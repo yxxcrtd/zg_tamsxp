@@ -61,6 +61,19 @@ public class TrdBondPtlSecExerciseInfo {
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal settleAmt;
 
+    // modify by etliu 20220228 start
+    // 广农商二阶段 GNS-896:【广农商场内清算】场内债券存续期-行权赎回，批处理后未生成交易
+    private String totalTradeId;
+
+    public String getTotalTradeId() {
+        return totalTradeId;
+    }
+
+    public void setTotalTradeId(String totalTradeId) {
+        this.totalTradeId = totalTradeId;
+    }
+    // modify by etliu 20220228 end
+
     /**
      * 理论应计利息
      */

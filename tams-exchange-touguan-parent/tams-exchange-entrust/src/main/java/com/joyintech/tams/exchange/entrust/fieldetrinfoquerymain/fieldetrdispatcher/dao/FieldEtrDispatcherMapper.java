@@ -83,7 +83,7 @@ public interface FieldEtrDispatcherMapper {
      * @see
      * @since 1.0
      */
-    FieldEtrDispatcherInfoResponse getEtrDispatcherInfo(Map<String, Object> pageParam);
+    List<FieldEtrDispatcherInfoResponse> getEtrDispatcherInfo(Map<String, Object> pageParam);
 
     /**
      * 交易员列表模糊查询
@@ -93,6 +93,11 @@ public interface FieldEtrDispatcherMapper {
      * @since 1.0
      */
     List<FieldEtrDispatcherTraderListRequest> getEtrTraderList(Map<String, Object> param);
+
+    /**
+     * 查询业务类型
+     */
+    String getBusiTypePosition(@Param("entrustId") String entrustId);
 
     /**
      * 交易员与工作量列表查询

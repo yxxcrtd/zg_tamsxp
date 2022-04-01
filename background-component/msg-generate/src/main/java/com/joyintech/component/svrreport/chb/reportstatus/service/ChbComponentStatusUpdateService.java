@@ -310,17 +310,12 @@ public class ChbComponentStatusUpdateService {
      * @param chbMsgBuildInfoDto
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void sendBackHandle(ChbMsgReturnInfoDto chbMsgReturnInfoDto, ChbBondSubmitPara para, ChbMsgBuildInfoDto chbMsgBuildInfoDto){
+    public synchronized void sendBackHandle(ChbMsgReturnInfoDto chbMsgReturnInfoDto, ChbBondSubmitPara para, ChbMsgBuildInfoDto chbMsgBuildInfoDto){
         if(chbMsgReturnInfoDto == null){
             //当返回结果为null时，更新反馈状态为发送异常
             this.updateFeedbackStatus(para.getRegistSeq() , para.getDealType(), DictCodeList.报送反馈状态_发送异常.getValue());
             logger.info("反馈信息:发送异常");
         }else{
-            //有返回结果时
-            chbComponentMsgLogService.insertInterfLogList(chbMsgBuildInfoDto.getLogList());
-            chbComponentMsgLogService.insertReportInfo(chbMsgReturnInfoDto.getChbInfoReportDto());
-            chbComponentMsgLogService.insertSubmitStatusInfo(chbMsgReturnInfoDto.getChbSubmitStatusDtos());
-
             logger.info("反馈信息:"+chbMsgReturnInfoDto.getRetCode());
             if (ChbConstant.XCPTNRTRCD_0000.equals(chbMsgReturnInfoDto.getRetCode())) {
                 // 更新数据库状态
@@ -330,6 +325,10 @@ public class ChbComponentStatusUpdateService {
                 this.updateFeedbackStatus(para.getRegistSeq()
                         , para.getDealType(), DictCodeList.报送反馈状态_发送失败.getValue());
             }
+            //有返回结果时
+            chbComponentMsgLogService.insertInterfLogList(chbMsgBuildInfoDto.getLogList());
+            chbComponentMsgLogService.insertReportInfo(chbMsgReturnInfoDto.getChbInfoReportDto());
+            chbComponentMsgLogService.insertSubmitStatusInfo(chbMsgReturnInfoDto.getChbSubmitStatusDtos());
         }
     }
 }

@@ -88,7 +88,7 @@ public class ChbFeedbackMsgService {
     /**
      * 没多少次提交一次
      */
-    @Value("${application.chb.maxSqlNum:2000}")
+    @Value("${application.chb.maxSqlNum:1000}")
     private int maxSqlNum;
 
     /**
@@ -206,6 +206,8 @@ public class ChbFeedbackMsgService {
 
                          // 登记银行代码
                          String registBankCode = prodRecode.substring(0,6);
+                         logger.info("获取取得文件内信息:registBankCode:"+registBankCode+",prodid:"+prodid);
+
                          // 根据登记银行代码获取机构代码
                          Map<String, Object> paramMap = new HashMap<String, Object>();
                          paramMap.put("registBankCode", registBankCode);
@@ -220,18 +222,20 @@ public class ChbFeedbackMsgService {
                          key.setOrgCode(orgCode);
                          key.setFlag("1");
                          key.setProdid(prodid);
-                         
+                         logger.info("获取取得文件内信息"+key.toString());
                          ChbPrdresistCode record = chbFeedbackMsgComponentMapper.selectByPrimaryKey(key);
                          if (record == null) {
                         	 record = new ChbPrdresistCode();
                              // 产品代码
                              record.setProdid(prodid);
+
+                             record.setProdInsId(prodid);
                              // 机构代码
                              record.setOrgCode(orgCode);
                              // 产品登记编码
                              record.setRegCode(prodRecode);
                              record.setRemark("中债直连反馈");
-                             
+
                              record.setCreateTime(new Date());
                              record.setUpdateTime(new Date());
                              record.setCreateUser("system");
@@ -249,6 +253,7 @@ public class ChbFeedbackMsgService {
                              // 产品登记编码
 //                             record.setRegCode(prodRecode);
                              record.setNewProdId(prodid);
+                             record.setProdInsId(prodid);
                              if(prodid != null && !prodid.equals(record.getProdid())){
                             	 chbFeedbackMsgComponentMapper.updateByPrimaryKeySelective(record);
                              }
@@ -303,7 +308,7 @@ public class ChbFeedbackMsgService {
             String reportSendDateStr = asynReportEntity.getMsgHeader().getBasicInfo().getMsgSndDateTime().getValue().replace("T", " ");
             reportSendDate = DateUtil.parse(reportSendDateStr);
         }
-
+        logger.info("报文内容:"+asynReportEntity.toString());
         InterfLog log = new InterfLog();
         log.setInterfId(DictCodeList.接口系统ID_直连结果分析.getValue());
         log.setBizDate(DateUtil.format(sysDate, DateUtil.DEFAULT_OTHER_FORMAT));
@@ -400,10 +405,11 @@ public class ChbFeedbackMsgService {
         // 下载成功时
         logger.info("根据下载文件更新反馈状态开始");
         if (StringUtils.isNotEmpty(fileXml)) {
-        // if (StringUtils.isNotEmpty("TEST")) {//TODO
+            logger.info("filexml不为空时进行数据修改");
             xmlList = this.updateSubStatus(filePath,fileName,reportNo,submitType, true);
         }
         if (CollectionUtil.isEmpty(xmlList)) {
+            logger.info("xmlList为空时进行数据修改");
             // 更新中债报送结果
             ChbSubmitStatusDto status = new ChbSubmitStatusDto();
             // 报送编码
@@ -416,6 +422,9 @@ public class ChbFeedbackMsgService {
                 chbFeedbackMsgComponentMapper.updateChbEquDetSubmitStatus(status);
             } else if (DictCodeList.报表名称_投资者身份信息登记.getValue().equals(submitType)
                     || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(submitType)) {
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+                status.setFlag(submitType);
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
                 // 更新中债三期反馈状态表
                 chbFeedbackMsgComponentMapper.updateChbSubmitStatus(status);
             } else {
@@ -598,8 +607,8 @@ public class ChbFeedbackMsgService {
             sqlSession.close();
         }
     }
-    
-    
+
+
     /**
      * 解析下载文件
      *
@@ -636,11 +645,11 @@ public class ChbFeedbackMsgService {
             XbrliDownLoadXml.class);
         return xml;
     }
-    
-    
+
+
     /**
 	 * 读取文件
-	 * 
+	 *
 	 * @param fullPath
 	 *            文件全路径
 	 * @param encode
@@ -677,7 +686,7 @@ public class ChbFeedbackMsgService {
 		}
 		catch(IOException e){
 			logger.error(e.getMessage(),e);
-		    throw new IOException(); 
+		    throw new IOException();
 		}
 		finally {
           if(fis!=null){
@@ -688,7 +697,7 @@ public class ChbFeedbackMsgService {
 //                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
-          }  
+          }
           if(isr!=null){
               try {
                   isr.close();
@@ -697,8 +706,8 @@ public class ChbFeedbackMsgService {
 //                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
-          }  
-          if(reader!=null){ 
+          }
+          if(reader!=null){
               try {
                   reader.close();
               }
@@ -706,12 +715,12 @@ public class ChbFeedbackMsgService {
 //                  e.printStackTrace();
                   logger.error(e.getMessage(),e);
               }
-          }  
+          }
         }
 		return result;
 	}
-    
-    
+
+
     /**
      * xml-->bean
      *
@@ -737,8 +746,8 @@ public class ChbFeedbackMsgService {
         }
         return t;
     }
-    
-    
+
+
     /**
      * 解压文件
      *
@@ -1024,8 +1033,8 @@ public class ChbFeedbackMsgService {
         }
         return asynReportEntitys;
     }
-    
-    
+
+
     /**
      * 获取外部API返回结果(40类报文用)
      *
@@ -1121,6 +1130,9 @@ public class ChbFeedbackMsgService {
                         equdeterros.add(status);
                     } else if (DictCodeList.报表名称_投资者身份信息登记.getValue().equals(submitType)
                             || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(submitType)) {
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+                        status.setFlag(submitType);
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
                         submiterrors.add(status);
                     } else {
                         submitTwoerrors.add(status);
@@ -1145,6 +1157,11 @@ public class ChbFeedbackMsgService {
                         equdetinfos.add(status);
                     } else if (DictCodeList.报表名称_投资者身份信息登记.getValue().equals(submitType)
                             || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(submitType)) {
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+                        status.setFlag(submitType);
+                        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
                         submitinfos.add(status);
                     } else {
                         // 中债一、二期的反馈结果

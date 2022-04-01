@@ -60,7 +60,7 @@
 				<module>../../tams-settle-batch</module>
 				<module>../../tams-system/touguan/batch</module>
 				<module>../../tams-customer-interf</module>
-				<module>../../tams-exchange-parent</module>
+				<module>../../tams-exchange-trade-parent</module>
 				<module>../../tams-invest-interf</module>
 				<module>../../tams-invest-parent</module>
 				<module>../../tams-system/touguan/app</module>

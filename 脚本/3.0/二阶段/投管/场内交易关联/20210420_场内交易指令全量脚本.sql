@@ -2045,16 +2045,16 @@ insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, 
 values ('10023', 'ETR29', null, null, null, null, null, null, '04', 'WTFUND', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('10024', 'ETR30', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+values ('10024', 'ETR30', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTBOND_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('10025', 'ETR31', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+values ('10025', 'ETR31', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTBOND_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('10026', 'ETR32', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+values ('10026', 'ETR32', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTBOND_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('10027', 'ETR33', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+values ('10027', 'ETR33', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTBOND_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('10028', 'ETR34', null, null, null, null, null, null, '04', 'WTSHARE', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
@@ -2063,7 +2063,7 @@ insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, 
 values ('10029', 'ETR35', null, null, null, null, null, null, '04', 'WTSHARE', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('10030', 'ETR36', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+values ('10030', 'ETR36', null, null, null, null, null, null, '04', 'WTBOND', null, null, null, 'WTBOND_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('10031', 'ETR37', null, null, null, null, null, null, '04', 'WTKZZSG', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
@@ -2075,7 +2075,7 @@ insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, 
 values ('10033', 'ETR39', null, null, null, null, null, null, '04', 'WTREPO', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MST_BUSINESS_ID_RULE (SEQ_NO, COMMON_BUSINESS_TYPE, TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5, TYPE_6, BUSINESS_ID_RULE_TYPE, PREFIX_NAME, PREFIX_SEQUENCE_NAME, PREFIX_SEQUENCE_LEN, POSTFIX_NAME, POSTFIX_SEQUENCE_NAME, POSTFIX_SEQUENCE_LEN, DATE_RULE_TYPE, BUSINESS_ID_SERVICE_NAME, BUSINESS_ID_METHOD_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('10034', 'ETR40', null, null, null, null, null, null, '04', 'WTZZG', null, null, null, 'WTCNJY_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
+values ('10034', 'ETR40', null, null, null, null, null, null, '04', 'WTZZG', null, null, null, 'WTBOND_SEQUENCE', 4, '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 delete from MST_BUSINESS_ID_RULE where SEQ_NO='0205' and COMMON_BUSINESS_TYPE='TRD60';
 

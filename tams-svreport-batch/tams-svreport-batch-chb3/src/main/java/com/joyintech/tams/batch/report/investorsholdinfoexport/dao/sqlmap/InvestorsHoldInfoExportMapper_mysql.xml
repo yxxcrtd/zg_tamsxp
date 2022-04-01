@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.report.investorsholdinfoexport.dao.InvestorsHoldInfoExportMapper_mysql">
+
+	<select id="getBatchLog" resultType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog">
+		select *
+		from chb_subinfo_batch_log
+		where deal_status = '04' and task_id='3076'
+	</select>
+
+	<select id="countExportNum" parameterType="map" resultType="int">
+		select count(*) from CHB_INVESTHOLD_INFO_SUB ciis
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS status
+		on ciis.sumit_seq = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<where>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="sendStatusList != null and sendStatusList.size()>0">
+				<foreach collection="sendStatusList" item="item" open="and ciis.SEND_STATUS in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="statusList != null and statusList.size()>0">
+				<foreach collection="statusList" item="item" open="and ciis.STATUS in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="updateTimeStart != null and updateTimeStart != ''">
+				and DATE_FORMAT(ciis.UPDATE_TIME,'%Y-%m-%d') &gt;= #{updateTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTimeEnd != null and updateTimeEnd != ''">
+				and DATE_FORMAT(ciis.UPDATE_TIME,'%Y-%m-%d') &lt;= #{updateTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateStart != null and submitDateStart != ''">
+				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateEnd != null and submitDateEnd != ''">
+				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+					#{submitFeedbackStatus,jdbcType=VARCHAR}
+				</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		 	</if>
+			<if test="registBankCode!= null and registBankCode != ''">
+				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<!-- <if test="prdRegistCode != null  and prdRegistCode != ''">
+				and ciis.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+			</if> -->
+            <if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
+                <foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+			<if test="indentifyMark != null  and indentifyMark != ''">
+			    and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
+			 </if>
+			 <if test="holdDateStart != null and holdDateStart != ''">
+				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &gt;= #{holdDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="holdDateEnd != null and holdDateEnd != ''">
+				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="orgCodeList != null and orgCodeList.size()>0">
+				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="investList!=null and investList.size()>0">
+				<foreach collection="investList" item="investDto" open=" (" close=")" separator=") or (">
+		 	 		ciis.PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR} 
+			 	 	and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
+		 	 		and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
+		 	 		and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
+		 	 		and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+		 	 		<choose>
+			 	 		<when test="checkFlag!=null and checkFlag!=''">
+			 	 			and ciis.SEND_STATUS in('02','03')
+			 	 		</when>
+			 	 		<otherwise>
+			 	 			and ciis.SEND_STATUS = #{investDto.sendStatus,jdbcType=VARCHAR}
+			 	 		</otherwise>
+		 	 		</choose>
+		 		</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectAllDataByPage"  resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto"
+			resultSetType="FORWARD_ONLY" fetchSize="10000">
+		SELECT
+		*
+	FROM
+    (
+        SELECT
+            tmp_page.*,
+			@rownum := @rownum + 1  row_id
+        FROM (select @rownum := 0 ) r , (
+				select 
+			        ciis.REGIST_SEQNO           registSeqno,      
+					ciis.REGIST_BANK_CODE       registBankCode,  
+					ciis.CHB_SUBMIT_DEADLINE    chbSubmitDeadline,
+					ciis.PRD_REGIST_CODE        prdRegistCode,    
+					ciis.INDENTIFY_MARK         indentifyMark,    
+					ciis.CCY                    ccy,              
+					ciis.HOLD_DATE              holdDate,         
+					ciis.AMOUNT                 amount,    
+					IF(substr(ciis.AMOUNT,1,1)='.',0||ciis.AMOUNT,ciis.AMOUNT)                 amountExportExcel,
+					ciis.QTY                    qty,  
+					IF(substr(ciis.QTY,1,1)='.',0||ciis.QTY,ciis.QTY)                    qtyExportExcel,
+					ciis.CNY_AMT                cnyAmt,         
+					IF(substr(ciis.CNY_AMT,1,1)='.',0||ciis.CNY_AMT,ciis.CNY_AMT)                cnyAmtExportExcel,
+					ciis.REMARK                 remark,           
+					ciis.SUBMIT_DEADLINE        submitDeadline,   
+					ciis.WORKFLOW_ID            workflowId,       
+					ciis.SEND_STATUS            sendStatus,       
+					ciis.STATUS_DATE            statusDate,      
+					ciis.STATUS                 status,           
+					ciis.CREATE_USER            createUser,       
+					ciis.CREATE_TIME            createTime,       
+					ciis.UPDATE_USER            updateUser,       
+					ciis.UPDATE_TIME            updateTime,         
+					ciis.ORG_CODE               orgCode,          
+					ciis.DEPT_CODE              deptCode,         
+					ciis.SUBMIT_TIME            submitTime,
+					ciis.SUMIT_SEQ				sumitSeq,
+					ciis.CHECK_SEQNO			checkSeqno,
+					crc.IS_LOGIC_CHECK			isLogicCheck,
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+					ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+					ciis.SUBMIT_SEND_STATUS    submitSendStatus
+				from CHB_INVESTHOLD_INFO_SUB ciis
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+					/*left join CHB_SUBMIT_STATUS status
+					on ciis.sumit_seq = status.seqno*/
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				left join CHB_REPORT_CHECK crc
+				on ciis.CHECK_SEQNO = crc.CHECK_SEQNO
+		<where>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="sendStatusList != null and sendStatusList.size()>0">
+				<foreach collection="sendStatusList" item="item" open="and ciis.SEND_STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="statusList != null and statusList.size()>0">
+				<foreach collection="statusList" item="item" open="and ciis.STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!-- <if test="channelList != null and channelList.size()>0">
+				<foreach collection="channelList" item="item" open="and ciis.CHANNEL in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="busiTypeList != null and busiTypeList.size()>0">
+				<foreach collection="busiTypeList" item="item" open="and ciis.BUSI_TYPE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if> -->
+
+			<if test="updateTimeStart != null and updateTimeStart != ''">
+				and DATE_FORMAT(ciis.STATUS_DATE,'%Y-%m-%d') &gt;= #{updateTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTimeEnd != null and updateTimeEnd != ''">
+				and DATE_FORMAT(ciis.STATUS_DATE,'%Y-%m-%d') &lt;= #{updateTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateStart != null and submitDateStart != ''">
+				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateEnd != null and submitDateEnd != ''">
+				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+					#{submitFeedbackStatus,jdbcType=VARCHAR}
+				</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			</if>
+			<if test="registBankCode!= null and registBankCode != ''">
+				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="prdCodeList != null and prdCodeList.size()>0">
+				<foreach collection="prdCodeList" item="item" open="and ciis.PRODID in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
+				<foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="holdDateStart != null and holdDateStart != ''">
+				and ciis.hold_date &gt;=DATE_FORMAT(#{holdDateStart,jdbcType=VARCHAR},'%Y-%m-%d')
+			</if>
+			<if test="holdDateEnd != null and holdDateEnd != ''">
+				and ciis.hold_date &lt;=DATE_FORMAT(#{holdDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+			</if>
+			<if test="indentifyMark != null  and indentifyMark != ''">
+				and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="orgCodeList != null and orgCodeList.size()>0">
+				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="sendStatus != null  and sendStatus != ''">
+				and ciis.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="REGIST_SEQNO != null and REGIST_SEQNO != ''">
+				and ciis.REGIST_SEQNO = #{REGIST_SEQNO,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by ciis.CHB_SUBMIT_DEADLINE,ciis.REGIST_SEQNO desc
+        )tmp_page
+		)a
+		WHERE
+		row_id &lt;= #{end}
+		AND row_id &gt; #{start}
+	</select>
+
+	<select id="getBusiConfirmDateEx" parameterType="map" resultType="map">
+		SELECT
+		MIN(HOLD_DATE) MINDATE,
+		MAX(HOLD_DATE) MAXDATE
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS status
+		on ciis.sumit_seq = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<where>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				and DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="sendStatusList != null and sendStatusList.size()>0">
+				<foreach collection="sendStatusList" item="item" open="and ciis.SEND_STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="statusList != null and statusList.size()>0">
+				<foreach collection="statusList" item="item" open="and ciis.STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="updateTimeStart != null and updateTimeStart != ''">
+				and DATE_FORMAT(ciis.UPDATE_TIME,'%Y-%m-%d') &gt;= #{updateTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTimeEnd != null and updateTimeEnd != ''">
+				and DATE_FORMAT(ciis.UPDATE_TIME,'%Y-%m-%d') &lt;= #{updateTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateStart != null and submitDateStart != ''">
+				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateEnd != null and submitDateEnd != ''">
+				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+					#{submitFeedbackStatus,jdbcType=VARCHAR}
+				</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			</if>
+			<if test="registBankCode!= null and registBankCode != ''">
+				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<!-- <if test="prdRegistCode != null  and prdRegistCode != ''">
+				and ciis.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+			</if> -->
+			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
+				<foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="indentifyMark != null  and indentifyMark != ''">
+				and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="holdDateStart != null and holdDateStart != ''">
+				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &gt;= #{holdDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="holdDateEnd != null and holdDateEnd != ''">
+				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="orgCodeList != null and orgCodeList.size()>0">
+				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="investList!=null and investList.size()>0">
+				<foreach collection="investList" item="investDto" open=" (" close=")" separator=") or (">
+					ciis.PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR}
+					and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR}
+					and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
+					and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
+					and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+					<choose>
+						<when test="checkFlag!=null and checkFlag!=''">
+							and ciis.SEND_STATUS in('02','03')
+						</when>
+						<otherwise>
+							and ciis.SEND_STATUS = #{investDto.sendStatus,jdbcType=VARCHAR}
+						</otherwise>
+					</choose>
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

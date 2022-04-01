@@ -92,6 +92,9 @@ public interface InvestmentBusinessDetailsMapper {
 	 */
 	InvestmentBusinessDetailsDto queryBottomInfoAmountFjr(Map<String,Object> map);
 
-
-
+	/**
+	 *附表银保监局	城商行 字段
+	 * @return
+	 */
+	InvestmentBusinessDetailsDto queryOrgName();
 }

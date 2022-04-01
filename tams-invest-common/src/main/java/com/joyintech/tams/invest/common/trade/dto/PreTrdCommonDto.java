@@ -26,6 +26,10 @@ public class PreTrdCommonDto {
      * List<金融产品交易预录入共通Dto>
      */
     private List<PreTrdCommonDto> preTrdCommonDtoList;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     public String getPortfolioId() {
         return portfolioId;
@@ -57,5 +61,13 @@ public class PreTrdCommonDto {
 
     public void setPreTrdCommonDtoList(List<PreTrdCommonDto> preTrdCommonDtoList) {
         this.preTrdCommonDtoList = preTrdCommonDtoList;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

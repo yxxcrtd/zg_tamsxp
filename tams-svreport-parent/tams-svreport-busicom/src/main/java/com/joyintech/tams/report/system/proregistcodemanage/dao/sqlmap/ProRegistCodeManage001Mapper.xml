@@ -62,7 +62,7 @@
 				</foreach>
 			</if>
 			<if test="isNotNull == true">
-				AND A.REG_CODE is null
+				AND A.REG_CODE is null or A.REG_CODE=''
 			</if>
 			<!-- dingzhipeng add Start 2017-10-23-->
 			<if test="orgCodeList != null and orgCodeList.size() > 0">
@@ -140,7 +140,7 @@
 		 	</foreach>
 		 	</if>
 		 	<if test="isNotNull == true">
-		 	AND A.REG_CODE is null
+				AND A.REG_CODE is null or A.REG_CODE=''
 		 	</if>
 		 	<!-- dingzhipeng add Start 2017-10-23-->
 		 	<if test="orgCodeList != null and orgCodeList.size() > 0">

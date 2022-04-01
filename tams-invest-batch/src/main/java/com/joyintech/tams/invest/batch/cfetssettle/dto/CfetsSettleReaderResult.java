@@ -51,6 +51,8 @@ public class CfetsSettleReaderResult extends NeedOperateEntity{
     private String finprodType2;
     //业务类型
     private String busiType;
+    //汇总交易编号
+    private String totalTradeId;
 
     public TrdBankManualSettleInfo getTrdBankManualSettleInfo() {
         return trdBankManualSettleInfo;
@@ -114,5 +116,13 @@ public class CfetsSettleReaderResult extends NeedOperateEntity{
 
     public void setBusiType(String busiType) {
         this.busiType = busiType;
+    }
+
+    public String getTotalTradeId() {
+        return totalTradeId;
+    }
+
+    public void setTotalTradeId(String totalTradeId) {
+        this.totalTradeId = totalTradeId;
     }
 }

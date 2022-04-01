@@ -1,0 +1,1 @@
+update cfg_datatable_show set colname='结算金额（元）' where pagecode='CfetsTrdQuery' and dtcode='CfetsTrdQueryCstpInfo'  and spcdcode='999999' and colcode='tradeAmt';

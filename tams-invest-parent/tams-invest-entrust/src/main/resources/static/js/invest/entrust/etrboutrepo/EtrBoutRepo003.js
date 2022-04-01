@@ -5,74 +5,106 @@
     var getriskdata = function() {
         var selectedItem = $.serializeToObject('#searchForm').selectedItem;
         if (selectedItem.length > 0) {
-            var objects = new Array();
+            var list = [];
+            var object = {
+                tradeDirection : [ 'ps', 'EtrBoutRepo002.ps' ],
+                portfolioCode : [ 'portfolioId', 'EtrBoutRepo002.portfolioId' ],
+                tradeAmount : [ 'entrustAmt', 'EtrBoutRepo002.entrustAmt' ],
+                assetType : [ 'assetType1', 'EtrBoutRepo002.assetType1' ],
+                data : list
+            };
             for ( var index in selectedItem) {
                 var item = selectedItem[index];
                 var trdProductDeal = {};
                 trdProductDeal.tradeAmt = item.entrustAmt;
                 trdProductDeal.unitCprice  = item.price;
-                if (item.ps == ps_03) {
-                    var obj = {
-                        tradeDirection : item.ps,
-                        timePoint : MY_SUP_TIME_TYPE_02,
-                        valDate : sysDate,
-                        portfolioCode : item.portfolioId,
-                        tradeAmount : item.entrustAmt,
-                        assetType : fintype_zhg,
-                        isEnabled : '01',
-                        fullDataFlag : '1',
-                        trdProductDeal : trdProductDeal
-                    }
-                    var object = {
-                        tradeDirection : [ 'ps', 'EtrBoutRepo002.ps' ],
-                        portfolioCode : [ 'portfolioId', 'EtrBoutRepo002.portfolioId' ],
-                        tradeAmount : [ 'entrustAmt', 'EtrBoutRepo002.entrustAmt' ],
-                        assetType : [ 'assetType1', 'EtrBoutRepo002.assetType1' ],
-                        data : obj
-                    }
-                } else if (item.ps == ps_04) {
-                    var obj = {
-                        tradeDirection : item.ps,
-                        timePoint : MY_SUP_TIME_TYPE_02,
-                        valDate : sysDate,
-                        portfolioCode : item.portfolioId,
-                        tradeAmount : item.entrustAmt,
-                        assetType : fintype_nhg,
-                        isEnabled : '01',
-                        fullDataFlag : '1',
-                        trdProductDeal : trdProductDeal
-                    }
-                    var object = {
-                        tradeDirection : [ 'ps', 'EtrBoutRepo002.ps' ],
-                        portfolioCode : [ 'portfolioId', 'EtrBoutRepo002.portfolioId' ],
-                        tradeAmount : [ 'entrustAmt', 'EtrBoutRepo002.entrustAmt' ],
-                        assetType : [ 'assetType1', 'EtrBoutRepo002.assetType1' ],
-                        data : obj
-                    }
-                } else {
-                    var obj = {
-                        tradeDirection : item.ps,
-                        timePoint : MY_SUP_TIME_TYPE_02,
-                        valDate : sysDate,
-                        portfolioCode : item.portfolioId,
-                        tradeAmount : item.entrustNum,
-                        assetType : fintype_zhg,
-                        isEnabled : '01',
-                        fullDataFlag : '1',
-                        trdProductDeal : trdProductDeal
-                    }
-                    var object = {
-                        tradeDirection : [ 'ps', 'EtrBoutRepo002.ps' ],
-                        portfolioCode : [ 'portfolioId', 'EtrBoutRepo002.portfolioId' ],
-                        tradeAmount : [ 'entrustAmt', 'EtrBoutRepo002.entrustAmt' ],
-                        assetType : [ 'assetType1', 'EtrBoutRepo002.assetType1' ],
-                        data : obj
-                    }
-                }
-                objects.push(object);
+                var obj = {
+                    tradeDirection : item.ps,
+                    timePoint : MY_SUP_TIME_TYPE_02,
+                    valDate : sysDate,
+                    portfolioCode : item.portfolioId,
+                    tradeAmount : item.entrustAmt,
+                    assetType : item.ps == ps_04 ? fintype_nhg : fintype_zhg,
+                    isEnabled : '01',
+                    fullDataFlag : '1',
+                    repoTerm:item.repoTerm,
+                    vdate:item.vdate,
+                    mdate:item.mdate,
+                    trdProductDeal : trdProductDeal
+                };
+                list.push(obj);
             }
-            return objects;
+            return object;
         }
+        // if (selectedItem.length > 0) {
+        //     var objects = new Array();
+        //     for ( var index in selectedItem) {
+        //         var item = selectedItem[index];
+        //         var trdProductDeal = {};
+        //         trdProductDeal.tradeAmt = item.entrustAmt;
+        //         trdProductDeal.unitCprice  = item.price;
+        //         if (item.ps == ps_03) {
+        //             var obj = {
+        //                 tradeDirection : item.ps,
+        //                 timePoint : MY_SUP_TIME_TYPE_02,
+        //                 valDate : sysDate,
+        //                 portfolioCode : item.portfolioId,
+        //                 tradeAmount : item.entrustAmt,
+        //                 assetType : fintype_zhg,
+        //                 isEnabled : '01',
+        //                 fullDataFlag : '1',
+        //                 trdProductDeal : trdProductDeal
+        //             }
+        //             var object = {
+        //                 tradeDirection : [ 'ps', 'EtrBoutRepo002.ps' ],
+        //                 portfolioCode : [ 'portfolioId', 'EtrBoutRepo002.portfolioId' ],
+        //                 tradeAmount : [ 'entrustAmt', 'EtrBoutRepo002.entrustAmt' ],
+        //                 assetType : [ 'assetType1', 'EtrBoutRepo002.assetType1' ],
+        //                 data : obj
+        //             }
+        //         } else if (item.ps == ps_04) {
+        //             var obj = {
+        //                 tradeDirection : item.ps,
+        //                 timePoint : MY_SUP_TIME_TYPE_02,
+        //                 valDate : sysDate,
+        //                 portfolioCode : item.portfolioId,
+        //                 tradeAmount : item.entrustAmt,
+        //                 assetType : fintype_nhg,
+        //                 isEnabled : '01',
+        //                 fullDataFlag : '1',
+        //                 trdProductDeal : trdProductDeal
+        //             }
+        //             var object = {
+        //                 tradeDirection : [ 'ps', 'EtrBoutRepo002.ps' ],
+        //                 portfolioCode : [ 'portfolioId', 'EtrBoutRepo002.portfolioId' ],
+        //                 tradeAmount : [ 'entrustAmt', 'EtrBoutRepo002.entrustAmt' ],
+        //                 assetType : [ 'assetType1', 'EtrBoutRepo002.assetType1' ],
+        //                 data : obj
+        //             }
+        //         } else {
+        //             var obj = {
+        //                 tradeDirection : item.ps,
+        //                 timePoint : MY_SUP_TIME_TYPE_02,
+        //                 valDate : sysDate,
+        //                 portfolioCode : item.portfolioId,
+        //                 tradeAmount : item.entrustNum,
+        //                 assetType : fintype_zhg,
+        //                 isEnabled : '01',
+        //                 fullDataFlag : '1',
+        //                 trdProductDeal : trdProductDeal
+        //             }
+        //             var object = {
+        //                 tradeDirection : [ 'ps', 'EtrBoutRepo002.ps' ],
+        //                 portfolioCode : [ 'portfolioId', 'EtrBoutRepo002.portfolioId' ],
+        //                 tradeAmount : [ 'entrustAmt', 'EtrBoutRepo002.entrustAmt' ],
+        //                 assetType : [ 'assetType1', 'EtrBoutRepo002.assetType1' ],
+        //                 data : obj
+        //             }
+        //         }
+        //         objects.push(object);
+        //     }
+        //     return objects;
+        // }
     }
     // 初始化委托列表
     /**
@@ -409,6 +441,7 @@
             var temp = objects[index];
             temp.operateType = operateType;
             temp.pageModel = pageModel;
+            temp.riskTrialRetDto = object.riskTrialRetDto;
             if (operateType === 'submit') {
                 temp.elementId = 'EtrBoutRepo002_btn_submit';
             }
@@ -445,7 +478,25 @@
          */
         $('#EtrBoutRepo003_btn_riskcal').click(function() {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-            $("#riskMathFlag").val("02");
+            // $("#riskMathFlag").val("02");
+            var list = $.serializeToObject('#searchForm', true).selectedItem;
+            var objectList = [];
+            for(var i in list){
+                var temp = {};
+                temp.portfolioId = list[i].portfolioId;
+                temp.ps = list[i].ps;
+                temp.ccy = list[i].ccy;
+                temp.entrustAmt = list[i].entrustAmt;
+                temp.tradeMarket = list[i].tradeMarket;
+                temp.price = list[i].price;
+                temp.groupCode = 'F10_0_'+i;//格式类型+委托/交易+序号
+                temp.repoTerm = list[i].repoTerm;
+                temp.vdate = list[i].vdateText,
+                    temp.mdate=list[i].mdateText,
+                    objectList.push(temp);
+            }
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F10',
+                objectList, getriskdata());
         });
     })
 

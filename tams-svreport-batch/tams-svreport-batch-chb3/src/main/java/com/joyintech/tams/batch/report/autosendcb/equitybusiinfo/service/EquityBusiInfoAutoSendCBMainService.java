@@ -85,6 +85,7 @@ public class EquityBusiInfoAutoSendCBMainService extends AutoSendCBBaseService {
         		//查询出所有未报送数据的日期 
         		days=equityBusiInfoRegist001Mapper.selectAllUnRegistDate();
         		if(StringUtil.isEmptyList(days)){
+					logInfoNoHandleData(DateUtil.now());
         			return;
         		}else{
         			startDate=days.get(0);
@@ -109,6 +110,9 @@ public class EquityBusiInfoAutoSendCBMainService extends AutoSendCBBaseService {
 //                }
         		//查询出对应日期所有的登记银行代码(按登记银行代码分次报)
         		List<String> bankCodes=equityBusiInfoRegist001Mapper.selectAllBanksByDate(day);
+        		if(StringUtil.isEmptyList(bankCodes)){
+					logInfoNoHandleData(DateUtil.now());
+				}
         		for(String bank:bankCodes){
         			
         			//投资者份额检查不通过的是否报送 01 是  02 否
@@ -166,6 +170,7 @@ public class EquityBusiInfoAutoSendCBMainService extends AutoSendCBBaseService {
         logInfo("查询待报送数据结束，数据条数：" + unregistDataList.size());
         if (StringUtil.isEmptyList(unregistDataList)) {
             logInfo("已无待报送数据，处理结束，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			logInfoNoHandleData(DateUtil.now());
             return false;
         }
         //查询出所有未报送数据条数   

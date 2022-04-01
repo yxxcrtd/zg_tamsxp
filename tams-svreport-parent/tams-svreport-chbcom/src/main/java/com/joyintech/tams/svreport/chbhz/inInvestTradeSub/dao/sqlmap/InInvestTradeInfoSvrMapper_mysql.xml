@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbhz.inInvestTradeSub.dao.InInvestTradeInfoSvrMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbInvestTradeSubTmp" >
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="TRADE_CODE" property="tradeCode" jdbcType="VARCHAR" />
+        <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="CUR_ASSET_TYPE" property="curAssetType" jdbcType="VARCHAR" />
+        <result column="CUR_ASSETDET_TYPE" property="curAssetdetType" jdbcType="VARCHAR" />
+        <result column="DEALDATE" property="dealdate" jdbcType="DATE" />
+        <result column="TRADE_COUNTER" property="tradeCounter" jdbcType="VARCHAR" />
+        <result column="UNIT_PRICE_FULL" property="unitPriceFull" jdbcType="DECIMAL" />
+        <result column="UNIT_PRICE_NET" property="unitPriceNet" jdbcType="DECIMAL" />
+        <result column="END_RATE" property="endRate" jdbcType="DECIMAL" />
+        <result column="CONTRACT_CODE" property="contractCode" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="DEAL_REGIST_DATE" property="dealRegistDate" jdbcType="DATE" />
+        <result column="NUM" property="num" jdbcType="DECIMAL" />
+        <result column="ASSET_METHOD" property="assetMethod" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY_TYPE" property="rivalPartyType" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="INVEST_APPROVER_ID" property="investApproverId" jdbcType="VARCHAR" />
+        <result column="INVEST_APPROVER_NAME" property="investApproverName" jdbcType="VARCHAR" />
+        <result column="INVEST_TRADER_ID" property="investTraderId" jdbcType="VARCHAR" />
+        <result column="INVEST_TRADER_NAME" property="investTraderName" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap type="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" id="InvestTradeRegist001DtoRM">
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="TRADE_CODE" property="tradeCode" jdbcType="VARCHAR" />
+        <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="NUM" property="num" jdbcType="DECIMAL" />
+        <result column="CUR_ASSET_TYPE" property="curAssetType" jdbcType="VARCHAR" />
+        <result column="CUR_ASSETDET_TYPE" property="curAssetdetType" jdbcType="VARCHAR" />
+        <result column="DEALDATE" property="dealdate" jdbcType="DATE" />
+        <result column="TRADE_COUNTER" property="tradeCounter" jdbcType="VARCHAR" />
+        <result column="UNIT_PRICE_FULL" property="unitPriceFull" jdbcType="DECIMAL" />
+        <result column="UNIT_PRICE_NET" property="unitPriceNet" jdbcType="DECIMAL" />
+        <result column="END_RATE" property="endRate" jdbcType="DECIMAL" />
+        <result column="CONTRACT_CODE" property="contractCode" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CHL_CPCT_ID" property="chlCpctId" jdbcType="VARCHAR" />
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <result column="CHL_AGRT_NAME" property="chlAgrtName" jdbcType="VARCHAR" />
+        <result column="FEE_ID" property="feeId" jdbcType="VARCHAR" />
+        <result column="FEE_NAME" property="feeName" jdbcType="VARCHAR" />
+        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="FEE_SECTYPE" property="feeSectype" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="CHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="DEAL_REGIST_DATE" property="dealRegistDate" jdbcType="DATE" />
+        <result column="IS_ASSET_SUB" property="isAssetSub" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="PROD_REG_CODE" property="prodRegCode" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="REF_TRADESEQNO" property="refTradeseqno" jdbcType="VARCHAR" />
+        <result column="PRODTYPE" property="prodType" jdbcType="VARCHAR" />
+        <result column="DEALTYPE" jdbcType="VARCHAR" property="dealtype" />
+        <result column="ASSET_METHOD" property="assetMethod" jdbcType="CHAR" />
+        <result column="RIVAL_PARTY_TYPE" property="rivalPartyType" jdbcType="CHAR" />
+        <result column="ASSET_METHOD_NUM" property="assetMethodNum" jdbcType="CHAR" />
+        <result column="RIVAL_PARTY_TYPE_NUM" property="rivalPartyTypeNum" jdbcType="CHAR" />
+        <result column="INVEST_APPROVER_ID" property="investApproverId" jdbcType="VARCHAR" />
+        <result column="INVEST_APPROVER_NAME" property="investApproverName" jdbcType="VARCHAR" />
+        <result column="INVEST_TRADER_ID" property="investTraderId" jdbcType="VARCHAR" />
+        <result column="INVEST_TRADER_NAME" property="investTraderName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="genChbInvestTradeSubTmpList"  resultMap="BaseResultMap">
+        select
+        pc.PRODID PROD_ID,rs.*
+        from  CHB_INVEST_TRADE_SUB_TMP rs
+        INNER JOIN CHB_PRDRESIST_CODE pc on rs.PROD_REGIST_CODE = pc.REG_CODE
+        where  1=1
+        and   DATE_FORMAT(ROW_DATE,'%Y-%m-%d') = #{batchdate,jdbcType = VARCHAR}
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND pc.PRODID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+    <select id="genChbInvestTradeSubList"  resultMap="InvestTradeRegist001DtoRM">
+        select * from CHB_INVEST_TRADE_SUB
+        where 1=1
+        and  SEND_STATUS  in ('02','03')
+        <if test="keylist != null and keylist.size() > 0">
+            AND /*PROD_ID||'|'||TRADE_CODE||'|'||ASSET_CODE||'|'||CUR_ASSET_TYPE*/
+            concat(PROD_ID,'|',TRADE_CODE,'|',ASSET_CODE,'|',CUR_ASSET_TYPE)
+            IN
+            <trim suffixOverrides=" OR concat(PROD_ID,'|',TRADE_CODE,'|',ASSET_CODE,'|',CUR_ASSET_TYPE) IN ()">
+                <foreach collection='keylist' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR concat(PROD_ID,'|',TRADE_CODE,'|',ASSET_CODE,'|',CUR_ASSET_TYPE)  IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="genChbInvestTradeSubAllList"  resultMap="InvestTradeRegist001DtoRM">
+  select * from CHB_INVEST_TRADE_SUB
+    where 1=1
+    and  SEND_STATUS  in ('02','03')
+ </select>
+</mapper>

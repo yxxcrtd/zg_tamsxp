@@ -215,7 +215,7 @@ public class DisRepProdInvestAdjrateService extends FileImpService {
         //检查数据类型
         String dataType = InterfDefine.产品资产种类投资比例调整数据.getCode();
         //重复性检查的keys
-        String[] checkEuplicatedKeys = {"PROD_ID","ADJUST_DATE","INVEST_TYPE"};
+        String[] checkEuplicatedKeys = {"PROD_ID","INVEST_ADJUST_DATE","INVEST_TYPE"};
         String filename = interfFile == null ? null : interfFile.getFilename();
         List<Map<String, String>>  listA = super.checkData(dataList, filename, inerfType, dataType,null, checkEuplicatedKeys);
 //        dataList.addAll(listA);// listA为错误数据，在checkData时被remove，需要重新放回dataList

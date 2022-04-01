@@ -19,6 +19,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModel;
 
 import java.math.BigDecimal;
 
@@ -30,7 +31,7 @@ import java.math.BigDecimal;
  * @see EtrExchangeTradeFjyywzlZqzyDto
  * @since 1.0
  */
-@PageId("EtrExchangeTrade002")
+@ApiModel(value="债券质押列表查询返回参数",description="债券质押列表查询返回参数")
 public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
 
     /**
@@ -91,7 +92,7 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
     /**
      * 资产名称
      */
-    private String finpordName;
+    private String finprodName;
 
     /**
      * 金融产品类型（投管分类）
@@ -156,6 +157,16 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
      */
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal canRepoNum;
+
+    /**
+     * 资金账户代码
+     */
+    private String acctId;
+
+    /**
+     * 折算率
+     */
+    private String discountRate;
 
     /**
      * 获取 portfolioId
@@ -265,22 +276,12 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
         this.finprodId = finprodId;
     }
 
-    /**
-     * 获取 finpordName
-     * 
-     * @return finpordName.
-     */
-    public String getFinpordName() {
-        return finpordName;
+    public String getFinprodName() {
+        return finprodName;
     }
 
-    /**
-     * 设置 finpordName
-     * 
-     * @param finpordName finpordName
-     */
-    public void setFinpordName(String finpordName) {
-        this.finpordName = finpordName;
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
     }
 
     /**
@@ -576,5 +577,22 @@ public class EtrExchangeTradeFjyywzlZqzyDto extends BaseEntity {
      */
     public void setCanRepoNum(BigDecimal canRepoNum) {
         this.canRepoNum = canRepoNum;
+    }
+
+
+    public String getAcctId() {
+        return acctId;
+    }
+
+    public void setAcctId(String acctId) {
+        this.acctId = acctId;
+    }
+
+    public String getDiscountRate() {
+        return discountRate;
+    }
+
+    public void setDiscountRate(String discountRate) {
+        this.discountRate = discountRate;
     }
 }

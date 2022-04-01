@@ -203,17 +203,17 @@
         </dependency>
 
         <!--		&lt;!&ndash; 场内交易&ndash;&gt;-->
-        <dependency>
+        <!-- <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>service-exchange</artifactId>
             <version>0.0.1</version>
-        </dependency>
+        </dependency> -->
         <!-- 行情 -->
-        <dependency>
+        <!-- <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>service-quote-new</artifactId>
             <version>0.0.1</version>
-        </dependency>
+        </dependency> -->
         <!-- 公共基础数据 -->
         <dependency>
             <groupId>com.joyintech</groupId>

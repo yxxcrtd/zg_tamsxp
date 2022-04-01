@@ -15,6 +15,8 @@ import java.util.*;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,10 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
      */
     @Autowired
     private BaseTradeProductDealMapper baseTradeProductDealMapper;
+
+    @Autowired
+    private BaseAssetCashPositionCommMapper baseAssetCashPositionCommMapper;
+
     /**
      * 金融产品交易
      */
@@ -347,6 +353,15 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
             MstFileOutputParameter mstFileOutputParameter = mstFileCommonService.getFileInfoByBusiId(tradeId);
             for(BaseTradeProductDealDto entity : baseTradeProductDealDto){
                 entity.setMstFileOutputParameter(mstFileOutputParameter);
+                // add by etliu 20220219 start
+                // 如果划款指令没有查到，重新查询下
+                if (StringUtil.isEmptyList(entity.getStlPayOrdersList())
+                        && entity.getTrdProductDeal() != null && StringUtil.isNotBlank(entity.getTrdProductDeal().getTotleTradeId())) {
+                    Map<String, Object> paramMap = new HashMap<>();
+                    paramMap.put("tradeId", entity.getTrdProductDeal().getTotleTradeId());
+                    entity.setStlPayOrdersList(baseTradeProductDealMapper.selectStlPayOrdersList(paramMap));
+                }
+                // add by etliu 20220219 end
             }
             baseTradeProductDealList.addAll(baseTradeProductDealDto);
         }
@@ -362,8 +377,8 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
     public List<BaseTradeProductDealDto> selectTotalDeal(List<String> tradeIdList) {
         List<BaseTradeProductDealDto> baseTradeProductDealList = new ArrayList<BaseTradeProductDealDto>();
         for(String tradeId:tradeIdList){
-            List<BaseTradeProductDealDto> baseTradeProductDealDto =new ArrayList<>();
-            baseTradeProductDealDto = baseTradeProductDealMapper.selectByTotalTradeId(tradeId);
+            // 查询交易相关基本信息
+            List<BaseTradeProductDealDto> baseTradeProductDealDto = selectBaseTradeProduct(tradeId);
             MstFileOutputParameter mstFileOutputParameter = mstFileCommonService.getFileInfoByBusiId(tradeId);
             for(BaseTradeProductDealDto entity : baseTradeProductDealDto){
                 entity.setMstFileOutputParameter(mstFileOutputParameter);
@@ -376,6 +391,15 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
                     entity.setStlPayOrdersList(baseTradeProductDealMapper.selectStlPayOrders(paramMap));
                 }
                 // add by etliu 20210928 end
+                // add by ysfu 20220228 start
+                // 如果划款指令没有查到，通过交易汇总编号重新查询下
+                if(StringUtil.isEmptyList(entity.getStlPayOrdersList())
+                        && entity.getTrdProductDeal() != null && StringUtil.isNotBlank(entity.getTrdProductDeal().getTotleTradeId())){
+                    Map<String, Object> paramMap = new HashMap<>();
+                    paramMap.put("totaltTradeId", entity.getTrdProductDeal().getTotleTradeId());
+                    entity.setStlPayOrdersList(baseTradeProductDealMapper.selectStlPayOrdersList1(paramMap));
+                }
+                // add by ysfu 20220228 end
             }
             baseTradeProductDealList.addAll(baseTradeProductDealDto);
         }
@@ -393,6 +417,47 @@ public class BaseTradeProductDealServiceImpl implements BaseTradeProductDealServ
         trdProductDealList = baseTradeProductDealMapper.selectTrdProductDealsByTotalTradeId(totalTradeId);
         return trdProductDealList;
     }
+
+    // GNS-923:抽方法，基金类存续期特殊处理 modify by fuyongsheng 20220301 start
+    private List<BaseTradeProductDealDto> selectBaseTradeProduct(String tradeId){
+        List<BaseTradeProductDealDto> baseTradeProductDealDto =new ArrayList<>();
+        TrdFinProductDealTotal dealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(tradeId);
+        // 基金存续期特殊处理
+        if(DictCodeList.共通业务类型_基金类资产存续期.getValue().equals(dealTotal.getBusiType())){
+            baseTradeProductDealDto = baseTradeProductDealMapper.selectByTotalTradeIdTRD14(tradeId);
+        }else{
+            // modify by etliu 20220227 start
+            // 广农商二阶段 GNS-890：【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+//            baseTradeProductDealDto = baseTradeProductDealMapper.selectByTotalTradeId(tradeId);
+            baseTradeProductDealDto = baseTradeProductDealMapper.selectByTotalTradeId(tradeId, "need1");
+            if (StringUtil.isEmptyList(baseTradeProductDealDto)) {
+                baseTradeProductDealDto = baseTradeProductDealMapper.selectByTotalTradeId(tradeId, "need2");
+            }
+            // GNS-925:竞价回购到期,防止划款指令重复特殊处理 modify by fuyongsheng 20220228 start
+            else{
+                String fundType = baseAssetCashPositionCommMapper.selectFundType(baseTradeProductDealDto.get(0).
+                        getTrdProductDeal().getFinprodId());
+                if(DictCodeList.交易方向_到期.getValue().equals(baseTradeProductDealDto.get(0).getTrdProductDeal().getPs())
+                        && DictCodeList.回购类型_质押式竞价回购.getValue().equals(fundType)){
+                    if(!CollectionUtils.isEmpty(baseTradeProductDealDto) && baseTradeProductDealDto.size()>1){
+                        List<BaseTradeProductDealDto> need2List = baseTradeProductDealMapper.selectByTotalTradeId(tradeId, "need2");
+                        if(!CollectionUtils.isEmpty(need2List)){
+                            baseTradeProductDealDto = need2List;
+                        }else{
+                            baseTradeProductDealDto = Collections.singletonList(baseTradeProductDealDto.get(0));
+                        }
+                    }
+                }
+            }
+            // GNS-925:竞价回购到期,防止划款指令重复特殊处理 modify by fuyongsheng 20220228 end
+            if (StringUtil.isEmptyList(baseTradeProductDealDto)) {
+                baseTradeProductDealDto = baseTradeProductDealMapper.selectByTotalTradeId(tradeId, "notNeed");
+            }
+        }
+        return baseTradeProductDealDto;
+    }
+    // GNS-923:抽方法，基金类存续期特殊处理 modify by fuyongsheng 20220301 end
+
     /**
      * 金融产品汇总交易查询
      */

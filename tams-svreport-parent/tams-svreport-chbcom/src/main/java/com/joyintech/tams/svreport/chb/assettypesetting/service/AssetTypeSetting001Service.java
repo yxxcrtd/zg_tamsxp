@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.dao.ChbAssetTypeMappingExMapper;
 import com.joyintech.tams.common.base.dao.ChbAssetTypeMappingMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetTypeMapping;
 import com.joyintech.tams.common.base.entity.ChbAssetTypeMappingEx;
+import com.joyintech.tams.report.submitmaintenance.agentinstitution.dto.AgentInstitutionDto;
 import com.joyintech.tams.svreport.chb.assettypesetting.dao.AssetTypeSetting001Mapper;
 import com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,16 +135,19 @@ public class AssetTypeSetting001Service extends CommonExportService<AssetTypeSet
      * @return
      */
     public Integer doDelete(AssetTypeSetting001Dto dto) {
-        String typeuuid = dto.getSelectedItem().get(0).getTypeuuid();
+      List<AssetTypeSetting001Dto> dtolist = dto.getSelectedItem();
+      for(AssetTypeSetting001Dto dto2:dtolist){
+          String typeuuid = dto2.getTypeuuid();
         //删除 资产负债类别映射表
         chbAssetTypeMappingMapper.deleteByPrimaryKey(typeuuid);
         //删除 资产负债类别映射附属表
         List<String> typeuuidExList = assetTypeSetting001Mapper.selectTypeUuidExById(typeuuid);
-        if (StringUtil.isNotEmpty(typeuuidExList)){
-            for (String str: typeuuidExList) {
+        if (StringUtil.isNotEmpty(typeuuidExList)) {
+            for (String str : typeuuidExList) {
                 chbAssetTypeMappingExMapper.deleteByPrimaryKey(str);
             }
         }
+      }
         return 1;
     }
 

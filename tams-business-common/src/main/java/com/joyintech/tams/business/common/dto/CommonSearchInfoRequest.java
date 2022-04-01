@@ -23,6 +23,9 @@ public class CommonSearchInfoRequest {
     @ApiModelProperty(name="ps",value="交易方向",example="买入/卖出",required = true)
     private String ps;
 
+    @ApiModelProperty(name="busiPs",value="回购/拆借方向",example="正回购、逆回购、拆入、拆出",required = false)
+    private String busiPs;
+
     @ApiModelProperty(name="portfolioId",value="组合代码",example="字符串1")
     private String portfolioId;
 
@@ -37,6 +40,21 @@ public class CommonSearchInfoRequest {
 
     @ApiModelProperty(name="tradeMarket",value="交易场所",example="字符串1")
     private String tradeMarket;
+
+    @ApiModelProperty(name = "assetType1", value = "资产二级分类", example = "字符串1")
+    private String assetType1;
+
+    @ApiModelProperty(name = "assetType10", value = "资产三级分类", example = "字符串1")
+    private String assetType10;
+
+    @ApiModelProperty(name = "assetType11", value = "资产四级分类", example = "字符串1")
+    private String assetType11;
+
+    @ApiModelProperty(name = "finprodId", value = "产品编码", example = "字符串1")
+    private String finprodId;
+
+    @ApiModelProperty(name = "ccy", value = "币种", example = "字符串1")
+    private String ccy;
 
     public String getTradeMarket() {
         return tradeMarket;
@@ -100,6 +118,54 @@ public class CommonSearchInfoRequest {
 
     public void setEntrustStatus(String entrustStatus) {
         this.entrustStatus = entrustStatus;
+    }
+
+    public String getBusiPs() {
+        return busiPs;
+    }
+
+    public void setBusiPs(String busiPs) {
+        this.busiPs = busiPs;
+    }
+
+    public String getAssetType1() {
+        return assetType1;
+    }
+
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
+    }
+
+    public String getAssetType10() {
+        return assetType10;
+    }
+
+    public void setAssetType10(String assetType10) {
+        this.assetType10 = assetType10;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    public String getCcy() {
+        return ccy;
+    }
+
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
     }
 }
 

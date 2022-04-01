@@ -108,8 +108,18 @@
         group by  PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,BRANCH,INV_AIM,HODING_TYPE,CDATE,ccy,P_FINPROD_ID,TRADE_ID
     </select>
     <select id="getEtrFinishAmt" resultType="java.math.BigDecimal">
-        SELECT NVL(SUM(ENT_FINISH_AMT),0) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId}
+        <!--// modify by etliu 20220227 start-->
+        <!--// 广农商二阶段 GNS-953:【广农商场内清算】深交所协议回购 正/逆回购首期，手工交收-日终清结算后，头寸更新有误-->
+        SELECT NVL(SUM(ENT_FINISH_AMT),0) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId} and TRADE_ID != #{entrustId}
+        <!--// modify by etliu 20220227 end-->
     </select>
+
+    <!--// modify by etliu 20220227 start-->
+    <!--// 广农商二阶段 GNS-953:【广农商场内清算】深交所协议回购 正/逆回购首期，手工交收-日终清结算后，头寸更新有误-->
+    <select id="getDayEndEtrFinishAmt" resultType="java.math.BigDecimal">
+        SELECT NVL(SUM(FINISH_AMT),0) FROM ETR_FINISH_STATUS WHERE ENTRUST_ID = #{entrustId} and TRADE_ID != #{entrustId}
+    </select>
+    <!--// modify by etliu 20220227 end-->
     <select id="selectPtlCashPositionFlowByTradeId" resultType="com.joyintech.tams.common.base.entity.PtlCashPositionFlow"  >
        select sum(amount) amount,PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,ccy,order_id,CHL_FINPROD_ID 
        from PTL_CASH_POSITION_FLOW 
@@ -322,4 +332,76 @@
           and CDATE = #{cdate,jdbcType=DATE}
           and CCY = #{ccy,jdbcType=VARCHAR}
     </update>
+
+    <!--add by etliu 20220116 start-->
+    <!--GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】-->
+    <select id="selectHoldInvAim" resultType="string" >
+        SELECT
+            MAX(PTL_SEC_POSITION.INV_AIM)
+        FROM
+            PTL_SEC_POSITION
+        WHERE
+            PTL_SEC_POSITION.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          AND PTL_SEC_POSITION.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          AND PTL_SEC_POSITION.HODING_TYPE = '03'
+          AND PTL_SEC_POSITION.CDATE =
+              (
+                  SELECT
+                      MAX(PTL_SEC_POSITION.CDATE)
+                  FROM
+                      PTL_SEC_POSITION
+                  WHERE
+                      PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+                    AND PTL_SEC_POSITION.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+                    AND PTL_SEC_POSITION.HODING_TYPE = '03')
+    </select>
+    <!--add by etliu 20220116 end-->
+
+    <select id="selectFinProductOthCodes" resultType="com.joyintech.tams.common.base.entity.FinProductOthCode">
+        SELECT
+            FINPROD_ID as finprodId,
+            BRANCH as branch,
+            OTH_TYPE as othCodeType,
+            OTH_CODE as othCode,
+            REMARK as remark
+        FROM
+            FIN_PRODUCT_OTH_CODE
+        WHERE
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            <if test="othCodeType != null" >
+                AND OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+            </if>
+        ORDER BY DECLARED_START_DATE DESC
+    </select>
+
+    <select id="selectFinProductQuto" resultType="com.joyintech.tams.common.base.entity.FinProductQuto">
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.FinProductQutoMapper.Base_Column_List" />
+        FROM
+            FIN_PRODUCT_QUTO
+        WHERE
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            AND OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+            AND CDATE = #{cdate,jdbcType=DATE}
+    </select>
+
+    <select id="selectSettleTransData" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+        SELECT
+            DISTINCT std.*
+        FROM
+        settle_trans_data std
+        LEFT JOIN SETTLE_TRANS_TG_MAPPING sttm ON sttm.TRADE_ID = std.TRADE_ID
+        LEFT JOIN TRD_PRODUCT_DEAL trd ON trd.TOTLE_TRADE_ID = sttm.TRADE_ID_TG
+        WHERE
+            trd.TOTLE_TRADE_ID = #{totalTradeId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询上一工作日 -->
+    <select id="getLastWorkDate" parameterType="java.util.Map" resultType="java.util.Date">
+        SELECT MAX(CDATE)
+        FROM VAL_VW_MST_HOLIDAY
+        WHERE CDATE <![CDATA[<]]> #{cdate}
+          AND IS_HOLIDAY = #{isHoliday}
+          AND TRADE_CALENDAR_ID = #{calendarId}
+    </select>
 </mapper>

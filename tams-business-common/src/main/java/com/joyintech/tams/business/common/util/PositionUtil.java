@@ -30,7 +30,7 @@ import java.util.Map;
 public class PositionUtil {
 
     private static Logger logger = LoggerFactory.getLogger(PositionUtil.class);
-    
+
     private static PtlPortfolioMapper ptlPortfolioMapper;
 
     private static CashPositionService cashPositionService;
@@ -78,12 +78,13 @@ public class PositionUtil {
                     StringBuffer strb = null;
                     Map responseMap_data = (Map) data.get("data");
                     if (responseMap_data != null){
-                        strb = new StringBuffer("当前【\n");
+                        strb = new StringBuffer("【<br/>");
                         List checkResults = (List) responseMap_data.get("checkResults");
                         if (checkResults != null) {
                             for (int i=0; i<checkResults.size();i++){
                                 BaseMap flow = BaseMap.newMap((Map) checkResults.get(i));
                                 BigDecimal CHECKBALANCE = flow.getBigDecimal("CHECKBALANCE");
+                                String UNIT = flow.getString("UNIT");
                                 String PORTFOLIO_ID = flow.getString("PORTFOLIO_ID");
                                 String HODING_TYPE = flow.getString("HODING_TYPE");
                                 PtlPortfolio obj = ptlPortfolioMapper.selectByPrimaryKey(PORTFOLIO_ID);
@@ -96,14 +97,15 @@ public class PositionUtil {
                                 strb.append(PORTFOLIO_ID);
                                 strb.append("(");
                                 strb.append(portfolioName);
-                                strb.append(")余额为");
-                                strb.append(CHECKBALANCE.toPlainString());
-                                strb.append("元【");
+                                strb.append(")");
+//                                strb.append(CHECKBALANCE.toPlainString());
+                                strb.append("【");
                                 strb.append(SysDataUtil.getNameFromDataDict(DictCode.头寸资产类型, HODING_TYPE));
+                                strb.append("】余额不足，当前余额为：").append(CHECKBALANCE.toPlainString()).append(UNIT.toString());
                                 if ((i+1) == checkResults.size()){
-                                    strb.append("】不足\n");
+                                    strb.append("<br/>");
                                 }else{
-                                    strb.append("】不足、\n");
+                                    strb.append("；<br/>");
                                 }
                             }
                         }
@@ -160,8 +162,8 @@ public class PositionUtil {
                     logger.info("CDATE平台日期：" + CDATE);
                     logger.info("CDATE平台日期：" + DateUtil.format(CDATE));
                     if (StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_托管户可用资金.getValue())
-                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可取资金.getValue())
-                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可用资金.getValue())
+//                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可取资金.getValue())
+//                            || StringUtil.equals(HODING_TYPE, DictCodeListExt3.资产类型_证券户可用资金.getValue())
                     ){
                         // 需要校验投管现金
                         // 校验仍不足时add
@@ -184,7 +186,7 @@ public class PositionUtil {
                         BigDecimal tamsCash = getCashByPId(PORTFOLIO_ID, tamsReq);
                         doAdd = doAdd.add(ArithmeticUtil.doAdd(cashT, CHECKBALANCE));
                         BigDecimal doSub = doAdd.subtract(tamsCash);
-                        if (doSub.compareTo(BigDecimal.ZERO) > 0){
+                        if (doSub.compareTo(BigDecimal.ZERO) >= 0){
                             // 头寸+投管余额足够
                             continue;
                         }else{
@@ -222,6 +224,9 @@ public class PositionUtil {
             if(StringUtil.isEmptyList(list)){
                 list = (List) tamsReq.get("ptlCashList");
             }
+            if(StringUtil.isEmptyList(list)){
+                list = (List) tamsReq.get("ptlTrusteeshipList");
+            }
             if (list != null && !list.isEmpty()){
                 for (int i=0;i<list.size(); i++){
                     BaseMap each = BaseMap.newMap((Map) list.get(i));
@@ -247,3 +252,4 @@ public class PositionUtil {
         PositionUtil.iPlatformDate = iPlatformDate;
     }
 }
+

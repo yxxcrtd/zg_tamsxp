@@ -1,6 +1,10 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
@@ -16,11 +20,14 @@ import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
 import com.joyintech.tams.exchange.datacommon.db.dao.InstrumentMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.FuturesInstrumentService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstrumentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2.平安资产类型_股票;
 
 @Service
 public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> implements InstrumentService {
@@ -102,11 +109,14 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
         futuresInstrumentService.clearMinPriceAndMinTrdUnitLimitCache();
         minPriceAndMinTrdUnitLimitBeanMap.clear();
         minPriceMap.clear();
+        String ps = null;
         minPriceList.forEach(minPrice -> {
             minPrice.setMarket(InvestmentUtils.convertInvestMarketToTrade(minPrice.getTradeMarket()));
-            String key = minPrice.getMarket() + "|" + minPrice.getTradePlat() + "|" + minPrice.getAssetType() + "|"
-                    + minPrice.getAssetType1() + "|" + minPrice.getAssetType2();
-            minPriceMap.put(key, minPrice);
+            ArrayList<Object> list = Lists.newArrayList(minPrice.getMarket(), minPrice.getTradePlat(), ps,
+                    minPrice.getAssetType(), minPrice.getAssetType1(), minPrice.getAssetType2());
+//            String key = minPrice.getMarket() + "|" + minPrice.getTradePlat() + "||" + minPrice.getAssetType() + "|"
+//                    + minPrice.getAssetType1() + "|" + minPrice.getAssetType2();
+            minPriceMap.put(Joiner.on(GlobalConstant.VERTICAL_LINE).useForNull(StringUtils.EMPTY).join(list), minPrice);
         });
     }
 
@@ -117,9 +127,18 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
         minTrdUnitLimitMap.clear();
         minTrdUnitLimitList.forEach(minTrdUnitLimit -> {
             minTrdUnitLimit.setMarket(InvestmentUtils.convertInvestMarketToTrade(minTrdUnitLimit.getTradeMarket()));
-            String key = minTrdUnitLimit.getMarket() + "|" + minTrdUnitLimit.getTradePlat() + "|" + minTrdUnitLimit.getPs() + "|"
-                    + minTrdUnitLimit.getAssetType() + "|" + minTrdUnitLimit.getAssetType1() + "|" + minTrdUnitLimit.getAssetType2();
-            minTrdUnitLimitMap.put(key, minTrdUnitLimit);
+            ArrayList<Object> list = Lists.newArrayList(minTrdUnitLimit.getMarket(), minTrdUnitLimit.getTradePlat(),
+                    minTrdUnitLimit.getPs(), minTrdUnitLimit.getAssetType(), minTrdUnitLimit.getAssetType1());
+            // 查询时根据合约的数据进行查询。合约上的字段根据 资产类型 有不同取值
+            if (minTrdUnitLimit.getAssetType().equals(平安资产类型_股票.getValue())) {
+                list.add(minTrdUnitLimit.getMarketType());
+            } else {
+                list.add(minTrdUnitLimit.getAssetType2());
+            }
+            minTrdUnitLimitMap.put(Joiner.on(GlobalConstant.VERTICAL_LINE).useForNull(StringUtils.EMPTY).join(list), minTrdUnitLimit);
+//            String key = minTrdUnitLimit.getMarket() + "|" + minTrdUnitLimit.getTradePlat() + "|" + minTrdUnitLimit.getPs() + "|"
+//                    + minTrdUnitLimit.getAssetType() + "|" + minTrdUnitLimit.getAssetType1() + "|" + minTrdUnitLimit.getAssetType2();
+//            minTrdUnitLimitMap.put(key, minTrdUnitLimit);
         });
     }
 
@@ -213,14 +232,18 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
         return new ArrayList<>(assetTypeMap.getOrDefault(assetType, new ConcurrentHashMap<>()).values());
     }
 
-    private String createKey(String tradePlat, String market, Instrument instrument, int type, String instructionPs) {
-        String marketKey = market + "|" + tradePlat + "|";
-        if (instructionPs != null) {
-            if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instrument.getAssetType())) {
-                instructionPs = InstructionPs.POSITIVEREPO.value;
-            }
-            marketKey += instructionPs + "|";
+    @Override
+    public void trdUnitLimitFlush() {
+        logger.info("minPriceAndMinTrdUnitLimitBeanMap:{}", JSON.toJSONString(minPriceAndMinTrdUnitLimitBeanMap));
+        minPriceAndMinTrdUnitLimitBeanMap.clear();
+    }
+
+    private String createKey(String tradePlat, String market, Instrument instrument, int type, String ps) {
+        List<String> list = Lists.newArrayList(market, tradePlat);
+        if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instrument.getAssetType())) {
+            ps = InstructionPs.POSITIVEREPO.value;
         }
+        list.add(ps);
         String assetType1 = instrument.getAssetType();
         String assetType2 = instrument.getAssetType1();
         if (type == 2) {
@@ -230,7 +253,27 @@ public class InstrumentServiceImpl extends AsyncServiceImpl<String, Instrument> 
         if (type == 1 || type == 2) {
             assetType3 = null;
         }
-        String assetTypeKey = assetType1 + "|" + assetType2 + "|" + assetType3;
-        return marketKey + assetTypeKey;
+        list.add(assetType1);
+        list.add(assetType2);
+        list.add(assetType3);
+        return Joiner.on(GlobalConstant.VERTICAL_LINE).useForNull(StringUtils.EMPTY).join(list);
+//        String marketKey = market + "|" + tradePlat + "|";
+//        if (ps != null) {
+//            if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instrument.getAssetType())) {
+//                ps = InstructionPs.POSITIVEREPO.value;
+//            }
+//            marketKey += ps + "|";
+//        }
+//        String assetType1 = instrument.getAssetType();
+//        String assetType2 = instrument.getAssetType1();
+//        if (type == 2) {
+//            assetType2 = null;
+//        }
+//        String assetType3 = instrument.getSubStockType();
+//        if (type == 1 || type == 2) {
+//            assetType3 = null;
+//        }
+//        String assetTypeKey = assetType1 + "|" + assetType2 + "|" + assetType3;
+//        return marketKey + assetTypeKey;
     }
 }

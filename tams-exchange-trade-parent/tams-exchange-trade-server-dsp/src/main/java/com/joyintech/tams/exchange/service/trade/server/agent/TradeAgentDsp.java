@@ -2,27 +2,10 @@ package com.joyintech.tams.exchange.service.trade.server.agent;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.joyintech.tams.exchange.common.bean.FuturesInstrumentCommissionRateQryBean;
-import com.joyintech.tams.exchange.common.bean.FuturesInstrumentMarginRateQryBean;
-import com.joyintech.tams.exchange.common.bean.FuturesInstrumentQryBean;
-import com.joyintech.tams.exchange.common.bean.FuturesPositionBean;
-import com.joyintech.tams.exchange.common.bean.FuturesPositionDetailBean;
-import com.joyintech.tams.exchange.common.bean.FuturesPositionDetailQryBean;
-import com.joyintech.tams.exchange.common.bean.FuturesPositionQryBean;
-import com.joyintech.tams.exchange.common.bean.ReissueEntrustBean;
-import com.joyintech.tams.exchange.common.bean.ReissueEntrustQryBean;
-import com.joyintech.tams.exchange.common.bean.ReissueTradeBean;
-import com.joyintech.tams.exchange.common.bean.ReissueTradeQryBean;
-import com.joyintech.tams.exchange.common.bean.TerminalId;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
 import com.joyintech.tams.exchange.common.constant.AccountLoginStatus;
-import com.joyintech.tams.exchange.common.db.domain.Account;
-import com.joyintech.tams.exchange.common.db.domain.CancelEntrustBean;
-import com.joyintech.tams.exchange.common.db.domain.Entrust;
-import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
-import com.joyintech.tams.exchange.common.db.domain.FuturesInstrument;
-import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
-import com.joyintech.tams.exchange.common.db.domain.Trade;
+import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.processor.account.AccountPositionHelper;
@@ -35,13 +18,11 @@ import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper
 import com.joyintech.tams.exchange.service.trade.service.TerminalAgentInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class TradeAgentDsp implements TradeAgent {
     private static final Logger logger = LoggerFactory.getLogger(TradeAgent.class);
@@ -67,6 +48,9 @@ public abstract class TradeAgentDsp implements TradeAgent {
     protected TerminalAgentInfoService terminalAgentInfoService;
 
     private String terminalName;
+
+    private AtomicInteger localOffset = new AtomicInteger(0);
+    private static int timeZoneOffset = 0;
 
     /**
      * 记录账户对应的TradeAgent
@@ -94,6 +78,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         tradeListMapByBroker.remove(accountId);
     }
 
+    @Override
     public String getTerminalName() {
         return terminalName;
     }
@@ -112,6 +97,8 @@ public abstract class TradeAgentDsp implements TradeAgent {
 
 
     public void updateTradeStatus(String accountId, AccountLoginStatus beforeReissuingSuccess, AccountLoginStatus afterReissuingSuccess) {
+        logger.info("updateTradeStatus：accountId={}，beforeReissuingSuccess={}，afterReissuingSuccess={}",
+                accountId, beforeReissuingSuccess.msg(), afterReissuingSuccess.msg());
         if (getStatus(accountId) == beforeReissuingSuccess.value) {
             setTradeStatus(accountId, afterReissuingSuccess);
             setTradeStatus(accountId, AccountLoginStatus.TRADING);
@@ -125,6 +112,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         return status.getOrDefault(accountId, AccountLoginStatus.NOT_LOGGED.value);
     }
 
+    @Override
     public void setStatus(String accountId, AccountLoginStatus status) {
         logger.info("account {} status set to: {}", accountId, status.msg);
         this.status.put(accountId, status.value);
@@ -134,6 +122,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         this.status.put(accountId, status.value);
     }
 
+    @Override
     public Map<String, Account> getAccountMap() {
         return accountMap;
     }
@@ -148,6 +137,16 @@ public abstract class TradeAgentDsp implements TradeAgent {
 
     protected String getKey(String accountId, String type) {
         return accountId + "|" + type;
+    }
+
+    public String genLocalId() {
+        int tempOffSet = localOffset.incrementAndGet();
+        if (tempOffSet > 9999) {
+            tempOffSet = 0;
+            localOffset.set(0);
+        }
+        long beginMill = System.currentTimeMillis() / (1000 * 3600 * 24) * (1000 * 3600 * 24) - timeZoneOffset;
+        return String.format("%s%04d", (System.currentTimeMillis() - beginMill) / 1000, tempOffSet);
     }
 
     @Override
@@ -295,6 +294,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         if (!Strings.isNullOrEmpty(entrustId)) {
             TradeMsgReceiver msgReceiver = msgReceiverManager.getTradeReceiverByEntrustId(entrustId);
             if (Objects.nonNull(msgReceiver)) {
+                logger.info("处理成交回报信息：{} - {}", tradeRecord.getAccountId(), tradeRecord.getBrokerEntrustId());
                 msgReceiver.handleRtnTradeRecord(tradeRecord);
             } else {
                 logger.warn("tradeRecord  not found receiver: {}", JsonUtils.getJsonFromObject(tradeRecord));
@@ -413,11 +413,6 @@ public abstract class TradeAgentDsp implements TradeAgent {
         }
     }
 
-    /**
-     * 报价查询、成交查询
-     */
-    public abstract void queryNextTrade();
-
     protected CancelEntrustBean getCancelEntrustBean(EntrustInterface entrust, EntrustInterface cancelEntrust) {
         CancelEntrustBean cancelEntrustBean = new CancelEntrustBean();
         cancelEntrustBean.setId(entrust.getId());
@@ -453,6 +448,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         serviceReissueStatusMap.put(entrustKey, ServiceReissueStatus.SERVICE_REISSUING_START);
         if (Objects.nonNull(reissueEntrustBeanList) && !reissueEntrustBeanList.isEmpty()) {
             setTradeStatus(accountId, AccountLoginStatus.ENTRUST_REISSUING);
+            logger.info("委托对比：委托对比中");
             boolean isLast = reissueEntrustQryBean.isLast();
             int pageNum = reissueEntrustQryBean.getPageNum();
             Map<String, ReissueEntrustBean> reissueEntrustBeanAccountMap = reissueEntrustBeanMap.get(accountId);
@@ -475,6 +471,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
                 }
             }
         } else {
+            logger.info("委托对比：委托对比成功");
             serviceReissueStatusMap.put(entrustKey, ServiceReissueStatus.SERVICE_REISSUING_FINNISH);
             setTradeStatus(accountId, AccountLoginStatus.ENTRUST_REISSUING_SUCCESS);
         }
@@ -485,6 +482,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
     }
 
     protected void compareReissueEntrust(String accountId, Map<String, EntrustInterface> entrustInterfaceMap) {
+        logger.info("委托对比：柜台组装数据");
         String entrustKey = getKey(accountId, "ENTRUST");
         brokerReissueStatusMap.put(entrustKey, BrokerReissueStatus.BROKER_REISSUING_FINNISH);
         if (serviceReissueStatusMap.get(entrustKey).value == ServiceReissueStatus.SERVICE_REISSUING_FINNISH.value) {
@@ -497,7 +495,8 @@ public abstract class TradeAgentDsp implements TradeAgent {
     public void compareReissueEntrust(String accountId, Map<String, EntrustInterface> entrustInterfaceMap, TradeAgent tradeAgent) {
         if (!reissueEntrustBeanMap.isEmpty()) {
             Map<String, ReissueEntrustBean> reissueEntrustBeanAccountMap = this.reissueEntrustBeanMap.get(accountId);
-            logger.info("开始比对委托信息 accountId {} entrustInterfaceMapByBroker {} reissueEntrustBeanMapCache {} reissueEntrustBeanAccountMap {}", accountId, entrustInterfaceMap.size(), reissueEntrustBeanMap.size(), reissueEntrustBeanAccountMap.size());
+            logger.info("开始比对委托信息 accountId {} entrustInterfaceMapByBroker {} reissueEntrustBeanMapCache {} reissueEntrustBeanAccountMap {}",
+                    accountId, entrustInterfaceMap.size(), reissueEntrustBeanMap.size(), reissueEntrustBeanAccountMap.size());
             reissueEntrustBeanAccountMap.forEach((s, reissueEntrustBean) -> {
                 if (!reissueEntrustBean.isBulk()) {
                     Entrust entrust = (Entrust) entrustInterfaceMap.get(s);
@@ -505,13 +504,21 @@ public abstract class TradeAgentDsp implements TradeAgent {
                         onRtnEntrust(entrust);
                     }
                 } else {
-                    IntegratedEntrust integratedEntrust = (IntegratedEntrust) entrustInterfaceMap.get(s);
+                    EntrustInterface entrustInterface = entrustInterfaceMap.get(s);
+                    IntegratedEntrust integratedEntrust;
+                    if (entrustInterface instanceof Entrust) {
+                        integratedEntrust = new IntegratedEntrust();
+                        BeanUtils.copyProperties(entrustInterface, integratedEntrust);
+                    } else {
+                        integratedEntrust = (IntegratedEntrust) entrustInterfaceMap.get(s);
+                    }
                     if (Objects.nonNull(integratedEntrust) && integratedEntrust.getEntrustStatus() != reissueEntrustBean.getEntrustStatus()) {
                         onRtnIntegratedEntrust(integratedEntrust);
                     }
                 }
             });
         }
+        logger.info("委托对比：更新状态");
         updateTradeStatus(accountId, AccountLoginStatus.TRADE_REISSUING_SUCCESS, AccountLoginStatus.ENTRUST_REISSUING_SUCCESS);
     }
 
@@ -527,6 +534,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
         String tradeKey = getKey(accountId, "TRADE");
         serviceReissueStatusMap.put(tradeKey, ServiceReissueStatus.SERVICE_REISSUING_START);
         if (Objects.nonNull(ReissueTradeBeanList) && !ReissueTradeBeanList.isEmpty()) {
+            logger.info("成交对比：成交对比中");
             boolean isLast = reissueTradeQryBean.isLast();
             int pageNum = reissueTradeQryBean.getPageNum();
             Map<String, ReissueTradeBean> reissueTradeBeanAccountMap = reissueTradeBeanMap.get(accountId);
@@ -550,6 +558,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
                 }
             }
         } else {
+            logger.info("成交对比：成交对比成功");
             serviceReissueStatusMap.put(tradeKey, ServiceReissueStatus.SERVICE_REISSUING_FINNISH);
             updateTradeStatus(accountId, AccountLoginStatus.ENTRUST_REISSUING_SUCCESS, AccountLoginStatus.TRADE_REISSUING_SUCCESS);
         }
@@ -560,6 +569,7 @@ public abstract class TradeAgentDsp implements TradeAgent {
     }
 
     public void compareReissueTrade(String accountId, List<Trade> tradeList) {
+        logger.info("成交对比：柜台组装数据");
         String tradeKey = getKey(accountId, "TRADE");
         brokerReissueStatusMap.put(tradeKey, BrokerReissueStatus.BROKER_REISSUING_FINNISH);
         if (serviceReissueStatusMap.get(tradeKey).value == ServiceReissueStatus.SERVICE_REISSUING_FINNISH.value) {
@@ -575,13 +585,15 @@ public abstract class TradeAgentDsp implements TradeAgent {
         boolean reissueEntrustSuccess = status == AccountLoginStatus.ENTRUST_REISSUING_SUCCESS.value;
         tradeAgent.setTradeStatus(accountId, AccountLoginStatus.TRADE_REISSUING);
         Map<String, ReissueTradeBean> reissueTradeBeanAccountMap = this.reissueTradeBeanMap.get(accountId);
-        logger.info("开始比对成交信息 accountId {} tradeListByBroker {} reissueTradeBeanMapCache {} reissueTradeBeanAccountMap {}", accountId, tradeList.size(), reissueTradeBeanMap.size(), reissueTradeBeanAccountMap.size());
+        logger.info("开始比对成交信息 accountId {} tradeListByBroker {} reissueTradeBeanMapCache {} reissueTradeBeanAccountMap {}",
+                accountId, tradeList.size(), reissueTradeBeanMap.size(), reissueTradeBeanAccountMap.size());
         tradeList.forEach(trade -> {
             ReissueTradeBean reissueTradeBean = reissueTradeBeanAccountMap.get(trade.getBrokerTradeId());
             if (Objects.isNull(reissueTradeBean)) {
                 onRtnTrade(trade);
             }
         });
+        logger.info("成交对比：更新状态");
         updateTradeStatus(accountId, reissueEntrustSuccess ? AccountLoginStatus.TRADE_REISSUING : AccountLoginStatus.ENTRUST_REISSUING_SUCCESS, AccountLoginStatus.TRADE_REISSUING_SUCCESS);
     }
 

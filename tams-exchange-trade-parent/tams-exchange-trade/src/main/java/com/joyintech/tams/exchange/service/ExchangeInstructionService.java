@@ -1,11 +1,11 @@
 package com.joyintech.tams.exchange.service;
 
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateRet;
-import com.joyintech.tams.exchange.common.bean.InstructionOpBean;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
 import org.slf4j.Logger;
@@ -63,6 +63,16 @@ public class ExchangeInstructionService extends BaseService {
             return new ResultBean(ErrorCode.SUCCESS, expireIncomeRateRetultBean.getData());
         }
         return new ResultBean(ErrorCode.TERMINAL_API_ERROR, expireIncomeRateRetultBean.getErrorList());
+    }
+
+    public Message<CalcPriceAndYieldResponse> calcPriceAndYield(CalcPriceAndYieldRequest request) {
+        logger.info("calcPriceAndYield() called with parameters => 【request = {}】", JSONUtil.toJsonStr(request));
+        String url = TradeServiceURL.calcPriceAndYield;
+        url = ServiceApplication.INSTRUCTION_SERVICE + url;
+        Message response = restTemplate.postForObject(url, request, Message.class);
+        logger.info("calcPriceAndYield() called with result => 【result = {}】", JSONUtil.toJsonStr(response));
+        return response;
+
     }
 
     public ResultBean flushInstructionFromInvest(String param) {

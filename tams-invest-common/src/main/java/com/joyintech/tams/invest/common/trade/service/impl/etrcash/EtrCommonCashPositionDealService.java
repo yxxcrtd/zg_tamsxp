@@ -578,9 +578,11 @@ public class EtrCommonCashPositionDealService extends BaseService {
      * @return
      */
     public static String select资金账户(String secManageAcctId, String ccy) {
-        List<StlCapacctInfo> stlCapacctInfos = etrCommonCashPositionMapper.selectDealCapacctInfoList(secManageAcctId, ccy);
-        if (stlCapacctInfos != null && !stlCapacctInfos.isEmpty()) {
-            return stlCapacctInfos.get(0).getAcctNo();
+        if (StringUtil.isNotEmpty(secManageAcctId)) {
+            List<StlCapacctInfo> stlCapacctInfos = etrCommonCashPositionMapper.selectDealCapacctInfoList(secManageAcctId, ccy);
+            if (stlCapacctInfos != null && !stlCapacctInfos.isEmpty()) {
+                return stlCapacctInfos.get(0).getAcctNo();
+            }
         }
         logger.error("该证券托管户（" + secManageAcctId + "）没有这个币种（" + ccy + "）的资金账户");
         return null;
@@ -901,6 +903,7 @@ public class EtrCommonCashPositionDealService extends BaseService {
         position.setWorkflowId(positionFlowDto.getWorkflowId());
         position.setCreateUser(positionFlowDto.getCreateUser());
         position.setCreateDept(positionFlowDto.getCreateDept());
+        position.setIsExistNew(positionFlowDto.getIsExistNew());
         return position;
     }
 
@@ -948,7 +951,8 @@ public class EtrCommonCashPositionDealService extends BaseService {
         BigDecimal val = BigDecimal.ZERO;
         String hodingType = DictCodeListExt1.持仓类型_委托指令可用.getValue();
         dto.setHodingType(hodingType);
-        BigDecimal availableCash = etrCommonCashPositionMapper.selectCommandAvailableCash(dto);
+       //BigDecimal availableCash = etrCommonCashPositionMapper.selectCommandAvailableCash(dto);
+        BigDecimal availableCash = etrCommonCashPositionMapper.selectCommandAvailableCashFlowSum(dto);
         BigDecimal advanceCash = selectCommandAdvanceCash(dto);
         dto.setHodingType(DictCodeListExt1.持仓类型_人工调整.getValue());
         BigDecimal 人工调整流水 = etrCommonCashPositionMapper.selectManualCashFlow(dto);
@@ -973,7 +977,8 @@ public class EtrCommonCashPositionDealService extends BaseService {
     public BigDecimal selectCommandAdvanceCash(PtlCashPositionFlowDto dto) {
         String hodingType = DictCodeListExt1.持仓类型_委托指令预增.getValue();
         dto.setHodingType(hodingType);
-        return etrCommonCashPositionMapper.selectCommandAvailableCash(dto);
+        //return etrCommonCashPositionMapper.selectCommandAvailableCash(dto);
+        return etrCommonCashPositionMapper.selectCommandAvailableCashFlowSum(dto);
     }
 
     /**
@@ -1621,6 +1626,14 @@ public class EtrCommonCashPositionDealService extends BaseService {
         }
         return bigDecimal;
     }
-
+    /**
+     * 查询指令可用现金(新表)
+     *
+     * @param dto
+     * @return
+     */
+    public BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto dto) {
+        return etrCommonCashPositionMapper.queryEtrAvailableCashNew(dto);
+    }
 
 }

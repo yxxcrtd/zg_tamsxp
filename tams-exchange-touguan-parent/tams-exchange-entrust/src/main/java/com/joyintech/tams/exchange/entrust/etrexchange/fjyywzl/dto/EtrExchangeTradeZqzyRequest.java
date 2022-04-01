@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.tams.business.common.dto.PageMode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -35,6 +37,27 @@ public class EtrExchangeTradeZqzyRequest {
 
     @ApiModelProperty(name="finprodId",value="资产代码",example="A1")
     private String finprodId;
+
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
+    private PageMode pageMode;
+
+    public PageMode getPageMode() {
+        return pageMode;
+    }
+
+    public void setPageMode(PageMode pageMode) {
+        this.pageMode = pageMode;
+    }
+
+    @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
+    public String getSort() {
+        return pageMode.getSort();
+    }
+    @ApiModelProperty(name="从pageMode获取",value="从pageMode获取")
+    public String getDirection() {
+        return pageMode.getDirection();
+
+    }
 
     public String getSearch() {
         return search;

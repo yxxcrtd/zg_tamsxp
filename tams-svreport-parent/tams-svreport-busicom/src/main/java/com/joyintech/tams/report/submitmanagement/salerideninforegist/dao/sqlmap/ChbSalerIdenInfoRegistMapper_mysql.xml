@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmanagement.salerideninforegist.dao.ChbSalerIdenInfoRegistMapper_mysql" >
+
+    <select id="queryForRegistPage" resultType="com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto">
+        SELECT
+        REGIST_SEQNO registSeqno,
+        SALER_INST_CODE salerInstCode,
+        SALER_NAME salerName,
+        SALER_SEX salerSex,
+        SALER_BIRTHDAY salerBirthday,
+        SALER_CREDENT_TYPE salerCredentType,
+        SALER_OTHER_CREDENT_NAME salerOtherCredentName,
+        SALER_CREDENT_NO salerCredentNo,
+        SALER_INS_NO  salerInsNo,
+        SALER_REGIST_NO salerRegistNo,
+        SALER_AREA_TYPE salerAreaType,
+        SALER_ORG_CODE salerOrgCode,
+        SALER_DEPT  salerDept,
+        SALER_POSITION salerPosition,
+        SALER_EDU_LEVEL salerEduLevel,
+        SALER_DEGREE salerDegree,
+        SALER_WORK_START_YMD salerWorkStartYmd,
+        SALER_FINANCE_START_YMD salerFinanceStartYmd,
+        SALER_START_YMD salerStartYmd,
+        SALER_LEVLE salerLevle,
+        SALER_CERTIFICATE_TYPE salerCertificateType,
+        SALER_CHB_TRAIN_NO salerChbTrainNo,
+        SALER_RISK_LEVEL salerRiskLevel,
+        SALER_QUALIFICATION salerQualification,
+        SALER_TEL salerTel,
+        SALER_MOBILE salerMobile,
+        SALER_MAIL salerMail,
+        SALER_STATUS salerStatus,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        SUBMIT_TIME submitTime,
+        CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        SUBMIT_DEADLINE submitDeadline,
+        STATUS status,
+        SUMIT_SEQ sumitSeq,
+        DATA_DATE dataDate,
+        REMARK remark,
+        UPDATE_TIME
+        FROM
+        CHB_SALER_IDEN_SUB
+        where 1=1
+        <if test="salerName != null and salerName != ''">
+            and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="salerSex != null and salerSex != ''">
+            and SALER_SEX = #{salerSex,jdbcType=VARCHAR}
+        </if>
+        <if test="salerCredentTypeList != null and salerCredentTypeList.size()&gt;0">
+            <foreach close=")" collection="salerCredentTypeList" item="item" open="and SALER_CREDENT_TYPE in(" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+            and SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+        </if>
+        <if test="sendStatus != null and sendStatus != ''">
+            and SEND_STATUS = #{sendStatus}
+        </if>
+        <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+            and CHB_SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/ STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d'and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+        </if>
+        <if test="searchDataDateStart != null and searchDataDateStart != ''">
+            and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+            and /* to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+        </if>
+        ORDER BY UPDATE_TIME DESC
+    </select>
+
+    <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto">
+        select * from (
+        SELECT
+        REGIST_SEQNO registSeqno,
+        SALER_INST_CODE salerInstCode,
+        SALER_NAME salerName,
+        SALER_SEX salerSex,
+        SALER_BIRTHDAY salerBirthday,
+        SALER_CREDENT_TYPE salerCredentType,
+        SALER_OTHER_CREDENT_NAME salerOtherCredentName,
+        SALER_CREDENT_NO salerCredentNo,
+        SALER_INS_NO  salerInsNo,
+        SALER_REGIST_NO salerRegistNo,
+        SALER_AREA_TYPE salerAreaType,
+        SALER_ORG_CODE salerOrgCode,
+        SALER_DEPT  salerDept,
+        SALER_POSITION salerPosition,
+        SALER_EDU_LEVEL salerEduLevel,
+        SALER_DEGREE salerDegree,
+        SALER_WORK_START_YMD salerWorkStartYmd,
+        SALER_FINANCE_START_YMD salerFinanceStartYmd,
+        SALER_START_YMD salerStartYmd,
+        SALER_LEVLE salerLevle,
+        SALER_CERTIFICATE_TYPE salerCertificateType,
+        SALER_CHB_TRAIN_NO salerChbTrainNo,
+        SALER_RISK_LEVEL salerRiskLevel,
+        SALER_QUALIFICATION salerQualification,
+        SALER_TEL salerTel,
+        SALER_MOBILE salerMobile,
+        SALER_MAIL salerMail,
+        SALER_STATUS salerStatus,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        SUBMIT_TIME submitTime,
+        CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        SUBMIT_DEADLINE submitDeadline,
+        STATUS status,
+        SUMIT_SEQ sumitSeq,
+        DATA_DATE dataDate,
+        REMARK remark,
+        UPDATE_TIME
+        FROM
+        CHB_SALER_IDEN_SUB
+        <where>
+            <if test="salerName != null and salerName != ''">
+                and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="salerSex != null and salerSex != ''">
+                and SALER_SEX = #{salerSex,jdbcType=VARCHAR}
+            </if>
+            <if test="salerCredentTypeList != null and salerCredentTypeList.size()&gt;0">
+                <foreach close=")" collection="salerCredentTypeList" item="item" open="and SALER_CREDENT_TYPE in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sendStatusList != null and sendStatusList.size()&gt;0">
+                <foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="keyList != null and keyList.size()&gt;0">
+                <foreach close=")" collection="keyList" item="item" open="and trim(REGIST_SEQNO) in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="statusList != null and statusList.size()&gt;0">
+                <foreach close=")" collection="statusList" item="item" open="and STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() &gt; 0">
+                <foreach close=")" collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" separator=",">
+                    #{submitFeedbackStatus,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+                and CHB_SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/ STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d')and/* to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+            </if>
+            <if test="searchDataDateStart != null and searchDataDateStart != ''">
+                and /* to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+                and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ) ORDER BY dataDate
+    </select>
+
+
+    <insert id="insertIntoHis" parameterType="java.util.Map">
+        insert into CHB_SALER_IDEN_SUB_HIS (
+        HIS_NO,
+        SALER_INST_CODE,SALER_NAME,SALER_SEX,SALER_BIRTHDAY,SALER_CREDENT_TYPE,
+        SALER_OTHER_CREDENT_NAME,SALER_CREDENT_NO,SALER_INS_NO,SALER_REGIST_NO,
+        SALER_AREA_TYPE,SALER_ORG_CODE,SALER_DEPT,SALER_POSITION,SALER_EDU_LEVEL,
+        SALER_DEGREE,SALER_WORK_START_YMD,SALER_FINANCE_START_YMD,SALER_START_YMD,
+        SALER_LEVLE,SALER_CERTIFICATE_TYPE,SALER_CHB_TRAIN_NO,SALER_RISK_LEVEL,
+        SALER_QUALIFICATION,SALER_TEL,SALER_MOBILE,SALER_MAIL,SALER_STATUS,REMARK,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        select
+        REGIST_SEQNO,
+        SALER_INST_CODE,SALER_NAME,SALER_SEX,SALER_BIRTHDAY,SALER_CREDENT_TYPE,
+        SALER_OTHER_CREDENT_NAME,SALER_CREDENT_NO,SALER_INS_NO,SALER_REGIST_NO,
+        SALER_AREA_TYPE,SALER_ORG_CODE,SALER_DEPT,SALER_POSITION,SALER_EDU_LEVEL,
+        SALER_DEGREE,SALER_WORK_START_YMD,SALER_FINANCE_START_YMD,SALER_START_YMD,
+        SALER_LEVLE,SALER_CERTIFICATE_TYPE,SALER_CHB_TRAIN_NO,SALER_RISK_LEVEL,
+        SALER_QUALIFICATION,SALER_TEL,SALER_MOBILE,SALER_MAIL,SALER_STATUS,REMARK,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+        from CHB_SALER_IDEN_SUB
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_INS_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerInsNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </insert>
+
+
+    <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+        delete from CHB_SALER_IDEN_SUB
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_INS_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerInsNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </delete>
+
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+        update CHB_SALER_IDEN_SUB
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            SUBMIT_FEEDBACK_STATUS = '03',
+            submit_time = sysdate
+        </set>
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                trim(REGIST_SEQNO) = #{regist.registSeqno,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="cancelMannultRegist" parameterType="java.util.Map">
+        update CHB_SALER_IDEN_SUB
+        <set>
+            SEND_STATUS = '01',
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                trim(REGIST_SEQNO) = #{dto.registSeqno}
+            </foreach>
+        </where>
+    </update>
+
+    <insert id="insertReportDataFromHis" parameterType="java.util.Map">
+        insert into CHB_SALER_IDEN_SUB (
+        REGIST_SEQNO,
+        SALER_INST_CODE,SALER_NAME,SALER_SEX,SALER_BIRTHDAY,SALER_CREDENT_TYPE,
+        SALER_OTHER_CREDENT_NAME,SALER_CREDENT_NO,SALER_INS_NO,SALER_REGIST_NO,
+        SALER_AREA_TYPE,SALER_ORG_CODE,SALER_DEPT,SALER_POSITION,SALER_EDU_LEVEL,
+        SALER_DEGREE,SALER_WORK_START_YMD,SALER_FINANCE_START_YMD,SALER_START_YMD,
+        SALER_LEVLE,SALER_CERTIFICATE_TYPE,SALER_CHB_TRAIN_NO,SALER_RISK_LEVEL,
+        SALER_QUALIFICATION,SALER_TEL,SALER_MOBILE,SALER_MAIL,SALER_STATUS,REMARK,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        select
+        HIS_NO,
+        SALER_INST_CODE,SALER_NAME,SALER_SEX,SALER_BIRTHDAY,SALER_CREDENT_TYPE,
+        SALER_OTHER_CREDENT_NAME,SALER_CREDENT_NO,SALER_INS_NO,SALER_REGIST_NO,
+        SALER_AREA_TYPE,SALER_ORG_CODE,SALER_DEPT,SALER_POSITION,SALER_EDU_LEVEL,
+        SALER_DEGREE,SALER_WORK_START_YMD,SALER_FINANCE_START_YMD,SALER_START_YMD,
+        SALER_LEVLE,SALER_CERTIFICATE_TYPE,SALER_CHB_TRAIN_NO,SALER_RISK_LEVEL,
+        SALER_QUALIFICATION,SALER_TEL,SALER_MOBILE,SALER_MAIL,SALER_STATUS,REMARK,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,his.CREATE_TIME,UPDATE_USER,UPDATE_TIME
+        from CHB_SALER_IDEN_SUB_HIS  his
+        INNER join (
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_IDEN_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_INS_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerInsNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> ) maxtime
+        on his.CREATE_TIME=maxtime.CREATE_TIME
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_INS_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerInsNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </insert>
+
+    <delete id="deleteReportDataHis" parameterType="java.util.Map">
+        delete
+        from CHB_SALER_IDEN_SUB_HIS  his
+        where his.CREATE_TIME=(
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_IDEN_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_INS_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerInsNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> )
+        <if test="registList !=null and registList.size()>0">
+            and SALER_INS_NO
+            IN
+            <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                #{regist.salerInsNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </delete>
+
+    <select id="setDataList" resultType="com.joyintech.tams.report.submitmanagement.salerideninforegist.dto.SalerIdenInfoRegistDto">
+        select
+        REGIST_SEQNO registSeqno,
+        SALER_INST_CODE salerInstCode,
+        SALER_NAME salerName,
+        SALER_SEX salerSex,
+        SALER_BIRTHDAY salerBirthday,
+        SALER_CREDENT_TYPE salerCredentType,
+        SALER_OTHER_CREDENT_NAME salerOtherCredentName,
+        SALER_CREDENT_NO salerCredentNo,
+        SALER_INS_NO  salerInsNo,
+        SALER_REGIST_NO salerRegistNo,
+        SALER_AREA_TYPE salerAreaType,
+        SALER_ORG_CODE salerOrgCode,
+        SALER_DEPT  salerDept,
+        SALER_POSITION salerPosition,
+        SALER_EDU_LEVEL salerEduLevel,
+        SALER_DEGREE salerDegree,
+        SALER_WORK_START_YMD salerWorkStartYmd,
+        SALER_FINANCE_START_YMD salerFinanceStartYmd,
+        SALER_START_YMD salerStartYmd,
+        SALER_LEVLE salerLevle,
+        SALER_CERTIFICATE_TYPE salerCertificateType,
+        SALER_CHB_TRAIN_NO salerChbTrainNo,
+        SALER_RISK_LEVEL salerRiskLevel,
+        SALER_QUALIFICATION salerQualification,
+        SALER_TEL salerTel,
+        SALER_MOBILE salerMobile,
+        SALER_MAIL salerMail,
+        SALER_STATUS salerStatus,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        SUBMIT_TIME submitTime,
+        CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        SUBMIT_DEADLINE submitDeadline,
+        STATUS status,
+        SUMIT_SEQ sumitSeq,
+        DATA_DATE dataDate,
+        REMARK remark,
+        UPDATE_TIME
+        FROM
+        CHB_SALER_IDEN_SUB
+        where 1=1
+        <if test="salerName != null and salerName != ''">
+            and SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="salerSex != null and salerSex != ''">
+            and SALER_SEX = #{salerSex,jdbcType=VARCHAR}
+        </if>
+        <if test="salerCredentTypeList != null and salerCredentTypeList.size()&gt;0">
+            <foreach close=")" collection="salerCredentTypeList" item="item" open="and SALER_CREDENT_TYPE in(" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+            and SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+        </if>
+        <if test="sendStatus != null and sendStatus != ''">
+            and SEND_STATUS = #{sendStatus}
+        </if>
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
+        </if>
+        <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+            and SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/ STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d')and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+        </if>
+        <if test="searchDataDateStart != null and searchDataDateStart != ''">
+            and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+            and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!--	姓名下拉框-->
+    <select id="getSalerName" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(SALER_NAME) code,
+        SALER_NAME name,
+        SALER_NAME shortName,
+        SALER_NAME hidCode
+        FROM CHB_SALER_IDEN_SUB
+        <where>
+            <if test="salerName != null and salerName != ''">
+                AND	SALER_NAME like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -5,7 +5,7 @@
         	<Cell order="1" name="匹配方式">matchTypeStr</Cell>
             <Cell order="2" name="业务编号">busiCode</Cell>
             <Cell order="3" name="交易场所">tradeMarketStr</Cell>
-            <Cell order="4" name="申请编号">applyNo</Cell>
+            <Cell order="4" name="申请编号">applyTradeId</Cell>
             <Cell order="5" name="组合代码">portfolioId</Cell>
             <Cell order="6" name="组合名称">portfolioName</Cell>
             <Cell order="7" name="资产类型">finprodType2Str</Cell>

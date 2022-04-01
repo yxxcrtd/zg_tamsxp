@@ -272,7 +272,7 @@ public class CfetsQuotedCommonService extends BaseService {
                             BussinessDictCodeList.银行间上行发送状态_成功.getValue()))
                         validFlag = true;
                 }
-                msg ="交易状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
+                msg ="报价状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
             }
             else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_做市方.getValue())) {
@@ -288,7 +288,7 @@ public class CfetsQuotedCommonService extends BaseService {
                         validFlag = true;
                     }
                 }
-                msg ="本方角色为做市方，交易状态和发送状态分别为已回复/成功，已修改/空的请求报价，才能执行撤回操作！";
+                msg ="本方角色为做市方，报价状态和发送状态分别为已回复/成功，已修改/空的请求报价，才能执行撤回操作！";
             }
             else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_非做市方.getValue())) {
@@ -317,10 +317,10 @@ public class CfetsQuotedCommonService extends BaseService {
                     statusChangeFlag = true;
                     validFlag = true;
                 }
-                msg ="本方角色为非做市方，交易状态和发送状态分别为待回复/成功，已回复/空的请求报价，才能执行撤回操作！";
+                msg ="本方角色为非做市方，报价状态和发送状态分别为待回复/成功，已回复/空的请求报价，才能执行撤回操作！";
             }
             else {
-            	msg ="交易状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
+            	msg ="报价状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行撤回操作！";
                 statusChangeFlag = true;
             }
 
@@ -349,7 +349,7 @@ public class CfetsQuotedCommonService extends BaseService {
                             && !StringUtil.isNotEmpty(bondQuoteInfoDto.getSendStatus())))
                         validFlag = true;
                 }
-                msg ="交易状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
+                msg ="报价状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
             }
             else if (StringUtil.equals(bondQuoteInfoDto.getQuoteRoleType(),
                 BussinessDictCodeList.银行间上行本方角色_非做市方.getValue())) {
@@ -373,10 +373,10 @@ public class CfetsQuotedCommonService extends BaseService {
                         validFlag = true;
                     }
                 }
-                msg ="本方角色为非做市方，交易状态和发送状态分别为待回复/成功，已撤回/成功，已终止/空,已过期/空，已成交/成功的请求报价，才能执行复制操作！";
+                msg ="本方角色为非做市方，报价状态和发送状态分别为待回复/成功，已撤回/成功，已终止/空,已过期/空，已成交/成功的请求报价，才能执行复制操作！";
             }
             else {
-            	msg ="交易状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
+            	msg ="报价状态和发送状态分别为已新增/成功，已修改/成功，已撤回/成功，已成交/空，已终止/空的对话报价，才能执行复制操作！";
                 statusChangeFlag = true;
             }
         }
@@ -534,7 +534,7 @@ public class CfetsQuotedCommonService extends BaseService {
                         validFlag = true;
                     }
                 }
-                msg ="交易状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行修改操作！";
+                msg ="报价状态和发送状态分别为已新增/成功，已修改/成功的对话报价，才能执行修改操作！";
             }else{
             	msg ="请求报价非做市方不允许进行修改操作！";
             }
@@ -801,30 +801,31 @@ public class CfetsQuotedCommonService extends BaseService {
         List<ValidMessage> errorList = new ArrayList<>();
         String ps = cfetsBondDealQuoteCommonDto.getPs();
         try{
-            if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
-                //按组合汇总全价总额
-                Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,
-                                                Collectors.mapping(PtlAllocationDto::getFpriceAmt,
-                                                        Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
-                for(String key : map.keySet()){
-                    BigDecimal fpriceAmt = map.get(key);
-
-                    Map<String,String> accnoParm = new HashMap<>();
-                    accnoParm.put("ccy",cfetsBondDealQuoteCommonDto.getCcy());
-                    accnoParm.put("portfolioId",key);
-                    accnoParm.put("acctType",DictCodeListExt1.资金账户类型_产品托管户.getValue());
-                    String accNo = cfetsIbuQuoteBondEtrMapper.getAccNo(accnoParm);
-                    if(StringUtil.isEmpty(accNo)){
-                        accNo = stlSecAcctInfoMapper.selectByPrimaryKey(cfetsBondDealQuoteCommonDto.getSecManageAcctId()).getTrdAcctId();
-                    }
-                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), accNo, cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
-                    if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
-                        errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
-                        ajaxResult.setErrorList(errorList);
-                        break;
-                    }
-                }
-            }
+            // 提交时新头寸已校验,此处不需校验
+//            if(StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
+//                //按组合汇总全价总额
+//                Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,
+//                                                Collectors.mapping(PtlAllocationDto::getFpriceAmt,
+//                                                        Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+//                for(String key : map.keySet()){
+//                    BigDecimal fpriceAmt = map.get(key);
+//
+//                    Map<String,String> accnoParm = new HashMap<>();
+//                    accnoParm.put("ccy",cfetsBondDealQuoteCommonDto.getCcy());
+//                    accnoParm.put("portfolioId",key);
+//                    accnoParm.put("acctType",DictCodeListExt1.资金账户类型_产品托管户.getValue());
+//                    String accNo = cfetsIbuQuoteBondEtrMapper.getAccNo(accnoParm);
+//                    if(StringUtil.isEmpty(accNo)){
+//                        accNo = stlSecAcctInfoMapper.selectByPrimaryKey(cfetsBondDealQuoteCommonDto.getSecManageAcctId()).getTrdAcctId();
+//                    }
+//                    BaseMap baseMap = positionInfoService.queryTrdAvailableCash(Arrays.asList(key), DateUtil.format(cfetsBondDealQuoteCommonDto.getTradeDate()), accNo, cfetsBondDealQuoteCommonDto.getCcy(), "03", Arrays.asList(DictCodeListExt1.资金账户类型_产品托管户.getValue()), null);
+//                    if(null!=baseMap&&fpriceAmt.compareTo((BigDecimal) baseMap.get("cashT"))>0){
+//                        errorList.add(new ValidMessage(StringUtil.join("组合可用现金不足,组合代码:[",key,"]")));
+//                        ajaxResult.setErrorList(errorList);
+//                        break;
+//                    }
+//                }
+//            }
             if(StringUtil.equals(ps,DictCodeList.交易方向_卖出.getValue())||StringUtil.equals(ps,DictCodeList.交易方向_行权_回售.getValue())){
                 //按组合汇总券面总额
                 Map<String, BigDecimal> map = cfetsBondDealQuoteCommonDto.getPtlAllocatios().stream().collect(Collectors.groupingBy(PtlAllocationDto::getPortfolioId,
@@ -853,6 +854,15 @@ public class CfetsQuotedCommonService extends BaseService {
      */
     public BigDecimal getWflShareAmtByEntrustId(String entrustId){
         return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustId(entrustId);
+    }
+
+    /**
+     * 获取指令流程中占用的券面总额
+     * @param entrustId
+     * @return
+     */
+    public BigDecimal getWflShareAmtByEntrustId(String entrustId,String totleTradeId){
+        return cfetsIbuQuoteBondMapper.getWflShareAmtByEntrustIdAndWorkFlowId(entrustId,totleTradeId);
     }
 
     public  AjaxResult reclasCheck(CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto){

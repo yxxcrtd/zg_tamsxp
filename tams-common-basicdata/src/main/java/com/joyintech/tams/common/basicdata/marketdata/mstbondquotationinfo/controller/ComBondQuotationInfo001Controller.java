@@ -19,6 +19,8 @@ import java.util.Map;
 import com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.dto.ComBondQuotationInfoDto;
 import com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.service.ComBondQuotationInfoService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -61,6 +63,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 @PageId("ComBondQuotationInfo001")
 @RequestMapping("/common/basicdata/marketdata/mstbondquotationinfo/ComBondQuotationInfo001")
 public class ComBondQuotationInfo001Controller extends BaseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ComBondQuotationInfo001Controller.class);
 
     /**
      * 
@@ -114,11 +118,15 @@ public class ComBondQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ComBondQuotationInfoDto> selectAll()
-        throws Exception {
-
-        Page<ComBondQuotationInfoDto> page = comBondQuotationInfoService.selectForPage(
-            RequestUtil.getParameters(getRequest()));
-        return page;
+    {
+        try {
+            Page<ComBondQuotationInfoDto> page = comBondQuotationInfoService.selectForPage(
+                RequestUtil.getParameters(getRequest()));
+            return page;
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return null;
+        }
     }
 
     /**

@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.SecPositionExerciseInfoDto;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondExerciseProcessDto;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondPtlSecExerciseInfo;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -70,4 +72,22 @@ public interface TrdBondDurationMapper {
     List<SelectOptionDto> getFinprodId(Map<String, Object> param);
 
     List<SelectOptionDto> getBusiCodeNew(Map<String, Object> param);
+
+    // modify by etliu 20220228 start
+    // 广农商二阶段 GNS-896:【广农商场内清算】场内债券存续期-行权赎回，批处理后未生成交易
+    /**
+     * 查询存续期交易数据(行权)
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    TrdBondExerciseProcessDto findEffectiveDataXq(Map<String, Object> params);
+
+    /**
+     * 查询存续期交易数据(行权金额明细信息)
+     * @param params
+     * @return
+     */
+    List<TrdBondPtlSecExerciseInfo> selectTrdBondPtlSecExerciseInfoList(Map<String, Object> params);
+    // modify by etliu 20220228 end
 }

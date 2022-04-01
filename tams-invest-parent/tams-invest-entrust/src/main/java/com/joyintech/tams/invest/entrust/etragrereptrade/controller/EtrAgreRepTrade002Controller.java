@@ -162,11 +162,12 @@ public class EtrAgreRepTrade002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findUnOpenQuotaPage")
     public Page<UnOpenQuota002Dto> findUnOpenQuotaPage(){
-        try {
-            return etrAgreRepTrade002Service.findUnOpenQuotaPage(RequestUtil.getPageParam());
-        }
-        catch (Exception e) {
-            return new Page<>();
-        }
+//        try {
+        return etrAgreRepTrade002Service.findUnOpenQuotaPage(RequestUtil.getPageParam());
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//            return new Page<>();
+//        }
     }
 }

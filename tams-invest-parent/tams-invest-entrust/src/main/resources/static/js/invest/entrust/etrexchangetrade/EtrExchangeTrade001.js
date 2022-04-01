@@ -75,6 +75,9 @@
                 object.entrustPrice = 0;
             }
         }
+        if(object.finprodType2 && object.finprodType2 == FINPROD_TYPE_TG_F10 && currentTab == 'jj'){
+            object.latestPrice = formatPrice(parent.EtrExchangeTradeHq.getJJMktPrice("#latestPrice_jj"));
+        }
         //设置涨跌停参数
         parent.EtrExchangeTradeHq.setLimitUpAndDown(object);
         object.pageModel = pageModel;
@@ -835,11 +838,17 @@
             var object = $("#secIdObjRelative_" + currentTab).val();
             if(object) {
                 object = JSON.parse(object);
-                $("#finprodId_" + currentTab).val(object.finprodId).trigger('change');
-                $("#finprodName_" + currentTab).val(object.finprodName).trigger('change');
-                $("#tradeMarket_" + currentTab).val(object.tradeMarket).trigger('change');
-                $("#finprodType2_" + currentTab).val(object.finprodType2 || FINPROD_TYPE_TG_ZYSHG).trigger('change');
-                $("#board_" + currentTab).val(object.board).trigger('change');
+                // 统一先赋值再触发变化事件
+                $("#finprodId_" + currentTab).val(object.finprodId);
+                $("#finprodName_" + currentTab).val(object.finprodName);
+                $("#tradeMarket_" + currentTab).val(object.tradeMarket);
+                $("#finprodType2_" + currentTab).val(object.finprodType2 || FINPROD_TYPE_TG_ZYSHG);
+                $("#board_" + currentTab).val(object.board);
+                $("#finprodId_" + currentTab).trigger('change');
+                $("#finprodName_" + currentTab).trigger('change');
+                $("#tradeMarket_" + currentTab).trigger('change');
+                $("#finprodType2_" + currentTab).trigger('change');
+                $("#board_" + currentTab).trigger('change');
                 /*if(currentTab == 'dz' || currentTab == "gd"){
                 	queryJJHQPrice({secId: secId, finprodType2: object.finprodType2,ps: ps});
                 }*/
@@ -1039,6 +1048,24 @@
                     }
                 }
             }
+            // 科创板打新股、股票直连交易支持 fuyongsheng 20211116 edit start
+            // 当前tab是竞价交易,股票资产是科创板,并且价格模式选择收盘价固定价格申报时,指令价格根据时间判断
+            if(currentTab === "jj" && $("#board_" + currentTab).val() == BOARD_BD03
+                && priceModel === DECLA_TYPE_PRM10){
+                var currentDate = new Date();
+                // 15:00 时间戳
+                var time1500 = new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate(),15,0,0).getTime();
+                // 当前时间为15:00前时，指令价格处理同股票市价指令时处理（指令价格只读，显示0，小数位按照股票最小价差显示）
+                if(currentDate.getTime()<time1500){
+                    $("#entrustPrice_" + currentTab).attr("disabled", true);
+                    $("#entrustPrice_" + currentTab).val(zeroPrice).trigger('change');
+                }else{ // 当前时间为15:00-15:30时，指令价格只读，显示最新价（小数位按照股票最小价差显示）；
+                    $("#entrustPrice_" + currentTab).val(
+                        formatPrice(parent.EtrExchangeTradeHq.getJJMktPrice("#latestPrice_jj")))
+                        .trigger('blur').trigger('change');
+                }
+            }
+            // 科创板打新股、股票直连交易支持 fuyongsheng 20211116 edit end
         }
         else {
             if(finprodType2 == FINPROD_TYPE_TG_F01 && isStandardPs(ps)) {
@@ -2069,17 +2096,27 @@
             var tradeMarket = $("#tradeMarket_" + currentTab).val();
             // 画面.交易场所 = 数据字典.交易场所.上海证券交易场所
             if(tradeMarket == TRADE_PLACE_03) {
-                // 画面.价格模式  = 数据字典.意向申报，数据字典.成交申报，收盘价固定价格申报，不指定
-                $("#declaType_" + currentTab).updateChosenArr({
-                    item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM10, DECLA_TYPE_PRM05],
-                    chosen: $("#declaType_" + currentTab).val(),
-                    disabled: false,
-                    isNotTrigger:true
-                });
+                // 当资产类型为股票,并且上市板是科创板时,申请类型不展示收盘价固定价格申报
+                if(finprodType2 == FINPROD_TYPE_TG_F10 && $("#board_" + currentTab).val() == BOARD_BD03){
+                    // 画面.价格模式  = 数据字典.意向申报，数据字典.成交申报，不指定
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val() == DECLA_TYPE_PRM10?"":$("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }else {
+                    // 画面.价格模式  = 数据字典.意向申报，数据字典.成交申报，收盘价固定价格申报，不指定
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM06, DECLA_TYPE_PRM09, DECLA_TYPE_PRM10, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }
             }
             // 画面.金融产品类型 IN（债券、股票、基金）
-            else if(/*finprodType2 == FINPROD_TYPE_TG_F01 || */finprodType2 == FINPROD_TYPE_TG_F06
-                || finprodType2 == FINPROD_TYPE_TG_F10) {
+            else if(/*finprodType2 == FINPROD_TYPE_TG_F01 || */finprodType2 == FINPROD_TYPE_TG_F06) {
                 // 画面.价格模式  = 数据字典.收盘价固定价格申报，数据字典.日均价固定价格申报，不指定
                 $("#declaType_" + currentTab).updateChosenArr({
                     item: [DECLA_TYPE_PRM10, DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
@@ -2087,6 +2124,24 @@
                     disabled: false,
                     isNotTrigger:true
                 });
+            }
+            else if(finprodType2 == FINPROD_TYPE_TG_F10){
+                // 大宗交易资产为股票且股票的上市板是科创板时,不展示 收盘价固定价格申报
+                if($("#board_" + currentTab).val() == BOARD_BD03){
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val() == DECLA_TYPE_PRM10?"":$("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }else{
+                    $("#declaType_" + currentTab).updateChosenArr({
+                        item: [DECLA_TYPE_PRM10, DECLA_TYPE_PRM11, DECLA_TYPE_PRM05],
+                        chosen: $("#declaType_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }
             }
             //债券申报类型放开
             else if(finprodType2 == FINPROD_TYPE_TG_F01){
@@ -2131,15 +2186,49 @@
                 }
             }
             // else if 画面.金融产品类型（投管） = 数据字典.金融产品类型（投管）.股票 and （画面.委托方向=数据字典.交易方向.配股 or 数据字典.交易方向.申购）
-            else if(finprodType2 == FINPROD_TYPE_TG_F10 && (ps == PS_T46 || ps == PS_T04)) {
-                // 画面.价格模式  = 数据字典.价格模式.指定价格 不可编辑
-                $("#priceModel_" + currentTab).updateChosenArr({
-                    item: [PRICE_MODEL_PRM01],
-                    chosen: PRICE_MODEL_PRM01,
-                    disabled: true,
-                    isNotTrigger:true
-                });
-                //add by chenjiaxing 更改资产为空时的价格模式枚举值 start
+            else if(finprodType2 == FINPROD_TYPE_TG_F10 ) {
+                // 科创板打新股、股票直连交易支持 fuyongsheng 20211116 edit start
+                // 资产为股票,并且上市板=科创板时,价格模式下拉框追加【收盘价固定价格申报】
+                if($("#board_" + currentTab).val() == BOARD_BD03){
+                    // 判断是否有【收盘价固定价格申报】选项,如果已添加,则无需重复添加
+                    var isExist = false;
+                    $("#priceModel_" + currentTab).find( "option" ).each(function(i, value) {
+                       if(value.value == DECLA_TYPE_PRM10){
+                           isExist = true;
+                       }
+                    });
+                    if(!isExist){
+                        $("#priceModel_" + currentTab).append("<option value='PRM10'>收盘价固定价格申报</option>")
+                    }
+                }else{// 如果不是科创板股票时,价格模式下拉框去除【收盘价固定价格申报】
+                    $("#priceModel_" + currentTab).find( "option" ).each(function(i, value) {
+                        if(value.value === DECLA_TYPE_PRM10){
+                            $(this).remove();
+                        }
+                    });
+                }
+                // 科创板打新股、股票直连交易支持 fuyongsheng 20211116 edit end
+                if((ps == PS_T46 || ps == PS_T04)){
+                    // 画面.价格模式  = 数据字典.价格模式.指定价格 不可编辑
+                    $("#priceModel_" + currentTab).updateChosenArr({
+                        item: [PRICE_MODEL_PRM01],
+                        chosen: PRICE_MODEL_PRM01,
+                        disabled: true,
+                        isNotTrigger:true
+                    });
+                    //add by chenjiaxing 更改资产为空时的价格模式枚举值 start
+                }
+                // add by fuyongsheng 20211213 交易方向非T46、T04 add start
+                else {
+                    // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
+                    $("#priceModel_" + currentTab).updateChosenArr({
+                        item: [PRICE_MODEL_PRM02, PRICE_MODEL_PRM03],
+                        chosen: $("#priceModel_" + currentTab).val(),
+                        disabled: false,
+                        isNotTrigger:true
+                    });
+                }
+                // add by fuyongsheng 20211213 交易方向非T46、T04 add end
             }else if(!finprodType2) {
                 // 画面.价格模式  = 数据字典.价格模式.限价指令，数据字典.价格模式.市价指令
                 $("#priceModel_" + currentTab).updateChosenArr({
@@ -2384,6 +2473,13 @@
         // 默认使用百元券面计算
         var prinAmt = new BigNumber(100);
         var finprodType2 = $("#finprodType2_" + currentTab).val();
+        // modify by etliu 20211230 start
+        // 当资产由债券改选股票等时，finprodType2_的值还没有联动过来，改成取$("#secId_jj").select2('data')[0].object
+        if ($("#secId_" + currentTab).select2('data')) {
+            finprodType2 = $("#secId_" + currentTab).select2('data')[0].object.finprodType2;
+        }
+        // modify by etliu 20211230 end
+
         // 以下条件不满足时直接返回
         if(finprodType2 != FINPROD_TYPE_TG_F01 || !finprodId || !prinAmt) {
             return;
@@ -3057,7 +3153,9 @@
             $("#price_" + currentTab).val(quotaPrice).trigger('blur').trigger('change');
         }
         else {
-            $("#entrustPrice_" + currentTab).val(quotaPrice).trigger('blur').trigger('change');
+            if($("#priceModel_" + currentTab).val()!='PRM03') {
+                $("#entrustPrice_" + currentTab).val(quotaPrice).trigger('blur').trigger('change');
+            }
         }
     }
 
@@ -3101,8 +3199,9 @@
             hideLeftTopPanel();
             if(parentPageModel==PAGE_MODEL_REFERENCE || parentPageModel==PAGE_MODEL_EDIT){
                 // 隐藏重置按钮
-
-                linkTradePlat(entrustType, true);
+                if(isMulti != 'Y') {
+                    linkTradePlat(entrustType, true);
+                }
                 portfolioIdChange(true);
                 acctNoChange(true);
                 secIdChange();
@@ -3499,6 +3598,10 @@
             if (parentPageModel!=PAGE_MODEL_REFERENCE){  //解决场内交易指令流程代办显示为0
                 psChange(false);
             }
+            // 资产代码变化联动价格模式下拉框
+            linkDeclaType();
+            // 联动指令价格变化
+            priceModelChange();
         });
 
         // 数据来源变更时

@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.position.controller;
 
+import com.alibaba.excel.exception.ExcelAnalysisException;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,8 +31,13 @@ public class PositionInfoController {
     @ApiOperation(value = "交易头寸信息查询", notes = "交易头寸信息查询")
     @PostMapping("/queryTrdPositionHead")
     @ResponseBody
-    public Message<List<BaseMap>> queryTrdPositionHead(@RequestBody PositionInfoRequestDto requestDto) {
-        List<BaseMap> list = positionInfoService.queryTrdPositionHead(requestDto);
+    public Message<List<BaseMap>> queryTrdPositionHead(@RequestBody PositionInfoRequestDto requestDto){
+        List<BaseMap> list = new ArrayList<>();
+        try{
+            list = positionInfoService.queryTrdPositionHead(requestDto);
+        }catch (Exception e){
+            return new Message<List<BaseMap>>().fail().setMessage(e.getMessage());
+        }
         return new Message<List<BaseMap>>().success().setData(list);
     }
 

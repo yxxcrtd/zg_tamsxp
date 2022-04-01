@@ -1,248 +1,248 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dao.PbcPrdAccountSubMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
-    <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
-    <result column="PBC_ACCOUNT_ID" property="pbcAccountId" jdbcType="VARCHAR" />
-    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
-    <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
-     <result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR" />
-    <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
-    <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
-    <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
-    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
-    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
-    <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
-    <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
-    <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
-    <result column="STATUS" property="status" jdbcType="VARCHAR" />
-    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="PBC_CODE" property="pbcCode" jdbcType="VARCHAR" />
-    <result column="PBCACCOUNTIDSHOW" property="pbcAccountIdShow" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    REGIST_SEQNO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID,ACCOUNT_ID, ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME, 
-    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="PBC_ACCOUNT_ID" property="pbcAccountId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PBC_CODE" property="pbcCode" jdbcType="VARCHAR" />
+        <result column="PBCACCOUNTIDSHOW" property="pbcAccountIdShow" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    REGIST_SEQNO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID,ACCOUNT_ID, ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME,
+    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
     STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
-   <sql id="Base_Column_List2" >
-    HIS_NO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID,ACCOUNT_ID, ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME, 
-    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+    <sql id="Base_Column_List2" >
+    HIS_NO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID,ACCOUNT_ID, ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME,
+    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
     STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from PBC_PRD_ACCOUNT_SUB
-    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_PRD_ACCOUNT_SUB
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from PBC_PRD_ACCOUNT_SUB
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
     insert into PBC_PRD_ACCOUNT_SUB (REGIST_SEQNO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID, ACCOUNT_ID,
-      ACCOUNT_NAME, VDATE, SEND_STATUS, 
-      SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, 
-      STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      STATUS, CREATE_USER, ORG_CODE, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+      ACCOUNT_NAME, VDATE, SEND_STATUS,
+      SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ,
+      STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+      STATUS, CREATE_USER, ORG_CODE,
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
       UPDATE_TIME)
-    values (#{registSeqno,jdbcType=CHAR}, #{pbcAccountId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR},#{accountId,jdbcType=VARCHAR}, 
-      #{accountName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP}, #{sendStatus,jdbcType=VARCHAR}, 
-      #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR}, 
-      #{statusDate,jdbcType=TIMESTAMP}, #{pbcSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+    values (#{registSeqno,jdbcType=CHAR}, #{pbcAccountId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR},#{accountId,jdbcType=VARCHAR},
+      #{accountName,jdbcType=VARCHAR}, #{vdate,jdbcType=TIMESTAMP}, #{sendStatus,jdbcType=VARCHAR},
+      #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR},
+      #{statusDate,jdbcType=TIMESTAMP}, #{pbcSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP},
+      #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
       #{createDept,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
       NOW())
   </insert>
-  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
-    insert into PBC_PRD_ACCOUNT_SUB
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="registSeqno != null" >
-        REGIST_SEQNO,
-      </if>
-      <if test="pbcAccountId != null" >
-        PBC_ACCOUNT_ID,
-      </if>
-      <if test="issuePartyId != null" >
-        ISSUE_PARTY_ID,
-      </if>
-      <if test="accountName != null" >
-        ACCOUNT_NAME,
-      </if>
-      <if test="vdate != null" >
-        VDATE,
-      </if>
-      <if test="sendStatus != null" >
-        SEND_STATUS,
-      </if>
-      <if test="submitTime != null" >
-        SUBMIT_TIME,
-      </if>
-      <if test="submitFeedbackStatus != null" >
-        SUBMIT_FEEDBACK_STATUS,
-      </if>
-      <if test="sumitSeq != null" >
-        SUMIT_SEQ,
-      </if>
-      <if test="statusDate != null" >
-        STATUS_DATE,
-      </if>
-      <if test="pbcSubmitDeadline != null" >
-        PBC_SUBMIT_DEADLINE,
-      </if>
-      <if test="submitDeadline != null" >
-        SUBMIT_DEADLINE,
-      </if>
-      <if test="status != null" >
-        STATUS,
-      </if>
-      <if test="createUser != null" >
-        CREATE_USER,
-      </if>
-      <if test="orgCode != null" >
-        ORG_CODE,
-      </if>
-      <if test="createDept != null" >
-        CREATE_DEPT,
-      </if>
-      <if test="createTime != null" >
-        CREATE_TIME,
-      </if>
-      <if test="updateUser != null" >
-        UPDATE_USER,
-      </if>
-      <if test="updateTime != null" >
-        UPDATE_TIME,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="registSeqno != null" >
-        #{registSeqno,jdbcType=CHAR},
-      </if>
-      <if test="pbcAccountId != null" >
-        #{pbcAccountId,jdbcType=VARCHAR},
-      </if>
-      <if test="issuePartyId != null" >
-        #{issuePartyId,jdbcType=VARCHAR},
-      </if>
-      <if test="accountName != null" >
-        #{accountName,jdbcType=VARCHAR},
-      </if>
-      <if test="vdate != null" >
-        #{vdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="sendStatus != null" >
-        #{sendStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="submitTime != null" >
-        #{submitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitFeedbackStatus != null" >
-        #{submitFeedbackStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="sumitSeq != null" >
-        #{sumitSeq,jdbcType=VARCHAR},
-      </if>
-      <if test="statusDate != null" >
-        #{statusDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pbcSubmitDeadline != null" >
-        #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitDeadline != null" >
-        #{submitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="orgCode != null" >
-        #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="createDept != null" >
-        #{createDept,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
-    update PBC_PRD_ACCOUNT_SUB
-    <set >
-      <if test="pbcAccountId != null" >
-        PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR},
-      </if>
-      <if test="issuePartyId != null" >
-        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
-      </if>
-      <if test="accountName != null" >
-        ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
-      </if>
-      <if test="vdate != null" >
-        VDATE = #{vdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="sendStatus != null" >
-        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="submitTime != null" >
-        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitFeedbackStatus != null" >
-        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="sumitSeq != null" >
-        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
-      </if>
-      <if test="statusDate != null" >
-        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="pbcSubmitDeadline != null" >
-        PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitDeadline != null" >
-        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null" >
-        STATUS = #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        CREATE_USER = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="orgCode != null" >
-        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="createDept != null" >
-        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
+        insert into PBC_PRD_ACCOUNT_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                REGIST_SEQNO,
+            </if>
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID,
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS,
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ,
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE,
+            </if>
+            <if test="pbcSubmitDeadline != null" >
+                PBC_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                #{registSeqno,jdbcType=CHAR},
+            </if>
+            <if test="pbcAccountId != null" >
+                #{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null" >
+                #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pbcSubmitDeadline != null" >
+                #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
+        update PBC_PRD_ACCOUNT_SUB
+        <set >
+            <if test="pbcAccountId != null" >
+                PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pbcSubmitDeadline != null" >
+                PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" >
     update PBC_PRD_ACCOUNT_SUB
     set PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR},
       ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
@@ -264,303 +264,303 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
-  <select id="selectNeedRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
-		select info.ISSUE_PARTY_ID,
-		case
-		when length(PROD_NAME)>180
-		then substring(PROD_NAME,1,180)
-		else PROD_NAME
-		end ACCOUNT_NAME,
-		VDATE,
-		PROD_ID ACCOUNT_ID,
-		NOW() STATUS_DATE,
-		info.STATUS,
-		info.CREATE_USER,
-		info.UPDATE_USER,
-		info.ORG_CODE,
-		info.DEPT_CODE CREATE_DEPT
-		from chb_prd_baseinfo info
-		where 
-			DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),ifnull(info.VDATE,STR_TO_DATE('1900-01-01','%Y-%m-%d')))
-			,'%Y-%m-%d') = DATE_FORMAT(#{statusDate,jdbcType=DATE},'%Y-%m-%d')
-			and info.PROFIT_TYPE='03'
-			and info.fprod_id is null
-			and info.ISSUING_STATUS='01'
-		<if test="prodList !=null  and prodList.size()!=0">
-			and info.prod_id in
-			<foreach collection="prodList" item="prodid" open="(" separator=","
-				close=")">
-				#{prodid}
-			</foreach>
-		</if>
+    <select id="selectNeedRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+        select info.ISSUE_PARTY_ID,
+        case
+        when length(PROD_NAME)>180
+        then substring(PROD_NAME,1,180)
+        else PROD_NAME
+        end ACCOUNT_NAME,
+        VDATE,
+        PROD_ID ACCOUNT_ID,
+        NOW() STATUS_DATE,
+        info.STATUS,
+        info.CREATE_USER,
+        info.UPDATE_USER,
+        info.ORG_CODE,
+        info.DEPT_CODE CREATE_DEPT
+        from chb_prd_baseinfo info
+        where
+        DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),ifnull(info.VDATE,STR_TO_DATE('1900-01-01','%Y-%m-%d')))
+        ,'%Y-%m-%d') = DATE_FORMAT(#{statusDate,jdbcType=DATE},'%Y-%m-%d')
+        and info.PROFIT_TYPE='03'
+        and info.fprod_id is null
+        and info.ISSUING_STATUS='01'
+        <if test="prodList !=null  and prodList.size()!=0">
+            and info.prod_id in
+            <foreach collection="prodList" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
 
-	</select>
-	<select id="selectAlReadyRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
-		select * from PBC_PRD_ACCOUNT_SUB
-		where SEND_STATUS in ('02','03')
-		<if test="reglist!=null and reglist.size()!=0">
-			<foreach collection="reglist" item="item" index="index" open="and trim(ACCOUNT_ID) in (" close=")" separator=",">
-		 	 	 #{item.accountId,jdbcType=VARCHAR}
-		 	</foreach>
-		</if>
-	</select>
-	<delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
-	  delete from PBC_PRD_ACCOUNT_SUB
-      where SEND_STATUS = '01'
+    </select>
+    <select id="selectAlReadyRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+        select * from PBC_PRD_ACCOUNT_SUB
+        where SEND_STATUS in ('02','03')
+        <if test="reglist!=null and reglist.size()!=0">
+            <foreach collection="reglist" item="item" index="index" open="and trim(ACCOUNT_ID) in (" close=")" separator=",">
+                #{item.accountId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+        delete from PBC_PRD_ACCOUNT_SUB
+        where SEND_STATUS = '01'
         <foreach collection="deleteList" item="item" index="index" open="and ACCOUNT_ID in (" close=")" separator=",">
-        #{item.accountId,jdbcType=VARCHAR} 
+            #{item.accountId,jdbcType=VARCHAR}
         </foreach>
-	</delete>
-	<select id="selectAllRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
-	select DISTINCT trim(ACCOUNT_ID) ACCOUNT_ID,trim(PBC_ACCOUNT_ID) PBC_ACCOUNT_ID 
-	from PBC_PRD_ACCOUNT_SUB
-	where 1=1
-		<if test="reglist!=null and reglist.size()!=0">
-			<foreach collection="reglist" item="item" index="index" open="and trim(ACCOUNT_ID) in (" close=")" separator=",">
-		 	 	 #{item.accountId,jdbcType=VARCHAR}
-		 	</foreach>
-		</if>
-	</select>
-	   <!-- 根据条件查询 -->
-  <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
-  	select 
-		t1.REGIST_SEQNO registSeqno,
-		t1.PBC_ACCOUNT_ID pbcAccountId,
-		t1.PBC_ACCOUNT_ID  pbcAccountIdShow,
-		t1.ISSUE_PARTY_ID issuePartyId,
-		t1.ACCOUNT_NAME accountName,
-		t1.ACCOUNT_ID accountId,
-		t1.VDATE vdate,
-		t1.SEND_STATUS sendStatus,
-		t1.SUBMIT_TIME submitTime,
-		t1.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-		t1.SUMIT_SEQ sumitSeq,
-		t1.STATUS_DATE statusDate,
-		t1.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
-		t1.SUBMIT_DEADLINE submitDeadline,
-		t1.STATUS status,
-		t1.CREATE_USER createUser,
-		t1.ORG_CODE orgCode,
-		t1.CREATE_DEPT createDept,
-		t1.CREATE_TIME createTime,
-		t1.UPDATE_USER updateUser,
-		t1.UPDATE_TIME updateTime,
-		t2.PBC_CODE pbcCode
-    from PBC_PRD_ACCOUNT_SUB t1
-    LEFT JOIN(
+    </delete>
+    <select id="selectAllRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+        select DISTINCT trim(ACCOUNT_ID) ACCOUNT_ID,trim(PBC_ACCOUNT_ID) PBC_ACCOUNT_ID
+        from PBC_PRD_ACCOUNT_SUB
+        where 1=1
+        <if test="reglist!=null and reglist.size()!=0">
+            <foreach collection="reglist" item="item" index="index" open="and trim(ACCOUNT_ID) in (" close=")" separator=",">
+                #{item.accountId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <!-- 根据条件查询 -->
+    <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+        select
+        t1.REGIST_SEQNO registSeqno,
+        t1.PBC_ACCOUNT_ID pbcAccountId,
+        t1.PBC_ACCOUNT_ID  pbcAccountIdShow,
+        t1.ISSUE_PARTY_ID issuePartyId,
+        t1.ACCOUNT_NAME accountName,
+        t1.ACCOUNT_ID accountId,
+        t1.VDATE vdate,
+        t1.SEND_STATUS sendStatus,
+        t1.SUBMIT_TIME submitTime,
+        t1.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        t1.SUMIT_SEQ sumitSeq,
+        t1.STATUS_DATE statusDate,
+        t1.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+        t1.SUBMIT_DEADLINE submitDeadline,
+        t1.STATUS status,
+        t1.CREATE_USER createUser,
+        t1.ORG_CODE orgCode,
+        t1.CREATE_DEPT createDept,
+        t1.CREATE_TIME createTime,
+        t1.UPDATE_USER updateUser,
+        t1.UPDATE_TIME updateTime,
+        t2.PBC_CODE pbcCode
+        from PBC_PRD_ACCOUNT_SUB t1
+        LEFT JOIN(
         SELECT
-            inside_prod_id,
-            pbc_code
+        inside_prod_id,
+        pbc_code
         FROM
-            pbc_prod_assetpool_code
+        pbc_prod_assetpool_code
         WHERE
-            status='E'
-            AND code_type='02'
-    )t2 ON t2.inside_prod_id=t1.ACCOUNT_ID
+        status='E'
+        AND code_type='02'
+        )t2 ON t2.inside_prod_id=t1.ACCOUNT_ID
 
-  	<where>
-        <if test="pbcAccountIdList != null and pbcAccountIdList.size > 0">
-            <foreach collection="pbcAccountIdList" item="items" open="and PBC_ACCOUNT_ID in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
+        <where>
+            <if test="pbcAccountIdList != null and pbcAccountIdList.size > 0">
+                <foreach collection="pbcAccountIdList" item="items" open="and PBC_ACCOUNT_ID in (" separator="," close =")">
+                    #{items,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="issuePartyId != null and issuePartyId !=''">
+                and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+            </if>
+            <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
+            <if test="prodIdList != null and prodIdList.size > 0">
+                AND ACCOUNT_ID IN
+                <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
+            <if test="statusList != null and statusList.size > 0">
+                and STATUS in
+                <foreach collection="statusList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="keyList != null and keyList.size > 0">
+                and trim(REGIST_SEQNO) in
+                <foreach collection="keyList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sendStatusList != null and sendStatusList.size > 0">
+                and SEND_STATUS in
+                <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+                and SUBMIT_FEEDBACK_STATUS in
+                <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="statusDateStart != null and statusDateStart != ''">
+                and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
+            </if>
+            <if test="statusDateEnd != null and statusDateEnd != ''">
+                and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
+            </if>
+            <if test="submitTimeStart != null and submitTimeStart != ''">
+                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
+            </if>
+            <if test="submitTimeEnd != null and submitTimeEnd != ''">
+                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
+            </if>
+            <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+                and DATE_FORMAT(PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
+            </if>
+            <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+                and DATE_FORMAT(PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
+            </if>
+            <if test="vdateStart != null and vdateStart != ''">
+                and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+            </if>
+            <if test="vdateEnd != null and vdateEnd != ''">
+                and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+            </if>
+            <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
+            <if test="startDate != null and startDate != ''">
+                and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{endDate}
+            </if>
+            <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+        </where>
+        <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
+        ORDER BY PBC_SUBMIT_DEADLINE ASC, UPDATE_TIME DESC
+        <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
+    </select>
+    <!-- 手工处理 -->
+    <update id="doManul" parameterType="map">
+        update PBC_PRD_ACCOUNT_SUB
+        set
+        SEND_STATUS = '03',
+        SUBMIT_FEEDBACK_STATUS = '03',
+        <if test="submitadd != null and submitadd != ''">
+            SUBMIT_TIME = now() + #{submitadd},
         </if>
-  		<if test="issuePartyId != null and issuePartyId !=''">
-  			and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
-  		</if>
-  		<!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
-  		<if test="prodIdList != null and prodIdList.size > 0">
-            AND ACCOUNT_ID IN
-            <foreach collection="prodIdList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
+        <if test="submitadd == null">
+            SUBMIT_TIME = NOW(),
         </if>
-        <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
-  		<if test="statusList != null and statusList.size > 0">
-            and STATUS in
-            <foreach collection="statusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="keyList != null and keyList.size > 0">
-            and trim(REGIST_SEQNO) in
-            <foreach collection="keyList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="sendStatusList != null and sendStatusList.size > 0">
-            and SEND_STATUS in
-            <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
-            and SUBMIT_FEEDBACK_STATUS in
-            <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="statusDateStart != null and statusDateStart != ''">
-           and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart}
-        </if>
-        <if test="statusDateEnd != null and statusDateEnd != ''">
-           and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd}
-        </if>
-         <if test="submitTimeStart != null and submitTimeStart != ''">
-           and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitTimeStart}
-        </if>
-        <if test="submitTimeEnd != null and submitTimeEnd != ''">
-           and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitTimeEnd}
-        </if>
-        <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
-           and DATE_FORMAT(PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{pbcSubmitDeadlineDateStart}
-        </if>
-        <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
-           and DATE_FORMAT(PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
-        </if>
-        <if test="vdateStart != null and vdateStart != ''">
-           and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
-        </if>
-        <if test="vdateEnd != null and vdateEnd != ''">
-           and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
-        </if>
-        <if test="updateTime != null and updateTime != ''">
-           and DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
-        </if>
-        <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
-        <if test="startDate != null and startDate != ''">
-           and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{startDate}
-        </if>
-        <if test="endDate != null and endDate != ''">
-           and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{endDate}
-        </if>
-        <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
-  	</where>
-  	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
-  	 ORDER BY PBC_SUBMIT_DEADLINE ASC, UPDATE_TIME DESC
-  	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
-  </select>
-  <!-- 手工处理 -->
-  <update id="doManul" parameterType="map">
-  	update PBC_PRD_ACCOUNT_SUB 
-  	set 
-  		SEND_STATUS = '03',
-  		SUBMIT_FEEDBACK_STATUS = '03',
-  		<if test="submitadd != null and submitadd != ''">
-  			SUBMIT_TIME = now() + #{submitadd},
-  		</if>
-  		<if test="submitadd == null">
-  			SUBMIT_TIME = NOW(),
-  		</if>
         UPDATE_TIME = NOW()
         <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
         , STATUS_DATE = NOW()
         <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
-  	where  trim(REGIST_SEQNO) in  
-  	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.registSeqno,jdbcType=CHAR}
-  	</foreach>
-  </update>
-  <!-- 取消手工处理 -->
-  <update id="cancelManul" parameterType="java.util.List">
-  	update PBC_PRD_ACCOUNT_SUB 
-  	set 
-  		SEND_STATUS = '01',
-		UPDATE_TIME = NOW(),
-		SUBMIT_TIME = null,
-		SUBMIT_FEEDBACK_STATUS = null
-  	where  trim(REGIST_SEQNO) in  
-  	<foreach collection="list" open="(" close=")" separator="," item="item">
-  		#{item.registSeqno,jdbcType=CHAR}
-  	</foreach>
-  </update>
-     <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
-  	insert into PBC_PRD_ACCOUNT_SUB_HIS (<include refid="Base_Column_List2"/>)
-    select 
-      REGIST_SEQNO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID, ACCOUNT_ID,ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME, 
-    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, NOW(), UPDATE_USER, NOW()
-    from PBC_PRD_ACCOUNT_SUB
-      where 
-      	PBC_ACCOUNT_ID in
-       <foreach collection="list" open="(" close=")" separator="," item="item">
-      		#{item.pbcAccountId,jdbcType=CHAR}
-      </foreach>
-      	and SEND_STATUS in ('02','03')
-  </insert>
-  <insert id="insetBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
-	insert into PBC_PRD_ACCOUNT_SUB
-	 (<include refid="Base_Column_List"/>)
-    select HIS_NO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID, ACCOUNT_ID,ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME, 
-    SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, NOW(), UPDATE_USER, NOW()
-      from (
-      	select <include refid="Base_Column_List2"/>,
-      	rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
-      	from PBC_PRD_ACCOUNT_SUB_HIS
-      	where 
-      	PBC_ACCOUNT_ID in
-       <foreach collection="list" open="(" close=")" separator="," item="item">
-      		#{item.pbcAccountId,jdbcType=CHAR}
-      </foreach>
-      )
-      where 1 = 1 limit 1
-</insert>
-<delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
-	delete from PBC_PRD_ACCOUNT_SUB_HIS
-	where PBC_ACCOUNT_ID in (
-	    select  PBC_ACCOUNT_ID
-	      from (
-	      	select PBC_ACCOUNT_ID ,
-	      	rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
-	      	from PBC_PRD_ACCOUNT_SUB_HIS
-	      	where 
-	      	PBC_ACCOUNT_ID in
-	       <foreach collection="list" open="(" close=")" separator="," item="item">
-	      		#{item.pbcAccountId,jdbcType=CHAR}
-	      </foreach>
-	      )
-	      where 1 = 1 limit 1
-    )
-</delete>
-<delete id="deleteBatchBySendStatus" parameterType="java.util.List">
-  	delete from PBC_PRD_ACCOUNT_SUB 
-  	where 
-  		PBC_ACCOUNT_ID in <foreach collection="list" item="item" open="(" close=")" separator=",">
-  			#{item.pbcAccountId,jdbcType=CHAR}
-  		</foreach>
-  		and SEND_STATUS in ('02','03')
- </delete>
- <update id="updateBaseInfoAccountId" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+        where  trim(REGIST_SEQNO) in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item.registSeqno,jdbcType=CHAR}
+        </foreach>
+    </update>
+    <!-- 取消手工处理 -->
+    <update id="cancelManul" parameterType="java.util.List">
+        update PBC_PRD_ACCOUNT_SUB
+        set
+        SEND_STATUS = '01',
+        UPDATE_TIME = NOW(),
+        SUBMIT_TIME = null,
+        SUBMIT_FEEDBACK_STATUS = null
+        where  trim(REGIST_SEQNO) in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item.registSeqno,jdbcType=CHAR}
+        </foreach>
+    </update>
+    <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
+        insert into PBC_PRD_ACCOUNT_SUB_HIS (<include refid="Base_Column_List2"/>)
+        select
+        REGIST_SEQNO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID, ACCOUNT_ID,ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME,
+        SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, NOW(), UPDATE_USER, NOW()
+        from PBC_PRD_ACCOUNT_SUB
+        where
+        PBC_ACCOUNT_ID in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item.pbcAccountId,jdbcType=CHAR}
+        </foreach>
+        and SEND_STATUS in ('02','03')
+    </insert>
+    <insert id="insetBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+        insert into PBC_PRD_ACCOUNT_SUB
+        (<include refid="Base_Column_List"/>)
+        select HIS_NO, PBC_ACCOUNT_ID, ISSUE_PARTY_ID, ACCOUNT_ID,ACCOUNT_NAME, VDATE, SEND_STATUS, SUBMIT_TIME,
+        SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, NOW(), UPDATE_USER, NOW()
+        from (
+        select <include refid="Base_Column_List2"/>,
+        rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
+        from PBC_PRD_ACCOUNT_SUB_HIS
+        where
+        PBC_ACCOUNT_ID in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item.pbcAccountId,jdbcType=CHAR}
+        </foreach>
+        )
+        where 1 = 1 limit 1
+    </insert>
+    <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+        delete from PBC_PRD_ACCOUNT_SUB_HIS
+        where PBC_ACCOUNT_ID in (
+        select  PBC_ACCOUNT_ID
+        from (
+        select PBC_ACCOUNT_ID ,
+        rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
+        from PBC_PRD_ACCOUNT_SUB_HIS
+        where
+        PBC_ACCOUNT_ID in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item.pbcAccountId,jdbcType=CHAR}
+        </foreach>
+        )
+        where 1 = 1 limit 1
+        )
+    </delete>
+    <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
+        delete from PBC_PRD_ACCOUNT_SUB
+        where
+        PBC_ACCOUNT_ID in <foreach collection="list" item="item" open="(" close=")" separator=",">
+        #{item.pbcAccountId,jdbcType=CHAR}
+    </foreach>
+        and SEND_STATUS in ('02','03')
+    </delete>
+    <update id="updateBaseInfoAccountId" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
  	update PBC_PRD_BASEINFO_SUB set ACCOUNT_ID=#{pbcAccountId,jdbcType=VARCHAR}
  	where PROD_ID=#{accountId,jdbcType=VARCHAR}
- </update>	
-	
- <select id="queryAllPbcAssetBaseInfo" resultMap="BaseResultMap">
-    select PBC_ACCOUNT_ID,
-          ACCOUNT_NAME
-    from (
+ </update>
+
+    <select id="queryAllPbcAssetBaseInfo" resultMap="BaseResultMap">
+        select PBC_ACCOUNT_ID,
+        ACCOUNT_NAME
+        from (
         select PBC_ACCOUNT_ID,ACCOUNT_NAME,
         rank() over (partition by PBC_ACCOUNT_ID order by ifnull(update_time,create_time) desc) ranknum
         from PBC_PRD_ACCOUNT_SUB
         where STATUS != 'D'
         <if test="search != null and search !='' ">
-        AND PBC_ACCOUNT_ID LIKE concat_ws('','%', #{search},'%')
+            AND PBC_ACCOUNT_ID LIKE concat_ws('','%', #{search},'%')
         </if>
-    )
-    where 1 = 1 limit 1
- </select>
-<select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
-   	select REGIST_SEQNO
-      from PBC_PRD_ACCOUNT_SUB
-      where 
-      <if test="flag == '02'">
-      SEND_STATUS in ('02','03')
-      </if>
-      <if test="flag == '01'">
-      SEND_STATUS = '01'
-      </if>
-      <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
-      PBC_ACCOUNT_ID = #{item.pbcAccountId,jdbcType=VARCHAR}
-      </foreach>
-   </select>
+        )
+        where 1 = 1 limit 1
+    </select>
+    <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
+        select REGIST_SEQNO
+        from PBC_PRD_ACCOUNT_SUB
+        where
+        <if test="flag == '02'">
+            SEND_STATUS in ('02','03')
+        </if>
+        <if test="flag == '01'">
+            SEND_STATUS = '01'
+        </if>
+        <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+            PBC_ACCOUNT_ID = #{item.pbcAccountId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
 </mapper>

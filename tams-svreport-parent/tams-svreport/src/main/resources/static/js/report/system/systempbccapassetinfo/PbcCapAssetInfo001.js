@@ -63,13 +63,12 @@
         });
         // 导入按钮点击事件
         $('#PbcCapAssetInfo001_btn_import').click(function() {
+            // add by zhoubin 20220326 start
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportDataByExcel', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportDataByDB', {fileName: fileName}, function() {
-                            Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                                Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/importFile', {fileName: fileName});
-                            });
+                    Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportDataByDB', {fileName: fileName}, function() {
+                        Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                            Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/importFile', {fileName: fileName});
                         });
                     });
                 },function() {
@@ -77,6 +76,7 @@
                 });
             });
         });
+        // add by zhoubin 20220326 end
 
         // 删除按钮点击事件
         $("#PbcCapAssetInfo001_btn_delete").click(function(){

@@ -59,6 +59,9 @@ public class StlDownDataGatherTask extends BatchBaseService {
     private StlDataGatherBond5Reader stlDataGatherBond5Reader;
 
     @Autowired
+    private StlDataGatherBond7Reader stlDataGatherBond7Reader;
+
+    @Autowired
     private StlDataGatherBond1Processor stlDataGatherBond1Processor;
 
     @Autowired
@@ -72,6 +75,9 @@ public class StlDownDataGatherTask extends BatchBaseService {
 
     @Autowired
     private StlDataGatherBond5Processor stlDataGatherBond5Processor;
+
+    @Autowired
+    private StlDataGatherBond7Processor stlDataGatherBond7Processor;
 
     @Autowired
     private StlDataGatherFund1Reader stlDataGatherFund1Reader;
@@ -99,6 +105,7 @@ public class StlDownDataGatherTask extends BatchBaseService {
 
     @Autowired
     private StlDataGatherRepo5Reader stlDataGatherRepo5Reader;
+
 
     @Autowired
     private StlDataGatherRepo1Processor stlDataGatherRepo1Processor;
@@ -161,7 +168,10 @@ public class StlDownDataGatherTask extends BatchBaseService {
         JobExecution jobExecution = batchBuilder.init(this)
             .batch("bond1", stlDataGatherBond1Reader, stlDataGatherBond1Processor, stlDataGatherWriter)
             .batch("bond2", stlDataGatherBond2Reader, stlDataGatherBond2Processor, stlDataGatherWriter)
-            .batch("bond3", stlDataGatherBond3Reader, stlDataGatherBond3Processor, stlDataGatherWriter)
+            // GZYHTZJY-1043:债券申购确认走债券存续期Processor modify by fuyongsheng 20220108 start
+            //.batch("bond3", stlDataGatherBond3Reader, stlDataGatherBond3Processor, stlDataGatherWriter)
+            .batch("bond3", stlDataGatherBond3Reader, stlDataGatherBondDurationProcessor, stlDataGatherWriter)
+            // GZYHTZJY-1043:债券申购确认走债券存续期Processor modify by fuyongsheng 20220108 end
             .batch("bond4", stlDataGatherBond4Reader, stlDataGatherBond4Processor, stlDataGatherWriter)
             .batch("bond5", stlDataGatherBond5Reader, stlDataGatherBond5Processor, stlDataGatherWriter)
             .batch("fund1", stlDataGatherFund1Reader, stlDataGatherFund1Processor, stlDataGatherWriter)
@@ -174,6 +184,7 @@ public class StlDownDataGatherTask extends BatchBaseService {
             .batch("shares1", stlDataGatherShares1Reader, stlDataGatherShares1Processor, stlDataGatherWriter)
             .batch("shares2", stlDataGatherShares2Reader, stlDataGatherShares2Processor, stlDataGatherWriter)
             .batch("bond6", stlDataGatherBondDurationReader, stlDataGatherBondDurationProcessor, stlDataGatherWriter)
+            .batch("bond7", stlDataGatherBond7Reader, stlDataGatherBond7Processor, stlDataGatherWriter)
             .buildFlow("债券买卖交易", "bond1")
             .buildFlow("可转债申购", "bond2")
             .buildFlow("可转债申购确认", "bond3")
@@ -189,11 +200,12 @@ public class StlDownDataGatherTask extends BatchBaseService {
             .buildFlow("股票新股中签交易", "shares1")
             .buildFlow("股票分红及送转交易", "shares2")
             .buildFlow("债券存续期", "bond6")
+            .buildFlow("债券股票上市流通", "bond7")
             .parallelBuilder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId(), stlDataGatherJobListener,
                     "债券买卖交易", "可转债申购", "可转债申购确认", "债转股", "配债"
                     , "基金买入、卖出、除权交易", "基金交易分红交易"
                     , "债券质押式回购_首期", "债券质押式竞价回购_到期"
-                    , "股票新股中签交易", "股票分红及送转交易","债券存续期")
+                    , "股票新股中签交易", "股票分红及送转交易","债券存续期","债券股票上市流通")
             .run();
 
         return jobExecution;

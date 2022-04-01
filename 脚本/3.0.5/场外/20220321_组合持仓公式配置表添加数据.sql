@@ -1,0 +1,3 @@
+
+delete  from PTL_POSITION_CFG where SEQNO = '26';
+INSERT INTO PTL_POSITION_CFG (SEQNO, S_HOLDINGTYPE, CAL_FLAG, HOLDINGTYPE, REMARK) VALUES ('26', 'S_007',  '1', 'A_004',  '交易汇总可用持仓-债券本方券可用持仓');

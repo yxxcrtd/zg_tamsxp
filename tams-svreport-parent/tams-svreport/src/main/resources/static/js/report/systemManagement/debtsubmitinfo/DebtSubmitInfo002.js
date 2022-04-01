@@ -13,7 +13,10 @@ var getPageParams=function() {
         //唯一标识
         uniqueIdenti : $('#DebtSubmitInfo002_uniqueIdenti').val(),
         reportNo : reportNo,
-        repName : repName
+        repName : repName,
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        repCode : repCode
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     };
 }
 var debtSubmitInfo002 = function() {

@@ -33,6 +33,7 @@ public class InstructionPledgeServiceImpl extends AsyncServiceImpl<String, Instr
                 List<InstructionPledge> instructionPledges1 = new ArrayList<>(instructionPledges);
                 if (instructionPledges1.size() > 0) asyncDel(instructionPledges1);
             }
+            instructionIdMap.remove(s);
         });
     }
 

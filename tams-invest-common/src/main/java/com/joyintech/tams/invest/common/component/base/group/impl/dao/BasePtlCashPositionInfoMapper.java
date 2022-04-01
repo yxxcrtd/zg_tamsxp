@@ -113,4 +113,13 @@ public interface BasePtlCashPositionInfoMapper {
      */
     int updateByPrimaryKeySelectiveForFlow(PtlCashPosition record);
     // add by etliu 汇总表更新并发问题解决 20210511 end
+
+    /**
+     * 查询可用现金(新表)
+     *
+     * @param positionQueryDto
+     * @return java.math.BigDecimal
+     * @date 2018/9/30
+     */
+    BigDecimal queryTrdAvailableCashNew(PtlCashPositionFlowDto positionQueryDto);
 }

@@ -222,5 +222,19 @@ public class DebtSubmitInfo001Dto extends ChbInfoReport{
     public void setSubmitCount(Integer submitCount) {
         this.submitCount = submitCount;
     }
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+    /**
+     * 报表编号
+     */
+    private String repCode;
+    public String getRepCode() {
+        return repCode;
+    }
+
+    public void setRepCode(String repCode) {
+        this.repCode = repCode;
+    }
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 
 }

@@ -9,7 +9,7 @@ import java.util.Set;
 
 public enum Market {
 
-    SZSE("深交所", "SZ", "04"), SHSE("上交所", "SH", "03"),
+    SZSE("深圳证券交易所", "SZ", "04"), SHSE("上海证券交易所", "SH", "03"),
 
     SHFE("上海期货交易所", "SHFE", ""), DCE("大连期货交易所", "DCE", ""), CZCE("郑州期货交易所", "CZCE", ""), CFFEX("中国金融期货交易所", "CFFEX", "12"), INE("上海能源期货交易所", "INE", "");
     public final String value;//交易系统市场

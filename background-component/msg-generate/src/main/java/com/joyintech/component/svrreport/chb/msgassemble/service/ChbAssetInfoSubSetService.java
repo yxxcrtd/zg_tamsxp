@@ -284,7 +284,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem20 = new CnBondInterfItemDto();
 			cnBondItem20.setValue(item.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem20.setDecimals("2");
-			cnBondItem20.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem20.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("OutsourcingInvestmentAmount", cnBondItem20);
 		}
 		//资金实际投向
@@ -420,7 +420,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
 			cnBondItem4.setValue(item.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem4.setDecimals("2");
-			cnBondItem4.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem4.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("AmountForOther", cnBondItem4);
 		}
 		//起息日
@@ -618,9 +618,19 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
 			cnBondItem4.setValue(item.getDebtScale().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem4.setDecimals("2");
-			cnBondItem4.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem4.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("LiabilityAmount", cnBondItem4);
 		}
+
+		/***1217升级**/
+		//是否为同业借款
+		if(StringUtil.isNotEmpty(item.getIsDepositFlag())){
+			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
+			cnBondItem1.setValue(item.getIsDepositFlag());
+			cnBondItemMap1.put("InterbankCashBorrowingPleaseSelect", cnBondItem1);
+		}
+		/***1217升级**/
+
 		//利率
 		if(StringUtil.isNotEmpty(item.getAssetYield())){
 			CnBondInterfItemDto cnBondItem5 = new CnBondInterfItemDto();
@@ -661,6 +671,17 @@ public class ChbAssetInfoSubSetService {
 			cnBondItem4.setValue(item.getRegistOrg1());
 		    cnBondItemMap1.put("RegistrationAgency", cnBondItem4);
 		}
+
+		/***1217升级**/
+
+		//是否为固定收益类
+		if(StringUtil.isNotEmpty(item.getProfitFlag())){
+			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
+			cnBondItem4.setValue(item.getProfitFlag());
+			cnBondItemMap1.put("FixedIncomeFundPleaseSelect", cnBondItem4);
+		}
+		/***1217升级**/
+
 		//是否属于政府投资基金
 		if(StringUtil.isNotEmpty(item.getIsGovernFund())){
 			CnBondInterfItemDto cnBondItem5 = new CnBondInterfItemDto();
@@ -772,7 +793,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem6 = new CnBondInterfItemDto();
 			cnBondItem6.setValue(item.getAssetValue().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem6.setDecimals("2");
-			cnBondItem6.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem6.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("AssetValueForAlternativeInvestments", cnBondItem6);
 		}
 	}
@@ -816,7 +837,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem5 = new CnBondInterfItemDto();
 			cnBondItem5.setValue(item.getAssetValue().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem5.setDecimals("2");
-			cnBondItem5.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem5.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("AssetValueForCommodities", cnBondItem5);
 		}
 	}
@@ -833,6 +854,25 @@ public class ChbAssetInfoSubSetService {
 			cnBondItem1.setValue(item.getAssetName());
 		    cnBondItemMap1.put("AssetManagementPlanName", cnBondItem1);
 		}
+
+		/***1217升级**/
+
+		//是否为银行理财产品
+		if(StringUtil.isNotEmpty(item.getFinancialProductFlag())){
+			CnBondInterfItemDto cnBondItem7 = new CnBondInterfItemDto();
+			cnBondItem7.setValue(item.getFinancialProductFlag());
+			cnBondItemMap1.put("WealthManagementProductPleaseSelect", cnBondItem7);
+		}
+
+		//产品登记编码
+		if(StringUtil.isNotEmpty(item.getProdRegisterCode())){
+			CnBondInterfItemDto cnBondItem7 = new CnBondInterfItemDto();
+			cnBondItem7.setValue(item.getProdRegisterCode());
+			cnBondItemMap1.put("ProductRegistrationCode", cnBondItem7);
+		}
+		/***1217升级**/
+
+
 		//是否由金融资产投资公司发行
 		if(StringUtil.isNotEmpty(item.getFinancialComissue())){
 			CnBondInterfItemDto cnBondItem2 = new CnBondInterfItemDto();
@@ -868,7 +908,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem7 = new CnBondInterfItemDto();
 			cnBondItem7.setValue(item.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem7.setDecimals("2");
-			cnBondItem7.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem7.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("AmountForAssetManagementPlans", cnBondItem7);
 		}
 		//资金实际投向
@@ -1090,7 +1130,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem15 = new CnBondInterfItemDto();
 			cnBondItem15.setValue(item.getBasicPrice().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem15.setDecimals("2");
-			cnBondItem15.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem15.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("UnderlyingAssetStrikePrice", cnBondItem15);
 		}
 		//挂钩标的资产登记日价格
@@ -1098,7 +1138,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem16 = new CnBondInterfItemDto();
 			cnBondItem16.setValue(item.getRegDatePrice().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem16.setDecimals("2");
-			cnBondItem16.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem16.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("UnderlyingAssetPriceOnRegistrationDate", cnBondItem16);
 		}
 		//交易费
@@ -1298,6 +1338,18 @@ public class ChbAssetInfoSubSetService {
 	 * @param item
 	 */
 	private void buildXmlData_JRYSP(Map<String, CnBondInterfItemDto> cnBondItemMap1, ChbAssetInfoDto item) {
+
+		/***1217升级**/
+
+		//所属国家或地区
+		if(StringUtil.isNotEmpty(item.getCountryArea())){
+			CnBondInterfItemDto cnBondItem7 = new CnBondInterfItemDto();
+			cnBondItem7.setValue(item.getCountryArea());
+			cnBondItemMap1.put("CountryOrRegion", cnBondItem7);
+		}
+		/***1217升级**/
+
+
 		//名称
 		if(StringUtil.isNotEmpty(item.getAssetName())){
 			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
@@ -1309,7 +1361,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem2 = new CnBondInterfItemDto();
 			cnBondItem2.setValue(item.getNomCapi().setScale(2, RoundingMode.HALF_UP).toString());
 			cnBondItem2.setDecimals("2");
-			cnBondItem2.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem2.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("NominalPrincipal", cnBondItem2);
 		}
 		//标的类别
@@ -1434,6 +1486,22 @@ public class ChbAssetInfoSubSetService {
 			cnBondItem3.setValue(item.getNotstandSecType());
 		    cnBondItemMap1.put("TypeForNonStandardDebtObligations", cnBondItem3);
 		}
+		/***1217升级**/
+
+		//是否为标准化票据
+		if(StringUtil.isNotEmpty(item.getIsBzhpj())){
+			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
+			cnBondItem3.setValue(item.getIsBzhpj());
+			cnBondItemMap1.put("StandardizedBillOrNotePleaseSelect", cnBondItem3);
+		}
+		//票据代码
+		if(StringUtil.isNotEmpty(item.getBillCode())){
+			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
+			cnBondItem3.setValue(item.getBillCode());
+			cnBondItemMap1.put("BillOrNoteCode", cnBondItem3);
+		}
+		/***1217升级**/
+
 		//数量
 		if(StringUtil.isNotEmpty(item.getNotstandSecNum())){
 			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
@@ -1446,7 +1514,7 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getAmt())){
 			CnBondInterfItemDto cnBondItem5 = new CnBondInterfItemDto();
 			cnBondItem5.setValue(item.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
-			cnBondItem5.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem5.setUnitRef(item.getCcy());
 			cnBondItem5.setDecimals("2");
 		    cnBondItemMap1.put("AggregateAmount", cnBondItem5);
 		}
@@ -1526,11 +1594,21 @@ public class ChbAssetInfoSubSetService {
 			cnBondItem3.setValue(item.getAssetName());
 		    cnBondItemMap1.put("NameForCreditAssetTradingsAndNonStandardDebtObligations", cnBondItem3);
 		}
+		/***1217升级**/
+
+		//资产代码
+		if(StringUtil.isNotEmpty(item.getCreditAssetCode())){
+			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
+			cnBondItem3.setValue(item.getCreditAssetCode());
+			cnBondItemMap1.put("CreditAssetTradingCode", cnBondItem3);
+		}
+		/***1217升级**/
+
 		//金额
 		if(StringUtil.isNotEmpty(item.getAmt())){
 			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
 			cnBondItem4.setValue(item.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
-			cnBondItem4.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem4.setUnitRef(item.getCcy());
 			cnBondItem4.setDecimals("2");
 		    cnBondItemMap1.put("AmountForCreditAssetTradingsAndNonStandardDebtObligations", cnBondItem4);
 		}
@@ -1538,7 +1616,7 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getPrinBaseamt())){
 			CnBondInterfItemDto cnBondItem5 = new CnBondInterfItemDto();
 			cnBondItem5.setValue(item.getPrinBaseamt().setScale(4, RoundingMode.HALF_UP).toString());
-			cnBondItem5.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem5.setUnitRef(item.getCcy());
 			cnBondItem5.setDecimals("4");
 		    cnBondItemMap1.put("UnitParValue", cnBondItem5);
 		}
@@ -1857,7 +1935,7 @@ public class ChbAssetInfoSubSetService {
 			CnBondInterfItemDto cnBondItem48 = new CnBondInterfItemDto();
 			cnBondItem48.setValue(item.getExercisePrice().setScale(4, RoundingMode.HALF_UP).toString());
 			cnBondItem48.setDecimals("4");
-			cnBondItem48.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem48.setUnitRef(item.getCcy());
 		    cnBondItemMap1.put("ExercisePrice", cnBondItem48);
 		}
 		//永续条款类型
@@ -1998,7 +2076,7 @@ public class ChbAssetInfoSubSetService {
 		if(StringUtil.isNotEmpty(item.getTargetAmt())){
 			CnBondInterfItemDto cnBondItem8 = new CnBondInterfItemDto();
 			cnBondItem8.setValue(item.getTargetAmt().setScale(2, RoundingMode.HALF_UP).toString());
-			cnBondItem8.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem8.setUnitRef(item.getCcy());
 			cnBondItem8.setDecimals("2");
 		    cnBondItemMap1.put("CollateralValue", cnBondItem8);
 		}
@@ -2091,11 +2169,22 @@ public class ChbAssetInfoSubSetService {
 			cnBondItem1.setValue(item.getBankName());
 		    cnBondItemMap1.put("DepositBank", cnBondItem1);
 		}
+
+		/***1217升级**/
+
+		//存款账号
+		if(StringUtil.isNotEmpty(item.getAccountNo())){
+			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
+			cnBondItem1.setValue(item.getAccountNo());
+			cnBondItemMap1.put("DepositAccountNumber", cnBondItem1);
+		}
+		/***1217升级**/
+
 		//存款金额
 		if(StringUtil.isNotEmpty(item.getAmt())){
 			CnBondInterfItemDto cnBondItem2 = new CnBondInterfItemDto();
 			cnBondItem2.setValue(item.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
-			cnBondItem2.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem2.setUnitRef(item.getCcy());
 			cnBondItem2.setDecimals("2");
 		    cnBondItemMap1.put("DepositAmount", cnBondItem2);
 		}

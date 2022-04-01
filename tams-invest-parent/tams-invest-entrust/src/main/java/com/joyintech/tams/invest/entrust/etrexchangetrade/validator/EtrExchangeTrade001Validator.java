@@ -85,6 +85,11 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 		List<ValidMessage> errorList = new ArrayList<>();
 		// TODO Auto-generated method stub
 		EtrExchangeTrade001Dto dto = (EtrExchangeTrade001Dto) value;
+		//如果来自多组合，不校验。
+		if(StringUtil.equals(dto.getIsMulti(),DictCodeList.是否_是.getValue())) {
+			return  errorList;
+		}
+
 		if(dto.getOperateType().equals("save")) {
 			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {
 				errorList.add(new ValidMessage("stockId", "资产名称不可为空！"));
@@ -194,6 +199,35 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				}
 			}
 			// 大宗交易增加涨跌幅限制 add by 代志伟 20201015 end
+
+			// 资产为股票且股票的上市板=科创板时
+			if(dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())
+					&& dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())
+					&& DictCodeList.上市板_科创板.getValue().equals(dto.getBoard())){
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(Calendar.HOUR_OF_DAY, 15);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.MILLISECOND, 0);
+				Long time1500 = calendar.getTimeInMillis();
+				calendar.set(Calendar.SECOND, 30);
+				Long time1530 = calendar.getTimeInMillis();
+				Long currentTime = new Date().getTime();
+				// 当前时间为15:00-15:30 且 价格模式选择【收盘价固定价格申报】时，指令价格不是最新价时，
+				// 提示【科创板股票的价格模式选择【收盘价固定价格申报】且时间为15:00-15:30时，指令价格应该为最新价！】
+				if(DictCodeListExt3.申报类型_收盘价固定价格申报.getValue().equals(dto.getPriceModel())
+						&& currentTime >= time1500 && currentTime <= time1530
+						&& !dto.getEntrustPrice().equals(dto.getLatestPrice())){
+					errorList.add(new ValidMessage("科创板股票的价格模式选择【收盘价固定价格申报】且时间为15:00-15:30时，指令价格应该为最新价！"));
+				}
+				// 有涨停/跌停价格时，指令价格需在涨跌停范围内
+				if(StringUtil.isNotEmpty(dto.getLimitUp()) && dto.getLatestPrice().compareTo(dto.getLimitUp())>0){
+					errorList.add(new ValidMessage("price", this.getMessage("ETR_ERROR_0034")));
+				}
+				if(StringUtil.isNotEmpty(dto.getLimitDown()) && dto.getLatestPrice().compareTo(dto.getLimitDown())<0){
+					errorList.add(new ValidMessage("price", this.getMessage("ETR_ERROR_0034")));
+				}
+			}
 			if (StringUtil.isNotEmpty(dto.getFinprodId()) && StringUtil.isNotEmpty(dto.getPs())
 					&& StringUtil.isNotEmpty(dto.getTradeMarket())) {
 				if (StringUtil.isNotEmpty(dto.getEntrustAmt()) && dto.getEntrustAmt().compareTo(BigDecimal.ZERO) > 0
@@ -425,7 +459,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("tradePlat",dto.getTradePlat());
 				List<WflEtrEntrust>  list = etrExchangeTrade001Service.selectWflEntrust(param);
 				if (list.size()>0){
-					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0061")));
+					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0061_2")));
 				}
 
 				// 同一股东只允许下达一次同一只新股申购指令
@@ -472,7 +506,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("secAcctId",dto.getSecAcctId());
 				param.put("ps",dto.getPs());
 				param.put("cDate",DateUtil.getSysDate());
-				param.put("portfolioId",dto.getPortfolioId());
+//				param.put("portfolioId",dto.getPortfolioId());
 				param.put("finprodType2",dto.getFinprodType2());
 				param.put("entrustType",dto.getEntrustType());
 				param.put("entrustId",dto.getEntrustId());
@@ -484,7 +518,11 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 					equtity = entrusts.get(0).getEntrustNum();
 				}
 				if (etrExchangeTrade001Service.getFinProductQutoInfo(param).size()>0&&dto.getEntrustNum().add(equtity).compareTo(entrustNum)>0) {
-					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0060",DictCodeListExt3.交易方向_配债.getValue())));
+					String tempMsg = DictCodeListExt2.交易方向_配股.getCodeName();
+					if (DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())) {
+						tempMsg = DictCodeListExt3.交易方向_配债.getCodeName();
+					}
+					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0060_2", tempMsg)));
 				}
 			}
 			

@@ -10,7 +10,7 @@
   <localRepository>/path/to/local/repo</localRepository>
 
   -->
-  <localRepository>G:\featureMaven</localRepository>
+  <localRepository>F:\featureMaven2.1.5</localRepository>
 
 <!-- 
 <offline>true</offline>

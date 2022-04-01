@@ -21,5 +21,7 @@ public interface StlPayOrdersMapper {
 
     int updateByPrimaryKey(StlPayOrders record);
 
+    int updateByTradeId(StlPayOrders record);
+
     List<StlPayOrders> selectByTradeId(String orderId);
 }

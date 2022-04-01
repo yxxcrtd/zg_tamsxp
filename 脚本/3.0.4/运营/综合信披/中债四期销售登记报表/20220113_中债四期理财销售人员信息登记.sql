@@ -448,4 +448,4 @@ INSERT INTO SYS_PAGE VALUES ('SalerRewPenaInfoRegist001','REP','/report/submitma
 --批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3062';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3062', 'VAL', '销售人员信息登记报送', null, 'SvrSalesStaffManageTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);
+values ('3062', 'SVR', '销售人员信息登记报送', null, 'SvrSalesStaffManageTaskService', 3040, 'system', null, sysdate, 'system', sysdate, null);

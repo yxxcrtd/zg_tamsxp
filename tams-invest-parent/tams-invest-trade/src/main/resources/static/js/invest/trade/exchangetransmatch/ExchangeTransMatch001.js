@@ -39,9 +39,9 @@
             object.tradeDateEnd = $("#trdMatchInfo_tradeDate").endDate();
         }
 
-        if(object.dealId) {
-            object.dealId = object.dealId.join(",")
-        }
+        // if(object.dealId) {
+        //     object.dealId = object.dealId.join(",")
+        // }
 
         if(object.portfolioId) {
             object.portfolioId = object.portfolioId.join(",")
@@ -75,7 +75,7 @@
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
             {field:'remainAmount', sortField:'remainAmount',width:200, title: 'ExchangeTransMatch001.remainAmount',type: 'money'},
             {field:'remainNum', sortField:'remainNum',width:200, title: 'ExchangeTransMatch001.remainNum',type: 'number'},
-            {field:'unitFprice', sortField:'unitFprice',width:200, title: 'ExchangeTransMatch001.dealPrice',type: 'number'},
+            {field:'unitFprice', sortField:'unitFprice',width:200, title: 'ExchangeTransMatch001.dealPrice',type: 'number',digit: 4},
             {field:'dealDate', sortField:'dealDate',width:200, title: 'ExchangeTransMatch001.dealDate',type: 'date'},
             {field:'acctName', sortField:'acctNo',width:200, title: 'ExchangeTransMatch001.fundAccount'},
 
@@ -92,7 +92,15 @@
             {field:'seqId', visible:false},
             {field:'settleDate', visible:false},
             {field:'tradeMarketMode', visible:false},
-            {field:'tradePlat', visible:false}
+            {field:'tradePlat', visible:false},
+            {field:'shareAmt', visible:false},
+            {field:'fpriceAmt', visible:false},
+            {field:'repoType', visible:false},
+            {field:'conPrice', visible:false},
+            {field:'conAmt', visible:false},
+            {field:'rFinMarketId', visible:false},
+            {field:'rFinprodId', visible:false},
+            {field:'busiType', visible:false}
         ]
 
     });
@@ -139,21 +147,22 @@
             return;
         },
         cols:[
-            {field:'tradeTypeStr', sortField:'tradeType',width:200, title: 'ExchangeTransMatch001.entrustType'},
+            // {field:'tradeTypeStr', sortField:'tradeType',width:200, title: 'ExchangeTransMatch001.entrustType'},
             {field:'portfolioId', sortField:'portfolioId',width:200, title: 'ExchangeTransMatch001.portfolioId'},
             {field:'portfolioName', sortField:'portfolioName',width:200, title: 'ExchangeTransMatch001.portfolioName'},
             {field:'finprodType2Str', sortField:'getFinprodType2Str',width:200, title: 'ExchangeTransMatch001.finprodType2'},
             {field:'finprodMarketId', sortField:'finprodMarketId',width:200, title: 'ExchangeTransMatch001.finprodId'},
             {field:'entrustDate', sortField:'entrustDate',width:200, title: 'ExchangeTransMatch001.entrustDate',type: 'date'},
-            {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
+            // {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ertPs'},
             {field:'tradeMarketStr', sortField:'tradeMarket',width:200, title: 'ExchangeTransMatch001.tradeMarket'},
             {field:'tradePlatStr', sortField:'tradePlat',width:200, title: 'ExchangeTransMatch001.tradePlat'},
             {field:'entrustAmt', sortField:'entrustAmount',width:200, title: 'ExchangeTransMatch001.entrustAmount',type: 'number'},
-            {field:'price', sortField:'entrustPrice',width:200, title: 'ExchangeTransMatch001.entrustPrice',type: 'number'},
+            {field:'price', sortField:'entrustPrice',width:200, title: 'ExchangeTransMatch001.entrustPrice',type: 'number',digit: 4},
             {field:'entrustNum', sortField:'entrustNum',width:200, title: 'ExchangeTransMatch001.entrustNum',type: 'number'},
             {field:'secAcctName', sortField:'secAcctName',width:200, title: 'ExchangeTransMatch001.secAcctNo'},
             {field:'acctName', sortField:'acctName',width:200, title: 'ExchangeTransMatch001.fundAccount'},
+            {field:'entrustId', sortField:'entrustId',width:200, title: 'ExchangeTransMatch001.bussCode'},
             {field:'tradeType', visible:false},
             {field:'finprodType2', visible:false},
             {field:'secAcctId', visible:false},
@@ -189,7 +198,7 @@
             {field:'psStr', sortField:'ps',width:200, title: 'ExchangeTransMatch001.ps'},
             {field:'tradeAmt', sortField:'tradeAmt',width:200, title: 'ExchangeTransMatch001.tradeAmout',type: 'number'},
             {field:'tradeNum', sortField:'tradeNum',width:200, title: 'ExchangeTransMatch001.tradeNum',type: 'number'},
-            {field:'tradePrice', sortField:'tradePrice',width:200, title: 'ExchangeTransMatch001.tradePrice',type: 'number'},
+            {field:'tradePrice', sortField:'tradePrice',width:200, title: 'ExchangeTransMatch001.tradePrice',type: 'number',digit: 4},
             {field:'tradeDate', sortField:'tradeDate',width:200, title: 'ExchangeTransMatch001.tradeDate',type: 'date'},
             {field:'ccyStr', sortField:'ccy',width:200, title: 'ExchangeTransMatch001.ccy'},
             {field:'matchType', visible:false},
@@ -268,8 +277,14 @@
                 object.finprodType1 = item.finprodType2;
                 object.ps = item.ps;
                 object.tradePlat = item.tradePlat;
+                object.tradeMarket = item.tradeMarket;
                 object.dealDate = new Date(item.dealDate).Format("yyyy-MM-dd");
-                object.secAccount = item.secAcctNo;
+                object.secAccount = item.secAcctId;
+                object.repoType = item.repoType;
+                object.remainNum = item.remainNum;
+                // GNS-847:增加期限品种条件 modify by fuyongsheng 20220215 start
+                object.termType = item.termType;
+                // GNS-847:增加期限品种条件 modify by fuyongsheng 20220215 end
                 if(entrustDataTable.table) {
                     entrustDataTable.clear();
                 }
@@ -345,7 +360,9 @@
                 object.ps = item.ps;
                 object.tradePlat = item.tradePlat;
                 object.dealDate = new Date(item.dealDate).format('yyyy-MM-dd');
-                object.secAccount = item.secAcctNo;
+                object.secAccount = item.secAcctId;
+                object.repoType = item.repoType;
+                object.remainNum = item.remainNum;
 
                 Joyin.ajaxJson(JoyinUtil.getRealPath('invest/trade/exchangetransmatch/ExchangeTransMatch001/matchSearch'),object,function (result) {
                     if(result) {

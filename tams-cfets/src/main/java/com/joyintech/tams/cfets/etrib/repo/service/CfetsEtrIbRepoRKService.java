@@ -1,6 +1,8 @@
 package com.joyintech.tams.cfets.etrib.repo.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoRkDto;
@@ -46,15 +48,31 @@ public class CfetsEtrIbRepoRKService extends BaseService<CfetsEtrIbRepoRkDto> {
      * @since 1.0
      */
     public void insert( CfetsEtrIbRepoRkDto dto) {
-    	//先删后插
-    	cfetsEtrIbRepoinfoMapper.deleteByPrimaryKey(dto.getPledgeStockId());
-    	cfetsEtrIbRepoinfoMapper.delete(dto.getPledgeStockId());
-        etrSecStockMapper.deleteByPrimaryKey(dto.getPledgeStockId());
-    	CfetsEtrIbRepoRkDto record = new CfetsEtrIbRepoRkDto();
-        record.setPledgeStockId(dto.getPledgeStockId());
-        record.setPledgeStockName(dto.getPledgeStockName());
-        etrSecStockMapper.insert(record);
-    }
+		//先删后插
+		cfetsEtrIbRepoinfoMapper.deleteByPrimaryKey(dto.getPledgeStockId());
+		cfetsEtrIbRepoinfoMapper.delete(dto.getPledgeStockId());
+		etrSecStockMapper.deleteByPrimaryKey(dto.getPledgeStockId());
+		CfetsEtrIbRepoRkDto record = new CfetsEtrIbRepoRkDto();
+		record.setPledgeStockId(dto.getPledgeStockId());
+		record.setPledgeStockName(dto.getPledgeStockName());
+		record.setIsDefStock(DictCodeList.是否_否.getValue());
+		// 保存默认质押券库,更新其他质押券库为非默认
+		if (StringUtil.isNotEmpty(dto.getDefaultStock())) {
+			CfetsEtrIbRepoRkDto temp1 = new CfetsEtrIbRepoRkDto();
+			temp1.setIsDefStock(DictCodeList.是否_否.getValue());
+			temp1.setCreateUser(LoginUserUtil.getUserName());
+			etrSecStockMapper.updateIsDefStockUser(temp1);
+			CfetsEtrIbRepoRkDto temp2 = new CfetsEtrIbRepoRkDto();
+			BeanUtil.copyPropertiesIgnoreNull(temp2, temp1);
+			temp2.setIsDefStock(DictCodeList.是否_是.getValue());
+			temp2.setDefaultStock(dto.getDefaultStock());
+			etrSecStockMapper.updateIsDefStockUser(temp2);
+		}
+		if (StringUtil.equals(dto.getDefaultStock(), dto.getPledgeStockId())) {
+			record.setIsDefStock(DictCodeList.是否_是.getValue());
+		}
+		etrSecStockMapper.insert(record);
+	}
     
     /**
      * 

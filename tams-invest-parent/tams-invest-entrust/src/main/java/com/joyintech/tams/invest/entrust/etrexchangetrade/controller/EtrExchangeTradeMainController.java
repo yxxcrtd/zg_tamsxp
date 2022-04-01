@@ -10,8 +10,10 @@
  
 package com.joyintech.tams.invest.entrust.etrexchangetrade.controller;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -54,6 +56,9 @@ public class EtrExchangeTradeMainController extends BaseController{
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         model.addAttribute("workflowId", workflowId);
         String entrustId = getParam("entrustId");
+
+        //场内交易指令是否开启多组合指令。01:是,02:否
+        String isNeedMutiPtl = CacheUtil.getSysParam(BussinessConstant.IS_NEED_EXCHANGE_MULTI_PTL);
         
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
        	 //流程代办
@@ -72,6 +77,16 @@ public class EtrExchangeTradeMainController extends BaseController{
         model.addAttribute("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
         model.addAttribute("SHARES_TRADE_PLATFORM_05", DictCodeList.交易平台_综合协议交易平台.getValue());
         model.addAttribute("entrustId", entrustId);
+
+        model.addAttribute("isNeedMutiPtl", isNeedMutiPtl);
+
+        if (StringUtil.isNotEmpty(workflowId)) {
+            //流程代办checkImportData
+            EtrExchangeTrade001Dto entity = etrExchangeTrade001Service.getBussinessEntityByWorkflowId(workflowId);
+            if(StringUtil.isNotEmpty(entity)) {
+                model.addAttribute("isMulti", StringUtil.isNotEmpty(entity.getIsMulti())?entity.getIsMulti():DictCodeList.是否_否.getValue());
+            }
+        }
         return super.init(model);
     }
 }

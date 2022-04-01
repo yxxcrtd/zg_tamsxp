@@ -75,8 +75,10 @@ public class EtrTransactionDetail001Controller  extends BaseController{
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         model.addAttribute("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
-        
+
         model.addAttribute("entrustStatus", DictCodeList.委托状态_已接收.getValue());
+        model.addAttribute("ENTRUST_CLASS_01", DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());
+        model.addAttribute("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         return super.init(model);
     }
     

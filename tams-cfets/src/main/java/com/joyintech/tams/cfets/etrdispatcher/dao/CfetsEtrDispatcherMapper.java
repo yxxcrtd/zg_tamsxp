@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.cfets.etrdispatcher.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -23,6 +23,7 @@ import java.util.Map;
 
 /**
  * 场外指令分发
+ *
  * @author sjj
  * @version 1.0 2021年10月26日
  * @see CfetsEtrDispatcherMapper
@@ -33,19 +34,22 @@ public interface CfetsEtrDispatcherMapper {
 
     /**
      * 指令列表分页查询
+     *
      * @param paraMap 参数
      * @return List<CfetsEtrDispatcherTradeListResponse>
      */
-    List<CfetsEtrDispatcherTradeListResponse> findAllEtrDispatcherCommon(Map<String,Object> paraMap);
+    List<CfetsEtrDispatcherTradeListResponse> findAllEtrDispatcherCommon(Map<String, Object> paraMap);
 
-    /** @MethodName: 删除自动分发规则
+    /**
+     * @MethodName: 删除自动分发规则
      * @Return: int
      * @Author: sjj
      * @Date: 2021/10/29
      **/
     int deleteEtrAutoRule();
 
-    /** @MethodName: 删除自动分发规则明细
+    /**
+     * @MethodName: 删除自动分发规则明细
      * @Return: int
      * @Author: sjj
      * @Date: 2021/10/29
@@ -54,15 +58,17 @@ public interface CfetsEtrDispatcherMapper {
 
     /**
      * 查询交易员指令分发权限配置列表
+     *
      * @return page分页参数
      * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
-    List<CfetsEtrDispatcherTraderAuthListResponse>  getTraderAuthList();
+    List<CfetsEtrDispatcherTraderAuthListResponse> getTraderAuthList();
 
     /**
      * 删除交易员指令分发的权限
+     *
      * @throws Exception 抛出异常
      * @see
      * @since 1.0
@@ -82,6 +88,7 @@ public interface CfetsEtrDispatcherMapper {
 
     /**
      * 交易员列表模糊查询
+     *
      * @param param
      * @return List<TrdCommandDispatcher001Dto>
      * @see
@@ -91,6 +98,7 @@ public interface CfetsEtrDispatcherMapper {
 
     /**
      * 交易员与工作量列表查询
+     *
      * @param param
      * @return List<CfetsEtrDispatcherTraderListRequest>
      * @see
@@ -98,13 +106,21 @@ public interface CfetsEtrDispatcherMapper {
      */
     List<CfetsEtrDispatcherTraderListRequest> getEtrTraderAndWorkloadList(Map<String, Object> param);
 
-    List<CfetsEtrDispatcherExeListInfoResponse>  getEtrDispatcherExeListInfo(Map<String, Object> pageParam);
+    List<CfetsEtrDispatcherExeListInfoResponse> getEtrDispatcherExeListInfo(Map<String, Object> pageParam);
 
-    List<CfetsEtrDispatcherDealListInfoResponse>  getEtrDispatcherDealListInfo(Map<String, Object> pageParam);
+    List<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherDealListInfo(Map<String, Object> pageParam);
+
+    /**
+     * 指令分发成交信息
+     * @param pageParam
+     * @return
+     */
+    List<CfetsEtrDispatcherDealListInfoResponse> getEtrDispatcherBidDealListInfo(Map<String, Object> pageParam);
 
     /**
      * 根据委托代码查询委托状态
      * add by sjj 20211101
+     *
      * @param map
      * @return
      */
@@ -112,6 +128,7 @@ public interface CfetsEtrDispatcherMapper {
 
     /**
      * 获取联想文本框交易员的查询方法
+     *
      * @param param
      * @return List<TrdCommandDispatcher001Dto>
      * @see
@@ -122,6 +139,7 @@ public interface CfetsEtrDispatcherMapper {
     /**
      * 删除原先分发的所有交易员记录
      * <功能详细描述>
+     *
      * @param key
      * @return
      * @see
@@ -132,18 +150,64 @@ public interface CfetsEtrDispatcherMapper {
     /**
      * 根据用户名查找真实姓名
      * <功能详细描述>
+     *
      * @param userName
      * @return
      * @see
      * @since 1.0
      */
-    User getRealNameByUserName(@Param("userName")String userName);
+    User getRealNameByUserName(@Param("userName") String userName);
 
     /**
      * 根据委托代码查询委托投标标位
+     *
      * @return
      */
     CfetsEtrDispatcherTradeListResponse getEtrBidInfo(@Param("entrustId") String entrustId);
 
-    CfetsEtrDispatcherAutoRequest findAutoDetail(@Param("sysDate")String sysDate);
+    /**
+     * 查询一级投标的进度及完成信息
+     * @param entrustId
+     * @return
+     */
+    CfetsEtrDispatcherTradeListResponse getEtrDealInfo(@Param("entrustId") String entrustId);
+
+
+    CfetsEtrDispatcherAutoRequest findAutoDetail(@Param("sysDate") String sysDate);
+
+    /**
+     * 获取委托投资人员信息
+     *
+     * @param pageParam
+     * @return
+     */
+    CfetsEtrDispatcherInvResponse getInvInfo(Map<String, Object> pageParam);
+
+    /**
+     * 获取指令明细基本信息 场外
+     *
+     * @param pageParam
+     * @return
+     */
+    CfetsEtrDispatcherInfoOtcResponse getEtrDispatcherOtc(Map<String, Object> pageParam);
+
+    /**
+     * 查询业务类型
+     */
+    String getBusiTypePosition(@Param("entrustId") String entrustId);
+
+    /**
+     * 指令信息明细查询
+     *
+     * @param pageParam
+     * @return Page<FieldEtrDispatcherInfoResponse>
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    CfetsEtrDispatcherInfoExcResponse getEtrDispatcherExcInfo(Map<String, Object> pageParam);
+
+    List<CfetsEtrDispatcherDealListInfoResponse> queryTrade2Touguan(Map<String, Object> pageParam);
+
+    List<CfetsEtrDispatcherExeListInfoResponse> queryEntrust2Touguan(Map<String, Object> pageParam);
 }

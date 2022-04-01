@@ -150,6 +150,16 @@ public interface CfetsQuotedCommonMapper {
      * @return
      */
     String qryPortfolioSecAcctId(Map<String, Object> map);
+
+    /**
+     * 查询产品资金账户
+     *
+     * @param param
+     * @return java.lang.String
+     * @author jiangpeng
+     * @date 2021/12/13 16:14
+     */
+    String qryPortfolioCashAcctId(Map<String, Object> param);
     
     /**
      * 根据查询查询符合条件的指令编号

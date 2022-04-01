@@ -1,6 +1,7 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONUtil;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.cache.impl.RedisCacheServiceImpl;
@@ -49,6 +50,21 @@ public class SystemMonitorManagement {
     @Value("${scheduled.monitor.fixedRate:60000}")
     private int monitorRate;
 
+    /**
+     * 获得某天0点时间
+     *
+     * @return
+     */
+    private static Date getTimesmorning(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
     public ResultBean queryExchangeMonitor() {
         ExchangeMonitorBean exchangeMonitorBean = new ExchangeMonitorBean();
         exchangeMonitorBean.setProductTradeMsgCount(TradeMsgReceiver.productOffset.intValue());
@@ -73,21 +89,6 @@ public class SystemMonitorManagement {
         return new ResultBean(ErrorCode.SUCCESS, exchangeMonitorBean);
     }
 
-    /**
-     * 获得某天0点时间
-     *
-     * @return
-     */
-    private static Date getTimesmorning(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
-    }
-
     private List<MonitorBean> monitorListConvert2MonitorBeanList(List<Monitor> monitors) {
         List<MonitorBean> monitorBeans = new ArrayList<>();
         if (ObjectUtil.isNotEmpty(monitors)) {
@@ -101,7 +102,7 @@ public class SystemMonitorManagement {
     }
 
     public ResultBean queryExchangeMonitorDynamic(DynamicMonitorDTO dto) {
-        logger.debug("queryExchangeMonitorDynamic params: {}", dto.toString());
+        logger.debug("queryExchangeMonitorDynamic params: {}", JSONUtil.toJsonStr(dto));
         String categoryName = dto.getCategoryName();
         Long snapshotTimestamp = dto.getSnapshotTime();
         Date snapshotTime = getTimesmorning(new Date());

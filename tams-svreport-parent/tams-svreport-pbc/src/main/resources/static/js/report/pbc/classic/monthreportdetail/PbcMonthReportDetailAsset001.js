@@ -61,7 +61,7 @@ $(function() {
             // { title: "利息调整", width : 120, field: 'intadjexpAddStr', width : 120,sortField:'intadjexpAdd'},
             { title: "公允价值变动", width : 120, field: 'floatIngplStr', width : 120,sortField:'floatIngpl'},
             { title: "减值", width : 120, field: 'lossAmtStr', width : 120,sortField:'lossAmt'},
-            { title: "期末余额", width : 120, field: 'amtStr', width : 120,sortField:'amt'},
+            { title: "余额", width : 120, field: 'amtStr', width : 120,sortField:'amt'},
             { title: "投管一级分类", width : 120, field: 'orgAssetType1Str',sortField:'orgAssetType1'},
             { title: "投管二级分类", width : 120, field: 'orgAssetType2Str',sortField:'orgAssetType2'},
             { title: "投管三级分类", width : 120, field: 'orgAssetType3Str',sortField:'orgAssetType3'},

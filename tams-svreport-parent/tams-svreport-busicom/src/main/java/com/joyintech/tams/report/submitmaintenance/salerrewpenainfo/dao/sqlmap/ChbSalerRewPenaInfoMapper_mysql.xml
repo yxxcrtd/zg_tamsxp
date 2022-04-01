@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dao.ChbSalerRewPenaInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
+        <id column="SALER_REW_PENA_NO" property="salerRewPenaNo" jdbcType="VARCHAR" />
+        <result column="SALER_INS_NO" property="salerInsNo" jdbcType="VARCHAR" />
+        <result column="SALER_INST_CODE" property="salerInstCode" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_TYEP" property="salerRewPenaTyep" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_NAME" property="salerRewPenaName" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_COMMENTS" property="salerRewPenaComments" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_INST" property="salerRewPenaInst" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_INST_NAME" property="salerRewPenaInstName" jdbcType="VARCHAR" />
+        <result column="SALER_REW_PENA_START" property="salerRewPenaStart" jdbcType="DATE" />
+        <result column="SALER_REW_PENA_END" property="salerRewPenaEnd" jdbcType="DATE" />
+        <result column="SALER_COMPLAIN_DETAIL" property="salerComplainDetail" jdbcType="VARCHAR" />
+        <result column="SALER_COMPLAIN_RESULT" property="salerComplainResult" jdbcType="VARCHAR" />
+        <result column="SALER_COMPLAIN_DATE" property="salerComplainDate" jdbcType="DATE" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SALER_REW_PENA_NO SALER_REW_PENA_NO, SALER_INS_NO SALER_INS_NO, SALER_INST_CODE SALER_INST_CODE, 
+        SALER_REW_PENA_TYEP SALER_REW_PENA_TYEP, SALER_REW_PENA_NAME SALER_REW_PENA_NAME, 
+        SALER_REW_PENA_COMMENTS SALER_REW_PENA_COMMENTS, SALER_REW_PENA_INST SALER_REW_PENA_INST, 
+        SALER_REW_PENA_INST_NAME SALER_REW_PENA_INST_NAME, SALER_REW_PENA_START SALER_REW_PENA_START, 
+        SALER_REW_PENA_END SALER_REW_PENA_END, SALER_COMPLAIN_DETAIL SALER_COMPLAIN_DETAIL, 
+        SALER_COMPLAIN_RESULT SALER_COMPLAIN_RESULT, SALER_COMPLAIN_DATE SALER_COMPLAIN_DATE, 
+        STATUS STATUS, DATA_DATE DATA_DATE, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dao.ChbSalerRewPenaInfoMapper.Base_Column_List" />
+        from CHB_SALER_REW_PENA_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dao.ChbSalerRewPenaInfoMapper.Base_Column_List" />
+        from CHB_SALER_REW_PENA_INFO
+        where STATUS = 'E'
+    </sql>
+
+<!--    分页查询-->
+    <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
+        SELECT *
+        FROM (
+        select
+        'erro'                    as erroOrInfo,
+        SALER_REW_PENA_NO         as salerRewPenaNo,
+        null                     as salerInstCode,
+        SALER_INS_NO              as salerInsNo,
+        SALER_REW_PENA_TYEP       as salerRewPenaTyep,
+        null                     as salerRewPenaName,
+        null                     as salerRewPenaComments,
+        SALER_REW_PENA_INST       as salerRewPenaInst,
+        null                     as salerRewPenaInstName,
+        SALER_REW_PENA_START      as salerRewPenaStart,
+        null                     as salerRewPenaEnd,
+        null                     as salerComplainDetail,
+        null                     as salerComplainResult,
+        SALER_COMPLAIN_DATE       as salerComplainDate,
+        'A'                       as dataStatus,
+        to_char(ERR_MSG)          as errMsg
+        from CHB_SALER_REW_PENA_ERRODATA
+        where 1=1
+        <if test="salerInsNo != null and salerInsNo != ''">
+            and SALER_INS_NO like concat(concat('%',#{salerInsNo,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="salerRewPenaTyep != null and salerRewPenaTyep != ''">
+            and SALER_REW_PENA_TYEP = #{salerRewPenaTyep,jdbcType=VARCHAR}
+        </if>
+        <if test="salerRewPenaInst != null and salerRewPenaInst != ''">
+            and SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+        </if>
+
+        UNION ALL
+
+        select
+        'info'                    as erroOrInfo,
+        SALER_REW_PENA_NO         as salerRewPenaNo,
+        SALER_INST_CODE           as salerInstCode,
+        SALER_INS_NO              as salerInsNo,
+        SALER_REW_PENA_TYEP       as salerRewPenaTyep,
+        SALER_REW_PENA_NAME       as salerRewPenaName,
+        SALER_REW_PENA_COMMENTS   as salerRewPenaComments,
+        SALER_REW_PENA_INST       as salerRewPenaInst,
+        SALER_REW_PENA_INST_NAME  as salerRewPenaInstName,
+        SALER_REW_PENA_START      as salerRewPenaStart,
+        SALER_REW_PENA_END        as salerRewPenaEnd,
+        SALER_COMPLAIN_DETAIL     as salerComplainDetail,
+        SALER_COMPLAIN_RESULT     as salerComplainResult,
+        SALER_COMPLAIN_DATE       as salerComplainDate,
+        STATUS                    as dataStatus,
+        null                     as errMsg
+        from CHB_SALER_REW_PENA_INFO
+        where 1=1
+        <if test="salerInsNo != null and salerInsNo != ''">
+            and SALER_INS_NO like concat(concat('%',#{salerInsNo,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="salerRewPenaTyep != null and salerRewPenaTyep != ''">
+            and SALER_REW_PENA_TYEP = #{salerRewPenaTyep,jdbcType=VARCHAR}
+        </if>
+        <if test="salerRewPenaInst != null and salerRewPenaInst != ''">
+            and SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+        </if>
+        ) ORDER BY dataStatus DESC
+    </select>
+
+    <!--	查询中债银行机构代码-->
+    <select id="selectIssuePartyId" parameterType="string" resultType="string">
+        select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
+        where
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--	根据内部编号查询姓名-->
+    <select id="getSalerName" parameterType="string" resultType="string">
+        select SALER_NAME from CHB_SALER_IDEN_INFO
+        where
+        SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
+    <!--    删除erro表-->
+    <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SALER_REW_PENA_ERRODATA
+        where SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </delete>
+
+    <!--	根据主键删除info-->
+    <update id="deleteInfo" parameterType="java.lang.String">
+        UPDATE CHB_SALER_REW_PENA_INFO
+        SET
+        STATUS = 'D'
+        where
+        SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </update>
+
+    <!--	双击查看详细信息查询info-->
+    <select id="selectDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
+        select
+        'info'                    as erroOrInfo,
+        A.SALER_REW_PENA_NO         as salerRewPenaNo,
+        A.SALER_INST_CODE           as salerInstCode,
+        A.SALER_INS_NO              as salerInsNo,
+        B.SALER_NAME                as salerName,
+        A.SALER_REW_PENA_TYEP       as salerRewPenaTyep,
+        A.SALER_REW_PENA_NAME       as salerRewPenaName,
+        A.SALER_REW_PENA_COMMENTS   as salerRewPenaComments,
+        A.SALER_REW_PENA_INST       as salerRewPenaInst,
+        A.SALER_REW_PENA_INST_NAME  as salerRewPenaInstName,
+        A.SALER_REW_PENA_START      as salerRewPenaStart,
+        A.SALER_REW_PENA_END        as salerRewPenaEnd,
+        A.SALER_COMPLAIN_DETAIL     as salerComplainDetail,
+        A.SALER_COMPLAIN_RESULT     as salerComplainResult,
+        A.SALER_COMPLAIN_DATE       as salerComplainDate,
+        A.STATUS                    as dataStatus
+        from CHB_SALER_REW_PENA_INFO A
+        left join CHB_SALER_IDEN_INFO B
+        on A.SALER_INS_NO = B.SALER_INS_NO
+        where
+        SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </select>
+
+    <!--	双击查看详细信息查询erro-->
+    <select id="selectErroDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
+        select
+        'erro'                    as erroOrInfo,
+        SALER_REW_PENA_NO         as salerRewPenaNo,
+        SALER_INS_NO              as salerInsNo,
+        SALER_REW_PENA_TYEP       as salerRewPenaTyep,
+        SALER_REW_PENA_INST       as salerRewPenaInst,
+        SALER_REW_PENA_START      as salerRewPenaStart,
+        SALER_COMPLAIN_DATE       as salerComplainDate,
+        'A'                       as dataStatus,
+        ORG_DATA                  as orgData,
+        ERR_MSG                   as errMsg
+        from CHB_SALER_REW_PENA_ERRODATA
+        where
+        SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </select>
+
+    <!--   内部编号下拉框-->
+    <select id="selectSalerInsNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        SALER_INS_NO id,
+        SALER_INS_NO text
+        from CHB_SALER_IDEN_INFO
+        where 1=1
+            <if test="search != null and search != ''">
+                and (SALER_INS_NO like concat(concat('%', #{search}),'%')
+                    or SALER_NAME like concat(concat('%', #{search}),'%'))
+            </if>
+    </select>
+
+    <select id="checkSalerInsNoImport" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
+        select  SALER_INS_NO  salerInsNo
+        from CHB_SALER_IDEN_INFO
+        where status = 'E'
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dao.ChbSalerRewPenaInfoMapper.Base_Column_List" />
+        from CHB_SALER_REW_PENA_INFO
+        where SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SALER_REW_PENA_INFO
+        where SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
+        insert into CHB_SALER_REW_PENA_INFO (SALER_REW_PENA_NO, SALER_INS_NO, SALER_INST_CODE, 
+            SALER_REW_PENA_TYEP, SALER_REW_PENA_NAME, SALER_REW_PENA_COMMENTS, 
+            SALER_REW_PENA_INST, SALER_REW_PENA_INST_NAME, 
+            SALER_REW_PENA_START, SALER_REW_PENA_END, SALER_COMPLAIN_DETAIL, 
+            SALER_COMPLAIN_RESULT, SALER_COMPLAIN_DATE, 
+            STATUS, DATA_DATE,CREATE_DEPT,ORG_CODE,
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{salerRewPenaNo,jdbcType=VARCHAR}, #{salerInsNo,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, 
+            #{salerRewPenaTyep,jdbcType=VARCHAR}, #{salerRewPenaName,jdbcType=VARCHAR}, #{salerRewPenaComments,jdbcType=VARCHAR}, 
+            #{salerRewPenaInst,jdbcType=VARCHAR}, #{salerRewPenaInstName,jdbcType=VARCHAR}, 
+            #{salerRewPenaStart,jdbcType=DATE}, #{salerRewPenaEnd,jdbcType=DATE}, #{salerComplainDetail,jdbcType=VARCHAR}, 
+            #{salerComplainResult,jdbcType=VARCHAR}, #{salerComplainDate,jdbcType=DATE}, 
+            #{status,jdbcType=VARCHAR}, sysdate,#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, sysdate, #{updateUser,jdbcType=VARCHAR},
+            sysdate)
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
+        insert into CHB_SALER_REW_PENA_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="salerRewPenaNo != null" >
+                SALER_REW_PENA_NO,
+            </if>
+            <if test="salerInsNo != null" >
+                SALER_INS_NO,
+            </if>
+            <if test="salerInstCode != null" >
+                SALER_INST_CODE,
+            </if>
+            <if test="salerRewPenaTyep != null" >
+                SALER_REW_PENA_TYEP,
+            </if>
+            <if test="salerRewPenaName != null" >
+                SALER_REW_PENA_NAME,
+            </if>
+            <if test="salerRewPenaComments != null" >
+                SALER_REW_PENA_COMMENTS,
+            </if>
+            <if test="salerRewPenaInst != null" >
+                SALER_REW_PENA_INST,
+            </if>
+            <if test="salerRewPenaInstName != null" >
+                SALER_REW_PENA_INST_NAME,
+            </if>
+            <if test="salerRewPenaStart != null" >
+                SALER_REW_PENA_START,
+            </if>
+            <if test="salerRewPenaEnd != null" >
+                SALER_REW_PENA_END,
+            </if>
+            <if test="salerComplainDetail != null" >
+                SALER_COMPLAIN_DETAIL,
+            </if>
+            <if test="salerComplainResult != null" >
+                SALER_COMPLAIN_RESULT,
+            </if>
+            <if test="salerComplainDate != null" >
+                SALER_COMPLAIN_DATE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="dataDate != null" >
+                DATA_DATE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="salerRewPenaNo != null" >
+                #{salerRewPenaNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerInsNo != null" >
+                #{salerInsNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerInstCode != null" >
+                #{salerInstCode,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaTyep != null" >
+                #{salerRewPenaTyep,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaName != null" >
+                #{salerRewPenaName,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaComments != null" >
+                #{salerRewPenaComments,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaInst != null" >
+                #{salerRewPenaInst,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaInstName != null" >
+                #{salerRewPenaInstName,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaStart != null" >
+                #{salerRewPenaStart,jdbcType=DATE},
+            </if>
+            <if test="salerRewPenaEnd != null" >
+                #{salerRewPenaEnd,jdbcType=DATE},
+            </if>
+            <if test="salerComplainDetail != null" >
+                #{salerComplainDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="salerComplainResult != null" >
+                #{salerComplainResult,jdbcType=VARCHAR},
+            </if>
+            <if test="salerComplainDate != null" >
+                #{salerComplainDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="dataDate != null" >
+                #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
+        insert into CHB_SALER_REW_PENA_INFO(SALER_REW_PENA_NO, SALER_INS_NO, SALER_INST_CODE, 
+        SALER_REW_PENA_TYEP, SALER_REW_PENA_NAME, SALER_REW_PENA_COMMENTS, SALER_REW_PENA_INST, 
+        SALER_REW_PENA_INST_NAME, SALER_REW_PENA_START, SALER_REW_PENA_END, SALER_COMPLAIN_DETAIL, 
+        SALER_COMPLAIN_RESULT, SALER_COMPLAIN_DATE, STATUS, DATA_DATE, REMARK, CREATE_USER, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SALER_REW_PENA_NO, SALER_INS_NO, SALER_INST_CODE, 
+            SALER_REW_PENA_TYEP, SALER_REW_PENA_NAME, SALER_REW_PENA_COMMENTS, SALER_REW_PENA_INST, 
+            SALER_REW_PENA_INST_NAME, SALER_REW_PENA_START, SALER_REW_PENA_END, SALER_COMPLAIN_DETAIL, 
+            SALER_COMPLAIN_RESULT, SALER_COMPLAIN_DATE, #{status,jdbcType=VARCHAR} STATUS, DATA_DATE, REMARK, CREATE_USER, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from CHB_SALER_REW_PENA_INFO
+             where STATUS = 'E' and SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
+        update CHB_SALER_REW_PENA_INFO
+        <set >
+            <if test="salerInsNo != null" >
+                SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerInstCode != null" >
+                SALER_INST_CODE = #{salerInstCode,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaTyep != null" >
+                SALER_REW_PENA_TYEP = #{salerRewPenaTyep,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaName != null" >
+                SALER_REW_PENA_NAME = #{salerRewPenaName,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaComments != null" >
+                SALER_REW_PENA_COMMENTS = #{salerRewPenaComments,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaInst != null" >
+                SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaInstName != null" >
+                SALER_REW_PENA_INST_NAME = #{salerRewPenaInstName,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRewPenaStart != null" >
+                SALER_REW_PENA_START = #{salerRewPenaStart,jdbcType=DATE},
+            </if>
+            <if test="salerRewPenaEnd != null" >
+                SALER_REW_PENA_END = #{salerRewPenaEnd,jdbcType=DATE},
+            </if>
+            <if test="salerComplainDetail != null" >
+                SALER_COMPLAIN_DETAIL = #{salerComplainDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="salerComplainResult != null" >
+                SALER_COMPLAIN_RESULT = #{salerComplainResult,jdbcType=VARCHAR},
+            </if>
+            <if test="salerComplainDate != null" >
+                SALER_COMPLAIN_DATE = #{salerComplainDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+                DATA_DATE = sysdate,
+                UPDATE_TIME = sysdate,
+        </set>
+        where SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
+        update CHB_SALER_REW_PENA_INFO
+        set SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR},
+            SALER_INST_CODE = #{salerInstCode,jdbcType=VARCHAR},
+            SALER_REW_PENA_TYEP = #{salerRewPenaTyep,jdbcType=VARCHAR},
+            SALER_REW_PENA_NAME = #{salerRewPenaName,jdbcType=VARCHAR},
+            SALER_REW_PENA_COMMENTS = #{salerRewPenaComments,jdbcType=VARCHAR},
+            SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR},
+            SALER_REW_PENA_INST_NAME = #{salerRewPenaInstName,jdbcType=VARCHAR},
+            SALER_REW_PENA_START = #{salerRewPenaStart,jdbcType=DATE},
+            SALER_REW_PENA_END = #{salerRewPenaEnd,jdbcType=DATE},
+            SALER_COMPLAIN_DETAIL = #{salerComplainDetail,jdbcType=VARCHAR},
+            SALER_COMPLAIN_RESULT = #{salerComplainResult,jdbcType=VARCHAR},
+            SALER_COMPLAIN_DATE = #{salerComplainDate,jdbcType=DATE},
+            STATUS = #{status,jdbcType=VARCHAR},
+            DATA_DATE = #{dataDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
+    </update>
+
+    <!--    内部编号联想框-->
+    <select id="getSalerInsNo" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        select distinct(code),name,shortName,hidCode
+        from(
+        SELECT
+        SALER_INS_NO  code,
+        SALER_INS_NO  name,
+        SALER_INS_NO  shortName,
+        SALER_INS_NO  hidCode
+        FROM CHB_SALER_REW_PENA_INFO
+        <where>
+            <if test="salerInsNo != null and salerInsNo != ''">
+                AND	SALER_INS_NO  like concat('%',concat(#{salerInsNo,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+
+        union all
+
+        SELECT
+        SALER_INS_NO  code,
+        SALER_INS_NO  name,
+        SALER_INS_NO  shortName,
+        SALER_INS_NO  hidCode
+        FROM CHB_SALER_REW_PENA_ERRODATA
+        <where>
+            <if test="salerInsNo != null and salerInsNo != ''">
+                AND	SALER_INS_NO  like concat('%',concat(#{salerInsNo,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+        )
+    </select>
+
+    <select id="checkSalerInsNo" resultType="integer">
+        select count(SALER_INS_NO) from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+        and STATUS = 'E'
+    </select>
+</mapper>

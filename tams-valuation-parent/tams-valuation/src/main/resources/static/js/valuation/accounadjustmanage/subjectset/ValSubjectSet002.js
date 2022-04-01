@@ -20,15 +20,15 @@
         var fel="";
         $("select[name='handCodes']").each(function (i) {
             console.log($(this).css('display'));
-            if($(this).css('display')!='none'&&($(this).val() == '' || $(this).val() == undefined || $(this).val() == null)){
-                Joyin.warn($(this).attr("title")+"不能为空");
-            }
+            // if($(this).css('display')!='none'&&($(this).val() == '' || $(this).val() == undefined || $(this).val() == null)){
+            //     Joyin.warn($(this).attr("title")+"不能为空");
+            // }
 
             console.log($(this).val());
             if ($(this).val() != '' && $(this).val() != undefined && $(this).val() != null) {
                 str = '{"handCode" :"' + $(this).attr('id') + '","handCodeValue" :"' + $(this).val() + '"}';
                 checkbox.push(str);
-                fel = fel + '' + $(this).attr('id') + '=' + "'" + $(this).val() + "'" + '&&';
+                fel = fel + '' + $(this).attr('id') + '==' + "'" + $(this).val() + "'" + '&&';
             }
         });
         $('#handjson').val('['+checkbox+']');
@@ -91,6 +91,13 @@
      * 画面加载完成
      */
     $(function () {
+        if (typeof pageModel !== 'undefined'
+            && (pageModel === PAGE_MODEL_EDIT)) {
+            //账套和科目号不允许修改
+            $("#booksetId").attr('disabled',"true");
+            $("#subjectNo").attr('disabled',"true");
+        }
+
         sbjectInternalcodeChange();
         // 绑定按钮事件
         $('#ValSubjectSet002_btn_submit').click(function() {

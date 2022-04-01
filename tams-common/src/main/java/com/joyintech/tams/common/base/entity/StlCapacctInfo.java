@@ -55,7 +55,7 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      * 流水号
      */
     private String seqNo;
-	
+
 	/**
      * 账户性质
      */
@@ -320,7 +320,7 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
     public void setTradePass(String tradePass) {
         this.tradePass = tradePass == null ? null : tradePass.trim();
     }
-	
+
 	/**
      * 取得 账户性质
      * @return 账户性质

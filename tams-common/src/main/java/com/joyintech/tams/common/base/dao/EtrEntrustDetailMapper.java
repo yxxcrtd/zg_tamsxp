@@ -23,4 +23,6 @@ public interface EtrEntrustDetailMapper {
     int updateByPrimaryKey(EtrEntrustDetail record);
 
     List<EtrEntrustDetail> selectList(String entrustId);
+
+    int deleteByEntrustId(String entrustId);
 }

@@ -119,6 +119,10 @@ public class EtrSinglePortfolioDto extends EtrBaseDto {
      * 交易方式
      */
     private String dealMode;
+    /**
+     *业务模式
+     */
+    private String businessModel;
 
     /**
      * Constructor
@@ -463,5 +467,12 @@ public class EtrSinglePortfolioDto extends EtrBaseDto {
      */
     public void setDealMode(String dealMode) {
         this.dealMode = dealMode;
+    }
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

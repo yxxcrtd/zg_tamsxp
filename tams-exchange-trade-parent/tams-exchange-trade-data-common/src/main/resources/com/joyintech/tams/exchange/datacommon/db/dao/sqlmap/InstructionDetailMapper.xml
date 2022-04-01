@@ -189,6 +189,13 @@
         delete from T_INSTRUCTION_DETAIL
         where ID = #{id,jdbcType=VARCHAR}
     </delete>
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.lang.String">
+        delete from T_INSTRUCTION_DETAIL
+        where ID in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
     <delete id="deleteByExample" parameterType="com.joyintech.tams.exchange.common.db.domain.InstructionDetailExample" >
         delete from T_INSTRUCTION_DETAIL
         <if test="_parameter != null" >

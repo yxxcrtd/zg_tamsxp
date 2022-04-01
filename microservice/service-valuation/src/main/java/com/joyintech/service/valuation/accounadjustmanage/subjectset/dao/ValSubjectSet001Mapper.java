@@ -117,15 +117,13 @@ public interface ValSubjectSet001Mapper {
      */
     List<ValBokSubjectDto> selectAll(Map<String, Object> pageParam);
     /**
-     * 根据主键检索科目
-     * 
-     * @param booksetId 账套代码
-     * @param subjectNo 科目代码
-     * @return 科目
-     * @see
-     * @since 1.0
+     * @author  殷亚
+     * @description 根据主键检索科目
+     * @date 2022-2-9 14:29
+     * @param dto:
+     * @return com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto
      */
-    ValBokSubjectDto selectValBokSubject(@Param("booksetId") String booksetId, @Param("subjectNo") String subjectNo);
+    ValBokSubjectDto selectValBokSubject(ValBokSubjectDto dto);
     /**
      * check科目是否存在
      * 
@@ -162,4 +160,14 @@ public interface ValSubjectSet001Mapper {
     int insert(ValBokSubjectDto record);
 
     int updateByPrimaryKey(ValBokSubjectDto record);
+
+    /**
+     * @author  殷亚
+     * @description 根据内部科目编码和账套检索
+     * @date 2022-2-9 14:29
+     * @param dto:
+     * @return java.util.List<com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto>
+     */
+    List<ValBokSubjectDto> selectValBokSubjectByInCode(ValBokSubjectDto dto);
+
 }

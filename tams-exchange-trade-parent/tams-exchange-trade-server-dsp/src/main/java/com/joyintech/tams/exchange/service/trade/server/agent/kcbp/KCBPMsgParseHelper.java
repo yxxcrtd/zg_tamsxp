@@ -57,6 +57,7 @@ public class KCBPMsgParseHelper {
             entrust.setReportTime(resMap.get("reporttime"));
             entrust.setMarket(getMarket(resMap.get("market")));
             entrust.setLocalEntrustId(resMap.get("ordergroup"));
+            entrust.setStockCode(resMap.get("stkcode"));
             entrust.setStockName(resMap.get("stkname"));
             if (!Strings.isNullOrEmpty(resMap.get("orderprice"))) {
                 entrust.setEntrustPrice(BigDecimal.valueOf(Double.parseDouble(resMap.get("orderprice"))));

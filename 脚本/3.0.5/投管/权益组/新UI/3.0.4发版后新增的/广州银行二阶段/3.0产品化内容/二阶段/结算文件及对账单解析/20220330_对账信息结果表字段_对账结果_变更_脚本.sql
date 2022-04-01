@@ -1,0 +1,1 @@
+alter table STL_SEC_RECON modify RECON_INFO varchar2(1000);

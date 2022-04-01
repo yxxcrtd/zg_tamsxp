@@ -50,7 +50,7 @@ public class PositionInfoService {
     @Autowired
     private DateCalService dateCalService;
     
-    public List<BaseMap> queryTrdPositionHead(PositionInfoRequestDto requestDto){
+    public List<BaseMap> queryTrdPositionHead(PositionInfoRequestDto requestDto) throws Exception{
         // 卖空模式
         String sellFlag = CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED");
 
@@ -126,8 +126,10 @@ public class PositionInfoService {
                 .put("acctId", acctId);
         Map map = positionInfoMapper.queryEtrAvailableCash(inMap);
         BaseMap outMap = BaseMap.newMap(map);
-        rs.put("cashT", ArithmeticUtil.doAdd(cashT, outMap.getBigDecimal("T0KYXJ")));
-        rs.put("cashT1", ArithmeticUtil.doAdd(cashT1, outMap.getBigDecimal("T1KYXJ")));
+       // rs.put("cashT", ArithmeticUtil.doAdd(cashT, outMap.getBigDecimal("T0KYXJ")));
+       // rs.put("cashT1", ArithmeticUtil.doAdd(cashT1, outMap.getBigDecimal("T1KYXJ")));
+        rs.put("cashT", cashT);
+        rs.put("cashT1", cashT1);
         rs.put("realCash", ArithmeticUtil.doAdd(realCash, outMap.getBigDecimal("ZHXJ")));
         return rs;
     }
@@ -232,7 +234,8 @@ public class PositionInfoService {
      */
     public BaseMap queryTrdPosition(List<String> portfolioIdList, String cdate, String finprodId){
         BaseMap bm = BaseMap.newMap()
-                .put("S_005", DictCodeListExt3.资产类型_交易汇总可用持仓.getValue())
+                .put("S_007", DictCodeListExt3.资产类型_交易汇总可用持仓.getValue())
+                .put("S_005", DictCodeListExt3.资产类型_指令汇总可用现金.getValue())
                 .put("S_003", DictCodeListExt3.资产类型_融入券卖空待购回持仓.getValue())
                 .put("A_004", DictCodeListExt3.资产类型_债券本方券可用持仓.getValue())
                 .put("A_005", DictCodeListExt3.资产类型_债券融入券可用持仓.getValue())

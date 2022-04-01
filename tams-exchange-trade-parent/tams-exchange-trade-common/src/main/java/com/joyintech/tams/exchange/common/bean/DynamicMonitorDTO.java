@@ -1,9 +1,5 @@
 package com.joyintech.tams.exchange.common.bean;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.util.Date;
-
 /**
  * @ClassName DynamicMonitorDTO
  * @Description 接收动态监控查询参数

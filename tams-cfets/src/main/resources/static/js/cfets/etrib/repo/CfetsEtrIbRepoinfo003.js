@@ -1,9 +1,11 @@
 (function () {
     // 风险试算结果
-    var riskResultdata;
+    var riskResultResponse = entity_RiskcalResponse;
     var initFlag = false;
     var cluflag;
     var businessId;
+    var riskFlag = 0;
+
 
     /**
      * 画星星
@@ -38,12 +40,6 @@
         }
     }
 
-
-    function getSearchParams() {
-        var object = $.serializeToObject("#searchForm");
-        return object;
-    }
-
     /**
      * 获取风险试算参数
      *
@@ -59,12 +55,17 @@
 
         {
             /* 组合代码 */
-            field: 'portfolioId', width: 200, title: 'EtribRepoInfo003.portfolioId', edit: true, sortable: false,
+            field: 'portfolioId',
+            width: 200,
+            title: 'EtribRepoInfo003.portfolioId',
+            edit: (repo_pledge_model == '02' && $("#ps").val() == '03') ? false : true,
+            sortable: false,
             editOption: {
                 type: 'select',
                 id: 'portfolioId',
                 multiple: false,
                 showField: 'text',
+                childrenIds : 'zyqk',
                 searchable: true,
                 url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')
             }
@@ -73,8 +74,7 @@
         {
             /* 质押券库代码 */
             field: 'zyqk', width: 200, title: 'EtrIbRepo001.zyqk',
-            /* 光大质押券暂时隐藏 */
-            visible: repo_pledge_model=='03'&&$("#ps").val()=='03'?true:false,
+            visible: (repo_pledge_model == '03' && $("#ps").val() == '03') ? true : false,
             edit: true,
             sortable: false,
             editOption: {
@@ -84,19 +84,39 @@
                 showField: 'text',
                 parentIds : 'portfolioId',
                 searchable: true,
-                url: JoyinUtil.getRealPath('/invest/entrust/etribrepo/EtrIbRepoinfo002/getPledgeStockIdByPortfolioId')
+                url: JoyinUtil.getRealPath('/cfets/etrib/cfetsEtrIbRepoinfo/getPledgeStockId')
             }
-        } 
+        }
         , {
-        /*指令金额*/
+            /*指令金额*/
             field: 'entrustAmt',
             width: 200,
             title: '指令金额（元）',
-            edit: false,
+            edit: true,
             sortable: false,
             type: 'number',
             digit: 2
-        }, {
+        },
+        {
+            field: "totalAmount",
+            width: 200,
+            title: '质押券折算总额(元)',
+            visible: repo_pledge_model == '02' ? true : false,
+            sortable: false,
+            type: 'number',
+            digit: 2
+        },
+        {
+            /*可质押券面总额*/
+            field: 'avaPledgePrin',
+            width: 200,
+            title: '可质押券面总额（万元）',
+            visible: ((repo_pledge_model == '01' || repo_pledge_model == '03') && $("#ps").val() == '03') ? true : false,
+            sortable: false,
+            type: 'number',
+            digit: 2
+        },
+        {
             /*组合t日可用*/
             field: 'availableCashT',
             width: 200,
@@ -123,50 +143,153 @@
             sortable: false,
             type: 'number',
             digit: 2
-        }
+        } , {
+            field: 'entrustId',
+            title: '指令Id',
+            width: 200,
+            visible: false
+        },
+        {field:'operation', width:20, title: 'SysCommon.operation',fixed:"right", sortable:false, type: 'action', buttons: ['delt']}
     ]
     var table = $("#etrInvestRepoInfoDtos").joyintable({
-        data:entity_BussCombDistribtList||[],
+        data: entity_BussCombDistribtList || [{}],
         cols: cols,
         page: false,
-        addbtn: true,
+        addbtn: (repo_pledge_model == '02' && $("#ps").val() == '03') ? false : true,
         addToLast: true,
         searchOnInit: true,
         checkbox: false,
         height: 190,
-        addclick: function (row) {
-
-        },beforeEditCell: function (preVal, field, rowData) {
-            if(!initFlag){
-                return true;
+        done:function(){
+            this.bind('click', '.delt', function(data, index) {
+                var allRow = table.getAllRows();
+                if(allRow.length > 1) {
+                    table.deleteRow(index);
+                }else {
+                    Joyin.error("至少要保留一个组合");
+                }
+            });
+        },
+         beforeEditCell: function (preVal, field, rowData) {
+            return true;
+        }, editCell: function (value, data, field, cell, column) {
+            setRiskFlag(1);
+            if (field == 'entrustAmt') {
+                var amt = 0;
+                var allRow = table.getAllRows();
+                $.each(allRow,function (index,item) {
+                    amt = JoyinMath.doAdd(amt,item.entrustAmt,2);
+                })
+                $("#entrustAmt").val(amt);
             }
-            return false;
+            if (field == 'portfolioId') {
+                var allRow = table.getAllRows();
+                var exist = 0;
+                $.each(allRow,function (index,item) {
+                    if(value == item.portfolioId) {
+                        exist = exist + 1;
+                    }
+                })
+                if(exist > 1) {
+                    Joyin.error(value+"组合已经存在,不可以重复选择");
+                    data.portfolioId = null;
+                    table.renderRow(data.LAY_TABLE_INDEX, data);
+                    return;
+                }
+                var arr = [];
+                var param = {}
+                arr.push(value);
+                param.portfolioIdList = arr;
+                Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbBondinfo/queryPositionInfo', param, function (result) {
+                    if(result.data) {
+                        $.each(result.data,function (index,item) {
+                            if(item.field == 'T0KYXJ') {//T日可用现金（元）
+                                if ("--" == item.amount) {
+                                    data.availableCashT = 0;
+                                } else {
+                                    data.availableCashT = item.amount;
+                                }
+                            }
+                            if(item.field == 'T1KYXJ') {//T1日可用现金（元）
+                                if ("--" == item.amount) {
+                                    data.availableCashT1 = 0;
+                                } else {
+                                    data.availableCashT1 = item.amount;
+                                }
+                            }
+                            if(item.field == 'ZHXJ') {//账户现金
+                                if ("--" == item.amount) {
+                                    data.accountCash = 0;
+                                } else {
+                                    data.accountCash = item.amount;
+                                }
+                            }
+                        })
+                        table.renderRow(data.LAY_TABLE_INDEX, data);
+                    }
+
+                });
+                if(!data.entrustId) {
+                    Joyin.ajaxSync(basePath + 'cfets/etrib/CfetsEtrIbBondinfo003/getEntrustId',{},function (result) {
+                        data.entrustId = result.data;
+                        table.renderRow(data.LAY_TABLE_INDEX, data);
+                    })
+                }
+                if(repo_pledge_model == '01' || repo_pledge_model == '03') {
+                    var param = {};
+                    param.portfolioId = value;
+                    param.pledgeStockId = "999999";
+                    if(data.zyqk) {
+                        param.pledgeStockId = data.zyqk;
+                    }
+                    Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/getPledgeable', param, function (result) {
+                        if(result.data) {
+                            data.avaPledgePrin = result.data / 10000;
+                            table.renderRow(data.LAY_TABLE_INDEX, data);
+                        }
+                    });
+                }
+            }
+            if (field == 'zyqk') {
+                var param = {};
+                param.portfolioId = data.portfolioId;
+                param.pledgeStockId = value;
+                Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/getPledgeable', param, function (result) {
+                    if(result.data) {
+                        data.avaPledgePrin = result.data;
+                        table.renderRow(data.LAY_TABLE_INDEX, data);
+                    }
+                });
+            }
+            return true;
         }
+
     });
     var colsRiskTrialRet = [
-        {field:'kriStatusCn',  title: 'BaseRiskMathComm.currStatus',sortable:false,
+        {
+            field: 'kriStatusCn', title: 'BaseRiskMathComm.currStatus', sortable: false,
             render: function (data, type, row, meta) {
-                if(row.kriStatus == 0){
+                if (row.kriStatus == 0) {
                     return "<span>正常</span>";
                 }
-                if(row.kriStatus == 1){
+                if (row.kriStatus == 1) {
                     return "<span style='color:orange'>预警</span>";
                 }
-                if(row.kriStatus == 2){
+                if (row.kriStatus == 2) {
                     return "<span style='color:#F7580D'>审批</span>";
                 }
-                if(row.kriStatus == 3){
+                if (row.kriStatus == 3) {
                     return "<span style='color:#F71A0D'>违规</span>";
                 }
-                if(row.kriStatus == 4){
+                if (row.kriStatus == 4) {
                     return "<span style='color:#951F1F'>异常</span>";
                 }
                 return row.kriStatus;
             }
         }
-        ,{
+        , {
             /* 指标名称*/
-            field: 'kriName', width: 200, title: 'BaseRiskMathComm.indName',sortable: false
+            field: 'kriName', width: 200, title: 'BaseRiskMathComm.indName', sortable: false
         }
         , {/*指标类型*/
             field: 'kriTypeCn',
@@ -220,7 +343,7 @@
     ]
 
     var tableRisk = $("#riskTrialRetTable").joyintable({
-        data:entity_RiskTrialRetList||[],
+        data: entity_RiskTrialRetList || [],
         cols: colsRiskTrialRet,
         page: true,
         addToLast: true,
@@ -231,13 +354,12 @@
 
 
     var init = function () {
-        initFlag=true
-        if($('#ps').val()=='04'){
+        if ($('#ps').val() == '04') {
             $("#pledgeBondTotalTblDetailed_div").hide();
         }
     }
-    var pledgeBondTotalTblDetailed ;
-    if(repo_pledge_model=='02') {
+    var pledgeBondTotalTblDetailed;
+    if (repo_pledge_model == '02') {
         /**
          * 质押券汇总信息（Total）
          */
@@ -246,6 +368,7 @@
             data: entity_PledgeBondTotalListDetailed || [],
             height: 200,
             searchOnInit: true,
+            checkbox: false,
             /**
              * 定义表头
              */
@@ -260,7 +383,8 @@
                     align: 'left',
                     sortable: false,
                     edit: false,
-                    width: 240
+                    width: 200,
+                    visible:false
                 }
                 // 债券简称
                 , {
@@ -270,7 +394,7 @@
                     align: 'left',
                     sortable: true,
                     edit: false,
-                    width: 240
+                    width: 200
                 }
                 // 债券类型
                 /*,{field: 'secTypeStr',title: 'BussRepoSecPtl.secType',type: 'text',align: 'left',edit: false,sortable: false}*/
@@ -281,7 +405,8 @@
                     type: 'text',
                     sortable: false,
                     edit: false,
-                    width: 240
+                    width: 150,
+                    visible:false
                 }
                 // 组合名称
                 , {
@@ -290,40 +415,45 @@
                     type: 'text',
                     edit: false,
                     sortable: false,
-                    width: 240
+                    width: 200
                 }
                 // 质押本方券券面总额
 //                , {field: 'pledgeBfPrin',title: '质押本方券券面总额',type: 'number',edit: true,sortable: false}
                 // 质押融入券券面总额
 //                , {field: 'pledgeRrPrin',title: '质押融入券券面总额',type: 'number',edit: true,sortable: false}
                 // 可质押券面总额
-                , {field: 'pledStrdPrinAmt', title: '可质押券面总额（万元）', type: 'number', edit: false, sortable: false, width: 240,
-                    render: function (data, type, row, meta) {
-                        return (data/10000).toFixed(2);
-                    }
+                , {
+                    field: 'pledStrdPrinAmt',
+                    title: '可质押券面总额（万元）',
+                    type: 'number',
+                    edit: false,
+                    sortable: false,
+                    width: 200
                 }
                 //质押券汇总券面总额
-                , {field: 'pledgePrin', title: '质押券面总额（万元）', type: 'number', edit: false, sortable: false, width: 240,
-                    render: function (data, type, row, meta) {
-                        return (data/10000).toFixed(2);
-                    }}
-                // 首次净价
+                , {
+                    field: 'pledgePrin', title: '质押券面总额（万元）', type: 'number', edit: true, sortable: false, width: 240
+                }
+                // 估价净价
                 , {
                     field: 'firstNetPrice',
-                    width: 150,digit: 4,
-                    title: '首次净价（元）',
+                    width: 150, digit: 4,
+                    title: '估价净价（元）',
                     sortable: false,
                     render: function (data, type, row, meta) {
-                        return (data*1).toFixed(4);
+                        return (data * 1).toFixed(4);
                     }
                 }
                 //折算比例%
-                , {field: 'scale', title: '折算比例(%)', type: 'number', edit: false, sortable: false,digit: 2, width: 100,
-                    render: function (data, type, row, meta) {
-                        return (data*100).toFixed(2);
-                    }
+                , {
+                    field: 'scale',
+                    title: '折算比例(%)',
+                    type: 'number',
+                    edit: true,
+                    sortable: false,
+                    digit: 2,
+                    width: 100
                 }
-
                 // 登记托管机构
                 , {
                     field: 'registOrgStr',
@@ -335,7 +465,47 @@
                     width: 200
                 }
 
-            ]
+            ], editCell: function (value, data, field, cell, column) {
+                if (field == 'pledgePrin') {
+                    if(value > data.pledStrdPrinAmt) {
+                        Joyin.error("质押券面总额不能大于可质押券面总额");
+                        data.pledgePrin = data.pledStrdPrinAmt;
+                        pledgeBondTotalTblDetailed.renderRow(data.LAY_TABLE_INDEX, data);
+                    }
+                    var allRow = table.getAllRows();
+                    $.each(allRow,function (index,item) {
+                        item.totalAmount = value * 100 * data.scale;
+                        table.renderRow(item.LAY_TABLE_INDEX, item);
+                    })
+                }
+                if(field == 'scale') {
+                    var rows = pledgeBondTotalTblDetailed.getAllRows();
+                    var rowData = null;
+                    $.each(rows, function(i, obj){
+                        if(obj.finprodMarketId == data.finprodMarketId) {
+                            rowData = obj;
+                            rowData.scale = value;
+                            pledgeBondTotalTblDetailed.renderRow(obj.LAY_TABLE_INDEX, rowData);
+                        }
+                    })
+                    var allRow = table.getAllRows();
+                    $.each(allRow,function (index,item) {
+                        item.totalAmount = data.pledgePrin * 100 * value;
+                        table.renderRow(item.LAY_TABLE_INDEX, item);
+                    })
+                }
+                setRiskFlag(1);
+                return true;
+            },
+            done:function () {
+                var rows = pledgeBondTotalTblDetailed.getAllRows();
+                $.each(rows, function(i, obj){
+                    obj.scale = obj.scale * 100;
+                    obj.pledgePrin = obj.pledgePrin / 10000;
+                    obj.pledStrdPrinAmt = obj.pledStrdPrinAmt /10000;
+                    pledgeBondTotalTblDetailed.renderRow(obj.LAY_TABLE_INDEX, obj);
+                })
+            }
         });
 
     }
@@ -353,36 +523,200 @@
         var param = {};
         param = JSON.parse(JSON.stringify(object));
         param.entrustAmt = object.entrustAmt;
-        // param.etrInvestRepoInfoDtos = objects;
-        // add by zhangrui1 start
         param.operateType = operateType;
+        param.isDzh = 'Y';
         param.pageModel = pageModel;
-        param.riskTrialRetDto = object.riskTrialRetDto;
+        param.cfetsEtribdoRiskcalResponse = riskResultResponse;
         param.elementId = 'CfetsEtrIbRepoinfo003_btn_submit';
+        param.pageId = "CfetsEtrIbRepoinfo003";
+        if(param.price) {
+            param.price = param.price / 100;
+        }
+        if(param.pledgeBondTotalListDetailed) {
+            $.each(param.pledgeBondTotalListDetailed,function (index,obj) {
+                obj.scale = obj.scale / 100;
+                obj.pledgePrin = obj.pledgePrin * 10000;
+                obj.pledStrdPrinAmt = obj.pledStrdPrinAmt * 10000;
+            })
+        }
+        if(param.etrInvestRepoInfoDtos) {
+            $.each(param.etrInvestRepoInfoDtos,function (index,item) {
+                if(item.avaPledgePrin) {
+                    item.avaPledgePrin = item.avaPledgePrin * 10000;
+                }
+            })
+        }
         res.param = param;
-        // res.objects = objects;
         return res;
     }
+    function setRiskFlag(flag) {
+        riskFlag = flag;
+    }
+    function paramCheck() {
+        var object = $.serializeToObject('#searchForm');
+        if (!object.entrustAmt || !object.settleSpreed || !object.priceModel || !object.price || !object.repoTerm || !object.termType) {
+            Joyin.error("有*必填项未填写,请填写完整")
+            return false;
+        }
+        if(object.etrInvestRepoInfoDtos) {
+            var avaPledgePrin = 0;
+            var totalAmount = 0;
+            var entrustAmt = 0;
+            $.each(object.etrInvestRepoInfoDtos,function (index,item) {
+                entrustAmt = item.entrustAmt + entrustAmt;
+                avaPledgePrin = item.avaPledgePrin * 10000 + avaPledgePrin;
+                totalAmount = item.totalAmount + totalAmount;
+            })
+            if(repo_pledge_model == '02' && Number(entrustAmt) > Number(totalAmount)) {
+                Joyin.error("指令金额不能大于质押券折算总额")
+                return false;
+            }
+            if((repo_pledge_model == '01' || repo_pledge_model == '03') && Number(entrustAmt) > Number(avaPledgePrin)) {
+                Joyin.error("指令金额不能大于可质押券面总额")
+                return false;
+            }
+        }
+        if(riskFlag === 1) {
+            Joyin.error("请先完成风险试算")
+            return false;
+        }
+
+        var obj = getSubmitParam("submit");
+        var errorMsg = "";
+        $.ajax({
+            type: "POST",
+            url: basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/checkSaveError',
+            dataType: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(obj.param),
+            success: function (result) {
+                if(result.code === '000') {
+                    if(result.data && result.data.errorList && result.data.errorList.length > 0) {
+                        $.each(result.data.errorList,function (index,item) {
+                            errorMsg = errorMsg + item.message + "<br\>";
+                        })
+                    }
+                }else {
+                    errorMsg = result.message;
+                }
+            }
+        });
+        if(errorMsg && errorMsg.length > 0) {
+            Joyin.error(errorMsg);
+            return false;
+        }
+        return true;
+    }
+
 
     function saveOrSubmit(operateType) {
-        var res =  getSubmitParam(operateType)
+        var res = getSubmitParam(operateType)
         // if(res.objects.length>0){
-            if (operateType === "save") {
-                WorkFlow.doSaveList(basePath+'cfets/etrib/cfetsEtrIbRepoinfo003/save',res.param,"cfetsEtrIbRepoinfo003_btn_save","cfetsEtrIbRepoinfo003");
-            } else {
-                WorkFlow.doSubmitList(basePath+'cfets/etrib/cfetsEtrIbRepoinfo003/save',res.param,"cfetsEtrIbRepoinfo003_btn_submit","cfetsEtrIbRepoinfo003");
-            }
+        //保存 走流程
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo003/save', res.param, "cfetsEtrIbRepoinfo003_btn_save", null,
+                function () {
+                    var index = window.parent.layer.getFrameIndex(window.name);
+                    window.parent.layer.close(index);
+                })
+        }
+        //提交 走流程
+        else if (operateType === 'submit') {
+            WorkFlow.doSubmitList(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo003/save', res.param, "cfetsEtrIbRepoinfo003_btn_submit", null,
+                function () {
+                    var index = window.parent.layer.getFrameIndex(window.name);
+                    window.parent.layer.close(index);
+                })
+        }
+        /*if (operateType === "save") {
+            WorkFlow.doSaveList(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo003/save', res.param, "cfetsEtrIbRepoinfo003_btn_save", "cfetsEtrIbRepoinfo003");
+        } else {
+            WorkFlow.doSubmitList(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo003/save', res.param, "cfetsEtrIbRepoinfo003_btn_submit", "cfetsEtrIbRepoinfo003");
+        }*/
         // }
 
     }
 
     // 绑定提交按钮
     $('#CfetsEtrIbRepoinfo003_btn_submit').click(function () {
-        saveOrSubmit('submit');
+        if (paramCheck()) {
+            saveOrSubmit('submit');
+        }
     });
     // 绑定保存按钮
     $('#CfetsEtrIbRepoinfo003_btn_save').click(function () {
         saveOrSubmit('save');
     });
+
+    $('#CfetsEtrIbRepoinfo003_btn_riskcal').click(function () {
+        var object = $.serializeToObject('#searchForm');
+        var param = JSON.parse(JSON.stringify(object))
+        $.ajax({
+            type: "POST",
+            url: basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/doRiskcal',
+            dataType: "json",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(param),
+            success: function (result) {
+                if(result.code === '000') {
+                    var data = result.data.data;
+                    if(data.riskTrialSpan) {
+                        $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.riskTrialSpan);
+                    }
+                    riskResultResponse = data;;
+                    entity_RiskTrialRetList = data.riskcalReturnList;
+                    if(entity_RiskTrialRetList) {
+                        $.each(entity_RiskTrialRetList, function (index, item) {
+                            item.conclusion = data.riskTrialSpan;
+                        })
+                    }
+                    tableRisk.clear();
+                    tableRisk.addRow(entity_RiskTrialRetList);
+                    //setRiskFlag(0);
+                }else if(result.message){
+                    Joyin.error(result.message);
+                }
+                setRiskFlag(0);//软控先
+            }
+        });
+
+  /*      Joyin.ajaxJson(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/doRiskcal', param, function (data) {
+            if(data.data.data) {
+                $("#riskTrialSpan").html("&nbsp;&nbsp;" + data.data.data.riskTrialSpan);
+                riskResultResponse = data.data.data;
+                entity_RiskTrialRetList = data.data.data.riskcalReturnList;
+                tableRisk.clear();
+                tableRisk.addRow(data.data.data.riskcalReturnList);
+            }
+        });*/
+    });
+    if(entity_riskTrialSpan) {
+        $("#riskTrialSpan").html("&nbsp;&nbsp;" + entity_riskTrialSpan);
+    }
+    //cfets/etrib/cfetsEtrIbRepoinfo/getTermType
+    $("#repoTerm").blur(function () {
+        var repoTerm = $("#repoTerm").val();
+        if (!repoTerm) return;
+        if(Number(repoTerm) < 1 || Number(repoTerm) > 365) {
+            Joyin.error("回购期限只能在1~365之间");
+            $("#repoTerm").val("");
+        }
+        Joyin.ajax(basePath + 'cfets/etrib/cfetsEtrIbRepoinfo/getTermTypeByRepoTerm?repoTerm=' + repoTerm, {}, function (data) {
+            if(data.data) {
+                $("#termType").textSelect('setValue', data.data.data);
+            }
+        });
+        setRiskFlag(1);
+    })
+    $("#price").change(function () {
+        var price = $("#price").val();
+        if(price && Number(price) <= 0) {
+            Joyin.error("回购利率需大于0");
+            $("#price").val("");
+        }
+        setRiskFlag(1);
+    })
 
 }());

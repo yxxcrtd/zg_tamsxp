@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.calendarmanagement.dao.SvrMstCalendarInfoInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCalendarInfo" >
+        <id column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <result column="CALENDAR_NAME" property="calendarName" jdbcType="VARCHAR" />
+        <result column="OTHER_ID" property="otherId" jdbcType="VARCHAR" />
+        <result column="IS_TRADE_CALENDAR" property="isTradeCalendar" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        SELECT
+        A.CALENDAR_ID,
+        A.CALENDAR_NAME,
+        A.OTHER_ID,
+        A.IS_TRADE_CALENDAR,
+        A.CREATE_TIME,
+        A.UPDATE_TIME
+        FROM
+        MST_CALENDAR_INFO A
+        where 1=1
+        <if test="updatetime != null" >
+            and ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

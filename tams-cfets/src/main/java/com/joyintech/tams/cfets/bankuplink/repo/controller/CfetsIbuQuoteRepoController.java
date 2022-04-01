@@ -7,7 +7,6 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.BaseMap;
@@ -15,18 +14,7 @@ import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelTplUitl;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayPriceDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDayRegDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteCommonDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoAutoAllocationRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoCalRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoPledgeRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoPtlAllocationAddRequest;
-import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoRiskCalRequest;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.bankuplink.repo.service.IbuQuoteRepoService;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
@@ -35,7 +23,6 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
-import com.joyintech.tams.invest.common.client.ClientData;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -49,21 +36,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -312,69 +289,69 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     public Message<AjaxResult> doRiskcal(@RequestBody RepoRiskCalRequest riskCalRequest) {
         CfetsEtribdoRiskcalResponse result = new CfetsEtribdoRiskcalResponse();
         try {
-            AjaxResult ajaxResult = ibuQuoteRepoService.riskCheckNotEmpty(riskCalRequest);
-            if (CollectionUtils.isNotEmpty(ajaxResult.getErrorList())) {
-                return new Message<AjaxResult>().success().setData(ajaxResult);
-            }
-            Map<String, Object> dataMap = ibuQuoteRepoService.doRiskcalPackage(riskCalRequest);
-            result.setRiskMathFlag("02");
-            List<String> resultArrList = interfRiskRdsController.doInfBatchData(dataMap, "1", "RSK002", "F07");
-            boolean forbidFlag = false;
-            boolean cluflag = true;
-            //是否全部正常
-            boolean allNormalFlag = true;
-            List<CfetsEtribdoRiskcalResponse> resultList = new ArrayList<>();
-            if (!StringUtil.isEmptyList(resultArrList)) {
-                for (String row : resultArrList) {
-                    ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
-                    if (StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
-                            && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
-                    ) {
-                        if (StringUtil.equals(resultArr.getHead().get("std400msgt"), "E")) {
-                            return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
-                        }
-                    }
-                    if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
-                            || !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
-                            || !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
-                        return new Message<AjaxResult>().success().setMessage("无");
-                    }
-                    List<Map<String, Object>> riskList = (List<Map<String, Object>>) resultArr.getBody().get("RSK_LIST");
-                    for (Map<String, Object> map : riskList) {
-                        if (allNormalFlag && !StringUtil.equals(map.get("kriStatus"), "0")) {
-                            allNormalFlag = false;
-                        }
-                        if (StringUtil.equals(map.get("kriStatus"), "0") && !StringUtil.equals(map.get("kriTrend"), "向好")) {
-                            forbidFlag = true;
-                        }
-                        map.put("kriStatusCn", ibuQuoteRepoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
-                        resultList.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
-                    }
-                    if (!allNormalFlag) {
-                        result.setRiskcalReturnList(resultList);
-                    }
-                    result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
-                    //当置为不通过时就不再进来了
-                    if (cluflag) {
-                        if (!StringUtil.equals(resultArr.getBody().get("rskStatus"), "3")) {
-                            if (StringUtil.equals(resultArr.getBody().get("rskStatus"), "4") && forbidFlag) {
-                                cluflag = false;
-                                resultArr.getBody().put("rskStatus", "3");
-                                result.setRskStatus("3");
-                            }
-                        } else {
-                            cluflag = false;
-                        }
-                        if (!cluflag) {
-                            result.setRiskTrialSpan("试算不通过");
-                        } else {
-                            result.setRiskTrialSpan("试算通过");
-                        }
-                    }
-
-                }
-
-            }
+//            AjaxResult ajaxResult = ibuQuoteRepoService.riskCheckNotEmpty(riskCalRequest);
+//            if (CollectionUtils.isNotEmpty(ajaxResult.getErrorList())) {
+//                return new Message<AjaxResult>().success().setData(ajaxResult);
+//            }
+//            Map<String, Object> dataMap = ibuQuoteRepoService.doRiskcalPackage(riskCalRequest);
+//            result.setRiskMathFlag("02");
+//            List<String> resultArrList = interfRiskRdsController.doInfBatchData(dataMap, "1", "RSK002", "F07");
+//            boolean forbidFlag = false;
+//            boolean cluflag = true;
+//            //是否全部正常
+//            boolean allNormalFlag = true;
+//            List<CfetsEtribdoRiskcalResponse> resultList = new ArrayList<>();
+//            if (!StringUtil.isEmptyList(resultArrList)) {
+//                for (String row : resultArrList) {
+//                    ClientData resultArr = JsonUtils.json2Object(row, ClientData.class);
+//                    if (StringUtil.isNotEmpty(resultArr) && StringUtil.isNotEmpty(resultArr.getHead())
+//                            && StringUtil.isNotEmpty(resultArr.getHead().get("std400msgt"))
+//                    ) {
+//                        if (StringUtil.equals(resultArr.getHead().get("std400msgt"), "E")) {
+//                            return new Message<AjaxResult>().fail().setMessage(resultArr.getHead().get("stdrtninfo").toString());
+//                        }
+//                    }
+//                    if (!StringUtil.isNotEmpty(resultArr) || !StringUtil.isNotEmpty(resultArr.getBody())
+//                            || !StringUtil.isNotEmpty(resultArr.getBody().get("RSK_LIST"))
+//                            || !StringUtil.isNotEmpty(resultArr.getBody().get("rskStatus"))) {
+//                        return new Message<AjaxResult>().success().setMessage("无");
+//                    }
+//                    List<Map<String, Object>> riskList = (List<Map<String, Object>>) resultArr.getBody().get("RSK_LIST");
+//                    for (Map<String, Object> map : riskList) {
+//                        if (allNormalFlag && !StringUtil.equals(map.get("kriStatus"), "0")) {
+//                            allNormalFlag = false;
+//                        }
+//                        if (StringUtil.equals(map.get("kriStatus"), "0") && !StringUtil.equals(map.get("kriTrend"), "向好")) {
+//                            forbidFlag = true;
+//                        }
+//                        map.put("kriStatusCn", ibuQuoteRepoService.getKriStatusCnByKriStatus(map.get("kriStatus").toString()));
+//                        resultList.add(BeanUtil.mapToObject(map, CfetsEtribdoRiskcalResponse.class));
+//                    }
+//                    if (!allNormalFlag) {
+//                        result.setRiskcalReturnList(resultList);
+//                    }
+//                    result.setStdrtninfo(resultArr.getHead().get("stdrtninfo").toString());
+//                    //当置为不通过时就不再进来了
+//                    if (cluflag) {
+//                        if (!StringUtil.equals(resultArr.getBody().get("rskStatus"), "3")) {
+//                            if (StringUtil.equals(resultArr.getBody().get("rskStatus"), "4") && forbidFlag) {
+//                                cluflag = false;
+//                                resultArr.getBody().put("rskStatus", "3");
+//                                result.setRskStatus("3");
+//                            }
+//                        } else {
+//                            cluflag = false;
+//                        }
+//                        if (!cluflag) {
+//                            result.setRiskTrialSpan("试算不通过");
+//                        } else {
+//                            result.setRiskTrialSpan("试算通过");
+//                        }
+//                    }
+//
+//                }
+//
+//            }
             AjaxResult m = new AjaxResult();
             m.setData(result);
             return new Message<AjaxResult>().success().setData(m);
@@ -386,20 +363,37 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ApiOperation(value = "查询交易执行明细信息", notes = "查询交易执行明细信息")
     @PostMapping("/listDealTransactionDetails")
     @ResponseBody
-    public Message<Map<String, Object>> listDealTransactionDetails(@RequestBody RepoEntrustRequest dto) {
+    public Message<Page<RepoDealTransactionDetailsDto>> listDealTransactionDetails(@RequestBody RepoEntrustRequest dto) {
         try {
             String entrustId;
             if (StringUtil.isNotEmpty(dto) && CollectionUtils.isNotEmpty(dto.getEntrustIdList())) {
                 entrustId = dto.getEntrustIdList().get(0);
             } else {
-                return new Message<Map<String, Object>>().success().setData(new HashMap<>());
+                return new Message<Page<RepoDealTransactionDetailsDto>>().success().setData(new Page<>());
             }
             Map<String, Object> result = new HashMap<>();
-            result.put("root", ibuQuoteRepoService.listDealTransactionDetails(entrustId));
-            return new Message<Map<String, Object>>().success().setData(result);
+            Map<String, Object> param = new HashMap<>();
+            param.put("entrustId", entrustId);
+            // 排序处理
+            if (StringUtil.isNotEmpty(dto.getPageMode())) {
+                if (StringUtil.isNotEmpty(dto.getPageMode().getDirection())) {
+                    param.put("direction", dto.getPageMode().getDirection());
+                }
+                if (StringUtil.isNotEmpty(dto.getPageMode().getSort())) {
+                    param.put("sort", dto.getPageMode().getSort());
+                }
+                if (StringUtil.isNotEmpty(dto.getPageMode().getPageNo())) {
+                    param.put("pageNo", dto.getPageMode().getPageNo());
+                }
+                if (StringUtil.isNotEmpty(dto.getPageMode().getPageSize())) {
+                    param.put("pageSize", dto.getPageMode().getPageSize());
+                }
+            }
+            Page<RepoDealTransactionDetailsDto> page = ibuQuoteRepoService.listDealTransactionDetails(param);
+            return new Message<Page<RepoDealTransactionDetailsDto>>().success().setData(page);
         } catch (Exception e) {
             logger.error("查询交易执行明细信息异常", e);
-            return new Message<Map<String, Object>>().fail().setMessage("查询交易执行明细信息异常");
+            return new Message<Page<RepoDealTransactionDetailsDto>>().fail().setMessage("查询交易执行明细信息异常");
         }
     }
 
@@ -769,13 +763,13 @@ public class CfetsIbuQuoteRepoController extends BaseController {
     @ApiOperation(value = "当日报价", notes = "当日报价")
     @PostMapping("/listDayPrice")
     @ResponseBody
-    public Message<List<CfetsRepoDayPriceDto>> pageDayPrice(@RequestBody RepoEntrustRequest dto) {
+    public Message<com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto>> pageDayPrice(@RequestBody RepoEntrustRequest dto) {
         try {
-            List<CfetsRepoDayPriceDto> result = cfetsRepoDealQuotedPrice002Service.listDayPrice(dto);
-            return new Message<List<CfetsRepoDayPriceDto>>().success().setData(result);
+            com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto> result = cfetsRepoDealQuotedPrice002Service.listDayPricePage(dto);
+            return new Message<com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto>>().success().setData(result);
         } catch (Exception e) {
             logger.error("查询当日报价数据异常", e);
-            return new Message<List<CfetsRepoDayPriceDto>>().fail().setMessage("查询当日报价数据异常");
+            return new Message<com.joyintech.background.component.common.pack.common.grid.Page<CfetsRepoDayPriceDto>>().fail().setMessage("查询当日报价数据异常");
         }
     }
 

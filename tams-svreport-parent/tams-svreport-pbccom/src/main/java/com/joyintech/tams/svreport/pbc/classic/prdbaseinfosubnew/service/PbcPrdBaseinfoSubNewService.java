@@ -76,10 +76,10 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 			return;
 		}
 		/***新人行获取ex映射时候取getSrcfield2 字段**/
-		List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
+		/*List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
 				.selectByMappingcode(PbcAssetPositionConstants.MAPPINGCODE_DEPT_CODE_CHBTOPBC);
-		Map<String,ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield1, a -> a,(k1,k2)->k1));
-		Map<String,PbcPrdBaseinfoSubNew> regMap = new HashMap<String,PbcPrdBaseinfoSubNew>();
+		Map<String, ChbTypeMappingEx> inDepCodeMap = subjectNoMappingList.stream().collect(Collectors.toMap(ChbTypeMappingEx::getSrcfield1, a -> a,(k1, k2)->k1));*/
+		Map<String, PbcPrdBaseinfoSubNew> regMap = new HashMap<String, PbcPrdBaseinfoSubNew>();
 		Map<String,String > pbcProdIdMap = new HashMap<String,String>();
 		//查询已生成人行产品代码的数据
 		List<PbcPrdBaseinfoSubNew> allPbcProdIdlist= new ArrayList<PbcPrdBaseinfoSubNew>();
@@ -150,9 +150,11 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 		List<PbcPrdBaseinfoSubNew> issueDeleteDataList = new ArrayList<PbcPrdBaseinfoSubNew>();
 		// 处理产品发行登记
 		for(PbcPrdBaseinfoSubNew sub : needRegistSubList){
-			if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
+			// modify by zhangliang 20220319 华夏个性化改造 start
+			/*if(sub.getInDepName() != null && inDepCodeMap.containsKey(sub.getInDepName())){
 				sub.setInDepCode(inDepCodeMap.get(sub.getInDepName()).getSrcfield2());
-			}
+			}*/
+			// modify by zhangliang 20220319 华夏个性化改造 end
 			String pbcProdId;
 			if(pbcProdIdMap.containsKey(sub.getProdId())){
 				pbcProdId=pbcProdIdMap.get(sub.getProdId());
@@ -223,6 +225,14 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 						sub.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
 					}
 				}
+				// 根据数据状态重新生成截止日期
+				List<Date> issueDateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_新人行产品基本信息.getValue(),
+						sub.getStatus(), dateMap,
+						null, SVReportGlobalConstant.SVR_SUBMIT_TIME_PBC);
+				if (CollectionUtils.isNotEmpty(issueDateList)) {
+					sub.setPbcSubmitDeadline(issueDateList.get(0));
+					sub.setSubmitDeadline(issueDateList.get(1));
+				}
 				// 准备插入处理未报送的数据
 				issueInsertDataList.add(sub);
 			}else{
@@ -237,6 +247,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 					sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
 				}
 			}
+
 		}
 		// 删除、插入发行登记
 		dealResultIssueCommitSingle(issueDeleteDataList,issueInsertDataList);

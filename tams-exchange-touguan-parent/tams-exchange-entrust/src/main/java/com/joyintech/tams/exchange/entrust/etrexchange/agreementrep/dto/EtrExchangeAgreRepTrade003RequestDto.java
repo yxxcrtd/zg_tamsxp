@@ -38,11 +38,97 @@ public class EtrExchangeAgreRepTrade003RequestDto{
     @ApiModelProperty(name="entrustStatus",value="指令状态")
     private String entrustStatus;
 
-    @ApiModelProperty(name="entrustId",value="指令代码")
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
+    private PageMode pageMode;
+
+    @ApiModelProperty(name="portfolioName",value="组合名称",example="A1")
+    private String portfolioName;
+
+    @ApiModelProperty(name="tradeMarket",value="交易场所",example="A1")
+    private String tradeMarket;
+
+    @ApiModelProperty(name="finprodId",value="质押券",example="A1")
+    private String finprodId;
+
+    @ApiModelProperty(name="bussType",value="业务类型",example="A1")
+    private String bussType;
+
+    @ApiModelProperty(name="entrustId",value="指令编号",example="A1")
     private String entrustId;
 
-    @ApiModelProperty(name="pageMode",value="分页对象")
-    private PageMode pageMode;
+    @ApiModelProperty(name="manager",value="投资经理",example="A1")
+    private String manager;
+
+    @ApiModelProperty(name="startDate",value="指令开始日期",example="A1")
+    private String startDate;
+
+    @ApiModelProperty(name="endDate",value="指令结束日期",example="A1")
+    private String endDate;
+
+    @ApiModelProperty(name="keywords",value="关键字",example="A1")
+    private String keywords;
+
+    @ApiModelProperty(name="portfolioIdList",value="组合代码列表",example="A1")
+    private List<String> portfolioIdList;
+
+    @ApiModelProperty(name="zyj",value="质押券列表",example="A1")
+    private List<String> zyj;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    public String getBussType() {
+        return bussType;
+    }
+
+    public void setBussType(String bussType) {
+        this.bussType = bussType;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
 
     public String getEntrustStatus() {
         return entrustStatus;
@@ -68,4 +154,27 @@ public class EtrExchangeAgreRepTrade003RequestDto{
         this.pageMode = pageMode;
     }
 
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public List<String> getPortfolioIdList() {
+        return portfolioIdList;
+    }
+
+    public void setPortfolioIdList(List<String> portfolioIdList) {
+        this.portfolioIdList = portfolioIdList;
+    }
+
+    public List<String> getZyj() {
+        return zyj;
+    }
+
+    public void setZyj(List<String> zyj) {
+        this.zyj = zyj;
+    }
 }

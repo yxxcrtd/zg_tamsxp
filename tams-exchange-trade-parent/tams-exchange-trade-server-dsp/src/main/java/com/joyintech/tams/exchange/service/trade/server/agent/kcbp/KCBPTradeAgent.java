@@ -1,17 +1,22 @@
 package com.joyintech.tams.exchange.service.trade.server.agent.kcbp;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PostConstruct;
-
+import cn.hutool.core.date.DateUtil;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.joyintech.tams.exchange.common.bean.*;
+import com.joyintech.tams.exchange.common.bean.bond.StandardBondQryBean;
+import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
+import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.db.domain.*;
+import com.joyintech.tams.exchange.common.net.protocol.FunctionCode;
+import com.joyintech.tams.exchange.common.utils.EntrustUtils;
+import com.joyintech.tams.exchange.common.utils.IntegratedEntrustUtils;
+import com.joyintech.tams.exchange.common.utils.JsonUtils;
+import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
+import com.joyintech.tams.exchange.service.trade.dao.domain.TerminalAgentInfo;
+import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentDsp;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -22,62 +27,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.joyintech.tams.exchange.common.bean.AccountFinance;
-import com.joyintech.tams.exchange.common.bean.AccountLoginReqBean;
-import com.joyintech.tams.exchange.common.bean.EnableQryBean;
-import com.joyintech.tams.exchange.common.bean.HistoryQryBean;
-import com.joyintech.tams.exchange.common.bean.HistoryTrade;
-import com.joyintech.tams.exchange.common.bean.InstrumentQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedQuote;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.PledgeDiscount;
-import com.joyintech.tams.exchange.common.bean.PositionQueryBean;
-import com.joyintech.tams.exchange.common.bean.QuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.StandardBonds;
-import com.joyintech.tams.exchange.common.bean.TerminalId;
-import com.joyintech.tams.exchange.common.bean.bond.StandardBondQryBean;
-import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
-import com.joyintech.tams.exchange.common.constant.ActionIn;
-import com.joyintech.tams.exchange.common.constant.AgentType;
-import com.joyintech.tams.exchange.common.constant.BSFlag;
-import com.joyintech.tams.exchange.common.constant.EntrustBs;
-import com.joyintech.tams.exchange.common.constant.EntrustProp;
-import com.joyintech.tams.exchange.common.constant.EntrustStatus;
-import com.joyintech.tams.exchange.common.constant.ErrorCode;
-import com.joyintech.tams.exchange.common.constant.IDPrefix;
-import com.joyintech.tams.exchange.common.constant.Market;
-import com.joyintech.tams.exchange.common.constant.PledgeeType;
-import com.joyintech.tams.exchange.common.constant.QuoteType;
-import com.joyintech.tams.exchange.common.db.domain.Account;
-import com.joyintech.tams.exchange.common.db.domain.CancelEntrustBean;
-import com.joyintech.tams.exchange.common.db.domain.Entrust;
-import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
-import com.joyintech.tams.exchange.common.db.domain.Instrument;
-import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
-import com.joyintech.tams.exchange.common.db.domain.PositionBean;
-import com.joyintech.tams.exchange.common.db.domain.Trade;
-import com.joyintech.tams.exchange.common.net.protocol.FunctionCode;
-import com.joyintech.tams.exchange.common.utils.EntrustUtils;
-import com.joyintech.tams.exchange.common.utils.IntegratedEntrustUtils;
-import com.joyintech.tams.exchange.common.utils.JsonUtils;
-import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
-import com.joyintech.tams.exchange.service.trade.dao.domain.TerminalAgentInfo;
-import com.joyintech.tams.exchange.common.constant.AccountLoginStatus;
-import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentDsp;
-
-import cn.hutool.core.date.DateUtil;
+import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author lifangpeng
@@ -152,6 +108,7 @@ public class KCBPTradeAgent extends TradeAgentDsp {
                 tradeAgentManager.addAccounts(this, accountId);
                 tradeAgentManager.addAgentLoginStatus(accountId, true);
                 accountManager.addAccounts(account);
+                addTradeRequest(accountId, this);
                 addAccount(accountId, account);
                 setStatus(account.getId(), AccountLoginStatus.LOGGED);
 
@@ -353,6 +310,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
     @Override
     public void entrust(Entrust entrust) {
         logger.info("send entrust:{}", entrust.getId());
+        entrust.setLocalEntrustId(genLocalId());
+        entrustIdManager.setLocalEntrustIdMapping(entrust.getAccountId(), entrust.getLocalEntrustId(), entrust.getId());
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ENTRUST.value);
         agentInfo.setAccountId(entrust.getAccountId());
         try {
@@ -404,6 +363,9 @@ public class KCBPTradeAgent extends TradeAgentDsp {
     @Override
     public void integratedEntrust(IntegratedEntrust entrust) {
         logger.info("send integratedEntrust:{}", entrust.getId());
+        entrust.setLocalEntrustId(genLocalId());
+        entrustIdManager.setLocalEntrustIdMapping(entrust.getAccountId(), entrust.getLocalEntrustId(), entrust.getId());
+
         Map<String, String> parameters = Maps.newHashMap();
         parameters.put("accountId", entrust.getAccountId());
         parameters.put("entrustProp", entrust.getEntrustProp());
@@ -530,6 +492,7 @@ public class KCBPTradeAgent extends TradeAgentDsp {
      * 411029	上海债券协议回购公开报价行情查询	上交所质押式协议回购公开报价行情查询
      * 460018	固收平台确定报价行情查询	上交所固收平台现券交易报价行情查询
      * 410556   上海盘后固定价格交易行情查询
+     * 410559   深圳盘后固定价格交易行情查询
      */
     @Override
     public List<IntegratedQuote> reqIntegratedQuotes(QuoteQryBean quoteQryBean) throws Exception {
@@ -876,12 +839,18 @@ public class KCBPTradeAgent extends TradeAgentDsp {
 
     @Override
     public void reqReissueEntrust(String accountId) {
+        Map<String, EntrustInterface> entrustInterfaceMap = getAllReissueEntrusts(accountId);
+        compareReissueEntrust(accountId, entrustInterfaceMap);
+    }
+
+    private Map<String, EntrustInterface> getAllReissueEntrusts(String accountId) {
         Map<String, EntrustInterface> entrustInterfaceMap = Maps.newHashMap();
         KCBPAccount kcbpAccount = getKCBPAccount(accountId);
         if (null == kcbpAccount) {
             logger.error(("登录账户信息不存在：accountId={}"), accountId);
-            return;
+            return entrustInterfaceMap;
         }
+
         List<Entrust> entrustList = queryIncrementEntrust0(kcbpAccount);
         if (Objects.isNull(entrustList)) {
             entrustList = new ArrayList<>();
@@ -898,8 +867,9 @@ public class KCBPTradeAgent extends TradeAgentDsp {
             }
         });
 
-        compareReissueEntrust(accountId, entrustInterfaceMap);
+        return entrustInterfaceMap;
     }
+
 
     private List<IntegratedEntrust> getAllReissueIntegratedEntrust(KCBPAccount kcbpAccount) {
         List<IntegratedEntrust> res = new ArrayList<>();
@@ -912,9 +882,6 @@ public class KCBPTradeAgent extends TradeAgentDsp {
     @Override
     public void reqReissueTrade(String accountId) {
         List<Trade> tradeList = getAllReissueTrades(accountId);
-        if (CollectionUtils.isEmpty(tradeList)) {
-            return;
-        }
         compareReissueTrade(accountId, tradeList);
     }
 
@@ -937,14 +904,13 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         if (MapUtils.isEmpty(kcbpAccounts)) {
             return;
         }
-
         for (Map.Entry<String, KCBPAccount> entry : kcbpAccounts.entrySet()) {
             KCBPAccount kcbpAccount = entry.getValue();
             String accountId = kcbpAccount.getAccountId();
-//            if (getStatus(accountId) != AccountLoginStatus.TRADING.value) {
-//                return;
-//            }
-            logger.info("status：{}", getStatus(accountId));
+            logger.info("account：{}，status：{}", accountId, getStatus(accountId));
+            if (getStatus(accountId) != AccountLoginStatus.TRADING.value) {
+                return;
+            }
             boolean loginStatus = tradeAgentManager.getAgentLoginStatus(accountId);
             if (loginStatus) {
                 executeQueryNextTrade(kcbpAccount);
@@ -958,10 +924,10 @@ public class KCBPTradeAgent extends TradeAgentDsp {
             poolExecutor.prestartAllCoreThreads();
         }
 
-        for (QueryEnum queryEnum : QueryEnum.values()) {
+        for (QueryEnum queryEnum : QueryEnum.getValues()) {
             try {
                 poolExecutor.execute(new QueryTask(queryEnum, kcbpAccount));
-                Thread.sleep(3000);
+                Thread.sleep(500);
             } catch (Exception e) {
                 logger.error("{}执行异常：{}", queryEnum.name(), e.getMessage(), e);
             }
@@ -969,14 +935,30 @@ public class KCBPTradeAgent extends TradeAgentDsp {
     }
 
     enum QueryEnum {
-        queryIncrementTrade,
-        queryFixedIncomeTrade,
-        queryProtocolBack_SZ_Trade,
-        queryProtocolBack_SH_Trade,
-        queryIncrementEntrust,
-        queryFixedIncomeEntrust,
-        queryProtocolBack_SH_Entrust,
-        queryProtocolBack_SZ_Entrust;
+        queryIncrementEntrust(1),
+        queryFixedIncomeEntrust(2),
+        queryProtocolBack_SH_Entrust(3),
+        queryProtocolBack_SZ_Entrust(4),
+        queryIncrementTrade(5),
+        queryFixedIncomeTrade(6),
+        queryProtocolBack_SZ_Trade(7),
+        queryProtocolBack_SH_Trade(8),
+        ;
+
+        private Integer code;
+
+        QueryEnum(Integer code) {
+            this.code = code;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public static List<QueryEnum> getValues(){
+            return Lists.newArrayList(QueryEnum.values()).stream()
+                    .sorted(Comparator.comparing(QueryEnum::getCode)).collect(Collectors.toList());
+        }
     }
 
     class QueryTask implements Runnable {
@@ -993,18 +975,6 @@ public class KCBPTradeAgent extends TradeAgentDsp {
             System.out.println(this.toString() + " is running!");
             try {
                 switch (queryEnum) {
-                    case queryIncrementTrade:
-                        queryIncrementTrade(kcbpAccount);
-                        return;
-                    case queryFixedIncomeTrade:
-                        queryFixedIncomeTrade(kcbpAccount);
-                        return;
-                    case queryProtocolBack_SZ_Trade:
-                        queryProtocolBack_SZ_Trade(kcbpAccount);
-                        return;
-                    case queryProtocolBack_SH_Trade:
-                        queryProtocolBack_SH_Trade(kcbpAccount);
-                        return;
                     case queryIncrementEntrust:
                         queryIncrementEntrust(kcbpAccount);
                         return;
@@ -1016,6 +986,18 @@ public class KCBPTradeAgent extends TradeAgentDsp {
                         return;
                     case queryProtocolBack_SZ_Entrust:
                         queryProtocolBack_SZ_Entrust(kcbpAccount);
+                        return;
+                    case queryIncrementTrade:
+                        queryIncrementTrade(kcbpAccount);
+                        return;
+                    case queryFixedIncomeTrade:
+                        queryFixedIncomeTrade(kcbpAccount);
+                        return;
+                    case queryProtocolBack_SH_Trade:
+                        queryProtocolBack_SH_Trade(kcbpAccount);
+                        return;
+                    case queryProtocolBack_SZ_Trade:
+                        queryProtocolBack_SZ_Trade(kcbpAccount);
                         return;
                     default:
                 }
@@ -1074,7 +1056,6 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         if (Strings.isNullOrEmpty(trade.getBrokerTradeId())) {
             trade.setBrokerTradeId(trade.getEntrustId());
         }
-        trade.setNoCancelEntrust(true);
         onRtnTrade(trade);
     }
 
@@ -1140,8 +1121,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getEntrustPositionStr());
+//        parameters.put("poststr", "");
+        parameters.put("poststr", kcbpAccount.getEntrustPositionStr());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "Bidding");
         agentInfo.setAccountId(accountId);
@@ -1172,8 +1153,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_entrust());
+//        parameters.put("poststr", "");
+        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_entrust());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "FixedIncome");
         agentInfo.setAccountId(accountId);
@@ -1207,8 +1188,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_entrust());
+//        parameters.put("posstr", "");
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_entrust());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "ProtocolBack_SH");
         agentInfo.setAccountId(accountId);
@@ -1239,8 +1220,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("ordersno", "");
         parameters.put("stkcode", "");
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_entrust());
+//        parameters.put("posstr", "");
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_entrust());
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
 
@@ -1273,8 +1254,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getTradePositionStr());
+//        parameters.put("poststr", "");
+        parameters.put("poststr", kcbpAccount.getTradePositionStr());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "Bidding");
         agentInfo.setAccountId(accountId);
@@ -1305,8 +1286,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_trade());
+//        parameters.put("poststr", "");
+        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_trade());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "FixedIncome");
         agentInfo.setAccountId(accountId);
@@ -1337,8 +1318,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("ordersno", "");
         parameters.put("qryflag", "1");
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_trade());
+//        parameters.put("posstr", "");
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_trade());
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
 
@@ -1373,8 +1354,8 @@ public class KCBPTradeAgent extends TradeAgentDsp {
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_trade());
+//        parameters.put("posstr", "");
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_trade());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "ProtocolBack_SH");
         agentInfo.setAccountId(accountId);

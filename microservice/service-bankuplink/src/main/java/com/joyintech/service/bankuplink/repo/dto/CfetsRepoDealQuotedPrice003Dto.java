@@ -26,7 +26,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
  * 
  * @author yufei
  * @version 1.0 2020年5月14日
- * @see CfetsRepoDealQuotedPriceDto
+ * @see CfetsRepoDealQuotedPrice003Dto
  * @since 1.0
  */
 public class CfetsRepoDealQuotedPrice003Dto extends BaseEntity {

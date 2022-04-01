@@ -35,6 +35,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
 import com.joyintech.system.base.entity.SysUploadFileInfo;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
@@ -50,12 +51,14 @@ import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.trade.exchangetransmatch.common.service.ExchangeTransMatchCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -331,6 +334,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private ExchangeTransMatchCommonService exchangeTransMatchCommonService;
+    @Autowired
+    private CommonPositionEngineService commonPositionEngineService;
 
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
@@ -1943,6 +1948,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             if(StringUtil.isNotEmpty(entity.getDealSqeId())) {
                 exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),trdFinProductDealTotal.getTotleTradeId(),operationType);
             }
+            if(StringUtil.isNotEmpty(entity.getBondFirstSign()) && StringUtil.equals("01",entity.getBondFirstSign())){
+                sendPositionMethod(entity);
+            }
         }
         // 撤销
         else {
@@ -1997,6 +2005,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             //成交录单---调用共通
 
             exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
+            if(StringUtil.isNotEmpty(entity.getBondFirstSign()) && StringUtil.equals("01",entity.getBondFirstSign())){
+                PositionHttpRequest.dorevoke(entity.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_债券一级投标.getValue(),entity.getPs());
+            }
 
         }
         // 如果中标结果进来 add by gejiaao 2019年8月6日 start
@@ -4813,5 +4824,77 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         return restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastNetAmortizationPrice", paramMap,
                 BigDecimal.class);
+    }
+    private  void sendPositionMethod(TrdBondInvestTradeDto entity){
+        //调用头寸
+        Map<String,Object> result = new HashMap<>();
+        result.put("userId", null!=SecurityUtil.getLoginUser()?SecurityUtil.getLoginUser().getUserName():"system");
+        result.put("totalTradeId",entity.getTotleTradeId());
+        result.put("flowStatus",DictCodeListExt3.流程节点_审批生效.getValue());
+        result.put("modelType", DictCodeListExt1.子系统代码_交易.getValue());
+        result.put("balanceCheck",DictCodeList.是否_否.getValue());
+        result.put("busiType",DictCodeListExt3.头寸业务类型_债券一级投标.getValue());
+        result.put("busiAct",DictCodeListExt3.业务动作_缴款.getValue());
+        result.put("ps",entity.getPs());
+        if(StringUtil.isNotEmpty(entity.getTradeMarket()) &&
+                (StringUtil.equals(entity.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue()) || StringUtil.equals(entity.getTradeMarket(),DictCodeListExt1.交易场所_商业银行柜台.getValue()))){
+            result.put("tradePlace",BussinessDictCodeList.交易场所_银行间.getValue());
+            result.put("interfaceType","Bond001");
+        }else{
+            result.put("interfaceType","Bond002");
+            result.put("tradePlace",entity.getTradeMarket());
+            String deliveryType = commonPositionEngineService.getDeliveryType(entity.getFinprodId());
+            result.put("deliveryType",deliveryType);
+        }
+        result.put("bidResult",DictCodeList.是否_是.getValue());
+        String settleSpreed = StringUtil.EMPTY;
+        if (Long.valueOf(entity.getSettleSpeedStr()) == 0L) {
+            settleSpreed =  BussinessDictCodeList.清算速度_T加0.getValue();
+        } else if (Long.valueOf(entity.getSettleSpeedStr())  == 1L) {
+            settleSpreed = BussinessDictCodeList.清算速度_T加1.getValue();
+        } else if (Long.valueOf(entity.getSettleSpeedStr())  == 2L) {
+            settleSpreed = BussinessDictCodeList.清算速度_T加2.getValue();
+        }
+        result.put("settleSpeed",settleSpreed);
+        result.put("decisionAct",DictCodeListExt3.系统动作_新建.getValue());
+        result.put("systemAct",DictCodeListExt3.系统动作_新建.getValue());
+        result.put("cdate",entity.getTradeDate());
+        result.put("ccy",entity.getCcy());
+        result.put("finprodId",entity.getFinprodId());
+        result.put("bTotalTradeId",null);
+        List<Map<String,Object>> ptlList = new ArrayList<>();
+        Map<String,Object> pltMap = new HashMap<>();
+        for (TrdProductDeal trdProductDeal : entity.getTrdProductDeals()){
+            TrdProductDealAdd trdProductDealAdd=new TrdProductDealAdd();
+            for(TrdProductDealAdd item:entity.getTrdProductDealAdds()){
+                if (trdProductDeal.getTradeId() != null
+                        && trdProductDeal.getTradeId().equals(item.getTradeId())) {
+                    trdProductDealAdd=item;
+                    break;
+                }
+            }
+            pltMap.put("portfolioId", trdProductDealAdd.getPortfolioId());
+            pltMap.put("tradeId",trdProductDeal.getTradeId());
+            pltMap.put("etrId",trdProductDeal.getEntrustId());
+            pltMap.put("cashAcctId",trdProductDealMapper.getACCTNO(trdProductDealAdd.getPortfolioId(),BussinessDictCodeList.资金账户类型_托管账户.getValue()));
+            pltMap.put("secAcctId",trdProductDealMapper.getSecAcctId(trdProductDealAdd.getPortfolioId(),entity.getFinprodId(),entity.getTradeMarket()));
+            pltMap.put("secAmount",ArithmeticUtil.multiply(trdProductDeal.getShareAmt(),new BigDecimal(100))); //券面总额
+            if(null!=trdProductDeal.getFpriceAmt()&&BigDecimal.ZERO.compareTo(trdProductDeal.getFpriceAmt())!=0){
+                pltMap.put("cashAmount",trdProductDeal.getFpriceAmt().setScale(4,RoundingMode.DOWN));//全价总额
+            }else{
+                if(null!=entity.getUnitFprice()&&BigDecimal.ZERO.compareTo(entity.getUnitFprice())!=0){
+                    pltMap.put("cashAmount",ArithmeticUtil.multiply(trdProductDeal.getShareAmt(),entity.getUnitFprice()).setScale(4,RoundingMode.DOWN));
+                }else{
+                    pltMap.put("cashAmount",ArithmeticUtil.multiply(trdProductDeal.getShareAmt(),new BigDecimal(100)).setScale(4,RoundingMode.DOWN));
+                }
+            }
+            pltMap.put("ownSecAmount",ArithmeticUtil.multiply(trdProductDeal.getShareAmt(),new BigDecimal(100)));
+            pltMap.put("integrateSecAmount",BigDecimal.ZERO);
+            pltMap.put("invAim",trdProductDeal.getInvAim());
+
+            ptlList.add(pltMap);
+        }
+        result.put("ptlList",ptlList);
+        PositionHttpRequest.send(result);
     }
 }

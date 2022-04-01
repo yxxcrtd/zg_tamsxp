@@ -21,6 +21,18 @@ public class InvestTradeReaderDto extends NeedOperateEntity {
      * 成交数据明细数据
      */
     private List<SettleTransDataDto> settleTransDataList;
+    /**
+     * 成交数据明细数据（新加申购确认）
+     */
+    private List<SettleTransDataDto> settleTransDataSgqrList;
+
+    public List<SettleTransDataDto> getSettleTransDataSgqrList() {
+        return settleTransDataSgqrList;
+    }
+
+    public void setSettleTransDataSgqrList(List<SettleTransDataDto> settleTransDataSgqrList) {
+        this.settleTransDataSgqrList = settleTransDataSgqrList;
+    }
 
     /**
      * 除权交易数据

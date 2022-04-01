@@ -72,7 +72,7 @@ public class StlDataDownTask extends BatchBaseService {
                 .buildFlow("上中登证券权益数据导入", "SzdZqy")
                 .buildFlow("深中登发行可申购额度信息数据导入", "SzdSjsks")
                 .parallelBuilder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId(),
-                        "上中登股息红利税补缴数据导入","上中登JSMX导入","深中登发行信息库导入","深中登SJSJG导入","深中登SJSMX导入","上中登ZQBD导入","深中登征税明细信息库数据导入","上中登证券权益数据导入","深中登发行可申购额度信息数据导入")
+                        "上中登股息红利税补缴数据导入","上中登JSMX导入","深中登发行信息库导入","深中登SJSJG导入","深中登SJSMX导入","上中登ZQBD导入","深中登征税明细信息库数据导入","上中登证券权益数据导入","深中登发行可申购额度信息数据导入","上中登权益登记通知信息TZXX接口")
 //                .builder(this.getBatchTask().getBeanName() + StringUtil.SPACE + this.getBatchTask().getTaskId())
                 .run();
     }

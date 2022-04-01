@@ -75,23 +75,23 @@
 
           //控制编辑时的输入框置灰
            var init = function(){
-           var erroOrInfo = $('#erroOrInfo').val();
-           var salerCredentType = $('#salerCredentType').val();
-           if(pageModel==PAGE_MODEL_EDIT && erroOrInfo === 'info'){
+             var erroOrInfo = $('#erroOrInfo').val();
+             var salerCredentType = $('#salerCredentType').val();
+             if(pageModel==PAGE_MODEL_EDIT){
                      $('#salerInstCode').prop("disabled",true);
                      $('#salerInsNo').prop("disabled",true);
                      if(salerCredentType != '99'){
                       $('#salerOtherCredentName').prop("disabled",true);
                      }
 
-           }
-           else{
+             }
+              else{
                      $('#salerInstCode').prop("disabled",true);
                      getIssuePartyId();
                      if(salerCredentType != '99'){
-                                           $('#salerOtherCredentName').prop("disabled",true);
-                                          }
-           }
+                          $('#salerOtherCredentName').prop("disabled",true);
+                     }
+              }
            }
 
       $(document).ready(function(){

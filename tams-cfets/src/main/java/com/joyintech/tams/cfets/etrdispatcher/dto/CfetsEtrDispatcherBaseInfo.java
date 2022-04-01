@@ -34,6 +34,9 @@ public class CfetsEtrDispatcherBaseInfo {
     @ApiModelProperty(name="ps",value="交易方向",example="字符串1")
     private String ps;
 
+    @ApiModelProperty(name="entrustId",value="指令代码",example="字符串1")
+    private String entrustId;
+
     public String getBusiTypePosition() {
         return busiTypePosition;
     }
@@ -112,5 +115,13 @@ public class CfetsEtrDispatcherBaseInfo {
 
     public void setPs(String ps) {
         this.ps = ps;
+    }
+
+    public String getEntrustId() {
+        return entrustId;
+    }
+
+    public void setEntrustId(String entrustId) {
+        this.entrustId = entrustId;
     }
 }

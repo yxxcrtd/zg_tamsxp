@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.component.svrreport.chb.msglog.dao.ChbComponentMsgLogMapper_mysql" >
+    <insert id="insertInterfLog" parameterType="com.joyintech.component.svrreport.chb.dto.InterfLog" >
+        insert into CHB_INTERF_LOG (LOG_ID,INTERF_ID,
+						        INTERF_TYPE,
+						        file_NAME,TASK_STATUS,
+								CREATE_TIME,BIZ_DATE,
+								err_message,ISNEEDWARNING,
+								remark1,remark2)
+        values (#{logId,jdbcType=VARCHAR}, #{interfId,jdbcType=VARCHAR},
+               #{interfType,jdbcType=VARCHAR},
+               #{fileName,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR},
+               #{createTime,jdbcType=TIMESTAMP}, #{bizDate,jdbcType=VARCHAR},
+               #{errMessage,jdbcType=VARCHAR}, #{isneedwarning,jdbcType=VARCHAR},
+               #{remark1,jdbcType=VARCHAR}, #{remark2,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertChbInfoReport" parameterType="com.joyintech.component.svrreport.chb.dto.ChbInfoReportDto" >
+        insert into CHB_INFO_REPORT (REPORT_NO, REP_MES_NO, UPLOAD_RESULT,
+            UPLOAD_RESULT_MSG, UPLOAD_FILE_ID, CHECK_FILE_ID,
+            CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME,
+            CHECK_TOTAL_COUNT, CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT,
+            INSIDE_FILE_ID, SEND_TIME, REPLY_TIME,
+            WORKFLOW_ID, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+            SUBMIT_COUNT, SUBMIT_TYPE)
+        values (#{reportNo,jdbcType=VARCHAR}, #{repMesNo,jdbcType=VARCHAR}, #{uploadResult,jdbcType=VARCHAR},
+            #{uploadResultMsg,jdbcType=VARCHAR}, #{uploadFileId,jdbcType=VARCHAR}, #{checkFileId,jdbcType=VARCHAR},
+            #{checkResult,jdbcType=VARCHAR}, #{checkResultMsg,jdbcType=VARCHAR}, #{checkFileName,jdbcType=VARCHAR},
+            #{checkTotalCount,jdbcType=DECIMAL}, #{checkSuccessCount,jdbcType=DECIMAL}, #{checkFailedCount,jdbcType=DECIMAL},
+            #{insideFileId,jdbcType=VARCHAR}, #{sendTime,jdbcType=DATE}, #{replyTime,jdbcType=TIMESTAMP},
+            #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{submitCount,jdbcType=DECIMAL}, #{submitType,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertChbEquDetSubmitStatus" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        insert into CHB_EQUDET_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
+            SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
+            CREATE_USER, CREATE_TIME, REPORT_NO,
+            SUBMIT_FEEDBACK_MSG, UNIQUE_IDENTI, CREATE_DEPT
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{submitNum,jdbcType=VARCHAR}, #{submitType,jdbcType=VARCHAR},
+            #{submitFeedbackStatus,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{reportNo,jdbcType=VARCHAR},
+            #{submitFeedbackMsg,jdbcType=VARCHAR}, #{uniqueIdenti,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+
+    <insert id="insertChbSubmitStatusTwo" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        insert into CHB_SUBMIT_STATUS_TWO (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
+            SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
+            CREATE_USER, CREATE_TIME, REPORT_NO,
+            SUBMIT_FEEDBACK_MSG, UNIQUE_IDENTI, CREATE_DEPT
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{submitNum,jdbcType=VARCHAR}, #{submitType,jdbcType=VARCHAR},
+            #{submitFeedbackStatus,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{reportNo,jdbcType=VARCHAR},
+            #{submitFeedbackMsg,jdbcType=VARCHAR}, #{uniqueIdenti,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}
+            )
+    </insert>
+    
+    <delete id="deleteChbSubmitStatusTwo" parameterType="map" >
+        DELETE FROM CHB_SUBMIT_STATUS_TWO  WHERE SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="selectReportNoByRepMesNo" resultType ="com.joyintech.component.svrreport.chb.dto.ChbInfoReportDto">
+        select
+        REPORT_NO AS reportNo,
+        REP_MES_NO AS repMesNo,
+        UPLOAD_RESULT AS uploadResult,
+        UPLOAD_RESULT_MSG AS uploadResultMsg,
+        UPLOAD_FILE_ID AS uploadFileId,
+        CHECK_FILE_ID AS checkFileId,
+        CHECK_RESULT AS checkResult,
+        CHECK_RESULT_MSG AS checkResultMsg,
+        CHECK_FILE_NAME AS checkFileName,
+        CHECK_TOTAL_COUNT AS checkTotalCount,
+        CHECK_SUCCESS_COUNT AS  checkSuccessCount,
+        CHECK_FAILED_COUNT AS checkFailedCount,
+        INSIDE_FILE_ID AS insideFileId,
+        SEND_TIME AS sendTime,
+        REPLY_TIME AS replyTime
+        <!-- 增加报送类型查询条件 add by wm 2020-08-20 start -->
+        ,submit_type submitType
+        <!-- 增加报送类型查询条件 add by wm 2020-08-20 end -->
+        from
+        CHB_INFO_REPORT
+        where REP_MES_NO =  #{repMesNo,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="delChbInfoReportByMesNo">
+        DELETE FROM CHB_INFO_REPORT WHERE REP_MES_NO = #{repMesNo,jdbcType=VARCHAR}
+    </delete>
+</mapper>

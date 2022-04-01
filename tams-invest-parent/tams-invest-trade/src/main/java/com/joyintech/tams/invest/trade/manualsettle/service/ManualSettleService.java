@@ -141,7 +141,17 @@ public class ManualSettleService extends CommonExportService<ManualSettleDto>
 
     @Override
     public Page<ManualSettleDto> selectPageData(Map<String, Object> selectParam) {
-        return selectForPage(selectParam);
+        if (selectParam.get("portfolioId") != null) {
+            selectParam.put("portfolioId", StringUtil.splitToList(",", (String)selectParam.get("portfolioId")));
+        }
+        else {
+            selectParam.put("portfolioId", null);
+        }
+        selectParam.put("userName", LoginUserUtil.getUserName());
+        Page<ManualSettleDto> page = restTemplate.postForPage(
+                ServiceApplication.TRADE_SERVICE_NAME + "/ManualSettle/findPageExport",
+                selectParam, ManualSettleDto.class);
+        return page;
     }
 }
 

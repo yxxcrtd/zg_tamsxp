@@ -91,4 +91,6 @@ public interface BasePtlCashPositionInfoService {
      * @return
      */
     FinProductAdd getFinProductAdd(String finprodId);
+
+    BigDecimal queryTrdAvailableCashNew(PtlCashPositionFlowDto positionQueryDto);
 }

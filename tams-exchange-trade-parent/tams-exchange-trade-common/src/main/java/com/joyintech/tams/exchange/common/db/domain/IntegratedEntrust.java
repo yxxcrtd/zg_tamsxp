@@ -2,7 +2,9 @@ package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -14,7 +16,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@ApiModel(value = "综合业务下单请求报文", description = "综合业务下单请求报文")
+@ApiModel(value = "综合业务下单响应报文", description = "综合业务下单响应报文")
 public class IntegratedEntrust extends BaseEntity implements Serializable, EntrustInterface, KeyMethodInterface<String> {
     private static final long serialVersionUID = -7278292640597594312L;
 
@@ -307,6 +309,47 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
     @ApiModelProperty(required = true, name = "operateUser", value = "操作人员ID 执行撤销异常委托操作人员ID")
     @Size(max = 20)
     private String operateUser;
+
+    @ApiModelProperty(name = "portfolioName", value = "组合名称", hidden = true)
+    private String portfolioName;
+    @ApiModelProperty(name = "secAcctId", value = "证券账户", hidden = true)
+    private String secAcctId;
+    @ApiModelProperty(name = "secAcctName", value = "证券账户", hidden = true)
+    private String secAcctName;
+    @ApiModelProperty(name = "tradePlat", value = "交易平台", hidden = true)
+    private String tradePlat;
+    @ApiModelProperty(name = "finprodType2", value = "金融产品类型（投管分类）：债券、理财产品、基金、理财产品模板、理财产品分层", hidden = true)
+    private String finprodType2;
+    @ApiModelProperty(name = "invManagerId", value = "投资经理", hidden = true)
+    private String invManagerId;
+    @ApiModelProperty(name = "ps", value = "交易方向", hidden = true)
+    private String ps;
+
+	@ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
+
+	@ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
+    private String busiTypeTg;
+    @ApiModelProperty(name = "extend1", value = "扩展信息1")
+    private String extend1;
+    @ApiModelProperty(name = "extend2", value = "扩展信息2")
+    private String extend2;
+
+    @ApiModelProperty(name = "tradeDate", value = "成交时间")
+    private String tradeDate;
+    @ApiModelProperty(name = "createDateTime", value = "委托时间")
+    private String createDateTime;
+
+    @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
+    private String entrustClass;
+
+	public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
+	} 
 
     public boolean isNoCancelEntrust() {
         return noCancelEntrust;
@@ -841,5 +884,109 @@ public class IntegratedEntrust extends BaseEntity implements Serializable, Entru
 
     public void setHedgeFlag(String hedgeFlag) {
 
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getInvManagerId() {
+        return invManagerId;
+    }
+
+    public void setInvManagerId(String invManagerId) {
+        this.invManagerId = invManagerId;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getExtend1() {
+        return extend1;
+    }
+
+    public void setExtend1(String extend1) {
+        this.extend1 = extend1;
+    }
+
+    public String getExtend2() {
+        return extend2;
+    }
+
+    public void setExtend2(String extend2) {
+        this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getCreateDateTime() {
+        return DateUtil.formatDateTime(createTime);
+    }
+
+    public void setCreateDateTime(String createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }

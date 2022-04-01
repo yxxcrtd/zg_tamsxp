@@ -426,6 +426,7 @@ function getColumns() {
 	$("#columnType").empty();
 	$("#resultColumn").empty();
 	$("#selectedColumns").empty();
+	selectedColumns = [];
 	if (typeof (tableId) == "undefined" || tableId == null || tableId == "") {
 		$("#columnType").empty();
 		$("#resultColumn").empty();

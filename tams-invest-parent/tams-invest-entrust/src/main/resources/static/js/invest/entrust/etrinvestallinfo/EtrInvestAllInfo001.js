@@ -41,6 +41,16 @@
             entrustCreateSource = data.entrustCreateSource;
             //交易所（上交和深交）的指令
             if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) {
+               // ENTRUST_CLASS=多组合单资产指令 且 资产类型 IN（债券、股票、基金、回购）且 交易场所IN（上交所、深交所）打开场内交易指令画面对应交易平台的多组合指令画面
+                if(data.entrustClass==ENTRUST_CLASS_02&&(data.assetType == F01 || data.assetType == F02||data.assetType == F07||data.assetType == F11 )){
+                    pagePath = "invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/init";
+                    Joyin.dialog(JoyinUtil.getLabel('EtrAgreRepTrade001.detail'), basePath + pagePath,
+                        "95%", "90%", {
+                            pageModel: PAGE_MODEL_REFERENCE,
+                            entrustId: data.entrustId,
+                        });//交易所协议回购指令详情
+                    return;
+                }
                 if (entrustCreateSource != null && entrustCreateSource == ENTRUST_CREATE_SOURCE_02) {
                     var entrustType = data.entrustType;
                     if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
@@ -278,7 +288,7 @@
             ,{field:'entrustStatusStr', title: 'EtrInvestAllInfo001.entrustStatus', width:'200',sortField:"entrustStatus"}
             ,{field:'portfolioId', title: 'EtrInvestAllInfo001.portfolioId', width:'200',
                 render : function(data, type, row, meta) {
-                    if(row.portfolioId){
+                    if(row.portfolioId&&row.entrustClass==ENTRUST_CLASS_01){
                         return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
                     }else{
                         return '';

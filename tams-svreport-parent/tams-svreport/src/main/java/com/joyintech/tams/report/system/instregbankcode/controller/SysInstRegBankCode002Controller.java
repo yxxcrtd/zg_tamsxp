@@ -98,7 +98,7 @@ public class SysInstRegBankCode002Controller extends BaseController {
         } else {
         	model.addAttribute("isFinSubCompany", DictCodeListExt2.是否理财子公司_是.getValue());
         }
-        super.setSelectOptionToModel(model, DictCode.是否理财子公司);
+        super.setSelectOptionToModel(model, DictCode.是否理财子公司,DictCode.监管机构);
         return super.init(model);
     }
 

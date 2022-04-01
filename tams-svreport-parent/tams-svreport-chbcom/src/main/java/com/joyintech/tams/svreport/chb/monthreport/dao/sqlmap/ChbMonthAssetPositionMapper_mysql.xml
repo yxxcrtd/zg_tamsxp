@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
-    <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
-    <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
-    <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
-    <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
-    <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
-    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
-    <result column="ASSETTYPE" property="assettype" jdbcType="VARCHAR" />
-    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
-    <result column="ASSETVALUE_A" property="assetvalueA" jdbcType="DECIMAL" />
-    <result column="ASSETVALUE_B" property="assetvalueB" jdbcType="DECIMAL" />
-    <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
-    <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
-    <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR" />
-    <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
-    <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
-    <result column="IS_GOVERN_FUND1" property="isGovernFund1" jdbcType="VARCHAR" />
-    <result column="PRIVATEFUND_FLAG" property="privatefundFlag" jdbcType="VARCHAR" />
-    <result column="PRIVATEPRD_FLAG" property="privateprdFlag" jdbcType="VARCHAR" />
-    <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag" jdbcType="VARCHAR" />
-    <result column="RATING" property="rating" jdbcType="VARCHAR" />
-    <result column="ASSETTYPE2" property="assettype2" jdbcType="VARCHAR" />
-    <result column="IS_UNDER_TRADE" property="isUnderDeal" jdbcType="VARCHAR" />
-    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-    <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
-    <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
+        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+        <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
+        <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+        <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+        <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSETTYPE" property="assettype" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ASSETVALUE_A" property="assetvalueA" jdbcType="DECIMAL" />
+        <result column="ASSETVALUE_B" property="assetvalueB" jdbcType="DECIMAL" />
+        <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
+        <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR" />
+        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="IS_GOVERN_FUND1" property="isGovernFund1" jdbcType="VARCHAR" />
+        <result column="PRIVATEFUND_FLAG" property="privatefundFlag" jdbcType="VARCHAR" />
+        <result column="PRIVATEPRD_FLAG" property="privateprdFlag" jdbcType="VARCHAR" />
+        <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag" jdbcType="VARCHAR" />
+        <result column="RATING" property="rating" jdbcType="VARCHAR" />
+        <result column="ASSETTYPE2" property="assettype2" jdbcType="VARCHAR" />
+        <result column="IS_UNDER_TRADE" property="isUnderDeal" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
+    </resultMap>
 
     <sql id="searchProductRatingSql">
         SELECT de.* FROM (
@@ -59,8 +59,8 @@
         INNEROUTER INNEROUTER,
         IF
         ( ( @OCODE = OCODE AND @OTYPE = OTYPE AND @GRADEORGID = GRADEORGID ),
-            @rank := @rank + 1,
-            @rank := 1
+        @rank := @rank + 1,
+        @rank := 1
         ) AS rk,
         @OCODE := OCODE,
         @OTYPE := OTYPE,
@@ -115,603 +115,41 @@
             AND de.rk = 1
         </if>
     </sql>
-  
-  <select id="selectAssetposition" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
-  	resultSetType="FORWARD_ONLY" fetchSize="1000" >
-		select 
-            #{bookdate,jdbcType=DATE} bookdate
-            ,#{enddate,jdbcType=DATE} enddate
-            ,pos.INVEST_VARIETY
-            ,pos.trade_type
-            ,pos.IS_UNDER_TRADE
-            ,pos.ASSET_CODE
-            ,pos.PROD_ID
-            ,pos.chl_id chlid
-            ,pos.CCY
-            ,(case pos.ASSET_CODE when 'REMAININGCASH' then '01' else info.asset_type end) assettype
-            ,(case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end) assettype2
-            ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
-            ,info.IN_ASSET_TYPE IN_ASSET_TYPE /*行业一级分类*/
-            ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
-            ,sum((case pos.trade_type when '05' then pos.accuqty else null end)) ASSETVALUE_B /*穿透后资产价值*/
-            ,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating/*债券评级*/
-            ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
-            ,(case info.PPPFLAG when '01' then '01' else null end) PPPFLAG
-            ,(case info.IS_GOVERN_FUND when '01' then '01' else null end) IS_GOVERN_FUND1
-            ,(case info.PRIVATEFUND_FLAG when '01' then '01' else null end) PRIVATEFUND_FLAG
-            ,(case info.PRIVATEPRD_FLAG when '01' then '01' else null end) PRIVATEPRD_FLAG
-            ,(case info.BONDTOSTOCK_FLAG when '01' then '01' else null end) BONDTOSTOCK_FLAG
-            ,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
-		from CHB_ASSET_POSITION pos
-		left join CHB_ASSET_INFO info
-		on pos.ASSET_CODE=info.ASSET_CODE
-		and info.status !='D'
-        <choose>
-          <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
-              left join (
-                  SELECT asset_code,rating FROM (
-                      select
-                      @rownum := @rownum + 1 rownum
-                      ,brating.O_CODE as asset_code
-                      ,brating.GRADE_RESULT as rating,
-                      IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                      @O_CODE := brating.O_CODE
-                      from
-                      ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                      <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                          ,is_recommand asc
-                      </if>
-                      <if test="sysflag=='02'.toString()"> /*最大评级*/
-                          ,GRADE_RESULT asc
-                      </if>
-                      <if test="sysflag=='03'.toString()"> /*最小评级*/
-                          ,GRADE_RESULT desc
-                      </if>) brating,
-                      ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                      where 1=1
-                      and brating.O_TYPE = '01' /*主体评级*/
-                      and brating.SHORT_LONG_TERM = '02' /*长期*/
-                      and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de where 1=1 limit 1
-              ) a
-              on info.FINANCIE=a.ASSET_CODE
-              left join  (
-                  SELECT asset_code,rating FROM (
-                      select
-                      @rownum := @rownum + 1 rownum
-                      ,brating.O_CODE as asset_code
-                      ,brating.GRADE_RESULT as rating,
-                      IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                      @O_CODE := brating.O_CODE
-                      from
-                      ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                      <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                          ,is_recommand asc
-                      </if>
-                      <if test="sysflag=='02'.toString()"> /*最大评级*/
-                          ,GRADE_RESULT asc
-                      </if>
-                      <if test="sysflag=='03'.toString()"> /*最小评级*/
-                          ,GRADE_RESULT desc
-                      </if>) brating,
-                      ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                      where 1=1
-                      and brating.O_TYPE = '01' /*主体评级*/
-                      and brating.SHORT_LONG_TERM = '01' /*短期*/
-                      and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de  where 1=1 limit 1
-              ) b
-              on info.FINANCIE=b.ASSET_CODE
-          </when>
-          <otherwise>
-              left join (
-                  SELECT asset_code,rating FROM (
-                  select
-                  @rownum := @rownum + 1 rownum
-                  ,brating.O_CODE as asset_code
-                  ,brating.GRADE_RESULT as rating,
-                  IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                  @O_CODE := brating.O_CODE
-                  from
-                  ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                  <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                      ,is_recommand asc
-                  </if>
-                  <if test="sysflag=='02'.toString()"> /*最大评级*/
-                      ,GRADE_RESULT asc
-                  </if>
-                  <if test="sysflag=='03'.toString()"> /*最小评级*/
-                      ,GRADE_RESULT desc
-                  </if>) brating,
-                  ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                  where 1=1
-                  and brating.O_TYPE = '01' /*主体评级*/
-                  and brating.SHORT_LONG_TERM = '02' /*长期*/
-                  and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de  where 1=1 limit 1
-              ) a
-              on pos.ASSET_CODE=a.ASSET_CODE
-              left join  (
-                  SELECT asset_code,rating FROM (
-                      select
-                      @rownum := @rownum + 1 rownum
-                      ,brating.O_CODE as asset_code
-                      ,brating.GRADE_RESULT as rating,
-                      IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                      @O_CODE := brating.O_CODE
-                      from
-                      ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                      <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                          ,is_recommand asc
-                      </if>
-                      <if test="sysflag=='02'.toString()"> /*最大评级*/
-                          ,GRADE_RESULT asc
-                      </if>
-                      <if test="sysflag=='03'.toString()"> /*最小评级*/
-                          ,GRADE_RESULT desc
-                      </if>) brating,
-                      ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                      where 1=1
-                      and brating.O_TYPE = '01' /*主体评级*/
-                      and brating.SHORT_LONG_TERM = '01' /*短期*/
-                      and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de  where 1=1 limit 1
-              ) b
-              on pos.ASSET_CODE=b.ASSET_CODE
-          </otherwise>
-         </choose>
-	    left join (
-              SELECT asset_code,rating FROM (
-                  select
-                  @rownum := @rownum + 1 rownum
-                  ,brating.O_CODE as asset_code
-                  ,brating.GRADE_RESULT as rating,
-                  IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                  @O_CODE := brating.O_CODE
-                  from
-                  ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                  <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                      ,is_recommand asc
-                  </if>
-                  <if test="sysflag=='02'.toString()"> /*最大评级*/
-                      ,GRADE_RESULT asc
-                  </if>
-                  <if test="sysflag=='03'.toString()"> /*最小评级*/
-                      ,GRADE_RESULT desc
-                  </if>) brating,
-                  ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                  where 1=1
-                  and brating.O_TYPE = '02' /*债项评级*/
-                  and brating.SHORT_LONG_TERM = '02' /*长期*/
-                  and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-              ) where 1=1 limit 1
-          ) c
-			on pos.ASSET_CODE=c.ASSET_CODE
-	    left join (
-          SELECT asset_code,rating FROM (
-              select
-              @rownum := @rownum + 1 rownum
-              ,brating.O_CODE as asset_code
-              ,brating.GRADE_RESULT as rating,
-              IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-              @O_CODE := brating.O_CODE
-              from
-              ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-              <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                  ,is_recommand asc
-              </if>
-              <if test="sysflag=='02'.toString()"> /*最大评级*/
-                  ,GRADE_RESULT asc
-              </if>
-              <if test="sysflag=='03'.toString()"> /*最小评级*/
-                  ,GRADE_RESULT desc
-              </if>) brating,
-              ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-              where 1=1
-              and brating.O_TYPE = '02' /*债项评级*/
-              and brating.SHORT_LONG_TERM = '01' /*短期*/
-              and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-          ) where 1=1 limit 1
-        ) d
-		on pos.ASSET_CODE=d.ASSET_CODE
-		left join CHB_PRD_BASEINFO prd
-		on prd.PROD_ID=pos.PROD_ID
-		and prd.status !='D'
-		where 1=1
-		and prd.PROFIT_TYPE='03'
-		and pos.trade_type in ('01','02','05') /*直投交易,通道交易,资管计划交易*/
-		and  pos.cDATE =#{enddate,jdbcType=DATE} 
-    	group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
-		(case pos.ASSET_CODE when 'REMAININGCASH' then '01' else info.asset_type end),
-        (case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end),
-        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
-		(case info.PRIVATE_FLAG when '01' then '01' else null end),
-		(case info.PPPFLAG when '01' then '01' else null end), (case info.IS_GOVERN_FUND when '01' then '01' else null end),
-	    (case info.PRIVATEFUND_FLAG when '01' then '01' else null end), (case info.PRIVATEPRD_FLAG when '01' then '01' else null end),
-	    (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
-		info.MANAGE_TYPE
-  </select>
-  
-  <select id="selectChlDeal" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
-		select 
-		#{bookdate,jdbcType=DATE} bookdate
-		,#{enddate,jdbcType=DATE} enddate
-		,pos.INVEST_VARIETY 
-		,pos.trade_type
-		,pos.IS_UNDER_TRADE
-		,pos.ASSET_CODE
-		,pos.PROD_ID
-		,pos.chl_id chlid
-		,pos.CCY
-    	,info.asset_type assettype
-		,info.ASSET_TYPE2 assettype2
-		,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
-		,info.IN_ASSET_TYPE
-		,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
-		,sum(pos.accuamt) ASSETVALUE_B /*穿透后资产价值*/
-		,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating/*债券评级*/
-		,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
-		,(case info.PPPFLAG when '01' then '01' else null end) PPPFLAG
-		,(case info.IS_GOVERN_FUND when '01' then '01' else null end) IS_GOVERN_FUND1
-		,(case info.PRIVATEFUND_FLAG when '01' then '01' else null end) PRIVATEFUND_FLAG
-		,(case info.PRIVATEPRD_FLAG when '01' then '01' else null end) PRIVATEPRD_FLAG
-		,(case info.BONDTOSTOCK_FLAG when '01' then '01' else null end) BONDTOSTOCK_FLAG
-		,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
-		from CHB_ASSET_POSITION pos
-		left join CHB_ASSET_INFO info
-		on pos.ASSET_CODE=info.ASSET_CODE
-		and info.status !='D'
-        <choose>
-          <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
-              left join (
-                  SELECT asset_code,rating FROM (
-                      select
-                      @rownum := @rownum + 1 rownum
-                      ,brating.O_CODE as asset_code
-                      ,brating.GRADE_RESULT as rating,
-                      IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                      @O_CODE := brating.O_CODE
-                      from
-                      ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                      <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                          ,is_recommand asc
-                      </if>
-                      <if test="sysflag=='02'.toString()"> /*最大评级*/
-                          ,GRADE_RESULT asc
-                      </if>
-                      <if test="sysflag=='03'.toString()"> /*最小评级*/
-                          ,GRADE_RESULT desc
-                      </if>) brating,
-                      ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                      where 1=1
-                      and brating.O_TYPE = '01' /*主体评级*/
-                      and brating.SHORT_LONG_TERM = '02' /*长期*/
-                      and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de  where 1=1 limit 1
-              ) a
-              on info.FINANCIE=a.ASSET_CODE
-              left join (
-                  SELECT asset_code,rating FROM (
-                  select
-                  @rownum := @rownum + 1 rownum
-                  ,brating.O_CODE as asset_code
-                  ,brating.GRADE_RESULT as rating,
-                  IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                  @O_CODE := brating.O_CODE
-                  from
-                  ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                  <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                      ,is_recommand asc
-                  </if>
-                  <if test="sysflag=='02'.toString()"> /*最大评级*/
-                      ,GRADE_RESULT asc
-                  </if>
-                  <if test="sysflag=='03'.toString()"> /*最小评级*/
-                      ,GRADE_RESULT desc
-                  </if>) brating,
-                  ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                  where 1=1
-                  and brating.O_TYPE = '01' /*主体评级*/
-                  and brating.SHORT_LONG_TERM = '01' /*短期*/
-                  and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de  where 1=1 limit 1
-              )b
-              on info.FINANCIE=b.ASSET_CODE
-          </when>
-          <otherwise>
-              left join (
-                  SELECT asset_code,rating FROM (
-                      select
-                      @rownum := @rownum + 1 rownum
-                      ,brating.O_CODE as asset_code
-                      ,brating.GRADE_RESULT as rating,
-                      IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                      @O_CODE := brating.O_CODE
-                      from
-                      ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                      <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                          ,is_recommand asc
-                      </if>
-                      <if test="sysflag=='02'.toString()"> /*最大评级*/
-                          ,GRADE_RESULT asc
-                      </if>
-                      <if test="sysflag=='03'.toString()"> /*最小评级*/
-                          ,GRADE_RESULT desc
-                      </if>) brating,
-                      ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                      where 1=1
-                      and brating.O_TYPE = '01' /*主体评级*/
-                      and brating.SHORT_LONG_TERM = '02' /*长期*/
-                      and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de  where 1=1 limit 1
-              ) a
-              on pos.ASSET_CODE=a.ASSET_CODE
-              left join (
-                  SELECT asset_code,rating FROM (
-                      select
-                      @rownum := @rownum + 1 rownum
-                      ,brating.O_CODE as asset_code
-                      ,brating.GRADE_RESULT as rating,
-                      IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                      @O_CODE := brating.O_CODE
-                      from
-                      ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                      <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                          ,is_recommand asc
-                      </if>
-                      <if test="sysflag=='02'.toString()"> /*最大评级*/
-                          ,GRADE_RESULT asc
-                      </if>
-                      <if test="sysflag=='03'.toString()"> /*最小评级*/
-                          ,GRADE_RESULT desc
-                      </if>) brating,
-                      ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                      where 1=1
-                      and brating.O_TYPE = '01' /*主体评级*/
-                      and brating.SHORT_LONG_TERM = '01' /*短期*/
-                      and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                  ) de where 1=1 limit 1
-              ) b
-              on pos.ASSET_CODE=b.ASSET_CODE
-          </otherwise>
-        </choose>
-	    left join (
-          SELECT asset_code,rating FROM (
-                  select
-                  @rownum := @rownum + 1 rownum
-                  ,brating.O_CODE as asset_code
-                  ,brating.GRADE_RESULT as rating,
-                  IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                  @O_CODE := brating.O_CODE
-                  from
-                  ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                  <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                      ,is_recommand asc
-                  </if>
-                  <if test="sysflag=='02'.toString()"> /*最大评级*/
-                      ,GRADE_RESULT asc
-                  </if>
-                  <if test="sysflag=='03'.toString()"> /*最小评级*/
-                      ,GRADE_RESULT desc
-                  </if>) brating,
-                  ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                  where 1=1
-                  and brating.O_TYPE = '02' /*债项评级*/
-                  and brating.SHORT_LONG_TERM = '02' /*长期*/
-                  and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-              ) where 1=1 limit 1
-          ) c
-			on pos.ASSET_CODE=c.ASSET_CODE
-	    left join  (
-          SELECT asset_code,rating FROM (
-                  select
-                  @rownum := @rownum + 1 rownum
-                  ,brating.O_CODE as asset_code
-                  ,brating.GRADE_RESULT as rating,
-                  IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                  @O_CODE := brating.O_CODE
-                  from
-                  ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                  <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                      ,is_recommand asc
-                  </if>
-                  <if test="sysflag=='02'.toString()"> /*最大评级*/
-                      ,GRADE_RESULT asc
-                  </if>
-                  <if test="sysflag=='03'.toString()"> /*最小评级*/
-                      ,GRADE_RESULT desc
-                  </if>) brating,
-                  ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                  where 1=1
-                  and brating.O_TYPE = '02' /*债项评级*/
-                  and brating.SHORT_LONG_TERM = '01' /*短期*/
-                  and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-              ) where 1=1 limit 1
-          )d
-		on pos.ASSET_CODE=d.ASSET_CODE
-		left join CHB_PRD_BASEINFO prd
-		on prd.PROD_ID=pos.PROD_ID
-		and prd.status !='D'
-		where 1=1
-		and prd.PROFIT_TYPE='03'
-		and pos.trade_type in ('01','02') /*直投交易,通道交易,资管计划交易*/
-		and  pos.cDATE =#{enddate,jdbcType=DATE} 
-		and pos.prod_id = #{prodId,jdbcType=VARCHAR}
-		and pos.CHL_ID = #{chlId,jdbcType=VARCHAR}
-    	group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
-		info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
-        (case info.PRIVATE_FLAG when '01' then '01' else null end),
-        (case info.PPPFLAG when '01' then '01' else null end),
-        (case info.IS_GOVERN_FUND when '01' then '01' else null end),
-        (case info.PRIVATEFUND_FLAG when '01' then '01' else null end),
-        (case info.PRIVATEPRD_FLAG when '01' then '01' else null end),
-        (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
-		info.MANAGE_TYPE
-		
-  </select>
-  
 
-  	<select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
-  		flushCache="true" useCache="false">
-		select
-		#{bookdate,jdbcType=DATE} bookdate
-		,#{enddate,jdbcType=DATE} enddate
-    	,info.asset_type assettype
-		,info.ASSET_TYPE2 assettype2
-		,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
-		,info.IN_ASSET_TYPE
-		,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating /*债券评级*/
+    <select id="selectAssetposition" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            resultSetType="FORWARD_ONLY" fetchSize="1000" >
+        select
+        #{bookdate,jdbcType=DATE} bookdate
+        ,#{enddate,jdbcType=DATE} enddate
+        ,pos.INVEST_VARIETY
+        ,pos.trade_type
+        ,pos.IS_UNDER_TRADE
+        ,pos.ASSET_CODE
+        ,pos.PROD_ID
+        ,pos.chl_id chlid
+        ,pos.CCY
+        ,(case pos.ASSET_CODE when 'REMAININGCASH' then '01' else info.asset_type end) assettype
+        ,(case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end) assettype2
+        ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
+        ,info.IN_ASSET_TYPE IN_ASSET_TYPE /*行业一级分类*/
+        ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
+        ,sum((case pos.trade_type when '05' then pos.accuqty else null end)) ASSETVALUE_B /*穿透后资产价值*/
+        ,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating/*债券评级*/
         ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
         ,(case info.PPPFLAG when '01' then '01' else null end) PPPFLAG
         ,(case info.IS_GOVERN_FUND when '01' then '01' else null end) IS_GOVERN_FUND1
         ,(case info.PRIVATEFUND_FLAG when '01' then '01' else null end) PRIVATEFUND_FLAG
         ,(case info.PRIVATEPRD_FLAG when '01' then '01' else null end) PRIVATEPRD_FLAG
         ,(case info.BONDTOSTOCK_FLAG when '01' then '01' else null end) BONDTOSTOCK_FLAG
-		,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
-		from CHB_ASSET_INFO info
+        ,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
+        from CHB_ASSET_POSITION pos
+        left join CHB_ASSET_INFO info
+        on pos.ASSET_CODE=info.ASSET_CODE
+        and info.status !='D'
         <choose>
             <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
                 left join (
-                    SELECT asset_code,rating FROM (
-                        select
-                        @rownum := @rownum + 1 rownum
-                        ,brating.O_CODE as asset_code
-                        ,brating.GRADE_RESULT as rating,
-                        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                        @O_CODE := brating.O_CODE
-                        from
-                        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                        <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                            ,is_recommand asc
-                        </if>
-                        <if test="sysflag=='02'.toString()"> /*最大评级*/
-                            ,GRADE_RESULT asc
-                        </if>
-                        <if test="sysflag=='03'.toString()"> /*最小评级*/
-                            ,GRADE_RESULT desc
-                        </if>) brating,
-                        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                        where 1=1
-                        and brating.O_TYPE = '01' /*主体评级*/
-                        and brating.SHORT_LONG_TERM = '02' /*长期*/
-                        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                    )de where 1=1 limit 1
-                ) a
-                on info.FINANCIE=a.ASSET_CODE
-                left join (
-                      SELECT asset_code,rating FROM (
-                        select
-                        @rownum := @rownum + 1 rownum
-                        ,brating.O_CODE as asset_code
-                        ,brating.GRADE_RESULT as rating,
-                        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                        @O_CODE := brating.O_CODE
-                        from
-                        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                        <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                            ,is_recommand asc
-                        </if>
-                        <if test="sysflag=='02'.toString()"> /*最大评级*/
-                            ,GRADE_RESULT asc
-                        </if>
-                        <if test="sysflag=='03'.toString()"> /*最小评级*/
-                            ,GRADE_RESULT desc
-                        </if>) brating,
-                        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                        where 1=1
-                        and brating.O_TYPE = '01' /*主体评级*/
-                        and brating.SHORT_LONG_TERM = '01' /*短期*/
-                        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                    ) de where 1=1 limit 1
-                ) b
-                on info.FINANCIE=b.ASSET_CODE
-            </when>
-            <otherwise>
-                left join (
-                    SELECT asset_code,rating FROM (
-                        select
-                        @rownum := @rownum + 1 rownum
-                        ,brating.O_CODE as asset_code
-                        ,brating.GRADE_RESULT as rating,
-                        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                        @O_CODE := brating.O_CODE
-                        from
-                        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                        <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                            ,is_recommand asc
-                        </if>
-                        <if test="sysflag=='02'.toString()"> /*最大评级*/
-                            ,GRADE_RESULT asc
-                        </if>
-                        <if test="sysflag=='03'.toString()"> /*最小评级*/
-                            ,GRADE_RESULT desc
-                        </if>) brating,
-                        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                        where 1=1
-                        and brating.O_TYPE = '01' /*主体评级*/
-                        and brating.SHORT_LONG_TERM = '02' /*长期*/
-                        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                    ) de where 1=1 limit 1
-                ) a
-                on info.ASSET_CODE=a.ASSET_CODE
-                left join (
-                    SELECT asset_code,rating FROM (
-                        select
-                        @rownum := @rownum + 1 rownum
-                        ,brating.O_CODE as asset_code
-                        ,brating.GRADE_RESULT as rating,
-                        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                        @O_CODE := brating.O_CODE
-                        from
-                        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                        <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                            ,is_recommand asc
-                        </if>
-                        <if test="sysflag=='02'.toString()"> /*最大评级*/
-                            ,GRADE_RESULT asc
-                        </if>
-                        <if test="sysflag=='03'.toString()"> /*最小评级*/
-                            ,GRADE_RESULT desc
-                        </if>) brating,
-                        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                        where 1=1
-                        and brating.O_TYPE = '01' /*主体评级*/
-                        and brating.SHORT_LONG_TERM = '01' /*短期*/
-                        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                    ) de where 1=1 limit 1
-                ) b
-                on info.ASSET_CODE=b.ASSET_CODE
-            </otherwise>
-        </choose>
-	    left join (
                 SELECT asset_code,rating FROM (
-                    select
-                    @rownum := @rownum + 1 rownum
-                    ,brating.O_CODE as asset_code
-                    ,brating.GRADE_RESULT as rating,
-                    IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
-                    @O_CODE := brating.O_CODE
-                    from
-                    ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
-                    <if test="sysflag=='01'.toString()"> /*推荐评级*/
-                        ,is_recommand asc
-                    </if>
-                    <if test="sysflag=='02'.toString()"> /*最大评级*/
-                        ,GRADE_RESULT asc
-                    </if>
-                    <if test="sysflag=='03'.toString()"> /*最小评级*/
-                        ,GRADE_RESULT desc
-                    </if>) brating,
-                    ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-                    where 1=1
-                    and brating.O_TYPE = '02' /*债项评级*/
-                    and brating.SHORT_LONG_TERM = '02' /*长期*/
-                    and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-                ) where 1=1 limit 1
-            ) c
-			on info.ASSET_CODE=c.ASSET_CODE
-	    left join (
-            SELECT asset_code,rating FROM (
                 select
                 @rownum := @rownum + 1 rownum
                 ,brating.O_CODE as asset_code
@@ -731,28 +169,590 @@
                 </if>) brating,
                 ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
                 where 1=1
-                and brating.O_TYPE = '02' /*债项评级*/
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '02' /*长期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de where 1=1 limit 1
+                ) a
+                on info.FINANCIE=a.ASSET_CODE
+                left join  (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
                 and brating.SHORT_LONG_TERM = '01' /*短期*/
                 and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
-            ) where 1=1 limit 1
+                ) de  where 1=1 limit 1
+                ) b
+                on info.FINANCIE=b.ASSET_CODE
+            </when>
+            <otherwise>
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '02' /*长期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de  where 1=1 limit 1
+                ) a
+                on pos.ASSET_CODE=a.ASSET_CODE
+                left join  (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '01' /*短期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de  where 1=1 limit 1
+                ) b
+                on pos.ASSET_CODE=b.ASSET_CODE
+            </otherwise>
+        </choose>
+        left join (
+        SELECT asset_code,rating FROM (
+        select
+        @rownum := @rownum + 1 rownum
+        ,brating.O_CODE as asset_code
+        ,brating.GRADE_RESULT as rating,
+        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+        @O_CODE := brating.O_CODE
+        from
+        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+            ,is_recommand asc
+        </if>
+        <if test="sysflag=='02'.toString()"> /*最大评级*/
+            ,GRADE_RESULT asc
+        </if>
+        <if test="sysflag=='03'.toString()"> /*最小评级*/
+            ,GRADE_RESULT desc
+        </if>) brating,
+        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+        where 1=1
+        and brating.O_TYPE = '02' /*债项评级*/
+        and brating.SHORT_LONG_TERM = '02' /*长期*/
+        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        ) where 1=1 limit 1
+        ) c
+        on pos.ASSET_CODE=c.ASSET_CODE
+        left join (
+        SELECT asset_code,rating FROM (
+        select
+        @rownum := @rownum + 1 rownum
+        ,brating.O_CODE as asset_code
+        ,brating.GRADE_RESULT as rating,
+        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+        @O_CODE := brating.O_CODE
+        from
+        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+            ,is_recommand asc
+        </if>
+        <if test="sysflag=='02'.toString()"> /*最大评级*/
+            ,GRADE_RESULT asc
+        </if>
+        <if test="sysflag=='03'.toString()"> /*最小评级*/
+            ,GRADE_RESULT desc
+        </if>) brating,
+        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+        where 1=1
+        and brating.O_TYPE = '02' /*债项评级*/
+        and brating.SHORT_LONG_TERM = '01' /*短期*/
+        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        ) where 1=1 limit 1
         ) d
-		on info.ASSET_CODE=d.ASSET_CODE
-		where 1=1
-		and info.status !='D'
-		and info.ASSET_CODE=#{assetCode,jdbcType=CHAR}
-    	group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
-		info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
+        on pos.ASSET_CODE=d.ASSET_CODE
+        left join CHB_PRD_BASEINFO prd
+        on prd.PROD_ID=pos.PROD_ID
+        and prd.status !='D'
+        where 1=1
+        and prd.PROFIT_TYPE='03'
+        and pos.trade_type in ('01','02','05') /*直投交易,通道交易,资管计划交易*/
+        and  pos.cDATE =#{enddate,jdbcType=DATE}
+        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
+        (case pos.ASSET_CODE when 'REMAININGCASH' then '01' else info.asset_type end),
+        (case pos.ASSET_CODE when 'REMAININGCASH' then '1001' else info.ASSET_TYPE2 end),
+        ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
+        (case info.PRIVATE_FLAG when '01' then '01' else null end),
+        (case info.PPPFLAG when '01' then '01' else null end), (case info.IS_GOVERN_FUND when '01' then '01' else null end),
+        (case info.PRIVATEFUND_FLAG when '01' then '01' else null end), (case info.PRIVATEPRD_FLAG when '01' then '01' else null end),
+        (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
+        info.MANAGE_TYPE
+    </select>
+
+    <select id="selectChlDeal" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" >
+        select
+        #{bookdate,jdbcType=DATE} bookdate
+        ,#{enddate,jdbcType=DATE} enddate
+        ,pos.INVEST_VARIETY
+        ,pos.trade_type
+        ,pos.IS_UNDER_TRADE
+        ,pos.ASSET_CODE
+        ,pos.PROD_ID
+        ,pos.chl_id chlid
+        ,pos.CCY
+        ,info.asset_type assettype
+        ,info.ASSET_TYPE2 assettype2
+        ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
+        ,info.IN_ASSET_TYPE
+        ,sum(pos.accuamt)  ASSETVALUE_A  /*穿透前资产价值*/
+        ,sum(pos.accuamt) ASSETVALUE_B /*穿透后资产价值*/
+        ,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating/*债券评级*/
+        ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
+        ,(case info.PPPFLAG when '01' then '01' else null end) PPPFLAG
+        ,(case info.IS_GOVERN_FUND when '01' then '01' else null end) IS_GOVERN_FUND1
+        ,(case info.PRIVATEFUND_FLAG when '01' then '01' else null end) PRIVATEFUND_FLAG
+        ,(case info.PRIVATEPRD_FLAG when '01' then '01' else null end) PRIVATEPRD_FLAG
+        ,(case info.BONDTOSTOCK_FLAG when '01' then '01' else null end) BONDTOSTOCK_FLAG
+        ,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
+        from CHB_ASSET_POSITION pos
+        left join CHB_ASSET_INFO info
+        on pos.ASSET_CODE=info.ASSET_CODE
+        and info.status !='D'
+        <choose>
+            <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '02' /*长期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de  where 1=1 limit 1
+                ) a
+                on info.FINANCIE=a.ASSET_CODE
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '01' /*短期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de  where 1=1 limit 1
+                )b
+                on info.FINANCIE=b.ASSET_CODE
+            </when>
+            <otherwise>
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '02' /*长期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de  where 1=1 limit 1
+                ) a
+                on pos.ASSET_CODE=a.ASSET_CODE
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '01' /*短期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de where 1=1 limit 1
+                ) b
+                on pos.ASSET_CODE=b.ASSET_CODE
+            </otherwise>
+        </choose>
+        left join (
+        SELECT asset_code,rating FROM (
+        select
+        @rownum := @rownum + 1 rownum
+        ,brating.O_CODE as asset_code
+        ,brating.GRADE_RESULT as rating,
+        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+        @O_CODE := brating.O_CODE
+        from
+        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+            ,is_recommand asc
+        </if>
+        <if test="sysflag=='02'.toString()"> /*最大评级*/
+            ,GRADE_RESULT asc
+        </if>
+        <if test="sysflag=='03'.toString()"> /*最小评级*/
+            ,GRADE_RESULT desc
+        </if>) brating,
+        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+        where 1=1
+        and brating.O_TYPE = '02' /*债项评级*/
+        and brating.SHORT_LONG_TERM = '02' /*长期*/
+        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        ) where 1=1 limit 1
+        ) c
+        on pos.ASSET_CODE=c.ASSET_CODE
+        left join  (
+        SELECT asset_code,rating FROM (
+        select
+        @rownum := @rownum + 1 rownum
+        ,brating.O_CODE as asset_code
+        ,brating.GRADE_RESULT as rating,
+        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+        @O_CODE := brating.O_CODE
+        from
+        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+            ,is_recommand asc
+        </if>
+        <if test="sysflag=='02'.toString()"> /*最大评级*/
+            ,GRADE_RESULT asc
+        </if>
+        <if test="sysflag=='03'.toString()"> /*最小评级*/
+            ,GRADE_RESULT desc
+        </if>) brating,
+        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+        where 1=1
+        and brating.O_TYPE = '02' /*债项评级*/
+        and brating.SHORT_LONG_TERM = '01' /*短期*/
+        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        ) where 1=1 limit 1
+        )d
+        on pos.ASSET_CODE=d.ASSET_CODE
+        left join CHB_PRD_BASEINFO prd
+        on prd.PROD_ID=pos.PROD_ID
+        and prd.status !='D'
+        where 1=1
+        and prd.PROFIT_TYPE='03'
+        and pos.trade_type in ('01','02') /*直投交易,通道交易,资管计划交易*/
+        and  pos.cDATE =#{enddate,jdbcType=DATE}
+        and pos.prod_id = #{prodId,jdbcType=VARCHAR}
+        and pos.CHL_ID = #{chlId,jdbcType=VARCHAR}
+        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE}, pos.INVEST_VARIETY,pos.trade_type,pos.IS_UNDER_TRADE, pos.ASSET_CODE, pos.PROD_ID, pos.chl_id, pos.CCY,
+        info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
         (case info.PRIVATE_FLAG when '01' then '01' else null end),
         (case info.PPPFLAG when '01' then '01' else null end),
         (case info.IS_GOVERN_FUND when '01' then '01' else null end),
         (case info.PRIVATEFUND_FLAG when '01' then '01' else null end),
         (case info.PRIVATEPRD_FLAG when '01' then '01' else null end),
         (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
-		info.MANAGE_TYPE
-		
-  </select>
+        info.MANAGE_TYPE
 
-  <select id="selectByMonthDate" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    </select>
+
+
+    <select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            flushCache="true" useCache="false">
+        select
+        #{bookdate,jdbcType=DATE} bookdate
+        ,#{enddate,jdbcType=DATE} enddate
+        ,info.asset_type assettype
+        ,info.ASSET_TYPE2 assettype2
+        ,ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
+        ,info.IN_ASSET_TYPE
+        ,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)) rating /*债券评级*/
+        ,(case info.PRIVATE_FLAG when '01' then '01' else null end) MONIT_TYPE
+        ,(case info.PPPFLAG when '01' then '01' else null end) PPPFLAG
+        ,(case info.IS_GOVERN_FUND when '01' then '01' else null end) IS_GOVERN_FUND1
+        ,(case info.PRIVATEFUND_FLAG when '01' then '01' else null end) PRIVATEFUND_FLAG
+        ,(case info.PRIVATEPRD_FLAG when '01' then '01' else null end) PRIVATEPRD_FLAG
+        ,(case info.BONDTOSTOCK_FLAG when '01' then '01' else null end) BONDTOSTOCK_FLAG
+        ,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
+        from CHB_ASSET_INFO info
+        <choose>
+            <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '02' /*长期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                )de where 1=1 limit 1
+                ) a
+                on info.FINANCIE=a.ASSET_CODE
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '01' /*短期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de where 1=1 limit 1
+                ) b
+                on info.FINANCIE=b.ASSET_CODE
+            </when>
+            <otherwise>
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '02' /*长期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de where 1=1 limit 1
+                ) a
+                on info.ASSET_CODE=a.ASSET_CODE
+                left join (
+                SELECT asset_code,rating FROM (
+                select
+                @rownum := @rownum + 1 rownum
+                ,brating.O_CODE as asset_code
+                ,brating.GRADE_RESULT as rating,
+                IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+                @O_CODE := brating.O_CODE
+                from
+                ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+                <if test="sysflag=='01'.toString()"> /*推荐评级*/
+                    ,is_recommand asc
+                </if>
+                <if test="sysflag=='02'.toString()"> /*最大评级*/
+                    ,GRADE_RESULT asc
+                </if>
+                <if test="sysflag=='03'.toString()"> /*最小评级*/
+                    ,GRADE_RESULT desc
+                </if>) brating,
+                ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+                where 1=1
+                and brating.O_TYPE = '01' /*主体评级*/
+                and brating.SHORT_LONG_TERM = '01' /*短期*/
+                and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+                ) de where 1=1 limit 1
+                ) b
+                on info.ASSET_CODE=b.ASSET_CODE
+            </otherwise>
+        </choose>
+        left join (
+        SELECT asset_code,rating FROM (
+        select
+        @rownum := @rownum + 1 rownum
+        ,brating.O_CODE as asset_code
+        ,brating.GRADE_RESULT as rating,
+        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+        @O_CODE := brating.O_CODE
+        from
+        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+            ,is_recommand asc
+        </if>
+        <if test="sysflag=='02'.toString()"> /*最大评级*/
+            ,GRADE_RESULT asc
+        </if>
+        <if test="sysflag=='03'.toString()"> /*最小评级*/
+            ,GRADE_RESULT desc
+        </if>) brating,
+        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+        where 1=1
+        and brating.O_TYPE = '02' /*债项评级*/
+        and brating.SHORT_LONG_TERM = '02' /*长期*/
+        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        ) where 1=1 limit 1
+        ) c
+        on info.ASSET_CODE=c.ASSET_CODE
+        left join (
+        SELECT asset_code,rating FROM (
+        select
+        @rownum := @rownum + 1 rownum
+        ,brating.O_CODE as asset_code
+        ,brating.GRADE_RESULT as rating,
+        IF( @O_CODE = brating.O_CODE, @rank := @rank + 1, @rank := 1 ) AS my_rank,
+        @O_CODE := brating.O_CODE
+        from
+        ( SELECT * FROM MST_BOND_CREDIT_RATING ORDER BY O_CODE, GRADE_DATE desc
+        <if test="sysflag=='01'.toString()"> /*推荐评级*/
+            ,is_recommand asc
+        </if>
+        <if test="sysflag=='02'.toString()"> /*最大评级*/
+            ,GRADE_RESULT asc
+        </if>
+        <if test="sysflag=='03'.toString()"> /*最小评级*/
+            ,GRADE_RESULT desc
+        </if>) brating,
+        ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+        where 1=1
+        and brating.O_TYPE = '02' /*债项评级*/
+        and brating.SHORT_LONG_TERM = '01' /*短期*/
+        and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+        ) where 1=1 limit 1
+        ) d
+        on info.ASSET_CODE=d.ASSET_CODE
+        where 1=1
+        and info.status !='D'
+        and info.ASSET_CODE=#{assetCode,jdbcType=CHAR}
+        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
+        info.asset_type, info.ASSET_TYPE2, ifnull(ifnull(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating)),
+        (case info.PRIVATE_FLAG when '01' then '01' else null end),
+        (case info.PPPFLAG when '01' then '01' else null end),
+        (case info.IS_GOVERN_FUND when '01' then '01' else null end),
+        (case info.PRIVATEFUND_FLAG when '01' then '01' else null end),
+        (case info.PRIVATEPRD_FLAG when '01' then '01' else null end),
+        (case info.BONDTOSTOCK_FLAG when '01' then '01' else null end),
+        info.MANAGE_TYPE
+
+    </select>
+
+    <select id="selectByMonthDate" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 
     sum(POSITION.ASSETVALUE_A) ASSETVALUE_A, sum(POSITION.ASSETVALUE_B) ASSETVALUE_B, 
     POSITION.ASSETTYPE, ifnull(POSITION.INDUSTRY1,'NULL') INDUSTRY1, POSITION.IN_ASSET_TYPE,
@@ -778,8 +778,8 @@
     ASSETINFO.BANK_SEC_PREFER
   </select>
 
-  <select id="selectPrdCashByDate" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
-  		parameterType="date">
+    <select id="selectPrdCashByDate" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            parameterType="date">
 	SELECT SUM(cashflow) cashamt,CCY ccy,PROD_ID prodId
 		FROM
 		  (SELECT SUM(
@@ -840,8 +840,8 @@
 		  ) base
 		GROUP BY CCY,PROD_ID
   </select>
-  <select id="selectAssetCashByDateA" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
-  		parameterType="date">
+    <select id="selectAssetCashByDateA" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            parameterType="date">
 	 SELECT 
 		sum(
 		case when deal.CUR_ASSET_TYPE in ('01','03','05','08','10','12')
@@ -859,8 +859,8 @@
 		and deal.STATUS !='D'
 		group by DEAL.PROD_ID,DEAL.CCY
   </select>
-  <select id="selectAssetCashByDateB" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
-  		parameterType="date">
+    <select id="selectAssetCashByDateB" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            parameterType="date">
 		SELECT
 			sum(
 				case when deal.CUR_ASSET_TYPE in ('01','03','05','08','10','12')
@@ -879,8 +879,8 @@
 			group by DEAL.PROD_ID,DEAL.CCY
 		
   </select>
-  <select id="selectBotCash" resultType="java.math.BigDecimal" 
-  		parameterType="date">
+    <select id="selectBotCash" resultType="java.math.BigDecimal"
+            parameterType="date">
   		SELECT SUM(UNINVEST_CASH) CASHAMT FROM(
 		select  DISTINCT UNINVEST_CASH,PLAN_ASSET_ID   from 
 		chb_bot_ast_pos 
@@ -893,8 +893,8 @@
 		and pos_date=#{cdate,jdbcType=DATE}
 		and status !='D') de
   </select>
-  <select id="selectBotCashList" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"  
-  		parameterType="date">
+    <select id="selectBotCashList" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            parameterType="date">
 	    select cp.PROD_ID prodId,Round((cp.accuqty/aq.qty)*ap.UNINVEST_CASH,2) cashamt,
 	    AP.PLAN_ASSET_ID oldAssetCode,ci.ccy
 	    from chb_asset_position  cp
@@ -953,35 +953,35 @@
         and prd.status !='D'
         <!--获取债项评级 -->
         left join (
-            select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-            SELECT
-            TEMP.GRADERESULT as GRADERESULT,
-            TEMP.OCODE AS OCODE,
-            rank() over (partition by TEMP.OCODE order by rownum) rk
-            FROM (
-            <include refid="searchProductRatingSql"/>
-            )
-            <!--SQL注入 -->
-            <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
-                ${getProductRatingOrderSqlByZx}
-            </if>
-            )t where 1 =1 limit 1
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM (
+        <include refid="searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
+            ${getProductRatingOrderSqlByZx}
+        </if>
+        )t where 1 =1 limit 1
         )bestRatingZx on bestRatingZx.OCODE = pos.ASSET_CODE
         <!--获取主体评级 -->
         left join(
-            select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-            SELECT
-            TEMP.GRADERESULT as GRADERESULT,
-            TEMP.OCODE AS OCODE,
-            rank() over (partition by TEMP.OCODE order by rownum) rk
-            FROM(
-              <include refid="searchProductRatingSql"/>
-            )
-            <!--SQL注入 -->
-            <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
-                ${getProductRatingOrderSqlByZt}
-            </if>
-            )t where 1 = 1 limit 1
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM(
+        <include refid="searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
+            ${getProductRatingOrderSqlByZt}
+        </if>
+        )t where 1 = 1 limit 1
         )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
         where 1=1
         and prd.PROFIT_TYPE='03'
@@ -1020,35 +1020,35 @@
         from CHB_ASSET_INFO info
         <!--获取债项评级 -->
         left join (
-            select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-            SELECT
-            TEMP.GRADERESULT as GRADERESULT,
-            TEMP.OCODE AS OCODE,
-            rank() over (partition by TEMP.OCODE order by rownum) rk
-            FROM (
-            <include refid="searchProductRatingSql"/>
-            )
-            <!--SQL注入 -->
-            <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
-                ${getProductRatingOrderSqlByZx}
-            </if>
-            )t where 1 = 1 limit 1
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM (
+        <include refid="searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
+            ${getProductRatingOrderSqlByZx}
+        </if>
+        )t where 1 = 1 limit 1
         )bestRatingZx on bestRatingZx.OCODE = info.ASSET_CODE
         <!--获取主体评级 -->
         left join(
-            select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-            SELECT
-            TEMP.GRADERESULT as GRADERESULT,
-            TEMP.OCODE AS OCODE,
-            rank() over (partition by TEMP.OCODE order by rownum) rk
-            FROM(
-            <include refid="searchProductRatingSql"/>
-            )
-            <!--SQL注入 -->
-            <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
-                ${getProductRatingOrderSqlByZt}
-            </if>
-            )t where 1 = 1 limit 1
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM(
+        <include refid="searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
+            ${getProductRatingOrderSqlByZt}
+        </if>
+        )t where 1 = 1 limit 1
         )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
         where 1=1
         and info.status !='D'
@@ -1097,35 +1097,35 @@
         and prd.status !='D'
         <!--获取债项评级 -->
         left join (
-            select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-            SELECT
-            TEMP.GRADERESULT as GRADERESULT,
-            TEMP.OCODE AS OCODE,
-            rank() over (partition by TEMP.OCODE order by rownum) rk
-            FROM (
-            <include refid="searchProductRatingSql"/>
-            )
-            <!--SQL注入 -->
-            <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
-                ${getProductRatingOrderSqlByZx}
-            </if>
-            )t where 1 = 1 limit 1
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM (
+        <include refid="searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
+            ${getProductRatingOrderSqlByZx}
+        </if>
+        )t where 1 = 1 limit 1
         )bestRatingZx on bestRatingZx.OCODE = pos.ASSET_CODE
         <!--获取主体评级 -->
         left join(
-            select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-            SELECT
-            TEMP.GRADERESULT as GRADERESULT,
-            TEMP.OCODE AS OCODE,
-            rank() over (partition by TEMP.OCODE order by rownum) rk
-            FROM(
-            <include refid="searchProductRatingSql"/>
-            )
-            <!--SQL注入 -->
-            <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
-                ${getProductRatingOrderSqlByZt}
-            </if>
-            )t where 1 = 1 limit 1
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM(
+        <include refid="searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
+            ${getProductRatingOrderSqlByZt}
+        </if>
+        )t where 1 = 1 limit 1
         )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
         where 1=1
         and prd.PROFIT_TYPE='03'

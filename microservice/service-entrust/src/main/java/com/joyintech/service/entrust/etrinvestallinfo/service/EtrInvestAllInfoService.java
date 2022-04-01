@@ -14,13 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.entrust.etrinvestallinfo.dto.EtrInvestAllInfoExportPdfDto;
+import com.joyintech.tams.constant.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
@@ -99,6 +97,7 @@ public class EtrInvestAllInfoService extends BaseService<EtrInvestAllInfoDto> {
         param.put("ASSET_TYPE_16", DictCodeListExt2.平安资产类型_利率互换.getValue());
         param.put("PS_T01", DictCodeList.交易方向_买入.getValue());
         param.put("assetBond", DictCodeList.平安资产类型_债券.getValue());
+        param.put("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         String tradePlat =(String)param.get("tradePlat");
         if(StringUtil.isNotEmpty(tradePlat) && StringUtil.equals(tradePlat, DictCodeList.清算速度_T_0.getValue())){
             param.put("tradePlat", 0);

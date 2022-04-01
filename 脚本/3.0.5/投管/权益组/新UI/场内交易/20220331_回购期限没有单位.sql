@@ -1,0 +1,1 @@
+update CFG_READONLY_FORM_SHOW set EXTENDCFG = '{"colAlign": "left","unit":"day"}' where PAGECODE = 'CfetsEtrDispatcher' and DTCODE = 'CfetsEtrDispatcherInfo' AND COLNAME = '回购期限' and EXTENDCFG = '{"colAlign": "left"}';

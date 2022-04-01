@@ -29,6 +29,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBasei
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.service.PbcPrdCashRaiseSubService001;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dao.PbcInitProdRaisingSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubCheck;
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubErrorCheck;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -153,7 +154,10 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 		        		SysDataUtil.getNameFromDataDict(DictCode.新人行产品类型,result.getIvstorientation()));
 		    }
             if (StringUtil.isNotEmpty(result.getPbcProdType())){
-                result.setPbcProdType( SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
+            	// modify by zhangliang 20220319 华夏个性化，“产品品种”字段应按需求默认为1-银行非保本理财 start
+				result.setPbcProdType(PbcDictCodeEnums.银行非保本理财.getName());
+                // result.setPbcProdType( SysDataUtil.getNameFromDataDict(DictCode.人行产品种类,result.getPbcProdType()));
+				// modify by zhangliang 20220319 华夏个性化，“产品品种”字段应按需求默认为1-银行非保本理财 end
             }
             if (StringUtil.isNotEmpty(result.getCustomerType())){
                 result.setCustomerType( SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType()));
@@ -417,10 +421,10 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             	result.setVdate01(date);
             }
 			if (StringUtil.isNotEmpty(result.getCrossBorderFlag())){
-				result.setCrossBorderFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
+				result.setCrossBorderFlag(result.getCrossBorderFlag() + "-" + SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCrossBorderFlag()));
 			}
 			if (StringUtil.isNotEmpty(result.getZjxtFlag())){
-				result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
+				result.setZjxtFlag(result.getZjxtFlag() + "-" + SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
 			}
 		}
 	}

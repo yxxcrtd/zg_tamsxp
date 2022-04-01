@@ -1,0 +1,2 @@
+update cfg_datatable_show set extendcfg='{"colAlign": "right","dataType":"amount","precision":"2","supportSearch":"精确"}' where pagecode='CfetsTrdQuery' and dtcode='CfetsTrdQueryIbuPledgeInfo' and colcode='pledgeRate';
+update cfg_datatable_show set extendcfg='{"colAlign": "right","dataType":"amount","precision":"2"}' where pagecode='cfetsManualSettleQuery' and dtcode='CfetsManualSettleInfo' and colcode='pledgeRate';

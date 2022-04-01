@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEquTmpMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbEquTmp" >
+        <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <result column="PERSONAL_IDENTIFY_TYPE" property="personalIdentifyType" jdbcType="CHAR" />
+        <result column="INSTITUTION_IDENTIFY_TYPE" property="institutionIdentifyType" jdbcType="VARCHAR" />
+        <result column="OTHER_IDENTIFY_NAME" property="otherIdentifyName" jdbcType="VARCHAR" />
+        <result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
+        <result column="HOLDER_NAME" property="holderName" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbEquTmp" >
+        insert into CHB_EQU_TMP (REGIST_BANK_CODE, PERSONAL_IDENTIFY_TYPE, 
+            INSTITUTION_IDENTIFY_TYPE, OTHER_IDENTIFY_NAME, 
+            IDENTIFY_NUMBER, HOLDER_NAME)
+        values (#{registBankCode,jdbcType=VARCHAR}, #{personalIdentifyType,jdbcType=CHAR}, 
+            #{institutionIdentifyType,jdbcType=VARCHAR}, #{otherIdentifyName,jdbcType=VARCHAR}, 
+            #{identifyNumber,jdbcType=VARCHAR}, #{holderName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEquTmp" >
+        insert into CHB_EQU_TMP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE,
+            </if>
+            <if test="personalIdentifyType != null" >
+                PERSONAL_IDENTIFY_TYPE,
+            </if>
+            <if test="institutionIdentifyType != null" >
+                INSTITUTION_IDENTIFY_TYPE,
+            </if>
+            <if test="otherIdentifyName != null" >
+                OTHER_IDENTIFY_NAME,
+            </if>
+            <if test="identifyNumber != null" >
+                IDENTIFY_NUMBER,
+            </if>
+            <if test="holderName != null" >
+                HOLDER_NAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="registBankCode != null" >
+                #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="personalIdentifyType != null" >
+                #{personalIdentifyType,jdbcType=CHAR},
+            </if>
+            <if test="institutionIdentifyType != null" >
+                #{institutionIdentifyType,jdbcType=VARCHAR},
+            </if>
+            <if test="otherIdentifyName != null" >
+                #{otherIdentifyName,jdbcType=VARCHAR},
+            </if>
+            <if test="identifyNumber != null" >
+                #{identifyNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="holderName != null" >
+                #{holderName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEquTmp" >
+        insert into CHB_EQU_TMP(REGIST_BANK_CODE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+        OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, HOLDER_NAME)
+        select REGIST_BANK_CODE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, HOLDER_NAME
+             from CHB_EQU_TMP
+             where 1 = 1
+    </insert>
+</mapper>

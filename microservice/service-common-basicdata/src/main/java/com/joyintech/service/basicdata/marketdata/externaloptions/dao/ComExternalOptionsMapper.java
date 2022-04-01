@@ -18,16 +18,16 @@ public interface ComExternalOptionsMapper {
 
     ComExternalOptions002Dto selectByPrimaryKey(Map<String, Object> map);
 
-    public List<SuggestDto> findFinRateInfoByBenchmarkId(Map<String, Object> params);
+    List<SuggestDto> findFinRateInfoByBenchmarkId(Map<String, Object> params);
 
-    public String findByBenchmarkId(String finprodId2);
+    String findByBenchmarkId(String finprodId2);
 
-    public List<ComExternalOptions001Dto> selectList(Map<String, Object> map);
+    List<ComExternalOptions001Dto> selectList(Map<String, Object> map);
 
 
-    public List<SuggestDto> findTargetId(Map<String, Object> params);
+    List<SuggestDto> findTargetId(Map<String, Object> params);
 
-    public List<SuggestDto> findFinprodId(Map<String, Object> params);
+    List<SuggestDto> findFinprodId(Map<String, Object> params);
 
     ComExternalOptions002Dto dateCheck(Map<String, Object> params);
 

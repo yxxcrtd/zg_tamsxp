@@ -5,6 +5,7 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
     /**
@@ -69,6 +70,12 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
      * 是否是最后一笔匹配委托
      */
     private boolean lastEntrust;
+
+
+    /**
+     * 指令多组合明细list
+     */
+    private List<ExchangeTransMatchCommonEntrustDetailDto> entrustDetailDtoList;
 
     public BigDecimal getMarchQty() {
         return marchQty;
@@ -158,5 +165,38 @@ public class ExchangeTransMatchCommonEntrustDto extends EtrEntrust {
         this.lastEntrust = lastEntrust;
     }
 
+    public List<ExchangeTransMatchCommonEntrustDetailDto> getEntrustDetailDtoList() {
+        return entrustDetailDtoList;
+    }
 
+    public void setEntrustDetailDtoList(List<ExchangeTransMatchCommonEntrustDetailDto> entrustDetailDtoList) {
+        this.entrustDetailDtoList = entrustDetailDtoList;
+    }
+
+
+    /**
+     * 软硬控标识
+     */
+    private String softSkipMode;
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
+
+    /**
+     * 操作类型
+     */
+    private String optType;
+
+    public String getOptType() {
+        return optType;
+    }
+
+    public void setOptType(String optType) {
+        this.optType = optType;
+    }
 }

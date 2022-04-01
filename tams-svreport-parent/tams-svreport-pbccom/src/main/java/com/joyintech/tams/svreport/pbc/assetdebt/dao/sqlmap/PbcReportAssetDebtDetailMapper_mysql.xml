@@ -17,11 +17,11 @@
     <result column="CCY_AMOUNT" property="ccyAmount" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, CNY, USD_TO_CNY, EUR_TO_CNY, GBP_TO_CNY, 
+    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, CNY, USD_TO_CNY, EUR_TO_CNY, GBP_TO_CNY,
     JPY_TO_CNY, OTH_TO_CNY, TOTAL, REPORTUUID,CCY_AMOUNT
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_BALANCE
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
@@ -31,15 +31,15 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetDebtDetailDto" >
-    insert into PBC_REPORT_BALANCE (DETAILUUID, REPORTTYPE, GROUPTYPE, 
-      PROPERTYCODE, CNY, USD_TO_CNY, 
-      EUR_TO_CNY, GBP_TO_CNY, JPY_TO_CNY, 
+    insert into PBC_REPORT_BALANCE (DETAILUUID, REPORTTYPE, GROUPTYPE,
+      PROPERTYCODE, CNY, USD_TO_CNY,
+      EUR_TO_CNY, GBP_TO_CNY, JPY_TO_CNY,
       OTH_TO_CNY, TOTAL, REPORTUUID,CCY_AMOUNT
       )
-    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
-      #{propertycode,jdbcType=VARCHAR}, #{cny,jdbcType=DECIMAL}, #{usdToCny,jdbcType=DECIMAL}, 
-      #{eurToCny,jdbcType=DECIMAL}, #{gbpToCny,jdbcType=DECIMAL}, #{jpyToCny,jdbcType=DECIMAL}, 
-      #{othToCny,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR}, 
+    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR},
+      #{propertycode,jdbcType=VARCHAR}, #{cny,jdbcType=DECIMAL}, #{usdToCny,jdbcType=DECIMAL},
+      #{eurToCny,jdbcType=DECIMAL}, #{gbpToCny,jdbcType=DECIMAL}, #{jpyToCny,jdbcType=DECIMAL},
+      #{othToCny,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR},
       #{ccyAmount,jdbcType=CHAR}
       )
   </insert>
@@ -187,34 +187,34 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
   <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_BALANCE
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
   </select>
-  
+
   <delete id="deleteByReportDate"  parameterType="map" >
     delete
     from PBC_REPORT_BALANCE prp
     where prp.REPORTUUID in(
-        select pr.REPORTUUID from PBC_REPORT pr
-       where 1=1 
-       <if test="reportStartDate != null" >
-       and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
-       </if>
-       <if test="reportEndDate != null" >
-       and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
-       </if>
-       <if test="reporttype != null" >
-         and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
-       </if> 
-       <if test="pbcAccountId != null" >
-         and pr.PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR}
-       </if> 
-       <if test="pbcAccountId == null" >
-         and pr.PBC_ACCOUNT_ID is null
-       </if> 
-       and pr.send_status = '01'/*只删除未报送数据*/
+    select pr.REPORTUUID from PBC_REPORT pr
+    where 1=1
+    <if test="reportStartDate != null" >
+      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reportEndDate != null" >
+      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reporttype != null" >
+      and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+    </if>
+    <if test="pbcAccountId != null" >
+      and pr.PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR}
+    </if>
+    <if test="pbcAccountId == null" >
+      and pr.PBC_ACCOUNT_ID is null
+    </if>
+    and pr.send_status = '01'/*只删除未报送数据*/
     )
   </delete>
   <select id="selectDetailInfoSubByReportUuid"
@@ -284,8 +284,8 @@
       where t.reportuuid  = #{reportuuid,jdbcType=CHAR}
       group by t.POBCASSETID,t.PBC_ACCOUNT_ID,t.CCY
   </select>
-  
-  
+
+
   <!-- 根据主表主键查询贷款明细基本信息 -->
   <select id="selectDKByReportuuid" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub" parameterType="java.lang.String" >
     select
@@ -321,9 +321,9 @@
 	from PBC_LOAN_DETAIL_INFO_SUB pldinfo
 	where pldinfo.REPORTUUID = #{reportuuid,jdbcType=CHAR}
   </select>
-  
-  	<!-- 根据主表主键查询资金信托基本信息 -->
-	<select id="selectXTByReportuuid" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub" parameterType="java.lang.String">
+
+  <!-- 根据主表主键查询资金信托基本信息 -->
+  <select id="selectXTByReportuuid" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub" parameterType="java.lang.String">
 		select
 		    pctds.PBC_ACCOUNT_ID pbcAccountId,/*资产池代码*/
 		    pctds.STOCK_TYPE stockType,/*股权种类*/
@@ -334,21 +334,21 @@
 		    sum(pctds.CAPITAL_TRUST_AMOUNT_CNY) capitalTrustAmountCny/*资金信托产品余额折人民币*/
 		from PBC_CAPITAL_TRUST_DETAIL_SUB pctds
 		where pctds.REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
-		group by 
+		group by
             pctds.PBC_ACCOUNT_ID,
             pctds.POBCASSETID,
             pctds.CCY,
             pctds.STOCK_TYPE,
             pctds.CAPITAL_TRUST_ORG_CODE
   	</select>
-  
+
   <select id="selectByReportuuidForExport" resultMap="BaseResultMap" parameterType="java.lang.String" >
-	    select 
+	    select
 		    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, CNY, USD_TO_CNY, TOTAL as TOTAL,
 		    REPORTUUID,substring(substring(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,',1,1)+4), 1,
 			INSTR(substring(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,',1,1)+4),',',1,1)-1) AS CCY_AMOUNT
 	    from PBC_REPORT_BALANCE
 	    where REPORTUUID = #{reportuuid,jdbcType=CHAR}
 	  </select>
-  
+
 </mapper>

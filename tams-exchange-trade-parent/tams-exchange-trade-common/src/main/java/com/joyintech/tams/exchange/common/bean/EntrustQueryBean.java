@@ -1,17 +1,16 @@
 package com.joyintech.tams.exchange.common.bean;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.constant.EntrustStatus;
 import com.joyintech.tams.exchange.common.constant.Market;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
+import com.joyintech.tams.exchange.common.constant.joyin.*;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.EntrustUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -130,6 +129,28 @@ public class EntrustQueryBean implements Serializable {
 
     @ApiModelProperty(name = "createTime", value = "委托时间")
     private Date createTime;
+
+    @ApiModelProperty(name = "secAcctName", value = "证券账户名称")
+    private String secAcctName;
+
+    @ApiModelProperty(name = "ps", value = "交易方向")
+    private String ps;
+    @ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
+    private String busiTypeTg;
+    @ApiModelProperty(name = "extend1", value = "扩展信息1")
+    private String extend1;
+    @ApiModelProperty(name = "extend2", value = "扩展信息2")
+    private String extend2;
+
+    private String tradeDate;
+    private String createDateTime;
+    @ApiModelProperty(name = "conNum", value = "可转数量")
+    private BigDecimal conNum;
+    @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
+    private String entrustClass;
+
+    @ApiModelProperty(name = "busiTypeTgStr", value = "业务类型")
+    private String busiTypeTgStr;
 
     /**
      * ////////////////////////////查询无用字段
@@ -278,8 +299,10 @@ public class EntrustQueryBean implements Serializable {
         this.tradedPrice = new BigDecimal("0.00");
     }
 
-    @Id
     public String getId() {
+        if (StringUtil.isNotEmpty(entrustId)) {
+            return entrustId;
+        }
         return id;
     }
 
@@ -824,7 +847,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getMarketStr() {
-        if(StringUtil.isEmpty(market)){
+        if (StringUtil.isEmpty(market)) {
             return null;
         }
         return Market.getMarketName(market);
@@ -835,7 +858,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getTradePlatStr() {
-        if(StringUtil.isEmpty(tradePlat)){
+        if (StringUtil.isEmpty(tradePlat)) {
             return null;
         }
         return DictCodeList.from(DictCode.交易平台, tradePlat).getCodeName();
@@ -846,7 +869,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getFinprodType2Str() {
-        if(StringUtil.isEmpty(finprodType2)){
+        if (StringUtil.isEmpty(finprodType2)) {
             return null;
         }
         return DictCodeListExt1.from(DictCode.金融产品类型, finprodType2).getCodeName();
@@ -857,10 +880,10 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getEntrustBsStr() {
-        if(StringUtil.isEmpty(entrustBs)){
+        if (StringUtil.isEmpty(ps)) {
             return null;
         }
-        return DictCodeListExt2.from(DictCode.交易方向, entrustBs).getCodeName();
+        return DictCodeListExt2.from(DictCode.交易方向, ps).getCodeName();
     }
 
     public void setEntrustBsStr(String entrustBsStr) {
@@ -868,7 +891,7 @@ public class EntrustQueryBean implements Serializable {
     }
 
     public String getEntrustPropStr() {
-        return entrustPropStr;
+        return EntrustUtils.getEntrustPropStr(entrustProp);
     }
 
     public void setEntrustPropStr(String entrustPropStr) {
@@ -881,5 +904,89 @@ public class EntrustQueryBean implements Serializable {
 
     public void setEntrustStatusStr(String entrustStatusStr) {
         this.entrustStatusStr = entrustStatusStr;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getBusiTypeTgStr() {
+        if (StringUtil.isEmpty(busiTypeTg)) {
+            return null;
+        }
+        return DictCodeListExt3.from(DictCode.投管业务类型, busiTypeTg).getCodeName();
+    }
+
+
+    public void setBusiTypeTgStr(String busiTypeTgStr) {
+        this.busiTypeTgStr = busiTypeTgStr;
+    }
+
+    public String getExtend1() {
+        return extend1;
+    }
+
+    public void setExtend1(String extend1) {
+        this.extend1 = extend1;
+    }
+
+    public String getExtend2() {
+        return extend2;
+    }
+
+    public void setExtend2(String extend2) {
+        this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getCreateDateTime() {
+        return DateUtil.format(createTime, "HH:mm:ss");
+    }
+
+    public void setCreateDateTime(String createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public BigDecimal getConNum() {
+        return conNum;
+    }
+
+    public void setConNum(BigDecimal conNum) {
+        this.conNum = conNum;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
     }
 }

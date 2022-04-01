@@ -598,7 +598,7 @@ with cj as(
 	'02',case when base.OPENCYCLEP*7>1096 and base.OPENCYCLEP*7<![CDATA[<=]]>1827 then '06'
 	when base.OPENCYCLEP*7>1827 then '07' end,
 	'03',case when base.OPENCYCLEP/12>3 and base.OPENCYCLEP/12<![CDATA[<=]]>5 then '06'
-	when base.OPENCYCLEP/12>5 then '07' end
+	when base.OPENCYCLEP/12>5 then '07' end,'00'
 	)days, cp.ENDAMTSUM_OTH
 	from chb_month_prd_position cp
 	<if test="org != null  and org!=''">
@@ -1108,8 +1108,7 @@ with cj as(
 	left join CHB_MONTH_PRD_POSITION lastcp
 	on cp.prodid=lastcp.prodid
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-	and  base.operate_mode in ('01','02')
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'	and  base.operate_mode in ('01','02')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1135,8 +1134,7 @@ with cj as(
 	left join CHB_MONTH_PRD_POSITION lastcp
 	on cp.prodid=lastcp.prodid
 	and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-	and base.operate_mode in ('03','04')
+	where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03' and base.operate_mode in ('03','04')
 	and base.termtype='09'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1161,25 +1159,6 @@ with cj as(
 		</if>
 
 		union all
-		select  '10' days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
-		from chb_month_prd_position cp
-		<if test="org != null  and org!=''">
-			left join DATA_AUTH_NOTIFY_INST di
-			on cp.prodid=di.business_id
-			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
-		</if>
-		left join chb_prd_baseinfo base
-		on cp.prodid=base.prod_id
-		left join CHB_MONTH_PRD_POSITION lastcp
-		on cp.prodid=lastcp.prodid
-		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-		and  base.operate_mode in ('01','02')
-		<if test="org != null  and org!=''">
-			and di.institution_code=#{org, jdbcType=VARCHAR}
-		</if>
-
-		union all
 		select  '10'  days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
 		from chb_month_prd_position cp
 		<if test="org != null  and org!=''">
@@ -1192,12 +1171,31 @@ with cj as(
 		left join CHB_MONTH_PRD_POSITION lastcp
 		on cp.prodid=lastcp.prodid
 		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
-		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03'
-		and base.operate_mode in ('03','04')
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03' and base.operate_mode in ('03','04')
 		and base.termtype='09'
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
+
+		union all
+		select  '10' days, cp.ENDAMTSUM_OTH as amt,cp.prodid,lastcp.ENDAMTSUM_OTH as lastamt
+		from chb_month_prd_position cp
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cp.prodid=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		left join chb_prd_baseinfo base
+		on cp.prodid=base.prod_id
+		left join CHB_MONTH_PRD_POSITION lastcp
+		on cp.prodid=lastcp.prodid
+		and lastcp.ENDDATE=#{lastEndDate,jdbcType=DATE}
+		where 1=1 and cp.ENDDATE=#{endDate,jdbcType=DATE} 	and cp.PROFIT_TYPE='03' and  base.operate_mode in ('01','02')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+
+
 	)
 	,possum as(
 	select end.days as days,(sum(nvl(end.amt,0))+sum(nvl(end.lastamt,0)))/2 as sumamt
@@ -1235,14 +1233,27 @@ with cj as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,
 		    case
 		    when info.perpetual_flag ='01' then '08'
-		    when exeplan.mdate is null then '02'
+		    when info.mdate is null then '02'
+		    /***行权日计算剩余期限**/
+			when exeplan.MDATE != info.MDATE and  info.MDATE is not null THEN
+			(case
 			when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 			when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 			when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 			when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 			when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 			when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-			when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09'
+			when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
+			ELSE
+			/***资产要素计算剩余期限**/
+			(case
+			when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+			when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
+			when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
+			when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
+			when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
+			when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
+			when info.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
 			end   days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -1773,15 +1784,29 @@ with cj as(
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
-		case when info.perpetual_flag ='01' then '08'
-		when exeplan.mdate is null then '02'
+		case
+		when info.perpetual_flag ='01' then '08'
+		when info.mdate is null then '02'
+		/***行权日计算剩余期限**/
+		when exeplan.MDATE != info.MDATE and  info.MDATE is not null THEN
+		(case
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09'
+		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
+		ELSE
+		/***资产要素计算剩余期限**/
+		(case
+		when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
+		when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
+		when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
+		when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
+		when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
+		when info.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
 		end   days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -2391,15 +2416,29 @@ with cj as(
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
-		case when info.perpetual_flag ='01' then '08'
-		when exeplan.mdate is null then '02'
+		case
+		when info.perpetual_flag ='01' then '08'
+		when info.mdate is null then '02'
+		/***行权日计算剩余期限**/
+		when exeplan.MDATE != info.MDATE and  info.MDATE is not null THEN
+		(case
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09'
+		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
+		ELSE
+		/***资产要素计算剩余期限**/
+		(case
+		when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
+		when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
+		when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
+		when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
+		when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
+		when info.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
 		end   days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -2530,15 +2569,29 @@ with cj as(
 		select A.DAYS termType,A.AMT sessionendBalance from(
 		select t.days,sum(t.amt) amt from(
 		select nvl(cmap.ASSETVALUE_A,0) amt,
-		case when info.perpetual_flag ='01' then '08'
-		when exeplan.mdate is null then '02'
+		case
+		when info.perpetual_flag ='01' then '08'
+		when info.mdate is null then '02'
+		/***行权日计算剩余期限**/
+		when exeplan.MDATE != info.MDATE and  info.MDATE is not null THEN
+		(case
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09'
+		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
+		ELSE
+		/***资产要素计算剩余期限**/
+		(case
+		when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
+		when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
+		when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
+		when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
+		when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
+		when info.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
 		end   days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -2564,7 +2617,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -2578,7 +2631,7 @@ with cj as(
 			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 		</if>
          where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -3067,15 +3120,29 @@ with cj as(
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0)-nvl(scmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,
-		case when info.perpetual_flag ='01' then '08'
-		when exeplan.mdate is null then '02'
+		case
+		when info.perpetual_flag ='01' then '08'
+		when info.mdate is null then '02'
+		/***行权日计算剩余期限**/
+		when exeplan.MDATE != info.MDATE and  info.MDATE is not null THEN
+		(case
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09'
+		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
+		ELSE
+		/***资产要素计算剩余期限**/
+		(case
+		when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
+		when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
+		when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
+		when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
+		when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
+		when info.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
 		end   days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -3105,7 +3172,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -3124,7 +3191,7 @@ with cj as(
 		and scmap.ENDDATE=#{yearStartDate,jdbcType=DATE}-1
 		and cmap.prod_id=scmap.prod_id
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -3638,15 +3705,29 @@ with cj as(
 		),
 		enddays as(
 		select nvl(cmap.ASSETVALUE_A,0) amt,cmap.asset_code as assetId,nvl(lastcmap.ASSETVALUE_A,0) lastamt,
-		case when info.perpetual_flag ='01' then '08'　
-		when exeplan.mdate is null then '02'
+		case
+		when info.perpetual_flag ='01' then '08'
+		when info.mdate is null then '02'
+		/***行权日计算剩余期限**/
+		when exeplan.MDATE != info.MDATE and  info.MDATE is not null THEN
+		(case
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >=1 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >92 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >184 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >366 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1096 and exeplan.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
 		when exeplan.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
-		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09'
+		when exeplan.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
+		ELSE
+		/***资产要素计算剩余期限**/
+		(case
+		when info.mdate-#{endDate,jdbcType=DATE} >=1 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>92 then '02'
+		when info.mdate-#{endDate,jdbcType=DATE} >92 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>184 then '03'
+		when info.mdate-#{endDate,jdbcType=DATE} >184 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>366 then '04'
+		when info.mdate-#{endDate,jdbcType=DATE} >366 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1096 then '05'
+		when info.mdate-#{endDate,jdbcType=DATE} >1096 and info.mdate-#{endDate,jdbcType=DATE} <![CDATA[<=]]>1827 then '06'
+		when info.mdate-#{endDate,jdbcType=DATE} >1827 then '07'
+		when info.mdate-#{endDate,jdbcType=DATE} 	<![CDATA[<=]]>0 then '09' end)
 		end   days
 		from
 		CHB_MONTH_ASSET_POSITION cmap
@@ -3676,7 +3757,7 @@ with cj as(
 		left join chb_asset_info info
 		on cmap.asset_code=info.asset_code
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0
 		<if test="org != null  and org!=''">
 		and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -3696,7 +3777,7 @@ with cj as(
 		and cmap.prod_id=lastcmap.prod_id
 		and lastcmap.ENDDATE=#{lastEndDate,jdbcType=DATE}
 		where 1=1 and cmap.ENDDATE=#{endDate,jdbcType=DATE}
-		and  cmap.ASSETTYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		and  cmap.ASSETTYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		and cmap.ASSETVALUE_A!=0　
 		<if test="org != null  and org!=''">
 		　and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -3789,13 +3870,16 @@ with cj as(
 		　　　　when cmap.ASSETTYPE2 in ('2601','2602','2604',
 		　　　　　　'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
 		　　　　when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
-		　　　　　when mst.industry3 ='03' then '01'
-				when mst.industry4 ='01' then '02'
-				when mst.industry4 ='02' then '03'
-				when mst.industry4 ='03' then '04'
-				when mst.industry4 ='04' then '05'
-				when mst.industry4 ='07' then '06'
+				/***新增中债资产二级分类为“政策性金融债券”和“商业性金融债券”的限制条件 add by leipeng 20220304*/
+		　　　　 when mst.industry3 ='03' and info.asset_type2 in ('1102','1112') then '01'
+				when mst.industry4 ='01'and info.asset_type2 in ('1102','1112') then '02'
+				when mst.industry4 ='02'and info.asset_type2 in ('1102','1112') then '03'
+				when mst.industry4 ='03'and info.asset_type2 in ('1102','1112') then '04'
+				when mst.industry4 ='04'and info.asset_type2 in ('1102','1112') then '05'
+				when mst.industry4 ='07'and info.asset_type2 in ('1102','1112') then '06'
 		        else  '14' end as industryType
+				/***新增中债资产二级分类为“政策性金融债券”和“商业性金融债券”的限制条件 add by leipeng 20220304*/
+
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
 		<if test="org != null  and org!=''">
@@ -4330,13 +4414,15 @@ with cj as(
 				when cmap.ASSETTYPE2 in ('2601','2602','2604',
 				'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
 				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
-		　　　　　when mst.industry3 ='03' then '01'
-				when mst.industry4 ='01' then '02'
-				when mst.industry4 ='02' then '03'
-				when mst.industry4 ='03' then '04'
-				when mst.industry4 ='04' then '05'
-				when mst.industry4 ='07' then '06'
+		　　　　　/***新增中债资产二级分类为“政策性金融债券”和“商业性金融债券”的限制条件 add by leipeng 20220304*/
+		　　　　 when mst.industry3 ='03' and info.asset_type2 in ('1102','1112') then '01'
+				when mst.industry4 ='01'and info.asset_type2 in ('1102','1112') then '02'
+				when mst.industry4 ='02'and info.asset_type2 in ('1102','1112') then '03'
+				when mst.industry4 ='03'and info.asset_type2 in ('1102','1112') then '04'
+				when mst.industry4 ='04'and info.asset_type2 in ('1102','1112') then '05'
+				when mst.industry4 ='07'and info.asset_type2 in ('1102','1112') then '06'
 				else  '14' end as industryType
+				/***新增中债资产二级分类为“政策性金融债券”和“商业性金融债券”的限制条件 add by leipeng 20220304*/
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
 		<if test="org != null  and org!=''">
@@ -4904,13 +4990,15 @@ with cj as(
 				when cmap.ASSETTYPE2 in ('2601','2602','2604',
 				'2605','2606','2607','2610','2611','2612','2617','2613','2699','2616','2614','2618','2619','2620')  then '12'
 				when cmap.ASSETTYPE2='1209' <!--and info.ISFBZB!=01--> then '13'
-		　　　　　when mst.industry3 ='03' then '01'
-				when mst.industry4 ='01' then '02'
-				when mst.industry4 ='02' then '03'
-				when mst.industry4 ='03' then '04'
-				when mst.industry4 ='04' then '05'
-				when mst.industry4 ='07' then '06'
+		　　　　　/***新增中债资产二级分类为“政策性金融债券”和“商业性金融债券”的限制条件 add by leipeng 20220304*/
+		　　　　 when mst.industry3 ='03' and info.asset_type2 in ('1102','1112') then '01'
+				when mst.industry4 ='01'and info.asset_type2 in ('1102','1112') then '02'
+				when mst.industry4 ='02'and info.asset_type2 in ('1102','1112') then '03'
+				when mst.industry4 ='03'and info.asset_type2 in ('1102','1112') then '04'
+				when mst.industry4 ='04'and info.asset_type2 in ('1102','1112') then '05'
+				when mst.industry4 ='07'and info.asset_type2 in ('1102','1112') then '06'
 				else  '14' end as industryType
+				/***新增中债资产二级分类为“政策性金融债券”和“商业性金融债券”的限制条件 add by leipeng 20220304*/
 		from
 		    CHB_MONTH_ASSET_POSITION cmap
 		<if test="org != null  and org!=''">
@@ -5054,12 +5142,12 @@ with cj as(
 			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
-			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
+			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04','07')) and info.asset_type2 in ('1102','1112')
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-            and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
-			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -5103,12 +5191,13 @@ with cj as(
 			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
-			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
+			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04')) and info.asset_type2 in ('1102','1112')
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
-			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
+
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -5154,13 +5243,13 @@ with cj as(
 			and info.PRO_PROPERTY in ('02','03','04','05')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
-			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
+			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04')) and info.asset_type2 in ('1102','1112')
 			and  info.manage_type='01'
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
-			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
 			and  info.manage_type='01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -5205,12 +5294,13 @@ with cj as(
 			and cmap.ASSETTYPE2 in ('1704','1106','2401','1303','2403','2402','2499')
 		</if>
 		<if test="industryType != null  and industryType.equals('YH')">
-			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04'))
+			and (mst.industry3 = '03' or  mst.industry4 in ('01','02','03','04')) and info.asset_type2 in ('1102','1112')
 		</if>
 		<if test="industryType != null  and industryType.equals('BX')">
-			and (mst.industry3 not in ('03')　or mst.industry3 is null)
-			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null)
-			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499',1706)
+			and (mst.industry3 not in ('03')　or mst.industry3 is null or (mst.industry3 = '03' and info.asset_type2 NOT in ('1102','1112')))
+			and (mst.industry4 not in ('01','02','03','04','07') or mst.industry4 is null or (mst.industry4 in ('01','02','03','04','07') and info.asset_type2 NOT in ('1102','1112')))
+			and cmap.ASSETTYPE2 not in ('1701','1703','1704','1106','2401','1303','2403','2402','2499','1706')
+
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}

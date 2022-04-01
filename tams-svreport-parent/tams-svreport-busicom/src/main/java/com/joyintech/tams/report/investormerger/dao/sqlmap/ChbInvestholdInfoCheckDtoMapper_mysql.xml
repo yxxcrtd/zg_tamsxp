@@ -249,6 +249,30 @@
 		</trim>
 	</insert>
 
+	<update id="updataOperateStatus" parameterType="java.util.List">
+		update CHB_INVESTHOLD_INFO_CHECK set OPERATE_STATUS='01'
+		where
+		(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS) in
+		<foreach collection="list" index ="index" item="key" open="(" separator=","  close=")">
+			(#{key.registBankCode,jdbcType=VARCHAR},
+			#{key.indentifyMark,jdbcType=VARCHAR},
+			#{key.prodid,jdbcType=VARCHAR},
+			#{key.holdDate,jdbcType=DATE},
+			#{key.ccy,jdbcType=VARCHAR},
+			#{key.status,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</update>
+
+	<update id="updataOperateStatusNew" parameterType="java.util.List">
+
+        update CHB_INVESTHOLD_INFO_CHECK set OPERATE_STATUS='01'
+        where
+        (REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS)
+        in
+        (select REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS from CHB_INVESTHOLD_INFO_TMP)
+    </update>
+
 	<select id="selectBymodel" resultType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto"
 			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
 		select <include refid="Base_Column_List" />
@@ -305,6 +329,9 @@
 		<if test="interfCheckResult != null" >
 			and INTERF_CHECK_RESULT=#{interfCheckResult,jdbcType=VARCHAR}
 		</if>
+		<if test="mergerindentifymark != null" >
+			and MERGER_INDENTIFY_MARK=#{mergerindentifymark,jdbcType=VARCHAR}
+		</if>
 	</select>
 	<delete id="deleteBymodel"
 			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
@@ -313,7 +340,6 @@
 		where 1=1
 		and  REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
 		and  (INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
-		or MERGER_INDENTIFY_MARK =#{indentifyMark,jdbcType=VARCHAR}
 		)
 		<if test="prdRegistCode != null" >
 			and PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR}
@@ -361,6 +387,19 @@
 			and INTERF_CHECK_RESULT=#{interfCheckResult,jdbcType=VARCHAR}
 		</if>
 	</delete>
+
+	<delete id="deleteBymodelAfterDealNew" parameterType="java.util.List">
+        DELETE FROM CHB_INVESTHOLD_INFO_CHECK che
+        where exists (
+            select 1 from CHB_INVESTHOLD_INFO_TMP tmp
+            where tmp.REGIST_BANK_CODE = che.REGIST_BANK_CODE
+            and tmp.PRODID = che.PRODID
+            and tmp.PRD_REGIST_CODE = che.PRD_REGIST_CODE
+            and tmp.INDENTIFY_MARK = che.INDENTIFY_MARK
+            and tmp.CCY = che.CCY
+            and tmp.HOLD_DATE = che.HOLD_DATE
+        )
+    </delete>
 	<update id="updateMergerIdAndOperatestatus">
 		update
 		CHB_INVESTHOLD_INFO_CHECK
@@ -541,11 +580,11 @@
 			<if test="updateUser != null">
 				#{updateUser,jdbcType=VARCHAR},
 			</if>
-			sysdate,
+			now(),
 			<if test="createUser != null">
 				#{createUser,jdbcType=VARCHAR},
 			</if>
-			sysdate,
+			now(),
 			<if test="agent != null">
 				#{agent,jdbcType=VARCHAR},
 			</if>
@@ -574,41 +613,53 @@
 		</if>)
 	</delete>
 	<select id="selectHbhChbInvestholdInfoUnmerged" resultMap="WhResultMap">
-	select s1.*,s2.DATA_SOURCE,s2.REMARK,s2.WORKFLOW_ID,s2.ORG_CODE,s2.DEPT_CODE
-	,s2.UPDATE_USER,s2.CREATE_USER,s2.AGENT,s2.CREATE_DEPT,s2.INTERF_CHECK_RESULT
-	from
-	(SELECT sum(amount) AMOUNT,sum(qty) QTY,sum(cny_amt) CNY_AMT ,
+		SELECT * FROM (select s1.*,s2.DATA_SOURCE,s2.REMARK,s2.WORKFLOW_ID,s2.ORG_CODE,s2.DEPT_CODE
+		,s2.UPDATE_USER,s2.CREATE_USER,s2.AGENT,s2.CREATE_DEPT,s2.INTERF_CHECK_RESULT
+		from
+		(SELECT sum(amount) AMOUNT,sum(qty) QTY,sum(cny_amt) CNY_AMT ,
 		CEK.MERGER_INDENTIFY_MARK INDENTIFY_MARK,HOLD_DATE,CCY,ck.STATUS,
 		PRD_REGIST_CODE,PRODID,ck.REGIST_BANK_CODE
-	FROM CHB_INVESTHOLD_INFO_CHECK ck
-	left join CHB_EQU_HOLD_CHECK cek
-	on cek.INDENTIFY_MARK=ck.INDENTIFY_MARK
-	and cek.REGIST_BANK_CODE=ck.REGIST_BANK_CODE
-	where (ck.OPERATE_STATUS is null or ck.OPERATE_STATUS='01')
-	and cek.OPERATE_STATUS='02'
-	group by CEK.MERGER_INDENTIFY_MARK, HOLD_DATE, CCY, ck.STATUS,
-	 PRD_REGIST_CODE,PRODID,ck.REGIST_BANK_CODE
-	 )s1
-	left join
-    (SELECT *
-    FROM (
-	    	SELECT ROW_NUMBER() OVER(PARTITION BY MERGER_INDENTIFY_MARK,REGIST_BANK_CODE ORDER BY update_time DESC) rn,
-	          cicc.*
-	          FROM (select cek.MERGER_INDENTIFY_MARK,cek.REGIST_BANK_CODE,cic.DATA_SOURCE,cic.REMARK,cic.WORKFLOW_ID,cic.ORG_CODE,cic.DEPT_CODE
-	          ,cic.UPDATE_USER,cic.CREATE_USER,cic.AGENT,cic.CREATE_DEPT,cic.INTERF_CHECK_RESULT,cic.update_time
-	          from CHB_INVESTHOLD_INFO_CHECK cic
-	          left join CHB_EQU_HOLD_CHECK cek
-	          on cek.INDENTIFY_MARK=cic.INDENTIFY_MARK
-	          and cek.REGIST_BANK_CODE=cic.REGIST_BANK_CODE
-	          )cicc
-          ) aa 	WHERE rn = 1
-   	) s2
-	 on
-   	 s2.MERGER_INDENTIFY_MARK=s1.INDENTIFY_MARK
-	 and  s2.REGIST_BANK_CODE=s1.REGIST_BANK_CODE
+		FROM CHB_INVESTHOLD_INFO_CHECK ck
+		left join CHB_EQU_HOLD_CHECK cek
+		on cek.INDENTIFY_MARK=ck.INDENTIFY_MARK
+		and cek.REGIST_BANK_CODE=ck.REGIST_BANK_CODE
+		where (ck.OPERATE_STATUS is null or ck.OPERATE_STATUS='01')
+		and cek.OPERATE_STATUS='02'
+		group by CEK.MERGER_INDENTIFY_MARK, HOLD_DATE, CCY, ck.STATUS,
+		PRD_REGIST_CODE,PRODID,ck.REGIST_BANK_CODE
+		)s1
+		left join
+		(SELECT *
+		FROM (
+		SELECT ROW_NUMBER() OVER(PARTITION BY MERGER_INDENTIFY_MARK,REGIST_BANK_CODE ORDER BY update_time DESC) rn,
+		cicc.*
+		FROM (select cek.MERGER_INDENTIFY_MARK,cek.REGIST_BANK_CODE,cic.DATA_SOURCE,cic.REMARK,cic.WORKFLOW_ID,cic.ORG_CODE,cic.DEPT_CODE
+		,cic.UPDATE_USER,cic.CREATE_USER,cic.AGENT,cic.CREATE_DEPT,cic.INTERF_CHECK_RESULT,cic.update_time
+		from CHB_INVESTHOLD_INFO_CHECK cic
+		left join CHB_EQU_HOLD_CHECK cek
+		on cek.INDENTIFY_MARK=cic.INDENTIFY_MARK
+		and cek.REGIST_BANK_CODE=cic.REGIST_BANK_CODE
+		)cicc
+		) aa 	WHERE rn = 1
+		) s2
+		on
+		s2.MERGER_INDENTIFY_MARK=s1.INDENTIFY_MARK
+		and  s2.REGIST_BANK_CODE=s1.REGIST_BANK_CODE) t
+		WHERE NOT EXISTS(
+		SELECT 1 FROM chb_investhold_info_sub sub
+		INNER JOIN chb_submit_status css
+		ON sub.SUMIT_SEQ = css.SEQNO
+		AND css.SUBMIT_FEEDBACK_STATUS = '03'
+		WHERE 1=1
+		AND sub.REGIST_BANK_CODE = t.REGIST_BANK_CODE
+		AND sub.INDENTIFY_MARK = t.INDENTIFY_MARK
+		AND sub.CCY = t.CCY
+		AND sub.HOLD_DATE = t.HOLD_DATE
+		AND sub.PRODID = t.PRODID
+		)
 </select>
 	<select id="selectLastMergerIndentifyMarkAndBankcode" resultType="string">
-	SELECT DISTINCT concat_ws(',',CK.REGIST_BANK_CODE,CK.MERGER_INDENTIFY_MARK,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'))
+	SELECT DISTINCT concat_ws(',',CK.REGIST_BANK_CODE,CK.MERGER_INDENTIFY_MARK,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CK.PRODID)
 	FROM CHB_INVESTHOLD_INFO_CHECK ck
 	where (ck.OPERATE_STATUS is null or ck.OPERATE_STATUS='01')
 	and CK.MERGER_INDENTIFY_MARK is not null
@@ -685,35 +736,48 @@
 			and si.INTERF_CHECK_RESULT=#{interfCheckResult,jdbcType=VARCHAR}
 		</if>
 	</select>
-	<update id="updateOperatestatusW" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
-  	 update CHB_INVESTHOLD_INFO_CHECK set OPERATE_STATUS='01'
-      where
-        REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
-    	and
-        INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
-     	and
-        PRODID=#{prodid,jdbcType=VARCHAR}
-      	and
-        HOLD_DATE=#{holdDate,jdbcType=TIMESTAMP}
-     	and
-        CCY=#{ccy,jdbcType=VARCHAR}
-     	and
-        STATUS=#{status,jdbcType=VARCHAR}
-  </update>
+	<update id="updateOperatestatusW" parameterType="java.util.List">
+		update CHB_INVESTHOLD_INFO_CHECK set OPERATE_STATUS='01'
+		where
+		(REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS) in
+
+		<foreach collection="list" index ="index" item="key" open="(" separator=","  close=")">
+			<if test ="(index % 999) ==998 "> null)  or (REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS)
+				IN (
+			</if>
+			(#{key.registBankCode,jdbcType=VARCHAR},
+			#{key.indentifyMark,jdbcType=VARCHAR},
+			#{key.prodid,jdbcType=VARCHAR},
+			#{key.holdDate,jdbcType=DATE},
+			#{key.ccy,jdbcType=VARCHAR},
+			#{key.status,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</update>
 	<delete id="deleteByBankcodeAndIndentifyMarkWH" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
-  	delete from CHB_INVESTHOLD_INFO
-  	where REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
-  	and INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
-  	and HOLD_DATE=#{holdDate,jdbcType=TIMESTAMP}
-  	and status='E'
+  	DELETE FROM CHB_INVESTHOLD_INFO
+		WHERE (REGIST_BANK_CODE,INDENTIFY_MARK,HOLD_DATE,PRODID)IN (
+			SELECT
+		 	 	ck.REGIST_BANK_CODE registBankCode,
+             	ck.MERGER_INDENTIFY_MARK indentifyMark,
+             	ck.HOLD_DATE holdDate,
+             	ck.PRODID prodid
+      		FROM CHB_INVESTHOLD_INFO_CHECK ck
+    WHERE ck.OPERATE_STATUS='01'
+  )AND STATUS ='E'
   </delete>
 	<delete id="deleteByBankcodeAndIndentifyMarkDJ" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
-  	delete from CHB_INVESTHOLD_INFO_SUB
-  	where REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
-  	and INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
-  	and HOLD_DATE=#{holdDate,jdbcType=TIMESTAMP}
-  	and SEND_STATUS ='01'
-  	and status='01'
+  	DELETE FROM CHB_INVESTHOLD_INFO_SUB
+  	where (REGIST_BANK_CODE,INDENTIFY_MARK,HOLD_DATE,PRODID) in
+  	(SELECT
+  		CK.REGIST_BANK_CODE registBankCode,
+		CK.MERGER_INDENTIFY_MARK indentifyMark,
+		CK.HOLD_DATE holdDate,
+		CK.PRODID prodid
+		FROM CHB_INVESTHOLD_INFO_CHECK ck
+	where  ck.OPERATE_STATUS='01' )
+	and SEND_STATUS ='01'
+  	and STATUS='01'
   </delete>
 
 	<update id="updateHoldInfoCheck" parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
@@ -803,7 +867,25 @@
 	</select>
 
 	<select id="queryNotInHoldButIncheckInfoHold" resultMap="WhResultMap">
-		select s1.REGIST_BANK_CODE, s1.INDENTIFY_MARK,s1.PRD_REGIST_CODE,
+		select * from(
+		SELECT  s1.REGIST_BANK_CODE, s1.INDENTIFY_MARK,s1.PRD_REGIST_CODE,                s1.HOLD_DATE, s1.CCY, s1.AMOUNT,
+		s1.QTY, s1.CNY_AMT, s1.REMARK,
+		s1.DATA_SOURCE, s1.STATUS, s1.WORKFLOW_ID,
+		s1.ORG_CODE, s1.DEPT_CODE, s1.UPDATE_USER,
+		s1.UPDATE_TIME, s1.CREATE_USER, s1.CREATE_TIME,
+		s1.AGENT, s1.CREATE_DEPT, s1.PRODID,
+		s1.INTERF_CHECK_RESULT
+		FROM CHB_INVESTHOLD_INFO s1
+		inner JOIN CHB_INVESTHOLD_INFO_sub cc ON s1.REGIST_BANK_CODE=cc.REGIST_BANK_CODE AND s1.INDENTIFY_MARK=cc.INDENTIFY_MARK AND s1.CCY=cc.CCY AND s1.HOLD_DATE=cc.HOLD_DATE AND s1.PRODID=cc.PRODID
+		WHERE
+		s1.status='E' AND cc.SEND_STATUS='01' AND  s1.INDENTIFY_MARK IN
+		( SELECT DISTINCT INDENTIFY_MARK  FROM chb_equ_hold_check
+		) AND s1.INDENTIFY_MARK NOT in (
+		SELECT INDENTIFY_MARK
+		FROM chb_equ_hold)
+
+		UNION ALL
+		SELECT  s1.REGIST_BANK_CODE, s1.INDENTIFY_MARK,s1.PRD_REGIST_CODE,
 		s1.HOLD_DATE, s1.CCY, s1.AMOUNT,
 		s1.QTY, s1.CNY_AMT, s1.REMARK,
 		s1.DATA_SOURCE, s1.STATUS, s1.WORKFLOW_ID,
@@ -811,38 +893,71 @@
 		s1.UPDATE_TIME, s1.CREATE_USER, s1.CREATE_TIME,
 		s1.AGENT, s1.CREATE_DEPT, s1.PRODID,
 		s1.INTERF_CHECK_RESULT
-		from  CHB_INVESTHOLD_INFO s1
-		inner join CHB_INVESTHOLD_INFO_sub cc
-		on s1.REGIST_BANK_CODE=cc.REGIST_BANK_CODE
-		and s1.INDENTIFY_MARK=cc.INDENTIFY_MARK
-		and s1.CCY=cc.CCY
-		and s1.HOLD_DATE=cc.HOLD_DATE
-		and s1.PRODID=cc.PRODID
-		where
-		s1.status='E' and cc.SEND_STATUS='01'
-		and  s1.INDENTIFY_MARK in (select INDENTIFY_MARK from CHB_EQU_HOLD_CHECK
-		UNION all select ORG_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK where ORG_INDENTIFY_MARK is not null)
-		and s1.INDENTIFY_MARK not in (select INDENTIFY_MARK from CHB_EQU_HOLD )
-		<if test="keys !=null and keys.size()>0">
-			AND concat_ws('_',s1.REGIST_BANK_CODE,s1.INDENTIFY_MARK,s1.CCY,s1.HOLD_DATE,s1.PRODID)
-			IN
-			<foreach collection="keys" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
-			</foreach>
-		</if>
+		FROM CHB_INVESTHOLD_INFO s1
+		inner JOIN CHB_INVESTHOLD_INFO_sub cc ON s1.REGIST_BANK_CODE=cc.REGIST_BANK_CODE AND s1.INDENTIFY_MARK=cc.INDENTIFY_MARK AND s1.CCY=cc.CCY AND s1.HOLD_DATE=cc.HOLD_DATE AND s1.PRODID=cc.PRODID
+		WHERE
+		s1.status='E' AND cc.SEND_STATUS='01' AND  s1.INDENTIFY_MARK IN
+		( SELECT ORG_INDENTIFY_MARK
+		FROM CHB_EQU_HOLD_CHECK
+		WHERE ORG_INDENTIFY_MARK IS not NULL) AND s1.INDENTIFY_MARK NOT in (
+		SELECT INDENTIFY_MARK
+		FROM chb_equ_hold)
+		) s1
+		<where>
+			<if test="keys !=null and keys.size()>0">
+				concat_ws('_',s1.REGIST_BANK_CODE,s1.INDENTIFY_MARK,s1.CCY,s1.HOLD_DATE,s1.PRODID)
+				IN
+				<foreach collection="keys" item="key" open="(" separator=","  close=")">
+					#{key,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
 	</select>
+	<select id="queryNotInHoldButIncheckInfoHoldNew" resultMap="WhResultMap">
+		select * from(
+		SELECT  s1.REGIST_BANK_CODE, s1.INDENTIFY_MARK,s1.PRD_REGIST_CODE,                s1.HOLD_DATE, s1.CCY, s1.AMOUNT,
+		s1.QTY, s1.CNY_AMT, s1.REMARK,
+		s1.DATA_SOURCE, s1.STATUS, s1.WORKFLOW_ID,
+		s1.ORG_CODE, s1.DEPT_CODE, s1.UPDATE_USER,
+		s1.UPDATE_TIME, s1.CREATE_USER, s1.CREATE_TIME,
+		s1.AGENT, s1.CREATE_DEPT, s1.PRODID,
+		s1.INTERF_CHECK_RESULT
+		FROM CHB_INVESTHOLD_INFO s1
+		inner JOIN CHB_INVESTHOLD_INFO_sub cc ON s1.REGIST_BANK_CODE=cc.REGIST_BANK_CODE AND s1.INDENTIFY_MARK=cc.INDENTIFY_MARK AND s1.CCY=cc.CCY AND s1.HOLD_DATE=cc.HOLD_DATE AND s1.PRODID=cc.PRODID
+		WHERE
+		s1.HOLD_DATE= #{holdDate} and s1.status='E' AND cc.SEND_STATUS='01' AND  s1.INDENTIFY_MARK IN
+		( SELECT DISTINCT INDENTIFY_MARK  FROM chb_equ_hold_check
+		) AND s1.INDENTIFY_MARK NOT in (
+		SELECT INDENTIFY_MARK
+		FROM chb_equ_hold)
 
-	<select id="queryInvestorsHoldInfoRegistByPkUnsubmit" resultMap="DJResultMap" parameterType="java.util.List">
+		UNION ALL
+		SELECT  s1.REGIST_BANK_CODE, s1.INDENTIFY_MARK,s1.PRD_REGIST_CODE,
+		s1.HOLD_DATE, s1.CCY, s1.AMOUNT,
+		s1.QTY, s1.CNY_AMT, s1.REMARK,
+		s1.DATA_SOURCE, s1.STATUS, s1.WORKFLOW_ID,
+		s1.ORG_CODE, s1.DEPT_CODE, s1.UPDATE_USER,
+		s1.UPDATE_TIME, s1.CREATE_USER, s1.CREATE_TIME,
+		s1.AGENT, s1.CREATE_DEPT, s1.PRODID,
+		s1.INTERF_CHECK_RESULT
+		FROM CHB_INVESTHOLD_INFO s1
+		inner JOIN CHB_INVESTHOLD_INFO_sub cc ON s1.REGIST_BANK_CODE=cc.REGIST_BANK_CODE AND s1.INDENTIFY_MARK=cc.INDENTIFY_MARK AND s1.CCY=cc.CCY AND s1.HOLD_DATE=cc.HOLD_DATE AND s1.PRODID=cc.PRODID
+		WHERE
+		s1.HOLD_DATE= #{holdDate} and s1.status='E' AND cc.SEND_STATUS='01' AND  s1.INDENTIFY_MARK IN
+		( SELECT ORG_INDENTIFY_MARK
+		FROM CHB_EQU_HOLD_CHECK
+		WHERE ORG_INDENTIFY_MARK IS not NULL) AND s1.INDENTIFY_MARK NOT in (
+		SELECT INDENTIFY_MARK
+		FROM chb_equ_hold)
+		) s1
+	</select>
+	<select id="queryInvestorsHoldInfoRegistByPkUnsubmit" resultMap="DJResultMap" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		SELECT * from
 		CHB_INVESTHOLD_INFO_sub
 		where SEND_STATUS='01'
-		<if test="keys !=null and keys.size()>0">
-			AND concat_ws('_',REGIST_BANK_CODE,INDENTIFY_MARK,CCY,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),PRODID)
-			IN
-			<foreach collection="keys" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
-			</foreach>
-		</if>
+		<foreach collection="newKeyList" item="item" open="AND (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.CCY,ciis.HOLD_DATE,ciis.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
+		</foreach>
 	</select>
 	<delete id="deleteInvestholdInfoBatch" parameterType="java.util.List">
 		delete from CHB_INVESTHOLD_INFO
@@ -864,31 +979,28 @@
 			#{key,jdbcType=VARCHAR}
 		</foreach>
 	</delete>
-	<update id="updateUnMergeInvestorsHoldInfo">
+	<update id="updateUnMergeInvestorsHoldInfo" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		update CHB_INVESTHOLD_INFO info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where concat_ws('_',info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
-		IN
-		<foreach collection="keys" item="key" open="(" separator=","  close=")">
-			#{key,jdbcType=VARCHAR}
+		where
+		<foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
 		</foreach>
 	</update>
-	<update id="updateUnMergeInvestorsHoldInfoSub">
+	<update id="updateUnMergeInvestorsHoldInfoSub" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		update CHB_INVESTHOLD_INFO_SUB info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where concat_ws('_',info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
-		IN
-		<foreach collection="keys" item="key" open="(" separator=","  close=")">
-			#{key,jdbcType=VARCHAR}
+		where
+		<foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
 		</foreach>
 	</update>
-	<update id="updateUnMergeInvestorsHoldInfoCheck">
+	<update id="updateUnMergeInvestorsHoldInfoCheck" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		update CHB_INVESTHOLD_INFO_CHECK info set info.MERGER_INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
 		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
-		where concat_ws('_',info.REGIST_BANK_CODE,info.MERGER_INDENTIFY_MARK,info.CCY,DATE_FORMAT(info.HOLD_DATE,'%Y-%m-%d'),info.PRODID)
-		IN
-		<foreach collection="keys" item="key" open="(" separator=","  close=")">
-			#{key,jdbcType=VARCHAR}
+		where
+		<foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
 		</foreach>
 	</update>
 
@@ -950,5 +1062,433 @@
             #{createDept,jdbcType=VARCHAR}, #{checkSeqno,jdbcType=VARCHAR}, #{prodid,jdbcType=VARCHAR}
             )
     </insert>
+	<!--<select id="selectNeedCheckDtoList" resultMap="BaseResultMap" parameterType="java.util.List">-->
+	<select id="selectNeedCheckDtoList" resultMap="BaseResultMap" parameterType="java.util.List" resultSetType="FORWARD_ONLY" fetchSize="1000" >
+		TRUNCATE  check_investhold_tmp;
+		INSERT INTO check_investhold_tmp(REGIST_BANK_CODE,INDENTIFY_MARK,CCY,HOLD_DATE,PRODID,AMOUNT,QTY,CNY_AMT,ORG_CODE,DEPT_CODE)
+		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual) A;">
+			#{item.REGIST_BANK_CODE, jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.INDENTIFY_MARK, jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.CCY,jdbcType=VARCHAR} CCY,
+			#{item.HOLD_DATE,jdbcType=VARCHAR} HOLD_DATE,
+			#{item.ACCOUNT,jdbcType=VARCHAR} PRODID,
+			#{item.AMOUNT,jdbcType=VARCHAR} AMOUNT,
+			#{item.QTY,jdbcType=VARCHAR} QTY,
+			#{item.CNY_AMT,jdbcType=VARCHAR} CNY_AMT,
+			#{item.ORG_CODE,jdbcType=VARCHAR} ORG_CODE,
+			#{item.DEPT_CODE,jdbcType=VARCHAR} DEPT_CODE
+		</foreach>
+		select
+		investhold_tmp.REGIST_BANK_CODE,
+		investhold_tmp.INDENTIFY_MARK,
+		investhold_tmp.CCY,
+		investhold_tmp.HOLD_DATE,
+		investhold_tmp.PRODID,
+		investhold_tmp.AMOUNT,
+		investhold_tmp.QTY,
+		investhold_tmp.CNY_AMT,
+		investhold_tmp.ORG_CODE,
+		investhold_tmp.DEPT_CODE,
+		infocheck.MERGER_INDENTIFY_MARK,
+		infocheck.OPERATE_STATUS,
+		infocheck.STATUS
+		from check_investhold_tmp investhold_tmp inner join CHB_EQU_HOLD_CHECK infocheck
+		on investhold_tmp.REGIST_BANK_CODE   =infocheck.REGIST_BANK_CODE   and investhold_tmp.INDENTIFY_MARK   =infocheck.INDENTIFY_MARK
+		where 1=1 and not exists (
+		select 1 from CHB_INVESTHOLD_INFO_SUB sub
+		inner join CHB_SUBMIT_STATUS css
+		ON sub.SUMIT_SEQ   = css.SEQNO   AND css.SUBMIT_FEEDBACK_STATUS   = '03'
+		WHERE investhold_tmp.REGIST_BANK_CODE   =sub.REGIST_BANK_CODE
+		and investhold_tmp.INDENTIFY_MARK   =sub.INDENTIFY_MARK
+		and investhold_tmp.CCY  =sub.CCY
+		and investhold_tmp.HOLD_DATE  =sub.HOLD_DATE
+		and investhold_tmp.PRODID   =sub.PRODID
+		);
+	</select>
+	<select id="selectNeedCheckDtoListNew" resultMap="BaseResultMap" parameterType="java.util.List"  resultSetType="FORWARD_ONLY" fetchSize="1000">
+        select
+        tmp.REGIST_BANK_CODE,
+        tmp.INDENTIFY_MARK,
+        tmp.CCY,
+        tmp.HOLD_DATE,
+        tmp.PRODID ,
+        tmp.AMOUNT,
+        tmp.QTY,
+        tmp.CNY_AMT,
+        tmp.ORG_CODE,
+        tmp.DEPT_CODE,
+        infocheck.MERGER_INDENTIFY_MARK,
+        infocheck.OPERATE_STATUS,
+        infocheck.STATUS
+        from  CHB_INVESTHOLD_INFO_TMP tmp
+        inner join CHB_EQU_HOLD_CHECK infocheck
+        on tmp. REGIST_BANK_CODE =infocheck.REGIST_BANK_CODE and tmp.INDENTIFY_MARK =infocheck.INDENTIFY_MARK
+        where 1=1 and not exists (
+        select 1 from CHB_INVESTHOLD_INFO_SUB sub
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        /* inner join CHB_SUBMIT_STATUS css
+        ON sub.SUMIT_SEQ = css.SEQNO  AND css.SUBMIT_FEEDBACK_STATUS = '03'*/
+        where tmp.REGIST_BANK_CODE =sub.REGIST_BANK_CODE
+        and tmp.INDENTIFY_MARK=sub.INDENTIFY_MARK
+        and tmp.CCY=sub.CCY
+        and tmp.HOLD_DATE=sub.HOLD_DATE
+        and tmp .PRODID =sub.PRODID
+        AND sub.SUBMIT_FEEDBACK_STATUS = '03'
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        )
+    </select>
+	<select id="getMergerindentifymark" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
+		select
+		REGIST_BANK_CODE registBankCode,
+		INDENTIFY_MARK indentifyMark ,
+		MERGER_INDENTIFY_MARK mergerindentifymark
+		from CHB_EQU_HOLD_CHECK si
+		where 1 =1
+		<if test="registBankCode != null" >
+			and  si.REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
+		</if>
+		<if test="mergerindentifymark != null" >
+			and si.MERGER_INDENTIFY_MARK=#{mergerindentifymark,jdbcType=VARCHAR}
+		</if>
 
+	</select>
+	<select id="isExistsMergerindentifymark" resultType="int"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
+		select
+		count(1) from chb_investhold_info_check si
+		where  1=1
+		<if test="registBankCode != null" >
+			and  si.REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
+		</if>
+		<if test="prdRegistCode != null" >
+			and si.PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR}
+		</if>
+		<if test="holdDate != null" >
+			and si.HOLD_DATE=#{holdDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="ccy != null" >
+			and si.CCY=#{ccy,jdbcType=VARCHAR}
+		</if>
+		<if test="prodid != null" >
+			and si.PRODID=#{prodid,jdbcType=VARCHAR}
+		</if>
+		<if test="mergerindentifymark != null" >
+			and si.MERGER_INDENTIFY_MARK=#{mergerindentifymark,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<update id="updateOperatestatus" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
+  	 update CHB_INVESTHOLD_INFO_CHECK set OPERATE_STATUS='01'
+      where
+        REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
+    	and
+        INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
+     	and
+        PRODID=#{prodid,jdbcType=VARCHAR}
+      	and
+        HOLD_DATE=#{holdDate,jdbcType=TIMESTAMP}
+     	and
+        CCY=#{ccy,jdbcType=VARCHAR}
+     	and
+        STATUS=#{status,jdbcType=VARCHAR}
+  </update>
+	<delete id="deleteInvestholdInfoSubBatchDto" parameterType="java.util.List">
+		delete from CHB_INVESTHOLD_INFO_sub
+		where (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY,SEND_STATUS,STATUS)
+		<foreach collection="keys" item="item" open="in (" separator=","  close=")">
+			(#{item.registBankCode,jdbcType=VARCHAR},#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.prdRegistCode,jdbcType=VARCHAR},#{item.holdDate,jdbcType=DATE},#{item.ccy,jdbcType=VARCHAR}
+			,'01','01')
+		</foreach>
+	</delete>
+	<delete id="deleteInvestholdInfoBatchDto" parameterType="java.util.List">
+		delete from CHB_INVESTHOLD_INFO
+		where (REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,status)
+		<foreach collection="keys" item="item" open="in (" separator=","  close=")">
+			(#{item.registBankCode,jdbcType=VARCHAR},#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.prodid,jdbcType=VARCHAR},#{item.holdDate,jdbcType=DATE},#{item.ccy,jdbcType=VARCHAR}
+			,'E')
+		</foreach>
+	</delete>
+	<delete id="deleteBymodelList"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
+		delete
+		from CHB_INVESTHOLD_INFO_CHECK
+		where (INDENTIFY_MARK,PRD_REGIST_CODE)
+		<foreach collection="list" item="item" separator="," open="in(" close=")">
+			(#{item.indentifyMark, jdbcType=VARCHAR},
+			#{item.prdRegistCode, jdbcType=VARCHAR})
+		</foreach>
+	</delete>
+	<insert id="insertBatchList" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" >
+		insert into CHB_INVESTHOLD_INFO_CHECK
+		(REGIST_BANK_CODE, INDENTIFY_MARK,MERGER_INDENTIFY_MARK, PRD_REGIST_CODE,
+		HOLD_DATE, CCY, AMOUNT,
+		QTY, CNY_AMT, REMARK,
+		DATA_SOURCE, `STATUS`, OPERATE_STATUS,WORKFLOW_ID,
+		ORG_CODE, DEPT_CODE, UPDATE_USER,
+		UPDATE_TIME, CREATE_USER, CREATE_TIME,
+		AGENT, CREATE_DEPT, PRODID,
+		INTERF_CHECK_RESULT) VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.registBankCode,jdbcType=VARCHAR}, #{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.mergerindentifymark,jdbcType=VARCHAR},#{item.prdRegistCode,jdbcType=VARCHAR},
+			#{item.holdDate,jdbcType=TIMESTAMP}, #{item.ccy,jdbcType=VARCHAR}, #{item.amount,jdbcType=DECIMAL},
+			#{item.qty,jdbcType=DECIMAL}, #{item.cnyAmt,jdbcType=DECIMAL}, #{item.remark,jdbcType=VARCHAR},
+			#{item.dataSource,jdbcType=CHAR}, #{item.status,jdbcType=VARCHAR}, #{item.operatestatus,jdbcType=VARCHAR}, #{item.workflowId,jdbcType=VARCHAR},
+			#{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+			#{item.agent,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.prodid,jdbcType=VARCHAR},
+			#{item.interfCheckResult,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	<select id="selectBymodelFromFormerNew" resultMap="BaseResultMap"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto">
+		select
+		si.REGIST_BANK_CODE, si.INDENTIFY_MARK,si.PRD_REGIST_CODE,
+		si.HOLD_DATE, si.CCY, si.AMOUNT,
+		si.QTY, si.CNY_AMT, si.REMARK,
+		si.DATA_SOURCE, si.STATUS, si.WORKFLOW_ID,
+		si.ORG_CODE, si.DEPT_CODE, si.UPDATE_USER,
+		si.UPDATE_TIME, si.CREATE_USER, si.CREATE_TIME,
+		si.AGENT, si.CREATE_DEPT, si.PRODID,
+		si.INTERF_CHECK_RESULT
+		from CHB_INVESTHOLD_INFO si
+		where
+		si.STATUS = 'E'
+		<if test="holdDate != null" >
+			and si.HOLD_DATE=#{holdDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="registBankCode != null" >
+			and  si.REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR}
+		</if>
+		<if test="indentifyMark != null" >
+			and si.INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
+		</if>
+		<if test="prodid != null" >
+			and si.PRODID=#{prodid,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<!--add by sunshuaishuai 20220117 性能优化 start-->
+	<select id="countNotInHoldButIncheckInfoHold" resultType="java.lang.Integer">
+		select count(*) from V_CHB_INVESTHOLD_INFO
+	</select>
+	<!--add by sunshuaishuai 20220117 性能优化 end-->
+
+	<!--add by sunshuaishuai 20220117 性能优化 start-->
+	<update id="updateUnMergeInvestorsHoldInfo1">
+		update CHB_INVESTHOLD_INFO info,V_CHB_INVESTHOLD_INFO v
+		set info.INDENTIFY_MARK=v.MERGER_INDENTIFY_MARK
+		where
+		info.REGIST_BANK_CODE = v.REGIST_BANK_CODE
+		AND info.INDENTIFY_MARK = v.INDENTIFY_MARK
+		AND info.CCY = v.CCY
+		AND info.HOLD_DATE = v.HOLD_DATE
+		AND info.PRODID = v.PRODID
+	</update>
+	<update id="updateUnMergeInvestorsHoldInfoSub1">
+		update CHB_INVESTHOLD_INFO_SUB info,V_CHB_INVESTHOLD_INFO v
+		set info.INDENTIFY_MARK=v.MERGER_INDENTIFY_MARK
+		where
+		info.REGIST_BANK_CODE = v.REGIST_BANK_CODE
+		AND info.INDENTIFY_MARK = v.INDENTIFY_MARK
+		AND info.CCY = v.CCY
+		AND info.HOLD_DATE = v.HOLD_DATE
+		AND info.PRODID = v.PRODID
+	</update>
+	<update id="updateUnMergeInvestorsHoldInfoCheck1">
+		update CHB_INVESTHOLD_INFO_CHECK info,V_CHB_INVESTHOLD_INFO v
+		set info.INDENTIFY_MARK=v.MERGER_INDENTIFY_MARK
+		where
+		info.REGIST_BANK_CODE = v.REGIST_BANK_CODE
+		AND info.INDENTIFY_MARK = v.INDENTIFY_MARK
+		AND info.CCY = v.CCY
+		AND info.HOLD_DATE = v.HOLD_DATE
+		AND info.PRODID = v.PRODID
+	</update>
+	<!--add by sunshuaishuai 20220117 性能优化 end-->
+
+	<select id="selectNeedDealDtoList" resultMap="BaseResultMap" parameterType="java.util.List"  >
+		with tmp as (
+		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)">
+			#{item.registBankCode, jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.indentifyMark, jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.mergerindentifymark, jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.holdDate,jdbcType=DATE} HOLD_DATE,
+			#{item.prodid,jdbcType=VARCHAR} PRODID,
+			#{item.mergerindentifymark,jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
+			#{item.operatestatus,jdbcType=VARCHAR} OPERATE_STATUS,
+			#{item.status,jdbcType=VARCHAR} STATUS
+		</foreach>
+		)
+		SELECT
+		sub.REGIST_BANK_CODE,
+		sub.INDENTIFY_MARK,
+		sub.HOLD_DATE,
+		sub.CCY,
+		sub.PRODID,
+		sub.AMOUNT,
+		sub.QTY,
+		sub.CNY_AMT,
+		/*C.MERGER_INDENTIFY_MARK,
+		'99' AS OPERATE_STATUS,
+		C.STATUS*/
+		tmp.MERGER_INDENTIFY_MARK,
+		tmp.OPERATE_STATUS,
+		tmp.STATUS
+		FROM
+		tmp
+		INNER JOIN
+		/*CHB_EQU_HOLD_CHECK C
+		on  C.MERGER_INDENTIFY_MARK = tmp.MERGER_INDENTIFY_MARK
+		INNER JOIN
+		CHB_INVESTHOLD_INFO_SUB sub
+		on     C.REGIST_BANK_CODE = sub.REGIST_BANK_CODE
+		and C.INDENTIFY_MARK = sub.INDENTIFY_MARK
+		and tmp.HOLD_DATE = sub.HOLD_DATE
+		and tmp.CCY = sub.CCY
+		and tmp.PRODID = sub.PRODID
+		and sub.SEND_STATUS = '01'
+		LEFT JOIN
+		CHB_INVESTHOLD_INFO_CHECK D
+		on C.INDENTIFY_MARK = D.INDENTIFY_MARK
+		and C.REGIST_BANK_CODE = D.REGIST_BANK_CODE
+		and tmp.CCY = D.CCY
+		and tmp.PRODID = D.PRODID
+		and tmp.HOLD_DATE = D.HOLD_DATE
+		WHERE D.INDENTIFY_MARK is null*/
+		CHB_INVESTHOLD_INFO_SUB sub
+		on tmp.REGIST_BANK_CODE = sub.REGIST_BANK_CODE
+		and tmp.INDENTIFY_MARK = sub.INDENTIFY_MARK
+		and tmp.HOLD_DATE = sub.HOLD_DATE
+		and tmp.CCY = sub.CCY
+		and tmp.PRODID = sub.PRODID
+		and sub.SEND_STATUS = '01'
+		where not exists(
+		select 1 from CHB_INVESTHOLD_INFO_CHECK infocheck
+		where infocheck.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+		and infocheck.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		and infocheck.CCY = tmp.CCY
+		and infocheck.PRODID = tmp.PRODID
+		and infocheck.HOLD_DATE = tmp.HOLD_DATE
+		)
+	</select>
+	<select id="selectNeedDealDtoListNew" resultMap="BaseResultMap" parameterType="java.util.List"  resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        sub.REGIST_BANK_CODE,
+        sub.INDENTIFY_MARK,
+        sub.HOLD_DATE,
+        sub.CCY,
+        sub.PRODID,
+        sub.AMOUNT,
+        sub.QTY,
+        sub.CNY_AMT,
+        sub.PRD_REGIST_CODE, sub.REMARK, sub.WORKFLOW_ID,
+        sub.ORG_CODE, sub.DEPT_CODE, sub.UPDATE_USER,
+        sub.UPDATE_TIME, sub.CREATE_USER, sub.CREATE_TIME,sub.CREATE_DEPT,
+        tmp.MERGER_INDENTIFY_MARK,
+        tmp.OPERATE_STATUS,
+        tmp.STATUS
+        FROM
+        CHB_INVESTHOLD_INFO_TMP tmp
+        INNER JOIN
+        CHB_INVESTHOLD_INFO_SUB sub
+        on tmp.REGIST_BANK_CODE = sub.REGIST_BANK_CODE
+        and tmp.INDENTIFY_MARK = sub.INDENTIFY_MARK
+        and tmp.HOLD_DATE = sub.HOLD_DATE
+        and tmp.CCY = sub.CCY
+        and tmp.PRODID = sub.PRODID
+        and sub.SEND_STATUS = '01'
+        where not exists(
+        select 1 from CHB_INVESTHOLD_INFO_CHECK infocheck
+        where infocheck.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+        and infocheck.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+        and infocheck.CCY = tmp.CCY
+        and infocheck.PRODID = tmp.PRODID
+        and infocheck.HOLD_DATE = tmp.HOLD_DATE
+        )
+    </select>
+
+	<select id="selectAllChbEquHoldCheck" resultMap="BaseResultMap"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" resultSetType="FORWARD_ONLY" fetchSize="1000">
+		with tmp as (
+		<foreach collection="list" item="item" separator="from dual union all select" open=" select * from (select " close="from dual)">
+			#{item.registBankCode, jdbcType=VARCHAR} REGIST_BANK_CODE,
+			#{item.indentifyMark, jdbcType=VARCHAR} INDENTIFY_MARK,
+			#{item.mergerindentifymark, jdbcType=VARCHAR} MERGER_INDENTIFY_MARK,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.holdDate,jdbcType=DATE} HOLD_DATE,
+			#{item.prodid,jdbcType=VARCHAR} PRODID
+		</foreach>
+		)
+		SELECT
+		tmp.REGIST_BANK_CODE,
+		tmp.INDENTIFY_MARK,
+		tmp.MERGER_INDENTIFY_MARK,
+		tmp.CCY,
+		tmp.HOLD_DATE,
+		tmp.PRODID,
+		C.MERGER_INDENTIFY_MARK,
+		C.OPERATE_STATUS,
+		C.STATUS
+		FROM
+		tmp
+		INNER JOIN
+		CHB_EQU_HOLD_CHECK C
+		on  C.MERGER_INDENTIFY_MARK = tmp.MERGER_INDENTIFY_MARK
+		and C.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+	</select>
+
+	<select id="selectAllChbEquHoldCheckNew" resultMap="BaseResultMap"
+			parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        tmp.REGIST_BANK_CODE,
+        tmp.INDENTIFY_MARK,
+        tmp.MERGER_INDENTIFY_MARK,
+        tmp.CCY,
+        tmp.HOLD_DATE,
+        tmp.PRODID,
+        C.MERGER_INDENTIFY_MARK,
+        C.OPERATE_STATUS,
+        C.STATUS
+        FROM CHB_INVESTHOLD_INFO_TMP tmp
+        INNER JOIN
+        CHB_EQU_HOLD_CHECK C
+        on  C.MERGER_INDENTIFY_MARK = tmp.MERGER_INDENTIFY_MARK
+        and C.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+    </select>
+
+	<delete id="deleteChbInvestholdInfoByTmp">
+        delete
+        from CHB_INVESTHOLD_INFO info
+       WHERE EXISTS (
+       SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+        info.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+        AND info.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+        AND info.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+        AND info.HOLD_DATE = tmp.HOLD_DATE
+        AND info.CCY = tmp.CCY
+       )
+    </delete>
+
+	<delete id="deleteChbInvestholdInfoSubByTmp">
+        delete
+        from CHB_INVESTHOLD_INFO_SUB sub
+        WHERE EXISTS (
+           SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+            sub.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+            AND sub.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+            AND sub.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+            AND sub.HOLD_DATE = tmp.HOLD_DATE
+            AND sub.CCY = tmp.CCY
+            AND sub.PRODID = tmp.PRODID
+            AND sub.SEND_STATUS = tmp.SEND_STATUS
+        )
+    </delete>
+
+	<delete id="truncateInvestholdTmp">
+		truncate table CHB_INVESTHOLD_INFO_TMP
+	</delete>
 </mapper>

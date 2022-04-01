@@ -12,29 +12,7 @@
 		WHERE TABLE_NAME = #{tableName}
 	</select>
 
-	<!-- 创建表备份ChbSubmitStatus -->
-	<update id="createChbSubmitStatus">
-		CREATE TABLE ${newTableName} AS SELECT CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS  WHERE 1=0
-	</update>
 
-	<!-- 插入 ChbSubmitStatus数据-->
-	<insert id="insertChbSubmitStatusData">
-		INSERT /*+ append */ INTO ${newTableName}
-		SELECT /*+ parallel(CHB_SUBMIT_STATUS,8) */ CHB_SUBMIT_STATUS.* FROM CHB_SUBMIT_STATUS
-		LEFT JOIN CHB_INVESTHOLD_INFO_SUB
-		ON CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
-		WHERE CHB_INVESTHOLD_INFO_SUB.HOLD_DATE BETWEEN to_date(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND to_date(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-		AND CHB_SUBMIT_STATUS.SUBMIT_TYPE = '16'
-	</insert>
-
-	<!-- 插入 ChbSubmitStatus数据-->
-	<delete id="deleteChbSubmitStatusData">
-		DELETE FROM CHB_SUBMIT_STATUS WHERE CHB_SUBMIT_STATUS.SEQNO IN(
-		SELECT SUMIT_SEQ FROM CHB_INVESTHOLD_INFO_SUB
-		WHERE CHB_INVESTHOLD_INFO_SUB.HOLD_DATE BETWEEN TO_DATE(#{startDate,jdbcType=VARCHAR},'yyyy-MM-dd') AND TO_DATE(#{endDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-		AND CHB_SUBMIT_STATUS.SUBMIT_TYPE = '16'
-		)
-	</delete>
 
 	<!-- 创建表备份ChbInvestHoldInfo -->
 	<update id="createChbInvestHoldInfo">

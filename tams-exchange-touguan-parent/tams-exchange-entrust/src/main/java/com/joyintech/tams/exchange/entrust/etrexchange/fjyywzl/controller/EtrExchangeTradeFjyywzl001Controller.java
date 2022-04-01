@@ -5,19 +5,17 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeExportCommonRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeZqzyRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.service.EtrExchangeTradeFjyywzl001Service;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -31,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +45,7 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
     private EtrExchangeTradeFjyywzl001Service etrExchangeTradeFjyywzl001Service;
 
     @Autowired
-    private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
+    private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
 
     /**
      * 检索产品债券质押持仓分页数据。
@@ -62,8 +60,7 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
     @PostMapping("/findZqzyPositionsPage")
     public Message<Page<EtrExchangeTradeFjyywzlZqzyDto>> findZqzyPositionsPage(@RequestBody EtrExchangeTradeZqzyRequest request){
         try {
-            Map<String, Object> map = BeanUtil.object2Map(request);
-            Page<EtrExchangeTradeFjyywzlZqzyDto> list = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(map);
+            Page<EtrExchangeTradeFjyywzlZqzyDto> list = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(request);
             return new Message<Page<EtrExchangeTradeFjyywzlZqzyDto>>().success().setData(list);
         }catch (Exception e) {
             logger.error("查询债券质押数据异常",e);
@@ -78,17 +75,16 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
      * @see
      * @since 1.0
      */
-    @ApiOperation(value="查询上交所和深交所标准券数量",notes = "查询上交所和深交所标准券数量")
+    @ApiOperation(value="查询组合上交所和深交所标准券数量",notes = "查询上交所和深交所标准券数量")
     @ResponseBody
     @PostMapping("/loadSecNum")
-    public Message<Map<String, String>> loadSecNum(@RequestBody EtrExchangeTradeZqzyRequest request) {
+    public Message<Map<String, Object>> loadSecNum(@RequestBody PositionCashSecDto request) {
         try {
-            Map<String, Object> param = BeanUtil.object2Map(request);
-            Map<String, String> map = etrExchangeTradeFjyywzl001Service.loadSecNum(param);
-            return new Message<Map<String,String>>().success().setData(map);
+            Map<String, Object> map = etrExchangeTradeFjyywzl001Service.loadSecNum(request);
+            return new Message<Map<String,Object>>().success().setData(map);
         }catch (Exception e){
             logger.error("查询上交所和深交所标准券数量",e);
-            return new Message<Map<String,String>>().fail().setMessage("查询上交所和深交所标准券数量");
+            return new Message<Map<String,Object>>().fail().setMessage("查询上交所和深交所标准券数量");
         }
     }
 
@@ -107,8 +103,7 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
         // 导出
         ExcelUitl.doExport(requestDto, response, "债券质押列表", () -> {
             EtrExchangeTradeZqzyRequest dto = requestDto.getDto(EtrExchangeTradeZqzyRequest.class);
-            Map<String, Object> map = BeanUtil.object2Map(dto);
-            List dataList = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(map).getRoot();
+            List dataList = etrExchangeTradeFjyywzl001Service.findZqzyPositionsPage(dto).getRoot();
             return dataList;
         });
     }
@@ -138,23 +133,39 @@ public class EtrExchangeTradeFjyywzl001Controller extends BaseController {
      * 获取标准券持仓
      * @param request request
      */
-    @ApiOperation(value = "获取标准券持仓", notes = "获取标准券持仓")
+    @ApiOperation(value = "可出库持仓", notes = "可出库持仓")
     @PostMapping("/queryStandandTicketCanUse")
     @ResponseBody
     public Message<String> queryStandandTicketCanUse(@RequestBody EtrExchangeTradeCommonRequest request) {
         try {
-            Map<String,Object> param = BeanUtil.object2Map(request);
-            Date sysDate = DateUtil.platDateFromCache();
-            param.put("sysDate", DateUtil.format(sysDate));
-            BigDecimal entrustNum = etrExchangeTradeCommon001Service.queryStandandTicketCanUse(param);
-            if(entrustNum == null) {
-                entrustNum= BigDecimal.ZERO;
-            }
+            BigDecimal entrustNum = etrExchangeTradeCommon002Service.querySecOutCanUse(request);
             String entrustNumStr=entrustNum.setScale(2).toString();
             return new Message<String>(entrustNumStr);
         }catch (Exception e) {
-            logger.error("获取标准券持仓异常",e);
+            logger.error("可出库持仓异常",e);
             return new Message<String>().fail().setMessage("获取标准券持仓异常");
         }
     }
+
+    /**
+     * 查询资产对应组合的可用持仓信息
+     *
+     * @param dto
+     * @return 可用持仓
+     * @author dubaojun
+     */
+    @ApiOperation(value = "查询资产对应组合的可用持仓信息", notes = "查询资产对应组合的可用持仓信息")
+    @ResponseBody
+    @PostMapping("/querySecInCanUse")
+    public Message<String> querySecInCanUse(@RequestBody PositionCashSecDto dto){
+        try{
+            BigDecimal availableNum = etrExchangeTradeCommon002Service.querySecInCanUse(dto);
+            String availableNumStr=availableNum.toString();
+            return new Message<>(availableNumStr);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<String>().fail().setMessage("查询异常");
+        }
+    }
+
 }

@@ -21,6 +21,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondExerciseProcessDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
@@ -634,4 +635,21 @@ public class TrdBondDurationService extends BaseService {
         param.put("userName", LoginUserUtil.getUserName());
         return queryForPageForSelectReturn(page, length, () -> trdBondDurationMapper.getBusiCodeNew(param));
     }
+
+    // modify by etliu 20220228 start
+    // 广农商二阶段 GNS-896:【广农商场内清算】场内债券存续期-行权赎回，批处理后未生成交易
+    /**
+     * 查询存续期交易数据(行权)
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    public TrdBondExerciseProcessDto findEffectiveDataXq(Map<String, Object> params) {
+        TrdBondExerciseProcessDto resultData = trdBondDurationMapper.findEffectiveDataXq(params);
+        if (resultData != null) {
+            resultData.setTrdBondPtlSecExerciseInfos(trdBondDurationMapper.selectTrdBondPtlSecExerciseInfoList(params));
+        }
+        return resultData;
+    }
+    // modify by etliu 20220228 end
 }

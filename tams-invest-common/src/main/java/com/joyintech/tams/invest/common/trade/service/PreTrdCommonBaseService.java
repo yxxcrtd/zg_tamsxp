@@ -107,12 +107,23 @@ public class PreTrdCommonBaseService extends BaseService {
                 etrCashPositionFlow.setAmount(ArithmeticUtil.multiply(etrCashPositionFlow.getAmount(),new BigDecimal(-1)));
             }
         }
+        // 数据是否已入新头寸
+        if(StringUtil.isNotEmpty(dto.getIsExistNew())) {
+            ptlCashPositionFlows.forEach(item->item.setIsExistNew(dto.getIsExistNew()));
+            positionFlows.forEach(item->item.setIsExistNew(dto.getIsExistNew()));
+        }
+
         //组合持仓流水
         mapperDelegateService.batchInsertSelective(PtlCashPositionFlowMapper.class,ptlCashPositionFlows);
         //组合现金流水
         mapperDelegateService. batchInsertSelective(PtlSecPositionFlowMapper.class,positionFlows);
         //委托指令预录入场合
         if (!StringUtil.isEmptyList(etrSecPositionFlows) && !StringUtil.isEmptyList(etrCashPositionFlows)){
+            // 数据是否已入新头寸
+            if(StringUtil.isNotEmpty(dto.getIsExistNew())) {
+                etrSecPositionFlows.forEach(item->item.setIsExistNew(dto.getIsExistNew()));
+                etrCashPositionFlows.forEach(item->item.setIsExistNew(dto.getIsExistNew()));
+            }
             //指令持仓流水
             mapperDelegateService.batchInsertSelective(EtrSecPositionFlowMapper.class,etrSecPositionFlows);
             //指令现金流水

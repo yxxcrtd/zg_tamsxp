@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.daycollect.dao.SvrDayCollectInterfMapper_mysql" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect">
+		SELECT
+		A.REG_CODE                            as prdRegistCode,
+		A.ACCOUNT                             as prodId,
+		ifnull(A.AGENCY_CODE,A.REGIST_BANK_CODE) as institutionCode,
+		A.FUND_ACC_PLACE                      as areaCode,
+		B.HOLDER_TYPE                         as holderType,
+		A.CCY                                 as ccy,
+		A.PROD_VALUE                          as prodValue,
+		A.IS_CONSIGN                          as isagency,
+		sum(A.saleAmount)                     as daySaleAmountSum,
+		sum(A.valueAmount)                    as dayValueAmountSum,
+		sum(A.saleTotalByQty)                     as daySaleQtySum,
+		sum(A.valueTotalByQty)                    as dayValueQtySum,
+		sum(A.saleAmount) * A.PROD_VALUE        as saleTotalByQty,
+		sum(A.valueAmount) * A.PROD_VALUE       as valueTotalByQty,
+		#{batchDate}       as equityConfDate
+		FROM
+		( SELECT
+		REG_CODE, ACCOUNT, FUND_ACC_PLACE, IS_CONSIGN, PROD_VALUE, ORG_INDENTIFY_MARK, REGIST_BANK_CODE, EQUITY_CONF_DATE, AGENCY_CODE, CCY,
+
+		case
+		when
+		BUSI_TYPE  in ('01','02','05','14') THEN AMOUNT
+		ELSE 0
+		END AS saleAmount,
+
+		case
+		when
+		BUSI_TYPE  in ('01','02','05','14') THEN AMOUNT
+		when BUSI_TYPE  in ('03','16','15') THEN AMOUNT * -1
+		ELSE 0
+		END AS valueAmount,
+
+		case
+		when
+		BUSI_TYPE  in ('01','02','05','14') THEN SHARES
+		ELSE 0
+		END AS saleTotalByQty,
+
+		case
+		when
+		BUSI_TYPE  in ('01','02','05','14') THEN SHARES
+		when BUSI_TYPE  in ('03','16','15') THEN SHARES * -1
+		ELSE 0
+		END AS valueTotalByQty
+		FROM CHB_EQUDET_SUB
+		WHERE STATUS != '03'
+		and
+		EQUITY_CONF_DATE = #{batchDate} )  A
+		LEFT JOIN
+		( SELECT
+		DISTINCT(INDENTIFY_MARK), ifnull(ORG_INDENTIFY_MARK,'') ORG_INDENTIFY_MARK, REGIST_BANK_CODE, HOLDER_TYPE
+		FROM(
+		select INDENTIFY_MARK, ORG_INDENTIFY_MARK, REGIST_BANK_CODE, HOLDER_TYPE
+		from
+		(SELECT
+		STATUS, INDENTIFY_MARK, ORG_INDENTIFY_MARK, REGIST_BANK_CODE, CASE HOLDER_CLASSIFY
+		when   '01' THEN  (case when HOLDER_TYPE in ('01','02','03') then '02'
+								when HOLDER_TYPE = '04' then '03'
+								when HOLDER_TYPE = '05' then '04'
+								when HOLDER_TYPE ='06' then '05'
+								when HOLDER_TYPE ='07' then '06'
+								when HOLDER_TYPE ='08' then '07'
+								when HOLDER_TYPE ='09' then '08'
+								when HOLDER_TYPE ='10' then '09'
+								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		when   '02' THEN   (case when HOLDER_TYPE in ('01','02','03') then '01'
+								when HOLDER_TYPE = '04' then '03'
+								when HOLDER_TYPE = '05' then '04'
+								when HOLDER_TYPE ='06' then '05'
+								when HOLDER_TYPE ='07' then '06'
+								when HOLDER_TYPE ='08' then '07'
+								when HOLDER_TYPE ='09' then '08'
+								when HOLDER_TYPE ='10' then '09'
+								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		END  as  HOLDER_TYPE,
+		ROW_NUMBER() over( partition by INDENTIFY_MARK order by UPDATE_TIME desc ) indMarkNo
+		FROM CHB_EQU_SUB ) T
+		where indMarkNo = 1 and STATUS != '03'
+		union ALL
+		SELECT
+		INDENTIFY_MARK, ORG_INDENTIFY_MARK, REGIST_BANK_CODE,
+		CASE HOLDER_CLASSIFY
+		when   '01' THEN   (case when HOLDER_TYPE in ('01','02','03') then '02'
+							when HOLDER_TYPE = '04' then '03'
+							when HOLDER_TYPE = '05' then '04'
+							when HOLDER_TYPE ='06' then '05'
+							when HOLDER_TYPE ='07' then '06'
+							when HOLDER_TYPE ='08' then '07'
+							when HOLDER_TYPE ='09' then '08'
+							when HOLDER_TYPE ='10' then '09'
+							when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+							else '99' END)
+		when   '02' THEN   (case when HOLDER_TYPE in ('01','02','03') then '01'
+								when HOLDER_TYPE = '04' then '03'
+								when HOLDER_TYPE = '05' then '04'
+								when HOLDER_TYPE ='06' then '05'
+								when HOLDER_TYPE ='07' then '06'
+								when HOLDER_TYPE ='08' then '07'
+								when HOLDER_TYPE ='09' then '08'
+								when HOLDER_TYPE ='10' then '09'
+								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		END  as  HOLDER_TYPE
+		FROM CHB_EQU_HOLD_CHECK ) T2 ) B
+		on A.ORG_INDENTIFY_MARK = B.INDENTIFY_MARK
+		GROUP BY A.REG_CODE, A.ACCOUNT, ifnull(A.AGENCY_CODE,A.REGIST_BANK_CODE), A.FUND_ACC_PLACE, B.HOLDER_TYPE, A.CCY, A.PROD_VALUE, A.IS_CONSIGN
+	</select>
+
+	<delete id="deleteBatchData">
+		DELETE from CHB_SALE_DEAL_SUM WHERE  EQUITY_CONF_DATE = #{batchDate}
+	</delete>
+	
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.svreport.chb.daycollect.dto.ChbDayCollect">
+		insert into CHB_SALE_DEAL_SUM(PRD_REGIST_CODE, PROD_ID, INSTITUTION_CODE,
+		AREA_CODE, HOLDER_TYPE, CCY, ISAGENCY, DAY_SALE_AMOUNT_SUM, DAY_VALUE_AMOUNT_SUM,
+		PROD_VALUE, DAY_SALE_QTY_SUM, DAY_VALUE_QTY_SUM,SALE_TOTAL_BY_QTY, VALUE_TOTAL_BY_QTY, EQUITY_CONF_DATE)
+		values(
+		#{prdRegistCode,jdbcType=VARCHAR},#{prodId,jdbcType=VARCHAR},#{institutionCode,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR}, #{holderType,jdbcType=CHAR},
+		#{ccy,jdbcType=CHAR},#{isagency,jdbcType=CHAR}, #{daySaleAmountSum,jdbcType=DECIMAL}, #{dayValueAmountSum,jdbcType=DECIMAL}, #{prodValue,jdbcType=DECIMAL},
+		#{daySaleQtySum,jdbcType=DECIMAL},#{dayValueQtySum,jdbcType=DECIMAL},#{saleTotalByQty,jdbcType=DECIMAL},#{valueTotalByQty,jdbcType=DECIMAL}
+		,#{equityConfDate}
+		)
+	</insert>
+
+<!--	check当月有无当日交易数据-->
+	<select id="checkTransaction" resultType="java.lang.Integer">
+		SELECT COUNT(*) from CHB_EQUDET_SUB WHERE EQUITY_CONF_DATE = #{batchDate}
+	</select>
+
+	<!--	check身份信息-->
+	<select id="checkIdentity" resultType="java.lang.Integer">
+		SELECT COUNT(*) from CHB_EQU_SUB
+	</select>
+</mapper>

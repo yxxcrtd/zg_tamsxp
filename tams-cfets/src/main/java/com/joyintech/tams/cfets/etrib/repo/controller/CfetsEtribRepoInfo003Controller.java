@@ -33,10 +33,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 银行间质押式回购指令- 多组合指令新建
@@ -80,8 +82,10 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         boolean todoList = false;
         // 代办中过来
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            entity = cfetsEtrIbRepoinfo003Service.getBussinessEntityByWorkflowId(
-                    workflowId);
+            entity = cfetsEtrIbRepoinfo003Service.getBussinessEntityByWorkflowId(workflowId);
+            if(Objects.nonNull(entity.getPrice())) {
+                entity.setPrice(entity.getPrice().multiply(new BigDecimal("100")));
+            }
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(entity.getEtrInvestPersonInfo()));
@@ -89,6 +93,9 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getEtrInvestRepoInfoDtos()));
             model.addAttribute("entity_PledgeBondTotalListDetailed",  JsonUtils.object2Json(entity.getPledgeBondTotalListDetailed()));
             model.addAttribute("entity_RiskTrialRetList",  JsonUtils.object2Json(entity.getRiskTrialRetDto()));
+            model.addAttribute("entity_riskTrialSpan",entity.getCfetsEtribdoRiskcalResponse()== null ? null : entity.getCfetsEtribdoRiskcalResponse().getRiskTrialSpan());
+            model.addAttribute("entity_RiskcalResponse",entity.getCfetsEtribdoRiskcalResponse());
+
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
         } else {
@@ -165,28 +172,18 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
     @ResponseBody
     @PostMapping("save")
     @ApiOperation(value = "多组合指令新建", notes = "多组合指令新建")
-    public Message<AjaxResult> save(@RequestBody CfetsEtribRepoInfo003Dto RepoInfoDto, BindingResult br)
-            throws Exception {
-        if (br.hasErrors()) {
-            return new Message<AjaxResult>().setData(new AjaxResult(br));
-        }
+    public Message<AjaxResult> save(@RequestBody CfetsEtribRepoInfo003Dto RepoInfoDto) throws Exception {
         RepoInfoDto.setAssetType1(DictCodeList.回购类型_质押式回购.getValue());
-        // ----------add by zhangrui1 20200715 预占功能 start----------
         List<CfetsEtribRepoInfo003Dto> dataList = new ArrayList<>();
-        // ----------add by zhangrui1 20200715 预占功能 end----------
         cfetsEtrIbRepoinfo003Service.packageEquity(RepoInfoDto,dataList);
         if (StringUtil.equals(BussinessConstant.SUBMIT, RepoInfoDto.getOperateType())) {
-            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(
-                    dataList, DictCodeList.平安资产类型_质押式回购.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(dataList, DictCodeList.平安资产类型_质押式回购.getValue(),BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
                     true, RepoInfoDto.getEtrInvestPersonInfo());
             if (StringUtil.isNotEmpty(ar)) {
                 return new Message<AjaxResult>().setData(ar);
             }
         }
-        EntrustRdsCommonAop.riskListToChildren(RepoInfoDto.getRiskTrialRetDto(), RepoInfoDto.getEtrInvestRepoInfoDtos(),
-                (dto, list) -> dto.setRiskTrialRetDto(list));
-
+        EntrustRdsCommonAop.riskListToChildren(RepoInfoDto.getRiskTrialRetDto(), RepoInfoDto.getEtrInvestRepoInfoDtos(),(dto, list) -> dto.setRiskTrialRetDto(list));
         // 临时主键
         if(!StringUtil.isNotEmpty(RepoInfoDto.getEntrustId())) {
             BussinessCodeParameter param = new BussinessCodeParameter();
@@ -202,19 +199,11 @@ public class CfetsEtribRepoInfo003Controller extends BaseController {
         ProcessParameter<CfetsEtribRepoInfo003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<CfetsEtribRepoInfo003Dto> params = new WorkFlowParameter<>();
         params.setPageId("CfetsEtrIbRepoinfo003");
-        params.setElementId(RepoInfoDto.getEtrInvestRepoInfoDtos().get(0).getElementId());
+        params.setElementId(RepoInfoDto.getElementId());
         params.setBusinessCode(CfetsEtribRepoInfo003Dto::getTotalEtrustId);
         params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务指令_质押式回购.getValue());
-        DecimalFormat df4 = new DecimalFormat("#,##0.00");
-        // 设置流程业务说明, entity即传入的dto
-        params.setComment(
-                entity ->  "(" + "指令日期" + ":" + DateUtil.format(entity.getEntrustDate()) + ")-"
-                        +"("+ "回购期限" +entity.getRepoTerm()+ "天"+")-"
-                        + this.getMessage("EtrRepo002.entrustAmt") + ":" + df4.format(entity.getEntrustAmt())+"元");
         processParameter.setWorkFlowParameter(params);
 
-//        String msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);
-//        return new Message<AjaxResult>().setData(new AjaxResult(msg));
         String msg = null;
         try {
             msg = cfetsEtrIbRepoinfo003Service.start(processParameter, RepoInfoDto);

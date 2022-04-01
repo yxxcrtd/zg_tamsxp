@@ -5,7 +5,6 @@ import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
-import com.joyintech.tams.exchange.service.ExchangeOrderService;
 import com.joyintech.tams.exchange.service.trade.management.service.OrderManagement;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/joyin")
 public class ExchangeOrderController {
 
-    @Autowired
-    private ExchangeOrderService orderService;
+//    @Autowired
+//    private ExchangeOrderService orderService;
 
     @Autowired
     private OrderManagement orderManagement;

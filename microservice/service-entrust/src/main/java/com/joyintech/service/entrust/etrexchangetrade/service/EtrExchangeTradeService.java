@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 
 import com.joyintech.background.component.common.pack.common.security.User;
@@ -164,9 +165,13 @@ public class EtrExchangeTradeService extends BaseService{
     @Autowired(required = false)
     private FinProductMapper finProductMapper;
 
+    @Autowired
+    private EtrEntrustDetailMapper etrEntrustDetailMapper;
+
     public static final String ENTRUST_RECORD_NEW = "new";
     
     public static final String ENTRUST_RECORD_MODIFY = "modify";
+
 
     /**
      * 工作流完成方法
@@ -618,6 +623,24 @@ public class EtrExchangeTradeService extends BaseService{
         }
     }
 
+
+    public void doCompleteMulti(EtrExchangeTradeMulti001Dto dto, String operationType) throws IllegalAccessException, InvocationTargetException {
+        EtrExchangeTrade001Dto etrExchangeTrade001Dto = new EtrExchangeTrade001Dto();
+        BeanUtil.copyPropertiesIgnoreNull(etrExchangeTrade001Dto,dto);
+        etrExchangeTrade001Dto.setPortfolioId(dto.getPortfolioTreeId());
+        etrExchangeTrade001Dto.setAcctNo(dto.getTradeMultiPtl001Dtos().get(0).getAcctNo());
+        etrExchangeTrade001Dto.setSecAcctId(dto.getTradeMultiPtl001Dtos().get(0).getSecAcctId());
+        this.doComplete(etrExchangeTrade001Dto, operationType);
+
+        //插入指令多组合明细表
+        BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildMultiEtrFlow(dto);
+        if(!StringUtil.isEmptyList(baseEtrInvestInfoDto.getEtrEntrustDetailList())) {
+            for (EtrEntrustDetail etrEntrustDetail:baseEtrInvestInfoDto.getEtrEntrustDetailList()) {
+                etrEntrustDetailMapper.insertSelective(etrEntrustDetail);
+            }
+        }
+    }
+
     /**
      * 构造投资指令DTO
      * @param dto
@@ -637,7 +660,13 @@ public class EtrExchangeTradeService extends BaseService{
         baseDto.setCreateTime(dto.getCreateTime());// 创建时间
         baseDto.setUpdateUser(LoginUserUtil.getUserName());// 更新用户
         baseDto.setUpdateTime(new Date());// 更新时间
-        baseDto.setEntrustClass(DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());// 数据字典.指令类型.单组合单资产
+        if(StringUtil.equals(dto.getIsMulti(),DictCodeList.是否_是.getValue()) ) {
+            baseDto.setEntrustClass(DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());// 数据字典.指令类型.单组合单资产
+        }
+        else {
+            baseDto.setEntrustClass(DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());// 数据字典.指令类型.单组合单资产
+        }
+
         baseDto.setEntrustType(dto.getEntrustBussType());// 指令业务类型
         baseDto.setEntrustId(dto.getEntrustId());// 指令编号
         if (iPlatformDate != null) {
@@ -711,6 +740,7 @@ public class EtrExchangeTradeService extends BaseService{
         param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
         param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        param.put("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         String portfolioId = (String)param.get("portfolioId");
         if (StringUtil.isNotEmpty(portfolioId)) {
             param.put("portfolioIdList",
@@ -804,6 +834,22 @@ public class EtrExchangeTradeService extends BaseService{
      */
     public Page<EtrExchangeTrade002Dto> findZqzyPositionsPage(int page, int length,
             Map<String, Object> pageParam) {
+        getZqzyPositionParam(pageParam);
+        Page<EtrExchangeTrade002Dto> result = super.queryForPage(page, length, () -> etrExchangeTradeMapper.findZqzyPositionsPage(pageParam));
+        return result;
+    }
+
+    /**
+     *
+     * @param pageParam
+     * @return
+     */
+    public List<EtrExchangeTrade002Dto> findZqzyPositionsList(Map<String, Object> pageParam) {
+        getZqzyPositionParam(pageParam);
+        return etrExchangeTradeMapper.findZqzyPositionsPage(pageParam);
+    }
+
+    private void getZqzyPositionParam(Map<String, Object> pageParam) {
         pageParam.put("POSITION_TYPE_03", BussinessDictCodeList.持仓类型_实际.getValue());
         pageParam.put("POSITION_TYPE_04", BussinessDictCodeList.持仓类型_质押.getValue());
         pageParam.put("POSITION_TYPE_05", BussinessDictCodeList.持仓类型_融入.getValue());
@@ -821,6 +867,7 @@ public class EtrExchangeTradeService extends BaseService{
         pageParam.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
         pageParam.put("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
         pageParam.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+        pageParam.put("PS_01", DictCodeList.出入库方向_入库.getValue());
         pageParam.put("LIBRARY_DIRECTION_01", DictCodeListExt3.交易方向_质押券入库.getValue());
         pageParam.put("TRADE_PLACE_03", BussinessDictCodeList.交易场所_深圳证券交易所.getValue());
         pageParam.put("TRADE_PLACE_04", BussinessDictCodeList.交易场所_上海证券交易所.getValue());
@@ -832,8 +879,6 @@ public class EtrExchangeTradeService extends BaseService{
             pageParam.put("date", iPlatformDate.getSysDate());
             //pageParam.put("date", DateUtil.parse("2020-08-13"));
         }
-        Page<EtrExchangeTrade002Dto> result = super.queryForPage(page, length, () -> etrExchangeTradeMapper.findZqzyPositionsPage(pageParam));
-        return result;
     }
 
     /**
@@ -2096,6 +2141,31 @@ public class EtrExchangeTradeService extends BaseService{
         return entity;
     }
 
+    public BaseEtrInvestInfoDto buildMultiEtrFlow(EtrExchangeTradeMulti001Dto dto) {
+	    dto.setSecAcctId(dto.getTradeMultiPtl001Dtos().get(0).getSecAcctId());
+        BaseEtrInvestInfoDto baseEtrInvestInfoDto = this.buildEtrFlow(dto);
+
+        EtrEntrust etrEntrust = baseEtrInvestInfoDto.getEtrEntrust();
+        EtrEntrustAdd etrEntrustAdd = baseEtrInvestInfoDto.getEtrEntrustAdd();
+        etrEntrustAdd.setWeighType(dto.getWeightType());
+        etrEntrustAdd.setMulDistriClass(dto.getMulDistriClass());
+        etrEntrustAdd.setMulTarget(dto.getTargetValue());
+        etrEntrustAdd.setMulUnit(dto.getMulTargetUnit());
+
+        List<EtrEntrustDetail> etrEntrustDetailList = new ArrayList<>();
+        baseEtrInvestInfoDto.setEtrEntrustDetailList(etrEntrustDetailList);
+        for(EtrExchangeTradeMultiPtl001Dto item : dto.getTradeMultiPtl001Dtos()) {
+            EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
+            etrEntrustDetail.setPortfolioId(item.getPortfolioId());
+            etrEntrustDetail.setEntrustId(etrEntrust.getEntrustId());
+            etrEntrustDetail.setEntrustAmt(item.getEntrustAmt());
+            etrEntrustDetail.setEntrustNum(item.getEntrustNum());
+            etrEntrustDetail.setDisRate(ArithmeticUtil.divide(item.getProportion(),new BigDecimal(100),4));
+            etrEntrustDetail.setTargetType(dto.getTargetType());
+            etrEntrustDetailList.add(etrEntrustDetail);
+        }
+        return baseEtrInvestInfoDto;
+    }
 
 	/**
 	 * 每日债券估值市场行情价格查询
@@ -2354,4 +2424,64 @@ public class EtrExchangeTradeService extends BaseService{
         return etrExchangeTradeMapper.selectFinExercisePlanData(map);
     }
     // add by etliu 20211207 end
+
+    /**
+     * 查询多组合名称下拉框
+     * @param map
+     * @return
+     */
+    public Page<SelectOptionDto> selectPortfolioTreeId(Map<String,Object> map, int page, int length) {
+        return super.queryForPageForSelectReturn(page,length,()->etrExchangeTradeMapper.selectPortfolioTreeId(map));
+    }
+
+    /**
+     * 查询多组合树关联的组合
+     * @param map
+     * @return
+     */
+    public List<SelectOptionDto> selectPortfolioId(Map<String,Object> map){
+        return etrExchangeTradeMapper.selectPortfolioId(map);
+    }
+
+    /**
+     * 查询多组合明细
+     * @param map
+     * @return
+     */
+    public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map) {
+        map.put("PS_T100",DictCodeListExt3.交易方向_调整到.getValue());
+        List<EtrExchangeTradeMultiPtl001Dto> list = etrExchangeTradeMapper.selectPortfolioTreeDetail(map);
+        return list;
+    }
+    /**
+     * 获取多组合分配资金账户
+     * @param paraMap
+     * @return
+     */
+    public Page<SelectOptionDto> selectMultiAcctNo(Map<String,Object> paraMap, int page, int length) {
+        return super.queryForPageForSelectReturn(page,length,()->etrExchangeTradeMapper.selectMultiAcctNo(paraMap));
+    }
+
+    /**
+     * 查询组合+资金账户+交易场所对应的证券账户（多组合）
+     * @param paraMap
+     * @return
+     */
+    public String selectMultiSecAcctId(Map<String,Object> paraMap) {
+        return etrExchangeTradeMapper.selectMultiSecAcctId(paraMap);
+    }
+
+    /**
+     * 查询多组合详情
+     * @param param
+     * @return
+     */
+    public EtrExchangeTradeMulti001Dto selectMultDetail(Map<String, Object> param){
+        param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+        param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
+        param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
+        param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        return etrExchangeTradeMapper.selectMultDetail(param);
+    }
+
 }

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbTypeMappingMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbTypeMapping">
+    <id column="MAPPINGID" jdbcType="CHAR" property="mappingid" />
+    <result column="SRCDATATYPE" jdbcType="VARCHAR" property="srcdatatype" />
+    <result column="SRCDATATYPEID" jdbcType="VARCHAR" property="srcdatatypeid" />
+    <result column="OBJDATATYPE" jdbcType="VARCHAR" property="objdatatype" />
+    <result column="OBJDATATYPEID" jdbcType="VARCHAR" property="objdatatypeid" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="WORKFLOW_ID" jdbcType="VARCHAR" property="workflowId" />
+    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    MAPPINGID, SRCDATATYPE, SRCDATATYPEID, OBJDATATYPE, OBJDATATYPEID, STATUS, WORKFLOW_ID,
+    DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, ORG_CODE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from CHB_TYPE_MAPPING
+    where MAPPINGID = #{mappingid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHB_TYPE_MAPPING
+    where MAPPINGID = #{mappingid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMapping">
+    insert into CHB_TYPE_MAPPING (MAPPINGID, SRCDATATYPE, SRCDATATYPEID,
+      OBJDATATYPE, OBJDATATYPEID, STATUS,
+      WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
+      UPDATE_TIME, CREATE_USER, CREATE_TIME,
+      ORG_CODE)
+    values (#{mappingid,jdbcType=CHAR}, #{srcdatatype,jdbcType=VARCHAR}, #{srcdatatypeid,jdbcType=VARCHAR},
+      #{objdatatype,jdbcType=VARCHAR}, #{objdatatypeid,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+      #{workflowId,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{orgCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMapping">
+    insert into CHB_TYPE_MAPPING
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mappingid != null">
+        MAPPINGID,
+      </if>
+      <if test="srcdatatype != null">
+        SRCDATATYPE,
+      </if>
+      <if test="srcdatatypeid != null">
+        SRCDATATYPEID,
+      </if>
+      <if test="objdatatype != null">
+        OBJDATATYPE,
+      </if>
+      <if test="objdatatypeid != null">
+        OBJDATATYPEID,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="workflowId != null">
+        WORKFLOW_ID,
+      </if>
+      <if test="deptCode != null">
+        DEPT_CODE,
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mappingid != null">
+        #{mappingid,jdbcType=CHAR},
+      </if>
+      <if test="srcdatatype != null">
+        #{srcdatatype,jdbcType=VARCHAR},
+      </if>
+      <if test="srcdatatypeid != null">
+        #{srcdatatypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="objdatatype != null">
+        #{objdatatype,jdbcType=VARCHAR},
+      </if>
+      <if test="objdatatypeid != null">
+        #{objdatatypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="workflowId != null">
+        #{workflowId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMapping">
+    update CHB_TYPE_MAPPING
+    <set>
+      <if test="srcdatatype != null">
+        SRCDATATYPE = #{srcdatatype,jdbcType=VARCHAR},
+      </if>
+      <if test="srcdatatypeid != null">
+        SRCDATATYPEID = #{srcdatatypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="objdatatype != null">
+        OBJDATATYPE = #{objdatatype,jdbcType=VARCHAR},
+      </if>
+      <if test="objdatatypeid != null">
+        OBJDATATYPEID = #{objdatatypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="workflowId != null">
+        WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptCode != null">
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where MAPPINGID = #{mappingid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbTypeMapping">
+    update CHB_TYPE_MAPPING
+    set SRCDATATYPE = #{srcdatatype,jdbcType=VARCHAR},
+      SRCDATATYPEID = #{srcdatatypeid,jdbcType=VARCHAR},
+      OBJDATATYPE = #{objdatatype,jdbcType=VARCHAR},
+      OBJDATATYPEID = #{objdatatypeid,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    where MAPPINGID = #{mappingid,jdbcType=CHAR}
+  </update>
+
+  <select id="selectMappingBySrcDataType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from chb_type_mapping
+    where 1 =1
+    <if test='srcDataType != null'>
+      and srcDataType=#{srcDataType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="selectMappingObjectValue" parameterType="java.util.Map" resultType="java.lang.String">
+    select objdatatypeid
+    from chb_type_mapping
+    where 1 =1
+    <if test='srcDataType != null'>
+      and srcDataType=#{srcDataType,jdbcType=VARCHAR}
+    </if>
+    <if test='objDataType != null'>
+      and objDataType=#{objDataType,jdbcType=VARCHAR}
+    </if>
+    <if test='srcValue != null'>
+      and srcDataTypeId=#{srcValue,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

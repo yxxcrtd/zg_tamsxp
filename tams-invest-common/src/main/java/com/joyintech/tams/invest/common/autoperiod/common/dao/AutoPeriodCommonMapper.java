@@ -46,6 +46,14 @@ public interface AutoPeriodCommonMapper {
 
     int deleteTrdProductDealAdd(Map<String, Object> paramMap);
 
+    int deletePaTrdFinTempDealTotalData(Map<String, Object> paramMap);
+
+    int deleteTrdFinProductTempDealTotalData(Map<String, Object> paramMap);
+
+    int deleteTrdProductTempDeal(Map<String, Object> paramMap);
+
+    int deleteTrdProductTempDealAdd(Map<String, Object> paramMap);
+
     int deleteStlPayOrdersData(Map<String, Object> paramMap);
 
     String selectDealCapacctInfo(@Param("secManageAcctId") String secManageAcctId, @Param("ccy")String ccy);

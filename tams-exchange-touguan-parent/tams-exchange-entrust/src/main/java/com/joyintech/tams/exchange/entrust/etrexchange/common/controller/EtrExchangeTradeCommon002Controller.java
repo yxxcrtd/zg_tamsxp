@@ -26,8 +26,10 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchang
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon003Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.*;
+import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.service.EtrExchangeTradeJj001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.constant.TempConstant;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -66,6 +68,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
     @Autowired
     private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
 
+
     @ApiOperation(value="查询页面初始化参数", notes = "查询页面初始化参数")
     @PostMapping("/init")
     @ResponseBody
@@ -87,7 +90,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         initPageParams.put("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
         initPageParams.put("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
         initPageParams.put("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
-
+        initPageParams.put("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
         // 场内交易指令画面持仓列表自动刷新时间（毫秒）
         long etrExchange_posTable_refresh_period = 20000;
         String tempSysParaVal = CacheUtil.getSysParam(
@@ -111,6 +114,8 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         }
         List<SelectOptionDto> optionsGradeResult = selectDto1.getOptions();
         initPageParams.put("PS_ETR", JsonUtils.objectArray2Json(optionsGradeResult.toArray()));
+        initPageParams.put("ETR_CHECK_POS_SWITCH",CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH));
+        initPageParams.put("noTradeBusiness", TempConstant.NO_TRADE_BUSINESS_ETR);
         /*add by chenjiaxing 更改交易方向枚举值 end*/
         return new Message<Map<String, Object>>(initPageParams).success();
     }
@@ -172,9 +177,9 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
         // 大宗平台
         List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
             return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue());
+                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
+//                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
+//                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue());
         }).collect(Collectors.toList());
         initPageParams.put("PS_DZ", JsonUtils.objectArray2Json(ps_dz.toArray()));
         // 固定收益
@@ -196,6 +201,7 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
     @ResponseBody
     public Message<Page<EtrExchangeTradePositionsCommonResponse>> findPositionsPage(@RequestBody   EtrExchangeTradePositionsCommonRequest request){
         try {
+            request.setSecId(null);
             Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findPositionsPage(request);
             return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
         } catch (Exception e) {
@@ -205,20 +211,22 @@ public class EtrExchangeTradeCommon002Controller extends BaseController{
 
     }
 
-    /**
-     * 查询债券质押持仓
-     * 
-     * @return
-     * @see
-     * @since 1.0
-     */
-    @ApiOperation(value="查询债券质押持仓分页数据",notes="查询债券质押持仓分页数据")
-    @PostMapping("findZqzyPositionsPage")
-    @ResponseBody
-    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(@RequestBody   EtrExchangeTradePositionsCommonRequest request){
-        Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findZqzyPositionsPage(request);
-        return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
-    }
+    // modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start
+//    /**
+//     * 查询债券质押持仓
+//     *
+//     * @return
+//     * @see
+//     * @since 1.0
+//     */
+//    @ApiOperation(value="查询债券质押持仓分页数据",notes="查询债券质押持仓分页数据")
+//    @PostMapping("findZqzyPositionsPage")
+//    @ResponseBody
+//    public Message<Page<EtrExchangeTradePositionsCommonResponse>> findZqzyPositionsPage(@RequestBody   EtrExchangeTradePositionsCommonRequest request){
+//        Page<EtrExchangeTradePositionsCommonResponse> page = etrExchangeTradeCommon002Service.findZqzyPositionsPage(request);
+//        return new Message<Page<EtrExchangeTradePositionsCommonResponse>>().success().setData(page);
+//    }
+    // modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 end
 
     /**
      * 查询证券代码联想框文本框

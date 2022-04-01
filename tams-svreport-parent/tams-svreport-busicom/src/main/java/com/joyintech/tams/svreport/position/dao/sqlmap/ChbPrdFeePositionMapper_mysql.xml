@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.position.dao.ChbPrdFeePositionMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition" >
-    <result column="CDATE" property="cdate" jdbcType="DATE" />
-    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
-    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-    <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
-    <result column="FEE_SECTYPE" property="feeSectype" jdbcType="VARCHAR" />
-    <result column="AMT" property="amt" jdbcType="DECIMAL" />
-    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
-    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-  </resultMap>
-  
-  <insert id="insertBatch" parameterType="java.util.List" >
-       insert into CHB_PRD_FEE_POSITION 
-	       (CDATE, PROD_ID, CCY,
-	        FEE_TYPE, FEE_SECTYPE,
-	        AMT,
-	        ORG_CODE,DEPT_CODE,
-	        CREATE_USER,CREATE_TIME)
-        <foreach collection="insertDataList" item="dto" index="index"  separator="union all"  open="("  close=")">
-	       select    
-		        #{dto.cdate,jdbcType=DATE}, 
-		        #{dto.prodId,jdbcType=VARCHAR}, 
-		        #{dto.ccy,jdbcType=VARCHAR}, 
-	            #{dto.feeType,jdbcType=VARCHAR}, 
-	            #{dto.feeSectype,jdbcType=VARCHAR},
-	            #{dto.amt,jdbcType=DECIMAL}, 	            
-	            #{dto.orgCode,jdbcType=VARCHAR}, 
-	            #{dto.deptCode,jdbcType=VARCHAR},
-	            #{dto.createUser,jdbcType=VARCHAR},
-	            NOW()
-            from dual
-       </foreach>
-  </insert>
-  
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition" >
+		<result column="CDATE" property="cdate" jdbcType="DATE" />
+		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+		<result column="CCY" property="ccy" jdbcType="VARCHAR" />
+		<result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+		<result column="FEE_SECTYPE" property="feeSectype" jdbcType="VARCHAR" />
+		<result column="AMT" property="amt" jdbcType="DECIMAL" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<insert id="insertBatch" parameterType="java.util.List" >
+		insert into CHB_PRD_FEE_POSITION
+		(CDATE, PROD_ID, CCY,
+		FEE_TYPE, FEE_SECTYPE,
+		AMT,
+		ORG_CODE,DEPT_CODE,
+		CREATE_USER,CREATE_TIME)
+		<foreach collection="insertDataList" item="dto" index="index"  separator="union all"  open="("  close=")">
+			select
+			#{dto.cdate,jdbcType=DATE},
+			#{dto.prodId,jdbcType=VARCHAR},
+			#{dto.ccy,jdbcType=VARCHAR},
+			#{dto.feeType,jdbcType=VARCHAR},
+			#{dto.feeSectype,jdbcType=VARCHAR},
+			#{dto.amt,jdbcType=DECIMAL},
+			#{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.deptCode,jdbcType=VARCHAR},
+			#{dto.createUser,jdbcType=VARCHAR},
+			NOW()
+			from dual
+		</foreach>
+	</insert>
+
 	<insert id="insertPos" parameterType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition" >
  		insert into CHB_PRD_FEE_POSITION 
 			(CDATE, PROD_ID, CCY,
@@ -57,23 +57,23 @@
 			now()
 		)
   </insert>
-  
-  <delete id="deletePosition" parameterType="map">
-   delete from
-   CHB_PRD_FEE_POSITION
-   where CDATE >= #{cdate,jdbcType=DATE}
-   <if test="prodIdList!=null and prodIdList.size()!=0">
-      and PROD_ID in 
-        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-          #{accountid}
-       	</foreach>
-    </if>
-  </delete>
-  
-   <select id="selectPrdFeeDeal" 
-          resultType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal"
-		  parameterType="map">
-		select 
+
+	<delete id="deletePosition" parameterType="map">
+		delete from
+		CHB_PRD_FEE_POSITION
+		where CDATE >= #{cdate,jdbcType=DATE}
+		<if test="prodIdList!=null and prodIdList.size()!=0">
+			and PROD_ID in
+			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
+				#{accountid}
+			</foreach>
+		</if>
+	</delete>
+
+	<select id="selectPrdFeeDeal"
+			resultType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal"
+			parameterType="map">
+		select
 		ifnull(info.FPROD_ID,info.PROD_ID) prodId,
 		info.fprod_id fprodid,
 		info.prod_name prodName,
@@ -94,59 +94,59 @@
 		where info.status != 'D'
 		and pay_date=#{batchDate,jdbcType=DATE}
 		<if test="prodIdList!=null">
-		<foreach collection="prodIdList" item="prodId" open="and ( ("
-			close=" ) )" separator=") or (">
-			ifnull(info.FPROD_ID,info.PROD_ID) = #{prodId,jdbcType = VARCHAR}
-			<!-- and info.org_code = #{prdEndSub.orgCode,jdbcType = VARCHAR} -->
-		</foreach>
+			<foreach collection="prodIdList" item="prodId" open="and ( ("
+					 close=" ) )" separator=") or (">
+				ifnull(info.FPROD_ID,info.PROD_ID) = #{prodId,jdbcType = VARCHAR}
+				<!-- and info.org_code = #{prdEndSub.orgCode,jdbcType = VARCHAR} -->
+			</foreach>
 		</if>
-  </select>
-  
-  
-  <select id="selectByDate" 
-          resultSetType="FORWARD_ONLY" fetchSize="1000"
-          resultMap="BaseResultMap" parameterType="map">
+	</select>
+
+
+	<select id="selectByDate"
+			resultSetType="FORWARD_ONLY" fetchSize="1000"
+			resultMap="BaseResultMap" parameterType="map">
 		SELECT
-		    POS.CDATE,
-			POS.PROD_ID,
-			POS.CCY,
-			POS.FEE_TYPE,
-			POS.FEE_SECTYPE,
-			POS.AMT,
-			ORG_CODE,DEPT_CODE,
-	        CREATE_USER,CREATE_TIME
+		POS.CDATE,
+		POS.PROD_ID,
+		POS.CCY,
+		POS.FEE_TYPE,
+		POS.FEE_SECTYPE,
+		POS.AMT,
+		ORG_CODE,DEPT_CODE,
+		CREATE_USER,CREATE_TIME
 		FROM CHB_PRD_FEE_POSITION POS
 		WHERE 1 = 1
 		AND POS.CDATE = #{cdate,jdbcType = DATE}
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-      	 	AND POS.PROD_ID in 
-	        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-	          #{accountid}
-	       	</foreach>
-        </if>
-  </select>
-  
-  <select id="queryMinSettdate" 
-          resultType="DATE" 
-          parameterType="map">
+			AND POS.PROD_ID in
+			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
+				#{accountid}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="queryMinSettdate"
+			resultType="DATE"
+			parameterType="map">
 		SELECT
-		case 
-        when min(PAY_DATE) is  null 
-        then #{batchDate,jdbcType=DATE}
-        when min(PAY_DATE) is not null and min(PAY_DATE)>#{batchDate,jdbcType=DATE} 
-        then #{batchDate,jdbcType=DATE}
-        when min(PAY_DATE) is not null and min(PAY_DATE)<![CDATA[<=]]>#{batchDate,jdbcType=DATE} 
-        then  min(PAY_DATE) end  SETTDATEDATE 
+		case
+		when min(PAY_DATE) is  null
+		then #{batchDate,jdbcType=DATE}
+		when min(PAY_DATE) is not null and min(PAY_DATE)>#{batchDate,jdbcType=DATE}
+		then #{batchDate,jdbcType=DATE}
+		when min(PAY_DATE) is not null and min(PAY_DATE)<![CDATA[<=]]>#{batchDate,jdbcType=DATE}
+		then  min(PAY_DATE) end  SETTDATEDATE
 		FROM CHB_PRD_FEE_DEAL
 		WHERE
-			DATE_FORMAT(update_time,'%Y-%m-%d')=DATE_FORMAT(#{batchDate,jdbcType=DATE},'%Y-%m-%d')
-		
+		DATE_FORMAT(update_time,'%Y-%m-%d')=DATE_FORMAT(#{batchDate,jdbcType=DATE},'%Y-%m-%d')
+
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-      	 	AND ifnull(FPROD_ID,PROD_ID) in
-	        <foreach item="accountid" collection="prodIdList" open="(" separator="," close=")"> 
-	          #{accountid}
-	       	</foreach>
-        </if>
-  </select>
- 
+			AND ifnull(FPROD_ID,PROD_ID) in
+			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
+				#{accountid}
+			</foreach>
+		</if>
+	</select>
+
 </mapper>

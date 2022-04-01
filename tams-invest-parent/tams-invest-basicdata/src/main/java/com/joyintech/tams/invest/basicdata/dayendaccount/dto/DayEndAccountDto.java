@@ -312,7 +312,7 @@ public class DayEndAccountDto extends StlSecRecon {
 	}
 
 	public String getFinprodTypeStr() {
-		return SysDataUtil.getNameFromDataDict(BussinessDictCode.平安资产类型, this.getFinprodType());
+		return SysDataUtil.getNameFromDataDict(BussinessDictCode.金融产品类型_投管用, this.getFinprodType());
 	}
 
 	public BigDecimal getStampFee() {

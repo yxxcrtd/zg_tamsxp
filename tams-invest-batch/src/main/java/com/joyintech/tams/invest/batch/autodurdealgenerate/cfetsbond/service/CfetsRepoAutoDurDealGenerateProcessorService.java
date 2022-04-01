@@ -38,13 +38,13 @@ import java.util.*;
 @Scope("prototype")
 public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
 
-    @Autowired
+    @Autowired(required = false)
     private AutoPeriodCommonService autoPeriodCommonService;
 
-    @Autowired
+    @Autowired(required = false)
     private CfetsBondAutoDurDealGenerateMapper cfetsBondAutoDurDealGenerateMapper;
-    
-    @Autowired
+
+    @Autowired(required = false)
     private PinganBatchCommonService pinganBatchCommonService;
 
     public void execute(Date batchDate) {
@@ -53,15 +53,14 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         paramMap1.put("finProdType2", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()));
         paramMap1.put("updateUser", "system");
         paramMap1.put("batchDate", batchDate);
+        paramMap1.put("tradeMarket",DictCodeListExt1.交易场所_银行间.getValue());
         List<TrdFinProductDealTotal> totalTradeIds = cfetsBondAutoDurDealGenerateMapper.selectTrdFinProductDealTotalData(paramMap1);
         for(TrdFinProductDealTotal item : totalTradeIds){
             PositionHttpRequest.dorevoke(item.getTotleTradeId(),DictCodeListExt1.子系统代码_交易.getValue(),DictCodeListExt3.头寸业务类型_质押式回购到期.getValue(),item.getPs());
         }
         //删除当日数据
-        autoPeriodCommonService.deleteActData(DictCodeList.共通业务类型_质押式回购存续期.getValue(),
-                DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),batchDate);
-        autoPeriodCommonService.deleteActData(DictCodeList.共通业务类型_质押式回购存续期.getValue(),
-                DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),batchDate);
+        autoPeriodCommonService.deleteActTempData(DictCodeList.共通业务类型_质押式回购存续期.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),batchDate,DictCodeListExt1.交易场所_银行间.getValue());
+        autoPeriodCommonService.deleteActTempData(DictCodeList.共通业务类型_质押式回购存续期.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),batchDate,DictCodeListExt1.交易场所_银行间.getValue());
         //查询待处理数据
         List<TrdRepoDurationDto> trdRepoDurationDtos = listTrdRepoDuration(batchDate);
         //处理待处理数据明细
@@ -78,13 +77,12 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
                     trdRepoDuration.setTradeAmt(trdRepoDuration.getTheoryAmt());
                     // 组合转换
                     trdRepoDuration.setActPortfolioId(trdRepoDuration.getPortfolioId());
-                    trdRepoDuration.setPortfolioId(
-                            AllTradeCommonUtil.exchangePortfolio(trdRepoDuration.getPortfolioId()));
+                    trdRepoDuration.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(trdRepoDuration.getPortfolioId()));
                     trdBondDurDbInserts.add(genDateForDb(trdRepoDuration));
                 }
             }
             //入库并处理头寸
-            insertandposition(trdBondDurDbInserts);
+            insertAndSendPosition(trdBondDurDbInserts);
         }
     }
 
@@ -94,7 +92,6 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
      */
     public  List<TrdRepoDurationDto> listTrdRepoDuration(Date batchDate){
         Map<String, Object> paramMap = new HashMap<String, Object>();
-
         paramMap.put("statusValid", Arrays.asList(DictCodeListExt1.画面数据状态_待处理.getValue()));
         paramMap.put("ps", Arrays.asList(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()));
         paramMap.put("notChannelFlag", "1");
@@ -103,9 +100,16 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         paramMap.put("mdateEnd", mdate);
         //去掉已接收成功的数据
         paramMap.put("DELIVERY_STATUS_02","02");
-        List<TrdRepoDurationDto> tradeDataList = restTemplate.postForList(
-                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/selectAllData", paramMap,
-                TrdRepoDurationDto.class);
+        List<TrdRepoDurationDto> tradeDataList = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/selectAllData", paramMap,TrdRepoDurationDto.class);
+        if(!CollectionUtils.isEmpty(tradeDataList)) {
+            List<TrdRepoDurationDto> resultList = new ArrayList<>();
+            tradeDataList.forEach(e -> {
+                if (StringUtil.equals(e.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue()) || StringUtil.equals(e.getTradeMarket(), DictCodeListExt1.交易场所_商业银行柜台.getValue())) {
+                    resultList.add(e);
+                }
+            });
+            return resultList;
+        }
         return  tradeDataList;
     }
 
@@ -117,9 +121,6 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
     public TrdRepoDurationDto getTrdRepoDuration(Map<String,Object> param){
         setParams(param);
         return cfetsBondAutoDurDealGenerateMapper.findRepoEffectiveData(param);
-        /*return restTemplate.postForObject(
-                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/findEffectiveData",
-                param, TrdRepoDurationDto.class);*/
     }
 
 
@@ -136,8 +137,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         trdFinProductDealTotal.setCcy(entity.getCcy());
         trdFinProductDealTotal.setPs(entity.getPs()==null ? DictCodeList.交易方向_到期.getValue() : entity.getPs());
         trdFinProductDealTotal.setSecManageAcctId(entity.getSecManageAcctId());
-        trdFinProductDealTotal.setBranch(
-                AutoPeriodCommonService.changePsToBranch(entity.getmDate(), DictCodeList.交易方向_到期.getValue()));
+        trdFinProductDealTotal.setBranch(AutoPeriodCommonService.changePsToBranch(entity.getmDate(), DictCodeList.交易方向_到期.getValue()));
         trdFinProductDealTotal.setTradeDate(DateTime.parse(entity.getSettleDate()).toDate());
         trdFinProductDealTotal.setVdate(DateTime.parse(entity.getvDate()).toDate());
 //        终止日存在使用终止日
@@ -163,13 +163,12 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
         trdFinProductDealTotal.setStatus(DictCodeList.数据状态_新建.getValue());
         trdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
-
         //到期结算金额
         trdFinProductDealTotal.setFpriceAmt(entity.getFpriceAmt());
         //通道费
-        if(com.joyintech.framework.util.StringUtil.isNotEmpty(entity.getChannelFee())){
+        if(StringUtil.isNotEmpty(entity.getChannelFee())){
             trdFinProductDealTotal.setFeeAmt(entity.getChannelFee());
-            if(com.joyintech.framework.util.StringUtil.equals(DictCodeListExt2.收取方式_回款前扣除.getValue(), entity.getCollectType())){
+            if(StringUtil.equals(DictCodeListExt2.收取方式_回款前扣除.getValue(), entity.getCollectType())){
                 trdFinProductDealTotal.setFeeAmtPay(entity.getChannelFee());
             }else{
                 trdFinProductDealTotal.setFeeAmtUnpay(entity.getChannelFee());
@@ -183,8 +182,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         }*/
         if(entity.getActTradeFee()!= null){
             trdFinProductDealTotal.setFeeAmt(ArithmeticUtil.doAdd(trdFinProductDealTotal.getFeeAmt()==null?BigDecimal.ZERO:trdFinProductDealTotal.getFeeAmt(),entity.getActTradeFee()));
-            trdFinProductDealTotal.setFeeAmtUnpay(
-                    ArithmeticUtil.doAdd(trdFinProductDealTotal.getFeeAmtUnpay()==null?BigDecimal.ZERO:trdFinProductDealTotal.getFeeAmtUnpay(),entity.getActTradeFee()));
+            trdFinProductDealTotal.setFeeAmtUnpay(ArithmeticUtil.doAdd(trdFinProductDealTotal.getFeeAmtUnpay()==null?BigDecimal.ZERO:trdFinProductDealTotal.getFeeAmtUnpay(),entity.getActTradeFee()));
         }
         trdFinProductDealTotal.setFpriceAmt(entity.getTheoryAmt());
         trdFinProductDealTotal.setRemark(entity.getRemark());
@@ -349,42 +347,38 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
      *  入库并处理头寸
      * @param trdBondDurDbInserts
      */
-    public void  insertandposition(List<TrdBondDurDbInertDto> trdBondDurDbInserts){
+    public void insertAndSendPosition(List<TrdBondDurDbInertDto> trdBondDurDbInserts){
         for(TrdBondDurDbInertDto trdBondDurDbInertDto : trdBondDurDbInserts){
-            autoPeriodCommonService.insertCfetsDealData(trdBondDurDbInertDto);
+            autoPeriodCommonService.insertCfetsTempDealData(trdBondDurDbInertDto);
             sendPositionMethod(trdBondDurDbInertDto);
         }
     }
-
 
     /**
      * 组装头寸
      * @param trdBondDurDbInertDto
      */
     private void sendPositionMethod(TrdBondDurDbInertDto trdBondDurDbInertDto) {
-        //调用头寸
         Map<String,Object> req = new HashMap<>();
         List<Map<String,Object>> ptlCashList = new ArrayList<>();
         List<Map<String,Object>> ptlSecList = new ArrayList<>();
         TrdFinProductDealTotal trdFinProductDealTotal = trdBondDurDbInertDto.getTrdFinProductDealTotal();
         Map<String, Object> map = new HashMap<>();
         map.put("finprodId", trdBondDurDbInertDto.getTradeId());
-        List<RepoInfo> repoInfoList = restTemplate.postForList(
-                ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/findRepoInfo", map,
-                RepoInfo.class);
+        List<RepoInfo> repoInfoList = restTemplate.postForList(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/findRepoInfo", map,RepoInfo.class);
+
         for (TrdProductDeal dto : trdBondDurDbInertDto.getTrdProductDealList()) {
-            //调用头寸
             Map<String, Object> ptlCash = new HashMap<>();
             ptlCash.put("portfolioId", trdFinProductDealTotal.getPortfolioId());
             ptlCash.put("tradeId", dto.getTradeId());
             ptlCash.put("etrId", dto.getEntrustId());
             ptlCash.put("cashAmount", dto.getTradeAmt());
-            if (com.joyintech.framework.util.StringUtil.isNotEmpty(trdFinProductDealTotal.getPortfolioId())) {
+            if (StringUtil.isNotEmpty(trdFinProductDealTotal.getPortfolioId())) {
                 Map<String, Object> acctIdMap = new HashMap<String, Object>();
                 acctIdMap.put("portfolioId", trdFinProductDealTotal.getPortfolioId());
                 acctIdMap.put("acctType", BussinessDictCodeList.资金账户类型_托管账户.getValue());
                 String cashAcctId = cfetsBondAutoDurDealGenerateMapper.qryPortfolioCashAcctId(acctIdMap);
-                if (com.joyintech.framework.util.StringUtil.isNotEmpty(cashAcctId)) {
+                if (StringUtil.isNotEmpty(cashAcctId)) {
                     ptlCash.put("cashAcctId", cashAcctId);
                 }
             }
@@ -423,7 +417,7 @@ public class CfetsRepoAutoDurDealGenerateProcessorService extends BaseService {
         }else{
             req.put("ps","04");
         }
-        if(null!=trdFinProductDealTotal.getSettleSpeed()){
+        if(null != trdFinProductDealTotal.getSettleSpeed()){
             if(trdFinProductDealTotal.getSettleSpeed() == 0L){
                 req.put("settleSpeed","01");
             }

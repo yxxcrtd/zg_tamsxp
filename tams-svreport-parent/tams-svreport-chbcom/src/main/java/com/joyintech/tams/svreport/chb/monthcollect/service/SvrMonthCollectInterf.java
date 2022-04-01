@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -190,8 +191,35 @@ public class SvrMonthCollectInterf extends BaseService{
 	public Map<String,Map<String,Map<String,ChbMonthCollect>>> getList(Date batchDate,Date batchDateStart ,Date batchDateEnd) {
 		//汇总  总、净销售金额
 		List<ChbMonthCollect> listAmountTotal = svrMonthCollectInterfMapper.selectAmountTotal(DateUtil.format(batchDateStart),DateUtil.format(batchDateEnd));
-			//报送表去除check表中识别标识相等的数据后再与check表合并
-			List<ChbMonthCollect> List = svrMonthCollectInterfMapper.selectHolderNumExcheck(DateUtil.format(batchDateEnd));
+		//获取正常的三合一与非三合一数据
+		List<ChbMonthCollect> notChangeEquHoldList = svrMonthCollectInterfMapper.selectNotChangeEquHold(DateUtil.format(batchDateEnd));
+		//获取所有三合一数据 包含持有为非三合一但身份已变成三合一的数据
+		List<ChbMonthCollect> ThreeInOneList = svrMonthCollectInterfMapper.selectThreeInOneList(DateUtil.format(batchDateEnd));
+		//获取当月持有check表中的关联主键
+		List<ChbMonthCollect> ChangeEquHoldList = svrMonthCollectInterfMapper.selectHolderNumFromCheck(DateUtil.format(batchDateEnd));
+		Map<String,ChbMonthCollect> ChangeEquHoldListMap = new HashMap<>();
+		for(ChbMonthCollect ChangeEquHold : ChangeEquHoldList){
+            String key = ChangeEquHold.getPrdRegistCode() + ChangeEquHold.getIndentifyMark()+ChangeEquHold.getCcy()+ChangeEquHold.getHoldDate();
+			ChangeEquHoldListMap.put(key,ChangeEquHold);
+		}
+		if(ThreeInOneList.size() != 0) {
+			for (ChbMonthCollect ThreeInOne:ThreeInOneList) {
+				String key = ThreeInOne.getPrdRegistCode() + ThreeInOne.getIndentifyMark()+ThreeInOne.getCcy()+ThreeInOne.getHoldDate();
+				if(ChangeEquHoldListMap.get(key) == null){
+					notChangeEquHoldList.add(ThreeInOne);
+				}
+			}
+		}
+		//报送表去除check表中识别标识相等的数据后再与check表合并
+		    List<ChbMonthCollect> List = new ArrayList<>();
+		    if(notChangeEquHoldList.size() != 0) {
+		    	//插入临时表
+		       insertMonthTemp(notChangeEquHoldList);
+		       //通过临时表汇总
+			   List = svrMonthCollectInterfMapper.selectHolderNumExcheck(notChangeEquHoldList);
+			   //删除临时表
+			   svrMonthCollectInterfMapper.deleteAllMonthTemp();
+		    }
 		    List<ChbMonthCollect> listAmountTotalExList = new ArrayList<>();
 //		通过五个主key来拼接数据
 			for(ChbMonthCollect collect:listAmountTotal){
@@ -321,8 +349,9 @@ public class SvrMonthCollectInterf extends BaseService{
 		}
 		//处理最大行值
 		for(int i =0;i < chbPrdPosition.size() ;i++){
-			for(String key :holderTypeCollectMap.keySet()){
-				if(chbPrdPosition.get(i).getPrdRegistCode().equals(key)){
+			for(String key :holderTypeCollectMap.keySet()) {
+				if(chbPrdPosition.get(i).getPrdRegistCode() != null){
+				if (chbPrdPosition.get(i).getPrdRegistCode().equals(key)) {
 					BigDecimal SaleAmountTotalAll = new BigDecimal("0");
 					BigDecimal SaleAmountTotalMax = new BigDecimal("0");
 					String SaleAmountFlag = "";
@@ -341,67 +370,67 @@ public class SvrMonthCollectInterf extends BaseService{
 					BigDecimal BalanceAmtAll = new BigDecimal("0");
 					BigDecimal BalanceAmtMax = new BigDecimal("0");
 					String BalanceAmtFlag = "";
-					for(String flag:holderTypeCollectMap.get(key).keySet()){
+					for (String flag : holderTypeCollectMap.get(key).keySet()) {
 						BigDecimal SaleAmountTotal = holderTypeCollectMap.get(key).get(flag).getSaleAmountTotal();
 						BigDecimal ValueAmountTota = holderTypeCollectMap.get(key).get(flag).getValueAmountTotal();
 						BigDecimal SaleSharesTotal = holderTypeCollectMap.get(key).get(flag).getSaleSharesTotal();
 						BigDecimal ValueSharesTotal = holderTypeCollectMap.get(key).get(flag).getValueSharesTotal();
 						BigDecimal BalanceShares = holderTypeCollectMap.get(key).get(flag).getBalanceShares();
 						BigDecimal BalanceAmt = holderTypeCollectMap.get(key).get(flag).getBalanceAmt();
-						if(SaleAmountTotal != null) {
+						if (SaleAmountTotal != null) {
 							SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
 						}
-						if(ValueAmountTota != null) {
+						if (ValueAmountTota != null) {
 							ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
 						}
-						if(SaleSharesTotal != null) {
+						if (SaleSharesTotal != null) {
 							SaleSharesTotalAll = SaleSharesTotalAll.add(SaleSharesTotal);
 						}
-						if(ValueSharesTotal != null) {
+						if (ValueSharesTotal != null) {
 							ValueSharesTotalAll = ValueSharesTotalAll.add(ValueSharesTotal);
 						}
-						if(BalanceShares != null) {
+						if (BalanceShares != null) {
 							BalanceSharesAll = BalanceSharesAll.add(BalanceShares);
 						}
-						if(BalanceAmt != null) {
+						if (BalanceAmt != null) {
 							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 						}
-						if(SaleAmountTotal != null) {
+						if (SaleAmountTotal != null) {
 							if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
 							} else {
 								SaleAmountTotalMax = SaleAmountTotal;
 								SaleAmountFlag = flag;
 							}
 						}
-						if(ValueAmountTota != null) {
+						if (ValueAmountTota != null) {
 							if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
 							} else {
 								ValueAmountTotalMax = ValueAmountTota;
 								ValueAmountFlag = flag;
 							}
 						}
-						if(SaleSharesTotal != null) {
+						if (SaleSharesTotal != null) {
 							if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
 							} else {
 								SaleSharesTotalMax = SaleSharesTotal;
 								SaleSharesTotalFlag = flag;
 							}
 						}
-						if(ValueSharesTotal != null) {
+						if (ValueSharesTotal != null) {
 							if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
 							} else {
 								ValueSharesTotalMax = ValueSharesTotal;
 								ValueSharesTotalFlag = flag;
 							}
 						}
-						if(BalanceShares != null) {
+						if (BalanceShares != null) {
 							if (BalanceSharesMax.compareTo(BalanceShares) == 1) {
 							} else {
 								BalanceSharesMax = BalanceShares;
 								BalanceSharesFlag = flag;
 							}
 						}
-						if(BalanceAmt != null) {
+						if (BalanceAmt != null) {
 							if (BalanceAmtMax.compareTo(BalanceAmt) == 1) {
 							} else {
 								BalanceAmtMax = BalanceAmt;
@@ -414,7 +443,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
-						}else{
+						} else {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 							holderTypeCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
@@ -425,7 +454,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
-						}else{
+						} else {
 							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
 							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 							holderTypeCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
@@ -436,7 +465,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
-						}else{
+						} else {
 							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 							holderTypeCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
@@ -447,7 +476,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
 							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 							holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
-						}else{
+						} else {
 							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 							holderTypeCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
@@ -458,7 +487,7 @@ public class SvrMonthCollectInterf extends BaseService{
 						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
 							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 							holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
-						}else{
+						} else {
 							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
 							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 							holderTypeCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
@@ -469,13 +498,14 @@ public class SvrMonthCollectInterf extends BaseService{
 						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
-						}else{
+						} else {
 							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 							holderTypeCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 						}
 					}
 				}
+			}
 			}
 		}
 
@@ -571,162 +601,164 @@ public class SvrMonthCollectInterf extends BaseService{
 		}
 		//处理最大行值
 		for(int i =0;i < chbPrdPosition.size() ;i++){
-			for(String key :areaCollectMap.keySet()){
-				if(chbPrdPosition.get(i).getPrdRegistCode().equals(key)){
-					BigDecimal SaleAmountTotalAll = new BigDecimal("0");
-					BigDecimal SaleAmountTotalMax = new BigDecimal("0");
-					String SaleAmountFlag = "";
-					BigDecimal ValueAmountTotalAll = new BigDecimal("0");
-					BigDecimal ValueAmountTotalMax = new BigDecimal("0");
-					String ValueAmountFlag = "";
-					BigDecimal SaleSharesTotalAll = new BigDecimal("0");
-					BigDecimal SaleSharesTotalMax = new BigDecimal("0");
-					String SaleSharesTotalFlag = "";
-					BigDecimal ValueSharesTotalAll = new BigDecimal("0");
-					BigDecimal ValueSharesTotalMax = new BigDecimal("0");
-					String ValueSharesTotalFlag = "";
-					BigDecimal BalanceSharesAll = new BigDecimal("0");
-					BigDecimal BalanceSharesMax = new BigDecimal("0");
-					String BalanceSharesFlag = "";
-					BigDecimal BalanceAmtAll = new BigDecimal("0");
-					BigDecimal BalanceAmtMax = new BigDecimal("0");
-					String BalanceAmtFlag = "";
-					for(String flag:areaCollectMap.get(key).keySet()){
-						BigDecimal SaleAmountTotal = areaCollectMap.get(key).get(flag).getSaleAmountTotal();
-						BigDecimal ValueAmountTota = areaCollectMap.get(key).get(flag).getValueAmountTotal();
-						BigDecimal SaleSharesTotal = areaCollectMap.get(key).get(flag).getSaleSharesTotal();
-						BigDecimal ValueSharesTotal = areaCollectMap.get(key).get(flag).getValueSharesTotal();
-						BigDecimal BalanceShares = areaCollectMap.get(key).get(flag).getBalanceShares();
-						BigDecimal BalanceAmt = areaCollectMap.get(key).get(flag).getBalanceAmt();
-						if(SaleAmountTotal != null) {
-							SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
-						}
-						if(ValueAmountTota != null) {
-							ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
-						}
-						if(SaleSharesTotal != null) {
-							SaleSharesTotalAll = SaleSharesTotalAll.add(SaleSharesTotal);
-						}
-						if(ValueSharesTotal != null) {
-							ValueSharesTotalAll = ValueSharesTotalAll.add(ValueSharesTotal);
-						}
-						if(BalanceShares != null) {
-							BalanceSharesAll = BalanceSharesAll.add(BalanceShares);
-						}
-						if(BalanceAmt != null) {
-							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
-						}
+			for(String key :areaCollectMap.keySet()) {
+				if (chbPrdPosition.get(i).getPrdRegistCode() != null){
+					if (chbPrdPosition.get(i).getPrdRegistCode().equals(key)) {
+						BigDecimal SaleAmountTotalAll = new BigDecimal("0");
+						BigDecimal SaleAmountTotalMax = new BigDecimal("0");
+						String SaleAmountFlag = "";
+						BigDecimal ValueAmountTotalAll = new BigDecimal("0");
+						BigDecimal ValueAmountTotalMax = new BigDecimal("0");
+						String ValueAmountFlag = "";
+						BigDecimal SaleSharesTotalAll = new BigDecimal("0");
+						BigDecimal SaleSharesTotalMax = new BigDecimal("0");
+						String SaleSharesTotalFlag = "";
+						BigDecimal ValueSharesTotalAll = new BigDecimal("0");
+						BigDecimal ValueSharesTotalMax = new BigDecimal("0");
+						String ValueSharesTotalFlag = "";
+						BigDecimal BalanceSharesAll = new BigDecimal("0");
+						BigDecimal BalanceSharesMax = new BigDecimal("0");
+						String BalanceSharesFlag = "";
+						BigDecimal BalanceAmtAll = new BigDecimal("0");
+						BigDecimal BalanceAmtMax = new BigDecimal("0");
+						String BalanceAmtFlag = "";
+						for (String flag : areaCollectMap.get(key).keySet()) {
+							BigDecimal SaleAmountTotal = areaCollectMap.get(key).get(flag).getSaleAmountTotal();
+							BigDecimal ValueAmountTota = areaCollectMap.get(key).get(flag).getValueAmountTotal();
+							BigDecimal SaleSharesTotal = areaCollectMap.get(key).get(flag).getSaleSharesTotal();
+							BigDecimal ValueSharesTotal = areaCollectMap.get(key).get(flag).getValueSharesTotal();
+							BigDecimal BalanceShares = areaCollectMap.get(key).get(flag).getBalanceShares();
+							BigDecimal BalanceAmt = areaCollectMap.get(key).get(flag).getBalanceAmt();
+							if (SaleAmountTotal != null) {
+								SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
+							}
+							if (ValueAmountTota != null) {
+								ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
+							}
+							if (SaleSharesTotal != null) {
+								SaleSharesTotalAll = SaleSharesTotalAll.add(SaleSharesTotal);
+							}
+							if (ValueSharesTotal != null) {
+								ValueSharesTotalAll = ValueSharesTotalAll.add(ValueSharesTotal);
+							}
+							if (BalanceShares != null) {
+								BalanceSharesAll = BalanceSharesAll.add(BalanceShares);
+							}
+							if (BalanceAmt != null) {
+								BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
+							}
 
-						if(SaleAmountTotal != null) {
-							if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
-							} else {
-								SaleAmountTotalMax = SaleAmountTotal;
-								SaleAmountFlag = flag;
+							if (SaleAmountTotal != null) {
+								if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
+								} else {
+									SaleAmountTotalMax = SaleAmountTotal;
+									SaleAmountFlag = flag;
+								}
+							}
+							if (ValueAmountTota != null) {
+								if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
+								} else {
+									ValueAmountTotalMax = ValueAmountTota;
+									ValueAmountFlag = flag;
+								}
+							}
+							if (SaleSharesTotal != null) {
+								if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
+								} else {
+									SaleSharesTotalMax = SaleSharesTotal;
+									SaleSharesTotalFlag = flag;
+								}
+							}
+							if (ValueSharesTotal != null) {
+								if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
+								} else {
+									ValueSharesTotalMax = ValueSharesTotal;
+									ValueSharesTotalFlag = flag;
+								}
+							}
+							if (BalanceShares != null) {
+								if (BalanceSharesMax.compareTo(BalanceShares) == 1) {
+								} else {
+									BalanceSharesMax = BalanceShares;
+									BalanceSharesFlag = flag;
+								}
+							}
+							if (BalanceAmt != null) {
+								if (BalanceAmtMax.compareTo(BalanceAmt) == 1) {
+								} else {
+									BalanceAmtMax = BalanceAmt;
+									BalanceAmtFlag = flag;
+								}
 							}
 						}
-						if(ValueAmountTota != null) {
-							if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
+						//处理总销售份额
+						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
+							if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+								areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 							} else {
-								ValueAmountTotalMax = ValueAmountTota;
-								ValueAmountFlag = flag;
+								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
+								areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 							}
 						}
-						if(SaleSharesTotal != null) {
-							if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
+						//处理净销份额
+						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
+							if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+								areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 							} else {
-								SaleSharesTotalMax = SaleSharesTotal;
-								SaleSharesTotalFlag = flag;
+								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
+								areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
 							}
 						}
-						if(ValueSharesTotal != null) {
-							if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
+						//处理份额
+						if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
+							if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+								areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 							} else {
-								ValueSharesTotalMax = ValueSharesTotal;
-								ValueSharesTotalFlag = flag;
+								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
+								areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
 							}
 						}
-						if(BalanceShares != null) {
-							if (BalanceSharesMax.compareTo(BalanceShares) == 1) {
+						//处理总销售金额
+						if (SaleAmountFlag != null && SaleAmountFlag != "") {
+							if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
+								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+								areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 							} else {
-								BalanceSharesMax = BalanceShares;
-								BalanceSharesFlag = flag;
+								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
+								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
+								areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
 							}
 						}
-						if(BalanceAmt != null) {
-							if (BalanceAmtMax.compareTo(BalanceAmt) == 1) {
+						//处理净销售金额
+						if (ValueAmountFlag != null && ValueAmountFlag != "") {
+							if (chbPrdPosition.get(i).getCleanamtsum() != null) {
+								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+								areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
 							} else {
-								BalanceAmtMax = BalanceAmt;
-								BalanceAmtFlag = flag;
+								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
+								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
+								areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
+							}
+						}
+						//处理余额
+						if (BalanceAmtFlag != null && BalanceAmtFlag != "") {
+							if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
+								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+								areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
+							} else {
+								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
+								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
+								areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 							}
 						}
 					}
-					//处理总销售份额
-					if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
-						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
-							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
-							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
-						}else{
-							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-							BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
-							areaCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
-						}
-					}
-					//处理净销份额
-					if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
-						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
-							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
-							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
-						}else{
-							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-							BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
-							areaCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
-						}
-					}
-					//处理份额
-					if (BalanceSharesFlag != null && BalanceSharesFlag != "") {
-						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
-							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
-							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
-						}else{
-							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
-							BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
-							areaCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
-						}
-					}
-					//处理总销售金额
-					if (SaleAmountFlag != null && SaleAmountFlag != "") {
-						if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
-							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
-							areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
-						}else{
-							chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
-							BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
-							areaCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
-						}
-					}
-					//处理净销售金额
-					if (ValueAmountFlag != null && ValueAmountFlag != "") {
-						if (chbPrdPosition.get(i).getCleanamtsum() != null) {
-							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
-							areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
-						}else{
-							chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
-							BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
-							areaCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
-						}
-					}
-					//处理余额
-					if (BalanceAmtFlag != null && BalanceAmtFlag != "") {
-						if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
-							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
-							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
-						}else{
-							chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
-							BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
-							areaCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
-						}
-					}
-				}
+			}
 			}
 		}
 
@@ -822,110 +854,111 @@ public class SvrMonthCollectInterf extends BaseService{
 		//处理最大行值
 		for(int i =0;i < chbPrdPosition.size() ;i++){
 			for(String key :institutionCollectMap.keySet()){
-				if(chbPrdPosition.get(i).getPrdRegistCode().equals(key)){
-					BigDecimal SaleAmountTotalAll = new BigDecimal("0");
-					BigDecimal SaleAmountTotalMax = new BigDecimal("0");
-					String SaleAmountFlag = "";
-					BigDecimal ValueAmountTotalAll = new BigDecimal("0");
-					BigDecimal ValueAmountTotalMax = new BigDecimal("0");
-					String ValueAmountFlag = "";
-					BigDecimal SaleSharesTotalAll = new BigDecimal("0");
-					BigDecimal SaleSharesTotalMax = new BigDecimal("0");
-					String SaleSharesTotalFlag = "";
-					BigDecimal ValueSharesTotalAll = new BigDecimal("0");
-					BigDecimal ValueSharesTotalMax = new BigDecimal("0");
-					String ValueSharesTotalFlag = "";
-					BigDecimal BalanceSharesAll = new BigDecimal("0");
-					BigDecimal BalanceSharesMax = new BigDecimal("0");
-					String BalanceSharesFlag = "";
-					BigDecimal BalanceAmtAll = new BigDecimal("0");
-					BigDecimal BalanceAmtMax = new BigDecimal("0");
-					String BalanceAmtFlag = "";
-					for(String flag:institutionCollectMap.get(key).keySet()){
-						BigDecimal SaleAmountTotal = institutionCollectMap.get(key).get(flag).getSaleAmountTotal();
-						BigDecimal ValueAmountTota = institutionCollectMap.get(key).get(flag).getValueAmountTotal();
-						BigDecimal SaleSharesTotal = institutionCollectMap.get(key).get(flag).getSaleSharesTotal();
-						BigDecimal ValueSharesTotal = institutionCollectMap.get(key).get(flag).getValueSharesTotal();
-						BigDecimal BalanceShares = institutionCollectMap.get(key).get(flag).getBalanceShares();
-						BigDecimal BalanceAmt = institutionCollectMap.get(key).get(flag).getBalanceAmt();
-						if(SaleAmountTotal != null) {
-							SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
-						}
-						if(ValueAmountTota != null) {
-							ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
-						}
-						if(SaleSharesTotal != null) {
-							SaleSharesTotalAll = SaleSharesTotalAll.add(SaleSharesTotal);
-						}
-						if(ValueSharesTotal != null) {
-							ValueSharesTotalAll = ValueSharesTotalAll.add(ValueSharesTotal);
-						}
-						if(BalanceShares != null) {
-							BalanceSharesAll = BalanceSharesAll.add(BalanceShares);
-						}
-						if(BalanceAmt != null) {
-							BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
-						}
-						if(SaleAmountTotal != null) {
-							if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
-							} else {
-								SaleAmountTotalMax = SaleAmountTotal;
-								SaleAmountFlag = flag;
+				if(chbPrdPosition.get(i).getPrdRegistCode() != null) {
+					if (chbPrdPosition.get(i).getPrdRegistCode().equals(key)) {
+						BigDecimal SaleAmountTotalAll = new BigDecimal("0");
+						BigDecimal SaleAmountTotalMax = new BigDecimal("0");
+						String SaleAmountFlag = "";
+						BigDecimal ValueAmountTotalAll = new BigDecimal("0");
+						BigDecimal ValueAmountTotalMax = new BigDecimal("0");
+						String ValueAmountFlag = "";
+						BigDecimal SaleSharesTotalAll = new BigDecimal("0");
+						BigDecimal SaleSharesTotalMax = new BigDecimal("0");
+						String SaleSharesTotalFlag = "";
+						BigDecimal ValueSharesTotalAll = new BigDecimal("0");
+						BigDecimal ValueSharesTotalMax = new BigDecimal("0");
+						String ValueSharesTotalFlag = "";
+						BigDecimal BalanceSharesAll = new BigDecimal("0");
+						BigDecimal BalanceSharesMax = new BigDecimal("0");
+						String BalanceSharesFlag = "";
+						BigDecimal BalanceAmtAll = new BigDecimal("0");
+						BigDecimal BalanceAmtMax = new BigDecimal("0");
+						String BalanceAmtFlag = "";
+						for (String flag : institutionCollectMap.get(key).keySet()) {
+							BigDecimal SaleAmountTotal = institutionCollectMap.get(key).get(flag).getSaleAmountTotal();
+							BigDecimal ValueAmountTota = institutionCollectMap.get(key).get(flag).getValueAmountTotal();
+							BigDecimal SaleSharesTotal = institutionCollectMap.get(key).get(flag).getSaleSharesTotal();
+							BigDecimal ValueSharesTotal = institutionCollectMap.get(key).get(flag).getValueSharesTotal();
+							BigDecimal BalanceShares = institutionCollectMap.get(key).get(flag).getBalanceShares();
+							BigDecimal BalanceAmt = institutionCollectMap.get(key).get(flag).getBalanceAmt();
+							if (SaleAmountTotal != null) {
+								SaleAmountTotalAll = SaleAmountTotalAll.add(SaleAmountTotal);
 							}
-						}
-						if(ValueAmountTota != null) {
-							if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
-							} else {
-								ValueAmountTotalMax = ValueAmountTota;
-								ValueAmountFlag = flag;
+							if (ValueAmountTota != null) {
+								ValueAmountTotalAll = ValueAmountTotalAll.add(ValueAmountTota);
 							}
-						}
-						if(SaleSharesTotal != null) {
-							if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
-							} else {
-								SaleSharesTotalMax = SaleSharesTotal;
-								SaleSharesTotalFlag = flag;
+							if (SaleSharesTotal != null) {
+								SaleSharesTotalAll = SaleSharesTotalAll.add(SaleSharesTotal);
 							}
-						}
-						if(ValueSharesTotal != null) {
-							if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
-							} else {
-								ValueSharesTotalMax = ValueSharesTotal;
-								ValueSharesTotalFlag = flag;
+							if (ValueSharesTotal != null) {
+								ValueSharesTotalAll = ValueSharesTotalAll.add(ValueSharesTotal);
 							}
-						}
-						if(BalanceShares != null) {
-							if (BalanceSharesMax.compareTo(BalanceShares) == 1) {
-							} else {
-								BalanceSharesMax = BalanceShares;
-								BalanceSharesFlag = flag;
+							if (BalanceShares != null) {
+								BalanceSharesAll = BalanceSharesAll.add(BalanceShares);
 							}
-						}
-						if(BalanceAmt != null) {
-							if (BalanceAmtMax.compareTo(BalanceAmt) == 1) {
-							} else {
-								BalanceAmtMax = BalanceAmt;
-								BalanceAmtFlag = flag;
+							if (BalanceAmt != null) {
+								BalanceAmtAll = BalanceAmtAll.add(BalanceAmt);
 							}
-						}
+							if (SaleAmountTotal != null) {
+								if (SaleAmountTotalMax.compareTo(SaleAmountTotal) == 1) {
+								} else {
+									SaleAmountTotalMax = SaleAmountTotal;
+									SaleAmountFlag = flag;
+								}
+							}
+							if (ValueAmountTota != null) {
+								if (ValueAmountTotalMax.compareTo(ValueAmountTota) == 1) {
+								} else {
+									ValueAmountTotalMax = ValueAmountTota;
+									ValueAmountFlag = flag;
+								}
+							}
+							if (SaleSharesTotal != null) {
+								if (SaleSharesTotalMax.compareTo(SaleSharesTotal) == 1) {
+								} else {
+									SaleSharesTotalMax = SaleSharesTotal;
+									SaleSharesTotalFlag = flag;
+								}
+							}
+							if (ValueSharesTotal != null) {
+								if (ValueSharesTotalMax.compareTo(ValueSharesTotal) == 1) {
+								} else {
+									ValueSharesTotalMax = ValueSharesTotal;
+									ValueSharesTotalFlag = flag;
+								}
+							}
+							if (BalanceShares != null) {
+								if (BalanceSharesMax.compareTo(BalanceShares) == 1) {
+								} else {
+									BalanceSharesMax = BalanceShares;
+									BalanceSharesFlag = flag;
+								}
+							}
+							if (BalanceAmt != null) {
+								if (BalanceAmtMax.compareTo(BalanceAmt) == 1) {
+								} else {
+									BalanceAmtMax = BalanceAmt;
+									BalanceAmtFlag = flag;
+								}
+							}
 						}
 						//处理总销售份额
 						if (SaleSharesTotalFlag != null && SaleSharesTotalFlag != "") {
 							if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
 								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 								institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
-							}else{
+							} else {
 								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 								BigDecimal SaleSharesTotalDiff = SaleSharesTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleSharesTotalAll));
 								institutionCollectMap.get(key).get(SaleSharesTotalFlag).setSaleSharesTotal(SaleSharesTotalDiff);
 							}
 						}
 						//处理净销份额
-					    if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
+						if (ValueSharesTotalFlag != null && ValueSharesTotalFlag != "") {
 							if (chbPrdPosition.get(i).getCleanamtsum() != null) {
 								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 								institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
-							}else{
+							} else {
 								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
 								BigDecimal ValueSharesTotalDiff = ValueSharesTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueSharesTotalAll));
 								institutionCollectMap.get(key).get(ValueSharesTotalFlag).setValueSharesTotal(ValueSharesTotalDiff);
@@ -936,7 +969,7 @@ public class SvrMonthCollectInterf extends BaseService{
 							if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
 								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 								institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
-							}else{
+							} else {
 								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 								BigDecimal BalanceSharesDiff = BalanceSharesMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceSharesAll));
 								institutionCollectMap.get(key).get(BalanceSharesFlag).setBalanceShares(BalanceSharesDiff);
@@ -947,7 +980,7 @@ public class SvrMonthCollectInterf extends BaseService{
 							if (chbPrdPosition.get(i).getDirtyamtsum() != null) {
 								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 								institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
-							}else{
+							} else {
 								chbPrdPosition.get(i).setDirtyamtsum(BigDecimal.ZERO);
 								BigDecimal SaleAmountTotalDiff = SaleAmountTotalMax.add(chbPrdPosition.get(i).getDirtyamtsum().subtract(SaleAmountTotalAll));
 								institutionCollectMap.get(key).get(SaleAmountFlag).setSaleAmountTotal(SaleAmountTotalDiff);
@@ -958,7 +991,7 @@ public class SvrMonthCollectInterf extends BaseService{
 							if (chbPrdPosition.get(i).getCleanamtsum() != null) {
 								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 								institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
-							}else{
+							} else {
 								chbPrdPosition.get(i).setCleanamtsum(BigDecimal.ZERO);
 								BigDecimal ValueAmountTotalDiff = ValueAmountTotalMax.add(chbPrdPosition.get(i).getCleanamtsum().subtract(ValueAmountTotalAll));
 								institutionCollectMap.get(key).get(ValueAmountFlag).setValueAmountTotal(ValueAmountTotalDiff);
@@ -969,13 +1002,14 @@ public class SvrMonthCollectInterf extends BaseService{
 							if (chbPrdPosition.get(i).getEndamtsumOth() != null) {
 								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 								institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
-							}else{
+							} else {
 								chbPrdPosition.get(i).setEndamtsumOth(BigDecimal.ZERO);
 								BigDecimal BalanceAmtDiff = BalanceAmtMax.add(chbPrdPosition.get(i).getEndamtsumOth().subtract(BalanceAmtAll));
 								institutionCollectMap.get(key).get(BalanceAmtFlag).setBalanceAmt(BalanceAmtDiff);
 							}
 						}
 					}
+				}
 				}
 			}
 
@@ -1134,4 +1168,26 @@ public class SvrMonthCollectInterf extends BaseService{
 		return detail;
 	}
 
+	/**
+	 * 分批插入临时表
+	 * @param notChangeEquHoldList
+	 */
+	private void insertMonthTemp(List<ChbMonthCollect> notChangeEquHoldList){
+		List<ChbMonthCollect> newList = new ArrayList<>();
+		newList.addAll(notChangeEquHoldList);
+		int end = 100;
+		//分批处理
+		int part = newList.size() / end;
+		for(int i = 0;i < part;i++){
+			if(newList.size() <= 100){
+				break;
+			}
+			svrMonthCollectInterfMapper.insertMonthTemp(newList.subList(0,end));
+			newList.subList(0,end).clear();
+		}
+		//最后剩下的数据
+		if(!CollectionUtils.isEmpty(newList)){
+			svrMonthCollectInterfMapper.insertMonthTemp(newList);
+		}
+	}
 }

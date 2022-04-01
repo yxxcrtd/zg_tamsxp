@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubErrorCheckMapper_mysql" >
+
+    <select id="selectProdDealSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select * from CHB_PRD_DEAL_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+            <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+                #{key}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateProdDealSub" parameterType="java.lang.String" >
+	   update CHB_PRD_DEAL_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+
+    <select id="selectProdIssueSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select * from CHB_PRD_ISSUE_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+
+            <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+                #{key}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateProdIssueSub" parameterType="java.lang.String" >
+	   update CHB_PRD_ISSUE_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+    <select id="selectProdEndSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select * from CHB_PRD_END_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+
+            <foreach item="key" collection="keys"  index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+                #{key}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateProdEndSub" parameterType="java.lang.String" >
+	   update CHB_PRD_END_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+    <select id="selectInvestTradeSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select * from CHB_INVEST_TRADE_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+
+            <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+
+                #{key}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateInvestTradeSub" parameterType="java.lang.String" >
+	   update CHB_INVEST_TRADE_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+    <select id="selectAssetInfoSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select pos.ACCUQTY,info.ASSET_CODE,info.REGIST_SEQNO from CHB_ASSET_INFO_SUB info inner join CHB_ASSET_POSITION pos on pos.ASSET_CODE=info.ASSET_CODE and pos.CDATE=info.MDATE
+        where
+        info.STATUS in ('01','02') and info.SEND_STATUS = '01'
+        and info.MDATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+        <if test="listAsset!=null and listAsset.size()!=0">
+            <if test=""></if>
+            and ASSET_CODE =
+            <foreach item="assetCode" collection="listAsset" open="(" separator="," close=")">
+                #{assetCode,jdbcType=VARCHAR}
+            </foreach>
+            and CDATE =
+            <foreach item="vdate" collection="listAsset" open="(" separator="," close=")">
+                #{vdate,jdbcType=DATE}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateAssetInfoSub" parameterType="java.lang.String" >
+	   update CHB_ASSET_INFO_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+    <select id="selectProdDeclareSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select * from CHB_PRD_DECLARE_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+
+            <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+
+                #{key}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateProdDeclareSub" parameterType="java.lang.String" >
+	   update CHB_PRD_DECLARE_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+    <select id="isInEmpoyeeSub" resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        CHB_EMPLOYEE_INFO_SUB
+        where IDENTIFY_NUMBER = #{id,jdbcType=VARCHAR}
+        and SEND_STATUS in ('02','03')
+        <if test="employeeType != null and employeeType != ''">
+            and EMPLOYEE_TYPE = #{employeeType}
+        </if>
+    </select>
+
+    <select id="isInAssetInfoSub" resultType="java.lang.Integer">
+		select
+		count(*)
+		from
+		CHB_ASSET_INFO_SUB
+		where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
+		  and SEND_STATUS IN ('02','03')
+	</select>
+
+    <select id="isInRaisetotSub" resultType="java.lang.Integer">
+		select
+		count(*)
+		from CHB_PRD_RAISETOT_SUB
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and SEND_STATUS IN ('02','03')
+	</select>
+
+    <select id="isInPrdEndSub" resultType="java.lang.Integer">
+		select
+		count(*)
+		from CHB_PRD_END_SUB
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and SEND_STATUS IN ('02','03')
+	</select>
+    <select id="isInPrdIssueSub" resultType="java.lang.Integer">
+		select
+		count(*)
+		from CHB_PRD_ISSUE_SUB
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and SEND_STATUS IN ('02','03')
+	</select>
+
+    <select id="isInProDeclareReg" resultType="java.lang.Integer">
+		select
+		count(*)
+		from CHB_PRD_DECLARE_SUB
+		where PROD_ID = #{prodId,jdbcType=VARCHAR}
+		  and SEND_STATUS IN ('02','03')
+	</select>
+
+    <select id="selectProdRaiseTotalSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select * from CHB_PRD_RAISETOT_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+
+            <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+
+                #{key}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateProdRaiseTotalSub" parameterType="java.lang.String" >
+	   update CHB_PRD_RAISETOT_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+    <select id="isUploadFile" resultType="java.lang.String">
+		select
+		FILE_NO
+		from CHB_PRD_DECLARE_SUB
+		where
+		REGIST_SEQNO = #{REGIST_SEQNO,jdbcType=CHAR}
+		and PROD_ID = #{PROD_ID,jdbcType=CHAR}
+	</select>
+
+    <select id="selectChbBotAst" resultType="java.util.HashMap" parameterType="java.util.Date">
+        select * from CHB_BOT_AST_POS_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+
+            <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+
+                #{key}
+            </foreach>
+        </if>
+
+    </select>
+
+    <update id="updateChbBotAstSub" parameterType="java.lang.String" >
+	   update CHB_BOT_AST_POS_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+    <select id="isOutsourOrAssetMana" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+		ASSET_TYPE
+		from CHB_ASSET_INFO_SUB
+		where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
+	</select>
+
+    <select id="selectChbAstValSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+		select * from CHB_AST_VAL_SUB
+		where
+		(SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+		and STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
+	</select>
+
+    <update id="updateChbAstValSub" parameterType="java.lang.String" >
+	   update CHB_AST_VAL_SUB set status='04'
+	   where REGIST_SEQNO= #{seqno,jdbcType=CHAR}
+   </update>
+
+    <select id="selectChbEmployeeSub" resultType="java.util.HashMap" parameterType="java.util.Date">
+        SELECT
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        SUMIT_SEQ,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        REMARK
+        from CHB_EMPLOYEE_INFO_SUB
+        WHERE
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <!-- AND STATUS_DATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE} -->
+    </select>
+
+    <select id="isInEmployeeSub" resultType="java.lang.Integer">
+		select
+		count(*)
+		from CHB_EMPLOYEE_INFO_SUB
+		where concat_ws('|',conEMPLOYEE_TYPE,IDENTIFY_NUMBER) = #{key}
+		and SEND_STATUS IN ('02','03')
+	</select>
+</mapper>

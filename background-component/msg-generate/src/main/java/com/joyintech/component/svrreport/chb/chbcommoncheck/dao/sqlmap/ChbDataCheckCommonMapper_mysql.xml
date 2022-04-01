@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.component.svrreport.chb.chbcommoncheck.dao.ChbDataCheckCommonMapper_mysql" >
+
+    <resultMap id="ConditionBaseResultMap" type="com.joyintech.component.svrreport.chb.chbcommoncheck.dto.CheckCondition" >
+        <result column="CHECKCONDITIONID" property="checkconditionid" jdbcType="CHAR" />
+        <result column="CHECKRULEID" property="checkruleid" jdbcType="CHAR" />
+        <result column="CHECKMETHOD" property="checkmethod" jdbcType="VARCHAR" />
+        <result column="SRCPROPERTY" property="srcproperty" jdbcType="VARCHAR" />
+        <result column="COMPARETO" property="compareto" jdbcType="VARCHAR" />
+        <result column="OBJVALUE" property="objvalue" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Condition_Base_Column_List" >
+        CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS
+    </sql>
+
+    <select id="queryChbCheckCondition" resultMap="ConditionBaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Condition_Base_Column_List" />
+        from CHB_DATACHECK_CONDITION_INV
+        <where>
+            <if test="pageFlag != null and pageFlag != ''">
+                STATUS='E'
+            </if>
+            <if test="checkruleid != null" >
+                and checkruleid= #{checkruleid,jdbcType=CHAR}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="Rule_BaseResultMap" type="com.joyintech.component.svrreport.chb.chbcommoncheck.dto.ChbCheckRule" >
+        <id column="CHECKRULEID" property="checkruleid" jdbcType="CHAR" />
+        <result column="PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <result column="CHECKCLASS" property="checkclass" jdbcType="VARCHAR" />
+        <result column="CHECKMETHOD" property="checkmethod" jdbcType="VARCHAR" />
+        <result column="SRCPROPERTY" property="srcproperty" jdbcType="VARCHAR" />
+        <result column="COMPARETO" property="compareto" jdbcType="VARCHAR" />
+        <result column="OBJVALUE" property="objvalue" jdbcType="VARCHAR" />
+        <result column="NULLABLE" property="nullable" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Rule_Base_Column_List" >
+        CHECKRULEID, PAGE_ID, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS
+    </sql>
+
+    <select id="queryChbCheckRule" resultMap="Rule_BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Rule_Base_Column_List" />
+        from CHB_DATACHECK_RULE_INV
+        <where>
+            <if test="pageFlag != null and pageFlag != ''">
+                STATUS='E'
+            </if>
+            and PAGE_ID=#{pageId,jdbcType=VARCHAR}
+        </where>
+    </select>
+
+    <select id="queryChbCheckRepTypeList" resultType="com.joyintech.component.svrreport.chb.chbcommoncheck.dto.ChbCheckRepType">
+        select distinct
+            SRCPROPERTY srcproperty
+        from CHB_DATACHECK_REP_TYPE_INV
+        where PAGE_ID = #{pageId,jdbcType=VARCHAR}
+        <if test="repType != null and repType != ''">
+            and SRCPROPERTY != NVL((select SRCPROPERTY from CHB_DATACHECK_REP_TYPE_INV where PAGE_ID = #{pageId,jdbcType=VARCHAR} and REP_TYPE = #{repType,jdbcType=VARCHAR}), 'NOSRCPROPERTY')
+        </if>
+    </select>
+
+</mapper>

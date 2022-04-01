@@ -12,9 +12,6 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 
 
 import com.joyintech.tams.common.base.entity.RepAssetBond;
-import com.joyintech.tams.common.base.entity.RepAssetDept;
-import com.joyintech.tams.common.base.entity.RepAssetOther;
-import com.joyintech.tams.common.base.entity.RepTrustInvestMode;
 
 import java.math.BigDecimal;
 
@@ -137,6 +134,32 @@ public class SvrBussRepOutInvestAgrInfoDto extends RepAssetBond {
      * 新人行资产三级分类
      */
     private String pbcAssetType3;
+
+    /**
+     * 公共PPP
+     */
+    private String pppflag;
+
+    /**
+     * 是否投向市场化债转股相关产品的部分
+     */
+    private String bondtostockFlag;
+
+    public String getPppflag() {
+        return pppflag;
+    }
+
+    public void setPppflag(String pppflag) {
+        this.pppflag = pppflag;
+    }
+
+    public String getBondtostockFlag() {
+        return bondtostockFlag;
+    }
+
+    public void setBondtostockFlag(String bondtostockFlag) {
+        this.bondtostockFlag = bondtostockFlag;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

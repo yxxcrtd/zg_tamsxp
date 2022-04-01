@@ -83,7 +83,7 @@ public class TokenJob {
     private QuoteTickService quoteTickService;
 
     private boolean isOutOfService = true;// 是否需要掉线服务
-
+    
     @PostConstruct
     public void processUrl() {
         if (Objects.nonNull(eurekaUrl)) {
@@ -97,8 +97,10 @@ public class TokenJob {
     @Scheduled(fixedRateString = "${scheduled.token.fixedRate:20000}")
     public void tokenCheck() {
         try {
+        	logger.info("----------------start tokenCheck-------------------");
             if (!enableToken) {
                 isMaster = true;
+                logger.info("----------------tokenCheck enableToken:{}",enableToken);
                 return;
             }
             ServiceNode thisNode = commonManagement.queryServiceNode(node).get(0);
@@ -109,7 +111,13 @@ public class TokenJob {
             if (isMaster) {
                 thisNode.setLastLiveTime(System.currentTimeMillis());
                 serviceNodeService.updateServiceNode(thisNode);
-                return;
+                if(thisNode.getMasterNode()==MasterNodeStatus.SLAVER) {
+                	isMaster=false;
+                	logger.info("----------------tokenCheck isMaster:{}",isMaster);
+                }else {
+                	logger.info("----------------tokenCheck isMaster:{}",isMaster);
+                	return;
+                }
             }
             logger.info("check master...");
             List<ServiceNode> nodeList = commonManagement.queryServiceNode(null).stream()
@@ -117,6 +125,8 @@ public class TokenJob {
                     .sorted(Comparator.comparingInt(ServiceNode::getNodeWeight).reversed()).collect(Collectors.toList());
             long currentTime = System.currentTimeMillis();
             for (ServiceNode serviceNode : nodeList) {
+            	logger.info("----------------tokenCheck node:{}",node);
+            	logger.info("----------------tokenCheck serviceNode:{}",serviceNode.getNodeName());
                 if (node.equals(serviceNode.getNodeName())) {
                     //有其他节点是master，或者更高权重节点在线时，不争抢master
                     List<ServiceNode> serviceNodeLive = nodeList.stream()
@@ -125,9 +135,17 @@ public class TokenJob {
                                             && currentTime - serviceNode1.getLastLiveTime() < fixedRate * 2)
                             .collect(Collectors.toList());
                     if (serviceNodeLive.size() == 0) {
+                    	logger.info("----------------tokenCheck node:{},抢到主节点",serviceNode.getNodeName());
                         logger.info("cover cache from redis...");
                         Map<String, RedisCacheServiceImpl> redisCacheServiceMap = SpringContextUtils.getApplicationContext().getBeansOfType(RedisCacheServiceImpl.class);
-                        redisCacheServiceMap.values().forEach(service -> service.coverCache(dataServiceConfig.isUseRedis()));
+//                        redisCacheServiceMap.values().forEach(service -> service.coverCache(dataServiceConfig.isUseRedis()));
+                        for(RedisCacheServiceImpl ser:redisCacheServiceMap.values()) {
+                        	logger.info("######:"+ser.getClass().getName());
+//                        	if(!"com.joyintech.tams.exchange.datacommon.db.service.impl.InstructionDetailServiceImpl".equals(ser.getClass().getName())
+//                        			&& !"com.joyintech.tams.exchange.datacommon.db.service.impl.MonitorServiceImpl".equals(ser.getClass().getName()))
+//                        	if(!"com.joyintech.tams.exchange.datacommon.db.service.impl.MonitorServiceImpl".equals(ser.getClass().getName()))
+                        	ser.coverCache(dataServiceConfig.isUseRedis());
+                        }
                         logger.info("cover cache from redis success!");
                         serviceNode.setLastLiveTime(System.currentTimeMillis());
                         serviceNode.setMasterNode(MasterNodeStatus.MASTER);
@@ -154,6 +172,7 @@ public class TokenJob {
                 } else {
                     //寻找master并记录
                     if (serviceNode.getMasterNode() == MasterNodeStatus.MASTER && currentTime - serviceNode.getLastLiveTime() < fixedRate * 2) {
+                    	logger.info("----------------tokenCheck node:{},找到主节点",serviceNode.getMasterNode());
                         masterAddress = serviceNode.getNodeAddress();
                         logger.info("current master is {} - {}", serviceNode.getNodeName(), masterAddress);
                         if (isSingle) {
@@ -174,8 +193,10 @@ public class TokenJob {
                     }
                 }
             }
+            logger.info("----------------tokenCheck node:{},没有找到主节点，更新自己时间",node);
             //可能权重高的节点还没有切换为master，先刷新自己的时间，防止被权重低的节点插队
             thisNode.setLastLiveTime(currentTime);
+            isMaster = false;
             thisNode.setMasterNode(MasterNodeStatus.SLAVER);
             changeYitiHuaServiceAddress();
             serviceNodeService.updateServiceNode(thisNode);
@@ -247,5 +268,17 @@ public class TokenJob {
                 logger.warn("未检测到可用行情终端信息，请确认是否启动行情终端 quoteServiceName [{}]", quoteServiceNodeConfig.getServiceNodeName());
             }
         }
+    }
+    
+    public static String getMasterUrl() {
+    	return ServiceApplication.EXCHANGE_SERVICE_NAME;
+    }
+    
+    public static boolean isMaster() {
+		return isMaster;
+    }
+    
+    public static String getMasterAddress() {
+    	return masterAddress;
     }
 }

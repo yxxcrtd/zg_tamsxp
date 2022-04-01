@@ -29,12 +29,12 @@ public class SalerInstInfo002Service extends BaseService{
         } else {
             //来自erro表
             SalerInstInfoDto infoDto = new SalerInstInfoDto();
-            SalerInstInfoDto listSalerErrordata = chbSalerInstInfoMapper.selectErroDetail(param);
-//            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-//                InstiInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
-//                infoDto.setErroOrInfo("erro");
-//            }
-            return listSalerErrordata;
+            List<SalerInstInfoDto> listSalerErrordata = chbSalerInstInfoMapper.selectErroDetail(param);
+            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
+                InstiInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
+                infoDto.setErroOrInfo("erro");
+            }
+            return infoDto;
         }
     }
 

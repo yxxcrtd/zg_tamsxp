@@ -166,8 +166,8 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      * @see
      * @since 1.0
      */
-    public ValBokSubjectDto selectValBokSubject(String booksetId, String subjectNo) {
-        return valSubjectSet001Mapper.selectValBokSubject(booksetId, subjectNo);
+    public ValBokSubjectDto selectValBokSubject(ValBokSubjectDto dto) {
+        return valSubjectSet001Mapper.selectValBokSubject(dto);
     }
 
     /**
@@ -252,5 +252,19 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
             });
         }
     }
+
+    /**
+     * 根据内部科目编码和账套检索
+     *
+     * @param booksetId 账套代码
+     * @param subjectInternalCode 内部科目编码
+     * @return 科目
+     * @see
+     * @since 1.0
+     */
+    public List<ValBokSubjectDto> selectValBokSubjectByInCode(ValBokSubjectDto dto) {
+        return valSubjectSet001Mapper.selectValBokSubjectByInCode(dto);
+    }
+
 
 }

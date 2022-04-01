@@ -63,6 +63,11 @@ $(function(){
     var init = function(){
         $('#AssetTypeSetting002_btn_save').hide()
         $('#AssetTypeSetting002_btn_othersave').hide()
+        if(pageModel==PAGE_MODEL_EDIT){
+            $('#assetType1').prop("disabled",true);
+            $('#assetType2').prop("disabled",true);
+            $('#assetType3').prop("disabled",true);
+        }
     };
 
     /**

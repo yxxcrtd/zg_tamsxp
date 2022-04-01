@@ -48,8 +48,11 @@ public class CfetsBondDayRegDto {
     @ApiModelProperty(name="shareAmt",value="券面总额（万元）")
     private BigDecimal shareAmt;
 
-    @ApiModelProperty(name="intAmt",value="应计利息")
+    @ApiModelProperty(name="intAmt",value="应计利息总额")
     private BigDecimal intAmt;
+
+    @ApiModelProperty(name="unitInt",value="应计利息")
+    private BigDecimal unitInt;
 
     @ApiModelProperty(name="price",value="净价（元）")
     private BigDecimal price;
@@ -229,6 +232,14 @@ public class CfetsBondDayRegDto {
 
     public void setIntAmt(BigDecimal intAmt) {
         this.intAmt = intAmt;
+    }
+
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
     }
 
     public BigDecimal getPrice() {

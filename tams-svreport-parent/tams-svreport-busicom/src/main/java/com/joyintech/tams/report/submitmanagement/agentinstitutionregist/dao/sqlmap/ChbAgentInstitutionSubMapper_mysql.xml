@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dao.ChbAgentInstitutionSubMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto" >
+        <result column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="AGENT_INSTITUTION_CODE" property="agentInstitutionCode" jdbcType="VARCHAR" />
+        <result column="AGENT_INSTITUTION_NAME" property="agentInstitutionName" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_FEEDBACK_MSG" property="submitFeedbackMsg" jdbcType="VARCHAR" />
+        <result column="ENCLOSURE_NUM" property="enclosureNum" jdbcType="VARCHAR" />
+        <result column="ENCLOSURE_ADDRESS" property="enclosureAddress" jdbcType="VARCHAR" />
+        <result column="ENCLOSURE_CHANGE_FLAG" property="enclosureChangeFlag" jdbcType="VARCHAR" />
+        <result column="FILE_NO" property="fileNo" jdbcType="VARCHAR" />
+        <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <select id="queryForRegistPage" resultType="com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto">
+        SELECT
+        a.REGIST_SEQNO registSeqno,
+        a.SEND_STATUS sendStatus,
+        a.SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        a.SUBMIT_TIME submitTime,
+        a.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        a.SUBMIT_DEADLINE submitDeadline,
+        a.STATUS status,
+        a.AGENT_INSTITUTION_CODE agentInstitutionCode,
+        a.AGENT_INSTITUTION_NAME agentInstitutionName,
+        a.ISSUE_PARTY_ID issuePartyId,
+        a.SUMIT_SEQ sumitSeq,
+        a.DATA_DATE dataDate,
+        a.ENCLOSURE_NUM enclosureNum,
+        a.FILE_NO fileNo,
+        a.ENCLOSURE_ADDRESS enclosureAddress,
+        a.ENCLOSURE_CHANGE_FLAG enclosureChangeFlag,
+        a.REMARK remark,
+        a.UPDATE_TIME
+        FROM
+        CHB_AGENT_INSTITUTION_SUB a
+        where 1=1
+        <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
+            and a.AGENT_INSTITUTION_CODE = #{agentInstitutionCode}
+        </if>
+        <if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+            and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+        </if>
+        <if test="sendStatus != null and sendStatus != ''">
+            and a.SEND_STATUS = #{sendStatus}
+        </if>
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND a.STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
+        </if>
+        <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+            and a.CHB_SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+        </if>
+        <if test="searchDataDateStart != null and searchDataDateStart != ''">
+            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd'*/)DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+        </if>
+        ORDER BY a.UPDATE_TIME DESC
+    </select>
+
+    <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto">
+        select * from (
+        SELECT
+        REGIST_SEQNO registSeqno,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        SUBMIT_TIME submitTime,
+        CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        SUBMIT_DEADLINE submitDeadline,
+        STATUS status,
+        AGENT_INSTITUTION_CODE agentInstitutionCode,
+        AGENT_INSTITUTION_NAME agentInstitutionName,
+        ISSUE_PARTY_ID issuePartyId,
+        SUMIT_SEQ sumitSeq,
+        DATA_DATE dataDate,
+        FILE_NO fileNo,
+        ENCLOSURE_NUM enclosureNum,
+        ENCLOSURE_ADDRESS enclosureAddress,
+        ENCLOSURE_CHANGE_FLAG enclosureChangeFlag,
+        REMARK remark,
+        UPDATE_TIME
+        FROM
+        CHB_AGENT_INSTITUTION_SUB
+        <where>
+            <if test="agentInstitutionCodeList != null and agentInstitutionCodeList.size()&gt;0">
+                <foreach close=")" collection="agentInstitutionCodeList" item="item" open="and AGENT_INSTITUTION_CODE in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sendStatusList != null and sendStatusList.size()&gt;0">
+                <foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="keyList != null and keyList.size()&gt;0">
+                <foreach close=")" collection="keyList" item="item" open="and trim(REGIST_SEQNO) in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="statusList != null and statusList.size()&gt;0">
+                <foreach close=")" collection="statusList" item="item" open="and STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() &gt; 0">
+                <foreach close=")" collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" separator=",">
+                    #{submitFeedbackStatus,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+                and SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+            </if>
+            <if test="searchDataDateStart != null and searchDataDateStart != ''">
+                and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+                and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ) ORDER BY dataDate
+    </select>
+
+
+    <insert id="insertIntoHis" parameterType="java.util.Map">
+        insert into CHB_AGENT_INSTITUTION_SUB_HIS (
+        HIS_NO,STATUS,AGENT_INSTITUTION_CODE,
+        AGENT_INSTITUTION_NAME,ISSUE_PARTY_ID,ENCLOSURE_NUM,
+        ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG,REMARK,CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,DATA_DATE,SUBMIT_TIME,SUMIT_SEQ,FILE_NO,
+        SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        select
+        REGIST_SEQNO,STATUS,AGENT_INSTITUTION_CODE,
+        AGENT_INSTITUTION_NAME,ISSUE_PARTY_ID,ENCLOSURE_NUM,
+        ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG,REMARK,CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,DATA_DATE,SUBMIT_TIME,SUMIT_SEQ,FILE_NO,
+        SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+        from CHB_AGENT_INSTITUTION_SUB
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                AGENT_INSTITUTION_CODE
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </insert>
+
+
+    <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+        delete from CHB_AGENT_INSTITUTION_SUB
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                AGENT_INSTITUTION_CODE
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </delete>
+
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+        update CHB_AGENT_INSTITUTION_SUB
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            SUBMIT_FEEDBACK_STATUS = '03',
+            submit_time = sysdate
+        </set>
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                trim(REGIST_SEQNO) = #{regist.registSeqno,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="cancelMannultRegist" parameterType="java.util.Map">
+        update CHB_AGENT_INSTITUTION_SUB
+        <set>
+            SEND_STATUS = '01',
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                trim(REGIST_SEQNO) = #{dto.registSeqno}
+            </foreach>
+        </where>
+    </update>
+
+    <insert id="insertReportDataFromHis" parameterType="java.util.Map">
+        insert into CHB_AGENT_INSTITUTION_SUB (
+        REGIST_SEQNO,STATUS,AGENT_INSTITUTION_CODE,
+        AGENT_INSTITUTION_NAME,ISSUE_PARTY_ID,ENCLOSURE_NUM,
+        ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG,REMARK,CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,DATA_DATE,SUBMIT_TIME,SUMIT_SEQ,FILE_NO,
+        SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER, UPDATE_TIME)
+        select
+        HIS_NO,STATUS,AGENT_INSTITUTION_CODE,
+        AGENT_INSTITUTION_NAME,ISSUE_PARTY_ID,ENCLOSURE_NUM,
+        ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG,REMARK,CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,DATA_DATE,SUBMIT_TIME,SUMIT_SEQ,FILE_NO,
+        SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,his.CREATE_TIME,UPDATE_USER, UPDATE_TIME
+        from CHB_AGENT_INSTITUTION_SUB_HIS  his
+        INNER join (
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_AGENT_INSTITUTION_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                AGENT_INSTITUTION_CODE
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> ) maxtime
+        on his.CREATE_TIME=maxtime.CREATE_TIME
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                AGENT_INSTITUTION_CODE
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+
+    </insert>
+
+    <delete id="deleteReportDataHis" parameterType="java.util.Map">
+        delete
+        from CHB_AGENT_INSTITUTION_SUB_HIS  his
+        where his.CREATE_TIME=(
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_AGENT_INSTITUTION_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                AGENT_INSTITUTION_CODE
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> )
+        <if test="registList !=null and registList.size()>0">
+            and AGENT_INSTITUTION_CODE
+            IN
+            <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                #{regist.agentInstitutionCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </delete>
+
+    <select id="setDataList" resultType="com.joyintech.tams.report.submitmanagement.agentinstitutionregist.dto.AgentInstitutionRegistDto">
+        select
+        a.REGIST_SEQNO registSeqno,
+        a.SEND_STATUS sendStatus,
+        a.SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        a.SUBMIT_TIME submitTime,
+        a.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        a.SUBMIT_DEADLINE submitDeadline,
+        a.STATUS status,
+        a.AGENT_INSTITUTION_CODE agentInstitutionCode,
+        a.AGENT_INSTITUTION_NAME agentInstitutionName,
+        a.ISSUE_PARTY_ID issuePartyId,
+        a.SUMIT_SEQ sumitSeq,
+        a.FILE_NO fileNo,
+        a.ENCLOSURE_NUM enclosureNum,
+        a.ENCLOSURE_ADDRESS enclosureAddress,
+        a.ENCLOSURE_CHANGE_FLAG enclosureChangeFlag,
+        a.DATA_DATE dataDate,
+        a.REMARK remark,
+        a.UPDATE_TIME
+        FROM
+        CHB_AGENT_INSTITUTION_SUB a
+        where 1=1
+        <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
+            and a.AGENT_INSTITUTION_CODE = #{agentInstitutionCode}
+        </if>
+        <if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+            and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+        </if>
+        <if test="sendStatus != null and sendStatus != ''">
+            and a.SEND_STATUS = #{sendStatus}
+        </if>
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND a.STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
+        </if>
+        <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+            and a.SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/ STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d')and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+        </if>
+        <if test="searchDataDateStart != null and searchDataDateStart != ''">
+            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+            and  /*to_char(a.DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(a.DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+            and  /*to_char(a.SUBMIT_TIME,'yyyy-MM-dd')*/DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+        </if>
+        ORDER BY AGENT_INSTITUTION_CODE DESC
+    </select>
+
+    <!--	代理销售机构代码下拉框-->
+    <select id="getAgentInstitutionCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(AGENT_INSTITUTION_CODE) code,
+        AGENT_INSTITUTION_NAME name,
+        AGENT_INSTITUTION_NAME shortName,
+        AGENT_INSTITUTION_CODE hidCode
+        FROM CHB_AGENT_INSTITUTION_SUB
+        <where>
+            <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
+                AND	(AGENT_INSTITUTION_CODE like concat('%',concat(#{agentInstitutionCode,jdbcType=VARCHAR},'%'))
+                or	AGENT_INSTITUTION_NAME like concat('%',concat(#{agentInstitutionCode,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+    </select>
+</mapper>

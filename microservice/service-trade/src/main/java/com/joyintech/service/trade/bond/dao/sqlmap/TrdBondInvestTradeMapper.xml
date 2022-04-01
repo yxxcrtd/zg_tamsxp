@@ -1087,7 +1087,8 @@
         G.CALC_RULE calMethod,
         H.EXERCISE_DATE nextExeDate,
         H.EXERCISE_PRICE nextExercisePrice,
-        A.TRADE_MARKET tradeMarket
+        A.TRADE_MARKET tradeMarket,
+        D.TYPE_11 as assetType11
       FROM FIN_PRODUCT A
       LEFT JOIN FIN_CASH_INFO B
         ON A.FINPROD_ID = B.FINPROD_ID
@@ -1735,7 +1736,7 @@
      from
          MST_COUNTER_PARTY mcp
          INNER JOIN MST_CFETS_CUSTOMER_INFO mcci
-         ON mcp.COUNTER_NAME = mcci.PARTY_NAME
+         ON mcp.PARTY_ID = mcci.PARTY_ID
      WHERE
          mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
     </select>

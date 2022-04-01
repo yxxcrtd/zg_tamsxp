@@ -511,6 +511,19 @@ public class TradeCommonService extends BaseService {
             creditLinesInputDto.setTradeAmt(inputDto.getShareAmt());
             creditLinesInputDto.setCounterId(inputDto.getCounterId());
 
+            List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+            inputDtoList.add(creditLinesInputDto);
+
+            CreditLinesInputDto creditLinesInputDto1 = new CreditLinesInputDto();
+            BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto1,creditLinesInputDto);
+            creditLinesInputDto1.setPs(DictCodeList.交易方向_买入.getValue());
+            creditLinesInputDto1.setShareAmt(inputDto.getConNum());
+            creditLinesInputDto1.setTradeAmt(inputDto.getConNum().multiply(inputDto.getConPrice()));
+            creditLinesInputDto1.setFinprodId("F10_"+inputDto.getFinprodMarketId());
+            creditLinesInputDto1.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+            inputDtoList.add(creditLinesInputDto1);
+
+            creditLinesInputDto.setInputDtoList(inputDtoList);
         }
         // 债券一级市场中标结果维护
         if (object instanceof TrdBiddingManage003Dto){

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.service.trade.conbond.dao.TrdConBondMapper" >
-    <resultMap id="trdBondInvestTradeResultMap" type="com.joyintech.service.trade.conbond.dto.TrdConBondDto" 
-        extends="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
+    <resultMap id="trdBondInvestTradeResultMap" type="com.joyintech.service.trade.conbond.dto.TrdConBondDto"
+               extends="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
         <result column="VALID_STATUS"       property="validStatus"      jdbcType="VARCHAR" />
         <result column="ENTRUST_ID"         property="entrustId"        jdbcType="VARCHAR" />
         <result column="PORTFOLIO_ID"       property="portfolioId"      jdbcType="VARCHAR" />
@@ -21,308 +21,308 @@
         <trim prefixOverrides="UNION ALL">
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_01">
                 SELECT
-                  #{VALID_STATUS_01} 		validStatus,
-                  T1.WORKFLOW_ID  			workflowId, 
-                  T1.WORKFLOW_STATUS		workflowStatus,
-                  T1.TOTLE_TRADE_ID 		busiCode,
-                  T2.ENTRUST_ID 			entrustId,
-                  T1.PORTFOLIO_ID 			portfolioId,
-                  PP.PORTFOLIO_NAME 		portfolioName,
-                  T3.FINPROD_ID 			finprodId,
-                  T3.FINPROD_NAME 			finprodName,
-                  T1.PS 					ps,
-                  <!-- T1.PRIN_AMT 				prinAmt, -->
-                  CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
-                  	ELSE T2.PUR_AMT
-                  	END AS prinAmt,
-                  T4.PRIN_AMT 				winlotteryAmt,
-                  T2.PURCH_DATE    			purchDate,
-                  <!-- T1.TRADE_DATE    			tradeDate,
-                  T1.SETTLE_DATE   			settleDate, -->
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
-                  		THEN  T2.PUR_CFM_DATE 
-                    ELSE T1.TRADE_DATE
-                    END AS  tradeDate,
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
-                  		THEN T2.PUR_PAY_DATE 
-                    ELSE  T1.SETTLE_DATE
-                    END AS  settleDate,
-                  T2.PURCH_MODLE 			purchModle,
-                  T2.PURCH_TYPE 			purchType,
-                  T1.TRADE_MARKET 			tradeMarket,
-                  T1.CCY 					ccy,
-                  T1.REMARK 				remark
- 				FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                #{VALID_STATUS_01} 		validStatus,
+                T1.WORKFLOW_ID  			workflowId,
+                T1.WORKFLOW_STATUS		workflowStatus,
+                T1.TOTLE_TRADE_ID 		busiCode,
+                T2.ENTRUST_ID 			entrustId,
+                T1.PORTFOLIO_ID 			portfolioId,
+                PP.PORTFOLIO_NAME 		portfolioName,
+                T3.FINPROD_ID 			finprodId,
+                T3.FINPROD_NAME 			finprodName,
+                T1.PS 					ps,
+                <!-- T1.PRIN_AMT 				prinAmt, -->
+                CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
+                ELSE T2.PUR_AMT
+                END AS prinAmt,
+                T4.PRIN_AMT 				winlotteryAmt,
+                T2.PURCH_DATE    			purchDate,
+                <!-- T1.TRADE_DATE    			tradeDate,
+                T1.SETTLE_DATE   			settleDate, -->
+                CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
+                THEN  T2.PUR_CFM_DATE
+                ELSE T1.TRADE_DATE
+                END AS  tradeDate,
+                CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
+                THEN T2.PUR_PAY_DATE
+                ELSE  T1.SETTLE_DATE
+                END AS  settleDate,
+                T2.PURCH_MODLE 			purchModle,
+                T2.PURCH_TYPE 			purchType,
+                T1.TRADE_MARKET 			tradeMarket,
+                T1.CCY 					ccy,
+                T1.REMARK 				remark
+                FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
                 LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                 LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
-                LEFT JOIN WFL_TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05} 
+                LEFT JOIN WFL_TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05}
                 LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                
+
                 WHERE T1.TRADE_STATUS = #{VALID_STATUS_01}
-                	
-                	AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-               		AND T1.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
-               		<if test="psList != null and psList.size() > 0">
-                        AND T1.PS IN
-                        <foreach collection="psList" item="item" open="(" close=")" separator=",">
-                            #{item}
-                        </foreach>
-                    </if>
-                    
-                    <!-- 一体化对应etliu end -->
-                    <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                        AND (
-                            pp.PORTFOLIO_ID IN
-                                <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
-                                	<if test="(index % 998) == 0">
-										null) or pp.PORTFOLIO_ID in (
-									</if>
-                                    #{item}
-                                </foreach>
-                            OR pp.PARENT_PORTFOLIO_ID IN
-                                <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
-                                	<if test="(index % 998) == 0">
-										null) or pp.PARENT_PORTFOLIO_ID in (
-									</if>
-                                    #{item}
-                                </foreach>
-                            )
-                    </if>
-                    <if test="loginUserName != null and loginUserName != ''">
-                        and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
-                                 OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
-                    </if>
-                    <if test="entrustId != null and entrustId != ''">
-                        AND T2.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
-                    </if>
-                    <if test="finprodId != null and finprodId != ''">
-                        AND T1.FINPROD_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
-                    </if>
-                    <if test="tradeMarket != null and tradeMarket != ''">
-                        AND T1.TRADE_MARKET = #{tradeMarket}
-                    </if>
-                    <if test="ps != null and ps != ''">
-                        AND T1.PS = #{ps}
-                    </if>
-                    <if test="purchModle != null and purchModle != ''">
-                        AND T2.PURCH_MODLE = #{purchModle}
-                    </if>
-                    <if test="purchType != null and purchType != ''">
-                        AND T2.PURCH_TYPE = #{purchType}
-                    </if>
-                    <if test="purchDateBegin != null and purchDateBegin != ''">
-                        AND T2.PURCH_DATE >= to_date(#{purchDateBegin}, 'yyyy-MM-dd')
-                    </if>
-                    <if test="purchDateEnd != null and purchDateEnd != ''">
-                        AND T2.PURCH_DATE &lt;= to_date(#{purchDateEnd}, 'yyyy-MM-dd')
-                    </if>
-                  
+
+                AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+                AND T1.P_TRADE_ID IS NULL/*撤销流程中的数据不展示*/
+                <if test="psList != null and psList.size() > 0">
+                    AND T1.PS IN
+                    <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <!-- 一体化对应etliu end -->
+                <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                    AND (
+                    pp.PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) or pp.PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    OR pp.PARENT_PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) or pp.PARENT_PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    )
+                </if>
+                <if test="loginUserName != null and loginUserName != ''">
+                    and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                    OR pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
+                </if>
+                <if test="entrustId != null and entrustId != ''">
+                    AND T2.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
+                </if>
+                <if test="finprodId != null and finprodId != ''">
+                    AND T1.FINPROD_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                </if>
+                <if test="tradeMarket != null and tradeMarket != ''">
+                    AND T1.TRADE_MARKET = #{tradeMarket}
+                </if>
+                <if test="ps != null and ps != ''">
+                    AND T1.PS = #{ps}
+                </if>
+                <if test="purchModle != null and purchModle != ''">
+                    AND T2.PURCH_MODLE = #{purchModle}
+                </if>
+                <if test="purchType != null and purchType != ''">
+                    AND T2.PURCH_TYPE = #{purchType}
+                </if>
+                <if test="purchDateBegin != null and purchDateBegin != ''">
+                    AND T2.PURCH_DATE >= to_date(#{purchDateBegin}, 'yyyy-MM-dd')
+                </if>
+                <if test="purchDateEnd != null and purchDateEnd != ''">
+                    AND T2.PURCH_DATE &lt;= to_date(#{purchDateEnd}, 'yyyy-MM-dd')
+                </if>
+
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_02">
                 UNION ALL
-                 SELECT
-                  #{VALID_STATUS_02} 		validStatus,
-                  null  					workflowId, 
-                  null						workflowStatus,
-                  T1.TOTLE_TRADE_ID 		busiCode,
-                  T2.ENTRUST_ID 			entrustId,
-                  T1.PORTFOLIO_ID 			portfolioId,
-                  PP.PORTFOLIO_NAME 		portfolioName,
-                  T3.FINPROD_ID 			finprodId,
-                  T3.FINPROD_NAME 			finprodName,
-                  T1.PS 					ps,
-                  <!-- T1.PRIN_AMT 				prinAmt, -->
-                  CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
-                  	ELSE T2.PUR_AMT
-                  	END AS prinAmt,
-                  T4.PRIN_AMT 				winlotteryAmt,
-                  T2.PURCH_DATE    			purchDate,
-                  <!-- T1.TRADE_DATE    			tradeDate,
-                  T1.SETTLE_DATE   			settleDate, -->
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
-                  		THEN  T2.PUR_CFM_DATE 
-                    ELSE T1.TRADE_DATE
-                    END AS  tradeDate,
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
-                  		THEN T2.PUR_PAY_DATE 
-                    ELSE  T1.SETTLE_DATE
-                    END AS  settleDate,
-                  T2.PURCH_MODLE 			purchModle,
-                  T2.PURCH_TYPE 			purchType,
-                  T1.TRADE_MARKET 			tradeMarket,
-                  T1.CCY 					ccy,
-                  T1.REMARK 				remark
- 				FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                SELECT
+                #{VALID_STATUS_02} 		validStatus,
+                null  					workflowId,
+                null						workflowStatus,
+                T1.TOTLE_TRADE_ID 		busiCode,
+                T2.ENTRUST_ID 			entrustId,
+                T1.PORTFOLIO_ID 			portfolioId,
+                PP.PORTFOLIO_NAME 		portfolioName,
+                T3.FINPROD_ID 			finprodId,
+                T3.FINPROD_NAME 			finprodName,
+                T1.PS 					ps,
+                <!-- T1.PRIN_AMT 				prinAmt, -->
+                CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
+                ELSE T2.PUR_AMT
+                END AS prinAmt,
+                T4.PRIN_AMT 				winlotteryAmt,
+                T2.PURCH_DATE    			purchDate,
+                <!-- T1.TRADE_DATE    			tradeDate,
+                T1.SETTLE_DATE   			settleDate, -->
+                CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
+                THEN  T2.PUR_CFM_DATE
+                ELSE T1.TRADE_DATE
+                END AS  tradeDate,
+                CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
+                THEN T2.PUR_PAY_DATE
+                ELSE  T1.SETTLE_DATE
+                END AS  settleDate,
+                T2.PURCH_MODLE 			purchModle,
+                T2.PURCH_TYPE 			purchType,
+                T1.TRADE_MARKET 			tradeMarket,
+                T1.CCY 					ccy,
+                T1.REMARK 				remark
+                FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
                 LEFT JOIN TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                 LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
-                LEFT JOIN TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05} AND (T4.IS_CANCEL IS NULL OR T4.IS_CANCEL='N') 
+                LEFT JOIN TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05} AND (T4.IS_CANCEL IS NULL OR T4.IS_CANCEL='N')
                 LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
                 WHERE T1.TRADE_STATUS = #{VALID_STATUS_01}
-                	
-                	AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                	AND (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL='N') 
-                	<if test="psList != null and psList.size() > 0">
-                        AND T1.PS IN
-                        <foreach collection="psList" item="item" open="(" close=")" separator=",">
-                            #{item}
-                        </foreach>
-                    </if>
-                	
-                    <!-- 一体化对应etliu end -->
-                    <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                        AND (
-                            pp.PORTFOLIO_ID IN
-                                <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
-                                	<if test="(index % 998) == 0">
-										null) or pp.PORTFOLIO_ID in (
-									</if>
-                                    #{item}
-                                </foreach>
-                            OR pp.PARENT_PORTFOLIO_ID IN
-                                <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
-                                	<if test="(index % 998) == 0">
-										null) or pp.PARENT_PORTFOLIO_ID in (
-									</if>
-                                    #{item}
-                                </foreach>
-                            )
-                    </if>
-                    <if test="loginUserName != null and loginUserName != ''">
-                        and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
-                                 or pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
-                    </if>
-                    <if test="entrustId != null and entrustId != ''">
-                        AND T2.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
-                    </if>
-                    <if test="finprodId != null and finprodId != ''">
-                        AND T1.FINPROD_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
-                    </if>
-                    <if test="tradeMarket != null and tradeMarket != ''">
-                        AND T1.TRADE_MARKET = #{tradeMarket}
-                    </if>
-                    <if test="ps != null and ps != ''">
-                        AND T1.PS = #{ps}
-                    </if>
-                    <if test="purchModle != null and purchModle != ''">
-                        AND T2.PURCH_MODLE = #{purchModle}
-                    </if>
-                    <if test="purchType != null and purchType != ''">
-                        AND T2.PURCH_TYPE = #{purchType}
-                    </if>
-                    <if test="purchDateBegin != null and purchDateBegin != ''">
-                        AND T2.PURCH_DATE >= to_date(#{purchDateBegin}, 'yyyy-MM-dd')
-                    </if>
-                    <if test="purchDateEnd != null and purchDateEnd != ''">
-                        AND T2.PURCH_DATE &lt;= to_date(#{purchDateEnd}, 'yyyy-MM-dd')
-                    </if>
-                    
+
+                AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+                AND (T1.IS_CANCEL IS NULL OR T1.IS_CANCEL='N')
+                <if test="psList != null and psList.size() > 0">
+                    AND T1.PS IN
+                    <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <!-- 一体化对应etliu end -->
+                <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                    AND (
+                    pp.PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) or pp.PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    OR pp.PARENT_PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) or pp.PARENT_PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    )
+                </if>
+                <if test="loginUserName != null and loginUserName != ''">
+                    and (pp.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                    or pp.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
+                </if>
+                <if test="entrustId != null and entrustId != ''">
+                    AND T2.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
+                </if>
+                <if test="finprodId != null and finprodId != ''">
+                    AND T1.FINPROD_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                </if>
+                <if test="tradeMarket != null and tradeMarket != ''">
+                    AND T1.TRADE_MARKET = #{tradeMarket}
+                </if>
+                <if test="ps != null and ps != ''">
+                    AND T1.PS = #{ps}
+                </if>
+                <if test="purchModle != null and purchModle != ''">
+                    AND T2.PURCH_MODLE = #{purchModle}
+                </if>
+                <if test="purchType != null and purchType != ''">
+                    AND T2.PURCH_TYPE = #{purchType}
+                </if>
+                <if test="purchDateBegin != null and purchDateBegin != ''">
+                    AND T2.PURCH_DATE >= to_date(#{purchDateBegin}, 'yyyy-MM-dd')
+                </if>
+                <if test="purchDateEnd != null and purchDateEnd != ''">
+                    AND T2.PURCH_DATE &lt;= to_date(#{purchDateEnd}, 'yyyy-MM-dd')
+                </if>
+
             </if>
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_03">
                 UNION ALL
-                  SELECT
-                  #{VALID_STATUS_03} 			validStatus,
-                  null  						workflowId, 
-                  null							workflowStatus,
-                  T1.TOTLE_TRADE_ID 			busiCode,
-                  T2.ENTRUST_ID 				entrustId,
-                  T1.PORTFOLIO_ID 				portfolioId,
-                  PP.PORTFOLIO_NAME 			portfolioName,
-                  T3.FINPROD_ID 				finprodId,
-                  T3.FINPROD_NAME 				finprodName,
-                  T1.PS 						ps,
-                  <!-- T1.PRIN_AMT 					prinAmt, -->
-                  CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
-                  	ELSE T2.PUR_AMT
-                  	END AS prinAmt,
-                  nvl(T4.PRIN_AMT,T5.PRIN_AMT) 	winlotteryAmt,
-                  T2.PURCH_DATE    				purchDate,
-                  <!-- T1.TRADE_DATE    			tradeDate,
-                  T1.SETTLE_DATE   			settleDate, -->
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
-                  		THEN  T2.PUR_CFM_DATE 
-                    ELSE T1.TRADE_DATE
-                    END AS  tradeDate,
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
-                  		THEN T2.PUR_PAY_DATE 
-                    ELSE  T1.SETTLE_DATE
-                    END AS  settleDate,
-                  T2.PURCH_MODLE 				purchModle,
-                  T2.PURCH_TYPE 				purchType,
-                  T1.TRADE_MARKET 				tradeMarket,
-                  T1.CCY 						ccy,
-                  T1.REMARK 					remark
- 				FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+                SELECT
+                #{VALID_STATUS_03} 			validStatus,
+                null  						workflowId,
+                null							workflowStatus,
+                T1.TOTLE_TRADE_ID 			busiCode,
+                T2.ENTRUST_ID 				entrustId,
+                T1.PORTFOLIO_ID 				portfolioId,
+                PP.PORTFOLIO_NAME 			portfolioName,
+                T3.FINPROD_ID 				finprodId,
+                T3.FINPROD_NAME 				finprodName,
+                T1.PS 						ps,
+                <!-- T1.PRIN_AMT 					prinAmt, -->
+                CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
+                ELSE T2.PUR_AMT
+                END AS prinAmt,
+                nvl(T4.PRIN_AMT,T5.PRIN_AMT) 	winlotteryAmt,
+                T2.PURCH_DATE    				purchDate,
+                <!-- T1.TRADE_DATE    			tradeDate,
+                T1.SETTLE_DATE   			settleDate, -->
+                CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
+                THEN  T2.PUR_CFM_DATE
+                ELSE T1.TRADE_DATE
+                END AS  tradeDate,
+                CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04}
+                THEN T2.PUR_PAY_DATE
+                ELSE  T1.SETTLE_DATE
+                END AS  settleDate,
+                T2.PURCH_MODLE 				purchModle,
+                T2.PURCH_TYPE 				purchType,
+                T1.TRADE_MARKET 				tradeMarket,
+                T1.CCY 						ccy,
+                T1.REMARK 					remark
+                FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
                 LEFT JOIN TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
                 LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
                 LEFT JOIN TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05} AND T4.IS_CANCEL='N'
                 LEFT JOIN TRD_PRODUCT_DEAL T5 ON T1.P_TRADE_ID = T5.TOTLE_TRADE_ID and T5.PS=#{PS_T05} AND T5.IS_CANCEL='N'
                 LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
                 WHERE T1.TRADE_STATUS = #{VALID_STATUS_03}
-                	
-                	AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                	
-                	<if test="psList != null and psList.size() > 0">
-                        AND T1.PS IN
-                        <foreach collection="psList" item="item" open="(" close=")" separator=",">
-                            #{item}
-                        </foreach>
-                    </if>
-                    
-                    <!-- 一体化对应etliu end -->
-                    <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-                        AND (PP.PORTFOLIO_ID IN
-                          <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
-                          	<if test="(index % 998) == 0">
-								null) or PP.PORTFOLIO_ID in (
-							</if>
-                              #{item}
-                          </foreach>
-                       OR 
-                       PP.PARENT_PORTFOLIO_ID IN
-                       <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
-                       	<if test="(index % 998) == 0">
-							null) or PP.PARENT_PORTFOLIO_ID in (
-						</if>
-                           #{item}
-                       </foreach>
-                       )
-                    </if>
-                    <if test="loginUserName != null and loginUserName != ''">
-                        and (PP.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
-                            OR PP.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
-                    </if>
-                    <if test="entrustId != null and entrustId != ''">
-                        AND T2.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
-                    </if>
-                    <if test="finprodId != null and finprodId != ''">
-                        AND T1.FINPROD_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
-                    </if>
-                    <if test="tradeMarket != null and tradeMarket != ''">
-                        AND T1.TRADE_MARKET = #{tradeMarket}
-                    </if>
-                    
-                    <if test="ps != null and ps != ''">
-                        AND T1.PS = #{ps}
-                    </if>
-                    <if test="purchModle != null and purchModle != ''">
-                        AND T2.PURCH_MODLE = #{purchModle}
-                    </if>
-                    <if test="purchType != null and purchType != ''">
-                        AND T2.PURCH_TYPE = #{purchType}
-                    </if>
-                    <if test="purchDateBegin != null and purchDateBegin != ''">
-                        AND T2.PURCH_DATE >= to_date(#{purchDateBegin}, 'yyyy-MM-dd')
-                    </if>
-                    <if test="purchDateEnd != null and purchDateEnd != ''">
-                        AND T2.PURCH_DATE &lt;= to_date(#{purchDateEnd}, 'yyyy-MM-dd')
-                    </if>
-                    
+
+                AND T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+
+                <if test="psList != null and psList.size() > 0">
+                    AND T1.PS IN
+                    <foreach collection="psList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <!-- 一体化对应etliu end -->
+                <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                    AND (PP.PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) or PP.PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    OR
+                    PP.PARENT_PORTFOLIO_ID IN
+                    <foreach collection="portfolioIdList" item="item" index="index" open="(" close=")" separator=",">
+                        <if test="(index % 998) == 0">
+                            null) or PP.PARENT_PORTFOLIO_ID in (
+                        </if>
+                        #{item}
+                    </foreach>
+                    )
+                </if>
+                <if test="loginUserName != null and loginUserName != ''">
+                    and (PP.PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName})
+                    OR PP.PARENT_PORTFOLIO_ID in (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
+                </if>
+                <if test="entrustId != null and entrustId != ''">
+                    AND T2.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
+                </if>
+                <if test="finprodId != null and finprodId != ''">
+                    AND T1.FINPROD_ID like CONCAT('%', CONCAT(#{finprodId}, '%'))
+                </if>
+                <if test="tradeMarket != null and tradeMarket != ''">
+                    AND T1.TRADE_MARKET = #{tradeMarket}
+                </if>
+
+                <if test="ps != null and ps != ''">
+                    AND T1.PS = #{ps}
+                </if>
+                <if test="purchModle != null and purchModle != ''">
+                    AND T2.PURCH_MODLE = #{purchModle}
+                </if>
+                <if test="purchType != null and purchType != ''">
+                    AND T2.PURCH_TYPE = #{purchType}
+                </if>
+                <if test="purchDateBegin != null and purchDateBegin != ''">
+                    AND T2.PURCH_DATE >= to_date(#{purchDateBegin}, 'yyyy-MM-dd')
+                </if>
+                <if test="purchDateEnd != null and purchDateEnd != ''">
+                    AND T2.PURCH_DATE &lt;= to_date(#{purchDateEnd}, 'yyyy-MM-dd')
+                </if>
+
             </if>
         </trim>
     </select>
 
-<resultMap id="trdConBondResultMap" type="com.joyintech.service.trade.conbond.dto.TrdConBondDto"
-        extends="com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper.BaseResultMap">
+    <resultMap id="trdConBondResultMap" type="com.joyintech.service.trade.conbond.dto.TrdConBondDto"
+               extends="com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper.BaseResultMap">
         <result column="ENTRUST_ID"         property="entrustId"        jdbcType="VARCHAR" />
         <result column="TOTLE_TRADE_ID"         property="busiCode"        jdbcType="VARCHAR" />
         <result column="PORTFOLIO_ID"       property="portfolioId"      jdbcType="VARCHAR" />
@@ -351,236 +351,236 @@
         </association>
     </resultMap>
     <select id="getTrdConBondDto" resultMap="trdConBondResultMap">
-               	SELECT
-                  T2.ENTRUST_ID,
-                  T1.PORTFOLIO_ID,
-                  PP.PORTFOLIO_NAME,
-                  T1.PS,
-                  T1.B_TRADE_ID,
-                  T1.TOTLE_TRADE_ID,
-                  T3.FINPROD_ID,
-                  T3.FINPROD_NAME, 
-                  T1.TRADE_MARKET,
-                  T2.PURCH_MODLE,
-                  T2.PURCH_TYPE,
-                  T2.PURCH_DATE,
-                  <!-- T1.TRADE_DATE,
-                  T1.SETTLE_DATE, -->
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN  T2.PUR_CFM_DATE 
-                    ELSE T1.TRADE_DATE
-                    END AS  TRADE_DATE,
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN T2.PUR_PAY_DATE
-                    ELSE  T1.SETTLE_DATE
-                    END AS  SETTLE_DATE,
-                  T1.CCY,
-                  T1.INV_AIM,
-                  T1.SEC_MANAGE_ACCT_ID,
-                  T1.CHL_ID,
-                  CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
-                  	ELSE T2.PUR_AMT
-                  	END AS tradeAmt,
-                  <!-- 券面总额 -->
-                    case when t1.ps=#{PS_T58}
-				    then t1.PRIN_AMT
-				    else NVL(T4.PRIN_AMT,T6.PRIN_AMT) 
-				  	end as winlotteryAmt,<!-- 中签券面总额 -->
-                  T2.DEPOSIT_AMT,<!-- 保证金金额 -->
-                  nvl(t4.trade_Amt,t6.trade_Amt)    supplementaryAmt,<!-- 补缴款金额 -->
-                  <!-- t5.trade_date  refundDate,
-                  t5.trade_amt  refundAmt, -->
-                    case when t1.trade_amt &lt;  0
-					  then abs(t1.trade_amt)
-				     when t1.ps=#{PS_T58}
-					  then t1.trade_amt
-					  else  0 
-					  end as refundAmt,<!-- 退款金额 -->
-					case when t1.trade_amt &lt;  0
-					  then t1.trade_date
-					    when t1.ps=#{PS_T58}
-    					then t1.trade_date
-					  else  null 
-					  end as refundDate,<!-- 退款日期 -->
-                  T1.REMARK,
-                  T1.TRADER,
-                  T1.COUNTER_ID,
-                  T1.COUNTER_TRADER,
-                  T1.COUNTER_CONTACT
- 				FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
-                LEFT JOIN TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
-                LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
-                LEFT JOIN TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05}
-                <!-- LEFT JOIN TRD_PRODUCT_DEAL T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID and T5.PS=#{PS_T51} -->
-                LEFT JOIN TRD_PRODUCT_DEAL T6 ON T1.P_TRADE_ID = T6.TOTLE_TRADE_ID and T6.PS=#{PS_T05} and T6.IS_CANCEL ='N'
-                LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                WHERE 
-                 T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                 AND T1.TOTLE_TRADE_ID=#{tradeId}
-    </select>
-    
-   <select id="getBusicode"  resultType="java.util.Map">
-    	SELECT 
-    		T1.TOTLE_TRADE_ID  	busiCode,
-    		T2.trade_id    		tradeId
-    		
-    	FROM
-    		WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
-    		left join wfl_trd_product_deal T2 on T1.TOTLE_TRADE_ID=T2.TOTLE_TRADE_ID and T2.PS=#{PS_T51}
-    	<where>
-    		T1.B_TRADE_ID = #{bTradeId}
-    	</where>
-    </select>
-    
-    <select id="getTradeId" resultType="java.lang.String">
-    	SELECT 
-    		TOTLE_TRADE_ID tradId
-    	FROM
-    		TRD_FIN_PRODUCT_DEAL_TOTAL
-    	<where>
-    		B_TRADE_ID = #{bTradeId}
-    	</where>
-    </select>
-<select id="getTrdConBondDtoForTradeId" resultMap="trdConBondResultMap">
-               	SELECT
-                  T2.ENTRUST_ID,
-                  T1.PORTFOLIO_ID,
-                  PP.PORTFOLIO_NAME,
-                  T1.PS,
-                  T1.B_TRADE_ID,
-                  T3.FINPROD_ID,
-                  T3.FINPROD_NAME, 
-                  T1.TRADE_MARKET,
-                  T2.PURCH_MODLE,
-                  T2.PURCH_TYPE,
-                  T2.PURCH_DATE,
-                  <!-- T1.TRADE_DATE,
-                  T1.SETTLE_DATE, -->
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN  T2.PUR_CFM_DATE 
-                    ELSE T1.TRADE_DATE
-                    END AS  TRADE_DATE,
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN T2.PUR_PAY_DATE
-                    ELSE  T1.TRADE_DATE
-                    END AS  SETTLE_DATE,
-                  T1.CCY,
-                  T1.INV_AIM,
-                  T1.SEC_MANAGE_ACCT_ID,
-                  T1.CHL_ID,
-                  CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
-                  	ELSE T2.PUR_AMT
-                  	END AS tradeAmt,
-                  <!-- 券面总额 -->
-                  nvl(T4.PRIN_AMT,T6.PRIN_AMT) winlotteryAmt,<!-- 中签券面总额 -->
-                  T2.DEPOSIT_AMT,<!-- 保证金金额 -->
-                  nvl(t4.trade_Amt,t6.trade_Amt)    supplementaryAmt,<!-- 补缴款金额 -->
-                  <!-- t5.trade_date  refundDate,
-                  t5.trade_amt  refundAmt, -->
-                    case when t1.trade_amt &lt; 0
-					  then abs(t1.trade_amt)
-					  else  0 
-					  end as refundAmt,<!-- 退款金额 -->
-					case when t1.trade_amt &lt; 0
-					  then t1.trade_date
-					  else  null 
-					  end as refundDate,<!-- 退款日期 -->
-                  T1.REMARK,
-                  T1.TRADER,
-                  T1.COUNTER_ID,
-                  T1.COUNTER_TRADER,
-                  T1.COUNTER_CONTACT
- 				FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
-                LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
-                LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
-                LEFT JOIN WFL_TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05}
-                <!-- LEFT JOIN WFL_TRD_PRODUCT_DEAL T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID and T5.PS=#{PS_T51} -->
-                LEFT JOIN WFL_TRD_PRODUCT_DEAL T6 ON T1.P_TRADE_ID = T6.TOTLE_TRADE_ID and T6.PS=#{PS_T05} and T6.IS_CANCEL ='N'
-                LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                WHERE 
-                 T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                 AND T1.TOTLE_TRADE_ID=#{tradeId}
+        SELECT
+        T2.ENTRUST_ID,
+        T1.PORTFOLIO_ID,
+        PP.PORTFOLIO_NAME,
+        T1.PS,
+        T1.B_TRADE_ID,
+        T1.TOTLE_TRADE_ID,
+        T3.FINPROD_ID,
+        T3.FINPROD_NAME,
+        T1.TRADE_MARKET,
+        T2.PURCH_MODLE,
+        T2.PURCH_TYPE,
+        T2.PURCH_DATE,
+        <!-- T1.TRADE_DATE,
+        T1.SETTLE_DATE, -->
+        CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN  T2.PUR_CFM_DATE
+        ELSE T1.TRADE_DATE
+        END AS  TRADE_DATE,
+        CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN T2.PUR_PAY_DATE
+        ELSE  T1.SETTLE_DATE
+        END AS  SETTLE_DATE,
+        T1.CCY,
+        T1.INV_AIM,
+        T1.SEC_MANAGE_ACCT_ID,
+        T1.CHL_ID,
+        CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
+        ELSE T2.PUR_AMT
+        END AS tradeAmt,
+        <!-- 券面总额 -->
+        case when t1.ps=#{PS_T58}
+        then t1.PRIN_AMT
+        else NVL(T4.PRIN_AMT,T6.PRIN_AMT)
+        end as winlotteryAmt,<!-- 中签券面总额 -->
+        T2.DEPOSIT_AMT,<!-- 保证金金额 -->
+        nvl(t4.trade_Amt,t6.trade_Amt)    supplementaryAmt,<!-- 补缴款金额 -->
+        <!-- t5.trade_date  refundDate,
+        t5.trade_amt  refundAmt, -->
+        case when t1.trade_amt &lt;  0
+        then abs(t1.trade_amt)
+        when t1.ps=#{PS_T58}
+        then t1.trade_amt
+        else  0
+        end as refundAmt,<!-- 退款金额 -->
+        case when t1.trade_amt &lt;  0
+        then t1.trade_date
+        when t1.ps=#{PS_T58}
+        then t1.trade_date
+        else  null
+        end as refundDate,<!-- 退款日期 -->
+        T1.REMARK,
+        T1.TRADER,
+        T1.COUNTER_ID,
+        T1.COUNTER_TRADER,
+        T1.COUNTER_CONTACT
+        FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+        LEFT JOIN TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05}
+        <!-- LEFT JOIN TRD_PRODUCT_DEAL T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID and T5.PS=#{PS_T51} -->
+        LEFT JOIN TRD_PRODUCT_DEAL T6 ON T1.P_TRADE_ID = T6.TOTLE_TRADE_ID and T6.PS=#{PS_T05} and T6.IS_CANCEL ='N'
+        LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        WHERE
+        T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        AND T1.TOTLE_TRADE_ID=#{tradeId}
     </select>
 
-	<select id="getTrdConBondDtoForAccount" resultMap="trdConBondResultMap">
-               	SELECT
-                  T2.ENTRUST_ID,
-                  T1.PORTFOLIO_ID,
-                  PP.PORTFOLIO_NAME,
-                  T1.PS,
-                  T1.B_TRADE_ID,
-                  T3.FINPROD_ID,
-                  T3.FINPROD_NAME, 
-                  T1.TRADE_MARKET,
-                  T2.PURCH_MODLE,
-                  T2.PURCH_TYPE,
-                  T2.PURCH_DATE,
-                  <!-- T1.TRADE_DATE,
-                  T1.SETTLE_DATE, -->
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN  T2.PUR_CFM_DATE 
-                    ELSE T1.TRADE_DATE
-                    END AS  TRADE_DATE,
-                  CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN T2.PUR_PAY_DATE
-                    ELSE  T1.TRADE_DATE
-                    END AS  SETTLE_DATE,
-                  T1.CCY,
-                  T1.INV_AIM,
-                  T1.SEC_MANAGE_ACCT_ID,
-                  T1.CHL_ID,
-                  CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
-                  	ELSE T2.PUR_AMT
-                  	END AS tradeAmt,
-                  <!-- 券面总额 -->
-                  nvl(T5.PRIN_AMT,T6.PRIN_AMT) winlotteryAmt,<!-- 中签券面总额 -->
-                  T2.DEPOSIT_AMT,<!-- 保证金金额 -->
-                  nvl(t4.trade_Amt,t6.trade_Amt)    supplementaryAmt,<!-- 补缴款金额 -->
-                   t5.trade_date  refundDate,<!-- 退款日期 -->
-                  t5.trade_amt  refundAmt,<!-- 退款金额 -->
-                  T1.REMARK,
-                  T1.TRADER,
-                  T1.COUNTER_ID,
-                  T1.COUNTER_TRADER,
-                  T1.COUNTER_CONTACT
- 				FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
-                LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
-                LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
-                LEFT JOIN WFL_TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05}
-                LEFT JOIN WFL_TRD_PRODUCT_DEAL T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID and T5.PS=#{PS_T51}
-                LEFT JOIN WFL_TRD_PRODUCT_DEAL T6 ON T1.P_TRADE_ID = T6.TOTLE_TRADE_ID and T6.PS=#{PS_T05} and T6.IS_CANCEL ='N'
-                LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
-                WHERE 
-                 T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
-                 AND T5.TRADE_ID=#{tradeId}
+    <select id="getBusicode"  resultType="java.util.Map">
+        SELECT
+        T1.TOTLE_TRADE_ID  	busiCode,
+        T2.trade_id    		tradeId
+
+        FROM
+        WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+        left join wfl_trd_product_deal T2 on T1.TOTLE_TRADE_ID=T2.TOTLE_TRADE_ID and T2.PS=#{PS_T51}
+        <where>
+            T1.B_TRADE_ID = #{bTradeId}
+        </where>
+    </select>
+
+    <select id="getTradeId" resultType="java.lang.String">
+        SELECT
+        TOTLE_TRADE_ID tradId
+        FROM
+        TRD_FIN_PRODUCT_DEAL_TOTAL
+        <where>
+            B_TRADE_ID = #{bTradeId}
+        </where>
+    </select>
+    <select id="getTrdConBondDtoForTradeId" resultMap="trdConBondResultMap">
+        SELECT
+        T2.ENTRUST_ID,
+        T1.PORTFOLIO_ID,
+        PP.PORTFOLIO_NAME,
+        T1.PS,
+        T1.B_TRADE_ID,
+        T3.FINPROD_ID,
+        T3.FINPROD_NAME,
+        T1.TRADE_MARKET,
+        T2.PURCH_MODLE,
+        T2.PURCH_TYPE,
+        T2.PURCH_DATE,
+        <!-- T1.TRADE_DATE,
+        T1.SETTLE_DATE, -->
+        CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN  T2.PUR_CFM_DATE
+        ELSE T1.TRADE_DATE
+        END AS  TRADE_DATE,
+        CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN T2.PUR_PAY_DATE
+        ELSE  T1.TRADE_DATE
+        END AS  SETTLE_DATE,
+        T1.CCY,
+        T1.INV_AIM,
+        T1.SEC_MANAGE_ACCT_ID,
+        T1.CHL_ID,
+        CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
+        ELSE T2.PUR_AMT
+        END AS tradeAmt,
+        <!-- 券面总额 -->
+        nvl(T4.PRIN_AMT,T6.PRIN_AMT) winlotteryAmt,<!-- 中签券面总额 -->
+        T2.DEPOSIT_AMT,<!-- 保证金金额 -->
+        nvl(t4.trade_Amt,t6.trade_Amt)    supplementaryAmt,<!-- 补缴款金额 -->
+        <!-- t5.trade_date  refundDate,
+        t5.trade_amt  refundAmt, -->
+        case when t1.trade_amt &lt; 0
+        then abs(t1.trade_amt)
+        else  0
+        end as refundAmt,<!-- 退款金额 -->
+        case when t1.trade_amt &lt; 0
+        then t1.trade_date
+        else  null
+        end as refundDate,<!-- 退款日期 -->
+        T1.REMARK,
+        T1.TRADER,
+        T1.COUNTER_ID,
+        T1.COUNTER_TRADER,
+        T1.COUNTER_CONTACT
+        FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+        LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN WFL_TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05}
+        <!-- LEFT JOIN WFL_TRD_PRODUCT_DEAL T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID and T5.PS=#{PS_T51} -->
+        LEFT JOIN WFL_TRD_PRODUCT_DEAL T6 ON T1.P_TRADE_ID = T6.TOTLE_TRADE_ID and T6.PS=#{PS_T05} and T6.IS_CANCEL ='N'
+        LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        WHERE
+        T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        AND T1.TOTLE_TRADE_ID=#{tradeId}
+    </select>
+
+    <select id="getTrdConBondDtoForAccount" resultMap="trdConBondResultMap">
+        SELECT
+        T2.ENTRUST_ID,
+        T1.PORTFOLIO_ID,
+        PP.PORTFOLIO_NAME,
+        T1.PS,
+        T1.B_TRADE_ID,
+        T3.FINPROD_ID,
+        T3.FINPROD_NAME,
+        T1.TRADE_MARKET,
+        T2.PURCH_MODLE,
+        T2.PURCH_TYPE,
+        T2.PURCH_DATE,
+        <!-- T1.TRADE_DATE,
+        T1.SETTLE_DATE, -->
+        CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN  T2.PUR_CFM_DATE
+        ELSE T1.TRADE_DATE
+        END AS  TRADE_DATE,
+        CASE WHEN T2.PURCH_TYPE=#{PURCH_TYPE_02} AND T1.PS=#{PS_T04} THEN T2.PUR_PAY_DATE
+        ELSE  T1.TRADE_DATE
+        END AS  SETTLE_DATE,
+        T1.CCY,
+        T1.INV_AIM,
+        T1.SEC_MANAGE_ACCT_ID,
+        T1.CHL_ID,
+        CASE WHEN T1.PS=#{PS_T04} THEN T1.PRIN_AMT
+        ELSE T2.PUR_AMT
+        END AS tradeAmt,
+        <!-- 券面总额 -->
+        nvl(T5.PRIN_AMT,T6.PRIN_AMT) winlotteryAmt,<!-- 中签券面总额 -->
+        T2.DEPOSIT_AMT,<!-- 保证金金额 -->
+        nvl(t4.trade_Amt,t6.trade_Amt)    supplementaryAmt,<!-- 补缴款金额 -->
+        t5.trade_date  refundDate,<!-- 退款日期 -->
+        t5.trade_amt  refundAmt,<!-- 退款金额 -->
+        T1.REMARK,
+        T1.TRADER,
+        T1.COUNTER_ID,
+        T1.COUNTER_TRADER,
+        T1.COUNTER_CONTACT
+        FROM WFL_TRD_FIN_PRODUCT_DEAL_TOTAL T1
+        LEFT JOIN WFL_TRD_DEAL_TOTAL_ADD T2 ON T1.TOTLE_TRADE_ID = T2.TOTLE_TRADE_ID
+        LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
+        LEFT JOIN WFL_TRD_PRODUCT_DEAL T4 ON T1.TOTLE_TRADE_ID = T4.TOTLE_TRADE_ID and T4.PS=#{PS_T05}
+        LEFT JOIN WFL_TRD_PRODUCT_DEAL T5 ON T1.TOTLE_TRADE_ID = T5.TOTLE_TRADE_ID and T5.PS=#{PS_T51}
+        LEFT JOIN WFL_TRD_PRODUCT_DEAL T6 ON T1.P_TRADE_ID = T6.TOTLE_TRADE_ID and T6.PS=#{PS_T05} and T6.IS_CANCEL ='N'
+        LEFT JOIN PTL_PORTFOLIO PP ON T1.PORTFOLIO_ID = PP.PORTFOLIO_ID
+        WHERE
+        T1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        AND T5.TRADE_ID=#{tradeId}
     </select>
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
-    	<if test="zhilingtype == null or zhilingtype == '01'">
-	        SELECT
-                distinct A.ACCT_NO hidCode,
-	            A.ACCT_NO code,
-	            B.SEC_ACCT_NAME name,
-	            B.SEC_ACCT_NAME shortName
-	        FROM PTL_SEC_ACCT A
-	        INNER JOIN STL_SEC_ACCT_INFO B
-	            ON A.ACCT_NO = B.SEC_ACCT_ID
+        <if test="zhilingtype == null or zhilingtype == '01'">
+            SELECT
+            distinct A.ACCT_NO hidCode,
+            A.ACCT_NO code,
+            B.SEC_ACCT_NAME name,
+            B.SEC_ACCT_NAME shortName
+            FROM PTL_SEC_ACCT A
+            INNER JOIN STL_SEC_ACCT_INFO B
+            ON A.ACCT_NO = B.SEC_ACCT_ID
             <if test="finprodId !=null and finprodId !='' ">
                 LEFT JOIN FIN_PRODUCT FP
                 ON FP.FINPROD_ID =#{finprodId,jdbcType=VARCHAR}
             </if>
-	        <where>
-	            <if test="portfolioId !=null and portfolioId !='' ">
+            <where>
+                <if test="portfolioId !=null and portfolioId !='' ">
                     PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
                 </if>
 
-	            <if test="search != null and search != ''">
-	                AND
-	                (
-	                    A.ACCT_NO LIKE CONCAT('%', CONCAT(#{search}, '%'))
-	                    OR
-	                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
-	                )
-	            </if>
-	            <if test="initValue != null and initValue != ''">
-	                AND (A.ACCT_NO = #{initValue, jdbcType=VARCHAR} OR
-                        (PORTFOLIO_ID || A.ACCT_NO) = #{initValue, jdbcType=VARCHAR}
+                <if test="search != null and search != ''">
+                    AND
+                    (
+                    A.ACCT_NO LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    B.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
                     )
-	            </if>
-	            <!--根据交易场所筛选 add by lishuping  20190924 start-->
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND (A.ACCT_NO = #{initValue, jdbcType=VARCHAR} OR
+                    (PORTFOLIO_ID || A.ACCT_NO) = #{initValue, jdbcType=VARCHAR}
+                    )
+                </if>
+                <!--根据交易场所筛选 add by lishuping  20190924 start-->
                 <if test="tradeMarket !=null and tradeMarket !='' ">
                     AND TRADE_PLACE = #{tradeMarket, jdbcType=VARCHAR}
                 </if>
@@ -588,29 +588,29 @@
                 <if test="finprodId !=null and finprodId !='' ">
                     AND FP.REGIST_ORG = B.REGIST_ORG
                 </if>
-	        </where>
+            </where>
         </if>
-         <if test="zhilingtype != null and zhilingtype == '02'">
-           	SELECT
-                 SEC_ACCT_ID hidCode,
-                 SEC_ACCT_ID code,
-                 SEC_ACCT_NAME name,
-                 SEC_ACCT_NAME shortName
-        		 FROM STL_SEC_ACCT_INFO
-           <where>
-	            <if test="search != null and search != ''">
-	                (
-	                    STL_SEC_ACCT_INFO.SEC_ACCT_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
-	                    OR
-	                    STL_SEC_ACCT_INFO.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
-	                )
-	            </if>
-	            <if test="initValue != null and initValue != ''">
-	                AND STL_SEC_ACCT_INFO.SEC_ACCT_ID = #{initValue, jdbcType=VARCHAR}
-	            </if>
-	       </where>
+        <if test="zhilingtype != null and zhilingtype == '02'">
+            SELECT
+            SEC_ACCT_ID hidCode,
+            SEC_ACCT_ID code,
+            SEC_ACCT_NAME name,
+            SEC_ACCT_NAME shortName
+            FROM STL_SEC_ACCT_INFO
+            <where>
+                <if test="search != null and search != ''">
+                    (
+                    STL_SEC_ACCT_INFO.SEC_ACCT_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    STL_SEC_ACCT_INFO.SEC_ACCT_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND STL_SEC_ACCT_INFO.SEC_ACCT_ID = #{initValue, jdbcType=VARCHAR}
+                </if>
+            </where>
         </if>
-        
+
     </select>
 
     <select id="selectSecManager" resultType="java.lang.String">
@@ -620,8 +620,8 @@
             PTL_CAPACCT_INFO
         WHERE
             ACCT_TYPE = #{ACCT_TYPE}
-            AND CCY = #{ccy}
-            AND PORTFOLIO_ID = #{portfolioId}
+          AND CCY = #{ccy}
+          AND PORTFOLIO_ID = #{portfolioId}
     </select>
 
     <resultMap id="finprodIdMap" type="com.joyintech.framework.select.SelectOptionDto">
@@ -651,113 +651,113 @@
     </resultMap>
     <select id="getFinprodId" resultMap="finprodIdMap">
         SELECT
-            A.FINPROD_ID id,
-            <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
-            A.FINPROD_ABBR text,
-            <!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
-            A.FINPROD_ID,
-            A.FINPROD_NAME,
-            A.FINPROD_ABBR,
-            TO_CHAR(A.VDATE, 'yyyy-MM-dd') VDATE,
-            TO_CHAR(A.MDATE, 'yyyy-MM-dd') MDATE,
-            TO_CHAR(A.IDATE, 'yyyy-MM-dd') IDATE,
-            A.TRADE_MARKET,
-            A.CCY,
-            A.CALENDAR_ID,
-            B.TYPE_4 windtypeone,
-            B.TYPE_6,
-            B.TYPE_9,
-            B.TYPE_10,
-            B.TYPE_11,
-            A.FINPROD_MARKET_ID,
-            A.IS_RIGHT
+        A.FINPROD_ID id,
+        <!--下拉框值为代码+简称 modified by lishuping 20191017 start-->
+        A.FINPROD_ABBR text,
+        <!--下拉框值为代码+简称 modified by lishuping 20191017 end-->
+        A.FINPROD_ID,
+        A.FINPROD_NAME,
+        A.FINPROD_ABBR,
+        TO_CHAR(A.VDATE, 'yyyy-MM-dd') VDATE,
+        TO_CHAR(A.MDATE, 'yyyy-MM-dd') MDATE,
+        TO_CHAR(A.IDATE, 'yyyy-MM-dd') IDATE,
+        A.TRADE_MARKET,
+        A.CCY,
+        A.CALENDAR_ID,
+        B.TYPE_4 windtypeone,
+        B.TYPE_6,
+        B.TYPE_9,
+        B.TYPE_10,
+        B.TYPE_11,
+        A.FINPROD_MARKET_ID,
+        A.IS_RIGHT
         FROM FIN_PRODUCT A
         LEFT JOIN FIN_PRODUCT_TYPE B
-            ON B.FINPROD_ID = A.FINPROD_ID
-	        <where>
-	        	A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG}
-					and (B.TYPE_6 = #{TYPE6_B14} OR B.TYPE_6 = #{TYPE6_B15})
-					and (A.TRADE_MARKET=#{TRADE_MARKET_03} OR A.TRADE_MARKET=#{TRADE_MARKET_04})
-	            <if test="search != null and search != ''">
-	               and (
-	                A.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
-	                or
-	                A.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
-	                )
-	            </if>
-	            <if test="initValue != null and initValue != ''">
-	                AND A.FINPROD_ID = #{initValue}
-	            </if>
-	            <if test="initValue == null or initValue == ''">
-		            <if test="FINPROD_TYPE_TG != null and FINPROD_TYPE_TG != ''">
-		                AND A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG}
-		            </if>
-	            </if>
-	        </where>
+        ON B.FINPROD_ID = A.FINPROD_ID
+        <where>
+            A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG}
+            and (B.TYPE_6 = #{TYPE6_B14} OR B.TYPE_6 = #{TYPE6_B15})
+            and (A.TRADE_MARKET=#{TRADE_MARKET_03} OR A.TRADE_MARKET=#{TRADE_MARKET_04})
+            <if test="search != null and search != ''">
+                and (
+                A.FINPROD_MARKET_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                or
+                A.FINPROD_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                )
+            </if>
+            <if test="initValue != null and initValue != ''">
+                AND A.FINPROD_ID = #{initValue}
+            </if>
+            <if test="initValue == null or initValue == ''">
+                <if test="FINPROD_TYPE_TG != null and FINPROD_TYPE_TG != ''">
+                    AND A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG}
+                </if>
+            </if>
+        </where>
     </select>
 
-    
-    
+
+
     <select id="getCurSecAmt" resultType="java.math.BigDecimal">
         SELECT
-               100 - NVL(sum(fcp.PRIN_AMT), 0)
+        100 - NVL(sum(fcp.PRIN_AMT), 0)
         FROM
-             FIN_CASH_PLAN fcp
-             inner join FIN_CASH_INFO fci
-             on fcp.CASH_ID = fci.CASH_ID
+        FIN_CASH_PLAN fcp
+        inner join FIN_CASH_INFO fci
+        on fcp.CASH_ID = fci.CASH_ID
         WHERE
-            fcp.FINPROD_ID = #{finprodId}
-            <!-- AND fcp.FINPROD_TYPE = #{finprodType} -->
-            AND fcp.MDATE &lt; #{settleDate}
-            and fci.CASH_TYPE_1 = #{cashType1}
+        fcp.FINPROD_ID = #{finprodId}
+        <!-- AND fcp.FINPROD_TYPE = #{finprodType} -->
+        AND fcp.MDATE &lt; #{settleDate}
+        and fci.CASH_TYPE_1 = #{cashType1}
     </select>
-    
+
     <select id="getRegistOrg" resultType="java.lang.String">
         SELECT
-            REGIST_ORG
+        REGIST_ORG
         FROM STL_SEC_ACCT_INFO
         <where>
             SEC_ACCT_ID = #{secAcctId}
         </where>
     </select>
 
-    
 
-  
-    <select id="selectPortfolioId" parameterType="java.lang.String" 
+
+
+    <select id="selectPortfolioId" parameterType="java.lang.String"
             resultType="com.joyintech.framework.select.SelectOptionDto">
-	         SELECT DISTINCT A.PORTFOLIO_ID   id,
-                A.PORTFOLIO_NAME text,
-                B.IS_GUARANTEE   object
-		     FROM PTL_PORTFOLIO A
-		     LEFT JOIN PA_PTL_PORTFOLIO B
-		     ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
-		     LEFT JOIN PTL_SEC_ACCT PSA
-    	     ON A.PORTFOLIO_ID = PSA.PORTFOLIO_ID
-			 WHERE A.INVEST_YESORNO = 'Y'
-			 and A.PORTFOLIO_ID in 
-			 	(select PORTFOLIO_ID
-                 from PTL_PORTFOLIO_AUTHORITY
-                 where USER_ID = #{userid})
- 			   and PSA.ACCT_NO=#{secManageAcctId,jdbcType=VARCHAR}
- 				<if test="initValue != null and initValue != ''">
-                	AND A.PORTFOLIO_ID = #{initValue}
-            	</if>
-            	<if test="search != null and search != ''">
-                AND ( A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
-                or
-                A.PORTFOLIO_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
-                )
-            </if>
+        SELECT DISTINCT A.PORTFOLIO_ID   id,
+        A.PORTFOLIO_NAME text,
+        B.IS_GUARANTEE   object
+        FROM PTL_PORTFOLIO A
+        LEFT JOIN PA_PTL_PORTFOLIO B
+        ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        LEFT JOIN PTL_SEC_ACCT PSA
+        ON A.PORTFOLIO_ID = PSA.PORTFOLIO_ID
+        WHERE A.INVEST_YESORNO = 'Y'
+        and A.PORTFOLIO_ID in
+        (select PORTFOLIO_ID
+        from PTL_PORTFOLIO_AUTHORITY
+        where USER_ID = #{userid})
+        and PSA.ACCT_NO=#{secManageAcctId,jdbcType=VARCHAR}
+        <if test="initValue != null and initValue != ''">
+            AND A.PORTFOLIO_ID = #{initValue}
+        </if>
+        <if test="search != null and search != ''">
+            AND ( A.PORTFOLIO_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+            or
+            A.PORTFOLIO_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+            )
+        </if>
     </select>
 
     <select id="getTongDaoCash" resultType="java.math.BigDecimal">
         select
-          AMOUNT
+            AMOUNT
         from PTL_CASH_POSITION
         where
-         (HODING_TYPE=#{POSITION_TYPE_01} or HODING_TYPE=#{POSITION_TYPE_03}) and PORTFOLIO_ID=#{portfolioId}
-         and CDATE= #{platDate,jdbcType=DATE} and CHL_FINPROD_ID=#{chlId}
+            (HODING_TYPE=#{POSITION_TYPE_01} or HODING_TYPE=#{POSITION_TYPE_03}) and PORTFOLIO_ID=#{portfolioId}
+          and CDATE= #{platDate,jdbcType=DATE} and CHL_FINPROD_ID=#{chlId}
     </select>
 
     <select id="getTrdProductDealByFTradeId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
@@ -819,7 +819,7 @@
     </insert>
 
 
- <insert id="insertRevokePaTrdProductDeal">
+    <insert id="insertRevokePaTrdProductDeal">
         INSERT INTO PA_TRD_PRODUCT_DEAL (TRADE_ID,
                                          THEORY_RATE,
                                          ACT_RATE,
@@ -851,49 +851,49 @@
         FROM PA_TRD_PRODUCT_DEAL
         WHERE TRADE_ID = #{bizCode}
     </insert>
-    
-    
+
+
     <insert id="insertRevokeTrdProductDealAdd">
         INSERT INTO TRD_PRODUCT_DEAL_ADD (TRADE_ID,
-                                          PORTFOLIO_ID,
-                                          CUSTOM_CASH_TYPE,
-                                          GEN_TYPE,
-                                          PUR_CFM_DATE,
-                                          RED_CFM_DATE,
-                                          REG_DATE_AMT,
-                                          <!-- 字段增加 分红日 及权益登记日 -->
-                                          REG_DATE,
-                                          BONUS_CFM_DATE,
-                                          ENTRUST_ID,
-                                          PAY_TYPE,
-                                          CREATE_USER,
-                                          CREATE_DEPT,
-                                          CREATE_TIME,
-                                          UPDATE_USER,
-                                          UPDATE_TIME)
+        PORTFOLIO_ID,
+        CUSTOM_CASH_TYPE,
+        GEN_TYPE,
+        PUR_CFM_DATE,
+        RED_CFM_DATE,
+        REG_DATE_AMT,
+        <!-- 字段增加 分红日 及权益登记日 -->
+        REG_DATE,
+        BONUS_CFM_DATE,
+        ENTRUST_ID,
+        PAY_TYPE,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME)
         SELECT TRADE_ID || 'R',
-               PORTFOLIO_ID,
-               CUSTOM_CASH_TYPE,
-               GEN_TYPE,
-               PUR_CFM_DATE,
-               RED_CFM_DATE,
-               REG_DATE_AMT,
-               <!-- 字段增加 分红日 及权益登记日 -->
-               REG_DATE,
-               BONUS_CFM_DATE,
-               ENTRUST_ID,
-               PAY_TYPE,
-               CREATE_USER,
-               CREATE_DEPT,
-               CREATE_TIME,
-               #{updateUser},
-               CURRENT_TIMESTAMP
+        PORTFOLIO_ID,
+        CUSTOM_CASH_TYPE,
+        GEN_TYPE,
+        PUR_CFM_DATE,
+        RED_CFM_DATE,
+        REG_DATE_AMT,
+        <!-- 字段增加 分红日 及权益登记日 -->
+        REG_DATE,
+        BONUS_CFM_DATE,
+        ENTRUST_ID,
+        PAY_TYPE,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        #{updateUser},
+        CURRENT_TIMESTAMP
         FROM TRD_PRODUCT_DEAL_ADD
         where TRADE_ID = #{bizCode}
     </insert>
-    
-    
-        <select id="findDealByTotalId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
+
+
+    <select id="findDealByTotalId" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
         <include refid="com.joyintech.tams.common.base.dao.TrdProductDealMapper.Sql_All_Data"/>
         WHERE
         <choose>
@@ -905,12 +905,12 @@
             </otherwise>
         </choose>
     </select>
-    
+
     <select id="findOrdersByOrderId" resultType="com.joyintech.tams.common.base.entity.StlPayOrders">
         <include refid="com.joyintech.tams.common.base.dao.StlPayOrdersMapper.Sql_All_Data"/>
         where TRADE_ID = #{tradeId}
     </select>
-    
+
     <select id="findDealAddByTradeIds" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealAddMapper.BaseResultMap">
         <include refid="com.joyintech.tams.common.base.dao.TrdProductDealAddMapper.Sql_All_Data"/>
         WHERE TRADE_ID IN (<foreach collection="list" separator="," item="item">#{item.tradeId}</foreach> )
@@ -921,7 +921,7 @@
         WHERE BUSI_NO IN (<foreach collection="list" separator="," item="item">#{item.tradeId}</foreach> )
     </select>
 
-     <select id="findDealByTotalIdForInterf" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
+    <select id="findDealByTotalIdForInterf" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
         select
         T1.*
         from TRD_PRODUCT_DEAL T1
@@ -938,8 +938,8 @@
             </otherwise>
         </choose>
     </select>
-    
-     <insert id="insertWflTotle">
+
+    <insert id="insertWflTotle">
         INSERT INTO WFL_TRD_FIN_PRODUCT_DEAL_TOTAL (TOTLE_TRADE_ID,
                                                     BUSI_TYPE,
                                                     FINPROD_ID,
@@ -1055,8 +1055,8 @@
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL
         WHERE TOTLE_TRADE_ID = #{bizCode}
     </insert>
-    
-     <insert id="insertWflPaTotal">
+
+    <insert id="insertWflPaTotal">
         INSERT INTO WFL_PA_TRD_FIN_DEAL_TOTAL (TOTLE_TRADE_ID,
                                                BRANCH,
                                                UNIT_INT,
@@ -1110,9 +1110,9 @@
         FROM PA_TRD_FIN_PRODUCT_DEAL_TOTAL
         WHERE TOTLE_TRADE_ID = #{bizCode}
     </insert>
-    
+
     <insert id="insertWflTradeTotalAdd">
-       INSERT INTO WFL_TRD_DEAL_TOTAL_ADD (
+        INSERT INTO WFL_TRD_DEAL_TOTAL_ADD (
             TOTLE_TRADE_ID,
             CONVERSION_RAT,
             BCON_UNIT_CPRICE2,
@@ -1124,10 +1124,10 @@
             CREATE_TIME,
             UPDATE_USER,
             UPDATE_TIME)
-            SELECT TOTLE_TRADE_ID || 'R',
-                CONVERSION_RAT,
+        SELECT TOTLE_TRADE_ID || 'R',
+               CONVERSION_RAT,
                BCON_UNIT_CPRICE2,
-                CONVERSION_TYPE,
+               CONVERSION_TYPE,
                #{workflowStatus},
                #{workflowId},
                #{user},
@@ -1138,8 +1138,8 @@
         FROM TRD_DEAL_TOTAL_ADD
         WHERE TOTLE_TRADE_ID = #{bizCode}
     </insert>
-    
-     <insert id="insertWflPayOrders">
+
+    <insert id="insertWflPayOrders">
         insert into WFL_STL_PAY_ORDERS (ORDER_ID,
                                         ORDER_TYPE,
                                         PAY_TYPE,
@@ -1193,8 +1193,8 @@
         FROM STL_PAY_ORDERS
         WHERE TRADE_ID = #{bizCode}
     </insert>
-    
-     <insert id="insertWflTrade">
+
+    <insert id="insertWflTrade">
         INSERT INTO WFL_TRD_PRODUCT_DEAL (TRADE_ID,
         BUSI_TYPE,
         FINPROD_ID,
@@ -1314,7 +1314,7 @@
         FROM TRD_PRODUCT_DEAL WHERE
         <foreach collection="deals" open="TRADE_ID IN (" close=")" item="item" separator=",">#{item.tradeId}</foreach>
     </insert>
-    
+
     <insert id="insertWflPaTrade">
         INSERT INTO WFL_PA_TRD_PRODUCT_DEAL (TRADE_ID,
         THEORY_RATE,
@@ -1352,7 +1352,7 @@
         #{time} FROM PA_TRD_PRODUCT_DEAL WHERE
         <foreach collection="deals" open="TRADE_ID IN (" close=")" item="item" separator=",">#{item.tradeId}</foreach>
     </insert>
-    
+
     <insert id="insertWflTradeAdd">
         INSERT INTO WFL_TRD_PRODUCT_DEAL_ADD (TRADE_ID,
         PORTFOLIO_ID,
@@ -1389,116 +1389,122 @@
         FROM TRD_PRODUCT_DEAL_ADD WHERE
         <foreach collection="deals" open="TRADE_ID IN (" close=")" item="item" separator=",">#{item.tradeId}</foreach>
     </insert>
-    
-        <insert id="insertWflPayOrdersOfDeal">
+
+    <insert id="insertWflPayOrdersOfDeal">
         insert into WFL_STL_PAY_ORDERS (ORDER_ID,
-                                        ORDER_TYPE,
-                                        PAY_TYPE,
-                                        SETTLE_DATE,
-                                        MY_ACCT_NO,
-                                        PS,
-                                        COUNTER_ACCT_NO,
-                                        SETTLE_AMT,
-                                        CCY,
-                                        SETTLE_STATUS,
-                                        PURPOSE,
-                                        IS_NEED_SEND,
-                                        IS_TOTAL_TRADE,
-                                        TRADE_ID,
-                                        ORDER_STATUS,
-                                        P_TRADE_ID,
-                                        PORTFOLIO_ID,
-                                        PROD_ID,
-                                        WORKFLOW_STATUS,
-                                        WORKFLOW_ID,
-                                        CREATE_USER,
-                                        CREATE_DEPT,
-                                        CREATE_TIME,
-                                        UPDATE_USER,
-                                        UPDATE_TIME)
+        ORDER_TYPE,
+        PAY_TYPE,
+        SETTLE_DATE,
+        MY_ACCT_NO,
+        PS,
+        COUNTER_ACCT_NO,
+        SETTLE_AMT,
+        CCY,
+        SETTLE_STATUS,
+        PURPOSE,
+        IS_NEED_SEND,
+        IS_TOTAL_TRADE,
+        TRADE_ID,
+        ORDER_STATUS,
+        P_TRADE_ID,
+        PORTFOLIO_ID,
+        PROD_ID,
+        WORKFLOW_STATUS,
+        WORKFLOW_ID,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME)
         SELECT ORDER_ID || 'R',
-               ORDER_TYPE,
-               PAY_TYPE,
-               SETTLE_DATE,
-               MY_ACCT_NO,
-               PS,
-               COUNTER_ACCT_NO,
-               SETTLE_AMT,
-               CCY,
-               SETTLE_STATUS,
-               PURPOSE,
-               IS_NEED_SEND,
-               IS_TOTAL_TRADE,
-               TRADE_ID || 'R',
-               #{ORDER_STATUS_03},
-               TRADE_ID,
-               PORTFOLIO_ID,
-               PROD_ID,
-               #{workflowStatus},
-               #{workflowId},
-               #{user},
-               #{dept},
-               #{time},
-               #{user},
-               #{time}
+        ORDER_TYPE,
+        PAY_TYPE,
+        SETTLE_DATE,
+        MY_ACCT_NO,
+        PS,
+        COUNTER_ACCT_NO,
+        SETTLE_AMT,
+        CCY,
+        SETTLE_STATUS,
+        PURPOSE,
+        IS_NEED_SEND,
+        IS_TOTAL_TRADE,
+        TRADE_ID || 'R',
+        #{ORDER_STATUS_03},
+        TRADE_ID,
+        PORTFOLIO_ID,
+        PROD_ID,
+        #{workflowStatus},
+        #{workflowId},
+        #{user},
+        #{dept},
+        #{time},
+        #{user},
+        #{time}
         FROM STL_PAY_ORDERS
         WHERE
         <foreach collection="deals" open="TRADE_ID IN (" close=")" item="item" separator=",">#{item.tradeId}</foreach>
     </insert>
-    
+
     <select id="selectConfirmInfo" resultType="java.lang.Integer">
-    	select count(*) from TRD_FIN_PRODUCT_DEAL_TOTAL
-    	<where>
-    	<if test="bTradeId != null and bTradeId != ''">
-    		and	B_TRADE_ID = #{bTradeId}
-    	</if>
-    	<if test="yes != null and yes != ''">
-    		and IS_CANCEL != #{yes}
-    	</if>
-    	<if test="tradeStatus != null and tradeStatus != ''">
-    		and TRADE_STATUS=#{tradeStatus}
-    	</if>
-    	</where> 
+        select count(*) from TRD_FIN_PRODUCT_DEAL_TOTAL
+        <where>
+            <if test="bTradeId != null and bTradeId != ''">
+                and	B_TRADE_ID = #{bTradeId}
+            </if>
+            <if test="yes != null and yes != ''">
+                and IS_CANCEL != #{yes}
+            </if>
+            <if test="tradeStatus != null and tradeStatus != ''">
+                and TRADE_STATUS=#{tradeStatus}
+            </if>
+        </where>
     </select>
-    
+
     <select id="selectWflConfirmInfo" resultType="java.lang.Integer">
-    	select count(*) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
-    	where 
-    	B_TRADE_ID = #{bTradeId}
+        select count(*) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
+        where
+            B_TRADE_ID = #{bTradeId}
     </select>
-    
+
     <select id="selectConfirmInfoWfl" resultType="java.lang.Integer">
-    	select count(*) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
-    	where WORKFLOW_ID is not null 
-    	<if test="bTradeId != null and bTradeId != ''">
-    		and	(B_TRADE_ID = #{bTradeId} or P_TRADE_ID = #{bTradeId})
-    	</if>
-    	<if test="yes != null and yes != ''">
-    		and IS_CANCEL != #{yes}
-    	</if>
-    	<if test="tradeStatus != null and tradeStatus != ''">
-    		and TRADE_STATUS=#{tradeStatus}
-    	</if>
-    	
+        select count(*) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
+        where WORKFLOW_ID is not null
+        <if test="bTradeId != null and bTradeId != ''">
+            and	(B_TRADE_ID = #{bTradeId} or P_TRADE_ID = #{bTradeId})
+        </if>
+        <if test="yes != null and yes != ''">
+            and IS_CANCEL != #{yes}
+        </if>
+        <if test="tradeStatus != null and tradeStatus != ''">
+            and TRADE_STATUS=#{tradeStatus}
+        </if>
+
     </select>
-    
+
     <select id="revokeCheckWfl" resultType="java.lang.Integer">
-    	select count(*) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
-    	where WORKFLOW_ID is not null 
-    	<if test="bTradeId != null and bTradeId != ''">
-    		and	 P_TRADE_ID = #{bTradeId}
-    	</if>
-    	<if test="yes != null and yes != ''">
-    		and IS_CANCEL != #{yes}
-    	</if>
-    	<if test="tradeStatus != null and tradeStatus != ''">
-    		and TRADE_STATUS=#{tradeStatus}
-    	</if>
-    	
+        select count(*) from WFL_TRD_FIN_PRODUCT_DEAL_TOTAL
+        where WORKFLOW_ID is not null
+        <if test="bTradeId != null and bTradeId != ''">
+            and	 P_TRADE_ID = #{bTradeId}
+        </if>
+        <if test="yes != null and yes != ''">
+            and IS_CANCEL != #{yes}
+        </if>
+        <if test="tradeStatus != null and tradeStatus != ''">
+            and TRADE_STATUS=#{tradeStatus}
+        </if>
+
     </select>
 
     <select id="getTrdProductDeals" resultMap="com.joyintech.tams.common.base.dao.TrdProductDealMapper.BaseResultMap">
         <include refid="com.joyintech.tams.common.base.dao.TrdProductDealMapper.Sql_All_Data" />
         WHERE TOTLE_TRADE_ID = #{busiCode}
+    </select>
+
+    <!--获取资金账户-->
+    <select id="getAccNo" resultType="java.lang.String">
+        select ACCT_NO ACCT_NO from PTL_CAPACCT_INFO
+        where PORTFOLIO_ID = #{portfolioId} and CCY = #{ccy} and ACCT_TYPE = #{acctType}
     </select>
 </mapper>

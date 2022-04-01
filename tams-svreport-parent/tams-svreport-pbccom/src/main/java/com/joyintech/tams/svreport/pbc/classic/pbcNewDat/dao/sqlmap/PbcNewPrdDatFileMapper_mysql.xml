@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.pbcNewDat.dao.PbcNewPrdDatFileMapper_mysql" >
+    <insert id="insertBatchZipData" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+        insert into PBC_SEND_ZIP_DAT_FILE (REGIST_SEQNO, DAT_ZIP_CODE, DAT_ZIP_PATH,
+        DAT_ZIP_TYPE, DAT_ZIP_DAT_TYPE, DAT_ZIP_STATUS,
+        ZIP_DOWNLOAD_TIME, STATUS_VDATE, REPORTUUID,
+        PIB_DETAIL_CNT, SUBMIT_TIME, ZIP_SEND_STATUS,
+        RETURN_ZIP_SEND_STATUS, RETURN_ZIP_CODE, RETURN_TIME,
+        RETURN_MSG, RETURN_ERROR_CNT, RETURN_PASS_CNT,
+        CREATE_USER, ORG_CODE, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORT_ORG_NAME,
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE,
+        PROD_VARIETY, PERSON_LIABLE, CONTACT,
+        REPORT_DATE,ENDDATE
+        )select
+        REGIST_SEQNO, DAT_ZIP_CODE, DAT_ZIP_PATH,
+        DAT_ZIP_TYPE, DAT_ZIP_DAT_TYPE, DAT_ZIP_STATUS,
+        ZIP_DOWNLOAD_TIME, STATUS_VDATE, REPORTUUID,
+        PIB_DETAIL_CNT, SUBMIT_TIME, ZIP_SEND_STATUS,
+        RETURN_ZIP_SEND_STATUS, RETURN_ZIP_CODE, RETURN_TIME,
+        RETURN_MSG, RETURN_ERROR_CNT, RETURN_PASS_CNT,
+        CREATE_USER, ORG_CODE, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORT_ORG_NAME,
+        SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE,
+        PROD_VARIETY, PERSON_LIABLE, CONTACT,
+        REPORT_DATE,ENDDATE
+        from (
+        <foreach collection="dataList" item="item" index="index" separator="UNION ALL">
+            select f_guid() REGIST_SEQNO,
+            #{item.datZipCode,jdbcType=VARCHAR} DAT_ZIP_CODE,
+            #{item.datZipPath,jdbcType=VARCHAR} DAT_ZIP_PATH,
+            #{item.datZipType,jdbcType=VARCHAR} DAT_ZIP_TYPE,
+            #{item.datZipDatType,jdbcType=VARCHAR} DAT_ZIP_DAT_TYPE,
+            #{item.datZipStatus,jdbcType=VARCHAR} DAT_ZIP_STATUS,
+            #{item.zipDownloadTime,jdbcType=DATE} ZIP_DOWNLOAD_TIME,
+            #{item.statusVdate,jdbcType=VARCHAR} STATUS_VDATE,
+            #{item.reportuuid,jdbcType=CHAR} REPORTUUID,
+            #{item.pibDetailCnt,jdbcType=DECIMAL} PIB_DETAIL_CNT,
+            #{item.submitTime,jdbcType=DATE} SUBMIT_TIME,
+            #{item.zipSendStatus,jdbcType=VARCHAR} ZIP_SEND_STATUS,
+            #{item.returnZipSendStatus,jdbcType=VARCHAR} RETURN_ZIP_SEND_STATUS,
+            #{item.returnZipCode,jdbcType=VARCHAR} RETURN_ZIP_CODE,
+            #{item.returnTime,jdbcType=DATE} RETURN_TIME,
+            #{item.returnMsg,jdbcType=VARCHAR} RETURN_MSG,
+            #{item.returnErrorCnt,jdbcType=DECIMAL} RETURN_ERROR_CNT,
+            #{item.returnPassCnt,jdbcType=DECIMAL} RETURN_PASS_CNT,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.updateTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+            #{item.issuePartyName,jdbcType=VARCHAR} ISSUE_PARTY_NAME,
+            #{item.reportOrgName,jdbcType=VARCHAR} REPORT_ORG_NAME,
+            #{item.socialCreditCode,jdbcType=VARCHAR} SOCIAL_CREDIT_CODE,
+            #{item.finInstitutionCode,jdbcType=VARCHAR} FIN_INSTITUTION_CODE,
+            #{item.prodVariety,jdbcType=VARCHAR} PROD_VARIETY,
+            #{item.personLiable,jdbcType=VARCHAR} PERSON_LIABLE,
+            #{item.contact,jdbcType=VARCHAR} CONTACT,
+            #{item.reportDate,jdbcType=DATE} REPORT_DATE,
+            #{item.enddate,jdbcType=DATE} ENDDATE
+            from dual
+        </foreach>
+        )as tt
+    </insert>
+</mapper>

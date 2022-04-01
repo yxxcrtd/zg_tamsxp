@@ -17,7 +17,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,19 +50,20 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.product.productduration.netproductduration.service.FinNetProductDurationService;
 import com.joyintech.tams.invest.product.productelement.build.dto.FinProductBuild002Dto;
 import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild002Service;
-import com.joyintech.tams.invest.product.productelement.module.dto.FinProductModuleInfo002Dto;
 import com.joyintech.tams.invest.product.productelement.module.service.FinProductModule001Service;
 import com.joyintech.tams.invest.product.productelement.module.service.FinProductModuleService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 
 /**
  * 产品信息新建
@@ -145,7 +145,7 @@ public class FinProductBuild002Controller extends BaseController {
         model.addAttribute("PRODPROFITFLAG_03", DictCodeList.产品收益标识_非保本浮动收益.getValue());
         model.addAttribute("SCHEDUAL_ISSUE_02", DictCodeList.排期发行方式_单一.getValue());
         //数据来源
-        model.addAttribute("PROD_DATA_SOURCE_02", DictCodeList.产品数据来源_三方分销TA.getValue());
+        model.addAttribute("PROD_DATA_SOURCE_02", DictCodeListExt3.产品数据来源_三方分销TA.getValue());
         model.addAttribute(GlobalConstant.DETAIL_PAGE_MODEL_KEY,
             this.getParam((GlobalConstant.DETAIL_PAGE_MODEL_KEY)));        
         model.addAttribute(GlobalConstant.WORKFLOW_ID, "");
@@ -309,7 +309,7 @@ public class FinProductBuild002Controller extends BaseController {
         AjaxResult ar = new AjaxResult();
        //开放式 的产品 是否设置最短持有期限 和 最短持有期限（天） 必输 yjm start 20190807
         List<ValidMessage> errorList = new ArrayList<>();
-        BussRepFinProductInfoDto repFinProductInfoDto = dto.getBussRepFinProductInfoDto();
+       /* BussRepFinProductInfoDto repFinProductInfoDto = dto.getBussRepFinProductInfoDto();
         if (StringUtil.isNotEmpty(repFinProductInfoDto)){
             if (StringUtil.equals(dto.getOperationType(), DictCodeList.开放类型_开放式.getValue())){
                 if (StringUtil.isEmpty(repFinProductInfoDto.getIsShortTerm())){
@@ -356,7 +356,7 @@ public class FinProductBuild002Controller extends BaseController {
 //                    }
                 }
             }
-        }
+        }*/
         
         
         ar.setErrorList(errorList);

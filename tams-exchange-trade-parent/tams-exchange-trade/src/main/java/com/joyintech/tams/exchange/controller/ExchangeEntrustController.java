@@ -2,8 +2,8 @@ package com.joyintech.tams.exchange.controller;
 
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.service.ExchangeEntrustService;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
+import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/joyin")
 public class ExchangeEntrustController {
 
-    @Autowired
-    private ExchangeEntrustService entrustService;
+//    @Autowired
+//    private ExchangeEntrustService entrustService;
 
     @Autowired
     private EntrustManagement entrustManagement;
+
+    @Autowired
+    private IntegratedQuoteManagement integratedQuoteManagement;
 
     /**
      * 查询委托信息
@@ -105,29 +108,31 @@ public class ExchangeEntrustController {
                                            @RequestParam(value = "liaisonTel", required = false) String liaisonTel,
                                            @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
                                            @RequestParam(value = "posStr", required = false) String posStr) {
-        String param = "?quote_type=" + quoteType;
-        if (!Strings.isNullOrEmpty(userId)) {
-            param = param + "&user_id=" + userId;
-        }
-        if (!Strings.isNullOrEmpty(accountId)) {
-            param = param + "&account_id=" + accountId;
-        }
-        if (!Strings.isNullOrEmpty(oppositeLiaisonTel)) {
-            param = param + "&opposite_liaisonTel=" + oppositeLiaisonTel;
-        }
-        if (!Strings.isNullOrEmpty(liaisonTel)) {
-            param = param + "&liaisonTel=" + liaisonTel;
-        }
-        if (!Strings.isNullOrEmpty(stockCode)) {
-            param = param + "&stock_code=" + stockCode;
-        }
-        if (pageSize > 0) {
-            param = param + "&page_size=" + pageSize;
-        }
-        if (!Strings.isNullOrEmpty(posStr)) {
-            param = param + "&posStr=" + posStr;
-        }
-        return entrustService.queryIntegratedQuote(param);
+//        String param = "?quote_type=" + quoteType;
+//        if (!Strings.isNullOrEmpty(userId)) {
+//            param = param + "&user_id=" + userId;
+//        }
+//        if (!Strings.isNullOrEmpty(accountId)) {
+//            param = param + "&account_id=" + accountId;
+//        }
+//        if (!Strings.isNullOrEmpty(oppositeLiaisonTel)) {
+//            param = param + "&opposite_liaisonTel=" + oppositeLiaisonTel;
+//        }
+//        if (!Strings.isNullOrEmpty(liaisonTel)) {
+//            param = param + "&liaisonTel=" + liaisonTel;
+//        }
+//        if (!Strings.isNullOrEmpty(stockCode)) {
+//            param = param + "&stock_code=" + stockCode;
+//        }
+//        if (pageSize > 0) {
+//            param = param + "&page_size=" + pageSize;
+//        }
+//        if (!Strings.isNullOrEmpty(posStr)) {
+//            param = param + "&posStr=" + posStr;
+//        }
+//        return entrustService.queryIntegratedQuote(param);
+//////////////////////////兼容新UI后端
+        return integratedQuoteManagement.queryIntegratedQuote(userId, quoteType, stockCode, accountId, oppositeLiaisonTel, liaisonTel, pageSize, posStr);
     }
 
     /**
@@ -148,8 +153,10 @@ public class ExchangeEntrustController {
                                   @RequestParam(value = "entrust_bs") String entrustBs,
                                   @RequestParam(value = "entrust_price") double entrustPrice,
                                   @RequestParam(value = "account_id") String accountId) {
-        String param = "?user_id=" + userId + "&stock_code=" + stockCode + "&account_id=" + accountId + "&entrust_prop=" + entrustProp + "&entrust_bs=" + entrustBs + "&entrust_price=" + entrustPrice;
-        return entrustService.queryEnable(param);
+//        String param = "?user_id=" + userId + "&stock_code=" + stockCode + "&account_id=" + accountId + "&entrust_prop=" + entrustProp + "&entrust_bs=" + entrustBs + "&entrust_price=" + entrustPrice;
+//        return entrustService.queryEnable(param);
+//////////////////////////兼容新UI后端
+        return entrustManagement.queryEnable(userId, stockCode, entrustProp, entrustBs, entrustPrice, accountId);
     }
 
     /**
@@ -250,8 +257,10 @@ public class ExchangeEntrustController {
                                                     @RequestParam(value = "stock_code", required = false) String stockCode,
                                                     @RequestParam(value = "entrust_prop", required = false) String entrustProp,
                                                     @RequestParam(value = "entrust_status", required = false, defaultValue = "-100") int entrustStatus) {
-        String param = queryEntrustParams(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
-        return entrustService.queryIntegratedEntrustForPage(param);
+//        String param = queryEntrustParams(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
+//        return entrustService.queryIntegratedEntrustForPage(param);
+//////////////////////////兼容新UI后端
+        return entrustManagement.queryIntegratedEntrustForPage(pageNum, pageSize, historyType, userId, startDay, endDay, accountId, portfolioId, market, stockCode, entrustProp, entrustStatus);
     }
 
     /**

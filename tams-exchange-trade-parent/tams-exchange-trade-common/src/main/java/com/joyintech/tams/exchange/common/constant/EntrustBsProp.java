@@ -20,8 +20,8 @@ public enum EntrustBsProp {
     ALLOCATE_SHARE("T46", "配股", "1", EntrustProp.ALLOTMENT),
     BOND_STOCK("T49", "债转股", "2", EntrustProp.CHANGE_TO_STOCK),
     SUBSCRIBE("T52", "认购", "1", EntrustProp.APPLY),
-    POSITIVE_REPO("03", "正回购", "1", EntrustProp.REPURCHASE),
-    REVERSED_REPO("04", "逆回购", "2", EntrustProp.REPURCHASE),
+    POSITIVE_REPO("03", "正回购", "1", EntrustProp.NORMAL),
+    REVERSED_REPO("04", "逆回购", "2", EntrustProp.NORMAL),
     SEAL("T68", "质押入库", "2", EntrustProp.ZYCRK),
     UNSEAL("T69", "质押出库", "1", EntrustProp.ZYCRK),
     allocate_bond("T97", "配债", "1", EntrustProp.PS),
@@ -40,20 +40,20 @@ public enum EntrustBsProp {
     /**
      * 大宗交易申报类型
      */
-    INTENTION("a", "意向委托", EntrustProp.INTENTION),
-    SET_PRICE("b", "定价委托", EntrustProp.SET_PRICE),
-    CONFIRM("c", "确认委托", EntrustProp.CONFIRM),
+    INTENTION("a", "意向申报", EntrustProp.INTENTION),
+    SET_PRICE("b", "定价申报", EntrustProp.SET_PRICE),
+    CONFIRM("c", "成交申报", EntrustProp.CONFIRM),
     LIMIT_PRICE("d", "限价委托", EntrustProp.LIMIT_PRICE),
     MUTUAL_TRADE("e", "互报成交确认委托", EntrustProp.MUTUAL_TRADE),
     LARGE_AFTER_CLOSING("ABT", "盘后大宗委托", EntrustProp.LARGE_AFTER_CLOSING),
-    LARGE_AFTER_CLOSING_PRICE("AFC", "盘后大宗收盘价委托", EntrustProp.LARGE_AFTER_CLOSING_PRICE),
-    LARGE_AFTER_CLOSING_WEIGHT_PRICE("AFW", "盘后大宗成交量加权平均价委托", EntrustProp.LARGE_AFTER_CLOSING_WEIGHT_PRICE),
+    LARGE_AFTER_CLOSING_PRICE("AFC", "收盘价盘后定价申报", EntrustProp.LARGE_AFTER_CLOSING_PRICE),
+    LARGE_AFTER_CLOSING_WEIGHT_PRICE("AFW", "日均价盘后定价申报", EntrustProp.LARGE_AFTER_CLOSING_WEIGHT_PRICE),
 
     /**
      * 上海固收平台申报类型
      */
-    SH_FIXEDINCOME_BAOJIA_CONFIRM("FI1", "确定报价", EntrustProp.SH_FIXEDINCOME_BAOJIA_CONFIRM),
-    SH_FIXEDINCOME_TRADE_CLICK("FI3", "点击成交", EntrustProp.SH_FIXEDINCOME_TRADE_CLICK),
+    SH_FIXEDINCOME_BAOJIA_CONFIRM("FI1", "成交申报", EntrustProp.SH_FIXEDINCOME_BAOJIA_CONFIRM),
+    SH_FIXEDINCOME_TRADE_CLICK("FI3", "点击成交申报", EntrustProp.SH_FIXEDINCOME_TRADE_CLICK),
     SH_FIXEDINCOME_BAOJIA_OPPOSITE("FI9", "指定对手方报价", EntrustProp.SH_FIXEDINCOME_BAOJIA_OPPOSITE),
     SH_FIXEDINCOME_KZHCJSB("FI100JY", "可转换成交申报", EntrustProp.SH_FIXEDINCOME_KZHCJSB),
     SH_FIXEDINCOME_ZYJCJSB("FI101JY", "最优价成交申报", EntrustProp.SH_FIXEDINCOME_ZYJCJSB),

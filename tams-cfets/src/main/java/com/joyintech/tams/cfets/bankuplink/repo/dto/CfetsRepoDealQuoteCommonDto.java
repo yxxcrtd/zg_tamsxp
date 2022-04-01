@@ -22,6 +22,9 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name = "cfetsQuoteId", value = "报价编号(外部)")
     private String cfetsQuoteId;
 
+    @ApiModelProperty(name = "totleTradeId", value = "交易编号")
+    private String totleTradeId;
+
     @ApiModelProperty(name = "elementId", value = "按钮id")
     private String elementId;
 
@@ -194,6 +197,14 @@ public class CfetsRepoDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setCfetsQuoteId(String cfetsQuoteId) {
         this.cfetsQuoteId = cfetsQuoteId;
+    }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
 
     public String getOperateType() {

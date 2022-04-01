@@ -80,6 +80,8 @@ public interface BaseTradeProductDealService {
      * @since 1.0
      */
     List<TrdProductDeal> selectTrdProductDealsByTotalTradeId(String totalTradeId);
+
+
     /**
      *
      * 根据汇总交易ID查询金融产品通道交易信息

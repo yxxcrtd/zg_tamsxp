@@ -395,6 +395,7 @@ public class MstSecuritiesAccountController {
     @PostMapping("getFinprodMarketInfoNewUi/{page}/{length}")
     public Page<SelectOptionDto> getFinprodMarketInfoNewUi(@RequestBody Map<String, Object> map,
                                                       @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
-        return mstSecuritiesAccountService.getFinprodMarketInfoNewUi(page, length, map);
+        Page<SelectOptionDto> asas=mstSecuritiesAccountService.getFinprodMarketInfoNewUi(page, length, map);
+        return asas;
     }
 }

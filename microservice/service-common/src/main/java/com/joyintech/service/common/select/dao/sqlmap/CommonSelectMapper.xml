@@ -247,7 +247,7 @@
     <select id="selectPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
             A.PORTFOLIO_ID id,
-        　　 A.PORTFOLIO_NAME  text,
+            A.PORTFOLIO_NAME  text,
             B.IS_GUARANTEE object,
             <!-- 新增type yzg 20190904 start -->
             A.PROFIT_TYPE  col

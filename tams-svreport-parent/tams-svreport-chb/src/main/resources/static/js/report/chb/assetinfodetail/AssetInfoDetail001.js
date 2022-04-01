@@ -125,7 +125,7 @@
 			if ((elementId || elementId === '') && event && event.currentTarget && $(event.currentTarget).attr('id') && $(event.currentTarget).attr('id') != elementId) {
 				elementId = $(event.currentTarget).attr('id');
 			}
-            //导出选中行
+			//导出选中行
 			if ((elementId.indexOf("_btn_exportCheck")!=-1)) {
 				if(expArr.length == 0) {
 					Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
@@ -136,10 +136,17 @@
 					})
 				}
 			}else{
-			//导出全部行
-				Joyin.confirm('确认导出全部信息？',function(){
-					exportExcel(0);
-				})
+				if(expArr.length == 0) {
+					//导出全部行
+					Joyin.confirm('确认导出全部信息？',function(){
+						exportExcel(0);
+					})
+				}else{
+					Joyin.confirm('确认导出选中信息？',function(){
+						exportExcel(1);
+					})
+				}
+
 			}
 		})
 

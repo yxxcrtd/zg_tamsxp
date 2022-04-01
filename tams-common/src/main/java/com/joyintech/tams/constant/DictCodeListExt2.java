@@ -1883,6 +1883,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     申购方式_网上申购(DictCode.申购方式,"01","网上申购"),
     申购方式_线下申购(DictCode.申购方式,"02","线下申购"),
     申购方式_战略配售(DictCode.申购方式,"03","战略配售"),
+    申购方式_网下申购(DictCode.申购方式,"02","网下申购"),
+    申购方式_网下优先配售(DictCode.申购方式,"03","网下优先配售"),
     申购类型_优先配售(DictCode.申购类型,"01","优先配售"),
     申购类型_普通申购(DictCode.申购类型,"02","普通申购"),
     共通业务类型_可转债申购委托(DictCode.共通业务类型,"ETR19","可转债申购委托"),

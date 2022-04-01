@@ -807,16 +807,16 @@ public class ChbAssetInfoInterf  extends BaseInterfService {
                 }
                 // 20200416 吉林银行修改-拆借回购根据交易对手二级类型细分类处理 wangwei end
                 // 根据配置映射项判别是否带相应属性
-                if (!StringUtils.isEmpty(counterType2) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_COUNTER, 
-                        chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
-                    counterType2 = null; 
-                }
+//                if (!StringUtils.isEmpty(counterType2) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_COUNTER,
+//                        chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
+//                    counterType2 = null;
+//                }
                 // 交易对手二级类型
 //                String counterType2 = counterinfo==null?null:counterinfo.getCounterType2();
                 // 根据配置映射项判别是否带相应属性
-                if (!StringUtils.isEmpty(counterType2) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_COUNTER, 
+                if (!StringUtils.isEmpty(counterType2) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_COUNTER,
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
-                    counterType2 = null; 
+                    counterType2 = null;
                 }
                 // 境内\境外
                 String blnarea = chbAssetInfo.getBlnArea();
@@ -830,7 +830,7 @@ public class ChbAssetInfoInterf  extends BaseInterfService {
                 }
                 String rivalPartyType = chbAssetInfo.getRivalPartyType();
                 // 根据配置映射项判别是否带相应属性
-                if (!StringUtils.isEmpty(blnarea) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_DSFLX,
+                if (!StringUtils.isEmpty(rivalPartyType) && chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.PBCASSETTYPE_DSFLX,
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
                     rivalPartyType = null;
                 }

@@ -1,181 +1,181 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.chb.perprodeclarereg.dao.PerProDeclareReg001Mapper_mysql">
-   
-    <resultMap type="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto" id="PerProDeclareRegDtoRM">
-    <result column="REGIST_SEQNO" property="registSeqno" />
-    <result column="PROD_ID" property="prodId" />
-    <result column="PROD_NAME" property="prodName" />
-    <result column="PROD_INS_ID" property="prodInsId" />
-    <result column="PROD_BRAND" property="prodBrand" />
-    <result column="PROD_STAGE" property="prodStage" />
-    <result column="ISSUE_PARTY_ID" property="issuePartyId" />
-    <result column="APPROVER_ID" property="approverId" />
-    <result column="APPROVER_NAME" property="approverName" />
-    <result column="DESIGNER_ID" property="designerId" />
-    <result column="DESIGNER_NAME" property="designerName" />
-    <result column="MANAGER_ID" property="managerId" />
-    <result column="MANAGER_NAME" property="managerName" />
-    <result column="LIAISON_NAME" property="liaisonName" />
-    <result column="LIAISON_TEL" property="liaisonTel" />
-    <result column="LIAISON_MOBILE" property="liaisonMobile" />
-    <result column="LIAISON_EMAIL" property="liaisonEmail" />
-    <result column="PROFIT_TYPE" property="profitType" />
-    <result column="TERMTYPE" property="termtype" />
-    <result column="INVESTOR_TYPE" property="investorType" />
-    <result column="INVEST_ARAE" property="investArae" />
-    <result column="INVEST_COUNTRY" property="investCountry" />
-    <result column="FINAN_SER_MODEL" property="finanSerModel" />
-    <result column="OPERATE_MODE" property="operateMode" />
-    <result column="BOOK_MODE" property="bookMode" />
-    <result column="CMMODE" property="cmmode" />
-    <result column="PMMODE" property="pmmode" />
-    <result column="MNAME" property="mname" />
-    <result column="PRICED_MODE" property="pricedMode" />
-    <result column="INV_ASSET_TYPE" property="invAssetType" />
-    <result column="CON_PRD_TRAGET" property="conPrdTraget" />
-    <result column="CONT_MODE" property="contMode" />
-    <result column="COOPERATION_NAME" property="cooperationName" />
-    <result column="INV_TYPE_RAT" property="invTypeRat" />
-    <result column="IS_YIELD" property="isYield" />
-    <result column="HIGH_YIELD" property="highYield" />
-    <result column="LOW_YIELD" property="lowYield" />
-    <result column="IS_YIELD_MEAS_BASIS" property="isYieldMeasBasis" />
-    <result column="RISK_TYPE" property="riskType" />
-    <result column="SALE_AREA" property="saleArea" />
-    <result column="RAISE_CCY" property="raiseCcy" />
-    <result column="CASH_PRIN_CCY" property="cashPrinCcy" />
-    <result column="CASH_PROF_CCY" property="cashProfCcy" />
-    <result column="SALE_AMT_STR" property="saleAmtStr" />
-    <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" />
-    <result column="RAISE_PSTRDATE" property="raisePstrdate" />
-    <result column="RAISE_PENDDATE" property="raisePenddate" />
-    <result column="INVEST_PRIN_DATE" property="investPrinDate" />
-    <result column="INVEST_PROF_DATE" property="investProfDate" />
-    <result column="SALE_FEE_RATE" property="saleFeeRate" />
-    <result column="IN_DEP_NAME" property="inDepName" />
-    <result column="IN_DEP_CODE" property="inDepCode" />
-    <result column="OUT_DEP_CTRY" property="outDepCtry" />
-    <result column="OUT_DEP_NAME" property="outDepName" />
-    <result column="TRU_FEE_RATE" property="truFeeRate" />
-    <result column="RISK_LEVEL" property="riskLevel" />
-    <result column="TERM_RIGHT_FLAG" property="termRightFlag" />
-    <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" />
-    <result column="CREDIT_FLAG" property="creditFlag" />
-    <result column="CREDIT_TYPE" property="creditType" />
-    <result column="CREDIT_MODE" property="creditMode" />
-    <result column="REMARK" property="remark" />
-    <result column="NINE_FILE" property="nineFile" />
-    <result column="FILE_NO" property="fileNo" />
-    <result column="PRE_REG_DATE" property="preRegDate" />
-    <result column="PRE_APP_DATE" property="preAppDate" />
-    <result column="SEND_STATUS" property="sendStatus" />
-    <result column="STATUS_DATE" property="statusDate" />
-    <result column="STATUS" property="status" />
-    <result column="CREATE_USER" property="createUser" />
-    <result column="CREATE_DEPT" property="createDept" />
-    <result column="CREATE_TIME" property="createTime" />
-    <result column="UPDATE_USER" property="updateUser" />
-    <result column="UPDATE_TIME" property="updateTime" />
-    <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" />
-    <result column="SUBMIT_DEADLINE" property="submitDeadline" />
-    <result column="SUBMIT_TIME" property="submitTime" />
-    <result column="ORG_CODE" property="orgCode" />
-    <result column="FILE_NUM" property="fileNum" />
-    <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" />
-     <result column="REG_CODE" property="regCode" />
-	<result column="RAISE_TYPE" property="raiseType" />
-	<result column="IVSTORIENTATION" property="ivstorientation" />
-	<result column="EXC_FIN_SECTOR" property="excFinSector" />
-	<result column="IS_SHORT_TERM" property="isShortTerm" />
-	<result column="SHORT_TERM" property="shortTerm" />
-	<result column="IS_FREE_REDEM" property="isFreeRedem" />
-	<result column="CASH_MANA_CATE" property="cashManaCate" />
-	<result column="YIELD" property="yield" />
-	<result column="INVEST_FEE_RATE" property="investFeeRate" />
- </resultMap>
-   <select id="selectAllData" parameterType="java.util.HashMap" resultType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
-      select 
-	    cds.REGIST_SEQNO registSeqno,
-	    cds.PROD_ID prodId,
-	    cds.PROD_NAME prodName,
-	    cds.PROD_INS_ID prodInsId,
-	    cds.PROD_BRAND prodBrand,
-	    cds.PROD_STAGE prodStage,
-	    cds.ISSUE_PARTY_ID issuePartyId,
-	    cds.APPROVER_ID approverId,
-	    cds.APPROVER_NAME approverName,
-	    cds.DESIGNER_ID designerId,
-	    cds.DESIGNER_NAME designerName,
-	    cds.MANAGER_ID managerId,
-	    cds.MANAGER_NAME managerName,
-	    cds.LIAISON_NAME liaisonName,
-	    cds.LIAISON_TEL liaisonTel,
-	    cds.LIAISON_MOBILE liaisonMobile,
-	    cds.LIAISON_EMAIL liaisonEmail,
-	    cds.PROFIT_TYPE profitType,
-	    cds.TERMTYPE termtype,
-	    cds.INVEST_ARAE investArae,
-	    cds.INVEST_COUNTRY investCountry,
-	    cds.FINAN_SER_MODEL finanSerModel,
-	    cds.OPERATE_MODE operateMode,
-	    cds.BOOK_MODE bookMode,
-	    cds.CMMODE cmmode,
-	    cds.PMMODE pmmode,
-	    cds.MNAME mname,
-	    cds.PRICED_MODE pricedMode,
-	    cds.INV_ASSET_TYPE invAssetType,
-	    cds.CON_PRD_TRAGET conPrdTraget,
-	    cds.CONT_MODE contMode,
-	    cds.COOPERATION_NAME cooperationName,
-	    cds.INV_TYPE_RAT invTypeRat,
-	    cds.IS_YIELD isYield,
-	    cds.HIGH_YIELD highYield,
-	    cds.LOW_YIELD lowYield,
-	    cds.IS_YIELD_MEAS_BASIS isYieldMeasBasis,
-	    cds.RISK_TYPE riskType,
-	    cds.SALE_AREA saleArea,
-	    cds.RAISE_CCY raiseCcy,
-	    cds.CASH_PRIN_CCY cashPrinCcy,
-	    cds.CASH_PROF_CCY cashProfCcy,
-	    cds.SALE_AMT_STR saleAmtStr,
-	    cds.RAISE_AMT_PLAN raiseAmtPlan,
-	    cds.RAISE_PSTRDATE raisePstrdate,
-	    cds.RAISE_PENDDATE raisePenddate,
-	    cds.INVEST_PRIN_DATE investPrinDate,
-	    cds.INVEST_PROF_DATE investProfDate,
-	    cds.SALE_FEE_RATE saleFeeRate,
-	    cds.IN_DEP_NAME inDepName,
-	    cds.IN_DEP_CODE inDepCode,
-	    cds.OUT_DEP_CTRY outDepCtry,
-	    cds.OUT_DEP_NAME outDepName,
-	    cds.TRU_FEE_RATE truFeeRate,
-	    cds.RISK_LEVEL riskLevel,
-	    cds.TERM_RIGHT_FLAG termRightFlag,
-	    cds.CUS_REDEEM_FLAG cusRedeemFlag,
-	    cds.CREDIT_FLAG creditFlag,
-	    cds.CREDIT_TYPE creditType,
-	    cds.CREDIT_MODE creditMode,
-	    cds.REMARK remark,
-	    cds.NINE_FILE nineFile,
-	    cds.FILE_NO fileNo,
-	    cds.PRE_REG_DATE preRegDate,
-	    cds.PRE_APP_DATE preAppDate,
-	    cds.SEND_STATUS sendStatus,
-	    cds.STATUS_DATE statusDate,
-	    cds.STATUS status,
-	    cds.CREATE_USER createUser,
-	    cds.CREATE_DEPT createDept,
-	    cds.CREATE_TIME createTime,
-	    cds.UPDATE_USER updateUser,
-	    cds.UPDATE_TIME updateTime,
-	    cds.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
-	    cds.SUBMIT_DEADLINE submitDeadline,
-	    cds.SUBMIT_TIME submitTime,
-	    cds.ORG_CODE orgCode,
-	    cds.FILE_NUM fileNum,
-	    cds.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-	    cds.REG_CODE regCode,
+
+	<resultMap type="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto" id="PerProDeclareRegDtoRM">
+		<result column="REGIST_SEQNO" property="registSeqno" />
+		<result column="PROD_ID" property="prodId" />
+		<result column="PROD_NAME" property="prodName" />
+		<result column="PROD_INS_ID" property="prodInsId" />
+		<result column="PROD_BRAND" property="prodBrand" />
+		<result column="PROD_STAGE" property="prodStage" />
+		<result column="ISSUE_PARTY_ID" property="issuePartyId" />
+		<result column="APPROVER_ID" property="approverId" />
+		<result column="APPROVER_NAME" property="approverName" />
+		<result column="DESIGNER_ID" property="designerId" />
+		<result column="DESIGNER_NAME" property="designerName" />
+		<result column="MANAGER_ID" property="managerId" />
+		<result column="MANAGER_NAME" property="managerName" />
+		<result column="LIAISON_NAME" property="liaisonName" />
+		<result column="LIAISON_TEL" property="liaisonTel" />
+		<result column="LIAISON_MOBILE" property="liaisonMobile" />
+		<result column="LIAISON_EMAIL" property="liaisonEmail" />
+		<result column="PROFIT_TYPE" property="profitType" />
+		<result column="TERMTYPE" property="termtype" />
+		<result column="INVESTOR_TYPE" property="investorType" />
+		<result column="INVEST_ARAE" property="investArae" />
+		<result column="INVEST_COUNTRY" property="investCountry" />
+		<result column="FINAN_SER_MODEL" property="finanSerModel" />
+		<result column="OPERATE_MODE" property="operateMode" />
+		<result column="BOOK_MODE" property="bookMode" />
+		<result column="CMMODE" property="cmmode" />
+		<result column="PMMODE" property="pmmode" />
+		<result column="MNAME" property="mname" />
+		<result column="PRICED_MODE" property="pricedMode" />
+		<result column="INV_ASSET_TYPE" property="invAssetType" />
+		<result column="CON_PRD_TRAGET" property="conPrdTraget" />
+		<result column="CONT_MODE" property="contMode" />
+		<result column="COOPERATION_NAME" property="cooperationName" />
+		<result column="INV_TYPE_RAT" property="invTypeRat" />
+		<result column="IS_YIELD" property="isYield" />
+		<result column="HIGH_YIELD" property="highYield" />
+		<result column="LOW_YIELD" property="lowYield" />
+		<result column="IS_YIELD_MEAS_BASIS" property="isYieldMeasBasis" />
+		<result column="RISK_TYPE" property="riskType" />
+		<result column="SALE_AREA" property="saleArea" />
+		<result column="RAISE_CCY" property="raiseCcy" />
+		<result column="CASH_PRIN_CCY" property="cashPrinCcy" />
+		<result column="CASH_PROF_CCY" property="cashProfCcy" />
+		<result column="SALE_AMT_STR" property="saleAmtStr" />
+		<result column="RAISE_AMT_PLAN" property="raiseAmtPlan" />
+		<result column="RAISE_PSTRDATE" property="raisePstrdate" />
+		<result column="RAISE_PENDDATE" property="raisePenddate" />
+		<result column="INVEST_PRIN_DATE" property="investPrinDate" />
+		<result column="INVEST_PROF_DATE" property="investProfDate" />
+		<result column="SALE_FEE_RATE" property="saleFeeRate" />
+		<result column="IN_DEP_NAME" property="inDepName" />
+		<result column="IN_DEP_CODE" property="inDepCode" />
+		<result column="OUT_DEP_CTRY" property="outDepCtry" />
+		<result column="OUT_DEP_NAME" property="outDepName" />
+		<result column="TRU_FEE_RATE" property="truFeeRate" />
+		<result column="RISK_LEVEL" property="riskLevel" />
+		<result column="TERM_RIGHT_FLAG" property="termRightFlag" />
+		<result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" />
+		<result column="CREDIT_FLAG" property="creditFlag" />
+		<result column="CREDIT_TYPE" property="creditType" />
+		<result column="CREDIT_MODE" property="creditMode" />
+		<result column="REMARK" property="remark" />
+		<result column="NINE_FILE" property="nineFile" />
+		<result column="FILE_NO" property="fileNo" />
+		<result column="PRE_REG_DATE" property="preRegDate" />
+		<result column="PRE_APP_DATE" property="preAppDate" />
+		<result column="SEND_STATUS" property="sendStatus" />
+		<result column="STATUS_DATE" property="statusDate" />
+		<result column="STATUS" property="status" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="CREATE_DEPT" property="createDept" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="UPDATE_USER" property="updateUser" />
+		<result column="UPDATE_TIME" property="updateTime" />
+		<result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" />
+		<result column="SUBMIT_DEADLINE" property="submitDeadline" />
+		<result column="SUBMIT_TIME" property="submitTime" />
+		<result column="ORG_CODE" property="orgCode" />
+		<result column="FILE_NUM" property="fileNum" />
+		<result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" />
+		<result column="REG_CODE" property="regCode" />
+		<result column="RAISE_TYPE" property="raiseType" />
+		<result column="IVSTORIENTATION" property="ivstorientation" />
+		<result column="EXC_FIN_SECTOR" property="excFinSector" />
+		<result column="IS_SHORT_TERM" property="isShortTerm" />
+		<result column="SHORT_TERM" property="shortTerm" />
+		<result column="IS_FREE_REDEM" property="isFreeRedem" />
+		<result column="CASH_MANA_CATE" property="cashManaCate" />
+		<result column="YIELD" property="yield" />
+		<result column="INVEST_FEE_RATE" property="investFeeRate" />
+	</resultMap>
+	<select id="selectAllData" parameterType="java.util.HashMap" resultType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
+		select
+		cds.REGIST_SEQNO registSeqno,
+		cds.PROD_ID prodId,
+		cds.PROD_NAME prodName,
+		cds.PROD_INS_ID prodInsId,
+		cds.PROD_BRAND prodBrand,
+		cds.PROD_STAGE prodStage,
+		cds.ISSUE_PARTY_ID issuePartyId,
+		cds.APPROVER_ID approverId,
+		cds.APPROVER_NAME approverName,
+		cds.DESIGNER_ID designerId,
+		cds.DESIGNER_NAME designerName,
+		cds.MANAGER_ID managerId,
+		cds.MANAGER_NAME managerName,
+		cds.LIAISON_NAME liaisonName,
+		cds.LIAISON_TEL liaisonTel,
+		cds.LIAISON_MOBILE liaisonMobile,
+		cds.LIAISON_EMAIL liaisonEmail,
+		cds.PROFIT_TYPE profitType,
+		cds.TERMTYPE termtype,
+		cds.INVEST_ARAE investArae,
+		cds.INVEST_COUNTRY investCountry,
+		cds.FINAN_SER_MODEL finanSerModel,
+		cds.OPERATE_MODE operateMode,
+		cds.BOOK_MODE bookMode,
+		cds.CMMODE cmmode,
+		cds.PMMODE pmmode,
+		cds.MNAME mname,
+		cds.PRICED_MODE pricedMode,
+		cds.INV_ASSET_TYPE invAssetType,
+		cds.CON_PRD_TRAGET conPrdTraget,
+		cds.CONT_MODE contMode,
+		cds.COOPERATION_NAME cooperationName,
+		cds.INV_TYPE_RAT invTypeRat,
+		cds.IS_YIELD isYield,
+		cds.HIGH_YIELD highYield,
+		cds.LOW_YIELD lowYield,
+		cds.IS_YIELD_MEAS_BASIS isYieldMeasBasis,
+		cds.RISK_TYPE riskType,
+		cds.SALE_AREA saleArea,
+		cds.RAISE_CCY raiseCcy,
+		cds.CASH_PRIN_CCY cashPrinCcy,
+		cds.CASH_PROF_CCY cashProfCcy,
+		cds.SALE_AMT_STR saleAmtStr,
+		cds.RAISE_AMT_PLAN raiseAmtPlan,
+		cds.RAISE_PSTRDATE raisePstrdate,
+		cds.RAISE_PENDDATE raisePenddate,
+		cds.INVEST_PRIN_DATE investPrinDate,
+		cds.INVEST_PROF_DATE investProfDate,
+		cds.SALE_FEE_RATE saleFeeRate,
+		cds.IN_DEP_NAME inDepName,
+		cds.IN_DEP_CODE inDepCode,
+		cds.OUT_DEP_CTRY outDepCtry,
+		cds.OUT_DEP_NAME outDepName,
+		cds.TRU_FEE_RATE truFeeRate,
+		cds.RISK_LEVEL riskLevel,
+		cds.TERM_RIGHT_FLAG termRightFlag,
+		cds.CUS_REDEEM_FLAG cusRedeemFlag,
+		cds.CREDIT_FLAG creditFlag,
+		cds.CREDIT_TYPE creditType,
+		cds.CREDIT_MODE creditMode,
+		cds.REMARK remark,
+		cds.NINE_FILE nineFile,
+		cds.FILE_NO fileNo,
+		cds.PRE_REG_DATE preRegDate,
+		cds.PRE_APP_DATE preAppDate,
+		cds.SEND_STATUS sendStatus,
+		cds.STATUS_DATE statusDate,
+		cds.STATUS status,
+		cds.CREATE_USER createUser,
+		cds.CREATE_DEPT createDept,
+		cds.CREATE_TIME createTime,
+		cds.UPDATE_USER updateUser,
+		cds.UPDATE_TIME updateTime,
+		cds.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+		cds.SUBMIT_DEADLINE submitDeadline,
+		cds.SUBMIT_TIME submitTime,
+		cds.ORG_CODE orgCode,
+		cds.FILE_NUM fileNum,
+		cds.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		cds.REG_CODE regCode,
 		cds.RAISE_TYPE raiseType,
 		cds.IVSTORIENTATION ivstorientation,
 		cds.EXC_FIN_SECTOR excFinSector,
@@ -185,131 +185,131 @@
 		cds.CASH_MANA_CATE cashManaCate,
 		cds.YIELD yield,
 		cds.INVEST_FEE_RATE investFeeRate
-     from CHB_PRD_DECLARE_SUB cds 
-    where 1=1
-    <if test="prodIdList != null and prodIdList.size()>0">
-                <foreach collection="prodIdList" item="item" open="and cds.PROD_ID in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="prodInsIdList != null and prodInsIdList.size()>0">
-				and (cds.PROD_INS_ID in
-				<foreach collection="prodInsIdList" item="item" index="index" open="(" separator="," close=")">
-					<if test="(index % 998) == 0">
-						null) OR cds.PROD_INS_ID in (
-					</if>
-					#{item,jdbcType=VARCHAR}
-				</foreach>
-				)
-            </if>
-            <if test="sendStatusList != null and sendStatusList.size()>0">
-				<foreach collection="sendStatusList" item="item" open="and cds.SEND_STATUS in(" separator="," close=")">
+		from CHB_PRD_DECLARE_SUB cds
+		where 1=1
+		<if test="prodIdList != null and prodIdList.size()>0">
+			<foreach collection="prodIdList" item="item" open="and cds.PROD_ID in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
-				</foreach>
+			</foreach>
+		</if>
+		<if test="prodInsIdList != null and prodInsIdList.size()>0">
+			and (cds.PROD_INS_ID in
+			<foreach collection="prodInsIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 998) == 0">
+					null) OR cds.PROD_INS_ID in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+			)
+		</if>
+		<if test="sendStatusList != null and sendStatusList.size()>0">
+			<foreach collection="sendStatusList" item="item" open="and cds.SEND_STATUS in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="statusList != null and statusList.size()>0">
+			<foreach collection="statusList" item="item" open="and cds.STATUS in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+			<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND cds.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				#{submitFeedbackStatus,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+			AND DATE_FORMAT(cds.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+		</if>
+		<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+			AND DATE_FORMAT(cds.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="raise_startdateStart != null and raise_startdateStart != ''">
+			and DATE_FORMAT(cds.RAISE_PSTRDATE,'%Y-%m-%d') &gt;= #{raise_startdateStart,jdbcType=VARCHAR}
+		</if>
+		<if test="raise_startdateEnd != null and raise_startdateEnd != ''">
+			and DATE_FORMAT(cds.RAISE_PSTRDATE,'%Y-%m-%d') &lt;= #{raise_startdateEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="statusDateStart != null and statusDateStart != ''">
+			and DATE_FORMAT(cds.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart,jdbcType=VARCHAR}
+		</if>
+		<if test="statusDateEnd != null and statusDateEnd != ''">
+			and DATE_FORMAT(cds.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
+		</if>
+
+		<if test="submitDateStart != null and submitDateStart != ''">
+			and DATE_FORMAT(cds.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+		</if>
+		<if test="submitDateEnd != null and submitDateEnd != ''">
+			and DATE_FORMAT(cds.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+		</if>
+
+		<if test="prodName != null and prodName != ''">
+			/* and cds.PROD_NAME like '%${prodName}%' */
+			and cds.PROD_NAME like concat('%', concat(#{prodName},'%'))
+		</if>
+
+		<if test="theProdId != null and theProdId != ''">
+			and cds.PROD_ID = #{prodId}
+		</if>
+		<if test="theSendStatus != null and theSendStatus != ''">
+			and cds.SEND_STATUS = #{sendStatus}
+		</if>
+	</select>
+
+	<select id="selcteDataByList" resultMap="PerProDeclareRegDtoRM" parameterType="java.util.List">
+		select * from CHB_PRD_DECLARE_SUB cds
+		where 1=1
+		<if test="list != null and list.size()>0">
+			<foreach collection="list" item="item" open="and cds.REGIST_SEQNO in(" separator="," close=")">
+				#{item.registSeqno,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+
+	</select>
+
+
+	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+		update CHB_PRD_DECLARE_SUB sub
+		<set>
+			<if test="sendStatus != null and sendStatus != ''">
+				sub.SEND_STATUS = #{sendStatus},
+
 			</if>
-			<if test="statusList != null and statusList.size()>0">
-				<foreach collection="statusList" item="item" open="and cds.STATUS in(" separator="," close=")">
-				  #{item,jdbcType=VARCHAR}
-				</foreach>
+			<if test="submitFeeBackStatus != null and submitFeeBackStatus != ''">
+				sub.SUBMIT_FEEDBACK_STATUS = #{submitFeeBackStatus},
 			</if>
-            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND cds.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
-             		#{submitFeedbackStatus,jdbcType=VARCHAR}
-            	</foreach>	
-		 	</if>
-			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
-			   AND DATE_FORMAT(cds.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
-			</if>
-			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
-			   AND DATE_FORMAT(cds.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
-			</if>
-		 	<if test="raise_startdateStart != null and raise_startdateStart != ''">
-				and DATE_FORMAT(cds.RAISE_PSTRDATE,'%Y-%m-%d') &gt;= #{raise_startdateStart,jdbcType=VARCHAR}
-			</if>
-			<if test="raise_startdateEnd != null and raise_startdateEnd != ''">
-				and DATE_FORMAT(cds.RAISE_PSTRDATE,'%Y-%m-%d') &lt;= #{raise_startdateEnd,jdbcType=VARCHAR}
-			</if>
-			<if test="statusDateStart != null and statusDateStart != ''">
-				and DATE_FORMAT(cds.STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart,jdbcType=VARCHAR}
-			</if>
-			<if test="statusDateEnd != null and statusDateEnd != ''">
-				and DATE_FORMAT(cds.STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
-			</if>
-			
-			<if test="submitDateStart != null and submitDateStart != ''">
-				and DATE_FORMAT(cds.SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
-			</if>
-			<if test="submitDateEnd != null and submitDateEnd != ''">
-				and DATE_FORMAT(cds.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
-			</if>
-            
-            <if test="prodName != null and prodName != ''">
-				/* and cds.PROD_NAME like '%${prodName}%' */
-				and cds.PROD_NAME like concat('%', concat(#{prodName},'%'))
-			</if>
-			
-			  <if test="theProdId != null and theProdId != ''">
-				and cds.PROD_ID = #{prodId}
-			</if>
-			 <if test="theSendStatus != null and theSendStatus != ''">
-				and cds.SEND_STATUS = #{sendStatus}
-			</if>
-   </select>
-   
-   <select id="selcteDataByList" resultMap="PerProDeclareRegDtoRM" parameterType="java.util.List">
-    select * from CHB_PRD_DECLARE_SUB cds
-    where 1=1
-     <if test="list != null and list.size()>0">
-                <foreach collection="list" item="item" open="and cds.REGIST_SEQNO in(" separator="," close=")">
-                #{item.registSeqno,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-      
-   </select>
-   
-   
-    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
-         update CHB_PRD_DECLARE_SUB sub
-        <set> 
-            <if test="sendStatus != null and sendStatus != ''">
-                sub.SEND_STATUS = #{sendStatus},
-               
-            </if>
-            <if test="submitFeeBackStatus != null and submitFeeBackStatus != ''">
-                sub.SUBMIT_FEEDBACK_STATUS = #{submitFeeBackStatus},
-            </if>
-            sub.SUBMIT_TIME = NOW(),
-            sub.UPDATE_TIME = NOW()
-        </set>
-        <where>
-            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                sub.REGIST_SEQNO = #{regist.registSeqno} 
-            </foreach>
-        </where>
-    </update>
-    
-    
-    
-      <!-- 取消手工报送登记表更新 -->
+			sub.SUBMIT_TIME = NOW(),
+			sub.UPDATE_TIME = NOW()
+		</set>
+		<where>
+			<foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+				sub.REGIST_SEQNO = #{regist.registSeqno}
+			</foreach>
+		</where>
+	</update>
+
+
+
+	<!-- 取消手工报送登记表更新 -->
 	<update id="cancelMannultRegist" parameterType="java.util.Map">
 		update CHB_PRD_DECLARE_SUB
-		<set> 
-		 	SEND_STATUS = '01',
+		<set>
+			SEND_STATUS = '01',
 			UPDATE_TIME = NOW(),
 			SUBMIT_TIME = null,
 			SUBMIT_FEEDBACK_STATUS=null
 		</set>
 		<where>
-		 	<foreach collection="list" item="dto" open="(" close=")" separator=") or (">
-		 	 	 REGIST_SEQNO = #{dto.registSeqno}  
-		 	</foreach>
+			<foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+				REGIST_SEQNO = #{dto.registSeqno}
+			</foreach>
 		</where>
 	</update>
-	
+
 	<select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="PerProDeclareRegDtoRM">
 	    select * from CHB_PRD_DECLARE_SUB where REGIST_SEQNO=#{registSeqno}
 	</select>
-	
+
 	<insert id="insertFile" parameterType="java.util.Map">
 	   insert into CHB_FILE (FILE_UUID,FILE_ID,FILE_PATH,FILE_NAME,STATUS)
 	    values(#{fileUUID},#{fileId},#{filePath},#{fileSimpleName},'E')
@@ -324,358 +324,358 @@
 	    where REGIST_SEQNO=#{registSeqno}
 	</update>
 
-	
-<select id="selectPerProdList"  resultMap="PerProDeclareRegDtoRM">
-	  SELECT
-	null as REGIST_SEQNO,
-	baseinfo.PROD_ID ,/*产品代码*/
-	baseinfo.PROD_NAME,/*产品名称*/
-	baseinfo.PROD_INS_ID ,/*行内识别码*/
-	baseinfo.PROD_BRAND,/*产品品牌*/
-	baseinfo.PROD_STAGE ,/*产品期次*/
-	/*baseinfo.ISSUE_PARTY_ID ,发行机构代码*/
-	baseinfo.APPROVER_ID,/*产品审批人身份证号*/
-	baseinfo.APPROVER_NAME,/*产品审批人姓名*/
-	baseinfo.DESIGNER_ID,/*产品设计人身份证号*/
-	baseinfo.DESIGNER_NAME,/*产品设计人姓名*/
-	baseinfo.MANAGER_ID,/*投资经理身份证号*/
-	baseinfo.MANAGER_NAME,/*投资经理姓名*/
-	baseinfo.LIAISON_NAME,/*业务联络人姓名*/
-	baseinfo.LIAISON_TEL,/*业务联络人座机*/
-	baseinfo.LIAISON_MOBILE,/*业务联络人手机*/
-	baseinfo.LIAISON_EMAIL,/*业务联络人邮箱*/
-	baseinfo.PROFIT_TYPE,/*产品收益类型*/
-	baseinfo.TERMTYPE,/*产品期限*/
-	baseinfo.INVEST_ARAE,/*资金投向地区*/
-	baseinfo.INVEST_COUNTRY,/*产品投资国家或地区*/
-	baseinfo.FINAN_SER_MODEL,/*理财业务服务模式*/
-	baseinfo.OPERATE_MODE,/*产品运作模式*/
-	baseinfo.CMMODE,/*产品资产配置方式*/
-	baseinfo.PMMODE,/*产品管理模式*/
-	baseinfo.MNAME ,/*实际管理人员名称*/
-	baseinfo.PRICED_MODE,/*产品定价方式*/
-	baseinfo.CONT_MODE,/*合作模式*/
-	baseinfo.COOPERATION_NAME ,/*合作机构名称*/
-	baseinfo.INV_TYPE_RAT ,/*投资资产种类及比例*/
-	baseinfo.RISK_TYPE,/*投资者风险偏好*/
-	baseinfo.SALE_AREA,/*产品销售区域*/
-	baseinfo.RAISE_CCY,/*募集币种*/
-	baseinfo.CASH_PRIN_CCY,/*兑付本金币种*/
-	baseinfo.CASH_PROF_CCY,/*兑付收益币种*/
-	baseinfo.SALE_AMT_STR ,/*起点销售金额*/
-	baseinfo.RAISE_AMT_PLAN ,/*计划募集金额*/
-	baseinfo.RAISE_PSTRDATE ,/*募集起始日期（从）*/
-	baseinfo.RAISE_PENDDATE ,/*募集起始日期（到）*/
-	baseinfo.INVEST_PRIN_DATE,/*投资本金到账日*/
-	baseinfo.INVEST_PROF_DATE,/*投资收益到账日*/
-	baseinfo.SALE_FEE_RATE ,/*销售手续费*/
-	baseinfo.IN_DEP_NAME,/*境内托管机构名称*/
-	baseinfo.IN_DEP_CODE ,/*境内托管机构代码*/
-	baseinfo.OUT_DEP_CTRY,/*境外托管机构国别*/
-	baseinfo.OUT_DEP_NAME,/*境外托管机构名称*/
-	baseinfo.TRU_FEE_RATE ,/*托管费率%*/
-	baseinfo.RISK_LEVEL,/*产品风险等级*/
-	baseinfo.TERM_RIGHT_FLAG,/*发行机构提前终止权标识*/
-	baseinfo.CUS_REDEEM_FLAG,/*客户赎回权标识*/
-	baseinfo.CREDIT_FLAG,/*产品增信标识*/
-	baseinfo.CREDIT_TYPE,/*产品增信机构类型*/
-	baseinfo.CREDIT_MODE,/*产品增信形式*/
-	baseinfo.REMARK ,/*备注*/
-	baseinfo.RAISE_TYPE ,/*募集方式*/
-	baseinfo.IVSTORIENTATION ,/*产品投资性质*/
-	baseinfo.EXC_FIN_SECTOR ,/*是否金融同业专属*/
-	baseinfo.IS_SHORT_TERM ,/*是否设置最短持有期限*/
-	baseinfo.SHORT_TERM ,/*最短持有期限(天)*/
-	baseinfo.IS_FREE_REDEM ,/*最短持有期后是否自由赎回*/
-	baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
-	baseinfo.YIELD ,/*业绩比较基准%*/
-	baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
-    baseinfo.STATUS STATUS
-	from CHB_PRD_BASEINFO baseinfo 
-	where 1 =1
-	and baseinfo.FPROD_ID IS NULL
-	<if test="prodInfos!=null and prodInfos.size()!=0">
-	 	AND trim(baseinfo.prod_id) in 
-	    <foreach item="prodId" collection="prodInfos" open="(" separator="," close=")"> 
-	      #{prodId}
-	   	</foreach>
-	</if>
-    <!-- 根据产品的更新时间和创建时间生成报表 -->
-    <if test="generateDate != null">
-    and DATE_FORMAT(ifnull(baseinfo.update_time,baseinfo.create_time),'%Y-%m-%d' )=#{generateDate,jdbcType=VARCHAR}
-    </if>
+
+	<select id="selectPerProdList"  resultMap="PerProDeclareRegDtoRM">
+		SELECT
+		null as REGIST_SEQNO,
+		baseinfo.PROD_ID ,/*产品代码*/
+		baseinfo.PROD_NAME,/*产品名称*/
+		baseinfo.PROD_INS_ID ,/*行内识别码*/
+		baseinfo.PROD_BRAND,/*产品品牌*/
+		baseinfo.PROD_STAGE ,/*产品期次*/
+		/*baseinfo.ISSUE_PARTY_ID ,发行机构代码*/
+		baseinfo.APPROVER_ID,/*产品审批人身份证号*/
+		baseinfo.APPROVER_NAME,/*产品审批人姓名*/
+		baseinfo.DESIGNER_ID,/*产品设计人身份证号*/
+		baseinfo.DESIGNER_NAME,/*产品设计人姓名*/
+		baseinfo.MANAGER_ID,/*投资经理身份证号*/
+		baseinfo.MANAGER_NAME,/*投资经理姓名*/
+		baseinfo.LIAISON_NAME,/*业务联络人姓名*/
+		baseinfo.LIAISON_TEL,/*业务联络人座机*/
+		baseinfo.LIAISON_MOBILE,/*业务联络人手机*/
+		baseinfo.LIAISON_EMAIL,/*业务联络人邮箱*/
+		baseinfo.PROFIT_TYPE,/*产品收益类型*/
+		baseinfo.TERMTYPE,/*产品期限*/
+		baseinfo.INVEST_ARAE,/*资金投向地区*/
+		baseinfo.INVEST_COUNTRY,/*产品投资国家或地区*/
+		baseinfo.FINAN_SER_MODEL,/*理财业务服务模式*/
+		baseinfo.OPERATE_MODE,/*产品运作模式*/
+		baseinfo.CMMODE,/*产品资产配置方式*/
+		baseinfo.PMMODE,/*产品管理模式*/
+		baseinfo.MNAME ,/*实际管理人员名称*/
+		baseinfo.PRICED_MODE,/*产品定价方式*/
+		baseinfo.CONT_MODE,/*合作模式*/
+		baseinfo.COOPERATION_NAME ,/*合作机构名称*/
+		baseinfo.INV_TYPE_RAT ,/*投资资产种类及比例*/
+		baseinfo.RISK_TYPE,/*投资者风险偏好*/
+		baseinfo.SALE_AREA,/*产品销售区域*/
+		baseinfo.RAISE_CCY,/*募集币种*/
+		baseinfo.CASH_PRIN_CCY,/*兑付本金币种*/
+		baseinfo.CASH_PROF_CCY,/*兑付收益币种*/
+		baseinfo.SALE_AMT_STR ,/*起点销售金额*/
+		baseinfo.RAISE_AMT_PLAN ,/*计划募集金额*/
+		baseinfo.RAISE_PSTRDATE ,/*募集起始日期（从）*/
+		baseinfo.RAISE_PENDDATE ,/*募集起始日期（到）*/
+		baseinfo.INVEST_PRIN_DATE,/*投资本金到账日*/
+		baseinfo.INVEST_PROF_DATE,/*投资收益到账日*/
+		baseinfo.SALE_FEE_RATE ,/*销售手续费*/
+		baseinfo.IN_DEP_NAME,/*境内托管机构名称*/
+		baseinfo.IN_DEP_CODE ,/*境内托管机构代码*/
+		baseinfo.OUT_DEP_CTRY,/*境外托管机构国别*/
+		baseinfo.OUT_DEP_NAME,/*境外托管机构名称*/
+		baseinfo.TRU_FEE_RATE ,/*托管费率%*/
+		baseinfo.RISK_LEVEL,/*产品风险等级*/
+		baseinfo.TERM_RIGHT_FLAG,/*发行机构提前终止权标识*/
+		baseinfo.CUS_REDEEM_FLAG,/*客户赎回权标识*/
+		baseinfo.CREDIT_FLAG,/*产品增信标识*/
+		baseinfo.CREDIT_TYPE,/*产品增信机构类型*/
+		baseinfo.CREDIT_MODE,/*产品增信形式*/
+		baseinfo.REMARK ,/*备注*/
+		baseinfo.RAISE_TYPE ,/*募集方式*/
+		baseinfo.IVSTORIENTATION ,/*产品投资性质*/
+		baseinfo.EXC_FIN_SECTOR ,/*是否金融同业专属*/
+		baseinfo.IS_SHORT_TERM ,/*是否设置最短持有期限*/
+		baseinfo.SHORT_TERM ,/*最短持有期限(天)*/
+		baseinfo.IS_FREE_REDEM ,/*最短持有期后是否自由赎回*/
+		baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
+		baseinfo.YIELD ,/*业绩比较基准%*/
+		baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
+		baseinfo.STATUS STATUS
+		from CHB_PRD_BASEINFO baseinfo
+		where 1 =1
+		and baseinfo.FPROD_ID IS NULL
+		<if test="prodInfos!=null and prodInfos.size()!=0">
+			AND trim(baseinfo.prod_id) in
+			<foreach item="prodId" collection="prodInfos" open="(" separator="," close=")">
+				#{prodId}
+			</foreach>
+		</if>
+		<!-- 根据产品的更新时间和创建时间生成报表 -->
+		<if test="generateDate != null">
+			and DATE_FORMAT(ifnull(baseinfo.update_time,baseinfo.create_time),'%Y-%m-%d' )=#{generateDate,jdbcType=VARCHAR}
+		</if>
 	</select>
-	
+
 	<select id="selectPerProdListEx"  resultMap="PerProDeclareRegDtoRM">
-	  SELECT
-	null as REGIST_SEQNO,
-	baseinfo.PROD_INS_ID PROD_ID ,/*产品代码*/
-	baseinfo.PROD_NAME,/*产品名称*/
-	baseinfo.PROD_INS_ID ,/*行内识别码*/
-	baseinfo.PROD_BRAND,/*产品品牌*/
-	baseinfo.PROD_STAGE ,/*产品期次*/
-	/*baseinfo.ISSUE_PARTY_ID ,发行机构代码*/
-	baseinfo.APPROVER_ID,/*产品审批人身份证号*/
-	baseinfo.APPROVER_NAME,/*产品审批人姓名*/
-	baseinfo.DESIGNER_ID,/*产品设计人身份证号*/
-	baseinfo.DESIGNER_NAME,/*产品设计人姓名*/
-	baseinfo.MANAGER_ID,/*投资经理身份证号*/
-	baseinfo.MANAGER_NAME,/*投资经理姓名*/
-	baseinfo.LIAISON_NAME,/*业务联络人姓名*/
-	baseinfo.LIAISON_TEL,/*业务联络人座机*/
-	baseinfo.LIAISON_MOBILE,/*业务联络人手机*/
-	baseinfo.LIAISON_EMAIL,/*业务联络人邮箱*/
-	baseinfo.PROFIT_TYPE,/*产品收益类型*/
-	baseinfo.TERMTYPE,/*产品期限*/
-	baseinfo.INVEST_ARAE,/*资金投向地区*/
-	baseinfo.INVEST_COUNTRY,/*产品投资国家或地区*/
-	baseinfo.FINAN_SER_MODEL,/*理财业务服务模式*/
-	baseinfo.OPERATE_MODE,/*产品运作模式*/
-	baseinfo.CMMODE,/*产品资产配置方式*/
-	baseinfo.PMMODE,/*产品管理模式*/
-	baseinfo.MNAME ,/*实际管理人员名称*/
-	baseinfo.PRICED_MODE,/*产品定价方式*/
-	baseinfo.CONT_MODE,/*合作模式*/
-	baseinfo.COOPERATION_NAME ,/*合作机构名称*/
-	baseinfo.INV_TYPE_RAT ,/*投资资产种类及比例*/
-	baseinfo.RISK_TYPE,/*投资者风险偏好*/
-	baseinfo.SALE_AREA,/*产品销售区域*/
-	baseinfo.RAISE_CCY,/*募集币种*/
-	baseinfo.CASH_PRIN_CCY,/*兑付本金币种*/
-	baseinfo.CASH_PROF_CCY,/*兑付收益币种*/
-	baseinfo.SALE_AMT_STR ,/*起点销售金额*/
-	baseinfo.RAISE_AMT_PLAN ,/*计划募集金额*/
-	baseinfo.RAISE_PSTRDATE ,/*募集起始日期（从）*/
-	baseinfo.RAISE_PENDDATE ,/*募集起始日期（到）*/
-	baseinfo.INVEST_PRIN_DATE,/*投资本金到账日*/
-	baseinfo.INVEST_PROF_DATE,/*投资收益到账日*/
-	baseinfo.SALE_FEE_RATE ,/*销售手续费*/
-	baseinfo.IN_DEP_NAME,/*境内托管机构名称*/
-	baseinfo.IN_DEP_CODE ,/*境内托管机构代码*/
-	baseinfo.OUT_DEP_CTRY,/*境外托管机构国别*/
-	baseinfo.OUT_DEP_NAME,/*境外托管机构名称*/
-	baseinfo.TRU_FEE_RATE ,/*托管费率%*/
-	baseinfo.RISK_LEVEL,/*产品风险等级*/
-	baseinfo.TERM_RIGHT_FLAG,/*发行机构提前终止权标识*/
-	baseinfo.CUS_REDEEM_FLAG,/*客户赎回权标识*/
-	baseinfo.CREDIT_FLAG,/*产品增信标识*/
-	baseinfo.CREDIT_TYPE,/*产品增信机构类型*/
-	baseinfo.CREDIT_MODE,/*产品增信形式*/
-	baseinfo.REMARK ,/*备注*/
-	baseinfo.RAISE_TYPE ,/*募集方式*/
-	baseinfo.IVSTORIENTATION ,/*产品投资性质*/
-	baseinfo.EXC_FIN_SECTOR ,/*是否金融同业专属*/
-	baseinfo.IS_SHORT_TERM ,/*是否设置最短持有期限*/
-	baseinfo.SHORT_TERM ,/*最短持有期限(天)*/
-	baseinfo.IS_FREE_REDEM ,/*最短持有期后是否自由赎回*/
-	baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
-	baseinfo.YIELD ,/*业绩比较基准%*/
-	baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
-    baseinfo.STATUS STATUS
-	from CHB_PRD_DECLARE_INFO baseinfo 
-	where 1 =1
-	<!-- <if test="prodInfos!=null and prodInfos.size()!=0">
-	 	AND trim(baseinfo.prod_id) in 
-	    <foreach item="prodId" collection="prodInfos" open="(" separator="," close=")"> 
-	      #{prodId}
-	   	</foreach>
-	</if> -->
-    <!-- 根据产品的更新时间和创建时间生成报表 -->
-    <if test="generateDate != null">
-    and DATE_FORMAT(ifnull(baseinfo.update_time,baseinfo.create_time),'%Y-%m-%d' )=#{generateDate,jdbcType=VARCHAR}
-    </if>
+		SELECT
+		null as REGIST_SEQNO,
+		baseinfo.PROD_INS_ID PROD_ID ,/*产品代码*/
+		baseinfo.PROD_NAME,/*产品名称*/
+		baseinfo.PROD_INS_ID ,/*行内识别码*/
+		baseinfo.PROD_BRAND,/*产品品牌*/
+		baseinfo.PROD_STAGE ,/*产品期次*/
+		/*baseinfo.ISSUE_PARTY_ID ,发行机构代码*/
+		baseinfo.APPROVER_ID,/*产品审批人身份证号*/
+		baseinfo.APPROVER_NAME,/*产品审批人姓名*/
+		baseinfo.DESIGNER_ID,/*产品设计人身份证号*/
+		baseinfo.DESIGNER_NAME,/*产品设计人姓名*/
+		baseinfo.MANAGER_ID,/*投资经理身份证号*/
+		baseinfo.MANAGER_NAME,/*投资经理姓名*/
+		baseinfo.LIAISON_NAME,/*业务联络人姓名*/
+		baseinfo.LIAISON_TEL,/*业务联络人座机*/
+		baseinfo.LIAISON_MOBILE,/*业务联络人手机*/
+		baseinfo.LIAISON_EMAIL,/*业务联络人邮箱*/
+		baseinfo.PROFIT_TYPE,/*产品收益类型*/
+		baseinfo.TERMTYPE,/*产品期限*/
+		baseinfo.INVEST_ARAE,/*资金投向地区*/
+		baseinfo.INVEST_COUNTRY,/*产品投资国家或地区*/
+		baseinfo.FINAN_SER_MODEL,/*理财业务服务模式*/
+		baseinfo.OPERATE_MODE,/*产品运作模式*/
+		baseinfo.CMMODE,/*产品资产配置方式*/
+		baseinfo.PMMODE,/*产品管理模式*/
+		baseinfo.MNAME ,/*实际管理人员名称*/
+		baseinfo.PRICED_MODE,/*产品定价方式*/
+		baseinfo.CONT_MODE,/*合作模式*/
+		baseinfo.COOPERATION_NAME ,/*合作机构名称*/
+		baseinfo.INV_TYPE_RAT ,/*投资资产种类及比例*/
+		baseinfo.RISK_TYPE,/*投资者风险偏好*/
+		baseinfo.SALE_AREA,/*产品销售区域*/
+		baseinfo.RAISE_CCY,/*募集币种*/
+		baseinfo.CASH_PRIN_CCY,/*兑付本金币种*/
+		baseinfo.CASH_PROF_CCY,/*兑付收益币种*/
+		baseinfo.SALE_AMT_STR ,/*起点销售金额*/
+		baseinfo.RAISE_AMT_PLAN ,/*计划募集金额*/
+		baseinfo.RAISE_PSTRDATE ,/*募集起始日期（从）*/
+		baseinfo.RAISE_PENDDATE ,/*募集起始日期（到）*/
+		baseinfo.INVEST_PRIN_DATE,/*投资本金到账日*/
+		baseinfo.INVEST_PROF_DATE,/*投资收益到账日*/
+		baseinfo.SALE_FEE_RATE ,/*销售手续费*/
+		baseinfo.IN_DEP_NAME,/*境内托管机构名称*/
+		baseinfo.IN_DEP_CODE ,/*境内托管机构代码*/
+		baseinfo.OUT_DEP_CTRY,/*境外托管机构国别*/
+		baseinfo.OUT_DEP_NAME,/*境外托管机构名称*/
+		baseinfo.TRU_FEE_RATE ,/*托管费率%*/
+		baseinfo.RISK_LEVEL,/*产品风险等级*/
+		baseinfo.TERM_RIGHT_FLAG,/*发行机构提前终止权标识*/
+		baseinfo.CUS_REDEEM_FLAG,/*客户赎回权标识*/
+		baseinfo.CREDIT_FLAG,/*产品增信标识*/
+		baseinfo.CREDIT_TYPE,/*产品增信机构类型*/
+		baseinfo.CREDIT_MODE,/*产品增信形式*/
+		baseinfo.REMARK ,/*备注*/
+		baseinfo.RAISE_TYPE ,/*募集方式*/
+		baseinfo.IVSTORIENTATION ,/*产品投资性质*/
+		baseinfo.EXC_FIN_SECTOR ,/*是否金融同业专属*/
+		baseinfo.IS_SHORT_TERM ,/*是否设置最短持有期限*/
+		baseinfo.SHORT_TERM ,/*最短持有期限(天)*/
+		baseinfo.IS_FREE_REDEM ,/*最短持有期后是否自由赎回*/
+		baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
+		baseinfo.YIELD ,/*业绩比较基准%*/
+		baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
+		baseinfo.STATUS STATUS
+		from CHB_PRD_DECLARE_INFO baseinfo
+		where 1 =1
+		<!-- <if test="prodInfos!=null and prodInfos.size()!=0">
+             AND trim(baseinfo.prod_id) in
+            <foreach item="prodId" collection="prodInfos" open="(" separator="," close=")">
+              #{prodId}
+               </foreach>
+        </if> -->
+		<!-- 根据产品的更新时间和创建时间生成报表 -->
+		<if test="generateDate != null">
+			and DATE_FORMAT(ifnull(baseinfo.update_time,baseinfo.create_time),'%Y-%m-%d' )=#{generateDate,jdbcType=VARCHAR}
+		</if>
 	</select>
-	
+
 	<insert id="insertList" parameterType="java.util.List">
-	    INSERT
-	INTO CHB_PRD_DECLARE_SUB
-	(
-	REGIST_SEQNO,
-	PROD_ID ,
-	PROD_NAME,
-	PROD_INS_ID ,
-	PROD_BRAND,
-	PROD_STAGE ,
-	ISSUE_PARTY_ID ,
-	APPROVER_ID,
-	APPROVER_NAME,
-	DESIGNER_ID,
-	DESIGNER_NAME,
-	MANAGER_ID,
-	MANAGER_NAME,
-	LIAISON_NAME,
-	LIAISON_TEL,
-	LIAISON_MOBILE,
-	LIAISON_EMAIL,
-	PROFIT_TYPE,
-	TERMTYPE,
-	INVEST_ARAE,
-	INVEST_COUNTRY,
-	FINAN_SER_MODEL,
-	OPERATE_MODE,
-	BOOK_MODE,
-	CMMODE,
-	PMMODE,
-	MNAME ,
-	PRICED_MODE,
-	INV_ASSET_TYPE,
-	CON_PRD_TRAGET,
-	CONT_MODE,
-	COOPERATION_NAME ,
-	INV_TYPE_RAT ,
-	IS_YIELD,
-	HIGH_YIELD ,
-	LOW_YIELD ,
-	IS_YIELD_MEAS_BASIS,
-	RISK_TYPE,
-	SALE_AREA,
-	RAISE_CCY,
-	CASH_PRIN_CCY,
-	CASH_PROF_CCY,
-	SALE_AMT_STR ,
-	RAISE_AMT_PLAN ,
-	RAISE_PSTRDATE ,
-	RAISE_PENDDATE ,
-	INVEST_PRIN_DATE,
-	INVEST_PROF_DATE,
-	SALE_FEE_RATE ,
-	IN_DEP_NAME,
-	IN_DEP_CODE ,
-	OUT_DEP_CTRY,
-	OUT_DEP_NAME,
-	TRU_FEE_RATE ,
-	RISK_LEVEL,
-	TERM_RIGHT_FLAG,
-	CUS_REDEEM_FLAG,
-	CREDIT_FLAG,
-	CREDIT_TYPE,
-	CREDIT_MODE,
-	REMARK ,
-	NINE_FILE ,
-	FILE_NO ,
-	PRE_REG_DATE ,
-	PRE_APP_DATE ,
-	SEND_STATUS ,
-	STATUS_DATE ,
-	STATUS ,
-	CREATE_USER ,
-	CREATE_DEPT ,
-	CREATE_TIME ,
-	UPDATE_USER ,
-	UPDATE_TIME ,
-	CHB_SUBMIT_DEADLINE ,
-	SUBMIT_DEADLINE ,
-	SUBMIT_TIME ,
-	ORG_CODE ,
-	FILE_NUM ,
-	SUBMIT_FEEDBACK_STATUS,
-	REG_CODE,
-	RAISE_TYPE,
-	IVSTORIENTATION,
-	EXC_FIN_SECTOR,
-	IS_SHORT_TERM,
-	SHORT_TERM,
-	IS_FREE_REDEM,
-	CASH_MANA_CATE,
-	YIELD,
-	INVEST_FEE_RATE
-	)
-	<foreach collection="list" item="item" separator="union all">
-	select
-	#{item.registSeqno,jdbcType=VARCHAR},
-	#{item.prodId,jdbcType=VARCHAR} ,
-	#{item.prodName,jdbcType=VARCHAR},
-	#{item.prodInsId,jdbcType=VARCHAR} ,
-	#{item.prodBrand,jdbcType=VARCHAR},
-	#{item.prodStage,jdbcType=NUMERIC} ,
-	#{item.issuePartyId,jdbcType=VARCHAR} ,
-	#{item.approverId,jdbcType=VARCHAR},
-	#{item.approverName,jdbcType=VARCHAR},
-	#{item.designerId,jdbcType=VARCHAR},
-	#{item.designerName,jdbcType=VARCHAR},
-	#{item.managerId,jdbcType=VARCHAR},
-	#{item.managerName,jdbcType=VARCHAR},
-	#{item.liaisonName,jdbcType=VARCHAR},
-	#{item.liaisonTel,jdbcType=VARCHAR},
-	#{item.liaisonMobile,jdbcType=VARCHAR},
-	#{item.liaisonEmail,jdbcType=VARCHAR},
-	#{item.profitType,jdbcType=VARCHAR},
-	#{item.termtype,jdbcType=VARCHAR},
-	#{item.investArae,jdbcType=VARCHAR},
-	#{item.investCountry,jdbcType=VARCHAR},
-	#{item.finanSerModel,jdbcType=VARCHAR},
-	#{item.operateMode,jdbcType=VARCHAR},
-	#{item.bookMode,jdbcType=VARCHAR},
-	#{item.cmmode,jdbcType=VARCHAR},
-	#{item.pmmode,jdbcType=VARCHAR},
-	#{item.mname,jdbcType=VARCHAR} ,
-	#{item.pricedMode,jdbcType=VARCHAR},
-	#{item.invAssetType,jdbcType=VARCHAR},
-	#{item.conPrdTraget,jdbcType=VARCHAR},
-	#{item.contMode,jdbcType=VARCHAR},
-	#{item.cooperationName,jdbcType=VARCHAR} ,
-	#{item.invTypeRat,jdbcType=VARCHAR} ,
-	#{item.isYield,jdbcType=VARCHAR},
-	#{item.highYield,jdbcType=NUMERIC} ,
-	#{item.lowYield,jdbcType=NUMERIC} ,
-	#{item.isYieldMeasBasis,jdbcType=VARCHAR},
-	#{item.riskType,jdbcType=VARCHAR},
-	#{item.saleArea,jdbcType=VARCHAR},
-	#{item.raiseCcy,jdbcType=VARCHAR},
-	#{item.cashPrinCcy,jdbcType=VARCHAR},
-	#{item.cashProfCcy,jdbcType=VARCHAR},
-	#{item.saleAmtStr,jdbcType=NUMERIC} ,
-	#{item.raiseAmtPlan,jdbcType=NUMERIC} ,
-	#{item.raisePstrdate,jdbcType=DATE} ,
-	#{item.raisePenddate,jdbcType=DATE} ,
-	#{item.investPrinDate,jdbcType=VARCHAR},
-	#{item.investProfDate,jdbcType=VARCHAR},
-	#{item.saleFeeRate,jdbcType=NUMERIC} ,
-	#{item.inDepName,jdbcType=VARCHAR},
-	#{item.inDepCode,jdbcType=VARCHAR} ,
-	#{item.outDepCtry,jdbcType=VARCHAR},
-	#{item.outDepName,jdbcType=VARCHAR},
-	#{item.truFeeRate,jdbcType=NUMERIC} ,
-	#{item.riskLevel,jdbcType=VARCHAR},
-	#{item.termRightFlag,jdbcType=VARCHAR},
-	#{item.cusRedeemFlag,jdbcType=VARCHAR},
-	#{item.creditFlag,jdbcType=VARCHAR},
-	#{item.creditType,jdbcType=VARCHAR},
-	#{item.creditMode,jdbcType=VARCHAR},
-	#{item.remark,jdbcType=VARCHAR} ,
-	null ,
-	null ,
-	null ,
-	null ,
-	'01' ,
-	NOW() ,
-	'01' ,
-	#{item.createUser,jdbcType=VARCHAR} ,
-	null ,
-	NOW() ,
-	#{item.updateUser,jdbcType=VARCHAR} ,
-	NOW() ,
-	#{item.chbSubmitDeadline,jdbcType=DATE} ,
-	#{item.submitDeadline,jdbcType=DATE} ,
-	null ,
-	#{item.orgCode,jdbcType=VARCHAR} ,
-	0 ,
-	null,
-	#{item.regCode,jdbcType=VARCHAR},
-	#{item.raiseType,jdbcType=VARCHAR},
-	#{item.ivstorientation,jdbcType=VARCHAR},
-	#{item.excFinSector,jdbcType=VARCHAR},
-	#{item.isShortTerm,jdbcType=VARCHAR},
-	#{item.shortTerm,jdbcType=NUMERIC},
-	#{item.isFreeRedem,jdbcType=VARCHAR},
-	#{item.cashManaCate,jdbcType=VARCHAR},
-	#{item.yield,jdbcType=NUMERIC},
-	#{item.investFeeRate,jdbcType=NUMERIC}
-	from dual
-			
-	</foreach>
+		INSERT
+		INTO CHB_PRD_DECLARE_SUB
+		(
+		REGIST_SEQNO,
+		PROD_ID ,
+		PROD_NAME,
+		PROD_INS_ID ,
+		PROD_BRAND,
+		PROD_STAGE ,
+		ISSUE_PARTY_ID ,
+		APPROVER_ID,
+		APPROVER_NAME,
+		DESIGNER_ID,
+		DESIGNER_NAME,
+		MANAGER_ID,
+		MANAGER_NAME,
+		LIAISON_NAME,
+		LIAISON_TEL,
+		LIAISON_MOBILE,
+		LIAISON_EMAIL,
+		PROFIT_TYPE,
+		TERMTYPE,
+		INVEST_ARAE,
+		INVEST_COUNTRY,
+		FINAN_SER_MODEL,
+		OPERATE_MODE,
+		BOOK_MODE,
+		CMMODE,
+		PMMODE,
+		MNAME ,
+		PRICED_MODE,
+		INV_ASSET_TYPE,
+		CON_PRD_TRAGET,
+		CONT_MODE,
+		COOPERATION_NAME ,
+		INV_TYPE_RAT ,
+		IS_YIELD,
+		HIGH_YIELD ,
+		LOW_YIELD ,
+		IS_YIELD_MEAS_BASIS,
+		RISK_TYPE,
+		SALE_AREA,
+		RAISE_CCY,
+		CASH_PRIN_CCY,
+		CASH_PROF_CCY,
+		SALE_AMT_STR ,
+		RAISE_AMT_PLAN ,
+		RAISE_PSTRDATE ,
+		RAISE_PENDDATE ,
+		INVEST_PRIN_DATE,
+		INVEST_PROF_DATE,
+		SALE_FEE_RATE ,
+		IN_DEP_NAME,
+		IN_DEP_CODE ,
+		OUT_DEP_CTRY,
+		OUT_DEP_NAME,
+		TRU_FEE_RATE ,
+		RISK_LEVEL,
+		TERM_RIGHT_FLAG,
+		CUS_REDEEM_FLAG,
+		CREDIT_FLAG,
+		CREDIT_TYPE,
+		CREDIT_MODE,
+		REMARK ,
+		NINE_FILE ,
+		FILE_NO ,
+		PRE_REG_DATE ,
+		PRE_APP_DATE ,
+		SEND_STATUS ,
+		STATUS_DATE ,
+		STATUS ,
+		CREATE_USER ,
+		CREATE_DEPT ,
+		CREATE_TIME ,
+		UPDATE_USER ,
+		UPDATE_TIME ,
+		CHB_SUBMIT_DEADLINE ,
+		SUBMIT_DEADLINE ,
+		SUBMIT_TIME ,
+		ORG_CODE ,
+		FILE_NUM ,
+		SUBMIT_FEEDBACK_STATUS,
+		REG_CODE,
+		RAISE_TYPE,
+		IVSTORIENTATION,
+		EXC_FIN_SECTOR,
+		IS_SHORT_TERM,
+		SHORT_TERM,
+		IS_FREE_REDEM,
+		CASH_MANA_CATE,
+		YIELD,
+		INVEST_FEE_RATE
+		)
+		<foreach collection="list" item="item" separator="union all">
+			select
+			#{item.registSeqno,jdbcType=VARCHAR},
+			#{item.prodId,jdbcType=VARCHAR} ,
+			#{item.prodName,jdbcType=VARCHAR},
+			#{item.prodInsId,jdbcType=VARCHAR} ,
+			#{item.prodBrand,jdbcType=VARCHAR},
+			#{item.prodStage,jdbcType=NUMERIC} ,
+			#{item.issuePartyId,jdbcType=VARCHAR} ,
+			#{item.approverId,jdbcType=VARCHAR},
+			#{item.approverName,jdbcType=VARCHAR},
+			#{item.designerId,jdbcType=VARCHAR},
+			#{item.designerName,jdbcType=VARCHAR},
+			#{item.managerId,jdbcType=VARCHAR},
+			#{item.managerName,jdbcType=VARCHAR},
+			#{item.liaisonName,jdbcType=VARCHAR},
+			#{item.liaisonTel,jdbcType=VARCHAR},
+			#{item.liaisonMobile,jdbcType=VARCHAR},
+			#{item.liaisonEmail,jdbcType=VARCHAR},
+			#{item.profitType,jdbcType=VARCHAR},
+			#{item.termtype,jdbcType=VARCHAR},
+			#{item.investArae,jdbcType=VARCHAR},
+			#{item.investCountry,jdbcType=VARCHAR},
+			#{item.finanSerModel,jdbcType=VARCHAR},
+			#{item.operateMode,jdbcType=VARCHAR},
+			#{item.bookMode,jdbcType=VARCHAR},
+			#{item.cmmode,jdbcType=VARCHAR},
+			#{item.pmmode,jdbcType=VARCHAR},
+			#{item.mname,jdbcType=VARCHAR} ,
+			#{item.pricedMode,jdbcType=VARCHAR},
+			#{item.invAssetType,jdbcType=VARCHAR},
+			#{item.conPrdTraget,jdbcType=VARCHAR},
+			#{item.contMode,jdbcType=VARCHAR},
+			#{item.cooperationName,jdbcType=VARCHAR} ,
+			#{item.invTypeRat,jdbcType=VARCHAR} ,
+			#{item.isYield,jdbcType=VARCHAR},
+			#{item.highYield,jdbcType=NUMERIC} ,
+			#{item.lowYield,jdbcType=NUMERIC} ,
+			#{item.isYieldMeasBasis,jdbcType=VARCHAR},
+			#{item.riskType,jdbcType=VARCHAR},
+			#{item.saleArea,jdbcType=VARCHAR},
+			#{item.raiseCcy,jdbcType=VARCHAR},
+			#{item.cashPrinCcy,jdbcType=VARCHAR},
+			#{item.cashProfCcy,jdbcType=VARCHAR},
+			#{item.saleAmtStr,jdbcType=NUMERIC} ,
+			#{item.raiseAmtPlan,jdbcType=NUMERIC} ,
+			#{item.raisePstrdate,jdbcType=DATE} ,
+			#{item.raisePenddate,jdbcType=DATE} ,
+			#{item.investPrinDate,jdbcType=VARCHAR},
+			#{item.investProfDate,jdbcType=VARCHAR},
+			#{item.saleFeeRate,jdbcType=NUMERIC} ,
+			#{item.inDepName,jdbcType=VARCHAR},
+			#{item.inDepCode,jdbcType=VARCHAR} ,
+			#{item.outDepCtry,jdbcType=VARCHAR},
+			#{item.outDepName,jdbcType=VARCHAR},
+			#{item.truFeeRate,jdbcType=NUMERIC} ,
+			#{item.riskLevel,jdbcType=VARCHAR},
+			#{item.termRightFlag,jdbcType=VARCHAR},
+			#{item.cusRedeemFlag,jdbcType=VARCHAR},
+			#{item.creditFlag,jdbcType=VARCHAR},
+			#{item.creditType,jdbcType=VARCHAR},
+			#{item.creditMode,jdbcType=VARCHAR},
+			#{item.remark,jdbcType=VARCHAR} ,
+			null ,
+			null ,
+			null ,
+			null ,
+			'01' ,
+			NOW() ,
+			'01' ,
+			#{item.createUser,jdbcType=VARCHAR} ,
+			null ,
+			NOW() ,
+			#{item.updateUser,jdbcType=VARCHAR} ,
+			NOW() ,
+			#{item.chbSubmitDeadline,jdbcType=DATE} ,
+			#{item.submitDeadline,jdbcType=DATE} ,
+			null ,
+			#{item.orgCode,jdbcType=VARCHAR} ,
+			0 ,
+			null,
+			#{item.regCode,jdbcType=VARCHAR},
+			#{item.raiseType,jdbcType=VARCHAR},
+			#{item.ivstorientation,jdbcType=VARCHAR},
+			#{item.excFinSector,jdbcType=VARCHAR},
+			#{item.isShortTerm,jdbcType=VARCHAR},
+			#{item.shortTerm,jdbcType=NUMERIC},
+			#{item.isFreeRedem,jdbcType=VARCHAR},
+			#{item.cashManaCate,jdbcType=VARCHAR},
+			#{item.yield,jdbcType=NUMERIC},
+			#{item.investFeeRate,jdbcType=NUMERIC}
+			from dual
+
+		</foreach>
 	</insert>
-	
+
 	<delete id="deleteDeclaresub"  parameterType="map">
 		delete from CHB_PRD_DECLARE_SUB
 		<where>
@@ -690,17 +690,17 @@
 			</if>
 		</where>
 	</delete>
-	
-    
-    <delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
-	   delete from CHB_PRD_DECLARE_SUB
-	   where SEND_STATUS = '01' /*删除未报送的*/
-	   <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
-	   #{item.prodId,jdbcType=VARCHAR} 
-	   </foreach>
-    </delete>
-    
-    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
+
+
+	<delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
+		delete from CHB_PRD_DECLARE_SUB
+		where SEND_STATUS = '01' /*删除未报送的*/
+		<foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+			#{item.prodId,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+
+	<insert id="insert" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
         INSERT INTO CHB_PRD_DECLARE_SUB
 	    (
 	    REGIST_SEQNO,
@@ -885,153 +885,153 @@
         #{investFeeRate,jdbcType=NUMERIC}
 	    )
     </insert>
-    
-   <select id="selectRegPerProdList" resultMap="PerProDeclareRegDtoRM">
-   SELECT
-	null as REGIST_SEQNO,
-	sub.PROD_ID ,
-	sub.PROD_NAME,
-	sub.PROD_INS_ID ,
-	sub.PROD_BRAND,
-	sub.PROD_STAGE ,
-	sub.ISSUE_PARTY_ID ,
-	sub.APPROVER_ID,
-	sub.APPROVER_NAME,
-	sub.DESIGNER_ID,
-	sub.DESIGNER_NAME,
-	sub.MANAGER_ID,
-	sub.MANAGER_NAME,
-	sub.LIAISON_NAME,
-	sub.LIAISON_TEL,
-	sub.LIAISON_MOBILE,
-	sub.LIAISON_EMAIL,
-	sub.PROFIT_TYPE,
-	sub.TERMTYPE,
-	sub.INVEST_ARAE,
-	sub.INVEST_COUNTRY,
-	sub.FINAN_SER_MODEL,
-	sub.OPERATE_MODE,
-	sub.BOOK_MODE,
-	sub.CMMODE,
-	sub.PMMODE,
-	sub.MNAME ,
-	sub.PRICED_MODE,
-	sub.INV_ASSET_TYPE,
-	sub.CON_PRD_TRAGET,
-	sub.CONT_MODE,
-	sub.COOPERATION_NAME ,
-	sub.INV_TYPE_RAT ,
-	sub.IS_YIELD,
-	sub.HIGH_YIELD ,
-	sub.LOW_YIELD ,
-	sub.IS_YIELD_MEAS_BASIS,
-	sub.RISK_TYPE,
-	sub.SALE_AREA,
-	sub.RAISE_CCY,
-	sub.CASH_PRIN_CCY,
-	sub.CASH_PROF_CCY,
-	sub.SALE_AMT_STR ,
-	sub.RAISE_AMT_PLAN ,
-	sub.RAISE_PSTRDATE ,
-	sub.RAISE_PENDDATE ,
-	sub.INVEST_PRIN_DATE,
-	sub.INVEST_PROF_DATE,
-	sub.SALE_FEE_RATE ,
-	sub.IN_DEP_NAME,
-	sub.IN_DEP_CODE ,
-	sub.OUT_DEP_CTRY,
-	sub.OUT_DEP_NAME,
-	sub.TRU_FEE_RATE ,
-	sub.RISK_LEVEL,
-	sub.TERM_RIGHT_FLAG,
-	sub.CUS_REDEEM_FLAG,
-	sub.CREDIT_FLAG,
-	sub.CREDIT_TYPE,
-	sub.CREDIT_MODE,
-	sub.REMARK ,
-	sub.CREATE_USER ,
-	sub.UPDATE_USER ,
-    sub.ORG_CODE ,
-	sub.REG_CODE ,
-	sub.RAISE_TYPE ,
-	sub.IVSTORIENTATION ,
-	sub.EXC_FIN_SECTOR ,
-	sub.IS_SHORT_TERM ,
-	sub.SHORT_TERM ,
-	sub.IS_FREE_REDEM ,
-	sub.CASH_MANA_CATE ,
-	sub.YIELD ,
-	sub.INVEST_FEE_RATE,
-	sub.status status
-	from CHB_PRD_DECLARE_SUB sub
-	where sub.send_status in ('02','03')
-	<if test="list!=null and list.size()!=0">
-	   	<foreach collection="list" item="item" open="and ((" close="))" separator=") or (">
-		 	trim(sub.prod_id)= #{item.prodId}
+
+	<select id="selectRegPerProdList" resultMap="PerProDeclareRegDtoRM">
+		SELECT
+		null as REGIST_SEQNO,
+		sub.PROD_ID ,
+		sub.PROD_NAME,
+		sub.PROD_INS_ID ,
+		sub.PROD_BRAND,
+		sub.PROD_STAGE ,
+		sub.ISSUE_PARTY_ID ,
+		sub.APPROVER_ID,
+		sub.APPROVER_NAME,
+		sub.DESIGNER_ID,
+		sub.DESIGNER_NAME,
+		sub.MANAGER_ID,
+		sub.MANAGER_NAME,
+		sub.LIAISON_NAME,
+		sub.LIAISON_TEL,
+		sub.LIAISON_MOBILE,
+		sub.LIAISON_EMAIL,
+		sub.PROFIT_TYPE,
+		sub.TERMTYPE,
+		sub.INVEST_ARAE,
+		sub.INVEST_COUNTRY,
+		sub.FINAN_SER_MODEL,
+		sub.OPERATE_MODE,
+		sub.BOOK_MODE,
+		sub.CMMODE,
+		sub.PMMODE,
+		sub.MNAME ,
+		sub.PRICED_MODE,
+		sub.INV_ASSET_TYPE,
+		sub.CON_PRD_TRAGET,
+		sub.CONT_MODE,
+		sub.COOPERATION_NAME ,
+		sub.INV_TYPE_RAT ,
+		sub.IS_YIELD,
+		sub.HIGH_YIELD ,
+		sub.LOW_YIELD ,
+		sub.IS_YIELD_MEAS_BASIS,
+		sub.RISK_TYPE,
+		sub.SALE_AREA,
+		sub.RAISE_CCY,
+		sub.CASH_PRIN_CCY,
+		sub.CASH_PROF_CCY,
+		sub.SALE_AMT_STR ,
+		sub.RAISE_AMT_PLAN ,
+		sub.RAISE_PSTRDATE ,
+		sub.RAISE_PENDDATE ,
+		sub.INVEST_PRIN_DATE,
+		sub.INVEST_PROF_DATE,
+		sub.SALE_FEE_RATE ,
+		sub.IN_DEP_NAME,
+		sub.IN_DEP_CODE ,
+		sub.OUT_DEP_CTRY,
+		sub.OUT_DEP_NAME,
+		sub.TRU_FEE_RATE ,
+		sub.RISK_LEVEL,
+		sub.TERM_RIGHT_FLAG,
+		sub.CUS_REDEEM_FLAG,
+		sub.CREDIT_FLAG,
+		sub.CREDIT_TYPE,
+		sub.CREDIT_MODE,
+		sub.REMARK ,
+		sub.CREATE_USER ,
+		sub.UPDATE_USER ,
+		sub.ORG_CODE ,
+		sub.REG_CODE ,
+		sub.RAISE_TYPE ,
+		sub.IVSTORIENTATION ,
+		sub.EXC_FIN_SECTOR ,
+		sub.IS_SHORT_TERM ,
+		sub.SHORT_TERM ,
+		sub.IS_FREE_REDEM ,
+		sub.CASH_MANA_CATE ,
+		sub.YIELD ,
+		sub.INVEST_FEE_RATE,
+		sub.status status
+		from CHB_PRD_DECLARE_SUB sub
+		where sub.send_status in ('02','03')
+		<if test="list!=null and list.size()!=0">
+			<foreach collection="list" item="item" open="and ((" close="))" separator=") or (">
+				trim(sub.prod_id)= #{item.prodId}
+			</foreach>
+		</if>
+	</select>
+
+	<delete id="deleteRegistSeqnoList">
+		delete from CHB_PRD_DECLARE_SUB
+		where
+		<foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
 		</foreach>
-	</if>
-   </select>
-   
-   <delete id="deleteRegistSeqnoList">
-   delete from CHB_PRD_DECLARE_SUB 
-   where 
-	<foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
-	#{item,jdbcType=VARCHAR}
-	</foreach>
-   </delete>
-   
-   <insert id="insertSeletForSub" parameterType="java.lang.String">
-   insert into CHB_PRD_DECLARE_SUB (REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
-    APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME, 
-    LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE, 
-    SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE, 
-    CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME, 
-    INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA, 
-    RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE, 
-    RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE, 
-    OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, 
-    CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE, 
-    PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-    UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
-    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
-      )
-      select 
-    REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
-    APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME, 
-    LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE, 
-    SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE, 
-    CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME, 
-    INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA, 
-    RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE, 
-    RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE, 
-    OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, 
-    CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE, 
-    PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, NOW(),
-    UPDATE_USER, NOW(), CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
-    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
-    from CHB_PRD_DECLARE_SUB_HIS
-    where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-  	<if test="regList !=null and regList.size()>0">
-          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
-            #{item,jdbcType=VARCHAR}
-          </foreach>
-       </if>
-   </insert>
-   
-   <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
-   	select REGIST_SEQNO
-      from CHB_PRD_DECLARE_SUB
-      where 
-      <if test="flag == '02'">
-      SEND_STATUS in ('02','03')
-      </if>
-      <if test="flag == '01'">
-      SEND_STATUS = '01'
-      </if>
-      <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
-      PROD_ID = #{item.prodId,jdbcType=VARCHAR}
-      </foreach>
-   </select>
+	</delete>
+
+	<insert id="insertSeletForSub" parameterType="java.lang.String">
+		insert into CHB_PRD_DECLARE_SUB (REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID,
+		APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME,
+		LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE,
+		SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE,
+		CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME,
+		INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA,
+		RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE,
+		RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE,
+		OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG,
+		CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE,
+		PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
+		FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR,
+		IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+		)
+		select
+		REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID,
+		APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME,
+		LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE,
+		SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE,
+		CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME,
+		INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA,
+		RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE,
+		RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE,
+		OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG,
+		CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE,
+		PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, NOW(),
+		UPDATE_USER, NOW(), CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
+		FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR,
+		IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+		from CHB_PRD_DECLARE_SUB_HIS
+		where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+		<if test="regList !=null and regList.size()>0">
+			<foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</insert>
+
+	<select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
+		select REGIST_SEQNO
+		from CHB_PRD_DECLARE_SUB
+		where
+		<if test="flag == '02'">
+			SEND_STATUS in ('02','03')
+		</if>
+		<if test="flag == '01'">
+			SEND_STATUS = '01'
+		</if>
+		<foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+			PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+		</foreach>
+	</select>
 </mapper>

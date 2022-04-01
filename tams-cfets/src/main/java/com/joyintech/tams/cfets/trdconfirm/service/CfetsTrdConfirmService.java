@@ -296,7 +296,7 @@ public class CfetsTrdConfirmService extends BaseService{
                         }else{
                             CfetsTrdRepoTrade003Dto entity=packageRepoEquity(item,DictCodeListExt1.生成方式_画面录入.getValue());
                             //成交确认提交方法
-                            cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
+                            cfetsTrdConfirm001Service.doCompleteRepoMethod(entity, OperationType.NEW, true);
                         }
 
                     }catch (Exception e) {
@@ -878,7 +878,9 @@ public class CfetsTrdConfirmService extends BaseService{
         deal.setSecManageAcctId(entity.getSecManageAcctId());
         deal.setTradeMarketMode(entity.getTradeMarketMode());
         bussSettleOrderParameterDto.setDeal(deal);
+        logger.debug("成交确认开始生成划款指令:" + JsonUtils.object2Json(bussTrdTransferOrder));
         BussTrdTransferOrderDto bussTrdTransferOrderDto = bussTrdTransferOrderService.generateOrder(bussSettleOrderParameterDto);
+        logger.debug("成交确认生成划款指令:" + JsonUtils.object2Json(bussTrdTransferOrder));
         bussTrdTransferOrderDto.setPayAcctNoList(null);
         bussTrdTransferOrderDto.setRecAcctNoList(null);
         bussTrdTransferOrderDto.setIsTotalTrade(BussinessDictCodeList.是否_是.getValue());
@@ -895,6 +897,7 @@ public class CfetsTrdConfirmService extends BaseService{
         bussTrdTransferOrderDto.setOrderRetStatus(DictCodeList.指令处理状态_处理成功.getValue());
         bussTrdTransferOrder.add(bussTrdTransferOrderDto);
         entity.setBussTrdTransferOrder(bussTrdTransferOrderService.save(bussTrdTransferOrder));
+        logger.debug("成交确认生成划款指令结果:" + JsonUtils.object2Json(bussTrdTransferOrder));
         // =====================划款指令信息=====================
 
         entity.getBussTrdTransferOrder().get(0).setTradeId(entity.getTotleTradeId());
@@ -2034,13 +2037,13 @@ public class CfetsTrdConfirmService extends BaseService{
                     if(StringUtil.equals(cfets_manualconfirm_bond,DictCodeList.是否_否.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"01")
                     ){
-                        errorRs.setErrorList(Arrays.asList(new ValidMessage("根据参数配置，银行间债券不可手工确认！")));
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("银行间债券交易登记数据通过CSTP下行匹配进行成交匹配确认，不可手工成交确认，请重新选择！")));
                         return errorRs;
                     }
                     if(StringUtil.equals(cfets_manualconfirm_repo,DictCodeList.是否_否.getValue())
                             && StringUtil.equals(item.getFinprodType2(),"02")
                     ){
-                        errorRs.setErrorList(Arrays.asList(new ValidMessage("根据参数配置，银行间回购不可手工确认！")));
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("银行间质押式回购交易登记数据通过CSTP下行匹配进行成交匹配确认，不可手工成交确认，请重新选择！")));
                         return errorRs;
                     }
                     WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
@@ -2062,6 +2065,11 @@ public class CfetsTrdConfirmService extends BaseService{
                     List<CfetsTrdConfirmRegInfoListResponse> flagList=cfetsTrdConfirmMapper.isExistDealInfo(pageParam);
                     if(StringUtil.isEmptyList(flagList)) {
                         errorRs.setErrorList(Arrays.asList(new ValidMessage("请选择有效状态的数据！")));
+                        return errorRs;
+                    }
+                    if(StringUtil.equals(item.getDealType(),BussinessDictCodeList.报价方式_对话报价.getValue())
+                            ||StringUtil.equals(item.getDealType(),BussinessDictCodeList.报价方式_请求报价.getValue())){
+                        errorRs.setErrorList(Arrays.asList(new ValidMessage("上行报价数据不允许点击成交确认！")));
                         return errorRs;
                     }
                 }
@@ -2407,7 +2415,7 @@ public class CfetsTrdConfirmService extends BaseService{
                 }
                 entity.setOprType(DictCodeListExt3.操作类型_手工匹配确认.getValue());
                 //成交确认提交方法
-                cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
+                cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW,false);
             }
         }catch (Exception e) {
             //若插入数据异常，提示错误信息
@@ -2636,7 +2644,7 @@ public class CfetsTrdConfirmService extends BaseService{
                     entity.setCfetsTrdConfirmMatchDto(matchDto);
                     entity.setOprType(DictCodeListExt3.操作类型_自动匹配确认.getValue());
                     //成交确认提交方法
-                    cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW);
+                    cfetsTrdConfirm001Service.doCompleteRepoMethod(entity,OperationType.NEW,false);
                 }
             }catch (Exception e) {
                 //若插入数据异常，提示错误信息

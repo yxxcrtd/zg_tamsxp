@@ -1,0 +1,1 @@
+update CFG_READONLY_FORM_SHOW set COLCODE = 'otherBusiModel' where COLCODE = 'busiModel' and PAGECODE = 'FieldEtrDispatcher' AND DTCODE = 'FieldEtrDispatcherInfo';

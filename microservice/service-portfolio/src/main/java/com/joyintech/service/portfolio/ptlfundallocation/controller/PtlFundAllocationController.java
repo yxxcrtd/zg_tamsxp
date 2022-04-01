@@ -177,8 +177,8 @@ public class PtlFundAllocationController {
     @RequestMapping("/doDelete")
     @Transactional
     @DTXTransaction
-    public int doDelete(@RequestBody String orderId) {
-        return ptlFundAllocationService.doDelete(orderId);
+    public int doDelete(@RequestBody PtlFundAllocationDto entity) {
+        return ptlFundAllocationService.doDelete(entity);
     }
     
     @RequestMapping("/doBack")

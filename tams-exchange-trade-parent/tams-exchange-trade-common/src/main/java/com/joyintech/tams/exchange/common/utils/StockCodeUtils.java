@@ -19,10 +19,11 @@ public class StockCodeUtils {
 
     public static String formatStockCode(String stockCode, String market) {
         if (!Strings.isNullOrEmpty(market)) {
-            if (stockCode.contains(market)) {
+            String marketStr = "." + market;
+            if (stockCode.contains(marketStr)) {
                 return stockCode;
             } else {
-                return stockCode + "." + market;
+                return stockCode + marketStr;
             }
         }
         return stockCode;

@@ -90,6 +90,10 @@ public interface InvestorsHoldInfo001Mapper {
      */
     List<InvestorsHoldInfo001Dto> selectAllHoldInfoData(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);
 
+    List<InvestorsHoldInfo001Dto> selectAllHoldInfoDataNew();
+
+
+
     /**
      * 获取所有登记表的关联信息
      * <功能详细描述>
@@ -99,6 +103,9 @@ public interface InvestorsHoldInfo001Mapper {
      * @since 1.0
      */
     List<ChbInvestholdInfoSub> selectAllSubHoldInfoData(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);
+
+    List<ChbInvestholdInfoSub> selectAllSubHoldInfoDataNew();
+
 
     /**
      * 批量插入维护表
@@ -318,6 +325,8 @@ public interface InvestorsHoldInfo001Mapper {
      */
     List<InvestorsHoldInfoRegist001Dto>  getSubmitFeedbackStatusList(List<ChbInvestholdInfoSub> subListUp);
 
+    List<InvestorsHoldInfoRegist001Dto>  getSubmitFeedbackStatusListNew();
+
     /**
      * 查询当天持有信息条数
      *
@@ -363,7 +372,10 @@ public interface InvestorsHoldInfo001Mapper {
 	 */
 	int handleInfoDeleteData(@Param("dataList") List<InvestorsHoldInfo001Dto> dataList);
 
-	/**
+    int handleInfoDeleteDataNew();
+
+
+    /**
 	 * 删除持有信息登记表中数据状态为删除的数据
 	 *
 	 * @param dataList 处理数据对象

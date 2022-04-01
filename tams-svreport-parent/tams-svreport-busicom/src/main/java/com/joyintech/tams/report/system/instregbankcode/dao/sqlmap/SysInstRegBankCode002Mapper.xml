@@ -20,6 +20,9 @@
             REGIST_BANK_CODE as registBankCode,
             PBC_BANK_CODE as pbcBankCode,
             IS_FIN_SUB_COMPANY as isFinSubCompany,
+            /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
+           belogCodeCBRC ,
+            /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
             INSITITUTE_CODE  as insitituteCode
         from
             CHB_ORG_REGIST_BANK_CODE

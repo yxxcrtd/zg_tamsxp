@@ -268,6 +268,29 @@
 							   th:value="${entity?.otherFeeRate}" data-th-data-textrange="5" required>
 					</div>
 				</div>
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repPppflag}">公共PPP</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_pppflag|" th:name="|${entityName}.pppflag|"
+								th:initValue="${entity?.pppflag}"
+								class="layui-input form-input input-select" placeholder="请输入内容"
+								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repBondtostockFlag}">是否投向市场化债转股相关产品的部分</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_bondtostockFlag|" th:name="|${entityName}.bondtostockFlag|"
+								th:initValue="${entity?.bondtostockFlag}"
+								class="layui-input form-input input-select" placeholder="请输入内容"
+								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
+						</select>
+					</div>
+				</div>
+
             </div>
 			<!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
 			<div class="layui-form-item">

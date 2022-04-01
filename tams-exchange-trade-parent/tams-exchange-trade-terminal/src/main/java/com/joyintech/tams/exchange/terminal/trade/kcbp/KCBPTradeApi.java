@@ -86,7 +86,7 @@ public class KCBPTradeApi {
     public static final String KCBP_FUNCTION_CODE_QRY_PLEDGE_DISCOUNT = "410575";
     //持仓查询
     public static final String KCBP_FUNCTION_CODE_QRY_ACCOUNT_POSITION = "410504";
-    private SimpleDateFormat formatBeginDate = new SimpleDateFormat("YYYYMMdd");
+    private SimpleDateFormat formatBeginDate = new SimpleDateFormat("yyyyMMdd");
 
     private Splitter commaSplitter = Splitter.on(",");
 
@@ -597,7 +597,7 @@ public class KCBPTradeApi {
 
     private void processProtocolBack_SH_ChenJiao(IntegratedEntrust integratedEntrust, Map<String, String> parameters) {
         logger.info("start isProtocolBack_SH_ChenJiao {}", integratedEntrust.getBsFlag());
-        parameters.put("funcid", "411024");
+        parameters.put("funcid", KCBP_FUNCTION_CODE_PROTOCOL_BACK_SH_TRADE);
         parameters.put("stkcode", StockCodeUtils.getStockCode(integratedEntrust.getStockCode()));
         parameters.put("orderqty", String.valueOf(integratedEntrust.getEntrustVolume()));//委托数量
         if (EntrustProp.SH_REPURCHASE_RENEWAL_CONFIRM.value.equals(integratedEntrust.getEntrustProp())
@@ -627,7 +627,7 @@ public class KCBPTradeApi {
 
     private void processProtocolBack_SH_BaoJia(IntegratedEntrust integratedEntrust, Map<String, String> parameters) {
         logger.info("start ProtocolBack_SH_BaoJia  {}", integratedEntrust.getBsFlag());
-        parameters.put("funcid", "411032");
+        parameters.put("funcid", KCBP_FUNCTION_CODE_PROTOCOL_BACK_SH_BAOJIA);
         parameters.put("stkcode", StockCodeUtils.getStockCode(integratedEntrust.getStockCode()));
         // 初始交易2C 换券申报2Q 填写
         parameters.put("orderqty", String.valueOf(integratedEntrust.getEntrustVolume()));//委托数量
@@ -1043,7 +1043,7 @@ public class KCBPTradeApi {
         String market = StockCodeUtils.getMarket(integratedBulkCloseQuoteQryBean.getStockCode());
         if (Market.SHSE.value.equals(market)) {
             //上海盘后固定价格交易行情查询
-            parameters.put("funcid", "410556");
+            parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SH);
             if (!Strings.isNullOrEmpty(integratedBulkCloseQuoteQryBean.getStockCode()))
                 parameters.put("stkcode", StockCodeUtils.getStockCode(integratedBulkCloseQuoteQryBean.getStockCode()));
             parameters.put("count", String.valueOf(integratedBulkCloseQuoteQryBean.getPageSize()));
@@ -1059,7 +1059,7 @@ public class KCBPTradeApi {
                 logger.info("queryIntegratedBulkCloseQuote SH fail {}", resultBean.getErrorMsg());
         } else if (Market.SZSE.value.equals(market)) {
             //深圳盘后固定价格交易行情查询
-            parameters.put("funcid", "410559");
+            parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SZ);
             if (!Strings.isNullOrEmpty(integratedBulkCloseQuoteQryBean.getStockCode()))
                 parameters.put("stkcode", StockCodeUtils.getStockCode(integratedBulkCloseQuoteQryBean.getStockCode()));
             logger.info("parameters {}", JsonUtils.getJsonFromObject(parameters));
@@ -1127,8 +1127,7 @@ public class KCBPTradeApi {
     public void queryIntegratedQuote(QuoteQryBean quoteQryBean, long requestId) {
         KCBPAccount kcbpAccount = kcbpTradeClient.getKCBPAccount(quoteQryBean.getAccountId());
         Map<String, String> parameters = Maps.newHashMap(kcbpAccount.getHeadMessages());
-        if (quoteQryBean.getQuoteType() == QuoteType.BULK_QUOTE.value
-                || QuoteType.AFTER_BULK_QUOTE.value == quoteQryBean.getQuoteType()) {
+        if (quoteQryBean.getQuoteType() == QuoteType.BULK_QUOTE.value) {
             String[] marketAndStockCode = StockCodeUtils.getMarketAndStockCode(quoteQryBean.getStockCode());
             if (marketAndStockCode[1].equals(Market.SZSE.value)) {
                 parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_SZ);
@@ -1159,9 +1158,22 @@ public class KCBPTradeApi {
             parameters.put("posstr", "");
         }
         if (quoteQryBean.getQuoteType() == QuoteType.AFTER_BULK_QUOTE.value) {
-            parameters.put("funcid", "410556");//上海盘后固定价格交易行情查询
-            if (!Strings.isNullOrEmpty(quoteQryBean.getStockCode()))
-                parameters.put("stkcode", StockCodeUtils.getStockCode(quoteQryBean.getStockCode()));
+//            parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SH);
+//            if (!Strings.isNullOrEmpty(quoteQryBean.getStockCode()))
+//                parameters.put("stkcode", StockCodeUtils.getStockCode(quoteQryBean.getStockCode()));
+//            parameters.put("count", "");
+//            parameters.put("posstr", "");
+            String[] marketAndStockCode = StockCodeUtils.getMarketAndStockCode(quoteQryBean.getStockCode());
+            if (marketAndStockCode[1].equals(Market.SZSE.value)) {
+                //深圳盘后固定价格交易行情查询
+                parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SZ);
+                quoteQryBean.setMarket(Market.SZSE.value);
+            } else if (marketAndStockCode[1].equals(Market.SHSE.value)) {
+                //上海盘后固定价格交易行情查询
+                parameters.put("funcid", KCBP_FUNCTION_CODE_QRY_INTEGRATED_QUOTE_CLOSE_SH);
+                quoteQryBean.setMarket(Market.SHSE.value);
+            }
+            parameters.put("stkcode", marketAndStockCode[0]);
             parameters.put("count", "");
             parameters.put("posstr", "");
         }

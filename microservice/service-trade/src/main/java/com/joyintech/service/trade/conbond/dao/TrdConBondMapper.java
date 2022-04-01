@@ -38,49 +38,49 @@ import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 @Repository
 public interface TrdConBondMapper {
 
-    /**
-     * 检索债券交易列表
-     *
-     * @param paraMap 参数
-     * @return 债券交易列表
-     * @see
-     * @since 1.0
-     */
-    List<TrdConBondDto> selectDeal(Map<String, Object> paraMap);
+	/**
+	 * 检索债券交易列表
+	 *
+	 * @param paraMap 参数
+	 * @return 债券交易列表
+	 * @see
+	 * @since 1.0
+	 */
+	List<TrdConBondDto> selectDeal(Map<String, Object> paraMap);
 
-    List<SuggestDto> getSecManageAcctId(Map<String, Object> param);
-    
-
-    List<SelectOptionDto> getFinprodId(Map<String, Object> param);
-
-    TrdConBondDto getTrdConBondDto(Map<String, Object> params);
-
-    /**
-     * a.当前债券面额取得（根据还本计划计算）
-     *
-     * @param param 参数
-     * @return a.当前债券面额取得（根据还本计划计算）
-     * @see
-     * @since 1.0
-     */
-    BigDecimal getCurSecAmt(Map<String, Object> param);
+	List<SuggestDto> getSecManageAcctId(Map<String, Object> param);
 
 
-    /**
-     * 取得证券托管户的登记托管机构
-     * 
-     * @param param Map<String, Object>
-     * @return 证券托管户的登记托管机构
-     * @see
-     * @since 1.0
-     */
-    String getRegistOrg(Map<String, Object> param);
+	List<SelectOptionDto> getFinprodId(Map<String, Object> param);
 
-    BigDecimal getTongDaoCash(Map<String, Object> param);
+	TrdConBondDto getTrdConBondDto(Map<String, Object> params);
 
-    List<TrdProductDeal> getTrdProductDealByFTradeId(@Param("fTradeId") String fTradeId,@Param("finprodType2") String finprodType2);
+	/**
+	 * a.当前债券面额取得（根据还本计划计算）
+	 *
+	 * @param param 参数
+	 * @return a.当前债券面额取得（根据还本计划计算）
+	 * @see
+	 * @since 1.0
+	 */
+	BigDecimal getCurSecAmt(Map<String, Object> param);
 
-    List<WflTrdProductDeal>  getWftTrdProductDealByFTradeId(@Param("fTradeId") String fTradeId,@Param("finprodType2") String finprodType2,@Param("workflowId") String workflowId);
+
+	/**
+	 * 取得证券托管户的登记托管机构
+	 *
+	 * @param param Map<String, Object>
+	 * @return 证券托管户的登记托管机构
+	 * @see
+	 * @since 1.0
+	 */
+	String getRegistOrg(Map<String, Object> param);
+
+	BigDecimal getTongDaoCash(Map<String, Object> param);
+
+	List<TrdProductDeal> getTrdProductDealByFTradeId(@Param("fTradeId") String fTradeId,@Param("finprodType2") String finprodType2);
+
+	List<WflTrdProductDeal>  getWftTrdProductDealByFTradeId(@Param("fTradeId") String fTradeId,@Param("finprodType2") String finprodType2,@Param("workflowId") String workflowId);
 
 	void insertRevokePtlTrade(@Param("deal") PtlTrade deal, @Param("updateUser")String updateUser);
 
@@ -121,36 +121,36 @@ public interface TrdConBondMapper {
 
 	int selectWflConfirmInfo(@Param("bTradeId") String bTradeId);
 
-    List<PtlTrade> findPtlTradeByTradeIds(List<TrdProductDeal> trdProductDeals1);
+	List<PtlTrade> findPtlTradeByTradeIds(List<TrdProductDeal> trdProductDeals1);
 
-    /**
-     * 
-     * 查询交易确认流程中信息
-     * <功能详细描述>
-     * @param bTradeId
-     * @return
-     * @see
-     * @since 1.0
-     */
-    Integer selectConfirmInfoWfl(Map<String, Object> param);
-    
-    /**
-     * 
-     * 查询交易确认流程中信息
-     * <功能详细描述>
-     * @param bTradeId
-     * @return
-     * @see
-     * @since 1.0
-     */
-    Integer revokeCheckWfl(Map<String, Object> param);
+	/**
+	 *
+	 * 查询交易确认流程中信息
+	 * <功能详细描述>
+	 * @param bTradeId
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	Integer selectConfirmInfoWfl(Map<String, Object> param);
+
+	/**
+	 *
+	 * 查询交易确认流程中信息
+	 * <功能详细描述>
+	 * @param bTradeId
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	Integer revokeCheckWfl(Map<String, Object> param);
 
 	TrdConBondDto getTrdConBondDtoForAccount(Map<String, Object> params);
 
 	Map<String, Object> getBusicode(Map<String, Object> param);
 
 	TrdConBondDto getTrdConBondDtoForTradeId(Map<String, Object> params);
-	
+
 	/**
 	 * 获取生效的到账交易编号
 	 * @param bTradeId
@@ -158,5 +158,7 @@ public interface TrdConBondMapper {
 	 */
 	String getTradeId(@Param("bTradeId") String bTradeId);
 
-    List<StlPayOrders> getTrdProductDeals(Map<String, Object> param);
+	List<StlPayOrders> getTrdProductDeals(Map<String, Object> param);
+
+	String getAccNo(Map<String,String> param);
 }

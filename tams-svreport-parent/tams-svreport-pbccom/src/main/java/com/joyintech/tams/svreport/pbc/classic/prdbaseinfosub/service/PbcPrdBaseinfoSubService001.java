@@ -5,18 +5,14 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
+import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.service.PbcPrdInitRaiseSubService001;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -89,6 +85,9 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
     
     @Autowired
 	private PbcPrdCashRaiseSubService001 pbcPrdCashRaiseSubService001;
+
+	@Autowired
+	private PbcPrdInitRaiseSubService001 pbcPrdInitRaiseSubService001;
     
     private DecimalFormat df = new DecimalFormat("0.00000");
     private DecimalFormat dt = new DecimalFormat("0.00");
@@ -722,8 +721,18 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
         
     	@SuppressWarnings("unchecked")
     	List<PbcPrdBaseinfoSub> dataList=new ArrayList<PbcPrdBaseinfoSub>();
+		List<PbcPrdBaseinfoSub> prodIdList=new ArrayList<PbcPrdBaseinfoSub>();
     	if (datas != null){
         	dataList=JsonUtils.json2List(datas,PbcPrdBaseinfoSub.class);
+			for (ListIterator<PbcPrdBaseinfoSub> iterator = dataList.listIterator(); iterator.hasNext(); ) {
+				PbcPrdBaseinfoSub it = iterator.next();
+				//如果没有募集信息就过滤
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("pbcProdId",it.getPbcProdIdShow());
+				if(CollectionUtils.isEmpty(pbcPrdInitRaiseSubService001.searchPage(map).getRoot())  ){
+					iterator.remove();
+				}
+			}
     	}else{
     		//不选报表导出所有未报送的记录
     		dataList= searchByCondition(selectParam);

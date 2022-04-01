@@ -15,9 +15,13 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.thymeleaf.util.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -43,6 +47,9 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
 
     @ApiModelProperty(name="otherPs",value="交易方向",example="买入")
     private String otherPs;
+
+    @ApiModelProperty(name="targetType",value="目标类型",example="A1")
+    private String targetType;
 
     @ApiModelProperty(name="busiPs",value="回购方向",example="回购/拆借方向")
     private String busiPs;
@@ -98,6 +105,12 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     @ApiModelProperty(name="calculateField",value="计算方式",example="计算方式供前台判断使用")
     private String calculateField;
 
+    @ApiModelProperty(name="trdAcctId",value="资金账户",example="XXX资金账户")
+    private String trdAcctId;
+
+    @ApiModelProperty(name="assetType1",value="资产一级类型",example="质押式协议回购")
+    private String assetType1;
+
     /**
      * 获取 otherEntrustStatus
      * @return otherEntrustStatus.
@@ -126,6 +139,10 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
         if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue())){
             return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, BussinessDictCodeList.平安资产类型_一级投标债券.getValue());
         }
+        else if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.平安资产类型_回购.getValue())
+                && StringUtil.equals(getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())) {
+            return BussinessConstant.NEGOTIATED_REPURCHASE_TEXT;
+        }
         return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, super.getFinprodType2());
     }
 
@@ -153,6 +170,14 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
         return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
     }
 
+    /**
+     * 获取 priceModel
+     * @return priceModel.
+     */
+    public String getOtherPriceModel() {
+        return SysDataUtil.getNameFromDataDict(DictCode.价格模式, super.getPriceModel());
+    }
+
     public String getPortfolioName() {
         return portfolioName;
     }
@@ -178,7 +203,35 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     }
 
     public String getOtherPs() {
+        if(StringUtils.equals(DictCodeListExt3.交易方向_提前购回.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_到期购回.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_中途换券.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_解除质押.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_到期续做.getValue(),this.getPs())
+        ){
+            if(StringUtils.equals(DictCodeList.回购拆借方向_正回购.getValue(),this.getBusiPs())){
+                return DictCodeList.回购拆借方向_正回购.getCodeName();
+            }
+            if(StringUtils.equals(DictCodeList.回购拆借方向_逆回购.getValue(),this.getBusiPs())){
+                return DictCodeList.回购拆借方向_逆回购.getCodeName();
+            }
+        }
         return otherPs;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public BigDecimal getEntrustAmt() {
+        if(StringUtils.equals(this.getBusiTypePosition(), DictCodeListExt3.投管业务类型_质押券出入库.getValue())){
+            return null;
+        }
+        return super.getEntrustAmt();
     }
 
     public void setOtherPs(String otherPs) {
@@ -270,6 +323,10 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
     }
 
     public BigDecimal getEtrPrice() {
+        if(StringUtils.equals(DictCodeList.平安资产类型_基金.getValue(),this.getFinprodType2())
+        && StringUtils.equals("PRM03",this.getPriceModel())){
+            return new BigDecimal(0.00);
+        }
         return etrPrice;
     }
 
@@ -331,5 +388,29 @@ public class FieldEtrInfoQueryListResponse extends EtrEntrust {
 
     public void setCalculateField(String calculateField) {
         this.calculateField = calculateField;
+    }
+
+    public String getTrdAcctId() {
+        return trdAcctId;
+    }
+
+    public void setTrdAcctId(String trdAcctId) {
+        this.trdAcctId = trdAcctId;
+    }
+
+    /**
+     * 取得 币种
+     * @return 币种
+     */
+    public String getCcyStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.币种, super.getCcy());
+    }
+
+    public String getAssetType1() {
+        return assetType1;
+    }
+
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
     }
 }

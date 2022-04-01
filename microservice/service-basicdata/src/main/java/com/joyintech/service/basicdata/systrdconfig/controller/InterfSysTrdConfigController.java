@@ -3,12 +3,16 @@ package com.joyintech.service.basicdata.systrdconfig.controller;
 import com.joyintech.service.basicdata.systrdconfig.dto.*;
 import com.joyintech.service.basicdata.systrdconfig.service.InterfSysTrdConfigService;
 import com.joyintech.service.basicdata.systrdconfig.service.StockInfoService;
+import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecRequest;
+import com.joyintech.tams.invest.common.dto.position.PositionCashSecSingleResp;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeCommonervice;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeOtherCommonService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,6 +35,14 @@ public class InterfSysTrdConfigController{
 
     @Autowired
     private StockInfoService stockInfoService;
+
+    @Autowired
+    private EtrTradeCommonervice etrTradeCommonervice;
+
+
+    @Autowired
+    private EtrTradeOtherCommonService etrTradeOtherCommonService;
+
 
     /**
      *
@@ -174,5 +186,47 @@ public class InterfSysTrdConfigController{
     @PostMapping("getPurchQuotaInfo")
     public Map<String,Object> getPurchQuotaInfo(@RequestBody Map<String,Object> params){
         return interfSysTrdConfigService.getPurchQuotaInfo(params);
+    }
+    /**
+     *
+     * @Description // 头寸信息查询汇总
+     * @Param [params]
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     * @version 1.0
+     * @see
+     **/
+    @PostMapping("/queryPositionInfo")
+    @ResponseBody
+    public List<BaseMap> queryPositionInfo(@RequestBody PositionCashSecRequest requestDto) {
+        List<BaseMap> m = etrTradeCommonervice.queryPositionInfo(requestDto);
+        return m;
+    }
+    /**
+     *
+     * @Description // 组合头寸信息分开
+     * @Param [params]
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     * @version 1.0
+     * @see
+     **/
+    @PostMapping("/queryPositionInfoSingle")
+    @ResponseBody
+    public List<PositionCashSecSingleResp>  queryPositionInfoSingle(@RequestBody PositionCashSecRequest requestDto) {
+        List<PositionCashSecSingleResp>  m = etrTradeCommonervice.queryPositionInfoSingle(requestDto);
+        return m;
+    }
+
+    /**
+     *
+     * @Description // 债券面值接口
+     * @Param [params]
+     * @version 1.0
+     * @see
+     **/
+    @PostMapping("/selectFaceValue")
+    @ResponseBody
+    public BigDecimal selectFaceValue(@RequestBody Map<String, Object> params) {
+        BigDecimal  m = etrTradeOtherCommonService.selectFaceValue(params);
+        return m;
     }
 }

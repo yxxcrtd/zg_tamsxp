@@ -238,215 +238,260 @@
             </div>
         </div>
 
+
+
+<!--        <div class="pro-module">-->
+<!--            <h3 class="pro-module-title">-->
+<!--                <span class="title-des">辅助核算项</span><i-->
+<!--                    class="iconfont icon-arrow-down pro-down-icon"></i></h3>-->
+<!--            <div class="layui-form-item">-->
+<!--                <div class="layui-inline layui-col-md4" id="SEC_TYPE_DIV" name="handCodesdiv" style="display: none">-->
+<!--                    <label class="layui-form-label form-lable">证券大类</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--&lt;!&ndash;                        <input type="text" id="BOND_ACCOUNTING_CLASSIFICATION" name="handCodes"  required&ndash;&gt;-->
+<!--&lt;!&ndash;                               class="layui-input form-input input-select"&ndash;&gt;-->
+<!--&lt;!&ndash;                               data-th-data-result='${BOND_ACCOUNTING_CLASSIFICATION}'&ndash;&gt;-->
+<!--&lt;!&ndash;                               data-th-initValue="${entity?.BOND_ACCOUNTING_CLASSIFICATION}">&ndash;&gt;-->
+
+<!--                        <select id="SEC_TYPE" name="handCodes"  style="display: none" title="证券大类"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${SEC_TYPE}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokBondType}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="SEC_TYPE_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokBondType}" >-->
+<!--                    </div>-->
+
+
+<!--                </div>-->
+<!--                <div class="layui-inline layui-col-md4" id="TYPE_2_DIV" name="handCodesdiv" style="display: none" >-->
+<!--                    <label class="layui-form-label form-lable">证券分类</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select id="TYPE_2" name="handCodes"  style="display: none" title="证券分类"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${TYPE_2}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokBondType2}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="TYPE_2_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokBondType2}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="layui-inline layui-col-md4" id="TRADE_MARKET_DIV" name="handCodesdiv" style="display: none" >-->
+<!--                    <label class="layui-form-label form-lable">交易市场</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select id="TRADE_MARKET" name="handCodes"  style="display: none" title="交易市场"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${TRADE_MARKET}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokTrdMarket}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="TRADE_MARKET_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokTrdMarket}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--            <div class="layui-form-item">-->
+
+<!--                <div class="layui-inline layui-col-md4" id="ISSUE_TYPE_DIV" name="handCodesdiv" style="display: none">-->
+<!--                    <label class="layui-form-label form-lable">发行方式</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+
+<!--                        <select id="ISSUE_TYPE" name="handCodes"  style="display: none" title="发行方式"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${ISSUE_TYPE}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokIssueType}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="ISSUE_TYPE_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokIssueType}" >-->
+<!--                    </div>-->
+
+
+<!--                </div>-->
+<!--                <div class="layui-inline layui-col-md4" id="COUNTER_TYPE_DIV" name="handCodesdiv" style="display: none" >-->
+<!--                    <label class="layui-form-label form-lable">交易对手类型</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select id="COUNTER_TYPE" name="handCodes"  style="display: none" title="交易对手类型"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${COUNTER_TYPE}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokCpyType}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="COUNTER_TYPE_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokCpyType}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="layui-inline layui-col-md4" id="ACCT_TYPE_DIV" name="handCodesdiv" style="display: none" >-->
+<!--                    <label class="layui-form-label form-lable">账户类型</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select id="ACCT_TYPE" name="handCodes"  style="display: none" title="账户类型"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${ACCT_TYPE}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokAccountType}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="ACCT_TYPE_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokAccountType}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--            <div class="layui-form-item">-->
+
+<!--                <div class="layui-inline layui-col-md4" id="FEE_TYPE_DIV" name="handCodesdiv" style="display: none">-->
+<!--                    <label class="layui-form-label form-lable">费用类型</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+
+<!--                        <select id="FEE_TYPE" name="handCodes"  style="display: none" title="费用类型"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${FEE_TYPE}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokFeeType}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+
+<!--                        <input type="hidden" id="FEE_TYPE_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokFeeType}" >-->
+<!--                    </div>-->
+
+
+<!--                </div>-->
+<!--                <div class="layui-inline layui-col-md4" id="TRD_PROP_DIV" name="handCodesdiv" style="display: none" >-->
+<!--                    <label class="layui-form-label form-lable">交易属性</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select id="TRD_PROP" name="handCodes"  style="display: none" title="交易属性"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${TRD_PROP}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokTrdProp}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="TRD_PROP_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokTrdProp}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="layui-inline layui-col-md4" id="TAX_FEE_TYPE_DIV" name="handCodesdiv" style="display: none" >-->
+<!--                    <label class="layui-form-label form-lable">税费类型</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <select id="TAX_FEE_TYPE" name="handCodes"  style="display: none" title="税费类型"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${TAX_FEE_TYPE}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokTaxType}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="TAX_FEE_TYPE_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokTaxType}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--            <div class="layui-form-item">-->
+
+<!--                <div class="layui-inline layui-col-md4" id="COUNTER_ID_DIV" name="handCodesdiv" style="display: none">-->
+<!--                    <label class="layui-form-label form-lable">交易对手</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+
+<!--                        <select id="COUNTER_ID" name="handCodes"  style="display: none" title="交易对手"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${COUNTER_ID}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokCpy}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="COUNTER_ID_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokCpy}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="layui-inline layui-col-md4" id="CHANNEL_DIV" name="handCodesdiv" style="display: none">-->
+<!--                    <label class="layui-form-label form-lable">渠道</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+
+<!--                        <select id="CHANNEL" name="handCodes"  style="display: none" title="渠道"-->
+<!--                                class="layui-input form-input input-select"-->
+<!--                                data-th-data-result='${CHANNEL}'-->
+<!--                                allowClear="true"-->
+<!--                                th:formatoption="false"-->
+<!--                                data-th-initValue="${entity?.bokChannel}"-->
+<!--                                placeholder="请输入内容">-->
+<!--                        </select>-->
+<!--                        <input type="hidden" id="CHANNEL_O"-->
+<!--                               class="layui-input form-input"-->
+<!--                               data-th-value="${entity?.bokChannel}" >-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+<!--            </div>-->
+
+<!--        </div>-->
+
         <div class="pro-module">
             <h3 class="pro-module-title">
-                <span class="title-des">辅助核算项</span><i
+                <span class="title-des">辅助核算表达式</span><i
                     class="iconfont icon-arrow-down pro-down-icon"></i></h3>
             <div class="layui-form-item">
-                <div class="layui-inline layui-col-md4" id="BOK_BOND_TYPE_DIV" name="handCodesdiv" style="display: none">
-                    <label class="layui-form-label form-lable">证券大类</label>
-                    <div class="layui-input-inline input-inline">
-<!--                        <input type="text" id="BOND_ACCOUNTING_CLASSIFICATION" name="handCodes"  required-->
-<!--                               class="layui-input form-input input-select"-->
-<!--                               data-th-data-result='${BOND_ACCOUNTING_CLASSIFICATION}'-->
-<!--                               data-th-initValue="${entity?.BOND_ACCOUNTING_CLASSIFICATION}">-->
 
-                        <select id="BOK_BOND_TYPE" name="handCodes" required style="display: none" title="证券大类"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_BOND_TYPE}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokBondType}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_BOND_TYPE_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokBondType}" >
-                    </div>
-
-
+                <div>
+                <label class="layui-form-label form-label-wrap" style='width: 10%;'>表达式</label>
+                <div class="layui-input-inline input-inline" style="width: 90%!important;">
+                    <textarea id="subjectHandFelCode" name="subjectHandFelCode" class="layui-textarea" data-th-text="${entity?.subjectHandFelCode}" readonly="true">
+                    </textarea>
                 </div>
-                <div class="layui-inline layui-col-md4" id="BOK_BOND_TYPE2_DIV" name="handCodesdiv" style="display: none" >
-                    <label class="layui-form-label form-lable">证券分类</label>
-                    <div class="layui-input-inline input-inline">
-                        <select id="BOK_BOND_TYPE2" name="handCodes" required style="display: none" title="证券分类"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_BOND_TYPE2}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokBondType2}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_BOND_TYPE2_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokBondType2}" >
-                    </div>
                 </div>
 
-                <div class="layui-inline layui-col-md4" id="BOK_TRD_MARKET_DIV" name="handCodesdiv" style="display: none" >
-                    <label class="layui-form-label form-lable">交易市场</label>
-                    <div class="layui-input-inline input-inline">
-                        <select id="BOK_TRD_MARKET" name="handCodes" required style="display: none" title="交易市场"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_TRD_MARKET}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokTrdMarket}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_TRD_MARKET_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokTrdMarket}" >
-                    </div>
+                <div>
+                <label class="layui-form-label form-label-wrap" style='width: 10%;'>表达式名称</label>
+                <div class="layui-input-inline input-inline" style="width: 90%!important;">
+                    <textarea id="subjectHandFelCodeName" name="subjectHandFelCodeName" class="layui-textarea" data-th-text="${entity?.subjectHandFelCodeName}" disabled>
+                    </textarea>
                 </div>
-
+                </div>
             </div>
-            <div class="layui-form-item">
-
-                <div class="layui-inline layui-col-md4" id="BOK_ISSUE_TYPE_DIV" name="handCodesdiv" style="display: none">
-                    <label class="layui-form-label form-lable">发行方式</label>
-                    <div class="layui-input-inline input-inline">
-
-                        <select id="BOK_ISSUE_TYPE" name="handCodes" required style="display: none" title="发行方式"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_ISSUE_TYPE}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokIssueType}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_ISSUE_TYPE_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokIssueType}" >
-                    </div>
-
-
-                </div>
-                <div class="layui-inline layui-col-md4" id="BOK_CPY_TYPE_DIV" name="handCodesdiv" style="display: none" >
-                    <label class="layui-form-label form-lable">交易对手类型</label>
-                    <div class="layui-input-inline input-inline">
-                        <select id="BOK_CPY_TYPE" name="handCodes" required style="display: none" title="交易对手类型"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_CPY_TYPE}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokCpyType}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_CPY_TYPE_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokCpyType}" >
-                    </div>
-                </div>
-
-                <div class="layui-inline layui-col-md4" id="BOK_ACCOUNT_TYPE_DIV" name="handCodesdiv" style="display: none" >
-                    <label class="layui-form-label form-lable">账户类型</label>
-                    <div class="layui-input-inline input-inline">
-                        <select id="BOK_ACCOUNT_TYPE" name="handCodes" required style="display: none" title="账户类型"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_ACCOUNT_TYPE}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokAccountType}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_ACCOUNT_TYPE_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokAccountType}" >
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="layui-form-item">
-
-                <div class="layui-inline layui-col-md4" id="BOK_FEE_TYPE_DIV" name="handCodesdiv" style="display: none">
-                    <label class="layui-form-label form-lable">费用类型</label>
-                    <div class="layui-input-inline input-inline">
-
-                        <select id="BOK_FEE_TYPE" name="handCodes" required style="display: none" title="费用类型"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_FEE_TYPE}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokFeeType}"
-                                placeholder="请输入内容">
-                        </select>
-
-                        <input type="hidden" id="BOK_FEE_TYPE_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokFeeType}" >
-                    </div>
-
-
-                </div>
-                <div class="layui-inline layui-col-md4" id="BOK_TRD_PROP_DIV" name="handCodesdiv" style="display: none" >
-                    <label class="layui-form-label form-lable">交易属性</label>
-                    <div class="layui-input-inline input-inline">
-                        <select id="BOK_TRD_PROP" name="handCodes" required style="display: none" title="交易属性"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_TRD_PROP}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokTrdProp}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_TRD_PROP_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokTrdProp}" >
-                    </div>
-                </div>
-
-                <div class="layui-inline layui-col-md4" id="BOK_TAX_TYPE_DIV" name="handCodesdiv" style="display: none" >
-                    <label class="layui-form-label form-lable">税费类型</label>
-                    <div class="layui-input-inline input-inline">
-                        <select id="BOK_TAX_TYPE" name="handCodes" required style="display: none" title="税费类型"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_TAX_TYPE}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokTaxType}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_TAX_TYPE_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokTaxType}" >
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="layui-form-item">
-
-                <div class="layui-inline layui-col-md4" id="BOK_CPY_DIV" name="handCodesdiv" style="display: none">
-                    <label class="layui-form-label form-lable">交易对手</label>
-                    <div class="layui-input-inline input-inline">
-
-                        <select id="BOK_CPY" name="handCodes" required style="display: none" title="交易对手"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BOK_CPY}'
-                                allowClear="true"
-                                th:formatoption="false"
-                                data-th-initValue="${entity?.bokCpy}"
-                                placeholder="请输入内容">
-                        </select>
-                        <input type="hidden" id="BOK_CPY_O"
-                               class="layui-input form-input"
-                               data-th-value="${entity?.bokCpy}" >
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
         </div>
+
+
 
         <input type="hidden" id="handjson" name="handjson"
                class="layui-input form-input">
 
-        <input type="hidden" id="subjectHandFelCode" name="subjectHandFelCode"
+        <input type="hidden" id="subjectHandFelCode" name="subjectHandFelCode" data-th-value="${entity?.subjectHandFelCode}"
                class="layui-input form-input">
     </form>
     <div class="layui-col-md11" style="margin: 10px;">

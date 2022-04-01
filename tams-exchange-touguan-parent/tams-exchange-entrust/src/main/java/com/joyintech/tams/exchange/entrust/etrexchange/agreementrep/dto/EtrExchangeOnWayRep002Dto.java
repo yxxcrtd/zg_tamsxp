@@ -162,6 +162,42 @@ public class EtrExchangeOnWayRep002Dto extends BaseEntity {
     @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal remainDays;
 
+    /**
+     * 资金账户名称
+     */
+    private String acctName;
+
+    /**
+     * 回购期限
+     */
+    private Long term;
+
+    /**
+     * 剩余天数
+     */
+    private Long leftDay;
+
+    /**
+     * 交易对手
+     */
+    private String counterName;
+    /**
+     * 正回购方交易员代码
+     */
+    private String repurTraderId;
+    /**
+     * 正回购方交易商代码
+     */
+    private String repurOrgId;
+    /**
+     * 逆回购方交易员代码
+     */
+    private String revRepurTraderId;
+    /**
+     * 逆回购方交易商代码
+     */
+    private String revRepurOrgId;
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -384,5 +420,69 @@ public class EtrExchangeOnWayRep002Dto extends BaseEntity {
 
     public void setPledgeFaceValue(String pledgeFaceValue) {
         this.pledgeFaceValue = pledgeFaceValue;
+    }
+
+    public String getAcctName() {
+        return acctName;
+    }
+
+    public void setAcctName(String acctName) {
+        this.acctName = acctName;
+    }
+
+    public Long getTerm() {
+        return term;
+    }
+
+    public void setTerm(Long term) {
+        this.term = term;
+    }
+
+    public Long getLeftDay() {
+        return leftDay;
+    }
+
+    public void setLeftDay(Long leftDay) {
+        this.leftDay = leftDay;
+    }
+
+    public String getRepurTraderId() {
+        return repurTraderId;
+    }
+
+    public void setRepurTraderId(String repurTraderId) {
+        this.repurTraderId = repurTraderId;
+    }
+
+    public String getRepurOrgId() {
+        return repurOrgId;
+    }
+
+    public void setRepurOrgId(String repurOrgId) {
+        this.repurOrgId = repurOrgId;
+    }
+
+    public String getRevRepurTraderId() {
+        return revRepurTraderId;
+    }
+
+    public void setRevRepurTraderId(String revRepurTraderId) {
+        this.revRepurTraderId = revRepurTraderId;
+    }
+
+    public String getRevRepurOrgId() {
+        return revRepurOrgId;
+    }
+
+    public void setRevRepurOrgId(String revRepurOrgId) {
+        this.revRepurOrgId = revRepurOrgId;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
     }
 }

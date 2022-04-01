@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbhz.inPrdDeclareSub.dao.InprodDeclareInfoSvrMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdDeclareSubTmp" >
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
+        <result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
+        <result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="APPROVER_ID" property="approverId" jdbcType="VARCHAR" />
+        <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+        <result column="DESIGNER_ID" property="designerId" jdbcType="VARCHAR" />
+        <result column="DESIGNER_NAME" property="designerName" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR" />
+        <result column="LIAISON_NAME" property="liaisonName" jdbcType="VARCHAR" />
+        <result column="LIAISON_TEL" property="liaisonTel" jdbcType="VARCHAR" />
+        <result column="LIAISON_MOBILE" property="liaisonMobile" jdbcType="VARCHAR" />
+        <result column="LIAISON_EMAIL" property="liaisonEmail" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+        <result column="INVEST_ARAE" property="investArae" jdbcType="VARCHAR" />
+        <result column="INVEST_COUNTRY" property="investCountry" jdbcType="VARCHAR" />
+        <result column="FINAN_SER_MODEL" property="finanSerModel" jdbcType="VARCHAR" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="CMMODE" property="cmmode" jdbcType="VARCHAR" />
+        <result column="PMMODE" property="pmmode" jdbcType="VARCHAR" />
+        <result column="MNAME" property="mname" jdbcType="VARCHAR" />
+        <result column="PRICED_MODE" property="pricedMode" jdbcType="VARCHAR" />
+        <result column="CONT_MODE" property="contMode" jdbcType="VARCHAR" />
+        <result column="COOPERATION_NAME" property="cooperationName" jdbcType="VARCHAR" />
+        <result column="INV_TYPE_RAT" property="invTypeRat" jdbcType="VARCHAR" />
+        <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+        <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PRIN_CCY" property="cashPrinCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PROF_CCY" property="cashProfCcy" jdbcType="VARCHAR" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+        <result column="RAISE_PSTRDATE" property="raisePstrdate" jdbcType="DATE" />
+        <result column="RAISE_PENDDATE" property="raisePenddate" jdbcType="DATE" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="IN_DEP_NAME" property="inDepName" jdbcType="VARCHAR" />
+        <result column="IN_DEP_CODE" property="inDepCode" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_NAME" property="outDepName" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="TERM_RIGHT_FLAG" property="termRightFlag" jdbcType="VARCHAR" />
+        <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="CREDIT_MODE" property="creditMode" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+        <result column="EXC_FIN_SECTOR" property="excFinSector" jdbcType="VARCHAR" />
+        <result column="IS_SHORT_TERM" property="isShortTerm" jdbcType="VARCHAR" />
+        <result column="SHORT_TERM" property="shortTerm" jdbcType="DECIMAL" />
+        <result column="IS_FREE_REDEM" property="isFreeRedem" jdbcType="VARCHAR" />
+        <result column="CASH_MANA_CATE" property="cashManaCate" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="INVEST_FEE_RATE" property="investFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="SALE_FEE_RATE" property="saleFeeRate" jdbcType="DECIMAL" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap type="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto" id="PerProDeclareRegDtoRM">
+        <result column="REGIST_SEQNO" property="registSeqno" />
+        <result column="PROD_ID" property="prodId" />
+        <result column="PROD_NAME" property="prodName" />
+        <result column="PROD_INS_ID" property="prodInsId" />
+        <result column="PROD_BRAND" property="prodBrand" />
+        <result column="PROD_STAGE" property="prodStage" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" />
+        <result column="APPROVER_ID" property="approverId" />
+        <result column="APPROVER_NAME" property="approverName" />
+        <result column="DESIGNER_ID" property="designerId" />
+        <result column="DESIGNER_NAME" property="designerName" />
+        <result column="MANAGER_ID" property="managerId" />
+        <result column="MANAGER_NAME" property="managerName" />
+        <result column="LIAISON_NAME" property="liaisonName" />
+        <result column="LIAISON_TEL" property="liaisonTel" />
+        <result column="LIAISON_MOBILE" property="liaisonMobile" />
+        <result column="LIAISON_EMAIL" property="liaisonEmail" />
+        <result column="PROFIT_TYPE" property="profitType" />
+        <result column="TERMTYPE" property="termtype" />
+        <result column="INVESTOR_TYPE" property="investorType" />
+        <result column="INVEST_ARAE" property="investArae" />
+        <result column="INVEST_COUNTRY" property="investCountry" />
+        <result column="FINAN_SER_MODEL" property="finanSerModel" />
+        <result column="OPERATE_MODE" property="operateMode" />
+        <result column="BOOK_MODE" property="bookMode" />
+        <result column="CMMODE" property="cmmode" />
+        <result column="PMMODE" property="pmmode" />
+        <result column="MNAME" property="mname" />
+        <result column="PRICED_MODE" property="pricedMode" />
+        <result column="INV_ASSET_TYPE" property="invAssetType" />
+        <result column="CON_PRD_TRAGET" property="conPrdTraget" />
+        <result column="CONT_MODE" property="contMode" />
+        <result column="COOPERATION_NAME" property="cooperationName" />
+        <result column="INV_TYPE_RAT" property="invTypeRat" />
+        <result column="IS_YIELD" property="isYield" />
+        <result column="HIGH_YIELD" property="highYield" />
+        <result column="LOW_YIELD" property="lowYield" />
+        <result column="IS_YIELD_MEAS_BASIS" property="isYieldMeasBasis" />
+        <result column="RISK_TYPE" property="riskType" />
+        <result column="SALE_AREA" property="saleArea" />
+        <result column="RAISE_CCY" property="raiseCcy" />
+        <result column="CASH_PRIN_CCY" property="cashPrinCcy" />
+        <result column="CASH_PROF_CCY" property="cashProfCcy" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" />
+        <result column="RAISE_PSTRDATE" property="raisePstrdate" />
+        <result column="RAISE_PENDDATE" property="raisePenddate" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" />
+        <result column="SALE_FEE_RATE" property="saleFeeRate" />
+        <result column="IN_DEP_NAME" property="inDepName" />
+        <result column="IN_DEP_CODE" property="inDepCode" />
+        <result column="OUT_DEP_CTRY" property="outDepCtry" />
+        <result column="OUT_DEP_NAME" property="outDepName" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" />
+        <result column="RISK_LEVEL" property="riskLevel" />
+        <result column="TERM_RIGHT_FLAG" property="termRightFlag" />
+        <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" />
+        <result column="CREDIT_FLAG" property="creditFlag" />
+        <result column="CREDIT_TYPE" property="creditType" />
+        <result column="CREDIT_MODE" property="creditMode" />
+        <result column="REMARK" property="remark" />
+        <result column="NINE_FILE" property="nineFile" />
+        <result column="FILE_NO" property="fileNo" />
+        <result column="PRE_REG_DATE" property="preRegDate" />
+        <result column="PRE_APP_DATE" property="preAppDate" />
+        <result column="SEND_STATUS" property="sendStatus" />
+        <result column="STATUS_DATE" property="statusDate" />
+        <result column="STATUS" property="status" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="CREATE_DEPT" property="createDept" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="UPDATE_USER" property="updateUser" />
+        <result column="UPDATE_TIME" property="updateTime" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" />
+        <result column="SUBMIT_TIME" property="submitTime" />
+        <result column="ORG_CODE" property="orgCode" />
+        <result column="FILE_NUM" property="fileNum" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" />
+        <result column="REG_CODE" property="regCode" />
+        <result column="RAISE_TYPE" property="raiseType" />
+        <result column="IVSTORIENTATION" property="ivstorientation" />
+        <result column="EXC_FIN_SECTOR" property="excFinSector" />
+        <result column="IS_SHORT_TERM" property="isShortTerm" />
+        <result column="SHORT_TERM" property="shortTerm" />
+        <result column="IS_FREE_REDEM" property="isFreeRedem" />
+        <result column="CASH_MANA_CATE" property="cashManaCate" />
+        <result column="YIELD" property="yield" />
+        <result column="INVEST_FEE_RATE" property="investFeeRate" />
+        <result column="IS_FHXGCP" property="isFhxgcp" />
+    </resultMap>
+
+    <select id="genChbPrdDeclareSubTmpList"  resultMap="BaseResultMap">
+        select  * from  CHB_PRD_DECLARE_SUB_TMP
+        where  1=1
+        and   DATE_FORMAT(ROW_DATE,'%Y-%m-%d') = #{batchdate,jdbcType = VARCHAR}
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PROD_INS_ID IN
+            <trim suffixOverrides=" OR PROD_INS_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_INS_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+    <select id="genChbPrdDeclareSubList"  resultMap="PerProDeclareRegDtoRM">
+        select * from CHB_PRD_DECLARE_SUB
+        where 1=1
+        <!-- add by zhangliang 20210507 先全量查询，代码去处理 目的是为了获取九大附件相关信息 start -->
+        <!-- and  SEND_STATUS  in ('02','03') -->
+        <!-- add by zhangliang 20210507 先全量查询，代码去处理 目的是为了获取九大附件相关信息 end -->
+        <if test="keylist != null and keylist.size() > 0">
+            AND PROD_INS_ID IN
+            <trim suffixOverrides=" OR PROD_INS_ID IN ()">
+                <foreach collection='keylist' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_INS_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="genChbPrdDeclareSubAllList"  resultMap="PerProDeclareRegDtoRM">
+  select * from CHB_PRD_DECLARE_SUB
+    where 1=1
+    and  SEND_STATUS  in ('02','03')
+ </select>
+
+    <select id="genChbPrdDeclareSubTmp1ByProdInsId" resultMap="BaseResultMap">
+ select  st.*  from  CHB_PRD_DECLARE_SUB_TMP  st
+where PROD_INS_ID  =#{prodInsId,jdbcType=VARCHAR}
+and  exists (
+select 1 from CHB_PRD_DECLARE_SUB_TMP  stp
+where  st.PROD_NAME=stp.PROD_NAME and  st.PROD_STAGE=stp.PROD_STAGE
+and  PROD_INS_ID  !=#{prodInsId,jdbcType=VARCHAR}
+)
+ </select>
+
+    <select id="genChbPrdDeclareSubTmp2ByProdInsId" resultMap="BaseResultMap">
+ select  st.*  from  CHB_PRD_DECLARE_SUB_TMP  st
+where PROD_INS_ID  =#{prodInsId,jdbcType=VARCHAR}
+and  exists (
+select 1 from CHB_PRD_DECLARE_SUB  stp
+where  st.PROD_NAME=stp.PROD_NAME and  st.PROD_STAGE=stp.PROD_STAGE
+and  PROD_INS_ID  !=#{prodInsId,jdbcType=VARCHAR}
+and stp.SEND_STATUS  in ('02','03')
+)
+ </select>
+</mapper>

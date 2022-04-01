@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
+        <id column="SALER_INS_NO" property="salerInsNo" jdbcType="VARCHAR" />
+        <result column="SALER_REGIST_NO" property="salerRegistNo" jdbcType="VARCHAR" />
+        <result column="SALER_INST_CODE" property="salerInstCode" jdbcType="VARCHAR" />
+        <result column="SALER_NAME" property="salerName" jdbcType="VARCHAR" />
+        <result column="SALER_SEX" property="salerSex" jdbcType="VARCHAR" />
+        <result column="SALER_BIRTHDAY" property="salerBirthday" jdbcType="DATE" />
+        <result column="SALER_CREDENT_TYPE" property="salerCredentType" jdbcType="VARCHAR" />
+        <result column="SALER_OTHER_CREDENT_NAME" property="salerOtherCredentName" jdbcType="VARCHAR" />
+        <result column="SALER_CREDENT_NO" property="salerCredentNo" jdbcType="VARCHAR" />
+        <result column="SALER_AREA_TYPE" property="salerAreaType" jdbcType="VARCHAR" />
+        <result column="SALER_ORG_CODE" property="salerOrgCode" jdbcType="VARCHAR" />
+        <result column="SALER_DEPT" property="salerDept" jdbcType="VARCHAR" />
+        <result column="SALER_POSITION" property="salerPosition" jdbcType="VARCHAR" />
+        <result column="SALER_EDU_LEVEL" property="salerEduLevel" jdbcType="VARCHAR" />
+        <result column="SALER_DEGREE" property="salerDegree" jdbcType="VARCHAR" />
+        <result column="SALER_WORK_START_YMD" property="salerWorkStartYmd" jdbcType="VARCHAR" />
+        <result column="SALER_FINANCE_START_YMD" property="salerFinanceStartYmd" jdbcType="VARCHAR" />
+        <result column="SALER_START_YMD" property="salerStartYmd" jdbcType="VARCHAR" />
+        <result column="SALER_LEVLE" property="salerLevle" jdbcType="VARCHAR" />
+        <result column="SALER_CERTIFICATE_TYPE" property="salerCertificateType" jdbcType="VARCHAR" />
+        <result column="SALER_CHB_TRAIN_NO" property="salerChbTrainNo" jdbcType="VARCHAR" />
+        <result column="SALER_RISK_LEVEL" property="salerRiskLevel" jdbcType="VARCHAR" />
+        <result column="SALER_QUALIFICATION" property="salerQualification" jdbcType="VARCHAR" />
+        <result column="SALER_TEL" property="salerTel" jdbcType="VARCHAR" />
+        <result column="SALER_MOBILE" property="salerMobile" jdbcType="VARCHAR" />
+        <result column="SALER_MAIL" property="salerMail" jdbcType="VARCHAR" />
+        <result column="SALER_STATUS" property="salerStatus" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SALER_INS_NO SALER_INS_NO, SALER_REGIST_NO SALER_REGIST_NO, SALER_INST_CODE SALER_INST_CODE,
+        SALER_NAME SALER_NAME, SALER_SEX SALER_SEX, SALER_BIRTHDAY SALER_BIRTHDAY, SALER_CREDENT_TYPE SALER_CREDENT_TYPE,
+        SALER_OTHER_CREDENT_NAME SALER_OTHER_CREDENT_NAME, SALER_CREDENT_NO SALER_CREDENT_NO,
+        SALER_AREA_TYPE SALER_AREA_TYPE, SALER_ORG_CODE SALER_ORG_CODE, SALER_DEPT SALER_DEPT,
+        SALER_POSITION SALER_POSITION, SALER_EDU_LEVEL SALER_EDU_LEVEL, SALER_DEGREE SALER_DEGREE,
+        SALER_WORK_START_YMD SALER_WORK_START_YMD, SALER_FINANCE_START_YMD SALER_FINANCE_START_YMD,
+        SALER_START_YMD SALER_START_YMD, SALER_LEVLE SALER_LEVLE, SALER_CERTIFICATE_TYPE SALER_CERTIFICATE_TYPE,
+        SALER_CHB_TRAIN_NO SALER_CHB_TRAIN_NO, SALER_RISK_LEVEL SALER_RISK_LEVEL, SALER_QUALIFICATION SALER_QUALIFICATION,
+        SALER_TEL SALER_TEL, SALER_MOBILE SALER_MOBILE, SALER_MAIL SALER_MAIL, SALER_STATUS SALER_STATUS,
+        REMARK REMARK, STATUS STATUS,DATA_DATE DATA_DATE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
+        from CHB_SALER_IDEN_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
+        from CHB_SALER_IDEN_INFO
+        where STATUS = 'E'
+    </sql>
+
+    <!--    分页查询-->
+    <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
+        SELECT *
+        FROM (
+        select
+        'erro'                       as erroOrInfo,
+        erro.WORKFLOW_ID             as workflowId,
+        erro.SALER_INS_NO            as salerInsNo,
+        null                         as salerRegistNo,
+        null                         as salerInstCode,
+        erro.SALER_NAME              as salerName,
+        erro.SALER_SEX               as salerSex,
+        null                         as salerBirthday,
+        erro.SALER_CREDENT_TYPE      as salerCredentType,
+        null                         as salerOtherCredentName,
+        null                         as salerCredentNo,
+        null                         as salerAreaType,
+        erro.SALER_ORG_CODE          as salerOrgCode,
+        null                         as salerDept,
+        null                         as salerPosition,
+        null                         as salerEduLevel,
+        null                         as salerDegree,
+        null                         as salerWorkStartYmd,
+        null                         as salerFinanceStartYmd,
+        null                         as salerStartYmd,
+        null                         as salerLevle,
+        null                         as salerCertificateType,
+        null                         as salerChbTrainNo,
+        null                         as salerRiskLevel,
+        null                         as salerQualification,
+        null                         as salerTel,
+        null                         as salerMobile,
+        null                         as salerMail,
+        null                         as salerStatus,
+        erro.DATA_DATE               as dataDate,
+        null                         as remark,
+        'A'                          as dataStatus,
+        erro.ERR_MSG                 as errMsg
+        from CHB_SALER_IDEN_ERRODATA erro
+        where 1=1
+        <if test="salerName != null and salerName != ''">
+            and erro.SALER_NAME like concat(concat('%',#{salerName,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="salerSex != null and salerSex != ''">
+            and erro.SALER_SEX = #{salerSex,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != ''">
+            and erro.STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+        <if test="salerCredentType != null and salerCredentType != ''">
+            and erro.SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and erro.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+        </if>
+
+        UNION ALL
+
+        select
+        'info'                       as erroOrInfo,
+        null                         as workflowId,
+        info.SALER_INS_NO            as salerInsNo,
+        info.SALER_REGIST_NO         as salerRegistNo,
+        info.SALER_INST_CODE         as salerInstCode,
+        info.SALER_NAME              as salerName,
+        info.SALER_SEX               as salerSex,
+        info.SALER_BIRTHDAY          as salerBirthday,
+        info.SALER_CREDENT_TYPE      as salerCredentType,
+        info.SALER_OTHER_CREDENT_NAME  as salerOtherCredentName,
+        info.SALER_CREDENT_NO        as salerCredentNo,
+        info.SALER_AREA_TYPE         as salerAreaType,
+        info.SALER_ORG_CODE          as salerOrgCode,
+        info.SALER_DEPT              as salerDept,
+        info.SALER_POSITION          as salerPosition,
+        info.SALER_EDU_LEVEL         as salerEduLevel,
+        info.SALER_DEGREE            as salerDegree,
+        info.SALER_WORK_START_YMD    as salerWorkStartYmd,
+        info.SALER_FINANCE_START_YMD as salerFinanceStartYmd,
+        info.SALER_START_YMD         as salerStartYmd,
+        info.SALER_LEVLE             as salerLevle,
+        info.SALER_CERTIFICATE_TYPE  as salerCertificateType,
+        info.SALER_CHB_TRAIN_NO      as salerChbTrainNo,
+        info.SALER_RISK_LEVEL        as salerRiskLevel,
+        info.SALER_QUALIFICATION     as salerQualification,
+        info.SALER_TEL               as salerTel,
+        info.SALER_MOBILE            as salerMobile,
+        info.SALER_MAIL              as salerMail,
+        info.SALER_STATUS            as salerStatus,
+        info.DATA_DATE               as dataDate,
+        info.REMARK                  as remark,
+        info.STATUS                  as dataStatus,
+        null                         as errMsg
+        from CHB_SALER_IDEN_INFO info
+        where 1=1
+        <if test="salerName != null and salerName != ''">
+            and info.SALER_NAME like concat(concat('%',#{salerName,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="salerSex != null and salerSex != ''">
+            and info.SALER_SEX = #{salerSex,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != ''">
+            and info.STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+        <if test="salerCredentType != null and salerCredentType != ''">
+            and info.SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and info.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+        </if>
+        ) ORDER BY dataStatus DESC
+    </select>
+
+    <!--    该机构是否已维护过奖惩投诉记录信息-->
+    <select id="deleteCheck" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from CHB_SALER_REW_PENA_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
+    <!--	查询中债银行机构代码-->
+    <select id="selectIssuePartyId" parameterType="string" resultType="string">
+        select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
+        where
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--    导入时为check查询全部-->
+    <select id="checkSalerIdenInfoImport" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
+        from CHB_SALER_IDEN_INFO
+    </select>
+
+    <!--    导入时为check查询全部-->
+    <select id="checkSalerIdentInfoDImport" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
+        from CHB_SALER_IDEN_INFO
+        where STATUS = 'D'
+    </select>
+
+    <!--    校验所属总部或分支机构是否已被维护-->
+    <select id="checkSalerOrgCodeImport" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
+        select
+        SALER_ORG_CODE salerOrgCode
+        from CHB_SALER_INST_INFO where status = 'E'
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
+        from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
+    <!--    理财销售人员姓名联想框-->
+    <select id="getSalerName" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        select distinct(code),name,shortName,hidCode
+        from(
+        SELECT
+        SALER_NAME  code,
+        SALER_NAME  name,
+        SALER_NAME  shortName,
+        SALER_NAME  hidCode
+        FROM CHB_SALER_IDEN_INFO
+        <where>
+            <if test="salerName != null and salerName != ''">
+                AND	SALER_NAME  like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+
+        union all
+
+        SELECT
+        SALER_NAME  code,
+        SALER_NAME  name,
+        SALER_NAME  shortName,
+        SALER_NAME  hidCode
+        FROM CHB_SALER_IDEN_ERRODATA
+        <where>
+            <if test="salerName != null and salerName != ''">
+                AND	SALER_NAME  like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+        )
+    </select>
+
+    <!--    总部或分支机构编码联想框-->
+    <select id="getSalerOrgCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(SALER_ORG_CODE)  code,
+        SALER_ORG_NAME  name,
+        SALER_ORG_NAME  shortName,
+        SALER_ORG_CODE  hidCode
+        FROM CHB_SALER_INST_INFO
+        <where>
+            <if test="salerOrgCode != null and salerOrgCode != ''">
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                OR SALER_INST_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+    </select>
+
+    <!--    根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </delete>
+
+    <!--    根据主键删除erro表-->
+    <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SALER_IDEN_ERRODATA
+        where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </delete>
+
+    <!--    新建，导入插入-->
+    <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
+        insert into CHB_SALER_IDEN_INFO (SALER_INS_NO, SALER_REGIST_NO, SALER_INST_CODE, 
+            SALER_NAME, SALER_SEX, SALER_BIRTHDAY, 
+            SALER_CREDENT_TYPE, SALER_OTHER_CREDENT_NAME, 
+            SALER_CREDENT_NO, SALER_AREA_TYPE, SALER_ORG_CODE, 
+            SALER_DEPT, SALER_POSITION, SALER_EDU_LEVEL, 
+            SALER_DEGREE, SALER_WORK_START_YMD, SALER_FINANCE_START_YMD, 
+            SALER_START_YMD, SALER_LEVLE, SALER_CERTIFICATE_TYPE, 
+            SALER_CHB_TRAIN_NO, SALER_RISK_LEVEL, SALER_QUALIFICATION, 
+            SALER_TEL, SALER_MOBILE, SALER_MAIL, 
+            SALER_STATUS, REMARK, STATUS, CREATE_DEPT,ORG_CODE,
+            DATA_DATE, CREATE_USER, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{salerInsNo,jdbcType=VARCHAR}, #{salerRegistNo,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, 
+            #{salerName,jdbcType=VARCHAR}, #{salerSex,jdbcType=VARCHAR}, #{salerBirthday,jdbcType=DATE}, 
+            #{salerCredentType,jdbcType=VARCHAR}, #{salerOtherCredentName,jdbcType=VARCHAR}, 
+            #{salerCredentNo,jdbcType=VARCHAR}, #{salerAreaType,jdbcType=VARCHAR}, #{salerOrgCode,jdbcType=VARCHAR}, 
+            #{salerDept,jdbcType=VARCHAR}, #{salerPosition,jdbcType=VARCHAR}, #{salerEduLevel,jdbcType=VARCHAR}, 
+            #{salerDegree,jdbcType=VARCHAR}, #{salerWorkStartYmd,jdbcType=VARCHAR}, #{salerFinanceStartYmd,jdbcType=VARCHAR}, 
+            #{salerStartYmd,jdbcType=VARCHAR}, #{salerLevle,jdbcType=VARCHAR}, #{salerCertificateType,jdbcType=VARCHAR}, 
+            #{salerChbTrainNo,jdbcType=VARCHAR}, #{salerRiskLevel,jdbcType=VARCHAR}, #{salerQualification,jdbcType=VARCHAR}, 
+            #{salerTel,jdbcType=VARCHAR}, #{salerMobile,jdbcType=VARCHAR}, #{salerMail,jdbcType=VARCHAR}, 
+            #{salerStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+            sysdate, #{createUser,jdbcType=VARCHAR}, sysdate,
+            #{updateUser,jdbcType=VARCHAR}, sysdate)
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
+        update CHB_SALER_IDEN_INFO
+        <set >
+            <if test="salerRegistNo != null" >
+                SALER_REGIST_NO = #{salerRegistNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerInstCode != null" >
+                SALER_INST_CODE = #{salerInstCode,jdbcType=VARCHAR},
+            </if>
+            <if test="salerName != null" >
+                SALER_NAME = #{salerName,jdbcType=VARCHAR},
+            </if>
+            <if test="salerSex != null" >
+                SALER_SEX = #{salerSex,jdbcType=VARCHAR},
+            </if>
+            <if test="salerBirthday != null" >
+                SALER_BIRTHDAY = #{salerBirthday,jdbcType=DATE},
+            </if>
+            <if test="salerCredentType != null" >
+                SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR},
+            </if>
+            <if test="salerOtherCredentName != null" >
+                SALER_OTHER_CREDENT_NAME = #{salerOtherCredentName,jdbcType=VARCHAR},
+            </if>
+            <if test="salerCredentNo != null" >
+                SALER_CREDENT_NO = #{salerCredentNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerAreaType != null" >
+                SALER_AREA_TYPE = #{salerAreaType,jdbcType=VARCHAR},
+            </if>
+            <if test="salerOrgCode != null" >
+                SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="salerDept != null" >
+                SALER_DEPT = #{salerDept,jdbcType=VARCHAR},
+            </if>
+            <if test="salerPosition != null" >
+                SALER_POSITION = #{salerPosition,jdbcType=VARCHAR},
+            </if>
+            <if test="salerEduLevel != null" >
+                SALER_EDU_LEVEL = #{salerEduLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="salerDegree != null" >
+                SALER_DEGREE = #{salerDegree,jdbcType=VARCHAR},
+            </if>
+            <if test="salerWorkStartYmd != null" >
+                SALER_WORK_START_YMD = #{salerWorkStartYmd,jdbcType=VARCHAR},
+            </if>
+            <if test="salerFinanceStartYmd != null" >
+                SALER_FINANCE_START_YMD = #{salerFinanceStartYmd,jdbcType=VARCHAR},
+            </if>
+            <if test="salerStartYmd != null" >
+                SALER_START_YMD = #{salerStartYmd,jdbcType=VARCHAR},
+            </if>
+            <if test="salerLevle != null" >
+                SALER_LEVLE = #{salerLevle,jdbcType=VARCHAR},
+            </if>
+            <if test="salerCertificateType != null" >
+                SALER_CERTIFICATE_TYPE = #{salerCertificateType,jdbcType=VARCHAR},
+            </if>
+            <if test="salerChbTrainNo != null" >
+                SALER_CHB_TRAIN_NO = #{salerChbTrainNo,jdbcType=VARCHAR},
+            </if>
+            <if test="salerRiskLevel != null" >
+                SALER_RISK_LEVEL = #{salerRiskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="salerQualification != null" >
+                SALER_QUALIFICATION = #{salerQualification,jdbcType=VARCHAR},
+            </if>
+            <if test="salerTel != null" >
+                SALER_TEL = #{salerTel,jdbcType=VARCHAR},
+            </if>
+            <if test="salerMobile != null" >
+                SALER_MOBILE = #{salerMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="salerMail != null" >
+                SALER_MAIL = #{salerMail,jdbcType=VARCHAR},
+            </if>
+            <if test="salerStatus != null" >
+                SALER_STATUS = #{salerStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="dataDate != null" >
+                DATA_DATE = #{dataDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
+        update CHB_SALER_IDEN_INFO
+        set SALER_REGIST_NO = #{salerRegistNo,jdbcType=VARCHAR},
+            SALER_INST_CODE = #{salerInstCode,jdbcType=VARCHAR},
+            SALER_NAME = #{salerName,jdbcType=VARCHAR},
+            SALER_SEX = #{salerSex,jdbcType=VARCHAR},
+            SALER_BIRTHDAY = #{salerBirthday,jdbcType=DATE},
+            SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR},
+            SALER_OTHER_CREDENT_NAME = #{salerOtherCredentName,jdbcType=VARCHAR},
+            SALER_CREDENT_NO = #{salerCredentNo,jdbcType=VARCHAR},
+            SALER_AREA_TYPE = #{salerAreaType,jdbcType=VARCHAR},
+            SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR},
+            SALER_DEPT = #{salerDept,jdbcType=VARCHAR},
+            SALER_POSITION = #{salerPosition,jdbcType=VARCHAR},
+            SALER_EDU_LEVEL = #{salerEduLevel,jdbcType=VARCHAR},
+            SALER_DEGREE = #{salerDegree,jdbcType=VARCHAR},
+            SALER_WORK_START_YMD = #{salerWorkStartYmd,jdbcType=VARCHAR},
+            SALER_FINANCE_START_YMD = #{salerFinanceStartYmd,jdbcType=VARCHAR},
+            SALER_START_YMD = #{salerStartYmd,jdbcType=VARCHAR},
+            SALER_LEVLE = #{salerLevle,jdbcType=VARCHAR},
+            SALER_CERTIFICATE_TYPE = #{salerCertificateType,jdbcType=VARCHAR},
+            SALER_CHB_TRAIN_NO = #{salerChbTrainNo,jdbcType=VARCHAR},
+            SALER_RISK_LEVEL = #{salerRiskLevel,jdbcType=VARCHAR},
+            SALER_QUALIFICATION = #{salerQualification,jdbcType=VARCHAR},
+            SALER_TEL = #{salerTel,jdbcType=VARCHAR},
+            SALER_MOBILE = #{salerMobile,jdbcType=VARCHAR},
+            SALER_MAIL = #{salerMail,jdbcType=VARCHAR},
+            SALER_STATUS = #{salerStatus,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            DATA_DATE = #{dataDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </update>
+
+    <!--    导入销售人员登记编码-->
+    <update id="updateSalerRegistNo" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
+        update CHB_SALER_IDEN_INFO
+        set SALER_REGIST_NO = #{salerRegistNo,jdbcType=VARCHAR},
+        UPDATE_TIME = sysdate
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </update>
+
+    <!--    所属总部或分支机构下拉框（新建）-->
+    <select id="selectSalerOrgCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        SALER_ORG_CODE id,
+        SALER_ORG_NAME text
+        from CHB_SALER_INST_INFO
+        <where>
+            <if test="search != null and search != ''">
+                and SALER_ORG_CODE like concat(concat('%', #{search}),'%')
+            </if>
+        </where>
+    </select>
+
+    <!--	双击查看详细信息查询info-->
+    <select id="selectDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
+        select
+        'info'                       as erroOrInfo,
+        SALER_INS_NO            as salerInsNo,
+        SALER_REGIST_NO         as salerRegistNo,
+        SALER_INST_CODE         as salerInstCode,
+        SALER_NAME              as salerName,
+        SALER_SEX               as salerSex,
+        SALER_BIRTHDAY          as salerBirthday,
+        SALER_CREDENT_TYPE      as salerCredentType,
+        SALER_OTHER_CREDENT_NAME  as salerOtherCredentName,
+        SALER_CREDENT_NO        as salerCredentNo,
+        SALER_AREA_TYPE         as salerAreaType,
+        SALER_ORG_CODE          as salerOrgCode,
+        SALER_DEPT              as salerDept,
+        SALER_POSITION          as salerPosition,
+        SALER_EDU_LEVEL         as salerEduLevel,
+        SALER_DEGREE            as salerDegree,
+        SALER_WORK_START_YMD    as salerWorkStartYmd,
+        SALER_FINANCE_START_YMD as salerFinanceStartYmd,
+        SALER_START_YMD         as salerStartYmd,
+        SALER_LEVLE             as salerLevle,
+        SALER_CERTIFICATE_TYPE  as salerCertificateType,
+        SALER_CHB_TRAIN_NO      as salerChbTrainNo,
+        SALER_RISK_LEVEL        as salerRiskLevel,
+        SALER_QUALIFICATION     as salerQualification,
+        SALER_TEL               as salerTel,
+        SALER_MOBILE            as salerMobile,
+        SALER_MAIL              as salerMail,
+        SALER_STATUS            as salerStatus,
+        DATA_DATE               as dataDate,
+        REMARK                  as remark,
+        STATUS                  as status
+        from CHB_SALER_IDEN_INFO
+        where
+        SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
+    <!--	双击查看详细信息查询erro-->
+    <select id="selectErroDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
+        select
+        'erro'                  as erroOrInfo,
+        SALER_INS_NO            as salerInsNo,
+        SALER_NAME              as salerName,
+        SALER_SEX               as salerSex,
+        SALER_CREDENT_TYPE      as salerCredentType,
+        DATA_DATE               as dataDate,
+        WORKFLOW_ID             as workflowId,
+        'A'                     as dataStatus,
+        ORG_DATA                as orgData,
+        ERR_MSG                 as errMsg
+        from CHB_SALER_IDEN_ERRODATA
+        where
+        WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </select>
+
+    <!--    查询奖惩记录-->
+    <select id="selectRewPenaInfo" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
+        select
+        DISTINCT(SALER_INS_NO) salerInsNo
+        from
+        CHB_SALER_REW_PENA_INFO
+        where
+        STATUS = 'E'
+    </select>
+
+    <!--	根据身份主键逻辑删除奖惩info-->
+    <update id="deleteRewPenaInfo" parameterType="java.lang.String">
+        UPDATE CHB_SALER_REW_PENA_INFO
+        SET
+        STATUS = 'D'
+        where
+        SALER_INS_NO = #{salerInsNo}
+    </update>
+
+    <!--	根据主键删除info-->
+    <update id="deleteInfo" parameterType="java.lang.String">
+        UPDATE CHB_SALER_IDEN_INFO
+        SET
+        STATUS = 'D'
+        where
+        SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </update>
+
+    <select id="checkSalerInsNo" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from
+        CHB_SALER_IDEN_INFO
+        where
+        STATUS = 'E'
+        and SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="checkSalerCredentNo" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from
+        CHB_SALER_IDEN_INFO
+        where
+        STATUS = 'E'
+        <if test="salerCredentType != null and salerCredentType != ''">
+            and SALER_CREDENT_TYPE = #{salerCredentType,jdbcType=VARCHAR}
+        </if>
+        <if test="salerOtherCredentName != null and salerOtherCredentName != ''">
+            and SALER_OTHER_CREDENT_NAME = #{salerOtherCredentName,jdbcType=VARCHAR}
+        </if>
+        <if test="salerCredentNo != null and salerCredentNo != ''">
+            and SALER_CREDENT_NO = #{salerCredentNo,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!--    check所属总部或分支机构校验有效性-->
+    <select id="checkSalerOrgCode" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from CHB_SALER_INST_INFO
+        where
+        STATUS = 'E'
+        and SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

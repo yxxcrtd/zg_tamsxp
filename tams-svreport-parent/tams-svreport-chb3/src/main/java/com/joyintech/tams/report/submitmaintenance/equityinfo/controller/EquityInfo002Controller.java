@@ -12,6 +12,7 @@ package com.joyintech.tams.report.submitmaintenance.equityinfo.controller;
 
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,7 +68,8 @@ public class EquityInfo002Controller extends BaseController {
                    model.addAttribute("isSubmit", isSubmit);
                }
            }
-           model.addAttribute("no", DictCodeList.是否_中债_否.getValue());
+       model.addAttribute("registBankCode", CommonUtil.getUserBankCode(null));
+       model.addAttribute("no", DictCodeList.是否_中债_否.getValue());
        return super.init(model);
    }
 

@@ -728,7 +728,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 result.add(resultDto);
                 // 结算数据下行，日终成交回报、质押式竞价回购、增加组合的标准券持仓登陆处理 start by chenzhuo
                 if ((StringUtils.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(), deal.getFinprodType2()))
-                	   && (StringUtils.equals(DictCodeList.回购类型_质押式竞价回购.getValue(), inputDto.getAssetType2()))
+                	   && (StringUtils.equals(DictCodeList.回购类型_质押式竞价回购.getValue(), assetType2))
                        && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
                        && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))) {
                 	PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
@@ -961,10 +961,13 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             else if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(deal.getFinprodType2())
                      && DictCodeList.交易方向_除权登记.getValue().equals(deal.getPs()) && deal.getShareAmt() != null
                      && deal.getShareAmt().compareTo(new BigDecimal(0)) > 0) {
-                resultDto.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                // modify by etliu 20220219 start
+                // GNS-875：【广农商场内清算】股票现金分红，权益登记日日终上交所解析JSMX03文件；深交所解析SJSJG文件后，成交数据明细表、各交易表和头寸表数据登录不正确
+/*                resultDto.setHodingType(DictCodeList.持仓类型_在途.getValue());
                 resultDto.setCdate(deal.getSettleDate());
                 resultDto.setAmount(deal.getShareAmt());
-                result.add(resultDto);
+                result.add(resultDto);*/
+                // modify by etliu 20220219 end
 
             }
             // 增加 股票除权登记 持仓处理 潘彬2019-7-18 end
@@ -978,28 +981,32 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 resultDto.setAmount(deal.getShareAmt());
                 result.add(resultDto);
 
-                PtlSecPositionFlowDto ztFlowDto = new PtlSecPositionFlowDto();
-                // 输入参数.组合代码
-                ztFlowDto.setPortfolioId(resultDto.getPortfolioId());
-                // 证券管理账户/通道代码
-                ztFlowDto.setSecAcctId(resultDto.getSecAcctId());
-                ztFlowDto.setFinprodId(resultDto.getFinprodId());
-                ztFlowDto.setBranch(0L);
-                ztFlowDto.setInvAim(StringUtil.isEmpty(deal.getInvAim()) ? "999999" : deal.getInvAim());
-                // 持仓类型-在途
-                ztFlowDto.setHodingType(DictCodeList.持仓类型_在途.getValue());
-                // 金融产品交易Entity.结算日期
-                ztFlowDto.setCdate(deal.getSettleDate());
-                // 划款指令Entity.结算金额*-1
-                ztFlowDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
-                // 金融产品交易Entity.币种
-                ztFlowDto.setCcy(deal.getCcy());
-                // 金融产品交易Entity.交易编号
-                ztFlowDto.setTradeId(deal.getTradeId());
-                ztFlowDto.setCreateUser(deal.getCreateUser());
-                ztFlowDto.setCreateDept(deal.getCreateDept());
-                ztFlowDto.setUpdateUser(deal.getCreateUser());
-                result.add(ztFlowDto);
+                // GNS-932:股票红利再投,非工作流数据无需登录在途持仓 modify by fuyongsheng 20220225 start
+                if(!inputDto.isNotWorkflow()){
+                    PtlSecPositionFlowDto ztFlowDto = new PtlSecPositionFlowDto();
+                    // 输入参数.组合代码
+                    ztFlowDto.setPortfolioId(resultDto.getPortfolioId());
+                    // 证券管理账户/通道代码
+                    ztFlowDto.setSecAcctId(resultDto.getSecAcctId());
+                    ztFlowDto.setFinprodId(resultDto.getFinprodId());
+                    ztFlowDto.setBranch(0L);
+                    ztFlowDto.setInvAim(StringUtil.isEmpty(deal.getInvAim()) ? "999999" : deal.getInvAim());
+                    // 持仓类型-在途
+                    ztFlowDto.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                    // 金融产品交易Entity.结算日期
+                    ztFlowDto.setCdate(deal.getSettleDate());
+                    // 划款指令Entity.结算金额*-1
+                    ztFlowDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                    // 金融产品交易Entity.币种
+                    ztFlowDto.setCcy(deal.getCcy());
+                    // 金融产品交易Entity.交易编号
+                    ztFlowDto.setTradeId(deal.getTradeId());
+                    ztFlowDto.setCreateUser(deal.getCreateUser());
+                    ztFlowDto.setCreateDept(deal.getCreateDept());
+                    ztFlowDto.setUpdateUser(deal.getCreateUser());
+                    result.add(ztFlowDto);
+                }
+                // GNS-932:股票红利再投，非工作流数据无需登录在途持仓 modify by fuyongsheng 20220225 end
             }
             // 增加 股票红利再投 持仓处理 潘彬2019-7-18 end
 
@@ -1011,7 +1018,11 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                      && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_配股.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_增发.getValue().equals(deal.getPs())
-                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))) {
+                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))
+                     // GZYHTZJY-1016:股票的申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 start
+                         || DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+                     // GZYHTZJY-1016:股票的申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 end
+            ) {
                 resultDto.setCdate(deal.getSettleDate());
                 resultDto.setAmount(deal.getShareAmt());
                 result.add(resultDto);
@@ -1352,8 +1363,11 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             else if ((DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
                       && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
                       && DictCodeList.交易方向_到期.getValue().equals(deal.getPs()))) {
-                if (StringUtil.isNotEmpty(inputDto.getIeFlag())
-                    && inputDto.getIeFlag().equals(DictCodeListExt1.收支方向_收入.getValue())) {
+                if ((StringUtil.isNotEmpty(inputDto.getIeFlag())
+                        && inputDto.getIeFlag().equals(DictCodeListExt1.收支方向_收入.getValue()))
+                        ||
+                        (StringUtil.isNotEmpty(stlPayOrder.getPs()) && stlPayOrder.getPs().equals(DictCodeListExt1.收支方向_收入.getValue()))
+                ) {
                     if (!DictCodeList.持仓类型_实际.getValue().equals(inputDto.getPositionType())) {
                         return result;
                     }// 到期续做场景，收支方向为收入，流程中不出流水
@@ -1366,10 +1380,15 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                     return result;
                 }
             }
-            else if ((DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(deal.getFinprodType2())
+            else if (DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(deal.getFinprodType2())
                       && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
-                      && DictCodeList.交易方向_到期.getValue().equals(deal.getPs()) && StringUtil.isNotEmpty(inputDto.getIeFlag())
-                      && inputDto.getIeFlag().equals(DictCodeListExt1.收支方向_支出.getValue()))) {
+                      && DictCodeList.交易方向_到期.getValue().equals(deal.getPs())
+                    && (
+                    (StringUtil.isNotEmpty(inputDto.getIeFlag()) && inputDto.getIeFlag().equals(DictCodeListExt1.收支方向_支出.getValue()))
+                    ||
+                    (StringUtil.isNotEmpty(stlPayOrder.getPs()) && stlPayOrder.getPs().equals(DictCodeListExt1.收支方向_支出.getValue()))
+                 )
+            ) {
                 resultDto.setCdate(deal.getSettleDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
                 resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
@@ -1431,7 +1450,11 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 }
                 return result;
             }
-            else if ((DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+            else if (
+                    // GZYHTZJY-1001:债券的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 start
+                    // (DictCodeList.交易方向_申购确认.getValue().equals(deal.getPs())
+                    (DictCodeList.交易方向_申购.getValue().equals(deal.getPs())
+                    // GZYHTZJY-1001:债券的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify by fuyongsheng 20220104 end
                       && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2()))) {
                 resultDto.setCdate(deal.getTradeDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
@@ -1622,7 +1645,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                      && (DictCodeList.交易方向_买入.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_配股.getValue().equals(deal.getPs())
                          || DictCodeListExt2.交易方向_增发.getValue().equals(deal.getPs())
-                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))) {
+                         || DictCodeListExt2.交易方向_新股中签.getValue().equals(deal.getPs()))
+                         // GZYHTZJY-1016:股票的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify fuyongsheng 20220104 start
+                         || DictCodeList.交易方向_申购.getValue().equals(deal.getPs())) {
+                         // GZYHTZJY-1016:股票的申购只处理现金,不处理持仓;申购确认只处理持仓,不处理现金 modify fuyongsheng 20220104 end
                 resultDto.setCdate(stlPayOrder.getSettleDate());
                 resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
                 resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
@@ -2058,27 +2084,31 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                     resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
                     result.add(resultDto);
 
-                    PtlCashPositionFlowDto ztFlowDto1 = new PtlCashPositionFlowDto();
-                    // 输入参数.组合代码
-                    ztFlowDto1.setPortfolioId(portfolioId);
-                    // 划款指令Entity.本方账户
-                    ztFlowDto1.setAcctId(stlPayOrder.getMyAcctNo());
-                    // 输入参数.持仓类型
-                    ztFlowDto1.setHodingType(DictCodeList.持仓类型_在途.getValue());
-                    // 划款指令Entity.币种
-                    ztFlowDto1.setCcy(stlPayOrder.getCcy());
-                    // 划款指令Entity.指令编号
-                    ztFlowDto1.setOrderId(stlPayOrder.getOrderId());
-                    // 金融产品交易Entity.金融产品代码
-                    ztFlowDto1.setChlFinprodId(chlId);
-                    ztFlowDto1.setCreateUser(deal.getCreateUser());
-                    ztFlowDto1.setCreateDept(deal.getCreateDept());
-                    ztFlowDto1.setUpdateUser(deal.getCreateUser());
-                    // ztFlowDto1.setAcctId(stlPayOrder.getCounterAcctNo());
-                    ztFlowDto1.setCdate(stlPayOrder.getSettleDate());
-                    ztFlowDto1.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
-                    ztFlowDto1.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
-                    result.add(ztFlowDto1);
+                    // GNS-949:只有流程中数据才走，结算下行无流程中数据,不走 modify by fuyongsheng 20220227 start
+                    if(!inputDto.isNotWorkflow()){
+                        PtlCashPositionFlowDto ztFlowDto1 = new PtlCashPositionFlowDto();
+                        // 输入参数.组合代码
+                        ztFlowDto1.setPortfolioId(portfolioId);
+                        // 划款指令Entity.本方账户
+                        ztFlowDto1.setAcctId(stlPayOrder.getMyAcctNo());
+                        // 输入参数.持仓类型
+                        ztFlowDto1.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                        // 划款指令Entity.币种
+                        ztFlowDto1.setCcy(stlPayOrder.getCcy());
+                        // 划款指令Entity.指令编号
+                        ztFlowDto1.setOrderId(stlPayOrder.getOrderId());
+                        // 金融产品交易Entity.金融产品代码
+                        ztFlowDto1.setChlFinprodId(chlId);
+                        ztFlowDto1.setCreateUser(deal.getCreateUser());
+                        ztFlowDto1.setCreateDept(deal.getCreateDept());
+                        ztFlowDto1.setUpdateUser(deal.getCreateUser());
+                        // ztFlowDto1.setAcctId(stlPayOrder.getCounterAcctNo());
+                        ztFlowDto1.setCdate(stlPayOrder.getSettleDate());
+                        ztFlowDto1.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
+                        ztFlowDto1.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
+                        result.add(ztFlowDto1);
+                    }
+                    // GNS-949:只有流程中数据才走，结算下行无流程中数据,不走 modify by fuyongsheng 20220227 end
                     return result;
                 }
                 /*
@@ -2091,18 +2121,27 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                           && (DictCodeList.交易方向_行权_回售.getValue().equals(deal.getPs())
                               || DictCodeList.交易方向_行权_赎回.getValue().equals(deal.getPs())))) {
                     // 一体化对应etliu end
-                	//modify by yujiaping 20210419 TISHKBS-1871【债券存续期管理】交易所债券行权赎回ptl_cash_position_flow生成的现金流日期错误start
-                	if(DictCodeList.交易方向_行权_赎回.getValue().equals(deal.getPs())) {
-                    resultDto.setCdate(deal.getSettleDate());
-                	}else {
-                    resultDto.setCdate(deal.getTradeDate());
-                	}
-                	//modify bu yujiaping 20210419 TISHKBS-1871【债券存续期管理】交易所债券行权赎回ptl_cash_position_flow生成的现金流日期错误end
+                	/// modify by etliu 20220228 start
+                    // 广农商二阶段 GNS-975:【广农商场内清算】场内债券存续期-行权赎回交易生成时，处理相关头寸有误
+//                    resultDto.setCdate(deal.getTradeDate());
+                    resultDto.setCdate(stlPayOrder.getSettleDate());
+                    // modify by etliu 20220228 end
                     resultDto.setAmount(stlPayOrder.getSettleAmt());
                     resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
                     result.add(resultDto);
                     return result;
                 }
+                // GNS-879:配债组合现金流水未登录 modify by fuyongsheng 20220220 start
+                else if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(deal.getFinprodType2())
+                        && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
+                        && DictCodeListExt3.交易方向_配债.getValue().equals(deal.getPs()))) {
+                    resultDto.setCdate(deal.getTradeDate());
+                    resultDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
+                    resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
+                    result.add(resultDto);
+                    return result;
+                }
+                // GNS-879:配债组合现金流水未登录 modify by fuyongsheng 20220220 end
 
                 /*
                  * 输入金融产品交易Entity.金融产品类型（投管分类）= 数据字典缓存.金融产品类型（投管分类).逆回购 and 金融产品交易Entity.交易场所 ！= 数据字典缓存.交易场所.银行间 and 金融产品交易Entity.交易方向 in （“到期”）
@@ -2254,46 +2293,51 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                     resultDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
                     result.add(resultDto);
 
-                    PtlCashPositionFlowDto ztFlowDto = new PtlCashPositionFlowDto();
-                    // 输入参数.组合代码
-                    ztFlowDto.setPortfolioId(portfolioId);
-                    // 划款指令Entity.本方账户
-                    ztFlowDto.setAcctId(stlPayOrder.getMyAcctNo());
-                    // 持仓类型-在途
-                    ztFlowDto.setHodingType(DictCodeList.持仓类型_在途.getValue());
-                    // 划款指令Entity.结算日期
-                    ztFlowDto.setCdate(stlPayOrder.getSettleDate());
-                    // 划款指令Entity.币种
-                    ztFlowDto.setCcy(stlPayOrder.getCcy());
-                    // 划款指令Entity.指令编号
-                    ztFlowDto.setOrderId(stlPayOrder.getOrderId());
-                    // 划款指令Entity.结算金额*-1
-                    ztFlowDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
-                    ztFlowDto.setCreateUser(deal.getCreateUser());
-                    ztFlowDto.setCreateDept(deal.getCreateDept());
-                    ztFlowDto.setUpdateUser(deal.getCreateUser());
-                    ztFlowDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
-                    result.add(ztFlowDto);
+                    // GNS-932:股票红利再投,非工作流数据无需登录在途持仓 modify by fuyongsheng 20220225 start
+                    if(!inputDto.isNotWorkflow()){
+                        PtlCashPositionFlowDto ztFlowDto = new PtlCashPositionFlowDto();
+                        // 输入参数.组合代码
+                        ztFlowDto.setPortfolioId(portfolioId);
+                        // 划款指令Entity.本方账户
+                        ztFlowDto.setAcctId(stlPayOrder.getMyAcctNo());
+                        // 持仓类型-在途
+                        ztFlowDto.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                        // 划款指令Entity.结算日期
+                        ztFlowDto.setCdate(stlPayOrder.getSettleDate());
+                        // 划款指令Entity.币种
+                        ztFlowDto.setCcy(stlPayOrder.getCcy());
+                        // 划款指令Entity.指令编号
+                        ztFlowDto.setOrderId(stlPayOrder.getOrderId());
+                        // 划款指令Entity.结算金额*-1
+                        ztFlowDto.setAmount(ArithmeticUtil.multiply(stlPayOrder.getSettleAmt(), new BigDecimal(-1)));
+                        ztFlowDto.setCreateUser(deal.getCreateUser());
+                        ztFlowDto.setCreateDept(deal.getCreateDept());
+                        ztFlowDto.setUpdateUser(deal.getCreateUser());
+                        ztFlowDto.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
+                        result.add(ztFlowDto);
 
-                    PtlCashPositionFlowDto ztFlowDto1 = new PtlCashPositionFlowDto();
-                    // 输入参数.组合代码
-                    ztFlowDto1.setPortfolioId(portfolioId);
-                    // 划款指令Entity.本方账户
-                    ztFlowDto1.setAcctId(stlPayOrder.getMyAcctNo());
-                    // 持仓类型-在途
-                    ztFlowDto1.setHodingType(DictCodeList.持仓类型_在途.getValue());
-                    // 划款指令Entity.结算日期
-                    ztFlowDto1.setCdate(deal.getTradeDate());
-                    // 划款指令Entity.币种
-                    ztFlowDto1.setCcy(stlPayOrder.getCcy());
-                    // 划款指令Entity.指令编号
-                    ztFlowDto1.setOrderId(stlPayOrder.getOrderId());
-                    ztFlowDto1.setAmount(stlPayOrder.getSettleAmt());
-                    ztFlowDto1.setCreateUser(deal.getCreateUser());
-                    ztFlowDto1.setCreateDept(deal.getCreateDept());
-                    ztFlowDto1.setUpdateUser(deal.getCreateUser());
-                    ztFlowDto1.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
-                    result.add(ztFlowDto1);
+                        PtlCashPositionFlowDto ztFlowDto1 = new PtlCashPositionFlowDto();
+                        // 输入参数.组合代码
+                        ztFlowDto1.setPortfolioId(portfolioId);
+                        // 划款指令Entity.本方账户
+                        ztFlowDto1.setAcctId(stlPayOrder.getMyAcctNo());
+                        // 持仓类型-在途
+                        ztFlowDto1.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                        // 划款指令Entity.结算日期
+                        ztFlowDto1.setCdate(deal.getTradeDate());
+                        // 划款指令Entity.币种
+                        ztFlowDto1.setCcy(stlPayOrder.getCcy());
+                        // 划款指令Entity.指令编号
+                        ztFlowDto1.setOrderId(stlPayOrder.getOrderId());
+                        ztFlowDto1.setAmount(stlPayOrder.getSettleAmt());
+                        ztFlowDto1.setCreateUser(deal.getCreateUser());
+                        ztFlowDto1.setCreateDept(deal.getCreateDept());
+                        ztFlowDto1.setUpdateUser(deal.getCreateUser());
+                        ztFlowDto1.setSplitType(DictCodeListExt3.拆分标识_已拆分.getValue());
+
+                        result.add(ztFlowDto1);
+                    }
+                    // GNS-932:股票红利再投,非工作流数据无需登录在途持仓 modify by fuyongsheng 20220225 end
                 }
                 // 增加 股票现金分红 现金处理 潘彬2019-7-18 end
                 // 外汇或者其他需要的场景用 add by renping 2019年7月11日 start---

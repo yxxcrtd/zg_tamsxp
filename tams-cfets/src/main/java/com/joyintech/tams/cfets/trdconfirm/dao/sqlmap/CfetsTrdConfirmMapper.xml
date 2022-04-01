@@ -43,7 +43,7 @@
         reg.repo_term as termDays,
         reg.trade_amt as tradeAmt,
         reg.totle_trade_id as busiCode,
-        nvl(t3.real_name,reg.ou_trader_id) as trader,
+        coalesce ( sua.IBU_TRADER, t3.real_name, reg.ou_trader_id ) AS trader,
         reg.trade_date as tradeDate,
         reg.counter_id as counterId,
         nvl(t1.counter_name,reg.counter_id) as counterIdName,
@@ -93,6 +93,7 @@
         left join stl_sec_acct_info stlinfo  on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         left join MST_COUNTER_PARTY t1 on t1.counter_id=reg.counter_id
         left join sys_user t3 on t3.user_name=reg.ou_trader_id
+        LEFT JOIN sys_user_add sua ON sua.USER_ID = t3.USER_ID
         where reg.trade_date= #{sysDate,jdbcType=DATE} and reg.trade_status='01' and reg.is_cancel='N'
         AND NOT EXISTS (SELECT 1 FROM trdquto_match_info match where reg.totle_trade_id=match.pre_trade_id)
         and reg.ps in ('T01','T02','03','04')
@@ -261,7 +262,7 @@
         null as termDays,
         ibd.fprice_amt as tradeAmt,
         ib.cfets_quote_id as busiCode,
-        nvl(t4.TRADER_NAME,ib.ou_trader_id) as trader,
+        coalesce ( sua.IBU_TRADER, t4.TRADER_NAME, ib.ou_trader_id ) AS trader,
         ib.quote_date as tradeDate,
         ibd.cp_party_id as counterId,
         mcci.PARTY_ABBR as counterIdName,
@@ -379,7 +380,7 @@
         ic.term as termDays,
         ic.fprice_amt as tradeAmt,
         ic.cfets_quote_id as busiCode,
-        nvl(t4.TRADER_NAME,ic.ou_trader_id)  as trader,
+        coalesce ( sua.IBU_TRADER, t4.TRADER_NAME, ic.ou_trader_id ) AS trader,
         ic.quote_date as tradeDate,
         ic.cp_party_id as counterId,
         mcci.PARTY_ABBR as counterIdName,
@@ -1740,7 +1741,7 @@
         from
         MST_COUNTER_PARTY mcp
         INNER JOIN MST_CFETS_CUSTOMER_INFO mcci
-        ON mcp.COUNTER_NAME = mcci.PARTY_NAME
+        ON mcp.PARTY_ID = mcci.PARTY_ID
         WHERE
         mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
     </select>

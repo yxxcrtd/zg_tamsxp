@@ -390,4 +390,42 @@ public interface EtrCommonCashPositionMapper {
      * @return
      */
     BigDecimal getEtrExchangeFinishAmtMuilt(Map<String, Object> map);
+
+    /**
+     *
+     * 查询指令可用现金(新表)
+     * <功能详细描述>
+     * @param portfolioId
+     * @param acctId
+     * @param chlFinprodId
+     * @param hodingType
+     * @param cdate
+     * @param ccy
+     * @param acctTypes
+     * @return
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryEtrAvailableCashNew(PtlCashPositionFlowDto dto);
+    /**
+     *
+     * 查询指令可用现金
+     * <功能详细描述>
+     * @param portfolioId
+     * @param acctId
+     * @param chlFinprodId
+     * @param hodingType
+     * @param cdate
+     * @param ccy
+     * @param acctTypes
+     * @return
+     * @see
+     * @since 1.0
+     */
+    BigDecimal selectCommandAvailableCashFlowSum(PtlCashPositionFlowDto dto);
+
+    // modify by etliu 20220226 start
+    // 广农商二阶段 GNS-947:【广农商场内清算】场内债券存续交易生成的时候，指令现金流水处理有误
+    int selectEtrCashPositionFlowCount(Map<String, Object> map);
+    // modify by etliu 20220226 end
 }

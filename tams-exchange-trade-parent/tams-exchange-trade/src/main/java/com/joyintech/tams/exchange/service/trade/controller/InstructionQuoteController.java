@@ -4,6 +4,8 @@ import com.joyintech.exchange.service.quote.service.QuoteService;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.request.QueryTickRequest;
 import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -26,6 +28,9 @@ public class InstructionQuoteController {
     @ApiOperation(value = "竞价行情查询接口", notes = "竞价行情查询接口")
     @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.POST)
     public ResultBean queryTick(@RequestBody @Validated QueryTickRequest queryTickRequest) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(queryTickRequest);
+    	}
         return quoteService.getTick(queryTickRequest.getStockCode());
     }
 
@@ -37,6 +42,9 @@ public class InstructionQuoteController {
                                                @RequestParam(value = "account_id") String accountId,
                                                @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize) {
         IntegratedBulkQuoteQryBean integratedBulkQuoteQryBean = new IntegratedBulkQuoteQryBean(stockCode, entrustProp, entrustBs, accountId, pageSize);
+        if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         return integratedQuoteManagement.queryIntegratedBulkQuote(integratedBulkQuoteQryBean);
     }
 
@@ -53,6 +61,9 @@ public class InstructionQuoteController {
                                                     @RequestParam(value = "account_id") String accountId,
                                                     @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize) {
         IntegratedBulkCloseQuoteQryBean integratedBulkCloseQuoteQryBean = new IntegratedBulkCloseQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
+        if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         return integratedQuoteManagement.queryIntegratedBulkCloseQuote(integratedBulkCloseQuoteQryBean);
     }
 
@@ -69,6 +80,9 @@ public class InstructionQuoteController {
                                                      @RequestParam(value = "account_id", required = false) String accountId,
                                                      @RequestParam(value = "page_size", required = false, defaultValue = "1000") int pageSize) {
         IntegratedRepurchaseQuoteQryBean integratedRepurchaseQuoteQryBean = new IntegratedRepurchaseQuoteQryBean(actionIn, entrustProp, accountId, pageSize);
+        if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         return integratedQuoteManagement.queryIntegratedRepurchaseQuote(integratedRepurchaseQuoteQryBean);
     }
 
@@ -85,6 +99,9 @@ public class InstructionQuoteController {
                                                       @RequestParam(value = "account_id") String accountId,
                                                       @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize) {
         IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean = new IntegratedFixedIncomeQuoteQryBean(stockCode, exchangeType, accountId, pageSize);
+        if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         return integratedQuoteManagement.queryIntegratedFixedIncomeQuote(integratedFixedIncomeQuoteQryBean);
     }
 
@@ -105,7 +122,21 @@ public class InstructionQuoteController {
                                            @RequestParam(value = "liaisonTel", required = false) String liaisonTel,
                                            @RequestParam(value = "page_size", required = false, defaultValue = "0") int pageSize,
                                            @RequestParam(value = "posStr", required = false, defaultValue = "") String posStr) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         return integratedQuoteManagement.queryIntegratedQuote(userId, quoteType, stockCode, accountId, oppositeLiaisonTel, liaisonTel, pageSize, posStr);
     }
 
+    /**
+     * 手动增加协议回购mock行情
+     */
+    @ApiOperation(value = "手动增加协议回购mock行情", notes = "手动增加协议回购mock行情", hidden = true)
+    @RequestMapping(value = "/add/integrated/repurchase_quote", method = RequestMethod.POST)
+    public ResultBean addIntegratedRepurchaseQuote(@RequestBody IntegratedRepurchaseQuoteBean repurchaseQuoteBean) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
+        return integratedQuoteManagement.addIntegratedRepurchaseQuote(repurchaseQuoteBean);
+    }
 }

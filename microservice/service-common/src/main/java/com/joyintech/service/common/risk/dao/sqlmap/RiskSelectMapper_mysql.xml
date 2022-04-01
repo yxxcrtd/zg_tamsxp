@@ -43,12 +43,21 @@
         RSK_ISUP_INDICATOR.IND_TYPE IND_TYPE
     </sql>
 	<select id="select" resultMap="BaseRedisResultMap" parameterType="java.lang.String" >
-        SELECT 
+        with TEMP as (SELECT distinct TRADE_ID FROM TRD_PRODUCT_DEAL TPD WHERE TRADE_ID =#{tradeId,jdbcType=VARCHAR}
+        OR TOTLE_TRADE_ID =#{tradeId,jdbcType=VARCHAR}
+        union all
+        SELECT distinct TOTLE_TRADE_ID FROM TRD_PRODUCT_DEAL tpd WHERE TRADE_ID =#{tradeId,jdbcType=VARCHAR}
+        OR TOTLE_TRADE_ID =#{tradeId,jdbcType=VARCHAR}
+        union all
+        SELECT #{tradeId,jdbcType=VARCHAR} as TRADE_ID FROM DUAL
+        )
+        SELECT
         <include refid="Base_Column_List" />
         ,
         CASE WHEN PTL_PORTFOLIO.PORTFOLIO_NAME IS NULL
         THEN RSK_PORTFOLIO_PACKAGE.PTL_BAG_NAME
-        ELSE PTL_PORTFOLIO.PORTFOLIO_NAME END PORTFOLIO_NAME
+        ELSE PTL_PORTFOLIO.PORTFOLIO_NAME END PORTFOLIO_NAME,
+        FIN_PRODUCT.FINPROD_NAME ASSET_NAME
         FROM RSK_ISUP_TRIAL
         LEFT JOIN RSK_ISUP_INDICATOR
         ON RSK_ISUP_TRIAL.IND_ID = RSK_ISUP_INDICATOR.IND_ID
@@ -56,23 +65,10 @@
         ON RSK_ISUP_TRIAL.TRADE_ID = RSK_ISUP_TRIAL_CLS.TRADE_ID AND RSK_ISUP_TRIAL.SEQ_NO=RSK_ISUP_TRIAL_CLS.SEQ_NO
         LEFT JOIN PTL_PORTFOLIO ON RSK_ISUP_TRIAL.PORTFOLIO_ID=PTL_PORTFOLIO.PORTFOLIO_ID
         LEFT JOIN RSK_PORTFOLIO_PACKAGE ON RSK_ISUP_TRIAL.PORTFOLIO_ID=RSK_PORTFOLIO_PACKAGE.PTL_BAG_ID
-        WHERE RSK_ISUP_TRIAL.TRADE_ID  in (select TRADE_ID from (SELECT distinct TRADE_ID FROM TRD_PRODUCT_DEAL tpd WHERE TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        OR TOTLE_TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        union all
-        SELECT distinct TOTLE_TRADE_ID FROM TRD_PRODUCT_DEAL tpd WHERE TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        OR TOTLE_TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        union all
-        SELECT #{tradeId,jdbcType=VARCHAR} as TRADE_ID FROM DUAL
-        )) AND RSK_ISUP_TRIAL.SEQ_NO = (
+        LEFT JOIN FIN_PRODUCT ON RSK_ISUP_TRIAL.ASSET_CODE=FIN_PRODUCT.FINPROD_ID
+        WHERE RSK_ISUP_TRIAL.TRADE_ID  in (select TRADE_ID from TEMP) AND RSK_ISUP_TRIAL.SEQ_NO = (
         SELECT   max(SEQ_NO) FROM RSK_ISUP_TRIAL
-        WHERE RSK_ISUP_TRIAL.TRADE_ID in (select TRADE_ID from (SELECT distinct TRADE_ID FROM TRD_PRODUCT_DEAL tpd WHERE TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        OR TOTLE_TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        union all
-        SELECT distinct TOTLE_TRADE_ID FROM TRD_PRODUCT_DEAL tpd WHERE TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        OR TOTLE_TRADE_ID =#{tradeId,jdbcType=VARCHAR}
-        union all
-        SELECT #{tradeId,jdbcType=VARCHAR} as TRADE_ID FROM DUAL
-        ))
+        WHERE RSK_ISUP_TRIAL.TRADE_ID in (select TRADE_ID from TEMP)
         )
     </select>
 	<select id="getValue" resultType="com.joyintech.tams.common.base.entity.FinProductValuation">

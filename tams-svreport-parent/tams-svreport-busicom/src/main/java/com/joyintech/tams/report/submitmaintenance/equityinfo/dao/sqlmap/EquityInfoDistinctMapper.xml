@@ -47,7 +47,7 @@
  
 	
  
-	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
+	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)   该sql目前没有方法调用-->
 	<select id="queryAllEquityInfoConStrastYbs"  
 	        parameterType="java.util.List"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
@@ -87,10 +87,11 @@
    	    inner join chb_equ_hold th
      	on th.INDENTIFY_MARK=T1.INDENTIFY_MARK
     	and nvl(th.ORG_INDENTIFY_MARK,'0')=nvl(T1.ORG_INDENTIFY_MARK,'0')
-    	left join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	<where>
-    		  (t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+		<where>
+    		  (T1.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     		 <!-- <if test="keys !=null and keys.size()>0">
 		        AND t1.REGIST_BANK_CODE
 		            ||'_'||t1.IDENTIFY_NUMBER
@@ -119,8 +120,67 @@
 		</where>
 		
 	</select>
+    <!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
+    <select id="queryAllEquityInfo"  parameterType="java.util.List"
+            resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        T1.INDENTIFY_MARK  AS indentifyMark,
+        T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
+        T1.REGIST_BANK_CODE AS bankCode,
+        T1.IS_BELONG_BANK AS isBelongBank,
+        T1.THE_BANK_NAME AS theBankName,
+        T1.THE_BANK_CODE AS theBankCode,
+        T1.HOLDER_MARK AS holderMark,
+        T1.HOLDER_REGION AS holderRegion,
+        T1.HOLDER_TYPE AS holderType,
+        T1.PERSONAL_IDENTIFY_TYPE AS personalIdentifyType,
+        T1.INSTITUTION_IDENTIFY_TYPE AS institutionIdentifyType,
+        T1.OTHER_IDENTIFY_NAME AS otherIdentifyName,
+        T1.IDENTIFY_NUMBER AS identifyNumber,
+        T1.SPV_CAP_ACC_BANK AS spvCapAccBank,
+        T1.OTHER_CAP_ACC_BANK AS otherCapAccBank,
+        T1.SPV_REGIST_CODE AS spvRegistCode,
+        T1.HOLDER_DATE AS holderDate,
+        T1.HOLDER_NAME AS holderName,
+        T1.HOLDER_SEX AS holderSex,
+        T1.HOLDER_RISK_PREFER AS holderRiskPrefer,
+        T1.HOLDER_CELLPHONE AS holderCellphone,
+        T1.HOLDER_TELEPHONE AS holderTelephone,
+        T1.HOLDER_EMAIL AS holderEmail,
+        T1.REMARK AS remark,
+        T1.STATUS AS status,
+        T1.DEPT_CODE AS deptCode,
+        T1.UPDATE_USER AS updateUser,
+        T1.UPDATE_TIME AS updateTime,
+        T1.CREATE_USER AS createUser,
+        T1.ORG_CODE AS orgCode
+        from chb_equ_sub T1
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        where
+        (T1.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        <if test="list !=null and list.size() >0">
+            AND (T1.REGIST_BANK_CODE
+			,T1.IDENTIFY_NUMBER
+			,T1.HOLDER_NAME
+			,nvl(T1.PERSONAL_IDENTIFY_TYPE,' ')
+			,nvl(T1.INSTITUTION_IDENTIFY_TYPE,' ')
+			,nvl(T1.OTHER_IDENTIFY_NAME,' ')
+			)in
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode,jdbcType=VARCHAR},
+				#{item.identifyNumber,jdbcType=VARCHAR},
+				#{item.holderName,jdbcType=VARCHAR},
+				nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
+				nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
+				nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+			</foreach>
+        </if>
+    </select>
+
 	<!-- 查询权益人登记表中已报送内容(反馈状态为03，即中债通过的内容)-->
-	<select id="queryAllEquityInfo"  parameterType="java.util.List"
+	<select id="queryAllEquityInfoMax"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
 	        resultSetType="FORWARD_ONLY" fetchSize="1000">
     	  SELECT 		    
@@ -155,22 +215,35 @@
 			T1.CREATE_USER AS createUser,
 			T1.ORG_CODE AS orgCode
        	from chb_equ_sub T1
-    	left join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	where
-    		  (t2.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
-			   <if test="list !=null and list.size() == 1">
-			        AND T1.REGIST_BANK_CODE
-			            ||'_'||T1.IDENTIFY_NUMBER
-			            ||'_'||T1.HOLDER_NAME
-			            ||'_'||T1.PERSONAL_IDENTIFY_TYPE
-			            ||'_'||T1.INSTITUTION_IDENTIFY_TYPE
-			            ||'_'||T1.OTHER_IDENTIFY_NAME IN
-			        <foreach collection="list" item="key" open="(" separator=","  close=")">
-			            #{key,jdbcType=VARCHAR}
-			        </foreach>
-			    </if>
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		where
+    		  (T1.SUBMIT_FEEDBACK_STATUS = '03' or T1.ORG_INDENTIFY_MARK is not null)
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*** add by zcw 三期性能优化 start **/
+		/***  六要素入临时表。sql对临时表操作 **/
+		and EXISTS(select 1 from CHB_EQU_TMP tmp
+		where T1.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		and T1.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
+		and T1.HOLDER_NAME = tmp.HOLDER_NAME
+		and nvl(T1.PERSONAL_IDENTIFY_TYPE,' ') = nvl(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+		and nvl(T1.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+		and nvl(T1.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
+		)
+<!--			   <if test="list !=null and list.size() == 1">-->
+<!--			        AND T1.REGIST_BANK_CODE-->
+<!--			            ||'_'||T1.IDENTIFY_NUMBER-->
+<!--			            ||'_'||T1.HOLDER_NAME-->
+<!--			            ||'_'||T1.PERSONAL_IDENTIFY_TYPE-->
+<!--			            ||'_'||T1.INSTITUTION_IDENTIFY_TYPE-->
+<!--			            ||'_'||T1.OTHER_IDENTIFY_NAME IN-->
+<!--			        <foreach collection="list" item="key" open="(" separator=","  close=")">-->
+<!--			            #{key,jdbcType=VARCHAR}-->
+<!--			        </foreach>-->
+<!--			    </if>-->
+		/*** add by zcw 三期性能优化 end **/
 	</select>
+
+	<!-- 该sql目前没有方法调用-->
 	<select id="queryAllEquityInfoConStrastYbsSingle"  
 	        parameterType="java.lang.String"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
@@ -218,10 +291,10 @@
 										   ||'_'||t1.INSTITUTION_IDENTIFY_TYPE
 										   ||'_'||t1.OTHER_IDENTIFY_NAME order by t1.update_time desc) rank
        	from chb_view_equ_sub T1
-    	inner join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
-    	<where>
-    		 t2.SUBMIT_FEEDBACK_STATUS = '03'
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<where>
+			T1.SUBMIT_FEEDBACK_STATUS = '03'
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		        AND t1.REGIST_BANK_CODE
 		            ||'_'||t1.IDENTIFY_NUMBER
 		            ||'_'||t1.HOLDER_NAME
@@ -268,19 +341,145 @@
        		SUBMIT_DEADLINE           as submitDeadline,
       	 	STATUS                    as status,
        		t1.UPDATE_TIME           as updateTime,
-       		t2.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
        		row_number() OVER(partition by t1.INDENTIFY_MARK order by t1.update_time desc) rank
        	from chb_view_equ_sub t1
-    	inner join CHB_SUBMIT_STATUS t2
-    	on  t1.SUMIT_SEQ = t2.SEQNO
     	<where>
-    		 t2.SUBMIT_FEEDBACK_STATUS = '03'
-   			and t1.INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
+			T1.SUBMIT_FEEDBACK_STATUS = '03'
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			and t1.INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR}
    			and t1.REGIST_BANK_CODE=#{bankCode,jdbcType=VARCHAR}
 		</where>
 	</select>
-	
-	<select id="queryEquityInfoList" parameterType="java.util.List" 
+
+    <select id="queryEquityInfoList" parameterType="java.util.List"
+            resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        INDENTIFY_MARK indentifyMark,
+        ORG_INDENTIFY_MARK orgIndentifyMark,
+        REGIST_BANK_CODE bankCode,
+        IS_BELONG_BANK isBelongBank,
+        THE_BANK_NAME theBankName,
+        THE_BANK_CODE theBankCode,
+        HOLDER_MARK holderMark,
+        HOLDER_REGION holderRegion,
+        HOLDER_TYPE holderType,
+        PERSONAL_IDENTIFY_TYPE personalIdentifyType,
+        INSTITUTION_IDENTIFY_TYPE institutionIdentifyType,
+        OTHER_IDENTIFY_NAME otherIdentifyName,
+        IDENTIFY_NUMBER identifyNumber,
+        SPV_CAP_ACC_BANK spvCapAccBank,
+        OTHER_CAP_ACC_BANK otherCapAccBank,
+        SPV_REGIST_CODE spvRegistCode,
+        HOLDER_DATE holderDate,
+        HOLDER_NAME holderName,
+        HOLDER_SEX holderSex,
+        HOLDER_RISK_PREFER holderRiskPrefer,
+        HOLDER_CELLPHONE holderCellphone,
+        HOLDER_TELEPHONE holderTelephone,
+        HOLDER_EMAIL holderEmail,
+        ORG_CODE orgCode,
+        DEPT_CODE deptCode,
+        REMARK remark,
+        FUND_ACC_PLACE fundAccPlace,
+        HOLDER_CLASSIFY holderClassify
+        FROM CHB_EQU_HOLD HOLD
+        <where>
+			STATUS !='D'
+			<if test="list !=null and list.size() >0">
+				AND (REGIST_BANK_CODE
+				,IDENTIFY_NUMBER
+				,HOLDER_NAME
+				,nvl(PERSONAL_IDENTIFY_TYPE,' ')
+				,nvl(INSTITUTION_IDENTIFY_TYPE,' ')
+				,nvl(OTHER_IDENTIFY_NAME,' ')
+				)in
+				<foreach collection="list" item="item" open="(" separator="," close=")">
+					(#{item.registBankCode,jdbcType=VARCHAR},
+					#{item.identifyNumber,jdbcType=VARCHAR},
+					#{item.holderName,jdbcType=VARCHAR},
+					nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
+					nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
+					nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				</foreach>
+			</if>
+            /*未报送*/
+            AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
+            /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+            WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK  AND T.SUBMIT_FEEDBACK_STATUS = '03'
+            )
+        </where>
+
+        UNION ALL
+
+        SELECT
+        INDENTIFY_MARK indentifyMark,
+        ORG_INDENTIFY_MARK orgIndentifyMark,
+        REGIST_BANK_CODE bankCode,
+        IS_BELONG_BANK isBelongBank,
+        THE_BANK_NAME theBankName,
+        THE_BANK_CODE theBankCode,
+        HOLDER_MARK holderMark,
+        HOLDER_REGION holderRegion,
+        HOLDER_TYPE holderType,
+        PERSONAL_IDENTIFY_TYPE personalIdentifyType,
+        INSTITUTION_IDENTIFY_TYPE institutionIdentifyType,
+        OTHER_IDENTIFY_NAME otherIdentifyName,
+        IDENTIFY_NUMBER identifyNumber,
+        SPV_CAP_ACC_BANK spvCapAccBank,
+        OTHER_CAP_ACC_BANK otherCapAccBank,
+        SPV_REGIST_CODE spvRegistCode,
+        HOLDER_DATE holderDate,
+        HOLDER_NAME holderName,
+        HOLDER_SEX holderSex,
+        HOLDER_RISK_PREFER holderRiskPrefer,
+        HOLDER_CELLPHONE holderCellphone,
+        HOLDER_TELEPHONE holderTelephone,
+        HOLDER_EMAIL holderEmail,
+        ORG_CODE orgCode,
+        DEPT_CODE deptCode,
+        REMARK remark,
+        FUND_ACC_PLACE fundAccPlace,
+        HOLDER_CLASSIFY holderClassify
+        FROM CHB_EQU_HOLD_CHECK HOLDCHECK
+        WHERE 1=1
+        AND NOT EXISTS (SELECT 1 FROM CHB_EQU_HOLD HOLD
+        WHERE HOLD.REGIST_BANK_CODE =  HOLDCHECK.REGIST_BANK_CODE
+        AND  HOLD.IDENTIFY_NUMBER =  HOLDCHECK.IDENTIFY_NUMBER
+        AND  HOLD.HOLDER_NAME =  HOLDCHECK.HOLDER_NAME
+        AND  HOLD.PERSONAL_IDENTIFY_TYPE =  HOLDCHECK.PERSONAL_IDENTIFY_TYPE
+        AND  HOLD.INSTITUTION_IDENTIFY_TYPE =  HOLDCHECK.INSTITUTION_IDENTIFY_TYPE
+        AND  HOLD.OTHER_IDENTIFY_NAME =  HOLDCHECK.OTHER_IDENTIFY_NAME
+        AND HOLD.INDENTIFY_MARK = HOLDCHECK.INDENTIFY_MARK)
+        AND NOT EXISTS (SELECT 1
+        FROM CHB_EQU_SUB SUB
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
+        OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK)
+        AND SUB.SUBMIT_FEEDBACK_STATUS = '03')
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<if test="list !=null and list.size() >0">
+			AND (HOLDCHECK.REGIST_BANK_CODE
+			,HOLDCHECK.IDENTIFY_NUMBER
+			,HOLDCHECK.HOLDER_NAME
+			,nvl(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ')
+			,nvl(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ')
+			,nvl(HOLDCHECK.OTHER_IDENTIFY_NAME,' ')
+			)in
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode,jdbcType=VARCHAR},
+				#{item.identifyNumber,jdbcType=VARCHAR},
+				#{item.holderName,jdbcType=VARCHAR},
+				nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
+				nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
+				nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+			</foreach>
+		</if>
+    </select>
+
+	<select id="queryEquityInfoListMax"
 	        resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto" 
 	        resultSetType="FORWARD_ONLY" fetchSize="1000">
 	        SELECT 
@@ -314,24 +513,22 @@
 				HOLDER_CLASSIFY holderClassify
 	   		FROM CHB_EQU_HOLD HOLD
 			 <where>
-			     <if test="keys !=null and keys.size()==1">
-			        AND REGIST_BANK_CODE
-			            ||'_'||IDENTIFY_NUMBER
-			            ||'_'||HOLDER_NAME
-			            ||'_'||PERSONAL_IDENTIFY_TYPE
-			            ||'_'||INSTITUTION_IDENTIFY_TYPE
-			            ||'_'||OTHER_IDENTIFY_NAME IN
-			        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-			            #{key,jdbcType=VARCHAR}
-			        </foreach>
-			    </if> 
-			 	AND STATUS !='D'
+				 STATUS !='D'
+				 /*** add by zcw 三期性能优化 start **/
+				 /***  六要素入临时表。sql对临时表操作 **/
+				 and EXISTS(select 1 from CHB_EQU_TMP tmp
+				 where HOLD.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+				 and HOLD.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
+				 and HOLD.HOLDER_NAME = tmp.HOLDER_NAME
+				 and nvl(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = nvl(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+				 and nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+				 and nvl(HOLD.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
+				 )
+				 /*** add by zcw 三期性能优化 end **/
 			 	/*未报送*/
 		        AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
-		                        INNER JOIN CHB_SUBMIT_STATUS T2
-							    ON  T.SUMIT_SEQ = T2.SEQNO
-							    AND T2.SUBMIT_FEEDBACK_STATUS = '03'
-			    			    WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
+				 /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			    			    WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK  AND T.SUBMIT_FEEDBACK_STATUS = '03'
 		                      )
 			 </where>
 			 
@@ -372,29 +569,30 @@
                        WHERE HOLD.REGIST_BANK_CODE =  HOLDCHECK.REGIST_BANK_CODE 
 		            		 AND  HOLD.IDENTIFY_NUMBER =  HOLDCHECK.IDENTIFY_NUMBER
 		            		 AND  HOLD.HOLDER_NAME =  HOLDCHECK.HOLDER_NAME
-		            		 AND  HOLD.PERSONAL_IDENTIFY_TYPE =  HOLDCHECK.PERSONAL_IDENTIFY_TYPE
-		            		 AND  HOLD.INSTITUTION_IDENTIFY_TYPE =  HOLDCHECK.INSTITUTION_IDENTIFY_TYPE
-                     AND  HOLD.OTHER_IDENTIFY_NAME =  HOLDCHECK.OTHER_IDENTIFY_NAME
+							AND nvl(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = nvl(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ')
+							AND nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ')
+							AND nvl(HOLD.OTHER_IDENTIFY_NAME,' ') = nvl(HOLDCHECK.OTHER_IDENTIFY_NAME,' ')
                      AND HOLD.INDENTIFY_MARK = HOLDCHECK.INDENTIFY_MARK)
             AND NOT EXISTS (SELECT 1
 							FROM CHB_EQU_SUB SUB
-							INNER JOIN CHB_SUBMIT_STATUS T2
-							ON  SUB.SUMIT_SEQ = T2.SEQNO
-							AND T2.SUBMIT_FEEDBACK_STATUS = '03'
-							WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
-							OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK))
-		       <if test="keys !=null and keys.size()==1">
-		        AND HOLDCHECK.REGIST_BANK_CODE
-		            ||'_'||HOLDCHECK.IDENTIFY_NUMBER
-		            ||'_'||HOLDCHECK.HOLDER_NAME
-		            ||'_'||HOLDCHECK.PERSONAL_IDENTIFY_TYPE
-		            ||'_'||HOLDCHECK.INSTITUTION_IDENTIFY_TYPE
-		            ||'_'||HOLDCHECK.OTHER_IDENTIFY_NAME IN
-		        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-		            #{key,jdbcType=VARCHAR}
-		        </foreach>
-			 </if> 
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		WHERE (HOLDCHECK.MERGER_INDENTIFY_MARK = SUB.INDENTIFY_MARK
+							OR HOLDCHECK.MERGER_INDENTIFY_MARK    = SUB.ORG_INDENTIFY_MARK)
+							AND SUB.SUBMIT_FEEDBACK_STATUS = '03')
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*** add by zcw 三期性能优化 start **/
+		/***  六要素入临时表。sql对临时表操作 **/
+		and EXISTS(select 1 from CHB_EQU_TMP tmp
+		where HOLDCHECK.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		and HOLDCHECK.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
+		and HOLDCHECK.HOLDER_NAME = tmp.HOLDER_NAME
+		and nvl(HOLDCHECK.PERSONAL_IDENTIFY_TYPE,' ') = nvl(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+		and nvl(HOLDCHECK.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+		and nvl(HOLDCHECK.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
+		)
+		/*** add by zcw 三期性能优化 end **/
 	</select>
+	
 	<select id="queryRepeatEquityInfoUnSubmit" resultMap="BaseResultMap">
 		with s2 as(
 		SELECT count(1),ch.REGIST_BANK_CODE,ch.PERSONAL_IDENTIFY_TYPE,
@@ -430,7 +628,7 @@
 		        </foreach>
 			 </if>
 	</select>
-	<select id="queryEquityInfoRegistByPkUnsubmit"  parameterType="java.util.List"
+	<select id="queryEquityInfoRegistByPkUnsubmit"  parameterType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
 		 
 		select INDENTIFY_MARK            as indentifyMark,
@@ -473,13 +671,8 @@
 			FUND_ACC_PLACE 			  as fundAccPlace
 		 from CHB_EQU_SUB
 		where SUBMIT_STATUS='01'
-		 <if test="keys !=null and keys.size()>0">
-		        AND REGIST_BANK_CODE
-		            ||'_'||INDENTIFY_MARK
-		            IN
-		        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-		            #{key,jdbcType=VARCHAR}
-		        </foreach>
-		    </if>
+		<foreach collection="newKeyList" item="item" open="AND (REGIST_BANK_CODE,INDENTIFY_MARK) in( values" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark})
+		</foreach>
 	</select>
 </mapper>

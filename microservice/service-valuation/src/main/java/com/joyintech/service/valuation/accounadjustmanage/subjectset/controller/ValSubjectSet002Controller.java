@@ -10,8 +10,14 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.subjectset.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValSubjectHandDto;
+import org.jasypt.commons.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,18 +79,17 @@ public class ValSubjectSet002Controller extends BaseController {
 //        return super.init(model);
 //    }
     
+
     /**
-     * 根据主键检索科目
-     * 
-     * @param booksetId 账套代码
-     * @param subjectNo 科目代码
-     * @return 科目
-     * @see
-     * @since 1.0
+     * @author  殷亚
+     * @description 根据主键检索科目
+     * @date 2022-2-9 14:30
+     * @param dto:
+     * @return com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto
      */
     @PostMapping("/selectValBokSubject")
-    public ValBokSubjectDto selectValBokSubject(@RequestBody Map<String, Object> pageParam) {
-        return valSubjectSet001Service.selectValBokSubject((String)pageParam.get("booksetId"), (String)pageParam.get("subjectNo"));
+    public ValBokSubjectDto selectValBokSubject(@RequestBody ValBokSubjectDto dto) {
+        return valSubjectSet001Service.selectValBokSubject(dto);
     }
 //    /**
 //     * 保存按钮点击时的check
@@ -117,5 +122,20 @@ public class ValSubjectSet002Controller extends BaseController {
         
         valSubjectSet001Service.save(dto);
         return true;
+    }
+
+
+
+
+   /**
+    * @author  殷亚
+    * @description 根据内部科目编码检索科目
+    * @date 2022-1-27 16:31
+     * @param dto:
+     * @return java.util.List<com.joyintech.service.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto>
+    */
+    @PostMapping("/selectValBokSubjectByInCode")
+    public List<ValBokSubjectDto> selectValBokSubjectByInCode(@RequestBody ValBokSubjectDto dto) {
+        return valSubjectSet001Service.selectValBokSubjectByInCode(dto);
     }
 }

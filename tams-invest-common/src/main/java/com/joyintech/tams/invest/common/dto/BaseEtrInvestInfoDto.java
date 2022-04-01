@@ -58,6 +58,7 @@ public class BaseEtrInvestInfoDto {
      * 投标标位表dto
      */
     private List<EtrEntrustBidPrice> bidPriceList;
+
     /**
      * 委托指令明细
      */

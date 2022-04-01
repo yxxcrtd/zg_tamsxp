@@ -75,6 +75,7 @@ public class CommonPlatformDateService implements IPlatformDate {
      * @see
      * @since 1.0
      */
+    @Override
     public Date getDbDate() {
         return commonPlatformDateMapper.getDbDate();
     }
@@ -86,6 +87,7 @@ public class CommonPlatformDateService implements IPlatformDate {
      * @see
      * @since 1.0
      */
+    @Override
     public String getSysDateStr() {
         return DateUtil.format(getSysDate());
     }

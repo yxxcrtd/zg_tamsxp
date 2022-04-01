@@ -28,7 +28,7 @@
 </sql>								
 <select id="searchPage"  parameterType="map"
 	resultType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
-		select * from
+		select t.* from
 		(<include refid="baseInfo"/>
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
@@ -80,12 +80,12 @@
 				and upper(CAVS.ASSET_CODE) like concat_ws('','%',upper(#{assetCodeLike,jdbcType=VARCHAR}),'%')
 			</if>
 		</where>
-		) order by valDate,assetCode
+		)t order by t.valDate,t.assetCode
 	</select>
 
 
     <select id="queryExportListByKeys" resultType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
-		select * from
+		select t.* from
 		(<include refid="baseInfo"/>
 		<where>
 		   	<if test="registList!=null and registList.size()!=0">
@@ -106,7 +106,7 @@
 			 	</foreach>
 		   	</if>
 		</where>
-		)
+		)t
 	</select>
 	
 	    <!-- 接口报送更新并且更新 报送流水号-->

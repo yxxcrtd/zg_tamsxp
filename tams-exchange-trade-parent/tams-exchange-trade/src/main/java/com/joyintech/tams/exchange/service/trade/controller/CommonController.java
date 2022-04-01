@@ -1,5 +1,19 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.util.DateUtil;
@@ -8,22 +22,16 @@ import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.SysParamBean;
 import com.joyintech.tams.exchange.common.bean.request.DeviationDegreeRequest;
 import com.joyintech.tams.exchange.common.bean.request.EtrDispatcherInfoRequest;
-import com.joyintech.tams.exchange.common.bean.response.EtrDispatcherInfoResponse;
+import com.joyintech.tams.exchange.common.bean.request.FaceValueRequest;
 import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.db.domain.Instrument;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/trade/joyin")
@@ -40,6 +48,9 @@ public class CommonController {
     public ResultBean queryInstrument(@RequestParam(value = "market", required = false) String market,
                                       @RequestParam(value = "asset_type", required = false) String assetType,
                                       @RequestParam(value = "keyword", required = false) String keyword) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return commonManagement.queryInstrument(market, assetType, keyword);
     }
 
@@ -47,6 +58,9 @@ public class CommonController {
     @RequestMapping(value = "/common/instrumentByMarket", method = RequestMethod.POST)
     public Message<List<Instrument>> queryInstrumentByMarket(@RequestParam @NotBlank(message = "交易场所不可为空") String market,
                                                              @RequestParam(required = false) String keyword) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(commonManagement.queryInstrument(market, null, keyword));
     }
 
@@ -54,18 +68,27 @@ public class CommonController {
     @RequestMapping(value = "/common/instrumentByAssetType", method = RequestMethod.POST)
     public Message<List<Instrument>> queryInstrumentByAssetType(@RequestParam @NotBlank(message = "资产类型不可为空") String assetType,
                                                                 @RequestParam(required = false) String keyword) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(commonManagement.queryInstrument(null, assetType, keyword));
     }
 
     @ApiOperation(value = "市场合约代码查询", notes = "根据关键字查询市场合约代码，不传关键词检索全部")
     @RequestMapping(value = "/common/instrumentByKeyword", method = RequestMethod.POST)
     public Message<List<Instrument>> queryInstrumentByKeyword(@RequestParam(required = false) String keyword) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<>(commonManagement.queryInstrument(null, null, keyword));
     }
 
     @ApiOperation(value = "期货市场合约代码查询", notes = "期货市场合约代码查询")
     @RequestMapping(value = "/common/futuresInstrument", method = RequestMethod.POST)
     public ResultBean queryInstrument(@RequestParam(value = "stock_code", required = false, defaultValue = "") String stockCode) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return commonManagement.queryFuturesInstrument(stockCode);
     }
 
@@ -110,17 +133,26 @@ public class CommonController {
 
     @RequestMapping(value = "/common/service/node", method = RequestMethod.POST)
     public ResultBean queryServiceNode(@RequestParam(value = "node_name") String nodeName) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return new ResultBean(ErrorCode.SUCCESS, commonManagement.queryServiceNode(nodeName));
     }
 
     @RequestMapping(value = "/common/eureka/services", method = RequestMethod.POST)
     public ResultBean getEurekaServices(@RequestParam(value = "service_name") String serviceName) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return new ResultBean(ErrorCode.SUCCESS, commonManagement.getEurekaServices(serviceName));
     }
 
     @ApiOperation(value = "获取主节点信息", notes = "获取主节点信息")
     @RequestMapping(value = "/common/master", method = RequestMethod.POST)
     public ResultBean queryMasterAddress() {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return commonManagement.queryMaster();
     }
 
@@ -138,6 +170,9 @@ public class CommonController {
     public ResultBean changeDbType(@RequestParam(value = "user_id") String userId,
                                    @RequestParam(value = "use_redis", required = false) boolean useRedis,
                                    @RequestParam(value = "async_db", required = false) boolean asyncDb) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return commonManagement.setDataServiceConfig(userId, asyncDb, useRedis);
     }
 
@@ -145,6 +180,9 @@ public class CommonController {
     @RequestMapping(value = "/common/position/check", method = RequestMethod.POST)
     public ResultBean changePositionCheck(@RequestParam(value = "user_id") String userId,
                                           @RequestParam(value = "position_check_flag", required = false) boolean positionCheckFlag) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return commonManagement.setPositionCheckFlag(userId, positionCheckFlag);
     }
 
@@ -190,12 +228,15 @@ public class CommonController {
     @ApiOperation(value = "缓存交易时间段", notes = "缓存交易时间段")
     @RequestMapping(value = "/common/trade/time/flush", method = RequestMethod.POST)
     public ResultBean tradeTimeCacheFlush() {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return commonManagement.tradeTimeCache();
     }
 
     @ApiOperation(value = "查询指令明细信息", notes = "根据指令代码查询指令明细信息")
     @RequestMapping(value = "/common/etrDispatcher/info", method = RequestMethod.POST)
-    public Message<Map<String,Object>> getEtrDispatcherInfo(@RequestBody EtrDispatcherInfoRequest request) {
+    public Message<Map<String, Object>> getEtrDispatcherInfo(@RequestBody EtrDispatcherInfoRequest request) {
         return commonManagement.getEtrDispatcherInfo(request);
     }
 
@@ -203,5 +244,11 @@ public class CommonController {
     @RequestMapping(value = "/common/deviationDegree", method = RequestMethod.POST)
     public Message<String> getDeviationDegree(@RequestBody DeviationDegreeRequest request) {
         return commonManagement.getDeviationDegree(request);
+    }
+
+    @ApiOperation(value = "查询最新面值", notes = "根据资产代码查询最新面值")
+    @RequestMapping(value = "/common/getFaceValue", method = RequestMethod.POST)
+    public Message<BigDecimal> getFaceValue(@RequestBody FaceValueRequest request) {
+        return commonManagement.getFaceValue(request.getFinprodId());
     }
 }

@@ -255,6 +255,9 @@ public class EntrustQueryBean implements Serializable {
     @ApiModelProperty(name = "operateUser", value = "操作人员ID 执行撤销异常委托操作人员ID", hidden = true)
     private String operateUser;
 
+    @ApiModelProperty(name = "progress", value = "委托进度", hidden = true)
+    private BigDecimal progress;
+
     public boolean isNoCancelEntrust() {
         return noCancelEntrust;
     }
@@ -881,5 +884,13 @@ public class EntrustQueryBean implements Serializable {
 
     public void setEntrustStatusStr(String entrustStatusStr) {
         this.entrustStatusStr = entrustStatusStr;
+    }
+
+    public BigDecimal getProgress() {
+        return progress;
+    }
+
+    public void setProgress(BigDecimal progress) {
+        this.progress = progress;
     }
 }

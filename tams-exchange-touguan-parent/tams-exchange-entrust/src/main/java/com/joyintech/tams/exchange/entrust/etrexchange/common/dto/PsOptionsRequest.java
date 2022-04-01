@@ -35,6 +35,9 @@ public class PsOptionsRequest {
     @ApiModelProperty(name="othCodeType",value="投管资产类型",example="A1")
     private String othCodeType;
 
+    @ApiModelProperty(name="ps",value="委托方向",example="A1")
+    private String ps;
+
     public String getTradePlat() {
         return tradePlat;
     }
@@ -65,5 +68,13 @@ public class PsOptionsRequest {
 
     public void setFinprodId(String finprodId) {
         this.finprodId = finprodId;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }

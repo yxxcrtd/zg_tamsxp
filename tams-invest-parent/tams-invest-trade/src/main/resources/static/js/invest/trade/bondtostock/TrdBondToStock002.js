@@ -25,13 +25,17 @@
             $("#finprodName").val($('#finprodId').select2('data')[0].text);
             $("#finprodMarketId").val($('#finprodId').select2('data')[0].object.shareId);
             $("#finprodMarketName").val($('#finprodId').select2('data')[0].object.shareName);
-            $("#conShareId").val($('#finprodId').select2('data')[0].object.conShareId);
+            if(!isTranRecord ||isTranRecord == 'N' || isTranRecord == '') {
+                $("#conShareId").val($('#finprodId').select2('data')[0].object.conShareId);
+                if(!$("#conPrice").val()){
+                    $("#conPrice").val($('#finprodId').select2('data')[0].object.conPrice).trigger("blur");
+                }
+            }
+            $("#convdate").val(new Date($('#finprodId').select2('data')[0].object.conVdate).format());
             //股票对应金融产品代码
             $("#shareFinprodId").val($('#finprodId').select2('data')[0].object.shareFinprodId);
             $("#tradeMarket").val($('#finprodId').select2('data')[0].object.tradeMarket);
             $("#ccy").val($('#finprodId').select2('data')[0].object.ccy).trigger("change");
-            $("#convdate").val(new Date($('#finprodId').select2('data')[0].object.conVdate).format());
-            $("#conPrice").val($('#finprodId').select2('data')[0].object.conPrice).trigger("blur");
             $("#firstUnitCprice3").val($('#finprodId').select2('data')[0].object.sharePrice).trigger("blur");
             $("#pbondvalue").val($('#finprodId').select2('data')[0].pbondvalue).trigger("blur");
             $("#prec").val($('#finprodId').select2('data')[0].object.prec).trigger("blur");

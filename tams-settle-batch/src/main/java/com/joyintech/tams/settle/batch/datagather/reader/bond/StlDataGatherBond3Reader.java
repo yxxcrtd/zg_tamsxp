@@ -28,6 +28,9 @@ public class StlDataGatherBond3Reader extends StlDataGatherBondBaseReader {
 
     @Override
     protected boolean isCreateTrade(){
-        return false;
+        //GZYHTZJY-1043:modify by fuyongsheng 20220107 start
+//        return false;
+        return true;
+        //GZYHTZJY-1043:modify by fuyongsheng 20220107 end
     }
 }

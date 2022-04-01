@@ -107,7 +107,6 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
             headList.add("发行机构代码");
             headList.add("代理销售机构代码");
             headList.add("产品登记编码");
-            headList.add("备注");
             List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
             if (!StringUtil.isEmptyList(tempCheckResult)) {
                 return tempCheckResult;
@@ -266,11 +265,6 @@ public class AgentPrdInfo001Service extends CommonExportService<AgentPrdInfoDto>
 
             //产品名称
             AgentPrdInfoDto.setProdName(prdCodeMap.get(list.get(2)).getProdName());
-
-            //备注
-            if(list.get(3) != null && list.get(3) != "") {
-                AgentPrdInfoDto.setRemark(list.get(3));
-            }
 
             //数据状态
             AgentPrdInfoDto.setStatus("E");

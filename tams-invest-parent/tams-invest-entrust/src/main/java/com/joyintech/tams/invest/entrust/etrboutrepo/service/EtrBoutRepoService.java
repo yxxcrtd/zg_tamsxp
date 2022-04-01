@@ -279,6 +279,13 @@ public class EtrBoutRepoService extends CommonExportService<EtrBoutRepoDto> impl
                 Integer.class);
     }
 
+    @Override
+    public void doDelete(String workflowId) {
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBoutRepo/doDelete",workflowId,
+                Integer.class);
+    }
+
     /**
      *
      * 流程修改时调用

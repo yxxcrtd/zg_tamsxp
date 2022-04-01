@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckMJQFEYEComMapper_mysql">
     <sql id="objRec" >
-        SELECT objRec.* FROM (
+        WITH  objRec  AS (
         SELECT
         tmp3.PROD_ID,
         tmp3.VDATE,
@@ -10,16 +10,11 @@
         tmp3.TOTAL_AMT
         FROM (
         SELECT
-        @rownum :=@rownum +1 rownum,
         tmp2.PROD_ID,
         tmp2.VDATE,
         B.RAISE_QTY,
         B.TOTAL_AMT,
-        IF
-        (@PROD_ID = tmp2.PROD_ID, @rank :=@rank + 1, @rank :=1 ) AS raiseStatusNo,
-        @PROD_ID := tmp2.PROD_ID
-        FROM
-        (SELECT * FROM (
+        ROW_NUMBER() over( partition by tmp2.PROD_ID ORDER BY B.STATUS DESC ,B.UPDATE_TIME DESC)  AS raiseStatusNo FROM (
         SELECT
         A.PROD_ID,
         A.VDATE
@@ -47,27 +42,25 @@
                 #{orgCode,jdbcType=VARCHAR}
             </foreach>
         </if>
-        ) aa ORDER BY PROD_ID ) tmp2
+        ) tmp2
         INNER JOIN CHB_PRD_RAISETOT_SUB B
         ON (tmp2.PROD_ID = B.PROD_ID
-        AND STATUS IN ('01','02')) left join
-        (SELECT @rownum :=0, @PROD_REGIST_CODE := NULL, @rank := 0) tmp on 1=1
+        AND STATUS IN ('01','02'))
         ) tmp3
         WHERE raiseStatusNo = 1
-        )  objRec
+        )
     </sql>
 
 
     <!-- 余额、份额共通-核查对象数量取得 -->
     <select id="cntMJQFEYETolCom" resultType="java.math.BigDecimal">
-
+        <include refid="objRec"></include>
         SELECT
         COUNT(DISTINCT(A.PROD_ID))
         FROM
-        (<include refid="objRec"></include>) A
-        INNER JOIN CHB_INVESTHOLD_INFO_SUB B
-        ON(A.PROD_ID = B.PRODID
-        AND B.STATUS IN ('01','02'))
+        objRec A
+        INNER JOIN CHB_INVESTHOLD_INFO_SUB_SUM B
+        ON A.PROD_ID = B.PRODID
         WHERE
         STR_TO_DATE(DATE_FORMAT(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
 
@@ -75,7 +68,7 @@
 
     <!-- 余额、份额共通-错误记录取得 -->
     <select id="searchMJQFEYERecCom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
-
+        <include refid="objRec"></include>
         SELECT
         prdRegistCode,
         prodId,
@@ -97,31 +90,21 @@
         SUM(IFNULL(CNY_AMT,0)) as investRaiseTotalAmt
         FROM(
         SELECT
-        @rownum :=@rownum +1 rownum,
         A.PROD_ID,
         A.VDATE,
         A.RAISE_QTY,
         A.TOTAL_AMT,
-        CASE WHEN B.STATUS = '03' THEN 0 ELSE B.CNY_AMT END CNY_AMT,
-        CASE WHEN B.STATUS = '03' THEN 0 ELSE B.QTY END QTY,
-        D.REG_CODE,
-        IF
-        ((@PROD_ID = A.PROD_ID AND @INDENTIFY_MARK = B.INDENTIFY_MARK),
-         @rank :=@rank + 1, @rank :=1 ) AS investStatusNo,
-        @PROD_ID := A.PROD_ID,
-        @INDENTIFY_MARK := B.INDENTIFY_MARK
-        FROM
-        (SELECT * FROM (<include refid="objRec"></include>) bb ORDER BY PROD_ID) A
+        B.CNY_AMT CNY_AMT,
+        B.QTY QTY,
+        D.REG_CODE
+        FROM  objRec A
         LEFT JOIN CHB_PRDRESIST_CODE D
         ON A.PROD_ID = D.PRODID
-        INNER JOIN CHB_INVESTHOLD_INFO_SUB B
-        ON A.PROD_ID = B.PRODID left join
-        (SELECT @rownum :=0, @PROD_ID := NULL, @INDENTIFY_MARK := NULL, @rank := 0) tmp on 1=1
+        INNER JOIN CHB_INVESTHOLD_INFO_SUB_SUM B
+        ON A.PROD_ID = B.PRODID
         WHERE
         STR_TO_DATE(DATE_FORMAT(B.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
         ) tmp1
-        WHERE
-        investStatusNo = 1
         GROUP BY
         tmp1.PROD_ID,
         tmp1.REG_CODE,

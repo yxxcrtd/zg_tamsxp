@@ -28,7 +28,7 @@ $(function() {
             //识别标识
             indentifyMark:$('#indentifyMark').val(),
             //产品
-            prdCode: $('#prdCode').val()==null?null:$('#prdCode').val().join(","),
+            // prdCode: $('#prdCode').val()==null?null:$('#prdCode').val().join(","),
             //产品登记编码
             prdRegistCode: $('#prdRegistCode').val()==null?null:$('#prdRegistCode').val().join(","),
             //持有日期

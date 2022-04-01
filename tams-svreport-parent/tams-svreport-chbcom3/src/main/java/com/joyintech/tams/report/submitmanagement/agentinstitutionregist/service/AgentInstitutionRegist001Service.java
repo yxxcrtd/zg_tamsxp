@@ -68,6 +68,7 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
      * @since 1.0
      */
     public Page<AgentInstitutionRegistDto> searchForPage(Map<String, Object> param){
+        dealSearchParam(param);
         if (null != param.get(GlobalConstant.PARAM_PAGE)
                 && null != param.get(GlobalConstant.PARAM_LENGTH)) {
         int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
@@ -238,6 +239,8 @@ public class AgentInstitutionRegist001Service extends CommonExportService<AgentI
         List<AgentInstitutionRegistDto> tempList=new ArrayList<AgentInstitutionRegistDto>();
         AgentInstitutionRegistDto nullDate = new AgentInstitutionRegistDto();
         if(datas == null){
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbAgentInstitutionSubMapper.setDataList(selectParam);
         }else{
             tempList= com.joyintech.framework.util.JsonUtils.json2List(datas,AgentInstitutionRegistDto.class);

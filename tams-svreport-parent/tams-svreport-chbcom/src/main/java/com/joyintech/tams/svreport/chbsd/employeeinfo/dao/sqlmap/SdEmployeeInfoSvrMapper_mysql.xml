@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbsd.employeeinfo.dao.SdEmployeeInfoSvrMapper_mysql" >
+    <resultMap type="com.joyintech.tams.svreport.chbsd.employeeinfo.dto.SdEmployeeInfoSvrDto"   id="SdEmployeeInfoSvrDtoRM">
+        <result column="EMPLOYEE_TYPE" property="employeeType" jdbcType="VARCHAR" />
+        <result column="EMPLOYEE_NAME" property="employeeName" jdbcType="VARCHAR" />
+        <result column="EMPLOYEE_SEX" property="employeeSex" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
+        <result column="BELONGS_BANK" property="belongsBank" jdbcType="VARCHAR" />
+        <result column="BELONGS_PLACE" property="belongsPlace" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="BELONGS_DEPT" property="belongsDept" jdbcType="VARCHAR" />
+        <result column="POSITION" property="position" jdbcType="VARCHAR" />
+        <result column="EDUCATION" property="education" jdbcType="VARCHAR" />
+        <result column="ACADEMIC_DEGREE" property="academicDegree" jdbcType="VARCHAR" />
+        <result column="FIRSTTIME2WORK" property="firsttime2work" jdbcType="VARCHAR" />
+        <result column="FIRSTTIME2FINWORK" property="firsttime2finwork" jdbcType="VARCHAR" />
+        <result column="PROFESSIONAL_TITLE" property="professionalTitle" jdbcType="VARCHAR" />
+        <result column="FIN_PROFESSIONAL_CRTF" property="finProfessionalCrtf" jdbcType="VARCHAR" />
+        <result column="FIN_TRAINING_NO" property="finTrainingNo" jdbcType="VARCHAR" />
+        <result column="AWARDS" property="awards" jdbcType="VARCHAR" />
+        <result column="OFFICE_TEL" property="officeTel" jdbcType="VARCHAR" />
+        <result column="MOBILE_TEL" property="mobileTel" jdbcType="VARCHAR" />
+        <result column="MAIL" property="mail" jdbcType="VARCHAR" />
+        <result column="REG_BUSI_TYPE" property="regBusiType" jdbcType="VARCHAR" />
+        <result column="REG_EMPLOYEE_TYPE" property="regEmployeeType" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="DATE" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="DATE" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+			EMPLOYEE_TYPE, EMPLOYEE_NAME, EMPLOYEE_SEX,
+            ISSUE_PARTY_ID, IDENTIFY_NUMBER, BELONGS_BANK,
+            BELONGS_PLACE, COMPANY_NAME, BELONGS_DEPT,
+            POSITION, EDUCATION, ACADEMIC_DEGREE,
+            FIRSTTIME2WORK, FIRSTTIME2FINWORK, PROFESSIONAL_TITLE,
+            FIN_PROFESSIONAL_CRTF, FIN_TRAINING_NO, AWARDS,
+            OFFICE_TEL, MOBILE_TEL, MAIL,
+            REG_BUSI_TYPE, REG_EMPLOYEE_TYPE, STATUS,
+            DEPT_CODE, ORG_CODE, UPDATE_USER,
+            UPDATE_TIME, CREATE_USER, CREATE_TIME,
+            SUMIT_SEQ, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS,
+            SEND_STATUS, STATUS_DATE, SUBMIT_TIME,
+            REMARK
+    </sql>
+    <select id="selcteSendingData"  resultMap="SdEmployeeInfoSvrDtoRM">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_EMPLOYEE_INFO_SUB
+        where SEND_STATUS = '01'
+        AND STATUS = '01'
+    </select>
+</mapper>

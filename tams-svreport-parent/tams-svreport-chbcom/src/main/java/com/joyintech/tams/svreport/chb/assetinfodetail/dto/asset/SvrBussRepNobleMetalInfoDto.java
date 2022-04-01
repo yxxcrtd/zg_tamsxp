@@ -10,10 +10,9 @@
  
 package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 
-import com.joyintech.framework.validation.annotation.ValidLogic;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+
 import com.joyintech.tams.common.base.entity.RepAssetBond;
-import com.joyintech.tams.svreport.chb.assetinfodetail.validator.asset.SvrBussFinBondRepInfoValidator;
+
 
 import java.math.BigDecimal;
 
@@ -72,6 +71,19 @@ public class SvrBussRepNobleMetalInfoDto extends RepAssetBond{
      * 新人行资产三级分类
      */
     private String pbcAssetType3;
+
+    /**
+     * 资产名称
+     */
+    private String assetName;
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
 
     public String getCountryArea() {
         return countryArea;

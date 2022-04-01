@@ -236,6 +236,25 @@ public class ChbPrdDealSubDto {
     private BigDecimal cashAmtWan;
 
 
+	/***1217升级**/
+
+
+	/***
+	 *净值日期
+	 */
+	private Date  yieldDate;
+
+
+	public Date getYieldDate() {
+		return yieldDate;
+	}
+
+	public void setYieldDate(Date yieldDate) {
+		this.yieldDate = yieldDate;
+	}
+
+	/***1217升级**/
+
 	public String getRegistSeqno() {
 		return registSeqno;
 	}

@@ -1,0 +1,2 @@
+delete from  cfg_readonly_form_show where pagecode='cfetsManualSettleQuery' and dtcode='CfetsManualSettleInfo' and spcdcode ='03,M' and COLCODE='accountPosition';
+insert into CFG_READONLY_FORM_SHOW (PAGECODE, DTCODE,SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, EXTENDCFG, STATUS, REMARK1, REMARK2, REMARK3) values('cfetsManualSettleQuery', 'CfetsManualSettleInfo','03,M', 'accountPosition', '账户持仓', '','11', '{"colAlign": "left","dataType":"amount","precision":"2","unit":"wanYuan"}', '1', '0', '', '');

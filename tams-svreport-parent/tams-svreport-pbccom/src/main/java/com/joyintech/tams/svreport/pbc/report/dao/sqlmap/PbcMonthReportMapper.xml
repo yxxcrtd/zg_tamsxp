@@ -41,9 +41,9 @@
     <sql id="Base_Column_List">
         REPORTUUID
         , TERMID, REPORTTYPE, STARTDATE, ENDDATE, ISSUE_PARTY_ID, ISSUE_PARTY_NAME,
-    REPORTFREQU, REPORT_ORG_NAME, SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY, 
-    PERSON_LIABLE, CONTACT, REPORT_DATE, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME, 
+    REPORTFREQU, REPORT_ORG_NAME, SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, PROD_VARIETY,
+    PERSON_LIABLE, CONTACT, REPORT_DATE, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME,
     UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT,PBC_ACCOUNT_ID
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -757,7 +757,7 @@
         where 1 =1
         <if test="registList !=null and registList.size()>0">
             <foreach collection="registList" item="regist" open=" AND (" close=")" separator=") or (">
-                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
                 <if test="null!=regist.orgCode and regist.orgCode != ''">
                     and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 </if>
@@ -773,7 +773,7 @@
         where 1 =1
         <if test="registList !=null and registList.size()>0">
             <foreach collection="registList" item="regist" open=" AND(" close=")" separator=") or (">
-                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
                 <if test="null!=regist.orgCode and regist.orgCode != ''">
                     and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 </if>
@@ -1005,24 +1005,24 @@
 
     <select id="selectTermIdList" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport">
         select  TERMID,
-                REPORTTYPE,
-                nvl(ORG_CODE,'All') ORG_CODE,
-                REPORTUUID,
-                ISSUE_PARTY_ID,
-                issue_party_name    ,
-                reportfrequ         ,
-                report_org_name     ,
-                social_credit_code  ,
-                fin_institution_code,
-                prod_variety        ,
-                person_liable       ,
-                contact             ,
-                report_date,
-                ENDDATE
+        REPORTTYPE,
+        nvl(ORG_CODE,'All') ORG_CODE,
+        REPORTUUID,
+        ISSUE_PARTY_ID,
+        issue_party_name    ,
+        reportfrequ         ,
+        report_org_name     ,
+        social_credit_code  ,
+        fin_institution_code,
+        prod_variety        ,
+        person_liable       ,
+        contact             ,
+        report_date,
+        ENDDATE
         from PBC_REPORT
         where reporttype != 'ONEPRD_ASSET_DEBT'
         <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
-              #{item,jdbcType=VARCHAR}
+            #{item,jdbcType=VARCHAR}
         </foreach>
         <if test="orgCode != null">
             and ORG_CODE = #{orgCode,jdbcType=VARCHAR}

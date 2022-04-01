@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.mst.mstcustomerinfo.dao.MstCustomerInfoInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.mst.mstcustomerinfo.dto.MstCustomerInfoInterfDto" >
+        <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_ABBR" property="customerAbbr" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_TYPE" property="customerType" jdbcType="VARCHAR" />
+        <result column="IS_ISSUER" property="isIssuer" jdbcType="VARCHAR" />
+        <result column="IS_ASSTE_MANAGER" property="isAssteManager" jdbcType="VARCHAR" />
+        <result column="IS_TRUSTER" property="isTruster" jdbcType="VARCHAR" />
+        <result column="IS_SALER" property="isSaler" jdbcType="VARCHAR" />
+        <result column="IS_FINANCIER" property="isFinancier" jdbcType="VARCHAR" />
+        <result column="IS_GUARANTEE" property="isGuarantee" jdbcType="VARCHAR" />
+        <result column="IS_RATING_AGENCIES" property="isRatingAgencies" jdbcType="VARCHAR" />
+        <result column="IS_PLEDGOR" property="isPledgor" jdbcType="VARCHAR" />
+        <result column="IS_DEPOSIT_BANK" property="isDepositBank" jdbcType="VARCHAR" />
+        <result column="IS_INVEST_ADVISER" property="isInvestAdviser" jdbcType="VARCHAR" />
+        <result column="IS_BROKER" property="isBroker" jdbcType="VARCHAR" />
+        <result column="IS_COUNTER" property="isCounter" jdbcType="VARCHAR" />
+        <result column="IS_BANK" property="isBank" jdbcType="VARCHAR" />
+        <result column="IS_FUTURE_COM" property="isFutureCom" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY2" property="industry2" jdbcType="VARCHAR" />
+        <result column="INSITITUTE_CODE" property="insitituteCode" jdbcType="VARCHAR" />
+        <result column="IS_GOV" property="isGov" jdbcType="VARCHAR" />
+        <result column="MAIN_CAPITAL" property="mainCapital" jdbcType="DECIMAL" />
+        <result column="REGISTER_CAPITAL" property="registerCapital" jdbcType="DECIMAL" />
+        <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+        <result column="CITY" property="city" jdbcType="VARCHAR" />
+        <result column="COUNTY" property="county" jdbcType="VARCHAR" />
+        <result column="HOLDING_TYPE" property="holdingType" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_OBJ_TYPE" property="customerObjType" jdbcType="VARCHAR" />
+        <result column="IS_LISTED_COMPANY" property="isListedCompany" jdbcType="VARCHAR" />
+        <result column="IS_GROUP_CUSTOMER" property="isGroupCustomer" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_ID" property="parentCustomerId" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_NAME" property="parentCustomerName" jdbcType="VARCHAR" />
+        <result column="IS_PRIVATE" property="isPrivate" jdbcType="VARCHAR" />
+        <result column="IS_ESCAPE_DEPT" property="isEscapeDept" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="IS_CREDIT_RELATED_TRD" property="isCreditRelatedTrd" jdbcType="VARCHAR" />
+        <result column="STRUCT_ADJUST_TYPE" property="structAdjustType" jdbcType="VARCHAR" />
+        <result column="INDUS_UPGRATE_TYPE" property="indusUpgrateType" jdbcType="VARCHAR" />
+        <result column="SEX" property="sex" jdbcType="VARCHAR" />
+        <result column="PERSON_ID" property="personId" jdbcType="VARCHAR" />
+        <result column="M_PHONE" property="mPhone" jdbcType="VARCHAR" />
+        <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+        <result column="POSITION" property="position" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+        <result column="MAIL" property="mail" jdbcType="VARCHAR" />
+        <result column="PROPERTY" property="property" jdbcType="VARCHAR" />
+        <result column="COMPANY_NATURE" property="companyNature" jdbcType="VARCHAR" />
+        <result column="LINK_ID1" property="linkId1" jdbcType="VARCHAR" />
+        <result column="LINK_ID2" property="linkId2" jdbcType="VARCHAR" />
+        <result column="LINK_ID3" property="linkId3" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="HS_TYPE" property="hsType" jdbcType="VARCHAR" />
+        <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+        <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+        <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+        <result column="BUSI_SCOPE" property="busiScope" jdbcType="CLOB" />
+        <result column="MAIN_BUSI" property="mainBusi" jdbcType="CLOB" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        select  MCI.CUSTOMER_ID CUSTOMER_ID, MCI.CUSTOMER_NAME CUSTOMER_NAME, MCI.CUSTOMER_ABBR CUSTOMER_ABBR,
+        MCI.CUSTOMER_TYPE CUSTOMER_TYPE, MCI.IS_ISSUER IS_ISSUER, MCI.IS_ASSTE_MANAGER IS_ASSTE_MANAGER,
+        MCI.IS_TRUSTER IS_TRUSTER, MCI.IS_SALER IS_SALER, MCI.IS_FINANCIER IS_FINANCIER, MCI.IS_GUARANTEE IS_GUARANTEE,
+        MCI.IS_RATING_AGENCIES IS_RATING_AGENCIES, MCI.IS_PLEDGOR IS_PLEDGOR, MCI.IS_DEPOSIT_BANK IS_DEPOSIT_BANK,
+        MCI.IS_INVEST_ADVISER IS_INVEST_ADVISER, MCI.CREATE_USER CREATE_USER, MCI.CREATE_DEPT CREATE_DEPT,
+        MCI.CREATE_TIME CREATE_TIME, MCI.UPDATE_USER UPDATE_USER, MCI.UPDATE_TIME UPDATE_TIME, MCI.IS_BROKER IS_BROKER,
+        MCI.IS_COUNTER IS_COUNTER, MCI.IS_BANK IS_BANK, MCI.IS_FUTURE_COM IS_FUTURE_COM,
+        MCIA.PARTY_TYPE3 PARTY_TYPE3, MCIA.PARTY_TYPE2 PARTY_TYPE2, MCIA.PARTY_TYPE1 PARTY_TYPE1, MCIA.
+        MCIA.INDUSTRY INDUSTRY, MCIA.INDUSTRY2 INDUSTRY2, MCIA.INSITITUTE_CODE INSITITUTE_CODE, MCIA.IS_GOV IS_GOV, MCIA.
+        MCIA.MAIN_CAPITAL MAIN_CAPITAL, MCIA.REGISTER_CAPITAL REGISTER_CAPITAL, MCIA.PROVINCE PROVINCE, MCIA.
+        MCIA.CITY CITY, MCIA.COUNTY COUNTY, MCIA.HOLDING_TYPE HOLDING_TYPE, MCIA.CUSTOMER_OBJ_TYPE CUSTOMER_OBJ_TYPE, MCIA.
+        MCIA.IS_LISTED_COMPANY IS_LISTED_COMPANY, MCIA.IS_GROUP_CUSTOMER IS_GROUP_CUSTOMER, MCIA.PARENT_CUSTOMER_ID PARENT_CUSTOMER_ID, MCIA.
+        MCIA.PARENT_CUSTOMER_NAME PARENT_CUSTOMER_NAME, MCIA.IS_PRIVATE IS_PRIVATE, MCIA.IS_ESCAPE_DEPT IS_ESCAPE_DEPT, MCIA.
+        MCIA.CREDIT_TYPE CREDIT_TYPE, MCIA.IS_CREDIT_RELATED_TRD IS_CREDIT_RELATED_TRD, MCIA.STRUCT_ADJUST_TYPE STRUCT_ADJUST_TYPE, MCIA.
+        MCIA.INDUS_UPGRATE_TYPE INDUS_UPGRATE_TYPE, MCIA.SEX SEX, MCIA.PERSON_ID PERSON_ID, MCIA.M_PHONE M_PHONE, MCIA.
+        MCIA.PHONE PHONE, MCIA.POSITION POSITION, MCIA.COMPANY_NAME COMPANY_NAME, MCIA.ADDRESS ADDRESS, MCIA.MAIL MAIL, MCIA.
+        MCIA.PROPERTY PROPERTY, MCIA.COMPANY_NATURE COMPANY_NATURE, MCIA.LINK_ID1 LINK_ID1, MCIA.LINK_ID2 LINK_ID2, MCIA.
+        MCIA.LINK_ID3 LINK_ID3, MCIA.REMARK REMARK, MCIA.CREATE_USER CREATE_USER, MCIA.CREATE_DEPT CREATE_DEPT, MCIA.
+        MCIA.CREATE_TIME CREATE_TIME, MCIA.UPDATE_USER UPDATE_USER, MCIA.UPDATE_TIME UPDATE_TIME, MCIA.HS_TYPE HS_TYPE, MCIA.
+        MCIA.IS_FIN_LICENCE IS_FIN_LICENCE, MCIA.INDUSTRY3 INDUSTRY3, MCIA.INDUSTRY4 INDUSTRY4,MCIA.BUSI_SCOPE BUSI_SCOPE, MCIA.MAIN_BUSI MAIN_BUSI
+        from MST_CUSTOMER_INFO MCI LEFT JOIN MST_CUSTOMER_INFO_ADD MCIA
+        ON MCI.CUSTOMER_ID = MCIA.CUSTOMER_ID
+        WHERE 1=1
+        <if test="updatetime != null" >
+            and ifnull(MCI.UPDATE_TIME,MCI.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+            or ifnull(MCIA.UPDATE_TIME,MCIA.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

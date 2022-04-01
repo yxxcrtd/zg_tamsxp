@@ -50,7 +50,12 @@ public class TerminalAgentInfo {
     /**
      * 状态
      */
-    public int status;
+    private int status;
+
+    /**
+     * 接口平台地址
+     */
+    private String dspUrl;
 
     public String getAccountId() {
         return accountId;
@@ -132,11 +137,19 @@ public class TerminalAgentInfo {
         this.createTime = createTime;
     }
 
-    public int isStatus() {
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public String getDspUrl() {
+        return dspUrl;
+    }
+
+    public void setDspUrl(String dspUrl) {
+        this.dspUrl = dspUrl;
     }
 }

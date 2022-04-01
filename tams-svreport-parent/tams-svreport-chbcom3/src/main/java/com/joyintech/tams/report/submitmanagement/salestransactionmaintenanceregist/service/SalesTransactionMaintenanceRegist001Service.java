@@ -76,6 +76,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
      * @since 1.0
      */
     public Page<SalesTransactionMaintenanceRegist001Dto> searchForPage(Map<String, Object> param){
+        dealSearchParam(param);
         if (null != param.get(GlobalConstant.PARAM_PAGE)
                 && null != param.get(GlobalConstant.PARAM_LENGTH)) {
             int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
@@ -86,6 +87,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
             return pageList;
         }else{
             Page<SalesTransactionMaintenanceRegist001Dto> page = queryForPage(SalesTransactionMaintenanceRegist001Mapper.class,"queryForRegistPage",param);
+            dealDataList(page.getRoot());
             return page;
         }
     }
@@ -271,8 +273,13 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
                 return null;
             }
         } else {
+            if(StringUtil.isNotBlank((String)param.get("dataStatus"))) {
+                String dataStatus = param.get("dataStatus").toString();
+                param.put("dataStatusList", StringUtil.splitToList(GlobalConstant.COMMA, dataStatus));
+            }
             resultList = salesTransactionMaintenanceRegist001Mapper.setDataList(param);
         }
+        dealDataList(resultList);
         return resultList;
     }
 
@@ -280,6 +287,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         list.forEach(item -> {
             if (StringUtil.isNotEmpty(item.getTradePs())) {
                 item.setTradePs(item.getTradePs() + " " + SvrDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, item.getTradePs()));
+                item.setTradeCcy(item.getTradeCcy() + " " + SvrDataUtil.getNameFromDataDict(DictCode.币种_中债, item.getTradeCcy()));
             }
         });
     }

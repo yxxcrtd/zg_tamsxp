@@ -11,21 +11,27 @@
 package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 
 import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FinProdResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dao.FieldEtrInfoQueryMapper;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.EntrustQueryBean;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListRequest;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.FieldEtrInfoQueryListResponse;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrinfoquery.dto.TradeQueryBean;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -107,7 +113,7 @@ public class FieldEtrInfoQueryService extends BaseService{
         pageParam.put("effectFlag04",DictCodeListExt1.有效状态_流程中.getValue());
         pageParam.put("finType_zq", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("ps_49", DictCodeListExt3.交易方向_债转股.getValue());
-
+        pageParam.put("search_isNumberFlag", BaseMap.isNumeric(dto.getSearch()));
         if (StringUtil.equals(dto.getSettleSpeed(),
                 DictCodeList.清算速度_T_0.getValue())) {
             pageParam.put("settleSpeed","0");
@@ -126,6 +132,23 @@ public class FieldEtrInfoQueryService extends BaseService{
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
 
+        //价格模式
+        if(StringUtils.isNotEmpty((String)pageParam.get("search"))){
+            List<String> declaTypeList = new ArrayList<>();
+            List<? extends DataDictItem> list = SysDataUtil.getDataDictItem(DictCode.价格模式.getValue());
+            if(!list.isEmpty()&&list.size()>0){
+                for (DataDictItem t:
+                        list) {
+                    String typeValue = t.getItemValue();
+                    if(typeValue.indexOf((String)pageParam.get("search"))!=-1){
+                        declaTypeList.add(t.getItemCode());
+                    }
+                }
+                pageParam.put("declaTypeList", declaTypeList);
+            }
+        } else {
+            pageParam.put("declaTypeList", null);
+        }
         //根据组合权限表添加检索权限
         Page<FieldEtrInfoQueryListResponse> pageLimit = new Page<FieldEtrInfoQueryListResponse>();
         if(StringUtil.isNotEmpty(SecurityUtil.getLoginUser())) {
@@ -146,17 +169,77 @@ public class FieldEtrInfoQueryService extends BaseService{
         return pageLimit;
     }
 
-    public Page<EntrustQueryBean> getEtrDispatcherExeListInfo(CommonSearchInfoRequest dto) {
+    public Page<FinProdResponse> findFinProdMarketIdList(FieldEtrInfoQueryListRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-        pageParam.put("instructionId",dto.getEntrustId());
         return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                () -> fieldEtrInfoQueryMapper.queryEntrust2Touguan(pageParam));
+                () -> fieldEtrInfoQueryMapper.findFinProdMarketIdList(pageParam));
     }
 
-    public Page<TradeQueryBean> getEtrDispatcherDealListInfo(CommonSearchInfoRequest dto) {
+    public Page<EntrustQueryBean> getEtrDispatcherExeListInfo(CommonSearchInfoRequest dto) {
+        Map<String, Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+        pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
+        pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
+        pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        pageParam.put("quoteType", BussinessDictCodeList.报价方式_登记报价.getValue());
+        List<String> entrustIdList = StringUtil.splitToList(",", (String) pageParam.get("entrustId"));
+        if (StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1) {
+            return new Page<EntrustQueryBean>();
+        }
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> fieldEtrInfoQueryMapper.getEtrDispatcherExeListInfo(pageParam));
+    }
+
+    public Page<EntrustQueryBean> getEtrDispatcherExeListInfoByExe(CommonSearchInfoRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("instructionId",dto.getEntrustId());
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+        Page<EntrustQueryBean> page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
+                () -> fieldEtrInfoQueryMapper.queryEntrust2Touguan(pageParam));
+        if (!CollectionUtils.isEmpty(page.getRoot())) {
+            for (EntrustQueryBean response : page.getRoot()) {
+                if (StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券出库.getValue())
+                        || StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                    response.setEntrustPrice(StringUtil.isNotEmpty(response.getEntrustPrice())?ArithmeticUtil.multiply(response.getEntrustPrice(), BigDecimal.valueOf(100)):null);
+                    response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
+                }
+                response.setTradingDay(StringUtil.isNotEmpty(response.getTradingDay())?DateUtil.format(DateUtil.parse(response.getTradingDay()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
+             }
+        }
+        return page;
+    }
+
+
+    public Page<TradeQueryBean> getEtrDispatcherDealListInfo(CommonSearchInfoRequest dto) {
+        Map<String, Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
+        pageParam.put("TRADE_FLOW_STATUS01", DictCodeListExt1.交易流程状态_流程中.getValue());
+        pageParam.put("TRADE_FLOW_STATUS02", DictCodeListExt1.交易流程状态_有效.getValue());
+        pageParam.put("TRADE_FLOW_STATUS03", DictCodeListExt1.交易流程状态_撤销.getValue());
+        List<String> entrustIdList = StringUtil.splitToList(",", (String) pageParam.get("entrustId"));
+        if (StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1) {
+            return new Page<TradeQueryBean>();
+        }
+        Page<TradeQueryBean>
+            page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(), () -> fieldEtrInfoQueryMapper.getEtrDispatcherDealListInfo(pageParam));
+        return page;
+    }
+
+    public Page<TradeQueryBean> getEtrDispatcherDealListInfoByExe(CommonSearchInfoRequest dto) {
+        Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("instructionId",dto.getEntrustId());
+        Page<TradeQueryBean> page = super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
                 () -> fieldEtrInfoQueryMapper.queryTrade2Touguan(pageParam));
+        if (!CollectionUtils.isEmpty(page.getRoot())) {
+            for (TradeQueryBean response : page.getRoot()) {
+                if (StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券出库.getValue())
+                        || StringUtils.equals(response.getEntrustBs(),DictCodeListExt3.交易方向_质押券入库.getValue())) {
+                    response.setTradedPrice(StringUtil.isNotEmpty(response.getTradedPrice())?ArithmeticUtil.multiply(response.getTradedPrice(),BigDecimal.valueOf(100)):null);
+                }
+                response.setTradingDay(StringUtil.isNotEmpty(response.getTradingDay())?DateUtil.format(DateUtil.parse(response.getTradingDay()),DateUtil.DEFAULT_DATE_FORMAT_EN):null);
+             }
+        }
+        return page;
     }
 }

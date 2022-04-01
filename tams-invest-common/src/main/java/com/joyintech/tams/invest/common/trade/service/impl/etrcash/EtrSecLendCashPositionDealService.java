@@ -85,6 +85,13 @@ public class EtrSecLendCashPositionDealService  {
         //modify by jiangpeng on 20210430 ZGBSS-1148 【债券借贷存续期】：到期交易中有“是否现金交割”的功能没有按照预期实现
                 && !StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {// 首期
             if (StringUtil.equals(deal.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())) {
+                if (DictCodeList.持仓类型_实际.equals(持仓类型)){
+                    EtrSecPositionFlowDto etrSecPositionFlowDto1 = new EtrSecPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDto1, etrSecPositionFlowDto);
+                    etrSecPositionFlowDto1.setAmount(deal.getPrinAmt());
+                    etrSecPositionFlowDto1.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto1);
+                }
                 if (DictCodeList.持仓类型_实际.equals(持仓类型) && StringUtil.isNotEmpty(finProductTradeDto.getSecLendFinprodId())) {
                     etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
                     etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(deal.getPrinAmt(), 100, 2));
@@ -136,6 +143,12 @@ public class EtrSecLendCashPositionDealService  {
                 }
             } else {
                 if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                    EtrSecPositionFlowDto etrSecPositionFlowDto1 = new EtrSecPositionFlowDto();
+                    BeanUtil.copyPropertiesIgnoreNull(etrSecPositionFlowDto1, etrSecPositionFlowDto);
+                    etrSecPositionFlowDto1.setAmount(deal.getPrinAmt());
+                    etrSecPositionFlowDto1.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto1);
+
                     if (StringUtil.isEmpty(entrustId)) { // 无委托
                         etrSecPositionFlowDto.setFinprodId(finProductTradeDto.getSecLendFinprodId());
                         etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(deal.getPrinAmt(), 100, 2).negate());

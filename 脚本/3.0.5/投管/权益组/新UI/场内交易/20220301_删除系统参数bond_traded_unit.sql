@@ -1,0 +1,1 @@
+DELETE FROM SYS_PARA WHERE PARA_CODE = 'bond_traded_unit';

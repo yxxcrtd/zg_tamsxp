@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.common.utils;
 
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.constant.EntrustBs;
 import com.joyintech.tams.exchange.common.constant.EntrustProp;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
@@ -8,81 +9,84 @@ import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.db.domain.OrderInterface;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class TradeUtils {
-
-    public static BigDecimal getBigDecimal(Double d, int round) {
-        BigDecimal bd = new BigDecimal(d);
-        return bd.setScale(round, BigDecimal.ROUND_HALF_UP);
+    
+    private TradeUtils() {
+        throw new IllegalStateException("Utility class");
     }
 
-    public static double formatDouble(Double d, int round) {
-        BigDecimal bd = new BigDecimal(d);
-        return bd.setScale(round, BigDecimal.ROUND_HALF_UP).doubleValue();
+    public static String formatDate(String dateStr) {
+        Date date = DateUtil.parse(dateStr);
+        return DateUtil.format(date, "yyyy-MM-dd");
     }
 
-    public static double formatDouble(Double d, int round, int roundingMode) {
-        BigDecimal bd = new BigDecimal(d);
-        return bd.setScale(round, roundingMode).doubleValue();
+    public static BigDecimal getBigDecimal(Double d, int scale) {
+        return BigDecimal.valueOf(d).setScale(scale, RoundingMode.HALF_UP);
     }
 
-    public static Long formatLong(Double d, int round, int roundingMode) {
-        BigDecimal bd = new BigDecimal(d);
-        return bd.setScale(round, roundingMode).longValue();
+    public static double formatDouble(Double d, int scale) {
+        return BigDecimal.valueOf(d).setScale(scale, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public static BigDecimal add(BigDecimal d, BigDecimal decimal, int round) {
-        return d.add(decimal).setScale(round, BigDecimal.ROUND_HALF_UP);
+    public static double formatDouble(Double d, int scale, RoundingMode roundingMode) {
+        return BigDecimal.valueOf(d).setScale(scale, roundingMode).doubleValue();
     }
 
-    public static BigDecimal add(BigDecimal d, long volume, int round) {
-        BigDecimal decimal1 = new BigDecimal(volume);
-        return d.add(decimal1).setScale(round, BigDecimal.ROUND_HALF_UP);
+    public static Long formatLong(Double d, int scale, RoundingMode roundingMode) {
+        return BigDecimal.valueOf(d).setScale(scale, roundingMode).longValue();
     }
 
-    public static BigDecimal add(BigDecimal d, BigDecimal decimal, BigDecimal bigDecimal, int round) {
-        return d.add(decimal).add(bigDecimal).setScale(round, BigDecimal.ROUND_HALF_UP);
+    public static BigDecimal add(BigDecimal d, BigDecimal decimal, int scale) {
+        return d.add(decimal).setScale(scale, RoundingMode.HALF_UP);
     }
 
-    public static BigDecimal add(Double d, BigDecimal decimal, int round) {
-        BigDecimal bd = new BigDecimal(d);
-        return decimal.add(bd).setScale(round, BigDecimal.ROUND_HALF_UP);
+    public static BigDecimal add(BigDecimal d, long volume, int scale) {
+        return d.add(BigDecimal.valueOf(volume)).setScale(scale, RoundingMode.HALF_UP);
     }
 
-    public static BigDecimal multiply(BigDecimal d, long num, int round) {
-        BigDecimal bd = new BigDecimal(num);
-        return d.multiply(bd).setScale(round, BigDecimal.ROUND_HALF_UP);
+    public static BigDecimal add(BigDecimal d, BigDecimal decimal, BigDecimal bigDecimal, int scale) {
+        return d.add(decimal).add(bigDecimal).setScale(scale, RoundingMode.HALF_UP);
     }
 
-    public static BigDecimal multiply(BigDecimal d, BigDecimal num, int round) {
-        return d.multiply(num).setScale(round, BigDecimal.ROUND_HALF_UP);
+    public static BigDecimal add(Double d, BigDecimal decimal, int scale) {
+        return decimal.add(BigDecimal.valueOf(d)).setScale(scale, RoundingMode.HALF_UP);
     }
 
-    public static BigDecimal divide(BigDecimal d, long num, int round) {
-        BigDecimal bd = new BigDecimal(num);
-        return d.divide(bd, round, BigDecimal.ROUND_HALF_UP);
+    public static BigDecimal multiply(BigDecimal d, long num, int scale) {
+        return d.multiply(BigDecimal.valueOf(num)).setScale(scale, RoundingMode.HALF_UP);
     }
 
-    public static Double divide(BigDecimal d, BigDecimal num, int round) {
-        return d.divide(num, round, BigDecimal.ROUND_DOWN).doubleValue();
+    public static BigDecimal multiply(BigDecimal d, BigDecimal num, int scale) {
+        return d.multiply(num).setScale(scale, RoundingMode.HALF_UP);
+    }
+
+    public static BigDecimal divide(BigDecimal d, long num, int scale) {
+        return d.divide(BigDecimal.valueOf(num), scale, RoundingMode.HALF_UP);
+    }
+
+    public static Double divide(BigDecimal d, BigDecimal num, int scale) {
+        return d.divide(num, scale, RoundingMode.DOWN).doubleValue();
     }
 
     public static BigDecimal divideAndRemainder(BigDecimal d, BigDecimal num) {
         return d.divideAndRemainder(num)[1];
     }
 
-    public static BigDecimal subtract(BigDecimal d, long num, int round) {
-        BigDecimal bd = new BigDecimal(num);
-        return d.subtract(bd).setScale(round, BigDecimal.ROUND_HALF_UP);
+    public static BigDecimal subtract(BigDecimal d, long num, int scale) {
+        return subtract(d, BigDecimal.valueOf(num), scale);
     }
 
     public static BigDecimal subtract(BigDecimal d, BigDecimal num, int round) {
-        return d.subtract(num).setScale(round, BigDecimal.ROUND_HALF_UP);
+        return d.subtract(num).setScale(round, RoundingMode.HALF_UP);
     }
 
     public static BigDecimal subtract(BigDecimal d, BigDecimal num, BigDecimal decimal, int round) {
-        return d.subtract(num).subtract(decimal).setScale(round, BigDecimal.ROUND_HALF_UP);
+        return d.subtract(num).subtract(decimal).setScale(round, RoundingMode.HALF_UP);
     }
 
     public static boolean equals(BigDecimal d, BigDecimal decimal) {
@@ -91,7 +95,7 @@ public class TradeUtils {
 
     public static boolean bigThan(BigDecimal d, BigDecimal decimal) {
         if (Objects.nonNull(d) && Objects.nonNull(decimal)) {
-            return d.compareTo(decimal) == 1;
+            return d.compareTo(decimal) > 0;
         }
         return false;
     }
@@ -100,9 +104,16 @@ public class TradeUtils {
         return bigThan(value, BigDecimal.ZERO);
     }
 
+    public static boolean isZero(BigDecimal value) {
+        if (Objects.isNull(value)) {
+            return true;
+        }
+        return BigDecimal.ZERO.compareTo(value) == 0;
+    }
+
     public static boolean lessThan(BigDecimal d, BigDecimal decimal) {
         if (Objects.nonNull(d) && Objects.nonNull(decimal)) {
-            return d.compareTo(decimal) == -1;
+            return d.compareTo(decimal) < 0;
         }
         return false;
     }
@@ -175,12 +186,15 @@ public class TradeUtils {
             return ((IntegratedEntrust) orderInterface).getEntrustBalance();
         }
         //债券按净价冻结 --- 需求新修正为净价 --- > 修正为全价
-        if (InvestmentAssetType.BOND.value.equals(assetType)) {
+        // 债券且是交易类
+        if (InvestmentAssetType.BOND.value.equals(assetType)
+                && Objects.nonNull(orderInterface)
+                && EntrustProp.isTrade(orderInterface.getEntrustProp())) {
             return multiply(orderInterface.getFullPrice(), entrustVolume, 2);
         }
         // 质押式竞价回购，金额计算
         if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(assetType)) {
-            return new BigDecimal(entrustVolume * 100).setScale(2, BigDecimal.ROUND_HALF_UP);
+            return new BigDecimal(entrustVolume * 100).setScale(2, RoundingMode.HALF_UP);
         }
         if (InvestmentAssetType.FUTURES.value.equals(assetType)) {
             BigDecimal res = multiply(entrustPrice, entrustVolume, 2);
@@ -190,12 +204,41 @@ public class TradeUtils {
         return multiply(entrustPrice, entrustVolume, 2);
     }
 
+    public static BigDecimal calculateBalance(String entrustBs, BigDecimal entrustPrice, long entrustVolume, String assetType, OrderInterface orderInterface) {
+        //协议回购金额计算
+        if (Objects.nonNull(orderInterface) && IntegratedEntrustUtils.isProtocolBack(orderInterface.getEntrustProp())) {
+            return ((IntegratedEntrust) orderInterface).getEntrustBalance();
+        }
+        // 债券按净价冻结 --- 需求新修正为净价 --- > 修正为全价
+        // 债券且是交易类
+        if (InvestmentAssetType.BOND.value.equals(assetType)
+                && Objects.nonNull(orderInterface)
+                && EntrustProp.isTrade(orderInterface.getEntrustProp())) {
+            return multiply(orderInterface.getFullPrice(), entrustVolume, 2);
+        }
+        // 质押式竞价回购，金额计算
+        if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(assetType)) {
+            return new BigDecimal(entrustVolume * 100).setScale(2, RoundingMode.HALF_UP);
+        }
+        // TODO ETF计算
+        return multiply(entrustPrice, entrustVolume, 2);
+    }
+
     //投管风控获取全价总额以及净价总额
     public static BigDecimal calculateBalanceForRisk(String entrustBs, BigDecimal entrustPrice, long entrustVolume, String assetType) {
         // 质押式竞价回购，金额计算
         if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(assetType)) {
-            return new BigDecimal(entrustVolume * 100).setScale(2, BigDecimal.ROUND_HALF_UP);
+            return new BigDecimal(entrustVolume * 100).setScale(2, RoundingMode.HALF_UP);
         }
         return multiply(entrustPrice, entrustVolume, 2);
+    }
+
+    /**
+     * 转为百分比格式
+     */
+    public static String percentFormat(Double d) {
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(2);
+        return percent.format(d);
     }
 }

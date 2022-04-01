@@ -10,6 +10,10 @@
 
 package com.joyintech.service.bankuplink.bond.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.background.component.common.pack.common.json.BigDecimalSerializer;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 
 /**
@@ -66,6 +70,20 @@ public class CounterInfoDto{
      * 行权收益率(%
      */
     private BigDecimal exerYield;
+    /**
+     * 净价总额
+     */
+    private BigDecimal cpriceAmt;
+
+    /**
+     * 利息总额
+     */
+    private BigDecimal intAmt;
+
+    /**
+     * 全价总额
+     */
+    private BigDecimal fpriceAmt;
     
     /**
      * 获取 counterValue
@@ -261,5 +279,29 @@ public class CounterInfoDto{
      */
     public void setDetId(String detId) {
         this.detId = detId;
+    }
+
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
     }
 }

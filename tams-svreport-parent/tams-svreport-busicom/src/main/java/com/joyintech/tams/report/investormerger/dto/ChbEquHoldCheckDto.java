@@ -3,6 +3,7 @@ package com.joyintech.tams.report.investormerger.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -14,7 +15,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
  * @author:  Administrator
  * @创建时间: 2019-03-18
  */
-public class ChbEquHoldCheckDto implements ITableRow {
+public class ChbEquHoldCheckDto extends BaseEntity implements ITableRow {
     /**
      * 识别标识
      */

@@ -15,6 +15,9 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -45,6 +48,9 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="otherPs",value="交易方向",example="买入")
     private String otherPs;
 
+    @ApiModelProperty(name="targetType",value="目标类型",example="A1")
+    private String targetType;
+
     @ApiModelProperty(name="busiPs",value="回购方向",example="回购/拆借方向")
     private String busiPs;
 
@@ -60,14 +66,14 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     @ApiModelProperty(name="settleSpeed",value="清算速度",example="字符串1")
     private String settleSpeed;
 
-    @ApiModelProperty(name="settleSpeed",value="期限（天）",example="30")
+    @ApiModelProperty(name="termDays",value="期限（天）",example="30")
     private String termDays;
 
     @ApiModelProperty(name="effectFlag",value="有效状态code",example="01")
     private String effectFlag;
 
     @ApiModelProperty(name="etrPrice",value="指令价格",example="99")
-    private BigDecimal etrPrice;
+    private String etrPrice;
 
     @ApiModelProperty(name="exeProgress",value="执行进度%",example="50%")
     private BigDecimal exeProgress;
@@ -95,6 +101,21 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     @ApiModelProperty(name="calculateField",value="计算方式",example="计算方式供前台判断使用")
     private String calculateField;
+
+    @ApiModelProperty(name = "assetType1", value = "资产二级分类", example = "字符串1")
+    private String assetType1;
+
+    @ApiModelProperty(name = "assetType10", value = "资产三级分类", example = "字符串1")
+    private String assetType10;
+
+    @ApiModelProperty(name = "assetType11", value = "资产四级分类", example = "字符串1")
+    private String assetType11;
+
+    @ApiModelProperty(name = "assetType11", value = "中标状态", example = "字符串1")
+    private String isWin;
+
+    @ApiModelProperty(name = "assetType11", value = "中标状态字典值", example = "字符串1")
+    private String isWinValue;
 
     /**
      * 获取 otherEntrustStatus
@@ -124,6 +145,11 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
         if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue())){
             return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, BussinessDictCodeList.平安资产类型_一级投标债券.getValue());
         }
+        else if (StringUtil.equals(super.getFinprodType2(), BussinessDictCodeList.平安资产类型_回购.getValue())
+            && StringUtil.equals(getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())) {
+            return BussinessConstant.NEGOTIATED_REPURCHASE_TEXT;
+        }
+
         return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, super.getFinprodType2());
     }
 
@@ -181,6 +207,14 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setOtherPs(String otherPs) {
         this.otherPs = otherPs;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 
     public String getBusiPs() {
@@ -248,6 +282,10 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
     }
 
     public BigDecimal getDealProgress() {
+        if (dealProgress == null) {
+            return BigDecimal.ZERO;
+        }
+
         return dealProgress;
     }
 
@@ -270,11 +308,11 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
                 SysDataUtil.getNameFromDataDict(DictCode.头寸业务类型, this.getBusiTypePosition());
     }
 
-    public BigDecimal getEtrPrice() {
+    public String getEtrPrice() {
         return etrPrice;
     }
 
-    public void setEtrPrice(BigDecimal etrPrice) {
+    public void setEtrPrice(String etrPrice) {
         this.etrPrice = etrPrice;
     }
 
@@ -324,5 +362,48 @@ public class CfetsEtrDispatcherTradeListResponse extends EtrEntrust {
 
     public void setCalculateField(String calculateField) {
         this.calculateField = calculateField;
+    }
+
+    public String getAssetType1() {
+        return assetType1;
+    }
+
+    public void setAssetType1(String assetType1) {
+        this.assetType1 = assetType1;
+    }
+
+    public String getAssetType10() {
+        return assetType10;
+    }
+
+    public void setAssetType10(String assetType10) {
+        this.assetType10 = assetType10;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
+    }
+
+    public String getIsWin() {
+        return isWin;
+    }
+
+    public void setIsWin(String isWin) {
+        this.isWin = isWin;
+    }
+
+    public String getIsWinValue() {
+        if (!StringUtil.isEmpty(this.getIsWin())) {
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.中标状态, this.getIsWin());
+        }
+        return null;
+    }
+
+    public void setIsWinValue(String isWinValue) {
+        this.isWinValue = isWinValue;
     }
 }

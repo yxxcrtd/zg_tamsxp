@@ -1,0 +1,1451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dao.InvestmentBusinessDetailsMapper_mysql">
+	
+<select id="selectAllMonthDetailAssetByTermid" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto" 
+    	parameterType="map">
+	select a.propertycode,IFNULL(a.BALANCE,0) sessionendNum ,IFNULL(b.BALANCE,0) lastSessionendNum, 0 nonperformingAssetNum,0 lastNonperformingAssetNum
+	from 
+	 ( select propertycode,BALANCE from CHB_MONTH_REPORT_DETAIL 
+		
+		where reportuuid is not null
+		AND reportuuid=(SELECT reportuuid FROM CHB_MONTH_REPORT WHERE
+		TERMID=#{termid, jdbcType = VARCHAR} AND UPDATE_TIME =(SELECT MAX(UPDATE_TIME) FROM CHB_MONTH_REPORT WHERE TERMID=#{termid, jdbcType = VARCHAR})
+		)
+		and reporttype='ASSET'
+		) a
+	  left join 
+	  (select propertycode,BALANCE
+	  from CHB_MONTH_REPORT_DETAIL 
+		where reportuuid is not null
+		AND reportuuid=(SELECT reportuuid FROM CHB_MONTH_REPORT WHERE
+		TERMID=#{lastTermid, jdbcType = VARCHAR} AND UPDATE_TIME =(SELECT MAX(UPDATE_TIME) FROM CHB_MONTH_REPORT WHERE TERMID=#{lastTermid, jdbcType = VARCHAR})
+		)
+	  and reporttype='ASSET'
+		) b on a.propertycode=b.propertycode
+</select>
+<select id="selectOtherData" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto" 
+    	parameterType="map">
+	SELECT a1.propertycode ,
+	  a1.sessionendNum,
+	  a2.sessionendNum lastSessionendNum
+	FROM
+	  (SELECT 'amt1_6_6' propertycode,
+	    SUM(cap.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{startDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap
+	  LEFT JOIN FIN_PRODUCT fp
+	  ON FP.FINPROD_MARKET_ID=CAP.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt
+	  ON FP.FINPROD_ID =FPT.FINPROD_ID
+	  WHERE FPT.TYPE_11='057'
+	  GROUP BY 'amt1_6_6'
+	  )a1
+	LEFT JOIN
+	  (SELECT 'amt1_6_6' propertycode,
+	    SUM(cap1.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{lastStartDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap1
+	  LEFT JOIN FIN_PRODUCT fp1
+	  ON FP1.FINPROD_MARKET_ID=CAP1.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt1
+	  ON FP1.FINPROD_ID =FPT1.FINPROD_ID
+	  WHERE FPT1.TYPE_11='057'
+	  GROUP BY 'amt1_6_6'
+	  ) a2 ON a2.propertycode=a1.propertycode
+	UNION ALL
+	SELECT a1.propertycode ,
+	  a1.sessionendNum,
+	  a2.sessionendNum lastSessionendNum
+	FROM
+	  (SELECT 'amt1_7_2_1' propertycode,
+	    SUM(cap.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{startDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap
+	  LEFT JOIN FIN_PRODUCT fp
+	  ON FP.FINPROD_MARKET_ID=CAP.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt
+	  ON FP.FINPROD_ID =FPT.FINPROD_ID
+	  WHERE FPT.TYPE_11='085'
+	  GROUP BY 'amt1_7_2_1'
+	  )a1
+	LEFT JOIN
+	  (SELECT 'amt1_7_2_1' propertycode,
+	    SUM(cap1.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{lastStartDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap1
+	  LEFT JOIN FIN_PRODUCT fp1
+	  ON FP1.FINPROD_MARKET_ID=CAP1.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt1
+	  ON FP1.FINPROD_ID =FPT1.FINPROD_ID
+	  WHERE FPT1.TYPE_11='085'
+	  GROUP BY 'amt1_7_2_1'
+	  ) a2 ON a2.propertycode=a1.propertycode
+	UNION ALL
+	SELECT a1.propertycode ,
+	  a1.sessionendNum,
+	  a2.sessionendNum lastSessionendNum
+	FROM
+	  (SELECT 'amt1_7_2_2' propertycode,
+	    SUM(cap.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{startDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap
+	  LEFT JOIN FIN_PRODUCT fp
+	  ON FP.FINPROD_MARKET_ID=CAP.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt
+	  ON FP.FINPROD_ID =FPT.FINPROD_ID
+	  WHERE FPT.TYPE_11='023'
+	  GROUP BY 'amt1_7_2_2'
+	  )a1
+	LEFT JOIN
+	  (SELECT 'amt1_7_2_2' propertycode,
+	    SUM(cap1.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{lastStartDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap1
+	  LEFT JOIN FIN_PRODUCT fp1
+	  ON FP1.FINPROD_MARKET_ID=CAP1.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt1
+	  ON FP1.FINPROD_ID =FPT1.FINPROD_ID
+	  WHERE FPT1.TYPE_11='023'
+	  GROUP BY 'amt1_7_2_2'
+	  ) a2 ON a2.propertycode=a1.propertycode
+	UNION all
+	SELECT a1.propertycode ,
+	  a1.sessionendNum,
+	  a2.sessionendNum lastSessionendNum
+	FROM
+	  (SELECT 'amt1_10_1' propertycode,
+	    SUM(cap.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{startDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap
+	  LEFT JOIN FIN_PRODUCT fp
+	  ON FP.FINPROD_MARKET_ID=CAP.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt
+	  ON FP.FINPROD_ID =FPT.FINPROD_ID
+	  WHERE FPT.TYPE_12='157'
+	  GROUP BY 'amt1_10_1'
+	  )a1
+	LEFT JOIN
+	  (SELECT 'amt1_10_1' propertycode,
+	    SUM(cap1.ASSETVALUE) sessionendNum
+	  FROM
+	    (SELECT asset_code,
+	      SUM(ASSETVALUE_A) ASSETVALUE
+	    FROM CHB_MONTH_ASSET_POSITION
+	    WHERE STARTDATE=#{lastStartDate, jdbcType = DATE}
+	    GROUP BY asset_code
+	    ) cap1
+	  LEFT JOIN FIN_PRODUCT fp1
+	  ON FP1.FINPROD_MARKET_ID=CAP1.ASSET_CODE
+	  LEFT JOIN FIN_PRODUCT_TYPE fpt1
+	  ON FP1.FINPROD_ID =FPT1.FINPROD_ID
+	  WHERE FPT1.TYPE_12='157'
+	  GROUP BY 'amt1_10_1'
+	  ) a2 ON a2.propertycode=a1.propertycode
+	UNION all
+	SELECT 'amt1_19' propertycode,
+	  a.BALANCE sessionendNum ,
+	  b.BALANCE lastSessionendNum
+	FROM
+	  (SELECT propertycode,
+	    BALANCE
+	  FROM CHB_MONTH_REPORT_DETAIL
+	  WHERE reportuuid IS NOT NULL
+	  AND reportuuid    =
+	    (SELECT reportuuid
+	    FROM CHB_MONTH_REPORT
+	    WHERE TERMID    =#{termid, jdbcType = VARCHAR}
+	    AND UPDATE_TIME =
+	      (SELECT MAX(UPDATE_TIME) FROM CHB_MONTH_REPORT WHERE TERMID=#{termid, jdbcType = VARCHAR}
+	      )
+	    )
+	  AND propertycode='SUM_MJFS'
+	  ) a
+	LEFT JOIN
+	  (SELECT propertycode,
+	    BALANCE
+	  FROM CHB_MONTH_REPORT_DETAIL
+	  WHERE reportuuid IS NOT NULL
+	  AND reportuuid    =
+	    (SELECT reportuuid
+	    FROM CHB_MONTH_REPORT
+	    WHERE TERMID    =#{lastTermid, jdbcType = VARCHAR}
+	    AND UPDATE_TIME =
+	      (SELECT MAX(UPDATE_TIME) FROM CHB_MONTH_REPORT WHERE TERMID=#{lastTermid, jdbcType = VARCHAR}
+	      )
+	    )
+	  AND propertycode='SUM_MJFS'
+	  ) b
+	ON a.propertycode=b.propertycode
+</select>		
+
+
+
+	<select id="queryBankDebentureAmount" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto" 
+    	parameterType="map">
+    	WITH TEMP_CUR AS (
+			SELECT IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_A, 0)), 0) AMOUNT
+			FROM CHB_MONTH_ASSET_POSITION CMAP
+			LEFT JOIN CHB_ASSET_INFO INFO
+			ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+			WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+			AND INFO.ASSET_TYPE2 IN ('1102', '1111', '1112', '1113', '1114', '1115', '1116')
+			AND INFO.INDUSTRY = '10'
+		),
+		TEMP_LAST AS (
+			SELECT IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_A, 0)), 0) AMOUNT
+			FROM CHB_MONTH_ASSET_POSITION CMAP
+			LEFT JOIN CHB_ASSET_INFO INFO
+			ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+			WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+			AND INFO.ASSET_TYPE2 IN ('1102', '1111', '1112', '1113', '1114', '1115', '1116')
+			AND INFO.INDUSTRY = '10'
+		)
+		SELECT 
+		'thamt1_3_4' AS propertycode,
+		TC.AMOUNT AS sessionendNum,
+		TL.AMOUNT AS lastSessionendNum
+		FROM TEMP_CUR TC, TEMP_LAST TL
+    </select>	
+    
+    
+    <select id="queryDiffAsset" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto" 
+    	parameterType="map">
+    SELECT 
+  		'samt1_3' propertycode,
+  		(
+    		SELECT 
+    		IFNULL(SUM(CMAP.ASSETVALUE_A), 0)
+    		FROM CHB_MONTH_ASSET_POSITION CMAP
+    		LEFT JOIN FIN_PRODUCT FP
+      			ON CMAP.ASSET_CODE = FP.FINPROD_MARKET_ID
+    		LEFT JOIN FIN_PRODUCT_TYPE FPT
+      			ON FPT.FINPROD_ID = FP.FINPROD_ID
+    		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+    			AND CMAP.ASSETTYPE = '12'
+    			AND FPT.TYPE_12 = '106'
+    	) AS nonsStandardAmount,
+    	(
+    		SELECT 
+    		IFNULL(SUM(CMAP.ASSETVALUE_A), 0)
+    		FROM CHB_MONTH_ASSET_POSITION CMAP
+    		LEFT JOIN FIN_PRODUCT FP
+      			ON CMAP.ASSET_CODE = FP.FINPROD_MARKET_ID
+    		LEFT JOIN FIN_PRODUCT_TYPE FPT
+      			ON FPT.FINPROD_ID = FP.FINPROD_ID
+    		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+    			AND CMAP.ASSETTYPE = '12'
+    			AND FPT.TYPE_12 = '106'
+    	) AS lastNonsStandardAmount,
+    	(
+    		SELECT 
+    		IFNULL(SUM(CMAP.ASSETVALUE_A), 0)
+    		FROM  CHB_MONTH_ASSET_POSITION CMAP
+    		LEFT JOIN FIN_PRODUCT FP
+      			ON CMAP.ASSET_CODE = FP.FINPROD_MARKET_ID
+    		LEFT JOIN FIN_PRODUCT_TYPE FPT
+      			ON FPT.FINPROD_ID = FP.FINPROD_ID
+    		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+    			AND CMAP.ASSETTYPE = '12'
+    			AND FPT.TYPE_12 != '106'
+    	) AS otherAmount,
+    	(
+    		SELECT 
+    		IFNULL(SUM(CMAP.ASSETVALUE_A), 0)
+    		FROM CHB_MONTH_ASSET_POSITION CMAP
+    		LEFT JOIN FIN_PRODUCT FP
+      			ON CMAP.ASSET_CODE = FP.FINPROD_MARKET_ID
+    		LEFT JOIN FIN_PRODUCT_TYPE FPT
+      			ON FPT.FINPROD_ID = FP.FINPROD_ID
+    		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+    			AND CMAP.ASSETTYPE = '12'
+    			AND FPT.TYPE_12 != '106'
+    	) AS lastOtherAmount
+		FROM DUAL
+    	</select>
+    	<select id="selectAssetsManagementPlanData" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto" 
+    		parameterType="map">
+    		select CM.ASSET_CODE assetcode,sum(CM.ASSETVALUE_A) sessionendNum from CHB_MONTH_ASSET_POSITION  cm
+			left join CHB_ASSET_INFO ca on CM.ASSET_CODE=CA.ASSET_CODE
+			and CA.STATUS !='D'
+			where 
+			CA.ASSET_TYPE='12'
+			and  CM.ENDDATE=#{endDate, jdbcType = DATE}
+			and CM.ASSETVALUE_A !=0
+			group by CM.ASSET_CODE
+    	</select>
+    	<select id="selectBottomAssetsData" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto" 
+    		parameterType="map">
+    		select pos_num sessionendNum,pos.asset_code assetcode,ca.ASSET_TYPE assettype,ca.ASSET_TYPE2 assettype2 from
+			CHB_BOT_AST_POS pos
+			left join CHB_ASSET_INFO ca on ca.ASSET_CODE=pos.ASSET_CODE
+			and CA.STATUS !='D'
+			where PLAN_ASSET_ID=#{assetcode, jdbcType = VARCHAR}
+			and pos_date=(select max(pos_date) from CHB_BOT_AST_POS
+			where PLAN_ASSET_ID=#{assetcode, jdbcType = VARCHAR} 
+			and pos_date<![CDATA[<=]]>#{endDate, jdbcType = DATE}
+			and status !='D'
+			)
+    	</select>
+	<select id="queryBottomDiffAsset" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT
+		't3_36_amt' propertycode,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS indInvestmentAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastIndInvestmentAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM  CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		AND (INFO.ASSET_TYPE2 IN ('1301', '1305', '1302', '1399') or (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE  IN ('01','02')))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS otherAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		AND (INFO.ASSET_TYPE2 IN ('1301', '1305', '1302', '1399') or (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE  IN ('01','02')))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastOtherAmount,
+		(
+		select REPLACE(group_concat(t.remark),',','、') remark from
+		(
+		select
+		/*t1.asset_name||'+'||to_char(round(t1.balance/10000,2)) AS remark*/
+		concat(concat(t1.asset_name,'+'),round(t1.balance/10000,2)) AS remark
+		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
+
+		from(
+		select coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ conacat('info.mdate-info.vdate','天回购')
+		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		info.asset_code,'现金')as asset_name,
+		sum(IFNULL(CMAP.ASSETVALUE_B,0)) as balance,
+		sum(IFNULL(data.pos_amt,0)) as posAmt
+		from chb_month_asset_position  cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
+		left join chb_asset_info info
+		ON cmap.asset_code=info.asset_code
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			left join chb_assets_basis_data data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			left join chb_assets_basis_data_nobtm data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
+
+		where  CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and cmap.ASSETVALUE_B is not null
+		AND (INFO.ASSET_TYPE2 IN ('1301', '1305', '1302', '1399') or (INFO.ASSET_TYPE2 ='1299' and INFO.IN_ASSET_TYPE  IN ('01','02')))
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ concat(info.mdate-info.vdate,'天回购')
+		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		info.asset_code,'现金')
+		)t1
+		order by  t1.balance desc
+		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
+		) as remark
+
+		FROM DUAL
+	</select>
+	<select id="queryBottomInfoAmountByModeType" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT
+		<if test="modetype != null  and modetype.equals('40')">
+			't3_40_amt' propertycode,
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			't3_41_amt' propertycode,
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			't3_42_amt' propertycode,
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			't3_43_amt' propertycode,
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			't3_44_amt' propertycode,
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			't3_45_amt' propertycode,
+		</if>
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE 1=1
+		<if test="startDate != null">
+			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		</if>
+		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
+		<if test="modetype != null  and modetype.equals('40')">
+　　　　    　and mst.IS_GOV='Y'
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			and mst.PARTY_TYPE2='01'
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			 	or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+				or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+				or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			and mst.INDUSTRY in ('04','07','14')
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS sessionendNum,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE 1=1
+		<if test="lastStartDate != null">
+			and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		</if>
+		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
+
+		<if test="modetype != null  and modetype.equals('40')">
+			and mst.IS_GOV='Y'
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			and mst.PARTY_TYPE2='01'
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			and mst.INDUSTRY in ('04','07','14')
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastSessionendNum,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE 1=1
+		<if test="startDate != null  ">
+			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		</if>
+
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		<if test="modetype != null  and modetype.equals('40')">
+			and INFO.INDUSTRY_FLAG='01'
+			and INFO.MONIT_TYPE='02'
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			and mst.PARTY_TYPE2='01'
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			and mst.INDUSTRY in ('04','07','14')
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS nonsStandardAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE 1=1
+		<if test="lastStartDate != null">
+			and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		</if>
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		<if test="modetype != null  and modetype.equals('40')">
+			and INFO.INDUSTRY_FLAG='01'
+			and INFO.MONIT_TYPE='02'
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			and mst.PARTY_TYPE2='01'
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			and mst.INDUSTRY in ('04','07','14')
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastNonsStandardAmount,
+
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM  CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE 1=1
+		<if test="startDate != null  ">
+			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		</if>
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1108','1106', '2401', '1303', '2403','2402','2499')
+		<if test="modetype != null  and modetype.equals('40')">
+			and mst.IS_GOV='Y'
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			and mst.PARTY_TYPE2='01'
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			and mst.INDUSTRY in ('04','07','14')
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS otherAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE 1=1
+		 <if test="lastStartDate != null">
+		and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+	    </if>
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1108','1106', '2401', '1303', '2403','2402','2499')
+		<if test="modetype != null  and modetype.equals('40')">
+			and mst.IS_GOV='Y'
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			and mst.PARTY_TYPE2='01'
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			and mst.INDUSTRY in ('04','07','14')
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastOtherAmount,
+		(
+		select REPLACE(group_concat(t.remark),',','、') remark from
+		(
+		select
+		/*t1.asset_name||'+'||to_char(round(t1.balance/10000,2)) AS remark,*/
+		concat(concat(t1.asset_name,'+'),round(t1.balance/10000,2)) AS remark,
+		t1.balance as balance,
+		t1.posAmt as posAmt,row_number() over(order by t1.balance  desc) as idx
+		from
+		(select
+		coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ concat(info.mdate-info.vdate,'天回购')
+		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		info.asset_code,'现金')as asset_name,
+		sum(IFNULL(CMAP.ASSETVALUE_B,0)) as balance,
+		sum(IFNULL(data.pos_amt,0)) as posAmt
+		from chb_month_asset_position  cmap
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		left join chb_asset_info info
+		ON cmap.asset_code=info.asset_code
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
+			left join chb_assets_basis_data data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
+		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('02')">
+			left join chb_assets_basis_data_nobtm data
+			on cmap.asset_code=data.asset_id
+			and data.value_date=#{endDate, jdbcType = DATE}
+			and cmap.prod_id =data.prod_id
+		</if>
+		where 1=1
+		and cmap.ASSETVALUE_B is not null
+		<if test="startDate != null">
+			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		</if>
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305','1108','1106', '2401', '1303', '2403','2402','2499')
+		<if test="modetype != null  and modetype.equals('40')">
+			and mst.IS_GOV='Y'
+		</if>
+		<if test="modetype != null  and modetype.equals('41')">
+			and mst.PARTY_TYPE2='01'
+		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
+		<if test="modetype != null  and modetype.equals('43')">
+			and mst.INDUSTRY in ('04','07','14')
+		</if>
+		<if test="modetype != null  and modetype.equals('44')">
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ concat(info.mdate-info.vdate,'天回购')
+		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		info.asset_code,'现金')
+		)t1
+		order by t1.balance desc
+		) t where  t.idx<![CDATA[<=]]> 3 or t.posAmt>=1000000000
+		) as remark
+		FROM DUAL
+	</select>
+	<select id="queryBottomTable3AddXj" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT
+			'小计' propertycode,
+		(
+		SELECT
+		IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS sessionendNum,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastSessionendNum,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS nonsStandardAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastNonsStandardAmount,
+
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		and INFO.IS_GOVERN_FUND='01'
+		and mst.IS_GOV='Y'
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS indInvestmentAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		and INFO.IS_GOVERN_FUND='01'
+		and mst.IS_GOV='Y'
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastIndInvestmentAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS otherAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
+		<if test="rule != null  and rule.equals('local')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="rule != null  and rule.equals('otherPlace')">
+			<if test="provinces!=null and provinces.size>0">
+				and  mst.PROVINCE not in
+				<foreach collection="provinces" item="province" open="("
+						 separator="," close=")">
+					#{province,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastOtherAmount
+		FROM DUAL
+	</select>
+	<select id="queryBottomTable3AddSum" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT
+		't3addSum' propertycode,
+		(
+		SELECT
+		IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS sessionendNum,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
+
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastSessionendNum,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS nonsStandardAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+
+		) AS lastNonsStandardAmount,
+
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		and INFO.IS_GOVERN_FUND='01'
+		and mst.IS_GOV='Y'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+
+		) AS indInvestmentAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND mst.province IS NOT NULL
+		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
+		and INFO.IS_GOVERN_FUND='01'
+		and mst.IS_GOV='Y'
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+
+		) AS lastIndInvestmentAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+
+		) AS otherAmount,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+
+		) AS lastOtherAmount
+		FROM DUAL
+	</select>
+	<select id="queryBottomInfoAmountFjr" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT
+		't3_15_amt' propertycode,
+		(
+		SELECT
+		IFNULL(SUM(IFNULL(CMAP.ASSETVALUE_B, 0)), 0) AS balance
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
+		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
+		and info.asset_type2 in  ('1113', '1114', '1115')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS sessionendNum,
+		(
+		SELECT
+		IFNULL(SUM(CMAP.ASSETVALUE_B), 0)
+		FROM CHB_MONTH_ASSET_POSITION CMAP
+		<if test="org != null  and org!=''">
+			left join DATA_AUTH_NOTIFY_INST di
+			on cmap.prod_id=di.business_id
+			and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
+		</if>
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
+		left join mst_customer_info_add mst
+		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
+		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
+		and info.asset_type2 in  ('1113', '1114', '1115')
+		<if test="org != null  and org!=''">
+			and di.institution_code=#{org, jdbcType=VARCHAR}
+		</if>
+		) AS lastSessionendNum
+		FROM DUAL
+	</select>
+
+
+
+
+	<select id="queryOrgName" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT 't8_00_Code' propertycode,L.ITEM_VALUE cbrcCode,I.INSTITUTION_NAME orgName
+		FROM CHB_ORG_REGIST_BANK_CODE B
+		LEFT JOIN SYS_INSTITUTION I ON I.INSTITUTION_CODE=B.ORG_CODE
+    	LEFT JOIN SYS_DATADICT_LIST L ON B.BELOGCODECBRC = L.ITEM_CODE AND L.DICT_CODE = 'SVR_BANK_REGU_BURE'
+		 WHERE B.STATUS IN ('E','M') AND I.INSTITUTION_TYPE = '01'
+	</select>
+</mapper>

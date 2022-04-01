@@ -311,13 +311,13 @@
         if (typeof init == 'undefined' || !init) {
             $('#registOrg').val('').trigger('change');
         }
-        // if (feeType == FEE_TYPE_B06) {
-        //     $('#registOrg').attr("disabled", true);
-        //     $('#registOrg').attr("required", false).trigger('change');
-        // } else {
-        //      $('#registOrg').attr("disabled", false);
-        //      $('#registOrg').attr("required", true).trigger('change');
-        // }
+        if (feeType == FEE_TYPE_B06) {
+            $('#registOrg').attr("disabled", true);
+            $('#registOrg').attr("required", false).trigger('change');
+        } else {
+             $('#registOrg').attr("disabled", false);
+             $('#registOrg').attr("required", true).trigger('change');
+        }
         star();
     }
     

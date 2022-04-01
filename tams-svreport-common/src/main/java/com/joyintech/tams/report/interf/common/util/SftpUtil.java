@@ -192,7 +192,17 @@ public class SftpUtil {
         try {
             sftp.cd(directory);
             // File file=new File(saveFile);
-            sftp.get(downloadFile, saveFile);
+
+            // 本地文件夹不存在先创建文件夹 add by zcw
+            File saveFileDir = new File(saveFile);
+            if (!saveFileDir.exists()) {
+                saveFileDir.mkdirs();
+            }
+            // 当配置参数为服务器路径时从新获取本地路径 add by zcw
+            String saveFileDirPath = saveFileDir.getAbsolutePath();
+
+
+            sftp.get(downloadFile, saveFileDirPath);
         }
         catch (Exception e) {
             logger.error(e.getMessage(),e);

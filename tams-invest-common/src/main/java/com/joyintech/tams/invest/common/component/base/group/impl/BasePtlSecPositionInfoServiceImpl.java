@@ -5,7 +5,19 @@
 
 package com.joyintech.tams.invest.common.component.base.group.impl;
 
-import com.joyintech.framework.util.*;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Map;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.PtlSecPositionDetailMapper;
 import com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper;
 import com.joyintech.tams.common.base.dao.PtlSecPositionMapper;
@@ -13,19 +25,12 @@ import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import com.joyintech.tams.common.base.entity.PtlSecPositionDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * 组合可用持仓和实际持仓查询更新组件实现类
@@ -181,7 +186,11 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
             || DictCodeList.持仓类型_质押.getValue().equals(positionFlowDto.getHodingType())
             || DictCodeList.持仓类型_融入.getValue().equals(positionFlowDto.getHodingType())
             || DictCodeListExt1.持仓类型_卖空.getValue().equals(positionFlowDto.getHodingType())
-            || DictCodeList.持仓类型_融出.getValue().equals(positionFlowDto.getHodingType())) {
+            || DictCodeList.持仓类型_融出.getValue().equals(positionFlowDto.getHodingType())
+            //增加持仓类型_场内上市前冻结 modify by fuyongsheng 20220111 start
+            || DictCodeListExt3.持仓类型_场内上市前冻结.getValue().equals(positionFlowDto.getHodingType())
+            //增加持仓类型_场内上市前冻结 modify by fuyongsheng 20220111 end
+        ) {
             PtlSecPosition position = getPtlSecPosition(positionFlowDto);
             BigDecimal amount = basePtlSecPositionInfoMapper.selectSecPosition(positionFlowDto);
             if (amount == null) {
@@ -312,6 +321,7 @@ public class BasePtlSecPositionInfoServiceImpl implements BasePtlSecPositionInfo
         position.setWorkflowId(positionFlowDto.getWorkflowId());
         position.setCreateUser(positionFlowDto.getCreateUser());
         position.setCreateDept(positionFlowDto.getCreateDept());
+        position.setIsExistNew(positionFlowDto.getIsExistNew());
         return position;
     }
 

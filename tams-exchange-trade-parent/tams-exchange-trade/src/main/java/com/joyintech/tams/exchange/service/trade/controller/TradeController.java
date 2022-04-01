@@ -9,6 +9,8 @@ import com.joyintech.tams.exchange.common.db.domain.Trade;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.request.*;
 import com.joyintech.tams.exchange.service.trade.management.service.TradeManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +32,27 @@ public class TradeController {
     @ApiOperation(value = "查询成交信息", notes = "查询成交信息")
     @RequestMapping(value = "/trade", method = RequestMethod.POST)
     public Message<List<Trade>> queryTradeAll(@RequestBody @Validated TradeInfoRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return tradeManagement.queryTrade(request);
     }
 
     @ApiOperation(value = "查询历史成交信息", notes = "查询历史成交信息")
     @RequestMapping(value = "/trade/history", method = RequestMethod.POST)
     public Message<List<HistoryTrade>> queryHistoryTrade(@RequestBody @Validated HistoryTradeInfoRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return tradeManagement.queryHistoryTrade(request);
     }
 
     @ApiOperation(value = "查询分页成交信息", notes = "查询分页成交信息")
     @RequestMapping(value = "/trade/page", method = RequestMethod.POST)
     public Message<PageInfo<TradeQueryBean>> queryAllForPage(@RequestBody @Validated PageTradeInfoRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return tradeManagement.queryAllForPage(request);
     }
 
@@ -55,24 +66,36 @@ public class TradeController {
     @ApiOperation(value = "根据委托编号查询成交信息", notes = "根据委托编号查询成交信息")
     @RequestMapping(value = "/tradeByEntrustId", method = RequestMethod.POST)
     public Message<List<Trade>> queryTradeByEntrustId(@RequestBody @Validated TradeInfoByIdRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return new Message<>(tradeManagement.queryTradeByEntrustId(request.getUserId(), request.getId()));
     }
 
     @ApiOperation(value = "根据订单编号查询成交信息", notes = "根据订单编号查询成交信息")
     @RequestMapping(value = "/tradeByOrderId", method = RequestMethod.POST)
     public Message<List<Trade>> queryTradeByOrderId(@RequestBody @Validated TradeInfoByIdRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return new Message<>(tradeManagement.queryTradeByOrderId(request.getUserId(), request.getId()));
     }
 
     @ApiOperation(value = "根据指令编号查询成交信息", notes = "根据指令编号查询成交信息")
     @RequestMapping(value = "/tradeByInstructionId", method = RequestMethod.POST)
     public Message<List<Trade>> queryTradeByInstructionId(@RequestBody @Validated TradeInfoByIdRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return new Message<>(tradeManagement.queryTradeByInstructionId(request.getUserId(), request.getId()));
     }
 
     @ApiOperation(value = "根据资金账户编号查询成交信息", notes = "根据资金账户编号查询成交信息")
     @RequestMapping(value = "/tradeByAccountId", method = RequestMethod.POST)
     public Message<List<Trade>> queryTradeByAccountId(@RequestBody @Validated TradeInfoByIdRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return new Message<>(tradeManagement.queryTradeByAccountId(request.getUserId(), request.getId()));
     }
 }

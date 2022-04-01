@@ -1788,6 +1788,9 @@ public class CnBondInterfService extends InterfService {
                     status.setSubmitFeedbackStatus(DictCodeListExt2.报送反馈状态_中债退回.getValue());
                     // 错误信息
                     status.setSubmitFeedbackMsg(info.getErrorMessage().getValue());
+                    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+                    status.setSubmitType(submitType);
+                    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
                     // 反馈状态
                     // 更新中债报送关系
                     if(DictCodeListExt2.报表名称_投资者明细信息登记.getValue().equals(submitType)){
@@ -1808,6 +1811,9 @@ public class CnBondInterfService extends InterfService {
                     status.setSubmitNum(info.getRegistrationSerialNumber().getValue());
                     // 反馈状态
                     status.setSubmitFeedbackStatus(DictCodeListExt2.报送反馈状态_中债通过.getValue());
+                    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+                    status.setSubmitType(submitType);
+                    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
                     // 更新数据
                     if(DictCodeListExt2.报表名称_投资者明细信息登记.getValue().equals(submitType)){
                         equdetinfos.add(status);
@@ -1847,6 +1853,9 @@ public class CnBondInterfService extends InterfService {
             status.setReportNo(reportNo);
             // 反馈状态
             status.setSubmitFeedbackStatus(DictCodeListExt2.报送反馈状态_审核文件下载失败.getValue());
+            /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+            status.setSubmitType(submitType);
+            /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
             // 更新数据
             if(DictCodeListExt2.报表名称_投资者明细信息登记.getValue().equals(submitType)){
                 cnBondInterfMapper.updateChbEquDetSubmitStatus(status);
@@ -2118,12 +2127,16 @@ public class CnBondInterfService extends InterfService {
             return;
         }
 
+        /***三期CHB_SUBMIT_STATUS去除改造  同批次要么身份要么持有,不会同时进  20220310**/
+        String SubmitsType = chbSubmitStatusList.get(0).getSubmitType();
+        /***三期CHB_SUBMIT_STATUS去除改造  同批次要么身份要么持有,不会同时进 20220310**/
+
         int maxDataCountOneTime = 100;
 
         // 报送数据
         int dataCount = chbSubmitStatusList.size();
         if (dataCount <= maxDataCountOneTime) {
-            cnBondInterfMapper.insertChbSubmitStatusList(chbSubmitStatusList);
+            cnBondInterfMapper.insertChbSubmitStatusList(chbSubmitStatusList,SubmitsType);
         }
         else {
             // 分批处理
@@ -2133,12 +2146,12 @@ public class CnBondInterfService extends InterfService {
             int part = dataCount / maxDataCountOneTime; // 分批数
             for (int i = 0; i < part; i++ ) {
                 cnBondInterfMapper.insertChbSubmitStatusList(
-                    newDataList.subList(0, maxDataCountOneTime));
+                    newDataList.subList(0, maxDataCountOneTime),SubmitsType);
                 newDataList.subList(0, maxDataCountOneTime).clear();
             }
             // 最后剩下的数据
             if (CollectionUtils.isNotEmpty(newDataList)) {
-                cnBondInterfMapper.insertChbSubmitStatusList(newDataList);
+                cnBondInterfMapper.insertChbSubmitStatusList(newDataList,SubmitsType);
             }
         }
     }

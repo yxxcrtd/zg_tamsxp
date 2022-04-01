@@ -441,34 +441,14 @@
     ASSETINFO.BANK_SEC_PERPETUAL,
     ASSETINFO.BANK_SEC_PREFER,
     ASSETINFO.IS_PERPETUAL
-    <if test="modelType != null">
-      , INSTITUTION_CODE
-    </if>
     from PBC_MONTH_ASSET_POSITION PMAP
-
-    <if test="modelType != null">
-      left join
-      (
-      select
-      distinct di.business_id finprod_market_id,di.institution_code
-      from DATA_AUTH_NOTIFY_INST di
-
-      where di.model_type = '02'
-      and DI.DATA_TYPE='PTL01'
-      ) di on di.finprod_market_id = PMAP.PRODID
-    </if>
     left join CHB_ASSET_INFO ASSETINFO
     ON ASSETINFO.ASSET_CODE = PMAP.ASSET_CODE  and  ASSETINFO.status in('E','M')
-
-
-    where to_char(ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
-    <if test="prodList !=null and prodList.size()!=0">
-      and PRODID in
-      <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")">
-        <if test="(index % 999) == 998">
-          null) OR PRODID in (
-        </if>
-        #{item}
+    where TO_CHAR(ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
+    <if test="prodList !=null">
+      <foreach collection="prodList" item="prodid" open="and PRODID in ("
+               separator="," close=")">
+        #{prodid,jdbcType=VARCHAR}
       </foreach>
     </if>
   </select>

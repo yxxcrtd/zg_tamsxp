@@ -47,7 +47,7 @@ public class CnBondUpInterfService extends BatchBaseService{
 		}
 		try {
 			// 调用接口轮询任务逻辑处理反馈信息
-			chb3CnBondUpInterfTaskService.execute();
+			chb3CnBondUpInterfTaskService.execute(batchExecuteInfo.getExecuteDate());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

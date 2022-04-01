@@ -52,6 +52,11 @@ public class PortfolioPositionsFlowInputDto {
     private TrdProductDealAdd trdProductDealAdd;
 
     /**
+     * 是否走工作流（结算下行过来的数据没有流程中的记录）
+     */
+    private boolean isNotWorkflow;
+
+    /**
      * 获取 positionType
      *
      * @return positionType
@@ -162,5 +167,13 @@ public class PortfolioPositionsFlowInputDto {
 
     public void setSecAmount(BigDecimal secAmount) {
         this.secAmount = secAmount;
+    }
+
+    public boolean isNotWorkflow() {
+        return isNotWorkflow;
+    }
+
+    public void setNotWorkflow(boolean notWorkflow) {
+        isNotWorkflow = notWorkflow;
     }
 }

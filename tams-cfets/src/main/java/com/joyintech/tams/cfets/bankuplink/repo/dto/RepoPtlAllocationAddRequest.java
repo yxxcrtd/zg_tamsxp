@@ -32,6 +32,9 @@ public class RepoPtlAllocationAddRequest {
     @ApiModelProperty(required = true, name = "secAcctId", value = "证券账户")
     private String secAcctId;
 
+    @ApiModelProperty(required = true, name = "quoteId", value = "报价编号（内部代码）",example = "DHREPO202112211051")
+    private String quoteId;
+
     @ApiModelProperty(required = true, name = "tradeYield", value = "回购利率")
     private BigDecimal tradeYield;
 
@@ -88,6 +91,14 @@ public class RepoPtlAllocationAddRequest {
 
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
+    }
+
+    public String getQuoteId() {
+        return quoteId;
+    }
+
+    public void setQuoteId(String quoteId) {
+        this.quoteId = quoteId;
     }
 
     public BigDecimal getTradeYield() {

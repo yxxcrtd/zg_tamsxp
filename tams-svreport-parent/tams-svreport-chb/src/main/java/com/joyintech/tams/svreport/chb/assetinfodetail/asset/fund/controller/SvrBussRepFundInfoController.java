@@ -2,10 +2,12 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.fund.controller;
 
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.fund.service.SvrBussRepFundInfoImplService;
-import com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.impl.SvrBussRepEquityInfoImplService;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepFundInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,6 +65,12 @@ public class SvrBussRepFundInfoController extends BaseController{
 
               //调用service
             bussAssetInfoService.setModle(uuid, dataStatus, model,workFlowId,entityName);
+        }else {
+            SvrBussRepFundInfoDto dto = new SvrBussRepFundInfoDto();
+            dto.setPppflag(DictCodeList.是否_中债_否.getValue());
+            dto.setBondtostockFlag(DictCodeList.是否_中债_否.getValue());
+            dto.setPrivatefundFlag(DictCodeList.是否_中债_否.getValue());
+            model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         model.addAttribute("entityName",this.getParam("entityName"));
 

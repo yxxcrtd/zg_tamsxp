@@ -11,7 +11,10 @@
         from PTL_SEC_UNITCOST a
         LEFT JOIN FIN_PRODUCT b ON a.FINPROD_ID =b.FINPROD_ID and b.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01}
         LEFT JOIN FIN_PRODUCT_TYPE c ON a.FINPROD_ID =c.FINPROD_ID
-        WHERE b.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01} AND b.TRADE_MARKET=#{SVR_TRADE_MARKET_01} AND a.CDATE=#{cdate}
+        WHERE
+             (( b.FINPROD_TYPE2 =#{FINPROD_TYPE_TG_F01} AND b.TRADE_MARKET=#{SVR_TRADE_MARKET_01} )
+              or (b.TRADE_MARKET in (#{SVR_TRADE_MARKET_03} ,#{SVR_TRADE_MARKET_04})))
+          AND a.CDATE=#{cdate}
         <if test="portfolioIdList != null">
             AND a.PORTFOLIO_ID in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -59,4 +62,28 @@
         DELETE FROM PTL_SEC_UNITCOST 
         WHERE CDATE = #{cdate} and PORTFOLIO_ID=#{portfolioId,jdbcType=VARCHAR} and FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
     </delete>
+
+    <!-- 交易所当日交易数据查询 -->
+    <select id="selectExchangeCurrTrdData" parameterType="Map" resultType="com.joyintech.tams.business.common.pojo.BaseMap">
+        select
+        b.PORTFOLIO_ID ,
+        a.FINPROD_ID ,
+        a.PS ,
+        a.UNIT_CPRICE AS PRICE,
+        a.SHARE_AMT AS AMT
+        from TRD_PRODUCT_DEAL a
+        LEFT JOIN TRD_PRODUCT_DEAL_ADD b ON a.TRADE_ID =b.TRADE_ID
+        LEFT JOIN FIN_PRODUCT c ON a.FINPROD_ID =c.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE d ON d.FINPROD_ID =a.FINPROD_ID
+        WHERE a.TRADE_DATE =#{cdate} AND  c.TRADE_MARKET in (#{SVR_TRADE_MARKET_03},#{SVR_TRADE_MARKET_04})
+        AND a.PS IN (#{PS_T01},#{PS_T02},#{PS_T03},#{PS_T04},#{PS_T49}) AND a.TRADE_STATUS =#{TRADE_STATUS_01}
+        AND a.IS_CANCEL=#{YN_N}
+        <if test="portfolioIdList != null">
+            AND b.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY b.PORTFOLIO_ID, a.FINPROD_ID , a.CREATE_TIME DESC
+    </select>
 </mapper>

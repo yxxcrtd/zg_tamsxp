@@ -4,6 +4,7 @@
 	<sql id="settleTransDataTotalSql">
 		std.SEQ_ID TRADE_ID,
 			/*std.CJBH CJBH,*/
+			std.F_CJBH,
 			std.DEAL_DATE DEAL_DATE,
 			std.SEC_TYPE SEC_TYPE,
 			std.APPLY_TRADE_ID APPLY_TRADE_ID,
@@ -145,22 +146,46 @@
 		SELECT
 			IFNULL(IFNULL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID), IFNULL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID)) ORDER_ID,
 			case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,ee.ENTRUST_ID,
+			stdta.REPO_TYPE,
 			<!--<include refid="settleTransDataSql"></include>-->
 			<include refid="settleTransDataTotalSql"></include>
-			LEFT JOIN T_ENTRUSTHISTORY teh ON TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = teh.BROKER_ENTRUST_ID
+		    LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS stdts ON std.SEQ_ID = stdts.SEQ_NO
+		    LEFT JOIN SETTLE_TRANS_DATA_TOTAL_ADD stdta ON std.SEQ_ID = stdta.TRADE_ID
+			LEFT JOIN T_ENTRUSTHISTORY teh
+				ON (
+				    TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = teh.BROKER_ENTRUST_ID
+				    OR
+					std.APPLY_TRADE_ID = teh.BROKER_ENTRUST_ID
+				)
 				and teh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = teh.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
-			LEFT JOIN T_ENTRUST te ON TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = te.BROKER_ENTRUST_ID
+			LEFT JOIN T_ENTRUST te
+				ON (
+				    TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = te.BROKER_ENTRUST_ID
+				    OR
+					std.APPLY_TRADE_ID = te.BROKER_ENTRUST_ID
+				)
 				and te.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = te.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
-			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh ON TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = tieh.BROKER_ENTRUST_ID
+			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh
+				ON (
+				    TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = tieh.BROKER_ENTRUST_ID
+				    OR
+					std.APPLY_TRADE_ID = tieh.BROKER_ENTRUST_ID
+				)
 				and tieh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = tieh.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
-			LEFT JOIN T_INTEGRATED_ENTRUST tie ON TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = tie.BROKER_ENTRUST_ID
+			LEFT JOIN T_INTEGRATED_ENTRUST tie
+				ON (
+				    TRIM(LEADING '0' from substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID))) = tie.BROKER_ENTRUST_ID
+				    OR
+					std.APPLY_TRADE_ID = tie.BROKER_ENTRUST_ID
+				)
 				and tie.ENTRUST_STATUS IN ('2', '5', '6', '8') AND DATE_FORMAT(DEAL_DATE, '%Y%m%d') = tie.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
 			LEFT JOIN ETR_ENTRUST ee ON (ee.ENTRUST_ID = IFNULL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) OR ee.ENTRUST_ID = IFNULL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID))
 			LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
 		<where>
 			<!--(te.BROKER_ENTRUST_ID IS NOT NULL OR teh.BROKER_ENTRUST_ID IS NOT NULL OR tie.BROKER_ENTRUST_ID IS NOT NULL OR tieh.BROKER_ENTRUST_ID IS NOT NULL)-->
+			(stdts.MATCH_STATUS != '2' OR stdts.MATCH_STATUS IS NULL)
 			<if test="dealDate != null">
-				std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
 				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
@@ -185,6 +210,11 @@
 					#{ps,jdbcType=VARCHAR}
 				</foreach>
 			</if>
+		    <!--协议回购特殊处理 fuyongsheng add 20211228 start-->
+			<if test="readerType != null and readerType != '' and readerType == 'Repo1Reader'">
+				AND (stdta.REPO_TYPE = 'H01' OR std.PS = 'T01')
+			</if>
+			<!--协议回购特殊处理 fuyongsheng add 20211228 end-->
         </where>
     </select>
 
@@ -221,6 +251,111 @@
 			<!--<if test="repoType != null">
 				AND stda.REPO_TYPE = #{repoType,jdbcType=VARCHAR}
 			</if>-->
+		</where>
+	</select>
+
+	<select id="selectFundDelSettleTransData" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto">
+		SELECT
+		PSP.PORTFOLIO_ID as portfolioId,/* 组合持仓.组合代码*/
+		PSP.FINPROD_ID as finprodId, /* 组合持仓.金融产品代码*/
+		FP.FINPROD_TYPE2 as finprodType2, /* 标的类金融产品.金融产品类型（投管）*/
+		FP.CCY as ccy, /*标的类金融产品.币种 */
+		FP.TRADE_MARKET as tradeMarket, /*标的类金融产品.交易场所*/
+		PSP.AMOUNT as redDateAmt, /*组合持仓.数量 */
+		MFBN.REG_DATE as regDate, /*基金分红公告.权益登记日*/
+		MFBN.DEL_DATE as delDate, /*基金分红公告.除权日*/
+		MFBN.DEVIDENT_DATE as devidentDate, /*基金分红公告.派息日*/
+		MFBN.UNIT_BONUS_UNIT_VALUE as unitBonusUnitValue, /*基金分红公告.单位分红净值*/
+		(MFBN.UNIT_BONUS_UNIT_VALUE * PSP.AMOUNT) as bonusAmt, /*分红金额  基金分红公告.单位分红净值*组合持仓.数量*/
+		(SELECT BONUS_MODE FROM( SELECT * FROM PORTFOLIO_FUND_BONUS_MODE PFBM ORDER BY PFBM.SET_DATE DESC) a
+		WHERE a.FINPROD_ID = MFBN.FUND_ID
+		AND a.PORTFOLIO_ID = PSP.PORTFOLIO_ID
+		AND a.SET_DATE&lt;= MFBN.REG_DATE
+		limit 1) AS bonusMode,/*组合基金分红方式.分红方式 */
+		PSP.SEC_ACCT_ID as secAcctId /*组合持仓.证券账户代码*/
+		FROM PTL_SEC_POSITION PSP /*组合持仓*/
+		LEFT JOIN FIN_PRODUCT FP /*标的类金融产品*/
+		ON FP.FINPROD_ID = PSP.FINPROD_ID
+		AND FP.FINPROD_TYPE2 = 'F06' AND FP.FINPROD_TYPE = 'F06'
+		INNER JOIN MST_FUND_BONUS_NOTICE MFBN /*基金分红公告*/
+		ON MFBN.FUND_ID = FP.FINPROD_MARKET_ID
+		AND MFBN.REG_DATE = PSP.CDATE
+		LEFT JOIN PORTFOLIO_FUND_BONUS_MODE PFBM
+		ON PFBM.FINPROD_ID = MFBN.FUND_ID
+		AND PFBM.PORTFOLIO_ID = PSP.PORTFOLIO_ID
+		AND PFBM.SET_DATE &lt;= MFBN.REG_DATE
+		<where>
+			PSP.HODING_TYPE = '03'
+			<if test="dealDate != null">
+				AND MFBN.REG_DATE = #{dealDate,jdbcType=DATE}
+			</if>
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND PSP.PORTFOLIO_ID IN (" close=")"
+						 separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="selectFundSettleTransData" parameterType="java.util.Map"
+			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
+		SELECT
+		std.SEQ_NO TRADE_ID,
+		/*std.CJBH CJBH,*/
+		std.DEAL_DATE DEAL_DATE,/*执行日期*/
+		std.FINPROD_ID,/*金融产品代码*/
+		std.PS,/*交易方向*/
+		std.TRADE_MARKET,/*交易场所*/
+		std.FINPROD_TYPE,/*金融产品类型（估值核算）*/
+		std.FINPROD_TYPE2,/*金融产品类型（投管分类）*/
+		std.TRADE_DATE,/*交易日期*/
+		std.SETTLE_DATE,/*交割日期*/
+		std.SEC_ACCT_ID,/*证券账户*/
+		std.ACCT_NO,/*资金账户*/
+		std.CCY,/*交易币种*/
+		std.UNIT_CPRICE,/*单位净价*/
+		std.PRIN_AMT,/*交易本金*/
+		std.INT_AMT,/*利息总额*/
+		std.FPRICE_AMT,/*全价总额*/
+		std.FRAGMENTARY_FUNDS,/*零碎份额资金*/
+		std.TRADE_AMT,/*交易金额*/
+		std.BUSI_TYPE,/*业务类型*/
+		psp.PORTFOLIO_ID, /*组合代码*/
+		psp.AMOUNT shareAmt, /*数量*/
+		psp.CDATE regDate, /*权益登记日*/
+		(SELECT TOTLE_TRADE_ID FROM (SELECT t1.TOTLE_TRADE_ID FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
+		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
+		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc) a limit 1) bTradeId /*前置交易编号*/
+		FROM SETTLE_TRANS_DATA std
+		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
+		LEFT JOIN fin_product_type fpt ON fp.FINPROD_ID=fpt.FINPROD_ID
+		INNER JOIN PTL_SEC_POSITION psp
+		ON psp.FINPROD_ID=std.FINPROD_ID
+		AND psp.SEC_ACCT_ID=std.SEC_ACCT_ID
+		AND psp.HODING_TYPE='03'
+		AND psp.CDATE = (
+		CASE WHEN fpt.TYPE_10='24' THEN(
+		SELECT t1.REG_DATE FROM MST_FUND_BONUS_NOTICE t1 LEFT JOIN FIN_PRODUCT t2
+		ON t1.FUND_ID=t2.FINPROD_MARKET_ID AND t2.FINPROD_ID=std.FINPROD_ID
+		)
+		ELSE(SELECT REG_DATE FROM (SELECT t1.REG_DATE FROM	TRD_FIN_PRODUCT_DEAL_TOTAL t1
+		WHERE t1.FINPROD_ID=std.FINPROD_ID AND t1.BUSI_TYPE='TRD14'
+		AND t1.PS='T13' AND t1.REG_DATE &lt;= #{dealDate,jdbcType=DATE} ORDER BY t1.REG_DATE desc)b limit 1)
+		END
+		)
+		<where>
+			std.DEAL_DATE = #{dealDate,jdbcType=DATE}
+			AND std.FINPROD_TYPE2 = 'F06'
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				<foreach collection="portfolioIdList" item="portfolioId" open="AND psp.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<foreach collection="psList" item="ps" open="AND std.PS IN (" close=")" separator=",">
+				#{ps,jdbcType=VARCHAR}
+			</foreach>
 		</where>
 	</select>
 </mapper>

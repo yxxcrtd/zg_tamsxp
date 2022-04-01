@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.position.dao.ChbAssetPositionMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
-    <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
-    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
-    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
-    <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
-    <result column="FACEVALUE" property="facevalue" jdbcType="DECIMAL" />
-    <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
-    <result column="IS_UNDER_TRADE" property="isundertrade" jdbcType="VARCHAR" />
-    <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
-    <result column="CUR_ASSET_TYPE" property="curassettype" jdbcType="VARCHAR" />
-    <result column="DEALAMT" property="dealamt" jdbcType="DECIMAL" />
-    <result column="DEALQTY" property="dealqty" jdbcType="DECIMAL" />
-    <result column="ACCUAMT" property="accuamt" jdbcType="DECIMAL" />
-    <result column="ACCUQTY" property="accuqty" jdbcType="DECIMAL" />
-    <result column="CDATE" property="cdate" jdbcType="TIMESTAMP" />
-    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
-    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
-    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-    
-  </resultMap>
-  <sql id="Base_Column_List" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
+        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="FACEVALUE" property="facevalue" jdbcType="DECIMAL" />
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <result column="IS_UNDER_TRADE" property="isundertrade" jdbcType="VARCHAR" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="CUR_ASSET_TYPE" property="curassettype" jdbcType="VARCHAR" />
+        <result column="DEALAMT" property="dealamt" jdbcType="DECIMAL" />
+        <result column="DEALQTY" property="dealqty" jdbcType="DECIMAL" />
+        <result column="ACCUAMT" property="accuamt" jdbcType="DECIMAL" />
+        <result column="ACCUQTY" property="accuqty" jdbcType="DECIMAL" />
+        <result column="CDATE" property="cdate" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+
+    </resultMap>
+    <sql id="Base_Column_List" >
     POSUUID, PROD_ID, ASSET_CODE, INVEST_TYPE,TRADE_TYPE,IS_UNDER_TRADE, CHL_ID, DEALAMT, DEALQTY, ACCUAMT, ACCUQTY, 
     CDATE, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME,INVEST_VARIETY,CCY
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from CHB_ASSET_POSITION
-    where POSUUID = #{posuuid,jdbcType=CHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from CHB_ASSET_POSITION
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from CHB_ASSET_POSITION
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
     insert into CHB_ASSET_POSITION (POSUUID, PROD_ID, ASSET_CODE, 
       INVEST_TYPE,TRADE_TYPE,IS_UNDER_TRADE,
       INVEST_VARIETY, CCY,CHL_ID, DEALAMT, 
@@ -56,161 +56,161 @@
       #{createUser,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
       NOW())
   </insert>
-  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
-    insert into CHB_ASSET_POSITION
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="posuuid != null" >
-        POSUUID,
-      </if>
-      <if test="prodId != null" >
-        PROD_ID,
-      </if>
-      <if test="assetCode != null" >
-        ASSET_CODE,
-      </if>
-      <if test="investType != null" >
-        INVEST_TYPE,
-      </if>
-      <if test="chlId != null" >
-        CHL_CPCT_ID,
-      </if>
-      <if test="dealamt != null" >
-        DEALAMT,
-      </if>
-      <if test="dealqty != null" >
-        DEALQTY,
-      </if>
-      <if test="accuamt != null" >
-        ACCUAMT,
-      </if>
-      <if test="accuqty != null" >
-        ACCUQTY,
-      </if>
-      <if test="cdate != null" >
-        CDATE,
-      </if>
-      <if test="orgCode != null" >
-        ORG_CODE,
-      </if>
-      <if test="deptCode != null" >
-        DEPT_CODE,
-      </if>
-      <if test="createUser != null" >
-        CREATE_USER,
-      </if>
-      <if test="createTime != null" >
-        CREATE_TIME,
-      </if>
-      <if test="updateUser != null" >
-        UPDATE_USER,
-      </if>
-      <if test="updateTime != null" >
-        UPDATE_TIME,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="posuuid != null" >
-        #{posuuid,jdbcType=CHAR},
-      </if>
-      <if test="prodId != null" >
-        #{prodId,jdbcType=VARCHAR},
-      </if>
-      <if test="assetCode != null" >
-        #{assetCode,jdbcType=VARCHAR},
-      </if>
-      <if test="investType != null" >
-        #{investType,jdbcType=VARCHAR},
-      </if>
-      <if test="chlId != null" >
-        #{chlId,jdbcType=VARCHAR},
-      </if>
-      <if test="dealamt != null" >
-        #{dealamt,jdbcType=DECIMAL},
-      </if>
-      <if test="dealqty != null" >
-        #{dealqty,jdbcType=DECIMAL},
-      </if>
-      <if test="accuamt != null" >
-        #{accuamt,jdbcType=DECIMAL},
-      </if>
-      <if test="accuqty != null" >
-        #{accuqty,jdbcType=DECIMAL},
-      </if>
-      <if test="cdate != null" >
-        #{cdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="orgCode != null" >
-        #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="deptCode != null" >
-        #{deptCode,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
-    update CHB_ASSET_POSITION
-    <set >
-      <if test="prodId != null" >
-        PROD_ID = #{prodId,jdbcType=VARCHAR},
-      </if>
-      <if test="assetCode != null" >
-        ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
-      </if>
-      <if test="investType != null" >
-        INVEST_TYPE = #{investType,jdbcType=VARCHAR},
-      </if>
-      <if test="chlId != null" >
-        CHL_ID = #{chlId,jdbcType=VARCHAR},
-      </if>
-      <if test="dealamt != null" >
-        DEALAMT = #{dealamt,jdbcType=DECIMAL},
-      </if>
-      <if test="dealqty != null" >
-        DEALQTY = #{dealqty,jdbcType=DECIMAL},
-      </if>
-      <if test="accuamt != null" >
-        ACCUAMT = #{accuamt,jdbcType=DECIMAL},
-      </if>
-      <if test="accuqty != null" >
-        ACCUQTY = #{accuqty,jdbcType=DECIMAL},
-      </if>
-      <if test="cdate != null" >
-        CDATE = #{cdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="orgCode != null" >
-        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="deptCode != null" >
-        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        CREATE_USER = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      
-        UPDATE_TIME = NOW()
-      
-    </set>
-    where POSUUID = #{posuuid,jdbcType=CHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
+        insert into CHB_ASSET_POSITION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="posuuid != null" >
+                POSUUID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE,
+            </if>
+            <if test="investType != null" >
+                INVEST_TYPE,
+            </if>
+            <if test="chlId != null" >
+                CHL_CPCT_ID,
+            </if>
+            <if test="dealamt != null" >
+                DEALAMT,
+            </if>
+            <if test="dealqty != null" >
+                DEALQTY,
+            </if>
+            <if test="accuamt != null" >
+                ACCUAMT,
+            </if>
+            <if test="accuqty != null" >
+                ACCUQTY,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="posuuid != null" >
+                #{posuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investType != null" >
+                #{investType,jdbcType=VARCHAR},
+            </if>
+            <if test="chlId != null" >
+                #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="dealamt != null" >
+                #{dealamt,jdbcType=DECIMAL},
+            </if>
+            <if test="dealqty != null" >
+                #{dealqty,jdbcType=DECIMAL},
+            </if>
+            <if test="accuamt != null" >
+                #{accuamt,jdbcType=DECIMAL},
+            </if>
+            <if test="accuqty != null" >
+                #{accuqty,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
+        update CHB_ASSET_POSITION
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investType != null" >
+                INVEST_TYPE = #{investType,jdbcType=VARCHAR},
+            </if>
+            <if test="chlId != null" >
+                CHL_ID = #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="dealamt != null" >
+                DEALAMT = #{dealamt,jdbcType=DECIMAL},
+            </if>
+            <if test="dealqty != null" >
+                DEALQTY = #{dealqty,jdbcType=DECIMAL},
+            </if>
+            <if test="accuamt != null" >
+                ACCUAMT = #{accuamt,jdbcType=DECIMAL},
+            </if>
+            <if test="accuqty != null" >
+                ACCUQTY = #{accuqty,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+
+            UPDATE_TIME = NOW()
+
+        </set>
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
     update CHB_ASSET_POSITION
     set PROD_ID = #{prodId,jdbcType=VARCHAR},
       ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
@@ -229,653 +229,653 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
-  
-  <select id="selectInvestTradeBuy" resultMap="BaseResultMap" parameterType="java.util.Map" 
-  		resultSetType="FORWARD_ONLY" fetchSize="1000">
-	select asset_code,invest_type,facevalue,invest_variety,trade_type,is_under_trade,prod_id,CHL_CPCT_ID CHL_ID,dealdate cdate,
-	ccy,
-	sum(
-	case when CUR_ASSET_TYPE in ('01','03','05','06')
-	then AMT
-	else 0-AMT
-	end ) dealamt
-	,sum(
-	case when CUR_ASSET_TYPE in ('01','03','05','06')
-	then NUM
-	else 0-NUM
-	end ) dealqty 
-	from chb_invest_trade 
-	where dealdate=#{cdate,jdbcType=DATE}
-	 <if test="prodids !=null and prodids.size()!=0">
-		and prod_id in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
-	</if>
-	<if test="assetcodes !=null and assetcodes.size() !=0">
-		and asset_code in
-		<foreach collection="assetcodes" item="assetcode" open="(" separator=","
-			close=")">
-			#{assetcode}
-		</foreach>
-	</if>  
-	and STATUS!='D' and CUR_ASSET_TYPE  in ('01','03','05','06')
-	group by asset_code,invest_type,facevalue,invest_variety, trade_type,is_under_trade,prod_id,CHL_CPCT_ID,dealdate,ccy
-  </select>
-  <select id="selectInvestTradeSale" resultMap="BaseResultMap" parameterType="java.util.Map" 
-  		resultSetType="FORWARD_ONLY" fetchSize="1000">
-	select asset_code,invest_type,facevalue,invest_variety, trade_type,cur_asset_type,
-	is_under_trade,prod_id,CHL_CPCT_ID CHL_ID,dealdate cdate,
-	ccy,
-	sum(
-	case when CUR_ASSET_TYPE in ('01','03','05','06')
-	then AMT
-	else 0-AMT
-	end ) dealamt
-	,sum(
-	case when CUR_ASSET_TYPE in ('01','03','05','06')
-	then NUM
-	when CUR_ASSET_TYPE in ('11')
-	then 0-AMT
-	else 0-NUM
-	end ) dealqty 
-	from chb_invest_trade 
-	where dealdate=#{cdate,jdbcType=DATE}
-	  <if test="prodids !=null and prodids.size()!=0">
-		and prod_id in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
-	</if>
-	<if test="assetcodes !=null and assetcodes.size() !=0">
-		and asset_code in
-		<foreach collection="assetcodes" item="assetcode" open="(" separator=","
-			close=")">
-			#{assetcode}
-		</foreach>
-	</if>  
-	and STATUS!='D' and (CUR_ASSET_TYPE  in ('02','04','07','08') or (CUR_ASSET_TYPE='11' and dealtype='24'))
-	group by asset_code,invest_type,facevalue,invest_variety, trade_type,cur_asset_type,ccy
-	,is_under_trade,prod_id,CHL_CPCT_ID,dealdate
-  </select>
-  <insert id="insertYsdPosition" parameterType="java.util.Map" >
-    insert into CHB_ASSET_POSITION 
-		SELECT f_guid,
-		PROD_ID,
-		ASSET_CODE,
-		INVEST_TYPE,
-		CHL_ID,
-		0,
-		0,
-		ACCUAMT,
-		ACCUQTY,
-		CDATE+1,
-		ORG_CODE,
-		DEPT_CODE,
-		CREATE_USER,
-		NOW(),
-		UPDATE_USER,
-		NOW(),
-		TRADE_TYPE,
-		IS_UNDER_TRADE,
-		INVEST_VARIETY,
-		CCY
-		FROM CHB_ASSET_POSITION 
-		where CDATE=#{cdate,jdbcType=DATE} and ACCUAMT<![CDATA[<>]]>0 and ACCUQTY<![CDATA[<>]]>0
-		<if test="iscal !=null and iscal=='02' ">
-		and ASSET_CODE !='REMAININGCASH'
-		</if>
-		<if test="prodids !=null and prodids.size()!=0 and prodids.size()!=0 ">
-		and prod_id in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
-	</if>
-	<if test="assetcodes !=null and assetcodes.size() !=0">
-		and asset_code in
-		<foreach collection="assetcodes" item="assetcode" open="(" separator=","
-			close=")">
-			#{assetcode}
-		</foreach>
-	</if>  
-  </insert>
- 
-  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true" useCache="false">
-    select 
-    <include refid="Base_Column_List" />
-    from CHB_ASSET_POSITION
-    where 1=1 
-    <if test="assetCode!=null">
-    	and asset_code=#{assetCode,jdbcType=VARCHAR}
-    </if>
-    <if test="cdate!=null">
-    	and cdate=#{cdate,jdbcType=DATE}
-    </if>
-    <if test="investVariety!=null">
-    	and invest_variety=#{investVariety,jdbcType=VARCHAR}
-    </if>
-    <if test="investType!=null">
-    	and invest_type=#{investType,jdbcType=VARCHAR}
-    </if>
-    <if test="prodId!=null">
-    	and prod_id=#{prodId,jdbcType=VARCHAR}
-    </if>
-    <if test="chlId!=null">
-    	and chl_id=#{chlId,jdbcType=VARCHAR}
-    </if>
-    <if test="isundertrade!=null">
-    	and is_under_trade=#{isundertrade,jdbcType=VARCHAR}
-    </if>
-    <if test="tradeType!=null">
-    	and trade_type=#{tradeType,jdbcType=VARCHAR}
-    </if>
-    <if test="ccy!=null">
-    	and ccy=#{ccy,jdbcType=VARCHAR}
-    </if>
-    
-  </select>
-  
-  
-  <delete id="deleteByDate" parameterType="java.util.Map" >
-    delete from CHB_ASSET_POSITION
-    where CDATE<![CDATA[>=]]> #{cdate,jdbcType=DATE}
-     <if test="prodids !=null and prodids.size()!=0">
-		and prod_id in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
-	</if>
-	<if test="assetcodes !=null and assetcodes.size() !=0">
-		and asset_code in
-		<foreach collection="assetcodes" item="assetcode" open="(" separator=","
-			close=")">
-			#{assetcode}
-		</foreach>
-	</if>   
-    <if test="positionType !=null and positionType == '01'">
-        and asset_code != 'REMAININGCASH'
-    </if>   
-    <if test="positionType !=null and positionType == '02'">
-        and asset_code = 'REMAININGCASH'
-    </if>
-  </delete>
-  <select id="selectAccuqtyByModel" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition"
-      resultType="java.math.BigDecimal">
-  	select ACCUQTY from CHB_ASSET_POSITION
-  	where PROD_ID=#{prodId,jdbcType=VARCHAR}
-  	and asset_code=#{assetCode,jdbcType=VARCHAR}
-  	and  CDATE = #{cdate,jdbcType=DATE}
-  	<if test="chlId!=null">
-    	and chl_id=#{chlId,jdbcType=VARCHAR}
-    </if>
-    <if test="chlId==null">
-    	and chl_id is null
-    </if>
-  </select>
-  <select id="selectPrdCashByModel" resultMap="BaseResultMap" parameterType="java.util.Map" 
-  		resultSetType="FORWARD_ONLY" fetchSize="1000">
-	SELECT SUM(cashflow) dealamt,CCY ccy,PROD_ID 
-		FROM
-		  (SELECT SUM(
-		    CASE prdeal.TRADE_TYPE
-		      WHEN '03'
-		      THEN (ifnull(prdeal.TRADE_PRINCE, 0)+ifnull(prdeal.REDEMPTION_FEE,0))  * -1
-		      WHEN '04'
-		      THEN 0
-		      WHEN '05'
-		      THEN 0
-		      WHEN '14'
-		      THEN 0
-		      WHEN '15'
-		      THEN 0
-		      WHEN '16'
-		      THEN ifnull(prdeal.TRADE_PRINCE, 0) * -1
-		      WHEN '17'
-		      THEN (ifnull(prdeal.TRADE_PRINCE, 0)+ifnull(prdeal.REDEMPTION_FEE,0)) * -1
-		      ELSE ifnull(prdeal.TRADE_PRINCE, 0)
-		    END) cashflow,
-		    prdeal.CCY,prdeal.PROD_ID
-		  FROM chb_prd_deal prdeal
-		   left join CHB_PRD_BASEINFO prd
-		   on prd.PROD_ID=prdeal.PROD_ID
-		  and prd.status!='D'	
-		  WHERE PAY_DATE  <![CDATA[=]]>#{cdate,jdbcType=DATE}
-		  AND TRADE_TYPE NOT IN ('05','14','15')
-		  and prd.PROFIT_TYPE='03'
-		  AND PRDEAL.STATUS !='D'
-		  GROUP BY prdeal.CCY,prdeal.PROD_ID
-		  UNION ALL
-		  SELECT SUM(
-		    CASE prdeal.TRADE_TYPE
-		      WHEN '04'
-		      THEN ifnull(prdeal.INT_AMT, 0) * -1
-		      ELSE 0
-		    END) cashflow,
-		    prdeal.CCY,prdeal.PROD_ID
-		  FROM chb_prd_deal prdeal
-	      left join CHB_PRD_BASEINFO prd
-		  on prd.PROD_ID=prdeal.PROD_ID
-		  and prd.status!='D'
-		  WHERE INTEREST_DATE<![CDATA[=]]>#{cdate,jdbcType=DATE}
-		  and prd.PROFIT_TYPE='03'
-		  AND PRDEAL.STATUS !='D'
-		  GROUP BY prdeal.CCY,prdeal.PROD_ID
-		  UNION ALL
-		  SELECT SUM(-1*ifnull(fee.AMT,0 ))cashflow,
-		    fee.CCY,fee.PROD_ID
-		  FROM chb_prd_fee_deal fee
-		  left join CHB_PRD_BASEINFO prd
-		  on prd.PROD_ID=fee.PROD_ID
-		  and prd.status!='D'
-		  WHERE fee.PAY_DATE <![CDATA[=]]>#{cdate,jdbcType=DATE}
-		  and prd.PROFIT_TYPE='03'
-		  AND fee.STATUS !='D'
-		  GROUP BY fee.CCY,fee.PROD_ID
-		  ) base
-		  <if test="prodids !=null and prodids.size()!=0">
-			where PROD_ID in
-			<foreach collection="prodids" item="prodid" open="(" separator=","
-				close=")">
-				#{prodid}
-			</foreach>
-		</if>
-		GROUP BY CCY,PROD_ID
-  </select>
-  <select id="selectAssetCashByModel" resultMap="BaseResultMap" parameterType="java.util.Map" 
-  		resultSetType="FORWARD_ONLY" fetchSize="1000">
-	 SELECT 
-		sum(
-		case when deal.CUR_ASSET_TYPE in ('01','03','05','08','10','12')
-		then -1*ifnull(deal.AMT,0)
-		else ifnull(deal.AMT,0)
-		end )  dealamt ,DEAL.PROD_ID,DEAL.CCY  
-		FROM 
-		chb_invest_trade deal
-		left join CHB_PRD_BASEINFO prd
-		  on prd.PROD_ID=deal.PROD_ID
-		  and prd.status!='D'
-		where deal.CHL_CPCT_ID is null
-		and prd.PROFIT_TYPE='03'
-		and deal.DEALDATE <![CDATA[=]]>#{cdate,jdbcType=DATE}
-		and deal.STATUS!='D'
-		<if test="prodids !=null and prodids.size()!=0">
-			and DEAL.PROD_ID in
-			<foreach collection="prodids" item="prodid" open="(" separator=","
-				close=")">
-				#{prodid}
-			</foreach>
-		</if>
-		group by DEAL.PROD_ID,DEAL.CCY
-  </select>
-  <select id="selectAssetPositionCashByModel" resultMap="BaseResultMap" parameterType="java.util.Map" 
-  		resultSetType="FORWARD_ONLY" fetchSize="1000">
-  		 select 
-    <include refid="Base_Column_List" />
-    from CHB_ASSET_POSITION
-    where CDATE=#{cdate,jdbcType=DATE}
-    and ASSET_CODE='REMAININGCASH'
-    <if test="prodids !=null and prodids.size()!=0">
-			and PROD_ID in
-			<foreach collection="prodids" item="prodid" open="(" separator=","
-				close=")">
-				#{prodid}
-			</foreach>
-		</if>
-  </select>
-  
-    <select id="queryMinSettdate" 
-          resultType="java.util.Date" 
-          parameterType="map">
-		SELECT
-		case 
-        when min(dealdate) is  null 
-        then #{cdate,jdbcType=DATE}
-        when min(dealdate) is not null and min(dealdate)>#{cdate,jdbcType=DATE} 
-        then #{cdate,jdbcType=DATE}
-        when min(dealdate) is not null and min(dealdate)<![CDATA[<=]]>#{cdate,jdbcType=DATE} 
-        then  min(dealdate) end  SETTDATEDATE 
-		FROM chb_invest_trade
-		WHERE
-			DATE_FORMAT(update_time,'%Y-%m-%d')=DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
-		<if test="prodids !=null and prodids.size()!=0">
-		and prod_id in
-		<foreach collection="prodids" item="prodid" open="(" separator=","
-			close=")">
-			#{prodid}
-		</foreach>
-		</if>
-		<if test="assetcodes !=null and assetcodes.size() !=0">
-			and asset_code in
-			<foreach collection="assetcodes" item="assetcode" open="(" separator=","
-				close=")">
-				#{assetcode}
-			</foreach>
-		</if>  
- 	</select>
-  
-    <select id="selectMinAssetsBasisDataByProdidAndAssetCode" 
-          resultType="java.util.Date" parameterType="map">
+
+    <select id="selectInvestTradeBuy" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        select asset_code,invest_type,facevalue,invest_variety,trade_type,is_under_trade,prod_id,CHL_CPCT_ID CHL_ID,dealdate cdate,
+        ccy,
+        sum(
+        case when CUR_ASSET_TYPE in ('01','03','05','06')
+        then AMT
+        else 0-AMT
+        end ) dealamt
+        ,sum(
+        case when CUR_ASSET_TYPE in ('01','03','05','06')
+        then NUM
+        else 0-NUM
+        end ) dealqty
+        from chb_invest_trade
+        where dealdate=#{cdate,jdbcType=DATE}
+        <if test="prodids !=null and prodids.size()!=0">
+            and prod_id in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+        <if test="assetcodes !=null and assetcodes.size() !=0">
+            and asset_code in
+            <foreach collection="assetcodes" item="assetcode" open="(" separator=","
+                     close=")">
+                #{assetcode}
+            </foreach>
+        </if>
+        and STATUS!='D' and CUR_ASSET_TYPE  in ('01','03','05','06')
+        group by asset_code,invest_type,facevalue,invest_variety, trade_type,is_under_trade,prod_id,CHL_CPCT_ID,dealdate,ccy
+    </select>
+    <select id="selectInvestTradeSale" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        select asset_code,invest_type,facevalue,invest_variety, trade_type,cur_asset_type,
+        is_under_trade,prod_id,CHL_CPCT_ID CHL_ID,dealdate cdate,
+        ccy,
+        sum(
+        case when CUR_ASSET_TYPE in ('01','03','05','06')
+        then AMT
+        else 0-AMT
+        end ) dealamt
+        ,sum(
+        case when CUR_ASSET_TYPE in ('01','03','05','06')
+        then NUM
+        when CUR_ASSET_TYPE in ('11')
+        then 0-AMT
+        else 0-NUM
+        end ) dealqty
+        from chb_invest_trade
+        where dealdate=#{cdate,jdbcType=DATE}
+        <if test="prodids !=null and prodids.size()!=0">
+            and prod_id in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+        <if test="assetcodes !=null and assetcodes.size() !=0">
+            and asset_code in
+            <foreach collection="assetcodes" item="assetcode" open="(" separator=","
+                     close=")">
+                #{assetcode}
+            </foreach>
+        </if>
+        and STATUS!='D' and (CUR_ASSET_TYPE  in ('02','04','07','08') or (CUR_ASSET_TYPE='11' and dealtype='24'))
+        group by asset_code,invest_type,facevalue,invest_variety, trade_type,cur_asset_type,ccy
+        ,is_under_trade,prod_id,CHL_CPCT_ID,dealdate
+    </select>
+    <insert id="insertYsdPosition" parameterType="java.util.Map" >
+        insert into CHB_ASSET_POSITION
+        SELECT f_guid,
+        PROD_ID,
+        ASSET_CODE,
+        INVEST_TYPE,
+        CHL_ID,
+        0,
+        0,
+        ACCUAMT,
+        ACCUQTY,
+        CDATE+1,
+        ORG_CODE,
+        DEPT_CODE,
+        CREATE_USER,
+        NOW(),
+        UPDATE_USER,
+        NOW(),
+        TRADE_TYPE,
+        IS_UNDER_TRADE,
+        INVEST_VARIETY,
+        CCY
+        FROM CHB_ASSET_POSITION
+        where CDATE=#{cdate,jdbcType=DATE} and ACCUAMT<![CDATA[<>]]>0 and ACCUQTY<![CDATA[<>]]>0
+        <if test="iscal !=null and iscal=='02' ">
+            and ASSET_CODE !='REMAININGCASH'
+        </if>
+        <if test="prodids !=null and prodids.size()!=0 and prodids.size()!=0 ">
+            and prod_id in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+        <if test="assetcodes !=null and assetcodes.size() !=0">
+            and asset_code in
+            <foreach collection="assetcodes" item="assetcode" open="(" separator=","
+                     close=")">
+                #{assetcode}
+            </foreach>
+        </if>
+    </insert>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true" useCache="false">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_ASSET_POSITION
+        where 1=1
+        <if test="assetCode!=null">
+            and asset_code=#{assetCode,jdbcType=VARCHAR}
+        </if>
+        <if test="cdate!=null">
+            and cdate=#{cdate,jdbcType=DATE}
+        </if>
+        <if test="investVariety!=null">
+            and invest_variety=#{investVariety,jdbcType=VARCHAR}
+        </if>
+        <if test="investType!=null">
+            and invest_type=#{investType,jdbcType=VARCHAR}
+        </if>
+        <if test="prodId!=null">
+            and prod_id=#{prodId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlId!=null">
+            and chl_id=#{chlId,jdbcType=VARCHAR}
+        </if>
+        <if test="isundertrade!=null">
+            and is_under_trade=#{isundertrade,jdbcType=VARCHAR}
+        </if>
+        <if test="tradeType!=null">
+            and trade_type=#{tradeType,jdbcType=VARCHAR}
+        </if>
+        <if test="ccy!=null">
+            and ccy=#{ccy,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
+
+    <delete id="deleteByDate" parameterType="java.util.Map" >
+        delete from CHB_ASSET_POSITION
+        where CDATE<![CDATA[>=]]> #{cdate,jdbcType=DATE}
+        <if test="prodids !=null and prodids.size()!=0">
+            and prod_id in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+        <if test="assetcodes !=null and assetcodes.size() !=0">
+            and asset_code in
+            <foreach collection="assetcodes" item="assetcode" open="(" separator=","
+                     close=")">
+                #{assetcode}
+            </foreach>
+        </if>
+        <if test="positionType !=null and positionType == '01'">
+            and asset_code != 'REMAININGCASH'
+        </if>
+        <if test="positionType !=null and positionType == '02'">
+            and asset_code = 'REMAININGCASH'
+        </if>
+    </delete>
+    <select id="selectAccuqtyByModel" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition"
+            resultType="java.math.BigDecimal">
+        select ACCUQTY from CHB_ASSET_POSITION
+        where PROD_ID=#{prodId,jdbcType=VARCHAR}
+        and asset_code=#{assetCode,jdbcType=VARCHAR}
+        and  CDATE = #{cdate,jdbcType=DATE}
+        <if test="chlId!=null">
+            and chl_id=#{chlId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlId==null">
+            and chl_id is null
+        </if>
+    </select>
+    <select id="selectPrdCashByModel" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT SUM(cashflow) dealamt,CCY ccy,PROD_ID
+        FROM
+        (SELECT SUM(
+        CASE prdeal.TRADE_TYPE
+        WHEN '03'
+        THEN (ifnull(prdeal.TRADE_PRINCE, 0)+ifnull(prdeal.REDEMPTION_FEE,0))  * -1
+        WHEN '04'
+        THEN 0
+        WHEN '05'
+        THEN 0
+        WHEN '14'
+        THEN 0
+        WHEN '15'
+        THEN 0
+        WHEN '16'
+        THEN ifnull(prdeal.TRADE_PRINCE, 0) * -1
+        WHEN '17'
+        THEN (ifnull(prdeal.TRADE_PRINCE, 0)+ifnull(prdeal.REDEMPTION_FEE,0)) * -1
+        ELSE ifnull(prdeal.TRADE_PRINCE, 0)
+        END) cashflow,
+        prdeal.CCY,prdeal.PROD_ID
+        FROM chb_prd_deal prdeal
+        left join CHB_PRD_BASEINFO prd
+        on prd.PROD_ID=prdeal.PROD_ID
+        and prd.status!='D'
+        WHERE PAY_DATE  <![CDATA[=]]>#{cdate,jdbcType=DATE}
+        AND TRADE_TYPE NOT IN ('05','14','15')
+        and prd.PROFIT_TYPE='03'
+        AND PRDEAL.STATUS !='D'
+        GROUP BY prdeal.CCY,prdeal.PROD_ID
+        UNION ALL
+        SELECT SUM(
+        CASE prdeal.TRADE_TYPE
+        WHEN '04'
+        THEN ifnull(prdeal.INT_AMT, 0) * -1
+        ELSE 0
+        END) cashflow,
+        prdeal.CCY,prdeal.PROD_ID
+        FROM chb_prd_deal prdeal
+        left join CHB_PRD_BASEINFO prd
+        on prd.PROD_ID=prdeal.PROD_ID
+        and prd.status!='D'
+        WHERE INTEREST_DATE<![CDATA[=]]>#{cdate,jdbcType=DATE}
+        and prd.PROFIT_TYPE='03'
+        AND PRDEAL.STATUS !='D'
+        GROUP BY prdeal.CCY,prdeal.PROD_ID
+        UNION ALL
+        SELECT SUM(-1*ifnull(fee.AMT,0 ))cashflow,
+        fee.CCY,fee.PROD_ID
+        FROM chb_prd_fee_deal fee
+        left join CHB_PRD_BASEINFO prd
+        on prd.PROD_ID=fee.PROD_ID
+        and prd.status!='D'
+        WHERE fee.PAY_DATE <![CDATA[=]]>#{cdate,jdbcType=DATE}
+        and prd.PROFIT_TYPE='03'
+        AND fee.STATUS !='D'
+        GROUP BY fee.CCY,fee.PROD_ID
+        ) base
+        <if test="prodids !=null and prodids.size()!=0">
+            where PROD_ID in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+        GROUP BY CCY,PROD_ID
+    </select>
+    <select id="selectAssetCashByModel" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
         SELECT
-            ifnull(min(VALUE_DATE),#{cdate,jdbcType=DATE}) SETTDATEDATE
-        <if test="isBtm ==null or isBtm=='01' ">
-		FROM CHB_ASSETS_BASIS_DATA 
-		</if>
-		<if test="isBtm !=null and isBtm=='02' ">
-		FROM CHB_ASSETS_BASIS_DATA_NOBTM 
-		</if>
-        WHERE 1 =1 
-            AND DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') =
-                DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        sum(
+        case when deal.CUR_ASSET_TYPE in ('01','03','05','08','10','12')
+        then -1*ifnull(deal.AMT,0)
+        else ifnull(deal.AMT,0)
+        end )  dealamt ,DEAL.PROD_ID,DEAL.CCY
+        FROM
+        chb_invest_trade deal
+        left join CHB_PRD_BASEINFO prd
+        on prd.PROD_ID=deal.PROD_ID
+        and prd.status!='D'
+        where deal.CHL_CPCT_ID is null
+        and prd.PROFIT_TYPE='03'
+        and deal.DEALDATE <![CDATA[=]]>#{cdate,jdbcType=DATE}
+        and deal.STATUS!='D'
+        <if test="prodids !=null and prodids.size()!=0">
+            and DEAL.PROD_ID in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+        group by DEAL.PROD_ID,DEAL.CCY
+    </select>
+    <select id="selectAssetPositionCashByModel" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_ASSET_POSITION
+        where CDATE=#{cdate,jdbcType=DATE}
+        and ASSET_CODE='REMAININGCASH'
         <if test="prodids !=null and prodids.size()!=0">
             and PROD_ID in
             <foreach collection="prodids" item="prodid" open="(" separator=","
-                close=")">
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryMinSettdate"
+            resultType="java.util.Date"
+            parameterType="map">
+        SELECT
+        case
+        when min(dealdate) is  null
+        then #{cdate,jdbcType=DATE}
+        when min(dealdate) is not null and min(dealdate)>#{cdate,jdbcType=DATE}
+        then #{cdate,jdbcType=DATE}
+        when min(dealdate) is not null and min(dealdate)<![CDATA[<=]]>#{cdate,jdbcType=DATE}
+        then  min(dealdate) end  SETTDATEDATE
+        FROM chb_invest_trade
+        WHERE
+        DATE_FORMAT(update_time,'%Y-%m-%d')=DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        <if test="prodids !=null and prodids.size()!=0">
+            and prod_id in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
+                #{prodid}
+            </foreach>
+        </if>
+        <if test="assetcodes !=null and assetcodes.size() !=0">
+            and asset_code in
+            <foreach collection="assetcodes" item="assetcode" open="(" separator=","
+                     close=")">
+                #{assetcode}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectMinAssetsBasisDataByProdidAndAssetCode"
+            resultType="java.util.Date" parameterType="map">
+        SELECT
+        ifnull(min(VALUE_DATE),#{cdate,jdbcType=DATE}) SETTDATEDATE
+        <if test="isBtm ==null or isBtm=='01' ">
+            FROM CHB_ASSETS_BASIS_DATA
+        </if>
+        <if test="isBtm !=null and isBtm=='02' ">
+            FROM CHB_ASSETS_BASIS_DATA_NOBTM
+        </if>
+        WHERE 1 =1
+        AND DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') =
+        DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        <if test="prodids !=null and prodids.size()!=0">
+            and PROD_ID in
+            <foreach collection="prodids" item="prodid" open="(" separator=","
+                     close=")">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="assetcodes !=null and assetcodes.size() !=0">
             and ASSET_ID in
             <foreach collection="assetcodes" item="assetcode" open="(" separator=","
-                close=")">
+                     close=")">
                 #{assetcode,jdbcType=VARCHAR}
             </foreach>
-        </if>  
+        </if>
     </select>
-    <select id="selectAssetsBasisData" resultMap="BaseResultMap" parameterType="java.util.Map" 
-        resultSetType="FORWARD_ONLY" fetchSize="1000">
-        SELECT 
-			NULL POSUUID,/*头寸ID:自动生成*/
-			ASSETBASIS.PROD_ID  PROD_ID,/*产品代码*/
-			ASSETBASIS.ASSET_ID ASSET_CODE,/*资产代码*/
-			NULL INVEST_TYPE,/*投资类型*/
-			NULL CHL_ID,/*通道代码*/
-			0 DEALAMT,/*交易金额*/              
-			0 DEALQTY,/*交易份额*/
-			<if test="monthReport!=null and monthReport=='01'">
-			ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
-			+ ifnull(ASSETBASIS.TDY_INTINCEXP,0) + ifnull(ASSETBASIS.DELAY_PAY_AMT,0) ACCUAMT,/*剩余金额*/
-			</if>
-			<if test="monthReport!=null and monthReport=='02'">
-			case when ASSETINFO.ASSET_TYPE!='07'
-				then ASSETBASIS.POS_AMT
-				else ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
-				+ ifnull(ASSETBASIS.TDY_INTINCEXP,0) + ifnull(ASSETBASIS.DELAY_PAY_AMT,0)
-			end ACCUAMT,/*剩余份额*/ 
-			</if>         
-			ASSETBASIS.POS_AMT ACCUQTY,/*剩余本金*/
-			ASSETBASIS.VALUE_DATE CDATE,/*生成日*/
-			NULL ORG_CODE,/*机构代码*/
-			NULL DEPT_CODE,/*部门代码*/
-			NULL CREATE_USER,/*创建人*/
-			NULL CREATE_TIME,/*创建时间*/
-			NULL UPDATE_USER,/*更新人*/
-			NULL UPDATE_TIME,/*更新时间*/
-            (case ifnull(ASSETINFO.ASSET_TYPE,'NULLASSET') when '12' then '05'
-            when '15'  then '01'
-            when '16'  then '05'
-            when '19'  then '05'
-            when 'NULLASSET'  then 'NULLASSET'
-            else '01'
-            end) as TRADE_TYPE,
-			/*交易类型:关联资产要素信息表，判断ASSET_TYPE字段的值，若为12,16,19则该字段存05，否则存01*/
-			'02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
-			NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
-			ASSETBASIS.CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
-		<if test="isBtm ==null or isBtm=='01' ">
-		FROM CHB_ASSETS_BASIS_DATA ASSETBASIS
-		</if>
-		<if test="isBtm !=null and isBtm=='02' ">
-		FROM CHB_ASSETS_BASIS_DATA_NOBTM ASSETBASIS
-		</if>
-		LEFT JOIN CHB_ASSET_INFO ASSETINFO
-		ON ASSETINFO.ASSET_CODE = ASSETBASIS.ASSET_ID
-		WHERE 1 =1 
-		AND ASSETBASIS.STATUS != 'D'/*删除状态数据不统计*/
+    <select id="selectAssetsBasisData" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        NULL POSUUID,/*头寸ID:自动生成*/
+        ASSETBASIS.PROD_ID  PROD_ID,/*产品代码*/
+        ASSETBASIS.ASSET_ID ASSET_CODE,/*资产代码*/
+        NULL INVEST_TYPE,/*投资类型*/
+        NULL CHL_ID,/*通道代码*/
+        0 DEALAMT,/*交易金额*/
+        0 DEALQTY,/*交易份额*/
+        <if test="monthReport!=null and monthReport=='01'">
+            ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
+            + ifnull(ASSETBASIS.TDY_INTINCEXP,0) + ifnull(ASSETBASIS.DELAY_PAY_AMT,0) ACCUAMT,/*剩余金额*/
+        </if>
+        <if test="monthReport!=null and monthReport=='02'">
+            case when ASSETINFO.ASSET_TYPE!='07'
+            then ASSETBASIS.POS_AMT
+            else ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
+            + ifnull(ASSETBASIS.TDY_INTINCEXP,0) + ifnull(ASSETBASIS.DELAY_PAY_AMT,0)
+            end ACCUAMT,/*剩余份额*/
+        </if>
+        ASSETBASIS.POS_AMT ACCUQTY,/*剩余本金*/
+        ASSETBASIS.VALUE_DATE CDATE,/*生成日*/
+        NULL ORG_CODE,/*机构代码*/
+        NULL DEPT_CODE,/*部门代码*/
+        NULL CREATE_USER,/*创建人*/
+        NULL CREATE_TIME,/*创建时间*/
+        NULL UPDATE_USER,/*更新人*/
+        NULL UPDATE_TIME,/*更新时间*/
+        (case ifnull(ASSETINFO.ASSET_TYPE,'NULLASSET') when '12' then '05'
+        when '15'  then '01'
+        when '16'  then '05'
+        when '19'  then '05'
+        when 'NULLASSET'  then 'NULLASSET'
+        else '01'
+        end) as TRADE_TYPE,
+        /*交易类型:关联资产要素信息表，判断ASSET_TYPE字段的值，若为12,16,19则该字段存05，否则存01*/
+        '02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
+        NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
+        ASSETBASIS.CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        <if test="isBtm ==null or isBtm=='01' ">
+            FROM CHB_ASSETS_BASIS_DATA ASSETBASIS
+        </if>
+        <if test="isBtm !=null and isBtm=='02' ">
+            FROM CHB_ASSETS_BASIS_DATA_NOBTM ASSETBASIS
+        </if>
+        LEFT JOIN CHB_ASSET_INFO ASSETINFO
+        ON ASSETINFO.ASSET_CODE = ASSETBASIS.ASSET_ID
+        WHERE 1 =1
+        AND ASSETBASIS.STATUS != 'D'/*删除状态数据不统计*/
         AND DATE_FORMAT(ASSETBASIS.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         <if test="prodids !=null and prodids.size()!=0">
             and ASSETBASIS.PROD_ID in
             <foreach collection="prodids" item="prodid" open="(" separator=","
-                close=")">
+                     close=")">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="assetcodes !=null and assetcodes.size() !=0">
             and ASSETBASIS.ASSET_ID in
             <foreach collection="assetcodes" item="assetcode" open="(" separator=","
-                close=")">
+                     close=")">
                 #{assetcode,jdbcType=VARCHAR}
             </foreach>
-        </if>  
+        </if>
     </select>
-    
+
     <select id="selectMintBalanceDate" resultType="java.util.Date" parameterType="map">
-        SELECT 
-            ifnull(min(SETTDATEDATE),#{cdate,jdbcType=DATE})
+        SELECT
+        ifnull(min(SETTDATEDATE),#{cdate,jdbcType=DATE})
         FROM (
-	        SELECT
-	            min(BALANCE.BALANCE_DATE) SETTDATEDATE
-	        FROM BOK_BALANCE BALANCE
-	        LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
-	        ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
-	        LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
-	        ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
-			LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
-			ON BALANCE.BOOKSET_ID=PRODADD.PORTFOLIO_ID
-	        WHERE 1 =1 
-	        AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
-			/*标的类金融产品.投管分类=理财产品*/
-			AND PROD.FINPROD_TYPE2 = 'F16'
-			and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
-			and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
-	        <if test="prodids !=null and prodids.size()!=0">
-	            <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
-	                close=")">
-	                #{prodid,jdbcType=VARCHAR}
-	            </foreach>
-	        </if>
-	        union all
-	        SELECT
-	            min(BALANCE.BALANCE_DATE) SETTDATEDATE
-	        FROM BOK_BALANCE BALANCE
-			LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
-			ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
-			LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
-			ON PROD.FINPROD_ID = BALANCE.BOOKSET_ID
-			LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
-			ON BALANCE.BOOKSET_ID=PRODADD.FINPROD_ID
-	        WHERE 1 =1 
-	        AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
-			/*标的类金融产品.投管分类=理财产品*/
-			AND PROD.FINPROD_TYPE2 = 'F16'
-			AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
-			and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
-	        <if test="prodids !=null and prodids.size()!=0">
-	            <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
-	                close=")">
-	                #{prodid,jdbcType=VARCHAR}
-	            </foreach>
-	        </if>
-        )
-    </select>
-    
-    <select id="selectMintBalanceDateSubSystem" resultType="java.util.Date" parameterType="map">
-	    SELECT
-	        ifnull(min(BALANCE.BALANCE_DATE),#{cdate,jdbcType=DATE}) SETTDATEDATE
-	    FROM BOK_BALANCE BALANCE
-		LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-		on prodinfo.PROD_ID = balance.BOOKSET_ID
-	    WHERE 1 =1 
-	    AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
-        and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
-	    <if test="prodids !=null and prodids.size()!=0">
-	        <foreach collection="prodids" item="prodid" open="and PRODINFO.prod_id in (" separator=","
-	            close=")">
-	            #{prodid,jdbcType=VARCHAR}
-	        </foreach>
-	    </if>
-    </select>
-    
-    <select id="selectBalanceData" resultMap="BaseResultMap" parameterType="java.util.Map" 
-        resultSetType="FORWARD_ONLY" fetchSize="1000">
-        SELECT 
-            NULL POSUUID,/*头寸ID:自动生成*/
-            PRODID PROD_ID,/*产品代码*/
-            'REMAININGCASH' ASSET_CODE,/*资产代码*/
-            NULL INVEST_TYPE,/*投资类型*/
-            NULL CHL_ID,/*通道代码*/
-            0 DEALAMT,/*交易金额*/              
-            0 DEALQTY,/*交易份额*/
-            SUM(ACCUAMT) ACCUAMT,/*剩余金额*/                
-            SUM(ACCUQTY) ACCUQTY,/*剩余本金*/
-            CDATE CDATE,/*生成日*/
-            NULL ORG_CODE,/*机构代码*/
-            NULL DEPT_CODE,/*部门代码*/
-            NULL CREATE_USER,/*创建人*/
-            NULL CREATE_TIME,/*创建时间*/
-            NULL UPDATE_USER,/*更新人*/
-            NULL UPDATE_TIME,/*更新时间*/
-            '01' TRADE_TYPE,
-            /*交易类型:关联资产要素信息表，判断ASSET_TYPE字段的值，若为12,15,16,19则该字段存05，否则存01*/
-            '02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
-            NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
-            CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
-        FROM(
-        SELECT 
-            PROD.FINPROD_MARKET_ID PRODID,/*产品代码*/
-            BALANCE.O_AMT ACCUAMT,/*剩余金额*/                
-            BALANCE.O_AMT ACCUQTY,/*剩余本金*/
-            BALANCE.BALANCE_DATE CDATE,/*生成日*/
-            BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        SELECT
+        min(BALANCE.BALANCE_DATE) SETTDATEDATE
         FROM BOK_BALANCE BALANCE
         LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
         ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
         ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
-        WHERE 1 =1 
-        AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
-		/*标的类金融产品.投管分类=理财产品*/
-		AND PROD.FINPROD_TYPE2 = 'F16'
-		and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
-		and exists (select 1 from FIN_PRODUCT_ADD PRODADD where BALANCE.BOOKSET_ID = PRODADD.PORTFOLIO_ID and prodadd.PROFIT_FLAG = '03')/*只取非保本理财产品 */
-        /*AND BALANCE.SUBJECT_NO IN (
-        '10020101','10020102','10020103','10020104','10020105','10020106','10020107','10020108','10020109','10020110','10020111','10020112',
-        '10210101','10310101','10310102'
-        )*//*现金科目*/
-        <if test='subjectNoList!=null and subjectNoList.size()>0'>
-          <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
-            #{subjectNo,jdbcType=VARCHAR}
-          </foreach>
-      	</if>
+        LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
+        ON BALANCE.BOOKSET_ID=PRODADD.PORTFOLIO_ID
+        WHERE 1 =1
+        AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        /*标的类金融产品.投管分类=理财产品*/
+        AND PROD.FINPROD_TYPE2 = 'F16'
+        and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
+        and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
         <if test="prodids !=null and prodids.size()!=0">
             <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
-                close=")">
+                     close=")">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
-        UNION ALL
-        SELECT 
-            PROD.FINPROD_MARKET_ID PRODID,/*产品代码*/
-            BALANCE.O_AMT ACCUAMT,/*剩余金额*/                
-            BALANCE.O_AMT ACCUQTY,/*剩余本金*/
-            BALANCE.BALANCE_DATE CDATE,/*生成日*/
-            BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        union all
+        SELECT
+        min(BALANCE.BALANCE_DATE) SETTDATEDATE
         FROM BOK_BALANCE BALANCE
         LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
         ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
         ON PROD.FINPROD_ID = BALANCE.BOOKSET_ID
-        WHERE 1 =1 
-        AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
-		/*标的类金融产品.投管分类=理财产品*/
-		AND PROD.FINPROD_TYPE2 = 'F16'
-		AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
-		and exists (select 1 from FIN_PRODUCT_ADD PRODADD where BALANCE.BOOKSET_ID = PRODADD.FINPROD_ID and prodadd.PROFIT_FLAG = '03')/*只取非保本理财产品 */
-		/*AND BALANCE.SUBJECT_NO IN (
-		'10020101','10020102','10020103','10020104','10020105','10020106','10020107','10020108','10020109','10020110','10020111','10020112',
-        '10210101','10310101','10310102'
-		)*/ /*现金科目*/
-		<if test='subjectNoList!=null and subjectNoList.size()>0'>
-          <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
-            #{subjectNo,jdbcType=VARCHAR}
-          </foreach>
-      	</if>
+        LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
+        ON BALANCE.BOOKSET_ID=PRODADD.FINPROD_ID
+        WHERE 1 =1
+        AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        /*标的类金融产品.投管分类=理财产品*/
+        AND PROD.FINPROD_TYPE2 = 'F16'
+        AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
+        and prodadd.PROFIT_FLAG = '03'/*只取非保本理财产品 */
         <if test="prodids !=null and prodids.size()!=0">
             <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
-                close=")">
+                     close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        )
+    </select>
+
+    <select id="selectMintBalanceDateSubSystem" resultType="java.util.Date" parameterType="map">
+        SELECT
+        ifnull(min(BALANCE.BALANCE_DATE),#{cdate,jdbcType=DATE}) SETTDATEDATE
+        FROM BOK_BALANCE BALANCE
+        LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
+        on prodinfo.PROD_ID = balance.BOOKSET_ID
+        WHERE 1 =1
+        AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
+        <if test="prodids !=null and prodids.size()!=0">
+            <foreach collection="prodids" item="prodid" open="and PRODINFO.prod_id in (" separator=","
+                     close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectBalanceData" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        NULL POSUUID,/*头寸ID:自动生成*/
+        PRODID PROD_ID,/*产品代码*/
+        'REMAININGCASH' ASSET_CODE,/*资产代码*/
+        NULL INVEST_TYPE,/*投资类型*/
+        NULL CHL_ID,/*通道代码*/
+        0 DEALAMT,/*交易金额*/
+        0 DEALQTY,/*交易份额*/
+        SUM(ACCUAMT) ACCUAMT,/*剩余金额*/
+        SUM(ACCUQTY) ACCUQTY,/*剩余本金*/
+        CDATE CDATE,/*生成日*/
+        NULL ORG_CODE,/*机构代码*/
+        NULL DEPT_CODE,/*部门代码*/
+        NULL CREATE_USER,/*创建人*/
+        NULL CREATE_TIME,/*创建时间*/
+        NULL UPDATE_USER,/*更新人*/
+        NULL UPDATE_TIME,/*更新时间*/
+        '01' TRADE_TYPE,
+        /*交易类型:关联资产要素信息表，判断ASSET_TYPE字段的值，若为12,15,16,19则该字段存05，否则存01*/
+        '02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
+        NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
+        CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        FROM(
+        SELECT
+        PROD.FINPROD_MARKET_ID PRODID,/*产品代码*/
+        BALANCE.O_AMT ACCUAMT,/*剩余金额*/
+        BALANCE.O_AMT ACCUQTY,/*剩余本金*/
+        BALANCE.BALANCE_DATE CDATE,/*生成日*/
+        BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        FROM BOK_BALANCE BALANCE
+        LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
+        ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
+        LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
+        ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
+        WHERE 1 =1
+        AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        /*标的类金融产品.投管分类=理财产品*/
+        AND PROD.FINPROD_TYPE2 = 'F16'
+        and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
+        and exists (select 1 from FIN_PRODUCT_ADD PRODADD where BALANCE.BOOKSET_ID = PRODADD.PORTFOLIO_ID and prodadd.PROFIT_FLAG = '03')/*只取非保本理财产品 */
+        /*AND BALANCE.SUBJECT_NO IN (
+        '10020101','10020102','10020103','10020104','10020105','10020106','10020107','10020108','10020109','10020110','10020111','10020112',
+        '10210101','10310101','10310102'
+        )*//*现金科目*/
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prodids !=null and prodids.size()!=0">
+            <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
+                     close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        UNION ALL
+        SELECT
+        PROD.FINPROD_MARKET_ID PRODID,/*产品代码*/
+        BALANCE.O_AMT ACCUAMT,/*剩余金额*/
+        BALANCE.O_AMT ACCUQTY,/*剩余本金*/
+        BALANCE.BALANCE_DATE CDATE,/*生成日*/
+        BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+        FROM BOK_BALANCE BALANCE
+        LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
+        ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
+        LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
+        ON PROD.FINPROD_ID = BALANCE.BOOKSET_ID
+        WHERE 1 =1
+        AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        /*标的类金融产品.投管分类=理财产品*/
+        AND PROD.FINPROD_TYPE2 = 'F16'
+        AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
+        and exists (select 1 from FIN_PRODUCT_ADD PRODADD where BALANCE.BOOKSET_ID = PRODADD.FINPROD_ID and prodadd.PROFIT_FLAG = '03')/*只取非保本理财产品 */
+        /*AND BALANCE.SUBJECT_NO IN (
+        '10020101','10020102','10020103','10020104','10020105','10020106','10020107','10020108','10020109','10020110','10020111','10020112',
+        '10210101','10310101','10310102'
+        )*/ /*现金科目*/
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prodids !=null and prodids.size()!=0">
+            <foreach collection="prodids" item="prodid" open="and PROD.FINPROD_MARKET_ID in (" separator=","
+                     close=")">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
         <!-- 穿透报送时接入通道剩余现金 -->
         <if test="isBtm !=null and isBtm == '01'">
             UNION ALL
-            SELECT 
-			    VAL.PORTFOLIO_ID PRODID,/*产品代码*/
-			    val.amount ACCUAMT,/*剩余金额*/                
-			    val.amount ACCUQTY,/*剩余本金*/
-			    VAL.CDATE CDATE,/*生成日*/
-			    VAL.CCY CCY /*币种*/
+            SELECT
+            VAL.PORTFOLIO_ID PRODID,/*产品代码*/
+            val.amount ACCUAMT,/*剩余金额*/
+            val.amount ACCUQTY,/*剩余本金*/
+            VAL.CDATE CDATE,/*生成日*/
+            VAL.CCY CCY /*币种*/
             from ptl_cash_position VAL
-			WHERE 1 =1 
-			AND DATE_FORMAT(VAL.CDATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
-	        and exists (select 1 from fin_product_add d where d.portfolio_id = val.portfolio_id and d.profit_flag = '03')/*只取非保本理财产品*/
-	        and val.HODING_TYPE = '03' /*只取实际*/
-	        and VAL.CHL_FINPROD_ID is not null ---只取通道id不为空的数据
-			<if test="prodids !=null and prodids.size()!=0">
-			    <foreach collection="prodids" item="prodid" open="and VAL.PORTFOLIO_ID in (" separator=","
-			        close=")">
-			        #{prodid,jdbcType=VARCHAR}
-			    </foreach>
-			</if>
+            WHERE 1 =1
+            AND DATE_FORMAT(VAL.CDATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+            and exists (select 1 from fin_product_add d where d.portfolio_id = val.portfolio_id and d.profit_flag = '03')/*只取非保本理财产品*/
+            and val.HODING_TYPE = '03' /*只取实际*/
+            and VAL.CHL_FINPROD_ID is not null ---只取通道id不为空的数据
+            <if test="prodids !=null and prodids.size()!=0">
+                <foreach collection="prodids" item="prodid" open="and VAL.PORTFOLIO_ID in (" separator=","
+                         close=")">
+                    #{prodid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
         </if>
         )
         GROUP BY PRODID,CDATE,CCY
     </select>
-    
-    <select id="selectBalanceDataSubSystem" resultMap="BaseResultMap" parameterType="java.util.Map" 
-        resultSetType="FORWARD_ONLY" fetchSize="1000">
-        SELECT 
-            NULL POSUUID,/*头寸ID:自动生成*/
-            PRODINFO.PROD_ID  PROD_ID,/*产品代码*/
-            'REMAININGCASH' ASSET_CODE,/*资产代码*/
-            NULL INVEST_TYPE,/*投资类型*/
-            NULL CHL_ID,/*通道代码*/
-            0 DEALAMT,/*交易金额*/              
-            0 DEALQTY,/*交易份额*/
-            SUM(BALANCE.O_AMT) ACCUAMT,/*剩余金额*/                
-            SUM(BALANCE.O_AMT) ACCUQTY,/*剩余本金*/
-            BALANCE.BALANCE_DATE CDATE,/*生成日*/
-            NULL ORG_CODE,/*机构代码*/
-            NULL DEPT_CODE,/*部门代码*/
-            NULL CREATE_USER,/*创建人*/
-            NULL CREATE_TIME,/*创建时间*/
-            NULL UPDATE_USER,/*更新人*/
-            NULL UPDATE_TIME,/*更新时间*/
-            '01' TRADE_TYPE,
-            /*交易类型:关联资产要素信息表，判断ASSET_TYPE字段的值，若为12,15,16,19则该字段存05，否则存01*/
-            '02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
-            NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
-            BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
+
+    <select id="selectBalanceDataSubSystem" resultMap="BaseResultMap" parameterType="java.util.Map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT
+        NULL POSUUID,/*头寸ID:自动生成*/
+        PRODINFO.PROD_ID  PROD_ID,/*产品代码*/
+        'REMAININGCASH' ASSET_CODE,/*资产代码*/
+        NULL INVEST_TYPE,/*投资类型*/
+        NULL CHL_ID,/*通道代码*/
+        0 DEALAMT,/*交易金额*/
+        0 DEALQTY,/*交易份额*/
+        SUM(BALANCE.O_AMT) ACCUAMT,/*剩余金额*/
+        SUM(BALANCE.O_AMT) ACCUQTY,/*剩余本金*/
+        BALANCE.BALANCE_DATE CDATE,/*生成日*/
+        NULL ORG_CODE,/*机构代码*/
+        NULL DEPT_CODE,/*部门代码*/
+        NULL CREATE_USER,/*创建人*/
+        NULL CREATE_TIME,/*创建时间*/
+        NULL UPDATE_USER,/*更新人*/
+        NULL UPDATE_TIME,/*更新时间*/
+        '01' TRADE_TYPE,
+        /*交易类型:关联资产要素信息表，判断ASSET_TYPE字段的值，若为12,15,16,19则该字段存05，否则存01*/
+        '02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
+        NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
+        BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
         on prodinfo.PROD_ID = balance.BOOKSET_ID
-        WHERE 1 =1 
+        WHERE 1 =1
         AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
         /*AND BALANCE.SUBJECT_NO IN (
         '10020101','10020102','10020103','10020104','10020105','10020106','10020107','10020108','10020109','10020110','10020111','10020112',
         '10210101','10310101','10310102')*//*现金科目*/
         <if test='subjectNoList!=null and subjectNoList.size()>0'>
-          <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
-            #{subjectNo,jdbcType=VARCHAR}
-          </foreach>
-      	</if>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and balance.SUBJECT_NO in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
         <if test="prodids !=null and prodids.size()!=0">
             <foreach collection="prodids" item="prodid" open="and PRODINFO.prod_id in (" separator=","
-                close=")">
+                     close=")">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>

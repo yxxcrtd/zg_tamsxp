@@ -676,7 +676,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 					pbcReportDebtTermDetailService.createDataForExp(param,data);
 					sheetList.remove(SHEET_3_3);
 				}else if(reporttype.equals(PbcReportType.PBC_REPORT_4_1)){
-					//pbcReportAssetConfigurationService.createDataForExp(param,data);
+					pbcReportAssetConfigurationService.createDataForExp(param,data);
 					sheetList.remove(SHEET_4_1);
 				}
 			}

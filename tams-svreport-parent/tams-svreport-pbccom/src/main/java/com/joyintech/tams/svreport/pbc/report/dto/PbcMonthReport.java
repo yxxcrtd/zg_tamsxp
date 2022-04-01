@@ -182,7 +182,7 @@ public class PbcMonthReport extends BaseEntity implements Comparable<PbcMonthRep
 
     	SysInstitution dtp = (SysInstitution) CommonUtil.queryCode(GlobalConstant.SYS_INSTITUTION_KEY,deptCode);
 		
-		return null!=dtp?dtp.getInstitutionName():(null==deptCode?"汇总项":"未知机构");
+		return null!=dtp?dtp.getInstitutionName():(null==deptCode?"广州银行":"未知机构");
 	}
 
 

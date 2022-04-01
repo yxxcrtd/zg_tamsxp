@@ -5,13 +5,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
-@ApiModel(value = "指令接收|放弃接口返回报文", description = "指令接收|放弃接口返回报文")
+@ApiModel(value = "指令接收|放弃接口请求报文", description = "指令接收|放弃接口请求报文")
 public class EntrustOpeBean implements Serializable {
     private static final long serialVersionUID = -7955113659323809773L;
 
     @ApiModelProperty(name = "entrustId", value = "指令ID")
     private String entrustId;
-    @ApiModelProperty(name = "recStatus", value = "接收状态")
+    @ApiModelProperty(name = "recStatus", value = "接收状态 1-接收；2-放弃")
     private String recStatus;
     @ApiModelProperty(name = "trader", value = "交易员")
     private String trader;

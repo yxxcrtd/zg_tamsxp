@@ -25,6 +25,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -87,8 +88,8 @@ public class IbuQuoteBond004Controller extends BaseController {
 
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
-            BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种);
+        this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度, DictCode.分配方式,
+            BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种,DictCode.业务模式,DictCode.价格模式);
         model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
         model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
@@ -136,6 +137,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         model.addAttribute("distribution",cfetsBondDealQuoteCommonDto.getDistribution());
         //卖空模式
         model.addAttribute("sellPara",CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
+        model.addAttribute("tradeDate", cfetsBondDealQuoteCommonDto.getTradeDate() !=null ? cfetsBondDealQuoteCommonDto.getTradeDate().getTime() : null);
         model.addAttribute(GlobalConstant.ENTITY, cfetsBondDealQuoteCommonDto);
         return super.init(model);
     }
@@ -185,9 +187,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         workFlowParameter.setElementId("IbuQuoteBond004_btn_revoke");
         workFlowParameter.setBusinessCode(item -> item.getTotleTradeId());
         workFlowParameter.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
-        DecimalFormat  df = new DecimalFormat("###,###.00");
-        workFlowParameter.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
+
         processParameter.setWorkFlowParameter(workFlowParameter);
         processParameter.setOperationType(OperationType.REVOKE);
         String msg = cfetsBondDealQuotedPrice004Service.start(processParameter,
@@ -216,10 +216,7 @@ public class IbuQuoteBond004Controller extends BaseController {
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
 	@RequestMapping("save")
     @ResponseBody
-	public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto dto, BindingResult br) throws Exception{
-        if (br.hasErrors()) {
-            return new Message<AjaxResult>().success().setData(new AjaxResult(br));
-		}
+	public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto dto) {
         CfetsBondDealRegisterQuoteDto cfetsBondDealRegisterQuoteDto = new CfetsBondDealRegisterQuoteDto();
         //前台实体转成后台dto
         BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealRegisterQuoteDto, dto);
@@ -237,13 +234,10 @@ public class IbuQuoteBond004Controller extends BaseController {
 		ProcessParameter<CfetsBondDealRegisterQuoteDto> processParameter = new ProcessParameter<CfetsBondDealRegisterQuoteDto>();
 		WorkFlowParameter<CfetsBondDealRegisterQuoteDto> params = new WorkFlowParameter<CfetsBondDealRegisterQuoteDto>();
 		params.setPageId("IbuQuoteBond004");
-		params.setElementId(cfetsBondDealRegisterQuoteDto.getElementId());
         params.setElementId("IbuQuoteBond004_btn_submit");
 		params.setBusinessType(DictCodeListExt3.共通业务类型_本币业务交易_登记.getValue());
 		params.setBusinessCode(cfetsBondDealRegisterQuoteDto.getTotleTradeId());
         DecimalFormat  df = new DecimalFormat("###,###.00");
-        params.setComment(entity -> "登记日期"+ "(" + DateUtil.format(entity.getTradeDate()) + ")-"
-                + "资产简称("+entity.getFinprodAbbr()+")-" + "对手方("+entity.getCounterName()+")-"+"券面总额("+df.format(ArithmeticUtil.divide(entity.getShareAmt(),new BigDecimal(10000),2))+"万元)");
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_现券登记报价.getValue());
 		processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);
@@ -251,7 +245,7 @@ public class IbuQuoteBond004Controller extends BaseController {
         try{
             msg = cfetsBondDealQuotedPrice004Service.start(processParameter, cfetsBondDealRegisterQuoteDto);
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             return PositionUtil.ajaxErrorReturn(e);
         }
         return new Message<AjaxResult>().success().setData(new AjaxResult(msg));

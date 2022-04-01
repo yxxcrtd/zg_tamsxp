@@ -19,6 +19,7 @@ var SysInstRegBankCode002 = function() {
                  param.pbcBankCode = $("#SysInstRegBankCode002_pbcBankCode").val();
                  param.isFinSubCompany = $("#SysInstRegBankCode002_isFinSubCompany").val();
                  param.insitituteCode = $("#SysInstRegBankCode002_insitituteCode").val();
+                 param.belogCodeCBRC = $("#SysInstRegBankCode002_belogCodeCBRC").val();
                  param.pageModel = pageModel;
                  param.operateType = 'save';
                  Joyin.ajax("checkData", param, function(result) {

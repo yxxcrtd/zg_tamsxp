@@ -1,8 +1,7 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.common.dao;
 
-import com.joyintech.tams.common.base.entity.SettleTransData;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDetailDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonEntrustDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonRevokeDto;
 import org.apache.ibatis.annotations.Param;
@@ -22,6 +21,13 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     List<ExchangeTransMatchCommonEntrustDto> getEtrEntrustByIdList(Map<String,Object> entrustMap);
+
+    /**
+     * 查询回购质押品汇总信息信息
+     * @param entrustMap
+     * @return
+     */
+    List<SettleTransDataTotalPledge> getSettleTransDataTotalPledgeList(Map<String,Object> entrustMap);
 
     /**
      * 获取下一工作日
@@ -94,4 +100,94 @@ public interface ExchangeTransMatchCommonMapper {
      * @return
      */
     List<ExchangeTransMatchCommonRevokeDto> getSettleTransTgMapping(Map<String, Object> paraMap);
+
+    List<ExchangeTransMatchCommonEntrustDetailDto> getEntrustDetailList(@Param("entrustId") String entrustId);
+
+    /**
+     * 获取首期委托交易
+     * @return
+     */
+    TrdProductDeal getFirstRepoTrade(Map<String, Object> paraMap);
+
+    /**
+     * 获取首期成交明细
+     * @param paraMap
+     * @return
+     */
+    SettleTransData getFirstRepoSettleTransData(Map<String, Object> paraMap);
+
+    /**
+     * 获取首期交易的
+     * @param paraMap
+     * @return
+     */
+    List<FinDealPledge> getFirstRepoFinDealPledge(Map<String, Object> paraMap);
+
+    /**
+     * 根据汇总交易编号获取质押券置换结果list
+     * @param paraMap
+     */
+    List<FinPledgeDisplaceResult> getFinPledgeDisplaceResult (Map<String, Object> paraMap);
+
+
+    /**
+     * 删除汇总成交质押品匹配结果表数据
+     * @param paraMap
+     * @return
+     */
+    int deleteSettleDataTotalPledgeMatch(Map<String, Object> paraMap);
+
+    /**
+     * 批量更新指令状态
+     * @param paraMap
+     * @return
+     */
+    int updateEntrustStatus(Map<String, Object> paraMap);
+
+    // modify by etliu 20220110 start
+    // GZYHTZJY-1032: 协议回购的头寸处理，需要走PTL_POSITION_FLOW_CFG配置
+    FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
+
+//    /**
+//     * 根据首期成交编号查询协议回购首期的交易编号
+//     * @param paraMap 参数
+//     * @return 协议回购首期的交易编号
+//     */
+//    String selectHgsqFinprodId(Map<String, Object> paraMap);
+    // modify by etliu 20220110 end
+
+    String getTradeIdByTotalTradeId(@Param("totalTradeId") String totalTradeId);
+
+    List<PtlSecPosition> searchPtlSecPositionList(Map<String, Object> paraMap);
+
+    /**
+     * 根据金融产品代码，日期，查询出当日折算率
+     *
+     * @param finprodId 金融产品代码
+     * @return EtrEntrust
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryConverseRadio(@Param("finprodId") String finprodId, @Param("vdate") Date vdate);
+
+    /**
+     * 查询资金账户
+     * @param secAcctId
+     * @return
+     */
+    String queryAccountNo(@Param("secAcctId") String secAcctId);
+
+    /**
+     * 查询质押品信息
+     * @param tradeId
+     * @return
+     */
+    List<FinDealPledge> getFinDealPledge(@Param("tradeId") String tradeId);
+
+    /**
+     * 金融产品交易表
+     * @param finprodId
+     * @return
+     */
+    FinTradeProduct getFinTradeProduct(@Param("finprodId") String finprodId);
 }

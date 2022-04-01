@@ -19,6 +19,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.validator.EtrExchangeTradeJj001Validator;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -92,11 +93,73 @@ public class EtrExchangeTradeJjSaveRequest extends EtrEntrust implements Process
     @ApiModelProperty(name="repoRate",value="回购利率",example="12")
     private BigDecimal repoRate;
 
+    /**
+     * 资产类型
+     */
+    private String assetsType;
+    /**
+     * 涨停
+     */
+    private BigDecimal limitUp;
+
+    /**
+     * 跌停
+     */
+    private BigDecimal limitDown;
+    /**
+     * 记录操作方式
+     */
+    private String optType;
+    /**
+     * 席位号
+     */
+    private String seatId;
+
+    /**
+     * 约定号
+     */
+    private String agreeOnId;
+
+    private String elementId;
+
+    /**
+     * 计算方式
+     */
+    private String calculateField;
+    /**
+     * 对手方交易商
+     */
+    private String counterOrg;
+
+    /**
+     * 本方交易员
+     */
+    private String trader;
+    /**
+            * 可转股数量
+     */
+    private BigDecimal toShareAvailableNum;
+
+    /**
+     * 清算速度
+     */
+    private String settleSpeed;
+    /**
+     * 申报类型
+     */
+    private String declaType;
+
     List<EtrExchangeTradePortfolioRequest> portfolioDtoList;
-    
 
+    /**
+     * 选中的数据
+     */
+    private transient List<EtrExchangeTradeJjSaveRequest> selectedItem;
 
-
+    /**
+     * 风险试算实体类
+     */
+    private List<RiskTrialRetDto> riskTrialRetDto;
 
     /**
      * 取得 委托代码
@@ -311,5 +374,125 @@ public class EtrExchangeTradeJjSaveRequest extends EtrEntrust implements Process
 
     public void setSecAcctId(String secAcctId) {
         this.secAcctId = secAcctId;
+    }
+
+    public List<EtrExchangeTradeJjSaveRequest> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<EtrExchangeTradeJjSaveRequest> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    public String getAssetsType() {
+        return assetsType;
+    }
+
+    public void setAssetsType(String assetsType) {
+        this.assetsType = assetsType;
+    }
+
+    public BigDecimal getLimitUp() {
+        return limitUp;
+    }
+
+    public void setLimitUp(BigDecimal limitUp) {
+        this.limitUp = limitUp;
+    }
+
+    public BigDecimal getLimitDown() {
+        return limitDown;
+    }
+
+    public void setLimitDown(BigDecimal limitDown) {
+        this.limitDown = limitDown;
+    }
+
+    public String getOptType() {
+        return optType;
+    }
+
+    public void setOptType(String optType) {
+        this.optType = optType;
+    }
+
+    public String getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(String seatId) {
+        this.seatId = seatId;
+    }
+
+    public String getAgreeOnId() {
+        return agreeOnId;
+    }
+
+    public void setAgreeOnId(String agreeOnId) {
+        this.agreeOnId = agreeOnId;
+    }
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
+
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
+    }
+
+    public String getCounterOrg() {
+        return counterOrg;
+    }
+
+    public void setCounterOrg(String counterOrg) {
+        this.counterOrg = counterOrg;
+    }
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
+    }
+
+    public BigDecimal getToShareAvailableNum() {
+        return toShareAvailableNum;
+    }
+
+    public void setToShareAvailableNum(BigDecimal toShareAvailableNum) {
+        this.toShareAvailableNum = toShareAvailableNum;
+    }
+
+    public String getSettleSpeed() {
+        return settleSpeed;
+    }
+
+    public void setSettleSpeed(String settleSpeed) {
+        this.settleSpeed = settleSpeed;
+    }
+
+    public String getDeclaType() {
+        return declaType;
+    }
+
+    public void setDeclaType(String declaType) {
+        this.declaType = declaType;
+    }
+
+    public List<RiskTrialRetDto> getRiskTrialRetDto() {
+        return riskTrialRetDto;
+    }
+
+    public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
+        this.riskTrialRetDto = riskTrialRetDto;
     }
 }

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dao.PbcBeforeSubErrorCheckMapper_mysql">
-  
-  <select id="selectPrdBaseInfoSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
-  	select * from PBC_PRD_BASEINFO_SUB
-  	where 
-  	 (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
-  	 and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{checkdate,jdbcType=DATE},'%Y-%m-%d')
-	<if test="listProd!=null and listProd.size()!=0">
-	 	and PROD_ID in 
-	    <foreach item="prodid" collection="listProd" open="(" separator="," close=")"> 
-	      #{prodid}
-	   	</foreach>
-	</if>
-  </select>
 
-       
+	<select id="selectPrdBaseInfoSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+		select * from PBC_PRD_BASEINFO_SUB
+		where
+		(SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+		and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{checkdate,jdbcType=DATE},'%Y-%m-%d')
+		<if test="listProd!=null and listProd.size()!=0">
+			and PROD_ID in
+			<foreach item="prodid" collection="listProd" open="(" separator="," close=")">
+				#{prodid}
+			</foreach>
+		</if>
+	</select>
+
+
 </mapper>

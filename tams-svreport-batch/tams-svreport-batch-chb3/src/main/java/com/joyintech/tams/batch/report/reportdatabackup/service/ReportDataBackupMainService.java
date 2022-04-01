@@ -74,13 +74,14 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
     /**
      *需要归档的表
      */
+	/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 //    private static final String[] DATA_BACKUP_TABLENAME = new String[] {"CHB_INFO_REPORT_", "CHB_SUBMIT_STATUS_","CHB_INVESTHOLD_INFO_","CHB_INVESTHOLD_INFO_SUB_","CHB_INVESTHOLD_INFO_CHECK_"};
-	private static final String[] ORIGINAL_DATA_BACKUP_TABLE_NAME = new String[] {"CHB_INFO_REPORT", "CHB_SUBMIT_STATUS","CHB_INVESTHOLD_INFO","CHB_INVESTHOLD_INFO_SUB","CHB_INVESTHOLD_INFO_CHECK"};
+	private static final String[] ORIGINAL_DATA_BACKUP_TABLE_NAME = new String[] {"CHB_INFO_REPORT", "CHB_INVESTHOLD_INFO","CHB_INVESTHOLD_INFO_SUB","CHB_INVESTHOLD_INFO_CHECK"};
 	/**
 	 * 归档的表
 	 */
-	private static final String[] DATA_BACKUP_TABLE_NAME = new String[] {"CHB_INFO_REPORT_", "CHB_SUBMIT_STATUS_","CHB_INVESTHOLD_INFO_","CHB_INVESTHOLD_INFO_SUB_","CHB_HOLD_INFO_CHECK_"};
-
+	private static final String[] DATA_BACKUP_TABLE_NAME = new String[] {"CHB_INFO_REPORT_", "CHB_INVESTHOLD_INFO_","CHB_INVESTHOLD_INFO_SUB_","CHB_HOLD_INFO_CHECK_"};
+	/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     /**
      * 自动检查报送
      * @param executeDateStr
@@ -118,8 +119,10 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
             	logger.info("查询需要归档的数据日期结束！");
 				if (map!=null && !map.isEmpty()) {
                 	//chb_submit_status
-                	doDataBackupDB2(year, month, 1 ,map);
-                	//chb_investhold_info
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+//                	doDataBackupDB2(year, month, 1 ,map);
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+					//chb_investhold_info
                 	doDataBackupDB2(year, month, 2 ,map);
                 	//chb_investhold_info_sub
                 	doDataBackupDB2(year, month, 3 ,map);
@@ -160,22 +163,25 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
 		logger.info("关闭归档日志,开启并发,备份开始！");
 		mapper.nologgingParrel(tableName_ori);
     	if(flag == 1){
-    		if(StringUtil.isEmpty(reportDataBackup)){
-    			logger.info("创建"+ tableName +"表开始！");
-        		mapper.createChbSubmitStatus(tableName);
-				mapper.nologgingParrel(tableName);
-        		logger.info("创建"+ tableName +"表结束！");
-        	}
-			logger.info("插入chb_submit_status表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
-			mapper.insertChbSubmitStatusData(tableName,startDate,endDate);
-			logger.info("插入chb_submit_status表"+  startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
-			//关闭并发，否则dml语句不可执行
-			mapper.loggingNoparallel(tableName_ori);
-			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据开始！");
-			//状态表中有身份数据，不能删除分区，还是按照原逻辑delete
-			mapper.deleteChbSubmitStatusData(startDate,endDate);
-			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据结束！");
-    	}
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+//    		if(StringUtil.isEmpty(reportDataBackup)){
+//    			logger.info("创建"+ tableName +"表开始！");
+//        		mapper.createChbSubmitStatus(tableName);
+//				mapper.nologgingParrel(tableName);
+//        		logger.info("创建"+ tableName +"表结束！");
+//        	}
+//			logger.info("插入chb_submit_status表" + startDate + "~" + endDate + "日数据归档至"+tableName+"表开始！");
+////			mapper.insertChbSubmitStatusData(tableName,startDate,endDate);
+//			logger.info("插入chb_submit_status表"+  startDate + "~" + endDate + "日数据归档至"+tableName+"表结束！");
+//			//关闭并发，否则dml语句不可执行
+//			mapper.loggingNoparallel(tableName_ori);
+//			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据开始！");
+//			//状态表中有身份数据，不能删除分区，还是按照原逻辑delete
+////			mapper.deleteChbSubmitStatusData(startDate,endDate);
+//			logger.info("删除chb_submit_status表" + startDate + "~" + endDate + "日数据结束！");
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		}
     	else if(flag == 2){
     		if(StringUtil.isEmpty(reportDataBackup)){
         		logger.info("创建"+ tableName +"表开始！");

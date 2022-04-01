@@ -9,9 +9,11 @@
 	</select>
 
 	<select id="countExportNum" parameterType="map" resultType="int">
-		select count(*) from CHB_INVESTHOLD_INFO_SUB ciis 
-			left join CHB_SUBMIT_STATUS status
-    		on ciis.sumit_seq = status.seqno
+		select count(*) from CHB_INVESTHOLD_INFO_SUB ciis
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS status
+    		on ciis.sumit_seq = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
 				to_char(ciis.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
@@ -42,10 +44,12 @@
 				and to_char(ciis.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
              		#{submitFeedbackStatus,jdbcType=VARCHAR}
-            	</foreach>	
-		 	</if>
+            	</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			</if>
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
@@ -131,12 +135,16 @@
 					ciis.SUMIT_SEQ				sumitSeq,
 					ciis.CHECK_SEQNO			checkSeqno,
 					crc.IS_LOGIC_CHECK			isLogicCheck,
-					status.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-					ciis.SUBMIT_SEND_STATUS    submitSendStatus
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+					ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		ciis.SUBMIT_SEND_STATUS    submitSendStatus
 			from CHB_INVESTHOLD_INFO_SUB ciis
-			left join CHB_SUBMIT_STATUS status
-	    	on ciis.sumit_seq = status.seqno
-	    	left join CHB_REPORT_CHECK crc
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS status
+	    	on ciis.sumit_seq = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		left join CHB_REPORT_CHECK crc
 	    	on ciis.CHECK_SEQNO = crc.CHECK_SEQNO
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
@@ -179,9 +187,11 @@
 				and to_char(ciis.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
 					#{submitFeedbackStatus,jdbcType=VARCHAR}
 				</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
@@ -230,8 +240,10 @@
 		MIN(HOLD_DATE) MINDATE,
 		MAX(HOLD_DATE) MAXDATE
 		from CHB_INVESTHOLD_INFO_SUB ciis
-		left join CHB_SUBMIT_STATUS status
-		on ciis.sumit_seq = status.seqno
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS status
+		on ciis.sumit_seq = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
 				to_char(ciis.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
@@ -262,9 +274,11 @@
 				and to_char(ciis.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
 					#{submitFeedbackStatus,jdbcType=VARCHAR}
 				</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')

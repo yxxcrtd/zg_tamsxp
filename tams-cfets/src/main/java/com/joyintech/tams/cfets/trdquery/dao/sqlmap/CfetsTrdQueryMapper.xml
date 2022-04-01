@@ -67,7 +67,7 @@
         reg.repo_term as termDays,
         deal.tradeAmt as tradeAmt,
         reg.totle_trade_id as busiCode,
-        nvl(su.real_name,reg.ou_trader_id) as trader,
+        COALESCE ( sua.IBU_TRADER, su.real_name, reg.ou_trader_id ) AS trader,
         to_char(reg.trade_date,'yyyy-MM-dd') as regTradeDate,
         to_char(total.trade_date,'yyyy-MM-dd') as confirmTradeDate,
         reg.counter_id as counterId,
@@ -118,6 +118,7 @@
         on reg.sec_manage_acct_id=stlinfo.sec_acct_id
         LEFT JOIN MST_COUNTER_PARTY mcci ON reg.counter_id= mcci.counter_id
         left join sys_user su on reg.ou_trader_id=su.user_name
+        LEFT JOIN SYS_USER_ADD sua  ON sua.USER_ID = su.USER_ID
         where 1=1 and reg.ps in ('T01','T02','T03','03','04') and reg.trade_status='01'
         <if test="sysDate != null and !sysDate.equals('')">
             AND  reg.trade_date= #{sysDate,jdbcType=DATE}
@@ -365,7 +366,7 @@
         select distinct
         reg.ou_party_id as traderid,
         m1.PARTY_ABBR as traderidStr,
-        nvl(su.real_name,reg.ou_trader_id) as trader,
+        COALESCE (sua.IBU_TRADER, su.real_name, reg.ou_trader_id) AS trader,
         reg.counter_id as counterId,
         m2.counter_name as counterIdStr,
         nvl(su1.TRADER_NAME,reg.counter_trader)  as counterTrader,
@@ -446,6 +447,7 @@
         left join MST_CFETS_CUSTOMER_INFO m1 on reg.ou_party_id=m1.PARTY_ID
         LEFT JOIN MST_COUNTER_PARTY m2 ON reg.counter_id= m2.counter_id
         left join sys_user su on reg.ou_trader_id=su.user_name
+        LEFT JOIN SYS_USER_ADD sua  ON sua.USER_ID = su.USER_ID
         left join MST_CFETS_CUSTOMER_TRADER su1 on reg.counter_trader=su1.TRADER_ID
         where reg.totle_trade_id= #{totleTradeId,jdbcType=VARCHAR}
         and decode(reg.is_cancel,'Y','03','N','01')= #{effectiveStatus,jdbcType=VARCHAR}
@@ -2003,7 +2005,7 @@
         ts.prinamt/10000 as faceValue,
         decode(I.BUSINESSTYPE, 'BOND', I.yield2*100, 'REPO', I.PRICE*100) tradeYield,
         I.TRADELIMITDAYS as termDays,
-        I.TRADECASHAMT as tradeAmt,
+        decode(I.BUSINESSTYPE, 'BOND', I.SETTLCURRAMT, 'REPO', DECODE(I.MARKETINDICATOR, 9, I.TRADECASHAMT, 10, I.SETTLCURRAMT)) as tradeAmt,
         I.QUOTEID as quoteid,
 
         I.ourinstitutioncode as traderid,
@@ -2274,8 +2276,7 @@
         where itr.tradeid=#{execId,jdbcType=VARCHAR}
         order by fprepo.finprod_id
     </select>
-    <select id="queryAllTradeInfoList"
-            resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryTradeInfoListResponse">
+    <select id="queryAllTradeInfoList" resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryTradeInfoListResponse">
         select * from (SELECT aaa.* FROM(
             SELECT distinct
             decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
@@ -2360,6 +2361,7 @@
             left join reg_fin_product_deal_total_add regAdd on regAdd.totle_trade_id=nvl(match.PRE_TRADE_ID,T1.B_TRADE_ID)
             left join ibu_quote_bond_det ibuDet on ibuDet.QUOTE_ID=nvl(match.PRE_TRADE_ID,T1.B_TRADE_ID) and ibuDet.TRADE_STATUS='07'
             WHERE   T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
+              and T8.SETTLE_STATUS in ('02','04') <!-- 已交收和交收失败 --> /*已交收在下面一段中已查询,此处再查询会导致查询重复*/
             <![CDATA[ AND T1.trade_date >= #{startDate}]]>
             <![CDATA[ AND T1.trade_date <= #{endDate}]]>
             <if test="submitUserId != null and submitUserId != ''">
@@ -2408,13 +2410,277 @@
                     #{item}
                 </foreach>
             </if>
+            union all <!-- 增加对临时交易表的判断 -->
+            SELECT distinct
+                decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
+                case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+                when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+                when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+                ELSE NULL END cleanStatus,
+                decode(T1.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
+                T1.TOTLE_TRADE_ID totleTradeId,
+                T1.FINPROD_TYPE2 finprodType2,
+                sdl1.item_value finprodType2Str,
+                btm.BUSI_TYPE tgBusiType,
+                sdl2.item_value tgBusiTypeStr,
+                t2.FINPROD_ID AS finprodId,
+                nvl(T2.FINPROD_MARKET_ID,T3.TERM_TYPE) finprodMarketId,
+                T2.FINPROD_ABBR finprodAbbr,
+                T1.PS ps,
+                sdl3.item_value psStr,
+                T1.TRADE_MARKET tradeMarket,
+                sdl4.item_value tradeMarketStr,
+                T1.TRADE_MARKET_MODE tradeMarketMode,
+                sdl6.item_value tradeMarketModeStr,
+                T1.settle_speed as settleSpeed,
+                'T+'||T1.settle_speed as settleSpeedStr,
+                T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
+                T7.SEC_ACCT_NAME secManageAcctIdStr,
+                decode(T1.finprod_type2,'F01',deal.share_amt/100,null)as faceValue,
+                case when T1.finprod_type2='F01'
+                then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+                '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+                '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+                TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+                when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.rate*100,4),'FM990.0000') ||'%'
+                else null end as tradeYield,
+                T3.term as termDays,
+                deal.trade_Amt tradeAmt,
+                T1.ccy as ccy,
+                sdl7.item_value as ccyStr,
+                to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
+                to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
+                match.exe_id as execid,
+                T1.counter_id as counterId,
+                T6.counter_name counterIdStr,
+                T1.remark,
+                T1.TRADE_DATE as tradeDate,
+                nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
+                match.pre_trade_id preTradeId,
+                match.match_status as matchStatus,
+                T1.trader as trader
+            FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
+            inner join (
+            select td.totle_trade_id,sum(td.share_amt) share_amt,
+            sum(td.trade_amt) as trade_Amt
+            from trd_product_deal td
+            left join  trd_product_deal_add tda
+            on td.trade_id=tda.trade_id
+            <if test="userId != null and userId != ''">
+                INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA
+                        ON tda.portfolio_id = PPA.PORTFOLIO_ID
+                        AND PPA.USER_ID = #{userId}
+            </if>
+            where td.trade_status='01'
+            group by td.totle_trade_id
+            )deal
+            on T1.totle_trade_id=deal.totle_trade_id
+            left join trd_product_deal trd_product_deal on T1.totle_trade_id = trd_product_deal.totle_trade_id
+            LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+            left join fin_trade_product T3 on trd_product_deal.FINPROD_ID=T3.finprod_id
+            left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=trd_product_deal.FINPROD_ID
+            LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
+            LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
+            LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
+            LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
+            left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+            LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+            LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
+            LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
+            LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
+            LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
+            LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
+            LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
+            left join reg_fin_product_deal_total_add regAdd on regAdd.totle_trade_id=nvl(match.PRE_TRADE_ID,T1.B_TRADE_ID)
+            left join ibu_quote_bond_det ibuDet on ibuDet.QUOTE_ID=nvl(match.PRE_TRADE_ID,T1.B_TRADE_ID) and ibuDet.TRADE_STATUS='07'
+            WHERE T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
+            and ((T8.SETTLE_STATUS is null or T8.SETTLE_STATUS = '01'))
+            and not exists (select 1 from TRD_PRODUCT_TEMP_DEAL_TOTAL where T1.TOTLE_TRADE_ID=TOTLE_TRADE_ID)
+            <![CDATA[ AND T1.trade_date >= #{startDate}]]>
+            <![CDATA[ AND T1.trade_date <= #{endDate}]]>
+            <if test="submitUserId != null and submitUserId != ''">
+                and (T1.create_user= #{submitUserId} or T1.update_user= #{submitUserId})
+            </if>
+            <if test="finprodIdList != null and finprodIdList.size() > 0">
+                AND nvl(T3.TERM_TYPE,T1.FINPROD_ID) in
+                <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="busiType != null and busiType!='' ">
+                AND btm.BUSI_TYPE = #{busiType}
+            </if>
+
+            <if test="totleTradeId != null and totleTradeId!='' ">
+                AND T1.TOTLE_TRADE_ID LIKE CONCAT('%',CONCAT(#{totleTradeId},'%'))
+            </if>
+            <if test="execId != null and execId!='' ">
+                AND match.exe_id LIKE CONCAT('%',CONCAT(#{execId},'%'))
+            </if>
+            <if test="finprodType2List != null and finprodType2List.size() > 0">
+                AND T1.finprod_type2 in
+                <foreach collection="finprodType2List" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeMarket != null and tradeMarket!='' ">
+                AND T1.TRADE_MARKET = #{tradeMarket}
+            </if>
+            <if test="ps != null and ps!='' ">
+                AND T1.PS= #{ps}
+            </if>
+            <if test="cleanStatus != null and cleanStatus!='' ">
+                AND (case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+                        when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+                        when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+                        ELSE NULL END)= #{cleanStatus}
+            </if>
+            <if test="settleStatus != null and settleStatus!='' ">
+                AND nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})= #{settleStatus}
+            </if>
+            <if test="effectiveStatusList != null and effectiveStatusList.size() > 0">
+                AND (decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03})) in
+                <foreach collection="effectiveStatusList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            union all
+            SELECT distinct
+                decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
+                case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+                when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+                when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+                ELSE NULL END cleanStatus,
+                decode(T1.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
+                T1.TOTLE_TRADE_ID totleTradeId,
+                T1.FINPROD_TYPE2 finprodType2,
+                sdl1.item_value finprodType2Str,
+                btm.BUSI_TYPE tgBusiType,
+                sdl2.item_value tgBusiTypeStr,
+                t2.FINPROD_ID AS finprodId,
+                nvl(T2.FINPROD_MARKET_ID,T3.TERM_TYPE) finprodMarketId,
+                T2.FINPROD_ABBR finprodAbbr,
+                T1.PS ps,
+                sdl3.item_value psStr,
+                T1.TRADE_MARKET tradeMarket,
+                sdl4.item_value tradeMarketStr,
+                T1.TRADE_MARKET_MODE tradeMarketMode,
+                sdl6.item_value tradeMarketModeStr,
+                T1.settle_speed as settleSpeed,
+                'T+'||T1.settle_speed as settleSpeedStr,
+                T1.SEC_MANAGE_ACCT_ID as secManageAcctId,
+                T7.SEC_ACCT_NAME secManageAcctIdStr,
+                decode(T1.finprod_type2,'F01',deal.share_amt/100,null)as faceValue,
+                case when T1.finprod_type2='F01'
+                then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+                '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+                '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+                TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+                when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.rate*100,4),'FM990.0000') ||'%'
+                else null end as tradeYield,
+                T3.term as termDays,
+                deal.trade_Amt tradeAmt,
+                T1.ccy as ccy,
+                sdl7.item_value as ccyStr,
+                to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
+                to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
+                match.exe_id as execid,
+                T1.counter_id as counterId,
+                T6.counter_name counterIdStr,
+                T1.remark,
+                T1.TRADE_DATE as tradeDate,
+                nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode,
+                match.pre_trade_id preTradeId,
+                match.match_status as matchStatus,
+                T1.trader as trader
+            FROM TRD_PRODUCT_TEMP_DEAL_TOTAL T1
+            inner join (
+            select td.totle_trade_id,sum(td.share_amt) share_amt,
+            sum(td.trade_amt) as trade_Amt
+            from trd_product_temp_deal td
+            left join  trd_product_temp_deal_add tda
+            on td.trade_id=tda.trade_id
+            <if test="userId != null and userId != ''">
+                INNER JOIN PTL_PORTFOLIO_AUTHORITY PPA
+                            ON tda.portfolio_id = PPA.PORTFOLIO_ID
+                            AND PPA.USER_ID = #{userId}
+            </if>
+            where td.trade_status='01'
+            group by td.totle_trade_id
+            )deal
+            on T1.totle_trade_id=deal.totle_trade_id
+            left join trd_product_temp_deal trd_product_deal on T1.totle_trade_id = trd_product_deal.totle_trade_id
+            LEFT JOIN FIN_PRODUCT  T2 ON T1.FINPROD_ID = T2.FINPROD_ID
+            left join fin_trade_product T3 on trd_product_deal.FINPROD_ID=T3.finprod_id
+            left join FIN_PRODUCT_TYPE FIN_PRODUCT_TYPE on FIN_PRODUCT_TYPE.FINPROD_ID=trd_product_deal.FINPROD_ID
+            LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
+            LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
+            LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
+            LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
+            left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+            LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON FIN_PRODUCT_TYPE.TYPE_8 = btm.Finprod_Type_Tg AND T1.Ps = btm.ps
+            LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = FIN_PRODUCT_TYPE.TYPE_8
+            LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
+            LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = T1.PS
+            LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
+            LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
+            LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
+            left join reg_fin_product_deal_total_add regAdd on regAdd.totle_trade_id=nvl(match.PRE_TRADE_ID,T1.B_TRADE_ID)
+            left join ibu_quote_bond_det ibuDet on ibuDet.QUOTE_ID=nvl(match.PRE_TRADE_ID,T1.B_TRADE_ID) and ibuDet.TRADE_STATUS='07'
+            WHERE T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
+            and (T8.SETTLE_STATUS is null or T8.SETTLE_STATUS = '01')
+            <![CDATA[ AND T1.trade_date >= #{startDate}]]>
+            <![CDATA[ AND T1.trade_date <= #{endDate}]]>
+            <if test="submitUserId != null and submitUserId != ''">
+                and (T1.create_user= #{submitUserId} or T1.update_user= #{submitUserId})
+            </if>
+            <if test="finprodIdList != null and finprodIdList.size() > 0">
+                AND nvl(T3.TERM_TYPE,T1.FINPROD_ID) in
+                <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="busiType != null and busiType!='' ">
+                AND btm.BUSI_TYPE = #{busiType}
+            </if>
+
+            <if test="totleTradeId != null and totleTradeId!='' ">
+                AND T1.TOTLE_TRADE_ID LIKE CONCAT('%',CONCAT(#{totleTradeId},'%'))
+            </if>
+            <if test="execId != null and execId!='' ">
+                AND match.exe_id LIKE CONCAT('%',CONCAT(#{execId},'%'))
+            </if>
+            <if test="finprodType2List != null and finprodType2List.size() > 0">
+                AND T1.finprod_type2 in
+                <foreach collection="finprodType2List" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeMarket != null and tradeMarket!='' ">
+                AND T1.TRADE_MARKET = #{tradeMarket}
+            </if>
+            <if test="ps != null and ps!='' ">
+                AND T1.PS= #{ps}
+            </if>
+            <if test="cleanStatus != null and cleanStatus!='' ">
+                AND (case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+                        when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+                        when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+                        ELSE NULL END)= #{cleanStatus}
+            </if>
+            <if test="settleStatus != null and settleStatus!='' ">
+                AND nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})= #{settleStatus}
+            </if>
+            <if test="effectiveStatusList != null and effectiveStatusList.size() > 0">
+                AND (decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03})) in
+                <foreach collection="effectiveStatusList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
         )aaa
         left join SYS_DATADICT_LIST sdles on sdles.DICT_CODE='STATUS_VALID' and aaa.effectiveStatus=sdles.ITEM_CODE
         left join SYS_DATADICT_LIST sdlcs on sdlcs.DICT_CODE='SETTLE_STATUS' and aaa.cleanStatus=sdlcs.ITEM_CODE
         left join SYS_DATADICT_LIST sdlss on sdlss.DICT_CODE='DELIVERY_STATUS' and aaa.settleStatus=sdlss.ITEM_CODE
-
-
-
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryTradeWhere"></include>
         order by aaa.confirmTradeDate,aaa.effectiveStatus,aaa.finprodType2,aaa.tgBusiType,aaa.ps)
@@ -2455,53 +2721,53 @@
             resultType="com.joyintech.tams.cfets.trdquery.dto.CfetsTrdQueryTradeInfoListResponse">
         select * from (SELECT aaa.* FROM(
         select distinct
-        decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
-        case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
-        when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
-        when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
-        ELSE NULL END cleanStatus,
-        decode(tot.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
-        t1.totle_trade_id as totleTradeId,
-        t1.trade_id as busiCode,
-        t2.entrust_id as entrustId,
-        t1.finprod_type2 as finprodType2,
-        sdl1.item_value finprodType2Str,
-        btm.BUSI_TYPE tgBusiType,
-        sdl2.item_value tgBusiTypeStr,
-        t2.portfolio_id as portfolioId,
-        pp.portfolio_name as portfolioName,
-        t1.finprod_id as finprodId,
-        nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
-        fp.finprod_abbr as finprodAbbr,
-        tot.ps as ps,
-        sdl3.item_value psStr,
-        t1.trade_market as tradeMarket,
-        sdl4.item_value tradeMarketStr,
-        t1.trade_market_mode as tradeMarketMode,
-        sdl6.item_value tradeMarketModeStr,
-        t1.settle_speed as settleSpeed,
-        'T+'||t1.settle_speed as settleSpeedStr,
-        t1.sec_manage_acct_id as secManageAcctId,
-        T7.SEC_ACCT_NAME  as secManageAcctIdStr,
-        decode(T1.finprod_type2,'F01',t1.share_amt/100,null) as faceValue,
-        case when T1.finprod_type2='F01'
-        then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
-             '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
-             '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
-              TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
-        when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.unit_int*100,4),'FM990.0000') ||'%'
-        else null end as tradeYield,
-        T3.term as termDays,
-        t1.trade_amt as tradeAmt,
-        t1.ccy as ccy,
-        sdl7.item_value as ccyStr,
-        to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
-        to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
-        match.exe_id as execid,
-        t1.counter_id as counterId,
-        T6.counter_name counterIdStr,
-        tot.remark,
-        nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
+            decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
+            case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+            when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+            when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+            ELSE NULL END cleanStatus,
+            decode(tot.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
+            t1.totle_trade_id as totleTradeId,
+            t1.trade_id as busiCode,
+            t2.entrust_id as entrustId,
+            t1.finprod_type2 as finprodType2,
+            sdl1.item_value finprodType2Str,
+            btm.BUSI_TYPE tgBusiType,
+            sdl2.item_value tgBusiTypeStr,
+            t2.portfolio_id as portfolioId,
+            pp.portfolio_name as portfolioName,
+            t1.finprod_id as finprodId,
+            nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
+            fp.finprod_abbr as finprodAbbr,
+            tot.ps as ps,
+            sdl3.item_value psStr,
+            t1.trade_market as tradeMarket,
+            sdl4.item_value tradeMarketStr,
+            t1.trade_market_mode as tradeMarketMode,
+            sdl6.item_value tradeMarketModeStr,
+            t1.settle_speed as settleSpeed,
+            'T+'||t1.settle_speed as settleSpeedStr,
+            t1.sec_manage_acct_id as secManageAcctId,
+            T7.SEC_ACCT_NAME  as secManageAcctIdStr,
+            decode(T1.finprod_type2,'F01',t1.share_amt/100,null) as faceValue,
+            case when T1.finprod_type2='F01'
+            then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+                 '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+                 '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+                  TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+            when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.unit_int*100,4),'FM990.0000') ||'%'
+            else null end as tradeYield,
+            T3.term as termDays,
+            t1.trade_amt as tradeAmt,
+            t1.ccy as ccy,
+            sdl7.item_value as ccyStr,
+            to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
+            to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
+            match.exe_id as execid,
+            t1.counter_id as counterId,
+            T6.counter_name counterIdStr,
+            tot.remark,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
         from trd_product_deal t1
         left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
         left join TRD_FIN_PRODUCT_DEAL_TOTAL tot on tot.TOTLE_TRADE_ID=t1.TOTLE_TRADE_ID
@@ -2529,6 +2795,7 @@
         left join reg_fin_product_deal_total_add regAdd on regAdd.totle_trade_id=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID)
         left join ibu_quote_bond_det ibuDet on ibuDet.QUOTE_ID=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID) and ibuDet.TRADE_STATUS='07'
         WHERE   T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
+        and T8.SETTLE_STATUS in ('02','04') <!-- 已交收和交收失败 -->
         <![CDATA[ AND T1.trade_date >= #{startDate}]]>
         <![CDATA[ AND T1.trade_date <= #{endDate}]]>
         <if test="submitUserId != null and submitUserId != ''">
@@ -2593,11 +2860,289 @@
                 #{item}
             </foreach>
         </if>
+        union all
+        select distinct
+            decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
+            case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+            when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+            when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+            ELSE NULL END cleanStatus,
+            decode(tot.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
+            t1.totle_trade_id as totleTradeId,
+            t1.trade_id as busiCode,
+            t2.entrust_id as entrustId,
+            t1.finprod_type2 as finprodType2,
+            sdl1.item_value finprodType2Str,
+            btm.BUSI_TYPE tgBusiType,
+            sdl2.item_value tgBusiTypeStr,
+            t2.portfolio_id as portfolioId,
+            pp.portfolio_name as portfolioName,
+            t1.finprod_id as finprodId,
+            nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
+            fp.finprod_abbr as finprodAbbr,
+            tot.ps as ps,
+            sdl3.item_value psStr,
+            t1.trade_market as tradeMarket,
+            sdl4.item_value tradeMarketStr,
+            t1.trade_market_mode as tradeMarketMode,
+            sdl6.item_value tradeMarketModeStr,
+            t1.settle_speed as settleSpeed,
+            'T+'||t1.settle_speed as settleSpeedStr,
+            t1.sec_manage_acct_id as secManageAcctId,
+            T7.SEC_ACCT_NAME  as secManageAcctIdStr,
+            decode(T1.finprod_type2,'F01',t1.share_amt/100,null) as faceValue,
+            case when T1.finprod_type2='F01'
+            then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+            '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+            '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+            TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+            when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.unit_int*100,4),'FM990.0000') ||'%'
+            else null end as tradeYield,
+            T3.term as termDays,
+            t1.trade_amt as tradeAmt,
+            t1.ccy as ccy,
+            sdl7.item_value as ccyStr,
+            to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
+            to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
+            match.exe_id as execid,
+            t1.counter_id as counterId,
+            T6.counter_name counterIdStr,
+            tot.remark,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
+        from trd_product_deal t1
+        left join trd_product_deal_add t2 on t1.trade_id=t2.trade_id
+        left join TRD_FIN_PRODUCT_DEAL_TOTAL tot on tot.TOTLE_TRADE_ID=t1.TOTLE_TRADE_ID
+        left  join ptl_portfolio pp on t2.portfolio_id=pp.portfolio_id
+        <if test="userId != null and userId != ''">
+            INNER JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON t2.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
+        left join fin_product fp on t1.finprod_id=fp.finprod_id
+        left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
+        left join fin_product_type  fin_product_type on fin_product_type.FINPROD_ID=t1.FINPROD_ID
+        LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
+        LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
+        LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
+        LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
+        left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON fin_product_type.TYPE_8 = btm.Finprod_Type_Tg AND tot.PS = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = fin_product_type.TYPE_8
+        LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
+        LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = tot.PS
+        LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
+        LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
+        LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
+        left join reg_fin_product_deal_total_add regAdd on regAdd.totle_trade_id=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID)
+        left join ibu_quote_bond_det ibuDet on ibuDet.QUOTE_ID=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID) and ibuDet.TRADE_STATUS='07'
+        WHERE T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
+        and ((T8.SETTLE_STATUS is null or T8.SETTLE_STATUS = '01'))
+        and not exists (select 1 from TRD_PRODUCT_TEMP_DEAL_TOTAL where T1.TOTLE_TRADE_ID=TOTLE_TRADE_ID)
+        <![CDATA[ AND T1.trade_date >= #{startDate}]]>
+        <![CDATA[ AND T1.trade_date <= #{endDate}]]>
+        <if test="submitUserId != null and submitUserId != ''">
+            and (t1.create_user= #{submitUserId} or t1.update_user= #{submitUserId})
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            AND t2.portfolio_id in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND nvl(T3.TERM_TYPE,T1.FINPROD_ID) in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="busiType != null and busiType!='' ">
+            AND btm.BUSI_TYPE = #{busiType}
+        </if>
+        <if test="totleTradeId != null and totleTradeId!='' ">
+            AND T1.TOTLE_TRADE_ID LIKE CONCAT('%',CONCAT(#{totleTradeId},'%'))
+        </if>
+        <if test="busiCode != null and busiCode!='' ">
+            AND t1.trade_id LIKE CONCAT('%',CONCAT(#{busiCode},'%'))
+        </if>
+        <if test="execId != null and execId!='' ">
+            AND match.exe_id LIKE CONCAT('%',CONCAT(#{execId},'%'))
+        </if>
+        <if test="entrustId != null and entrustId!='' ">
+            AND  t2.entrust_id LIKE CONCAT('%',CONCAT(#{entrustId},'%'))
+        </if>
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            AND T1.finprod_type2 in
+            <foreach collection="finprodType2List" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tradeMarket != null and tradeMarket!='' ">
+            AND T1.TRADE_MARKET = #{tradeMarket}
+        </if>
+        <if test="tradeMarketMode != null and tradeMarketMode!='' ">
+            AND T1.TRADE_MARKET_MODE = #{tradeMarketMode}
+        </if>
+        <if test="ps != null and ps!='' ">
+            AND tot.PS= #{ps}
+        </if>
+        <if test="cleanStatus != null and cleanStatus!='' ">
+            AND (case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+                    when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+                    when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+                    ELSE NULL END)= #{cleanStatus}
+        </if>
+        <if test="settleStatus != null and settleStatus!='' ">
+            AND nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})= #{settleStatus}
+        </if>
+        <if test="effectiveStatusList != null and effectiveStatusList.size() > 0">
+            AND (decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03})) in
+            <foreach collection="effectiveStatusList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        union all
+        select distinct
+            decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03}) as  effectiveStatus,
+            case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+            when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+            when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+            ELSE NULL END cleanStatus,
+            decode(tot.finprod_type2,'F03',null,nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})) settleStatus,
+            t1.totle_trade_id as totleTradeId,
+            t1.trade_id as busiCode,
+            t2.entrust_id as entrustId,
+            t1.finprod_type2 as finprodType2,
+            sdl1.item_value finprodType2Str,
+            btm.BUSI_TYPE tgBusiType,
+            sdl2.item_value tgBusiTypeStr,
+            t2.portfolio_id as portfolioId,
+            pp.portfolio_name as portfolioName,
+            t1.finprod_id as finprodId,
+            nvl(fp.finprod_market_id,T3.TERM_TYPE) as finprodMarketId,
+            fp.finprod_abbr as finprodAbbr,
+            tot.ps as ps,
+            sdl3.item_value psStr,
+            t1.trade_market as tradeMarket,
+            sdl4.item_value tradeMarketStr,
+            t1.trade_market_mode as tradeMarketMode,
+            sdl6.item_value tradeMarketModeStr,
+            t1.settle_speed as settleSpeed,
+            'T+'||t1.settle_speed as settleSpeedStr,
+            t1.sec_manage_acct_id as secManageAcctId,
+            T7.SEC_ACCT_NAME  as secManageAcctIdStr,
+            decode(T1.finprod_type2,'F01',t1.share_amt/100,null) as faceValue,
+            case when T1.finprod_type2='F01'
+            then decode(nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD),'01',TO_CHAR(ROUND(T1.unit_cprice,4),'FM990.0000'),
+            '02',TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%',
+            '03',TO_CHAR(ROUND(T1.exer_yield*100,4),'FM990.0000')||'%',
+            TO_CHAR(ROUND(T1.yield*100,4),'FM990.0000') ||'%')
+            when T1.finprod_type2 in ('F02','F03') then  TO_CHAR(ROUND(T1.unit_int*100,4),'FM990.0000') ||'%'
+            else null end as tradeYield,
+            T3.term as termDays,
+            t1.trade_amt as tradeAmt,
+            t1.ccy as ccy,
+            sdl7.item_value as ccyStr,
+            to_char(T1.TRADE_DATE,'yyyy-MM-dd') as confirmTradeDate,
+            to_char(T1.SETTLE_DATE,'yyyy-MM-dd') as settleDate,
+            match.exe_id as execid,
+            t1.counter_id as counterId,
+            T6.counter_name counterIdStr,
+            tot.remark,
+            nvl(regAdd.CAL_MODE,ibuDet.CALCULATE_FIELD) as calMode
+        from trd_product_temp_deal t1
+        left join trd_product_temp_deal_add t2 on t1.trade_id=t2.trade_id
+        left join TRD_PRODUCT_TEMP_DEAL_TOTAL tot on tot.TOTLE_TRADE_ID=t1.TOTLE_TRADE_ID
+        left  join ptl_portfolio pp on t2.portfolio_id=pp.portfolio_id
+        <if test="userId != null and userId != ''">
+            INNER JOIN  PTL_PORTFOLIO_AUTHORITY PPA
+            ON t2.portfolio_id = PPA.PORTFOLIO_ID
+            AND PPA.USER_ID = #{userId}
+        </if>
+        left join fin_product fp on t1.finprod_id=fp.finprod_id
+        left join fin_trade_product T3 on T1.FINPROD_ID=T3.finprod_id
+        left join fin_product_type  fin_product_type on fin_product_type.FINPROD_ID=t1.FINPROD_ID
+        LEFT JOIN MST_COUNTER_PARTY T6 ON T1.COUNTER_ID = T6.counter_id
+        LEFT JOIN STL_SEC_ACCT_INFO T7 ON T1.SEC_MANAGE_ACCT_ID = T7.SEC_ACCT_ID
+        LEFT JOIN TRD_BANK_MANUAL_SETTLE_INFO T8 ON T1.TOTLE_TRADE_ID = T8.TRADE_ID
+        LEFT JOIN STL_PAY_ORDERS T9 ON T1.TOTLE_TRADE_ID = T9.TRADE_ID
+        left join trdquto_match_info match on T1.totle_trade_id=match.trd_id
+        LEFT JOIN (select INPUT_VALUE_1 as Finprod_Type_Tg,INPUT_VALUE_2 as ps,OUTPUT_VALUE_1 as busi_type from FIN_PRODUCT_TYPE_CONFIG where CONFIG_TYPE='BUSI_TYPE_MAPPING') btm ON fin_product_type.TYPE_8 = btm.Finprod_Type_Tg AND tot.PS = btm.ps
+        LEFT JOIN SYS_DATADICT_LIST sdl1 on sdl1.dict_code ='PINAN_ASSET_TYPE' and sdl1.item_code = fin_product_type.TYPE_8
+        LEFT JOIN SYS_DATADICT_LIST sdl2 on sdl2.dict_code ='BUSI_TYPE_POSITION' and sdl2.item_code = btm.BUSI_TYPE
+        LEFT JOIN SYS_DATADICT_LIST sdl3 on sdl3.dict_code ='PS' and sdl3.item_code = tot.PS
+        LEFT JOIN SYS_DATADICT_LIST sdl4 on sdl4.dict_code ='TRADE_PLACE' and sdl4.item_code = T1.TRADE_MARKET
+        LEFT JOIN SYS_DATADICT_LIST sdl6 on sdl6.dict_code ='SHARES_TRADE_MARKET' and sdl6.item_code = T1.TRADE_MARKET_MODE
+        LEFT JOIN SYS_DATADICT_LIST sdl7 on sdl7.dict_code ='CCY' and sdl7.item_code = T1.ccy
+        left join reg_fin_product_deal_total_add regAdd on regAdd.totle_trade_id=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID)
+        left join ibu_quote_bond_det ibuDet on ibuDet.QUOTE_ID=nvl(match.PRE_TRADE_ID,tot.B_TRADE_ID) and ibuDet.TRADE_STATUS='07'
+        WHERE T1.trade_status='01' and T1.FINPROD_TYPE2 in ('F01','F02','F03') and T1.ps in ('T01','T02','T03','03','04')
+        and (T8.SETTLE_STATUS is null or T8.SETTLE_STATUS = '01')
+        <![CDATA[ AND T1.trade_date >= #{startDate}]]>
+        <![CDATA[ AND T1.trade_date <= #{endDate}]]>
+        <if test="submitUserId != null and submitUserId != ''">
+            and (t1.create_user= #{submitUserId} or t1.update_user= #{submitUserId})
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+            AND t2.portfolio_id in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodIdList != null and finprodIdList.size() > 0">
+            AND nvl(T3.TERM_TYPE,T1.FINPROD_ID) in
+            <foreach collection="finprodIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="busiType != null and busiType!='' ">
+            AND btm.BUSI_TYPE = #{busiType}
+        </if>
+        <if test="totleTradeId != null and totleTradeId!='' ">
+            AND T1.TOTLE_TRADE_ID LIKE CONCAT('%',CONCAT(#{totleTradeId},'%'))
+        </if>
+        <if test="busiCode != null and busiCode!='' ">
+            AND t1.trade_id LIKE CONCAT('%',CONCAT(#{busiCode},'%'))
+        </if>
+        <if test="execId != null and execId!='' ">
+            AND match.exe_id LIKE CONCAT('%',CONCAT(#{execId},'%'))
+        </if>
+        <if test="entrustId != null and entrustId!='' ">
+            AND  t2.entrust_id LIKE CONCAT('%',CONCAT(#{entrustId},'%'))
+        </if>
+        <if test="finprodType2List != null and finprodType2List.size() > 0">
+            AND T1.finprod_type2 in
+            <foreach collection="finprodType2List" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tradeMarket != null and tradeMarket!='' ">
+            AND T1.TRADE_MARKET = #{tradeMarket}
+        </if>
+        <if test="tradeMarketMode != null and tradeMarketMode!='' ">
+            AND T1.TRADE_MARKET_MODE = #{tradeMarketMode}
+        </if>
+        <if test="ps != null and ps!='' ">
+            AND tot.PS= #{ps}
+        </if>
+        <if test="cleanStatus != null and cleanStatus!='' ">
+            AND (case when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus01} THEN #{cleanStatus01}
+                    when T9.PS = #{feePs02} and T9.SETTLE_STATUS = #{settlementStatus01} and T9.ORDER_RET_STATUS = #{commandDealStatus02} THEN #{cleanStatus02}
+                    when T9.PS = #{feePs02} and (T9.SETTLE_STATUS is null or T9.SETTLE_STATUS = #{settlementStatus02}) and T9.ORDER_RET_STATUS = '03' THEN #{cleanStatus03}
+                    ELSE NULL END)= #{cleanStatus}
+        </if>
+        <if test="settleStatus != null and settleStatus!='' ">
+            AND nvl(T8.SETTLE_STATUS,#{DELIVERY_STATUS_01})= #{settleStatus}
+        </if>
+        <if test="effectiveStatusList != null and effectiveStatusList.size() > 0">
+            AND (decode(T1.is_cancel,'N',#{STATUS_VALID_01},'Y',#{STATUS_VALID_03})) in
+            <foreach collection="effectiveStatusList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
         )aaa
         left join SYS_DATADICT_LIST sdles on sdles.DICT_CODE='STATUS_VALID' and aaa.effectiveStatus=sdles.ITEM_CODE
         left join SYS_DATADICT_LIST sdlcs on sdlcs.DICT_CODE='SETTLE_STATUS' and aaa.cleanStatus=sdlcs.ITEM_CODE
         left join SYS_DATADICT_LIST sdlss on sdlss.DICT_CODE='DELIVERY_STATUS' and aaa.settleStatus=sdlss.ITEM_CODE
-
         <!-- 关键字模糊查询 -->
         <include refid="vagueQueryTradeDetailWhere"></include>
         order by aaa.confirmTradeDate,aaa.effectiveStatus,aaa.finprodType2,aaa.tgBusiType,aaa.ps)
@@ -2896,6 +3441,13 @@
         from trdquto_match_info tmi
         where tmi.trd_id =#{totleTradeId,jdbcType=VARCHAR})
     </update>
+
+    <update id="updateIbuRepoByPrimaryKeySelective">
+        update IBU_QUOTE_CREP t
+        set t.trade_status = #{tradeStatus}
+        where t.quote_id = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+
     <select id="selectAllTrdDetailListById" resultType="java.lang.String">
         SELECT distinct
         trade_id as tradeid
@@ -2906,10 +3458,11 @@
     <select id="getTradeId" resultType="java.lang.String">
         select PRE_TRADE_ID from TRDQUTO_MATCH_INFO  where TRD_ID=#{tradeId,jdbcType=VARCHAR}
     </select>
+
     <select id="getTotalTradeId" resultType="java.lang.String">
-        select  TOTLE_TRADE_ID from TRD_PRODUCT_DEAL where TRADE_ID=(
-            select FINPROD_ID from TRD_PRODUCT_DEAL where TOTLE_TRADE_ID=#{tradeId})
+        select  TOTLE_TRADE_ID from TRD_PRODUCT_DEAL where TRADE_ID=#{tradeId}
     </select>
+
     <select id="getCountByReg" resultType="java.lang.Integer">
        select sum(t.qty) from (
            select count(*) qty from wfl_reg_fin_product_deal_total  where TOTLE_TRADE_ID=#{tradeId,jdbcType=VARCHAR}
@@ -3304,6 +3857,18 @@
                  rp.pledge_ratio,
                  mbvi.NETPRICE,
                  fp.REGIST_ORG
+    </select>
+
+    <select id="findEtrEntrustIsForcedFinish" resultType="java.lang.String">
+        select distinct eea.ENTRUST_ID
+        from ETR_ENTRUST_ADD eea
+                 left join (select TOTLE_TRADE_ID, ENTRUST_ID, TRADE_ID
+                            from REG_FIN_PRODUCT_DEAL
+                            union
+                            select QUOTE_ID TOTLE_TRADE_ID, ENTRUST_ID, QUOTE_ID
+                            from IBU_QUOTE_ETR_RE) deal on deal.ENTRUST_ID = eea.ENTRUST_ID
+                 left join TRDQUTO_MATCH_INFO tmi on tmi.PRE_TRADE_ID = deal.TOTLE_TRADE_ID
+        where eea.FORCED_FINISH_AMT is not null and tmi.TRD_ID = #{totleTradeId,jdbcType=VARCHAR}
     </select>
 </mapper>
 

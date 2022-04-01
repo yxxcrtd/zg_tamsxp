@@ -1,13 +1,39 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import cn.hutool.json.JSONUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.BusinessResultException;
+import com.joyintech.tams.exchange.common.bean.CalcPriceAndYieldRequest;
+import com.joyintech.tams.exchange.common.bean.CalcPriceAndYieldResponse;
 import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateBean;
 import com.joyintech.tams.exchange.common.bean.ExpireIncomeRateRet;
 import com.joyintech.tams.exchange.common.bean.InstructionOpBean;
@@ -19,6 +45,7 @@ import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
+import com.joyintech.tams.exchange.common.db.domain.InstructionExportVo;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
 import com.joyintech.tams.exchange.common.domain.Message;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
@@ -28,35 +55,31 @@ import com.joyintech.tams.exchange.common.request.InstructionQueryRequest;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
 
 @RestController
 @RequestMapping("/trade/joyin")
 @Api(tags = "场内交易-指令操作接口")
 public class InstructionController {
-    private final Logger LOGGER = LoggerFactory.getLogger(InstructionController.class);
-
-    @Autowired
-    private InvestmentManagement investmentManagement;
-
+    private final Logger logger = LoggerFactory.getLogger(InstructionController.class);
     @Autowired(required = false)
     @Qualifier("loadBalancedRestTemplate")
     protected JoyinRestTemplate restTemplate;
+    @Autowired
+    private InvestmentManagement investmentManagement;
 
     @ApiOperation(value = "查询指令列表", notes = "查询指令列表")
     @RequestMapping(value = "/instruction/users", method = RequestMethod.POST)
     @CrossOrigin
     public Message<InstructionPage<Instruction, InstructionPledge, InstructionDetail>> queryAllInstruction(@RequestBody InstructionQueryRequest instructionQuery) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(instructionQuery);
+    	}
         String fairCode = CacheUtil.getSysParam(ExchangeConstant.FAIR_CODE_IN_PARA);
         String platDate = DateUtil.getSysDate();
         String approveCode = CacheUtil.getSysParam(ExchangeConstant.RISK_APPROVAL_IN_PARA);
@@ -80,6 +103,15 @@ public class InstructionController {
     @ResponseBody
     @ApiOperation(value = "导出指令列表", notes = "导出指令列表")
     public void exportInstruction(@RequestBody InstructionExportRequest request, HttpServletResponse response) {
+        if (Objects.nonNull(request.getData())) {
+            List<Instruction> instructionList = request.getData().stream().map(item -> BeanUtil.toBean(item, Instruction.class)).collect(Collectors.toList());
+            List<InstructionExportVo> instructionExportVoList = investmentManagement.convertFieldValue(instructionList);
+
+            List<BaseMap> newList = Lists.newArrayList();
+            newList.addAll(instructionExportVoList.stream().map(item -> BaseMap.newMap(BeanUtil.beanToMap(item))).collect(Collectors.toList()));
+
+            request.setData(newList);
+        }
         ExcelUitl.doExport(request, response, "指令列表", () -> investmentManagement.queryExportPage(request.getDto(InstructionQueryRequest.class)));
     }
 
@@ -87,6 +119,9 @@ public class InstructionController {
     @RequestMapping(value = "/instruction/confirm", method = RequestMethod.POST)
     @CrossOrigin
     public Message<List<EntrustOpeBean>> acceptOrRefuse(@RequestBody @Validated List<InstructionOpBean> instructionOpBeans) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(instructionOpBeans);
+    	}
         if (Objects.isNull(instructionOpBeans) || instructionOpBeans.size() == 0) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "参数不可以为空");
         }
@@ -113,9 +148,26 @@ public class InstructionController {
     @ApiOperation(value = "从投管重新刷入指令数据", notes = "从投管重新刷入指令数据", hidden = true)
     @RequestMapping(value = "/instruction/flush", method = RequestMethod.POST)
     public Message<Object> flushInstructionFromInvest(@RequestParam(value = "userId") String userId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(userId);
+    	}
         return new Message<Object>(investmentManagement.flushInstructionFromInvest());
     }
 
+    /**
+     * {"calculateField":"01","finprodId":"F01_113052.SH","fprice":"","price":"113.01","prinAmt":"100","ps":"T01","tradeMarket":"03","yield":""}
+     */
+    @ApiOperation(value = "净价、全价、到期收益率计算三合一", notes = "净价、全价、到期收益率计算三合一")
+    @PostMapping(value = "/instruction/calcPriceAndYield")
+    public Message<CalcPriceAndYieldResponse> calcPriceAndYield(@RequestBody @Validated CalcPriceAndYieldRequest request) {
+        String url = TradeServiceURL.calcPriceAndYield;
+        url = ServiceApplication.INSTRUCTION_SERVICE + url;
+        Message response = restTemplate.postForObject(url, request, Message.class);
+        logger.info("调用投管接口 【净价、全价、到期收益率计算三合一】 calcPriceAndYield() called with url ==> 【{}】, request = 【{}】, response => 【{}】", url, JSONUtil.toJsonStr(request), JSONUtil.toJsonStr(response));
+        return response;
+    }
+
+    @Deprecated
     @ApiOperation(value = "到期收益率计算", notes = "到期收益率计算")
     @RequestMapping(value = "/instruction/expireIncomeRate", method = RequestMethod.POST)
     @CrossOrigin
@@ -150,9 +202,9 @@ public class InstructionController {
         if (Strings.isNullOrEmpty(expireIncomeRateBean.getSettleDate())) {
             throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交割日不可以为空");
         }
-        if (Strings.isNullOrEmpty(expireIncomeRateBean.getInvAim())) {
-            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "投资目的不可以为空");
-        }
+//        if (Strings.isNullOrEmpty(expireIncomeRateBean.getInvAim())) {
+//            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "投资目的不可以为空");
+//        }
 //        if (Strings.isNullOrEmpty(expireIncomeRateBean.getTradeMarketMode())) {
 //            throw BusinessResultException.create(ErrorCode.REQ_PARAMETER_ERROR, "交易市场不可以为空");
 //        }
@@ -197,9 +249,9 @@ public class InstructionController {
             url = TradeServiceURL.yield;
         }
         url = ServiceApplication.TRADE_SERVICE_NAME + url;
-        LOGGER.debug("调用投管接口：url:{}, param:{}", url, JSONUtil.toJsonStr(pageParam));
+        logger.debug("调用投管接口：url:{}, param:{}", url, JSONUtil.toJsonStr(pageParam));
         ExpireIncomeRateRet expireIncomeRateRet = restTemplate.postForObject(url, pageParam, ExpireIncomeRateRet.class);
-        LOGGER.debug("ExpireIncomeRateRet:{}", JSONObject.toJSONString(expireIncomeRateRet));
+        logger.debug("ExpireIncomeRateRet:{}", JSONObject.toJSONString(expireIncomeRateRet));
         return new Message<ExpireIncomeRateRet>(expireIncomeRateRet);
     }
 }

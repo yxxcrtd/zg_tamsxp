@@ -330,8 +330,16 @@ public class InvestPeriodCommonService {
             // 划款指令
             //update zhangweiqi 2020-02-13 场外期权 汇总已经处理  begin
             if(!StringUtil.equals(trdProductDeal.getBusiType(), DictCodeListExt3.业务类型_场外期权.getValue())){
-            List<StlPayOrders> orders = periodCommonMapper.findOrdersByOrderId(oldTradeId);
-            revokeStlPayOrders(orders);
+                List<StlPayOrders> orders = periodCommonMapper.findOrdersByOrderId(oldTradeId);
+                // modify by etliu 20220219 start
+                // GNS-926: 【广农商场内清算】深交所竞价首期解析SJSMX1文件；重复跑批时，投管交易撤销批处理报错
+                // 前面的处理已经做了划款指令的撤销，这里如果出现主键冲突，直接忽略
+                try {
+                    revokeStlPayOrders(orders);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // modify by etliu 20220219 end
             }
           //update zhangweiqi 2020-02-13 场外期权 汇总已经处理  end
             
@@ -356,8 +364,17 @@ public class InvestPeriodCommonService {
              // 一体化对应etliu end
             }
 
-            // 费用明细
-            periodCommonMapper.inertRevokeFeeDetailByTradeId(oldTradeId, updateUser);
+            // modify by etliu 20220219 start
+            // GNS-926: 【广农商场内清算】深交所竞价首期解析SJSMX1文件；重复跑批时，投管交易撤销批处理报错
+            // 前面的处理已经做了费用明细的撤销，这里如果出现主键冲突，直接忽略
+            try {
+                // 费用明细
+                periodCommonMapper.inertRevokeFeeDetailByTradeId(oldTradeId, updateUser);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            // modify by etliu 20220219 end
             // 删除交易报送
             periodCommonMapper.deleteRepTradeByTradeId(oldTradeId);
 

@@ -68,47 +68,94 @@
 			  )	
 	</insert>
 	<select id="queryUpdateOrDelList" resultType="com.joyintech.tams.common.base.entity.ChbAstValueSub">
-	    SELECT
-	    	sub.REGIST_SEQNO as registSeqno,
-		    VAL.ISSUE_PARTY_ID  as issuePartyId,
-		    ifnull(ASSETINFO.ASSET_CODE,ASSETINFO.ASSET_CODE_OLD) as assetCode,
-		    VAL.VAL_DATE as valDate,
-		    VAL.UNIT_VAL_NET as unitValNet,
-		    VAL.UNIT_VAL_TOTAL as unitValTotal, 
-		    VAL.REMARK as remark,
-		    '02'  status/*修改状态*/
+		SELECT
+		sub.REGIST_SEQNO as registSeqno,
+		VAL.ISSUE_PARTY_ID  as issuePartyId,
+		SUB.ASSET_CODE as assetCode,
+		VAL.VAL_DATE as valDate,
+		VAL.UNIT_VAL_NET as unitValNet,
+		VAL.UNIT_VAL_TOTAL as unitValTotal,
+		VAL.REMARK as remark,
+		'02'  status/*修改状态*/
 		FROM CHB_AST_VAL_SUB sub
 		left join CHB_ASSET_INFO ASSETINFO
-		ON ASSETINFO.ASSET_CODE = SUB.ASSET_CODE
-		left join CHB_AST_VAL val 
-		on val.VAL_DATE = sub.VAL_DATE 
-		and  val.ASSET_CODE = sub.ASSET_CODE
+		ON ifnull(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) = SUB.ASSET_CODE
+		left join CHB_AST_VAL val
+		on val.VAL_DATE = sub.VAL_DATE
+		and  val.ASSET_CODE = ASSETINFO.ASSET_CODE
 		and val.status in ('M','E')
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
 		WHERE DATE_FORMAT(sub.VAL_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
-		  and SUB.SEND_STATUS in ('02','03')
-		  and( SUB.STATUS ='03' or (val.UNIT_VAL_NET &lt;&gt; SUB.UNIT_VAL_NET or val.UNIT_VAL_TOTAL &lt;&gt; SUB.UNIT_VAL_TOTAL))
-	    union all
-	    SELECT
-	        sub.REGIST_SEQNO as registSeqno,
-		    sub.ISSUE_PARTY_ID  as issuePartyId,
-            ifnull(ASSETINFO.ASSET_CODE,ASSETINFO.ASSET_CODE_OLD) as assetCode,
-		    sub.VAL_DATE as valDate,
-		    sub.UNIT_VAL_NET as unitValNet,
-		    sub.UNIT_VAL_TOTAL as unitValTotal, 
-		    sub.REMARK as remark,
-		    '03'  status/*删除状态*/
+		and SUB.SEND_STATUS in ('02','03')
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+		</if>
+		<!-- add by zhangliang 20201112 删除的数据不应该生成修改未报送  start-->
+		<!-- and( SUB.STATUS ='03' or (val.UNIT_VAL_NET &lt;&gt; SUB.UNIT_VAL_NET or val.UNIT_VAL_TOTAL &lt;&gt; SUB.UNIT_VAL_TOTAL)) -->
+		and SUB.STATUS in ('01','02')
+		and (val.UNIT_VAL_NET &lt;&gt; SUB.UNIT_VAL_NET or val.UNIT_VAL_TOTAL &lt;&gt; SUB.UNIT_VAL_TOTAL)
+		UNION ALL
+		SELECT
+		sub.REGIST_SEQNO as registSeqno,
+		VAL.ISSUE_PARTY_ID  as issuePartyId,
+		SUB.ASSET_CODE as assetCode,
+		VAL.VAL_DATE as valDate,
+		VAL.UNIT_VAL_NET as unitValNet,
+		VAL.UNIT_VAL_TOTAL as unitValTotal,
+		VAL.REMARK as remark,
+		'01'  status/*新建状态*/
 		FROM CHB_AST_VAL_SUB sub
-        left join CHB_ASSET_INFO ASSETINFO
-        ON ASSETINFO.ASSET_CODE = SUB.ASSET_CODE
+		left join CHB_ASSET_INFO ASSETINFO
+		ON ifnull(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) = SUB.ASSET_CODE
+		left join CHB_AST_VAL val
+		on val.VAL_DATE = sub.VAL_DATE
+		and  val.ASSET_CODE = ASSETINFO.ASSET_CODE
+		and val.status in ('M','E')
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
 		WHERE DATE_FORMAT(sub.VAL_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
-		  and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
-		  and not exists(
-		  	select 1 
-		  	from CHB_AST_VAL val 
-		  	where DATE_FORMAT(val.VAL_DATE,'%Y-%m-%d') = DATE_FORMAT(sub.VAL_DATE,'%Y-%m-%d')
-		  	and val.ASSET_CODE = sub.ASSET_CODE
-		  	and val.STATUS != 'D'
-		  )
+		and SUB.SEND_STATUS in ('02','03')
+		and SUB.STATUS ='03'
+		<!-- add by zhangliang 20201112 删除的数据不应该生成修改未报送  end-->
+
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			and CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+		</if>
+		and( SUB.STATUS ='03' or (val.UNIT_VAL_NET &lt;&gt; SUB.UNIT_VAL_NET or val.UNIT_VAL_TOTAL &lt;&gt; SUB.UNIT_VAL_TOTAL))
+		union all
+		SELECT
+		sub.REGIST_SEQNO as registSeqno,
+		sub.ISSUE_PARTY_ID  as issuePartyId,
+		SUB.ASSET_CODE as assetCode,
+		sub.VAL_DATE as valDate,
+		sub.UNIT_VAL_NET as unitValNet,
+		sub.UNIT_VAL_TOTAL as unitValTotal,
+		sub.REMARK as remark,
+		'03'  status/*删除状态*/
+		FROM CHB_AST_VAL_SUB sub
+		left join CHB_ASSET_INFO ASSETINFO
+		ON ifnull(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) = SUB.ASSET_CODE
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=sub.ASSET_CODE
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
+		WHERE DATE_FORMAT(sub.VAL_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
+		and SUB.SEND_STATUS in ('02','03') and SUB.STATUS &lt;&gt;'03'
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+		</if>
+		and not exists(
+		select 1
+		from CHB_AST_VAL val
+		where DATE_FORMAT(val.VAL_DATE,'%Y-%m-%d') = DATE_FORMAT(sub.VAL_DATE,'%Y-%m-%d')
+		and val.ASSET_CODE = ASSETINFO.ASSET_CODE
+		and val.STATUS != 'D'
+		)
 	</select>
 
 	<select id="queryRegistedList" resultType="com.joyintech.tams.common.base.entity.ChbAstValueSub">
@@ -213,5 +260,41 @@
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, NOW(),
       #{updateUser,jdbcType=VARCHAR}, NOW())
   </insert>
-	
+	<select id="queryInsertGenerateList" parameterType="map" resultMap="com.joyintech.tams.common.base.dao.ChbAstValueSubMapper.BaseResultMap">
+		SELECT
+		f_guid() REGIST_SEQNO,
+		VAL.ISSUE_PARTY_ID  as ISSUE_PARTY_ID,
+		ifnull(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE) as ASSET_CODE,
+		VAL.VAL_DATE as VAL_DATE,
+		VAL.UNIT_VAL_NET as UNIT_VAL_NET,
+		VAL.UNIT_VAL_TOTAL as UNIT_VAL_TOTAL,
+		VAL.REMARK as REMARK,
+		'01'  STATUS,
+		'01' SEND_STATUS,
+		#{chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+		#{submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+		VAL.ORG_CODE ORG_CODE,
+		VAL.DEPT_CODE DEPT_CODE,
+		'system' CREATE_USER,
+		now() CREATE_TIME,
+		'system' UPDATE_USER,
+		now() UPDATE_TIME,
+		#{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
+		FROM CHB_AST_VAL VAL
+		LEFT JOIN CHB_ASSET_INFO ASSETINFO
+		ON ASSETINFO.ASSET_CODE = VAL.ASSET_CODE
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=VAL.ASSET_CODE
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
+		WHERE DATE_FORMAT(VAL.VAL_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
+		and not exists  (select 1 from CHB_AST_VAL_SUB SUB
+		where SUB.VAL_DATE = VAL.VAL_DATE
+		and SUB.ASSET_CODE = ifnull(ASSETINFO.ASSET_CODE_OLD,ASSETINFO.ASSET_CODE)
+		and SUB.SEND_STATUS in ('02','03')
+		)
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			AND CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+		</if>
+	</select>
 </mapper>

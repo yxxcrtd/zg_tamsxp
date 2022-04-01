@@ -280,11 +280,14 @@ public class TradeHelper {
         String othCodeType = "";
         String entrustProp = order.getEntrustProp();
         if (HS.value.equals(entrustProp)) {
-            othCodeType = HSDM.value;
+//            othCodeType = HSDM.value;
+            return false;
         } else if (ZYCRK.value.equals(entrustProp)) {
-            othCodeType = ZYDM.value;
+//            othCodeType = ZYDM.value;
+            return false;
         } else if (CHANGE_TO_STOCK.value.equals(entrustProp)) {
-            othCodeType = KZZZGDM.value;
+//            othCodeType = KZZZGDM.value;
+            return false;
         } else if (PS.value.equals(entrustProp)) {
             othCodeType = PZDM.value;
         } else if (ALLOTMENT.value.equals(entrustProp)) {

@@ -415,6 +415,82 @@
                 </div>
 
             </div>
+
+            <div class="layui-form-item">
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repPppflag}">公共PPP</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_pppflag|" th:name="|${entityName}.pppflag|"
+                                th:initValue="${entity?.pppflag}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repBondtostockFlag}">是否投向市场化债转股相关产品的部分</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_bondtostockFlag|" th:name="|${entityName}.bondtostockFlag|"
+                                th:initValue="${entity?.bondtostockFlag}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{BussRepOther.repPrivateprdFlag}">投向地方政府融资平台的部分</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_privateprdFlag|" th:name="|${entityName}.privateprdFlag|"
+                                th:initValue="${entity?.privateprdFlag}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                required="required"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}">
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" >结构化业务类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_constracteBusiType|" th:name="|${entityName}.constracteBusiType|"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                th:initValue="${entity?.constracteBusiType}"
+                                data-th-placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result="${SVR_CONSTRACTE_BUSI_TYPE}">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" >结构化层级</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_constracteGrade|" th:name="|${entityName}.constracteGrade|"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                th:initValue="${entity?.constracteGrade}"
+                                data-th-placeholder="#{SysCommon.placeholder}"
+                                data-th-data-result="${SVR_CONSTRACTE_GRADE}">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap">结构化杠杆倍数</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" th:id="|${entityName}_constracteHeaverTimes|" th:name="|${entityName}.constracteHeaverTimes|"
+                               th:value="${entity?.constracteHeaverTimes}" data-textrange="2" maxlength="6"
+                               class="layui-input form-input text-number"/>
+                    </div>
+                </div>
+
+            </div>
+
             <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
             <div class="layui-form-item">
 

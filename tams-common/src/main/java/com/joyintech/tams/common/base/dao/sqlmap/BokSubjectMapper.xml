@@ -21,32 +21,37 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SUBJECT_INTERNAL_CODE" property="subjectInternalCode" jdbcType="VARCHAR" />
+        <result column="SUBJECT_HAND_FEL_CODE" property="subjectHandFelCode" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="IS_BOTTOM" property="isBottom" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        BOOKSET_ID BOOKSET_ID, SUBJECT_NO SUBJECT_NO, SUBJECT_NAME SUBJECT_NAME, FSUBJECT_ID FSUBJECT_ID, 
-        BAL_FLAG BAL_FLAG, SUBJECT_TYPE SUBJECT_TYPE, SUBJECT_LEVEL SUBJECT_LEVEL, ACC_QUA_FLAG ACC_QUA_FLAG, 
-        ACC_INT_FLAG ACC_INT_FLAG, OVERDRAWN_FLAG OVERDRAWN_FLAG, GEN_DETSUB_FLAG GEN_DETSUB_FLAG, 
-        BASE_SUBJECT_NATURE BASE_SUBJECT_NATURE, INV_AIM INV_AIM, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, 
-        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME
+        BOOKSET_ID BOOKSET_ID, SUBJECT_NO SUBJECT_NO, SUBJECT_NAME SUBJECT_NAME, FSUBJECT_ID FSUBJECT_ID,
+        BAL_FLAG BAL_FLAG, SUBJECT_TYPE SUBJECT_TYPE, SUBJECT_LEVEL SUBJECT_LEVEL, ACC_QUA_FLAG ACC_QUA_FLAG,
+        ACC_INT_FLAG ACC_INT_FLAG, OVERDRAWN_FLAG OVERDRAWN_FLAG, GEN_DETSUB_FLAG GEN_DETSUB_FLAG,
+        BASE_SUBJECT_NATURE BASE_SUBJECT_NATURE, INV_AIM INV_AIM, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, SUBJECT_INTERNAL_CODE SUBJECT_INTERNAL_CODE, SUBJECT_HAND_FEL_CODE SUBJECT_HAND_FEL_CODE,
+        CCY CCY, IS_BOTTOM IS_BOTTOM
     </sql>
     <sql id="Sql_All_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
         from BOK_SUBJECT
     </sql>
     <sql id="Sql_All_Effective_Data" >
-        select 
+        select
         <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
         from BOK_SUBJECT
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokSubjectKey" >
-    select
-    <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
-    from BOK_SUBJECT
-    where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
-    and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
-</select>
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
+        from BOK_SUBJECT
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokSubjectKey" >
         delete from BOK_SUBJECT
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
@@ -59,14 +64,16 @@
             OVERDRAWN_FLAG, GEN_DETSUB_FLAG, BASE_SUBJECT_NATURE,
             INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER,
             CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-            UPDATE_TIME)
+            UPDATE_TIME, SUBJECT_INTERNAL_CODE, SUBJECT_HAND_FEL_CODE,
+            CCY, IS_BOTTOM)
         values (#{booksetId,jdbcType=VARCHAR}, #{subjectNo,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR},
             #{fsubjectId,jdbcType=VARCHAR}, #{balFlag,jdbcType=VARCHAR}, #{subjectType,jdbcType=VARCHAR},
             #{subjectLevel,jdbcType=DECIMAL}, #{accQuaFlag,jdbcType=VARCHAR}, #{accIntFlag,jdbcType=VARCHAR},
             #{overdrawnFlag,jdbcType=VARCHAR}, #{genDetsubFlag,jdbcType=VARCHAR}, #{baseSubjectNature,jdbcType=VARCHAR},
             #{invAim,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{updateTime,jdbcType=TIMESTAMP}, #{subjectInternalCode,jdbcType=VARCHAR}, #{subjectHandFelCode,jdbcType=VARCHAR},
+            #{ccy,jdbcType=VARCHAR}, #{isBottom,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokSubject" >
         insert into BOK_SUBJECT
@@ -128,6 +135,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="subjectInternalCode != null" >
+                SUBJECT_INTERNAL_CODE,
+            </if>
+            <if test="subjectHandFelCode != null" >
+                SUBJECT_HAND_FEL_CODE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="isBottom != null" >
+                IS_BOTTOM,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="booksetId != null" >
@@ -187,17 +206,31 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="subjectInternalCode != null" >
+                #{subjectInternalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectHandFelCode != null" >
+                #{subjectHandFelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="isBottom != null" >
+                #{isBottom,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokSubject" >
         insert into BOK_SUBJECT(BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG,
         SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG,
         BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
-        UPDATE_USER, UPDATE_TIME)
+        UPDATE_USER, UPDATE_TIME, SUBJECT_INTERNAL_CODE, SUBJECT_HAND_FEL_CODE, CCY, IS_BOTTOM
+        )
         select BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG,
             SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG,
             BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SUBJECT_INTERNAL_CODE, SUBJECT_HAND_FEL_CODE, CCY, IS_BOTTOM
+
              from BOK_SUBJECT
              where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
     </insert>
@@ -246,6 +279,18 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="subjectInternalCode != null" >
+                SUBJECT_INTERNAL_CODE = #{subjectInternalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectHandFelCode != null" >
+                SUBJECT_HAND_FEL_CODE = #{subjectHandFelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="isBottom != null" >
+                IS_BOTTOM = #{isBottom,jdbcType=VARCHAR},
+            </if>
         </set>
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
@@ -265,7 +310,11 @@
             INV_AIM = #{invAim,jdbcType=VARCHAR},
             SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SUBJECT_INTERNAL_CODE = #{subjectInternalCode,jdbcType=VARCHAR},
+            SUBJECT_HAND_FEL_CODE = #{subjectHandFelCode,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            IS_BOTTOM = #{isBottom,jdbcType=VARCHAR}
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
           and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
     </update>

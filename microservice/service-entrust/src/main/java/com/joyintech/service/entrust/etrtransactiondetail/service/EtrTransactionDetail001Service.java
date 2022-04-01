@@ -94,6 +94,7 @@ public class EtrTransactionDetail001Service extends BaseService{
         param.put("ASSET_TYPE_16", DictCodeListExt2.平安资产类型_利率互换.getValue());
         param.put("PS_T01", DictCodeList.交易方向_买入.getValue());
         param.put("assetBond", DictCodeList.平安资产类型_债券.getValue());
+        param.put("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         String portfolioId = (String)param.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
@@ -129,6 +130,7 @@ public class EtrTransactionDetail001Service extends BaseService{
 			throws Exception {
     	param.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
     	param.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+        param.put("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         Page<TrdProductDealDetailDto> pageDto = super.queryForPage(page, length,() -> etrTransactionDetailMapper.selectTransDetailPage(param));
 		return pageDto;
 	}

@@ -19,7 +19,14 @@ public interface TradeAgent extends IAgentCommand {
      *
      * @param accountId 账号id
      */
-    default  void removeAccount(String accountId) {
+    default void removeAccount(String accountId) {
+
+    }
+
+    /**
+     * 报价查询、成交查询
+     */
+    default void queryNextTrade() {
 
     }
 }

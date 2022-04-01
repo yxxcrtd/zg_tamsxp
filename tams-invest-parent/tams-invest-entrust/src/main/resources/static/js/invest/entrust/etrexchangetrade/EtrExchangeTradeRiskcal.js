@@ -47,7 +47,7 @@ $(function() {
             ];
     
     var table = $("#baseRiskMathTable").joyintable({
-        data:parent.EtrExchangeTrade001.riskResultdata==null?[]:parent.EtrExchangeTrade001.riskResultdata,
+        data: (!parent.EtrExchangeTradeMain || parent.EtrExchangeTradeMain.currentEtrTypeTab == '0')?(parent.EtrExchangeTrade001.riskResultdata==null?[]:parent.EtrExchangeTrade001.riskResultdata):(parent.EtrExchangeTradeMulti001.riskResultdata==null?[]:parent.EtrExchangeTradeMulti001.riskResultdata),
         cols : cols,
         searchOnInit:true,
         checkbox : false,

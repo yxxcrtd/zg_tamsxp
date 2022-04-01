@@ -66,7 +66,11 @@ public class ChbDeadlineService extends BaseService<ChbDeadLine001Dto>{
         ChbDeadLine001Dto holidaymarket001DtoChb = new ChbDeadLine001Dto();
         //行内报送截止日
         ChbDeadLine001Dto holidaymarket001Dto = new ChbDeadLine001Dto();
-        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(flag)|| DictCodeListExt1.维护数据状态_有效.getValue().equals(flag)){
+        if(DictCodeListExt2.报送数据状态_新建.getValue().equals(flag)|| DictCodeListExt1.维护数据状态_有效.getValue().equals(flag)
+                /***根据数据源规范.三期所有数据应该都是一个工作日报送.不应区分是否删除修改****/
+                ||DictCodeListExt2.报表名称_投资者身份信息登记.getValue().equals(regTimePoints001Dto.getReportCode())
+                ||DictCodeListExt2.报表名称_投资者持有信息登记.getValue().equals(regTimePoints001Dto.getReportCode())
+                ||DictCodeListExt2.报表名称_投资者明细信息登记.getValue().equals(regTimePoints001Dto.getReportCode())){
             if(DictCodeListExt2.报送时点类型_每周.getValue().equals(regTimePoints001Dto.getSubmitTimetype())){//中债报送截止日
 //                holidaymarket001DtoChb = new Holidaymarket001Dto();
 //                //行内报送截止日

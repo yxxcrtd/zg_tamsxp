@@ -13,9 +13,12 @@ package com.joyintech.tams.exchange.entrust.etrexchange.agreementbond.controller
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.business.common.dto.CfetsExportRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementbond.dto.EtrExchangeFixedIncomeResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementbond.service.EtrExchangeTradeGd002Service;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeExportCommonRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.hqjj.dto.EtrExchangeTradeQuotationRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +30,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 交易所指令交易（债券股票回购基金场内指令交易）
@@ -72,6 +78,27 @@ public class EtrExchangeAgreeBond002Controller extends BaseController{
 			logger.error("查询指令管理分页数据异常",e);
 			return new Message<Page<EtrExchangeFixedIncomeResponse>>().fail().setMessage("查询固定收益行情数据异常");
 		}
+	}
+
+
+	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="导出交易行情信息",notes = "导出交易行情信息")
+	@ResponseBody
+	@PostMapping("exportFixedIncomePage")
+	public void exportFixedIncomePage(@RequestBody CfetsExportRequestDto request, HttpServletResponse response){
+		// 导出
+		ExcelUitl.doExport(request, response, "交易行情", () -> {
+			EtrExchangeTradeQuotationRequest dto = request.getDto(EtrExchangeTradeQuotationRequest.class);
+			List dataList = etrExchangeTradeGd002Service.findFixedIncomePage(dto).getRoot();
+			return dataList;
+		});
+
 	}
 
 

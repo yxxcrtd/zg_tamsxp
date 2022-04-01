@@ -190,6 +190,8 @@ public class EquityInfo002Service extends BaseService{
             List<Map<String, String>> listType = new ArrayList<>();
             listType.add(map);
             List<EquityInfo001Dto> equityList = new ArrayList<>();
+            //【中债三期优化--投资者身份信息--列表】数据检查结果自动填充错误
+            dto.setInterfCheckResult(null);
             equityList.add(dto);
             //modify by wangmin 合DB2版本代码，添加数据源 begin 2018-07-23
             //equityInfo001Service.dealAfterCheck(listType, equityList);

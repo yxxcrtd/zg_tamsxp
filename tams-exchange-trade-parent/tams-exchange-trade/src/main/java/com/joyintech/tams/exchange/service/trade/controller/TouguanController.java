@@ -9,6 +9,8 @@ import com.joyintech.tams.exchange.datacommon.db.service.EntrustService;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.SettleManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class TouguanController {
     public ResultBean handleExamine(@RequestParam(value = "eventId") String orderId,
                                     @RequestParam(value = "approveResult") String instructionsStatus,
                                     @RequestParam(value = "approveReason", required = false) String approveReason) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return investmentManagement.handleExamine(orderId, instructionsStatus, approveReason);
     }
 
@@ -59,6 +64,9 @@ public class TouguanController {
     @RequestMapping(value = "/instructionChange", method = RequestMethod.POST)
     public ResultBean instructionChange(@RequestParam(value = "entrustId") String instructionId,
                                         @RequestParam(value = "entrustStatus") String status) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return investmentManagement.instructionChange(instructionId, status);
     }
 
@@ -74,6 +82,9 @@ public class TouguanController {
     @RequestMapping(value = "/instruction/cancel", method = RequestMethod.POST)
     public ResultBean cancelInstruction(@RequestParam(value = "instruction_Id") String instructionId,
                                         @RequestParam(value = "entrustStatus", required = false) String instructionStatus) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return investmentManagement.cancelInstruction(instructionId, instructionStatus);
     }
 
@@ -87,13 +98,19 @@ public class TouguanController {
     @ApiOperation(value = "投管用-指令分发接收接口", notes = "投管用-指令分发接收接口")
     @RequestMapping(value = "/instruction/distribute", method = RequestMethod.POST)
     public ResultBean appointInstruction(@RequestBody InstructionPage<Instruction, InstructionPledge, InstructionDetail> instructionPage) throws Exception {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return investmentManagement.appointInstruction(instructionPage);
     }
 
     @ApiOperation(value = "投管用-场内交易历史数据清算接口", notes = "投管用-场内交易历史数据清算接口")
     @RequestMapping(value = "/settle", method = RequestMethod.POST)
-    public String settleHistory() {
-        return settleManagement.settleHistory();
+    public Message<String> settleHistory() {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
+        return new Message<String>(settleManagement.settleHistory());
     }
 
     /**
@@ -105,6 +122,9 @@ public class TouguanController {
     @ApiOperation(value = "投管用-委托查询接口", notes = "投管用-委托查询接口")
     @RequestMapping(value = "/queryEntrust", method = RequestMethod.POST)
     public Message<List<EntrustQueryDto>> queryEntrust(@RequestParam(value = "entrustId") String instructionId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<List<EntrustQueryDto>>(entrustService.queryEntrust2Touguan(instructionId));
     }
 
@@ -117,6 +137,9 @@ public class TouguanController {
     @ApiOperation(value = "投管用-成交查询接口", notes = "投管用-成交查询接口")
     @RequestMapping(value = "/queryTrade", method = RequestMethod.POST)
     public Message<List<TradeQueryDto>> queryTrade(@RequestParam(value = "entrustId") String instructionId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
         return new Message<List<TradeQueryDto>>(tradeService.queryTrade2Touguan(instructionId));
     }
 

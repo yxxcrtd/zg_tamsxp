@@ -1,5 +1,6 @@
 (function() {
 	var assetType;
+	var assetTypeflag=true;
 	var init=function() {
 //		setTimeout(function() {
 //        }, 500);
@@ -40,7 +41,7 @@
         object.operateType = operateType;
         object.pageModel = pageModel;
         //check一下比例         start
-        if(assetType  === '01'){
+        if(assetTypeflag){
         	 var eachProportion=object.eachProportion;
              var assetsInvest=object.assetsInvest;
              if(eachProportion !== null){
@@ -288,6 +289,7 @@
 				}else{
 					$('#assetType').val("08").trigger('change');
 					syqFlag = false;
+					assetTypeflag = false;
 				}
 				if (syqFlag){
 					syqDiv.style.display="block";

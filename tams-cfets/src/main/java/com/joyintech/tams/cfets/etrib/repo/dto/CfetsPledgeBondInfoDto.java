@@ -74,6 +74,9 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
      */
     private Date mdate;
 
+    @ApiModelProperty(name="totalPrinAmt",value="汇总券面总额",example="10000")
+    private BigDecimal totalPrinAmt;
+
     /**
      * 可质押券面总额
      */
@@ -256,5 +259,13 @@ public class CfetsPledgeBondInfoDto extends BaseEntity {
 
     public void setPledgeAmount(BigDecimal pledgeAmount) {
         this.pledgeAmount = pledgeAmount;
+    }
+
+    public BigDecimal getTotalPrinAmt() {
+        return totalPrinAmt;
+    }
+
+    public void setTotalPrinAmt(BigDecimal totalPrinAmt) {
+        this.totalPrinAmt = totalPrinAmt;
     }
 }

@@ -251,7 +251,11 @@ public class TradeCallbackHelper {
             // 若指令全部完成，则更新指令状态为已完成
             updateInstructionStatus(instruction);
             // 是否需要手工交手
-            if (InvestmentAssetType.isBond(instruction.getAssetType()) && TradePlat.needSettleTrade(instruction.getTradePlat())) {
+            if(IntegratedEntrustUtils.isProtocolBack(tradeRecord.getEntrustProp())){//协议回购
+                messageSenderService.pushTradeToMQForFixedIncome(tradeRecord, instruction, entrust);
+                return;
+            }
+            else if (InvestmentAssetType.isBond(instruction.getAssetType()) && TradePlat.needSettleTrade(instruction.getTradePlat())) {
                 Instrument instrument = instrumentService.queryByInnerCode(entrust.getStockCode());
                 if (Objects.nonNull(instrument)) {
                     if (EntrustUtils.isSettleTrade(instrument.getTradePlat(), entrust.getEntrustProp())) {

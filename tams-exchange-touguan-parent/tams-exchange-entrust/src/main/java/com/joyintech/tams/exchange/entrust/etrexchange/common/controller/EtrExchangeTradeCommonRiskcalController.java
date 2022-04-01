@@ -18,6 +18,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
+import com.joyintech.tams.component.business.riskrds.controller.RiskRdsTrialController;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeCommonRiskcalResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
@@ -65,6 +66,9 @@ public class EtrExchangeTradeCommonRiskcalController extends BaseController{
     private InterfRiskRdsController interfRiskRdsController;
 
     @Autowired
+    private RiskRdsTrialController riskRdsTrialController;
+
+    @Autowired
     private EtrExchangeTradeCommon001Service etrExchangeTrade001CommonService;
 
     @ApiOperation(value = "风险试算初始化参数", notes = "风险试算初始化参数")
@@ -88,10 +92,18 @@ public class EtrExchangeTradeCommonRiskcalController extends BaseController{
             EtrExchangeTradeCommonRiskcalResponse result=new EtrExchangeTradeCommonRiskcalResponse();
             //风险试算组装dto
             Map<String, Object> dataMap=etrExchangeTrade001CommonService.doRiskcalPackageEquity(dto);
-            List<String> resultArrList=null;
+            List<String> resultArrList=new ArrayList<>();
             //债券
             if(StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
-               resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F01");
+
+                  if (StringUtil.equals(dto.getPs(),DictCodeListExt1.交易方向_债转股.getValue())) {
+                      resultArrList = interfRiskRdsController.doInfBatchData(dataMap, "0", "RSK011", "F01");
+                  }else{
+                      resultArrList = interfRiskRdsController.doInfBatchData(dataMap, "0", "RSK002", "F01");
+                  }
+
+//                String riskResult = riskRdsTrialController.doInfBatchData(dataMap, "EtrExchangeTradeMulti001", "0", "F01");
+//                resultArrList.add(riskResult);
             }
             //基金
             else if (StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
@@ -103,7 +115,7 @@ public class EtrExchangeTradeCommonRiskcalController extends BaseController{
             }
             //质押式回购
             else if (StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
-                  && StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+                 || StringUtil.equals(dto.getFinprodType2(),DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
                 resultArrList=interfRiskRdsController.doInfBatchData(dataMap,"0", "RSK002","F07");
             }
             result.setRiskMathFlag("02");

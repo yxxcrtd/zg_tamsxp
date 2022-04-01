@@ -99,6 +99,19 @@ public class TotalTrdProductDealDto extends TrdFinProductDealTotal {
      */
     private String finprodTypeExt;
 
+	/**
+	 * 总持仓数量
+	 */
+	private BigDecimal amount;
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
     private BigDecimal theoryInt; // 理论应计利息
 
 	private BigDecimal theoryprinAmt; // 理论还本金额

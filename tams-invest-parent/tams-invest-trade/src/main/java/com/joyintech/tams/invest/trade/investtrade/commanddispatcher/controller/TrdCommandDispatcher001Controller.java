@@ -155,6 +155,8 @@ public class TrdCommandDispatcher001Controller extends BaseController{
             model.addAttribute("MDATE", "");
 		}
 		model.addAttribute("SYS_DATE", DateUtil.getSysDate());
+        model.addAttribute("ENTRUST_CLASS_01", DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());
+        model.addAttribute("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
 		return super.init(model);
 	}
 	

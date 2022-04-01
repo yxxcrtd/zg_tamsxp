@@ -1,0 +1,12 @@
+alter table ETR_SEC_STOCK add IS_DEF_STOCK VARCHAR2(2);
+comment on column ETR_SEC_STOCK.IS_DEF_STOCK is '是否是默认质押券库';
+
+delete from ETR_SEC_STOCK where PLEDGE_STOCK_ID = 'comConfig';
+
+INSERT INTO ETR_SEC_STOCK (PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_DEF_STOCK) 
+VALUES ('comConfig', '通用质押券库', 'comConfig', 'YHZGB', sysdate, 'comConfig', sysdate, null);
+
+delete from ETR_SEC_STOCK_CONFIG where PLEDGE_STOCK_ID = 'comConfig';
+
+INSERT INTO ETR_SEC_STOCK_CONFIG (CONFIG_ID, PLEDGE_STOCK_ID, WINDTYPEONE, WINDTYPETWO, M_GRADE_RESULT, SEC_GRADE_RESULT, IS_SEC_BOND, IS_RIGHT, IS_PPB, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES (SYS_GUID(), 'comConfig', '03', '003', null, null, null, null, null, 'comConfig', 'YHZGB', sysdate, 'comConfig', sysdate);

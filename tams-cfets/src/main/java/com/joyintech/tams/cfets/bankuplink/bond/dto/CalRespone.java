@@ -58,6 +58,9 @@ public class CalRespone {
     @ApiModelProperty(name="deviationDegree",value="偏离度")
     private String deviationDegree;
 
+    @ApiModelProperty(name="assetType11",value="资产四级分类")
+    private String assetType11;
+
     public BigDecimal getShareAmt() {
         return shareAmt;
     }
@@ -176,6 +179,14 @@ public class CalRespone {
 
     public void setParValueAmt(BigDecimal parValueAmt) {
         this.parValueAmt = parValueAmt;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
     }
 }
 

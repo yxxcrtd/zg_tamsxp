@@ -88,6 +88,7 @@ public enum ErrorCode {
 
     INSTRUCTION_NOT_SUPPORT_ALGORITHM_ERROR(1018, "该指令不支持算法交易"),
 
+    INSTRUMENT_INFO_NOT_EXIT(1019, "申报代码信息不存在"),
 
     /**
      * 2001 —— 3000终端错误号

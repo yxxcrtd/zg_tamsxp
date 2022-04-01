@@ -17,12 +17,12 @@
     <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, LOAN_INCOME_RIGHT, DEBT_SECURITIES_INCOME_RIGHTS, 
-    RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS, STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS, 
+    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, LOAN_INCOME_RIGHT, DEBT_SECURITIES_INCOME_RIGHTS,
+    RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS, STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS,
     PROPERTY_RIGHTS, TOTAL, REPORTUUID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_ASSET_INCOME
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
@@ -32,16 +32,16 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetIncomeDetail" >
-    insert into PBC_REPORT_ASSET_INCOME (DETAILUUID, REPORTTYPE, GROUPTYPE, 
-      PROPERTYCODE, LOAN_INCOME_RIGHT, DEBT_SECURITIES_INCOME_RIGHTS, 
-      RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS, 
-      STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS, 
+    insert into PBC_REPORT_ASSET_INCOME (DETAILUUID, REPORTTYPE, GROUPTYPE,
+      PROPERTYCODE, LOAN_INCOME_RIGHT, DEBT_SECURITIES_INCOME_RIGHTS,
+      RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS,
+      STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS,
       PROPERTY_RIGHTS, TOTAL, REPORTUUID
       )
-    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
-      #{propertycode,jdbcType=VARCHAR}, #{loanIncomeRight,jdbcType=DECIMAL}, #{debtSecuritiesIncomeRights,jdbcType=DECIMAL}, 
-      #{receivableIncomeRights,jdbcType=DECIMAL}, #{otherCreditorRights,jdbcType=DECIMAL}, 
-      #{stockIncomeRight,jdbcType=DECIMAL}, #{otherEquityIncomeRights,jdbcType=DECIMAL}, 
+    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR},
+      #{propertycode,jdbcType=VARCHAR}, #{loanIncomeRight,jdbcType=DECIMAL}, #{debtSecuritiesIncomeRights,jdbcType=DECIMAL},
+      #{receivableIncomeRights,jdbcType=DECIMAL}, #{otherCreditorRights,jdbcType=DECIMAL},
+      #{stockIncomeRight,jdbcType=DECIMAL}, #{otherEquityIncomeRights,jdbcType=DECIMAL},
       #{propertyRights,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR}
       )
   </insert>
@@ -189,29 +189,29 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
   <select id="selectByReportuuid"
-	resultType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetIncomeDetail" parameterType="java.lang.String">
+          resultType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAssetIncomeDetail" parameterType="java.lang.String">
 	select DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, LOAN_INCOME_RIGHT,
 	DEBT_SECURITIES_INCOME_RIGHTS,
 	RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS, STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS,
 	PROPERTY_RIGHTS, TOTAL, REPORTUUID from PBC_REPORT_ASSET_INCOME
 	where REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
 </select>
- <delete id="deleteByReportDate"  parameterType="map" >
+  <delete id="deleteByReportDate"  parameterType="map" >
     delete
     from PBC_REPORT_ASSET_INCOME prp
     where prp.REPORTUUID in(
-         select pr.REPORTUUID from PBC_REPORT pr
-          where 1=1
-          <if test="reportStartDate != null" >
-          and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
-          </if>
-          <if test="reportEndDate != null" >
-          and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
-          </if>
-          <if test="reporttype != null" >
-            and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
-          </if> 
-       and pr.send_status = '01'/*只删除未报送数据*/
-       )
+    select pr.REPORTUUID from PBC_REPORT pr
+    where 1=1
+    <if test="reportStartDate != null" >
+      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reportEndDate != null" >
+      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reporttype != null" >
+      and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+    </if>
+    and pr.send_status = '01'/*只删除未报送数据*/
+    )
   </delete>
 </mapper>

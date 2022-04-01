@@ -5,71 +5,71 @@
 
 	<select id="queryGenerateList" resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
 		SELECT
-		    POS.ISSUE_PARTY_ID  as issuePartyId,
-		    STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
-		    POS.PLAN_ASSET_ID as planAssetId, 
-		    POS.ASSET_CODE as assetCode,
-		    POS.TOTAL_NUM as totalNum,
-		    POS.ISSUE_AMT as issueAmt,
-		    POS.UNINVEST_CASH as uninvestCash,
-		    POS.POS_NUM as posNum,
-		    POS.POS_AMT as posAmt,
-		    '01'  status	    
+		POS.ISSUE_PARTY_ID  as issuePartyId,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as posDate,
+		POS.PLAN_ASSET_ID as planAssetId,
+		POS.ASSET_CODE as assetCode,
+		POS.TOTAL_NUM as totalNum,
+		POS.ISSUE_AMT as issueAmt,
+		POS.UNINVEST_CASH as uninvestCash,
+		POS.POS_NUM as posNum,
+		POS.POS_AMT as posAmt,
+		'01'  status
 		FROM CHB_BOT_AST_POS POS
 		WHERE DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
 		<if test="ischbbtm != null and ischbbtm == '02'">
 			and POS.ISCHL = '02'
 		</if>
-		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB 
-			where SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
-			  and SUB.ASSET_CODE = POS.ASSET_CODE 
-			  and SUB.SEND_STATUS in ('02','03'))
+		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB
+		where SUB.POS_DATE = POS.POS_DATE
+		and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
+		and SUB.ASSET_CODE = POS.ASSET_CODE
+		and SUB.SEND_STATUS in ('02','03'))
 	</select>
 
 	<insert id="queryGenerateListAndInsert" parameterType="map">
-		insert into CHB_BOT_AST_POS_SUB 
-		  (REGIST_SEQNO,ISSUE_PARTY_ID,POS_DATE,PLAN_ASSET_ID,ASSET_CODE,TOTAL_NUM,ISSUE_AMT,
-    UNINVEST_CASH,POS_NUM,POS_AMT,STATUS,SEND_STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
-    ORG_CODE, DEPT_CODE, CREATE_USER,  CREATE_TIME, UPDATE_USER, UPDATE_TIME,STATUS_DATE)
-		select 
-		    F_GUID() REGIST_SEQNO,
-			POS.ISSUE_PARTY_ID  as ISSUE_PARTY_ID,
-		    STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as POS_DATE,
-		    ifnull(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as PLAN_ASSET_ID,
-		    ifnull(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as ASSET_CODE,
-		    POS.TOTAL_NUM as TOTAL_NUM,
-		    POS.ISSUE_AMT as ISSUE_AMT,
-		    POS.UNINVEST_CASH as UNINVEST_CASH,
-		    POS.POS_NUM as POS_NUM,
-		    POS.POS_AMT as POS_AMT,
-		    '01'  STATUS,
-		    '01' SEND_STATUS,
-		    #{chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
-		    #{submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
-		    POS.ORG_CODE ORG_CODE,
-		    POS.DEPT_CODE DEPT_CODE,
-		    'system' CREATE_USER,
-		    NOW() CREATE_TIME,
-		    'system' UPDATE_USER,
-		    NOW() UPDATE_TIME,
-		    #{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
+		insert into CHB_BOT_AST_POS_SUB
+		(REGIST_SEQNO,ISSUE_PARTY_ID,POS_DATE,PLAN_ASSET_ID,ASSET_CODE,TOTAL_NUM,ISSUE_AMT,
+		UNINVEST_CASH,POS_NUM,POS_AMT,STATUS,SEND_STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+		ORG_CODE, DEPT_CODE, CREATE_USER,  CREATE_TIME, UPDATE_USER, UPDATE_TIME,STATUS_DATE)
+		select
+		F_GUID() REGIST_SEQNO,
+		POS.ISSUE_PARTY_ID  as ISSUE_PARTY_ID,
+		STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')  as POS_DATE,
+		ifnull(PLANASSET.ASSET_CODE_OLD,PLANASSET.ASSET_CODE) as PLAN_ASSET_ID,
+		ifnull(BOTASSET.ASSET_CODE_OLD,BOTASSET.ASSET_CODE) as ASSET_CODE,
+		POS.TOTAL_NUM as TOTAL_NUM,
+		POS.ISSUE_AMT as ISSUE_AMT,
+		POS.UNINVEST_CASH as UNINVEST_CASH,
+		POS.POS_NUM as POS_NUM,
+		POS.POS_AMT as POS_AMT,
+		'01'  STATUS,
+		'01' SEND_STATUS,
+		#{chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+		#{submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+		POS.ORG_CODE ORG_CODE,
+		POS.DEPT_CODE DEPT_CODE,
+		'system' CREATE_USER,
+		NOW() CREATE_TIME,
+		'system' UPDATE_USER,
+		NOW() UPDATE_TIME,
+		#{statusDate,jdbcType=TIMESTAMP} STATUS_DATE
 		FROM CHB_BOT_AST_POS POS
-        LEFT JOIN CHB_ASSET_INFO PLANASSET
-        ON PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
-        LEFT JOIN CHB_ASSET_INFO BOTASSET
-        ON BOTASSET.ASSET_CODE = POS.ASSET_CODE
+		LEFT JOIN CHB_ASSET_INFO PLANASSET
+		ON PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
+		LEFT JOIN CHB_ASSET_INFO BOTASSET
+		ON BOTASSET.ASSET_CODE = POS.ASSET_CODE
 		WHERE DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
 		<if test="ischbbtm != null and ischbbtm == '02'">
 			and POS.ISCHL = '02'
 		</if>
-		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB 
-			where SUB.POS_DATE = POS.POS_DATE
-			  and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID 
-			  and SUB.ASSET_CODE = POS.ASSET_CODE 
-			  and SUB.SEND_STATUS in ('02','03'))
+		and not exists  (select 1 from CHB_BOT_AST_POS_SUB SUB
+		where SUB.POS_DATE = POS.POS_DATE
+		and SUB.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
+		and SUB.ASSET_CODE = POS.ASSET_CODE
+		and SUB.SEND_STATUS in ('02','03'))
 	</insert>
-	
+
 	<select id="queryUpdateOrDelList" resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
 		SELECT
 			sub.REGIST_SEQNO as registSeqno,
@@ -145,29 +145,29 @@
 
 	<!-- 批量 插入登记表-->
 	<insert id="insertRegistBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSub">
-		insert into CHB_BOT_AST_POS_SUB (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
-		      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
-		      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
-		      POS_NUM, POS_AMT, SEND_STATUS, 
-		      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-		      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
-		      STATUS, STATUS_DATE, ORG_CODE, 
-		      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
-		      CREATE_TIME, UPDATE_USER, UPDATE_TIME
-            )
+		insert into CHB_BOT_AST_POS_SUB (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID,
+		POS_DATE, PLAN_ASSET_ID, ASSET_CODE,
+		TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH,
+		POS_NUM, POS_AMT, SEND_STATUS,
+		CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+		SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS,
+		STATUS, STATUS_DATE, ORG_CODE,
+		DEPT_CODE, CREATE_USER, CREATE_DEPT,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME
+		)
 		<foreach collection="chbBotAstPositionSubList" item="dto" open=" select * from (select " close="from dual)" separator="from dual union all select ">
-		  #{dto.registSeqno,jdbcType=CHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, 
-	      #{dto.posDate,jdbcType=TIMESTAMP}, #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=OTHER}, 
-	      #{dto.totalNum,jdbcType=DECIMAL}, #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL}, 
-	      #{dto.posNum,jdbcType=DECIMAL}, #{dto.posAmt,jdbcType=DECIMAL}, #{dto.sendStatus,jdbcType=VARCHAR}, 
-	      #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{dto.submitDeadline,jdbcType=TIMESTAMP}, 
-	      #{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR}, 
-	      #{dto.status,jdbcType=VARCHAR},  #{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR}, 
-	      #{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, 
-	      NOW() CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},NOW() UPDATE_TIME
-        </foreach>
+			#{dto.registSeqno,jdbcType=CHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.issuePartyId,jdbcType=VARCHAR},
+			#{dto.posDate,jdbcType=TIMESTAMP}, #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=OTHER},
+			#{dto.totalNum,jdbcType=DECIMAL}, #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL},
+			#{dto.posNum,jdbcType=DECIMAL}, #{dto.posAmt,jdbcType=DECIMAL}, #{dto.sendStatus,jdbcType=VARCHAR},
+			#{dto.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{dto.submitDeadline,jdbcType=TIMESTAMP},
+			#{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR},
+			#{dto.status,jdbcType=VARCHAR},  #{dto.statusDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR},
+			#{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR},
+			NOW() CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},NOW() UPDATE_TIME
+		</foreach>
 	</insert>
-	
+
 	<delete id="delete"  parameterType="map">
 		delete from CHB_BOT_AST_POS_SUB
 		<where>
@@ -181,9 +181,9 @@
 				and SEND_STATUS  = #{sendStatus,jdbcType=VARCHAR}
 			</if>
 		</where>
-	
+
 	</delete>
-	
+
 	<select id="queryUpdateDate" resultType="java.util.Date">
 		SELECT
 			distinct POS_DATE
@@ -191,5 +191,5 @@
 		WHERE DATE_FORMAT(pos.UPDATE_TIME,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
 		  and pos.status = 'E'
 	</select>
-	
+
 </mapper>

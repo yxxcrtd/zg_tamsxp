@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.component.business.evaluation.dao.EvalIndexAlgorithmMapper_mysql">
 	<select id="queryTargetReturnList"
-		resultType="com.joyintech.tams.component.business.evaluation.dto.PtlTargetReturnDto">
+			resultType="com.joyintech.tams.component.business.evaluation.dto.PtlTargetReturnDto">
 		SELECT PII.INDEX_ID indexId,
 		  PII.INCOME_TYPE incomeType,
 		  PII.INCOME_TARGET incomeTarget,

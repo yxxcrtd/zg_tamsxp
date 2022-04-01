@@ -1,14 +1,16 @@
 package com.joyintech.tams.settle.batch.datagather.processor.repo;
 
-import com.joyintech.background.component.common.pack.common.util.ArithmeticUtil;
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.settle.common.service.SettleCommonService;
 import org.apache.commons.collections.CollectionUtils;
@@ -52,25 +54,56 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
             //金融产品汇总附属交易
             List<TrdProductDealAdd> trdProductDealAddList = new ArrayList<>();
             handTrdProductDeal(settleTransDataDtos);
+            
+            //add by wujie on 20220301 start remark:调用估值交易入账参数对象
+            List<AllTradeCommonInputDto> listInputDto = new ArrayList<>();
+            //add by wujie on 20220301 end remark:调用估值交易入账参数对象
+            
             for (SettleTransDataDto settleTransData : settleTransDataDtos) {
                 //汇总交(资产维度)
                 TotalTrdProductDealDto totalTrdProductDealDto = new TotalTrdProductDealDto();
-                totalTrdProductDealDto.setShareAmt(settleTransData.getShareAmt());
+                // GNS-925:竞价回购到期生成存续期交易有误 modify by fuyongsheng 20220220 start
+                // totalTrdProductDealDto.setShareAmt(settleTransData.getShareAmt());
+                totalTrdProductDealDto.setShareAmt(settleTransData.getShareNum());
+                // GNS-925:竞价回购到期生成存续期交易有误 modify by fuyongsheng 20220220 end
                 totalTrdProductDealDto.setTradeAmt(settleTransData.getTradeAmt());
-                totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
+                // GNS-925:计算利息总额 modify by fuyongsheng 20220228 start
+                // totalTrdProductDealDto.setIntAmt(settleTransData.getIntAmt());
+                totalTrdProductDealDto.setIntAmt(settleTransData.getTrdProductDealList().stream().map(TrdProductDealDto::getIntAmt).reduce(BigDecimal.ZERO,BigDecimal::add));
+                // GNS-925:计算利息总额 modify by fuyongsheng 20220228 end
                 totalTrdProductDealDto.setPrinAmt(settleTransData.getShareNum());
                 // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify start
                 // totalTrdProductDealDto.setFpriceAmt(settleTransData.getFpriceAmt());
                 // 全价总额 = 本金 + 金额 modify by fuyongsheng 20211218 start
                 // totalTrdProductDealDto.setFpriceAmt(settleTransData.getmTradeAmt());
-                totalTrdProductDealDto.setFpriceAmt(totalTrdProductDealDto.getIntAmt().add(totalTrdProductDealDto.getPrinAmt()));
+                // GNS-889:使用工具类操作,防止null指针 modify by fuyongsheng 20220220 start
+                // totalTrdProductDealDto.setFpriceAmt(totalTrdProductDealDto.getIntAmt().add(totalTrdProductDealDto.getPrinAmt()));
+                totalTrdProductDealDto.setFpriceAmt(ArithmeticUtil.doAdd(totalTrdProductDealDto.getIntAmt(),totalTrdProductDealDto.getPrinAmt()));
+                // GNS-889:使用工具类操作,防止null指针 modify by fuyongsheng 20220220 end
                 // 全价总额 = 本金 + 金额 modify by fuyongsheng 20211218 end
-                totalTrdProductDealDto.setTheoryInt(settleTransData.getmIntAmt());
-                totalTrdProductDealDto.setTheoryprinAmt(settleTransData.getmPrinAmt());
+
+                // GNS-925:生成回购到期数据有误 modify by fuyongsheng 20220220 start
+                // totalTrdProductDealDto.setTheoryInt(settleTransData.getmIntAmt());
+                // totalTrdProductDealDto.setTheoryprinAmt(settleTransData.getmPrinAmt());
+                totalTrdProductDealDto.setTheoryInt(totalTrdProductDealDto.getIntAmt());
+                totalTrdProductDealDto.setTheoryprinAmt(totalTrdProductDealDto.getPrinAmt());
+                // GNS-925:生成回购到期数据有误 modify by fuyongsheng 20220220 end
+
                 // ZGZGST-4220:解决页面字段为空的问题 fuyongsheng 20211216 modify end
                 totalTrdProductDealDto.setTradeAmt(totalTrdProductDealDto.getFpriceAmt());
                 createTotalDeal(totalTrdProductDealDto,settleTransData);
+                //wangyang1 20220114 start
+                String totalTradeId = settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_逆回购录入);
+                totalTrdProductDealDto.setTotleTradeId(totalTradeId);
+                totalTrdProductDealDto.setFeeAmt(BigDecimal.ZERO);
+                totalTrdProductDealDto.setFeeAmtUnpay(BigDecimal.ZERO);
+                totalTrdProductDealDto.setRemark("数据清算自动处理");
+                totalTrdProductDealDto.setDqprinAmt(settleTransData.getmPrinAmt());
+                totalTrdProductDealDto.setDeliveryType("03");
+                totalTrdProductDealDto.setmDeliveryType("03");
+                //wangyang1 20220114 end
                 finProductDealTotalList.add(totalTrdProductDealDto);
+
                 //投管交易关系
                 List<String> tradeIdList = settleTransData.getTradeIdList();
                 SettleTransTgMapping settleTransTgMapping = new SettleTransTgMapping();
@@ -78,12 +111,18 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                 settleTransTgMapping.setTradeIdTg(totalTrdProductDealDto.getTotleTradeId());
                 settleTransTgMapping.setTgDataStatus("02");
                 // add by fuyongsheng 对成交与投管关系执行时间赋值 fuyongsheng 20211217 start
-                settleTransTgMapping.setDealDate(settleTransData.getDealDate());
+                settleTransTgMapping.setDealDate(getBatchExecuteInfo().getExecuteDate());
                 // add by fuyongsheng 对成交与投管关系执行时间赋值 fuyongsheng 20211217 end
                 settleTransTgMappingList.add(settleTransTgMapping);
                 //组合交易
                 //划款指令
-                stlPayOrdersList.add(createStlPayOrders(totalTrdProductDealDto,settleTransData.getAcctNo()));
+                StlPayOrders stlPayOrders = createStlPayOrders(totalTrdProductDealDto,settleTransData.getAcctNo());
+                stlPayOrdersList.add(stlPayOrders);
+                   
+                //add by wujie on 20220301 start remark:调用估值交易入账参数对象
+                List<TrdProductDeal> rstlist = new ArrayList<>();
+                //add by wujie on 20220301 end remark:调用估值交易入账参数对象
+                
                 for (TrdProductDealDto  trdProductDealDto: settleTransData.getTrdProductDealList()) {
                     TrdProductDealDto trdProductDeal = new TrdProductDealDto();
                     trdProductDeal.setPs(trdProductDealDto.getPs());
@@ -99,6 +138,10 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                     trdProductDeal.setTradeAmt(trdProductDealDto.getTradeAmt());
                     trdProductDeal.setTotleTradeId(totalTrdProductDealDto.getTotleTradeId());
                     createDeal(trdProductDeal,settleTransData);
+                    //wangyang1 20220114 start
+                    trdProductDeal.setTradeId(settleCommonService.buildBussinessCodeExt(DictCodeList.共通业务类型_逆回购录入));
+                    trdProductDeal.setPayDate(trdProductDealDto.getSettleDate());
+                    //wangyang1 20220114 end
                     trdProductDeal.setPortfolioId(settleTransData.getPortfolioId());
                     TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
                     trdProductDealAdd.setTradeId(trdProductDeal.getTradeId());
@@ -108,9 +151,27 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
                     ptlTradeList.add(createPtlTrade(ptlTrade,trdProductDeal));
                     productDealList.add(trdProductDeal);
                     trdProductDealAddList.add(trdProductDealAdd);
-
+                    
+                    //add by wujie on 20220301 start remark:调用估值交易入账参数对象
+                    TrdProductDeal dto = new TrdProductDeal();
+                    BeanUtil.copyProperties(dto, trdProductDeal);
+                    rstlist.add(dto);
+                    //add by wujie on 20220301 end remark:调用估值交易入账参数对象
                 }
+                //add by wujie on 20220301 start remark:调用估值交易入账参数对象
+            	AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
+            	inputDto.setProdid(totalTrdProductDealDto.getPortfolioId());
+                inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
+                inputDto.setTrdProductDealList(rstlist);
+                inputDto.setStlPayOrders(stlPayOrders);
+                listInputDto.add(inputDto);
+            	//add by wujie on 20220301 end remark:调用估值交易入账参数对象
             }
+            //add by wujie on 20220301 start remark:调用估值交易入账参数对象
+            investTradeWriteDto.setBusiType(DictCodeList.共通业务类型_质押式回购存续期.getValue());
+            investTradeWriteDto.setListInputDto(listInputDto);
+            //add by wujie on 20220301 end remark:调用估值交易入账参数对象
+            
             investTradeWriteDto.setSettleTransTgMappingList(settleTransTgMappingList);
             investTradeWriteDto.setFinProductDealTotalList(finProductDealTotalList);
             investTradeWriteDto.setPtlTradeList(ptlTradeList);
@@ -415,6 +476,14 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
         stlPayOrders.setRemark("数据清算自动处理");
         // 划款类型
         stlPayOrders.setPayType(DictCodeListExt1.平安划款类型_清算划款.getValue());
+        // GNS-925:收付方向未登录 modify by fuyongsheng 20220220 start
+        // 收付方向
+        if(StringUtil.equals(total.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())){
+            stlPayOrders.setPs(DictCodeListExt1.收支方向_支出.getValue());
+        }else{
+            stlPayOrders.setPs(DictCodeListExt1.收支方向_收入.getValue());
+        }
+        // GNS-925:收付方向未登录 modify by fuyongsheng 20220220 end
         return stlPayOrders;
     }
 
@@ -434,10 +503,14 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
             String keyitem = key.getKey();
             List<SettleTransDataDto> list = key.getValue();
             if(CollectionUtils.isNotEmpty(list)){
-                tradeAmtMap.put(keyitem,list.stream().map(item -> item.getTradeAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
-                intAmtMap.put(keyitem,list.stream().map(item -> item.getIntAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
-                maxTradeAmtMap.put(keyitem,list.stream().max((p1, p2) -> p1.getTradeAmt().compareTo(p2.getTradeAmt())).get().getTradeId2());
-                maxTradeAmtMap.put(keyitem,list.stream().max((p1, p2) -> p1.getIntAmt().compareTo(p2.getIntAmt())).get().getTradeId2());
+                // tradeAmtMap.put(keyitem,list.stream().map(item -> item.getTradeAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
+                tradeAmtMap.put(keyitem,list.stream().map(SettleTransData::getTradeAmt).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
+                // intAmtMap.put(keyitem,list.stream().map(item -> item.getIntAmt()).reduce(BigDecimal.ZERO, BigDecimal::add));
+                intAmtMap.put(keyitem,list.stream().map(SettleTransData::getIntAmt).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
+                // maxTradeAmtMap.put(keyitem,list.stream().max((p1, p2) -> p1.getTradeAmt().compareTo(p2.getTradeAmt())).get().getTradeId2());
+                maxTradeAmtMap.put(keyitem,list.stream().filter(item-> null != item.getTradeAmt()).max((p1, p2) -> p1.getTradeAmt().compareTo(p2.getTradeAmt())).orElse(new SettleTransDataDto()).getTradeId2());
+                // maxTradeAmtMap.put(keyitem,list.stream().max((p1, p2) -> p1.getIntAmt().compareTo(p2.getIntAmt())).get().getTradeId2());
+                maxIntAmtMap.put(keyitem,list.stream().filter(item-> null != item.getIntAmt()).max((p1, p2) -> p1.getIntAmt().compareTo(p2.getIntAmt())).orElse(new SettleTransDataDto()).getTradeId2());
             }
         }
         //组装
@@ -460,11 +533,12 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
             if(null!=settleTransDataDto.getIntAmt()&&settleTransDataDto.getIntAmt().compareTo(BigDecimal.ZERO)!=0){
                 TrdProductDealDto trdProductDealDto = new TrdProductDealDto();
                 trdProductDealDto.setPs(DictCodeList.交易方向_收息到账.getValue());
-                trdProductDealDto.setShareAmt(settleTransDataDto.getShareNum());
+//                trdProductDealDto.setShareAmt(settleTransDataDto.getShareNum());
+                //还本收息.交易份额
+                trdProductDealDto.setShareAmt(BigDecimal.ZERO);
                 // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 start
                 // settleTransDataDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
                 trdProductDealDto.setIntAmt(ArithmeticUtil.divide(ArithmeticUtil.multiply(settleTransDataDto.getIntAmt(),settleTransDataDto.getShareNum()),settleTransDataDto.getShareAmt(),2));
-                settleTransDataDto.setIntAmt(trdProductDealDto.getIntAmt());
                 // ZGZGST-4220:存续期交易回购利息赋值有误 fuyongsheng modify 20211218 end
                 trdProductDealDto.setTradeAmt(trdProductDealDto.getIntAmt());
                 trdProductDealDto.setFpriceAmt(trdProductDealDto.getIntAmt());
@@ -511,7 +585,7 @@ public class StlDataGatherRepoDurationProcessor extends BaseProcessor<NeedOperat
     }
 
     private static String fetchGroupKey(SettleTransDataDto item){
-        return com.joyintech.framework.util.StringUtil.joinString(Arrays.asList(item.getCjbh(),item.getSeatNumber(), DateUtil.format(item.getTradeDate())),"_");
+        return StringUtil.joinString(Arrays.asList(item.getCjbh(),item.getSeatNumber(), DateUtil.format(item.getTradeDate())),"_");
     }
 }
 

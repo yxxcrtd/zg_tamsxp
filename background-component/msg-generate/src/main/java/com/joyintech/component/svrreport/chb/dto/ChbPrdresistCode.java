@@ -50,10 +50,21 @@ public class ChbPrdresistCode extends ChbPrdresistCodeKey {
     private String interfCheckResult;
     
     private String newProdId;
-    
-    
 
-	public String getNewProdId() {
+    /**
+     * 宁银个性化字段
+     */
+    private String prodInsId;
+
+    public String getProdInsId() {
+        return prodInsId;
+    }
+
+    public void setProdInsId(String prodInsId) {
+        this.prodInsId = prodInsId;
+    }
+
+    public String getNewProdId() {
 		return newProdId;
 	}
 

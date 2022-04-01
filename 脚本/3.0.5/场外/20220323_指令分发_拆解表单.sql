@@ -1,0 +1,2 @@
+delete from CFG_DATATABLE_SHOW where PAGECODE='CfetsEtrDispatcher' and DTCODE='CfetsEtrDispatcherDealInfo' and SPCDCODE='18' and COLCODE='entrustId';
+INSERT INTO CFG_DATATABLE_SHOW (PAGECODE, DTCODE, SPCDCODE, COLCODE, COLNAME, DICTCODE, SEQNO, DISPLAYED, FROZEN, SORT, MAXLEN, EXTENDCFG, EFFERANGE, RANGEID, STATUS, REMARK1, REMARK2, REMARK3, ISKEY) VALUES ('CfetsEtrDispatcher', 'CfetsEtrDispatcherDealInfo', '18', 'entrustId', '委托编号', null, 2, 1, 0, 0, 100, '{"colAlign": "left"}', 0, 'COMM', 1, 0, null, null, 0);

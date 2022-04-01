@@ -68,10 +68,165 @@ public class InvestmentBusinessDetailsDto {
 	private String industryType;
 	//机构名称
 	private String orgName;
+	//所属银保监局
+	private String cbrcCode;
 	//数据时点
 	private String reportDate;
 
-	/**  
+
+	//表五计算用 投资余额 -穿透前
+	private BigDecimal valueA;
+	//表五计算用 投资余额 -穿透后
+	private BigDecimal valueB;
+	//表五计算用 投资余额 -上季 -穿透前
+	private BigDecimal valueALast;
+	//表五计算用 投资余额 -上季 -穿透后
+	private BigDecimal valueBLast;
+	//表五计算用 平均杠杆率 -穿透前
+	private BigDecimal avgRate1;
+	//表五计算用 平均杠杆率 -穿透后
+	private BigDecimal avgRate2;
+	//表五计算用 平均杠杆率 -穿透前 - 上季
+	private BigDecimal avgRate1Last;
+	//表五计算用 平均杠杆率 -穿透后 - 上季
+	private BigDecimal avgRate2Last;
+
+	//表五计算用 杠杆倍数最高值 -本机
+	private BigDecimal heaverTimes1;
+	//表五计算用 杠杆倍数最高值 -上季
+	private BigDecimal heaverTimes2;
+	//表五计算用 信贷资产支持证券
+	private BigDecimal valueB01;
+	//表五计算用 信贷资产支持证券 - 上季
+	private BigDecimal valueBlast01;
+
+	//表五计算用 资产支持专项计划
+	private BigDecimal valueB02;
+	//表五计算用 资产支持专项计划 - 上季
+	private BigDecimal valueBlast02;
+
+
+	public String getCbrcCode() {
+		return cbrcCode;
+	}
+
+	public void setCbrcCode(String cbrcCode) {
+		this.cbrcCode = cbrcCode;
+	}
+
+	public BigDecimal getValueA() {
+		return valueA;
+	}
+
+	public void setValueA(BigDecimal valueA) {
+		this.valueA = valueA;
+	}
+
+	public BigDecimal getValueB() {
+		return valueB;
+	}
+
+	public void setValueB(BigDecimal valueB) {
+		this.valueB = valueB;
+	}
+
+	public BigDecimal getValueALast() {
+		return valueALast;
+	}
+
+	public void setValueALast(BigDecimal valueALast) {
+		this.valueALast = valueALast;
+	}
+
+	public BigDecimal getValueBLast() {
+		return valueBLast;
+	}
+
+	public void setValueBLast(BigDecimal valueBLast) {
+		this.valueBLast = valueBLast;
+	}
+
+	public BigDecimal getAvgRate1() {
+		return avgRate1;
+	}
+
+	public void setAvgRate1(BigDecimal avgRate1) {
+		this.avgRate1 = avgRate1;
+	}
+
+	public BigDecimal getAvgRate2() {
+		return avgRate2;
+	}
+
+	public void setAvgRate2(BigDecimal avgRate2) {
+		this.avgRate2 = avgRate2;
+	}
+
+	public BigDecimal getAvgRate1Last() {
+		return avgRate1Last;
+	}
+
+	public void setAvgRate1Last(BigDecimal avgRate1Last) {
+		this.avgRate1Last = avgRate1Last;
+	}
+
+	public BigDecimal getAvgRate2Last() {
+		return avgRate2Last;
+	}
+
+	public void setAvgRate2Last(BigDecimal avgRate2Last) {
+		this.avgRate2Last = avgRate2Last;
+	}
+
+	public BigDecimal getHeaverTimes1() {
+		return heaverTimes1;
+	}
+
+	public void setHeaverTimes1(BigDecimal heaverTimes1) {
+		this.heaverTimes1 = heaverTimes1;
+	}
+
+	public BigDecimal getHeaverTimes2() {
+		return heaverTimes2;
+	}
+
+	public void setHeaverTimes2(BigDecimal heaverTimes2) {
+		this.heaverTimes2 = heaverTimes2;
+	}
+
+	public BigDecimal getValueB01() {
+		return valueB01;
+	}
+
+	public void setValueB01(BigDecimal valueB01) {
+		this.valueB01 = valueB01;
+	}
+
+	public BigDecimal getValueBlast01() {
+		return valueBlast01;
+	}
+
+	public void setValueBlast01(BigDecimal valueBlast01) {
+		this.valueBlast01 = valueBlast01;
+	}
+
+	public BigDecimal getValueB02() {
+		return valueB02;
+	}
+
+	public void setValueB02(BigDecimal valueB02) {
+		this.valueB02 = valueB02;
+	}
+
+	public BigDecimal getValueBlast02() {
+		return valueBlast02;
+	}
+
+	public void setValueBlast02(BigDecimal valueBlast02) {
+		this.valueBlast02 = valueBlast02;
+	}
+
+	/**
 	 * @Description   
 	 * @Author      高健  
 	 * @Date        2019年8月9日 下午2:27:33  

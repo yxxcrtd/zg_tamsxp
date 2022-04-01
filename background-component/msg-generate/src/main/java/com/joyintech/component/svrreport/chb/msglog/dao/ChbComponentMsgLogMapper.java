@@ -50,13 +50,7 @@ public interface ChbComponentMsgLogMapper {
      * @return
      */
     int insertChbEquDetSubmitStatus(ChbSubmitStatusDto submitStatusDto);
-
-    /**
-     * 中债报送状态表
-     * @return
-     */
-    int insertChbSubmitStatus(ChbSubmitStatusDto submitStatusDto);
-
+    
     /**
      * 中债报送状态表
      * @return

@@ -296,6 +296,9 @@
         STL_SEC_ACCT_INFO.SEC_ACCT_NAME secAcctIdStr ,
         ETR_SEC_STOCK.PLEDGE_STOCK_NAME PLEDGESTOCKNAME
         FROM ETR_ENTRUST_PLEDGE
+        <if test="loginUserId!=null and loginUserId!=''">
+            LEFT JOIN PTL_PORTFOLIO_AUTHORITY PPA ON ETR_ENTRUST_PLEDGE.PORTFOLIO_ID = PPA.PORTFOLIO_ID
+        </if>
         left join ETR_SEC_STOCK on ETR_SEC_STOCK.PLEDGE_STOCK_ID=ETR_ENTRUST_PLEDGE.PLEDGE_STOCK_ID
         LEFT JOIN (
         SELECT
@@ -305,6 +308,8 @@
         TEMP.SEC_ACCT_ID,
         /*证券账户/通道代码*/
         TEMP.FINPROD_ID,
+        /*组合起息日*/
+        TEMP.VDATE,
         /*分支序号*/
         SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt, /*可质押券面总额*/
         SUM(TEMP.pledgeAmount) pledgeAmount /*已质押质押券面总额*/
@@ -312,6 +317,7 @@
         SELECT
         espr.PORTFOLIO_ID, pp.PORTFOLIO_NAME,
         espr.SEC_ACCT_ID, espr.FINPROD_ID,
+        pp.VDATE,
         CASE WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
         AS pledStrdPrinAmt, /*可质押券面总额*/
         CASE WHEN espr.HODING_TYPE=#{A_012} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
@@ -326,14 +332,22 @@
         AND espr.CDATE = to_date(#{sysDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
         AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012})
         ) TEMP
-            <if test="userId!=null and userId!=''">
-            LEFT JOIN PTL_PORTFOLIO_AUTHORITY ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
-            WHERE 1 = 1
+        <if test="userId!=null and userId!=''">
+        LEFT JOIN PTL_PORTFOLIO_AUTHORITY ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+        </if>
+        WHERE 1 = 1
+        AND TEMP.VDATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+        AND TEMP.PORTFOLIO_ID NOT IN
+        (SELECT DISTINCT TFP.PORTFOLIO_ID PORTFOLIO_ID FROM TRD_FIN_PRODUCT_DEAL_TOTAL TFP
+        WHERE (TFP.PS = 'C5' OR TFP.PS = 'C20')
+        AND (TFP.IS_CANCEL !='Y' OR TFP.IS_CANCEL IS NULL)
+        )
+        <if test="userId!=null and userId!=''">
             AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
-            </if>
+        </if>
         GROUP BY
         TEMP.PORTFOLIO_ID, TEMP.PORTFOLIO_NAME,
-        TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID
+        TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID, TEMP.VDATE
         HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
         )TABLE01/*以上统计可用持仓*/
         ON ETR_ENTRUST_PLEDGE.PORTFOLIO_ID = TABLE01.PORTFOLIO_ID
@@ -342,6 +356,9 @@
         INNER JOIN FIN_PRODUCT
         ON FIN_PRODUCT.FINPROD_ID = TABLE01.FINPROD_ID
         AND FIN_PRODUCT.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
+        AND FIN_PRODUCT.CCY = 'CNY'
+        LEFT JOIN MST_BOND_MARKET_INFO mbmi  ON FIN_PRODUCT.FINPROD_MARKET_ID  = mbmi.SEC_ID
+        AND mbmi.VALUE_DATE = to_date(#{sysDate},'yyyy-MM-dd')
         INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
         left join ( select 100-sum(nvl(PRIN_AMT,0)) prinAmt,FINPROD_ID
         from FIN_CASH_PLAN
@@ -377,6 +394,12 @@
         WHERE 1=1
         /*只获取交易场所为：01银行间*/
         AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01}
+        AND FIN_PRODUCT.VDATE <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
+        AND FIN_PRODUCT.MDATE <![CDATA[>=]]> to_date(#{sysDate},'yyyy-MM-dd')
+        AND (mbmi.MARKET_AMT > 0 OR mbmi.MARKET_AMT IS NULL )
+        <if test="loginUserId!=null and loginUserId!=''">
+            AND PPA.USER_ID = #{loginUserId}
+        </if>
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND ETR_ENTRUST_PLEDGE.PORTFOLIO_ID in
             <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
@@ -760,31 +783,36 @@
     
     <select id="getPledgeStockIdByPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
         select distinct
-            t.pledge_stock_id id,
-            t.pledge_stock_name text
-        from PTL_SEC_STOCK t
+            ess.pledge_stock_id id,
+            ess.pledge_stock_name text,
+            ess.IS_DEF_STOCK object
+        from ETR_SEC_STOCK ess
+        left join PTL_SEC_STOCK t on t.PLEDGE_STOCK_ID = ess.PLEDGE_STOCK_ID
         <where>
         	<if test="initValue != null and initValue !='' ">
-        		t.pledge_stock_id = #{initValue, jdbcType=VARCHAR}
+                and ess.pledge_stock_id = #{initValue, jdbcType=VARCHAR}
         	</if>
-        	<if test="initValue == null or initValue =='' ">
-	        <if test="portfolioIdList != null and portfolioIdList.size() > 0">
-	             t.PORTFOLIO_ID in
-	            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
-	                #{item}
-	            </foreach>
-        	</if>
-        	<if test="search !=null and search !='' ">
-        		AND
-					(
-					t.pledge_stock_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
-					OR
-					t.pledge_stock_name LIKE CONCAT('%', CONCAT(#{search}, '%'))
-					)
-        	</if>
-        	<if test="portfolioId !=null and portfolioId !='' ">
-        		or t.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
-        	</if>
+            <if test="userId != null and userId !='' ">
+                and ess.CREATE_USER = #{userId, jdbcType=VARCHAR}
+            </if>
+                <if test="initValue == null or initValue =='' ">
+                <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                     and t.PORTFOLIO_ID in
+                    <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="search !=null and search !='' ">
+                    AND
+                        (
+                        ess.pledge_stock_id LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                        OR
+                        ess.pledge_stock_name LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                        )
+                </if>
+                <if test="portfolioId !=null and portfolioId !='' ">
+                    or t.PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
+                </if>
         	</if>
         </where>
     </select>
@@ -794,6 +822,11 @@
         t.pledge_stock_id id,
         t.pledge_stock_name text
         from ETR_SEC_STOCK t
+        <where>
+            <if test="userId != null and userId != ''">
+                CREATE_USER = #{userId}
+            </if>
+        </where>
         ORDER BY CREATE_TIME DESC
     </select>
     <!-- 查询登录用户是否满足指定的角色岗位 -->
@@ -1039,6 +1072,252 @@
                 ) MST_BOND_VALUATION_INFO
                            ON fp.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
         where ee.ENTRUST_ID=#{entrustId}
+    </select>
+
+    <!-- 质押券管理查询画面 -->
+    <select id="getPledgeable" resultType="java.math.BigDecimal">
+        select pledStrdPrinAmt
+            from (
+                     select eep.PORTFOLIO_ID, eep.PLEDGE_STOCK_ID, sum(TABLE01.pledStrdPrinAmt) pledStrdPrinAmt
+                     FROM ETR_ENTRUST_PLEDGE eep
+                              LEFT JOIN (SELECT TEMP.PORTFOLIO_ID, /*组合代码*/
+                                                TEMP.PORTFOLIO_NAME,
+                                                TEMP.SEC_ACCT_ID, /*证券账户/通道代码*/
+                                                TEMP.FINPROD_ID, /*组合起息日*/
+                                                TEMP.VDATE, /*分支序号*/
+                                                SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt, /*可质押券面总额*/
+                                                SUM(TEMP.pledgeAmount)    pledgeAmount /*已质押质押券面总额*/
+                                         FROM (SELECT espr.PORTFOLIO_ID,
+                                                      pp.PORTFOLIO_NAME,
+                                                      espr.SEC_ACCT_ID,
+                                                      espr.FINPROD_ID,
+                                                      pp.VDATE,
+                                                      CASE
+                                                          WHEN ppc.S_HOLDINGTYPE = #{S_002}
+                                                              THEN espr.AMOUNT * nvl(ppc.CAL_FLAG, 1)
+                                                          ELSE 0 END AS pledStrdPrinAmt, /*可质押券面总额*/
+                                                      CASE
+                                                          WHEN espr.HODING_TYPE = #{A_012} THEN espr.AMOUNT * nvl(ppc.CAL_FLAG, 1)
+                                                          ELSE 0 END AS pledgeAmount /*已质押质押券面总额*/
+                                               FROM ETR_SEC_POSITION_RULE espr
+                                                        INNER JOIN PTL_PORTFOLIO pp ON espr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                                                        left JOIN PTL_POSITION_CFG ppc
+                                                                  ON espr.HODING_TYPE = ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE = #{S_002}
+                                               WHERE 1 = 1
+                                                 AND espr.CDATE = to_date(#{sysDate}, 'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+                                                 AND espr.DATE_TYPE = 0
+                                                 AND (ppc.S_HOLDINGTYPE = #{S_002} or espr.HODING_TYPE = #{A_012} )) TEMP
+                                         WHERE 1 = 1
+                                           AND TEMP.VDATE <![CDATA[<=]]> to_date(#{sysDate}, 'yyyy-MM-dd')
+                                           AND TEMP.PORTFOLIO_ID NOT IN (SELECT DISTINCT TFP.PORTFOLIO_ID PORTFOLIO_ID
+                                                                         FROM TRD_FIN_PRODUCT_DEAL_TOTAL TFP
+                                                                         WHERE (TFP.PS = 'C5' OR TFP.PS = 'C20')
+                                                                           AND (TFP.IS_CANCEL != 'Y' OR TFP.IS_CANCEL IS NULL))
+                                         GROUP BY TEMP.PORTFOLIO_ID, TEMP.PORTFOLIO_NAME, TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID,
+                                                  TEMP.VDATE
+                                         HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/ ) TABLE01/*以上统计可用持仓*/
+                                        ON eep.PORTFOLIO_ID = TABLE01.PORTFOLIO_ID AND
+                                           eep.FINPROD_ID = TABLE01.FINPROD_ID AND
+                                           eep.SEC_ACCT_ID = TABLE01.SEC_ACCT_ID
+
+                     group by eep.PORTFOLIO_ID, eep.PLEDGE_STOCK_ID) T
+            where T.PORTFOLIO_ID = #{portfolioId}
+              and T.PLEDGE_STOCK_ID = #{pledgeStockId}
+    </select>
+
+    <select id="selectEtrSecStockByUser" resultType="com.joyintech.tams.common.base.entity.EtrSecStock">
+        select * from ETR_SEC_STOCK where CREATE_USER = #{userId}
+    </select>
+
+    <resultMap id="CfetsEtrIbRepoRkDtoMap" type="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoRkDto">
+        <id column="PLEDGE_STOCK_ID" property="pledgeStockId" jdbcType="VARCHAR"/>
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR"/>
+        <collection property="cfetsEtrSecStockConfig"
+                    ofType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrSecStockConfig" javaType="java.util.ArrayList" >
+            <result column="config_id" property="configId" jdbcType="VARCHAR"/>
+            <result column="pledge_stock_id" property="pledgeStockId" jdbcType="VARCHAR"/>
+            <result column="windtypeone" property="windtypeone" jdbcType="VARCHAR"/>
+            <result column="windtypetwo" property="windtypetwo" jdbcType="VARCHAR"/>
+            <result column="m_grade_result" property="mGradeResult" jdbcType="VARCHAR"/>
+            <result column="sec_grade_result" property="secGradeResult" jdbcType="VARCHAR"/>
+            <result column="is_sec_bond" property="isSecBond" jdbcType="VARCHAR"/>
+            <result column="is_right" property="isRight" jdbcType="VARCHAR"/>
+            <result column="is_ppb" property="isPpb" jdbcType="VARCHAR"/>
+            <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectRepoRkInfoAndCofigs" resultMap="CfetsEtrIbRepoRkDtoMap">
+        select ess.PLEDGE_STOCK_ID,
+               pss.PORTFOLIO_ID,
+               essc.config_id,
+               essc.pledge_stock_id,
+               essc.windtypeone,
+               essc.windtypetwo,
+               essc.m_grade_result,
+               essc.sec_grade_result,
+               essc.is_sec_bond,
+               essc.is_right,
+               essc.is_ppb,
+               essc.create_user
+        from ETR_SEC_STOCK ess
+                 left join ETR_SEC_STOCK_CONFIG essc on ess.PLEDGE_STOCK_ID = essc.PLEDGE_STOCK_ID
+                 left join PTL_SEC_STOCK pss on essc.PLEDGE_STOCK_ID = pss.PLEDGE_STOCK_ID
+        where ess.CREATE_USER = #{userId} and (
+        <if test="portfolioIdList != null and portfolioIdList.size() > 0"><!-- 组合信息 -->
+            pss.PORTFOLIO_ID in
+            <foreach collection="portfolioIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            or pss.PORTFOLIO_ID is null
+        </if>
+        )
+    </select>
+
+    <select id="selectFinprodInfo" resultType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrSecStockConfig">
+        select fp.FINPROD_ID,
+        case when ISSUE_TYPE != '01' then 'Y' else 'N' end IS_PPB/*是否私募债*/,
+        IS_RIGHT/*是否含权债*/,
+        fpa.IS_SEC_BOND,
+        fpt.TYPE_10                                        Windtypeone,
+        fpt.TYPE_11                                        Windtypetwo,
+        mRating.GRADE_RESULT                               mGradeResult,
+        sRating.GRADE_RESULT                               secGradeResult
+        from FIN_PRODUCT fp
+        left join FIN_PRODUCT_ADD fpa on fpa.FINPROD_ID = fp.FINPROD_ID
+        left join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID = fp.FINPROD_ID
+         left join (select GRADE_RESULT,
+                           O_CODE,
+                           GRADE_DATE,
+                           O_TYPE,
+                           row_number() over (partition by O_CODE order by GRADE_DATE desc) num
+                    from MST_BOND_CREDIT_RATING
+                    where O_TYPE = '01'
+                      and GRADE_DATE <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')) mRating
+                   on fp.ISSUER = mRating.O_CODE and mRating.num = '1'
+         left join (select GRADE_RESULT,
+                           O_CODE,
+                           GRADE_DATE,
+                           O_TYPE,
+                           row_number() over (partition by O_CODE order by GRADE_DATE desc) num
+                    from MST_BOND_CREDIT_RATING
+                    where O_TYPE = '02'
+                      and GRADE_DATE <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')) sRating
+                   on fp.ISSUER = sRating.O_CODE and sRating.num = '1'
+        where FINPROD_TYPE2 = 'F01' and fp.FINPROD_ID = #{finprodId}
+    </select>
+
+    <select id="findSecPosition" resultType="com.joyintech.tams.cfets.etrib.repo.dto.CfetsEtrIbRepoLibDto">
+        SELECT  DISTINCT TABLE01.PORTFOLIO_ID portfolioId
+                   ,TABLE01.SEC_ACCT_ID secAcctId/*证券账户/通道代码*/
+                   ,TABLE01.FINPROD_ID finProdId/*金融产品Id*/
+                   ,TABLE01.BRANCH branch/*分支序号*/
+                   ,MBCR.GRADE_RESULT gradeResult /*债项评级*/
+                   ,FIN_PRODUCT.REGIST_ORG registOrg/*登记托管机构*/
+                   ,NVL(fscr.SCALE,1)*100 scale/*折算比例*/
+                   ,FIN_PRODUCT.FINPROD_MARKET_ID finprodMarketId/*市场代码*/
+            FROM
+            (
+                SELECT  TEMP.PORTFOLIO_ID
+                       ,/*组合代码*/ TEMP.PORTFOLIO_NAME
+                       ,TEMP.SEC_ACCT_ID
+                       ,/*证券账户/通道代码*/ TEMP.FINPROD_ID
+                       ,0 BRANCH
+                       ,/*分支序号*/ SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt
+                       ,/*可质押券面总额*/ SUM(TEMP.Amount) Amount /*已质押质押券面总额*/
+                FROM
+                (
+                    SELECT  espr.PORTFOLIO_ID
+                           ,pp.PORTFOLIO_NAME
+                           ,espr.SEC_ACCT_ID
+                           ,espr.FINPROD_ID
+                           ,CASE WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1)  ELSE 0 END AS pledStrdPrinAmt
+                           ,/*可质押券面总额*/ 0 Amount /*已质押质押券面总额*/
+                    FROM ETR_SEC_POSITION_RULE espr
+                    INNER JOIN PTL_PORTFOLIO pp
+                    ON espr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                    LEFT JOIN PTL_POSITION_CFG ppc
+                    ON espr.HODING_TYPE =ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE =#{S_002}
+                    WHERE 1 = 1
+                    AND espr.CDATE = to_date(#{plateDate}, 'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+                    AND espr.DATE_TYPE =0
+                    AND ppc.S_HOLDINGTYPE =#{S_002}
+                    UNION ALL
+                    SELECT  pspr.PORTFOLIO_ID
+                           ,pp.PORTFOLIO_NAME
+                           ,pspr.SEC_ACCT_ID
+                           ,pspr.FINPROD_ID
+                           ,0 pledStrdPrinAmt
+                           ,/*可质押券面总额*/ Amount Amount /*券面总额*/
+                    FROM PTL_SEC_POSITION_RULE pspr
+                    INNER JOIN PTL_PORTFOLIO pp
+                    ON pspr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                    WHERE pspr.CDATE = to_date(#{plateDate}, 'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+                    AND pspr.DATE_TYPE =0
+                    AND pspr.HODING_TYPE=#{A_001}
+                ) TEMP
+                LEFT JOIN PTL_PORTFOLIO_AUTHORITY
+                ON TEMP.PORTFOLIO_ID = PTL_PORTFOLIO_AUTHORITY.PORTFOLIO_ID
+                WHERE 1 = 1
+                AND PTL_PORTFOLIO_AUTHORITY.USER_ID = #{userId}
+                GROUP BY  TEMP.PORTFOLIO_ID
+                         ,TEMP.PORTFOLIO_NAME
+                         ,TEMP.SEC_ACCT_ID
+                         ,TEMP.FINPROD_ID
+                HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
+            )TABLE01/*以上统计可用持仓*/
+            LEFT JOIN STL_SEC_ACCT_INFO
+            ON TABLE01.SEC_ACCT_ID = STL_SEC_ACCT_INFO.SEC_ACCT_ID
+            LEFT JOIN FIN_PRODUCT FIN_PRODUCT2
+            ON TABLE01.SEC_ACCT_ID = FIN_PRODUCT2.FINPROD_ID
+            INNER JOIN FIN_PRODUCT
+            ON FIN_PRODUCT.FINPROD_ID = TABLE01.FINPROD_ID
+            LEFT JOIN
+            (
+                SELECT  T2.SEC_ID
+                       ,T2.LAST_PERIOD
+                FROM
+                (
+                    SELECT  tmp1.SEC_ID
+                           ,tmp1.value_source
+                           ,MAX(tmp1.value_date) AS value_date
+                    FROM MST_BOND_VALUATION_INFO tmp1
+                    LEFT JOIN FIN_PRODUCT tmp2
+                    ON tmp1.sec_id = tmp2.finprod_market_id
+                    WHERE 1 = 1
+                    AND tmp1.value_date <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')/*估值行情.日期 小于等于 平台日*/
+                    AND tmp1.value_source = (CASE WHEN tmp2.trade_market IN (#{TRADEPLACE03}, #{TRADEPLACE04}) THEN 'CSD' ELSE 'CBC' END)
+                    GROUP BY  tmp1.sec_id
+                             ,tmp1.value_source
+                ) T1
+                LEFT JOIN MST_BOND_VALUATION_INFO T2
+                ON T1.SEC_ID = T2.SEC_ID AND T1.value_source = T2.value_source AND T1.VALUE_DATE = T2.VALUE_DATE
+            ) MST_BOND_VALUATION_INFO/*以上获取债券小于等于平台日的最新估值行情*/
+            ON FIN_PRODUCT.FINPROD_MARKET_ID = MST_BOND_VALUATION_INFO.SEC_ID
+            LEFT JOIN FIN_STDSEC_CONVERSE_RADIO fscr
+            ON fscr.FINPROD_ID = TABLE01.FINPROD_ID AND fscr.BRANCH = TABLE01.BRANCH AND fscr.VDATE <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd') AND NOT EXISTS (
+
+            SELECT  *
+            FROM FIN_STDSEC_CONVERSE_RADIO fscrInner
+            WHERE fscrInner.FINPROD_ID = fscr.FINPROD_ID
+            AND fscrInner.BRANCH = fscr.BRANCH
+            AND fscrInner.VDATE <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')
+            AND fscrInner.VDATE > fscr.VDATE )
+            LEFT JOIN
+            (
+                SELECT  RANK() OVER(PARTITION BY O_CODE ORDER BY GRADE_DATE DESC,CAST(GRADE_RESULT AS DECIMAL) DESC) NUM
+                       ,O_CODE
+                       ,GRADE_RESULT
+                FROM MST_BOND_CREDIT_RATING
+                WHERE GRADE_DATE <![CDATA[<=]]> to_date(#{plateDate}, 'yyyy-MM-dd')
+                AND GRADE_ORG_ID !='22'
+            ) MBCR
+            ON MBCR.O_CODE = FIN_PRODUCT.FINPROD_MARKET_ID AND MBCR.NUM = 1
+            WHERE 1=1
+            AND FIN_PRODUCT.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01} /*只获取交易场所为：01银行间，03上海证券交易所, 04深圳证券交易所*/
+            AND FIN_PRODUCT.TRADE_MARKET = #{TRADEPLACE01}
+            and TABLE01.FINPROD_ID = #{finprodId}
+            and TABLE01.PORTFOLIO_ID = #{portfolioId}
     </select>
 
 </mapper>

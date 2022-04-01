@@ -293,4 +293,12 @@ public class BasePtlCashPositionInfoServiceImpl implements BasePtlCashPositionIn
     public FinProductAdd getFinProductAdd(String finprodId) {
     	return finProductAddMapper.selectByPrimaryKey(finprodId);
     }
+    @Override
+    public BigDecimal queryTrdAvailableCashNew(PtlCashPositionFlowDto positionQueryDto) {
+        Assert.isTrue(positionQueryDto != null, "查询dto不能为null");
+        Assert.isTrue(StringUtil.isNotEmpty(positionQueryDto.getPortfolioId()), "组合代码不能为空");
+        Assert.notNull(positionQueryDto.getCdate(), "日期不能为null");
+        Assert.isTrue(StringUtil.isNotEmpty(positionQueryDto.getCcy()), "币种不能为空");
+        return basePtlCashPositionInfoMapper.queryTrdAvailableCashNew(positionQueryDto);
+    }
 }

@@ -28,6 +28,11 @@ public class EtrSecPosition extends EtrSecPositionKey {
     private BigDecimal faceValue;
 
     /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
+    /**
      * 取得 数量
      * @return 数量
      */
@@ -89,5 +94,13 @@ public class EtrSecPosition extends EtrSecPositionKey {
      */
     public void setFaceValue(BigDecimal faceValue) {
         this.faceValue = faceValue;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

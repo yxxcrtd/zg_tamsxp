@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.institutiondata.dao.RepRelOrgInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepRelorg" >
+        <result column="RELORG_ID" property="relorgId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        SELECT
+        FIN_PRODUCT.FINPROD_ID       BUSI_ID,--业务代码
+        FIN_CASH_CALC_RULE.CASH_ID   CASH_ID,--现金流代码
+        sys_datadict_list.ITEM_VALUE CASH_NAME,--现金流名称
+        FIN_CASH_INFO.CASH_TYPE_1    CASH_TYPE,--现金流类型
+        FIN_CASH_INFO.CASH_TYPE_2    CASH_TYPE2,--现金流二级类型
+        FIN_CASH_CALC_RULE.YIELD     FEE_RATE,--初始利率
+        FIN_CASH_CALC_RULE.EFF_DATE  START_DATE,--生效日
+        FIN_CASH_CALC_RULE.CREATE_USER,
+        FIN_CASH_CALC_RULE.CREATE_DEPT,
+        FIN_CASH_CALC_RULE.UPDATE_USER,
+        FIN_PRODUCT.P_FINPROD_ID  --父产品代码
+        FROM
+        FIN_PRODUCT,
+        FIN_CASH_INFO,
+        MST_FEEINFO,
+        FIN_CASH_CALC_RULE,
+        sys_datadict_list
+        WHERE
+        FIN_PRODUCT.FINPROD_ID = FIN_CASH_INFO.FINPROD_ID
+        AND FIN_PRODUCT.FINPROD_TYPE2 IN ( 'F16' ,'F24' )
+        AND FIN_CASH_INFO.CASH_TYPE_1 = '03'
+        AND FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
+        AND FIN_CASH_INFO.CASH_ID = FIN_CASH_CALC_RULE.CASH_ID
+        AND sys_datadict_list.dict_code ='CASH_TYPE_2'
+        AND sys_datadict_list.item_code = FIN_CASH_INFO.CASH_TYPE_2
+        AND sys_datadict_list.item_code = FIN_CASH_INFO.CASH_TYPE_2
+        <if test="updatetime != null" >
+            and ifnull(FIN_CASH_CALC_RULE.UPDATE_TIME,FIN_CASH_CALC_RULE.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

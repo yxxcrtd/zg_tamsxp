@@ -39,6 +39,7 @@ public class InstructionDetailServiceImpl extends AsyncServiceImpl<String, Instr
                 List<InstructionDetail> instructionDetails1 = new ArrayList<>(instructionDetails);
                 if (instructionDetails1.size() > 0) asyncDel(instructionDetails1);
             }
+            instructionIdMap.remove(s);
         });
     }
 

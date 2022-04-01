@@ -698,7 +698,7 @@
 		,Rep_Prod_Declare.REP_FINPROD_STAGE repFinprodStage
 		/*add by yejiejie 2019-3-8 start 产品期次*/
 		<!-- add by tuqirong 2019-03-26 start 产品风险等级 -->
-		,Rep_Prod_Declare.REP_RISK_LEVEL riskLevel
+		,nvl(Rep_Prod_Declare.REP_RISK_LEVEL,FIN_PRODUCT_ADD.RISK_LEVEL) riskLevel
 		<!-- add by tuqirong 2019-03-26 start 产品风险等级 --> 
 		,nvl(Rep_Prod_Declare.REP_FINPROD_INS_ID,REP_PROD_ISSUE.REP_BANK_PROD_CODE) repFinprodInsId
 		,FIN_CASH_INFO.BRANCH

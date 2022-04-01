@@ -61,6 +61,7 @@
         <!-- 前台应用 -->
 		<module>../../tams-disclosure-parent</module>
         <module>../../tams-svreport-parent</module>
+        <module>../../tams-business-common</module>
         <module>../../tams-invest-common</module>
         <module>../../tams-valuation-parent</module>
         <module>../../tams-valuation-basicdata</module>

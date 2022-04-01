@@ -39,7 +39,7 @@
           //控制编辑时的输入框置灰
            var init = function(){
            var erroOrInfo = $('#erroOrInfo').val();
-           if(pageModel==PAGE_MODEL_EDIT && erroOrInfo === 'info'){
+           if(pageModel==PAGE_MODEL_EDIT){
                 $('#salerInstCode').prop("disabled",true);
                 $('#salerOrgCode').prop("disabled",true);
            }else{

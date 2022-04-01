@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.pbc.prod.dao.PbcReportProdDetailMapper_mysql">
-  <sql id="Base_Column_List" >
+	<sql id="Base_Column_List" >
     DETAILUUID,REPORTUUID,PROPERTYCODE,
 	REPORTTYPE,GROUPTYPE,
 	CNY,USD_TO_CNY,
@@ -9,23 +9,23 @@
 	JPY_TO_CNY,OTH_TO_CNY,
 	PRODCOUNTS,	TOTAL
   </sql>
-  
-  <delete id="deleteByReportDate"  parameterType="map" >
-    delete
-    from PBC_REPORT_PROD prp
-    where prp.REPORTUUID in(
-	     select pr.REPORTUUID from PBC_REPORT pr
-	      where 1=1 
-	      <if test="reportStartDate != null" >
-	      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
-	      </if>
-	      <if test="reportEndDate != null" >
-	      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
-	      </if>
-	      <if test="reporttype != null" >
-	    	and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
-	      </if> 
-        and send_status = '01'/*只删除未报送数据*/)
-  </delete>
+
+	<delete id="deleteByReportDate"  parameterType="map" >
+		delete
+		from PBC_REPORT_PROD prp
+		where prp.REPORTUUID in(
+		select pr.REPORTUUID from PBC_REPORT pr
+		where 1=1
+		<if test="reportStartDate != null" >
+			and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+		</if>
+		<if test="reportEndDate != null" >
+			and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+		</if>
+		<if test="reporttype != null" >
+			and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+		</if>
+		and send_status = '01'/*只删除未报送数据*/)
+	</delete>
 
 </mapper>

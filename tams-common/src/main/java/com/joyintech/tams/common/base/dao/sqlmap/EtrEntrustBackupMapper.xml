@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.common.base.dao.EtrEntrustBackupMapper" >
+
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.EtrEntrust" >
+        <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET_MODE" property="tradeMarketMode" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="IS_OUT_TRADE" property="isOutTrade" jdbcType="VARCHAR" />
+        <result column="COUNTER_TRADER" property="counterTrader" jdbcType="VARCHAR" />
+        <result column="CONTACT_INFO" property="contactInfo" jdbcType="VARCHAR" />
+        <result column="ENTRUST_DATE" property="entrustDate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="DECIMAL" />
+        <result column="ENTRUST_NUM" property="entrustNum" jdbcType="DECIMAL" />
+        <result column="AVAILABLE_NUM" property="availableNum" jdbcType="DECIMAL" />
+        <result column="PRO_AVAILABLE_CASH" property="proAvailableCash" jdbcType="DECIMAL" />
+        <result column="ACC_AVAILABLE_CASH" property="accAvailableCash" jdbcType="DECIMAL" />
+        <result column="ENTRUST_STATUS" property="entrustStatus" jdbcType="VARCHAR" />
+        <result column="PRICE" property="price" jdbcType="DECIMAL" />
+        <result column="IS_ACCURATE" property="isAccurate" jdbcType="VARCHAR" />
+        <result column="INV_MANAGER_ID" property="invManagerId" jdbcType="VARCHAR" />
+        <result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="SALE_CODE" property="saleCode" jdbcType="VARCHAR" />
+        <result column="PRICE_MODEL" property="priceModel" jdbcType="VARCHAR" />
+        <result column="ENTRUST_TYPE" property="entrustType" jdbcType="VARCHAR" />
+        <result column="STOCK_ID" property="stockId" jdbcType="VARCHAR" />
+        <result column="ENTRUST_CLASS" property="entrustClass" jdbcType="VARCHAR" />
+        <result column="BUSINESS_MODEL" property="businessModel" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, FINPROD_TYPE2 FINPROD_TYPE2, 
+        TRADE_MARKET TRADE_MARKET, TRADE_PLAT TRADE_PLAT, TRADE_MARKET_MODE TRADE_MARKET_MODE, 
+        PS PS, CCY CCY, INV_AIM INV_AIM, COUNTER_ID COUNTER_ID, IS_OUT_TRADE IS_OUT_TRADE, 
+        COUNTER_TRADER COUNTER_TRADER, CONTACT_INFO CONTACT_INFO, ENTRUST_DATE ENTRUST_DATE, 
+        VDATE VDATE, MDATE MDATE, ENTRUST_AMT ENTRUST_AMT, ENTRUST_NUM ENTRUST_NUM, AVAILABLE_NUM AVAILABLE_NUM, 
+        PRO_AVAILABLE_CASH PRO_AVAILABLE_CASH, ACC_AVAILABLE_CASH ACC_AVAILABLE_CASH, ENTRUST_STATUS ENTRUST_STATUS, 
+        PRICE PRICE, IS_ACCURATE IS_ACCURATE, INV_MANAGER_ID INV_MANAGER_ID, CALENDAR_ID CALENDAR_ID, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CHL_ID CHL_ID, SALE_CODE SALE_CODE, 
+        PRICE_MODEL PRICE_MODEL, ENTRUST_TYPE ENTRUST_TYPE, STOCK_ID STOCK_ID, ENTRUST_CLASS ENTRUST_CLASS ,BUSINESS_MODEL BUSINESS_MODEL
+    </sql>
+    
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustBackupMapper.Base_Column_List" />
+        from ETR_ENTRUST_BACKUP
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </select>
     
     <insert id="insertFromQuery" parameterType="java.lang.String">
         INSERT INTO ETR_ENTRUST_BACKUP
@@ -42,4 +104,10 @@
         delete from ETR_ENTRUST_ADD_BACKUP
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </delete>
+    <delete id="deleteDetailByPrimaryKey" parameterType="java.lang.String" >
+        delete from ETR_ENTRUST_DETAIL_BACKUP
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </delete>
+
+
 </mapper>

@@ -1,0 +1,1 @@
+UPDATE SYS_BATCH_TASK SET TASK_PRI = 6 WHERE BEAN_NAME = 'stlSettleTransDataGatherTask';

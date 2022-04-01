@@ -1580,6 +1580,45 @@
             and (instr(P_TRADE_ID, #{search}) > 0)
         </if>
     </select>
-
+    <!--// modify by etliu 20220228 start-->
+    <!--// 广农商二阶段 GNS-896:【广农商场内清算】场内债券存续期-行权赎回，批处理后未生成交易-->
+    <select id="findEffectiveDataXq" resultType="com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondExerciseProcessDto">
+        SELECT
+            t1.TOTLE_TRADE_ID as bizCode,
+            t1.FINPROD_ID as finprodId,
+            t2.FINPROD_MARKET_ID as finprodMarketId,
+            t2.FINPROD_ABBR as finprodName,
+            t1.VDATE as vdate,
+            t1.MDATE as mdate,
+            t1.TRADE_DATE as  payDate,
+            t1.SHARE_AMT * t1.PAR_VALUE as qty,
+            t1.UNIT_CPRICE as netPrice,
+            t1.UNIT_CPRICE * t1.SHARE_AMT as cPriceAmt,
+            t1.FPRICE_AMT as fPriceAmt,
+            t1.SETTLE_DATE as  settleDate
+        FROM
+            TRD_FIN_PRODUCT_DEAL_TOTAL t1
+                inner join FIN_PRODUCT t2 on t1.FINPROD_ID = t2.FINPROD_ID
+        WHERE
+            t1.TOTLE_TRADE_ID = #{totalTradeId, jdbcType=VARCHAR}
+    </select>
+    <select id="selectTrdBondPtlSecExerciseInfoList" resultType="com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondPtlSecExerciseInfo">
+        SELECT
+            t1.TOTLE_TRADE_ID as totalTradeId,
+            t1.PORTFOLIO_ID as portfolioId,
+            t3.PORTFOLIO_NAME as portfolioName,
+            t1.SEC_MANAGE_ACCT_ID as secAcctId,
+            t1.INV_AIM as invAim,
+            t1.SHARE_AMT * t1.PAR_VALUE as qty,
+            t1.UNIT_CPRICE * t1.SHARE_AMT as cPriceAmt,
+            t1.FPRICE_AMT as settleAmt
+        FROM
+            TRD_FIN_PRODUCT_DEAL_TOTAL t1
+                inner join TRD_DEAL_TOTAL_ADD t2 on t1.TOTLE_TRADE_ID = t2.TOTLE_TRADE_ID
+                inner join PTL_PORTFOLIO t3 on t1.PORTFOLIO_ID = t3.PORTFOLIO_ID
+        WHERE
+            t1.P_TOTLE_TRADE_ID = #{totalTradeId, jdbcType=VARCHAR}
+    </select>
+    <!--// modify by etliu end start-->
 </mapper>
                         

@@ -36,6 +36,8 @@ public class ChbMonthCollect extends BaseEntity {
     private BigDecimal saleAmountTotal;
     //净销售金额
     private BigDecimal valueAmountTotal;
+    //单持有余额
+    private BigDecimal amount;
     //持有余额
     private BigDecimal balanceAmt;
     //持有份额
@@ -82,6 +84,10 @@ public class ChbMonthCollect extends BaseEntity {
     private String sendStatus;
     //数据日期
     private Date statusDate;
+    //持有日期
+    private Date holdDate;
+
+    private BigDecimal qty;
 
     public String getTermid() {
         return termid;
@@ -201,6 +207,14 @@ public class ChbMonthCollect extends BaseEntity {
 
     public void setStatusDate(Date statusDate) {
         this.statusDate = statusDate;
+    }
+
+    public Date getHoldDate() {
+        return holdDate;
+    }
+
+    public void setHoldDate(Date holdDate) {
+        this.holdDate = holdDate;
     }
 
     public String getHolderTypeFlag() {
@@ -401,5 +415,21 @@ public class ChbMonthCollect extends BaseEntity {
 
     public void setValueSharesTotal(BigDecimal valueSharesTotal) {
         this.valueSharesTotal = valueSharesTotal;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getQty() {
+        return qty;
+    }
+
+    public void setQty(BigDecimal qty) {
+        this.qty = qty;
     }
 }

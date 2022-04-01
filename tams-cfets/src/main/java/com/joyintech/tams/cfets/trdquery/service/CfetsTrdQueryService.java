@@ -267,8 +267,8 @@ public class CfetsTrdQueryService extends BaseService{
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
         pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         pageParam.put("sysDate",iPlatformDate.getSysDateStr());
-        pageParam.put("totleTradeId",dto.getBusiCode());
-        List<CfetsPledgeInfoResponse> pledgeInfoDtoList = cfetsTrdQueryMapper.findRepoPledgeInfo(pageParam);
+    //    pageParam.put("totleTradeId",dto.getBusiCode());
+        List<CfetsPledgeInfoResponse> pledgeInfoDtoList = cfetsTrdQueryMapper.selectRegTablePledgeInfoList(pageParam);
 
 
         resultData.put(dtCode+"_dataform",dataform);

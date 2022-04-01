@@ -15,11 +15,194 @@
     <sql id="Base_Column_List">
     INTERF_ID, LAST_UPDATETIME, REMARK, INTERF_NAME, CONTENT_TYPE, CONTENT_SRC, REF_REPORT,
     SYS_SCOPE, STATUS
-  </sql>
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_INTERF_CONFIG
+        where INTERF_ID = #{interfId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHB_INTERF_CONFIG
+    where INTERF_ID = #{interfId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbInterfConfigDto">
+    insert into CHB_INTERF_CONFIG (INTERF_ID, LAST_UPDATETIME, REMARK,
+      INTERF_NAME, CONTENT_TYPE, CONTENT_SRC,
+      REF_REPORT, SYS_SCOPE, STATUS
+      )
+    values (#{interfId,jdbcType=VARCHAR}, #{lastUpdatetime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+      #{interfName,jdbcType=VARCHAR}, #{contentType,jdbcType=CHAR}, #{contentSrc,jdbcType=VARCHAR},
+      #{refReport,jdbcType=VARCHAR}, #{sysScope,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbInterfConfigDto">
+        insert into CHB_INTERF_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="interfId != null">
+                INTERF_ID,
+            </if>
+            <if test="lastUpdatetime != null">
+                LAST_UPDATETIME,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="interfName != null">
+                INTERF_NAME,
+            </if>
+            <if test="contentType != null">
+                CONTENT_TYPE,
+            </if>
+            <if test="contentSrc != null">
+                CONTENT_SRC,
+            </if>
+            <if test="refReport != null">
+                REF_REPORT,
+            </if>
+            <if test="sysScope != null">
+                SYS_SCOPE,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="interfId != null">
+                #{interfId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastUpdatetime != null">
+                #{lastUpdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="interfName != null">
+                #{interfName,jdbcType=VARCHAR},
+            </if>
+            <if test="contentType != null">
+                #{contentType,jdbcType=CHAR},
+            </if>
+            <if test="contentSrc != null">
+                #{contentSrc,jdbcType=VARCHAR},
+            </if>
+            <if test="refReport != null">
+                #{refReport,jdbcType=VARCHAR},
+            </if>
+            <if test="sysScope != null">
+                #{sysScope,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbInterfConfigDto">
+        update CHB_INTERF_CONFIG
+        <set>
+            <if test="lastUpdatetime != null">
+                LAST_UPDATETIME = #{lastUpdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="interfName != null">
+                INTERF_NAME = #{interfName,jdbcType=VARCHAR},
+            </if>
+            <if test="contentType != null">
+                CONTENT_TYPE = #{contentType,jdbcType=CHAR},
+            </if>
+            <if test="contentSrc != null">
+                CONTENT_SRC = #{contentSrc,jdbcType=VARCHAR},
+            </if>
+            <if test="refReport != null">
+                REF_REPORT = #{refReport,jdbcType=VARCHAR},
+            </if>
+            <if test="sysScope != null">
+                SYS_SCOPE = #{sysScope,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where INTERF_ID = #{interfId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbInterfConfigDto">
+    update CHB_INTERF_CONFIG
+    set LAST_UPDATETIME = #{lastUpdatetime,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      INTERF_NAME = #{interfName,jdbcType=VARCHAR},
+      CONTENT_TYPE = #{contentType,jdbcType=CHAR},
+      CONTENT_SRC = #{contentSrc,jdbcType=VARCHAR},
+      REF_REPORT = #{refReport,jdbcType=VARCHAR},
+      SYS_SCOPE = #{sysScope,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR}
+    where INTERF_ID = #{interfId,jdbcType=VARCHAR}
+  </update>
+    <select id="queryUpdateTime" parameterType="java.lang.String" resultType="java.util.Date">
+		select
+		 	LAST_UPDATETIME
+		from CHB_INTERF_CONFIG
+		where
+			INTERF_ID =  #{interfId,jdbcType=VARCHAR}
+	</select>
+
+    <update id="updateLastupdatetime" parameterType="map">
+		update
+		 	CHB_INTERF_CONFIG
+		set
+			LAST_UPDATETIME =  #{newUpdateTime,jdbcType=TIMESTAMP}
+		where
+			INTERF_ID =  #{interfId,jdbcType=VARCHAR}
+	</update>
+    <select id="selectByInterfId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_INTERF_CONFIG
+        where INTERF_ID = #{interfId,jdbcType=VARCHAR}
+        and status= 'E'
+    </select>
+    <select id="selectByInterfIdEx" parameterType="java.lang.String" resultMap="BaseResultMap">
+	  select
+	  c.INTERF_ID, A.LAST_UPDATETIME, c.REMARK, c.INTERF_NAME, c.CONTENT_TYPE, c.CONTENT_SRC, c.REF_REPORT,
+    	c.SYS_SCOPE, c.STATUS
+	  from CHB_INTERF_CONFIG c
+	  LEFT JOIN CHB_INTERF_CONFIG_ADD A ON C.INTERF_ID=A.INTERF_ID
+	  where a.INTERF_ID = #{interfId,jdbcType=VARCHAR}
+	  AND A.Institution_Code = #{InstitutionCode,jdbcType=VARCHAR}
+	  and c.status= 'E'
+	</select>
+    <select id="queryUpdateTimeEx" parameterType="java.lang.String" resultType="java.util.Date">
+		select
+		 	a.LAST_UPDATETIME
+		from CHB_INTERF_CONFIG_ADD a
+		where
+			a.INTERF_ID =  #{interfId,jdbcType=VARCHAR}
+		 AND A.Institution_Code = #{InstitutionCode,jdbcType=VARCHAR}
+	</select>
+
+    <update id="updateLastupdatetimeEx" parameterType="map">
+        update
+        CHB_INTERF_CONFIG_add
+        set
+        LAST_UPDATETIME =  #{newUpdateTime,jdbcType=TIMESTAMP}
+        where
+        INTERF_ID =  #{interfId,jdbcType=VARCHAR}
+        <if test="InstitutionCode != null and InstitutionCode != '' ">
+            AND Institution_Code = #{InstitutionCode,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <update id="updateLastupdatetimeExt" parameterType="map">
+		 UPDATE
+		 CHB_INTERF_CONFIG A
+		 SET LAST_UPDATETIME = IFNULL((SELECT MIN(LAST_UPDATETIME) FROM CHB_INTERF_CONFIG_add B WHERE A.INTERF_ID = b.INTERF_ID) ,sysdate)
+		 WHERE INTERF_ID =  #{interfId,jdbcType=VARCHAR}
+	</update>
     <update id="updateBySysdate" parameterType="map">
         update
             CHB_INTERF_CONFIG
-        set 
+        set
             LAST_UPDATETIME =  NOW()
         where
             INTERF_ID =  #{interfId,jdbcType=VARCHAR}

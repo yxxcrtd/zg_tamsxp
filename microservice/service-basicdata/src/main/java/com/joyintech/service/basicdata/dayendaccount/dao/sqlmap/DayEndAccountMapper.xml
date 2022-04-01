@@ -4,101 +4,118 @@
 
     <select id="findAccountInfo" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
         SELECT
-            a.SEQ_NO,
-            a.ACCOUT busiAcctNo,
-            a.SETTLE_DATE,
-            a.FINPROD_ID,
-            a.TRADE_MARKET,
-            a.CHECK_RESULT,
-            CASE WHEN f.TYPE_8 IS NOT NULL THEN f.TYPE_8
-            WHEN b.FINPROD_TYPE IS NOT NULL THEN b.FINPROD_TYPE
-            WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+            ssr.SEQ_NO,
+            ssr.ACCOUT busiAcctNo,
+            ssr.SETTLE_DATE,
+            ssr.FINPROD_ID,
+            ssr.TRADE_MARKET,
+            ssr.CHECK_RESULT,
+            CASE
+                <!--GZYHTZJY-1075:优先取明细资产类型 modify by fuyongsheng 20220110 start-->
+                WHEN settle.FINPROD_TYPE2 IS NOT NULL THEN settle.FINPROD_TYPE2
+                WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
+                <!--GZYHTZJY-1075:优先取明细资产类型 modify by fuyongsheng 20220110 end-->
+                WHEN ins.STOCK_CODE IS NOT NULL THEN #{prodType2_F07}
+                WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
             END  FINPROD_TYPE,
-            a.ENTRUST_TRADE_ID,
-            a.CUSTOMER_ID,
-            a.STL_SEC_DEME,
-            b.TRADE_ID,
-            b.SEAT_NUMBER,
-            NVL(b.COMMISSION_AMT,0) COMMISSION_AMT,
-            NVL(b.JSF_AMT,0) JSF_AMT,
-            NVL(b.ZGF_AMT,0) ZGF_AMT,
-            NVL(b.STAMP_FEE,0) STAMP_FEE,
-            NVL(b.SETTLE_FEE,0) SETTLE_FEE,
-            NVL(b.GHF_AMT,0) GHF_AMT,
-            NVL(b.SXF_AMT,0) SXF_AMT,
-            NVL(b.TRADE_AMT,0) TRADE_AMT,
-            NVL(b.TRADE_NUM,0) TRADE_NUM,
-            b.PS,
-            b.SEC_ACCT_ID,
-            NVL(e.COMMISSION_AMT,0) COMMISSION_AMT2,
-            NVL(e.JSF_AMT,0) JSF_AMT2,
-            NVL(e.ZGF_AMT,0) ZGF_AMT2,
-            NVL(e.STAMP_FEE,0) STAMP_FEE2,
-            NVL(e.SETTLE_FEE,0) SETTLE_FEE2,
-            NVL(e.GHF_AMT,0) GHF_AMT2,
-            NVL(e.SXF_AMT,0) SXF_AMT2,
-            NVL(e.FPRICE_AMT,0) TRADE_AMT2,
-            NVL(e.SHARE_AMT,0) TRADE_NUM2
+            ssr.ENTRUST_TRADE_ID,
+            ssr.CUSTOMER_ID,
+            ssr.STL_SEC_DEME,
+            ssrd.TRADE_ID,
+            ssrd.SEAT_NUMBER,
+            NVL(ssrd.COMMISSION_AMT,0) COMMISSION_AMT,
+            NVL(ssrd.JSF_AMT,0) JSF_AMT,
+            NVL(ssrd.ZGF_AMT,0) ZGF_AMT,
+            NVL(ssrd.STAMP_FEE,0) STAMP_FEE,
+            NVL(ssrd.SETTLE_FEE,0) SETTLE_FEE,
+            NVL(ssrd.GHF_AMT,0) GHF_AMT,
+            NVL(ssrd.SXF_AMT,0) SXF_AMT,
+            NVL(ssrd.TRADE_AMT,0) TRADE_AMT,
+            NVL(ssrd.TRADE_NUM,0) TRADE_NUM,
+            ssrd.PS,
+            ssrd.SEC_ACCT_ID,
+            NVL(settle.COMMISSION_AMT,0) COMMISSION_AMT2,
+            NVL(settle.JSF_AMT,0) JSF_AMT2,
+            NVL(settle.ZGF_AMT,0) ZGF_AMT2,
+            NVL(settle.STAMP_FEE,0) STAMP_FEE2,
+            NVL(settle.SETTLE_FEE,0) SETTLE_FEE2,
+            NVL(settle.GHF_AMT,0) GHF_AMT2,
+            NVL(settle.SXF_AMT,0) SXF_AMT2,
+            NVL(settle.FPRICE_AMT,0) TRADE_AMT2,
+            NVL(settle.SHARE_AMT,0) TRADE_NUM2
         FROM
-            STL_SEC_RECON a
+            STL_SEC_RECON ssr
         LEFT JOIN
-            STL_SEC_RECON_DEAL b ON a.SEQ_NO = b.SEQ_NO
+            STL_SEC_RECON_DEAL ssrd ON ssr.SEQ_NO = ssrd.SEQ_NO
         LEFT JOIN (
             SELECT
-                c.SEQ_NO,
-                SUM(d.COMMISSION_AMT) COMMISSION_AMT,
-                SUM(d.JSF_AMT) JSF_AMT,
-                SUM(d.ZGF_AMT) ZGF_AMT,
-                SUM(d.STAMP_FEE) STAMP_FEE,
-                SUM(d.SETTLE_FEE) SETTLE_FEE,
-                SUM(d.GHF_AMT) GHF_AMT,
-                SUM(d.SXF_AMT) SXF_AMT,
+                detail.SEQ_NO,
+                std.FINPROD_TYPE2,
+                SUM(std.COMMISSION_AMT) COMMISSION_AMT,
+                SUM(std.JSF_AMT) JSF_AMT,
+                SUM(std.ZGF_AMT) ZGF_AMT,
+                SUM(std.STAMP_FEE) STAMP_FEE,
+                SUM(std.SETTLE_FEE) SETTLE_FEE,
+                SUM(std.GHF_AMT) GHF_AMT,
+                SUM(std.SXF_AMT) SXF_AMT,
                 SUM(
-                    CASE WHEN d.PS = #{PS_T01} AND d.FINPROD_TYPE2 != #{prodType2_F02} THEN d.FPRICE_AMT*-1
-                    WHEN d.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND d.FINPROD_TYPE2 = #{prodType2_F02} THEN d.FPRICE_AMT*-1
-                    ELSE d.FPRICE_AMT END
+                    CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB01} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB04} AND std.TRADE_MARKET = #{TRADE_MARKET_03} THEN std.FPRICE_AMT*-1
+                    WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.FPRICE_AMT*-1
+                    ELSE std.FPRICE_AMT END
                 ) FPRICE_AMT,
                 SUM(
-                    CASE WHEN d.PS = #{PS_T01} AND d.FINPROD_TYPE2 != #{prodType2_F02} THEN d.SHARE_AMT
-                    WHEN d.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T56},#{PS_T95},#{PS_T96}) AND d.FINPROD_TYPE2 = #{prodType2_F02} THEN d.SHARE_AMT
-                    ELSE d.SHARE_AMT*-1 END
+                    CASE WHEN std.PS = #{PS_T01} AND std.FINPROD_TYPE2 != #{prodType2_F02} THEN std.SHARE_AMT
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RS03} THEN std.SHARE_AMT
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB01} THEN std.SHARE_AMT
+                    WHEN std.PS = #{PS_T56} AND std.BUSI_SCENE_CALSS = #{BUSI_SCENE_CALSS_0902RB04} THEN std.SHARE_AMT
+                    WHEN std.PS IN (#{PS_T07},#{PS_T54},#{PS_T55},#{PS_T95},#{PS_T96}) AND std.FINPROD_TYPE2 = #{prodType2_F02} THEN std.SHARE_AMT
+                    ELSE std.SHARE_AMT*-1 END
                 ) SHARE_AMT
             FROM
-                STL_SEC_RECON_DETAIL c
+                STL_SEC_RECON_DETAIL detail
+            LEFT JOIN
+                STL_SEC_RECON ssr1 ON detail.SEQ_NO = ssr1.SEQ_NO
             INNER JOIN
-                SETTLE_TRANS_DATA d ON c.TRADE_ID = d.TRADE_ID
+                SETTLE_TRANS_DATA std ON detail.TRADE_ID = std.TRADE_ID
             GROUP BY
-                c.SEQ_NO
-            )e ON a.SEQ_NO = e.SEQ_NO
+                detail.SEQ_NO,
+                std.FINPROD_TYPE2
+            )settle ON ssr.SEQ_NO = settle.SEQ_NO
         LEFT JOIN
-            FIN_PRODUCT_TYPE f ON a.FINPROD_ID = f.FINPROD_ID
+            FIN_PRODUCT_TYPE fpt ON ssr.FINPROD_ID = fpt.FINPROD_ID
         LEFT JOIN
-            T_INSTRUMENT ins ON a.FINPROD_ID = ins.STOCK_CODE
+            T_INSTRUMENT ins ON ssr.FINPROD_ID = ins.STOCK_CODE AND
+                CASE WHEN ssr.TRADE_MARKET = #{TRADE_MARKET_03} THEN 'SH'
+                WHEN ssr.TRADE_MARKET = #{TRADE_MARKET_04} THEN 'SZ'
+                END = ins.STOCK_CODE
         WHERE
             1=1
             <if test="accountList != null and accountList.size() > 0">
-                AND a.ACCOUT IN
+                AND ssr.ACCOUT IN
                 <foreach collection="accountList" index="index" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
             </if>
             <if test="finprodIdList != null and finprodIdList.size() > 0">
-                AND a.FINPROD_ID IN
+                AND ssr.FINPROD_ID IN
                 <foreach collection="finprodIdList" index="index" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
             </if>
             <if test="tradeMarket != null and tradeMarket != ''">
-                AND a.TRADE_MARKET = #{tradeMarket}
+                AND ssr.TRADE_MARKET = #{tradeMarket}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
-                AND a.SETTLE_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-MM-dd')
+                AND ssr.SETTLE_DATE >= TO_DATE(#{tradeDateBegin}, 'yyyy-MM-dd')
             </if>
             <if test="tradeDateEnd != null and tradeDateEnd != ''">
-                AND a.SETTLE_DATE &lt;= TO_DATE(#{tradeDateEnd}, 'yyyy-MM-dd')
+                AND ssr.SETTLE_DATE &lt;= TO_DATE(#{tradeDateEnd}, 'yyyy-MM-dd')
             </if>
             <if test="accountStatus != null and accountStatus != ''">
-                AND a.CHECK_RESULT = #{accountStatus}
+                AND ssr.CHECK_RESULT = #{accountStatus}
             </if>
         ORDER BY
             CUSTOMER_ID,SETTLE_DATE DESC
@@ -874,7 +891,7 @@
         LEFT JOIN STL_SEC_ACCT_INFO c
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         AND p1.BRANCH='0'
         AND p1.CDATE=t1.CDATE
         )=1 then (
@@ -886,7 +903,7 @@
         LEFT JOIN STL_SEC_ACCT_INFO c
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         AND p1.BRANCH='0'
         AND p1.CDATE=t1.CDATE
         ) end portfolioId,
@@ -898,7 +915,7 @@
         LEFT JOIN STL_SEC_ACCT_INFO c
         ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         AND p1.BRANCH='0'
         AND p1.CDATE=t1.CDATE
         )=1 then (
@@ -910,7 +927,7 @@
         left join PTL_PORTFOLIO p2
         on p2.PORTFOLIO_ID=p1.PORTFOLIO_ID
         WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
-        AND c.bond_id = t1. SEC_ACCT_ID
+        AND c.bond_id = t1.SEC_ACCT_ID
         AND p1.BRANCH='0'
         AND p1.CDATE=t1.CDATE
         ) end portfolioName,
@@ -1034,7 +1051,7 @@
         ) table2
     </select>
     <select id="selectPage1" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
-        SELECT #{parentId} parentInfo,
+        SELECT distinct #{parentId} parentInfo,
                null childInfo,
                p1.PORTFOLIO_ID   portfolioId,
                p3.PORTFOLIO_NAME portfolioName,
@@ -1093,6 +1110,372 @@
                  p3.PORTFOLIO_NAME
     </select>
 
+    <select id="selectPageNew" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
+        select
+        table1.*,nvl(table1.portfolioId,'null')||','||'1'||','||table1.busiAcctNo||','||to_char(table1.settleDate,'yyyy-MM-dd')||','||table1.ccy
+        childInfo from (
+        SELECT
+        'root' parentInfo,
+        t1.CCY ccy,
+        m2.CUSTOMER_NAME customerName,
+        case
+        when (SELECT count(distinct p.PORTFOLIO_ID)
+        FROM PTL_CASH_POSITION_RULE p
+        WHERE p.ACCT_ID = t1.ACCT_ID
+        AND p.CCY = t1.CCY
+        AND p.CDATE = t1.CDATE
+        ) = 1 then (
+        SELECT distinct p.PORTFOLIO_ID
+        FROM PTL_CASH_POSITION_RULE p
+        WHERE p.ACCT_ID = t1.ACCT_ID
+        AND p.CCY = t1.CCY
+        AND p.CDATE = t1.CDATE
+        )
+        else null end portfolioId,
+        case
+        when (SELECT count(distinct p.PORTFOLIO_ID)
+        FROM PTL_CASH_POSITION_RULE p
+        WHERE p.ACCT_ID = t1.ACCT_ID
+        AND p.CCY = t1.CCY
+        AND p.CDATE = t1.CDATE
+        ) = 1 then (
+        SELECT DISTINCT p2.PORTFOLIO_NAME
+        FROM PTL_CASH_POSITION_RULE p
+        LEFT JOIN PTL_PORTFOLIO p2
+        ON p2.PORTFOLIO_ID = p.PORTFOLIO_ID
+        WHERE p.ACCT_ID = t1.ACCT_ID
+        AND p.CCY = t1.CCY
+        AND p.CDATE = t1.CDATE
+        )
+        else null end portfolioName,
+        null secAcctId,
+        s1.BUSI_ACCT_NO busiAcctNo,
+        s1.ACCT_NAME acctName,
+        t1.CDATE settleDate,
+        null finprodId,
+        null finprodMarketId,
+        null finprodName,
+        null tradeMarket,
+        'F20' finprodType,
+        t1.AMOUNT xiTongAmount,
+        s2.ZYBS quanShangAmount,
+        null termType,
+        case when t1.AMOUNT = s2.ZYBS then '1' else '0' end checkResult
+        FROM (
+        SELECT p1.ACCT_ID,
+        p1.CDATE,
+        p1.CCY,
+        SUM(p1.AMOUNT) AMOUNT
+        FROM PTL_CASH_POSITION_RULE p1
+        LEFT JOIN PTL_CAPACCT_INFO p2
+        ON p1.ACCT_ID = p2.ACCT_NO
+        AND p1.PORTFOLIO_ID = p2.PORTFOLIO_ID
+        AND p1.CCY = p2.CCY
+        WHERE p2.ACCT_TYPE = 'A07'
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        GROUP BY p1.ACCT_ID, p1.CDATE, p1.CCY
+        ) t1
+        LEFT JOIN STL_CAPACCT_INFO s1
+        ON t1.ACCT_ID = s1.ACCT_NO
+        LEFT JOIN MST_SALE_DEPARTMENT m1
+        ON s1.OWN_DEPT = m1.SALE_DEPID
+        LEFT JOIN MST_CUSTOMER_INFO m2
+        ON m1.BROKER_ID = m2.CUSTOMER_ID
+        LEFT JOIN STL_CASH_RECON s2
+        ON t1.ACCT_ID = s2.ACCT_NO
+        AND t1.CDATE = s2.CDATE
+        AND t1.CCY = s2.JYLB
+        <where>
+            <if test="customerId!=null and customerId!=''">
+                m2.CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="busiAcctNoList != null and busiAcctNoList.size() > 0">
+                AND t1.ACCT_ID IN
+                <foreach collection="busiAcctNoList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="accountStatus!=null and accountStatus!=''">
+                AND case when t1.AMOUNT = s2.ZYBS then '1' else '0' end = #{accountStatus}
+            </if>
+            <if test="tradeDateBegin!=null and tradeDateBegin!=''">
+                AND t1.CDATE&gt;=to_date(#{tradeDateBegin},'yyyy-MM-dd')
+            </if>
+            <if test="tradeDateEnd!=null and tradeDateEnd!=''">
+                AND t1.CDATE&lt;=to_date(#{tradeDateEnd},'yyyy-MM-dd')
+            </if>
+            <if test="secAcctId!=null and secAcctId!=''">
+                AND 1=2
+            </if>
+        </where>
+        ) table1
+
+        union all
+        select
+        table2.*,nvl(table2.portfolioId,'null')||','||'2'||','||table2.finprodId||','||to_char(table2.settleDate,'yyyy-MM-dd')||','||table2.secAcctId||','||nvl(table2.termType,'null') childInfo
+        from (
+        SELECT
+        'root' parentInfo,
+        null ccy,
+        m2.CUSTOMER_NAME customerName,
+        case when (
+        SELECT
+        COUNT(DISTINCT p1.PORTFOLIO_ID)
+        FROM PTL_SEC_POSITION_RULE p1
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
+        LEFT JOIN STL_SEC_ACCT_INFO c
+        ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
+        WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
+        AND c.bond_id = t1.SEC_ACCT_ID
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        AND p1.CDATE=t1.CDATE
+        )=1 then (
+        SELECT
+        DISTINCT p1.PORTFOLIO_ID
+        FROM PTL_SEC_POSITION_RULE p1
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
+        LEFT JOIN STL_SEC_ACCT_INFO c
+        ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
+        WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
+        AND c.bond_id = t1.SEC_ACCT_ID
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        AND p1.CDATE=t1.CDATE
+        ) end portfolioId,
+        case when (
+        SELECT COUNT(DISTINCT p1.PORTFOLIO_ID)
+        FROM PTL_SEC_POSITION_RULE p1
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
+        LEFT JOIN STL_SEC_ACCT_INFO c
+        ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
+        WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
+        AND c.bond_id = t1.SEC_ACCT_ID
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        AND p1.CDATE=t1.CDATE
+        )=1 then (
+        SELECT DISTINCT p2.PORTFOLIO_NAME
+        FROM PTL_SEC_POSITION_RULE p1
+        LEFT JOIN fin_product a on    p1.FINPROD_ID = a.FINPROD_ID
+        LEFT JOIN fin_trade_product b on  p1.FINPROD_ID = b.FINPROD_ID
+        LEFT JOIN STL_SEC_ACCT_INFO c ON p1.SEC_ACCT_ID=c.SEC_ACCT_ID
+        left join PTL_PORTFOLIO p2
+        on p2.PORTFOLIO_ID=p1.PORTFOLIO_ID
+        WHERE ((a.FINPROD_MARKET_ID=t1.FINPROD_ID and a.FINPROD_ID is not null) or (a.FINPROD_ID is null and b.TERM_TYPE = t1.TERM_TYPE))
+        AND c.bond_id = t1.SEC_ACCT_ID
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        AND p1.CDATE=t1.CDATE
+        ) end portfolioName,
+        t1.SEC_ACCT_ID secAcctId,
+        s2.BUSI_ACCT_NO busiAcctNo,
+        s2.ACCT_NAME acctName,
+        t1.CDATE settleDate,
+        nvl(f1.FINPROD_ID,t1.FINPROD_ID) finprodId,
+        nvl(f1.FINPROD_MARKET_ID,t1.FINPROD_ID) finprodMarketId,
+        f1.FINPROD_NAME finprodName,
+        t1.TRADE_MARKET tradeMarket,
+        t1.TYPE_8 finprodType,
+        t1.AMOUNT xiTongAmount,
+        s3.AMOUT quanShangAmount,
+        t1.TERM_TYPE termType,
+        case when t1.AMOUNT = s3.AMOUT then '1' else '0' end checkResult
+        FROM (
+        SELECT nvl(f1.FINPROD_ID,p1.FINPROD_ID) FINPROD_ID,s1.BOND_ID SEC_ACCT_ID,p1.CDATE,f1.TRADE_MARKET,f2.type_8,null TERM_TYPE,
+        <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 start-->
+        <!--SUM(p1.AMOUNT) AMOUNT-->
+        SUM(
+        CASE WHEN f1.FINPROD_TYPE2 IS NOT NULL AND f1.FINPROD_TYPE2 = #{finProdType2_F01} THEN p1.AMOUNT/100
+        ELSE p1.AMOUNT END
+        ) AMOUNT
+        <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 end-->
+        FROM PTL_SEC_POSITION_RULE p1
+        LEFT JOIN STL_SEC_ACCT_INFO s1
+        ON p1.SEC_ACCT_ID=s1.SEC_ACCT_ID
+        LEFT JOIN PTL_CAPACCT_INFO p2
+        ON s1.TRD_ACCT_ID=p2.ACCT_NO
+        AND s1.TRD_ACCT_CCY=p2.CCY
+        AND p1.PORTFOLIO_ID=p2.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT f1
+        ON p1.FINPROD_ID=f1.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE f2
+        ON p1.FINPROD_ID=f2.FINPROD_ID
+        INNER JOIN FIN_PRODUCT f3
+        ON p1.FINPROD_ID=f3.FINPROD_ID
+        WHERE s1.SEC_ACCT_TYPE='SEC'
+        AND s1.TRADE_PLACE IN ('03','04')
+        AND p2.ACCT_TYPE='A07'
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        GROUP BY p1.FINPROD_ID,s1.BOND_ID,p1.CDATE,f2.type_8,f1.TRADE_MARKET,f1.FINPROD_ID
+        UNION ALL
+        SELECT
+            CASE WHEN f1.TERM_TYPE='GC001' THEN '204001'
+            WHEN f1.TERM_TYPE='GC002' THEN '204002'
+            WHEN f1.TERM_TYPE='GC003' THEN '204003'
+            WHEN f1.TERM_TYPE='GC004' THEN '204004'
+            WHEN f1.TERM_TYPE='GC007' THEN '204007'
+            WHEN f1.TERM_TYPE='GC014' THEN '204014'
+            WHEN f1.TERM_TYPE='GC028' THEN '204028'
+            WHEN f1.TERM_TYPE='GC091' THEN '204091'
+            WHEN f1.TERM_TYPE='GC182' THEN '204182'
+            WHEN f1.TERM_TYPE='R-001' THEN '131810'
+            WHEN f1.TERM_TYPE='R-002' THEN '131811'
+            WHEN f1.TERM_TYPE='R-003' THEN '131800'
+            WHEN f1.TERM_TYPE='R-007' THEN '131801'
+            WHEN f1.TERM_TYPE='R-014' THEN '131802'
+            WHEN f1.TERM_TYPE='R-028' THEN '131803'
+            WHEN f1.TERM_TYPE='R-091' THEN '131805'
+            WHEN f1.TERM_TYPE='R-128' THEN '131806'
+            ELSE '131807' END FINPROD_ID,
+            s1.BOND_ID SEC_ACCT_ID,
+            p1.CDATE,
+            case
+                when f1.TERM_TYPE like 'G%' then '03'
+                when f1.TERM_TYPE like 'R%' then '04' else '04'
+            end tradeMarket,
+            'F07' TYPE_8,
+            f1.TERM_TYPE,
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 start-->
+            <!--SUM(p1.AMOUNT) AMOUNT-->
+            SUM(
+                CASE WHEN fp.FINPROD_TYPE2 IS NOT NULL AND fp.FINPROD_TYPE2 = #{finProdType2_F01} THEN p1.AMOUNT/100
+                ELSE p1.AMOUNT END
+            ) AMOUNT
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 end-->
+        FROM PTL_SEC_POSITION_RULE p1
+        LEFT JOIN STL_SEC_ACCT_INFO s1
+            ON p1.SEC_ACCT_ID=s1.SEC_ACCT_ID
+        LEFT JOIN PTL_CAPACCT_INFO p2
+            ON s1.TRD_ACCT_ID=p2.ACCT_NO
+            AND s1.TRD_ACCT_CCY=p2.CCY
+            AND p1.PORTFOLIO_ID=p2.PORTFOLIO_ID
+        inner JOIN FIN_TRADE_PRODUCT f1
+            ON p1.FINPROD_ID=f1.FINPROD_ID
+        LEFT JOIN fin_product fp
+            on p1.FINPROD_ID = fp.FINPROD_ID
+        WHERE s1.SEC_ACCT_TYPE='SEC'
+        AND s1.TRADE_PLACE IN ('03','04')
+        AND p2.ACCT_TYPE='A07'
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        GROUP BY f1.TERM_TYPE,s1.BOND_ID,p1.CDATE
+        ) t1
+        LEFT JOIN STL_SEC_ACCT_INFO s1
+        ON t1.SEC_ACCT_ID=s1.SEC_ACCT_ID
+        LEFT JOIN STL_CAPACCT_INFO s2
+        ON s1.TRD_ACCT_ID=s2.ACCT_NO
+        AND s1.TRD_ACCT_CCY=s2.CCY
+        LEFT JOIN MST_SALE_DEPARTMENT m1
+        ON s2.OWN_DEPT=m1.SALE_DEPID
+        LEFT JOIN MST_CUSTOMER_INFO m2
+        ON m1.BROKER_ID=m2.CUSTOMER_ID
+        LEFT JOIN FIN_PRODUCT f1
+        ON t1.FINPROD_ID=f1.FINPROD_ID
+        LEFT JOIN STL_SECP_RECON s3
+        ON t1.SEC_ACCT_ID=s3.ACCT_NO
+        AND t1.CDATE=s3.CDATE
+        AND t1.FINPROD_ID=s3.FINPROD_ID
+        left join FIN_PRODUCT_TYPE f2
+        on f1.FINPROD_ID=f2.FINPROD_ID
+        <where>
+            <if test="customerId!=null and customerId!=''">
+                m2.CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="busiAcctNoList != null and busiAcctNoList.size() > 0">
+                AND 1=2
+            </if>
+            <if test="accountStatus!=null and accountStatus!=''">
+                AND case when t1.AMOUNT = s3.AMOUT then '1' else '0' end = #{accountStatus}
+            </if>
+            <if test="tradeDateBegin!=null and tradeDateBegin!=''">
+                AND t1.CDATE&gt;=to_date(#{tradeDateBegin},'yyyy-MM-dd')
+            </if>
+            <if test="tradeDateEnd!=null and tradeDateEnd!=''">
+                AND t1.CDATE&lt;=to_date(#{tradeDateEnd},'yyyy-MM-dd')
+            </if>
+            <if test="secAcctId!=null and secAcctId!=''">
+                AND t1.SEC_ACCT_ID=#{secAcctId}
+            </if>
+        </where>
+        ) table2
+    </select>
+    <select id="selectPageNew1" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
+        SELECT distinct #{parentId} parentInfo,
+                        null childInfo,
+                        p1.PORTFOLIO_ID   portfolioId,
+                        p3.PORTFOLIO_NAME portfolioName,
+                        s1.BUSI_ACCT_NO   busiAcctNo,
+                        s1.ACCT_NAME      acctName,
+                        p1.CDATE          settleDate,
+                        p1.AMOUNT         xiTongAmount,
+                        'F20'             finprodType
+
+        FROM PTL_CASH_POSITION_RULE p1
+                 LEFT JOIN PTL_CAPACCT_INFO p2
+                           ON p1.ACCT_ID = p2.ACCT_NO
+                               AND p1.CCY = p2.CCY
+                 LEFT JOIN STL_CAPACCT_INFO s1
+                           ON p1.ACCT_ID = s1.ACCT_NO
+                 LEFT JOIN PTL_PORTFOLIO p3
+                           on p1.PORTFOLIO_ID = p3.PORTFOLIO_ID
+        WHERE p2.ACCT_TYPE = 'A07'
+          AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+          AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+          AND s1.BUSI_ACCT_NO = #{busiAcctNo}
+          AND p1.CDATE = to_date(#{settleDate},'yyyy-MM-dd')
+          AND p1.CCY = #{ccy}
+    </select>
+    <select id="selectPageNew2" resultType="com.joyintech.service.basicdata.dayendaccount.dto.DayEndAccountDto">
+        SELECT #{parentId} parentInfo,
+            null childInfo,
+            p1.PORTFOLIO_ID portfolioId,
+            p3.PORTFOLIO_NAME portfolioName,
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 start-->
+            <!--sum(p1.AMOUNT) xiTongAmount-->
+            SUM(
+                CASE WHEN fp.FINPROD_TYPE2 IS NOT NULL AND fp.FINPROD_TYPE2 = #{finProdType2_F01} THEN p1.AMOUNT/100
+                ELSE p1.AMOUNT END
+            ) xiTongAmount
+            <!--ZGTFCP-2010:新头寸债券需要除以100 modify by fuyongsheng 20220329 end-->
+        FROM
+             PTL_SEC_POSITION_RULE p1
+        LEFT JOIN STL_SEC_ACCT_INFO s1
+            ON p1.SEC_ACCT_ID = s1.SEC_ACCT_ID
+        LEFT JOIN PTL_CAPACCT_INFO p2
+            ON s1.TRD_ACCT_ID = p2.ACCT_NO
+            AND s1.TRD_ACCT_CCY = p2.CCY
+            AND p1.PORTFOLIO_ID = p2.PORTFOLIO_ID
+        LEFT JOIN PTL_PORTFOLIO p3
+            on p1.PORTFOLIO_ID = p3.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT fp
+            ON fp.FINPROD_ID = p1.FINPROD_ID
+        <if test="termType!=null">
+            inner join FIN_TRADE_PRODUCT f1
+            on p1.FINPROD_ID = f1.FINPROD_ID
+            and p1.BRANCH = f1.BRANCH
+        </if>
+        WHERE s1.SEC_ACCT_TYPE = 'SEC'
+        AND p1.HODING_TYPE = #{hodingType,jdbcType=VARCHAR}
+        AND p1.DATE_TYPE = #{dateType,jdbcType=NUMERIC}
+        AND s1.BOND_ID =#{secAcctId}
+        <if test="termType!=null">
+            and f1.term_type = #{termType}
+        </if>
+        <if test="termType=null">
+            AND p1.FINPROD_ID =#{finprodId}
+        </if>
+        <!--AND p1.BRANCH = '0'-->
+        AND p1.CDATE =to_date(#{settleDate},'yyyy-MM-dd')
+        GROUP BY p1.PORTFOLIO_ID,
+        p3.PORTFOLIO_NAME
+    </select>
+
     <select id="selectSecAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
         select BOND_ID id,BOND_ID text from STL_SEC_ACCT_INFO
         <where>
@@ -1118,7 +1501,7 @@
                 WHEN fpt.TYPE_8 IS NOT NULL THEN fpt.TYPE_8
                 WHEN ssrd.FINPROD_TYPE IS NOT NULL THEN ssrd.FINPROD_TYPE
                 WHEN ins.STOCK_CODE IS NOT NULL THEN 'F07'
-            END  FINPROD_TYPE,
+                END  FINPROD_TYPE,
             ssrd.MARKET_ID,
             ssrd.FINPROD_NAME,
             ssrd.TRADE_MARKET,
@@ -1151,9 +1534,9 @@
             NVL(ssrd.TOTAL_TEEAMT,0) TOTAL_TEEAMT
         FROM
             STL_SEC_RECON_DEAL ssrd
-        LEFT JOIN
+                LEFT JOIN
             FIN_PRODUCT_TYPE fpt ON ssrd.FINPROD_ID = fpt.FINPROD_ID
-        LEFT JOIN
+                LEFT JOIN
             T_INSTRUMENT ins ON ssrd.FINPROD_ID = ins.STOCK_CODE
         WHERE
             ssrd.SEQ_NO = #{seqNo,jdbcType=VARCHAR}

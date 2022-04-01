@@ -318,9 +318,10 @@ where
 	<delete id="deleteSettleTransDataStatusDisaccords" parameterType="java.util.Map">
 		DELETE
 		FROM
-			SETTLE_TRANS_DATA_STATUS
+			SETTLE_TRANS_DATA_STATUS stds
 		WHERE
-			CHECK_RESULT in (#{CHECK_RESULT_0,jdbcType=VARCHAR}, #{CHECK_RESULT_2,jdbcType=VARCHAR})
+				stds.CHECK_RESULT in (#{CHECK_RESULT_0,jdbcType=VARCHAR}, #{CHECK_RESULT_2,jdbcType=VARCHAR})
+		  	AND EXISTS (SELECT 1 FROM SETTLE_TRANS_DATA std WHERE std.TRADE_ID = stds.TRADE_ID AND std.SETTLE_DATE = TO_DATE(#{batchDate}, 'yyyy-MM-dd'))
 	</delete>
 
 	<delete id="batchDeleteStlSecReconDetail" parameterType="java.util.Map">

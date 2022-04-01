@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -30,8 +31,45 @@ import java.math.BigDecimal;
  */
 @ApiModel(value="非公开行情查询请求参数",description="非公开行情查询请求参数")
 public class EtrExchangeUnOpenQuotaRequestDto {
-    @ApiModelProperty(name="pageMode",value="分页对象")
+
+    @ApiModelProperty(name="pageMode",value="分页对象",example="{pageSize: 10,pageNo: 1, sort: 'name', direction: 'asc'}")
     private PageMode pageMode;
+
+    @ApiModelProperty(name="requestId",value="请求编号",example="A1")
+    private String requestId;
+
+    @ApiModelProperty(name="bussType",value="业务类型",example="A1")
+    private String bussType;
+
+    @ApiModelProperty(name="zyj",value="质押券代码列表",example="A1")
+    private List<String> zyj;
+
+    @ApiModelProperty(name="search",value="关键字",example="A1")
+    private String search;
+
+    public String getBussType() {
+        return bussType;
+    }
+
+    public void setBussType(String bussType) {
+        this.bussType = bussType;
+    }
+
+    public List<String> getZyj() {
+        return zyj;
+    }
+
+    public void setZyj(List<String> zyj) {
+        this.zyj = zyj;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
     public PageMode getPageMode() {
         return pageMode;
@@ -39,5 +77,13 @@ public class EtrExchangeUnOpenQuotaRequestDto {
 
     public void setPageMode(PageMode pageMode) {
         this.pageMode = pageMode;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

@@ -860,4 +860,18 @@ public class DateUtil extends DateUtils {
         Date endDate = calendar.getTime();
         return DateUtil.format(endDate);
     }
+
+    /**
+     * 查看现在是否为工作日
+     * @param date
+     * @return
+     */
+    public static boolean isBusinessDay(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        if(c.get(Calendar.DAY_OF_WEEK) != 1 && c.get(Calendar.DAY_OF_WEEK) != 7)
+            return true;
+        else
+            return false;
+    }
 }

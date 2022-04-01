@@ -606,7 +606,7 @@ public class PbcClassicsDataFileService {
 			//【dat文件生成留痕】数据的key
 			data1.put("datakey",sub.getRegistSeqno());
 			data1.put("type", "1");
-			data1.put("pbc_prod_id", sub.getPbcProdId());
+			data1.put("pbc_prod_id", sub.getPbcProdIdShow());
 			data1.put("issue_party_id", sub.getIssuePartyId());
 			data1.put("pbc_prod_type", sub.getPbcProdType());
 			data1.put("prod_name", sub.getProdName());
@@ -647,7 +647,7 @@ public class PbcClassicsDataFileService {
 				for(String raiseCcy :StringUtil.splitToList(",", sub.getRaiseCcy())){
 					LinkedHashMap<String,String> data21= new LinkedHashMap<String,String>();
 					data21.put("type", "2");
-					data21.put("pbc_prod_id", sub.getPbcProdId());
+					data21.put("pbc_prod_id", sub.getPbcProdIdShow());
 					data21.put("ccy_type", "1");
 					data21.put("raise_ccy", raiseCcy);
 					dataList.add(data21);
@@ -657,7 +657,7 @@ public class PbcClassicsDataFileService {
 				for(String cashPrinCcy :StringUtil.splitToList(",", sub.getCashPrinCcy())){
 					LinkedHashMap<String,String> data22= new LinkedHashMap<String,String>();
 					data22.put("type", "2");
-					data22.put("pbc_prod_id", sub.getPbcProdId());
+					data22.put("pbc_prod_id", sub.getPbcProdIdShow());
 					data22.put("ccy_type", "2");
 					data22.put("cash_prin_ccy", cashPrinCcy);
 					dataList.add(data22);
@@ -668,7 +668,7 @@ public class PbcClassicsDataFileService {
 				for(String cashProfCcy :StringUtil.splitToList(",", sub.getCashProfCcy())){
 					LinkedHashMap<String,String> data23= new LinkedHashMap<String,String>();
 					data23.put("type", "2");
-					data23.put("pbc_prod_id", sub.getPbcProdId());
+					data23.put("pbc_prod_id", sub.getPbcProdIdShow());
 					data23.put("ccy_type", "3");
 					data23.put("cash_prof_ccy", cashProfCcy);
 					dataList.add(data23);
@@ -679,7 +679,7 @@ public class PbcClassicsDataFileService {
 				for(String customerType :StringUtil.splitToList(",", sub.getCustomerType())){
 					LinkedHashMap<String,String> data3= new LinkedHashMap<String,String>();
 					data3.put("type", "3");
-					data3.put("pbc_prod_id", sub.getPbcProdId());
+					data3.put("pbc_prod_id", sub.getPbcProdIdShow());
 					data3.put("customer_type", customerType);
 					dataList.add(data3);
 				}
@@ -689,7 +689,7 @@ public class PbcClassicsDataFileService {
 				for(String creditType :StringUtil.splitToList(",", sub.getCreditType())){
 					LinkedHashMap<String,String> data4= new LinkedHashMap<String,String>();
 					data4.put("type", "4");
-					data4.put("pbc_prod_id", sub.getPbcProdId());
+					data4.put("pbc_prod_id", sub.getPbcProdIdShow());
 					data4.put("credit_type", creditType);
 					dataList.add(data4);
 				}
@@ -699,7 +699,7 @@ public class PbcClassicsDataFileService {
 				for(String creditMode :StringUtil.splitToList(",", sub.getCreditMode())){
 					LinkedHashMap<String,String> data5= new LinkedHashMap<String,String>();
 					data5.put("type", "5");
-					data5.put("pbc_prod_id", sub.getPbcProdId());
+					data5.put("pbc_prod_id", sub.getPbcProdIdShow());
 					data5.put("credit_mode", creditMode);
 					dataList.add(data5);
 				}
@@ -1437,6 +1437,7 @@ public class PbcClassicsDataFileService {
 		}
 
 		//产品
+		searchParam.put("datFlag","01");
 		List<PbcPrdBaseinfoSub> subList2 = pbcPrdBaseinfoSubMapper.searchPage(searchParam);
 		//【dat文件生成留痕】
 		List<String> subKeys = new ArrayList<String>();
@@ -1447,6 +1448,7 @@ public class PbcClassicsDataFileService {
 					StringUtil.splitToList(",",DictCodeListExt2.报送状态_手工处理.getValue()+","+DictCodeListExt2.报送状态_接口报送.getValue()));
 			op.put("pbcProdIdList",Arrays.asList(sub.getPbcProdId()));
 			op.put("issuePartyId",issuePartyId);
+			op.put("datFlag","01");
 			List<PbcPrdBaseinfoSub> oList = pbcPrdBaseinfoSubMapper.searchPage(op);
 			if(oList.size()==0)
 				continue;
@@ -1915,6 +1917,13 @@ public class PbcClassicsDataFileService {
 		subList.addAll(pbcProdRaiseSubMapper.selectByDimension(searchParam));
 		//清除参数
 		searchParam.remove("buyPlace");
+		searchParam.put("nyield", "000000");
+		searchParam.put("yield", "000000");
+		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-1：原币
+
+		searchParam.put("ccy", "BWB");
+		subList.addAll(pbcProdRaiseSubMapper.selectByDimension2(searchParam));// 净值型产品的单位净值-2：BWB
+		searchParam.remove("ccy");
 		//按发行机构分组：Map<发行机构,产品List<Map<生成文件的属性键值对>>>
 		Map<String,List<LinkedHashMap<String,String>>> map=new HashMap<String,List<LinkedHashMap<String,String>>>();
 		for(PbcProdRaiseSub sub :subList){

@@ -7,23 +7,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
+import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonParamDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.SettleBatchPara;
-import com.joyintech.tams.common.base.entity.SettleDataRule;
-import com.joyintech.tams.common.base.entity.SzdAbcsj;
-import com.joyintech.tams.common.base.entity.SzdJsmx;
-import com.joyintech.tams.common.base.entity.SzdSjsfx;
-import com.joyintech.tams.common.base.entity.SzdSjsjg;
-import com.joyintech.tams.common.base.entity.SzdSjsks;
-import com.joyintech.tams.common.base.entity.SzdSjsmx;
-import com.joyintech.tams.common.base.entity.SzdZqbd;
-import com.joyintech.tams.common.base.entity.SzdZqy;
-import com.joyintech.tams.common.base.entity.SzdZsmx;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListStl;
 import com.joyintech.tams.settle.batch.datadeal.constant.StlDataDealProcessConstant;
@@ -43,7 +39,23 @@ import com.joyintech.tams.settle.batch.datadeal.dto.step2.StlDownDataDealOperato
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StlDownDataDealReaderService {
-	
+
+	/**
+	 * 是否单体服务
+	 */
+	@Value("${application.micorservice.contextPath.single:false}")
+	private boolean isSingle;
+
+	@Autowired(required = false)
+	private JoyinRestTemplate restTemplate;
+
+	@Autowired(required = false)
+	@Qualifier("simpleRestTemplate")
+	protected JoyinRestTemplate simpleRestTemplate;
+
+	@Value("${application.micorservice.contextPath.tamsServer:http://tams-server}")
+	private String tamsSerever;
+
     @Autowired
     protected StlDownDataDealMapper stlDownDataDealMapper;
     
@@ -51,7 +63,26 @@ public class StlDownDataDealReaderService {
     public List<SettleBatchPara> selectAllParam(Date dealDate) {
         return stlDownDataDealMapper.selectAllParam(dealDate);
     }
-    
+
+	// 查询需要撤销的清算明细数据数据TradeIds
+	public List<SettleTransDataTotalMatch> selectNeedRevokeSettleTransDataTotals(Date dealDate, List<String> portfolioIdList, List<String> secTypeList){
+		return stlDownDataDealMapper.selectNeedRevokeSettleTransDataTotals(dealDate, portfolioIdList, secTypeList);
+	}
+
+	public void transactionMacthRevokeBatch(List<SettleTransDataTotalMatch> dtoList) {
+		ExchangeTransMatchCommonParamDto paramDto = new ExchangeTransMatchCommonParamDto();
+		paramDto.setRevokeDataList(dtoList);
+
+		// 调用批量撤销逻辑
+		if(isSingle) {
+			simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionRevokeAutoBatch", paramDto, Map.class);
+		}
+		else {
+			restTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionRevokeAutoBatch", paramDto, Map.class);
+		}
+
+	}
+
     // 删除【成交数据与投管交易关系】
     public int deleteSettleTransTgMapping(Date dealDate, List<String> portfolioIdList, List<String> secTypeList) {
     	return stlDownDataDealMapper.deleteSettleTransTgMapping(dealDate, portfolioIdList, secTypeList);
@@ -268,7 +299,13 @@ public class StlDownDataDealReaderService {
     				List<SzdZqbd> szdZqbdList = this.selectSzdZqbd(dealDate, settleDataRulePartitionDto.getDataFile(), searchMap);
     				for (SzdZqbd szdZqbd : szdZqbdList) {
     					// 流通类型为0的数据才处理。未来了能会修改。
-    					if (StringUtil.isNotEmpty(szdZqbd.getLtlx()) && StringUtil.equals(szdZqbd.getLtlx(), "0")) {
+    					if (StringUtil.isNotEmpty(szdZqbd.getLtlx()) &&
+								(StringUtil.equals(szdZqbd.getLtlx(), "0")
+								|| StringUtil.equals(szdZqbd.getLtlx(), "N")
+								//GNS-880:上交所配股上市流通ltlx是1 modify by fuyongsheng 20220216 start
+								|| StringUtil.equals(szdZqbd.getLtlx(), "1")
+								//GNS-880:上交所配股上市流通ltlx是1 modify by fuyongsheng 20220216 end
+								)) {
 	    					String key = settleDataRulePartitionDto.getFinprodType() + settleDataRulePartitionDto.getTableName() + 
 	    							settleDataRulePartitionDto.getDataFile() + szdZqbd.getZqzh();
 	    					if (dealSettleDataMap.get(key) == null) {
@@ -386,6 +423,54 @@ public class StlDownDataDealReaderService {
     					}
     				}
     			}
+				// 上中登权益登记通知信息TZXX清算数据查询
+				if (StringUtil.equals(settleDataRulePartitionDto.getTableName(), DictCodeListStl.清算数据源表_上中登TZXX.getValue())) {
+					List<SzdTzxx> szdTzxxList = this.selectSzdTzxx(dealDate, settleDataRulePartitionDto.getDataFile(), searchMap);
+					for (SzdTzxx szdTzxx : szdTzxxList) {
+						String key = settleDataRulePartitionDto.getFinprodType() + settleDataRulePartitionDto.getTableName() +
+								settleDataRulePartitionDto.getDataFile() + szdTzxx.getZqdm();
+						if (dealSettleDataMap.get(key) == null) {
+							StlDownDataDealOperatorDto stlDownDataDealOperatorDto = new StlDownDataDealOperatorDto();
+							stlDownDataDealOperatorDto.setFinprodType(settleDataRulePartitionDto.getFinprodType());
+							stlDownDataDealOperatorDto.setTableName(settleDataRulePartitionDto.getTableName());
+							stlDownDataDealOperatorDto.setDataFile(settleDataRulePartitionDto.getDataFile());
+							stlDownDataDealOperatorDto.setSecAcctId(szdTzxx.getZqdm());
+							stlDownDataDealOperatorDto.setPortfolioIdList(portfolioIdList);
+							stlDownDataDealOperatorDto.setDealDate(dealDate);
+							StlDownDataDealOperatorBaseDto stlDownDataDealBaseDto = new StlDownDataDealOperatorBaseDto();
+							stlDownDataDealBaseDto.getSzdTzxxList().add(szdTzxx);
+							stlDownDataDealOperatorDto.setStlDownDataDealOperatorBaseDto(stlDownDataDealBaseDto);
+							dealSettleDataMap.put(key, stlDownDataDealOperatorDto);
+						}
+						else {
+							dealSettleDataMap.get(key).getStlDownDataDealOperatorBaseDto().getSzdTzxxList().add(szdTzxx);
+						}
+					}
+				}
+				// 【深中登SJSGB】清算数据查询
+				if (StringUtil.equals(settleDataRulePartitionDto.getTableName(), DictCodeListStl.清算数据源表_深中登SJSGB.getValue())) {
+					List<SzdSjsgb> szdSjsgbList = this.selectSzdSjsgb(dealDate, settleDataRulePartitionDto.getDataFile(), searchMap);
+					for (SzdSjsgb szdSjsgb : szdSjsgbList) {
+						String key = settleDataRulePartitionDto.getFinprodType() + settleDataRulePartitionDto.getTableName() +
+								settleDataRulePartitionDto.getDataFile();
+						if (dealSettleDataMap.get(key) == null) {
+							StlDownDataDealOperatorDto stlDownDataDealOperatorDto = new StlDownDataDealOperatorDto();
+							stlDownDataDealOperatorDto.setFinprodType(settleDataRulePartitionDto.getFinprodType());
+							stlDownDataDealOperatorDto.setTableName(settleDataRulePartitionDto.getTableName());
+							stlDownDataDealOperatorDto.setDataFile(settleDataRulePartitionDto.getDataFile());
+							stlDownDataDealOperatorDto.setPortfolioIdList(portfolioIdList);
+							stlDownDataDealOperatorDto.setDealDate(dealDate);
+							StlDownDataDealOperatorBaseDto stlDownDataDealBaseDto = new StlDownDataDealOperatorBaseDto();
+							stlDownDataDealBaseDto.getSzdSjsgbList().add(szdSjsgb);
+							stlDownDataDealOperatorDto.setStlDownDataDealOperatorBaseDto(stlDownDataDealBaseDto);
+							dealSettleDataMap.put(key, stlDownDataDealOperatorDto);
+						}
+						else {
+							dealSettleDataMap.get(key).getStlDownDataDealOperatorBaseDto().getSzdSjsgbList().add(szdSjsgb);
+						}
+					}
+				}
+
     		}
     	}
     	
@@ -417,4 +502,24 @@ public class StlDownDataDealReaderService {
     public List<SzdSjsks> selectSzdSjsks(Date dealDate, String dataFile, Map<String, List<String>> searchMap) {
     	return stlDownDataDealMapper.selectSzdSjsks(dealDate, dataFile, searchMap);
     }
+
+	// 查询上中登TZXX
+	public List<SzdTzxx> selectSzdTzxx(Date dealDate, String dataFile, Map<String, List<String>> searchMap) {
+		return stlDownDataDealMapper.selectSzdTzxx(dealDate, dataFile, searchMap);
+	}
+
+	// 查询深中登SJSGB
+	public List<SzdSjsgb> selectSzdSjsgb(Date dealDate, String dataFile, Map<String, List<String>> searchMap) {
+		return stlDownDataDealMapper.selectSzdSjsgb(dealDate, dataFile, searchMap);
+	}
+	
+	// 删除【送股权益登记】
+	public int deleteShareBonusRegByCdate(Date dealDate){
+		return stlDownDataDealMapper.deleteShareBonusRegByCdate(dealDate);
+	}
+
+	// 删除【基金分红公告】
+	public int deletemstFundBonusNoticeByCdate(Date dealDate){
+    	return stlDownDataDealMapper.deletemstFundBonusNoticeByCdate(dealDate);
+	}
 }

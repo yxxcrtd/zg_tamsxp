@@ -129,6 +129,11 @@ public class TrdBondInvestTradeService extends BaseService {
         pageParam.put("psList", psList);
         // 一体化对应etliu end
 
+        // add by etliu 20220219 start
+        // GNS-894:【广农商场内清算】交易查询 页面查询条件“交易方向”缺少枚举值“T97：配债”，查询结果也要能查到配债交易
+        psList.add(DictCodeListExt3.交易方向_配债.getValue());
+        // add by etliu 20220219 end
+
         // add by etliu 20210501 银行间场内场外拆分 start
         pageParam.put("defaultTradeMarketList", PageMenuSplitUtil.getTradeMarketList((String) pageParam.get("pageId")));
         pageParam.put("defaultTradePlatFormList", PageMenuSplitUtil.getTradePlatFormList((String) pageParam.get("pageId")));

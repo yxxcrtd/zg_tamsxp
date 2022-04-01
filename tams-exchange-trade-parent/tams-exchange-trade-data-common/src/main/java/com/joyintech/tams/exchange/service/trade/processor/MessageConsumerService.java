@@ -1,39 +1,39 @@
 package com.joyintech.tams.exchange.service.trade.processor;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.rabbitmq.entity.SimpleRabbitMessage;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.redis.core.base.PipeReadService;
 import com.joyintech.redis.core.data.RedisHash;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.constant.InstructionFlag;
 import com.joyintech.tams.exchange.common.constant.InstructionStatus;
+import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
+import com.joyintech.tams.exchange.common.constant.TradePlat;
 import com.joyintech.tams.exchange.common.constant.joyin.AutoReceiveFlag;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
+import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionDetail;
 import com.joyintech.tams.exchange.common.db.domain.InstructionPledge;
+import com.joyintech.tams.exchange.common.enums.EntrustBussTypeEnum;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionDetailService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionPledgeService;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.CommonManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 @Component
 public class MessageConsumerService {
@@ -44,7 +44,7 @@ public class MessageConsumerService {
 
     @Autowired
     private InstructionPledgeService instructionPledgeService;
-    
+
     @Autowired
     private InstructionDetailService instructionDetailService;
 
@@ -87,17 +87,37 @@ public class MessageConsumerService {
             if (Objects.nonNull(pledgeList))
                 pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
             if (Objects.nonNull(detailList))
-            	detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
+                detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
             // 处理指令信息，并清除过期指令下的抵押券信息
-            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet,instructionDetailIdSet);
+            processInstructions(instructionEtrEntrustList, instructionPledgeIdSet, instructionDetailIdSet);
             // 处理抵押券信息
             processInstructionPledges(pledgeList, instructionPledgeIdSet);
         } catch (Exception e) {
             logger.warn("receive or handle rabbitMessage error {}", e);
         }
     }
+    
+    public void processInstructionsPortfolio(List<Instruction> instructionEtrEntrustList, List<InstructionDetail> detailList) {
+    	for(Instruction instruction:instructionEtrEntrustList) {
+    		if("02".equals(instruction.getEntrustClass())) {
+    			String portfolioId = "";
+    			String portfolioName = "";
+    			for(InstructionDetail instructionDetail:detailList) {
+    				if(StringUtil.isNotEmpty(portfolioId)) {
+    					portfolioId = portfolioId+","+instructionDetail.getPortfolioId();
+    					portfolioName = portfolioName+","+instructionDetail.getPortfolioName();
+    				}else {
+    					portfolioId = instructionDetail.getPortfolioId();
+    					portfolioName = instructionDetail.getPortfolioName();
+    				}
+    			}
+    			instruction.setPortfolioId(portfolioId);
+    			instruction.setPortfolioName(portfolioName);
+    		}
+    	}
+    }
 
-    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet,Set<String> instructionDetailIdSet) {
+    public void processInstructions(List<Instruction> instructionEtrEntrustList, Set<String> instructionPledgeIdSet, Set<String> instructionDetailIdSet) {
         List<Instruction> instructionList = new ArrayList<>();
         Set<String> removeInstructionIdSet = new HashSet<>();
         List<Instruction> removeInstructionList = new ArrayList<>();
@@ -107,6 +127,17 @@ public class MessageConsumerService {
         Map<String, Set<String>> instructionTraderMap = new HashMap<>();
         List<EntrustOpeBean> entrustList = new ArrayList<>();
         if (instructionEtrEntrustList.size() > 0) {
+            instructionEtrEntrustList.forEach(instruction -> {
+                String entrustBussType = instruction.getEntrustBussType();
+                //非交易业务指令，设置交易平台为 沪深竞价撮合平台
+                if (EntrustBussTypeEnum.BOND_REPURCHASE.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.ALLOTMENT_DEBT.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.CONVERTIBLE_BOND_SUBSCRIPTION.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.STANDARD_COUPONS_IN_AND_OUT.value.equals(entrustBussType)
+                        || EntrustBussTypeEnum.DEBT_TO_EQUITY.value.equals(entrustBussType)) {
+                    instruction.setTradePlat(TradePlat.NORMAL.value);
+                }
+            });
             instructionEtrEntrustList.forEach(instruction -> {
                 // 为指令设置trader
                 Set<String> tradeSet = instructionTraderMap.getOrDefault(instruction.getEntrustId(), new HashSet<>());
@@ -126,6 +157,10 @@ public class MessageConsumerService {
                 Instruction instructionFormCache = instructionMapCache.get(instructionId);
                 Set<String> stringSet = instructionTraderMap.get(instructionId);
                 instruction.setTradersInfo(JsonUtils.getJsonFromObject(stringSet));
+                //创建时间、修改时间
+                Date now = DateUtil.now();
+                instruction.setCreateTime(now);
+                instruction.setUpdateTime(now);
                 // 过滤掉指令中平台日小于当前平台日和无tradeId的指令
                 Date investSystemDate = commonManagement.getPlatDate();
                 logger.debug("当前平台日: {}", investSystemDate.toString());
@@ -167,6 +202,12 @@ public class MessageConsumerService {
                             entrustList.add(opeBean);
                         }
                     }
+                    //如果是协议回购、质押式回购 回购利率乘以100
+                    if (isPledge(instruction)) {
+                        BigDecimal entrustPrice = instruction.getEntrustPrice();
+                        instruction.setEntrustPrice(entrustPrice.multiply(BigDecimal.valueOf(100)));
+                    }
+
                     instructionList.add(instruction);
                 } else {
                     logger.info("investSystemDate {} > instruction mDate {}", JsonUtils.getJsonFromObject(investSystemDate), JsonUtils.getJsonFromObject(instruction.getMdate()));
@@ -183,7 +224,7 @@ public class MessageConsumerService {
                         removeInstructionIdSet.add(instruction.getEntrustId());
                     List<InstructionDetail> instructionDetails = instructionDetailService.queryInstructionDetailsByInstructionId(instruction.getEntrustId());
                     if (Objects.nonNull(instructionDetails))
-                    	instructionDetailIdSet.add(instruction.getEntrustId());
+                        removeInstructionIdSet.add(instruction.getEntrustId());
                 }
             });
             if (removeInstructionList.size() > 0) {
@@ -194,6 +235,11 @@ public class MessageConsumerService {
                 logger.info("delete origin instructionPledges from DB {}", removeInstructionIdSet.size());
                 instructionPledgeService.deleteInstructionPledgesByInstructionsIds(removeInstructionIdSet);
             }
+            if (removeInstructionIdSet.size() > 0) {
+                logger.info("delete origin instructionDetails from DB {}", removeInstructionIdSet.size());
+                instructionDetailService.deleteInstructionDetailsByInstructionsIds(removeInstructionIdSet);
+            }
+
             logger.info("存储下发指令 {}", instructionList.size());
             instructionService.asyncUpdate(instructionList);
             if (!entrustList.isEmpty()) {
@@ -214,7 +260,7 @@ public class MessageConsumerService {
             });
         }
     }
-    
+
     public void processInstructionDetail(List<InstructionDetail> detailList, Set<String> instructionIdSet) {
         if (Objects.nonNull(detailList)) {
             instructionDetailService.deleteInstructionDetailsByInstructionsIds(instructionIdSet);
@@ -225,4 +271,24 @@ public class MessageConsumerService {
             });
         }
     }
+
+    public boolean isPledge(Instruction instruction) {
+        String busiTypeTg = instruction.getBusiTypeTg();
+        if (DictCodeListExt3.投管业务类型_首期.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_提前购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期续做.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_中途换券.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_解除质押.getValue().equals(busiTypeTg)) {
+            return true;
+        } else if (DictCodeListExt3.投管业务类型_竞价交易.getValue().equals(busiTypeTg)) {
+            if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(instruction.getAssetType())
+                    && InvestmentAssetType1.BIDDING_REPO.value.equals(instruction.getAssetType1())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

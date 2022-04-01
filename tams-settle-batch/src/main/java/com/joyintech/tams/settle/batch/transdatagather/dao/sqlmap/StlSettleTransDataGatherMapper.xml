@@ -22,7 +22,9 @@
             A.*,
             B.TRADE_ID tradeIdAdd, B.REPO_TYPE, B.CON_PRICE, B.CON_AMT, B.CON_PRIN_AMT,
             B.R_FINPROD_ID, B.SE_REP_DAY_TYPE,
-            C.CHECK_RESULT
+            C.CHECK_RESULT,
+            F.TRADE_ID PLEDGE_TRADE_ID, F.BRANCH pledgeBranch, F.PLEDGE_FINPROD_ID, F.PLEDGE_FACE_VALUE,
+            F.PLEDGE_NUMBER, F.PLEDGE_RATIO,F.PLEDGE_AMT,F.DISPLACE_DIRECTION
         from
             SETTLE_TRANS_DATA A
                 left join SETTLE_TRANS_DATA_ADD B
@@ -35,17 +37,22 @@
                               and A.SEAT_NUMBER = D.SEAT_NUMBER
                 left join SETTLE_TRANS_DATA_TOTAL_STATUS E
                           on D.SEQ_ID= E.SEQ_NO
+                left join SETTLE_TRANS_DATA_PLEDGE F
+                on A.TRADE_ID= F.TRADE_ID
         where
             A.DEAL_DATE = #{dealDate,jdbcType=DATE}
           <!--/*and C.CHECK_RESULT in (#{checkResult1},#{checkResult3})*/-->
           and (E.MATCH_STATUS is null or E.MATCH_STATUS = #{matchStatus})
           <!--ZGZGST-4261:存续期数据无需登录SETTLE_TRANS_DATA_TOTAL表 fuyongsheng modify 20211221 start-->
           <!--and A.APPLY_TRADE_ID is not null-->
-          and (A.APPLY_TRADE_ID is not null OR (B.REPO_TYPE = 'H02' AND A.PS= 'T07'))
+          <!--GNS-862:配股配债有可能APPLY_TRADE_ID is NULL modify by fuyongsheng 20220217 start-->
+          and (A.APPLY_TRADE_ID is not null OR ((B.REPO_TYPE = 'H02' AND A.PS!= 'T07') OR A.PS = 'T46' OR A.PS = 'T97'))
+          <!--GNS-862:配股配债有可能APPLY_TRADE_ID is NULL modify by fuyongsheng 20220217 end-->
           <!--ZGZGST-4261:存续期数据无需登录SETTLE_TRANS_DATA_TOTAL表 fuyongsheng modify 20211221 end-->
           <!--/*AND EXISTS  (
                 SELECT 1 FROM stl_sec_recon_detail ssrd
                 where ssrd.TRADE_ID = A.TRADE_ID)*/-->
+          and A.PS !=#{PS_T05}
 
     </select>
 
@@ -142,14 +149,100 @@
     </delete>
 
     <!-- 存量数据删除，为支持重复跑批，先将上次批处理生出的数据删除-->
-    <delete id="insetSettleTransDataTotalStatus">
+    <insert id="insetSettleTransDataTotalStatus">
         insert into SETTLE_TRANS_DATA_TOTAL_STATUS (SEQ_NO, MATCH_STATUS, CREATE_USER,
                                                     CREATE_DEPT, CREATE_TIME, UPDATE_USER,
                                                     UPDATE_TIME)
         values (#{seqNo,jdbcType=VARCHAR}, #{matchStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
                 #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
                 #{updateTime,jdbcType=TIMESTAMP})
-    </delete>
+    </insert>
+
+    <insert id="insetSettleTransDataTotalPledge"  >
+        insert into SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID,
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE,
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER,
+            </if>
+            <if test="pledgeRatio != null" >
+                PLEDGE_RATIO,
+            </if>
+            <if test="pledgeAmt != null" >
+                PLEDGE_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeRatio != null" >
+                #{pledgeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeAmt != null" >
+                #{pledgeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="displaceDirection != null" >
+                #{displaceDirection,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 
 
 

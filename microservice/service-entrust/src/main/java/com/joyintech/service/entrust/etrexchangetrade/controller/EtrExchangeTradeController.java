@@ -73,6 +73,11 @@ public class EtrExchangeTradeController {
     public BaseEtrInvestInfoDto selectEtrExchange(@RequestBody EtrExchangeTrade001Dto dto){
         return etrExchangeTradeService.buildEtrFlow(dto);
     }
+
+    @PostMapping("buildMultiEtrFlow")
+    public BaseEtrInvestInfoDto buildMultiEtrFlow(@RequestBody EtrExchangeTradeMulti001Dto dto){
+        return etrExchangeTradeService.buildMultiEtrFlow(dto);
+    }
     /**
      * 
      * 工作流完成方法
@@ -89,6 +94,24 @@ public class EtrExchangeTradeController {
     public void doComplete(@RequestBody EtrExchangeTrade001Dto dto) throws IllegalAccessException, InvocationTargetException{
     	etrExchangeTradeService.doComplete(dto, dto.getOperateType());
     }
+
+    /**
+     *
+     * 工作流完成方法
+     * <功能详细描述>
+     * @param dto
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doCompleteMulti")
+    public void doCompleteMulti(@RequestBody EtrExchangeTradeMulti001Dto dto) throws IllegalAccessException, InvocationTargetException{
+        etrExchangeTradeService.doCompleteMulti(dto, dto.getOperateType());
+    }
+
     
     /**
      * 检索产品持仓分页数据。 <功能详细描述>
@@ -126,6 +149,17 @@ public class EtrExchangeTradeController {
             @PathVariable("length") int length)
                     throws Exception {
         return etrExchangeTradeService.findZqzyPositionsPage(page, length, pageParam);
+    }
+
+    /**
+     * 检索产品债券质押持仓所有数据。
+     * @param pageParam
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/findZqzyPositionsList")
+    public List<EtrExchangeTrade002Dto> findZqzyPositionsList(@RequestBody Map<String, Object> pageParam)  throws Exception {
+        return etrExchangeTradeService.findZqzyPositionsList(pageParam);
     }
 
     /**
@@ -418,6 +452,21 @@ public class EtrExchangeTradeController {
 		etrExchangeTradeService.doInsetOrUpdateForEtrPositionHold(dto);
 	}
 
+    /**
+     * 插入和修改时，指令持仓流水 、现金流水处理(多组合)
+     * add by zhangpei
+     * 20201128
+     * @param dtoList
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doInsetOrUpdateForEtrPositionHoldMulti")
+    public void doInsetOrUpdateForEtrPositionHoldMulti(@RequestBody List<EtrExchangeTrade001Dto> dtoList) {
+        for(EtrExchangeTrade001Dto dto:dtoList) {
+            etrExchangeTradeService.doInsetOrUpdateForEtrPositionHold(dto);
+        }
+    }
+
 
 	/**
 	 *
@@ -516,4 +565,60 @@ public class EtrExchangeTradeController {
         return etrExchangeTradeService.selectFinExercisePlanData(map);
     }
     // add by etliu 20211207 end
+
+    /**
+     * 查询多组合名称下拉框
+     * @param map
+     * @return
+     */
+    @PostMapping("selectPortfolioTreeId/{page}/{length}")
+    public Page<SelectOptionDto> selectPortfolioTreeId(Map<String,Object> map,@PathVariable("page") int page, @PathVariable("length") int length) {
+        return etrExchangeTradeService.selectPortfolioTreeId(map,page,length);
+    }
+
+    /**
+     * 查询多组合树关联的组合
+     * @param map
+     * @return
+     */
+    @PostMapping("selectPortfolioId")
+    public List<SelectOptionDto> selectPortfolioId(@RequestBody Map<String,Object> map){
+        return etrExchangeTradeService.selectPortfolioId(map);
+    }
+
+
+    /**
+     * 查询多组合明细
+     * @param map
+     * @return
+     */
+    @RequestMapping("selectPortfolioTreeDetail")
+    public List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(@RequestBody Map<String,Object> map) {
+        return etrExchangeTradeService.selectPortfolioTreeDetail(map);
+    }
+    /**
+     * 获取多组合分配资金账户
+     * @param paraMap
+     * @return
+     */
+    @RequestMapping("selectMultiAcctNo/{page}/{length}")
+    public Page<SelectOptionDto> selectMultiAcctNo(@RequestBody Map<String,Object> paraMap,@PathVariable("page") int page, @PathVariable("length") int length) {
+        return etrExchangeTradeService.selectMultiAcctNo(paraMap,page,length);
+    }
+
+    /**
+     * 查询组合+资金账户+交易场所对应的证券账户（多组合）
+     * @param paraMap
+     * @return
+     */
+    @RequestMapping("selectMultiSecAcctId")
+    public String selectMultiSecAcctId(@RequestBody Map<String,Object> paraMap) {
+        return etrExchangeTradeService.selectMultiSecAcctId(paraMap);
+	}
+	
+    @RequestMapping("selectMultDetail")
+    public void selectMultDetail(@RequestBody Map<String,Object> map){
+        etrExchangeTradeService.selectMultDetail(map);
+    }
+
 }

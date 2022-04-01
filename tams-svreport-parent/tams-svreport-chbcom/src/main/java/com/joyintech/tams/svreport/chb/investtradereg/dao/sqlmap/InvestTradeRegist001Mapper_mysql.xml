@@ -57,7 +57,7 @@
     <result column="RIVAL_PARTY_TYPE" property="rivalPartyType" jdbcType="CHAR" />
     <result column="ASSET_METHOD_NUM" property="assetMethodNum" jdbcType="CHAR" />
     <result column="RIVAL_PARTY_TYPE_NUM" property="rivalPartyTypeNum" jdbcType="CHAR" />
-    
+
   </resultMap>
   <resultMap id="BaseResultMapHis" type="com.joyintech.tams.svreport.chb.investtradereg.dto.ChbInvestTradeSubHisDto" >
     <id column="HIS_NO" property="hisNo" jdbcType="CHAR" />
@@ -124,12 +124,12 @@
     REF_TRADESEQNO, CNY_AMT, AMT, NUM
   </sql>
 
-    <select id="getTradeNo" resultType="java.lang.String">
+  <select id="getTradeNo" resultType="java.lang.String">
         select _NEXTINDEX('SEQ_INVEST_TRADE_SUB') from dual
     </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from CHB_INVEST_TRADE_SUB
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
@@ -296,13 +296,13 @@
         CREATE_DEPT,
       </if>
       <if test="dealRegistDate != null">
-      	DEAL_REGIST_DATE,
+        DEAL_REGIST_DATE,
       </if>
       <if test="isAssetSub != null">
-      	IS_ASSET_SUB,
+        IS_ASSET_SUB,
       </if>
       <if test="refTradeseqno != null">
-      	REF_TRADESEQNO,
+        REF_TRADESEQNO,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -430,7 +430,7 @@
         #{createDept,jdbcType=VARCHAR},
       </if>
       <if test="dealRegistDate != null">
-      	#{dealRegistDate,jdbcType=TIMESTAMP},
+        #{dealRegistDate,jdbcType=TIMESTAMP},
       </if>
       <if test="isAssetSub != null">
         #{isAssetSub,jdbcType=VARCHAR},
@@ -564,7 +564,7 @@
         CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
       </if>
       <if test="dealRegistDate != null">
-      	DEAL_REGIST_DATE = #{dealRegistDate,jdbcType=TIMESTAMP}
+        DEAL_REGIST_DATE = #{dealRegistDate,jdbcType=TIMESTAMP}
       </if>
       <if test="isAssetSub != null">
         IS_ASSET_SUB = #{isAssetSub,jdbcType=VARCHAR},
@@ -623,56 +623,56 @@
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
   <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
-  select 
-	    sub.REGIST_SEQNO registSeqno,
-	    sub.TRADE_CODE tradeCode,
-	    deal.INVEST_VARIETY investVariety,
-	    sub.PROD_ID prodId,
-	    sub.REGIST_BANK_CODE registBankCode,
-	    sub.ASSET_CODE assetCode,
-	    sub.CCY ccy,
-	    sub.CNY_AMT cnyAmt,
-	    sub.AMT amt,
-	    sub.NUM num,
-	    sub.CUR_ASSET_TYPE curAssetType,
-	    sub.CUR_ASSETDET_TYPE curAssetdetType,
-	    sub.DEALDATE dealdate,
-	    sub.TRADE_COUNTER tradeCounter,
-	    sub.UNIT_PRICE_FULL unitPriceFull,
-	    sub.UNIT_PRICE_NET unitPriceNet,
-	    sub.END_RATE endRate,
-	    sub.CONTRACT_CODE contractCode,
-	    sub.REMARK remark,
-	    sub.CHL_CPCT_ID chlCpctId,
-	    sub.TRADE_TYPE tradeType,
-	    sub.CHL_AGRT_NAME chlAgrtName,
-	    sub.FEE_ID feeId,
-	    sub.FEE_NAME feeName,
-	    sub.FEE_TYPE feeType,
-	    sub.FEE_SECTYPE feeSectype,
-	    sub.STATUS status,
-	    sub.ORG_CODE orgCode,
-	    sub.DEPT_CODE deptCode,
-	    sub.CREATE_USER createUser,
-	    sub.CREATE_TIME createTime,
-	    sub.UPDATE_USER updateUser,
-	    sub.UPDATE_TIME updateTime,
-	    sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
-	    sub.SUBMIT_DEADLINE submitDeadline,
-	    sub.SEND_STATUS sendStatus,
-	    sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-	    sub.STATUS_DATE statusDate,
-	    sub.SUBMIT_TIME submitTime,
-	    sub.DELETE_RES deleteRes,
-	    sub.DATA_SOURCE dataSource,
-	    sub.CREATE_DEPT createDept,
-	    sub.DEAL_REGIST_DATE dealRegistDate,
-	    sub.IS_ASSET_SUB isAssetSub,
-	    info.PROD_NAME prodName,
-	    reginfo.REG_CODE prodRegCode,
-	    deal.DEALTYPE dealtype
-	    ,sub.ASSET_METHOD assetMethod
-	    ,sub.RIVAL_PARTY_TYPE rivalPartyType
+    select
+    sub.REGIST_SEQNO registSeqno,
+    sub.TRADE_CODE tradeCode,
+    deal.INVEST_VARIETY investVariety,
+    sub.PROD_ID prodId,
+    sub.REGIST_BANK_CODE registBankCode,
+    sub.ASSET_CODE assetCode,
+    sub.CCY ccy,
+    sub.CNY_AMT cnyAmt,
+    sub.AMT amt,
+    sub.NUM num,
+    sub.CUR_ASSET_TYPE curAssetType,
+    sub.CUR_ASSETDET_TYPE curAssetdetType,
+    sub.DEALDATE dealdate,
+    sub.TRADE_COUNTER tradeCounter,
+    sub.UNIT_PRICE_FULL unitPriceFull,
+    sub.UNIT_PRICE_NET unitPriceNet,
+    sub.END_RATE endRate,
+    sub.CONTRACT_CODE contractCode,
+    sub.REMARK remark,
+    sub.CHL_CPCT_ID chlCpctId,
+    sub.TRADE_TYPE tradeType,
+    sub.CHL_AGRT_NAME chlAgrtName,
+    sub.FEE_ID feeId,
+    sub.FEE_NAME feeName,
+    sub.FEE_TYPE feeType,
+    sub.FEE_SECTYPE feeSectype,
+    sub.STATUS status,
+    sub.ORG_CODE orgCode,
+    sub.DEPT_CODE deptCode,
+    sub.CREATE_USER createUser,
+    sub.CREATE_TIME createTime,
+    sub.UPDATE_USER updateUser,
+    sub.UPDATE_TIME updateTime,
+    sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+    sub.SUBMIT_DEADLINE submitDeadline,
+    sub.SEND_STATUS sendStatus,
+    sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+    sub.STATUS_DATE statusDate,
+    sub.SUBMIT_TIME submitTime,
+    sub.DELETE_RES deleteRes,
+    sub.DATA_SOURCE dataSource,
+    sub.CREATE_DEPT createDept,
+    sub.DEAL_REGIST_DATE dealRegistDate,
+    sub.IS_ASSET_SUB isAssetSub,
+    info.PROD_NAME prodName,
+    reginfo.REG_CODE prodRegCode,
+    deal.DEALTYPE dealtype
+    ,sub.ASSET_METHOD assetMethod
+    ,sub.RIVAL_PARTY_TYPE rivalPartyType
     from CHB_INVEST_TRADE_SUB sub
     left join CHB_PRD_BASEINFO info
     on sub.prod_id = info.prod_id
@@ -683,21 +683,21 @@
     where 1=1
     <!-- 产品名称 -->
     <if test="prodIdList != null and prodIdList.size()>0">
-    <foreach collection="prodIdList" item="items" open="and info.PROD_ID in (" separator="," close =")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
+      <foreach collection="prodIdList" item="items" open="and info.PROD_ID in (" separator="," close =")">
+        #{items,jdbcType=VARCHAR}
+      </foreach>
     </if>
     <!-- 产品登记编码 -->
     <if test="prodRegCodeList != null and prodRegCodeList.size()>0">
-    <foreach collection="prodRegCodeList" item="items" open="and reginfo.reg_code in (" separator="," close =")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
+      <foreach collection="prodRegCodeList" item="items" open="and reginfo.reg_code in (" separator="," close =")">
+        #{items,jdbcType=VARCHAR}
+      </foreach>
     </if>
     <!-- 行内交易编码 -->
     <if test="tradeCodeList != null and tradeCodeList.size()>0">
-    <foreach collection="tradeCodeList" item="items" open="and sub.TRADE_CODE in (" separator="," close =")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
+      <foreach collection="tradeCodeList" item="items" open="and sub.TRADE_CODE in (" separator="," close =")">
+        #{items,jdbcType=VARCHAR}
+      </foreach>
     </if>
     <!-- 资产代码 -->
     <!-- <if test="assetCodeList != null and assetCodeList.size()>0">
@@ -706,69 +706,69 @@
     </foreach>
     </if> -->
     <if test="assetCode != null and assetCode != ''">
-        and sub.ASSET_CODE like concat_ws('','%', #{assetCode,jdbcType=VARCHAR},'%')
+      and sub.ASSET_CODE like concat_ws('','%', #{assetCode,jdbcType=VARCHAR},'%')
     </if>
     <if test="assetRegistList != null and assetRegistList.size()>0">
-    <foreach collection="assetRegistList" item="items" open="and sub.IS_ASSET_SUB in (" separator="," close =")">
-    #{items,jdbcType=VARCHAR}
-    </foreach> 
+      <foreach collection="assetRegistList" item="items" open="and sub.IS_ASSET_SUB in (" separator="," close =")">
+        #{items,jdbcType=VARCHAR}
+      </foreach>
     </if>
     <!-- 交易日 -->
     <if test="dealdateStart != null and !dealdateStart.isEmpty()">
-	and  DATE_FORMAT(sub.DEALDATE, '%Y-%m-%d') <![CDATA[ >= ]]> #{dealdateStart,jdbcType=VARCHAR}
+      and  DATE_FORMAT(sub.DEALDATE, '%Y-%m-%d') <![CDATA[ >= ]]> #{dealdateStart,jdbcType=VARCHAR}
     </if>
     <if test="dealdateEnd != null and !dealdateEnd.isEmpty()">
-	and DATE_FORMAT(sub.DEALDATE, '%Y-%m-%d') <![CDATA[ <= ]]> #{dealdateEnd,jdbcType=VARCHAR}
+      and DATE_FORMAT(sub.DEALDATE, '%Y-%m-%d') <![CDATA[ <= ]]> #{dealdateEnd,jdbcType=VARCHAR}
     </if>
     <!-- 报送状态 -->
     <if test="sendStatusList != null and sendStatusList.size()>0">
-    <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
+      <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+        #{items,jdbcType=VARCHAR}
+      </foreach>
     </if>
     <!-- 反馈状态 -->
     <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
-    <foreach collection="submitFeedbackStatusList" item="items" open="and sub.SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
+      <foreach collection="submitFeedbackStatusList" item="items" open="and sub.SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
+        #{items,jdbcType=VARCHAR}
+      </foreach>
     </if>
     <!-- 报送日期 -->
     <if test="submitDateStart != null and !submitDateStart.isEmpty()">
-	and DATE_FORMAT(sub.SUBMIT_TIME, '%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart,jdbcType=VARCHAR}
+      and DATE_FORMAT(sub.SUBMIT_TIME, '%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart,jdbcType=VARCHAR}
     </if>
     <if test="submitDateEnd != null and !submitDateEnd.isEmpty()">
-	and DATE_FORMAT(sub.SUBMIT_TIME, '%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd,jdbcType=VARCHAR}
+      and DATE_FORMAT(sub.SUBMIT_TIME, '%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd,jdbcType=VARCHAR}
     </if>
     <!-- 数据日期 -->
     <if test="dataDateStart != null and !dataDateStart.isEmpty()">
-	and DATE_FORMAT(sub.STATUS_DATE, '%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart,jdbcType=VARCHAR}
+      and DATE_FORMAT(sub.STATUS_DATE, '%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart,jdbcType=VARCHAR}
     </if>
     <if test="dataDateEnd != null and !dataDateEnd.isEmpty()">
-	and DATE_FORMAT(sub.STATUS_DATE, '%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd,jdbcType=VARCHAR}
+      and DATE_FORMAT(sub.STATUS_DATE, '%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd,jdbcType=VARCHAR}
     </if>
     <!-- 数据状态 -->
     <if test="statusList != null and statusList.size()>0">
-    <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
-    	#{items,jdbcType=VARCHAR}
-    </foreach>
+      <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+        #{items,jdbcType=VARCHAR}
+      </foreach>
     </if>
     <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
-        and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+      and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
     </if>
     <if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
-        and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+      and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
     </if>
-     and sub.STATUS !='04'
+    and sub.STATUS !='04'
     order by sub.dealdate desc
   </select>
   <select id="selectAllDataByList" resultMap="BaseResultMap">
-  select 
-  	sub.REGIST_SEQNO, sub.TRADE_CODE, sub.PROD_ID, sub.REGIST_BANK_CODE, 
-    sub.ASSET_CODE, sub.CCY, sub.CNY_AMT, sub.AMT, sub.NUM, sub.CUR_ASSET_TYPE, sub.CUR_ASSETDET_TYPE, sub.DEALDATE, 
-    sub.TRADE_COUNTER, sub.UNIT_PRICE_FULL, sub.UNIT_PRICE_NET, sub.END_RATE, sub.CONTRACT_CODE, sub.REMARK, 
-    sub.CHL_CPCT_ID, sub.TRADE_TYPE, sub.CHL_AGRT_NAME, sub.FEE_ID, sub.FEE_NAME, sub.FEE_TYPE, sub.FEE_SECTYPE, sub.STATUS, 
-    sub.ORG_CODE, sub.DEPT_CODE, sub.CREATE_USER, sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.CHB_SUBMIT_DEADLINE, 
-    sub.SUBMIT_DEADLINE, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.SUBMIT_TIME, sub.DELETE_RES, 
+    select
+    sub.REGIST_SEQNO, sub.TRADE_CODE, sub.PROD_ID, sub.REGIST_BANK_CODE,
+    sub.ASSET_CODE, sub.CCY, sub.CNY_AMT, sub.AMT, sub.NUM, sub.CUR_ASSET_TYPE, sub.CUR_ASSETDET_TYPE, sub.DEALDATE,
+    sub.TRADE_COUNTER, sub.UNIT_PRICE_FULL, sub.UNIT_PRICE_NET, sub.END_RATE, sub.CONTRACT_CODE, sub.REMARK,
+    sub.CHL_CPCT_ID, sub.TRADE_TYPE, sub.CHL_AGRT_NAME, sub.FEE_ID, sub.FEE_NAME, sub.FEE_TYPE, sub.FEE_SECTYPE, sub.STATUS,
+    sub.ORG_CODE, sub.DEPT_CODE, sub.CREATE_USER, sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.CHB_SUBMIT_DEADLINE,
+    sub.SUBMIT_DEADLINE, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.SUBMIT_TIME, sub.DELETE_RES,
     sub.DATA_SOURCE, sub.CREATE_DEPT, sub.DEAL_REGIST_DATE,sub.IS_ASSET_SUB, info.PROD_NAME, reginfo.REG_CODE PROD_REG_CODE,
     deal.INVEST_VARIETY INVEST_VARIETY,deal.dealtype dealtype,sub.ASSET_METHOD,sub.RIVAL_PARTY_TYPE,
     sub.ASSET_METHOD  ASSET_METHOD_NUM ,sub.RIVAL_PARTY_TYPE   RIVAL_PARTY_TYPE_NUM
@@ -781,680 +781,680 @@
     on deal.trade_code = sub.trade_code
     where 1=1
     <if test="keyList != null and keyList.size()>0">
-    <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
-    #{items.registSeqno,jdbcType=VARCHAR}
-    </foreach>
+      <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+        #{items.registSeqno,jdbcType=VARCHAR}
+      </foreach>
     </if>
   </select>
   <update id="updateSubmitStatusToOk" parameterType="java.util.List">
-        update CHB_INVEST_TRADE_SUB tradeinfo
-        <set> 
-            tradeinfo.SUBMIT_FEEDBACK_STATUS = '03'
-        </set>
-        <where>
-            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
-                tradeinfo.REGIST_SEQNO = #{item,jdbcType=VARCHAR}
-            </foreach>
-        </where>
-    </update>
-    
-	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
-         update CHB_INVEST_TRADE_SUB tradeinfo
-        <set> 
-            <if test="sendStatus != null and sendStatus != ''">
-                tradeinfo.SEND_STATUS = #{sendStatus},
-            </if>
-            tradeinfo.submit_time = now(),
-            tradeinfo.UPDATE_TIME = now()
-        </set>
-        <where>
-            <foreach collection="registList" item="item" open="(" close=")" separator=") or (">
-                tradeinfo.regist_Seqno = #{item.registSeqno} 
-            </foreach>
-        </where>
-    </update>
-    
-    <!-- 接口报送更新并且更新 报送流水号-->
-    <update id="updateAllInterfSubmitAndSeqBatch" >
-         update CHB_INVEST_TRADE_SUB tradeinfo
-        <set> 
-            <if test="sendStatus != null and sendStatus != ''">
-                tradeinfo.SEND_STATUS = #{sendStatus},
-            </if>
-            tradeinfo.submit_time = now(),
-            tradeinfo.UPDATE_TIME = now()
-        </set>
-        <where>
-            tradeinfo.SEND_STATUS = '01'
-        </where>
-    </update>
-    
-    <update id="updateInvestTradeRegist" parameterType="java.util.Map">
-		update CHB_INVEST_TRADE_SUB
-		<set> 
-		 	SEND_STATUS = '01',
-			UPDATE_TIME = now(),
-			SUBMIT_TIME = null,
-			SUBMIT_FEEDBACK_STATUS = null
-		</set>
-		<where>
-		 	<foreach collection="registSeqList" item="item" open="(" close=")" separator=") or (">
-                regist_Seqno = #{item,jdbcType=VARCHAR}
-            </foreach>
-		</where>
-	</update>
-	
-	<select id="selectInvestTradeForRegist" parameterType="java.util.Map" resultMap="BaseResultMap"
-	 	resultSetType="FORWARD_ONLY" fetchSize="1000">
-		SELECT 
-		null regist_code,/*登记编码*/
-		investtrade.TRADE_CODE,
-		investtrade.PROD_ID,
-		investtrade.REGIST_BANK_CODE,
-		ifnull(ASSETINFO.ASSET_CODE_OLD,ifnull(ASSETINFO.ASSET_CODE,investtrade.ASSET_CODE)) ASSET_CODE,
-		investtrade.ccy,
-		investtrade.CNY_AMT,
-		investtrade.amt,
-		investtrade.NUM,
-		investtrade.CUR_ASSET_TYPE,
-		investtrade.CUR_ASSETDET_TYPE,
-		investtrade.DEALDATE,
-		investtrade.TRADE_COUNTER,
-		investtrade.UNIT_PRICE_FULL,
-		investtrade.UNIT_PRICE_NET,
-		investtrade.END_RATE,
-		investtrade.CONTRACT_CODE,
-		investtrade.REMARK,
-		investtrade.CHL_CPCT_ID,
-		investtrade.TRADE_TYPE,
-		investtrade.CHL_AGRT_NAME,
-		NULL fee_id,
-		NULL fee_name,
-		NULL fee_type,
-		null fee_sectype,
-		investtrade.STATUS STATUS,
-		investtrade.ORG_CODE ORG_CODE,
-		investtrade.DEPT_CODE DEPT_CODE,
-		null CREATE_USER,
-		null CREATE_TIME,
-		NULL update_user,
-		null update_time,
-		NULL chb_submit_deadline,/*行内报送截止日*/
-		null SUBMIT_DEADLINE,/*中债报送截止日*/
-		null send_status,/*报送状态*/
-		NULL submit_feedback_status,/*反馈状态*/
-		NULL submit_time,/*报送时间*/
-		NULL delete_res,/*删除原因*/
-		investtrade.data_source,
-		investtrade.status_date,
-		NULL create_dept,
-		now() deal_regist_date,
-		investtrade.TRADE_SEQNO ref_tradeseqno,/*关联交易编号*/
-        '02' IS_ASSET_SUB
-		/*资产是否登记*/
-		,
-		investtrade.INVEST_VARIETY INVEST_VARIETY, /*投资品种*/
-		investtrade.DEALTYPE DEALTYPE, /*交易类型*/
-		prodinfo.prodtype prodtype/*产品类型N M净值型*/
-		,investtrade.ASSET_METHOD
-		,investtrade.RIVAL_PARTY_TYPE
-		FROM chb_invest_trade investtrade
-        left join chb_prd_baseinfo prodinfo
-        on prodinfo.prod_id = investtrade.PROD_ID
-		LEFT JOIN CHB_ASSET_INFO ASSETINFO
-		on ASSETINFO.asset_code = investtrade.asset_code
-		where 1 =1
-        <!-- 不过滤状态 -->
-        <!-- and investtrade.status = 'E' -->/*有效状态*/
-		<![CDATA[and DATE_FORMAT(GREATEST(ifnull(investtrade.update_time,investtrade.create_time),investtrade.DEALDATE), '%Y-%m-%d') = #{registDate,jdbcType=VARCHAR}]]>
-		<!-- /*资产交易未登记*/
-		and not exists(
-			select 1
-			from chb_invest_trade_sub investtradesub
-			where 1=1 
-			and investtradesub.ref_tradeseqno = investtrade.TRADE_SEQNO
-			and investtrade.status != '03'/*不为删除数据*/
-		) -->
-        <if test="tradenoList !=null and tradenoList.size()>0">
-            <!-- 产品代码不为空时 -->
-            <foreach collection="tradenoList" item="tradeCode" open="and investtrade.TRADE_CODE in (" close=")" separator=",">
-                #{tradeCode,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="prodList !=null and prodList.size()>0">
-            <!-- 产品代码不为空时 -->
-            <foreach collection="prodList" item="prodId" open="and investtrade.PROD_ID in (" close=")" separator=",">
-                #{prodId,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-		UNION ALL
-		SELECT 
-		null regist_code,/*登记编码*/
-		prdfeedeal.TRADE_ID TRADE_CODE,
-		prdfeedeal.prod_id,
-		prodinfo.ISSUE_PARTY_ID regist_bank_code,
-		null ASSET_CODE,
-		prdfeedeal.ccy,
-		null CNY_AMT,/*折算人民币金额*/
-		prdfeedeal.amt,
-		0 num,
-		'12' cur_asset_type,/*其他支出*/
-		prdfeedeal.fee_name cur_assetdet_type,
-		prdfeedeal.PAY_DATE dealdate,
-		'无' TRADE_COUNTER,
-		null unit_price_full,
-		null UNIT_PRICE_NET,
-		null END_RATE,
-		prdfeedeal.TRADE_ID CONTRACT_CODE,
-		prdfeedeal.REMARK,
-		null chl_cpct_id,
-		'03' TRADE_TYPE,/*交易类型03产品费用交易*/
-		null chl_agrt_name,
-		prdfeedeal.FEE_ID fee_id,
-		prdfeedeal.fee_name fee_name,
-		prdfeedeal.fee_type fee_type,
-		prdfeedeal.fee_sectype fee_sectype,
-		prdfeedeal.STATUS STATUS,
-		prdfeedeal.ORG_CODE ORG_CODE,
-		prdfeedeal.DEPT_CODE DEPT_CODE,
-		null CREATE_USER,
-		null CREATE_TIME,
-		null UPDATE_USER,
-		null update_time,
-		NULL chb_submit_deadline,/*行内报送截止日*/
-		null SUBMIT_DEADLINE,/*中债报送截止日*/
-		null send_status,/*报送状态*/
-		NULL submit_feedback_status,/*反馈状态*/
-		NULL submit_time,/*报送时间*/
-		NULL delete_res,/*删除原因*/
-		prdfeedeal.data_source,
-		now() status_date,
-		NULL create_dept,
-		now() deal_regist_date,
-		prdfeedeal.SEQNO ref_tradeseqno,/*关联交易编号*/
-		'02' is_asset_sub/*资产是否登记*/,
-		NULL INVEST_VARIETY, /*投资品种*/
-		NULL DEALTYPE, /*交易类型*/
-        prodinfo.prodtype prodtype/*产品类型N M净值型*/
-        ,NULL ASSET_METHOD
-		,NULL RIVAL_PARTY_TYPE
-		FROM chb_prd_fee_deal prdfeedeal
-        left join chb_prd_baseinfo prodinfo
-        on prodinfo.prod_id = prdfeedeal.PROD_ID
-		where 1 =1 
-		and prdfeedeal.FEE_TYPE = '02'/*他行费用*/
-		<!-- and prdfeedeal.FEE_SECTYPE in ('05','06','07','09') -->
-        <!-- 不过滤状态 -->
-		<!-- and prdfeedeal.status = 'E' -->/*有效状态*/
-		<![CDATA[and DATE_FORMAT(GREATEST(ifnull(prdfeedeal.update_time,prdfeedeal.create_time),prdfeedeal.PAY_DATE), '%Y-%m-%d') = #{registDate,jdbcType=VARCHAR}]]>
-        <if test="tradenoList !=null and tradenoList.size()>0">
-            <!-- 产品代码不为空时 -->
-            <foreach collection="tradenoList" item="tradeCode" open="and prdfeedeal.TRADE_ID in (" close=")" separator=",">
-                #{tradeCode,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="prodList !=null and prodList.size()>0">
-            <!-- 产品代码不为空时 -->
-            <foreach collection="prodList" item="prodId" open="and prdfeedeal.prod_id in (" close=")" separator=",">
-                #{prodId,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-		<!-- /*费用交易未登记*/
-		and not exists(
-			select 1
-			from chb_invest_trade_sub investtradesub
-			where 1=1 
-			and investtradesub.ref_tradeseqno = prdfeedeal.SEQNO
-			and prdfeedeal.status != '03'/*不为删除数据*/
-		) -->
-	</select>
-	
-	<insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
-	insert into CHB_INVEST_TRADE_SUB (REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
-      ASSET_CODE, CCY, CNY_AMT, 
-      AMT, NUM, CUR_ASSET_TYPE, 
-      CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
-      UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
-      CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
-      TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, 
-      FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
-      STATUS, ORG_CODE, DEPT_CODE, 
-      CREATE_USER, CREATE_TIME, UPDATE_USER, 
-      UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-      SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
-      SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO)
-		<foreach collection="insertList" item="item" index="index" separator="union all" >
-		select
-		  #{item.registSeqno,jdbcType=CHAR}, #{item.tradeCode,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR}, 
-	      #{item.assetCode,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR}, #{item.cnyAmt,jdbcType=DECIMAL}, 
-	      #{item.amt,jdbcType=DECIMAL}, #{item.num,jdbcType=DECIMAL}, #{item.curAssetType,jdbcType=VARCHAR}, 
-	      #{item.curAssetdetType,jdbcType=VARCHAR}, #{item.dealdate,jdbcType=TIMESTAMP}, #{item.tradeCounter,jdbcType=VARCHAR}, 
-	      #{item.unitPriceFull,jdbcType=DECIMAL}, #{item.unitPriceNet,jdbcType=DECIMAL}, #{item.endRate,jdbcType=DECIMAL}, 
-	      #{item.contractCode,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.chlCpctId,jdbcType=VARCHAR}, 
-	      #{item.tradeType,jdbcType=VARCHAR}, #{item.chlAgrtName,jdbcType=VARCHAR}, #{item.feeId,jdbcType=VARCHAR}, 
-	      #{item.feeName,jdbcType=VARCHAR}, #{item.feeType,jdbcType=VARCHAR}, #{item.feeSectype,jdbcType=VARCHAR}, 
-	      #{item.status,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}, 
-	      #{item.createUser,jdbcType=VARCHAR}, now(), #{item.updateUser,jdbcType=VARCHAR},
-	      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP}, 
-	      #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.statusDate,jdbcType=TIMESTAMP}, 
-	      #{item.submitTime,jdbcType=TIMESTAMP}, #{item.deleteRes,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR}, 
-	      #{item.createDept,jdbcType=VARCHAR},#{item.dealRegistDate,jdbcType=TIMESTAMP},#{item.isAssetSub,jdbcType=VARCHAR},#{item.refTradeseqno,jdbcType=VARCHAR}
-	      from dual
-		</foreach>
-	</insert>
-	
-	<select id="selectIsExistAlreadyRegist" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" resultType="java.lang.Integer">
+    update CHB_INVEST_TRADE_SUB tradeinfo
+    <set>
+      tradeinfo.SUBMIT_FEEDBACK_STATUS = '03'
+    </set>
+    <where>
+      <foreach collection="list" item="item" open="(" close=")" separator=") or (">
+        tradeinfo.REGIST_SEQNO = #{item,jdbcType=VARCHAR}
+      </foreach>
+    </where>
+  </update>
+
+  <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+    update CHB_INVEST_TRADE_SUB tradeinfo
+    <set>
+      <if test="sendStatus != null and sendStatus != ''">
+        tradeinfo.SEND_STATUS = #{sendStatus},
+      </if>
+      tradeinfo.submit_time = now(),
+      tradeinfo.UPDATE_TIME = now()
+    </set>
+    <where>
+      <foreach collection="registList" item="item" open="(" close=")" separator=") or (">
+        tradeinfo.regist_Seqno = #{item.registSeqno}
+      </foreach>
+    </where>
+  </update>
+
+  <!-- 接口报送更新并且更新 报送流水号-->
+  <update id="updateAllInterfSubmitAndSeqBatch" >
+    update CHB_INVEST_TRADE_SUB tradeinfo
+    <set>
+      <if test="sendStatus != null and sendStatus != ''">
+        tradeinfo.SEND_STATUS = #{sendStatus},
+      </if>
+      tradeinfo.submit_time = now(),
+      tradeinfo.UPDATE_TIME = now()
+    </set>
+    <where>
+      tradeinfo.SEND_STATUS = '01'
+    </where>
+  </update>
+
+  <update id="updateInvestTradeRegist" parameterType="java.util.Map">
+    update CHB_INVEST_TRADE_SUB
+    <set>
+      SEND_STATUS = '01',
+      UPDATE_TIME = now(),
+      SUBMIT_TIME = null,
+      SUBMIT_FEEDBACK_STATUS = null
+    </set>
+    <where>
+      <foreach collection="registSeqList" item="item" open="(" close=")" separator=") or (">
+        regist_Seqno = #{item,jdbcType=VARCHAR}
+      </foreach>
+    </where>
+  </update>
+
+  <select id="selectInvestTradeForRegist" parameterType="java.util.Map" resultMap="BaseResultMap"
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
+    SELECT
+    null regist_code,/*登记编码*/
+    investtrade.TRADE_CODE,
+    investtrade.PROD_ID,
+    investtrade.REGIST_BANK_CODE,
+    ifnull(ASSETINFO.ASSET_CODE_OLD,ifnull(ASSETINFO.ASSET_CODE,investtrade.ASSET_CODE)) ASSET_CODE,
+    investtrade.ccy,
+    investtrade.CNY_AMT,
+    investtrade.amt,
+    investtrade.NUM,
+    investtrade.CUR_ASSET_TYPE,
+    investtrade.CUR_ASSETDET_TYPE,
+    investtrade.DEALDATE,
+    investtrade.TRADE_COUNTER,
+    investtrade.UNIT_PRICE_FULL,
+    investtrade.UNIT_PRICE_NET,
+    investtrade.END_RATE,
+    investtrade.CONTRACT_CODE,
+    investtrade.REMARK,
+    investtrade.CHL_CPCT_ID,
+    investtrade.TRADE_TYPE,
+    investtrade.CHL_AGRT_NAME,
+    NULL fee_id,
+    NULL fee_name,
+    NULL fee_type,
+    null fee_sectype,
+    investtrade.STATUS STATUS,
+    investtrade.ORG_CODE ORG_CODE,
+    investtrade.DEPT_CODE DEPT_CODE,
+    null CREATE_USER,
+    null CREATE_TIME,
+    NULL update_user,
+    null update_time,
+    NULL chb_submit_deadline,/*行内报送截止日*/
+    null SUBMIT_DEADLINE,/*中债报送截止日*/
+    null send_status,/*报送状态*/
+    NULL submit_feedback_status,/*反馈状态*/
+    NULL submit_time,/*报送时间*/
+    NULL delete_res,/*删除原因*/
+    investtrade.data_source,
+    investtrade.status_date,
+    NULL create_dept,
+    now() deal_regist_date,
+    investtrade.TRADE_SEQNO ref_tradeseqno,/*关联交易编号*/
+    '02' IS_ASSET_SUB
+    /*资产是否登记*/
+    ,
+    investtrade.INVEST_VARIETY INVEST_VARIETY, /*投资品种*/
+    investtrade.DEALTYPE DEALTYPE, /*交易类型*/
+    prodinfo.prodtype prodtype/*产品类型N M净值型*/
+    ,investtrade.ASSET_METHOD
+    ,investtrade.RIVAL_PARTY_TYPE
+    FROM chb_invest_trade investtrade
+    left join chb_prd_baseinfo prodinfo
+    on prodinfo.prod_id = investtrade.PROD_ID
+    LEFT JOIN CHB_ASSET_INFO ASSETINFO
+    on ASSETINFO.asset_code = investtrade.asset_code
+    where 1 =1
+    <!-- 不过滤状态 -->
+    <!-- and investtrade.status = 'E' -->/*有效状态*/
+    <![CDATA[and DATE_FORMAT(GREATEST(ifnull(investtrade.update_time,investtrade.create_time),investtrade.DEALDATE), '%Y-%m-%d') = #{registDate,jdbcType=VARCHAR}]]>
+    <!-- /*资产交易未登记*/
+    and not exists(
+        select 1
+        from chb_invest_trade_sub investtradesub
+        where 1=1
+        and investtradesub.ref_tradeseqno = investtrade.TRADE_SEQNO
+        and investtrade.status != '03'/*不为删除数据*/
+    ) -->
+    <if test="tradenoList !=null and tradenoList.size()>0">
+      <!-- 产品代码不为空时 -->
+      <foreach collection="tradenoList" item="tradeCode" open="and investtrade.TRADE_CODE in (" close=")" separator=",">
+        #{tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="prodList !=null and prodList.size()>0">
+      <!-- 产品代码不为空时 -->
+      <foreach collection="prodList" item="prodId" open="and investtrade.PROD_ID in (" close=")" separator=",">
+        #{prodId,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    UNION ALL
+    SELECT
+    null regist_code,/*登记编码*/
+    prdfeedeal.TRADE_ID TRADE_CODE,
+    prdfeedeal.prod_id,
+    prodinfo.ISSUE_PARTY_ID regist_bank_code,
+    null ASSET_CODE,
+    prdfeedeal.ccy,
+    null CNY_AMT,/*折算人民币金额*/
+    prdfeedeal.amt,
+    0 num,
+    '12' cur_asset_type,/*其他支出*/
+    prdfeedeal.fee_name cur_assetdet_type,
+    prdfeedeal.PAY_DATE dealdate,
+    '无' TRADE_COUNTER,
+    null unit_price_full,
+    null UNIT_PRICE_NET,
+    null END_RATE,
+    prdfeedeal.TRADE_ID CONTRACT_CODE,
+    prdfeedeal.REMARK,
+    null chl_cpct_id,
+    '03' TRADE_TYPE,/*交易类型03产品费用交易*/
+    null chl_agrt_name,
+    prdfeedeal.FEE_ID fee_id,
+    prdfeedeal.fee_name fee_name,
+    prdfeedeal.fee_type fee_type,
+    prdfeedeal.fee_sectype fee_sectype,
+    prdfeedeal.STATUS STATUS,
+    prdfeedeal.ORG_CODE ORG_CODE,
+    prdfeedeal.DEPT_CODE DEPT_CODE,
+    null CREATE_USER,
+    null CREATE_TIME,
+    null UPDATE_USER,
+    null update_time,
+    NULL chb_submit_deadline,/*行内报送截止日*/
+    null SUBMIT_DEADLINE,/*中债报送截止日*/
+    null send_status,/*报送状态*/
+    NULL submit_feedback_status,/*反馈状态*/
+    NULL submit_time,/*报送时间*/
+    NULL delete_res,/*删除原因*/
+    prdfeedeal.data_source,
+    now() status_date,
+    NULL create_dept,
+    now() deal_regist_date,
+    prdfeedeal.SEQNO ref_tradeseqno,/*关联交易编号*/
+    '02' is_asset_sub/*资产是否登记*/,
+    NULL INVEST_VARIETY, /*投资品种*/
+    NULL DEALTYPE, /*交易类型*/
+    prodinfo.prodtype prodtype/*产品类型N M净值型*/
+    ,NULL ASSET_METHOD
+    ,NULL RIVAL_PARTY_TYPE
+    FROM chb_prd_fee_deal prdfeedeal
+    left join chb_prd_baseinfo prodinfo
+    on prodinfo.prod_id = prdfeedeal.PROD_ID
+    where 1 =1
+    and prdfeedeal.FEE_TYPE = '02'/*他行费用*/
+    <!-- and prdfeedeal.FEE_SECTYPE in ('05','06','07','09') -->
+    <!-- 不过滤状态 -->
+    <!-- and prdfeedeal.status = 'E' -->/*有效状态*/
+    <![CDATA[and DATE_FORMAT(GREATEST(ifnull(prdfeedeal.update_time,prdfeedeal.create_time),prdfeedeal.PAY_DATE), '%Y-%m-%d') = #{registDate,jdbcType=VARCHAR}]]>
+    <if test="tradenoList !=null and tradenoList.size()>0">
+      <!-- 产品代码不为空时 -->
+      <foreach collection="tradenoList" item="tradeCode" open="and prdfeedeal.TRADE_ID in (" close=")" separator=",">
+        #{tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="prodList !=null and prodList.size()>0">
+      <!-- 产品代码不为空时 -->
+      <foreach collection="prodList" item="prodId" open="and prdfeedeal.prod_id in (" close=")" separator=",">
+        #{prodId,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <!-- /*费用交易未登记*/
+    and not exists(
+        select 1
+        from chb_invest_trade_sub investtradesub
+        where 1=1
+        and investtradesub.ref_tradeseqno = prdfeedeal.SEQNO
+        and prdfeedeal.status != '03'/*不为删除数据*/
+    ) -->
+  </select>
+
+  <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
+    insert into CHB_INVEST_TRADE_SUB (REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE,
+    ASSET_CODE, CCY, CNY_AMT,
+    AMT, NUM, CUR_ASSET_TYPE,
+    CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+    UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+    CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+    TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
+    FEE_NAME, FEE_TYPE, FEE_SECTYPE,
+    STATUS, ORG_CODE, DEPT_CODE,
+    CREATE_USER, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
+    SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
+    CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO)
+    <foreach collection="insertList" item="item" index="index" separator="union all" >
+      select
+      #{item.registSeqno,jdbcType=CHAR}, #{item.tradeCode,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.registBankCode,jdbcType=VARCHAR},
+      #{item.assetCode,jdbcType=VARCHAR}, #{item.ccy,jdbcType=VARCHAR}, #{item.cnyAmt,jdbcType=DECIMAL},
+      #{item.amt,jdbcType=DECIMAL}, #{item.num,jdbcType=DECIMAL}, #{item.curAssetType,jdbcType=VARCHAR},
+      #{item.curAssetdetType,jdbcType=VARCHAR}, #{item.dealdate,jdbcType=TIMESTAMP}, #{item.tradeCounter,jdbcType=VARCHAR},
+      #{item.unitPriceFull,jdbcType=DECIMAL}, #{item.unitPriceNet,jdbcType=DECIMAL}, #{item.endRate,jdbcType=DECIMAL},
+      #{item.contractCode,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.chlCpctId,jdbcType=VARCHAR},
+      #{item.tradeType,jdbcType=VARCHAR}, #{item.chlAgrtName,jdbcType=VARCHAR}, #{item.feeId,jdbcType=VARCHAR},
+      #{item.feeName,jdbcType=VARCHAR}, #{item.feeType,jdbcType=VARCHAR}, #{item.feeSectype,jdbcType=VARCHAR},
+      #{item.status,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
+      #{item.createUser,jdbcType=VARCHAR}, now(), #{item.updateUser,jdbcType=VARCHAR},
+      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{item.submitDeadline,jdbcType=TIMESTAMP},
+      #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.statusDate,jdbcType=TIMESTAMP},
+      #{item.submitTime,jdbcType=TIMESTAMP}, #{item.deleteRes,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR},
+      #{item.createDept,jdbcType=VARCHAR},#{item.dealRegistDate,jdbcType=TIMESTAMP},#{item.isAssetSub,jdbcType=VARCHAR},#{item.refTradeseqno,jdbcType=VARCHAR}
+      from dual
+    </foreach>
+  </insert>
+
+  <select id="selectIsExistAlreadyRegist" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" resultType="java.lang.Integer">
 		select count(*)
 		from CHB_INVEST_TRADE_SUB
 		where ref_tradeseqno = #{refTradeseqno,jdbcType=VARCHAR}
 		and SEND_STATUS in('02','03')/*去除未报送的内容*/
 	</select>
-	
-	<select id="selectIsExistNotRegist" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" resultType="java.lang.Integer">
+
+  <select id="selectIsExistNotRegist" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" resultType="java.lang.Integer">
 		select count(*)
 		from CHB_INVEST_TRADE_SUB
 		where ref_tradeseqno = #{refTradeseqno,jdbcType=VARCHAR}
 		and SEND_STATUS ='01'/*未报送的内容*/
 	</select>
-	
-	<!-- 批量更新 -->
-	<update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
-		begin
-		<foreach collection="updateList" item="item" index="index" separator=";">
-			update CHB_INVEST_TRADE_SUB
-			<set>
-			  <if test="item.tradeCode != null" >
-		        TRADE_CODE = #{item.tradeCode,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.prodId != null" >
-		        PROD_ID = #{item.prodId,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.registBankCode != null" >
-		        REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.assetCode != null" >
-		        ASSET_CODE = #{item.assetCode,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.ccy != null" >
-		        CCY = #{item.ccy,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.cnyAmt != null" >
-		        CNY_AMT = #{item.cnyAmt,jdbcType=DECIMAL},
-		      </if>
-		      <if test="item.amt != null" >
-		        AMT = #{item.amt,jdbcType=DECIMAL},
-		      </if>
-		      <if test="item.num != null" >
-		        NUM = #{item.num,jdbcType=DECIMAL},
-		      </if>
-		      <if test="item.curAssetType != null" >
-		        CUR_ASSET_TYPE = #{item.curAssetType,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.curAssetdetType != null" >
-		        CUR_ASSETDET_TYPE = #{item.curAssetdetType,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.dealdate != null" >
-		        DEALDATE = #{item.dealdate,jdbcType=TIMESTAMP},
-		      </if>
-		      <if test="item.tradeCounter != null" >
-		        TRADE_COUNTER = #{item.tradeCounter,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.unitPriceFull != null" >
-		        UNIT_PRICE_FULL = #{item.unitPriceFull,jdbcType=DECIMAL},
-		      </if>
-		      <if test="item.unitPriceNet != null" >
-		        UNIT_PRICE_NET = #{item.unitPriceNet,jdbcType=DECIMAL},
-		      </if>
-		      <if test="item.endRate != null" >
-		        END_RATE = #{item.endRate,jdbcType=DECIMAL},
-		      </if>
-		      <if test="item.contractCode != null" >
-		        CONTRACT_CODE = #{item.contractCode,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.remark != null" >
-		        REMARK = #{item.remark,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.chlCpctId != null" >
-		        CHL_CPCT_ID = #{item.chlCpctId,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.tradeType != null" >
-		        TRADE_TYPE = #{item.tradeType,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.chlAgrtName != null" >
-		        CHL_AGRT_NAME = #{item.chlAgrtName,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.feeId != null" >
-		        FEE_ID = #{item.feeId,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.feeName != null" >
-		        FEE_NAME = #{item.feeName,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.feeType != null" >
-		        FEE_TYPE = #{item.feeType,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.feeSectype != null" >
-		        FEE_SECTYPE = #{item.feeSectype,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.status != null" >
-		        STATUS = #{item.status,jdbcType=CHAR},
-		      </if>
-		      <if test="item.orgCode != null" >
-		        ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.deptCode != null" >
-		        DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.createUser != null" >
-		        CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.createTime != null" >
-		        CREATE_TIME = #{item.createTime,jdbcType=TIMESTAMP},
-		      </if>
-		      <if test="item.updateUser != null" >
-		        UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.updateTime != null" >
-		        UPDATE_TIME = now(),
-		      </if>
-		      <if test="item.chbSubmitDeadline != null" >
-		        CHB_SUBMIT_DEADLINE = #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
-		      </if>
-		      <if test="item.submitDeadline != null" >
-		        SUBMIT_DEADLINE = #{item.submitDeadline,jdbcType=TIMESTAMP},
-		      </if>
-		      <if test="item.sendStatus != null" >
-		        SEND_STATUS = #{item.sendStatus,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.submitFeedbackStatus != null" >
-		        SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.statusDate != null" >
-		        STATUS_DATE = #{item.statusDate,jdbcType=TIMESTAMP},
-		      </if>
-		      <if test="item.submitTime != null" >
-		        SUBMIT_TIME = #{item.submitTime,jdbcType=TIMESTAMP},
-		      </if>
-		      <if test="item.deleteRes != null" >
-		        DELETE_RES = #{item.deleteRes,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.dataSource != null" >
-		        DATA_SOURCE = #{item.dataSource,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.createDept != null" >
-		        CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.dealRegistDate != null">
-		      	DEAL_REGIST_DATE = #{item.dealRegistDate,jdbcType=TIMESTAMP},
-		      </if>
-		      <if test="item.isAssetSub != null">
-		        IS_ASSET_SUB = #{item.isAssetSub,jdbcType=VARCHAR},
-		      </if>
-		      <if test="item.refTradeseqno != null">
-		        REF_TRADESEQNO = #{item.refTradeseqno,jdbcType=VARCHAR},
-		      </if>
-			</set>
-			<!-- where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR} -->
-			where REF_TRADESEQNO = #{item.refTradeseqno,jdbcType=VARCHAR}
-        </foreach>
-        ;end;
-	</update>
-	
-	<select id="selectProdIsNProd" parameterType="java.lang.String" resultType="java.lang.String">
-		select 1
-		from chb_prd_baseinfo
-		where prod_id =#{prodid,jdbcType=VARCHAR}
-		<!-- and status = 'E' -->
-		and PRODTYPE in ('N','M')
-	</select>
-    <!-- 获取行内交易编码下拉菜单-->
-    <select id="selectTradeNoCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT DISTINCT
-          trade.TRADE_CODE id,
-          trade.TRADE_CODE text
-         FROM (
-	         select DISTINCT trade_code
-	         from CHB_INVEST_TRADE
-<!-- 	         where status = 'E' -->
-	         union all 
-	         select DISTINCT trade_id trade_code
-	         from chb_prd_fee_deal
-	         where 1=1
-<!-- 	         status = 'E' -->
-             and FEE_TYPE = '02'/*他行费用*/
-         ) trade
-         <where>
-            <if test="search != null and search != ''">
-                and trade.TRADE_CODE like concat_ws('','%', #{search},'%')
-            </if>
-            <if test="orgCodeList !=null and orgCodeList.size()>0">
-                <!-- 机构代码不为空时 -->
-                <foreach collection="orgCodeList" item="orgCode" open="and trade.ORG_CODE in (" close=")" separator=",">
-                    #{orgCode,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-         </where>
-         ORDER BY trade.TRADE_CODE
-    </select>
 
-	<delete id="deleteByTradeCode"
-		parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
-		delete from chb_invest_trade_sub
-        where 1 =1
-        <if test='deleteList != null and deleteList.size() > 0'>
-			<foreach collection="deleteList" item="item" index="index"
-				open="AND TRADE_CODE in (" close=")" separator=",">
-				#{item.tradeCode,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-        and send_status = '01'/*只删除未报送的数据*/
-	</delete>
-	
-    <delete id="deleteByRegistseqno"
-        parameterType="java.util.Map">
-        delete from chb_invest_trade_sub
-        where 1 =1
-        <if test='deleteList != null and deleteList.size() > 0'>
-            <foreach collection="deleteList" item="registSeqno" index="index"
-                open="AND REGIST_SEQNO in (" close=")" separator=",">
-                #{registSeqno,jdbcType=VARCHAR}
-            </foreach>
+  <!-- 批量更新 -->
+  <update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
+    begin
+    <foreach collection="updateList" item="item" index="index" separator=";">
+      update CHB_INVEST_TRADE_SUB
+      <set>
+        <if test="item.tradeCode != null" >
+          TRADE_CODE = #{item.tradeCode,jdbcType=VARCHAR},
         </if>
-    </delete>
-    
-    
-    <select id="selectInvestTradeRegHisByTradeCode" resultMap="BaseResultMapHis"
-        parameterType="java.util.Map">
-        select
-        <include refid="Base_Column_List_His" />
-        from chb_invest_trade_sub
-        where 1 =1 
-        and send_status in ('02','03')
-        <if test='tradeList != null and tradeList.size() > 0'>
-          <foreach collection="tradeList" item="tradeCode" index="index" open="AND TRADE_CODE in (" close=")" separator=",">
-          #{tradeCode,jdbcType=VARCHAR} 
-          </foreach>
+        <if test="item.prodId != null" >
+          PROD_ID = #{item.prodId,jdbcType=VARCHAR},
         </if>
-    </select>
-    
-    <select id="selectAllTradeReg" resultMap="BaseResultMap"
-        parameterType="java.util.Map">
-        select
-        <include refid="Base_Column_List" />
-        from chb_invest_trade_sub
-        where 1 =1 
-        and send_status in ('02','03')
-        <if test="registList !=null and registList.size()>0">
-           <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
-             #{regist.tradeCode,jdbcType=VARCHAR}
-           </foreach>
+        <if test="item.registBankCode != null" >
+          REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR},
         </if>
-    </select>
-    <insert id="insertReportHis" parameterType="java.util.Map">
-      insert into CHB_INVEST_TRADE_SUB_HIS (
-	      HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
-	      ASSET_CODE, CCY, CNY_AMT, 
-	      AMT, NUM, CUR_ASSET_TYPE, 
-	      CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
-	      UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
-	      CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
-	      TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, 
-	      FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
-	      STATUS, ORG_CODE, DEPT_CODE, 
-	      CREATE_USER, CREATE_TIME, UPDATE_USER, 
-	      UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-	      SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
-	      SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-	      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
-	      ,ASSET_METHOD,RIVAL_PARTY_TYPE
-      )
-      select  
-          REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
-          ASSET_CODE, CCY, CNY_AMT, 
-          AMT, NUM, CUR_ASSET_TYPE, 
-          CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
-          UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
-          CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
-          TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, 
-          FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
-          STATUS, ORG_CODE, DEPT_CODE, 
-          CREATE_USER, now() CREATE_TIME, UPDATE_USER,
-          now() UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-          SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
-          SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-          CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
-          ,ASSET_METHOD,RIVAL_PARTY_TYPE
-      from CHB_INVEST_TRADE_SUB
-      where 1 =1
-       <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
-            #{regist.tradeCode,jdbcType=VARCHAR}
-          </foreach>
-       </if>
-       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-	</insert>
-    <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
-      delete from CHB_INVEST_TRADE_SUB
-      where 1 =1
-       <if test="registList !=null and registList.size()>0">
-          <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
-            #{regist.tradeCode,jdbcType=VARCHAR}
-          </foreach>
-       </if>
-       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-	</delete>
-	<insert id="insertReportDataFromHis" parameterType="java.util.Map">
-      insert into CHB_INVEST_TRADE_SUB (
-          REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
-          ASSET_CODE, CCY, CNY_AMT, 
-          AMT, NUM, CUR_ASSET_TYPE, 
-          CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
-          UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
-          CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
-          TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, 
-          FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
-          STATUS, ORG_CODE, DEPT_CODE, 
-          CREATE_USER, CREATE_TIME, UPDATE_USER, 
-          UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-          SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
-          SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-          CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
-      )
-      select   
-          HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
-          ASSET_CODE, CCY, CNY_AMT, 
-          AMT, NUM, CUR_ASSET_TYPE, 
-          CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
-          UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
-          CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
-          TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, 
-          FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
-          STATUS, ORG_CODE, DEPT_CODE, 
-          CREATE_USER, CREATE_TIME, UPDATE_USER, 
-          UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-          SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
-          SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-          CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
-      from (
-          select  
-			HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE, 
-			ASSET_CODE, CCY, CNY_AMT, 
-			AMT, NUM, CUR_ASSET_TYPE, 
-			CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER, 
-			UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, 
-			CONTRACT_CODE, REMARK, CHL_CPCT_ID, 
-			TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, 
-			FEE_NAME, FEE_TYPE, FEE_SECTYPE, 
-			STATUS, ORG_CODE, DEPT_CODE, 
-			CREATE_USER, now() CREATE_TIME, UPDATE_USER,
-			now() UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-			SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
-			SUBMIT_TIME, DELETE_RES, DATA_SOURCE, 
-			CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,
-            rank() over (partition by TRADE_CODE order by ifnull(update_time,create_time) desc) ranknum
-         from CHB_INVEST_TRADE_SUB_HIS  his
-         <where>
-	       <if test="registList !=null and registList.size()>0">
-	          <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
-	            #{regist.tradeCode,jdbcType=VARCHAR}
-	          </foreach>
-	       </if>
-         </where>
-      )
-      where 1 = 1 limit 1
-	</insert>
-	<delete id="deleteLastSubmitHis" parameterType="java.util.Map">
-       delete  from CHB_INVEST_TRADE_SUB_HIS
-      where 1 =1 
-      and HIS_NO in (
-        select a.HIS_NO from (
-          SELECT
-          @rownum:=@rownum+1 rownum,
-          a.HIS_NO,
-          IF( @ASSET_CODE = a.ASSET_CODE, @rank := @rank + 1, @rank := 1 ) AS myrank,
-          @ASSET_CODE := a.ASSET_CODE
-          FROM
-          ( SELECT * FROM CHB_INVEST_TRADE_SUB_HIS  ORDER BY ASSET_CODE,ifnull( UPDATE_TIME, CREATE_TIME ) DESC) a,
-          ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
-          where 1=1
-           <if test="registList !=null and registList.size()>0">
-                 <foreach collection="registList" item="regist" open=" AND (TRADE_CODE) IN (" separator="union all"  close=")">
-                   select #{regist.tradeCode,jdbcType=VARCHAR}from dual
-                 </foreach>
-              </if>
-        )a
-        where 1=1 limit 1
-      )
+        <if test="item.assetCode != null" >
+          ASSET_CODE = #{item.assetCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.ccy != null" >
+          CCY = #{item.ccy,jdbcType=VARCHAR},
+        </if>
+        <if test="item.cnyAmt != null" >
+          CNY_AMT = #{item.cnyAmt,jdbcType=DECIMAL},
+        </if>
+        <if test="item.amt != null" >
+          AMT = #{item.amt,jdbcType=DECIMAL},
+        </if>
+        <if test="item.num != null" >
+          NUM = #{item.num,jdbcType=DECIMAL},
+        </if>
+        <if test="item.curAssetType != null" >
+          CUR_ASSET_TYPE = #{item.curAssetType,jdbcType=VARCHAR},
+        </if>
+        <if test="item.curAssetdetType != null" >
+          CUR_ASSETDET_TYPE = #{item.curAssetdetType,jdbcType=VARCHAR},
+        </if>
+        <if test="item.dealdate != null" >
+          DEALDATE = #{item.dealdate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.tradeCounter != null" >
+          TRADE_COUNTER = #{item.tradeCounter,jdbcType=VARCHAR},
+        </if>
+        <if test="item.unitPriceFull != null" >
+          UNIT_PRICE_FULL = #{item.unitPriceFull,jdbcType=DECIMAL},
+        </if>
+        <if test="item.unitPriceNet != null" >
+          UNIT_PRICE_NET = #{item.unitPriceNet,jdbcType=DECIMAL},
+        </if>
+        <if test="item.endRate != null" >
+          END_RATE = #{item.endRate,jdbcType=DECIMAL},
+        </if>
+        <if test="item.contractCode != null" >
+          CONTRACT_CODE = #{item.contractCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.remark != null" >
+          REMARK = #{item.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="item.chlCpctId != null" >
+          CHL_CPCT_ID = #{item.chlCpctId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.tradeType != null" >
+          TRADE_TYPE = #{item.tradeType,jdbcType=VARCHAR},
+        </if>
+        <if test="item.chlAgrtName != null" >
+          CHL_AGRT_NAME = #{item.chlAgrtName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.feeId != null" >
+          FEE_ID = #{item.feeId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.feeName != null" >
+          FEE_NAME = #{item.feeName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.feeType != null" >
+          FEE_TYPE = #{item.feeType,jdbcType=VARCHAR},
+        </if>
+        <if test="item.feeSectype != null" >
+          FEE_SECTYPE = #{item.feeSectype,jdbcType=VARCHAR},
+        </if>
+        <if test="item.status != null" >
+          STATUS = #{item.status,jdbcType=CHAR},
+        </if>
+        <if test="item.orgCode != null" >
+          ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.deptCode != null" >
+          DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createUser != null" >
+          CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createTime != null" >
+          CREATE_TIME = #{item.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.updateUser != null" >
+          UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="item.updateTime != null" >
+          UPDATE_TIME = now(),
+        </if>
+        <if test="item.chbSubmitDeadline != null" >
+          CHB_SUBMIT_DEADLINE = #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.submitDeadline != null" >
+          SUBMIT_DEADLINE = #{item.submitDeadline,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.sendStatus != null" >
+          SEND_STATUS = #{item.sendStatus,jdbcType=VARCHAR},
+        </if>
+        <if test="item.submitFeedbackStatus != null" >
+          SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+        </if>
+        <if test="item.statusDate != null" >
+          STATUS_DATE = #{item.statusDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.submitTime != null" >
+          SUBMIT_TIME = #{item.submitTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.deleteRes != null" >
+          DELETE_RES = #{item.deleteRes,jdbcType=VARCHAR},
+        </if>
+        <if test="item.dataSource != null" >
+          DATA_SOURCE = #{item.dataSource,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createDept != null" >
+          CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
+        </if>
+        <if test="item.dealRegistDate != null">
+          DEAL_REGIST_DATE = #{item.dealRegistDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.isAssetSub != null">
+          IS_ASSET_SUB = #{item.isAssetSub,jdbcType=VARCHAR},
+        </if>
+        <if test="item.refTradeseqno != null">
+          REF_TRADESEQNO = #{item.refTradeseqno,jdbcType=VARCHAR},
+        </if>
+      </set>
+      <!-- where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR} -->
+      where REF_TRADESEQNO = #{item.refTradeseqno,jdbcType=VARCHAR}
+    </foreach>
+    ;end;
+  </update>
+
+  <select id="selectProdIsNProd" parameterType="java.lang.String" resultType="java.lang.String">
+    select 1
+    from chb_prd_baseinfo
+    where prod_id =#{prodid,jdbcType=VARCHAR}
+    <!-- and status = 'E' -->
+    and PRODTYPE in ('N','M')
+  </select>
+  <!-- 获取行内交易编码下拉菜单-->
+  <select id="selectTradeNoCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
+    SELECT DISTINCT
+    trade.TRADE_CODE id,
+    trade.TRADE_CODE text
+    FROM (
+    select DISTINCT trade_code
+    from CHB_INVEST_TRADE
+    <!-- 	         where status = 'E' -->
+    union all
+    select DISTINCT trade_id trade_code
+    from chb_prd_fee_deal
+    where 1=1
+    <!-- 	         status = 'E' -->
+    and FEE_TYPE = '02'/*他行费用*/
+    ) trade
+    <where>
+      <if test="search != null and search != ''">
+        and trade.TRADE_CODE like concat_ws('','%', #{search},'%')
+      </if>
+      <if test="orgCodeList !=null and orgCodeList.size()>0">
+        <!-- 机构代码不为空时 -->
+        <foreach collection="orgCodeList" item="orgCode" open="and trade.ORG_CODE in (" close=")" separator=",">
+          #{orgCode,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+    </where>
+    ORDER BY trade.TRADE_CODE
+  </select>
+
+  <delete id="deleteByTradeCode"
+          parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
+    delete from chb_invest_trade_sub
+    where 1 =1
+    <if test='deleteList != null and deleteList.size() > 0'>
+      <foreach collection="deleteList" item="item" index="index"
+               open="AND TRADE_CODE in (" close=")" separator=",">
+        #{item.tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    and send_status = '01'/*只删除未报送的数据*/
   </delete>
-    <select id="selectDataListByRegList" resultMap="BaseResultMap"
-        parameterType="java.util.Map">
-		select 
-			sub.REGIST_SEQNO, sub.TRADE_CODE, sub.PROD_ID, sub.REGIST_BANK_CODE, 
-			sub.ASSET_CODE, sub.CCY, sub.CNY_AMT, sub.AMT, sub.NUM, 
-			sub.CUR_ASSET_TYPE, sub.CUR_ASSETDET_TYPE, sub.DEALDATE, 
-			sub.TRADE_COUNTER, sub.UNIT_PRICE_FULL, sub.UNIT_PRICE_NET, 
-			sub.END_RATE, sub.CONTRACT_CODE, sub.REMARK, 
-			sub.CHL_CPCT_ID, sub.TRADE_TYPE, sub.CHL_AGRT_NAME, sub.FEE_ID, 
-			sub.FEE_NAME, sub.FEE_TYPE, sub.FEE_SECTYPE, sub.STATUS, 
-			sub.ORG_CODE, sub.DEPT_CODE, sub.CREATE_USER, sub.CREATE_TIME, 
-			sub.UPDATE_USER, sub.UPDATE_TIME, sub.CHB_SUBMIT_DEADLINE, 
-			sub.SUBMIT_DEADLINE, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, 
-			sub.STATUS_DATE, sub.SUBMIT_TIME, sub.DELETE_RES, 
-			sub.DATA_SOURCE, sub.CREATE_DEPT, sub.DEAL_REGIST_DATE,
-		    sub.IS_ASSET_SUB,info.PROD_NAME, reginfo.REG_CODE PROD_REG_CODE
-		from CHB_INVEST_TRADE_SUB sub
-		left join CHB_PRD_BASEINFO info
-		on sub.prod_id = info.prod_id
-		left join chb_prdresist_code reginfo
-		on sub.prod_id = reginfo.prodid
-        <where>
-            <if test="registList!=null and registList.size()!=0">
-                <foreach collection="registList" item="items" 
-                        open=" AND TRIM(sub.REGIST_SEQNO) IN (" close=")" separator=",">
-                        #{items.registSeqno,jdbcType=CHAR}
-                 </foreach> 
-            </if>
-        </where>
-        
-    </select>
+
+  <delete id="deleteByRegistseqno"
+          parameterType="java.util.Map">
+    delete from chb_invest_trade_sub
+    where 1 =1
+    <if test='deleteList != null and deleteList.size() > 0'>
+      <foreach collection="deleteList" item="registSeqno" index="index"
+               open="AND REGIST_SEQNO in (" close=")" separator=",">
+        #{registSeqno,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </delete>
+
+
+  <select id="selectInvestTradeRegHisByTradeCode" resultMap="BaseResultMapHis"
+          parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List_His" />
+    from chb_invest_trade_sub
+    where 1 =1
+    and send_status in ('02','03')
+    <if test='tradeList != null and tradeList.size() > 0'>
+      <foreach collection="tradeList" item="tradeCode" index="index" open="AND TRADE_CODE in (" close=")" separator=",">
+        #{tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </select>
+
+  <select id="selectAllTradeReg" resultMap="BaseResultMap"
+          parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from chb_invest_trade_sub
+    where 1 =1
+    and send_status in ('02','03')
+    <if test="registList !=null and registList.size()>0">
+      <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
+        #{regist.tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </select>
+  <insert id="insertReportHis" parameterType="java.util.Map">
+    insert into CHB_INVEST_TRADE_SUB_HIS (
+    HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE,
+    ASSET_CODE, CCY, CNY_AMT,
+    AMT, NUM, CUR_ASSET_TYPE,
+    CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+    UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+    CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+    TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
+    FEE_NAME, FEE_TYPE, FEE_SECTYPE,
+    STATUS, ORG_CODE, DEPT_CODE,
+    CREATE_USER, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
+    SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
+    CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
+    ,ASSET_METHOD,RIVAL_PARTY_TYPE
+    )
+    select
+    REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE,
+    ASSET_CODE, CCY, CNY_AMT,
+    AMT, NUM, CUR_ASSET_TYPE,
+    CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+    UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+    CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+    TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
+    FEE_NAME, FEE_TYPE, FEE_SECTYPE,
+    STATUS, ORG_CODE, DEPT_CODE,
+    CREATE_USER, now() CREATE_TIME, UPDATE_USER,
+    now() UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
+    SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
+    CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
+    ,ASSET_METHOD,RIVAL_PARTY_TYPE
+    from CHB_INVEST_TRADE_SUB
+    where 1 =1
+    <if test="registList !=null and registList.size()>0">
+      <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
+        #{regist.tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+  </insert>
+  <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+    delete from CHB_INVEST_TRADE_SUB
+    where 1 =1
+    <if test="registList !=null and registList.size()>0">
+      <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
+        #{regist.tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+  </delete>
+  <insert id="insertReportDataFromHis" parameterType="java.util.Map">
+    insert into CHB_INVEST_TRADE_SUB (
+    REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE,
+    ASSET_CODE, CCY, CNY_AMT,
+    AMT, NUM, CUR_ASSET_TYPE,
+    CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+    UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+    CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+    TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
+    FEE_NAME, FEE_TYPE, FEE_SECTYPE,
+    STATUS, ORG_CODE, DEPT_CODE,
+    CREATE_USER, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
+    SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
+    CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
+    )
+    select
+    HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE,
+    ASSET_CODE, CCY, CNY_AMT,
+    AMT, NUM, CUR_ASSET_TYPE,
+    CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+    UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+    CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+    TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
+    FEE_NAME, FEE_TYPE, FEE_SECTYPE,
+    STATUS, ORG_CODE, DEPT_CODE,
+    CREATE_USER, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
+    SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
+    CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
+    from (
+    select
+    HIS_NO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE,
+    ASSET_CODE, CCY, CNY_AMT,
+    AMT, NUM, CUR_ASSET_TYPE,
+    CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+    UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+    CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+    TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
+    FEE_NAME, FEE_TYPE, FEE_SECTYPE,
+    STATUS, ORG_CODE, DEPT_CODE,
+    CREATE_USER, now() CREATE_TIME, UPDATE_USER,
+    now() UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
+    SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
+    CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,
+    rank() over (partition by TRADE_CODE order by ifnull(update_time,create_time) desc) ranknum
+    from CHB_INVEST_TRADE_SUB_HIS  his
+    <where>
+      <if test="registList !=null and registList.size()>0">
+        <foreach collection="registList" item="regist" open="and TRADE_CODE IN (" separator=","  close=")">
+          #{regist.tradeCode,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+    </where>
+    )
+    where 1 = 1 limit 1
+  </insert>
+  <delete id="deleteLastSubmitHis" parameterType="java.util.Map">
+    delete  from CHB_INVEST_TRADE_SUB_HIS
+    where 1 =1
+    and HIS_NO in (
+    select a.HIS_NO from (
+    SELECT
+    @rownum:=@rownum+1 rownum,
+    a.HIS_NO,
+    IF( @ASSET_CODE = a.ASSET_CODE, @rank := @rank + 1, @rank := 1 ) AS myrank,
+    @ASSET_CODE := a.ASSET_CODE
+    FROM
+    ( SELECT * FROM CHB_INVEST_TRADE_SUB_HIS  ORDER BY ASSET_CODE,ifnull( UPDATE_TIME, CREATE_TIME ) DESC) a,
+    ( SELECT @rownum := 0, @FINPROD_ID := NULL, @rank := 0 )b
+    where 1=1
+    <if test="registList !=null and registList.size()>0">
+      <foreach collection="registList" item="regist" open=" AND (TRADE_CODE) IN (" separator="union all"  close=")">
+        select #{regist.tradeCode,jdbcType=VARCHAR}from dual
+      </foreach>
+    </if>
+    )a
+    where 1=1 limit 1
+    )
+  </delete>
+  <select id="selectDataListByRegList" resultMap="BaseResultMap"
+          parameterType="java.util.Map">
+    select
+    sub.REGIST_SEQNO, sub.TRADE_CODE, sub.PROD_ID, sub.REGIST_BANK_CODE,
+    sub.ASSET_CODE, sub.CCY, sub.CNY_AMT, sub.AMT, sub.NUM,
+    sub.CUR_ASSET_TYPE, sub.CUR_ASSETDET_TYPE, sub.DEALDATE,
+    sub.TRADE_COUNTER, sub.UNIT_PRICE_FULL, sub.UNIT_PRICE_NET,
+    sub.END_RATE, sub.CONTRACT_CODE, sub.REMARK,
+    sub.CHL_CPCT_ID, sub.TRADE_TYPE, sub.CHL_AGRT_NAME, sub.FEE_ID,
+    sub.FEE_NAME, sub.FEE_TYPE, sub.FEE_SECTYPE, sub.STATUS,
+    sub.ORG_CODE, sub.DEPT_CODE, sub.CREATE_USER, sub.CREATE_TIME,
+    sub.UPDATE_USER, sub.UPDATE_TIME, sub.CHB_SUBMIT_DEADLINE,
+    sub.SUBMIT_DEADLINE, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS,
+    sub.STATUS_DATE, sub.SUBMIT_TIME, sub.DELETE_RES,
+    sub.DATA_SOURCE, sub.CREATE_DEPT, sub.DEAL_REGIST_DATE,
+    sub.IS_ASSET_SUB,info.PROD_NAME, reginfo.REG_CODE PROD_REG_CODE
+    from CHB_INVEST_TRADE_SUB sub
+    left join CHB_PRD_BASEINFO info
+    on sub.prod_id = info.prod_id
+    left join chb_prdresist_code reginfo
+    on sub.prod_id = reginfo.prodid
+    <where>
+      <if test="registList!=null and registList.size()!=0">
+        <foreach collection="registList" item="items"
+                 open=" AND TRIM(sub.REGIST_SEQNO) IN (" close=")" separator=",">
+          #{items.registSeqno,jdbcType=CHAR}
+        </foreach>
+      </if>
+    </where>
+
+  </select>
 </mapper>

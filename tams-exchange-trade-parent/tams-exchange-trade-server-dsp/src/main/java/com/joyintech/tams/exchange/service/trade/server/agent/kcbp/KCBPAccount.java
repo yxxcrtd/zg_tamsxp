@@ -26,6 +26,7 @@ public class KCBPAccount {
      */
     private String custert;
     private Map<String, String> headMessages;
+
     private String tradePositionStr;
     private String protocolBack_SZ_PositionStr_trade;
     private String protocolBack_SH_PositionStr_trade;
@@ -37,7 +38,7 @@ public class KCBPAccount {
     private String RTGS_PositionStr;
 
     public String getEntrustPositionStr() {
-        return entrustPositionStr;
+        return entrustPositionStr == null ? "" : entrustPositionStr;
     }
 
     public void setEntrustPositionStr(String entrustPositionStr) {
@@ -45,7 +46,7 @@ public class KCBPAccount {
     }
 
     public String getTradePositionStr() {
-        return tradePositionStr;
+        return tradePositionStr == null ? "" : tradePositionStr;
     }
 
     public void setTradePositionStr(String tradePositionStr) {
@@ -117,7 +118,7 @@ public class KCBPAccount {
     }
 
     public String getProtocolBack_SZ_PositionStr_trade() {
-        return protocolBack_SZ_PositionStr_trade;
+        return protocolBack_SZ_PositionStr_trade == null ? "" : protocolBack_SZ_PositionStr_trade;
     }
 
     public void setProtocolBack_SZ_PositionStr_trade(String protocolBack_SZ_PositionStr_trade) {
@@ -125,7 +126,7 @@ public class KCBPAccount {
     }
 
     public String getProtocolBack_SH_PositionStr_trade() {
-        return protocolBack_SH_PositionStr_trade;
+        return protocolBack_SH_PositionStr_trade == null ? "" : protocolBack_SH_PositionStr_trade;
     }
 
     public void setProtocolBack_SH_PositionStr_trade(String protocolBack_SH_PositionStr_trade) {
@@ -133,7 +134,7 @@ public class KCBPAccount {
     }
 
     public String getFixedIncome_PositionStr_trade() {
-        return fixedIncome_PositionStr_trade;
+        return fixedIncome_PositionStr_trade == null ? "" : fixedIncome_PositionStr_trade;
     }
 
     public void setFixedIncome_PositionStr_trade(String fixedIncome_PositionStr_trade) {
@@ -141,7 +142,7 @@ public class KCBPAccount {
     }
 
     public String getProtocolBack_SZ_PositionStr_entrust() {
-        return protocolBack_SZ_PositionStr_entrust;
+        return protocolBack_SZ_PositionStr_entrust == null ? "" : protocolBack_SZ_PositionStr_entrust;
     }
 
     public void setProtocolBack_SZ_PositionStr_entrust(String protocolBack_SZ_PositionStr_entrust) {
@@ -149,7 +150,7 @@ public class KCBPAccount {
     }
 
     public String getProtocolBack_SH_PositionStr_entrust() {
-        return protocolBack_SH_PositionStr_entrust;
+        return protocolBack_SH_PositionStr_entrust == null ? "" : protocolBack_SH_PositionStr_entrust;
     }
 
     public void setProtocolBack_SH_PositionStr_entrust(String protocolBack_SH_PositionStr_entrust) {
@@ -157,7 +158,7 @@ public class KCBPAccount {
     }
 
     public String getFixedIncome_PositionStr_entrust() {
-        return fixedIncome_PositionStr_entrust;
+        return fixedIncome_PositionStr_entrust == null ? "" : fixedIncome_PositionStr_entrust;
     }
 
     public void setFixedIncome_PositionStr_entrust(String fixedIncome_PositionStr_entrust) {
@@ -165,7 +166,7 @@ public class KCBPAccount {
     }
 
     public String getRTGS_PositionStr() {
-        return RTGS_PositionStr;
+        return RTGS_PositionStr == null ? "" : RTGS_PositionStr;
     }
 
     public void setRTGS_PositionStr(String RTGS_PositionStr) {

@@ -221,12 +221,6 @@
         PLEDGE_AMT I_Q_C_P_PLEDGE_AMT, UNIT_CPRICE I_Q_C_P_UNIT_CPRICE, CPRICE_DATE I_Q_C_P_CPRICE_DATE, CREATE_USER I_Q_C_P_CREATE_USER,
         CREATE_DEPT I_Q_C_P_CREATE_DEPT, CREATE_TIME I_Q_C_P_CREATE_TIME, UPDATE_USER I_Q_C_P_UPDATE_USER, UPDATE_TIME I_Q_C_P_UPDATE_TIME
     </sql>
-    <resultMap id="QcDtoResultMap" type="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepDto" extends="IqcBaseResultMap">
-        <!-- 扩展字段 -->
-        <result column="I_Q_C_FIELD1" property="field1" jdbcType="VARCHAR" />
-        <result column="I_Q_C_FIELD2" property="field2" jdbcType="VARCHAR" />
-        <result column="I_Q_C_FIELD3" property="field3" jdbcType="VARCHAR" />
-    </resultMap>
     <resultMap id="QcpDtoResultMap" type="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepPledgeDto" extends="IqcpResultMap">
         <!-- 扩展字段 -->
         <result column="I_Q_C_P_FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
@@ -234,24 +228,9 @@
         <result column="I_Q_C_P_FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
         <result column="I_Q_C_P_REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
     </resultMap>
-    <!-- 对应质押式回购报价DTO -->
-    <resultMap type="com.joyintech.background.component.uplink.interbank.business.dto.RepoDialogueQuoteDto" id="RepoDialogueQuoteResultMap">
-        <association property="ibuQuoteCrepDto" resultMap="QcDtoResultMap"></association>
-        <collection property="ibuQuoteCrepPledgeDtoList" ofType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepPledgeDto"
-                    select="selectCrepPledgeListByQuoteId" column="{I_Q_C_QUOTE_ID=I_Q_C_QUOTE_ID,I_Q_C_VERSION=I_Q_C_VERSION}">
-        </collection>
-        <!--多组合改造 start-->
-        <collection property="ibuQuoteEtrReDtoList" ofType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto"
-                    select="selectCrepReListByQuoteId" column="{I_Q_C_QUOTE_ID=I_Q_C_QUOTE_ID,I_Q_C_VERSION=I_Q_C_VERSION}">
-        </collection>
-        <collection property="ibuQuoteEntCrepPledgeDtoList" ofType="com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEntCrepPledgeDto"
-                    select="selectCrepEntPledgeListByQuoteId" column="{I_Q_C_QUOTE_ID=I_Q_C_QUOTE_ID,I_Q_C_VERSION=I_Q_C_VERSION}">
-        </collection>
-        <!--多组合改造 end-->
-    </resultMap>
 
     <!-- 根据报价编号查询质押式回购报价信息  -->
-    <select id="selectWflQuoteCrepByKey" parameterType="java.lang.String" resultMap="QcDtoResultMap">
+    <select id="selectWflQuoteCrepByKey" parameterType="java.lang.String" resultMap="IqcBaseResultMap">
         select
         <include refid="Iqc_Column_List" />
         from WFL_IBU_QUOTE_CREP a
@@ -512,6 +491,377 @@
                 AND T1.VALUE_DATE = T2.VALUE_DATE
 		) mbvi/*以上获取债券小于等于平台日的最新估值行情*/
 		    ON T2.FINPROD_MARKET_ID = mbvi.SEC_ID
+    </select>
+    <!-- 查找已入库质押券中可质押券面大于0的数据 -->
+    <sql id="selectStockId">
+        SELECT
+        EEP.PORTFOLIO_ID,EEP.PLEDGE_STOCK_ID,TABLE01.FINPROD_ID,TABLE01.SEC_ACCT_ID
+        from (
+                 SELECT
+                     TEMP.PORTFOLIO_ID,
+                     /*组合代码*/
+                     TEMP.PORTFOLIO_NAME,
+                     TEMP.SEC_ACCT_ID,
+                     /*证券账户/通道代码*/
+                     TEMP.FINPROD_ID,
+                     /*分支序号*/
+                     SUM(TEMP.pledStrdPrinAmt) pledStrdPrinAmt, /*可质押券面总额*/
+                     SUM(TEMP.pledgeAmount) pledgeAmount, /*已质押质押券面总额*/
+                     SUM(TEMP.pledgePrin) pledgePrin /*质押券面总额*/
+                 FROM (
+                     SELECT
+                         espr.PORTFOLIO_ID, pp.PORTFOLIO_NAME,
+                         espr.SEC_ACCT_ID, espr.FINPROD_ID,
+                         CASE WHEN ppc.S_HOLDINGTYPE = #{S_002} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
+                         AS pledStrdPrinAmt, /*可质押券面总额*/
+                         CASE WHEN espr.HODING_TYPE=#{A_012} THEN espr.AMOUNT*nvl(ppc.CAL_FLAG,1) ELSE 0 END
+                         AS pledgeAmount, /*已质押质押券面总额*/
+                         CASE WHEN espr.HODING_TYPE=#{A_001} THEN espr.AMOUNT ELSE 0 END pledgePrin
+                     FROM
+                        PTL_SEC_POSITION_RULE espr
+                     INNER JOIN PTL_PORTFOLIO pp ON
+                        espr.PORTFOLIO_ID = pp.PORTFOLIO_ID
+                     left JOIN PTL_POSITION_CFG ppc ON
+                        espr.HODING_TYPE =ppc.HOLDINGTYPE AND ppc.S_HOLDINGTYPE =#{S_002}
+                     WHERE 1 = 1
+                         AND espr.CDATE = to_date(#{platDate},'yyyy-MM-dd')/*组合持仓.日期 = 平台日*/
+                         AND espr.DATE_TYPE =0 AND ( ppc.S_HOLDINGTYPE =#{S_002} or espr.HODING_TYPE=#{A_012} or espr.HODING_TYPE=#{A_001})
+                 ) TEMP
+                 GROUP BY
+                     TEMP.PORTFOLIO_ID, TEMP.PORTFOLIO_NAME,
+                     TEMP.SEC_ACCT_ID, TEMP.FINPROD_ID
+                 HAVING SUM(TEMP.pledStrdPrinAmt) > 0 /*只统计可质押券面总额>0*/
+           )TABLE01/*以上统计可用持仓*/
+		LEFT JOIN ETR_ENTRUST_PLEDGE EEP
+		    ON TABLE01.PORTFOLIO_ID = EEP.PORTFOLIO_ID
+		    AND TABLE01.SEC_ACCT_ID = EEP.SEC_ACCT_ID
+		    AND TABLE01.FINPROD_ID = EEP.FINPROD_ID
+		where EEP.PORTFOLIO_ID is not null
+    </sql>
+
+    <resultMap id="resultMap" type="com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto">
+        <id property="entrustStatus" column="entrustStatus"/>
+        <id property="finishAmt" column="finishAmt"/>
+        <id property="avaNum" column="avaNum"/>
+        <id property="finishDealAmt" column="finishDealAmt"/>
+        <id property="avaDealAmt" column="avaDealAmt"/>
+        <id property="transactioncom" column="transactioncom"/>
+        <id property="tradeFinishPercent" column="tradeFinishPercent"/>
+        <id property="entrustNum" column="entrustNum"/>
+        <id property="portfolioId" column="portfolioId"/>
+        <id property="portfolioName" column="portfolioName"/>
+        <id property="finprodIds" column="finprodIds"/>
+        <id property="finprodMarketNames" column="finprodMarketNames"/>
+        <id property="pledgeStockId" column="pledgeStockId"/>
+        <id property="pledgeStockName" column="pledgeStockName"/>
+        <id property="settleSpreed" column="settleSpreed"/>
+        <id property="ps" column="ps"/>
+        <id property="priceModel" column="priceModel"/>
+        <id property="repoTerm" column="repoTerm"/>
+        <id property="tradeYield" column="tradeYield"/>
+        <id property="invManagerId" column="invManagerId"/>
+        <id property="invManagerName" column="invManagerName"/>
+        <id property="counterId" column="counterId"/>
+        <id property="counterPartyId" column="counterPartyId"/>
+        <id property="counterName" column="counterName"/>
+        <id property="entrustDate" column="ENTRUST_DATE"/>
+        <id property="transmitTime" column="TRANSMIT_TIME"/>
+        <id property="entrustId" column="entrustId"/>
+        <id property="remark" column="remark"/>
+        <id property="vdate" column="vdate"/>
+        <id property="mdate" column="mdate"/>
+        <id property="quoteType" column="quoteType"/>
+        <id property="mySide" column="mySide"/>
+        <id property="mySideAbbr" column="mySideAbbr"/>
+        <id property="mySideTrader" column="mySideTrader"/>
+        <id property="mySideTraderName" column="mySideTraderName"/>
+        <id property="counterTrader" column="counterTrader"/>
+        <id property="counterTraderName" column="counterTraderName"/>
+        <id property="settleCcy" column="settleCcy"/>
+        <id property="ccy" column="ccy"/>
+        <id property="secAcctSource" column="secAcctSource"/>
+        <id property="partyId" column="partyId"/>
+        <id property="secManageAcctId" column="secManageAcctId"/>
+        <id property="secManageAcctIdZZ" column="secManageAcctIdZZ"/>
+        <id property="secManageAcctIdSQ" column="secManageAcctIdSQ"/>
+        <id property="portfolioSeries" column="portfolioSeries"/>
+        <id property="termType" column="termType"/>
+        <collection property="repoEntrustPledgeDtos" ofType="com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto"
+                    javaType="java.util.ArrayList" >
+            <result column="bondCode" property="bondCode" jdbcType="VARCHAR" />
+            <result column="bondAbbrName" property="bondAbbrName" jdbcType="VARCHAR" />
+            <result column="pledgePrin" property="pledgePrin" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+
+    <select id="listEntrust" resultMap="resultMap">
+        SELECT *
+        FROM (
+            SELECT ETR_ENTRUST.ENTRUST_STATUS                                                                 entrustStatus/*指令状态*/
+                , (NVL(T5.FINISH_AMT,0)+NVL(T7.ENT_FINISH_AMT,0))                                             finishAmt/*已完成额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT, 0)
+                    - NVL(T5.FINISH_AMT,0) - NVL(T7.ENT_FINISH_AMT,0)                                         avaNum/*剩余指令额度(元)*/
+                , ROUND(NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))                      finishDealAmt/*已成交额度(元)*/
+                , NVL(ETR_ENTRUST.ENTRUST_AMT, 0) -
+                        ROUND(NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))                avaDealAmt/*剩余成交额度(元)*/
+                , trunc(nvl(NVL(T5.FINISH_AMT, 0)+
+                                       NVL(T7.ENT_FINISH_AMT, 0),0)/(ETR_ENTRUST.ENTRUST_AMT),4)*100          transactioncom/*执行进度(%)*/
+                , trunc((NVL(C.totalShareAmt,nvl(C2.FPRICE_AMT, 0))+NVL(T6.FINISH_AMT,0))
+                                                                /(ETR_ENTRUST.ENTRUST_AMT),4)*100             tradeFinishPercent/* 成交进度(%)*/
+                , ETR_ENTRUST.ENTRUST_AMT                                                                     entrustNum/*指令额度(元)*/
+                , ETR_ENTRUST.PORTFOLIO_ID                                                                    portfolioId/*组合代码*/
+                , PTL_PORTFOLIO.PORTFOLIO_NAME                                                                portfolioName/*组合名称*/
+            <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
+                ,PLEDGE.finprodIds /*质押债券*/
+                ,PLEDGE.finprodMarketNames /*质押债券*/
+                ,fp.FINPROD_MARKET_ID                                                                          bondCode
+                ,fp.FINPROD_ABBR                                                                               bondAbbrName
+                ,PLEDGES.PLEDGE_NUMBER * 100                                                                   pledgePrin
+            </if>
+            <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
+                ,ETR_ENTRUST_ADD.PLEDGE_STOCK_ID                                                              pledgeStockId/*质押券库*/
+                ,ETR_SEC_STOCK.PLEDGE_STOCK_NAME                                                              pledgeStockName/*质押券库*/
+            </if>
+                , ETR_ENTRUST_ADD.SETTLE_SPREED                                                               settleSpreed/*清算速度*/
+                , ETR_ENTRUST.PS                                                                              ps/*交易方向*/
+                , ETR_ENTRUST.PRICE_MODEL                                                                     priceModel/* 价格模式code*/
+                , ETR_ENTRUST_ADD.TERM_DAYS                                                                   repoTerm/*回购期限*/
+                , ETR_ENTRUST.PRICE*100                                                                       tradeYield/*回购利率(%)*/
+                , ETR_ENTRUST.INV_MANAGER_ID                                                                  invManagerId/*投资经理ID*/
+                , SU.real_name                                                                                invManagerName/*投资经理名称*/
+                , MCP.COUNTER_ID                                                                              counterId/* 交易对手*/
+                , MCP.COUNTER_NAME                                                                            counterName/* 交易对手名称*/
+                , MCP.PARTY_ID                                                                                counterPartyId
+                , ETR_ENTRUST.ENTRUST_DATE                                                                    ENTRUST_DATE/* 指令日期*/
+                , to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME, 'hh24:mi:ss')                                        TRANSMIT_TIME/* 指令下达时间*/
+                , ETR_ENTRUST.ENTRUST_ID                                                                      entrustId/*指令代码*/
+                , ETR_ENTRUST.REMARK                                                                          remark/* 备注*/
+
+                , ETR_ENTRUST.VDATE                                                                           vdate/*委托开始日*/
+                , ETR_ENTRUST.MDATE                                                                           mdate/*委托结束日*/
+                , ETR_ENTRUST_ADD.QUOTE_TYPE                                                                  quoteType/*报价方式*/
+                , MCCI.PARTY_ID                                                                               mySide/* 本方 */
+                , MCCI.PARTY_ABBR                                                                             mySideAbbr/* 本方名称 */
+                , (
+                    SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID
+                    FROM MST_CFETS_CUSTOMER_TRADER
+                    INNER JOIN SYS_USER_ADD
+                    ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
+                    INNER JOIN SYS_USER
+                    ON sys_user.user_name = #{loginUserId} AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
+                    WHERE MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MCCI.PARTY_ID
+                    OR MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = (
+                    SELECT MST_CFETS_CUSTOMER_RELA.MPARTY_ID
+                    FROM MST_CFETS_CUSTOMER_RELA
+                    WHERE MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MCCI.PARTY_ID))               mySideTrader /* 本方交易员 */
+                , (
+                    SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_NAME
+                    FROM MST_CFETS_CUSTOMER_TRADER
+                    INNER JOIN SYS_USER_ADD
+                    ON SYS_USER_ADD.ibu_trader = MST_CFETS_CUSTOMER_TRADER.TRADER_ID
+                    INNER JOIN SYS_USER
+                    ON sys_user.user_name = #{loginUserId} AND sys_user.USER_ID = SYS_USER_ADD.USER_ID
+                    WHERE MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = MCCI.PARTY_ID
+                    OR MST_CFETS_CUSTOMER_TRADER.MPARTY_ID = (
+                    SELECT MST_CFETS_CUSTOMER_RELA.MPARTY_ID
+                    FROM MST_CFETS_CUSTOMER_RELA
+                    WHERE MST_CFETS_CUSTOMER_RELA.SPARTY_ID = MCCI.PARTY_ID))                mySideTraderName/* 本方交易员名称 */
+                , ETR_ENTRUST.COUNTER_TRADER                                                                    counterTrader/* 对手方交易员*/
+                , MST_CFETS_CT.TRADER_NAME                                                                      counterTraderName/* 对手方交易员名称*/
+                , ETR_ENTRUST.CCY                                                                               settleCcy/* 币种*/
+                , ETR_ENTRUST.CCY                                                                               ccy/* 币种*/
+                , IPAR.CFETS_ACCT_TYPE                                                                          secAcctSource/* 银行间账户类型，自营/理财*/
+                , IPAR.PARTY_ID                                                                                 partyId/* 交易成员ID，21位编号*/
+                , ETR_ENTRUST_ADD.SEC_ACCT_ID                                                                   secManageAcctId/* 证券账户代码*/
+                , SECACCT1.ACCT_NO                                                                              secManageAcctIdZZ/* 中债登 证券账户代码*/
+                , SECACCT2.ACCT_NO                                                                              secManageAcctIdSQ/* 上清所 证券账户代码*/
+                , ETR_ENTRUST_ADD.TERM_TYPE                                                                     termType /*期限品种*/
+                , ETR_ENTRUST.TRADE_MARKET/*交易场所，银行间、上交所、深交所、柜面等*/
+            FROM ETR_ENTRUST
+            INNER JOIN PTL_PORTFOLIO
+                ON ETR_ENTRUST.PORTFOLIO_ID = PTL_PORTFOLIO.PORTFOLIO_ID
+            LEFT JOIN ETR_DISTRIBUTE
+                ON ETR_ENTRUST.ENTRUST_ID = ETR_DISTRIBUTE.ENTRUST_ID
+            LEFT JOIN ETR_ENTRUST_ADD
+                ON ETR_ENTRUST.ENTRUST_ID = ETR_ENTRUST_ADD.ENTRUST_ID
+            LEFT JOIN (
+                        select PORTFOLIO_ID,ACCT_NO
+                        from PTL_SEC_ACCT psa
+                        inner join STL_SEC_ACCT_INFO ssai
+                            on psa.ACCT_NO = ssai.SEC_ACCT_ID
+                            and ssai.REGIST_ORG in ('01')
+                            and NVL(ssai.sec_acct_type, 'SEC') = 'SEC'
+                            and TRADE_PLACE = '01'
+                     ) SECACCT1 ON ETR_ENTRUST.PORTFOLIO_ID = SECACCT1.PORTFOLIO_ID
+            LEFT JOIN (
+                        select PORTFOLIO_ID,ACCT_NO
+                        from PTL_SEC_ACCT psa
+                        inner join STL_SEC_ACCT_INFO ssai
+                            on psa.ACCT_NO = ssai.SEC_ACCT_ID
+                            and ssai.REGIST_ORG in ('02')
+                            and NVL(ssai.sec_acct_type, 'SEC') = 'SEC'
+                            and TRADE_PLACE = '01'
+                     ) SECACCT2 ON ETR_ENTRUST.PORTFOLIO_ID = SECACCT2.PORTFOLIO_ID
+            LEFT JOIN
+            (
+                SELECT
+                    ENTRUST_ID,
+                    SUM(FINISH_AMT) AS FINISH_AMT
+                FROM
+                    ETR_QUOTE_FINISH_STATUS
+                GROUP BY
+                    ENTRUST_ID) T5
+            ON ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
+            LEFT JOIN(
+                SELECT
+                    ENTRUST_ID,
+                    SUM(FINISH_AMT) AS FINISH_AMT
+                FROM
+                ETR_FINISH_STATUS
+                <!--登记与报价分开统计-->
+                INNER JOIN (SELECT
+                            DISTINCT T3.TRADE_ID
+                        FROM
+                            TRDQUTO_MATCH_INFO T1
+                        INNER JOIN REG_FIN_PRODUCT_DEAL_TOTAL T2 ON T1.PRE_TRADE_ID = T2.TOTLE_TRADE_ID
+                        INNER JOIN TRD_PRODUCT_DEAL T3 ON T3.TOTLE_TRADE_ID = T1.TRD_ID
+                        WHERE
+                            TRD_CONF_STATUS = '1')	REG
+                        ON REG.TRADE_ID = ETR_FINISH_STATUS.TRADE_ID
+                GROUP BY ENTRUST_ID) T6
+            ON ETR_ENTRUST.ENTRUST_ID = T6.ENTRUST_ID
+            LEFT JOIN(
+                    SELECT
+                        ENTRUST_ID,
+                        SUM(ENT_FINISH_AMT) AS ENT_FINISH_AMT
+                    FROM
+                        ETR_FINISH_STATUS
+                    GROUP BY
+                    ENTRUST_ID) T7 ON
+            ETR_ENTRUST.ENTRUST_ID = T7.ENTRUST_ID
+            LEFT JOIN IBU_PORTFOLIO_ACCT_RELA IPAR
+                ON ETR_ENTRUST.PORTFOLIO_ID = IPAR.PORTFOLIO_ID AND IPAR.CFETS_ACCT_TYPE = '01'
+            LEFT JOIN MST_CFETS_CUSTOMER_INFO MCCI
+                ON IPAR.PARTY_ID = MCCI.PARTY_ID
+            LEFT JOIN SYS_USER SU
+                ON ETR_ENTRUST.INV_MANAGER_ID = SU.USER_NAME
+            LEFT JOIN MST_CFETS_CUSTOMER_TRADER MST_CFETS_CT
+                ON MST_CFETS_CT.TRADER_ID = ETR_ENTRUST.COUNTER_TRADER
+            LEFT JOIN MST_COUNTER_PARTY MCP
+                ON MCP.COUNTER_ID = ETR_ENTRUST.COUNTER_ID
+        <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
+            LEFT JOIN
+            (
+                select ENTRUST_ID,
+                listagg(fp.FINPROD_ID, ',')within group(order by ENTRUST_ID) AS finprodIds,
+                listagg(fp.FINPROD_ABBR, ',')within group(order by ENTRUST_ID) AS finprodMarketNames
+                from ETR_PLEDGE ep
+                left join FIN_PRODUCT fp on ep.FINPROD_ID = fp.FINPROD_ID
+                group by ENTRUST_ID
+            ) PLEDGE /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
+                ON PLEDGE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+            LEFT JOIN ETR_PLEDGE PLEDGES on PLEDGES.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+            left join FIN_PRODUCT fp on PLEDGES.FINPROD_ID = fp.FINPROD_ID/*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
+        </if>
+        <if test="repo_pledge_model != null and repo_pledge_model.equals('01')">
+            LEFT JOIN ( <include refid="selectStockId" /> ) StockFinId on StockFinId.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID
+        </if>
+        <if test="repo_pledge_model != null and repo_pledge_model.equals('03')">
+            LEFT JOIN ( <include refid="selectStockId" /> ) StockFinId
+                on StockFinId.PORTFOLIO_ID = ETR_ENTRUST.PORTFOLIO_ID AND ETR_ENTRUST_ADD.PLEDGE_STOCK_ID = StockFinId.PLEDGE_STOCK_ID
+            LEFT JOIN ETR_SEC_STOCK ON ETR_SEC_STOCK.PLEDGE_STOCK_ID = ETR_ENTRUST_ADD.PLEDGE_STOCK_ID
+        </if>
+            LEFT JOIN (SELECT iqer.ENTRUST_ID, SUM(nvl(iqer.FPRICE_AMT, 0)) totalShareAmt
+                          FROM IBU_QUOTE_ETR_RE iqer /*质押式回购银行间报价*/
+                          where QUOTE_ID in (select QUOTE_ID from IBU_QUOTE_CREP where TRADE_STATUS = '07')
+                          GROUP BY iqer.ENTRUST_ID) C /*质押式回购银行间报价 按指令代码汇总 交易份额，债券数量等*/
+                ON C.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+            LEFT JOIN (SELECT iqer.ENTRUST_ID, iqer.FPRICE_AMT
+                      FROM IBU_QUOTE_ETR_RE iqer /*质押式回购银行间报价*/
+                      where QUOTE_ID in (select QUOTE_ID from IBU_QUOTE_CREP where TRADE_STATUS = '07')) C2/*质押式回购银行间报价*/
+                ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+            WHERE ETR_ENTRUST.FINPROD_TYPE2 in (#{finprodType2_F02},#{finprodType2_F03})
+                AND ETR_ENTRUST.TRADE_MARKET IN (#{tradeMarket01} , #{tradeMarket02})
+                AND ETR_ENTRUST.PS IN (#{ps_03} , #{ps_04} )
+                AND ETR_ENTRUST.ENTRUST_STATUS IN (#{entrustStatusUnAccept}, #{entrustStatusAccept}, #{entrustStatusComple}, #{entrustStatusReturn})
+                <if test="quoteId != null and quoteId !='' ">
+                    <if test="repo_pledge_model != null and ( repo_pledge_model.equals('01') or repo_pledge_model.equals('03') ) ">
+                        /* 查询条件 报价编号（内部代码）*/
+                        AND StockFinId.FINPROD_ID in (select iqcp.PLEDGE_FINPROD_ID
+                                                    from IBU_QUOTE_CREP_PLEDGE iqcp
+                                                            left join IBU_QUOTE_CREP iqc on iqcp.QUOTE_ID = iqc.QUOTE_ID and iqcp.VERSION = iqc.VERSION
+                                                    where iqc.TRADE_STATUS = '09' and iqc.QUOTE_ID = #{quoteId})
+                    </if>
+                    <if test="repo_pledge_model != null and repo_pledge_model.equals('02')">
+                        /* 查询条件 报价编号（内部代码）*/
+                        AND fp.FINPROD_ID in (select iqcp.PLEDGE_FINPROD_ID
+                                                    from IBU_QUOTE_CREP_PLEDGE iqcp
+                                                            left join IBU_QUOTE_CREP iqc on iqcp.QUOTE_ID = iqc.QUOTE_ID and iqcp.VERSION = iqc.VERSION
+                                                    where iqc.TRADE_STATUS = '09' and iqc.QUOTE_ID = #{quoteId})
+                    </if>
+                </if>
+                <if test="entrustStatus != null and entrustStatus.size() > 0">
+                    /* 查询条件 指令状态*/
+                    AND ETR_ENTRUST.ENTRUST_STATUS IN
+                    <foreach collection="entrustStatus" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="platDate != null">
+                    /* 已接收未完成的当日质押式回购指令供选择*/
+                    AND ETR_ENTRUST.ENTRUST_DATE = to_date(#{platDate}, 'yyyy-MM-dd')
+                </if>
+                <if test="priceModelList != null and priceModelList.size() > 0 ">
+                    /* 查询条件 价格模式*/
+                    AND ETR_ENTRUST.PRICE_MODEL IN
+                    <foreach collection="priceModelList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="invManagerId != null and invManagerId.size() > 0">
+                    /* 查询条件 投资经理*/
+                    AND ETR_ENTRUST.INV_MANAGER_ID IN
+                    <foreach collection="invManagerId" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="mySide!= null and mySide != ''">
+                    AND IPAR.PARTY_ID = #{mySide}
+                </if>
+                <if test="loginUserId != null and loginUserId != ''">
+                    /* 查询条件 交易员*/
+                    AND ETR_DISTRIBUTE.TRADER = #{loginUserId}
+                </if>
+                <if test="repo_pledge_model != null and repo_pledge_model.equals('03') and pledgeStockIdList != null and pledgeStockIdList.size() > 0 ">
+                    /* 查询条件 质押券库*/
+                    AND ETR_ENTRUST.PLEDGE_STOCK_ID IN
+                    <foreach collection="pledgeStockIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="entrustIdList != null and entrustIdList.size() > 0">
+                    and ETR_ENTRUST.ENTRUST_ID in
+                    <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="notentrustIdList != null and notentrustIdList.size() > 0">
+                    and ETR_ENTRUST.ENTRUST_ID not in
+                    <foreach collection="notentrustIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                    and ( ETR_ENTRUST.COUNTER_ID in
+                    (
+                        select
+                            COUNTER_ID
+                        from ETR_ENTRUST
+                        where ENTRUST_ID in
+                        <foreach collection="notentrustIdList" item="item" open="(" close=")" separator=",">
+                            #{item}
+                        </foreach>
+                    ) or ETR_ENTRUST.COUNTER_ID is null )
+                </if>
+            order by decode(ETR_ENTRUST.ENTRUST_STATUS,'09',1,'02',2,'03',3,'04',4,'06',5,'05',6,'07',7),ETR_ENTRUST_ADD.TRANSMIT_TIME,ETR_ENTRUST.ps)
     </select>
 
 </mapper>

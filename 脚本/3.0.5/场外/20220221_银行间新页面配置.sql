@@ -1,0 +1,1 @@
+update sys_page set page_url='/'||page_url where page_Url like 'home.html#/%';

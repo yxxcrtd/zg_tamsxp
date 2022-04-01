@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.employee.dao.SvrChbEmployeeDBInterfMapper_mysql" >
+
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfo">
+		SELECT
+		    EMPLOYEE_TYPE,
+			EMPLOYEE_NAME,
+			EMPLOYEE_SEX,
+			ISSUE_PARTY_ID,
+			IDENTIFY_NUMBER,
+			BELONGS_BANK,
+			BELONGS_PLACE,
+			COMPANY_NAME,
+			BELONGS_DEPT,
+			POSITION,
+			EDUCATION,
+			ACADEMIC_DEGREE,
+			FIRSTTIME2WORK,
+			FIRSTTIME2FINWORK,
+			PROFESSIONAL_TITLE,
+			FIN_PROFESSIONAL_CRTF,
+			FIN_TRAINING_NO,
+			AWARDS,
+			OFFICE_TEL,
+			MOBILE_TEL,
+			MAIL,
+			REG_BUSI_TYPE,
+			REG_EMPLOYEE_TYPE,
+			STATUS,
+			DEPT_CODE,
+			ORG_CODE,
+			UPDATE_USER,
+			UPDATE_TIME,
+			CREATE_USER,
+			CREATE_TIME,
+			REMARK
+	    FROM CHB_EMPLOYEE_INFO
+		WHERE DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+
+    <select id="selectRegEmployeeData" resultType="com.joyintech.tams.common.base.entity.ChbEmployeeInfoSub">
+		SELECT
+		    EMPLOYEE_TYPE,
+			EMPLOYEE_NAME,
+			EMPLOYEE_SEX,
+			ISSUE_PARTY_ID,
+			IDENTIFY_NUMBER,
+			BELONGS_BANK,
+			BELONGS_PLACE,
+			COMPANY_NAME,
+			BELONGS_DEPT,
+			POSITION,
+			EDUCATION,
+			ACADEMIC_DEGREE,
+			FIRSTTIME2WORK,
+			FIRSTTIME2FINWORK,
+			PROFESSIONAL_TITLE,
+			FIN_PROFESSIONAL_CRTF,
+			FIN_TRAINING_NO,
+			AWARDS,
+			OFFICE_TEL,
+			MOBILE_TEL,
+			MAIL,
+			REG_BUSI_TYPE,
+			REG_EMPLOYEE_TYPE,
+			STATUS,
+			DEPT_CODE,
+			ORG_CODE,
+			UPDATE_USER,
+			UPDATE_TIME,
+			CREATE_USER,
+			CREATE_TIME,
+			SUMIT_SEQ,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			SUBMIT_FEEDBACK_STATUS,
+			SEND_STATUS,
+			STATUS_DATE,
+			SUBMIT_TIME,
+			REMARK
+		FROM CHB_EMPLOYEE_INFO_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+
+    <delete id="deleteBatchData" parameterType="map">
+        DELETE FROM CHB_EMPLOYEE_INFO_SUB
+        <where>
+            <foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+                EMPLOYEE_TYPE = #{item.employeeType,jdbcType=VARCHAR}
+                AND IDENTIFY_NUMBER = #{item.identifyNumber,jdbcType=VARCHAR}
+                AND SEND_STATUS = '01'
+            </foreach>
+        </where>
+    </delete>
+
+    <insert id="insertChbEmployeeSubData">
+        INSERT INTO CHB_EMPLOYEE_INFO_SUB
+        (
+            EMPLOYEE_TYPE,
+            EMPLOYEE_NAME,
+            EMPLOYEE_SEX,
+            ISSUE_PARTY_ID,
+            IDENTIFY_NUMBER,
+            BELONGS_BANK,
+            BELONGS_PLACE,
+            COMPANY_NAME,
+            BELONGS_DEPT,
+            POSITION,
+            EDUCATION,
+            ACADEMIC_DEGREE,
+            FIRSTTIME2WORK,
+            FIRSTTIME2FINWORK,
+            PROFESSIONAL_TITLE,
+            FIN_PROFESSIONAL_CRTF,
+            FIN_TRAINING_NO,
+            AWARDS,
+            OFFICE_TEL,
+            MOBILE_TEL,
+            MAIL,
+            REG_BUSI_TYPE,
+            REG_EMPLOYEE_TYPE,
+            STATUS,
+            DEPT_CODE,
+            ORG_CODE,
+            UPDATE_USER,
+            UPDATE_TIME,
+            CREATE_USER,
+            CREATE_TIME,
+            SUMIT_SEQ,
+            CHB_SUBMIT_DEADLINE,
+            SUBMIT_DEADLINE,
+            SUBMIT_FEEDBACK_STATUS,
+            SEND_STATUS,
+            STATUS_DATE,
+            SUBMIT_TIME,
+            REMARK
+        )
+        SELECT TEMP.* FROM
+        (
+            <foreach collection="subList" item="item"  separator="union all">
+                SELECT
+                #{item.employeeType,jdbcType=VARCHAR} EMPLOYEE_TYPE,
+                #{item.employeeName,jdbcType=VARCHAR} EMPLOYEE_NAME,
+                #{item.employeeSex,jdbcType=VARCHAR} EMPLOYEE_SEX,
+                #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+                #{item.identifyNumber,jdbcType=VARCHAR} IDENTIFY_NUMBER,
+                #{item.belongsBank,jdbcType=VARCHAR} BELONGS_BANK,
+                #{item.belongsPlace,jdbcType=VARCHAR} BELONGS_PLACE,
+                #{item.companyName,jdbcType=VARCHAR} COMPANY_NAME,
+                #{item.belongsDept,jdbcType=VARCHAR} BELONGS_DEPT,
+                #{item.position,jdbcType=VARCHAR} POSITION,
+                #{item.education,jdbcType=VARCHAR} EDUCATION,
+                #{item.academicDegree,jdbcType=VARCHAR} ACADEMIC_DEGREE,
+                #{item.firsttime2work,jdbcType=VARCHAR} FIRSTTIME2WORK,
+                #{item.firsttime2finwork,jdbcType=VARCHAR} FIRSTTIME2FINWORK,
+                #{item.professionalTitle,jdbcType=VARCHAR} PROFESSIONAL_TITLE,
+                #{item.finProfessionalCrtf,jdbcType=VARCHAR} FIN_PROFESSIONAL_CRTF,
+                #{item.finTrainingNo,jdbcType=VARCHAR} FIN_TRAINING_NO,
+                #{item.awards,jdbcType=VARCHAR} AWARDS,
+                #{item.officeTel,jdbcType=VARCHAR} OFFICE_TEL,
+                #{item.mobileTel,jdbcType=VARCHAR} MOBILE_TEL,
+                #{item.mail,jdbcType=VARCHAR} MAIL,
+                #{item.regBusiType,jdbcType=VARCHAR} REG_BUSI_TYPE,
+                #{item.regEmployeeType,jdbcType=VARCHAR} REG_EMPLOYEE_TYPE,
+                #{item.status,jdbcType=VARCHAR} STATUS,
+                #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+                #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+                #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                #{item.updateTime,jdbcType=VARCHAR} UPDATE_TIME,
+                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+                #{item.createTime,jdbcType=VARCHAR} CREATE_TIME,
+                #{item.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
+                #{item.chbSubmitDeadline,jdbcType=VARCHAR} CHB_SUBMIT_DEADLINE,
+                #{item.submitDeadline,jdbcType=VARCHAR} SUBMIT_DEADLINE,
+                #{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+                #{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
+                #{item.statusDate,jdbcType=VARCHAR} STATUS_DATE,
+                #{item.submitTime,jdbcType=VARCHAR} SUBMIT_TIME,
+                #{item.remark,jdbcType=VARCHAR} REMARK
+                FROM DUAL
+            </foreach>
+        )TEMP
+    </insert>
+
+</mapper>

@@ -55,6 +55,26 @@ public class ChbPrdIssueSubDto {
      */
     private String isConstracte;
 
+
+    /***1217升级**/
+
+
+    /**
+     * 分级比例
+     */
+    private  BigDecimal   gradProportion;
+
+    public BigDecimal getGradProportion() {
+        return gradProportion;
+    }
+
+    public void setGradProportion(BigDecimal gradProportion) {
+        this.gradProportion = gradProportion;
+    }
+
+    /***1217升级**/
+
+
     /**
      * 层级类别      11 优先层级一/12 优先层级二/13 优先层级三/14 优先层级四/15 优先层级五/21 进取层级一/22 进取层级二/23 进取层级三/24 进取层级四/25 进取层级五
      */

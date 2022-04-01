@@ -14,13 +14,19 @@ import com.joyintech.background.component.uplink.interbank.business.dto.BondDial
 import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDto;
 import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.bond.service.CfetsBondDealQuotedPriceService;
 import com.joyintech.service.bankuplink.ibu.dto.BondQuoteInfoDto;
@@ -28,6 +34,7 @@ import com.joyintech.system.base.dao.SysWflBusinessListMapper;
 import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
 import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
@@ -35,6 +42,7 @@ import com.joyintech.tams.business.common.util.PositionUtil;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
+import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -48,6 +56,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.SecInfoModelDto;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -64,7 +73,12 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 现券买卖-对话报价
@@ -117,6 +131,27 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
 
     @Autowired
     private SysWflBusinessListMapper sysWflBusinessListMapper;
+    @Autowired
+    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
+
+    @Autowired
+    private CfetsBondDealQuotedPrice002Service cfetsBondDealQuotedPrice002Service;
+    /**
+     * 设置流程业务说明
+     */
+    @Override
+    public String generateTitle(CfetsBondDealDialogueQuoteDto entity, OperationType type) {
+        DecimalFormat df = new DecimalFormat("###,###.00");
+        String avaNumStr="";
+        if(StringUtil.isNotEmpty(entity.getAvaNum())){
+            avaNumStr=df.format(entity.getAvaNum());
+        }
+        return  "报价日期(" + DateUtil.format(entity.getSettleDate())+")-"+
+                "资产简称(" + (entity.getFinprodAbbr()==null?"":entity.getFinprodAbbr()) + ")-"+
+                "对手方("+(entity.getCounterName()==null?"":entity.getCounterName())+")-"+
+                "报价操作("+  entity.getQuoteOperatorType() +")-" +
+                "券面总额("+ avaNumStr +"万元)";
+    }
 
     public AjaxResult checkNotEmpty(CfetsBondDealQuoteCommonDto entity) {
         AjaxResult ajaxResult = new AjaxResult();
@@ -136,6 +171,13 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             }
             if(StringUtil.isEmpty(entity.getMySideTrader())){
                 errorList.add(new ValidMessage("请输入本方交易员"));
+            }
+            if (StringUtil.isNotEmpty(entity.getMySide())
+                    &&StringUtil.isNotEmpty(entity.getMySideTrader())) {
+                String userId = joyinbusinessCommonService.findUserByMySideTrader(entity.getMySideTrader(), entity.getMySide());
+                if (!StringUtil.isNotEmpty(userId)) {
+                    errorList.add(new ValidMessage("选择的本方交易员未与系统用户关联，请先去【用户管理】关联"));
+                }
             }
             if(StringUtil.isEmpty(entity.getCounterId())){
                 errorList.add(new ValidMessage("请输入对手方"));
@@ -168,6 +210,12 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             if(null==entity.getSettleType()){
                 errorList.add(new ValidMessage("请输入清算类型"));
             }
+            if (StringUtil.isNotEmpty(entity.getCounterId())) {
+                String trader = cfetsRepoQuotedPrice004Service.findTraderByPartyId(entity.getCounterId());
+                if (!StringUtil.isNotEmpty(trader)) {
+                    errorList.add(new ValidMessage("选择的对手方未与系统中交易对手关联，请先去关联"));
+                }
+            }
         }
         /*if(StringUtil.equals(sellPara,"02")){
             if(null==entity.getOurEntNum()){
@@ -180,12 +228,12 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
                 errorList.add(new ValidMessage("请输入卖空购回券面总额"));
             }
         }*/
-        if(null==entity.getDealFeeAmt()){
+       /* if(null==entity.getDealFeeAmt()){
             errorList.add(new ValidMessage("请输入交易手续费"));
         }
         if(null==entity.getSettFeeAmt()){
             errorList.add(new ValidMessage("请输入结算服务费"));
-        }
+        }*/
         if(CollectionUtils.isEmpty(entity.getPtlAllocatios())){
             errorList.add(new ValidMessage("组合分配不可为空"));
         }else{
@@ -1030,7 +1078,15 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      */
     @Override
 	public void doComplete(CfetsBondDealDialogueQuoteDto entity, OperationType type) {
-        if(cfetsQuotedCommonServicevue.checkQuoteStatusChange(entity.getQuoteId(),entity.getTradeStatus())){
+        String statusValid = null;
+        if(StringUtil.isNotEmpty(isInWflProcess(entity.getQuoteId(),entity.getPageId(),null))){
+            statusValid = DictCodeListExt1.有效状态_流程中.getValue();
+        }else{
+            statusValid=DictCodeListExt1.有效状态_有效.getValue();
+        }
+        CfetsBondDealDialogueQuoteDto cetsBondDealDialogueQuoteDto = cfetsBondDealQuotedPrice002Service.getBondDialogueQuote(
+                entity.getQuoteId(), statusValid);
+        if(null!=cetsBondDealDialogueQuoteDto && !StringUtil.isEmpty(entity.getTradeStatus()) && !StringUtil.equals(cetsBondDealDialogueQuoteDto.getTradeStatus(),entity.getTradeStatus())){
             throw new BusinessException("MSG:报价状态已变更,无法审批!");
         }
         //this.calcListFpriceAmt(entity);
@@ -1111,9 +1167,23 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     
     @Override
 	public void doBack(CfetsBondDealDialogueQuoteDto entity){
-    	//doDeletePtlPositionHold(entity.getWorkflowId());
         String systemAct= handSystemAct(entity);
-        sendPosition(entity,DictCodeListExt3.流程节点_流程退回.getValue(),systemAct,systemAct);
+        sendPosition(entity,DictCodeListExt3.流程节点_流程退回.getValue(),systemAct,systemAct,null);
+
+    	//doDeletePtlPositionHold(entity.getWorkflowId());
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+
+            //回退释放头寸
+            doDeletePtlPositionHold(entity.getWorkflowId());
+            //插入旧头寸
+            if (StringUtil.equals(entity.getQuotaPageModel(), "edit")) {
+                entity.setIsExistNew(DictCodeList.是否_是.getValue());
+                entity.getCfetsBondDealDialogueQuoteDtoList().clear();
+                doInsetOrUpdateForPtlPositionHold(entity);
+            }
+
+        }
+
     }
     
     // add by etliu 20210309 银行间上下行多组合 start
@@ -1166,18 +1236,20 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         //处理本方券、融入券
         this.handOurAndLendinShareAmt(entity);
         insertWflBondDialogueQuote(entity);
-        String systemAct = handSystemAct(entity);
-        try {
-            sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct);
-            //doInsetOrUpdateForPtlPositionHold(entity);
-        }catch(PositionException e){
-            e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
-            throw new BusinessException("MSG:"+message.getMessage());
+        if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+            //插入旧头寸
+            entity.setIsExistNew(DictCodeList.是否_是.getValue());
+            doInsetOrUpdateForPtlPositionHold(entity);
         }
+        String systemAct = handSystemAct(entity);
+        sendPosition(entity, DictCodeListExt3.流程节点_流程提交.getValue(), systemAct, systemAct, null);
     }
     
 	@Override
     public void doUpdate(CfetsBondDealDialogueQuoteDto entity){
+        if ("save".equals(entity.getOperatorType())) {
+            return;
+        }
         Map<String,Object> map = new HashMap<>();
         if (!StringUtil.equals("revoke", entity.getOperatorType()) && !StringUtil.equals("delete", entity.getOperatorType())) {
             // add by etliu 20210309 银行间上下行多组合 start
@@ -1186,17 +1258,33 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
             this.handOurAndLendinShareAmt(entity);
             // 重新insert
         	insertWflBondDialogueQuote(entity);
+            if (StringUtil.equals(DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                entity.setIsExistNew(DictCodeList.是否_是.getValue());
+                doInsetOrUpdateForPtlPositionHold(entity);
+            }
+            String confirmOk = RequestUtil.getParam("confirmOk");
         	try{
                 SysWflBusinessList sysWflBusinessList = sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
                 String systemAct= handSystemAct(entity);
                 if(StringUtil.equals(sysWflBusinessList.getProcessState(), ProcessState.BACK.toString())){
-                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_修改.getValue(),systemAct);
+                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),DictCodeListExt3.系统动作_修改.getValue(),systemAct,confirmOk);
                 }else{
-                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),systemAct,systemAct);
+                    sendPosition(entity,DictCodeListExt3.流程节点_流程提交.getValue(),systemAct,systemAct,confirmOk);
                 }
             }catch(PositionException e){
                 e.printStackTrace(); Message message = PositionUtil.ajaxErrorReturn(e);
-                throw new BusinessException("MSG:"+message.getMessage());
+                BaseMap bm = (BaseMap) message.getData();
+                String code = (String) bm.get("code");
+                String messageStr = JsonUtils.json2Object((String) bm.get("message").toString(), String.class);
+                if (StringUtil.isEmpty(confirmOk)
+                        && StringUtil.equals(PositionHttpRequest.CODE_BUSI_RK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.确认消息);
+                }
+                if (StringUtil.equals(PositionHttpRequest.CODE_BUSI_YK, code)) {
+                    WorkFlowUtil.showMessage(messageStr, MessageType.错误消息);
+                }
+                throw new PositionException(messageStr);
             }
             //doInsetOrUpdateForPtlPositionHold(entity);
             ProcessMark newEntity;
@@ -1554,30 +1642,6 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      * @return
      */
 	public Boolean insertWflBondDialogueQuote(CfetsBondDealDialogueQuoteDto entity) {
-		// 做市方回应
-		if (StringUtil.equals(entity.getQuotaPageModel(), "marketResponse")) {
-
-		} else if (StringUtil.equals(entity.getQuotaPageModel(), "dialogueResponse")) {
-			// 对话回应
-			if (StringUtil.equals(entity.getOperatorType(), "done")) {
-				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
-			} else if (StringUtil.equals(entity.getOperatorType(), "refuse")) {
-				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
-			}
-		} else if (StringUtil.equals(entity.getQuotaPageModel(), "new")) {
-			// 新增
-			if (StringUtil.equals(entity.getOperatorType(), "save")) {
-				// 保存
-			} else if (StringUtil.equals(entity.getOperatorType(), "submit")) {
-				// 提交
-			}
-		} else if (StringUtil.equals(entity.getQuotaPageModel(), "edit")) {
-			// 修改
-			if (StringUtil.equals(entity.getOperatorType(), "save")) {
-			} else if (StringUtil.equals(entity.getOperatorType(), "submit")) {
-				entity.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
-			}
-		}
         return cfetsBondDealQuotedPriceService.insertWflBondDialogueQuote(preparEntity(entity));
 		/*return restTemplate.postForObject(
 				ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/insertWflBondDialogueQuote",
@@ -1755,8 +1819,8 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      * @param decisionAct  角色动作
      * @param systemAct    系统动作
      */
-    public void sendPosition(CfetsBondDealDialogueQuoteDto entity,String flowStatus,String decisionAct,String systemAct){
-        Map<String, Object> stringObjectMap = preparePosition(entity, flowStatus,decisionAct,systemAct);
+    public void sendPosition(CfetsBondDealDialogueQuoteDto entity,String flowStatus,String decisionAct,String systemAct,String confirmOk){
+        Map<String, Object> stringObjectMap = preparePosition(entity, flowStatus,decisionAct,systemAct,confirmOk);
         if(StringUtil.equals(flowStatus,DictCodeListExt3.流程节点_流程提交.getValue())||StringUtil.equals(flowStatus,DictCodeListExt3.流程节点_流程退回.getValue())){
             if(StringUtil.equals(systemAct,DictCodeListExt3.系统动作_新建.getValue())||StringUtil.equals(systemAct,DictCodeListExt3.系统动作_修改.getValue())||StringUtil.equals(systemAct,DictCodeListExt3.系统动作_成交.getValue())){
                 PositionHttpRequest.send(stringObjectMap);
@@ -1780,8 +1844,8 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
      * @param flowStatus
      * @return
      */
-    public Map<String,Object> preparePosition(CfetsBondDealDialogueQuoteDto dto,String flowStatus,String decisionAct,String systemAct) {
+    public Map<String,Object> preparePosition(CfetsBondDealDialogueQuoteDto dto,String flowStatus,String decisionAct,String systemAct,String confirmOk) {
         com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto entity = JsonUtils.json2Object(JsonUtils.object2Json(dto), com.joyintech.service.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto.class);
-        return cfetsQuotedCommonServiceMicro.prepareDialoguePosition(entity,flowStatus,decisionAct,systemAct);
+        return cfetsQuotedCommonServiceMicro.prepareDialoguePosition(entity,flowStatus,decisionAct,systemAct,confirmOk);
     }
 }

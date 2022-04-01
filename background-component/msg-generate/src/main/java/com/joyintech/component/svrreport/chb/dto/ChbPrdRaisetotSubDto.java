@@ -239,6 +239,39 @@ public class ChbPrdRaisetotSubDto {
      */
     private Date statusDate;
 
+
+
+    /***1217升级**/
+
+
+    /**
+     * 资金托管账号
+     */
+    private String busiAcctNo;
+
+    /**
+     * 资金托管账户
+     */
+    private String acctName;
+
+    public String getBusiAcctNo() {
+        return busiAcctNo;
+    }
+
+    public void setBusiAcctNo(String busiAcctNo) {
+        this.busiAcctNo = busiAcctNo;
+    }
+
+    public String getAcctName() {
+        return acctName;
+    }
+
+    public void setAcctName(String acctName) {
+        this.acctName = acctName;
+    }
+
+    /***1217升级**/
+
     /**
      * 取得 产品代码
      * @return 产品代码

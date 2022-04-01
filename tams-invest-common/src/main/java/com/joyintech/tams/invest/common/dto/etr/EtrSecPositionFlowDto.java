@@ -38,6 +38,12 @@ public class EtrSecPositionFlowDto extends EtrSecPositionFlow {
     private boolean channel;
 
     /**
+     * 数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
+
+    /**
      * 获取 channel
      *
      * @return channel
@@ -125,5 +131,13 @@ public class EtrSecPositionFlowDto extends EtrSecPositionFlow {
      */
     public void setEntrust(boolean entrust) {
         this.entrust = entrust;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

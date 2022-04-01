@@ -127,12 +127,18 @@ public class EtrCashPosAutoGenerationService {
                     2、非通道交易，如果是通过证券账户，找证券账户的资金账户；
                     3、非通道和证券账户交易，找组合的托管户；
                     */
-                    if(StringUtil.isNotEmpty(etrEntrustComm.getEtrEntrustAdd().getSecAcctId()) ){
-                        acctId = EtrCommonCashPositionDealService.select资金账户(etrEntrustComm.getEtrEntrustAdd().getSecAcctId(), etrEntrust.getCcy());
-                    }else{
-                        acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
-                                DictCodeListExt2.资金账户类型_托管户.getValue());
-                    }
+                    // modify by etliu 20220331 start
+                    //
+//                    if(StringUtil.isNotEmpty(etrEntrustComm.getEtrEntrustAdd().getSecAcctId()) ){
+//                        acctId = EtrCommonCashPositionDealService.select资金账户(etrEntrustComm.getEtrEntrustAdd().getSecAcctId(), etrEntrust.getCcy());
+//                    }else{
+//                        acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+//                                DictCodeListExt2.资金账户类型_托管户.getValue());
+//                    }
+                    acctId = EtrSecCashPositionDealService.gen账号(etrEntrust.getTradeMarket(), etrEntrust.getChlId(), etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+                            etrEntrustComm.getEtrEntrustAdd().getSecAcctId(),
+                            etrEntrustComm.getEtrEntrust().getCounterId(), flow);
+                    // modify by etliu 20220331 end
                     //修改账户取值逻辑，保持和指令交易逻辑统一 20200712 end
 //                    acctId = EtrCommonCashPositionDealService.select资金账户(etrEntrustComm.getEtrEntrustAdd().getSecAcctId(), etrEntrust.getCcy());
                     flow.setChlFinprodId(null);

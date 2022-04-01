@@ -70,4 +70,16 @@ public interface CfgDataTableMapper {
                                          @Param("spcdCodes") List<String> spcdCodes,
                                          @Param("effeRange") Integer effeRange, @Param("rangeId") String rangeId);
 
+    /**
+     * 查询页面数据表格式设置
+     * @param pageCode
+     * @param dtCode
+     * @param effeRange
+     * @param rangeId
+     * @return
+     */
+    List<CfgDataTableShow> getBySpcdCodesshowInvaim(@Param("pageCode") String pageCode, @Param("dtCode") String dtCode,
+                                          @Param("spcdCodes") List<String> spcdCodes,
+                                          @Param("effeRange") Integer effeRange, @Param("rangeId") String rangeId, @Param("showInvaimOrBussinssmodel") String showInvaimOrBussinssmodel);
+
 }

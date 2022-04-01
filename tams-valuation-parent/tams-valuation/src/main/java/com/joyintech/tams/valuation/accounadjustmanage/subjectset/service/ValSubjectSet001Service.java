@@ -158,20 +158,15 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
 //        return super.queryForPage(()-> valSubjectSet001Mapper.selectAll(pageParam));
     }
     /**
-     * 根据主键检索科目
-     * 
-     * @param booksetId 账套代码
-     * @param subjectNo 科目代码
-     * @return 科目
-     * @see
-     * @since 1.0
+     * @author  殷亚
+     * @description 根据主键检索科目
+     * @date 2022-2-9 14:26
+     * @param dto:
+     * @return com.joyintech.tams.valuation.accounadjustmanage.subjectset.dto.ValBokSubjectDto
      */
-    public ValBokSubjectDto selectValBokSubject(String booksetId, String subjectNo) {
+    public ValBokSubjectDto selectValBokSubject(ValBokSubjectDto dto) {
         Map<String,Object> params = new HashMap<String,Object>();
-        params.put("booksetId", booksetId);
-        params.put("subjectNo", subjectNo);
-        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/selectValBokSubject", params, ValBokSubjectDto.class);
-//        return valSubjectSet001Mapper.selectValBokSubject(booksetId, subjectNo);
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/selectValBokSubject", dto, ValBokSubjectDto.class);
     }
 
     /**
@@ -210,5 +205,9 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
     
     public void save(ValBokSubjectDto dto) {
         restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/save", dto, boolean.class);
+    }
+
+    public List<ValBokSubjectDto> selectValBokSubjectByInCode(ValBokSubjectDto dto) {
+        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet002/selectValBokSubjectByInCode", dto, ValBokSubjectDto.class);
     }
 }

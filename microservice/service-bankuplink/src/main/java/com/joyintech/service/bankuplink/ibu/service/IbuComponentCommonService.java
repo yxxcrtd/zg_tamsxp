@@ -43,7 +43,6 @@ import com.joyintech.tams.invest.common.util.QuotaPageModelUtil;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -2098,6 +2097,13 @@ public class IbuComponentCommonService extends BaseService {
             }
         }
         //add by chenjiaxing 20210816 end
+        // 排序
+        if (StringUtil.isNotEmpty(param.get("sort"))) {
+            inputBean.setSort(param.get("sort").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("direction"))) {
+            inputBean.setDirection(param.get("direction").toString());
+        }
 
         // 登录用户ID Modified by JIAOXUJIN on 2020-06-03
         inputBean.setLoginUserId(MapUtils.getString(param, "loginUserId"));
@@ -2154,6 +2160,153 @@ public class IbuComponentCommonService extends BaseService {
         }
         //add by chenjiaxing 质押式回购下单管理改造
         return ibuMainService.getRepoDialogueQuoteList(inputBean, null);
+    }
+
+    /**
+     * 质押券报价查询-指定条件<br />
+     * 根据传入的不为空的属性进行查询，需支持数据权限
+     *
+     * @param inputBean BondQuoteSearchDto 现券报价查询条件
+     * @param userInfo User 登录用户信息
+     * @return List<BondQuoteExtDto>
+     */
+    public com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteExtDto> getRepoDayOfferTablePage(Map<String, Object> param) {
+        // 查询条件转换
+        RepoQuoteSearchDto inputBean = new RepoQuoteSearchDto();
+        int pageNo = 1;
+        int pageSize = 10;
+        if (param.get("pageNo") != null) {
+            pageNo = (int) param.get("pageNo");
+        }
+        if (param.get("pageSize") != null) {
+            pageSize = (int) param.get("pageSize");
+        }
+        // 交易方向
+        inputBean.setPs(param.get("ps") != null ? param.get("ps").toString() : null);
+        // 交易方向List
+        inputBean.setPsList(param.get("psList") != null ? (List)param.get("psList") : null);
+        // 资产代码
+        inputBean.setFinprodId(
+                param.get("finprodId") != null ? param.get("finprodId").toString() : null);
+        // 本方交易员
+        if (StringUtil.isNotEmpty(param.get("mySideTrader"))) {
+            inputBean.setOuTraderIdList(StringUtil.splitToList(GlobalConstant.COMMA,
+                    param.get("mySideTrader").toString()));
+        }
+        // 对手方
+        inputBean.setCpPartyId(
+                param.get("cpPartyId") != null ? param.get("cpPartyId").toString() : null);
+        // 报价编号
+        if (StringUtil.isNotEmpty(param.get("quoteId"))) {
+            inputBean.setQuoteId(param.get("quoteId").toString());
+        }
+        // 报价编号
+        if (StringUtil.isNotEmpty(param.get("cfetsQuoteId"))) {
+            inputBean.setCfetsQuoteIdFuzzy(param.get("cfetsQuoteId").toString());
+        }
+        // 报价日期
+        inputBean.setQuoteDate(iPlatformDate.getSysDate());
+        // 是否全数据查询角色(管理员true， 非管理员false)
+        if (param.get("isAdmin") != null) {
+            if ((boolean)param.get("isAdmin")) {
+                inputBean.setAutoDataRole(true);
+            }
+            else {
+                inputBean.setAutoDataRole(false);
+            }
+        }
+        if (StringUtil.isNotEmpty(param.get("counterId"))) {
+            inputBean.setCounterIdList(StringUtil.splitToList(GlobalConstant.COMMA,
+                    param.get("counterId").toString()));
+        }
+        if (StringUtil.isNotEmpty(param.get("counterTrader"))) {
+            inputBean.setCounterTraderList(StringUtil.splitToList(GlobalConstant.COMMA,
+                    param.get("counterTrader").toString()));
+        }
+        if (StringUtil.isNotEmpty(param.get("term"))) {
+            inputBean.setTerm(param.get("term").toString());
+        }
+        //add by chenjiaxing 20210816 start
+        if (StringUtil.isNotEmpty(param.get("termStart"))) {
+            inputBean.setTermStart(param.get("termStart").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("termEnd"))) {
+            inputBean.setTermEnd(param.get("termEnd").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("ouPartyId"))) {
+            inputBean.setOuPartyIdList(StringUtil.splitToList(GlobalConstant.COMMA,
+                    param.get("ouPartyId").toString()));
+        }
+        if(StringUtil.isNotEmpty(param.get("benfangSide"))){
+            String benfangSide = param.get("benfangSide").toString();
+            if(!StringUtil.equals(benfangSide,"whole")){
+                inputBean.setPs(benfangSide);
+            }
+        }
+        //add by chenjiaxing 20210816 end
+        // 排序
+        if (StringUtil.isNotEmpty(param.get("sort"))) {
+            inputBean.setSort(param.get("sort").toString());
+        }
+        if (StringUtil.isNotEmpty(param.get("direction"))) {
+            inputBean.setDirection(param.get("direction").toString());
+        }
+
+        // 登录用户ID Modified by JIAOXUJIN on 2020-06-03
+        inputBean.setLoginUserId(MapUtils.getString(param, "loginUserId"));
+        // 待回复数据查询方式
+        if (param.get("unAnswerFlag") != null) {
+            inputBean.setReplyQueryTypeIbu(BussinessDictCodeList.银行间上行回复查询方式_全部交易员可见.getValue());
+            if (StringUtil.equals(param.get("unAnswerFlag"), "N")) {
+                inputBean.setReplyQueryTypeIbu(
+                        BussinessDictCodeList.银行间上行回复查询方式_指定交易员可见.getValue());
+                inputBean.setLoginTraderId(MapUtils.getString(param, "loginTraderId"));
+            }
+        }
+        // 报价状态列表
+        if (param.get("dayOfferStatus") != null) {
+            List<String> tradeStatusList = new ArrayList<>();
+            if (StringUtil.equals(param.get("dayOfferStatus"), "undo")) {
+                tradeStatusList.add("NA");// 此处特殊处理，组件那边判断取tradeStatus为空的记录
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_新增中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已新增.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已修改.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_撤回中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_待回复.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已回复.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已拒绝.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_拒绝中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_回复中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_交谈中.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已交谈.getValue());
+
+            }
+            else if (StringUtil.equals(param.get("dayOfferStatus"), "done")) {
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已撤回.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已成交.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已终止.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已过期.getValue());
+                tradeStatusList.add(BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
+            }
+
+            inputBean.setTradeStatusList(tradeStatusList);
+        }
+        // 交易方向
+        inputBean.setKeywords(param.get("keywords") != null ? param.get("keywords").toString() : null);
+
+        //add by chenjiaixing 质押式回购下单管理改造
+        String isGetBondCode = "";
+        if (StringUtil.isNotEmpty(param.get("isGetBondCode"))) {
+            isGetBondCode = param.get("isGetBondCode").toString();
+        }
+        if (StringUtil.equals(isGetBondCode, "Y")) {
+            return ibuMainService.getRepoDialogueQuoteList2(pageNo, pageSize, inputBean, null);
+        }
+        //add by chenjiaxing 质押式回购下单管理改造
+        return ibuMainService.getRepoDialogueQuoteList(pageNo, pageSize, inputBean, null);
     }
 
     /**

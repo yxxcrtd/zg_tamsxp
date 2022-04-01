@@ -25,6 +25,11 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="ENTRUST_NO" property="entrustNo" jdbcType="VARCHAR" />
         <result column="DEAL_NO" property="dealNo" jdbcType="VARCHAR" />
+        <result column="PRIN" property="prin" jdbcType="DECIMAL" />
+        <result column="M_TRADE_AMT" property="mTradeAmt" jdbcType="DECIMAL" />
+        <result column="PLEDGE_NUMBER" property="pledgeNumber" jdbcType="DECIMAL" />
+        <result column="PLEDGE_ID" property="pledgeId" jdbcType="VARCHAR" />
+        <result column="B_PLEDGE_ID" property="bPledgeId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SETTLE_SEQ_NO SETTLE_SEQ_NO, SETTLE_STATUS SETTLE_STATUS, ORDER_ID ORDER_ID, TRADE_ID TRADE_ID, 
@@ -32,7 +37,8 @@
         SEC_ACCT_ID SEC_ACCT_ID, TRADE_MARKET TRADE_MARKET, TRADE_PLAT TRADE_PLAT, FINPROD_ID FINPROD_ID, 
         SETTLE_NUM SETTLE_NUM, SETTLE_AMT SETTLE_AMT, BUSI_TYPE BUSI_TYPE, COUNTER_ID COUNTER_ID, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME, ENTRUST_NO ENTRUST_NO, DEAL_NO DEAL_NO
+        UPDATE_TIME UPDATE_TIME, ENTRUST_NO ENTRUST_NO, DEAL_NO DEAL_NO,PRIN PRIN,M_TRADE_AMT M_TRADE_AMT,
+        PLEDGE_NUMBER PLEDGE_NUMBER,PLEDGE_ID PLEDGE_ID,B_PLEDGE_ID B_PLEDGE_ID
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -62,7 +68,8 @@
             SETTLE_NUM, SETTLE_AMT, BUSI_TYPE, 
             COUNTER_ID, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-            ENTRUST_NO, DEAL_NO)
+            ENTRUST_NO, DEAL_NO,PRIN,M_TRADE_AMT,
+            PLEDGE_NUMBER,PLEDGE_ID,B_PLEDGE_ID)
         values (#{settleSeqNo,jdbcType=VARCHAR}, #{settleStatus,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
             #{tradeId,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, 
             #{portfolioId,jdbcType=VARCHAR}, #{acctNo,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
@@ -70,7 +77,8 @@
             #{settleNum,jdbcType=DECIMAL}, #{settleAmt,jdbcType=DECIMAL}, #{busiType,jdbcType=VARCHAR}, 
             #{counterId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{entrustNo,jdbcType=VARCHAR}, #{dealNo,jdbcType=VARCHAR})
+            #{entrustNo,jdbcType=VARCHAR}, #{dealNo,jdbcType=VARCHAR},#{prin,jdbcType=DECIMAL},#{mTradeAmt,jdbcType=DECIMAL},
+            #{pledgeNumber,jdbcType=DECIMAL},#{pledgeId,jdbcType=VARCHAR},#{bPledgeId,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdManualSettleInfo" >
         insert into TRD_MANUAL_SETTLE_INFO
@@ -144,6 +152,21 @@
             <if test="dealNo != null" >
                 DEAL_NO,
             </if>
+            <if test="prin != null" >
+                PRIN,
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT,
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER,
+            </if>
+            <if test="pledgeId != null" >
+                PLEDGE_ID,
+            </if>
+            <if test="bPledgeId != null" >
+                B_PLEDGE_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="settleSeqNo != null" >
@@ -215,17 +238,33 @@
             <if test="dealNo != null" >
                 #{dealNo,jdbcType=VARCHAR},
             </if>
+            <if test="prin != null" >
+                #{prin,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeId != null" >
+                #{pledgeId,jdbcType=VARCHAR},
+            </if>
+            <if test="bPledgeId != null" >
+                #{bPledgeId,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdManualSettleInfo" >
         insert into TRD_MANUAL_SETTLE_INFO(SETTLE_SEQ_NO, SETTLE_STATUS, ORDER_ID, TRADE_ID, 
         TRADE_DATE, SETTLE_DATE, PORTFOLIO_ID, ACCT_NO, SEC_ACCT_ID, TRADE_MARKET, TRADE_PLAT, 
         FINPROD_ID, SETTLE_NUM, SETTLE_AMT, BUSI_TYPE, COUNTER_ID, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, ENTRUST_NO, DEAL_NO)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, ENTRUST_NO, DEAL_NO,PRIN,M_TRADE_AMT,PLEDGE_NUMBER,PLEDGE_ID,B_PLEDGE_ID)
         select SETTLE_SEQ_NO, SETTLE_STATUS, ORDER_ID, TRADE_ID, 
             TRADE_DATE, SETTLE_DATE, PORTFOLIO_ID, ACCT_NO, SEC_ACCT_ID, TRADE_MARKET, TRADE_PLAT, 
             FINPROD_ID, SETTLE_NUM, SETTLE_AMT, BUSI_TYPE, COUNTER_ID, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ENTRUST_NO, DEAL_NO
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ENTRUST_NO, DEAL_NO,
+               PRIN,M_TRADE_AMT,PLEDGE_NUMBER,PLEDGE_ID,B_PLEDGE_ID
              from TRD_MANUAL_SETTLE_INFO
              where 1 = 1 and SETTLE_SEQ_NO = #{settleSeqNo,jdbcType=VARCHAR}
     </insert>
@@ -289,6 +328,21 @@
             <if test="dealNo != null" >
                 DEAL_NO = #{dealNo,jdbcType=VARCHAR},
             </if>
+            <if test="prin != null" >
+                PRIN = #{prin,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeId != null" >
+                PLEDGE_ID = #{pledgeId,jdbcType=VARCHAR},
+            </if>
+            <if test="bPledgeId != null" >
+                B_PLEDGE_ID = #{bPledgeId,jdbcType=VARCHAR},
+            </if>
         </set>
         where SETTLE_SEQ_NO = #{settleSeqNo,jdbcType=VARCHAR}
     </update>
@@ -312,7 +366,12 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             ENTRUST_NO = #{entrustNo,jdbcType=VARCHAR},
-            DEAL_NO = #{dealNo,jdbcType=VARCHAR}
+            DEAL_NO = #{dealNo,jdbcType=VARCHAR},
+            PRIN = #{prin,jdbcType=VARCHAR},
+            M_TRADE_AMT = #{mTradeAmt,jdbcType=VARCHAR},
+            PLEDGE_NUMBER = #{pledgeNumber,jdbcType=VARCHAR},
+            PLEDGE_ID = #{pledgeId,jdbcType=VARCHAR},
+            B_PLEDGE_ID = #{bPledgeId,jdbcType=VARCHAR}
         where SETTLE_SEQ_NO = #{settleSeqNo,jdbcType=VARCHAR}
     </update>
 </mapper>

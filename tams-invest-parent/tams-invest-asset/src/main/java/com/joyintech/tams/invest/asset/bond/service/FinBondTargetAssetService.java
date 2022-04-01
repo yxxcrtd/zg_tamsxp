@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.asset.interfaceDto.*;
 import com.joyintech.tams.invest.asset.common.dto.*;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -315,6 +316,26 @@ implements BaseProcessService<FinBondTargetAssetDto>{
         {
             //功能暂未测试
         }
+    }
+
+    /**
+     * 获取基本信息--修改/详细
+     * @param finprodId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public FinBondTargetAssetDto getBasicInfos(String finprodId, String finprodType){
+        if(StringUtils.isNotEmpty(finprodType)){
+            return restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME
+                            + "/FinBondTargetAsset/getBasicInfo?finprodId="
+                            + finprodId+"&finprodType="+finprodType,
+                    FinBondTargetAssetDto.class);
+        }
+        return restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME
+                        + "/FinBondTargetAsset/getBasicInfo?finprodId="
+                        + finprodId,
+                FinBondTargetAssetDto.class);
     }
 
     /**

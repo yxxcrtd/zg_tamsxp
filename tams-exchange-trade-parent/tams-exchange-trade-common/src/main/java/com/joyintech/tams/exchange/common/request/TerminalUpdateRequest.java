@@ -3,6 +3,8 @@ package com.joyintech.tams.exchange.common.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 /**
  * @author swwan
  * @date 2021/12/22 - 15:47
@@ -42,4 +44,6 @@ public class TerminalUpdateRequest extends BaseRequest {
     public void setTerminalType(int terminalType) {
         this.terminalType = terminalType;
     }
+
+
 }

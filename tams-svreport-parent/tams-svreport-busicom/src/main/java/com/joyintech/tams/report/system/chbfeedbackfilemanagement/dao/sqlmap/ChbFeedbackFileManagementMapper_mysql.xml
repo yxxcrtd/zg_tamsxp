@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dao.ChbFeedbackFileManagementMapper_mysql">
+
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileManagementDto" >
+        <id column="RTN_REP_MES_NO" property="rtnRepMesNo" jdbcType="VARCHAR" />
+        <result column="SEND_REP_MES_NO" property="sendRepMesNo" jdbcType="VARCHAR" />
+        <result column="REPORT_SEND_DATE" property="reportSendDate" jdbcType="TIMESTAMP" />
+        <result column="REPORT_ACCEPT_DATE" property="reportAcceptDate" jdbcType="TIMESTAMP" />
+        <result column="BUSINESS_GROUP_TYPE" property="businessGroupType" jdbcType="VARCHAR" />
+        <result column="REPORT_ETR_TYPE" property="reportEtrType" jdbcType="VARCHAR" />
+        <result column="FILE_ID" property="fileId" jdbcType="VARCHAR" />
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+        <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+        <result column="HANDLE_STATUS" property="handleStatus" jdbcType="VARCHAR" />
+        <result column="MOVE_FLAG" property="moveFlag" jdbcType="VARCHAR" />
+        <result column="MOVE_PATH" property="movePath" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileManagementDto"
+               extends="BaseResultMap" >
+        <result column="FEEDBACK_MSG" property="feedbackMsg" jdbcType="CLOB" />
+    </resultMap>
+
+    <select id="queryChbFeedbackFileList" resultMap="ResultMapWithBLOBs">
+        select
+        RTN_REP_MES_NO, SEND_REP_MES_NO, REPORT_SEND_DATE, REPORT_ACCEPT_DATE, BUSINESS_GROUP_TYPE,
+        REPORT_ETR_TYPE, FILE_ID, FILE_NAME, FILE_PATH, HANDLE_STATUS, MOVE_FLAG, MOVE_PATH,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,FEEDBACK_MSG
+        from CHB_FEEDBACK_FILE cff
+        where 1=1
+        <if test="reportEtrType != null and !reportEtrType.isEmpty()">
+            AND cff.REPORT_ETR_TYPE = #{reportEtrType}
+        </if>
+        <if test="handleStatus != null and !handleStatus.isEmpty()">
+            AND cff.HANDLE_STATUS = #{handleStatus}
+        </if>
+        <if test="reportSendDate != null and !reportSendDate.isEmpty()">
+            AND cff.REPORT_SEND_DATE >= STR_TO_DATE(#{reportSendDate}, '%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="reportAcceptDate != null and !reportAcceptDate.isEmpty()">
+            AND cff.REPORT_ACCEPT_DATE >= STR_TO_DATE(#{reportAcceptDate}, '%Y-%m-%d %H:%i:%s')
+        </if>
+    </select>
+
+    <!--资产估值信息登记表-->
+    <select id="queryChbAssetValSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, CONCAT_WS(',',ASSET_CODE,DATE_FORMAT(VAL_DATE, '%Y-%m-%d')) keyCode
+        from CHB_AST_VAL_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--产品申报登记表-->
+    <select id="queryChbPrdIssueSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, PROD_REGIST_CODE keyCode
+        from CHB_PRD_ISSUE_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--产品申报登记表-->
+    <select id="queryChbPrdDeclareSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, PROD_INS_ID keyCode
+        from CHB_PRD_DECLARE_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--募集总量登记表-->
+    <select id="queryChbPrdRaisetotSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, PROD_ID keyCode
+        from CHB_PRD_RAISETOT_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--产品存续期登记表-->
+    <select id="queryChbPrdDealSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, /*PROD_REGIST_CODE||','||TO_CHAR(MDATE, 'yyyy-MM-dd')*/ concat(PROD_REGIST_CODE,',',DATE_FORMAT(MDATE,'%Y-%m-%d')) keyCode
+        from CHB_PRD_DEAL_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--产品终止登记表-->
+    <select id="queryChbPrdEndSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, PROD_REGIST_CODE keyCode
+        from CHB_PRD_END_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--资管计划底层持仓信息登记表-->
+    <select id="queryChbBottomAstPosSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, CONCAT_WS(',',PLAN_ASSET_ID,CONCAT_WS(',', ASSET_CODE, DATE_FORMAT(POS_DATE, '%Y-%m-%d'))) keyCode
+        from CHB_BOT_AST_POS_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--资产交易信息登记表-->
+    <select id="queryChbInvestTradeSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, TRADE_CODE keyCode
+        from CHB_INVEST_TRADE_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--资产要素信息登记表-->
+    <select id="queryChbAssetInfoSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, ASSET_CODE keyCode
+        from CHB_ASSET_INFO_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <!--从业人员登记表-->
+    <select id="queryChbEmployeeInfoSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
+        select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
+            STATUS_DATE regDataDate, STATUS regDataStatus, CONCAT_WS(',',EMPLOYEE_TYPE,IDENTIFY_NUMBER) keyCode
+        from CHB_EMPLOYEE_INFO_SUB
+        where SUMIT_SEQ in
+        <foreach collection="list" item="seqno" open="( " close=" )" separator=",">
+            #{seqno}
+        </foreach>
+        order by SUMIT_SEQ
+    </select>
+
+    <delete id="delChbInfoReportByMesNo">
+        DELETE FROM CHB_INFO_REPORT WHERE REP_MES_NO = #{repMesNo,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="mergeInfoChbInfoReport" parameterType="com.joyintech.component.svrreport.chb.dto.ChbInfoReportDto">
+       insert into CHB_INFO_REPORT(REPORT_NO,REP_MES_NO,UPLOAD_RESULT,UPLOAD_RESULT_MSG,
+        UPLOAD_FILE_ID,CHECK_FILE_ID,CHECK_RESULT,CHECK_RESULT_MSG,
+        CHECK_FILE_NAME,CHECK_TOTAL_COUNT,CHECK_SUCCESS_COUNT,CHECK_FAILED_COUNT,
+        INSIDE_FILE_ID,SEND_TIME,REPLY_TIME,WORKFLOW_ID,CREATE_USER,
+        CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,SUBMIT_COUNT,SUBMIT_TYPE)
+        select
+        de.*
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="newDataList" item="dto"  separator="union all">
+            select
+            #{item.reportNo,jdbcType=VARCHAR} REPORT_NO,
+            #{item.repMesNo,jdbcType=VARCHAR} REP_MES_NO,
+            #{item.uploadResult,jdbcType=VARCHAR} UPLOAD_RESULT,
+            #{item.uploadResultMsg,jdbcType=VARCHAR} UPLOAD_RESULT_MSG,
+            #{item.uploadFileId,jdbcType=VARCHAR} UPLOAD_FILE_ID,
+            #{item.checkFileId,jdbcType=VARCHAR} CHECK_FILE_ID,
+            #{item.checkResult,jdbcType=VARCHAR} CHECK_RESULT,
+            #{item.checkResultMsg,jdbcType=VARCHAR} CHECK_RESULT_MSG,
+            #{item.checkFileName,jdbcType=VARCHAR} CHECK_FILE_NAME,
+            #{item.checkTotalCount,jdbcType=DECIMAL} CHECK_TOTAL_COUNT,
+            #{item.checkSuccessCount,jdbcType=DECIMAL} CHECK_SUCCESS_COUNT,
+            #{item.checkFailedCount,jdbcType=DECIMAL} CHECK_FAILED_COUNT,
+            #{item.insideFileId,jdbcType=VARCHAR} INSIDE_FILE_ID,
+            #{item.sendTime,jdbcType=DATE} SEND_TIME,
+            #{item.replyTime,jdbcType=TIMESTAMP} REPLY_TIME,
+            #{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=TIMESTAMP} CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.submitCount,jdbcType=DECIMAL} SUBMIT_COUNT,
+            #{item.submitType,jdbcType=VARCHAR} SUBMIT_TYPE
+            from dual
+        </foreach>
+        ) TEMP where not exists (select 1 from CHB_INFO_REPORT CII where CII.REPORT_NO = TEMP.REPORT_NO)
+        ) de ;
+
+        UPDATE  CHB_INFO_REPORT as A,
+        (
+        select TEMP.* from
+        (
+        <foreach collection="newDataList" item="dto"  separator="union all">
+            select
+            #{item.reportNo,jdbcType=VARCHAR} REPORT_NO,
+            #{item.repMesNo,jdbcType=VARCHAR} REP_MES_NO,
+            #{item.uploadResult,jdbcType=VARCHAR} UPLOAD_RESULT,
+            #{item.uploadResultMsg,jdbcType=VARCHAR} UPLOAD_RESULT_MSG,
+            #{item.uploadFileId,jdbcType=VARCHAR} UPLOAD_FILE_ID,
+            #{item.checkFileId,jdbcType=VARCHAR} CHECK_FILE_ID,
+            #{item.checkResult,jdbcType=VARCHAR} CHECK_RESULT,
+            #{item.checkResultMsg,jdbcType=VARCHAR} CHECK_RESULT_MSG,
+            #{item.checkFileName,jdbcType=VARCHAR} CHECK_FILE_NAME,
+            #{item.checkTotalCount,jdbcType=DECIMAL} CHECK_TOTAL_COUNT,
+            #{item.checkSuccessCount,jdbcType=DECIMAL} CHECK_SUCCESS_COUNT,
+            #{item.checkFailedCount,jdbcType=DECIMAL} CHECK_FAILED_COUNT,
+            #{item.insideFileId,jdbcType=VARCHAR} INSIDE_FILE_ID,
+            #{item.sendTime,jdbcType=DATE} SEND_TIME,
+            #{item.replyTime,jdbcType=TIMESTAMP} REPLY_TIME,
+            #{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=TIMESTAMP} CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.submitCount,jdbcType=DECIMAL} SUBMIT_COUNT,
+            #{item.submitType,jdbcType=VARCHAR} SUBMIT_TYPE
+            from dual
+        </foreach>
+        ) TEMP
+        ) AS B
+        set
+        A.REPORT_NO=B.REPORT_NO,
+        A.REP_MES_NO=B.REP_MES_NO,
+        A.UPLOAD_RESULT=B.UPLOAD_RESULT,
+        A.UPLOAD_RESULT_MSG=B.UPLOAD_RESULT_MSG,
+        A.UPLOAD_FILE_ID=B.UPLOAD_FILE_ID,
+        A.CHECK_FILE_ID=B.CHECK_FILE_ID,
+        A.CHECK_RESULT=B.CHECK_RESULT,
+        A.CHECK_RESULT_MSG=B.CHECK_RESULT_MSG,
+        A.CHECK_FILE_NAME=B.CHECK_FILE_NAME,
+        A.CHECK_TOTAL_COUNT=B.CHECK_TOTAL_COUNT,
+        A.CHECK_SUCCESS_COUNT=B.CHECK_SUCCESS_COUNT,
+        A.CHECK_FAILED_COUNT=B.CHECK_FAILED_COUNT,
+        A.INSIDE_FILE_ID=B.INSIDE_FILE_ID,
+        A.SEND_TIME=B.SEND_TIME,
+        A.REPLY_TIME=B.REPLY_TIME,
+        A.WORKFLOW_ID=B.WORKFLOW_ID,
+        A.CREATE_USER=B.CREATE_USER,
+        A.CREATE_DEPT=B.CREATE_DEPT,
+        A.CREATE_TIME=B.CREATE_TIME,
+        A.UPDATE_USER=B.UPDATE_USER,
+        A.UPDATE_TIME=B.UPDATE_TIME,
+        A.SUBMIT_COUNT=B.SUBMIT_COUNT,
+        A.SUBMIT_TYPE=B.SUBMIT_TYPE
+        where A.REPORT_NO = B.REPORT_NO;
+    </insert>
+
+    <insert id="mergeInfoChbSubmitStatusTwo" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto">
+        insert into CHB_SUBMIT_STATUS_TWO(SEQNO,SUBMIT_NUM,SUBMIT_TYPE,SUBMIT_FEEDBACK_STATUS,
+        CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,
+        UPDATE_TIME,REPORT_NO,SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
+        select
+        de.*
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="newDataList" item="dto"  separator="union all">
+            select
+            #{item.seqno,jdbcType=VARCHAR} SEQNO,
+            #{item.submitNum,jdbcType=VARCHAR} SUBMIT_NUM,
+            #{item.submitType,jdbcType=VARCHAR} SUBMIT_TYPE,
+            #{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=TIMESTAMP} CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.reportNo,jdbcType=VARCHAR} REPORT_NO,
+            #{item.submitFeedbackMsg,jdbcType=VARCHAR} SUBMIT_FEEDBACK_MSG,
+            #{item.uniqueIdenti,jdbcType=VARCHAR} UNIQUE_IDENTI
+            from dual
+        </foreach>
+        ) TEMP where not exists (select 1 from CHB_SUBMIT_STATUS_TWO CII where CII.SEQNO = TEMP.SEQNO)
+        ) de ;
+
+        UPDATE  CHB_SUBMIT_STATUS_TWO as A,
+        (
+        select TEMP.* from
+        (
+        <foreach collection="newDataList" item="dto"  separator="union all">
+            select
+            #{item.seqno,jdbcType=VARCHAR} SEQNO,
+            #{item.submitNum,jdbcType=VARCHAR} SUBMIT_NUM,
+            #{item.submitType,jdbcType=VARCHAR} SUBMIT_TYPE,
+            #{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=TIMESTAMP} CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.reportNo,jdbcType=VARCHAR} REPORT_NO,
+            #{item.submitFeedbackMsg,jdbcType=VARCHAR} SUBMIT_FEEDBACK_MSG,
+            #{item.uniqueIdenti,jdbcType=VARCHAR} UNIQUE_IDENTI
+            from dual
+        </foreach>
+        ) TEMP
+        ) AS B
+        set
+        A.SUBMIT_NUM = B.SUBMIT_NUM,
+        A.SUBMIT_TYPE = B.SUBMIT_TYPE,
+        A.SUBMIT_FEEDBACK_STATUS = B.SUBMIT_FEEDBACK_STATUS,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.REPORT_NO = B.REPORT_NO,
+        A.SUBMIT_FEEDBACK_MSG = B.SUBMIT_FEEDBACK_MSG,
+        A.UNIQUE_IDENTI = B.UNIQUE_IDENTI,
+        A.CREATE_DEPT = B.CREATE_DEPT
+        where A.SEQNO = B.SEQNO;
+    </insert>
+
+</mapper>

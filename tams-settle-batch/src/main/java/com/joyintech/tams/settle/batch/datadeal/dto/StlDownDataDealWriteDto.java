@@ -6,6 +6,8 @@ import java.util.List;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.entity.CommissionCaclProcess;
 import com.joyintech.tams.common.base.entity.FinProductQuto;
+import com.joyintech.tams.common.base.entity.MstFundBonusNotice;
+import com.joyintech.tams.common.base.entity.ShareBonusReg;
 import com.joyintech.tams.settle.batch.datadeal.dto.step2.StlDownDataDealWriteBaseDto;
 
 /**
@@ -29,12 +31,20 @@ public class StlDownDataDealWriteDto extends NeedToWriteEntity {
 	
 	// 交易所品种额度List
 	List<FinProductQuto> finProductQutoList;
+
+	// 送股权益登记List
+	List<ShareBonusReg> shareBonusRegList;
+
+	//基金分红公告List
+	List<MstFundBonusNotice> mstFundBonusNoticeList;
 	
     public StlDownDataDealWriteDto() {
     	stlDownDataDealWriteDtoList =  new ArrayList<StlDownDataDealWriteDto>();
     	stlDownDataDealWriteBaseDtoList = new ArrayList<StlDownDataDealWriteBaseDto>();
     	commissionCaclProcessList = new ArrayList<CommissionCaclProcess>();
     	finProductQutoList = new ArrayList<FinProductQuto>();
+		shareBonusRegList=new ArrayList<ShareBonusReg>();
+		mstFundBonusNoticeList=new ArrayList<MstFundBonusNotice>();
     }
 
 	public List<StlDownDataDealWriteBaseDto> getStlDownDataDealWriteBaseDtoList() {
@@ -67,5 +77,21 @@ public class StlDownDataDealWriteDto extends NeedToWriteEntity {
 
 	public void setFinProductQutoList(List<FinProductQuto> finProductQutoList) {
 		this.finProductQutoList = finProductQutoList;
+	}
+
+	public List<ShareBonusReg> getShareBonusRegList() {
+		return shareBonusRegList;
+	}
+
+	public void setShareBonusRegList(List<ShareBonusReg> shareBonusRegList) {
+		this.shareBonusRegList = shareBonusRegList;
+	}
+
+	public List<MstFundBonusNotice> getMstFundBonusNoticeList() {
+		return mstFundBonusNoticeList;
+	}
+
+	public void setMstFundBonusNoticeList(List<MstFundBonusNotice> mstFundBonusNoticeList) {
+		this.mstFundBonusNoticeList = mstFundBonusNoticeList;
 	}
 }

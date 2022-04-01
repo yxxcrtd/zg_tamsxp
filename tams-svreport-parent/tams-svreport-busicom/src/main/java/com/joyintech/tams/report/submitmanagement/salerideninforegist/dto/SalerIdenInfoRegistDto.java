@@ -7,8 +7,11 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbSalerIdenSub;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
+import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.util.Date;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -23,6 +26,201 @@ public class SalerIdenInfoRegistDto extends ChbSalerIdenSub implements ProcessEn
 
     @BusinessKey("SALER_INS_NO")
     public String salerInsNo;//内部编码业务主键
+
+    /**
+     * 登记序列
+     */
+    private String registSeqno;
+
+    /**
+     * 销售人员登记编码
+     */
+    private String salerRegistNo;
+
+    /**
+     * 销售机构代码
+     */
+    private String salerInstCode;
+
+    /**
+     * 姓名
+     */
+    private String salerName;
+
+    /**
+     * 性别
+     */
+    @DictFormat(DictCode.性别_中债)
+    private String salerSex;
+
+    /**
+     * 出生日期
+     */
+    private Date salerBirthday;
+
+    /**
+     * 证件类别
+     */
+    @DictFormat(DictCode.销售人员证件类型)
+    private String salerCredentType;
+
+    /**
+     * 其他证件名称
+     */
+    private String salerOtherCredentName;
+
+    /**
+     * 证件号码
+     */
+    private String salerCredentNo;
+
+    /**
+     * 所属区域
+     */
+    @DictFormat(DictCode.销售区域_中债)
+    private String salerAreaType;
+
+    /**
+     * 所属总部或分支机构
+     */
+    private String salerOrgCode;
+
+    /**
+     * 所属部门
+     */
+    private String salerDept;
+
+    /**
+     * 职位
+     */
+    private String salerPosition;
+
+    /**
+     * 学历
+     */
+    @DictFormat(DictCode.销售人员学历)
+    private String salerEduLevel;
+
+    /**
+     * 学位
+     */
+    @DictFormat(DictCode.销售人员学位)
+    private String salerDegree;
+
+    /**
+     * 首次参加工作时间
+     */
+    private String salerWorkStartYmd;
+
+    /**
+     * 首次从事金融工作时间
+     */
+    private String salerFinanceStartYmd;
+
+    /**
+     * 首次从事理财销售时间
+     */
+    private String salerStartYmd;
+
+    /**
+     * 专业技术职称
+     */
+    @DictFormat(DictCode.销售人员专业技术职称)
+    private String salerLevle;
+
+    /**
+     * 理财专业证书
+     */
+    @DictFormat(DictCode.销售人员理财专业证书)
+    private String salerCertificateType;
+
+    /**
+     * 理财登记培训证书编号
+     */
+    private String salerChbTrainNo;
+
+    /**
+     * 可销售产品风险等级
+     */
+    @DictFormat(DictCode.可销售产品风险等级)
+    private String salerRiskLevel;
+
+    /**
+     * 销售资质
+     */
+    private String salerQualification;
+
+    /**
+     * 办公电话
+     */
+    private String salerTel;
+
+    /**
+     * 移动电话
+     */
+    private String salerMobile;
+
+    /**
+     * 邮箱
+     */
+    private String salerMail;
+
+    /**
+     * 当前状态
+     */
+    @DictFormat(DictCode.销售人员当前状态)
+    private String salerStatus;
+
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
+
+    /**
+     * 中债报送截止日
+     */
+    private Date chbSubmitDeadline;
+
+    /**
+     * 行内报送截止日
+     */
+    private Date submitDeadline;
+
+    /**
+     * 报送状态
+     */
+    private String sendStatus;
+
+    /**
+     * 报送时间
+     */
+    private Date submitTime;
+
+    /**
+     * 反馈状态
+     */
+    @DictFormat(DictCode.报送反馈状态)
+    private String submitFeedbackStatus;
+
+    /**
+     * 报送反馈消息
+     */
+    private String submitFeedbackMsg;
+
+    /**
+     * 数据日期
+     */
+    private Date dataDate;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 机构代码
+     */
+    private String orgCode;
     //报送状态字符串化
     public String getStatusStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());

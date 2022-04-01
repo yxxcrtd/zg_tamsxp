@@ -73,6 +73,10 @@ public class SecInfoModelDto {
      * 下一行权价
      */
     private BigDecimal nextExercisePrice;
+    /**
+     *资产四级分类
+     */
+    private String assetType11;
 
     /**
      * 获取 startDate
@@ -288,5 +292,13 @@ public class SecInfoModelDto {
      */
     public void setNextExercisePrice(BigDecimal nextExercisePrice) {
         this.nextExercisePrice = nextExercisePrice;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
     }
 }

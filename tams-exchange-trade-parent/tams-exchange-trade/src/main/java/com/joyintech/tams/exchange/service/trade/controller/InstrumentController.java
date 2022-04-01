@@ -1,23 +1,20 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
-import com.google.common.base.Strings;
-import com.joyintech.tams.exchange.common.bean.MinPrice;
-import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
-import com.joyintech.tams.exchange.common.db.domain.Instrument;
-import com.joyintech.tams.exchange.common.domain.Message;
-import com.joyintech.tams.exchange.common.request.InstrumentFlushRequest;
-import com.joyintech.tams.exchange.common.request.MinPriceAndMinTrdUnitLimitQueryRequest;
-import com.joyintech.tams.exchange.service.trade.management.service.InstrumentManagement;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.base.Strings;
+import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.common.db.domain.Instrument;
+import com.joyintech.tams.exchange.service.trade.management.service.InstrumentManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
 
 
 @RestController
@@ -32,6 +29,9 @@ public class InstrumentController {
                                       @RequestParam(value = "stock_code", required = false) String stockCode,
                                       @RequestParam(value = "page_no", required = false) String pageNo,
                                       @RequestParam(value = "count", required = false) String count) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         Map<String, Object> params = new HashMap<String, Object>();
         if (!Strings.isNullOrEmpty(market)) {
             params.put("market", market);
@@ -46,6 +46,15 @@ public class InstrumentController {
             params.put("count", count);
         }
         return instrumentManagement.flushInstrumentData(params);
+    }
+
+    @RequestMapping(value = "/instrument/trdUnitLimitFlush", method = RequestMethod.GET)
+    public ResultBean trdUnitLimitFlush() {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
+        instrumentManagement.trdUnitLimitFlush();
+        return new ResultBean(ErrorCode.SUCCESS);
     }
 
     /**
@@ -64,6 +73,9 @@ public class InstrumentController {
                                @RequestParam(value = "asset_type") String assetType,
                                @RequestParam(value = "asset_type1", required = false) String assetType1,
                                @RequestParam(value = "asset_type2", required = false) String assetType2) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         Instrument instrument = new Instrument();
         instrument.setMarket(market);
         instrument.setAssetType(assetType);
@@ -90,6 +102,9 @@ public class InstrumentController {
                                       @RequestParam(value = "asset_type1", required = false) String assetType1,
                                       @RequestParam(value = "asset_type2", required = false) String assetType2,
                                       @RequestParam(value = "instruction_ps", required = false, defaultValue = "T01") String instructionPs) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         Instrument instrument = new Instrument();
         instrument.setMarket(market);
         instrument.setAssetType(assetType);
@@ -100,6 +115,9 @@ public class InstrumentController {
 
     @RequestMapping(value = "/futuresInstrument/flush", method = RequestMethod.GET)
     public ResultBean FuturesInstrumentFlush() {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         return instrumentManagement.flushFuturesInstrumentData();
     }
 
@@ -114,6 +132,9 @@ public class InstrumentController {
     public ResultBean queryMinPriceAndMinTrdUnitLimit(@RequestParam(value = "stock_code") String stockCode,
                                                       @RequestParam(value = "trade_plat", required = false) String tradePlat,
                                                       @RequestParam(value = "instruction_ps", required = false) String instructionPs) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return instrumentManagement.queryMinPriceAndMinTrdUnitLimit(stockCode, tradePlat, instructionPs);
     }
 

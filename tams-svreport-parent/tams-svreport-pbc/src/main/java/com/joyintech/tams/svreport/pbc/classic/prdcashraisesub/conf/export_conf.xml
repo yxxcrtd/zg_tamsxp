@@ -22,12 +22,12 @@
 			<Cell order="18" name="期末产品金额">endamtsum</Cell>
 			<Cell order="19" name="期末产品金额折人民币">endamtsumCny</Cell>
 			<Cell order="20" name="期末产品份额">endqty</Cell>
-			<Cell order="21" name="开放式净值型产品期末净值">prodValue</Cell>
-			<Cell order="22" name="开放式净值型产品期末净值折人民币">prodValueCny</Cell>
-			<Cell order="23" name="开放式净值型产品期末累计净值">unitValueTotal</Cell>
-			<Cell order="24" name="开放式净值型产品期末累计净值折人民币">unitValueTotalCny</Cell>
-			<Cell order="25" name="开放式非净值型产品预期最高收益率">prodHighYield</Cell>
-			<Cell order="26" name="开放式非净值型产品预期最低收益率">prodLowYield</Cell>
+			<Cell order="21" name="开放净值型产品期末净值">prodValue</Cell>
+			<Cell order="22" name="开放净值型产品期末净值折人民币">prodValueCny</Cell>
+			<Cell order="23" name="开放净值型产品期末累计净值">unitValueTotal</Cell>
+			<Cell order="24" name="开放净值型产品期末累计净值折人民币">unitValueTotalCny</Cell>
+			<Cell order="25" name="开放非净值型产品预期最高收益率">prodHighYield</Cell>
+			<Cell order="26" name="开放非净值型产品预期最低收益率">prodLowYield</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

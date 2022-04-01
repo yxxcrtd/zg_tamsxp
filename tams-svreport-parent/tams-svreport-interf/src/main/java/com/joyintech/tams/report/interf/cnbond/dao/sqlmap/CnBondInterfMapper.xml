@@ -24,7 +24,14 @@
     </select>
     <!-- 更新中债报送结果 -->
     <update id="updateChbSubmitStatus" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
-        update CHB_SUBMIT_STATUS
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        <if test="flag != null and flag.equals('14')" >
+            update CHB_EQU_SUB
+        </if>
+        <if test="flag != null and flag.equals('16')" >
+            update CHB_INVESTHOLD_INFO_SUB
+        </if>
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
         <set >
             <if test="submitFeedbackStatus != null" >
                 SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
@@ -115,18 +122,38 @@
         </foreach>
     </insert>
 
-    <insert id="insertChbSubmitStatusList">
-        insert into CHB_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE, 
-            SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME, 
-            CREATE_USER, CREATE_TIME, REPORT_NO, 
-            SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
-        <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
-            #{item.seqno,jdbcType=VARCHAR}, #{item.submitNum,jdbcType=VARCHAR}, #{item.submitType,jdbcType=VARCHAR}, 
-            #{item.submitFeedbackStatus,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.reportNo,jdbcType=VARCHAR}, 
-            #{item.submitFeedbackMsg,jdbcType=VARCHAR},#{item.uniqueIdenti,jdbcType=VARCHAR}
+    <update id="insertChbSubmitStatusList">
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        begin
+        <foreach collection="updateDataList" item="dto" index="index" separator=";">
+            <if test="flag != null and flag.equals('14')" >
+                update CHB_EQU_SUB
+            </if>
+            <if test="flag != null and flag.equals('16')" >
+                update CHB_INVESTHOLD_INFO_SUB
+            </if>
+            <set >
+                <if test="dto.submitFeedbackStatus != null" >
+                    SUBMIT_FEEDBACK_STATUS = #{dto.submitFeedbackStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="dto.submitFeedbackMsg != null" >
+                    SUBMIT_FEEDBACK_MSG = #{dto.submitFeedbackMsg,jdbcType=VARCHAR},
+                </if>
+                <if test="dto.updateUser != null" >
+                    UPDATE_USER = #{dto.updateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="dto.updateTime != null" >
+                    UPDATE_TIME = #{dto.updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="dto.reportNo != null" >
+                    REPORT_NO = #{dto.reportNo,jdbcType=VARCHAR}
+                </if>
+            </set>
+            where SUBMIT_NUM = #{dto.submitNum,jdbcType=VARCHAR}
         </foreach>
-    </insert>
+        ;end;
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    </update>
     <insert id="insertChbEquDetSubmitStatusList">
         insert into CHB_EQUDET_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE, 
             SUBMIT_FEEDBACK_STATUS,EQUITY_CONF_DATE, UPDATE_USER, UPDATE_TIME, 

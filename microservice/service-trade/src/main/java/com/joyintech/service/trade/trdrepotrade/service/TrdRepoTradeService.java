@@ -22,6 +22,7 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt;
 import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -145,6 +146,9 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         pageParam.put("PINAN_BUSINESS_TYPE_20", DictCodeListExt1.平安业务类型_正回购.getValue());
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         pageParam.put("TRADE_STATUS_03", DictCodeListExt1.交易状态_撤销.getValue());
+
+        pageParam.put("ps_T22", BussinessDictCodeList.交易方向_收息到账.getValue());
+        pageParam.put("ps_T23", BussinessDictCodeList.交易方向_还本到账.getValue());
         
         //update by zhangnian start 20200318
         //有回购类型查询条件是 不显示银行间的数据
@@ -253,7 +257,7 @@ public class TrdRepoTradeService extends BaseService<TrdRepoTradeDto> {
         param.put("TRADE_STATUS_03", DictCodeListExt1.交易状态_撤销.getValue());
         TrdRepoTradeReferenceDto resultDto = this.trdRepoTradeMapper.getTrdRepoTradeDto(param);
         // 清算速度
-        if (resultDto.getSettleSpeed() == null || resultDto.getSettleSpeed() == 0L) {
+        if (!StringUtil.isNotEmpty(resultDto) || resultDto.getSettleSpeed() == null || resultDto.getSettleSpeed() == 0L) {
             resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_0.getValue());
         } else {
             resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());

@@ -1292,12 +1292,16 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                             acctId = EtrCommonCashPositionDealService.select通道资金账户(chlId);
                         }
                     }
-                    预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                    预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, true);
                 }
             }
         }
         /** 场内基金_现金分红 **/
         else {
+            boolean 处理预增 =  true;
+            if (isNotWorkflow){
+                处理预增 = false;
+            }
             if (DictCodeList.持仓类型_实际.equals(持仓类型)) { // 有效
                 String acctId;
                 // 1.直投
@@ -1323,10 +1327,6 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                     else {
                         acctId = EtrCommonCashPositionDealService.select通道资金账户(chlId);
                     }
-                }
-                boolean 处理预增 =  true;
-                if (isNotWorkflow){
-                	处理预增 = false;
                 }
                 可用现金增加(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, 处理预增);
             }
@@ -1354,7 +1354,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                             acctId = EtrCommonCashPositionDealService.select通道资金账户(chlId);
                         }
                     }
-                    预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
+                    预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, 处理预增);
                 }
             }
         }
@@ -1399,6 +1399,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 2.通道
                 // 可用持仓(组合、通道):红利再投日增加红利再投份额
                 etrSecPositionFlowDto.setAmount(deal.getShareAmt());
+                // GNS-923:红利再投的指令持仓应该使用交易交割日 modify by fuyongsheng 20220226 start
+                if(StringUtil.isNotEmpty(deal.getSettleDate())){
+                    etrSecPositionFlowDto.setCdate(deal.getSettleDate());
+                }
+                // GNS-923:红利再投的指令持仓应该使用交易交割日 modify by fuyongsheng 20220226 end
                 etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
             }
         }
@@ -1474,26 +1479,28 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
     }
 
     private static void 预增现金处理(EtrPositionHoldDto etrPositionHoldDto, List<StlPayOrdersDto> stlPayOrdersDtos,
-                               EtrCashPositionFlowDto etrCashPositionFlowDto, String acctId) {
+                               EtrCashPositionFlowDto etrCashPositionFlowDto, String acctId, boolean 处理预增) {
         if (StringUtil.isEmpty(acctId) || stlPayOrdersDtos == null || stlPayOrdersDtos.isEmpty()) {
             return;
         }
         stlPayOrdersDtos.forEach(stlPayOrdersDto -> {
-            // 预增现金 资金到账日增加到账金额
-            etrCashPositionFlowDto.setOrderId(stlPayOrdersDto.getOrderId());
-            EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
-            BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto);
-            etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt());
-            etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
-            etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
-            etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
-            etrCashPositionFlowDto2.setSeqno(getSeqNo());
-            String QsAcctId = EtrCommonCashPositionDealService.selectZQAcctId(stlPayOrdersDto.getPortfolioId(), stlPayOrdersDto.getCcy(),
-                    etrCashPositionFlowDto2.getAcctId());
-            if(StringUtil.isNotEmpty(QsAcctId)){
-                return;
+            if(处理预增){
+                // 预增现金 资金到账日增加到账金额
+                etrCashPositionFlowDto.setOrderId(stlPayOrdersDto.getOrderId());
+                EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto);
+                etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt());
+                etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
+                etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
+                etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
+                etrCashPositionFlowDto2.setSeqno(getSeqNo());
+                String QsAcctId = EtrCommonCashPositionDealService.selectZQAcctId(stlPayOrdersDto.getPortfolioId(), stlPayOrdersDto.getCcy(),
+                        etrCashPositionFlowDto2.getAcctId());
+                if(StringUtil.isNotEmpty(QsAcctId)){
+                    return;
+                }
+                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
             }
-            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
         });
     }
 

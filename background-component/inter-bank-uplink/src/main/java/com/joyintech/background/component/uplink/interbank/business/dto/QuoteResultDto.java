@@ -50,7 +50,11 @@ public class QuoteResultDto extends ResultBaseDto {
      * 质押式回购报价DTO
      */
     private RepoDialogueQuoteDto repoDialogueQuote;
-    
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
     public QuoteResultDto() {
         super.setStatus(true);
     }
@@ -186,4 +190,11 @@ public class QuoteResultDto extends ResultBaseDto {
         this.sendType = sendType;
     }
 
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
+    }
 }

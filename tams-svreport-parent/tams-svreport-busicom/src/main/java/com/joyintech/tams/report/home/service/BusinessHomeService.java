@@ -59,6 +59,7 @@ public class BusinessHomeService {
 		//查询接口监控表数据
 		List<BusinessHomeDto> businessinfolist = businessHomeMapper.selectBusinessHomeInfo(parmMap);
 		//查询数据检查的数据
+		parmMap.put("businessinfolist",businessinfolist);
 		List<BusinessHomeDto> checkdatalist = businessHomeMapper.selectDateCheckInfo(parmMap);
 		//查询产品登记编码统计数
 		int prodRegistnum = 0;

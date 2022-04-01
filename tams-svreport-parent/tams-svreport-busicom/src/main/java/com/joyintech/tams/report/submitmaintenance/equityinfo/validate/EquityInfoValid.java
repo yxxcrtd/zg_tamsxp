@@ -255,7 +255,7 @@ public class EquityInfoValid {
             message.add(this.getMessage("CHB_EQUITYINFO_E_002", "登记银行代码", "6"));
         }
         else if (EquityInfoCheckUtil.findPatern(PATTERN_REGIST_BANK_CODE_NEW, bankCode)) {
-            message.add(this.getMessage("CHB_EQUITYINFO_E_036", "登记银行代码"));
+            message.add(this.getMessage("CHB_EQUITYINFO_P_036", "登记银行代码"));
         }
         // add by etliu 20180912 start
         else if (EquityInfoCheckUtil.whiteListCheck( bankCode,objFileds,spzMap,equityInfo001Dto)) {

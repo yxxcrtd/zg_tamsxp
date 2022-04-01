@@ -1,6 +1,7 @@
 package com.joyintech.service.bankuplink.common.service;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -123,7 +125,9 @@ public class CfetsQuotedTradeCommonService{
     /**
      * cstp交易入库
      */
-    public ResultBaseDto insertCstpTrade(CfetsQuotedTradeCommonDto entity) {
+    @Transactional(rollbackFor = { Exception.class })
+    @DTXTransaction
+    public ResultBaseDto insertCstpTrade(CfetsQuotedTradeCommonDto entity) throws Exception {
         try {
             Thread.sleep(maxWaitTime);
         }
@@ -188,7 +192,8 @@ public class CfetsQuotedTradeCommonService{
 
         }catch (Exception e){
             resultBaseDto.setErrMsg(e.getMessage());
-            logger.error(e.getMessage());
+            //logger.error(e.getMessage());
+            throw new Exception(e);
         }
         return resultBaseDto;
     }
@@ -270,7 +275,7 @@ public class CfetsQuotedTradeCommonService{
             iCstpTrade.setUnderlyingsymbol(entity.getUnderlyingSymbol());
             iCstpTrade.setUnderlyingsecurityid(entity.getSecurityID());
             if(null!=entity.getPrice()){
-                iCstpTrade.setPrice(ArithmeticUtil.divide(entity.getPrice(),new BigDecimal(100),4));
+                iCstpTrade.setPrice(ArithmeticUtil.divide(entity.getPrice(),new BigDecimal(100),6));
             }
             iCstpTrade.setSettldate2(entity.getSettlDate2());
             //处理跨托管交易本金
@@ -375,7 +380,16 @@ public class CfetsQuotedTradeCommonService{
                 }
             });
         }
-        交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  start
+        if(StringUtil.isNotEmpty(noPartyId.getNoContactInfos())){
+            noPartyId.getNoContactInfos().forEach(item ->{
+                if(StringUtil.equals(item.getContactInfoIDType(),"6")){
+                    iCstpTrade.setOurtelephone(item.getContactInfoID());
+                }
+            });
+        }
+        //交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  end
     }
 
     private void 对方交易员信息(InterfCstpTrade iCstpTrade, NoPartyID noPartyId){
@@ -428,7 +442,16 @@ public class CfetsQuotedTradeCommonService{
                 }
             });
         }
-        交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  start
+        if(StringUtil.isNotEmpty(noPartyId.getNoContactInfos())){
+            noPartyId.getNoContactInfos().forEach(item ->{
+                if(StringUtil.equals(item.getContactInfoIDType(),"6")){
+                    iCstpTrade.setCountertelephone(item.getContactInfoID());
+                }
+            });
+        }
+        //交易员联系方式(iCstpTrade,noPartyId);
+        // mod by chenggaoling 20211223 交易员联系方式，当方向为4时赋值不正确  end
     }
 
     private void 交易员联系方式(InterfCstpTrade iCstpTrade, NoPartyID noPartyId){

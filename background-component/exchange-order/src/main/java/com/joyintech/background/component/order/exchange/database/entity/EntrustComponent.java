@@ -186,6 +186,10 @@ public class EntrustComponent extends BaseEntity {
      * 证券代码
      */
     private String stockId;
+    /**
+     *业务模式
+     */
+    private String businessModel;
 
     /**
      * 取得 委托代码
@@ -772,5 +776,13 @@ public class EntrustComponent extends BaseEntity {
      */
     public void setStockId(String stockId) {
         this.stockId = stockId;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

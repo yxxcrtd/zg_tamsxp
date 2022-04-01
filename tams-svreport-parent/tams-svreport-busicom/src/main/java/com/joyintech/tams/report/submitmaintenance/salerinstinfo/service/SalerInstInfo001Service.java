@@ -7,8 +7,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.dao.ChbSalerInstInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -41,7 +43,9 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
      */
     public Page<SalerInstInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
     {
-        return super.queryForPage(page,length,() -> chbSalerInstInfoMapper.selectForPage(pageParam));
+        Page<SalerInstInfoDto> pageList = super.queryForPage(page,length,() -> chbSalerInstInfoMapper.selectForPage(pageParam));
+        this.formatByType(pageList.getRoot());
+        return pageList;
     }
 
     /**
@@ -346,6 +350,35 @@ public class SalerInstInfo001Service extends CommonExportService<SalerInstInfoDt
         }
         return length;
 
+    }
+
+    public static List<SalerInstInfoDto> formatByType(List<SalerInstInfoDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerOrgLevel(getDictCodeAndName(DictCode.机构层级, item.getSalerOrgLevel()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 
 }

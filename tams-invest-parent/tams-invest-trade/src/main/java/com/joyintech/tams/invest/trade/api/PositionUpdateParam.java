@@ -27,6 +27,24 @@ public class PositionUpdateParam {
      */
     private String busiType;
 
+    /**
+     * 是否走工作流（结算下行过来的数据没有流程中的记录）
+     */
+    private String isNotWorkflow;
+
+    public String getDealOldPositionFlag() {
+        return dealOldPositionFlag;
+    }
+
+    public void setDealOldPositionFlag(String dealOldPositionFlag) {
+        this.dealOldPositionFlag = dealOldPositionFlag;
+    }
+
+    /**
+     * 处理老头存标识,N:不处理老头存,其余处理老头存
+     */
+    private String dealOldPositionFlag;
+
     public String getStatus() {
         return status;
     }
@@ -82,4 +100,12 @@ public class PositionUpdateParam {
 	public void setAssetType2(String assetType2) {
 		this.assetType2 = assetType2;
 	}
+
+    public String getIsNotWorkflow() {
+        return isNotWorkflow;
+    }
+
+    public void setIsNotWorkflow(String isNotWorkflow) {
+        this.isNotWorkflow = isNotWorkflow;
+    }
 }

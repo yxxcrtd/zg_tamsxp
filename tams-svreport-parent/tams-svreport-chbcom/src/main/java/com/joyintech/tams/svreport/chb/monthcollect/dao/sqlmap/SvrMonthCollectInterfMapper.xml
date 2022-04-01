@@ -26,9 +26,9 @@
 		(select
 		A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '01' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
-		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '02' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
@@ -43,15 +43,42 @@
 		select
 		prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
-		(
+		chb_month_count_tmp
+		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
+	</select>
+
+	<insert id="insertMonthTemp">
+		insert into chb_month_count_tmp(prdRegistCode,institutionCode,areaCode,holderType,ccy,amount,qty,cnyAmt)
+		select A.*
+		from (
+		<foreach collection="newList" index="index" item = "item" separator="UNION ALL">
+			select
+			#{item.prdRegistCode,jdbcType=VARCHAR},
+			#{item.institutionCode,jdbcType=VARCHAR},
+			#{item.areaCode,jdbcType=VARCHAR},
+			#{item.holderType,jdbcType=VARCHAR},
+			#{item.ccy,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=DECIMAL},
+			#{item.qty,jdbcType=DECIMAL},
+			#{item.cnyAmt,jdbcType=DECIMAL}
+			from dual
+		</foreach>
+		) A
+	</insert>
+
+	<delete id="deleteAllMonthTemp">
+		truncate table chb_month_count_tmp
+	</delete>
+
+	<select id="selectNotChangeEquHold" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
 		FROM
 		(
 		select A.STATUS,A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '01' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
-		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '02' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt,
@@ -71,9 +98,9 @@
 
 		select A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '01' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
-		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '02' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
@@ -82,9 +109,50 @@
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
 		WHERE
 		A.HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
-		)
-		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
 	</select>
+
+	<select id="selectThreeInOneList" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+		select
+		prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt,holdDate
+		FROM
+		(
+		select
+		A.STATUS,A.PRD_REGIST_CODE prdRegistCode, NVL(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,A.HOLD_DATE holdDate,
+		CASE B.HOLDER_CLASSIFY
+		when   '01' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
+		when   '02' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
+		END  as  holderType,
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
+		FROM
+		(select
+		*
+		from
+		CHB_INVESTHOLD_INFO_SUB
+		WHERE
+		HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')) A
+		LEFT JOIN
+		CHB_EQU_SUB B
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		inner join
+		CHB_EQU_HOLD_CHECK C
+		ON A.INDENTIFY_MARK = C.INDENTIFY_MARK
+		)
+		where
+		STATUS != '03'
+	</select>
+
+	<select id="selectHolderNumFromCheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+		select
+		PRD_REGIST_CODE prdRegistCode,
+		MERGER_INDENTIFY_MARK indentifyMark,
+		CCY ccy,
+		HOLD_DATE holdDate
+		FROM
+		CHB_INVESTHOLD_INFO_CHECK where HOLD_DATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+	</select>
+
 <!--查询需要删除的reportuuid-->
 	<select id="selectReportuuid" resultType="string" parameterType="string">
 		select REPORTUUID FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR}
@@ -165,9 +233,9 @@
 		A.STATUS,
 		A.PRD_REGIST_CODE prdRegistCode,
 		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '01' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
-		when   '02' THEN  decode(B.HOLDER_TYPE,'01','02','02','02','03','02','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
+		when   '02' THEN  decode(B.HOLDER_TYPE,'01','01','02','01','03','01','04','03','05','04','06','05','07','06','08','07','09','08','10','09','11','99','12','99','13','99','14','99','15','99','16','99','17','10',
 		'18','10','19','10','20','10','21','10','22','10','23','10','24','99','25','99','99')
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark,

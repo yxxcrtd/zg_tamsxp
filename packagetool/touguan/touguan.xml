@@ -12,6 +12,7 @@
     <artifactId>tams-base</artifactId>
     <version>2.1.2</version>
     <packaging>pom</packaging>
+    <name>tams-base(集成)</name>
 
 
     <properties>

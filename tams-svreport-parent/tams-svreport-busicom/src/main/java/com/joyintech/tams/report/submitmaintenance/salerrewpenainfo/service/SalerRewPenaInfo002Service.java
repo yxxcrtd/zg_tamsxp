@@ -29,12 +29,12 @@ public class SalerRewPenaInfo002Service extends BaseService{
         } else {
             //来自erro表
             SalerRewPenaInfoDto infoDto = new SalerRewPenaInfoDto();
-            SalerRewPenaInfoDto listSalerErrordata = chbSalerRewPenaInfoMapper.selectErroDetail(param);
-//            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-//                RewPenaInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
-//                infoDto.setErroOrInfo("erro");
-//            }
-            return listSalerErrordata;
+            List<SalerRewPenaInfoDto> listSalerErrordata = chbSalerRewPenaInfoMapper.selectErroDetail(param);
+            if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
+                RewPenaInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
+                infoDto.setErroOrInfo("erro");
+            }
+            return infoDto;
         }
     }
 

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlCashPositionInfoMapper;
 import com.joyintech.tams.invest.common.component.base.group.impl.dao.BasePtlSecPositionInfoMapper;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -128,6 +129,26 @@ public class TrdAvailableCashQueryService {
                 ret.put("T_2", basePtlCashPositionInfoService.queryUsableCashPosition(dto));
             }
             // 通道交易 新增 强成西 2019/03/26 end
+
+            //查询新表可用现金
+            PtlCashPositionFlowDto dtoNew = new PtlCashPositionFlowDto();
+            dtoNew.setHodingType(DictCodeListExt3.资产类型_汇总可用现金.getValue());
+            dtoNew.setCdate(tradeDate);
+            dtoNew.setPortfolioId((String)param.get("portfolioId"));
+            dtoNew.setCcy((String)param.get("ccy"));
+            dtoNew.setDateType(0);
+            BigDecimal cashT0_new = basePtlCashPositionInfoService.queryTrdAvailableCashNew(dtoNew);
+            BigDecimal cashT= new BigDecimal(ret.get("T_0").toString());
+            if(StringUtil.isNotEmpty(cashT0_new)){
+                ret.put("T_0",  ArithmeticUtil.doAdd(cashT, cashT0_new));// 组合T日可用
+            }
+            dtoNew.setDateType(1);
+            BigDecimal cashT1_new = basePtlCashPositionInfoService.queryTrdAvailableCashNew(dtoNew);
+            BigDecimal cashT1= new BigDecimal(ret.get("T_1").toString());
+            if(StringUtil.isNotEmpty(cashT1_new)){
+                ret.put("T_1",  ArithmeticUtil.doAdd(cashT1, cashT1_new));// 组合T+1日可用
+            }
+
         }
         // 可用持仓
         if (basePtlSecPositionInfoService != null) {

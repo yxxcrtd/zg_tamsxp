@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbsd.prdissuesub.dao.SdprodIssueSvrMapper_mysql" >
+    <resultMap  id="SdProdPersonIssueDtoRM" type="com.joyintech.tams.svreport.chbsd.prdissuesub.dto.SdProdPersonIssueDto" >
+        <result column="REGIST_SEQNO" property="registSeqno"/>
+        <result column="PROD_REGIST_CODE" property="prodRegistCode"/>
+        <result column="PROD_ID" property="prodId"/>
+        <result column="RAISE_VDATE" property="raiseVdate"/>
+        <result column="RAISE_ENDDATE" property="raiseEnddate"/>
+        <result column="PRD_VDATE" property="prdVdate"/>
+        <result column="PRD_MDATE" property="prdMdate"/>
+        <result column="IS_CONSTRACTE" property="isConstracte"/>
+        <result column="GRADE_TYPE" property="gradeType"/>
+        <result column="EXP_MIN_YIELD" property="expMinYield"/>
+        <result column="EXP_MAX_YIELD" property="expMaxYield"/>
+        <result column="EXP_AVG_YIELD" property="expAvgYield"/>
+        <result column="YIELD_COMMENT" property="yieldComment"/>
+        <result column="OPEN_MODE" property="openMode"/>
+        <result column="OPEN_CIRCLE" property="openCircle"/>
+        <result column="OPEN_CIRCLE_DAYS" property="openCircleDays"/>
+        <result column="RULE_COMMENT" property="ruleComment" />
+        <result column="FIRST_OPEN_DAY" property="firstOpenDay" />
+        <result column="HOLIDAY_ON_FLAG" property="holidayOnFlag" />
+        <result column="AVG_OPEN_COUNT" property="avgOpenCount" />
+        <result column="OPEN_BUSS" property="openBuss"/>
+        <result column="OPEN_BUSS_REMARK" property="openBussRemark"/>
+        <result column="WORKFLOW_ID" property="workflowId"/>
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus"/>
+        <result column="SEND_STATUS" property="sendStatus" />
+        <result column="STATUS_DATE" property="statusDate" />
+        <result column="STATUS" property="status" />
+        <result column="ORG_CODE" property="orgCode" />
+        <result column="CREATE_USER" property="createUser"/>
+        <result column="CREATE_DEPT" property="createDept"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_USER" property="updateUser"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+        <result column="SUBMIT_TIME" property="submitTime"/>
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline"/>
+        <result column="SUBMIT_DEADLINE" property="submitDeadline"  />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" />
+        <result column="MANAGE_TYPE" property="manageType" />
+        <result column="YIELD_LOW" property="yieldLow"/>
+        <result column="YIELD_HIGH" property="yieldHigh"/>
+        <result column="YIELD_REMARK" property="yieldRemark"/>
+        <result column="BUSI_ACCT_NO" property="busiAcctNo"/>
+        <result column="ACCT_NAME" property="acctName"/>
+        <result column="SUMIT_SEQ" property="sumitSeq"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+    REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, RAISE_VDATE, RAISE_ENDDATE, PRD_VDATE, PRD_MDATE,
+    IS_CONSTRACTE, GRADE_TYPE, EXP_MIN_YIELD, EXP_MAX_YIELD, EXP_AVG_YIELD, YIELD_COMMENT,
+    OPEN_MODE, OPEN_CIRCLE, OPEN_CIRCLE_DAYS, RULE_COMMENT, FIRST_OPEN_DAY, HOLIDAY_ON_FLAG,
+    AVG_OPEN_COUNT, OPEN_BUSS, OPEN_BUSS_REMARK, WORKFLOW_ID, SUBMIT_FEEDBACK_STATUS,
+    SEND_STATUS, STATUS_DATE, STATUS, ORG_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+    UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    ISSUE_PARTY_ID, ACCT_NAME, SUMIT_SEQ, BUSI_ACCT_NO,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,MANAGE_TYPE
+  </sql>
+    <select id="selcteDataByIds" parameterType="java.util.List" resultMap="SdProdPersonIssueDtoRM">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_PRD_ISSUE_SUB
+        where SEND_STATUS = '01'
+        AND STATUS = '01'
+        <!--AND   to_char(STATUS_DATE,'yyyy-MM-dd') = #{batchdate,jdbcType = VARCHAR}-->
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PROD_ID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+</mapper>

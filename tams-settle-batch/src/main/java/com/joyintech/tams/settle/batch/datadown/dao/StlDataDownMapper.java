@@ -51,4 +51,7 @@ public interface StlDataDownMapper {
     int removeTempDataZQD(@Param("importDate") Date importDate, @Param("dataFile") String dataFile, @Param("portfolioIdList") Set<String> portfolioIdList);
 
     int removeTempDataSJSKS(@Param("importDate") Date importDate, @Param("dataFile") String dataFile, @Param("portfolioIdList") Set<String> portfolioIdList);
+
+    int removeTempDataTZXX(@Param("importDate") Date importDate, @Param("dataFile") String dataFile, @Param("portfolioIdList") Set<String> portfolioIdList);
+
 }

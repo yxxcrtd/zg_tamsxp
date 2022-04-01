@@ -187,4 +187,6 @@ public interface EntrustInterface extends OrderInterface {
     String getHedgeFlag();
 
     void setHedgeFlag(String hedgeFlag);
+    
+    BigDecimal getEntrustBalance();
 }

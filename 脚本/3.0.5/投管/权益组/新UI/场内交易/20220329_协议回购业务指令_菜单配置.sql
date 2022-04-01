@@ -1,0 +1,7 @@
+
+--菜单配置
+delete from sys_page where page_id = 'EtrExchangeAgreRepTrade001';
+INSERT INTO sys_page("PAGE_ID", "SYSTEM_CODE", "PAGE_URL", "PAGE_FILE", "MENU_ID", "HEIGHT", "WIDTH", "IS_HP_SELECT", "IS_NEED_WORKFLOW", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('EtrExchangeAgreRepTrade001', 'ETR', '/home.html#/instructions/repurchaseorder?a=a', 'etrexchange/common/etrExchangeTrade001', 'SH_DEAL_MANAGEMENT_001_001_008', NULL, NULL, '02', '01', '协议回购指令', 'system', NULL, TO_TIMESTAMP('2021-12-23 14:05:17.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'system', TO_TIMESTAMP('2021-12-23 14:05:17.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'));
+delete from SYS_MENU where page_id = 'EtrExchangeAgreRepTrade001';
+INSERT INTO SYS_MENU("MENU_ID", "SYSTEM_CODE", "ICON", "PARENT_MENU_ID", "PAGE_ID", "ORDER_NO", "IS_SPREAD", "REMARK", "CREATE_USER", "CREATE_DEPT", "CREATE_TIME", "UPDATE_USER", "UPDATE_TIME") VALUES ('SH_DEAL_MANAGEMENT_001_001_008', 'ETR', NULL, 'SH_DEAL_MANAGEMENT_001_001', 'EtrExchangeAgreRepTrade001', '8', '02', '协议回购指令', 'system', NULL, TO_TIMESTAMP('2021-06-04 17:05:05.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'), 'system', TO_TIMESTAMP('2021-09-16 00:00:00.000000', 'SYYYY-MM-DD HH24:MI:SS:FF6'));
+

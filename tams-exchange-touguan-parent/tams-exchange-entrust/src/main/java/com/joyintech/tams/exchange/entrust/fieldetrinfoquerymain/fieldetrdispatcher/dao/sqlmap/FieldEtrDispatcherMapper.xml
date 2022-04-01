@@ -463,33 +463,58 @@
     <select id="getEtrDispatcherInfo"
             resultType="com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dto.FieldEtrDispatcherInfoResponse">
         SELECT
+            DISTINCT
             #{busiTypePosition} busiTypePosition,
             to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
-            ete.portfolio_id portfolioId,
-            pp.portfolio_name portfolioName,
+           	nvl(detail.PORTFOLIO_ID,pp.PORTFOLIO_ID) portfolioId,
+            nvl(detail.PORTFOLIO_NAME,pp.PORTFOLIO_NAME) portfolioName,
             ete.inv_aim busiModel,
-            fp.finprod_market_id finprodMarketId,
-            fp.finprod_abbr finprodAbbr,
+            CASE
+            WHEN eted.ASSET_TYPE = 'F07'
+            AND ete.PS IN ( '03', '04', 'T56', 'T93', 'T94', 'T95', 'T96' ) THEN
+            ete.STOCK_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_MARKET_ID ELSE eted.ASSET_TYPE_10 END )
+            END finprodMarketId,
+            CASE
+            WHEN eted.ASSET_TYPE = 'F07'
+            AND ete.PS IN ( '03', '04' )
+            AND ete.ENTRUST_TYPE NOT IN ( '17', '18', '19', '20', '21' ) THEN
+            ete.FINPROD_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_ABBR ELSE OPT_TARGET_INFO.TARGET_NAME END )
+            END finprodAbbr,
             ete.trade_market tradeMarket,
+            CASE
+            WHEN eted.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
+            THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{BACK_LEND_DIRECTION} AND ITEM_CODE =
+            eted.BUSI_PS)
+            ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{PS} AND ITEM_CODE = ete.PS)
+            END AS otherPs,
+            eted.BUSI_PS busiPs,
             ete.ps ps,
             DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
             ete.price_model priceModel,
-            ssai.sec_acct_name secAcctId,
+            eted.SEC_ACCT_ID secAcctId,
             ete.ccy ccy,
             ete.entrust_num/100 shareNum,
             eted.our_ent_num/100 entrustOwnNum,
             eted.lendin_ent_num integrateSecAmount,
-            ete.price unitPrice,
+            decode(eted.ASSET_TYPE ,'F07' ,nvl(ete.price,0)*100,nvl(ete.price,0)) unitPrice,
             eted.full_price allPrice,
             eted.mature_yield*100 matureYield,
             eted.exer_yield*100 exerYield,
             eted.full_price*ete.entrust_num fpriceAmt,
             ete.remark remark,
+            ete.remark addCla,
             mci.CUSTOMER_NAME mainConsignee,
             to_char(eted.payment_date,'yyyy-MM-dd') paymentDate,
             to_char(eted.listing_date,'yyyy-MM-dd')  listingDate,
             ete.entrust_num entrustNum,
-            ete.entrust_amt entrustAmt,
+            decode(
+            eted.ASSET_TYPE,
+            'F01',
+            NVL( ete.ENTRUST_NUM * ete.PRICE, 0 ),
+            'F10',
+            NVL( ete.ENTRUST_NUM * 100, 0 ),
+            NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )
+            ) entrustAmt,
             eted.deal_mode dealMode,
             eted.term_type termType,
             to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
@@ -497,9 +522,9 @@
             eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
             pss.pledge_stock_name pledgeStockName,
             eted.ASSET_TYPE assetType,
-            ete.INV_MANAGER_ID invManagerId,
+            su.REAL_NAME invManagerId,
             eted.TARGET_TYPE targetType, 
-            ete.COUNTER_ID counterId,
+            mcp.COUNTER_NAME counterId,
             eted.COUNTER_SEAT counterSeat,
             eted.COUNTER_CON_NO counterConNo,
             eted.TRADER trader,
@@ -510,72 +535,123 @@
             eted.EXP_CON_NUM expConNum,
             eted.PREB preb,
             eted.PREC prec,
-            fpt.TYPE_11 secType, 
-            eted.DEAL_CUR_ACCT dealCurAcct,
+            fpt.TYPE_11 secType,
+            sci.ACCT_NAME dealCurAcct,
             eted.REQUEST_ID requestId,
             eted.CAP_DAYS capDays, 
             to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
             to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
             eted.M_INT_AMT mIntAmt,
             eted.M_TRADE_AMT mTradeAmt,
-            ee.Pledge_Ratio * 100 pledgeRatio, /** 折算率 **/
+            case when ete.ps in ('T68', 'T69') then ete.price * 100
+                else ee.Pledge_Ratio * 100 end as pledgeRatio, /** 折算率 **/
             ee.PLEDGE_NUMBER pledgeNumber,
             ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
             eted.TRADE_ID tradeId,
-            oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
-            oee.PLEDGE_NUMBER oldPledgeNumber,
-            oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
-            T6.finprod_market_id oldFinprodMarketId,
+            old.origRepSecNum oldPledgeNumber,
+            old.origPrintAmt oldPledStrdPrinAmt,
+            decode(old.origPrintAmt,'','',ete.ENTRUST_AMT / nvl( old.origPrintAmt, 1 ) * 100 ) oldPledgeRatio,
+            old.origRepSecId oldFinprodMarketId,
             eted.DEAL_MODE dealMode,  /** 申报类型 **/
-            ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO pledgeStandardNumber, /** 标准券额度 **/
-            fp.Is_Right isRight
+            nvl(ete.entrust_num * ete.price, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
+            fp.Is_Right isRight,
+            eted.DEAL_MODE declaType,
+            ete.FINPROD_ID finprodId
         FROM ETR_ENTRUST ete
         INNER JOIN ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+        LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
         LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
+        LEFT JOIN (
+            SELECT EED.ENTRUST_ID,
+            wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+            wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            FROM ETR_ENTRUST_DETAIL EED
+        left join
+        (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+        FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+        GROUP BY EED.ENTRUST_ID ) detail ON ete.ENTRUST_ID = detail.ENTRUST_ID
+
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
-        LEFT JOIN ETR_ENTRUST_PLEDGE eep ON ete.portfolio_id = eep.portfolio_id
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
-        LEFT JOIN etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/ 
-        LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
-        LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
-        LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
+        LEFT JOIN STL_CAPACCT_INFO sci ON sci.ACCT_NO = ssai.TRD_ACCT_ID
+        LEFT JOIN etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
+        LEFT JOIN (
+            SELECT
+                tpd.F_TRADE_ID,
+                t2.PLEDGE_NUMBER AS origRepSecNum,
+                t2.PLEDGE_NUMBER * t2.PLEDGE_FACE_VALUE origPrintAmt,
+                t4.FINPROD_MARKET_ID origRepSecId
+            FROM
+                FIN_DEAL_PLEDGE t2
+            LEFT JOIN TRD_PRODUCT_DEAL tpd ON t2.FINPROD_ID = tpd.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT t4 ON t4.FINPROD_ID = t2.PLEDGE_FINPROD_ID
+        ) old ON eted.TRADE_ID = old.F_TRADE_ID
+        <!--LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id-->
+        LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
+        left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
+        LEFT JOIN OPT_TARGET_INFO ON eted.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
         WHERE ete.entrust_id = #{entrustId}
 
         union all
 
         SELECT
+        DISTINCT
         #{busiTypePosition} busiTypePosition,
         to_char(ete.entrust_date,'yyyy-MM-dd') entrustDate,
-        ete.portfolio_id portfolioId,
-        pp.portfolio_name portfolioName,
+        nvl(detail.PORTFOLIO_ID,pp.PORTFOLIO_ID) portfolioId,
+        nvl(detail.PORTFOLIO_NAME,pp.PORTFOLIO_NAME) portfolioName,
         ete.inv_aim busiModel,
-        fp.finprod_market_id finprodMarketId,
-        fp.finprod_abbr finprodAbbr,
+        CASE
+        WHEN eted.ASSET_TYPE = 'F07'
+        AND ete.PS IN ( '03', '04', 'T56', 'T93', 'T94', 'T95', 'T96' ) THEN
+        ete.STOCK_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_MARKET_ID ELSE eted.ASSET_TYPE_10 END )
+        END finprodMarketId,
+        CASE
+        WHEN eted.ASSET_TYPE = 'F07'
+        AND ete.PS IN ( '03', '04' )
+        AND ete.ENTRUST_TYPE NOT IN ( '17', '18', '19', '20', '21' ) THEN
+        ete.FINPROD_ID ELSE ( CASE WHEN fp.FINPROD_MARKET_ID IS NOT NULL THEN fp.FINPROD_ABBR ELSE OPT_TARGET_INFO.TARGET_NAME END )
+        END finprodAbbr,
         ete.trade_market tradeMarket,
+        CASE
+        WHEN eted.ASSET_TYPE IN (#{ASSET_TYPE_07}, #{ASSET_TYPE_10}, #{ASSET_TYPE_12})
+        THEN (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{BACK_LEND_DIRECTION} AND ITEM_CODE =
+        eted.BUSI_PS)
+        ELSE (SELECT ITEM_VALUE FROM sys_datadict_list WHERE DICT_CODE = #{PS} AND ITEM_CODE = ete.PS)
+        END AS otherPs,
+        eted.BUSI_PS busiPs,
         ete.ps ps,
         DECODE(eted.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         ete.price_model priceModel,
-        ssai.sec_acct_name secAcctId,
+        eted.SEC_ACCT_ID secAcctId,
         ete.ccy ccy,
         ete.entrust_num/100 shareNum,
         eted.our_ent_num/100 entrustOwnNum,
         eted.lendin_ent_num integrateSecAmount,
-        ete.price unitPrice,
+        decode(eted.ASSET_TYPE ,'F07' ,nvl(ete.price,0)*100,nvl(ete.price,0)) unitPrice,
         eted.full_price allPrice,
         eted.mature_yield*100 matureYield,
         eted.exer_yield*100 exerYield,
         eted.full_price*ete.entrust_num fpriceAmt,
         ete.remark remark,
+        ete.remark addCla,
         mci.CUSTOMER_NAME mainConsignee,
         to_char(eted.payment_date,'yyyy-MM-dd') paymentDate,
         to_char(eted.listing_date,'yyyy-MM-dd')  listingDate,
         ete.entrust_num entrustNum,
-        ete.entrust_amt entrustAmt,
+        decode(
+        eted.ASSET_TYPE,
+        'F01',
+        NVL( ete.ENTRUST_NUM * ete.PRICE, 0 ),
+        'F10',
+        NVL( ete.ENTRUST_NUM * 100, 0 ),
+        NVL( ete.ENTRUST_AMT, ete.ENTRUST_NUM )
+        ) entrustAmt,
         eted.deal_mode dealMode,
         eted.term_type termType,
         to_char(eted.MDATE,'yyyy-MM-dd') || ' - ' || to_char(eted.MDATE2,'yyyy-MM-dd') as dueDate,
@@ -583,9 +659,9 @@
         eted.FIRST_UNIT_CPRICE || ' - ' || eted.FIRST_UNIT_CPRICE2 firstprice,
         pss.pledge_stock_name pledgeStockName,
         eted.ASSET_TYPE assetType,
-        ete.INV_MANAGER_ID invManagerId,
-        eted.TARGET_TYPE targetType, 
-        ete.COUNTER_ID counterId,
+        su.REAL_NAME invManagerId,
+        eted.TARGET_TYPE targetType,
+        mcp.COUNTER_NAME counterId,
         eted.COUNTER_SEAT counterSeat,
         eted.COUNTER_CON_NO counterConNo,
         eted.TRADER trader,
@@ -596,40 +672,65 @@
         eted.EXP_CON_NUM expConNum,
         eted.PREB preb,
         eted.PREC prec,
-        fpt.TYPE_11 secType, 
-        eted.DEAL_CUR_ACCT dealCurAcct,
+        fpt.TYPE_11 secType,
+        sci.ACCT_NAME dealCurAcct,
         eted.REQUEST_ID requestId,
         eted.CAP_DAYS capDays, 
         to_char(eted.VPAY_DATE,'yyyy-MM-dd') vpayDate,
         to_char(eted.MPAY_DATE,'yyyy-MM-dd') mpayDate,
         eted.M_INT_AMT mIntAmt,
         eted.M_TRADE_AMT mTradeAmt,
-        ee.Pledge_Ratio * 100 pledgeRatio, /** 折算率 **/
+        case when ete.ps in ('T68', 'T69') then ete.price * 100
+            else ee.Pledge_Ratio * 100 end as pledgeRatio, /** 折算率 **/
         ee.PLEDGE_NUMBER pledgeNumber,
         ee.PLEDGE_NUMBER * ee.Pledge_Face_Value pledStrdPrinAmt,
         eted.TRADE_ID tradeId,
-        oee.Pledge_Ratio * 100 oldPledgeRatio, /** 折算率 **/
-        oee.PLEDGE_NUMBER oldPledgeNumber,
-        oee.PLEDGE_NUMBER * oee.Pledge_Face_Value oldPledStrdPrinAmt,
-        T6.finprod_market_id oldFinprodMarketId,
+        old.origRepSecNum oldPledgeNumber,
+        old.origPrintAmt oldPledStrdPrinAmt,
+        decode(old.origPrintAmt,'','',ete.ENTRUST_AMT / nvl( old.origPrintAmt, 1 ) * 100 ) oldPledgeRatio,
+        old.origRepSecId oldFinprodMarketId,
         eted.DEAL_MODE dealMode,  /** 申报类型 **/
-        ee.PLEDGE_NUMBER * ee.PLEDGE_RATIO pledgeStandardNumber, /** 标准券额度 **/
-        fp.Is_Right isRight
+        nvl(ete.entrust_num * ete.price, ete.entrust_num) pledgeStandardNumber, /** 标准券额度 **/
+        fp.Is_Right isRight,
+        eted.DEAL_MODE declaType,
+        ete.FINPROD_ID finprodId
         FROM WFL_ETR_ENTRUST ete
         INNER JOIN WFL_ETR_ENTRUST_ADD eted ON ete.entrust_id = eted.entrust_id
+        LEFT JOIN FIN_PRODUCT_TYPE_CONFIG btm ON ( ete.FINPROD_TYPE2 = btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 IS NULL )
         LEFT JOIN FIN_PRODUCT_CONVERTIBLE FPC ON ete.FINPROD_ID = FPC.FINPROD_ID
         LEFT JOIN FIN_PRODUCT T5 ON FPC.CON_FINPROD_ID = T5.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO pp ON ete.portfolio_id = pp.portfolio_id
+        LEFT JOIN (
+            SELECT EED.ENTRUST_ID,
+            wm_concat ( FP.PORTFOLIO_ID ) AS PORTFOLIO_ID ,
+            wm_concat ( FP.PORTFOLIO_NAME ) AS PORTFOLIO_NAME
+            FROM ETR_ENTRUST_DETAIL EED
+        left join
+        (select PORTFOLIO_ID,PORTFOLIO_NAME from PTL_PORTFOLIO order by PORTFOLIO_ID, PORTFOLIO_NAME)
+        FP on EED.PORTFOLIO_ID = FP.PORTFOLIO_ID
+        GROUP BY EED.ENTRUST_ID ) detail ON ete.ENTRUST_ID = detail.ENTRUST_ID
         LEFT JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = ete.FINPROD_ID
         LEFT JOIN FIN_PRODUCT fp ON ete.finprod_id = fp.finprod_id
-        LEFT JOIN WFL_ETR_ENTRUST_PLEDGE eep ON ete.portfolio_id = eep.portfolio_id
         LEFT JOIN PTL_SEC_STOCK pss ON pss.pledge_stock_id = eted.pledge_stock_id AND ete.portfolio_id = pss.portfolio_id
         LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = eted.main_consignee AND mci.IS_SALER = #{YESORNO_YES, jdbcType = VARCHAR}
         LEFT JOIN STL_SEC_ACCT_INFO ssai ON eted.SEC_ACCT_ID = ssai.SEC_ACCT_ID
-        LEFT JOIN wfl_etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/ 
-        LEFT JOIN ETR_ENTRUST oete ON  oete.entrust_id = eted.TRADE_ID
-        LEFT JOIN etr_pledge oee ON oete.entrust_id = oee.entrust_id   
-        LEFT JOIN FIN_PRODUCT T6 ON oete.FINPROD_ID = T6.FINPROD_ID
+        LEFT JOIN STL_CAPACCT_INFO sci ON sci.ACCT_NO = ssai.TRD_ACCT_ID
+        LEFT JOIN wfl_etr_pledge ee ON ete.entrust_id = ee.entrust_id /** 委托指令回购质押品 **/
+        LEFT JOIN (
+            SELECT
+                tpd.F_TRADE_ID,
+                t2.PLEDGE_NUMBER AS origRepSecNum,
+                t2.PLEDGE_NUMBER * t2.PLEDGE_FACE_VALUE origPrintAmt,
+                t4.FINPROD_MARKET_ID origRepSecId
+            FROM
+                FIN_DEAL_PLEDGE t2
+            LEFT JOIN TRD_PRODUCT_DEAL tpd ON t2.FINPROD_ID = tpd.FINPROD_ID
+            LEFT JOIN FIN_PRODUCT t4 ON t4.FINPROD_ID = t2.PLEDGE_FINPROD_ID
+        ) old ON eted.TRADE_ID = old.F_TRADE_ID
+        <!--LEFT JOIN etr_pledge oee ON ete.entrust_id = oee.entrust_id-->
+        LEFT JOIN SYS_USER su on ete.INV_MANAGER_ID = su.USER_NAME
+        left join MST_COUNTER_PARTY mcp on ete.COUNTER_ID = mcp.COUNTER_ID
+        LEFT JOIN OPT_TARGET_INFO ON eted.ASSET_TYPE_10 = OPT_TARGET_INFO.TARGET_ID
         WHERE ete.entrust_id = #{entrustId}
     </select>
 
@@ -958,4 +1059,10 @@
         group by er.DISPENSE_RULE, er.VDATE, er.MDATE
     </select>
 
+    <select id="getBusiTypePosition" resultType="java.lang.String">
+        select OUTPUT_VALUE_1 from FIN_PRODUCT_TYPE_CONFIG btm left join ETR_ENTRUST ON (ETR_ENTRUST.FINPROD_TYPE2 =
+        btm.INPUT_VALUE_2 OR btm.INPUT_VALUE_2 is null) AND (ETR_ENTRUST.Ps = btm.INPUT_VALUE_3 OR btm.INPUT_VALUE_3 is
+        null) AND (ETR_ENTRUST.TRADE_PLAT = btm.INPUT_VALUE_1 OR btm.INPUT_VALUE_1 IS NULL) where
+        ETR_ENTRUST.ENTRUST_ID=#{entrustId}
+    </select>
 </mapper>

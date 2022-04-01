@@ -96,6 +96,11 @@ public class EtrBaseDto extends BaseEntity {
      */
     private Date oldUpdateTime;
 
+    /**
+     * 附属表到期日
+     */
+    private Date addMdate;
+
     public EtrBaseDto() {
         // nothing
     }
@@ -343,5 +348,13 @@ public class EtrBaseDto extends BaseEntity {
      */
     public void setTargetType(String targetType) {
         this.targetType = targetType;
+    }
+
+    public Date getAddMdate() {
+        return addMdate;
+    }
+
+    public void setAddMdate(Date addMdate) {
+        this.addMdate = addMdate;
     }
 }

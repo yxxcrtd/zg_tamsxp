@@ -1,31 +1,25 @@
 package com.joyintech.tams.exchange.controller;
 
-import java.util.Objects;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.db.domain.AccountRiskParameter;
-import com.joyintech.tams.exchange.service.ExchangeAccountService;
 import com.joyintech.tams.exchange.service.trade.management.service.AccountManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.AccountRiskParameterManagement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/joyin")
 public class ExchangeAccountController {
 
-    @Autowired
-    private ExchangeAccountService accountService;
-    
+//    @Autowired
+//    private ExchangeAccountService accountService;
+
     @Autowired
     private AccountManagement accountManagement;
-    
+
     @Autowired
     private AccountRiskParameterManagement accountRiskParameterManagement;
 
@@ -39,8 +33,8 @@ public class ExchangeAccountController {
     @RequestMapping(value = "/account", method = RequestMethod.GET)
     public ResultBean queryAccount(@RequestParam(value = "user_id") String userId,
                                    @RequestParam(value = "account_id", required = false) String accountId) {
-        String param = "?user_id="+userId;
-        if (Objects.nonNull(accountId))param += "&account_id="+accountId;
+        String param = "?user_id=" + userId;
+        if (Objects.nonNull(accountId)) param += "&account_id=" + accountId;
 //        return accountService.queryAccount(param);
 //////////////////////////兼容新UI后端
         return accountManagement.queryAccount(accountId);
@@ -58,8 +52,10 @@ public class ExchangeAccountController {
     public ResultBean connectAccount(@RequestParam(value = "user_id") String userId,
                                      @RequestParam(value = "account_id") String accountId,
                                      @RequestParam(value = "status") int connectStatus) {
-        String param = "?user_id="+userId+"&account_id="+accountId+"&status="+connectStatus;
-        return accountService.connectAccount(param);
+//        String param = "?user_id="+userId+"&account_id="+accountId+"&status="+connectStatus;
+//        return accountService.connectAccount(param);
+//////////////////////////兼容新UI后端
+        return accountManagement.connectAccount(accountId, connectStatus);
     }
 
     /**
@@ -74,8 +70,10 @@ public class ExchangeAccountController {
     public ResultBean compareAccount(@RequestParam(value = "user_id") String userId,
                                      @RequestParam(value = "account_id") String accountId,
                                      @RequestParam(value = "type") int compareType) {
-        String param = "?user_id="+userId+"&account_id="+accountId+"&type="+compareType;
-        return accountService.compareAccount(param);
+//        String param = "?user_id="+userId+"&account_id="+accountId+"&type="+compareType;
+//        return accountService.compareAccount(param);
+//////////////////////////兼容新UI后端
+        return accountManagement.compareAccount(accountId, compareType);
     }
 
     /**
@@ -88,9 +86,11 @@ public class ExchangeAccountController {
     @RequestMapping(value = "/account/fund", method = RequestMethod.GET)
     public ResultBean queryAccountFund(@RequestParam(value = "user_id") String userId,
                                        @RequestParam(value = "account_id", required = false) String accountId) {
-        String param = "?user_id=" + userId;
-        if (Objects.nonNull(accountId)) param += "&account_id=" + accountId;
-        return accountService.queryAccountFund(param);
+//        String param = "?user_id=" + userId;
+//        if (Objects.nonNull(accountId)) param += "&account_id=" + accountId;
+//        return accountService.queryAccountFund(param);
+//////////////////////////兼容新UI后端
+        return accountManagement.queryAccountFund(accountId);
     }
 
 
@@ -104,9 +104,11 @@ public class ExchangeAccountController {
     @RequestMapping(value = "/account/standard/bond/available", method = RequestMethod.GET)
     public ResultBean queryAccountStandardBonds(@RequestParam(value = "account_id") String accountId,
                                                 @RequestParam(value = "market", required = false) String market) {
-        String param = "?account_id=" + accountId;
-        if (Objects.nonNull(market)) param += "&market=" + market;
-        return accountService.queryAccountAvailableStandardBonds(param);
+//        String param = "?account_id=" + accountId;
+//        if (Objects.nonNull(market)) param += "&market=" + market;
+//        return accountService.queryAccountAvailableStandardBonds(param);
+//////////////////////////兼容新UI后端
+        return accountManagement.queryAccountAvailableStandardBonds(accountId, market);
     }
 
     /**

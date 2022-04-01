@@ -12,7 +12,7 @@ import com.joyintech.tams.constant.DictCode;
  * @see RiskTrialRetDto
  * @since 1.0
  */
-public class RiskTrialRetDto extends BaseEntity{
+public class RiskTrialRetDto extends BaseEntity {
 
 	/**
 	 * <意义，目的和功能，以及可能被用到的地方>

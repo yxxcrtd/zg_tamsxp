@@ -236,7 +236,7 @@
         STATUS, WORKFLOW_ID,DEPT_CODE,
         UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
         ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-        STATUS_DATE,CHECK_SEQNO)
+        STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK)
         select _NEXTINDEX('SEQ_EQUDET_SUB'),
         BUSI_SEQNO, REG_CODE,
         ACCOUNT,REGIST_BANK_CODE, INDENTIFY_MARK,
@@ -251,7 +251,7 @@
         STATUS, null WORKFLOW_ID,DEPT_CODE,
         UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
         ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-        STATUS_DATE,CHECK_SEQNO
+        STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK
         from CHB_EQUDET_SUB
         <where>
             <foreach collection="investList" item="equityRegist" open="(" close=")" separator=") or (">
@@ -327,22 +327,40 @@
     <!-- add by etliu 20180818 start-->
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
-        update CHB_EQUDET_SUB sub
-        <set>
-            <if test="sendStatus != null and sendStatus != ''">
-                sub.SUBMIT_STATUS = #{sendStatus},
-            </if>
-            sub.submit_time = NOW(),
-            sub.UPDATE_TIME = NOW()
-        </set>
-        <where>
-            <foreach collection="investList" item="equityRegist" open="(" close=")" separator=") or (">
-                sub.BUSI_SEQNO = #{equityRegist.busiSeqno}
-                and sub.REG_CODE = #{equityRegist.regCode}
-                and sub.REGIST_BANK_CODE = #{equityRegist.registBankCode}
-                and sub.INDENTIFY_MARK = #{equityRegist.indentifyMark}
-            </foreach>
-        </where>
+        <!--		update CHB_EQUDET_SUB sub-->
+        <!--		<set>-->
+        <!--			<if test="sendStatus != null and sendStatus != ''">-->
+        <!--				sub.SUBMIT_STATUS = #{sendStatus},-->
+        <!--			</if>-->
+        <!--			sub.submit_time = now(),-->
+        <!--			sub.UPDATE_TIME = now()-->
+        <!--		</set>-->
+        <!--		<where>-->
+        <!--			<foreach collection="investList" item="equityRegist" open="(" close=")" separator=") or (">-->
+        <!--				sub.BUSI_SEQNO = #{equityRegist.busiSeqno}-->
+        <!--				and sub.REG_CODE = #{equityRegist.regCode}-->
+        <!--				and sub.REGIST_BANK_CODE = #{equityRegist.registBankCode}-->
+        <!--				and sub.INDENTIFY_MARK = #{equityRegist.indentifyMark}-->
+        <!--			</foreach>-->
+        <!--		</where>-->
+        <foreach collection="investList" item="equityRegist" index="index" separator=";" >
+            update CHB_EQUDET_SUB sub
+            <set>
+                <if test="sendStatus != null and sendStatus != ''">
+                    sub.SUBMIT_STATUS = #{sendStatus},
+                </if>
+                <if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
+                    sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
+                </if>
+                sub.SUBMIT_TIME = now(),
+                sub.UPDATE_TIME = now()
+            </set>
+            where sub.BUSI_SEQNO = #{equityRegist.busiSeqno}
+            and sub.REG_CODE = #{equityRegist.regCode}
+            and sub.REGIST_BANK_CODE = #{equityRegist.registBankCode}
+            and sub.INDENTIFY_MARK = #{equityRegist.indentifyMark}
+        </foreach>
+        ;
     </update>
     <!-- add by etliu 20180818 end-->
 
@@ -480,7 +498,7 @@
         STATUS, SUMIT_SEQ,DEPT_CODE,
         UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
         ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-        STATUS_DATE,CHECK_SEQNO)
+        STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK)
         select ciish.BUSI_SEQNO, ciish.REG_CODE,
         ciish.ACCOUNT,ciish.REGIST_BANK_CODE, ciish.INDENTIFY_MARK,
         ciish.EQUITY_CONF_DATE, ciish.SHARE_CONF_DATETIME, ciish.FUND_ACC_PLACE,
@@ -493,7 +511,7 @@
         ciish.STATUS, ciish.SUMIT_SEQ,ciish.DEPT_CODE,
         ciish.UPDATE_USER, ciish.UPDATE_TIME,ciish.CREATE_USER,ciish.CREATE_TIME,
         ciish.ORG_CODE, ciish.CHB_SUBMIT_DEADLINE,ciish.CREATE_DEPT,
-        ciish.STATUS_DATE,ciish.CHECK_SEQNO
+        ciish.STATUS_DATE,ciish.CHECK_SEQNO,ciish.ORG_INDENTIFY_MARK
         from (select max(HIS_NO) HIS_NO,BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
         from CHB_EQUDET_SUB_HIS where SUBMIT_STATUS !='01'
         GROUP BY BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK) A
@@ -673,11 +691,11 @@
     </update>
 
     <select id="selectNoendCountByTaskBeanName" parameterType="string" resultType="int">
-    	select count(1) 
+    	select count(1)
     	from SYS_BATCHGRP_EXEC_INFO info
 		  left join SYS_BATCH_JOB bj
 		  on info.BATCH_SEQ_NO=bj.BATCH_SEQ_NO
-		  where 
+		  where
 			bj.TASK_ID=#{taskid,jdbcType=VARCHAR}
 			and info.STATUS in ('UNR','RUN')
 	</select>
@@ -691,7 +709,7 @@
         DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK
         )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual) a">
-        	#{item.busiSeqno,jdbcType=VARCHAR} BUSI_SEQNO, #{item.regCode,jdbcType=VARCHAR} REG_CODE, #{item.account,jdbcType=VARCHAR} ACCOUNT,
+            #{item.busiSeqno,jdbcType=VARCHAR} BUSI_SEQNO, #{item.regCode,jdbcType=VARCHAR} REG_CODE, #{item.account,jdbcType=VARCHAR} ACCOUNT,
             #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE, #{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK, #{item.equityConfDate,jdbcType=DATE} EQUITY_CONF_DATE,
             #{item.shareConfDatetime,jdbcType=TIMESTAMP} SHARE_CONF_DATETIME, #{item.fundAccPlace,jdbcType=VARCHAR} FUND_ACC_PLACE, #{item.busiType,jdbcType=CHAR} BUSI_TYPE,
             #{item.ccy,jdbcType=CHAR} CCY, #{item.amount,jdbcType=DECIMAL} AMOUNT, #{item.amountCny,jdbcType=DECIMAL} AMOUNT_CNY,
@@ -701,57 +719,57 @@
             #{item.agencyCode,jdbcType=VARCHAR} AGENCY_CODE , #{item.agencyName,jdbcType=VARCHAR} AGENCY_NAME, #{item.agencyFsa,jdbcType=CHAR} AGENCY_FSA,
             #{item.busiFsa,jdbcType=CHAR} BUSI_FSA , #{item.prodValue,jdbcType=DECIMAL} PROD_VALUE, #{item.feeAmt,jdbcType=DECIMAL} FEE_AMT,
             #{item.tranTellName,jdbcType=VARCHAR} TRAN_TELL_NAME, #{item.status,jdbcType=VARCHAR} STATUS,
-			<choose>
-				<when test="item.workflowId != null">
-					#{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
-				</when>
-				<otherwise>
-					null WORKFLOW_ID,
-				</otherwise>
-			</choose>
+            <choose>
+                <when test="item.workflowId != null">
+                    #{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+                </when>
+                <otherwise>
+                    null WORKFLOW_ID,
+                </otherwise>
+            </choose>
             #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE, #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER, #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME, #{item.dataSource,jdbcType=CHAR} DATA_SOURCE,
             #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-			<choose>
-				<when test="item.agent != null">
-					#{item.agent,jdbcType=VARCHAR} AGENT,
-				</when>
-				<otherwise>
-					null AGENT,
-				</otherwise>
-			</choose>
-			<choose>
-				<when test="item.createDept != null">
-					#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-				</when>
-				<otherwise>
-					null CREATE_DEPT,
-				</otherwise>
-			</choose>
-			<choose>
-				<when test="item.isSubmit != null">
-					#{item.isSubmit,jdbcType=CHAR} IS_SUBMIT,
-				</when>
-				<otherwise>
-					null IS_SUBMIT,
-				</otherwise>
-			</choose>
-			<choose>
-				<when test="item.interfCheckResult != null">
-					#{item.interfCheckResult,jdbcType=CHAR} INTERF_CHECK_RESULT,
-				</when>
-				<otherwise>
-					null INTERF_CHECK_RESULT,
-				</otherwise>
-			</choose>
-			<choose>
-				<when test="item.orgIndentifyMark != null">
-					#{item.orgIndentifyMark,jdbcType=CHAR} ORG_INDENTIFY_MARK
-				</when>
-				<otherwise>
-					null ORG_INDENTIFY_MARK
-				</otherwise>
-			</choose>
+            <choose>
+                <when test="item.agent != null">
+                    #{item.agent,jdbcType=VARCHAR} AGENT,
+                </when>
+                <otherwise>
+                    null AGENT,
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="item.createDept != null">
+                    #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+                </when>
+                <otherwise>
+                    null CREATE_DEPT,
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="item.isSubmit != null">
+                    #{item.isSubmit,jdbcType=CHAR} IS_SUBMIT,
+                </when>
+                <otherwise>
+                    null IS_SUBMIT,
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="item.interfCheckResult != null">
+                    #{item.interfCheckResult,jdbcType=CHAR} INTERF_CHECK_RESULT,
+                </when>
+                <otherwise>
+                    null INTERF_CHECK_RESULT,
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="item.orgIndentifyMark != null">
+                    #{item.orgIndentifyMark,jdbcType=CHAR} ORG_INDENTIFY_MARK
+                </when>
+                <otherwise>
+                    null ORG_INDENTIFY_MARK
+                </otherwise>
+            </choose>
         </foreach>
     </insert>
     <insert id="insertBtachInterfEquityBusiSub">
@@ -762,65 +780,65 @@
         CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME,
         SUBMIT_DEADLINE,CHB_SUBMIT_DEADLINE,CHECK_SEQNO,STATUS_DATE,SUBMIT_STATUS,SUBMIT_TIME,SUMIT_SEQ,
         STATUS, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-        ORG_CODE, CREATE_DEPT)
+        ORG_CODE, CREATE_DEPT,ORG_INDENTIFY_MARK)
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual) a">
-			#{item.busiSeqno,jdbcType=VARCHAR} BUSI_SEQNO,
-			#{item.regCode,jdbcType=VARCHAR} REG_CODE,
-			#{item.account,jdbcType=VARCHAR} ACCOUNT,
-			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
-			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
-			#{item.equityConfDate,jdbcType=DATE} EQUITY_CONF_DATE,
-			#{item.shareConfDatetime,jdbcType=TIMESTAMP} SHARE_CONF_DATETIME,
-			#{item.fundAccPlace,jdbcType=VARCHAR} FUND_ACC_PLACE,
-			#{item.busiType,jdbcType=CHAR} BUSI_TYPE,
-			#{item.ccy,jdbcType=CHAR} CCY,
-			#{item.amount,jdbcType=DECIMAL} AMOUNT,
-			#{item.amountCny,jdbcType=DECIMAL} AMOUNT_CNY,
-			#{item.shares,jdbcType=DECIMAL} SHARES,
-			#{item.channel,jdbcType=CHAR} CHANNEL,
-			#{item.fundAcc,jdbcType=VARCHAR} FUND_ACC,
-			#{item.isConsign,jdbcType=VARCHAR} IS_CONSIGN,
-			#{item.remark,jdbcType=VARCHAR} REMARK,
-			#{item.contractNo,jdbcType=VARCHAR} CONTRACT_NO,
-			#{item.finAcc,jdbcType=VARCHAR} FIN_ACC,
-			#{item.custContractNo,jdbcType=VARCHAR} CUST_CONTRACT_NO,
-			#{item.custName,jdbcType=VARCHAR} CUST_NAME,
-			#{item.agencyCode,jdbcType=VARCHAR} AGENCY_CODE,
-			#{item.agencyName,jdbcType=VARCHAR} AGENCY_NAME,
-			#{item.agencyFsa,jdbcType=CHAR} AGENCY_FSA,
-			#{item.busiFsa,jdbcType=CHAR} BUSI_FSA,
-			#{item.prodValue,jdbcType=DECIMAL} PROD_VALUE,
-			#{item.feeAmt,jdbcType=DECIMAL} FEE_AMT,
-			#{item.tranTellName,jdbcType=VARCHAR} TRAN_TELL_NAME,
-			#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
-			#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
-			<choose>
-				<when test="item.checkSeqno != null">
-					#{item.checkSeqno,jdbcType=VARCHAR} CHECK_SEQNO,
-				</when>
-				<otherwise>
-					null CHECK_SEQNO,
-				</otherwise>
-			</choose>
-			#{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
-			#{item.submitStatus,jdbcType=VARCHAR} SUBMIT_STATUS,
-			<choose>
-				<when test="item.submitTime != null">
-					#{item.submitTime,jdbcType=TIMESTAMP} SUBMIT_TIME,
-				</when>
-				<otherwise>
-					null SUBMIT_TIME,
-				</otherwise>
-			</choose>
-			#{item.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
-			#{item.status,jdbcType=VARCHAR} STATUS,
-			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            #{item.busiSeqno,jdbcType=VARCHAR} BUSI_SEQNO,
+            #{item.regCode,jdbcType=VARCHAR} REG_CODE,
+            #{item.account,jdbcType=VARCHAR} ACCOUNT,
+            #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+            #{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
+            #{item.equityConfDate,jdbcType=DATE} EQUITY_CONF_DATE,
+            #{item.shareConfDatetime,jdbcType=TIMESTAMP} SHARE_CONF_DATETIME,
+            #{item.fundAccPlace,jdbcType=VARCHAR} FUND_ACC_PLACE,
+            #{item.busiType,jdbcType=CHAR} BUSI_TYPE,
+            #{item.ccy,jdbcType=CHAR} CCY,
+            #{item.amount,jdbcType=DECIMAL} AMOUNT,
+            #{item.amountCny,jdbcType=DECIMAL} AMOUNT_CNY,
+            #{item.shares,jdbcType=DECIMAL} SHARES,
+            #{item.channel,jdbcType=CHAR} CHANNEL,
+            #{item.fundAcc,jdbcType=VARCHAR} FUND_ACC,
+            #{item.isConsign,jdbcType=VARCHAR} IS_CONSIGN,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.contractNo,jdbcType=VARCHAR} CONTRACT_NO,
+            #{item.finAcc,jdbcType=VARCHAR} FIN_ACC,
+            #{item.custContractNo,jdbcType=VARCHAR} CUST_CONTRACT_NO,
+            #{item.custName,jdbcType=VARCHAR} CUST_NAME,
+            #{item.agencyCode,jdbcType=VARCHAR} AGENCY_CODE,
+            #{item.agencyName,jdbcType=VARCHAR} AGENCY_NAME,
+            #{item.agencyFsa,jdbcType=CHAR} AGENCY_FSA,
+            #{item.busiFsa,jdbcType=CHAR} BUSI_FSA,
+            #{item.prodValue,jdbcType=DECIMAL} PROD_VALUE,
+            #{item.feeAmt,jdbcType=DECIMAL} FEE_AMT,
+            #{item.tranTellName,jdbcType=VARCHAR} TRAN_TELL_NAME,
+            #{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+            #{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+            <choose>
+                <when test="item.checkSeqno != null">
+                    #{item.checkSeqno,jdbcType=VARCHAR} CHECK_SEQNO,
+                </when>
+                <otherwise>
+                    null CHECK_SEQNO,
+                </otherwise>
+            </choose>
+            #{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
+            #{item.submitStatus,jdbcType=VARCHAR} SUBMIT_STATUS,
+            <choose>
+                <when test="item.submitTime != null">
+                    #{item.submitTime,jdbcType=TIMESTAMP} SUBMIT_TIME,
+                </when>
+                <otherwise>
+                    null SUBMIT_TIME,
+                </otherwise>
+            </choose>
+            #{item.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,#{item.orgIndentifyMark,jdbcType=CHAR} ORG_INDENTIFY_MARK
 
         </foreach>
     </insert>
@@ -945,7 +963,7 @@
     </update>
     <!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
     <insert id="insertEquityBusiHis" parameterType="java.util.List">
-        insert into CHB_EQUDET_HIS (HIS_NO, BUSI_SEQNO, REG_CODE,
+        insert into CHB_EQUDET_HIS ( BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
         BUSI_TYPE, CCY, AMOUNT,
@@ -959,7 +977,7 @@
         UPDATE_TIME, CREATE_USER, CREATE_TIME,
         DATA_SOURCE, ORG_CODE, AGENT,
         CREATE_DEPT, IS_SUBMIT)
-        select _NEXTINDEX('seq_equity_busi') ,
+        select
         BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
@@ -997,7 +1015,7 @@
     </delete>
     <!-- 根据主键查询投资者信息 -->
     <select id="selectChbEqudetSubByKey" resultType="com.joyintech.tams.common.base.entity.ChbEqudet">
-        select 
+        select
            A.SUBMIT_STATUS status,
            A.BUSI_SEQNO busiSeqno,
            A.REGIST_BANK_CODE registBankCode,
@@ -1008,10 +1026,10 @@
           and A.ACCOUNT = B.ACCOUNT
     </select>
     <select id="selectAllCheckEquHoldDto" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
-    	select INDENTIFY_MARK indentifyMark,MERGER_INDENTIFY_MARK mergerindentifymark,REGIST_BANK_CODE registBankCode
-    	from chb_equ_hold_check
-		where INDENTIFY_MARK!=MERGER_INDENTIFY_MARK
-		and STATUS = 'E'
+        select INDENTIFY_MARK indentifyMark,MERGER_INDENTIFY_MARK mergerindentifymark,REGIST_BANK_CODE registBankCode
+        from chb_equ_hold_check
+        where INDENTIFY_MARK!=MERGER_INDENTIFY_MARK
+        <!--and STATUS = 'E'-->
     </select>
     <!-- 查询所有数据状态为删除且报送状态为未报送的数据 -->
     <select id="selectDeletedAndUnsubmittedData"
@@ -1070,14 +1088,14 @@
     <select id="selectEquityInfoAll"
             resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto"
             resultSetType="FORWARD_ONLY" fetchSize="1000">
-		select 
+		select
         	INDENTIFY_MARK         as indentifyMark,
        		REGIST_BANK_CODE          as bankCode,
        		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
        		IDENTIFY_NUMBER           as identifyNumber
    		from
-   		 CHB_EQU_HOLD 
-		
+   		 CHB_EQU_HOLD
+
 	</select>
     <select id="selectCountSizeWithSameKey" parameterType="map" resultType="int">
         select count(1) from (
@@ -1102,7 +1120,7 @@
         UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
         ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
         STATUS_DATE,CHECK_SEQNO)
-        select SEQ_EQUDET_SUB.NEXTVAL,
+        select _NEXTINDEX('SEQ_EQUDET_SUB'),
         tt.BUSI_SEQNO, tt.REG_CODE,
         ACCOUNT,tt.REGIST_BANK_CODE, tt.INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
@@ -1133,7 +1151,18 @@
     <delete id="deleteEquDetSubmitRegist" parameterType="map">
         delete from CHB_EQUDET_SUB aa
         where aa.SUBMIT_STATUS in ('02','03')
-        and EXISTS (
+        and ( BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK) IN
+        ( SELECT * FROM (
+        SELECT
+        BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
+        FROM
+        chb_equdet_sub
+        GROUP BY
+        BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
+        HAVING
+        COUNT(1) > 1)t
+        )
+        <!--and EXISTS (
         select BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK,count(1)
         from chb_equdet_sub ciis
         <include refid="wherecase"/>
@@ -1142,7 +1171,7 @@
         and ciis.REGIST_BANK_CODE=aa.REGIST_BANK_CODE
         and ciis.INDENTIFY_MARK=aa.INDENTIFY_MARK
         group by BUSI_SEQNO, REG_CODE, REGIST_BANK_CODE, INDENTIFY_MARK
-        having count(1)>1)
+        having count(1)>1)-->
     </delete>
     <sql id="wherecase">
         <where>
@@ -1231,7 +1260,7 @@
 		SELECT
 			max(A.BUSI_DATE) busiDate
 		FROM CHB_MKT_HOLIDAY A
-		where 
+		where
 		A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
 		AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
 		AND A.STATUS = 'E'
@@ -1261,7 +1290,7 @@
         from CHB_EQUDET_SUB ciis
         where
         ciis.SUBMIT_STATUS = '01'
-        and ciis.STATUS != '03'
+        and ciis.STATUS = '01'
         and ciis.EQUITY_CONF_DATE = #{holdDate,jdbcType=DATE}
         and ciis.REGIST_BANK_CODE= #{bankcode,jdbcType=VARCHAR}
         <if test="repeatHoldInfoData != null and  repeatHoldInfoData.size > 0">
@@ -1294,9 +1323,9 @@
     </insert>
     <select id="selectAllUnregistCheckOkData" parameterType="map"
             resultType="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto">
-		select 
+		select
 	        ciis.STATUS                 status,
-	        ciis.STATUS_DATE            statusDate, 
+	        ciis.STATUS_DATE            statusDate,
 	        ciis.SUBMIT_STATUS          submitStatus,
 	        ciis.SUBMIT_TIME            submitTime,
 	        ciis.CHB_SUBMIT_DEADLINE    chbSubmitDeadline,
@@ -1306,7 +1335,7 @@
 	        ciis.BUSI_TYPE              busiType,
 	        ciis.EQUITY_CONF_DATE       equityConfDate,
 	        ciis.SHARE_CONF_DATETIME    shareConfDatetime,
-	        ciis.CCY                    ccy,              		     
+	        ciis.CCY                    ccy,
 			ciis.AMOUNT                 amount,
 	        ciis.AMOUNT_CNY             amountCny,
 	        ciis.PROD_VALUE             prodValue,
@@ -1326,15 +1355,15 @@
 	        ciis.AGENCY_FSA             agencyFsa,
 	        ciis.BUSI_FSA               busiFsa,
 	        ciis.TRAN_TELL_NAME         tranTellName,
-			ciis.REMARK                 remark,             
-			ciis.CREATE_USER            createUser,       
-			ciis.CREATE_TIME            createTime,       
-			ciis.UPDATE_USER            updateUser,       
-			ciis.UPDATE_TIME            updateTime,         
-			ciis.ORG_CODE               orgCode,          
-			ciis.DEPT_CODE              deptCode,         			
+			ciis.REMARK                 remark,
+			ciis.CREATE_USER            createUser,
+			ciis.CREATE_TIME            createTime,
+			ciis.UPDATE_USER            updateUser,
+			ciis.UPDATE_TIME            updateTime,
+			ciis.ORG_CODE               orgCode,
+			ciis.DEPT_CODE              deptCode,
 			ciis.SUMIT_SEQ				sumitSeq,
-			ciis.CHECK_SEQNO			checkSeqno		
+			ciis.CHECK_SEQNO			checkSeqno
 		from CHB_EQUDET_SUB ciis
 		inner join CHB_EQUDET_SEND_TEMP tempTable
         on ciis.SUMIT_SEQ = tempTable.SUMIT_SEQ
@@ -1343,12 +1372,17 @@
 	</select>
     <update id="updateSubmitStatus">
         update CHB_EQUDET_SUB sub
+        inner join CHB_EQUDET_SEND_TEMP tp on sub.SUMIT_SEQ = tp.SUMIT_SEQ
+        set sub.SUBMIT_STATUS = '02',
+        sub.submit_time = NOW()
+        where sub.SUBMIT_STATUS = '01'
+        <!--update CHB_EQUDET_SUB sub
         set sub.SUBMIT_STATUS = '02',
             sub.submit_time = NOW()
         where
             sub.SUMIT_SEQ in (select SUMIT_SEQ from CHB_EQUDET_SEND_TEMP)
-            and sub.SUBMIT_STATUS = '01'
-            
+            and sub.SUBMIT_STATUS = '01'-->
+
     </update>
     <select id="getChbEquSubSend" resultType="string" parameterType="map">
 		select INDENTIFY_MARK from CHB_EQU_SUB  cs
@@ -1484,5 +1518,21 @@
             and ACCOUNT = #{item.account,jdbcType=VARCHAR}
             and REGIST_BANK_CODE = #{item.registBankCode,jdbcType=VARCHAR}
         </foreach>
+    </update>
+
+    <update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        begin
+        <foreach collection="list" item="item" index="index" open="" close=";" separator=";">
+            update CHB_EQU_SUB
+            <set >
+                <if test="item.submitFeedbackStatus != null" >
+                    SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus.reqId,jdbcType=VARCHAR},
+                </if>
+            </set>
+            where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
+        </foreach>
+        end;
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     </update>
 </mapper>

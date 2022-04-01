@@ -69,6 +69,9 @@ public class CfetsManualSettleInfoRespond {
     @ApiModelProperty(name="prinAmtTheory",value="理论还本金额",example="A1")
     private BigDecimal prinAmtTheory;
 
+    @ApiModelProperty(name="totalAmtTheory",value="理论交收金额",example="A1")
+    private BigDecimal totalAmtTheory;
+
     //组合分配
     List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList;
 
@@ -214,5 +217,13 @@ public class CfetsManualSettleInfoRespond {
 
     public void setSettleDate(String settleDate) {
         this.settleDate = settleDate;
+    }
+
+    public BigDecimal getTotalAmtTheory() {
+        return totalAmtTheory;
+    }
+
+    public void setTotalAmtTheory(BigDecimal totalAmtTheory) {
+        this.totalAmtTheory = totalAmtTheory;
     }
 }

@@ -5,6 +5,8 @@ import com.joyintech.exchange.service.quote.service.QuoteService;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.TickBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class QuoteTickController {
      */
     @RequestMapping(value = {"/quote/tick"}, method = RequestMethod.GET)
     public ResultBean queryTick(@RequestParam(value = "stock_code") String stockCode) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.getForObjectResultBean();
+    	}
         return quoteService.getTick(stockCode);
     }
 
@@ -44,6 +49,9 @@ public class QuoteTickController {
      */
     @RequestMapping(value = {"/quote/tick/convert"}, method = RequestMethod.POST)
     public ResultBean convertTick(@RequestBody InterfQuoteBean interfQuoteBean) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(interfQuoteBean);
+    	}
         return new ResultBean(ErrorCode.SUCCESS, quoteService.convertTick(interfQuoteBean));
     }
 
@@ -76,6 +84,9 @@ public class QuoteTickController {
 
     @RequestMapping(value = {"add/quote/tick/json"}, method = RequestMethod.POST)
     public ResultBean addTicksForJson(@RequestBody List<TickBean> tickBeanList) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(tickBeanList);
+    	}
         return quoteService.addTicks(tickBeanList, null);
     }
 

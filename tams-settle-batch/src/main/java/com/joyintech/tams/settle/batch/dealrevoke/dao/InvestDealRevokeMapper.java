@@ -1,9 +1,9 @@
 package com.joyintech.tams.settle.batch.dealrevoke.dao;
 
-import com.joyintech.tams.common.base.entity.EtrCashPosition;
-import com.joyintech.tams.common.base.entity.EtrSecPosition;
-import com.joyintech.tams.common.base.entity.PtlCashPosition;
-import com.joyintech.tams.common.base.entity.PtlSecPosition;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,6 +30,13 @@ public interface InvestDealRevokeMapper {
      * @return 汇总交易编号列表
      */
     List<String> selectTotalTradeIdTgM(Map<String, Object> param);
+
+    /**
+     * 关联结算下行映射表查询汇总交易编号
+     * @param param 查询参数
+     * @return 汇总交易编号列表
+     */
+    List<String> selectSsltTotalTradeIdTgM(Map<String, Object> param);
 
     /**
      * 查询交易编号
@@ -72,7 +79,21 @@ public interface InvestDealRevokeMapper {
      * @return
      */
     int deleteEtrCashPositionFlow(Map<String, Object> param);
-    
+
+    /**
+     * 删除质押券出入库表
+     * @param param 参数
+     * @return
+     */
+    int deleteTrdStasecFlow(Map<String, Object> param);
+
+    /**
+     * 删除质押券出入库明细表
+     * @param param 参数
+     * @return
+     */
+    int deleteTrdStasecFlowDetail(Map<String, Object> param);
+
     /**
      * 删除日间委托完成度
      * @param param 参数
@@ -137,4 +158,62 @@ public interface InvestDealRevokeMapper {
     int updateEtrCashPosition(EtrCashPosition etrCashPosition);
 
     int updateEtrSecPosition(EtrSecPosition etrSecPosition);
+
+    int updateEtrStatusByTrdId(Map<String, Object> param);
+
+    List<Map<String,String>> selectPsById(Map<String, Object> param);
+
+    List<Map<String, String>> selectRepoPsById(Map<String, Object> param);
+
+    void deletePtlSecPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deleteEtrSecPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deleteEtrCashPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deletePtlCashPositionFlowByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    List<String> searchTradeIdsByTotalTradeIds(@Param("totalTradeIds") List<String> totalTradeIds);
+
+    List<PtlSecPositionFlowDto> getPtlSecPositionFlowsByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    List<EtrSecPositionFlowDto> getEtrSecPositionFlowsByTradeIds(@Param("tradeIds") List<String> tradeIds);
+
+    void deleteZyTrdStasecFlows(@Param("tradeIds") List<String> tradeIds);
+
+    void deleteZyTrdStasecFlowDetails(@Param("tradeIds") List<String> tradeIds);
+
+	// add by fuyongsheng 20220308 start
+    /**
+     * 查询日间成交交易
+     * @param param
+     * @return
+     */
+    List<TrdProductTempDeal> getTrdProductTempDeals(Map<String, Object> param);
+    // add by fuyongsheng 20220308 end
+
+    /**
+     * 查询日间标准券出入库流水表
+     * @param param
+     * @return
+     */
+    List<TrdTempStasecFlow> getTrdTempStasecFlows(Map<String, Object> param);
+
+    // modify by etliu 20220227 start
+    // 广农商二阶段 GNS-963:【广农商场内清算】协议回购上交所存续期（解除质押、到期购回、到期续做、提前购回）指令提交后，指令持仓更新不对
+    void deleteDayFinTradeProduct(Map<String, Object> param);
+    void deleteDayFinTradeProductAdd(Map<String, Object> param);
+    void deleteDayFinProductType(Map<String, Object> param);
+    void deleteDayFinDealPledge(Map<String, Object> param);
+    // modify by etliu 20220227 end
+
+    // modify by etliu 20220227 start
+    // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+    /**
+     * 查询明细数据的汇总交易编号（如债券存续期）
+     * @param param 查询参数
+     * @return 汇总交易编号列表
+     */
+    List<TrdFinProductDealTotal> selectSubTotalTradeData(Map<String, Object> param);
+    // modify by etliu 20220227 end
 }

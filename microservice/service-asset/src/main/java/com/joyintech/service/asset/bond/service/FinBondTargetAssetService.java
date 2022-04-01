@@ -849,9 +849,13 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
      * @see
      * @since 1.0
      */
-    public FinBondTargetAssetDto getBasicInfo(String finprodId) {
+    public FinBondTargetAssetDto getBasicInfo(String finprodId, String finprodType) {
         FinBondTargetAssetDto finBondTargetAssetDto = new FinBondTargetAssetDto();
-        finBondTargetAssetDto = finBondTargetAssetMapper.getBasicInfo(finprodId, DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        if(Objects.isNull(finprodType)){
+            finBondTargetAssetDto = finBondTargetAssetMapper.getBasicInfo(finprodId, DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        } else {
+            finBondTargetAssetDto = finBondTargetAssetMapper.getBasicInfo(finprodId, finprodType);
+        }
         //转债信息
         if(null!=finBondTargetAssetDto){
             FinProductConvertible finProductConvertible = finProductConvertibleMapper.selectByPrimaryKey(finBondTargetAssetDto.getFinprodId());
@@ -862,6 +866,8 @@ public class FinBondTargetAssetService extends BaseService<FinBondTargetAssetDto
                 }
                 finBondTargetAssetDto.setFinProductConvertible(finProductConvertible);
             }
+        } else {
+            return new FinBondTargetAssetDto();
         }
         return finBondTargetAssetDto;
     }

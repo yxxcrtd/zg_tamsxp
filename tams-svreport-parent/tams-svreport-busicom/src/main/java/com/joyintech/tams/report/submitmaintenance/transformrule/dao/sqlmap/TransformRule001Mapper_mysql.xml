@@ -28,31 +28,31 @@
 	</insert>
 
 	<!-- 删除数据 -->
-    <update id="deleteByList" parameterType="java.util.List" >
-        update  CHB_TRANSFORM_RULE
-        <set>
-        STATUS='D'
-        </set>
-        <where>
-            <foreach collection="deleteList" index="index" item="item" open="(" separator=") or (" close=")">     
-                SEQNO = #{item.seqno, jdbcType=VARCHAR}
-            </foreach>
-        </where>
-    </update>
+	<update id="deleteByList" parameterType="java.util.List" >
+		update  CHB_TRANSFORM_RULE
+		<set>
+			STATUS='D'
+		</set>
+		<where>
+			<foreach collection="deleteList" index="index" item="item" open="(" separator=") or (" close=")">
+				SEQNO = #{item.seqno, jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</update>
 
-  <!--修改保存 -->
-  <update id="doEditSave" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
-	update CHB_TRANSFORM_RULE
-        <set>
-        PINGYING=#{pinyin,jdbcType=VARCHAR} ,
-        TARGET_FIELD= #{targetField,jdbcType=VARCHAR} ,
-        REMARK=#{remark,jdbcType=VARCHAR},
-        STATUS='E',
-        FIELD_UNICODE= #{fieldUnicode,jdbcType=VARCHAR} ,
-        UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
-        UPDATE_TIME=NOW()
-        </set>
-        where SEQNO=#{seqno}
+	<!--修改保存 -->
+	<update id="doEditSave" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
+		update CHB_TRANSFORM_RULE
+		<set>
+			PINGYING=#{pinyin,jdbcType=VARCHAR} ,
+			TARGET_FIELD= #{targetField,jdbcType=VARCHAR} ,
+			REMARK=#{remark,jdbcType=VARCHAR},
+			STATUS='E',
+			FIELD_UNICODE= #{fieldUnicode,jdbcType=VARCHAR} ,
+			UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME=NOW()
+		</set>
+		where SEQNO=#{seqno}
 	</update>
 
 </mapper>

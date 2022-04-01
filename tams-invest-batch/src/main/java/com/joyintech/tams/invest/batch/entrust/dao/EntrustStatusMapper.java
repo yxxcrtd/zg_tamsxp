@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.batch.entrust.dao;
 
+import com.joyintech.tams.invest.batch.entrust.dto.EntrustClosePosEtrReqDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +32,8 @@ public interface EntrustStatusMapper {
     List<String> selectEntrustIds(Map<String, String> sysDate);
 
     void updateDistributeStatus(Map<String, String> sysDate);
+
+    List<EntrustClosePosEtrReqDto> selectEntrustList(Map<String, String> sysDate);
+
+    void updateBusModel(Map<String,Object> param);
 }

@@ -123,8 +123,8 @@ public class PbcSendZipDatFileService extends CommonExportService<PbcSendZipDatF
 		dealSearchParam(pageParam);
 		//将发送状态改为空
 		pageParam.put("sendStatus", "");
-		String orgCode = SecurityUtil.getLoginUser().getOrgCode();
-		pageParam.put("orgCode",orgCode);
+//		String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+//		pageParam.put("orgCode",orgCode);
 		if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
 				&& pageParam.get(GlobalConstant.PARAM_LENGTH) != null){
 			int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());

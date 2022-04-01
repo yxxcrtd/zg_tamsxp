@@ -51,6 +51,15 @@ public class CounterInfoDto {
     @ApiModelProperty(name="exerYield",value="行权收益率(%")
     private BigDecimal exerYield;
 
+    @ApiModelProperty(name="cpriceAmt",value="净价总额")
+    private BigDecimal cpriceAmt;
+
+    @ApiModelProperty(name="cpriceAmt",value="利息总额")
+    private BigDecimal intAmt;
+
+    @ApiModelProperty(name="cpriceAmt",value="全价总额")
+    private BigDecimal fpriceAmt;
+
     public String getDetId() {
         return detId;
     }
@@ -145,6 +154,30 @@ public class CounterInfoDto {
 
     public void setExerYield(BigDecimal exerYield) {
         this.exerYield = exerYield;
+    }
+
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
     }
 }
 

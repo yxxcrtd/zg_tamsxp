@@ -20,6 +20,10 @@ public class AvailableEtrSecPositionRequest  {
     @ApiModelProperty(name="invAim",value="投资目的，无投资目的的存999999",example="A1")
     private String invAim;
 
+    @ApiModelProperty(name="ps",value="交易方向",example="A1")
+    private String ps;
+
+
     /**
      * 持仓类型，实际、在途、质押、融入、融出
      */
@@ -125,5 +129,13 @@ public class AvailableEtrSecPositionRequest  {
      */
     public void setCdate(Date cdate) {
         this.cdate = cdate;
+    }
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
     }
 }

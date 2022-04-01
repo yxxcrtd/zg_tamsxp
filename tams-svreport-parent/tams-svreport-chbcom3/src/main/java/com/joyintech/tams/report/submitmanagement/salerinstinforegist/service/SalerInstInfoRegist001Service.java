@@ -66,6 +66,10 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
      * @since 1.0
      */
     public Page<SalerInstInfoRegistDto> searchForPage(Map<String, Object> param){
+        if(StringUtil.isNotBlank((String)param.get("status"))) {
+            String status = param.get("status").toString();
+            param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+        }
         if (null != param.get(GlobalConstant.PARAM_PAGE)
                 && null != param.get(GlobalConstant.PARAM_LENGTH)) {
             int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
@@ -188,6 +192,13 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
             // 反馈状态
             String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
 
+            String status = (String) pageParam.get("status");
+
+            // 将数据状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(status)) {
+                pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+            }
+
             // 将总部或分支机构名称当做多选下拉框处理
             if (StringUtil.isNotBlank(salerOrgName)) {
                 pageParam.put("salerOrgNameList", StringUtil.splitToList(GlobalConstant.COMMA, salerOrgName));
@@ -237,6 +248,8 @@ public class SalerInstInfoRegist001Service extends CommonExportService<SalerInst
         List<SalerInstInfoRegistDto> tempList=new ArrayList<SalerInstInfoRegistDto>();
         SalerInstInfoRegistDto nullDate = new SalerInstInfoRegistDto();
         if(datas == null){
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbSalerInstInfoRegistMapper.setDataList(selectParam);
             this.formatByType(tempList);
         }else{

@@ -79,56 +79,45 @@ values ('BOK_HAND_GROUP', 'VAL', '辅助核算项群组', null, '02', 'system', 
 
 delete from sys_datadict_list d where d.dict_code='BOK_HAND_GROUP';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_BOND_TYPE', '证券大类', 0, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'SEC_TYPE', '证券大类', 0, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_BOND_TYPE2', '证券分类', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'TYPE_2', '证券分类', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_TRD_MARKET', '交易市场', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'TRADE_MARKET', '交易市场', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_ISSUE_TYPE', '发行方式', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'ISSUE_TYPE', '发行方式', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_CPY_TYPE', '交易对手类型', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'COUNTER_TYPE', '交易对手类型', 4, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_ACCOUNT_TYPE', '账户类型', 5, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'ACCT_TYPE', '账户类型', 5, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_FEE_TYPE', '费用类型', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'FEE_TYPE', '费用类型', 6, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_TRD_PROP', '交易属性', 7, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'TRD_PROP', '交易属性', 7, '0', 'system', null, sysdate, 'system', sysdate, null);
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('BOK_HAND_GROUP', 'BOK_TAX_TYPE', '税费类型', 8, '0', 'system', null, sysdate, 'system', sysdate, null);
+values ('BOK_HAND_GROUP', 'TAX_FEE_TYPE', '税费类型', 8, '0', 'system', null, sysdate, 'system', sysdate, null);
 --insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 --values ('BOK_HAND_GROUP', 'BOK_CPY', '交易对手', 8, '0', 'system', null, sysdate, 'system', sysdate, null);
+insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
+values ('BOK_HAND_GROUP', 'CHANNEL', '渠道', 9, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 
-delete from sys_datadict d where d.dict_code in('BOK_BOND_TYPE','BOK_BOND_TYPE2','BOK_TRD_MARKET','BOK_ISSUE_TYPE','BOK_CPY_TYPE',
-'BOK_ACCOUNT_TYPE','BOK_FEE_TYPE','BOK_TRD_PROP','BOK_TAX_TYPE','BOK_CPY');
+
+delete from sys_datadict d where d.dict_code in('TYPE_2','TRD_PROP','TAX_FEE_TYPE');
 
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_BOND_TYPE', 'VAL', '证券大类', null, '01', 'system', null, sysdate, 'system', sysdate);
+values ('TYPE_2', 'VAL', '证券分类', null, '01', 'system', null, sysdate, 'system', sysdate);
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_BOND_TYPE2', 'VAL', '证券分类', null, '01', 'system', null, sysdate, 'system', sysdate);
+values ('TRD_PROP', 'VAL', '交易属性', null, '01', 'system', null, sysdate, 'system', sysdate);
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_TRD_MARKET', 'VAL', '交易市场', null, '01', 'system', null, sysdate, 'system', sysdate);
-insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_ISSUE_TYPE', 'VAL', '发行方式', null, '01', 'system', null, sysdate, 'system', sysdate);
-insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_CPY_TYPE', 'VAL', '交易对手类型', null, '01', 'system', null, sysdate, 'system', sysdate);
-insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_ACCOUNT_TYPE', 'VAL', '账户类型', null, '01', 'system', null, sysdate, 'system', sysdate);
-insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_FEE_TYPE', 'VAL', '费用类型', null, '01', 'system', null, sysdate, 'system', sysdate);
-insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_TRD_PROP', 'VAL', '交易属性', null, '01', 'system', null, sysdate, 'system', sysdate);
-insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOK_TAX_TYPE', 'VAL', '税费类型', null, '01', 'system', null, sysdate, 'system', sysdate);
+values ('TAX_FEE_TYPE', 'VAL', '税费类型', null, '01', 'system', null, sysdate, 'system', sysdate);
 --insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 --values ('BOK_CPY', 'VAL', '交易对手', null, '01', 'system', null, sysdate, 'system', sysdate);
 
 
 
 
-delete from sys_datadict_list d where d.dict_code in('BOK_BOND_TYPE','BOK_BOND_TYPE2','BOK_TRD_MARKET','BOK_ISSUE_TYPE','BOK_CPY_TYPE',
-'BOK_ACCOUNT_TYPE','BOK_FEE_TYPE','BOK_TRD_PROP','BOK_TAX_TYPE','BOK_CPY');
+delete from sys_datadict_list d where d.dict_code in('TYPE_2','TRD_PROP','TAX_FEE_TYPE');
 
 
 

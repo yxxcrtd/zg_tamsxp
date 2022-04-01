@@ -21,7 +21,7 @@ import com.joyintech.tams.business.common.dto.CommonSearchInfoRequest;
 import com.joyintech.tams.business.common.entity.CfgReadonlyFormShow;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.User;
 import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispatcher.dao.FieldEtrDispatcherMapper;
@@ -32,12 +32,14 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.trade.dao.BussRepoSecMapper;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -69,6 +71,9 @@ public class FieldEtrDispatcherService extends BaseService{
 
     @Autowired
     private AutoDispenseRightMapper autoDispenseRightMapper;
+
+    @Autowired
+    private EtrCommonService etrCommonService;
     /**
      * 自定义债券一级投标委托mapper
      */
@@ -305,14 +310,29 @@ public class FieldEtrDispatcherService extends BaseService{
         FieldEtrDispatcherInfoResponse fieldResponseDto =new FieldEtrDispatcherInfoResponse();
         //dto转成map
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
+        pageParam.put("ASSET_TYPE_07", DictCodeList.平安资产类型_拆借.getValue());
+        pageParam.put("ASSET_TYPE_08", DictCodeList.平安资产类型_质押式回购.getValue());
+        pageParam.put("ASSET_TYPE_10", DictCodeList.平安资产类型_买断式回购.getValue());
+        pageParam.put("ASSET_TYPE_12", DictCodeListExt2.平安资产类型_债券借贷.getValue());
         pageParam.put("YESORNO_YES", DictCodeList.是否_是.getValue());
+        pageParam.put("BACK_LEND_DIRECTION", DictCode.回购拆借方向.getValue());
+        pageParam.put("PS", DictCode.交易方向.getValue());
         List<String> entrustIdList = StringUtil.splitToList(",",(String)pageParam.get("entrustId"));
         if(StringUtil.isBlank(dto.getEntrustId()) || entrustIdList.size() > 1){
             return new FieldEtrDispatcherInfoResponse();
         }else {
-            fieldResponseDto = fieldEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+            List<FieldEtrDispatcherInfoResponse> list = fieldEtrDispatcherMapper.getEtrDispatcherInfo(pageParam);
+            if(!CollectionUtils.isEmpty(list)){
+                fieldResponseDto = list.get(0);
+            }
             //一级市场投标增加投标标位List
             if (fieldResponseDto != null) {
+                //折算率 计算 * 面值
+                BigDecimal pledgeStandardNumber = fieldResponseDto.getPledgeStandardNumber();
+                Date sysDate = DateUtil.platDateFromCache();
+                String finprodId = fieldResponseDto.getFinprodId();
+                BigDecimal faceAmt =  (BigDecimal) etrCommonService.select券面面值(finprodId, DateUtil.format(sysDate));
+                fieldResponseDto.setPledgeStandardNumber(pledgeStandardNumber.multiply(faceAmt).divide(new BigDecimal(100)));
                 if (StringUtil.equals(dto.getBusiTypePosition(), DictCodeListExt3.头寸业务类型_债券一级投标.getValue())) {
                     fieldResponseDto.setBidPriceList(mapper.selectBidPriceByKey(pageParam));
                     fieldResponseDto.setEtrBidDate(fieldResponseDto.getEntrustDate());
@@ -449,6 +469,16 @@ public class FieldEtrDispatcherService extends BaseService{
      * @return
      */
     public Map<String, Object> getReadonlyFormEtrInfo(String pageCode, String dtCode, String spcdCode, CommonSearchInfoRequest dto) {
+        if ("null".equals(spcdCode) && Objects.nonNull(dto) && StringUtil.isNotEmpty(dto.getEntrustId())) {
+            String busiTypePosition = fieldEtrDispatcherMapper.getBusiTypePosition(dto.getEntrustId());
+            logger.debug("fieldEtrDispatcherMapper getBusiTypePosition with entrustId = [{}], result busiTypePosittion = [{}]", dto.getEntrustId(), busiTypePosition);
+            if (StringUtil.isEmpty(busiTypePosition)) {
+                dto.setBusiTypePosition(StringUtil.EMPTY);
+            } else {
+                dto.setBusiTypePosition(busiTypePosition);
+                spcdCode = busiTypePosition;
+            }
+        }
         Map<String, Object> resultData = new HashMap<>();
         List<CfgReadonlyFormShow>  infoForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode,dtCode,spcdCode);
         if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),dto.getFinprodType2()) &&

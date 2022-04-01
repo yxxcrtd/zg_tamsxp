@@ -141,6 +141,7 @@ public class TrdBondToStock002Controller extends BaseController {
         }
         //成交匹配录单
         else if(StringUtil.isNotEmpty(tranRecord)) {
+            model.addAttribute("isTranRecord", DictCodeList.是否_是.getValue());
             entity = JsonUtils.json2Object(tranRecord,TrdBondToStock001Dto.class);
         }
         else{

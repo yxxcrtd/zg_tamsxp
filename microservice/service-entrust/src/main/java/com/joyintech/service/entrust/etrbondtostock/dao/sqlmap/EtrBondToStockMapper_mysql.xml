@@ -307,7 +307,7 @@
 		@rownum:=@rownum+1 rownum, MBMI.*,
 		if(@SEC_ID=MBMI.SEC_ID,@rank:=@rank+1,@rank:=1) as px,
 		@SEC_ID:=MBMI.SEC_ID
-		from(SELECT * from MST_BOND_MARKET_INFO WHERE VALUE_DATE &lt; = STR_TO_DATE(#{sysDate},'%Y-%m-%d') order by SEC_ID,VALUE_DATE DESC)MBMI,
+		from(SELECT * from MST_BOND_MARKET_INFO WHERE VALUE_DATE &lt;= STR_TO_DATE(#{sysDate},'%Y-%m-%d') order by SEC_ID,VALUE_DATE DESC)MBMI,
 		(select @rownum:=0,@SEC_ID:=null,@rank:=0)b
 <!--		SELECT MBMI.*,-->
 <!--			    (row_number()over(partition BY SEC_ID order by VALUE_DATE DESC)) px-->
@@ -325,7 +325,7 @@
 		@rownum:=@rownum+1 rownum, MSP.*,
 		if(@SHARES_ID=MSP.SHARES_ID,@rank:=@rank+1,@rank:=1) as px,
 		@SHARES_ID:=MSP.SHARES_ID
-		from(SELECT * from MST_SHARE_PRICE WHERE DEAL_DATE &lt; =  STR_TO_DATE(#{sysDate},'%Y-%m-%d') order by SHARES_ID,DEAL_DATE DESC)MSP,
+		from(SELECT * from MST_SHARE_PRICE WHERE DEAL_DATE &lt;=  STR_TO_DATE(#{sysDate},'%Y-%m-%d') order by SHARES_ID,DEAL_DATE DESC)MSP,
 		(select @rownum:=0,@SHARES_ID:=null,@rank:=0)b
 <!--		SELECT MSP.*,-->
 <!--			    (row_number()over(partition BY SHARES_ID order by DEAL_DATE DESC)) px-->

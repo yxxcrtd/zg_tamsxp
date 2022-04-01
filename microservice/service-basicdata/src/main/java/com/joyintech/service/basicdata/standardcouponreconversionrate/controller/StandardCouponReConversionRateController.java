@@ -64,6 +64,17 @@ public class StandardCouponReConversionRateController {
     }
 
     /**
+     * 详情、修改、查看、唯一性验证
+     *
+     * @param dto
+     * @return
+     */
+    @PostMapping("/getList")
+    public List<StandardCouponReConversionRateDto> getList(@RequestBody StandardCouponReConversionRateDto dto){
+        return standardCouponReConversionRateService.getList(dto);
+    }
+
+    /**
      * 删除
      *
      * @param dto

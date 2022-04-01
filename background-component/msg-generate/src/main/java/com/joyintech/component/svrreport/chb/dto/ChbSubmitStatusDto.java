@@ -55,6 +55,24 @@ public class ChbSubmitStatusDto extends BaseEntity {
      */
     private String status;
 
+
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    /***
+     * 数据更新表
+     * 14 - 身份
+     * 16 - 持有
+     */
+    private String flag;
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
     public String getStatus() {
         return status;
     }

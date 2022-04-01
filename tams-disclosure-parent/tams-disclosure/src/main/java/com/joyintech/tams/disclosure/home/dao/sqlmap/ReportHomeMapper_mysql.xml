@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.home.dao.DisclosureHomeMapper_mysql">
 	<select id="searchReportInfo" resultType="com.joyintech.tams.disclosure.home.dto.SubmitInformationRegistrationDto">
-	 select 
+		select
 		subinfo.delaynum as delaynum,
 		subinfo.delayingnum as delayingnum,
 		subinfo.sendnum as sendnum,
@@ -12,127 +12,127 @@
 		DATE_FORMAT(subinfo.maxdate,'%Y-%m-%d') as maxdate,
 		(subinfo.delaynum+subinfo.delayingnum+subinfo.sendnum) as totalnum,
 		subinfo.reporttype as reporttype
-	from 
-	 (
+		from
+		(
 		select
-		   	delayData.delaynum as delaynum,
-		    delayingData.mindate as mindate,
-		    delayingData.maxdate as maxdate,
-		    delayingData.delayingnum as delayingnum,
-		    sendData.sendnum as sendnum,
-		   	'1' as reporttype
-		   	FROM
-		   	(select count(ces1.SUBMIT_STATUS) as delaynum from CHB_EQU_SUB  ces1 WHERE ces1.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and  ces1.SUBMIT_STATUS=#{NO_SUBMIT}
-		   	 <if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ces1.CREATE_DEPT in(" separator="," close=")">
+		delayData.delaynum as delaynum,
+		delayingData.mindate as mindate,
+		delayingData.maxdate as maxdate,
+		delayingData.delayingnum as delayingnum,
+		sendData.sendnum as sendnum,
+		'1' as reporttype
+		FROM
+		(select count(ces1.SUBMIT_STATUS) as delaynum from CHB_EQU_SUB  ces1 WHERE ces1.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and  ces1.SUBMIT_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces1.CREATE_DEPT in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ces1.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ces1.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-		   	 ) delayData ,
-			(select count(ces2.SUBMIT_STATUS) as delayingnum , min(ces2.SUBMIT_DEADLINE) as mindate, max(ces2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_EQU_SUB  ces2 WHERE ces2.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_STATUS=#{NO_SUBMIT}
-			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ces2.CREATE_DEPT in(" separator="," close=")">
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ces1.ORG_CODE in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-            <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ces2.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ces2.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-			) delayingData,
-			(select count(ces3.SUBMIT_STATUS) as sendnum from CHB_EQU_SUB  ces3 WHERE ces3.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces3.SUBMIT_STATUS=#{NO_SUBMIT}
-			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and ces1.DEPT_CODE in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-            <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-			) sendData
-   		union all
-   		select
-		   	delayData.delaynum as delaynum,
-		    delayingData.mindate as mindate,
-		    delayingData.maxdate as maxdate,
-		    delayingData.delayingnum as delayingnum,
-		    sendData.sendnum as sendnum,
-		   	'2' as reporttype
-		   	FROM
-		   	(select count(ciis1.SEND_STATUS) as delaynum from CHB_INVESTHOLD_INFO_SUB  ciis1 WHERE ciis1.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and  ciis1.SEND_STATUS=#{NO_SUBMIT}
-		   	<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+			</foreach>
+		</if>
+		) delayData ,
+		(select count(ces2.SUBMIT_STATUS) as delayingnum , min(ces2.SUBMIT_DEADLINE) as mindate, max(ces2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_EQU_SUB  ces2 WHERE ces2.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces2.CREATE_DEPT in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-		   	) delayData ,
-			(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_INVESTHOLD_INFO_SUB  ciis2 WHERE ciis2.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ciis2.SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ciis2.SEND_STATUS=#{NO_SUBMIT}
-			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ces2.ORG_CODE in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-            <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-			 ) delayingData,
-			(select count(ciis3.SEND_STATUS) as sendnum from CHB_INVESTHOLD_INFO_SUB  ciis3 WHERE ciis3.SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ciis3.SEND_STATUS=#{NO_SUBMIT}
-			<if test="createDeptList != null and createDeptList.size>0">
-				<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and ces2.DEPT_CODE in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-            <if test="orgCodeList != null and orgCodeList.size>0">
-                <foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="deptCodeList != null and deptCodeList.size>0">
-                <foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-			) sendData
+			</foreach>
+		</if>
+		) delayingData,
+		(select count(ces3.SUBMIT_STATUS) as sendnum from CHB_EQU_SUB  ces3 WHERE ces3.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces3.SUBMIT_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ces3.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and ces3.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) sendData
+		union all
+		select
+		delayData.delaynum as delaynum,
+		delayingData.mindate as mindate,
+		delayingData.maxdate as maxdate,
+		delayingData.delayingnum as delayingnum,
+		sendData.sendnum as sendnum,
+		'2' as reporttype
+		FROM
+		(select count(ciis1.SEND_STATUS) as delaynum from CHB_INVESTHOLD_INFO_SUB  ciis1 WHERE ciis1.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and  ciis1.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis1.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ciis1.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and ciis1.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) delayData ,
+		(select count(ciis2.SEND_STATUS) as delayingnum , min(ciis2.SUBMIT_DEADLINE) as mindate, max(ciis2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_INVESTHOLD_INFO_SUB  ciis2 WHERE ciis2.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ciis2.SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ciis2.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis2.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ciis2.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and ciis2.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) delayingData,
+		(select count(ciis3.SEND_STATUS) as sendnum from CHB_INVESTHOLD_INFO_SUB  ciis3 WHERE ciis3.SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ciis3.SEND_STATUS=#{NO_SUBMIT}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and ciis3.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ciis3.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and ciis3.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) sendData
 		<!-- union all
    		select
 		   	delayData.delaynum as delaynum,
@@ -145,8 +145,8 @@
 		   	(select count(ces1.SUBMIT_STATUS) as delaynum from CHB_EQUTOT_SUB  ces1 WHERE ces1.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and  ces1.SUBMIT_STATUS=#{NO_SUBMIT} <if test="orgCode!='' and orgCode != null ">and ces1.ORG_CODE= #{orgCode}</if> ) delayData ,
 			(select count(ces2.SUBMIT_STATUS) as delayingnum , min(ces2.SUBMIT_DEADLINE) as mindate, max(ces2.CHB_SUBMIT_DEADLINE) as maxdate from CHB_EQUTOT_SUB  ces2 WHERE ces2.CHB_SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDateYesterday,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces2.SUBMIT_STATUS=#{NO_SUBMIT} <if test="orgCode!='' and orgCode != null ">and ces2.ORG_CODE= #{orgCode}</if>) delayingData,
 			(select count(ces3.SUBMIT_STATUS) as sendnum from CHB_EQUTOT_SUB  ces3 WHERE ces3.SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces3.SUBMIT_STATUS=#{NO_SUBMIT}  <if test="orgCode!='' and orgCode != null ">and ces3.ORG_CODE= #{orgCode}</if>) sendData -->
-	)subinfo
-</select>
+		)subinfo
+	</select>
 	<select id="queryYpl" resultType="com.joyintech.tams.disclosure.home.dto.RepFtpPathDto">
 		select 
 			EP.id,
@@ -184,65 +184,65 @@
 	<select id="queryDpl" resultType="com.joyintech.tams.disclosure.home.dto.RepFtpPathDto">
 		<!--生成失败 -->
 		SELECT
-		    '生成失败' firstCol,
-		    EP.id,
-		    COUNT(P.REPORT_CATEGORY) reportCount
+		'生成失败' firstCol,
+		EP.id,
+		COUNT(P.REPORT_CATEGORY) reportCount
 		FROM
-		    REP_FTP_PATH EP
+		REP_FTP_PATH EP
 		LEFT JOIN
-		    (
-		        SELECT
-		            RN.REPORT_CATEGORY
-		        FROM
-		            REP_INSTALL_LOG_DETAIL RDL
-		        LEFT JOIN
-		            REP_INFO RN
-		        ON
-		            RDL.REP_ID = RN.REP_ID
-		        WHERE
-		            RDL.exec_status='02'
-		        AND RDL.STATUS='E'
-		        AND  #{searchDateEnd, jdbcType=VARCHAR} >= DATE_FORMAT(RDL.REVEAL_END_DATE,'%Y-%m-%d')
-		        AND DATE_FORMAT(RDL.REVEAL_END_DATE,'%Y-%m-%d') >= #{searchDateStart, jdbcType=VARCHAR}
-		        AND RDL.JOB_ID IS NOT NULL)P
+		(
+		SELECT
+		RN.REPORT_CATEGORY
+		FROM
+		REP_INSTALL_LOG_DETAIL RDL
+		LEFT JOIN
+		REP_INFO RN
 		ON
-		    EP.ID=P.REPORT_CATEGORY
+		RDL.REP_ID = RN.REP_ID
+		WHERE
+		RDL.exec_status='02'
+		AND RDL.STATUS='E'
+		AND  #{searchDateEnd, jdbcType=VARCHAR} >= DATE_FORMAT(RDL.REVEAL_END_DATE,'%Y-%m-%d')
+		AND DATE_FORMAT(RDL.REVEAL_END_DATE,'%Y-%m-%d') >= #{searchDateStart, jdbcType=VARCHAR}
+		AND RDL.JOB_ID IS NOT NULL)P
+		ON
+		EP.ID=P.REPORT_CATEGORY
 		GROUP BY
-		    EP.id
-		
+		EP.id
+
 		<!--待确认 -->
 		UNION ALL
 		SELECT
-			'待确认' firstCol,
-			EP.id,
-			count(rr.REPORT_CATEGORY) reportCount
-		from  REP_FTP_PATH  EP  
+		'待确认' firstCol,
+		EP.id,
+		count(rr.REPORT_CATEGORY) reportCount
+		from  REP_FTP_PATH  EP
 		LEFT JOIN (
-			select * from  rep_reveal 
-			where CONFIRM_STATUS ='02'
-			and STATUS='E'
-			AND #{searchDateEnd,jdbcType=VARCHAR} >= DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d')
-			AND DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d') >= #{searchDateStart,jdbcType=VARCHAR}
+		select * from  rep_reveal
+		where CONFIRM_STATUS ='02'
+		and STATUS='E'
+		AND #{searchDateEnd,jdbcType=VARCHAR} >= DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d')
+		AND DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d') >= #{searchDateStart,jdbcType=VARCHAR}
 		) rr ON EP.ID=rr.REPORT_CATEGORY
 		GROUP BY EP.id
-		
+
 		<!--待披露 -->
 		UNION ALL
 		SELECT
-			'待披露' firstCol,
-			EP.id,
-			count(rr.REPORT_CATEGORY) reportCount
-		FROM  REP_FTP_PATH  EP 
+		'待披露' firstCol,
+		EP.id,
+		count(rr.REPORT_CATEGORY) reportCount
+		FROM  REP_FTP_PATH  EP
 		LEFT JOIN (
-			select * from rep_reveal 
-			where CONFIRM_STATUS ='01'
-			and REVEAL_STATUS='02'
-			and STATUS='E'
-			AND #{searchDateEnd,jdbcType=VARCHAR} >= DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d')
-			AND DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d') >= #{searchDateStart,jdbcType=VARCHAR}
-		 ) rr ON EP.ID=rr.REPORT_CATEGORY
+		select * from rep_reveal
+		where CONFIRM_STATUS ='01'
+		and REVEAL_STATUS='02'
+		and STATUS='E'
+		AND #{searchDateEnd,jdbcType=VARCHAR} >= DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d')
+		AND DATE_FORMAT(REVEAL_END_DATE,'%Y-%m-%d') >= #{searchDateStart,jdbcType=VARCHAR}
+		) rr ON EP.ID=rr.REPORT_CATEGORY
 		GROUP BY EP.id
-    </select>
+	</select>
 	<select id="queryYjpl" resultType="com.joyintech.tams.disclosure.home.dto.RepFtpPathDto">
 		SELECT
 		    EP.id,

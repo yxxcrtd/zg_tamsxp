@@ -443,6 +443,24 @@ public class ChbPrdDeclareSubDto {
      */
     private Date statusDate;
 
+
+    /***1217升级**/
+
+    /**
+     * 产品特殊属性
+     */
+    private String prdSpecProperty;
+
+    public String getPrdSpecProperty() {
+        return prdSpecProperty;
+    }
+
+    public void setPrdSpecProperty(String prdSpecProperty) {
+        this.prdSpecProperty = prdSpecProperty;
+    }
+
+    /***1217升级**/
+
     public String getAttachFilePath() {
         return attachFilePath;
     }

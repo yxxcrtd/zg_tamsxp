@@ -6,11 +6,12 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.business.common.pojo.BaseMap;
-import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.batch.cfetsPositionPrice.dao.CfetsPositionPriceMapper;
 import com.joyintech.tams.invest.batch.cfetsPositionPrice.dto.CfetsUnitCostDto;
+import org.activiti.engine.impl.util.CollectionUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -64,6 +65,12 @@ public class CfetsPositionPriceService extends BaseService{
 
         // 当日交易数据查询
         List<BaseMap> currTrdData = selectCurrTrdData(cdate, portfolioIdList);
+        //交易所当日交易数据查询
+        List<BaseMap> exchangeCurrTrdData = selectExchangeCurrTrdData(cdate, portfolioIdList);
+
+        if(CollectionUtils.isNotEmpty(exchangeCurrTrdData)){
+            currTrdData.addAll(exchangeCurrTrdData);
+        }
 
         if (currTrdData != null){
             currTrdData.forEach(i -> {
@@ -75,6 +82,24 @@ public class CfetsPositionPriceService extends BaseService{
                 }
 
                 if (StringUtil.equals(i.getString("PS"), DictCodeList.交易方向_买入.getValue())){
+                    // 成本
+                    BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
+                            .add(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
+                    dto.setBuyCostAmt(thisBuyCostAmt);
+                    // 数量
+                    dto.setShareAmt(dto.getShareAmt().add(i.getBigDecimal("AMT")));
+                    // 单位成本 = 成本/数量
+                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt(), dto.getShareAmt(), 4));
+                }else if (StringUtil.equals(i.getString("PS"), DictCodeList.交易方向_申购.getValue())) {
+                    // 成本
+                    BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
+                            .add(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
+                    dto.setBuyCostAmt(thisBuyCostAmt);
+                    // 数量
+                    dto.setShareAmt(dto.getShareAmt().add(i.getBigDecimal("AMT")));
+                    // 单位成本 = 成本/数量
+                    dto.setUnitCost(ArithmeticUtil.divide(dto.getBuyCostAmt(), dto.getShareAmt(), 4));
+                }else if (StringUtil.equals(i.getString("PS"), DictCodeListExt1.交易方向_债转股.getValue())) {
                     // 成本
                     BigDecimal thisBuyCostAmt = dto.getBuyCostAmt()
                             .add(ArithmeticUtil.multiply(i.getBigDecimal("PRICE"), i.getBigDecimal("AMT")));
@@ -140,6 +165,8 @@ public class CfetsPositionPriceService extends BaseService{
         BaseMap reqMap = BaseMap.newMap()
                 .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
                 .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
+                .put("SVR_TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                .put("SVR_TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue())
                 .put("cdate", DateUtil.addDay(cdate, -1));
 
         if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
@@ -175,6 +202,38 @@ public class CfetsPositionPriceService extends BaseService{
         if(portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
 
         List<BaseMap> list = cfetsPositionPriceMapper.selectCurrTrdData(reqMap);
+        /**
+         *  PORTFOLIO_ID、FINPROD_ID、INV_AIM、PS
+         *  PRICE,  净价
+         *  AMT     数量
+         */
+        return list;
+    }
+
+    /**
+     * 当日交易数据查询
+     * @param cdate 交易日期
+     * @param portfolioIdList 组合代码
+     * @param secType1 债券一级分类
+     */
+    public List<BaseMap> selectExchangeCurrTrdData(Date cdate, List<String> portfolioIdList) {
+        BaseMap reqMap = BaseMap.newMap()
+                .put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue())    // 债券
+                .put("SVR_TRADE_MARKET_01", DictCodeListExt1.交易场所_银行间.getValue())           // 银行间
+                .put("PS_T01", DictCodeList.交易方向_买入.getValue())
+                .put("PS_T02", DictCodeList.交易方向_卖出.getValue())
+                .put("PS_T03", DictCodeList.交易方向_行权_回售.getValue())
+                .put("PS_T04", DictCodeList.交易方向_申购.getValue())
+                .put("PS_T49", DictCodeListExt1.交易方向_债转股.getValue())
+                .put("SVR_TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                .put("SVR_TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue())
+                .put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue())
+                .put("YN_N", DictCodeList.是否_否.getValue())
+                .put("cdate", cdate);
+
+        if (portfolioIdList != null && !portfolioIdList.isEmpty()) reqMap.put("portfolioIdList", portfolioIdList);
+
+        List<BaseMap> list = cfetsPositionPriceMapper.selectExchangeCurrTrdData(reqMap);
         /**
          *  PORTFOLIO_ID、FINPROD_ID、INV_AIM、PS
          *  PRICE,  净价

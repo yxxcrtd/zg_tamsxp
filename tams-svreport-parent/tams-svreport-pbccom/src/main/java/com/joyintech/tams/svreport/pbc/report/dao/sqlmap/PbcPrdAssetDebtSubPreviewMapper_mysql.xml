@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.pbc.report.dao.PbcPrdAssetDebtSubPreviewMapper_mysql">
+
+    <!-- 贷款明细信息预览 -->
+    <select id="searchPageDX" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub">
+		select
+			pldinfo.PBC_ACCOUNT_ID pbcAccountId,/*资产池代码*/
+			pldinfo.PROD_ID prodId,/*内部产品代码*/
+			pldinfo.ASSET_CODE assetCode,/*资产代码*/
+			cai.ASSET_NAME assetName,/*资产名称*/
+			pldinfo.LOANS_TYPE loansType,/*贷款种类*/
+			pldinfo.LOAN_TRANSFEROR_ID loanTransferorId,/*贷款转让方机构代码*/
+			pldinfo.LOAN_TRANSFEROR_NAME loanTransferorName,/*贷款转让方机构名称*/
+			pldinfo.LOAN_CONTRACT_ORG_ID loanContractOrgId,/*贷款合同原始发放机构代码*/
+			pldinfo.LOAN_CONTRACT_ORG_NAME loanContractOrgName,/*贷款合同原始发放机构名称*/
+			pldinfo.LOAN_CONTRACT_ORG_COUNTY loanContractOrgCounty,/*贷款合同原始发放机构所在地(县)*/
+			pldinfo.BORROWER_TYPE borrowerType,/*借款人类型*/
+			pldinfo.BORROWER_COUNTY borrowerCounty,/*地区代码*/
+			pldinfo.BORROWER_ID borrowerId,/*借款人代码*/
+			pldinfo.BORROWER_NATIONALITY borrowerNationality,/*借款人国别*/
+			pldinfo.INDUSTRY_INFO industryInfo,/*行业信息*/
+			pldinfo.ENTERPRISE_INVESTOR_TYPE_FIRST enterpriseInvestorTypeFirst,/*企业出资人经济成分（一级）*/
+			pldinfo.ENTERPRISE_INVESTOR_TYPE_SEC enterpriseInvestorTypeSec,/*企业出资人经济成分（二级）*/
+			pldinfo.ENTERPRISE_INVESTOR_TYPE_THIRD enterpriseInvestorTypeThird,/*企业出资人经济成分（三级）*/
+			pldinfo.ENTERPRISE_SCALE enterpriseScale,/*企业规模*/
+			pldinfo.LOAN_BASIS_ID loanBasisId,/*贷款借据编码*/
+			pldinfo.LOAN_PRD_TYPE loanPrdType,/*贷款产品类别*/
+			pldinfo.LOAN_ACTUAL_INVEST loanActualInvest,/*贷款实际投向*/
+			pldinfo.LOAN_VDATE loanVdate,/*贷款发放日期*/
+			pldinfo.LOAN_MDATE loanMdate,/*贷款到期日期*/
+			pldinfo.LOAN_EXTENSION_DUE_DATE loanExtensionDueDate,/*贷款展期到期日期*/
+			pldinfo.RATE_FIXED rateFixed,/*利率是否固定*/
+			pldinfo.RATE_LEVEL rateLevel,/*利率水平(%)*/
+			pldinfo.LOAN_GUARANTEE_MODE loanGuaranteeMode,/*贷款担保方式*/
+			pldinfo.LOAN_QUALITY loanQuality,/*贷款质量*/
+			pldinfo.LOAN_STATE loanState,/*贷款状态*/
+			pldinfo.LOAN_TRANSFEROR_RATE loanTransferorRate,/*贷款转让折扣率(%)*/
+			pldinfo.ORIG_CCY origCcy,/*原始合同币种代码*/
+			pldinfo.ORIG_CONTRACT_AMOUNT origContractAmount,/*原始合同金额*/
+			pldinfo.ORIG_CONTRACT_AMOUNT_CNY origContractAmountCny,/*原始合同金额折人民币*/
+			pldinfo.AMT_CCY amtCcy,/*贷款余额币种代码*/
+			pldinfo.CONTRACT_AMOUNT contractAmount,/*贷款余额*/
+			pldinfo.CONTRACT_AMOUNT_CNY contractAmountCny/*贷款余额折人民币*/
+		from PBC_LOAN_DETAIL_INFO_SUB pldinfo
+		left join chb_asset_info cai on pldinfo.ASSET_CODE=cai.ASSET_CODE and cai.STATUS != 'D'
+		where pldinfo.REPORTUUID=#{reportuuid,jdbcType=VARCHAR}
+  	</select>
+
+    <!-- 资金信托信息预览 -->
+    <select id="searchPageXT" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub">
+		select
+		    pctds.PBC_ACCOUNT_ID pbcAccountId,/*资产池代码*/
+		    pctds.PROD_ID prodId,/*内部产品代码*/
+		    pctds.ASSET_CODE assetCode,/*资产代码*/
+		    cai.ASSET_NAME assetName,/*资产名称*/
+		    pctds.STOCK_TYPE stockType,/*股权种类*/
+		    pctds.CAPITAL_TRUST_ORG_CODE capitalTrustOrgCode,/*产品发起机构编码*/
+		    pctds.POBCASSETID pobcassetid,/*人行资金信托代码*/
+		    pctds.CCY ccy,/*币种代码*/
+		    pctds.CAPITAL_TRUST_AMOUNT capitalTrustAmount,/*资金信托产品余额*/
+		    pctds.CAPITAL_TRUST_AMOUNT_CNY capitalTrustAmountCny/*资金信托产品余额折人民币*/
+		from PBC_CAPITAL_TRUST_DETAIL_SUB pctds
+		left join chb_asset_info cai on pctds.ASSET_CODE=cai.ASSET_CODE and cai.STATUS != 'D'
+		where pctds.REPORTUUID=#{reportuuid,jdbcType=VARCHAR}
+  	</select>
+
+</mapper>

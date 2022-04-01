@@ -45,7 +45,8 @@ public class InvDataCheckService {
         // modify by etliu 20211223 end
             return dataCheckCommonUtil.chbCheckCommon(checkResultList, entity, pageId, repType, ValidMessage.class);
         }
-        return new ArrayList<ValidMessage>();
+        // return new ArrayList<ValidMessage>();
+        return checkResultList;
     }
 
     public Map<String,String> getCheckRule(String pageId, String pageFlag) {

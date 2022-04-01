@@ -66,6 +66,10 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
      * @since 1.0
      */
     public Page<SalerRewPenaInfoRegistDto> searchForPage(Map<String, Object> param){
+        if(StringUtil.isNotBlank((String)param.get("status"))) {
+            String status = param.get("status").toString();
+            param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+        }
         if (null != param.get(GlobalConstant.PARAM_PAGE)
                 && null != param.get(GlobalConstant.PARAM_LENGTH)) {
             int pagenum = Integer.parseInt(param.get(GlobalConstant.PARAM_PAGE).toString());
@@ -183,6 +187,8 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
             String sendStatus = (String) pageParam.get("sendStatus");
             // 反馈状态
             String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
+
+            String status = (String) pageParam.get("status");
             // 将报送状态当做多选下拉框处理
             if (StringUtil.isNotBlank(sendStatus)) {
                 pageParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
@@ -191,6 +197,10 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
             if (StringUtil.isNotBlank(submitFeedbackStatus)) {
                 pageParam.put("submitFeedbackStatusList",
                         StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+            }
+            // 将数据状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(status)) {
+                pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             }
         }
     }
@@ -224,6 +234,8 @@ public class SalerRewPenaInfoRegist001Service extends CommonExportService<SalerR
         List<SalerRewPenaInfoRegistDto> tempList=new ArrayList<SalerRewPenaInfoRegistDto>();
         SalerRewPenaInfoRegistDto nullDate = new SalerRewPenaInfoRegistDto();
         if(datas == null){
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbSalerRewPenaInfoRegistMapper.setDataList(selectParam);
             this.formatByType(tempList);
         }else{

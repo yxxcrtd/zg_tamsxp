@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.systemtools.dao.TamsBaseMapper_mysql">
     <select id="getSequenceIndexData" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
         <!--<if test="databaseType == 'mysql'"> -->
-            SELECT _nextIndex(#{sequenceName, jdbcType=VARCHAR})
+        SELECT _nextIndex(#{sequenceName, jdbcType=VARCHAR})
         <!--</if>-->
     </select>
 
@@ -80,16 +80,16 @@
 	</select>
 
     <!-- 查询机构类型 -->
-	<select id="getInstitutionType" resultType="java.lang.String" parameterType="java.lang.String">
+    <select id="getInstitutionType" resultType="java.lang.String" parameterType="java.lang.String">
     	SELECT INSTITUTION_TYPE FROM SYS_INSTITUTION WHERE INSTITUTION_CODE = #{institutionCode}
     </select>
-    
-     <!-- 根据机构代码获取机构类型 -->
+
+    <!-- 根据机构代码获取机构类型 -->
     <select id="selectInsitutionType" resultType="java.lang.String">
 	    SELECT INSTITUTION_TYPE FROM SYS_INSTITUTION
 	    where institution = #{institutionCode}
     </select>
-    
+
     <select id="getInsitutionType_ms" resultType="java.lang.String">
 	    SELECT INSTITUTION_TYPE
       FROM SYS_INSTITUTION SI
@@ -101,7 +101,7 @@
                      WHERE SD.DEPT_CODE = SU.DEPT_CODE
                        AND SU.USER_NAME = #{userName} ))
     </select>
-    
+
     <select id="getInsitutionCode_ms" resultType="java.lang.String">
 	     SELECT INSTITUTION_CODE
       FROM SYS_INSTITUTION SI
@@ -113,7 +113,7 @@
                      WHERE SD.DEPT_CODE = SU.DEPT_CODE
                        AND SU.USER_NAME = #{userName} ))
     </select>
-    
+
     <select id="getParentInstitution" parameterType="java.lang.String" resultType="java.lang.String">
     SELECT INSTITUTION_CODE FROM
         (

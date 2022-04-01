@@ -16,6 +16,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.pbc.reportdetail.dao.PbcMonthReportDetailAssetMapper;
 import com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset;
 import org.slf4j.Logger;
@@ -60,6 +61,9 @@ public class PbcMonthReportDetailAsset001Service extends CommonExportService<Pbc
 		if(StringUtil.isNotEmpty(pageParam.get("assetCode"))){
 			pageParam.put("assetCodes",pageParam.get("assetCode").toString().split(","));
 		}
+		if(StringUtil.isNotEmpty(pageParam.get("enddate"))){
+			pageParam.put("enddateDate",DateUtil.parse(DateUtil.getLastDayOfLayMonth(DateUtil.parse(pageParam.get("enddate")+"01"))));
+		}
 		Page<PbcMonthReportDetailAsset> page = queryForPage(
 				pagenum,legth,()->pbcMonthReportDetailAssetMapper.selectDetailList(pageParam));
 		return page;
@@ -76,6 +80,9 @@ public class PbcMonthReportDetailAsset001Service extends CommonExportService<Pbc
 		if(pageParam.containsKey("keyList")){
 			pageParam.put("keysList",
 					StringUtil.splitToList(",",(String) pageParam.get("keyList")));
+		}
+		if(StringUtil.isNotEmpty(pageParam.get("enddate"))){
+			pageParam.put("enddateDate", DateUtil.parse(DateUtil.getLastDayOfLayMonth(DateUtil.parse(pageParam.get("enddate")+"01"))));
 		}
 		List<PbcMonthReportDetailAsset> list = pbcMonthReportDetailAssetMapper.selectDetailList(pageParam);
 		return list;

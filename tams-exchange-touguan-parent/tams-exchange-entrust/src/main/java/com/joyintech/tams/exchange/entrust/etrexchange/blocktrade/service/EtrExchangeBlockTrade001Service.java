@@ -37,7 +37,9 @@ import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTra
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.PsOptionsRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon002Service;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -49,6 +51,8 @@ import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -87,10 +91,14 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 	private EtrExchangeTradeCommon002Service etrExchangeTradeCommon002Service;
 
 	@Autowired
+	private EtrExchangeTradeCommon001Service etrExchangeTradeCommon001Service;
+
+	@Autowired
 	private JoyinbusinessCommonMapper joyinbusinessCommonMapper;
 
 	@Autowired
 	private FinProductAddMapper finProductAddMappers;
+
 
 	/**
 	 * 查询大宗交易行情信息
@@ -788,5 +796,119 @@ public class EtrExchangeBlockTrade001Service extends BaseService<EtrExchangeBloc
 			}
 		});
 		joyinbusinessCommonMapper.mergeCfetsOprHis(result);
+	}
+
+
+	/**
+	 * 判断是否交易时间段
+	 *
+	 * @param dto
+	 * @return true 不是交易时段，不可交易 false 可以交易
+	 */
+	public String isNonTradingTime(EtrExchangeTradeSaveRequest dto) {
+		if (CacheUtil.getSysParam(BussinessConstant.ETR_TRADE_TIME_SWITCH).equals(DictCodeListExt1.是否_是.getValue())) {
+			if (StringUtil.isNotEmpty(dto.getTradeMarket()) && StringUtil.isNotEmpty(dto.getFinprodType2())) {
+				TrdTimeConfigDto trdTimeConfigDto = etrExchangeTradeCommon001Service.getTrdTimeConfig(dto.getTradePlat(), dto.getTradeMarket(),
+						dto.getFinprodType2(), dto.getDeclaType());
+				if (null != trdTimeConfigDto && null != trdTimeConfigDto.getNoonCloseTime()) {
+					Date date = new Date();
+					SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					if (null != trdTimeConfigDto.getNoonOpenTime()){
+						try {
+							Date noonOpenTime = sdf.parse(sd.format(date) + " " + trdTimeConfigDto.getNoonOpenTime().trim());
+							if (noonOpenTime.after(new Date())) {
+								return "01";
+							}
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
+					try {
+						Date noonCloseTime = sdf.parse(sd.format(date) + " " + trdTimeConfigDto.getNoonCloseTime().trim());
+						if (noonCloseTime.before(new Date())) {
+							return "02";
+						}
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+
+	public String getIsFullPrice(String finprodId){
+		FinProductAdd finProductAdd = finProductAddMappers.selectByPrimaryKey(finprodId);
+		if (StringUtil.isNotEmpty(finProductAdd)){
+			return finProductAdd.getIsNetprice();
+		}
+		return null;
+	}
+
+	/**
+	 * 1.6计算偏离度
+	 *
+	 * @param
+	 * @return 偏离度
+	 * @see
+	 * @since 1.0
+	 */
+	public String calcDeviationDegree(Map<String, Object> param) {
+		// 参数.资产代码(市场代码)
+		String 市场代码 = (String) param.get("finprodMarketId");
+		// 参数.净价
+		String 净价 = (String) param.get("unitCprice");
+		if (StringUtil.isBlank(市场代码) || StringUtil.isBlank(净价)) {
+			return null;
+		}
+		String sysDate = DateUtil.format(iPlatformDate.getSysDate());
+		param.put("sysDate", DateUtil.parse(sysDate));
+		// 查询债券登记托管机构
+		FinProduct finProduct = finProductMapper.selectByPrimaryKey((String) param.get("finprodId"));
+		if (finProduct != null) {
+			if (StringUtil.equals(DictCodeList.登记托管机构_中债_中央国债登记结算有限责任公司.getValue(),
+					finProduct.getRegistOrg())) {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.登记托管机构_中债_上海清算所.getValue(),
+					finProduct.getRegistOrg())) {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_上清所_SCH.getValue());
+			}
+			else if (StringUtil.equals(DictCodeList.登记托管机构_中债_中国证券登记结算有限责任公司.getValue(),
+					finProduct.getRegistOrg())) {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_中证登_CSD.getValue());
+			}
+			else {
+				param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+			}
+		}
+		else {
+			param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+		}
+
+		// 查询上一估值日的净价
+		BigDecimal 上一估值日净价 = etrExchangeTradeCommonMapper.getLastNetPrice(param);
+		if (上一估值日净价 == null || BigDecimal.ZERO.compareTo(上一估值日净价) == 0) {
+			//估值行情取不到值就需要取当前标的剩余单位面值
+			param.put("CASH_CLASS_TYPE_02",DictCodeList.现金流类型_中间还本.getValue());
+			param.put("CASH_CLASS_TYPE_03",DictCodeList.现金流类型_到期还本.getValue());
+			上一估值日净价 = etrExchangeTradeCommonMapper.getResidualFace(param);
+			if (上一估值日净价 == null || BigDecimal.ZERO.compareTo(上一估值日净价) == 0) {
+				return "0%";
+			}
+		}
+		try {
+			BigDecimal 所输净价 = new BigDecimal(净价);
+			// 计算公式：（所输净价-上一估值净价）/上一估值净价*100%
+			BigDecimal result = ArithmeticUtil.subtract(所输净价, 上一估值日净价);
+			result = ArithmeticUtil.multiply(result, new BigDecimal(100));
+			result = ArithmeticUtil.divide(result, 上一估值日净价, 2);
+			return String.valueOf(result) + "%";
+		}
+		catch (Exception e) {
+		}
+		return null;
 	}
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbsd.prdendsub.dao.SdProdTerminationSvrMapper_mysql" >
+    <resultMap type="com.joyintech.tams.svreport.chbsd.prdendsub.dto.SdProdTerminationSvrDto"  id="SdProdTerminationSvrDtoRM">
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode"/>
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="TIMESTAMP" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PROFIT" property="profit" jdbcType="DECIMAL" />
+        <result column="CUSTOM_PROFIT" property="customProfit" jdbcType="DECIMAL" />
+        <result column="CUSTOM_PROFIT_ORI" property="customProfitOri" jdbcType="VARCHAR" />
+        <result column="CUSTOM_AMT_ORI" property="customAmtOri" jdbcType="VARCHAR" />
+        <result column="CUSTOM_AMT" property="customAmt" jdbcType="DECIMAL" />
+        <result column="CUSTOM_QTY" property="customQty" jdbcType="DECIMAL" />
+        <result column="CUS_YEAR_YIELD" property="cusYearYield" jdbcType="DECIMAL" />
+        <result column="PRD_YEAR_YIELD" property="prdYearYield" jdbcType="DECIMAL" />
+        <result column="CUST_FEE_IN" property="custFeeIn" jdbcType="DECIMAL" />
+        <result column="MAN_FEE_IN" property="manFeeIn" jdbcType="DECIMAL" />
+        <result column="COU_FEE_IN" property="couFeeIn" jdbcType="DECIMAL" />
+        <result column="OTHER_FEE_IN" property="otherFeeIn" jdbcType="DECIMAL" />
+        <result column="CUST_FEE_OUT" property="custFeeOut" jdbcType="DECIMAL" />
+        <result column="MAN_FEE_OUT" property="manFeeOut" jdbcType="DECIMAL" />
+        <result column="COU_FEE_OUT" property="couFeeOut" jdbcType="DECIMAL" />
+        <result column="ADV_FEE_OUT" property="advFeeOut" jdbcType="DECIMAL" />
+        <result column="OTHER_FEE_OUT" property="otherFeeOut" jdbcType="DECIMAL" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    REGIST_SEQNO, PROD_ID, MDATE, ISSUE_PARTY_ID, PROFIT, CUSTOM_PROFIT, CUSTOM_PROFIT_ORI,
+    CUSTOM_AMT_ORI, CUSTOM_AMT, CUSTOM_QTY, CUS_YEAR_YIELD, PRD_YEAR_YIELD, CUST_FEE_IN,
+    MAN_FEE_IN, COU_FEE_IN, OTHER_FEE_IN, CUST_FEE_OUT, MAN_FEE_OUT, COU_FEE_OUT, ADV_FEE_OUT,
+    OTHER_FEE_OUT, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER,
+    CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+    SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
+  </sql>
+    <select id="selcteDataByIds" parameterType="java.util.List" resultMap="SdProdTerminationSvrDtoRM">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_PRD_END_SUB
+        where SEND_STATUS = '01'
+        AND STATUS = '01'
+        <!--AND   to_char(STATUS_DATE,'yyyy-MM-dd') = #{batchdate,jdbcType = VARCHAR} -->
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PROD_ID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+</mapper>

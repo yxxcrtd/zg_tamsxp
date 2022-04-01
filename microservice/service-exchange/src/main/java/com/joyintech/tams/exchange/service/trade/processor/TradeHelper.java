@@ -280,11 +280,14 @@ public class TradeHelper {
         String othCodeType = "";
         String entrustProp = order.getEntrustProp();
         if (HS.value.equals(entrustProp)) {
-            othCodeType = HSDM.value;
+//            othCodeType = HSDM.value;
+            return false;
         } else if (ZYCRK.value.equals(entrustProp)) {
-            othCodeType = ZYDM.value;
+//            othCodeType = ZYDM.value;
+            return false;
         } else if (CHANGE_TO_STOCK.value.equals(entrustProp)) {
-            othCodeType = KZZZGDM.value;
+//            othCodeType = KZZZGDM.value;
+            return false;
         } else if (PS.value.equals(entrustProp)) {
             othCodeType = PZDM.value;
         } else if (ALLOTMENT.value.equals(entrustProp)) {
@@ -531,10 +534,19 @@ public class TradeHelper {
         if (EntrustUtils.needOthCode(dto.getEntrustProp())) {
             String stockCode = order.getStockCode();
             String entrustProp = dto.getEntrustProp();
+            // add by lifangpeng 20220107 回售、标准券出入库、可转债转股不检查申报信息 start
+            if (HS.value.equals(entrustProp) || ZYCRK.value.equals(entrustProp) || CHANGE_TO_STOCK.value.equals(entrustProp)) {
+                return true;
+            }
+            // add by lifangpeng 20220107 回售、标准券出入库、可转债转股不检查申报信息 end
             if (EntrustProp.ETF_APPLY.value.equals(dto.getEntrustProp())) {
                 Instrument instrument = instrumentService.findById(stockCode);
                 if (Objects.isNull(instrument) || Strings.isNullOrEmpty(instrument.getPurRedId())) {
                     logger.warn("业务：{} 合约代码：{} 获取申报代码信息失败", entrustProp, stockCode);
+                    // add by lifangpeng 20211230 填充委托错误码和描述 start
+                    order.setErrorCode(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.value);
+                    order.setErrorMsg(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.errorMsg);
+                    // add by lifangpeng 20211230 填充委托错误码和描述 end
                     return false;
                 } else {
                     logger.info("业务：{} 合约代码：{} 获取到申报代码信息：{}", entrustProp, stockCode, dto.getStockCode());
@@ -550,6 +562,10 @@ public class TradeHelper {
                 }
             } else {
                 logger.warn("业务：{} 合约代码：{} 获取申报代码信息失败", entrustProp, stockCode);
+                // add by lifangpeng 20211230 填充委托错误码和描述 start
+                order.setErrorCode(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.value);
+                order.setErrorMsg(ErrorCode.INSTRUMENT_INFO_NOT_EXIT.errorMsg);
+                // add by lifangpeng 20211230 填充委托错误码和描述 end
                 return false;
             }
         }

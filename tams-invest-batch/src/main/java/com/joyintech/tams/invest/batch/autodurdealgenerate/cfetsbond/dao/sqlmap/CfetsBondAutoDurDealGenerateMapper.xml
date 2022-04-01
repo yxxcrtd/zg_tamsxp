@@ -133,8 +133,7 @@
         )
     </select>
 
-    <select id="findEffectiveData"
-            resultType="com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto">
+    <select id="findEffectiveData" resultType="com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto">
         SELECT t1.*,
         ROUND(100 - SUM(NVL(fcp.prin_amt, 0)), 6) intPrinAmt
         FROM (
@@ -511,7 +510,6 @@
         AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01}
         AND t1.CDATE = t2.exercise_date-1
         and t2.exercise_type='01'
-
         left join PTL_CAPACCT_INFO pc
         on T1.PORTFOLIO_ID=pc.PORTFOLIO_ID
         and pc.acct_type='A01'
@@ -551,86 +549,77 @@
         and rownum=1
     </select>
 
-    <select id="getDealDetailsByTradeId" parameterType="java.lang.String"
-            resultType="com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsManualSettleDealInfo">
+    <select id="getDealDetailsByTradeId" parameterType="java.lang.String" resultType="com.joyintech.tams.invest.batch.autodurdealgenerate.cfetsbond.dto.CfetsManualSettleDealInfo">
         SELECT
-        TPD.TRADE_ID TRADE_ID,
-        BUSI_TYPE BUSI_TYPE,
-        FINPROD_ID FINPROD_ID,
-        FINPROD_TYPE FINPROD_TYPE,
-        FINPROD_TYPE2 FINPROD_TYPE2,
-        BRANCH BRANCH,
-        TRADE_DATE TRADE_DATE,
-        VDATE VDATE,
-        MDATE MDATE,
-        SETTLE_DATE SETTLE_DATE,
-        SETTLE_SPEED SETTLE_SPEED,
-        CCY CCY,
-        CPRICE_DATE CPRICE_DATE,
-        UNIT_CPRICE UNIT_CPRICE,
-        UNIT_INT UNIT_INT,
-        UNIT_FPRICE UNIT_FPRICE,
-        PAR_VALUE PAR_VALUE,
-        CPRICE_AMT CPRICE_AMT,
-        SHARE_AMT*100 SHARE_AMT,
-        PRIN_AMT PRIN_AMT,
-        INT_AMT INT_AMT,
-        FPRICE_AMT FPRICE_AMT,
-        FEE_AMT_PAY FEE_AMT_PAY,
-        TRADE_AMT TRADE_AMT,
-        FEE_AMT_UNPAY FEE_AMT_UNPAY,
-        FEE_AMT FEE_AMT,
-        PS PS, YIELD YIELD,
-        EXER_YIELD EXER_YIELD,
-        INV_AIM INV_AIM,
-        TRADE_STATUS TRADE_STATUS,
-        IS_CANCEL IS_CANCEL,
-        P_TRADE_ID P_TRADE_ID,
-        IS_CLEAN IS_CLEAN,
-        TPD.TOTLE_TRADE_ID TOTLE_TRADE_ID,
-        R_TRADE_ID R_TRADE_ID,
-        B_TRADE_ID B_TRADE_ID,
-        CHL_ID CHL_ID,
-        COUNTER_ID COUNTER_ID,
-        IS_OUT_TRADE IS_OUT_TRADE,
-        TRADE_MARKET TRADE_MARKET,
-        TRADE_PLAT TRADE_PLAT,
-        TRADE_MARKET_MODE TRADE_MARKET_MODE,
-        TRADER TRADER,
-        COUNTER_TRADER COUNTER_TRADER,
-        COUNTER_CONTACT COUNTER_CONTACT,
-        SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
-        F_TRADE_ID F_TRADE_ID,
-        CASH_ID CASH_ID,
-        REGIST_ORG REGIST_ORG,
-        REMARK REMARK,
-        CANCEL_REMARK CANCEL_REMARK,
-        DELIVERY_TYPE DELIVERY_TYPE,
-        PAY_DATE PAY_DATE,
-        SALE_CODE SALE_CODE,
-        ACCR_NUM ACCR_NUM,
-        TG_BUSI_TYPE TG_BUSI_TYPE,
-        PS_PAYMENT PS_PAYMENT,
-        SPLIT_TRADE_ID SPLIT_TRADE_ID,
-        IS_SWAP_TRANSACTION IS_SWAP_TRANSACTION,
-        SEAT_ID SEAT_ID,
-        SETTLEMEN_TYPE SETTLEMEN_TYPE,
-        HK_MARKET HK_MARKET,
-        BUY_SETTLE_RATE BUY_SETTLE_RATE,
-        SELL_SETTLE_RATE SELL_SETTLE_RATE,
-        DEAL_AMT DEAL_AMT,
-        TPDA.PORTFOLIO_ID,
-        TPDA.ENTRUST_ID,
-        TPDA.OUR_SHARE_AMT,
-        TPDA.LENDIN_SHARE_AMT
-        FROM
-        TRD_PRODUCT_DEAL TPD
-        LEFT JOIN TRD_PRODUCT_DEAL_ADD TPDA
-        ON TPD.TRADE_ID = TPDA.TRADE_ID
-        LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA
-        ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
-        WHERE
-        TPD.TOTLE_TRADE_ID = #{tradeId}
+            TPD.TRADE_ID TRADE_ID,
+            BUSI_TYPE BUSI_TYPE,
+            FINPROD_ID FINPROD_ID,
+            FINPROD_TYPE FINPROD_TYPE,
+            FINPROD_TYPE2 FINPROD_TYPE2,
+            BRANCH BRANCH,
+            TRADE_DATE TRADE_DATE,
+            VDATE VDATE,
+            MDATE MDATE,
+            SETTLE_DATE SETTLE_DATE,
+            SETTLE_SPEED SETTLE_SPEED,
+            CCY CCY,
+            CPRICE_DATE CPRICE_DATE,
+            UNIT_CPRICE UNIT_CPRICE,
+            UNIT_INT UNIT_INT,
+            UNIT_FPRICE UNIT_FPRICE,
+            PAR_VALUE PAR_VALUE,
+            CPRICE_AMT CPRICE_AMT,
+            case when TPD.PS != 'T07' and (FINPROD_TYPE2 = 'F02' or FINPROD_TYPE2 = 'F03') then SHARE_AMT
+               WHEN FINPROD_TYPE2 = 'F01' THEN SHARE_AMT
+               else SHARE_AMT*100 end SHARE_AMT,
+            PRIN_AMT PRIN_AMT,
+            INT_AMT INT_AMT,
+            FPRICE_AMT FPRICE_AMT,
+            FEE_AMT_PAY FEE_AMT_PAY,
+            TRADE_AMT TRADE_AMT,
+            FEE_AMT_UNPAY FEE_AMT_UNPAY,
+            FEE_AMT FEE_AMT,
+            PS PS, YIELD YIELD,
+            EXER_YIELD EXER_YIELD,
+            INV_AIM INV_AIM,
+            TRADE_STATUS TRADE_STATUS,
+            IS_CANCEL IS_CANCEL,
+            P_TRADE_ID P_TRADE_ID,
+            IS_CLEAN IS_CLEAN,
+            TPD.TOTLE_TRADE_ID TOTLE_TRADE_ID,
+            R_TRADE_ID R_TRADE_ID,
+            B_TRADE_ID B_TRADE_ID,
+            CHL_ID CHL_ID,
+            COUNTER_ID COUNTER_ID,
+            IS_OUT_TRADE IS_OUT_TRADE,
+            TRADE_MARKET TRADE_MARKET,
+            TRADE_PLAT TRADE_PLAT,
+            TRADE_MARKET_MODE TRADE_MARKET_MODE,
+            TRADER TRADER,
+            COUNTER_TRADER COUNTER_TRADER,
+            COUNTER_CONTACT COUNTER_CONTACT,
+            SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+            F_TRADE_ID F_TRADE_ID,
+            CASH_ID CASH_ID,
+            REGIST_ORG REGIST_ORG,
+            REMARK REMARK,
+            CANCEL_REMARK CANCEL_REMARK,
+            DELIVERY_TYPE DELIVERY_TYPE,
+            PAY_DATE PAY_DATE,
+            SALE_CODE SALE_CODE,
+            ACCR_NUM ACCR_NUM,
+            TG_BUSI_TYPE TG_BUSI_TYPE,
+            PS_PAYMENT PS_PAYMENT,
+            SEAT_ID SEAT_ID,
+            SETTLEMEN_TYPE SETTLEMEN_TYPE,
+            TPDA.PORTFOLIO_ID,
+            TPDA.ENTRUST_ID,
+            TPDA.OUR_SHARE_AMT,
+            TPDA.LENDIN_SHARE_AMT
+        FROM TRD_PRODUCT_TEMP_DEAL TPD
+        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD TPDA ON TPD.TRADE_ID = TPDA.TRADE_ID
+        LEFT JOIN TRD_DEAL_TOTAL_ADD TDTA ON TPD.TOTLE_TRADE_ID = TDTA.TOTLE_TRADE_ID
+        WHERE TPD.TOTLE_TRADE_ID = #{tradeId}
     </select>
 
     <select id="qryPortfolioSecAcctId" resultType="java.lang.String">
@@ -647,7 +636,7 @@
     </select>
 
     <select id="selectTrdFinProductDealTotalData" resultType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal">
-        select tfpft.totle_trade_id,tfpft.ps from TRD_FIN_PRODUCT_DEAL_TOTAL tfpft
+        select tfpft.totle_trade_id,tfpft.ps from TRD_PRODUCT_TEMP_DEAL_TOTAL tfpft
         where tfpft.trade_date =#{batchDate}
         and tfpft.BUSI_TYPE = #{busiType}
         and tfpft.update_user = #{updateUser}
@@ -657,6 +646,9 @@
             <foreach collection="finProdType2" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="tradeMarket != null and tradeMarket != ''">
+            and tfpft.TRADE_MARKET = #{tradeMarket}
         </if>
     </select>
 
@@ -670,6 +662,33 @@
 	   AND V.TRADE_PLACE = #{tradeMarket}
 	   AND PSA.PORTFOLIO_ID = #{portfolioId}
 	   AND R.FINPROD_ID = #{finprodId}
+    </select>
+
+    <select id="findInvAimData" resultType="java.lang.String">
+        SELECT * FROM (
+            SELECT T1.INV_AIM FROM  PTL_SEC_POSITION T1
+            WHERE T1.FINPROD_ID = #{finprodId} /*and 持仓类型 = 数据字典缓存.持仓类型.实际*/
+
+            AND T1.HODING_TYPE IN ( '03', '05', '06', '11' ) /*and 组合持仓.日期 = 平台日*/
+
+            AND t1.CDATE &lt; TO_DATE(#{mDate}, 'YYYY-MM-DD')
+            AND T1.SEC_ACCT_ID = #{secAcctId}
+            AND T1.AMOUNT > 0
+            AND NOT EXISTS (
+            SELECT
+            1
+            FROM
+            PTL_SEC_POSITION tpsp
+            WHERE
+            tpsp.HODING_TYPE = T1.HODING_TYPE
+            AND tpsp.PORTFOLIO_ID = T1.PORTFOLIO_ID
+            AND tpsp.SEC_ACCT_ID = T1.SEC_ACCT_ID
+            AND tpsp.FINPROD_ID = T1.FINPROD_ID
+            AND tpsp.CDATE > T1.CDATE
+            AND tpsp.CDATE &lt; TO_DATE(#{mDate}, 'YYYY-MM-DD')
+                )
+            ORDER BY T1.CDATE DESC)
+        where rownum=1
     </select>
 
 

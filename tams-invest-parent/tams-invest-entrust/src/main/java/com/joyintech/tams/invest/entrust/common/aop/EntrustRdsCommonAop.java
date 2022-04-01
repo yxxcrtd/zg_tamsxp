@@ -359,6 +359,7 @@ public class EntrustRdsCommonAop {
             // ZGZGST-2768:现券多组合指令走批量预占接口 fuyongsheng 20210917 add start
             || mapTrd.containsKey("etrInvestBondInfoDtos")
             // ZGZGST-2768:现券多组合指令走批量预占接口 fuyongsheng 20210917 add end
+            || StringUtil.equals(mapTrd.get("isMulti"),DictCodeList.是否_是.getValue())
             ) {
                 logger.info(BATCH_INFO_LOG, infCode);
                 infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();

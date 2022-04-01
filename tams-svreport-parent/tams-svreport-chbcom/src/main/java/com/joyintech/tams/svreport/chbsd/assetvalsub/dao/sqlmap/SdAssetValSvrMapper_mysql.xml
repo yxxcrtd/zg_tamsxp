@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbsd.assetvalsub.dao.SdAssetValSvrMapper_mysql">
+    <sql id="baseInfo">
+		  SELECT
+		    CAVS.ISSUE_PARTY_ID  as issuePartyId,
+		    CAVS.ASSET_CODE as assetCode,
+		    CAVS.VAL_DATE as valDate,
+		    CAVS.UNIT_VAL_NET as unitValNet,
+		    CAVS.UNIT_VAL_TOTAL as unitValTotal,
+		    CAVS.ORG_CODE as orgCode,
+		    CAVS.DEPT_CODE as deptCode,
+		    CAVS.CREATE_USER as createUser,
+		    CAVS.CREATE_TIME as createTime,
+		    CAVS.UPDATE_USER as updateUser,
+		    CAVS.UPDATE_TIME as updateTime,
+		    CAVS.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+		    CAVS.SUBMIT_DEADLINE as submitDeadline,
+		    CAVS.SEND_STATUS as sendStatus,
+		    CAVS.SUBMIT_TIME as submitTime,
+		    CAVS.REGIST_SEQNO registSeqno,
+		    CAVS.REMARK as remark,
+		    CAVS.STATUS_DATE as statusDate,
+		    CAVS.STATUS as status,
+			CAVS.SUMIT_SEQ as sumitSeq,
+		    CAVS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+		  FROM
+		    CHB_AST_VAL_SUB CAVS
+	</sql>
+
+    <select id="selcteUnRegData" resultType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
+        <include refid="baseInfo"/>
+        <where>
+            <!--<if test="batchDate!=null and batchDate!='' ">
+            to_char(CAVS.VAL_DATE,'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR}
+            </if>-->
+            AND CAVS.SEND_STATUS = '01'
+            AND CAVS.STATUS = '01' /*暂时只报送新建状态数据*/
+        </where>
+    </select>
+</mapper>

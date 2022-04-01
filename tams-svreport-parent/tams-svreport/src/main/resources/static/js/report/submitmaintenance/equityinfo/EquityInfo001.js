@@ -137,7 +137,7 @@ $(function() {
         // 导入按钮点击事件
         $('#EquityInfo001_btn_import').click(function() {
             Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
-                Joyin.uploadFile(function(fileName) {
+                Joyin.uploadFile({height:'530px',width:'850px'},function(fileName) {
                     Joyin.ajax('checkConfirmMsgForImportData', {fileName: fileName}, function() {
                         Joyin.ajax('importFile', {fileName: fileName});
                     },function() {
@@ -154,7 +154,7 @@ $(function() {
             Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
                 var options = {};
                 options.pageId = "EquityInfo001_2";
-                Joyin.uploadFile(options, function(fileName) {
+                Joyin.uploadFile({height:'530px',width:'850px'}, function(fileName) {
                     Joyin.ajax('checkConfirmMsgForChbImportData', {fileName: fileName}, function() {
                         Joyin.ajax('chbImportFile', {fileName: fileName});
                     },function() {

@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dao.InvestorsHoldInfo001Mapper_mysql">
-<!-- 批量删除 -->
-<delete id="deleteInvestRegist" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
-delete from CHB_INVESTHOLD_INFO_SUB
-where
-	<foreach collection="list" item="investDto" open=" (" close=")" separator=") or (">
- 	 	PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR} 
-	 	and REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
- 	 	and INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
- 	 	and CCY = #{investDto.ccy,jdbcType=VARCHAR}
- 	 	and HOLD_DATE = #{investDto.holdDate,jdbcType=DATE}
- 	 	and SEND_STATUS = '01'
-	</foreach>
-</delete>
-<delete id="deleteByPrimary" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
+	<!-- 批量删除 -->
+	<delete id="deleteInvestRegist" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+		delete from CHB_INVESTHOLD_INFO_SUB
+		where
+		<foreach collection="list" item="investDto" open=" (" close=")" separator=") or (">
+			PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR}
+			and REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR}
+			and INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
+			and CCY = #{investDto.ccy,jdbcType=VARCHAR}
+			and HOLD_DATE = #{investDto.holdDate,jdbcType=DATE}
+			and SEND_STATUS = '01'
+		</foreach>
+	</delete>
+	<delete id="deleteByPrimary" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
         delete from CHB_INVESTHOLD_INFO_SUB
         where
-        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} 
-		and	INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} 
-		and PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR} 
+        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+		and	INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+		and PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
 		and CCY = #{ccy,jdbcType=VARCHAR}
  	 	and HOLD_DATE = #{holdDate,jdbcType=DATE}
 		and SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
 </delete>
-<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from CHB_INVESTHOLD_INFO_SUB
         where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
 </delete>
-    <update id="updateByPrimaryKeySelected" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
-        update CHB_INVESTHOLD_INFO_SUB
-        <set >
-            <if test="status != null" >
-                STATUS = #{status,jdbcType=VARCHAR}
-            </if>
-        </set>
-        where 
-        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
-        and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
-        and SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
-        and PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR} 
+	<update id="updateByPrimaryKeySelected" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
+		update CHB_INVESTHOLD_INFO_SUB
+		<set >
+			<if test="status != null" >
+				STATUS = #{status,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where
+		REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+		and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+		and SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+		and PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
 		and CCY = #{ccy,jdbcType=VARCHAR}
- 	 	and HOLD_DATE = #{holdDate,jdbcType=DATE}
-    </update>
-<!-- 根据输入的识别标识与登记银行代码查询登记表中的数据  -->
+		and HOLD_DATE = #{holdDate,jdbcType=DATE}
+	</update>
+	<!-- 根据输入的识别标识与登记银行代码查询登记表中的数据  -->
 	<select id="querySumbitInvestHoldByCode" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfo" resultType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
 		select INDENTIFY_MARK as indentifyMark,
 		REGIST_BANK_CODE as registBankCode,
@@ -58,107 +58,107 @@ where
 	          and CCY = #{ccy,jdbcType=VARCHAR}
 	          and HOLD_DATE = #{holdDate,jdbcType=DATE}
 	</select>
-	
+
 	<!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
 	<insert id="insertDeleteInvestReg" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-		insert into CHB_INVESTHOLD_INFO_SUB 
+		insert into CHB_INVESTHOLD_INFO_SUB
 		(
 		REGIST_SEQNO,REGIST_BANK_CODE,CHB_SUBMIT_DEADLINE,PRD_REGIST_CODE,INDENTIFY_MARK,CCY,
 		HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,SUBMIT_DEADLINE,WORKFLOW_ID,SEND_STATUS,
 		STATUS_DATE,STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,
 		ORG_CODE,DEPT_CODE,SUBMIT_TIME
             )
-        select  
+        select
         #{registSeqno,jdbcType=VARCHAR},REGIST_BANK_CODE,#{chbSubmitDeadline,jdbcType=TIMESTAMP},PRD_REGIST_CODE,INDENTIFY_MARK,CCY,
         HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,#{submitDeadline,jdbcType=TIMESTAMP},WORKFLOW_ID,'01',
 		#{statusDate,jdbcType=TIMESTAMP},#{status,jdbcType=VARCHAR},CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,
-		ORG_CODE,DEPT_CODE,null     
+		ORG_CODE,DEPT_CODE,null
         from chb_investhold_info
          where INDENTIFY_MARK = #{indentifyMark} and REGIST_BANK_CODE = #{registBankCode}
          	    and PRD_REGIST_CODE= #{prdRegistCode,jdbcType=VARCHAR}
 				and CCY= #{ccy,jdbcType=VARCHAR}
 				and HOLD_DATE= #{holdDate,jdbcType=DATE}
 	</insert>
-	
+
 	<select id="selectAllData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-	select
-		 cii.REGIST_BANK_CODE registBankCode,
-		 cii.INDENTIFY_MARK indentifyMark,
-         cii.PRODID prodid,
-		 cii.PRD_REGIST_CODE prdRegistCode,
-		 cii.HOLD_DATE holdDate,
-		 cii.CCY ccy,
-		 cii.AMOUNT amount,
-		 cii.QTY qty,
-		 cii.CNY_AMT cnyAmt,
-		 cii.REMARK remark,
-		 cii.DATA_SOURCE dataSource,
-		 cii.STATUS statusCode,
-		 <!-- sdl1.ITEM_VALUE status,
-		 sdl2.ITEM_VALUE ccyCode, -->
-		 cii.STATUS status,
-		 cii.CCY ccyCode,
-		 cii.CREATE_DEPT,
-		 <!-- cpc.PRODID prodId, -->
-		 cii.AGENT agent,
-		 <!-- 添加接入检查结果类 -->
-		 case cii.STATUS 
-		      when 'E' then ''
-		 else cii.INTERF_CHECK_RESULT end as interfCheckResult
-	from 
-	CHB_INVESTHOLD_INFO cii
-	<!-- left join SYS_DATADICT_LIST sdl1 on sdl1.DICT_CODE = #{DICT_STATUS} and sdl1.ITEM_CODE = cii.STATUS and sdl1.status='E'
-	left join SYS_DATADICT_LIST sdl2 on sdl2.DICT_CODE = #{DICT_CYY} and sdl2.ITEM_CODE = cii.CCY and sdl2.status='E' -->
-	<!-- left join CHB_PRDRESIST_CODE cpc on cii.PRD_REGIST_CODE = cpc.REG_CODE -->
-	<!-- left join  -->
-	left join CHB_EQU_HOLD ceh on ceh.INDENTIFY_MARK=cii.INDENTIFY_MARK and ceh.STATUS='E' and ceh.ORG_CODE=cii.ORG_CODE
-	<where>
-		<if test="registBankCode!= null and registBankCode != ''">
-			cii.REGIST_BANK_CODE like concat_ws('','%',#{registBankCode},'%')
-		</if>
-		
-		<if test="prodIdList != null  and prodIdList.size()>0">
-			<foreach collection="prodIdList" item="item" open="and cii.PRODID in(" separator="," close=")">
-			#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		
-		<if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
-			<foreach collection="prdRegistCodeList" item="item" open="and cii.PRD_REGIST_CODE in(" separator="," close=")">
-			#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		<if test="indentifyMark != null  and indentifyMark != ''">
-		    and cii.INDENTIFY_MARK like concat_ws('','%',#{indentifyMark},'%')
-		 </if>
-        <if test="holderName !=null and holderName != ''">
-            and ceh.HOLDER_NAME LIKE concat_ws('','%',#{holderName},'%')
-        </if>
-		<if test="holdDateEnd != null">
-			and cii.HOLD_DATE &lt;= #{holdDateEnd}
-		</if>
-		<if test="holdDateStart != null">
-			and cii.HOLD_DATE &gt;= #{holdDateStart}
-		</if>
-		<if test="statusList != null and statusList.size()>0">
-			<foreach collection="statusList" item="item" open="and cii.STATUS in(" separator="," close=")">
-			#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		<if test="orgCodeList != null and orgCodeList.size()>0">
-			<foreach collection="orgCodeList" item="item" open="and cii.ORG_CODE in(" separator="," close=")">
-			#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		<if test="keyList != null and keyList.size()>0">
-			<foreach collection="keyList" item="item" open="and (" separator="or" close=")">
-			(cii.REGIST_BANK_CODE = #{item.registBankCode}
-			and cii.INDENTIFY_MARK=#{item.indentifyMark} and cii.PRODID=#{item.prodid} and
-				DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d')=DATE_FORMAT(#{item.holdDate},'%Y-%m-%d') and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
-			</foreach>
-		</if>
-	</where>
-	order by cii.REGIST_BANK_CODE, cii.PRODID, cii.CCY, cii.INDENTIFY_MARK, cii.HOLD_DATE
+		select
+		cii.REGIST_BANK_CODE registBankCode,
+		cii.INDENTIFY_MARK indentifyMark,
+		cii.PRODID prodid,
+		cii.PRD_REGIST_CODE prdRegistCode,
+		cii.HOLD_DATE holdDate,
+		cii.CCY ccy,
+		cii.AMOUNT amount,
+		cii.QTY qty,
+		cii.CNY_AMT cnyAmt,
+		cii.REMARK remark,
+		cii.DATA_SOURCE dataSource,
+		cii.STATUS statusCode,
+		<!-- sdl1.ITEM_VALUE status,
+        sdl2.ITEM_VALUE ccyCode, -->
+		cii.STATUS status,
+		cii.CCY ccyCode,
+		cii.CREATE_DEPT,
+		<!-- cpc.PRODID prodId, -->
+		cii.AGENT agent,
+		<!-- 添加接入检查结果类 -->
+		case cii.STATUS
+		when 'E' then ''
+		else cii.INTERF_CHECK_RESULT end as interfCheckResult
+		from
+		CHB_INVESTHOLD_INFO cii
+		<!-- left join SYS_DATADICT_LIST sdl1 on sdl1.DICT_CODE = #{DICT_STATUS} and sdl1.ITEM_CODE = cii.STATUS and sdl1.status='E'
+        left join SYS_DATADICT_LIST sdl2 on sdl2.DICT_CODE = #{DICT_CYY} and sdl2.ITEM_CODE = cii.CCY and sdl2.status='E' -->
+		<!-- left join CHB_PRDRESIST_CODE cpc on cii.PRD_REGIST_CODE = cpc.REG_CODE -->
+		<!-- left join  -->
+		left join CHB_EQU_HOLD ceh on ceh.INDENTIFY_MARK=cii.INDENTIFY_MARK and ceh.STATUS='E' and ceh.ORG_CODE=cii.ORG_CODE
+		<where>
+			<if test="registBankCode!= null and registBankCode != ''">
+				cii.REGIST_BANK_CODE like concat_ws('','%',#{registBankCode},'%')
+			</if>
+
+			<if test="prodIdList != null  and prodIdList.size()>0">
+				<foreach collection="prodIdList" item="item" open="and cii.PRODID in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+
+			<if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
+				<foreach collection="prdRegistCodeList" item="item" open="and cii.PRD_REGIST_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="indentifyMark != null  and indentifyMark != ''">
+				and cii.INDENTIFY_MARK like concat_ws('','%',#{indentifyMark},'%')
+			</if>
+			<if test="holderName !=null and holderName != ''">
+				and ceh.HOLDER_NAME LIKE concat_ws('','%',#{holderName},'%')
+			</if>
+			<if test="holdDateEnd != null">
+				and cii.HOLD_DATE &lt;= #{holdDateEnd}
+			</if>
+			<if test="holdDateStart != null">
+				and cii.HOLD_DATE &gt;= #{holdDateStart}
+			</if>
+			<if test="statusList != null and statusList.size()>0">
+				<foreach collection="statusList" item="item" open="and cii.STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="orgCodeList != null and orgCodeList.size()>0">
+				<foreach collection="orgCodeList" item="item" open="and cii.ORG_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="keyList != null and keyList.size()>0">
+				<foreach collection="keyList" item="item" open="and (" separator="or" close=")">
+					(cii.REGIST_BANK_CODE = #{item.registBankCode}
+					and cii.INDENTIFY_MARK=#{item.indentifyMark} and cii.PRODID=#{item.prodid} and
+					DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d')=DATE_FORMAT(#{item.holdDate},'%Y-%m-%d') and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
+				</foreach>
+			</if>
+		</where>
+		order by cii.REGIST_BANK_CODE, cii.PRODID, cii.CCY, cii.INDENTIFY_MARK, cii.HOLD_DATE
 	</select>
 	<update id="updateByKeyList">
 		update CHB_INVESTHOLD_INFO cii
@@ -380,7 +380,6 @@ where
 		AND CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
 		AND CII.HOLD_DATE = TEMP.HOLD_DATE
 		AND CII.CCY = TEMP.CCY
-		AND CII.INDENTIFY_MARK = TEMP.INDENTIFY_MARK
 		AND CII.PRODID = TEMP.PRODID
 		AND CII.SEND_STATUS = TEMP.SEND_STATUS)
 		) de;
@@ -549,54 +548,112 @@ where
 		AND A.SEND_STATUS = B.SEND_STATUS
 	</insert>
 	<select id="selectAllHoldInfoData" resultType = "com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-	select
-		 cii.REGIST_BANK_CODE registBankCode,
-		 cii.INDENTIFY_MARK indentifyMark,
-         cii.PRODID prodid,
-		 cii.PRD_REGIST_CODE prdRegistCode,
-		 cii.HOLD_DATE holdDate,
-		 cii.CCY ccy,
-		 cii.AMOUNT amount,
-		 cii.QTY qty,
-		 cii.CNY_AMT cnyAmt,
-		 cii.STATUS status
-	from 
-	CHB_INVESTHOLD_INFO cii
-    <!-- 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 start -->
-    <where>
-<!-- 	<foreach collection="newKeyList" item="item" open="(cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in(" separator="," close=")">
-		(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
-	</foreach>	 -->
-	<foreach collection="newKeyList" item="item" open="(" separator="or" close=")">
-		(cii.REGIST_BANK_CODE =#{item.registBankCode} 
-			and cii.INDENTIFY_MARK=#{item.indentifyMark}
-			and cii.PRD_REGIST_CODE=#{item.prdRegistCode}
-			and cii.HOLD_DATE = STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
-			and cii.CCY =#{item.ccy})
-	</foreach>
-    </where>
-    <!-- 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 end -->
+		select
+		cii.REGIST_BANK_CODE registBankCode,
+		cii.INDENTIFY_MARK indentifyMark,
+		cii.PRODID prodid,
+		cii.PRD_REGIST_CODE prdRegistCode,
+		cii.HOLD_DATE holdDate,
+		cii.CCY ccy,
+		cii.AMOUNT amount,
+		cii.QTY qty,
+		cii.CNY_AMT cnyAmt,
+		cii.STATUS status
+		from
+		CHB_INVESTHOLD_INFO cii
+		<!-- 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 start -->
+<!--		<where>-->
+			<!-- 	<foreach collection="newKeyList" item="item" open="(cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in(" separator="," close=")">
+                    (#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+                </foreach>	 -->
+		<!--	<foreach collection="newKeyList" item="item" open="(" separator="or" close=")">
+				(cii.REGIST_BANK_CODE =#{item.registBankCode}
+				and cii.INDENTIFY_MARK=#{item.indentifyMark}
+				and cii.PRD_REGIST_CODE=#{item.prdRegistCode}
+				and cii.HOLD_DATE = STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
+				and cii.CCY =#{item.ccy})
+			</foreach>
+		</where>
+		&lt;!&ndash; 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 end &ndash;&gt;
+	</select>-->
+		WHERE 1=1
+		<if test="newKeyList !=null and newKeyList.size()>0">
+			AND (cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in
+			<foreach collection="newKeyList" item="item" open="and (" separator="," close=")">
+				(#{item.registBankCode},{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+			</foreach>
+		</if>
 	</select>
-	<select id="selectAllSubHoldInfoData" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
-	select
-		 ciis.REGIST_SEQNO registSeqno,
-		 ciis.REGIST_BANK_CODE registBankCode,
-		 ciis.INDENTIFY_MARK indentifyMark,
-		 ciis.PRD_REGIST_CODE prdRegistCode,
-		 ciis.HOLD_DATE holdDate,
-		 ciis.CCY ccy,
-		 ciis.AMOUNT amount,
-		 ciis.QTY qty,
-		 ciis.CNY_AMT cnyAmt,
-		 ciis.STATUS status,
-		 ciis.SEND_STATUS,
-		 ciis.CHECK_SEQNO checkSeqno
-	from 
-	CHB_INVESTHOLD_INFO_SUB ciis
-	where
-	<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d'),ciis.CCY) in(" separator="," close=")">
-		(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
-	</foreach>
+
+	<!--<select id="selectAllSubHoldInfoData" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+		select
+		ciis.REGIST_SEQNO registSeqno,
+		ciis.REGIST_BANK_CODE registBankCode,
+		ciis.INDENTIFY_MARK indentifyMark,
+		ciis.PRD_REGIST_CODE prdRegistCode,
+		ciis.HOLD_DATE holdDate,
+		ciis.CCY ccy,
+		ciis.AMOUNT amount,
+		ciis.QTY qty,
+		ciis.CNY_AMT cnyAmt,
+		ciis.STATUS status,
+		ciis.SEND_STATUS,
+		ciis.CHECK_SEQNO checkSeqno
+		from
+		CHB_INVESTHOLD_INFO_SUB ciis
+		where
+		<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d'),ciis.CCY) in(" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
+		</foreach>
+	</select>-->
+	<select id="selectAllHoldInfoDataNew" resultType = "com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
+		select
+		cii.REGIST_BANK_CODE registBankCode,
+		cii.INDENTIFY_MARK indentifyMark,
+		cii.PRODID prodid,
+		cii.PRD_REGIST_CODE prdRegistCode,
+		cii.HOLD_DATE holdDate,
+		cii.CCY ccy,
+		cii.AMOUNT amount,
+		cii.QTY qty,
+		cii.CNY_AMT cnyAmt,
+		cii.STATUS status
+		from
+		CHB_INVESTHOLD_INFO cii
+		where EXISTS (
+		SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+		cii.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		AND cii.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+		AND cii.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+		AND cii.HOLD_DATE = tmp.HOLD_DATE
+		AND cii.CCY = tmp.CCY
+		)
+	</select>
+
+	<select id="selectAllSubHoldInfoDataNew" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+		select
+		ciis.REGIST_SEQNO registSeqno,
+		ciis.REGIST_BANK_CODE registBankCode,
+		ciis.INDENTIFY_MARK indentifyMark,
+		ciis.PRD_REGIST_CODE prdRegistCode,
+		ciis.HOLD_DATE holdDate,
+		ciis.CCY ccy,
+		ciis.AMOUNT amount,
+		ciis.QTY qty,
+		ciis.CNY_AMT cnyAmt,
+		ciis.STATUS status,
+		ciis.SEND_STATUS,
+		ciis.CHECK_SEQNO checkSeqno
+		from
+		CHB_INVESTHOLD_INFO_SUB ciis
+		where EXISTS (
+       SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+        ciis.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+        AND ciis.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+        AND ciis.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+        AND ciis.HOLD_DATE = tmp.HOLD_DATE
+        AND ciis.CCY = tmp.CCY
+       )
 	</select>
 	<delete id="deleteTmpTable">truncate table CHB_INVESTHOLD_INFO_IMP_TMP</delete>
 	<select id="getAllRegistBankCodeSet" resultType="java.util.Map">
@@ -611,34 +668,34 @@ where
 	<select id="getRateNearByDate" resultType="java.math.BigDecimal">
 		select
 		<choose>
-		<when test="pricetype == '01'">
-			cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-		</when>
-		<when test="pricetype == '02'">
-			cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-		</when>
-		<when test="pricetype == '03'">
-			cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-		</when>
-		<when test="pricetype == '04'">
-			cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-		</when>
-		<otherwise >
-			cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-		</otherwise>
+			<when test="pricetype == '01'">
+				cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+			</when>
+			<when test="pricetype == '02'">
+				cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+			</when>
+			<when test="pricetype == '03'">
+				cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+			</when>
+			<when test="pricetype == '04'">
+				cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+			</when>
+			<otherwise >
+				cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+			</otherwise>
 		</choose>
-		 from MST_EXCHARGE_QUOTE cmei
-		 where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
-		 and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
-		 and cmei.DATASOURCE_TYPE = 'SAFE'
-		 AND cmei.TRADE_DATE=
-		 ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE}) 
+		from MST_EXCHARGE_QUOTE cmei
+		where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
+		and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
+		and cmei.DATASOURCE_TYPE = 'SAFE'
+		AND cmei.TRADE_DATE=
+		( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
 	</select>
 	<delete id="deleteUnSubByKeyList">
 		delete CHB_INVESTHOLD_INFO_SUB
 		where SEND_STATUS =#{unSubmit}
 		<foreach collection="keyList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
-				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
 		</foreach>
 	</delete>
 	<select id="countProdReg" resultType="int">
@@ -656,63 +713,63 @@ where
 	<insert id="insertProdRegInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode">
 		insert into CHB_PRDRESIST_CODE(PRODID,ORG_CODE,REG_CODE,DEPT_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,CREATE_DEPT)
 		<foreach collection="prodRegInfoList" item="dto" open=" select * from (select " close="from dual) a" separator="from dual union all select ">
-		#{dto.prodid,jdbcType=VARCHAR} as PRODID,
-		#{dto.orgCode,jdbcType=VARCHAR} as ORG_CODE,
-		#{dto.regCode,jdbcType=VARCHAR} as REG_CODE,
-        #{dto.deptCode,jdbcType=VARCHAR} as DEPT_CODE,
-        #{dto.updateUser,jdbcType=TIMESTAMP} as UPDATE_USER ,
-        #{dto.updateTime,jdbcType=VARCHAR} as UPDATE_TIME,
-        #{dto.createUser,jdbcType=TIMESTAMP} as CREATE_USER,
-        #{dto.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
-        #{dto.createDept,jdbcType=VARCHAR} as CREATE_DEPT
-        </foreach>
+			#{dto.prodid,jdbcType=VARCHAR} as PRODID,
+			#{dto.orgCode,jdbcType=VARCHAR} as ORG_CODE,
+			#{dto.regCode,jdbcType=VARCHAR} as REG_CODE,
+			#{dto.deptCode,jdbcType=VARCHAR} as DEPT_CODE,
+			#{dto.updateUser,jdbcType=TIMESTAMP} as UPDATE_USER ,
+			#{dto.updateTime,jdbcType=VARCHAR} as UPDATE_TIME,
+			#{dto.createUser,jdbcType=TIMESTAMP} as CREATE_USER,
+			#{dto.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
+			#{dto.createDept,jdbcType=VARCHAR} as CREATE_DEPT
+		</foreach>
 	</insert>
-	
+
 	<select id="selectStatusAInvestholdInfoData" resultMap="com.joyintech.tams.common.base.dao.ChbInvestholdInfoMapper.BaseResultMap">
-	   <include refid="com.joyintech.tams.common.base.dao.ChbInvestholdInfoMapper.Sql_All_Data"></include>
-	   where
-	       STATUS = 'A'
-	       AND PRODID = #{prodId,jdbcType=VARCHAR}
-	       AND ORG_CODE = #{orgCode,jdbcType=VARCHAR}
-	       <if test="isCover != '01'">
-	       AND (PRD_REGIST_CODE IS NULL OR PRD_REGIST_CODE = '') 
-	       </if>
+		<include refid="com.joyintech.tams.common.base.dao.ChbInvestholdInfoMapper.Sql_All_Data"></include>
+		where
+		STATUS = 'A'
+		AND PRODID = #{prodId,jdbcType=VARCHAR}
+		AND ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+		<if test="isCover != '01'">
+			AND (PRD_REGIST_CODE IS NULL OR PRD_REGIST_CODE = '')
+		</if>
 	</select>
-	
+
 	<update id="updateChbInvestholdInfoData">
-        update CHB_INVESTHOLD_INFO 
-            set
-                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
-                STATUS = #{statusToUpdate,jdbcType=VARCHAR}
-            where
-                STATUS = 'A'
-                and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in (
-	            <foreach collection="dataList" item="item" index="index" separator=", " > 
-	               (
-	               #{item.registBankCode,jdbcType=VARCHAR},
-		           #{item.indentifyMark,jdbcType=VARCHAR},
-		           #{item.prodid,jdbcType=VARCHAR},
-		           #{item.holdDate,jdbcType=DATE},
-		           #{item.ccy,jdbcType=VARCHAR}
-		           )
-	            </foreach>
-                )
+		update CHB_INVESTHOLD_INFO
+		set
+		PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
+		STATUS = #{statusToUpdate,jdbcType=VARCHAR}
+		where
+		STATUS = 'A'
+		and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in (
+		<foreach collection="dataList" item="item" index="index" separator=", " >
+			(
+			#{item.registBankCode,jdbcType=VARCHAR},
+			#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.prodid,jdbcType=VARCHAR},
+			#{item.holdDate,jdbcType=DATE},
+			#{item.ccy,jdbcType=VARCHAR}
+			)
+		</foreach>
+		)
 	</update>
 	<!-- 查询检查序列号 -->
 	<select id="selectCheckSeqno" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" resultType="java.lang.String">
 		select DISTINCT CHECK_SEQNO from CHB_INVESTHOLD_INFO_SUB
 		<where>
 			<foreach collection="list" item="investDto" open=" (" close=")" separator=") or (">
-		 	 		PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR} 
-			 	 	and REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
-		 	 		and INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
-		 	 		and CCY = #{investDto.ccy,jdbcType=VARCHAR}
-		 	 		and HOLD_DATE = STR_TO_DATE(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+				PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR}
+				and REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR}
+				and INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
+				and CCY = #{investDto.ccy,jdbcType=VARCHAR}
+				and HOLD_DATE = STR_TO_DATE(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
 			</foreach>
 		</where>
 	</select>
 	<select id="selectSendDataToCompare" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub"
-		resultType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+			resultType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
 		select QTY as qty,
 		AMOUNT as amount,
 		CNY_AMT as cnyamt
@@ -724,45 +781,45 @@ where
 	          and HOLD_DATE = #{dto.holdDate,jdbcType=DATE}
 	          and SEND_STATUS != '01'
 	</select>
-	
+
 	<update id="updateChbInvestholdInfoData2">
-        update CHB_INVESTHOLD_INFO 
-            set
-                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
-            where
-                STATUS = 'E'
-                and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in (
-	            <foreach collection="dataList" item="item" index="index" separator=", " > 
-	               (
-	               #{item.registBankCode,jdbcType=VARCHAR},
-		           #{item.indentifyMark,jdbcType=VARCHAR},
-		           #{item.prodid,jdbcType=VARCHAR},
-		           #{item.holdDate,jdbcType=DATE},
-		           #{item.ccy,jdbcType=VARCHAR}
-		           )
-	            </foreach>
-                )
+		update CHB_INVESTHOLD_INFO
+		set
+		PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
+		where
+		STATUS = 'E'
+		and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in (
+		<foreach collection="dataList" item="item" index="index" separator=", " >
+			(
+			#{item.registBankCode,jdbcType=VARCHAR},
+			#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.prodid,jdbcType=VARCHAR},
+			#{item.holdDate,jdbcType=DATE},
+			#{item.ccy,jdbcType=VARCHAR}
+			)
+		</foreach>
+		)
 	</update>
 	<update id="updateChbInvestholdInfoSubData">
-        update CHB_INVESTHOLD_INFO_SUB 
-            set
-                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
-            where
-                STATUS in ('01','02')
-                and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in (
-	            <foreach collection="dataList" item="item" index="index" separator=", " > 
-	               (
-	               #{item.registBankCode,jdbcType=VARCHAR},
-		           #{item.indentifyMark,jdbcType=VARCHAR},
-		           #{item.prodid,jdbcType=VARCHAR},
-		           #{item.holdDate,jdbcType=DATE},
-		           #{item.ccy,jdbcType=VARCHAR}
-		           )
-	            </foreach>
-                )
+		update CHB_INVESTHOLD_INFO_SUB
+		set
+		PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR}
+		where
+		STATUS in ('01','02')
+		and (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID, HOLD_DATE, CCY) in (
+		<foreach collection="dataList" item="item" index="index" separator=", " >
+			(
+			#{item.registBankCode,jdbcType=VARCHAR},
+			#{item.indentifyMark,jdbcType=VARCHAR},
+			#{item.prodid,jdbcType=VARCHAR},
+			#{item.holdDate,jdbcType=DATE},
+			#{item.ccy,jdbcType=VARCHAR}
+			)
+		</foreach>
+		)
 	</update>
 	<select id="selectStatusEInvestholdInfoData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-	   select 
+	   select
 	     REGIST_BANK_CODE registBankCode,
 		 INDENTIFY_MARK indentifyMark,
          PRODID prodid,
@@ -785,7 +842,7 @@ where
 	       AND ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 	</select>
 	<select id="selectAllInvestholdInfoData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-	   select 
+	   select
 	     REGIST_BANK_CODE registBankCode,
 		 INDENTIFY_MARK indentifyMark,
          PRODID prodid,
@@ -807,98 +864,145 @@ where
 	       AND ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 	</select>
 	<select id="selectAllDataByList" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-	select
-		 cii.REGIST_BANK_CODE registBankCode,
-		 cii.INDENTIFY_MARK indentifyMark,
-         cii.PRODID prodid,
-		 cii.PRD_REGIST_CODE prdRegistCode,
-		 cii.HOLD_DATE holdDate,
-		 cii.CCY ccy,
-		 cii.AMOUNT amount,
-		 cii.QTY qty,
-		 cii.CNY_AMT cnyAmt,
-		 cii.REMARK remark,
-		 cii.DATA_SOURCE dataSource,
-		 cii.STATUS statusCode,
-		 <!-- sdl1.ITEM_VALUE status,
-		 sdl2.ITEM_VALUE ccyCode, -->
-		 cii.STATUS status,
-		 cii.CCY ccyCode,
-		 cii.CREATE_DEPT,
-		 <!-- cpc.PRODID prodId, -->
-		 cii.AGENT agent,
-		 case cii.STATUS 
-              when 'E' then ''
-         else cii.INTERF_CHECK_RESULT end as interfCheckResult
-	from 
-	CHB_INVESTHOLD_INFO cii
-	<!-- left join SYS_DATADICT_LIST sdl1 on sdl1.DICT_CODE = #{DICT_STATUS} and sdl1.ITEM_CODE = cii.STATUS and sdl1.status='E'
-	left join SYS_DATADICT_LIST sdl2 on sdl2.DICT_CODE = #{DICT_CYY} and sdl2.ITEM_CODE = cii.CCY and sdl2.status='E' -->
-	<!-- left join CHB_PRDRESIST_CODE cpc on cii.PRD_REGIST_CODE = cpc.REG_CODE -->
-	<!-- left join  -->
-	left join CHB_EQU_HOLD ceh on ceh.INDENTIFY_MARK=cii.INDENTIFY_MARK and ceh.STATUS='E' and ceh.ORG_CODE=cii.ORG_CODE
-	<where>
-		<if test="keyList != null and keyList.size()>0">
-			<foreach collection="keyList" item="item" open="and (" separator="or" close=")">
-			(cii.REGIST_BANK_CODE = #{item.registBankCode}
-			and cii.INDENTIFY_MARK=#{item.indentifyMark} and cii.PRODID=#{item.prodid} and
-				cii.HOLD_DATE =STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
-				and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
-			</foreach>
-		</if>
-	</where>
-	order by cii.REGIST_BANK_CODE, cii.PRODID, cii.CCY, cii.INDENTIFY_MARK, cii.HOLD_DATE
+		select
+		cii.REGIST_BANK_CODE registBankCode,
+		cii.INDENTIFY_MARK indentifyMark,
+		cii.PRODID prodid,
+		cii.PRD_REGIST_CODE prdRegistCode,
+		cii.HOLD_DATE holdDate,
+		cii.CCY ccy,
+		cii.AMOUNT amount,
+		cii.QTY qty,
+		cii.CNY_AMT cnyAmt,
+		cii.REMARK remark,
+		cii.DATA_SOURCE dataSource,
+		cii.STATUS statusCode,
+		<!-- sdl1.ITEM_VALUE status,
+        sdl2.ITEM_VALUE ccyCode, -->
+		cii.STATUS status,
+		cii.CCY ccyCode,
+		cii.CREATE_DEPT,
+		<!-- cpc.PRODID prodId, -->
+		cii.AGENT agent,
+		case cii.STATUS
+		when 'E' then ''
+		else cii.INTERF_CHECK_RESULT end as interfCheckResult
+		from
+		CHB_INVESTHOLD_INFO cii
+		<!-- left join SYS_DATADICT_LIST sdl1 on sdl1.DICT_CODE = #{DICT_STATUS} and sdl1.ITEM_CODE = cii.STATUS and sdl1.status='E'
+        left join SYS_DATADICT_LIST sdl2 on sdl2.DICT_CODE = #{DICT_CYY} and sdl2.ITEM_CODE = cii.CCY and sdl2.status='E' -->
+		<!-- left join CHB_PRDRESIST_CODE cpc on cii.PRD_REGIST_CODE = cpc.REG_CODE -->
+		<!-- left join  -->
+		left join CHB_EQU_HOLD ceh on ceh.INDENTIFY_MARK=cii.INDENTIFY_MARK and ceh.STATUS='E' and ceh.ORG_CODE=cii.ORG_CODE
+		<where>
+			<if test="keyList != null and keyList.size()>0">
+				<foreach collection="keyList" item="item" open="and (" separator="or" close=")">
+					(cii.REGIST_BANK_CODE = #{item.registBankCode}
+					and cii.INDENTIFY_MARK=#{item.indentifyMark} and cii.PRODID=#{item.prodid} and
+					cii.HOLD_DATE =STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
+					and cii.CCY=#{item.ccy} and cii.STATUS=#{item.status})
+				</foreach>
+			</if>
+		</where>
+		order by cii.REGIST_BANK_CODE, cii.PRODID, cii.CCY, cii.INDENTIFY_MARK, cii.HOLD_DATE
 	</select>
-	
+
 	<select id="getSubmitFeedbackStatusList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
-		select distinct
-		    status.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-		    ciis.CCY ccy,
-		    ciis.HOLD_DATE holdDate,
-		    ciis.INDENTIFY_MARK indentifyMark,
-		    ciis.PRODID prodid,
-		    ciis.REGIST_BANK_CODE registBankCode,
-		    ciis.AMOUNT amount,
-		    ciis.QTY qty,
-		    ciis.CNY_AMT cnyAmt
-		  from CHB_INVESTHOLD_INFO_SUB ciis
-		  left join CHB_SUBMIT_STATUS status
-		  on ciis.SUMIT_SEQ = status.SEQNO
+		<!--select distinct
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		ciis.CCY ccy,
+		ciis.HOLD_DATE holdDate,
+		ciis.INDENTIFY_MARK indentifyMark,
+		ciis.PRODID prodid,
+		ciis.REGIST_BANK_CODE registBankCode,
+		ciis.AMOUNT amount,
+		ciis.QTY qty,
+		ciis.CNY_AMT cnyAmt
+		from CHB_INVESTHOLD_INFO_SUB ciis
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<where>
 			<foreach collection="list" item="investDto" open=" (" close=")" separator=") or (">
-		 	 		ciis.PRODID = #{investDto.prodid,jdbcType=VARCHAR} 
-			 	 	and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
-		 	 		and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
-		 	 		and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
-		 	 		and ciis.HOLD_DATE = STR_TO_DATE(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
-		 	 		and ciis.SEND_STATUS = '02'	 		
+				ciis.PRODID = #{investDto.prodid,jdbcType=VARCHAR}
+				and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR}
+				and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
+				and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
+				and ciis.HOLD_DATE = STR_TO_DATE(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+				and ciis.SEND_STATUS = '02'
 			</foreach>
-		</where>
+		</where>-->
+		select distinct
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		ciis.CCY ccy,
+		ciis.HOLD_DATE holdDate,
+		ciis.INDENTIFY_MARK indentifyMark,
+		ciis.PRODID prodid,
+		ciis.REGIST_BANK_CODE registBankCode,
+		ciis.AMOUNT amount,
+		ciis.QTY qty,
+		ciis.CNY_AMT cnyAmt
+		from CHB_INVESTHOLD_INFO_SUB ciis
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		where  ciis.SEND_STATUS in('02','03')
+		<if test="list !=null and list.size()>0">
+			AND (ciis.INDENTIFY_MARK,ciis.HOLD_DATE,ciis.CCY,ciis.PRODID,ciis.REGIST_BANK_CODE) in
+			<foreach collection="list" item="item" open="and (" separator="," close=")">
+				(#{item.indentifyMark},{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getSubmitFeedbackStatusListNew"  resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+		select distinct
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		ciis.CCY ccy,
+		ciis.HOLD_DATE holdDate,
+		ciis.INDENTIFY_MARK indentifyMark,
+		ciis.PRODID prodid,
+		ciis.REGIST_BANK_CODE registBankCode,
+		ciis.AMOUNT amount,
+		ciis.QTY qty,
+		ciis.CNY_AMT cnyAmt
+		from CHB_INVESTHOLD_INFO_SUB ciis
+
+		WHERE EXISTS (
+		SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+		ciis.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+		AND ciis.HOLD_DATE = tmp.HOLD_DATE
+		AND ciis.CCY = tmp.CCY
+		AND ciis.PRODID = tmp.PRODID
+		AND ciis.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		)
+		and ciis.SEND_STATUS in('02','03')
 	</select>
 	<!-- 查询持有信息登记中中债反馈状态为中债退回的数据 -->
 	<select id="selectInvestHoldInfoFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		select T.REGIST_BANK_CODE registBankCode,
-		 T.INDENTIFY_MARK indentifyMark,
-         T.PRODID prodid,
-		 T.PRD_REGIST_CODE prdRegistCode,
-		 T.HOLD_DATE holdDate,
-		 T.CCY ccy,
-		 T.AMOUNT amount,
-		 T.QTY qty,
-		 T.CNY_AMT cnyAmt,
-		 T.REMARK remark,
-		 '' as  dataSource,
-		 T.STATUS statusCode,
-		 T.STATUS status,
-		 T.CCY ccyCode,
-		 '' as  agent,
-		 status.SUBMIT_FEEDBACK_MSG as repFailedInfo
-		 from CHB_INVESTHOLD_INFO_SUB T
-		 left join CHB_SUBMIT_STATUS status
-		 on T.sumit_seq = status.seqno
+		T.INDENTIFY_MARK indentifyMark,
+		T.PRODID prodid,
+		T.PRD_REGIST_CODE prdRegistCode,
+		T.HOLD_DATE holdDate,
+		T.CCY ccy,
+		T.AMOUNT amount,
+		T.QTY qty,
+		T.CNY_AMT cnyAmt,
+		T.REMARK remark,
+		'' as  dataSource,
+		T.STATUS statusCode,
+		T.STATUS status,
+		T.CCY ccyCode,
+		'' as  agent,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		from CHB_INVESTHOLD_INFO_SUB T
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+			T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+
+
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="SEQNO !=null and SEQNO.size()>0 ">
 				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
@@ -910,42 +1014,42 @@ where
 			</if>
 		</where>
 	</select>
-	
+
 	<!-- 查询持有信息登记中中债反馈状态为中债退回的数据 -->
 	<select id="selectAllInvestHoldInfoFeedBackData" resultType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		select T.REGIST_BANK_CODE registBankCode,
-		 T.INDENTIFY_MARK indentifyMark,
-         T.PRODID prodid,
-		 T.PRD_REGIST_CODE prdRegistCode,
-		 T.HOLD_DATE holdDate,
-		 T.CCY ccy,
-		 T.AMOUNT amount,
-		 T.QTY qty,
-		 T.CNY_AMT cnyAmt,
-		 T.REMARK remark,
-		 '' as  dataSource,
-		 T.STATUS statusCode,
-		 T.STATUS status,
-		 T.CCY ccyCode,
-		 '' as  agent,
-		 status.SUBMIT_FEEDBACK_MSG as repFailedInfo
-		 from CHB_INVESTHOLD_INFO_SUB T
-		 left join CHB_SUBMIT_STATUS status
-		 on T.sumit_seq = status.seqno
+		T.INDENTIFY_MARK indentifyMark,
+		T.PRODID prodid,
+		T.PRD_REGIST_CODE prdRegistCode,
+		T.HOLD_DATE holdDate,
+		T.CCY ccy,
+		T.AMOUNT amount,
+		T.QTY qty,
+		T.CNY_AMT cnyAmt,
+		T.REMARK remark,
+		'' as  dataSource,
+		T.STATUS statusCode,
+		T.STATUS status,
+		T.CCY ccyCode,
+		'' as  agent,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		from CHB_INVESTHOLD_INFO_SUB T
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="reportNo !=null and reportNo !=''">
-				AND status.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+				AND T.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>
-	
+
 	<select id="selectInvestHoldInfoDataCount" resultType="java.lang.Integer">
 	   select count(1) from CHB_INVESTHOLD_INFO where HOLD_DATE = STR_TO_DATE(#{holdDate,jdbcType=VARCHAR},'%Y-%m-%d')
 	</select>
-	
+
 	<!-- 批量  -->
 	<select id="querySumbitInvestHoldByCodeBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfo" resultType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
 		select INDENTIFY_MARK as indentifyMark,
@@ -965,79 +1069,84 @@ where
 	</select>
 	<!-- 删除登记表中未报送数据 -->
 	<delete id="deleteByPrimaryBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
-        delete from CHB_INVESTHOLD_INFO_SUB
-        <where>
-        	SEND_STATUS = '01'
-        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+		delete from CHB_INVESTHOLD_INFO_SUB
+		<where>
+			SEND_STATUS = '01'
+			<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
 				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
 			</foreach>
-        </where>
+		</where>
 	</delete>
 	<!-- 批量插入删除登记表的数据 -->
 	<insert id="insertDeleteInvestRegBatch" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
-		insert into CHB_INVESTHOLD_INFO_SUB 
+		insert into CHB_INVESTHOLD_INFO_SUB
 		(
 		REGIST_SEQNO,REGIST_BANK_CODE,CHB_SUBMIT_DEADLINE,PRD_REGIST_CODE,INDENTIFY_MARK,CCY,
 		HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,SUBMIT_DEADLINE,WORKFLOW_ID,SEND_STATUS,
 		STATUS_DATE,STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,
 		ORG_CODE,DEPT_CODE,SUBMIT_TIME,PRODID
-            )
-        select A.* from (
-        <foreach collection="subList" item="item" index="index" separator="union all">
-            select  #{item.registSeqno,jdbcType=VARCHAR},REGIST_BANK_CODE,#{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
-            	PRD_REGIST_CODE,INDENTIFY_MARK,CCY,HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,
-            	#{item.submitDeadline,jdbcType=TIMESTAMP},WORKFLOW_ID,'01',#{item.statusDate,jdbcType=TIMESTAMP},
-            	#{item.status,jdbcType=VARCHAR},CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ORG_CODE,DEPT_CODE,null,PRODID     
-        	from chb_investhold_info
-         	where INDENTIFY_MARK = #{item.indentifyMark} and REGIST_BANK_CODE = #{item.registBankCode}
-         	    and PRD_REGIST_CODE= #{item.prdRegistCode,jdbcType=VARCHAR}
-				and CCY= #{item.ccy,jdbcType=VARCHAR}
-				and HOLD_DATE= #{item.holdDate,jdbcType=DATE}
-         </foreach>
-         )A
+		)
+		select A.* from (
+		<foreach collection="subList" item="item" index="index" separator="union all">
+			select
+			#{item.registSeqno,jdbcType=VARCHAR},REGIST_BANK_CODE,
+			#{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+			PRD_REGIST_CODE,INDENTIFY_MARK,CCY,HOLD_DATE,AMOUNT,QTY,CNY_AMT,REMARK,
+			#{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,WORKFLOW_ID,'01',
+			#{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
+			#{item.status,jdbcType=VARCHAR} STATUS,CREATE_USER,
+			CREATE_TIME,UPDATE_USER,UPDATE_TIME,
+			ORG_CODE,DEPT_CODE,null,PRODID
+			from chb_investhold_info
+			where INDENTIFY_MARK = #{item.indentifyMark} and REGIST_BANK_CODE = #{item.registBankCode}
+			and PRD_REGIST_CODE= #{item.prdRegistCode,jdbcType=VARCHAR}
+			and CCY= #{item.ccy,jdbcType=VARCHAR}
+			and HOLD_DATE= #{item.holdDate,jdbcType=DATE}
+		</foreach>
+		)A
 	</insert>
 	<!-- 批量更新登记表中未报送数据 -->
 	<update id="updateByPrimaryKeySelectedBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" >
-        update CHB_INVESTHOLD_INFO_SUB
-        <set >
-            <if test="status != null" >
-                STATUS = #{status,jdbcType=VARCHAR}
-            </if>
-        </set>
-        <where>
-        	SEND_STATUS = '01'
-        	<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+		update CHB_INVESTHOLD_INFO_SUB
+		<set >
+			<if test="status != null" >
+				STATUS = #{status,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<where>
+			SEND_STATUS = '01'
+			<foreach collection="subList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
 				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
 			</foreach>
-        </where>
-      </update>
-      
-      <update id="handleInfoDeleteData" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto" >
-	    update CHB_INVESTHOLD_INFO cii
-	    set cii.STATUS = 'E'
-	    where
-	    STATUS = 'D'
-	    <foreach collection="dataList" item="item" open="and (" separator="or" close=")">
-            (cii.REGIST_BANK_CODE =#{item.registBankCode} 
-                and cii.INDENTIFY_MARK=#{item.indentifyMark}
-                and cii.PRODID=#{item.prodid}
-                and DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d') =DATE_FORMAT(#{item.holdDate},'%Y-%m-%d')
-                and cii.CCY =#{item.ccy})
-        </foreach>
-    </update>
-      
-    <!-- 删除持有信息登记表中数据状态为删除的数据-->
-    <delete id="handleSubDeleteData" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto" >
-        delete from CHB_INVESTHOLD_INFO_SUB
-        <where>
-            STATUS = '03'
-            <foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
-                (#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
-            </foreach>
-        </where>
-    </delete>
-    <!-- 产品登记模块刷新有效持有信息维护表 -->
-    <update id="updateInfoRegCodeByProdid" >
+		</where>
+	</update>
+
+	<update id="handleInfoDeleteData" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto" >
+		update CHB_INVESTHOLD_INFO cii
+		set cii.STATUS = 'E'
+		where
+		STATUS = 'D'
+		<foreach collection="dataList" item="item" open="and (" separator="or" close=")">
+			(cii.REGIST_BANK_CODE =#{item.registBankCode}
+			and cii.INDENTIFY_MARK=#{item.indentifyMark}
+			and cii.PRODID=#{item.prodid}
+			and DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d') =DATE_FORMAT(#{item.holdDate},'%Y-%m-%d')
+			and cii.CCY =#{item.ccy})
+		</foreach>
+	</update>
+
+	<!-- 删除持有信息登记表中数据状态为删除的数据-->
+	<delete id="handleSubDeleteData" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto" >
+		delete from CHB_INVESTHOLD_INFO_SUB
+		<where>
+			STATUS = '03'
+			<foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
+			</foreach>
+		</where>
+	</delete>
+	<!-- 产品登记模块刷新有效持有信息维护表 -->
+	<update id="updateInfoRegCodeByProdid" >
        update CHB_INVESTHOLD_INFO
        set PRD_REGIST_CODE = #{regCode,jdbcType=VARCHAR}
 	   where
@@ -1055,7 +1164,7 @@ where
 	       AND ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 	       AND PRD_REGIST_CODE != #{regCode,jdbcType=VARCHAR}
 	</update>
-	
+
 	<select id="countInvestorByIndentifyMark" resultType="int">
 		SELECT COUNT(1) FROM(
 		SELECT INDENTIFY_MARK

@@ -27,7 +27,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
  * 报送时点工具类
  * @author weiyuqiang
  * @version 1.0 2019年3月22日
- * @see PbcDeadlineUtil
+ * @see DeadlineUtil
  * @since 1.0
  */
 public class DeadlineUtil {
@@ -54,7 +54,7 @@ public class DeadlineUtil {
         else{
             date = DateUtil.now();
         }
-        String key = DateUtil.format(date)+ "|" + reportCode ;
+        String key = DateUtil.format(date)+ "|" + type + "|" + reportCode ;
         if(map!= null&&CollectionUtils.isNotEmpty(map.get(key))){
             return map.get(key);
         }

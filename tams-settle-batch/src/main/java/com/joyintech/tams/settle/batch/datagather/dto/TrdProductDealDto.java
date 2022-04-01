@@ -188,6 +188,17 @@ public class TrdProductDealDto extends TrdProductDeal {
      */
     private BigDecimal mTradeAmt;
 
+    //预计分红日
+    private Date bonusCfmDate;
+
+    public Date getBonusCfmDate() {
+        return bonusCfmDate;
+    }
+
+    public void setBonusCfmDate(Date bonusCfmDate) {
+        this.bonusCfmDate = bonusCfmDate;
+    }
+
     /**
      * 取得 投资目的2
      * @return 投资目的2
@@ -555,4 +566,16 @@ public class TrdProductDealDto extends TrdProductDeal {
 	public void setmTradeAmt(BigDecimal mTradeAmt) {
 		this.mTradeAmt = mTradeAmt;
 	}
+    /**
+     * 支付类型，交易方向为分红除权时填写，红利再投、现金分红
+     */
+    private String payType;
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
 }

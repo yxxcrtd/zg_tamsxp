@@ -172,7 +172,7 @@
      from
          MST_COUNTER_PARTY mcp
          INNER JOIN MST_CFETS_CUSTOMER_INFO mcci
-         ON mcp.COUNTER_NAME = mcci.PARTY_NAME
+         ON mcp.PARTY_ID = mcci.PARTY_ID
      WHERE
          mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
     </select>

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.tams.constant.DictCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,6 +151,11 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
             if (institutionMap.containsKey(dataDto.getOrgCode())) {
                 dataDto.setOrgName(institutionMap.get(dataDto.getOrgCode()));
             }
+
+
+            if(!StringUtil.isEmpty(dataDto.getBelogCodeCBRC())){
+                dataDto.setBelogCodeCBRC(dataDto.getBelogCodeCBRC().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.监管机构, dataDto.getBelogCodeCBRC()));
+            }
           /*  if (instituteMap.containsKey(dataDto.getOrgCode())) {
             	dataDto.setInsitituteCode(instituteMap.get(dataDto.getOrgCode()));
             }*/
@@ -274,6 +280,12 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
             }
             //TISHKBS-2372 社会信用代码要求只能是18位的数字或大写英文组合 add by wangyaning 20210625 end
 
+            /******所属银保监局不可为空**/
+            String belogCodeCBRC = list.get(6);
+            if (StringUtil.isEmpty(belogCodeCBRC)) {
+                messageList.add(this.getMessage("REPORT_COMMON_E_0057", "所属银保监局"));
+            }
+
             if (CollectionUtils.isNotEmpty(messageList)) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),
                     StringUtil.joinString(messageList, "<br>")));
@@ -287,6 +299,9 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
                 entity.setIsFinSubCompany(isFinSubCompany);
                 /*机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-19 end*/
                 entity.setInsitituteCode(insitituteCode);
+                /****新增所属银保监局字段   20220307 leipeng**/
+                entity.setBelogCodeCBRC(belogCodeCBRC);
+                /****新增所属银保监局字段   20220307 leipeng**/
 
                 entities.add(entity);
             }
@@ -316,6 +331,10 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
                         chbOrgRegistBankCode.setIsFinSubCompany(dataDto.getIsFinSubCompany());
                         /*机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end*/
                         chbOrgRegistBankCode.setInsitituteCode(dataDto.getInsitituteCode());
+
+                        /****新增所属银保监局字段   20220307 leipeng**/
+                        chbOrgRegistBankCode.setBelogCodeCBRC(dataDto.getBelogCodeCBRC());
+                        /****新增所属银保监局字段   20220307 leipeng**/
 
                         try {
                             chbOrgRegistBankCodeMapper.insert(chbOrgRegistBankCode);

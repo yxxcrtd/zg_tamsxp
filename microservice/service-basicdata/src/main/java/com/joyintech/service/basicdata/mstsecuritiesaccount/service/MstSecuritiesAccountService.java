@@ -387,11 +387,31 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
         map.put("FINPROD_TYPE_TG_ZYSHG", "ZYSHG");
         map.put("FINPROD_OTH_CODE_TYPE_05", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
         map.put("FINPROD_OTH_CODE_TYPE_06", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
+        map.put("FINPROD_OTH_CODE_TYPE_07", DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
         map.put("FINPROD_TYPE_TG_F01_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
         if (StringUtil.isNotEmpty(map.get("tradePlat"))
                 && StringUtil.equals(map.get("tradePlat").toString(),DictCodeList.交易平台_非交易业务指令平台.getValue())){
             map.put("tradePlat", DictCodeList.交易平台_竞价撮合平台.getValue());
             map.remove("SHARES_TRADE_PLATFORM_02");
+        }
+        String entrustBussType=StringUtil.isNotEmpty(map.get("entrustBussType"))?map.get("entrustBussType").toString():"";
+        if(StringUtil.isNotEmpty(entrustBussType)&&
+                (DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_配债指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue().equals(entrustBussType)
+                || DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue().equals(entrustBussType))){
+            map.put("tradePlat", "");
+        }
+        Map pageMode = (Map) map.get("pageMode");
+        if(pageMode != null) { // 设置导出条数
+            if(pageMode.get("pageNo")!=null){
+                page=Integer.parseInt(pageMode.get("pageNo").toString());
+            }
+            if(pageMode.get("pageSize")!=null){
+                length=Integer.parseInt(pageMode.get("pageSize").toString());
+            }
+
         }
         return super.queryForPageForSelectReturn(page, length, () -> mstSecuritiesAccountMapper.getFinprodMarketInfoNewUi(map));
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.component.business.evaluation.dao.AccountingCommonMapper_mysql">
 	<select id="getBookLatestInfo" parameterType="java.util.Map"
-		resultType="com.joyintech.tams.component.business.evaluation.dto.BookLatestInfoDto">
+			resultType="com.joyintech.tams.component.business.evaluation.dto.BookLatestInfoDto">
 		SELECT
 		crt.*,
 		book.BOOKSET_DATE booksetDateNew
@@ -106,7 +106,7 @@
 		ORDER BY crt.HAPPEN_DATE ASC
 	</select>
 	<select id="subportfolioIncomeCapitalRatio" parameterType="Map"
-		resultType="com.joyintech.tams.component.business.evaluation.dto.SubportfolioIncomeCapitalRatio">
+			resultType="com.joyintech.tams.component.business.evaluation.dto.SubportfolioIncomeCapitalRatio">
 
 		SELECT
 		T1.FINPROD_ID AS subcombinedCode,
@@ -121,42 +121,42 @@
 		T1.TRADE_STATUS = #{transactionStatusInitial}
 		AND T1.TRADE_DATE >= STR_TO_DATE(#{startDate},'%Y-%m-%d')
 		AND STR_TO_DATE(#{endDate},'%Y-%m-%d') >= T1.TRADE_DATE
-		AND (T1.FINPROD_ID IN 
+		AND (T1.FINPROD_ID IN
 		<foreach collection="subCodes" item="code" index= "index" open="(" close=")" separator="," >
-        	<if test="(index % 998) == 0">
-            	null) or T1.FINPROD_ID in (
-            </if>
-            #{code}
-        </foreach>
-        )
+			<if test="(index % 998) == 0">
+				null) or T1.FINPROD_ID in (
+			</if>
+			#{code}
+		</foreach>
+		)
 		GROUP BY
 		T1.FINPROD_ID
-		
+
 	</select>
 	<select id="queryShareAmts" resultType="com.joyintech.tams.component.business.evaluation.dto.SubportfolioIncomeCapitalRatio">
-	SELECT
-	tpda.PORTFOLIO_ID AS subcombinedCode,
-	SUM(case when tpd.PS = '${tradeDirectionSubscribe}' then tpd.TRADE_AMT
-	when tpd.PS = '${tradeDirectionRedemption}' then -1*tpd.TRADE_AMT end) AS transactionAmount
-	FROM
-	TRD_PRODUCT_DEAL tpd
-	INNER JOIN TRD_PRODUCT_DEAL_ADD tpda
-	ON tpd.TRADE_ID = tpda.TRADE_ID
-	INNER JOIN PA_TRD_PRODUCT_DEAL ptpd
-	ON ptpd.TRADE_ID = tpd.TRADE_ID
-	AND ptpd.PA_BUSS_TYPE IN (#{productTradingCapitalAllocation},#{productCapitalAdjustment})
-	WHERE
-	tpd.TRADE_STATUS <![CDATA[<>]]> #{transactionStatusInitial}
-	AND tpd.IS_CANCEL = #{yes_no}
-	AND DATE_FORMAT(tpd.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{endDate}
-	AND (tpda.PORTFOLIO_ID in
-	<foreach collection="subCodes" item="code" index= "index" open="(" close=")" separator="," >
-    	<if test="(index % 998) == 0">
-        	null) or tpda.PORTFOLIO_ID in (
-        </if>
-        #{code}
-    </foreach>
-    )
-	GROUP BY tpda.PORTFOLIO_ID
-</select>
+		SELECT
+		tpda.PORTFOLIO_ID AS subcombinedCode,
+		SUM(case when tpd.PS = '${tradeDirectionSubscribe}' then tpd.TRADE_AMT
+		when tpd.PS = '${tradeDirectionRedemption}' then -1*tpd.TRADE_AMT end) AS transactionAmount
+		FROM
+		TRD_PRODUCT_DEAL tpd
+		INNER JOIN TRD_PRODUCT_DEAL_ADD tpda
+		ON tpd.TRADE_ID = tpda.TRADE_ID
+		INNER JOIN PA_TRD_PRODUCT_DEAL ptpd
+		ON ptpd.TRADE_ID = tpd.TRADE_ID
+		AND ptpd.PA_BUSS_TYPE IN (#{productTradingCapitalAllocation},#{productCapitalAdjustment})
+		WHERE
+		tpd.TRADE_STATUS <![CDATA[<>]]> #{transactionStatusInitial}
+		AND tpd.IS_CANCEL = #{yes_no}
+		AND DATE_FORMAT(tpd.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{endDate}
+		AND (tpda.PORTFOLIO_ID in
+		<foreach collection="subCodes" item="code" index= "index" open="(" close=")" separator="," >
+			<if test="(index % 998) == 0">
+				null) or tpda.PORTFOLIO_ID in (
+			</if>
+			#{code}
+		</foreach>
+		)
+		GROUP BY tpda.PORTFOLIO_ID
+	</select>
 </mapper>

@@ -38,7 +38,7 @@
     ORG_CODE, DEPT_CODE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from CHB_PRD_RAISETOT_SUB_HIS
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
@@ -352,39 +352,39 @@
       DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
-  
+
   <insert id="insertSubHisBatch" parameterType="java.lang.String">
-  insert into CHB_PRD_RAISETOT_SUB_HIS (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
-      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
-      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-      STATUS_DATE, STATUS, CREATE_USER, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-      UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
-      )
-      select
-      REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
-      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
-      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-      STATUS_DATE, STATUS, CREATE_USER, 
-      CREATE_DEPT, NOW(), UPDATE_USER,
-      NOW(), SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+    insert into CHB_PRD_RAISETOT_SUB_HIS (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+    SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+    RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+    REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+    STATUS_DATE, STATUS, CREATE_USER,
+    CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+    SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+    )
+    select
+    REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+    SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+    RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+    REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+    STATUS_DATE, STATUS, CREATE_USER,
+    CREATE_DEPT, NOW(), UPDATE_USER,
+    NOW(), SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+    SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
     from CHB_PRD_RAISETOT_SUB
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-  	<if test="regList !=null and regList.size()>0">
-          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
-            #{item,jdbcType=VARCHAR}
-          </foreach>
+    <if test="regList !=null and regList.size()>0">
+      <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
     </if>
   </insert>
-  
+
   <select id="selectByprodId" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-  select a.REGIST_SEQNO from (
+    select a.REGIST_SEQNO from (
     SELECT
     @rownum:=@rownum+1 rownum,
     REGIST_SEQNO,
@@ -393,20 +393,20 @@
     FROM
     ( SELECT * FROM CHB_PRD_RAISETOT_SUB_HIS  ORDER BY prod_id, ifnull( UPDATE_TIME, CREATE_TIME ) desc ) a,
     ( SELECT @rownum := 0, @prod_id := NULL, @rank := 0 )b
-  where 
-  <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
-  prod_id = #{item.prodId,jdbcType=VARCHAR}
-  </foreach>
-  )a
-  where 1=1 limit 1
+    where
+    <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
+      prod_id = #{item.prodId,jdbcType=VARCHAR}
+    </foreach>
+    )a
+    where 1=1 limit 1
   </select>
-  
-   <delete id="deleteBySeqno" parameterType="java.lang.String">
-	delete from CHB_PRD_RAISETOT_SUB_HIS
-	where
-	<foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
-		separator="," close=")">
-		#{item,jdbcType=VARCHAR}
-	</foreach>
-</delete>
+
+  <delete id="deleteBySeqno" parameterType="java.lang.String">
+    delete from CHB_PRD_RAISETOT_SUB_HIS
+    where
+    <foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
+             separator="," close=")">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </delete>
 </mapper>

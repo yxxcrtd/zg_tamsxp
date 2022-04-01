@@ -356,6 +356,10 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust {
 
     // 分配方式
     private String dipType;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     public Date getRepoVdate() {
 		return repoVdate;
@@ -1358,5 +1362,13 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust {
 
     public void setDipType(String dipType) {
         this.dipType = dipType;
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

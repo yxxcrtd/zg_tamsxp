@@ -1,12 +1,15 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.OrderPlaceBean;
+import com.joyintech.tams.exchange.common.constant.BatchPriceMode;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
-
+import com.joyintech.tams.exchange.common.utils.JsonUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Digits;
@@ -15,8 +18,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
-@ApiModel(value="订单报文",description="订单报文")
+@ApiModel(value = "订单报文", description = "订单报文")
 public class Order implements Serializable, Cloneable, OrderInterface, KeyMethodInterface<String> {
     private static final long serialVersionUID = 7947633128705147688L;
     @NotNull
@@ -141,6 +145,9 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
     @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal fullPrice;//全价价格
 
+    @ApiModelProperty(name = "expireYearRate", value = "收益率")
+    private BigDecimal expireYearRate;
+
     @ApiModelProperty(name = "entrustBalance", value = "委托金额")
     @NotNull
     @Digits(integer = 20, fraction = 4)
@@ -223,6 +230,35 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
     @ApiModelProperty(name = "hedgeFlag", value = "套期保值标识：期货使用")
     private String hedgeFlag;
 
+    @ApiModelProperty(name = "portfolioName", value = "组合名称", hidden = true)
+    private String portfolioName;
+    @ApiModelProperty(name = "secAcctId", value = "证券账户", hidden = true)
+    private String secAcctId;
+    @ApiModelProperty(name = "secAcctName", value = "证券账户名称", hidden = true)
+    private String secAcctName;
+    @ApiModelProperty(name = "tradePlat", value = "交易平台", hidden = true)
+    private String tradePlat;
+    @ApiModelProperty(name = "finprodType2", value = "金融产品类型（投管分类）：债券、理财产品、基金、理财产品模板、理财产品分层", hidden = true)
+    private String finprodType2;
+    @ApiModelProperty(name = "invManagerId", value = "投资经理", hidden = true)
+    private String invManagerId;
+    @ApiModelProperty(name = "busiTypeTg", value = "投管业务类型")
+    private String busiTypeTg;
+    @ApiModelProperty(name = "extend1", value = "扩展信息1")
+    private String extend1;
+    @ApiModelProperty(name = "extend2", value = "扩展信息2")
+    private String extend2;
+
+    @ApiModelProperty(name = "tradeDate", value = "成交时间")
+    private String tradeDate;
+    @ApiModelProperty(name = "createDateTime", value = "委托时间")
+    private String createDateTime;
+
+    @ApiModelProperty(name = "conNum", value = "可转数量")
+    private BigDecimal conNum;
+    @ApiModelProperty(name = "entrustClass", value = "委托指令类别：01-单组合，02-多组合")
+    private String entrustClass;
+
     public Order() {
         this.orderPrice = new BigDecimal("0.00");
         this.orderBalance = new BigDecimal("0.00");
@@ -232,6 +268,7 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
         this.frozenBalance = new BigDecimal("0.00");
         this.tradedBalance = new BigDecimal("0.00");
         this.tradedPrice = new BigDecimal("0.00");
+        this.expireYearRate = new BigDecimal("0.00");
     }
 
     public String getPs() {
@@ -452,6 +489,14 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
         this.fullPrice = fullPrice;
     }
 
+    public BigDecimal getExpireYearRate() {
+        return expireYearRate;
+    }
+
+    public void setExpireYearRate(BigDecimal expireYearRate) {
+        this.expireYearRate = expireYearRate;
+    }
+
     public BigDecimal getEntrustBalance() {
         return entrustBalance;
     }
@@ -588,6 +633,121 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
         this.hedgeFlag = hedgeFlag;
     }
 
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public void setPortfolioName(String portfolioName) {
+        this.portfolioName = portfolioName;
+    }
+
+    public String getSecAcctId() {
+        return secAcctId;
+    }
+
+    public void setSecAcctId(String secAcctId) {
+        this.secAcctId = secAcctId;
+    }
+
+    public String getSecAcctName() {
+        return secAcctName;
+    }
+
+    public void setSecAcctName(String secAcctName) {
+        this.secAcctName = secAcctName;
+    }
+
+    public String getTradePlat() {
+        return tradePlat;
+    }
+
+    public void setTradePlat(String tradePlat) {
+        this.tradePlat = tradePlat;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
+
+    public String getInvManagerId() {
+        return invManagerId;
+    }
+
+    public void setInvManagerId(String invManagerId) {
+        this.invManagerId = invManagerId;
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getExtend1() {
+        return extend1;
+    }
+
+    public void setExtend1(String extend1) {
+        this.extend1 = extend1;
+    }
+
+    public String getExtend2() {
+        return extend2;
+    }
+
+    public void setExtend2(String extend2) {
+        this.extend2 = extend2;
+    }
+
+    public String getTradeDate() {
+        return TradeUtils.formatDate(tradingDay);
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getCreateDateTime() {
+        return DateUtil.formatDateTime(createTime);
+    }
+
+    public void setCreateDateTime(String createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public BigDecimal getConNum() {
+        return conNum;
+    }
+
+    public void setConNum(BigDecimal conNum) {
+        this.conNum = conNum;
+    }
+
+    public String getEntrustClass() {
+        return entrustClass;
+    }
+
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
+    }
+
+    public String getPriceMode() {
+        if (StringUtil.isNotEmpty(extend2) && extend2.contains("priceMode")) {
+            Map map = JsonUtils.getObjectFromJson(extend2, Map.class);
+            Object priceMode = map.get("priceMode");
+            if (priceMode != null) {
+                return BatchPriceMode.getBatchPriceMode((int) map.get("priceMode"));
+            }
+        }
+        return "";
+    }
+
     public static Order getTemplateOrder() {
         return templateOrder;
     }
@@ -612,6 +772,7 @@ public class Order implements Serializable, Cloneable, OrderInterface, KeyMethod
             newOrder.setStockCode(orderPlaceBean.getStockCode());
             newOrder.setOrderVolume(orderPlaceBean.getEntrustVolume());
             newOrder.setOrderPrice(orderPlaceBean.getEntrustPrice());
+            newOrder.setExpireYearRate(orderPlaceBean.getYield());
             newOrder.setOffsetFlag(orderPlaceBean.getOffsetFlag());
             newOrder.setHedgeFlag(orderPlaceBean.getHedgeFlag());
             newOrder.setFullPrice(orderPlaceBean.getFullPrice() == null ? new BigDecimal("0.00") : orderPlaceBean.getFullPrice());

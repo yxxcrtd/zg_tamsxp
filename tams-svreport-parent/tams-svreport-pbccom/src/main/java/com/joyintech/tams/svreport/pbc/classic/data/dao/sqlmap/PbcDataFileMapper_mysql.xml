@@ -18,11 +18,11 @@
     <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    FILEID, FILECODE, CDATE, HEAD_ORGCODE, FILESEQNO, FILEPATH, STATUS, ORG_CODE, CREATE_USER, 
+    FILEID, FILECODE, CDATE, HEAD_ORGCODE, FILESEQNO, FILEPATH, STATUS, ORG_CODE, CREATE_USER,
     CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_DATFILE
     where FILEID = #{fileid,jdbcType=CHAR}
@@ -32,14 +32,14 @@
     where FILEID = #{fileid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFile">
-    insert into PBC_DATFILE (FILEID, FILECODE, CDATE, 
-      HEAD_ORGCODE, FILESEQNO, FILEPATH, 
-      STATUS, ORG_CODE, CREATE_USER, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+    insert into PBC_DATFILE (FILEID, FILECODE, CDATE,
+      HEAD_ORGCODE, FILESEQNO, FILEPATH,
+      STATUS, ORG_CODE, CREATE_USER,
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
       UPDATE_TIME, SUBMIT_TIME)
-    values (#{fileid,jdbcType=CHAR}, #{filecode,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP}, 
-      #{headOrgcode,jdbcType=VARCHAR}, #{fileseqno,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+    values (#{fileid,jdbcType=CHAR}, #{filecode,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP},
+      #{headOrgcode,jdbcType=VARCHAR}, #{fileseqno,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
       #{createDept,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
       NOW(), #{submitTime,jdbcType=TIMESTAMP})
   </insert>
@@ -196,26 +196,26 @@
       SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP}
     where FILEID = #{fileid,jdbcType=CHAR}
   </update>
-  
+
   <select id="queryPage" parameterType="map" resultMap="BaseResultMap">
-  	select * from (
-        select 
-        <include refid="Base_Column_List" />
-        from PBC_DATFILE
-        <where>
-        	STATUS != 'D'
-            <if test="fileCodeList != null and fileCodeList.size() > 0">
-                <foreach close=")" collection="fileCodeList" item="item" open="AND FILECODE IN(" separator=",">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="startDate != null and startDate != ''">
-                AND DATE_FORMAT(CDATE,'%Y-%m-%d') &gt;= #{startDate,jdbcType=VARCHAR}
-            </if>
-           <if test="endDate != null and endDate != ''">
-                AND DATE_FORMAT(CDATE,'%Y-%m-%d') &lt;= #{endDate,jdbcType=VARCHAR}
-            </if>
-        </where>
+    select * from (
+    select
+    <include refid="Base_Column_List" />
+    from PBC_DATFILE
+    <where>
+      STATUS != 'D'
+      <if test="fileCodeList != null and fileCodeList.size() > 0">
+        <foreach close=")" collection="fileCodeList" item="item" open="AND FILECODE IN(" separator=",">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="startDate != null and startDate != ''">
+        AND DATE_FORMAT(CDATE,'%Y-%m-%d') &gt;= #{startDate,jdbcType=VARCHAR}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        AND DATE_FORMAT(CDATE,'%Y-%m-%d') &lt;= #{endDate,jdbcType=VARCHAR}
+      </if>
+    </where>
     ) ORDER BY FILECODE, HEAD_ORGCODE, CDATE, FILESEQNO
   </select>
 </mapper>

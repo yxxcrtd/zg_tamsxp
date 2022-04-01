@@ -105,9 +105,9 @@ public class BusiAutoEtrDispService {
                                 etrDistributes = addByRuleOne(etrEntrust,etrEntrustAdd,true);
                             }
                         } else if (StringUtil.equals(str, distributePara_three)) {//分发参数回购拆借指令发给所有有权限交易员
-                            if(StringUtil.isBlank(etrEntrust.getFinprodId())){
+//                            if(StringUtil.isBlank(etrEntrust.getFinprodId())){
                                 etrDistributes =  getEtrDistributes(etrEntrust,etrEntrustAdd,distributeRule_one);
-                            }
+//                            }
                         }
                     }
                 }else{//分发参数不存在

@@ -174,5 +174,10 @@
         from ETR_ENTRUST_DETAIL
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </select>
+    <delete id="deleteByEntrustId"  >
+        delete from ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </delete>
+
 
 </mapper>

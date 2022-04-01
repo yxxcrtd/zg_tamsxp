@@ -5,6 +5,7 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalStatus;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.transdatagather.dto.StlSettleTransDataGatherParamDto;
@@ -47,6 +48,13 @@ public class StlSettleTransDataGatherProcessor extends BaseProcessor<NeedOperate
             status.setMatchStatus(DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
             stlSettleTransDataGatherService.insetSettleTransDataTotalStatus(status);
         });
+        // 汇总质押品
+        List<SettleTransDataTotalPledge> transDataTotalPledgeList = item.getSettleTransDataTotalPledge();
+        if(CollectionUtils.isNotEmpty(transDataTotalPledgeList)){
+            transDataTotalPledgeList.forEach(pledge -> {
+                stlSettleTransDataGatherService.insetSettleTransDataTotalPledge(pledge);
+            });
+        }
         return null;
     }
 }

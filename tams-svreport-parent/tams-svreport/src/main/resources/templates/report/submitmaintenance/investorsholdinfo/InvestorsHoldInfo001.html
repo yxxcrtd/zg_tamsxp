@@ -17,65 +17,101 @@
   <div class="joyin-form-wrap joyin-filter-form condition-area">
   <form class="layui-form" id="searchForm">
     <div class="layui-form-item">
-      <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">产品登记编码</label>
-        <div class="layui-input-inline input-inline">
-            <select id="prdRegistCode" name="prdRegistCode" data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
-            </select>
-        </div>
-      </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">产品登记编码</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--            <select id="prdRegistCode" name="prdRegistCode" data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">-->
+<!--            </select>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">持有日期</label>
         <div class="layui-input-inline input-inline">
           <input type="text" id="holdDate" class="layui-input form-input input-dateRangeSelect"/>
         </div>
       </div>
-      <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">识别标识</label>
-        <div class="layui-input-inline input-inline">
-          <input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input input-lenovoselect" maxlength="30" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">产品代码</label>
+            <div class="layui-input-inline input-inline">
+                <input id="ProRegistCodeManage001_prod" name="prod" class="layui-input form-input input-lenovoselect"
+                       data-parentids="orgCode" data-code="prdCode"
+                       data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProd}"
+                       data-idfield="code" data-keyfield="code"
+                       data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}'
+                >
+            </div>
         </div>
-      </div>
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">产品登记编码</label>
+            <div class="layui-input-inline input-inline">
+                <select id="prdRegistCode" name="prdRegistCode" data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' data-th-data-formatoption=true data-th-data-parentids="orgCode" class="input-select" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}" allowClear="true" multiple="multiple">
+                </select>
+            </div>
+        </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">识别标识</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input input-lenovoselect" maxlength="30" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
     <!-- 新增产品代码筛选条件 -->
     <div class="layui-form-item">
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">数据状态</label>
+            <div class="layui-input-inline input-inline">
+                <select id="status" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${MAINTAIN_STATUS}' data-th-initvalue="${status}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+            </div>
+        </div>
     <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">投资者名称</label>
         <div class="layui-input-inline input-inline">
           <input type="text" id="holderName" name="holderName" class="layui-input form-input" placeholder="请输入内容">
         </div>
       </div>
-    <div class="layui-inline layui-col-md4">
-              <label class="layui-form-label form-lable">产品</label>
-              <div class="layui-input-inline input-inline">
-                <input id="ProRegistCodeManage001_prod" name="prod" class="layui-input form-input input-lenovoselect" 
-                data-parentids="orgCode" data-code="prdCode" 
-                data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProd}"
-                data-idfield="code" data-keyfield="code"
-                data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}'
-                >
-              </div>
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">识别标识</label>
+            <div class="layui-input-inline input-inline">
+                <input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input input-lenovoselect" maxlength="30" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
             </div>
-      <div class="layui-inline layui-col-md4">
-          <label class="layui-form-label form-lable">机构代码</label>
-          <div class="layui-input-inline input-inline">
-            <select id="orgCode" class="input-select" data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getInstitutionCode}" placeholder="请选择" allowClear="true" multiple="multiple"></select>
-          </div>
-      </div>
+        </div>
+<!--    <div class="layui-inline layui-col-md4">-->
+<!--              <label class="layui-form-label form-lable">产品</label>-->
+<!--              <div class="layui-input-inline input-inline">-->
+<!--                <input id="ProRegistCodeManage001_prod" name="prod" class="layui-input form-input input-lenovoselect" -->
+<!--                data-parentids="orgCode" data-code="prdCode" -->
+<!--                data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getProd}"-->
+<!--                data-idfield="code" data-keyfield="code"-->
+<!--                data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}'-->
+<!--                >-->
+<!--              </div>-->
+<!--            </div>-->
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--          <label class="layui-form-label form-lable">机构代码</label>-->
+<!--          <div class="layui-input-inline input-inline">-->
+<!--            <select id="orgCode" class="input-select" data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getInstitutionCode}" placeholder="请选择" allowClear="true" multiple="multiple"></select>-->
+<!--          </div>-->
+<!--      </div>-->
     </div>
     <div class="layui-form-item">
+        <div class="layui-inline layui-col-md4">
+            <label class="layui-form-label form-lable">机构代码</label>
+            <div class="layui-input-inline input-inline">
+                <select id="orgCode" class="input-select" data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getInstitutionCode}" placeholder="请选择" allowClear="true" multiple="multiple"></select>
+            </div>
+        </div>
     <div class="layui-inline layui-col-md4">
         <label class="layui-form-label form-lable">登记银行代码</label>
         <div class="layui-input-inline input-inline">
           <input type="text" id="registBankCode" name="registBankCode" class="layui-input form-input" placeholder="请输入内容">
         </div>
       </div>
-      <div class="layui-inline layui-col-md4">
-        <label class="layui-form-label form-lable">数据状态</label>
-        <div class="layui-input-inline input-inline">
-          <select id="status" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${MAINTAIN_STATUS}' data-th-initvalue="${status}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
-        </div>
-      </div>
+<!--      <div class="layui-inline layui-col-md4">-->
+<!--        <label class="layui-form-label form-lable">数据状态</label>-->
+<!--        <div class="layui-input-inline input-inline">-->
+<!--          <select id="status" class="input-select" allowClear="true" multiple="multiple" data-th-data-result='${MAINTAIN_STATUS}' data-th-initvalue="${status}" placeholder="请选择" data-th-placeholder="#{SysCommon.selectplaceholder}"></select>-->
+<!--        </div>-->
+<!--      </div>-->
       </div>
   </form>
   </div>

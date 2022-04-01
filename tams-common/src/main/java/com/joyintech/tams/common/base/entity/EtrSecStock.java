@@ -14,6 +14,11 @@ public class EtrSecStock extends BaseEntity {
     private String pledgeStockName;
 
     /**
+     * 是否默认质押券库
+     */
+    private String isDefStock;
+
+    /**
      * 取得 质押库代码
      * @return 质押库代码
      */
@@ -43,5 +48,13 @@ public class EtrSecStock extends BaseEntity {
      */
     public void setPledgeStockName(String pledgeStockName) {
         this.pledgeStockName = pledgeStockName == null ? null : pledgeStockName.trim();
+    }
+
+    public String getIsDefStock() {
+        return isDefStock;
+    }
+
+    public void setIsDefStock(String isDefStock) {
+        this.isDefStock = isDefStock;
     }
 }

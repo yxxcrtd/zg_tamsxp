@@ -55,7 +55,7 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
      *
      */
     @SuppressWarnings("resource")
-    public void execute() {
+    public void execute(Date batchDate) {
         FileChannel channel = null;
         FileLock lock = null;
         try {
@@ -76,16 +76,16 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
                 return;
             }
             // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  start
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	        Date bdate=new Date();
 	        Long bt=bdate.getTime();
-	        logger.info("上游解析投资者身份文件开始---------:"+sdf.format(bdate));
+	        logger.info("上游解析投资者身份文件开始---------:"+ DateUtil.format(batchDate));
             // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  end
             try {
                 // 获取消息（读取前一日文件夹信息）
 //                cnBondUpInterfService.getUpInterfMessage(
 //                    DateUtil.addDayLocal(DateUtil.getCurrentDate(), -1));
-            	chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getYesterDayDate());
+            	chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.format(batchDate));
             }
             catch (Exception e) {
             	 logger.error("error:",e);
@@ -93,13 +93,13 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
             }
 
             // 获取消息（读取当前日期文件夹信息）
-            chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getCurrentDate());
+//            chb3cnBondUpInterfService.getUpInterfMessage(DateUtil.getCurrentDate());
 
             // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  start
             Date edate=new Date();
 		    Long et=edate.getTime();
 		    Long time=(et-bt)/1000;
-			logger.info("上游解析投资者身份文件结束----------:"+sdf.format(edate)+"耗时"+time+"秒");
+			logger.info("上游解析投资者身份文件结束----------:"+DateUtil.format(batchDate)+"耗时"+time+"秒");
             // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  end
         }
         catch (FileNotFoundException e) {

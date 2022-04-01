@@ -259,6 +259,22 @@ public class CommonNodeListEntity implements Feild {
     @XmlElement(name = "wemax:BusinessType")
     private CommonNodeEntity businessType;
 
+
+    /****1217升级**/
+
+
+
+
+    @XmlElement(name = "wemax:ProductSpecialPropertyTuple")
+    private CommonNodeEntity productSpecialPropertyTuple;
+    /**
+     * 产品特殊属性
+     */
+    @XmlElement(name = "wemax:ProductSpecialProperty")
+    private CommonNodeEntity productSpecialProperty;
+
+    /****1217升级**/
+
     // /**
     // * 获取 contextRef
     // * @return contextRef.
@@ -934,4 +950,19 @@ public class CommonNodeListEntity implements Feild {
 		this.typeOfRegistrar = typeOfRegistrar;
 	}
 
+    public CommonNodeEntity getProductSpecialPropertyTuple() {
+        return productSpecialPropertyTuple;
+    }
+
+    public void setProductSpecialPropertyTuple(CommonNodeEntity productSpecialPropertyTuple) {
+        this.productSpecialPropertyTuple = productSpecialPropertyTuple;
+    }
+
+    public CommonNodeEntity getProductSpecialProperty() {
+        return productSpecialProperty;
+    }
+
+    public void setProductSpecialProperty(CommonNodeEntity productSpecialProperty) {
+        this.productSpecialProperty = productSpecialProperty;
+    }
 }

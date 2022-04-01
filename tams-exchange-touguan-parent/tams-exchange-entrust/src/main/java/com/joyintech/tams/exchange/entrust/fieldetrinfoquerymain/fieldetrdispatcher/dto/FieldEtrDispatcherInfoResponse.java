@@ -3,9 +3,12 @@ package com.joyintech.tams.exchange.entrust.fieldetrinfoquerymain.fieldetrdispat
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.thymeleaf.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -89,6 +92,8 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     private String remark;
     //债券交易 end
 
+    private String addCla;
+
     @ApiModelProperty(name="pledgeBondList",value="质押券信息",example="pledgeBondList")
     private List<PledgeBondInfoDto> pledgeBondList;
 
@@ -140,6 +145,20 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     @ApiModelProperty(name="oldPledStrdPrinAmt",value="原券面金额",example="10000")
     private BigDecimal oldPledStrdPrinAmt;
+
+    private String declaType;
+
+    private String declaTypeStr;
+
+    private String finprodId;
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
 
     public BigDecimal getPledgeStandardNumber() {
         return pledgeStandardNumber;
@@ -258,6 +277,8 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     @ApiModelProperty(name="dealMode",value="挂钩利率",example="个人定期(整存整取)一年")
     private String dealMode;
+
+    private String otherPs;
 
     @ApiModelProperty(name="termType",value="期限",example="1Y/1M")
     private String termType;
@@ -412,6 +433,10 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     }
 
     public BigDecimal getUnitPrice() {
+        if(StringUtils.equals(DictCodeList.平安资产类型_基金.getValue(),this.getAssetType())
+                && StringUtils.equals("PRM03",this.getPriceModel())){
+            return new BigDecimal(0.00);
+        }
         return unitPrice;
     }
 
@@ -457,6 +482,14 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getAddCla() {
+        return addCla;
+    }
+
+    public void setAddCla(String addCla) {
+        this.addCla = addCla;
     }
 
     public String getRepoTerm() {
@@ -524,7 +557,24 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
     }
 
     public String getOtherPs() {
-        return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+        if(StringUtils.equals(DictCodeListExt3.交易方向_提前购回.getValue(),this.getPs())
+        ||StringUtils.equals(DictCodeListExt3.交易方向_到期购回.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_中途换券.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_解除质押.getValue(),this.getPs())
+                ||StringUtils.equals(DictCodeListExt3.交易方向_到期续做.getValue(),this.getPs())
+        ){
+            if(StringUtils.equals(DictCodeList.回购拆借方向_正回购.getValue(),this.getBusiPs())){
+                return DictCodeList.回购拆借方向_正回购.getCodeName();
+            }
+            if(StringUtils.equals(DictCodeList.回购拆借方向_逆回购.getValue(),this.getBusiPs())){
+                return DictCodeList.回购拆借方向_逆回购.getCodeName();
+            }
+        }
+        return this.otherPs;
+    }
+
+    public void setOtherPs(String otherPs) {
+        this.otherPs = otherPs;
     }
 
     public String getEtrBidDate() {
@@ -557,5 +607,29 @@ public class FieldEtrDispatcherInfoResponse extends FieldEtrDispatcherBaseInfo {
 
     public void setBusiTypePositionStr(String busiTypePositionStr) {
         this.busiTypePositionStr = busiTypePositionStr;
+    }
+
+    public String getOtherAssetType() {
+        return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, super.getAssetType());
+    }
+
+    public String getOtherTargetType() {
+        return SysDataUtil.getNameFromDataDict(DictCode.目标类型, super.getTargetType());
+    }
+
+    public String getDeclaType() {
+        return declaType;
+    }
+
+    public void setDeclaType(String declaType) {
+        this.declaType = declaType;
+    }
+
+    public String getDeclaTypeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.申报类型, this.getDeclaType());
+    }
+
+    public void setDeclaTypeStr(String declaTypeStr) {
+        this.declaTypeStr = declaTypeStr;
     }
 }

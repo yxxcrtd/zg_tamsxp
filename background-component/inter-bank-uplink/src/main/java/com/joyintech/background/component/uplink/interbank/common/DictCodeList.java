@@ -21,7 +21,7 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
  */
 public enum DictCodeList implements BaseDictCodeList {
     银行间上行报价状态_新增中(IbuDictCode.银行间上行报价状态,"01","新增中"),
-        银行间上行报价状态_已新增(IbuDictCode.银行间上行报价状态,"02","已新增"),
+    银行间上行报价状态_已新增(IbuDictCode.银行间上行报价状态,"02","已新增"),
     银行间上行报价状态_修改中(IbuDictCode.银行间上行报价状态,"03","修改中"),
     银行间上行报价状态_已修改(IbuDictCode.银行间上行报价状态,"04","已修改"),
     银行间上行报价状态_撤回中(IbuDictCode.银行间上行报价状态,"05","撤回中"),

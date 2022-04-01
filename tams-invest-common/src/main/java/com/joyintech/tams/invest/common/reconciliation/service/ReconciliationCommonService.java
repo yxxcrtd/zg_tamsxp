@@ -405,7 +405,11 @@ public class ReconciliationCommonService {
                         && DictCodeListExt1.一次性费用类型_佣金.getValue().equals(feeType)) {
                     //if 待对账数据.交易方向 = 买入 or 正回购
                     if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())
-                            || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())) {
+                        || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 start
+                        || DictCodeListExt1.交易方向_债转股.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 end
+                    ) {
                         //待对账数据.清算金额差额 = 待对账数据.清算金额差额 + 待清算数据.清算佣金差额
                         dto.setSettleAmtCe(ArithmeticUtil.doAdd(dto.getSettleAmtCe(), dto.getCommissionAmtCe()));
                     } else if (DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
@@ -416,8 +420,12 @@ public class ReconciliationCommonService {
                 } else if (DictCodeListExt1.是否_是.getValue().equals(isPay)
                         && DictCodeListExt1.一次性费用类型_经手费.getValue().equals(feeType)) {
                     if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())
-                            || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
-                            || DictCodeList.交易方向_申购.getValue().equals(dto.getPs())) {
+                        || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
+                        || DictCodeList.交易方向_申购.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 start
+                        || DictCodeListExt1.交易方向_债转股.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 end
+                    ) {
                         //待对账数据.清算金额差额 = 待对账数据.清算金额差额 + 待清算数据.清算经手费差额
                         dto.setSettleAmtCe(ArithmeticUtil.doAdd(dto.getSettleAmtCe(), dto.getJsfAmtCe()));
                     } else if (DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
@@ -428,7 +436,11 @@ public class ReconciliationCommonService {
                 } else if (DictCodeListExt1.是否_是.getValue().equals(isPay)
                         && DictCodeListExt1.一次性费用类型_证管费.getValue().equals(feeType)) {
                     if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())
-                            || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())) {
+                        || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 start
+                        || DictCodeListExt1.交易方向_债转股.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 end
+                    ) {
                         //待对账数据.清算金额差额 = 待对账数据.清算金额差额 + 待清算数据.清算证管费差额
                         dto.setSettleAmtCe(ArithmeticUtil.doAdd(dto.getSettleAmtCe(), dto.getZgfAmtCe()));
                     } else if (DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
@@ -439,7 +451,11 @@ public class ReconciliationCommonService {
                 } else if (DictCodeListExt1.是否_是.getValue().equals(isPay)
                         && DictCodeListExt1.一次性费用类型_印花税.getValue().equals(feeType)) {
                     if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())
-                            || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())) {
+                        || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 start
+                        || DictCodeListExt1.交易方向_债转股.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 end
+                    ) {
                         //待对账数据.清算金额差额 = 待对账数据.清算金额差额 + 待清算数据.清算印花税差额
                         dto.setSettleAmtCe(ArithmeticUtil.doAdd(dto.getSettleAmtCe(), dto.getStampFeeCe()));
                     } else if (DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
@@ -450,7 +466,11 @@ public class ReconciliationCommonService {
                 } else if (DictCodeListExt1.是否_是.getValue().equals(isPay)
                         && DictCodeListExt1.一次性费用类型_结算费.getValue().equals(feeType)) {
                     if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())
-                            || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())) {
+                        || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 start
+                        || DictCodeListExt1.交易方向_债转股.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 end
+                    ) {
                         //待对账数据.清算金额差额 = 待对账数据.清算金额差额 + 待清算数据.清算结算费差额
                         dto.setSettleAmtCe(ArithmeticUtil.doAdd(dto.getSettleAmtCe(), dto.getSettleFeeCe()));
                     } else if (DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
@@ -461,7 +481,11 @@ public class ReconciliationCommonService {
                 } else if (DictCodeListExt1.是否_是.getValue().equals(isPay)
                         && DictCodeListExt1.一次性费用类型_过户费.getValue().equals(feeType)) {
                     if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())
-                            || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())) {
+                        || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 start
+                        || DictCodeListExt1.交易方向_债转股.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 end
+                    ) {
                         //待对账数据.清算金额差额 = 待对账数据.清算金额差额 + 待清算数据.清算过户费差额
                         dto.setSettleAmtCe(ArithmeticUtil.doAdd(dto.getSettleAmtCe(), dto.getGhfAmtCe()));
                     } else if (DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
@@ -472,7 +496,11 @@ public class ReconciliationCommonService {
                 } else if (DictCodeListExt1.是否_是.getValue().equals(isPay)
                         && DictCodeListExt1.一次性费用类型_交易手续费.getValue().equals(feeType)) {
                     if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())
-                            || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())) {
+                        || DictCodeList.回购拆借方向_正回购.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 start
+                        || DictCodeListExt1.交易方向_债转股.getValue().equals(dto.getPs())
+                        // add by fuyongsheng 20211207 自动对账批处理开发 end
+                    ) {
                         //待对账数据.清算金额差额 = 待对账数据.清算金额差额 + 待清算数据.清算手续费差额
                         dto.setSettleAmtCe(ArithmeticUtil.doAdd(dto.getSettleAmtCe(), dto.getSxfAmtCe()));
                     } else if (DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())

@@ -30,11 +30,70 @@ $(function() {
                 });
             });
     }
-
     var init = function() {
+        let finprodIdType = false
+        let accountTypes = false
+        $('#brokerId').change(function(){
+            var borker = $("#brokerId").val();
+            if(borker == "BROKER"){
+                $('#accountType').textSelect('setValue', 'BROKER');
+                $('#accountType').prop('disabled',true);
+                console.log("2222")
+            }else if(borker != ""){
+                Joyin.ajaxJson(basePath + 'invest/basicdata/standardcouponreconversionrate/StandardCouponReConversionRate002/brokerIdChange?borker='+$("#brokerId").val(), null, function(result) {
+                    if (borker != null || borker != "") {
+                        if (result != null && result != '' && result.length > 0) {
+                            var itemSH = [];
+                            for (var m = 0; m < result.length; m++) {
+                                itemSH.push(result[m].id);
+                            }
+                            $('#accountType').updateChosenArr({
+                                item: itemSH,
+                                disabled: false
+                            });
+                            $("#finprodId").val("")
+                            $("#finprodId").attr("disabled", false);
+                        } else {
+                            $('#accountType').updateChosenArr({
+                                item: [""],
+                                disabled: false
+                            });
+                            $("#finprodId").val("")
+                            $("#finprodId").attr("disabled", false);
+                        }
+                    }
+                });
+            }
+
+        });
+        $("#finprodId").on("select2:select select2:unselecting", function(e) {
+            this.finprodIdType = true
+        });
+        $("#accountType").on("select2:select select2:unselecting", function(e) {
+            this.accountTypes = true
+        });
+        $("#finprodId").change(function(){
+            if(this.finprodIdType){
+                $("#accountType").attr("disabled", false);
+            } else {
+                $("#accountType").val("");
+                $("#accountType").attr("disabled", "disabled");
+            }
+            this.finprodIdType = false
+        })
+        $("#accountType").change(function(){
+            if(this.accountTypes){
+                $("#finprodId").attr("disabled", false);
+            } else {
+                $("#finprodId").val("")
+                $("#finprodId").attr("disabled", "disabled");
+            }
+            this.accountTypes = false
+        })
         if (pageModel == PAGE_MODEL_EDIT) {
             $("#brokerId").attr("disabled", "disabled");
             $("#finprodId").attr("disabled", "disabled");
+            $("#accountType").attr("disabled", "disabled");
         }
     }
 

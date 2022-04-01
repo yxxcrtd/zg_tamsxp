@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbsd.assetdealsub.dao.SdAssetDealSvrMapper_mysql">
+    <sql id="baseInfo">
+        SELECT
+        sub.REGIST_SEQNO registSeqno,
+        sub.TRADE_CODE tradeCode,
+        sub.PROD_ID prodId,
+        sub.REGIST_BANK_CODE registBankCode,
+        sub.ASSET_CODE assetCode,
+        sub.CCY ccy,
+        sub.CNY_AMT cnyAmt,
+        sub.AMT amt,
+        sub.NUM num,
+        sub.CUR_ASSET_TYPE curAssetType,
+        sub.CUR_ASSETDET_TYPE curAssetdetType,
+        sub.DEALDATE dealdate,
+        sub.TRADE_COUNTER tradeCounter,
+        sub.UNIT_PRICE_FULL unitPriceFull,
+        sub.UNIT_PRICE_NET unitPriceNet,
+        sub.END_RATE endRate,
+        sub.CONTRACT_CODE contractCode,
+        sub.REMARK remark,
+        sub.CHL_CPCT_ID chlCpctId,
+        sub.TRADE_TYPE tradeType,
+        sub.CHL_AGRT_NAME chlAgrtName,
+        sub.FEE_ID feeId,
+        sub.FEE_NAME feeName,
+        sub.FEE_TYPE feeType,
+        sub.FEE_SECTYPE feeSectype,
+        sub.STATUS status,
+        sub.ORG_CODE orgCode,
+        sub.DEPT_CODE deptCode,
+        sub.CREATE_USER createUser,
+        sub.CREATE_TIME createTime,
+        sub.UPDATE_USER updateUser,
+        sub.UPDATE_TIME updateTime,
+        sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE submitDeadline,
+        sub.SEND_STATUS sendStatus,
+        sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        sub.STATUS_DATE statusDate,
+        sub.SUBMIT_TIME submitTime,
+        sub.SUMIT_SEQ sumitSeq,
+        sub.DELETE_RES deleteRes,
+        sub.DATA_SOURCE dataSource,
+        sub.CREATE_DEPT createDept,
+        sub.DEAL_REGIST_DATE dealRegistDate,
+        sub.IS_ASSET_SUB isAssetSub,
+        sub.PROD_REGIST_CODE prodRegistCode
+        <!-- 中债五月份升级增加字段-->
+        ,sub.ASSET_METHOD assetMethod
+        ,sub.RIVAL_PARTY_TYPE rivalPartyType
+        FROM chb_invest_trade_sub SUB
+    </sql>
+
+    <select id="selcteUnRegData" resultType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
+        <include refid="baseInfo"/>
+        <where>
+            <!--<if test="batchDate!=null and batchDate!='' ">
+            to_char(SUB.DEALDATE,'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR}
+            </if>-->
+            <if test="prodIdList != null and prodIdList.size()>0">
+                <foreach collection="prodIdList" item="items" open="and SUB.prod_id in (" separator="," close =")">
+                    #{items,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            AND SUB.SEND_STATUS = '01'
+            AND SUB.STATUS = '01' /*暂时只报送新建状态数据*/
+        </where>
+    </select>
+</mapper>

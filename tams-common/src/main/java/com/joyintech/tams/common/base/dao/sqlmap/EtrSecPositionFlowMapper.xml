@@ -28,7 +28,7 @@
         BRANCH BRANCH, INV_AIM INV_AIM, HODING_TYPE HODING_TYPE, CDATE CDATE, CCY CCY, AMOUNT AMOUNT, 
         P_FINPROD_ID P_FINPROD_ID, TRADE_ID TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CLOSE_FLAG CLOSE_FLAG, 
-        OFFSET_ID OFFSET_ID, OFFSET_FLAG OFFSET_FLAG
+        OFFSET_ID OFFSET_ID, OFFSET_FLAG OFFSET_FLAG,is_Exist_New is_Exist_New
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -57,14 +57,14 @@
             AMOUNT, P_FINPROD_ID, TRADE_ID, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, CLOSE_FLAG, 
-            OFFSET_ID, OFFSET_FLAG)
+            OFFSET_ID, OFFSET_FLAG,is_Exist_New)
         values (#{seqno,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
             #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{invAim,jdbcType=VARCHAR}, 
             #{hodingType,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
             #{amount,jdbcType=DECIMAL}, #{pFinprodId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{closeFlag,jdbcType=VARCHAR}, 
-            #{offsetId,jdbcType=VARCHAR}, #{offsetFlag,jdbcType=VARCHAR})
+            #{offsetId,jdbcType=VARCHAR}, #{offsetFlag,jdbcType=VARCHAR}, #{isExistNew,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrSecPositionFlow" >
         insert into ETR_SEC_POSITION_FLOW
@@ -129,6 +129,9 @@
             <if test="offsetFlag != null" >
                 OFFSET_FLAG,
             </if>
+            <if test="isExistNew != null" >
+                is_Exist_New,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -191,15 +194,18 @@
             <if test="offsetFlag != null" >
                 #{offsetFlag,jdbcType=VARCHAR},
             </if>
+            <if test="isExistNew != null" >
+                #{isExistNew,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrSecPositionFlow" >
         insert into ETR_SEC_POSITION_FLOW(SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
         INV_AIM, HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CLOSE_FLAG, OFFSET_ID, OFFSET_FLAG)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CLOSE_FLAG, OFFSET_ID, OFFSET_FLAG,is_Exist_New)
         select SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, BRANCH, 
             INV_AIM, HODING_TYPE, CDATE, CCY, AMOUNT, P_FINPROD_ID, TRADE_ID, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CLOSE_FLAG, OFFSET_ID, OFFSET_FLAG
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CLOSE_FLAG, OFFSET_ID, OFFSET_FLAG,is_Exist_New
              from ETR_SEC_POSITION_FLOW
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -254,6 +260,9 @@
             <if test="offsetFlag != null" >
                 OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
             </if>
+            <if test="isExistNew != null" >
+                is_Exist_New = #{isExistNew,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -274,7 +283,8 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             CLOSE_FLAG = #{closeFlag,jdbcType=VARCHAR},
             OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
-            OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR}
+            OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
+            is_Exist_New = #{isExistNew,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

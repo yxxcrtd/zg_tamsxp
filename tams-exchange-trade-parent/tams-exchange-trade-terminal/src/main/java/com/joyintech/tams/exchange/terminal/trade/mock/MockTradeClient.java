@@ -126,6 +126,30 @@ public class MockTradeClient implements ITradeRequest {
             onEntrust(entrust);
             return;
         }
+
+        //质押券出入库
+        if ("EX005".equals(entrust.getBusiTypeTg())) {
+            long tradeVolume;
+            //全部成交 数量是300的倍数全部成交
+            if (entrust.getEntrustVolume() % 300 == 0) {
+                entrust.setEntrustStatus(EntrustStatus.SUCCEEDED.value);
+                tradeVolume = entrust.getEntrustVolume();
+            } else {
+                tradeVolume = entrust.getEntrustVolume() / 2;
+                entrust.setEntrustStatus(EntrustStatus.PART_SUCCESS.value);
+                entrust.setTradedVolume(tradeVolume);
+                entrustMap.put(entrust.getId(), entrust);
+            }
+            Trade trade = getTrade(entrust, Calendar.getInstance(), TradeType.NORMAL.value);
+            trade.setTradedPrice(entrust.getEntrustPrice());
+            trade.setTradedVolume(tradeVolume);
+            trade.setTradedBalance(entrust.getEntrustPrice().multiply(BigDecimal.valueOf(tradeVolume)));
+            onEntrust(entrust);
+            tradeArray.add(trade);
+            onTrade(trade);
+            return;
+        }
+
         int tradeVolume;
         if (entrust.getEntrustVolume() % 300 == 0) {//全部成交 数量是300的倍数全部成交
             entrust.setEntrustStatus(EntrustStatus.SUCCEEDED.value);
@@ -509,9 +533,9 @@ public class MockTradeClient implements ITradeRequest {
                     || EntrustProp.PS.value.equals(entrust.getEntrustProp()))
                     && Market.SZSE.value.equals(entrust.getMarket())) && !EntrustProp.HS.value.equals(entrust.getEntrustProp())) {
                 logger.info("回报即成交业务,不可撤单");
-                entrust.setEntrustStatus(EntrustStatus.REPORTED.value);
-                entrust.setErrorCode(ErrorCode.REQ_PARAMETER_ERROR.value);
-                entrust.setErrorMsg("该类业务不可撤单");
+                cancelEntrustBean.setEntrustStatus(EntrustStatus.REPORTED.value);
+                cancelEntrustBean.setErrorCode(ErrorCode.REQ_PARAMETER_ERROR.value);
+                cancelEntrustBean.setErrorMsg("该类业务不可撤单");
                 mockTradeResponse.resCancelEntrust(cancelEntrustBean);
                 return;
             }
@@ -645,7 +669,7 @@ public class MockTradeClient implements ITradeRequest {
         } else if (quoteQryBean.getQuoteType() == QuoteType.AFTER_BULK_QUOTE.value) {
             integratedQuotes.addAll(MockQuoteData.makeAfterBulkQuote(quoteQryBean.getStockCode()));
         } else if (quoteQryBean.getQuoteType() == QuoteType.FIXED_INCOME_QUOTE.value) {
-            integratedQuotes.addAll(MockQuoteData.makeFixedIncomeQuote());
+            integratedQuotes.addAll(MockQuoteData.makeFixedIncomeQuote(quoteQryBean.getStockCode()));
         }
         mockTradeResponse.resQueryIntegratedQuotes(integratedQuotes, requestId);
     }
@@ -846,7 +870,7 @@ public class MockTradeClient implements ITradeRequest {
                     integratedRepurchaseQuoteBean.setPropAccountName("mock");
                     integratedRepurchaseQuoteBean.setPledgeeName("mock");
                     integratedRepurchaseQuoteBean.setRemark(integratedEntrust.getRemark());
-                    list.add(integratedRepurchaseQuoteBean);
+//                    list.add(integratedRepurchaseQuoteBean);
                 }
             });
         }
@@ -926,14 +950,14 @@ public class MockTradeClient implements ITradeRequest {
             integratedRepurchaseQuoteBean.setPropAccountName("ufx0923上海");
             integratedRepurchaseQuoteBean.setPledgeeName("test24");
             integratedRepurchaseQuoteBean.setRemark("自动模拟行情");
-            list.add(integratedRepurchaseQuoteBean);
+//            list.add(integratedRepurchaseQuoteBean);
         }
         mockTradeResponse.resQueryIntegratedRepurchaseQuote(list, requestId);
     }
 
     @Override
     public void queryIntegratedFixedIncomeQuote(IntegratedFixedIncomeQuoteQryBean integratedFixedIncomeQuoteQryBean, Long requestId) {
-        List<IntegratedQuote> integratedQuotes = MockQuoteData.makeFixedIncomeQuote();
+        List<IntegratedQuote> integratedQuotes = MockQuoteData.makeFixedIncomeQuote(integratedFixedIncomeQuoteQryBean.getStockCode());
         mockTradeResponse.resQueryIntegratedFixedIncomeQuote(MockConverter.convertIntegratedFixedIncomeQuoteBeans(integratedQuotes), requestId);
     }
 

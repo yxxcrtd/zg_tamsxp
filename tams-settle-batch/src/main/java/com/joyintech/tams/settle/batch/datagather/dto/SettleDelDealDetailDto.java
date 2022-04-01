@@ -37,12 +37,12 @@ public class SettleDelDealDetailDto {
 	private BigDecimal redDateAmt;
 	
 	/**
-	 * 除权登记日
+	 * 权益登记日
 	 */
 	private Date regDate;
 	
 	/**
-	 * 除权除息日
+	 * 除权日
 	 */
 	private Date delDate;
 	

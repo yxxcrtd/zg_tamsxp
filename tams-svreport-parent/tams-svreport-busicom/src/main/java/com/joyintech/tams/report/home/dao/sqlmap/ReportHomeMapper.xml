@@ -206,11 +206,13 @@
 	) manualData,
 	(select count(ces3.SUBMIT_STATUS) as interfPassnum /*接口通过*/
 	from CHB_EQU_SUB  ces3
-	left join CHB_SUBMIT_STATUS substatus
-	 		on ces3.sumit_seq = substatus.seqno
-	WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') 
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    /*left join CHB_SUBMIT_STATUS substatus
+	 		on ces3.sumit_seq = substatus.seqno*/
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd')
 	and ces3.SUBMIT_STATUS='02' /*接口报送*/
-	and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
 	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 		#{item,jdbcType=VARCHAR}
@@ -229,11 +231,13 @@
 	) interfPass,
 	(select count(ces3.SUBMIT_STATUS) as interfBacknum /*接口退回*/
 	from CHB_EQU_SUB  ces3
-	left join CHB_SUBMIT_STATUS substatus
-	 		on ces3.sumit_seq = substatus.seqno
-	WHERE <![CDATA[to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') <= to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ]]>
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    /*left join CHB_SUBMIT_STATUS substatus
+	 		on ces3.sumit_seq = substatus.seqno*/
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    WHERE <![CDATA[to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') <= to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ]]>
 	and ces3.SUBMIT_STATUS='02' /*接口报送*/
-	and substatus.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+	and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
 	<if test="createDeptList != null and createDeptList.size>0">
 		<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 		#{item,jdbcType=VARCHAR}
@@ -362,11 +366,10 @@
 		) manualData,
 		(select count(ces3.SEND_STATUS) as interfPassnum /*接口通过*/
 		from CHB_INVESTHOLD_INFO_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
-   		on ces3.sumit_seq = substatus.seqno
+
 		WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd')
 		and ces3.SEND_STATUS='02' /*接口报送*/
-		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 			#{item,jdbcType=VARCHAR}
@@ -385,12 +388,14 @@
 		) interfPass,
 		(select count(ces3.SEND_STATUS) as interfBacknum /*接口退回*/
 		from CHB_INVESTHOLD_INFO_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
-   		on ces3.sumit_seq = substatus.seqno
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    /*left join CHB_SUBMIT_STATUS substatus
+   		on ces3.sumit_seq = substatus.seqno*/
 		WHERE <![CDATA[to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') <= to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ]]>
 		and ces3.SEND_STATUS='02' /*接口报送*/
-		and substatus.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
-		<if test="createDeptList != null and createDeptList.size>0">
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('02','04','05') /*接口退回*/
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    <if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 			#{item,jdbcType=VARCHAR}
 			</foreach>
@@ -518,11 +523,11 @@
 		) manualData,
 		(select count(ces3.SUBMIT_STATUS) as interfPassnum /*接口通过*/
 		from CHB_EQUDET_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
+		left join CHB_EQUDET_SUBMIT_STATUS substatus
    		on ces3.sumit_seq = substatus.seqno
 		WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd')
 		and ces3.SUBMIT_STATUS='02' /*接口报送*/
-		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 			#{item,jdbcType=VARCHAR}
@@ -541,7 +546,7 @@
 		) interfPass,
 		(select count(ces3.SUBMIT_STATUS) as interfBacknum /*接口退回*/
 		from CHB_EQUDET_SUB  ces3
-		left join CHB_SUBMIT_STATUS substatus
+		left join CHB_EQUDET_SUBMIT_STATUS substatus
    		on ces3.sumit_seq = substatus.seqno
 		WHERE <![CDATA[to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') <= to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') ]]>
 		and ces3.SUBMIT_STATUS='02' /*接口报送*/

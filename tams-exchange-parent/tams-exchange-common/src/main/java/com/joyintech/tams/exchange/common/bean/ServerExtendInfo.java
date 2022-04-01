@@ -42,6 +42,10 @@ public class ServerExtendInfo implements Serializable {
     private String ufxSubClientName; //ufx配置文件订阅节点
     private String ufxBrokerType; //ufx 券商类型
 
+    /**
+     * 接口平台地址：为柜台指定接口平台的访问地址
+     */
+    private String dspUrl;
 
     public String getOppositeLiaisonTel() {
         return oppositeLiaisonTel;
@@ -193,6 +197,14 @@ public class ServerExtendInfo implements Serializable {
 
     public void setUserProductInfo(String userProductInfo) {
         this.userProductInfo = userProductInfo;
+    }
+
+    public String getDspUrl() {
+        return dspUrl;
+    }
+
+    public void setDspUrl(String dspUrl) {
+        this.dspUrl = dspUrl;
     }
 
     @Override

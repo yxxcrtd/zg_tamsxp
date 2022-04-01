@@ -176,6 +176,13 @@ public interface CfetsTrdQueryMapper {
     void updateIbuByPrimaryKeySelective(Map<String, Object> paramMap);
 
     /**
+     * 根据更新报价数据
+     * @param paramMap
+     * @return
+     */
+    void updateIbuRepoByPrimaryKeySelective(Map<String, Object> paramMap);
+
+    /**
      * 获取交易id
      *
      * @date 2022/1/19
@@ -253,6 +260,5 @@ public interface CfetsTrdQueryMapper {
      */
     List<CfetsPledgeInfoResponse> findRepoPledgeInfo(Map<String, Object> pageParam);
 
-
-
+    List<String> findEtrEntrustIsForcedFinish(Map<String, Object> pageParam);
 }

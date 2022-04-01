@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreportdetail.dao.ChbMonthReportDetailProdMapper_mysql" >
+
+  <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailProd">
+		SELECT
+		  PRODID,
+		  prodName,
+		  raisemode,
+		  VDATE,
+		  MDATE,
+		  raiseType,
+		  IVSTORIENTATION,
+		  ccy,
+		  operateMode,
+		  opentype,
+		  term,
+		  termtype,
+		  isTransfer,
+		  isBreakeven,
+		  isFhxgcp,
+		  excFinSector,
+		  isYllccp,
+		  isThisTrem,
+		  isEndTrem,
+		  sum(endamtsumOth) endamtsumOth,
+		  sum(payamtsum) payamtsum,
+		  sum(customeramt) customeramt,
+		  sum(bankamt) bankamt,
+		  sum(dirtyamtsum) dirtyamtsum,
+		  sum(cleanamtsum) cleanamtsum,
+	      sum(ordIdentified01) ordIdentified01,
+		  sum(ordIdentified02) ordIdentified02,
+		  sum(ordIdentified03) ordIdentified03,
+		  sum(ordIdentified04) ordIdentified04,
+		  sum(ordIdentified05) ordIdentified05,
+		  sum(ordIdentified06) ordIdentified06,
+		  sum(ordIdentified07) ordIdentified07,
+		  sum(ordIdentified08) ordIdentified08,
+		  sum(ordIdentified09) ordIdentified09
+		FROM (
+			  SELECT
+			  P.POSUUID,
+			  P.PRODID,
+			  B.PROD_NAME prodName,
+			  P.RAISEMODE raisemode,
+			  B.VDATE,
+			  B.MDATE,
+			  B.raise_type raiseType,
+			  B.IVSTORIENTATION,
+			  P.ccy,
+			  B.OPERATE_MODE operateMode,
+			  CASE WHEN B.OPERATE_MODE = '03' THEN
+			  CASE WHEN B.cash_mana_cate = '01' THEN '01'
+			  WHEN B.termtype IN ('06','08','09') THEN '02'
+			  ELSE '99' END END opentype,
+			  P.TERMDAYS term,
+			  P.termtype,
+			  b.is_transfer isTransfer,
+			  decode(b.profit_type,'03','02','01') isBreakeven,
+			  ifnull(b.is_fhxgcp,'01') isFhxgcp,
+			  B.exc_fin_sector excFinSector,
+	          case when instr(cpdi.prd_spec_property ,'01')>0 then '01'
+	          else '02' end  isYllccp ,
+			  p.dirtyamtsum,
+			  p.cleanamtsum,
+			  CASE WHEN DATE_FORMAT(B.VDATE,'%Y%m') = P.TERM then '01' else '02' end isThisTrem,
+			  DECODE(P.DURATIONFLAG,'02','02','01')  isEndTrem,
+			  P.ENDAMTSUM_OTH endamtsumOth,
+			  P.PAYAMTSUM payamtsum,
+			  P.CUSTOMERAMT customeramt,
+			  P.BANKAMT bankamt,
+			  case when ORD_IDENTIFIED = '01' then P.ENDAMTSUM_OTH end as ordIdentified01,
+	  		  case when ORD_IDENTIFIED = '02' then P.ENDAMTSUM_OTH end as ordIdentified02,
+	  	  	  case when ORD_IDENTIFIED = '03' then P.ENDAMTSUM_OTH end as ordIdentified03,
+	  		  case when ORD_IDENTIFIED = '05' then P.ENDAMTSUM_OTH end as ordIdentified04,
+	  		  case when ORD_IDENTIFIED = '06' then P.ENDAMTSUM_OTH end as ordIdentified05,
+	  		  case when ORD_IDENTIFIED = '07' then P.ENDAMTSUM_OTH end as ordIdentified06,
+	  		  case when ORD_IDENTIFIED = '08' then P.ENDAMTSUM_OTH end as ordIdentified07,
+	  		  case when ORD_IDENTIFIED = '04' then P.ENDAMTSUM_OTH end as ordIdentified08,
+	  		  case when ORD_IDENTIFIED = '09' then P.ENDAMTSUM_OTH end as ordIdentified09
+
+			  FROM CHB_MONTH_PRD_POSITIONDETAIL P
+			  LEFT JOIN CHB_PRD_BASEINFO B ON P.PRODID= b.Prod_Id AND B.FPROD_ID IS NULL AND B.STATUS IN ('E','M')
+	          LEFT JOIN CHB_PRD_DECLARE_INFO CPDI ON P.PRODID= CPDI.PROD_INS_ID AND CPDI.STATUS IN ('E','M')
+			  WHERE 1=1
+			  <if test="enddate != null and enddate != ''">
+				  and P.TERM =  #{enddate,jdbcType=VARCHAR}
+			  </if>
+			  <if test="prodIds != null and prodIds != '' ">
+				  <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PRODID IN(" close=")">
+					  #{item}
+				  </foreach>
+			  </if>
+
+		) A
+
+		GROUP BY
+		  PRODID,
+		  prodName,
+		  raisemode,
+		  VDATE,
+		  MDATE,
+		  raiseType,
+		  IVSTORIENTATION,
+		  ccy,
+		  operateMode,
+		  opentype,
+		  term,
+		  termtype,
+		  isTransfer,
+		  isBreakeven,
+		  isFhxgcp,
+		  excFinSector,
+		  isYllccp,
+		  isThisTrem,
+		  isEndTrem
+  </select>
+
+
+	<insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthPrdPositiondetail" >
+		insert into CHB_MONTH_PRD_POSITIONDETAIL (POSUUID, PRODID, TERM,
+				DETAILNO, CCY, RAISEMODE,
+				IVSTORIENTATION, TERMTYPE, TERMDAYS,
+				OPEN_TYPE, OPERATE_MODE, PROFIT_TYPE,
+				SALE_TARGET, IS_TRANSFER, IS_FHXGCP,
+				IS_YLLCCP, CON_PRD_TRAGET, ORD_IDENTIFIED,
+				DIRTYAMTSUM, CLEANAMTSUM, REDEEMAMT,
+				TERMINATIONAMT, ENDAMTSUM_OTH, CUSTOMERAMT,
+				REDEEMINTAMT, TERMINATIONINTAMT, CASHAMT,
+				DURATIONFLAG, VDATE, MDATE,
+				OPENDURATION, ORG_CODE, DEPT_CODE,
+				CASH_MANA_CATE, PAYAMTSUM, CLOSETERMDAY,
+				BANKAMT, TRUSTFEEAMT, SALEFEEAMT,
+				OTHERFEEAMT, MANAFEEAMT, FLOATFEEAMT,
+				IS_NEW_PRD, YIELD_E)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select t.* from (select "
+				 close="from dual)t">
+			F_GUID() POSUUID, #{item.prodid,jdbcType=VARCHAR} PRODID, #{item.term,jdbcType=VARCHAR} TERM,
+			#{item.detailno,jdbcType=VARCHAR} DETAILNO, #{item.ccy,jdbcType=VARCHAR} CCY, #{item.raisemode,jdbcType=VARCHAR} RAISEMODE,
+			#{item.ivstorientation,jdbcType=VARCHAR} IVSTORIENTATION, #{item.termtype,jdbcType=VARCHAR} TERMTYPE, #{item.termdays,jdbcType=DECIMAL} TERMDAYS,
+			#{item.openType,jdbcType=VARCHAR} OPEN_TYPE, #{item.operateMode,jdbcType=VARCHAR} OPERATE_MODE, #{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+			#{item.saleTarget,jdbcType=VARCHAR} SALE_TARGET, #{item.isTransfer,jdbcType=VARCHAR} IS_TRANSFER, #{item.isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP,
+			#{item.isYllccp,jdbcType=VARCHAR} IS_YLLCCP, #{item.conPrdTraget,jdbcType=VARCHAR} CON_PRD_TRAGET, #{item.ordIdentified,jdbcType=VARCHAR} ORD_IDENTIFIED,
+			#{item.dirtyamtsum,jdbcType=DECIMAL} DIRTYAMTSUM, #{item.cleanamtsum,jdbcType=DECIMAL} CLEANAMTSUM, #{item.redeemamt,jdbcType=DECIMAL} REDEEMAMT,
+			#{item.terminationamt,jdbcType=DECIMAL} TERMINATIONAMT, #{item.endamtsumOth,jdbcType=DECIMAL} ENDAMTSUM_OTH, #{item.customeramt,jdbcType=DECIMAL} CUSTOMERAMT,
+			#{item.redeemintamt,jdbcType=DECIMAL} REDEEMINTAMT, #{item.terminationintamt,jdbcType=DECIMAL} TERMINATIONINTAMT, #{item.cashamt,jdbcType=DECIMAL} CASHAMT,
+			#{item.durationflag,jdbcType=VARCHAR} DURATIONFLAG, #{item.vdate,jdbcType=DATE} VDATE, #{item.mdate,jdbcType=DATE} MDATE,
+			#{item.openduration,jdbcType=VARCHAR} OPENDURATION, #{item.orgCode,jdbcType=VARCHAR} ORG_CODE, #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.cashManaCate,jdbcType=VARCHAR} CASH_MANA_CATE, #{item.payamtsum,jdbcType=DECIMAL} PAYAMTSUM, #{item.closetermday,jdbcType=DECIMAL} CLOSETERMDAY,
+			#{item.bankamt,jdbcType=DECIMAL} BANKAMT, #{item.trustfeeamt,jdbcType=DECIMAL} TRUSTFEEAMT, #{item.salefeeamt,jdbcType=DECIMAL} SALEFEEAMT,
+			#{item.otherfeeamt,jdbcType=DECIMAL} OTHERFEEAMT, #{item.manafeeamt,jdbcType=DECIMAL} MANAFEEAMT, #{item.floatfeeamt,jdbcType=DECIMAL} FLOATFEEAMT,
+			#{item.isNewPrd,jdbcType=VARCHAR} IS_NEW_PRD, #{item.yieldE,jdbcType=DECIMAL} YIELD_E
+		</foreach>
+
+    </insert>
+
+	<delete id="deleteDetail" parameterType="java.lang.String" >
+        delete from CHB_MONTH_PRD_POSITIONDETAIL
+        where TERM = #{term,jdbcType=CHAR}
+  </delete>
+
+</mapper>

@@ -331,6 +331,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
+
              <div class="form-inline-wrap">
                 <label class="layui-form-label form-lable"
                        data-th-text="#{SvrBussRepAssetMngProdInfo.privateprdFlag}">投向金融资产投资公司发行的私募资产管理产品</label>
@@ -361,9 +362,50 @@
                         </select>
 					</div>
 				</div>
+
+                <div class="form-inline-wrap" th:id="|${entityName}_isPropertyTrust_div|">
+                    <label class="layui-form-label form-label" style="line-height: normal!important;">是否为财产权信托产品</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_isPropertyTrust|" th:name="|${entityName}.isPropertyTrust|"
+                                th:initValue="${entity?.isPropertyTrust}" class="layui-input form-input input-select"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-data-result="${SVR_YES_OR_NO}">
+                        </select>
+                    </div>
+                </div>
+
             </div>
+
+            <div class="layui-form-item">
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repPppflag}">公共PPP</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_pppflag|" th:name="|${entityName}.pppflag|"
+                                th:initValue="${entity?.pppflag}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repBondtostockFlag}">是否投向市场化债转股相关产品的部分</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_bondtostockFlag|" th:name="|${entityName}.bondtostockFlag|"
+                                th:initValue="${entity?.bondtostockFlag}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+
 			<!-- 中债新增字段 add by tuqirong 2021-12-30 start -->
 			<div class="layui-form-item" th:id="|${entityName}_content_one_div|" style="display: none">
+
 				<div class="form-inline-wrap">
                     <label class="layui-form-label form-label" data-th-utext="#{SvrBussRepAssetMngProdInfo.financialProductFlag}">是否为银行理财产品</label>
                     <div class="layui-input-inline input-inline">

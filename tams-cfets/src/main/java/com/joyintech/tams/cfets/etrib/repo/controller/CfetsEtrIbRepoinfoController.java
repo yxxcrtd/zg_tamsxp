@@ -30,8 +30,10 @@ import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.util.ExcelUitl;
+import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribSaveRequest;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtribdoRiskcalResponse;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
+import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoAutoRKService;
 import com.joyintech.tams.cfets.etrib.repo.service.CfetsEtrIbRepoinfoService;
 import com.joyintech.tams.component.business.riskrds.controller.InterfRiskRdsController;
 import com.joyintech.tams.component.business.trade.BussEtrInvestPersonInfoService;
@@ -51,6 +53,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +104,9 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private CfetsEtrIbRepoAutoRKService cfetsEtrIbRepoAutoRKService;
 
 
 
@@ -232,6 +238,36 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         });
     }
 
+    @PostMapping(value="/checkBondInfo")
+    @ApiOperation(value = "添加质押券校验", notes = "模式2 添加质押券校验")
+    public Message<AjaxResult> checkBondInfo(@RequestBody CfetsEtrRepoBondInfoRequest request) {
+        try {
+            AjaxResult ajax = cfetsEtrIbRepoinfoService.checkBondInfo(request);
+            if (null != ajax) {
+                return new Message<AjaxResult>().success().setData(ajax);
+            } else {
+                return new Message<AjaxResult>().success().setMessage("校验通过");
+            }
+        } catch (Exception e) {
+            logger.error("添加质押券校验异常", e);
+            return new Message<AjaxResult>().fail().setMessage("校验失败");
+        }
+    }
+
+    @PostMapping("/getPledgeable")
+    @ApiOperation(value = "获取可质押券面总额", notes = "模式1、3 获取可质押券面总额")
+    public Message<BigDecimal> getPledgeable(@RequestBody CfetsEtrRepoPledgeableRequest request) {
+        try {
+            BigDecimal pledgeable = BigDecimal.ZERO;
+            Map<String, Object> pageParam = BeanUtil.object2Map(request);
+            pledgeable = cfetsEtrIbRepoinfoService.getPledgeable(pageParam);
+            return new Message<BigDecimal>().success().setData(pledgeable);
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return new Message<BigDecimal>().fail().setMessage("查询异常");
+        }
+    }
+
     /**
      * 质押库：下拉框
      *
@@ -244,6 +280,7 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
     @ApiOperation(value = "质押库：下拉框", notes = "质押库：下拉框")
     public Message<List<SelectOptionDto>> getPledgeStockIdByPortfolioId(@RequestBody CfetsSearchPledgeStockRequest params) {
     	try {
+            cfetsEtrIbRepoAutoRKService.createComRule(SecurityUtil.getLoginUser().getUserName());
             List<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockIdByPortfolioId(params);
 			return new Message<List<SelectOptionDto>>().success().setData(page);
 		} catch (Exception e) {
@@ -251,6 +288,31 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
 			return new Message<List<SelectOptionDto>>().fail().setMessage("查询异常");
 		}
     	
+    }
+    /**
+     * 质押库：下拉框
+     *
+     * @param param 画面参数
+     * @return 质押库：下拉框
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping({"getPledgeStockId"})
+    @ApiOperation(value = "质押库：下拉框", notes = "质押库：下拉框")
+    public List<SelectOptionDto> getPledgeStockId(@RequestParam Map<String, String> param ) {
+        try {
+            CfetsSearchPledgeStockRequest params = new CfetsSearchPledgeStockRequest();
+            params.setPortfolioId(param.get("portfolioId"));
+            params.setInitValue(param.get("initValue"));
+            params.setSearch(param.get("search"));
+            cfetsEtrIbRepoAutoRKService.createComRule(SecurityUtil.getLoginUser().getUserName());
+            List<SelectOptionDto> page = cfetsEtrIbRepoinfoService.getPledgeStockIdByPortfolioId(params);
+            return page;
+        } catch (Exception e) {
+            logger.error("查询功能异常", e);
+            return null;
+        }
+
     }
     
     /**
@@ -435,6 +497,19 @@ public class CfetsEtrIbRepoinfoController extends BaseController{
         String msg = null;
         if(StringUtil.isNotEmpty(map.get("repoTerm"))){
             msg = cfetsEtrIbRepoinfoService.getTermType((Integer) map.get("repoTerm"));
+        }
+        AjaxResult m =new AjaxResult();
+        m.setData(msg);
+        return new Message<AjaxResult>().success().setData(m);
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "计算期限品种", notes = "计算期限品种")
+    @PostMapping("getTermTypeByRepoTerm")
+    public Message<AjaxResult> getTermType(@RequestParam("repoTerm") String repoTerm) throws Exception {
+        String msg = null;
+        if(StringUtil.isNotEmpty(repoTerm)){
+            msg = cfetsEtrIbRepoinfoService.getTermType(Integer.valueOf(repoTerm));
         }
         AjaxResult m =new AjaxResult();
         m.setData(msg);

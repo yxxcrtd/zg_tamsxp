@@ -10,7 +10,11 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.subjectset.dto;
 
+import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -18,8 +22,11 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.service.valuation.accounadjustmanage.subjectset.validator.ValBokSubjectDtoValidator;
 import com.joyintech.tams.common.base.entity.BokSubject;
+import com.joyintech.tams.valuation.common.utils.ExpressionUtil;
+import org.apache.commons.collections.CollectionUtils;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ValidLogic(targetClass = ValBokSubjectDtoValidator.class, groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
@@ -38,6 +45,73 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
      * 如果是记账科目，必填。"
      */
     private String subjectHandFelCode;
+
+    /**
+     * "辅助核算表达式中文 用于展示
+     */
+    private String subjectHandFelCodeName;
+
+    private static final Set<String> sets = new TreeSet<String>();
+    static {
+        // &&和|| 转换为单字符@和#替代 方便判断
+        sets.add("&&");
+        sets.add("||");
+        sets.add("@");
+        sets.add("#");
+        sets.add("!");
+        sets.add("+");
+        sets.add("-");
+        sets.add("*");
+        sets.add("/");
+        sets.add("%");
+        sets.add(">");
+        sets.add("=");
+        sets.add("<");
+        sets.add(" ");
+        sets.add("(");
+        sets.add(")");
+    }
+
+    public String getSubjectHandFelCodeName() {
+        StringBuilder sb = new StringBuilder();
+        if(subjectHandFelCode!=null){
+            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> mapKey = new HashMap<String, String>();
+            Map<String, String> mapVal = new HashMap<String, String>();
+            // 表达式list
+            List<String> explist = ExpressionUtil.split(subjectHandFelCode);
+            for (int i=0;i<explist.size();i++) {
+                String str=explist.get(i);
+                if(CacheUtil.getDictCode(str)!=null){
+                    String keyCn= CacheUtil.getDictCode(str).getDictCnname();
+                    if (null != keyCn) {
+                        sb.append(keyCn);
+                    } else {
+                        sb.append(str);
+                    }
+                }else{
+                    //value值必须要用‘’，往前找key，转换value值为中文
+                    if(str.contains("'")){
+                        String key=null;
+                        for (int j=0;j<i;j++) {
+                            String substr=explist.get(j);
+                            if(sets.contains(substr)){
+                                continue;
+                            }
+                            key=substr;
+                        }
+                        str=getDictValue(key,str.replaceAll("'",""));
+                    }
+                    sb.append(str);
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public void setSubjectHandFelCodeName(String subjectHandFelCodeName) {
+        this.subjectHandFelCodeName = subjectHandFelCodeName;
+    }
     /**
      * 币种
      */
@@ -136,6 +210,18 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
      * 交易对手
      */
     private String bokCpy;
+    /**
+     * 渠道
+     */
+    private String bokChannel;
+
+    public String getBokChannel() {
+        return bokChannel;
+    }
+
+    public void setBokChannel(String bokChannel) {
+        this.bokChannel = bokChannel;
+    }
 
     public String getBokBondType() {
         return bokBondType;
@@ -546,6 +632,17 @@ public class ValBokSubjectDto extends BokSubject implements ITableRow {
 
     public void setOperateType(String operateType) {
         this.operateType = operateType;
+    }
+
+    private static String getDictValue(String key,String value){
+        List<? extends DataDictItem > dataDictItemList = SysDataUtil.getDataDictItem(key);
+        if(CollectionUtils.isNotEmpty(dataDictItemList)){
+            return (String)dataDictItemList.stream().filter((item) -> {
+                return StringUtil.equals(item.getItemCode(), value);
+            }).map(DataDictItem::getItemValue).findFirst().orElse((String)null);
+        }else{
+            return value;
+        }
     }
 
 }

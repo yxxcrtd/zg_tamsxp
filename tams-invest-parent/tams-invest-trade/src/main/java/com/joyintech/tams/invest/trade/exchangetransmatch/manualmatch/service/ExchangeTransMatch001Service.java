@@ -33,15 +33,13 @@ import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade002Dto;
 import com.joyintech.tams.invest.trade.trdstockconnect.controller.TrdStockConnect002Controller;
 import com.joyintech.tams.invest.trade.trdstockconnect.dto.TrdStockConnectDto;
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(rollbackFor=Exception.class)
@@ -133,10 +131,20 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             String ps = (String)map.get("ps");
             if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())
             || StringUtil.equals(ps,DictCodeListExt3.交易方向_逆回购.getValue()) ) {
-                map.put("ps",DictCodeList.交易方向_买入.getValue());
+                // GNS-959:交易方向不必特殊处理 modify by fuyongsheng 20220227 start
+                //map.put("ps",DictCodeList.交易方向_买入.getValue());
+                // GNS-959:交易方向不必特殊处理 modify by fuyongsheng 20220227 end
                 map.put("finprodType2",StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())?DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue():DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
             }
+
+            if(StringUtil.equals(ps,DictCodeListExt3.交易方向_到期购回.getValue())) {
+                map.put("ps",DictCodeList.交易方向_到期.getValue());
+            }
+            else if(StringUtil.equals(ps, DictCodeListExt3.交易方向_提前购回.getValue())){
+                map.put("ps",DictCodeListExt3.交易方向_投资端_提前终止.getValue());
+            }
         }
+
 
         Page<ExchangeTransMatch002Dto> page = restTemplate.postForPage(ServiceApplication.TRADE_SERVICE_NAME
                 + "/ExchangeTransMatchController/findPage", map, ExchangeTransMatch002Dto.class);
@@ -181,10 +189,10 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
             map.put("portfolioIdList",StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
         }
 
-        if(StringUtil.isNotEmpty(map.get("dealId"))) {
-            String dealId = (String)map.get("dealId");
-            map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
-        }
+//        if(StringUtil.isNotEmpty(map.get("dealId"))) {
+//            String dealId = (String)map.get("dealId");
+//            map.put("dealIdList",StringUtil.splitToList(GlobalConstant.COMMA, dealId));
+//        }
         if(StringUtil.isNotEmpty(map.get("ps"))) {
             String ps = (String)map.get("ps");
             if(StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())
@@ -214,6 +222,20 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
     protected void buildExportParam(ExportParam exportParam) {
         exportParam.config(
                 "/com/joyintech/tams/invest/trade/exchangetransmatch/manualmatch/conf/export_conf.xml").dataSource(DataSourceType.MASERT);
+    }
+
+    /**
+     * 处理导出参数，格式化导出的格式
+     * @param beanName beanName
+     * @param cell 单元格
+     * @param propName 配置
+     * @param value 值
+     */
+    @Override
+    public void setCellValue(String beanName, Cell cell, String propName, Object value) {
+        if(StringUtil.equals("tradeDate", propName)) {
+            cell.setCellValue(DateUtil.format((Date)value));
+        }
     }
 
 
@@ -362,12 +384,14 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
                         trdBondToStock001Dto.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                         trdBondToStock001Dto.setIsOutTrade(DictCodeList.是否_是.getValue());
                         trdBondToStock001Dto.setConShareId(settleTransDataTotalAdd.getrFinprodId());
-                        trdBondToStock001Dto.setConvdate(settleTransDataTotal.getVdate());
+//                        trdBondToStock001Dto.setConvdate(settleTransDataTotal.getVdate());
                         trdBondToStock001Dto.setConNum(settleTransDataTotalAdd.getConAmt());
                         trdBondToStock001Dto.setConPrice(settleTransDataTotalAdd.getConPrice());
                         trdBondToStock001Dto.setTradeAmt(dto.getRemainAmount());
-                        trdBondToStock001Dto.setShareAmt(dto.getRemainNum());
-
+                        // GZYHTZJY-1140:债转股带入的“转股券面总额”有误 modify fuyongsheng 20220115 start
+                        // trdBondToStock001Dto.setShareAmt(dto.getRemainNum());
+                        trdBondToStock001Dto.setShareAmt(ArithmeticUtil.divide(dto.getRemainNum(),new BigDecimal(100L), 4));
+                        // GZYHTZJY-1140:债转股带入的“转股券面总额”有误 modify fuyongsheng 20220115 end
                         if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                             trdBondToStock001Dto.setCounterId(BussinessConstant.COUNTER_PARTY_ID_SHANGHAI);
                         }
@@ -382,6 +406,13 @@ public class ExchangeTransMatch001Service extends CommonExportService<ExchangeTr
 
                         dtoStr = JsonUtils.object2Json(trdBondToStock001Dto);
                     }
+                }
+                else if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券入库.getValue())
+                || StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券出库.getValue())){
+                    //TODO 页面待开发
+                }
+                else if(StringUtil.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
+                    //TODO 页面待开发
                 }
 
             }

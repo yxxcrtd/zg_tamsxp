@@ -60,7 +60,7 @@ public class CfetsEntrustStatusService {
             params.put("ENTRUST_STATUS_03", DictCodeList.委托状态_已接收.getValue());
             params.put("ENTRUST_STATUS_05", DictCodeList.委托状态_已退回.getValue());
             params.put("ENTRUST_STATUS_07", DictCodeList.委托状态_已撤回.getValue());
-            List<CfetsEntrustClosePosEtrReqDto> entrustIdList = entrustStatusMapper.selectEntrustIds(params);
+            List<CfetsEntrustClosePosEtrReqDto> entrustIdList = entrustStatusMapper.selectEntrustList(params);
           //  entrustIdList.forEach(s -> baseEtrCashPositionCommService.entrustCloseExecute(s));
             entrustStatusMapper.updateDistributeStatus(params);//add by yangwenjun 20201211 更新委托指令分发表中的接收状态
             entrustStatusMapper.updateEntrustStatus(params);

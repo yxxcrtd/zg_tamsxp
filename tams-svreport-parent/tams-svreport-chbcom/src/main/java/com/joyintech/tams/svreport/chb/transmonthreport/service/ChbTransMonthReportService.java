@@ -76,6 +76,10 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
      * 1000
      */
     private static final BigDecimal TENTHOUSAND = new BigDecimal(10000);
+    /**
+     * 100
+     */
+    private static final BigDecimal ONEHUNDRED = new BigDecimal(100);
 
     /**
      * 短sql最大一次最大插入条数
@@ -547,14 +551,14 @@ public class ChbTransMonthReportService extends SvrCommonExportService<ChbTransM
             }
             // 加权期末余额
             if (detail.getNewTerms() != null) {
-                detail.setNewTerms(detail.getNewTerms().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+                detail.setNewTerms(detail.getNewTerms().multiply(ONEHUNDRED));
             }
             // 期末余额
             if (detail.getOldBalance() != null) {
                 detail.setOldBalance(detail.getOldBalance().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
             }
             if (detail.getOldTerms() != null) {
-                detail.setOldTerms(detail.getOldTerms().divide(TENTHOUSAND, 9, BigDecimal.ROUND_HALF_UP));
+                detail.setOldTerms(detail.getOldTerms().multiply(ONEHUNDRED));
             }
         }
         return detail;

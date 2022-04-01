@@ -3,7 +3,9 @@ package com.joyintech.tams.exchange.common.db.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
+import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -76,11 +78,11 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @Size(max = 50)
     private String ccy = "";
 
-    @ApiModelProperty(required = false, name = "busiAcctNo", value = "资金账号")
+    @ApiModelProperty(required = false, name = "busiAcctNo", value = "资金账户代码")
     @Size(max = 30)
     private String busiAcctNo = "";
 
-    @ApiModelProperty(required = false, name = "acctName", value = "户名")
+    @ApiModelProperty(required = false, name = "acctName", value = "资金账户名称")
     @Size(max = 200)
     private String acctName = "";
 
@@ -362,26 +364,34 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     @ApiModelProperty(required = false, name = "deliveryMethod", value = "申赎方式，交割方式")
     @Size(max = 50)
     private String deliveryMethod;
-    
+
     /**
      * 委托指令类别
-     *        
+     *
      * @author yflv
      * @date 2021/12/27
      */
     @ApiModelProperty(required = false, name = "entrustClass", value = "委托指令类别")
     @Size(max = 50)
     private String entrustClass;
-    
+
     /**
      * 投管业务类型
-     *        
+     *
      * @author yflv
      * @date 2022/01/19
      */
     @ApiModelProperty(required = false, name = "busiTypeTg", value = "投管业务类型")
     @Size(max = 50)
     private String busiTypeTg;
+
+    @ApiModelProperty(required = false, name = "createTime", value = "创建时间")
+    private Date createTime;
+    @ApiModelProperty(required = false, name = "updateTime", value = "修改时间")
+    private Date updateTime;
+
+    @ApiModelProperty( name = "tradeSide", value = "交易方向")
+    private String tradeSide;
 
     @Id
     public String getEntrustId() {
@@ -1041,22 +1051,54 @@ public class Instruction implements Serializable, KeyMethodInterface<String>, Cl
     }
 
     public String getEntrustClass() {
-		return entrustClass;
-	}
+        return entrustClass;
+    }
 
-	public void setEntrustClass(String entrustClass) {
-		this.entrustClass = entrustClass;
-	}
+    public void setEntrustClass(String entrustClass) {
+        this.entrustClass = entrustClass;
+    }
 
-	public String getBusiTypeTg() {
-		return busiTypeTg;
-	}
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
 
-	public void setBusiTypeTg(String busiTypeTg) {
-		this.busiTypeTg = busiTypeTg;
-	}
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
 
-	@Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getTradeSide() {
+        if (DictCodeListExt3.投管业务类型_首期.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_提前购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期购回.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_到期续做.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_中途换券.getValue().equals(busiTypeTg)
+                || DictCodeListExt3.投管业务类型_解除质押.getValue().equals(busiTypeTg)) {
+            return firstRepoPs;
+        }
+        return ps;
+    }
+
+    public void setTradeSide(String tradeSide) {
+        this.tradeSide = tradeSide;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

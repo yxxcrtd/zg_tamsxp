@@ -952,8 +952,9 @@ public class PbcClassicsDataFileNewService {
         	//组装数据
         	LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
         	//【dat文件生成留痕】数据的key
+
             data.put("datakey",sub.getRegistSeqno() == null ? UUID.randomUUID().toString() : sub.getRegistSeqno());
-        	data.put("pbc_prod_id", resultMap.get(sub.getProdId()));
+        	data.put("pbc_prod_id", sub.getPbcProdId());
         	data.put("buy_place", sub.getBuyPlace());
         	data.put("customer_type1", sub.getCustomerType1());
         	data.put("ccy", sub.getCcy());

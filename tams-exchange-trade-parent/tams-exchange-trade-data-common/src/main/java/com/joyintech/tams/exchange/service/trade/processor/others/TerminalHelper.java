@@ -435,9 +435,8 @@ public class TerminalHelper {
         } else {
             Map<String, TradeAgent> accountAgents = tradeAgentManager.getAccountAgents();
             if (accountAgents.size() > 0) {
-                String accountId1 = accountAgents.keySet().iterator().next();
-                accountId = accountId1;
-                tradeAgent = accountAgents.get(accountId1);
+                String key = accountAgents.keySet().iterator().next();
+                tradeAgent = accountAgents.get(key);
             } else {
                 logger.warn("not found agent from accountAgents because no terminal login with trade !!!");
             }
@@ -467,7 +466,7 @@ public class TerminalHelper {
                     logger.info("委托信息比对数 size {}, batchCount {}, pageNum {}", reissueEntrustBeanBatchList.size(), batchCount, pageNum);
                     tradeAgent.reqReissueEntrust(entrustsForReissue);
                 } catch (Exception e) {
-                    logger.error("reqReissueEntrust error {}", "\r\n" + e);
+                    logger.error("reqReissueEntrust error {}",  e.getMessage(),e);
                 }
             } else {
                 logger.error("not found agent {} from accountAgents  when  reqReissueEntrust!!!", accountId);
@@ -497,7 +496,7 @@ public class TerminalHelper {
                     logger.info("成交信息比对数 size {}, batchCount {}, pageNum {}", reissueTradeBeanBatchList.size(), batchCount, pageNum);
                     tradeAgent.reqReissueTrade(tradesForReissue);
                 } catch (Exception e) {
-                    logger.error("reqReissueEntrust error {}", "\r\n" + e);
+                    logger.error("reqReissueEntrust error {}",  e.getMessage(),e);
                 }
             } else {
                 logger.error("not found agent {} from accountAgents  when  reqReissueEntrust!!!", accountId);

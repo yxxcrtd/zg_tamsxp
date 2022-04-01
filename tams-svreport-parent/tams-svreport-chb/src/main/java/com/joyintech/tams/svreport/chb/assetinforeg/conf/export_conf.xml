@@ -207,7 +207,9 @@
 			<Cell order="203" name="名称">assetName14</Cell>
 			<Cell order="204" name="行内资产类别">inAssetTypeName</Cell>
 			<Cell order="205" name="行内资产类别说明">inAssetTypeCmm</Cell>
-			<Cell order="206" name="金额">assetValue14</Cell>
+			<!--modify by spf 2022-3-4 HXZZSJ-152 资产要素登记，导出中债excel模板中，资产负债类别为：各类资产的其他项时，金额为空-->
+			<!--<Cell order="206" name="金额">assetValue14</Cell>-->
+			<Cell order="206" name="金额">amt14</Cell>
 			<Cell order="207" name="起息日">vdate14</Cell>
 			<Cell order="208" name="到期日">mdate14</Cell>
 			<Cell order="209" name="所属国家或地区">countryAreaName14</Cell>

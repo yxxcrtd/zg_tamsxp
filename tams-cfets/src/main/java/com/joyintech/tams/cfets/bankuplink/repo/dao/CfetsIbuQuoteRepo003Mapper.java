@@ -5,6 +5,7 @@ import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuote
 import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEntCrepPledgeDto;
 import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealEntrustOrderDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -55,4 +56,12 @@ public interface CfetsIbuQuoteRepo003Mapper {
     List<CfetsRepoDealQuotedPrice003Dto>  selectQuoteCrepPledgeForDzh(Map<String,Object> map);
 
     List<CfetsRepoDealQuotedPrice003Dto>  selectWflQuoteCrepPledgeForDzh(Map<String,Object> map);
+
+    /**
+     * 委托列表初始化
+     *
+     * @param param 条件
+     * @return 指令列表
+     */
+    List<CfetsRepoDealEntrustOrderDto> listEntrust(Map<String, Object> param);
 }

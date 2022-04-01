@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.instrument.MinPriceAndMinTrdUnitLimitBean;
@@ -14,10 +15,7 @@ import com.joyintech.tams.exchange.common.bean.investment.CapitalAccountBean;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustOpeBean;
 import com.joyintech.tams.exchange.common.bean.investment.EntrustReBackBean;
 import com.joyintech.tams.exchange.common.constant.*;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCode;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeList;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt1;
-import com.joyintech.tams.exchange.common.constant.joyin.DictCodeListExt2;
+import com.joyintech.tams.exchange.common.constant.joyin.*;
 import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.microservice.ServiceApplication;
 import com.joyintech.tams.exchange.common.microservice.TradeServiceURL;
@@ -39,8 +37,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.bouncycastle.asn1.misc.MiscObjectIdentifiers.entrust;
 
 @Component
 public class InvestmentManagement extends BaseService {
@@ -169,12 +165,13 @@ public class InvestmentManagement extends BaseService {
 
     /**
      * 指令列表导出内容查询
+     *
      * @param request
      * @return
      */
-    public List<Instruction> queryExportPage(InstructionQueryRequest request) {
+    public List<InstructionExportVo> queryExportPage(InstructionQueryRequest request) {
         Map<String, Object> pageParam = JsonUtils.getObjectFromJson(JsonUtils.getJsonFromObject(request), Map.class);
-        InstructionPage<Instruction, InstructionPledge,InstructionDetail> page = queryInstructionsFromCache(pageParam);
+        InstructionPage<Instruction, InstructionPledge, InstructionDetail> page = queryInstructionsFromCache(pageParam);
         List<Instruction> instructionList = page.getEtr_entrust_list();
         return convertFieldValue(instructionList);
     }
@@ -182,14 +179,14 @@ public class InvestmentManagement extends BaseService {
     /**
      * 对指令状态、交易平台、委托方向、价格模式、资产类型字典值进行转换
      */
-    private List<Instruction> convertFieldValue(List<Instruction> instructionList) {
+    public List<InstructionExportVo> convertFieldValue(List<Instruction> instructionList) {
         if (Objects.isNull(instructionList) || instructionList.isEmpty()) {
             return Collections.emptyList();
         }
-        List<Instruction> returnList = new ArrayList<>(instructionList.size());
-        Instruction newInstruction = null;
+        List<InstructionExportVo> returnList = new ArrayList<>(instructionList.size());
+        InstructionExportVo newInstruction = null;
         for (Instruction instruction : instructionList) {
-            newInstruction = new Instruction();
+            newInstruction = new InstructionExportVo();
             BeanUtil.copyProperties(instruction, newInstruction);
             if (Objects.nonNull(DictCodeList.from(DictCode.委托状态, newInstruction.getEntrustStatus()))) {
                 newInstruction.setEntrustStatus(DictCodeList.from(DictCode.委托状态, newInstruction.getEntrustStatus()).getCodeName());
@@ -203,9 +200,16 @@ public class InvestmentManagement extends BaseService {
             if (Objects.nonNull(DictCodeListExt2.from(DictCode.价格模式, newInstruction.getPriceMode()))) {
                 newInstruction.setPriceMode(DictCodeListExt2.from(DictCode.价格模式, newInstruction.getPriceMode()).getCodeName());
             }
-            if (Objects.nonNull(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()))) {
-                newInstruction.setFinprodType2(DictCodeList.from(DictCode.平安资产类型, newInstruction.getFinprodType2()).getCodeName());
+            if (Objects.nonNull(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()))) {
+                newInstruction.setFinprodType2(DictCodeListExt1.from(DictCode.金融产品类型_投管用, newInstruction.getFinprodType2()).getCodeName());
             }
+            if (Objects.nonNull(DictCodeListExt3.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()))) {
+                newInstruction.setBusiTypeTg(DictCodeListExt3.from(DictCode.投管业务类型, newInstruction.getBusiTypeTg()).getCodeName());
+            }
+            newInstruction.setProgress(newInstruction.getProgress());
+            newInstruction.setDealProgress(newInstruction.getDealProgress());
+            newInstruction.setLeftVolume(newInstruction.getLeftVolume());
+            newInstruction.setLeftAmount(newInstruction.getLeftAmount());
             returnList.add(newInstruction);
         }
         return returnList;
@@ -216,10 +220,10 @@ public class InvestmentManagement extends BaseService {
      *
      * @return
      */
-    public InstructionPage<Instruction, InstructionPledge,InstructionDetail> queryInstructionsFromCache(Map<String, Object> pageParam) {
+    public InstructionPage<Instruction, InstructionPledge, InstructionDetail> queryInstructionsFromCache(Map<String, Object> pageParam) {
         // 更新系统参数
         updateSysParam(pageParam);
-        InstructionPage<Instruction, InstructionPledge,InstructionDetail> bean = new InstructionPage<>();
+        InstructionPage<Instruction, InstructionPledge, InstructionDetail> bean = new InstructionPage<>();
         List<InstructionPledge> pledgeList = new ArrayList<>();
         List<InstructionDetail> detailList = new ArrayList<>();
         List<Instruction> instructionUserList = new ArrayList<>();
@@ -252,7 +256,11 @@ public class InvestmentManagement extends BaseService {
                             } else {
                                 minPriceAndMinTrdUnitLimitBean = instrumentService.queryMinPriceAndMinTrdUnitLimit(instruction.getFinprodMarketId(), instruction.getTradePlat(), instruction.getPs());
                                 instruction.setMinPriceAndMinTrdUnitLimitBean(minPriceAndMinTrdUnitLimitBean);
-                                instructionCloneList.add(instruction);
+                                Instruction instructionClone = instruction.cloneInstruction();
+                                if ("EX005".equals(instructionClone.getBusiTypeTg())) {
+                                    instructionClone.setEntrustPrice(instructionClone.getEntrustPrice().multiply(BigDecimal.valueOf(100)));
+                                }
+                                instructionCloneList.add(instructionClone);
                             }
                             List<InstructionPledge> instructionPledges = instructionPledgeService.queryInstructionPledgesByInstructionId(instruction.getEntrustId());
                             if (Objects.nonNull(instructionPledges) && instructionPledges.size() > 0) {
@@ -267,7 +275,10 @@ public class InvestmentManagement extends BaseService {
                     instructionUserList.addAll(instructionCloneList);
                 });
             }
-            bean.setEtr_entrust_list(instructionUserList);
+            //指令根据创建时间倒排序
+            bean.setEtr_entrust_list(instructionUserList.stream()
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList()));
             bean.setEtr_pledge_list(pledgeList);
             bean.setEtr_entrust_detail_list(detailList);
         } else {
@@ -276,7 +287,12 @@ public class InvestmentManagement extends BaseService {
             } else {
                 bean = restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.queryInstructions, pageParam, InstructionPage.class);
             }
-            bean.setEtr_entrust_list(ListConvertUtils.convertList(bean.getEtr_entrust_list(), Instruction.class));
+
+            List<Instruction> instructions = ListConvertUtils.convertList(bean.getEtr_entrust_list(), Instruction.class);
+            //指令根据创建时间倒排序
+            bean.setEtr_entrust_list(instructions.stream()
+                    .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                    .collect(Collectors.toList()));
             bean.setEtr_pledge_list(ListConvertUtils.convertList(bean.getEtr_pledge_list(), InstructionPledge.class));
             bean.setEtr_entrust_detail_list(ListConvertUtils.convertList(bean.getEtr_entrust_detail_list(), InstructionDetail.class));
         }
@@ -289,12 +305,12 @@ public class InvestmentManagement extends BaseService {
      *
      * @return
      */
-    public InstructionPage<Instruction, InstructionPledge,InstructionDetail> queryInstructionsAll() {
+    public InstructionPage<Instruction, InstructionPledge, InstructionDetail> queryInstructionsAll() {
         if (!Strings.isNullOrEmpty(ServiceApplication.INSTRUCTION_SERVICE)) {
             Map<String, Object> pageParam = new HashMap<>();
             pageParam.put("AMOUNT", 0);
             pageParam.put("positionStr", "");
-            InstructionPage<Instruction, InstructionPledge,InstructionDetail> bean = null;
+            InstructionPage<Instruction, InstructionPledge, InstructionDetail> bean = null;
             if (isSingle) {
                 bean = simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.queryInstructions, pageParam, InstructionPage.class);
             } else {
@@ -351,7 +367,7 @@ public class InvestmentManagement extends BaseService {
                                 if (isSingle) {
                                     instruction.setTraderName(simpleRestTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getRealNameByUser, entrustOpeBean.getTrader(), String.class));
                                 } else {
-                                    instruction.setTraderName(restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.acceptOrRefuse, entrustOpeBean.getTrader(), String.class));
+                                    instruction.setTraderName(restTemplate.postForObject(ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getRealNameByUser, entrustOpeBean.getTrader(), String.class));
                                 }
                                 // 接收后，删除其他trader下的未接收指令
                                 List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
@@ -361,12 +377,18 @@ public class InvestmentManagement extends BaseService {
                                     traderSet.clear();
                                     traderSet.add(entrustOpeBean.getTrader());
                                 }
+                                instructionService.asyncUpdate(instruction);
                             } else {
                                 instruction.setEntrustStatus(InstructionStatus.WAIT_RECEIVE.value);
+                                List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
+                                for (String s : traderSet) {
+                                    Instruction i = instruction.cloneInstruction();
+                                    i.setTradeId(s);
+                                    instructionService.asyncUpdate(i);
+                                }
                             }
                             entrustOpeBean.setErrorCode(ErrorCode.SUCCESS.value);
                             entrustOpeBean.setErrorMsg(ErrorCode.SUCCESS.errorMsg);
-                            instructionService.asyncUpdate(instruction);
                         } else {//失败
                             entrustOpeBean.setErrorCode(ErrorCode.INSTRUCTION_ACCEPT_OR_REFUSE_ERROR.value);
                             entrustOpeBean.setErrorMsg(ErrorCode.INSTRUCTION_ACCEPT_OR_REFUSE_ERROR.errorMsg);
@@ -641,6 +663,12 @@ public class InvestmentManagement extends BaseService {
         }
         if (!Strings.isNullOrEmpty(instructionStatus) && InstructionStatus.CLOSE.value.equals(instructionStatus)) {
             instruction.setEntrustStatus(InstructionStatus.CLOSE.value);
+        } else if (!Strings.isNullOrEmpty(instructionStatus) && InstructionStatus.RETURN.value.equals(instructionStatus)) {
+            if (InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())) {
+                instruction.setEntrustStatus(InstructionStatus.RETURN.value);
+            } else {
+                return new ResultBean(ErrorCode.INSTRUCTIONS_RETURN_FORBID);
+            }
         } else {
             // 撤回时，如果有在途委托返回失败
             List<Entrust> entrusts = entrustService.queryEntrustByInstructionId(instructionId);
@@ -678,7 +706,7 @@ public class InvestmentManagement extends BaseService {
 
     public ResultBean flushInstructionFromInvest() {
         try {
-            InstructionPage<Instruction, InstructionPledge,InstructionDetail> instructionPages = queryInstructionsAll();
+            InstructionPage<Instruction, InstructionPledge, InstructionDetail> instructionPages = queryInstructionsAll();
             return appointInstruction(instructionPages);
         } catch (Exception e) {
             return new ResultBean(ErrorCode.FLUSH_INSTRUCTION_FAILED);
@@ -830,8 +858,9 @@ public class InvestmentManagement extends BaseService {
         }
     }
 
-    public ResultBean appointInstruction(InstructionPage<Instruction, InstructionPledge,InstructionDetail> instructionPage) throws Exception {
+    public ResultBean appointInstruction(InstructionPage<Instruction, InstructionPledge, InstructionDetail> instructionPage) throws Exception {
         try {
+            logger.info("指令分发数据信息：{}", JsonUtils.getJsonFromObject(instructionPage));
             List<Instruction> instructionEtrEntrustList = instructionPage.getEtr_entrust_list();
             List<InstructionPledge> pledgeList = instructionPage.getEtr_pledge_list();
             List<InstructionDetail> detailList = instructionPage.getEtr_entrust_detail_list();
@@ -840,8 +869,10 @@ public class InvestmentManagement extends BaseService {
             if (Objects.nonNull(pledgeList))
                 pledgeList.forEach(instructionPledge -> instructionPledgeIdSet.add(instructionPledge.getEntrustId()));
             if (Objects.nonNull(detailList))
-            	detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
-            messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet,instructionDetailIdSet);
+                detailList.forEach(instructionDetail -> instructionDetailIdSet.add(instructionDetail.getEntrustId()));
+            //对于多组合时，组合代码、组合名称展示多个用逗号隔开
+            messageConsumerService.processInstructionsPortfolio(instructionEtrEntrustList, detailList);
+            messageConsumerService.processInstructions(instructionEtrEntrustList, instructionPledgeIdSet, instructionDetailIdSet);
             messageConsumerService.processInstructionPledges(pledgeList, instructionPledgeIdSet);
             messageConsumerService.processInstructionDetail(detailList, instructionDetailIdSet);
             logger.info("appointInstruction {}", JsonUtils.getJsonFromObject(instructionPage));

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.component.business.evaluation.dao.CommonSearchMapper_mysql">
 	<select id="queryPtlLatestStrategy"
-		resultType="com.joyintech.tams.component.business.evaluation.dto.PtlLatestStrategyDto">
+			resultType="com.joyintech.tams.component.business.evaluation.dto.PtlLatestStrategyDto">
 
 		SELECT  PISD.BATCH_ID batchId,
 		  PISD.STRATEGY_ID strategyId,

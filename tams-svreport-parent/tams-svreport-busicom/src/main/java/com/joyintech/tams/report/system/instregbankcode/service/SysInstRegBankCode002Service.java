@@ -74,6 +74,9 @@ public class SysInstRegBankCode002Service extends BaseService<SysInstRegBankCode
         chbOrgRegistBankCode.setIsFinSubCompany(inputDto.getIsFinSubCompany());
         chbOrgRegistBankCode.setInsitituteCode(inputDto.getInsitituteCode());
         /*机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end*/
+        /**新增所属银保监局字段   20220307 leipeng****/
+        chbOrgRegistBankCode.setBelogCodeCBRC(inputDto.getBelogCodeCBRC());
+        /**新增所属银保监局字段   20220307 leipeng****/
         if (StringUtil.equals(inputDto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             chbOrgRegistBankCodeMapper.insert(chbOrgRegistBankCode);
         }

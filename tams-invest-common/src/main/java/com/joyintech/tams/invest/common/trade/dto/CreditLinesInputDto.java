@@ -144,6 +144,37 @@ public class CreditLinesInputDto extends BaseEntity {
      */
     private Integer rownum;
 
+    //债转股 股票代码
+    private String zhaiZhuanGuId;
+    //债转股 股票数量
+    private BigDecimal zhaiZhuanGuNum;
+    //债转股 股票净价
+    private BigDecimal zhaiZhuanGuDanJia;
+
+    public String getZhaiZhuanGuId() {
+        return zhaiZhuanGuId;
+    }
+
+    public void setZhaiZhuanGuId(String zhaiZhuanGuId) {
+        this.zhaiZhuanGuId = zhaiZhuanGuId;
+    }
+
+    public BigDecimal getZhaiZhuanGuNum() {
+        return zhaiZhuanGuNum;
+    }
+
+    public void setZhaiZhuanGuNum(BigDecimal zhaiZhuanGuNum) {
+        this.zhaiZhuanGuNum = zhaiZhuanGuNum;
+    }
+
+    public BigDecimal getZhaiZhuanGuDanJia() {
+        return zhaiZhuanGuDanJia;
+    }
+
+    public void setZhaiZhuanGuDanJia(BigDecimal zhaiZhuanGuDanJia) {
+        this.zhaiZhuanGuDanJia = zhaiZhuanGuDanJia;
+    }
+
     public Integer getRownum() {
         return rownum;
     }

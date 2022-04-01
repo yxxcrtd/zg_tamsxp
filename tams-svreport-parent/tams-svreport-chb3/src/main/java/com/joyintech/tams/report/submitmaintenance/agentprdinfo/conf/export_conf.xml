@@ -9,7 +9,6 @@
 			<Cell order="5" name="产品登记编码">prodRegistCode</Cell>
 			<Cell order="6" name="产品代码">prodId</Cell>
 			<Cell order="7" name="产品名称">prodName</Cell>
-			<Cell order="8" name="备注">remark</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="TRADE_ID_TG" property="tradeIdTg" jdbcType="VARCHAR" />
+        <result column="TG_DATA_STATUS" property="tgDataStatus" jdbcType="VARCHAR" />
+        <result column="DEAL_DATE" property="dealDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, TRADE_ID_TG TRADE_ID_TG, TG_DATA_STATUS TG_DATA_STATUS, DEAL_DATE DEAL_DATE,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
+        from SETTLE_TRANS_TG_MAPPING
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
+        from SETTLE_TRANS_TG_MAPPING
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper.Base_Column_List" />
+        from SETTLE_TRANS_TG_MAPPING
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SETTLE_TRANS_TG_MAPPING
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
+        insert into SETTLE_TRANS_TG_MAPPING (TRADE_ID, TRADE_ID_TG, TG_DATA_STATUS,
+            DEAL_DATE, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        values (#{tradeId,jdbcType=VARCHAR}, #{tradeIdTg,jdbcType=VARCHAR}, #{tgDataStatus,jdbcType=VARCHAR},
+            #{dealDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
+        insert into SETTLE_TRANS_TG_MAPPING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="tradeIdTg != null" >
+                TRADE_ID_TG,
+            </if>
+            <if test="tgDataStatus != null" >
+                TG_DATA_STATUS,
+            </if>
+            <if test="dealDate != null" >
+                DEAL_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeIdTg != null" >
+                #{tradeIdTg,jdbcType=VARCHAR},
+            </if>
+            <if test="tgDataStatus != null" >
+                #{tgDataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dealDate != null" >
+                #{dealDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
+        insert into SETTLE_TRANS_TG_MAPPING(TRADE_ID, TRADE_ID_TG, TG_DATA_STATUS, DEAL_DATE,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, TRADE_ID_TG, TG_DATA_STATUS, DEAL_DATE,
+           CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from SETTLE_TRANS_TG_MAPPING
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
+        update SETTLE_TRANS_TG_MAPPING
+        <set >
+            <if test="tgDataStatus != null" >
+                TG_DATA_STATUS = #{tgDataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="dealDate != null" >
+                DEAL_DATE = #{dealDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+            and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleTransTgMapping" >
+        update SETTLE_TRANS_TG_MAPPING
+        set TG_DATA_STATUS = #{tgDataStatus,jdbcType=VARCHAR},
+            DEAL_DATE = #{dealDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and TRADE_ID_TG = #{tradeIdTg,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -43,23 +43,23 @@
             ,{field:'dataStatusStr', title: '数据状态', width:'150',sortField:'dataStatus'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
             ,{field:'salerName', title: '姓名', width:'150',sortField:'salerName'}
-            ,{field:'salerSexStr', title: '性别', width:'150',sortField:'salerSex'}
+            ,{field:'salerSex', title: '性别', width:'150',sortField:'salerSex'}
             ,{field:'salerBirthday', title: '出生日期', width:'150',sortField:'salerBirthday',type:'date'}
-            ,{field:'salerCredentTypeStr', title: '证件类别', width:'150',sortField:'salerCredentType'}
+            ,{field:'salerCredentType', title: '证件类别', width:'150',sortField:'salerCredentType'}
             ,{field:'salerOtherCredentName', title: '其他证件名称', width:'150',sortField:'salerOtherCredentName'}
             ,{field:'salerCredentNo', title: '证件号码', width:'150',sortField:'salerCredentNo'}
             ,{field:'salerInsNo', title: '内部编号', width:'150',sortField:'salerInsNo'}
             ,{field:'salerRegistNo', title: '销售人员登记编码', width:'150',sortField:'salerRegistNo'}
-            ,{field:'salerAreaTypeStr', title: '所属区域', width:'150',sortField:'salerAreaType'}
+            ,{field:'salerAreaType', title: '所属区域', width:'150',sortField:'salerAreaType'}
             ,{field:'salerOrgCode', title: '所属总部或分支机构', width:'150',sortField:'salerOrgCode'}
             ,{field:'salerDept', title: '所属部门', width:'150',sortField:'salerDept'}
             ,{field:'salerPosition', title: '职位', width:'150',sortField:'salerPosition'}
-            ,{field:'salerEduLevelStr', title: '学历', width:'150',sortField:'salerEduLevel'}
-            ,{field:'salerDegreeStr', title: '学位', width:'150',sortField:'salerDegree'}
+            ,{field:'salerEduLevel', title: '学历', width:'150',sortField:'salerEduLevel'}
+            ,{field:'salerDegree', title: '学位', width:'150',sortField:'salerDegree'}
             ,{field:'salerWorkStartYmd', title: '首次参加工作时间', width:'150',sortField:'salerWorkStartYmd'}
             ,{field:'salerFinanceStartYmd', title: '首次从事金融工作时间', width:'150',sortField:'salerFinanceStartYmd'}
             ,{field:'salerStartYmd', title: '首次从事理财销售时间', width:'150',sortField:'salerStartYmd'}
-            ,{field:'salerLevleStr', title: '专业技术职称', width:'150',sortField:'salerLevle'}
+            ,{field:'salerLevle', title: '专业技术职称', width:'150',sortField:'salerLevle'}
             ,{field:'salerCertificateTypeStr', title: '理财专业证书', width:'150',sortField:'salerCertificateType'}
             ,{field:'salerChbTrainNo', title: '理财登记培训证书编号', width:'150',sortField:'salerChbTrainNo'}
             ,{field:'salerRiskLevelStr', title: '可销售产品风险等级', width:'150',sortField:'salerRiskLevel'}
@@ -67,7 +67,7 @@
             ,{field:'salerTel', title: '办公电话', width:'150',sortField:'salerTel'}
             ,{field:'salerMobile', title: '移动电话', width:'150',sortField:'salerMobile'}
             ,{field:'salerMail', title: '邮箱', width:'150',sortField:'salerMail'}
-            ,{field:'salerStatusStr', title: '当前状态', width:'150',sortField:'salerStatus'}
+            ,{field:'salerStatus', title: '当前状态', width:'150',sortField:'salerStatus'}
             ,{field:'remark', title: '备注', width:'150',sortField:'remark'}
             ,{field:'errMsg', title: '错误信息', width:'150',sortField:'errMsg'}
             ,{field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:'150'}

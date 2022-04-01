@@ -44,6 +44,7 @@ import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.threadservice.JasperUtil;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.CeLinesUpdate;
@@ -286,7 +287,17 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
             // 场内基金改造 画面交易金额即实际交易金额 delete by 20191117 renping end
             baseTradeProductDealDtos.add(dto);
             finProductTradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
-            //basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTradeId());
+
+            // add by etliu 20210104 start
+            // GZYHTZJY-856: 场内公募基金交易,买入交易审批后，双击查看风险试算信息为空
+            if (!StringUtil.isEmptyList(entity.getRiskTrialRetDto()) && StringUtil.isNotBlank(entity.getFinprodId())) {
+                for (RiskTrialRetDto riskTrialRetDto : entity.getRiskTrialRetDto()) {
+                    riskTrialRetDto.setAssetCode(entity.getFinprodId());
+                }
+            }
+            basRiskMathCommService.insert(entity.getRiskTrialRetDto(), entity.getTradeId());
+            // add by etliu 20210104 end
+
             // 委托代码不为空设置委托编号
             if (StringUtil.isNotEmpty(entity.getEntrustId())) {
                 dto.setEntrustId(entity.getEntrustId());

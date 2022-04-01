@@ -130,6 +130,19 @@ public class AutoPeriodCommonService extends BaseService {
     @Autowired
     private AutoPeriodCommonMapper autoPeriodCommonMapper;
 
+    @Autowired
+    private PaTrdProdTempDealTotalMapper paTrdProdTempDealTotalMapper;
+
+    @Autowired
+    private TrdProductTempDealTotalMapper trdProductTempDealTotalMapper;
+
+    @Autowired
+    private TrdProductTempDealMapper trdProductTempDealMapper;
+
+    @Autowired
+    private TrdProductTempDealAddMapper trdProductTempDealAddMapper;
+
+
     public static String change现金流类型To交易方向(String cashType) {
         String ps = null;
         if (StringUtil.isNotEmpty(cashType)) {
@@ -551,6 +564,57 @@ public class AutoPeriodCommonService extends BaseService {
             }
         }
     }
+
+
+    /**
+     * 登录存续期流程临时表数据
+     *
+     * @param trdBondDurDbInertDto
+     * @see
+     * @since 1.0
+     */
+    public void insertCfetsTempDealData(TrdBondDurDbInertDto trdBondDurDbInertDto) {
+        if (trdBondDurDbInertDto == null) {
+            return;
+        }
+        if (trdBondDurDbInertDto.getTrdFinProductDealTotal() != null) {
+            trdProductTempDealTotalMapper.insert(trdBondDurDbInertDto.getTrdFinProductDealTotal());
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getStlPayOrdersList())) {
+            for (StlPayOrders StlPayOrders : trdBondDurDbInertDto.getStlPayOrdersList()) {
+                stlPayOrdersMapper.insert(StlPayOrders);
+            }
+        }
+
+        if (trdBondDurDbInertDto.getPaTrdFinProductDealTotal() != null) {
+            paTrdProdTempDealTotalMapper.insert(trdBondDurDbInertDto.getPaTrdFinProductDealTotal());
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealList())) {
+            for (TrdProductDeal trdProductDeal : trdBondDurDbInertDto.getTrdProductDealList()) {
+                TrdProductTempDeal tempDeal = new TrdProductTempDeal();
+                BeanUtil.copyPropertiesIgnoreNull(tempDeal,trdProductDeal);
+                trdProductTempDealMapper.insert(tempDeal);
+            }
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealAdds())) {
+            for (TrdProductDealAdd trdProductDealAdd : trdBondDurDbInertDto.getTrdProductDealAdds()) {
+                TrdProductTempDealAdd dealAdd = new TrdProductTempDealAdd();
+                BeanUtil.copyPropertiesIgnoreNull(dealAdd,trdProductDealAdd);
+                trdProductTempDealAddMapper.insert(dealAdd);
+            }
+        }
+
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getPtlTrades())) {
+            for (PtlTrade ptlTrade : trdBondDurDbInertDto.getPtlTrades()) {
+                ptlTradeMapper.insert(ptlTrade);
+            }
+        }
+    }
+
+
     /**
      * 登录存续期流程数据
      *
@@ -591,7 +655,6 @@ public class AutoPeriodCommonService extends BaseService {
                 trdProductDealAddMapper.insert(trdProductDealAdd);
             }
         }
-
         if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getPtlTrades())) {
             for (PtlTrade ptlTrade : trdBondDurDbInertDto.getPtlTrades()) {
                 ptlTradeMapper.insert(ptlTrade);
@@ -599,6 +662,83 @@ public class AutoPeriodCommonService extends BaseService {
         }
 
 
+    }
+
+    /**
+     * 登录存续期临时表流程数据
+     *
+     * @param trdBondDurDbInertDto
+     * @see
+     * @since 1.0
+     */
+    public void insertCfetsShTempDealData(TrdBondDurDbInertDto trdBondDurDbInertDto) {
+        if (trdBondDurDbInertDto == null) {
+            return;
+        }
+        if (trdBondDurDbInertDto.getTrdFinProductDealTotal() != null) {
+            trdProductTempDealTotalMapper.insert(trdBondDurDbInertDto.getTrdFinProductDealTotal());
+        }
+        if (trdBondDurDbInertDto.getTrdDealTotalAdd() != null) {
+           trdDealTotalAddMapper.insert(trdBondDurDbInertDto.getTrdDealTotalAdd());
+        }
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getStlPayOrdersList())) {
+            for (StlPayOrders StlPayOrders : trdBondDurDbInertDto.getStlPayOrdersList()) {
+                stlPayOrdersMapper.insert(StlPayOrders);
+            }
+        }
+        if (trdBondDurDbInertDto.getPaTrdFinProductDealTotal() != null) {
+            paTrdProdTempDealTotalMapper.insert(trdBondDurDbInertDto.getPaTrdFinProductDealTotal());
+        }
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealList())) {
+            for (TrdProductDeal trdProductDeal : trdBondDurDbInertDto.getTrdProductDealList()) {
+                TrdProductTempDeal tempDeal = new TrdProductTempDeal();
+                BeanUtil.copyPropertiesIgnoreNull(tempDeal,trdProductDeal);
+                trdProductTempDealMapper.insert(tempDeal);
+            }
+        }
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getTrdProductDealAdds())) {
+            for (TrdProductDealAdd trdProductDealAdd : trdBondDurDbInertDto.getTrdProductDealAdds()) {
+                TrdProductTempDealAdd dealAdd = new TrdProductTempDealAdd();
+                BeanUtil.copyPropertiesIgnoreNull(dealAdd,trdProductDealAdd);
+                trdProductTempDealAddMapper.insert(dealAdd);
+            }
+        }
+        if (!StringUtil.isEmptyList(trdBondDurDbInertDto.getPtlTrades())) {
+            for (PtlTrade ptlTrade : trdBondDurDbInertDto.getPtlTrades()) {
+                ptlTradeMapper.insert(ptlTrade);
+            }
+        }
+    }
+
+    /**
+     * 将临时交易表的数据插入正式交易表中
+     * @param totalTradeId
+     */
+    public void insertDealDataFromTemp(String totalTradeId) {
+        trdProductTempDealTotalMapper.insertToDealTotal(totalTradeId);
+        paTrdProdTempDealTotalMapper.insertToPaDealTotal(totalTradeId);
+        trdProductTempDealMapper.insertToDeal(totalTradeId);
+        trdProductTempDealAddMapper.insertToDealAdd(totalTradeId);
+    }
+
+    /**
+     * 更新交易表状态为撤销状态
+     * @param totalTradeId
+     * @param 'Y or N'
+     */
+    public void updateDealDataCancel(String totalTradeId,String cancel) {
+        TrdFinProductDealTotal total = new TrdFinProductDealTotal();
+        total.setTotleTradeId(totalTradeId);
+        total.setIsCancel(cancel);
+        total.setUpdateTime(new Date());
+        total.setUpdateUser("system");
+        trdFinProductDealTotalMapper.updateByPrimaryKeySelective(total);
+        TrdProductDeal deal = new TrdProductDeal();
+        deal.setTotleTradeId(totalTradeId);
+        deal.setIsCancel(cancel);
+        deal.setUpdateTime(new Date());
+        deal.setUpdateUser("system");
+        trdProductDealMapper.updateByTotleTradeId(deal);
     }
 
     /**
@@ -620,6 +760,31 @@ public class AutoPeriodCommonService extends BaseService {
         autoPeriodCommonMapper.deleteTrdFinProductDealTotalData(paramMap);
         autoPeriodCommonMapper.deleteTrdProductDeal(paramMap);
         autoPeriodCommonMapper.deleteTrdProductDealAdd(paramMap);
+        if(StringUtil.equals(finProdType2,DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+            autoPeriodCommonMapper.deleteStlPayOrdersData(paramMap);
+        }
+    }
+
+    /**
+     * 删除Temp表数据
+     *
+     * @param busiType 业务类型
+     * @param finProdType2 金融产品类型（投管）
+     * @see
+     * @since 1.0
+     */
+    public void deleteActTempData(String busiType, String finProdType2,Date batchDate,String tradeMarket) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("busiType", busiType);
+        paramMap.put("finProdType2", finProdType2);
+        paramMap.put("updateUser", "system");
+        paramMap.put("batchDate", batchDate);
+        paramMap.put("tradeMarket",tradeMarket);
+
+        autoPeriodCommonMapper.deletePaTrdFinTempDealTotalData(paramMap);
+        autoPeriodCommonMapper.deleteTrdFinProductTempDealTotalData(paramMap);
+        autoPeriodCommonMapper.deleteTrdProductTempDeal(paramMap);
+        autoPeriodCommonMapper.deleteTrdProductTempDealAdd(paramMap);
         if(StringUtil.equals(finProdType2,DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
             autoPeriodCommonMapper.deleteStlPayOrdersData(paramMap);
         }

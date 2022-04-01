@@ -18,11 +18,11 @@
     <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    DETAILID, DETAILCODE, FILEID, FILECODE, CDATE, FILESEQNO, FILEPATH, ORG_CODE, CREATE_USER, 
+    DETAILID, DETAILCODE, FILEID, FILECODE, CDATE, FILESEQNO, FILEPATH, ORG_CODE, CREATE_USER,
     CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_DATFILE_DETAIL
     where DETAILID = #{detailid,jdbcType=CHAR}
@@ -32,14 +32,14 @@
     where DETAILID = #{detailid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDataFileDetail" >
-    insert into PBC_DATFILE_DETAIL (DETAILID, DETAILCODE, FILEID, 
-      FILECODE, CDATE, FILESEQNO, 
-      FILEPATH, ORG_CODE, CREATE_USER, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+    insert into PBC_DATFILE_DETAIL (DETAILID, DETAILCODE, FILEID,
+      FILECODE, CDATE, FILESEQNO,
+      FILEPATH, ORG_CODE, CREATE_USER,
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
       UPDATE_TIME, SUBMIT_TIME)
-    values (#{detailid,jdbcType=CHAR}, #{detailcode,jdbcType=VARCHAR}, #{fileid,jdbcType=CHAR}, 
-      #{filecode,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP}, #{fileseqno,jdbcType=VARCHAR}, 
-      #{filepath,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+    values (#{detailid,jdbcType=CHAR}, #{detailcode,jdbcType=VARCHAR}, #{fileid,jdbcType=CHAR},
+      #{filecode,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP}, #{fileseqno,jdbcType=VARCHAR},
+      #{filepath,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
       #{createDept,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
       NOW(), #{submitTime,jdbcType=TIMESTAMP})
   </insert>

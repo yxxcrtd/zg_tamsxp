@@ -19,4 +19,6 @@ public interface EtrPledgeComponentMapper {
     int updateByPrimaryKeySelective(EtrPledgeComponent record);
 
     int updateByPrimaryKey(EtrPledgeComponent record);
+
+    int deleteByEntrustId(EtrPledgeComponent record);
 }

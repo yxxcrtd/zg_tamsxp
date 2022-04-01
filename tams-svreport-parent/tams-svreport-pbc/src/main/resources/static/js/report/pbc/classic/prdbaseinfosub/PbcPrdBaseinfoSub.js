@@ -86,7 +86,7 @@ $(function(){
 				{ title: "分级产品标识", field: 'isConstracte',width:150,sortField:'isConstracte'},
 				{ title: "收益权转让产品标识", field: 'transferType',width:150,sortField:'transferType'},
 				{ title: "理财产品发起机构标识", field: 'identiFlag',width:150,sortField:'identiFlag'},
-				{ title: "是否现金管理类", field: 'cashManaCate',width:150,sortField:'cashManaCate'},
+				{ title: "现金管理类产品标识", field: 'cashManaCate',width:150,sortField:'cashManaCate'},
                 { title: "跨境理财通标识", field: 'crossBorderFlag',width:150,sortField:'crossBorderFlag'},
                 { title: "以财产权信托名义开展的资金信托标识", field: 'zjxtFlag',width:150,sortField:'zjxtFlag'},
 			    {field:'sendStatus', visible:false},

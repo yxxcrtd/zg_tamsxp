@@ -4,6 +4,7 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 投管交易撤销参数
@@ -39,7 +40,21 @@ public class DealRevokeParamDto extends NeedOperateEntity {
      */
     private Date tradeDate;
 
+    private Map<String,String> tradeIdMap;
+
+    private Map<String,String> totalTradeIdMap;
+
     public DealRevokeParamDto() {
+    }
+
+    public DealRevokeParamDto(String secType, Date tradeDate, List<String> portfolioIdList, List<String> tradeIdList, List<String> totalTradeIdList, Map<String, String> tradeIdMap, Map<String, String> totalTradeIdMap) {
+        this.secType = secType;
+        this.tradeIdList = tradeIdList;
+        this.totalTradeIdList = totalTradeIdList;
+        this.portfolioIdList = portfolioIdList;
+        this.tradeDate = tradeDate;
+        this.tradeIdMap = tradeIdMap;
+        this.totalTradeIdMap = totalTradeIdMap;
     }
 
     public DealRevokeParamDto(String secType, Date tradeDate, List<String> portfolioIdList, List<String> tradeIdList, List<String> totalTradeIdList) {
@@ -88,5 +103,21 @@ public class DealRevokeParamDto extends NeedOperateEntity {
 
     public void setTradeDate(Date tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public Map<String, String> getTradeIdMap() {
+        return tradeIdMap;
+    }
+
+    public void setTradeIdMap(Map<String, String> tradeIdMap) {
+        this.tradeIdMap = tradeIdMap;
+    }
+
+    public Map<String, String> getTotalTradeIdMap() {
+        return totalTradeIdMap;
+    }
+
+    public void setTotalTradeIdMap(Map<String, String> totalTradeIdMap) {
+        this.totalTradeIdMap = totalTradeIdMap;
     }
 }

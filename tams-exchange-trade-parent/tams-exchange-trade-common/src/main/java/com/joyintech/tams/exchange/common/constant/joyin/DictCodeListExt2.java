@@ -1784,8 +1784,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
 	价格模式_成交申报(
 			DictCode.价格模式, "PRM09", "成交申报"
 	),
-	价格模式_收盘价固定价格申报(
-			DictCode.价格模式, "PRM10", "收盘价固定价格申报"
+	价格模式_收盘价固定价格(
+			DictCode.价格模式, "PRM10", "收盘价固定价格"
 	),
 	价格模式_日均价固定价格申报(
 			DictCode.价格模式, "PRM11", "日均价固定价格申报"
@@ -1819,7 +1819,7 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
 	交易方向_还本(DictCode.交易方向,"T08","还本"),
 	交易方向_买入(DictCode.交易方向,"T01","买入"),
 	交易方向_卖出(DictCode.交易方向,"T02","卖出"),
-	交易方向_行权_回售(DictCode.交易方向,"T03","行权-回售"),
+	交易方向_行权_回售(DictCode.交易方向,"T03","回售"),
 	交易方向_申购(DictCode.交易方向,"T04","申购"),
 	交易方向_申购确认(DictCode.交易方向,"T05","申购确认"),
 	交易方向_赎回(DictCode.交易方向,"T06","赎回"),
@@ -1833,8 +1833,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
 	交易方向_正回购(DictCode.交易方向, "03", "正回购"),
 	交易方向_逆回购(DictCode.交易方向, "04", "逆回购"),
 	交易方向_配债(DictCode.交易方向, "T97", "配债"),
-	交易方向_质押券入库(DictCode.交易方向, "T68", "质押券入库"),
-	交易方向_质押券出库(DictCode.交易方向, "T69", "质押券出库"),
+	交易方向_质押券入库(DictCode.交易方向, "T68", "质押入库"),
+	交易方向_质押券出库(DictCode.交易方向, "T69", "质押出库"),
 	交易方向_收息(DictCode.交易方向,"T09","收息"),
 	交易方向_付费(DictCode.交易方向,"T10","付费"),
 	交易方向_现金分红(DictCode.交易方向,"T11","现金分红"),

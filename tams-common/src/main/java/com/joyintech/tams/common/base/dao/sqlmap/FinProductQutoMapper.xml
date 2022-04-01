@@ -11,6 +11,7 @@
         <result column="QUTO" property="quto" jdbcType="DECIMAL" />
         <result column="IPO_QUTO" property="ipoQuto" jdbcType="DECIMAL" />
         <result column="BOND_ID" property="bondId" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
         <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
@@ -20,7 +21,7 @@
     </resultMap>
     <sql id="Base_Column_List" >
         SEQ_NO SEQ_NO, PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID, 
-        OTH_TYPE OTH_TYPE, CDATE CDATE, QUTO QUTO, IPO_QUTO IPO_QUTO, BOND_ID BOND_ID, TRADE_MARKET TRADE_MARKET, 
+        OTH_TYPE OTH_TYPE, CDATE CDATE, QUTO QUTO, IPO_QUTO IPO_QUTO, BOND_ID BOND_ID, PS PS,TRADE_MARKET TRADE_MARKET,
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME
     </sql>
@@ -47,13 +48,13 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinProductQuto" >
         insert into FIN_PRODUCT_QUTO (SEQ_NO, PORTFOLIO_ID, SEC_ACCT_ID, 
             FINPROD_ID, OTH_TYPE, CDATE, 
-            QUTO, IPO_QUTO, BOND_ID, 
+            QUTO, IPO_QUTO, BOND_ID, PS,
             TRADE_MARKET, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME
             )
         values (#{seqNo,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
             #{finprodId,jdbcType=VARCHAR}, #{othType,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, 
-            #{quto,jdbcType=DECIMAL}, #{ipoQuto,jdbcType=DECIMAL}, #{bondId,jdbcType=VARCHAR}, 
+            #{quto,jdbcType=DECIMAL}, #{ipoQuto,jdbcType=DECIMAL}, #{bondId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR},
             #{tradeMarket,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
             )
@@ -87,6 +88,9 @@
             </if>
             <if test="bondId != null" >
                 BOND_ID,
+            </if>
+            <if test="ps != null" >
+                PS,
             </if>
             <if test="tradeMarket != null" >
                 TRADE_MARKET,
@@ -135,6 +139,9 @@
             <if test="bondId != null" >
                 #{bondId,jdbcType=VARCHAR},
             </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
             <if test="tradeMarket != null" >
                 #{tradeMarket,jdbcType=VARCHAR},
             </if>
@@ -157,10 +164,10 @@
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductQuto" >
         insert into FIN_PRODUCT_QUTO(SEQ_NO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, OTH_TYPE, 
-        CDATE, QUTO, IPO_QUTO, BOND_ID, TRADE_MARKET, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        CDATE, QUTO, IPO_QUTO, BOND_ID, PS, TRADE_MARKET, CREATE_USER, CREATE_DEPT, CREATE_TIME,
         UPDATE_USER, UPDATE_TIME)
         select SEQ_NO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, OTH_TYPE, 
-            CDATE, QUTO, IPO_QUTO, BOND_ID, TRADE_MARKET, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            CDATE, QUTO, IPO_QUTO, BOND_ID, PS, TRADE_MARKET, CREATE_USER, CREATE_DEPT, CREATE_TIME,
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
              from FIN_PRODUCT_QUTO
              where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
@@ -192,6 +199,9 @@
             <if test="bondId != null" >
                 BOND_ID = #{bondId,jdbcType=VARCHAR},
             </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
             <if test="tradeMarket != null" >
                 TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
             </if>
@@ -214,6 +224,7 @@
             QUTO = #{quto,jdbcType=DECIMAL},
             IPO_QUTO = #{ipoQuto,jdbcType=DECIMAL},
             BOND_ID = #{bondId,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
             TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}

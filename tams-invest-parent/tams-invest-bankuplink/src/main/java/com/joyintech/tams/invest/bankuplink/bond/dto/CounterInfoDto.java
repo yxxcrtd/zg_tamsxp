@@ -72,6 +72,21 @@ public class CounterInfoDto{
 
     private String tradeStatusStr;
 
+    /**
+     * 净价总额
+     */
+    private BigDecimal cpriceAmt;
+
+    /**
+     * 利息总额
+     */
+    private BigDecimal intAmt;
+
+    /**
+     * 全价总额
+     */
+    private BigDecimal fpriceAmt;
+
     public String getTradeStatusStr() {
         return SysDataUtil.getNameFromDataDict(BussinessDictCode.银行间上行报价状态, this.getTradeStatus());
     }
@@ -271,5 +286,29 @@ public class CounterInfoDto{
      */
     public void setDetId(String detId) {
         this.detId = detId;
+    }
+
+    public BigDecimal getCpriceAmt() {
+        return cpriceAmt;
+    }
+
+    public void setCpriceAmt(BigDecimal cpriceAmt) {
+        this.cpriceAmt = cpriceAmt;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+
+    public BigDecimal getFpriceAmt() {
+        return fpriceAmt;
+    }
+
+    public void setFpriceAmt(BigDecimal fpriceAmt) {
+        this.fpriceAmt = fpriceAmt;
     }
 }

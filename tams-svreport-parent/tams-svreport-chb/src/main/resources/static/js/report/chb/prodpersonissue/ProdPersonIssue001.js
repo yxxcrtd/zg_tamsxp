@@ -132,6 +132,7 @@ $(function(){
             { title: "产品终止日期", field: 'prdMdate',type: 'date',width:200, sortField:'prdMdate' },
             { title: "管理方式", field: 'manageType',width:200, sortField:'manageType'},
             { title: "是否为结构化（分级）产品", field: 'isConstracte',width:200, sortField:'isConstracte'},
+            { title: "分级比例", field: 'gradProportion',width:200, sortField:'gradProportion'},
             { title: "业绩比较基准下限(%)", field: 'yieldLow',type:'number', digit:5, width:200, sortField:'yieldLow'},
             { title: "业绩比较基准上限(%)", field: 'yieldHigh',type:'number', digit:5, width:200, sortField:'yieldHigh'},
             { title: "业绩比较基准说明", field: 'yieldRemark',width:200, sortField:'yieldRemark'},
@@ -151,7 +152,6 @@ $(function(){
             {title:"开放期业务说明", field: 'openBussRemark', width:200, sortField:'openBussRemark'},
            /* { title: "资金托管账号", field: 'busiAcctNo',width:200, sortField:'busiAcctNo'},
             { title: "资金托管账户", field: 'acctName',width:200, sortField:'acctName'},*/
-            { title: "分级比例", field: 'gradProportion',width:200, sortField:'gradProportion'},
             { field: 'sumitSeq', visible:false}
         ]
     });

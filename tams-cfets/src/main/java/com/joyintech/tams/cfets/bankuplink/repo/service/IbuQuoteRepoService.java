@@ -23,6 +23,7 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondEtrMapper;
 import com.joyintech.tams.cfets.bankuplink.bond.dao.CfetsIbuQuoteBondMapper;
+import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepo003Mapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
 import com.joyintech.tams.cfets.bankuplink.repo.dto.*;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsEtrIbClosePosEtrRequest;
@@ -51,6 +52,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
+import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -128,6 +130,9 @@ public class IbuQuoteRepoService extends BaseService {
     private CfetsIbuQuoteRepoMapper cfetsIbuQuoteRepoMapper;
 
     @Autowired
+    private CfetsIbuQuoteRepo003Mapper cfetsIbuQuoteRepo003Mapper;
+
+    @Autowired
     private CfetsIbuQuoteBondMapper cfetsIbuQuoteBondMapper;
 
     @Autowired
@@ -159,7 +164,10 @@ public class IbuQuoteRepoService extends BaseService {
     /**
      * 递增维度
      */
-    private static BigDecimal dimension = new BigDecimal("0.01");
+    private final static String dimension = "0.01";
+
+    @Autowired(required = false)
+    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
 
     /**
      * 费用查询
@@ -396,6 +404,7 @@ public class IbuQuoteRepoService extends BaseService {
         CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto = new CfetsRepoDealQuoteCommonDto();
         Map<String, Object> param = BeanUtil.object2Map(cfetsRepoDealQuoteRequest);
         setParam(param, 1);
+        param.put("isInit", "Y");
         // 指令信息查询
         List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
         setParam(param, 2);
@@ -530,7 +539,15 @@ public class IbuQuoteRepoService extends BaseService {
         param.put("entrustStatus", Collections.singletonList(DictCodeList.委托状态_已接收.getValue()));
         setParam(param, 1);
         param.put("repo_pledge_model", CacheUtil.getSysParam(BussinessConstant.REPO_PLEDGE_MODEL));
-        List<CfetsRepoDealEntrustOrderDto> entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+        List<CfetsRepoDealEntrustOrderDto> entrustDtos = new ArrayList<>();
+        if (StringUtil.isEmpty(ptlAllocationAddRequest.getQuoteId())) {
+            entrustDtos = cfetsIbuQuoteRepoMapper.listEntrust(param);
+        } else {
+            param.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
+            param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+            entrustDtos = cfetsIbuQuoteRepo003Mapper.listEntrust(param);
+        }
         if (!StringUtil.isEmptyList(entrustDtos)) {
             return initPtlAllocation(entrustDtos);
         }
@@ -665,6 +682,9 @@ public class IbuQuoteRepoService extends BaseService {
                 }
                 item.setAvaNum(ArithmeticUtil.subtract(item.getAvaNum(), item.getTradeAmt()));
                 tailDifference = ArithmeticUtil.subtract(tailDifference, item.getTradeAmt());
+                if(tailDifference.compareTo(BigDecimal.ZERO)<=0){
+                    break;
+                }
             }
             handleTailDifference(ptlAllocationListNeed, tailDifference);
         }
@@ -821,16 +841,22 @@ public class IbuQuoteRepoService extends BaseService {
      * @author jiangpeng
      * @date 2021/12/20 14:31
      */
-    public List<RepoDealTransactionDetailsDto> listDealTransactionDetails(String entrustId) {
-        Map<String, Object> param = new HashMap<>();
+    public Page<RepoDealTransactionDetailsDto> listDealTransactionDetails(Map<String, Object> param) {
         String loginUserId = LoginUserUtil.getUserName();
-        param.put("entrustId", entrustId);
         param.put("rolePos03", DictCodeListExt2.角色岗位_交易处长.getValue());
         if ("admin".equals(loginUserId)) {
 //            loginUserId = "jp";//TODO 测试写死登录用户 提交代码时修改
         }
         param.put("loginUserId", loginUserId);
-        return cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param);
+        int pageNo = 1;
+        int pageSize = 10;
+        if (param.get("pageNo") != null) {
+            pageNo = (int) param.get("pageNo");
+        }
+        if (param.get("pageSize") != null) {
+            pageSize = (int) param.get("pageSize");
+        }
+        return super.queryForPage(pageNo, pageSize, () -> cfetsIbuQuoteRepoMapper.listDealTransactionDetails(param));
     }
 
     /**
@@ -885,6 +911,15 @@ public class IbuQuoteRepoService extends BaseService {
         Map<String, Object> pageParam = BeanUtil.object2Map(dto);
         pageParam.put("platDate", iPlatformDate.getSysDateStr());
         pageParam.put("OPR_TYPE_09", DictCodeListExt3.操作类型_导出.getValue());
+        // 排序处理
+        if(StringUtil.isNotEmpty(dto.getPageMode())){
+            if(StringUtil.isNotEmpty(dto.getPageMode().getDirection())){
+                pageParam.put("direction", dto.getPageMode().getDirection());
+            }
+            if(StringUtil.isNotEmpty(dto.getPageMode().getSort())){
+                pageParam.put("sort", dto.getPageMode().getSort());
+            }
+        }
         setParam(pageParam, 1);
         pageParam.put("CONFIRM_STATUS_0", com.joyintech.tams.constant.DictCodeList.确认状态_未确认.getValue());
         int pageNo = dto.getPageMode() == null ? 1 : dto.getPageMode().getPageNo();
@@ -1341,6 +1376,7 @@ public class IbuQuoteRepoService extends BaseService {
         }
         Map<String, Object> param = new HashMap<>();
         param.put("finProdIds", finProdIds);
+        param.put("platDate", iPlatformDate.getSysDateStr());
         if (StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
             List<FinExercisePlan> finExercisePlans = cfetsIbuQuoteRepoMapper.findFinExercisePlan(param);
             if (CollectionUtils.isEmpty(finExercisePlans)) {
@@ -1354,7 +1390,7 @@ public class IbuQuoteRepoService extends BaseService {
                                 repoEntrustPledgeDto.getBondAbbrName() + "到期日为" + repoEntrustPledgeDto.getMdate() + "，不可小于等于回购到期结算日", MessageType.错误消息);
                         return result;
                     }
-                    if (DateUtil.compareTo(finExercisePlan.getExerciseDate(), repoEntrustPledgeDto.getMdate()) < 0) {
+                    if (DateUtil.compareTo(finExercisePlan.getExerciseDate(), request.getSettlementEndDate()) < 0) {
                         result.setMessage("债券" + repoEntrustPledgeDto.getBondCode() +
                                 repoEntrustPledgeDto.getBondAbbrName() + "已做赎回登记，是否确认继续质押", MessageType.确认消息);
                     } else {
@@ -1990,13 +2026,13 @@ public class IbuQuoteRepoService extends BaseService {
      */
     private void handleTailDifference(List<RepoPtlAllocationDto> ptlAllocations, BigDecimal tailDifference) {
         //递增维度
-        BigDecimal addDimension = dimension;
+        BigDecimal addDimension = new BigDecimal(dimension);
         int size = ptlAllocations.size();
         //委托维度 已经完全分配的集合
         Set<String> set = new HashSet<>();
         while (tailDifference.compareTo(BigDecimal.ZERO) > 0 && size > 0) {
             if (tailDifference.compareTo(new BigDecimal("1")) >= 0) {
-                addDimension = ArithmeticUtil.divide(tailDifference, size, 4);
+                addDimension = ArithmeticUtil.divide(tailDifference, size, 2);
             }
             for (RepoPtlAllocationDto item : ptlAllocations) {
                 if ((item.getAvaNum().compareTo(item.getTradeAmt()) == 0 || tailDifference.compareTo(BigDecimal.ZERO) <= 0)) {
@@ -2072,37 +2108,37 @@ public class IbuQuoteRepoService extends BaseService {
             //组合分配中交易金额/基本信息中总的交易金额*金额信息中回购利息
             BigDecimal mIntAmtTemp = ArithmeticUtil.round(
                     ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mIntAmt), 4, RoundingMode.HALF_UP);
+                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mIntAmt), 2, RoundingMode.HALF_UP);
             item.setmIntAmt(StringUtil.isNotEmpty(mIntAmtTemp) ? mIntAmtTemp : BigDecimal.ZERO);
             mIntAmtTailDifference = ArithmeticUtil.subtract(mIntAmtTailDifference, item.getmIntAmt());
             //组合分配中交易金额/基本信息中总的交易金额*金额信息中到期结算金额
             BigDecimal mtradeAmtTemp = ArithmeticUtil.round(
                     ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mtradeAmt), 4, RoundingMode.HALF_UP);
+                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), mtradeAmt), 2, RoundingMode.HALF_UP);
             item.setMtradeAmt(StringUtil.isNotEmpty(mtradeAmtTemp) ? mtradeAmtTemp : BigDecimal.ZERO);
             mtradeAmtTailDifference = ArithmeticUtil.subtract(mtradeAmtTailDifference, item.getMtradeAmt());
             //组合分配中交易金额/基本信息中总的交易金额*基本信息中交易手续费
             BigDecimal dealFeeAmtTemp = ArithmeticUtil.round(
                     ArithmeticUtil.multiply(
-                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), dealFeeAmt), 4, RoundingMode.HALF_UP);
+                            ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), dealFeeAmt), 2, RoundingMode.HALF_UP);
             item.setDealFeeAmt(StringUtil.isNotEmpty(dealFeeAmtTemp) ? dealFeeAmtTemp : BigDecimal.ZERO);
             dealFeeAmtTailDifference = ArithmeticUtil.subtract(dealFeeAmtTailDifference, item.getDealFeeAmt());
             // 结算手续费 平均分配
-            BigDecimal settFeeAmtTemp = ArithmeticUtil.divide(settFeeAmt, size, 4, RoundingMode.HALF_UP);
+            BigDecimal settFeeAmtTemp = ArithmeticUtil.divide(settFeeAmt, size, 2, RoundingMode.HALF_UP);
             item.setSettFeeAmt(StringUtil.isNotEmpty(settFeeAmtTemp) ? settFeeAmtTemp : BigDecimal.ZERO);
             settFeeAmtTailDifference = ArithmeticUtil.subtract(settFeeAmtTailDifference, item.getSettFeeAmt());
             //组合分配中交易金额/基本信息中总的折算券面*基本信息中交易手续费
             if (convertAmt != null) {
                 BigDecimal convertAmtTemp = ArithmeticUtil.round(
                         ArithmeticUtil.multiply(
-                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 4, RoundingMode.HALF_UP);
+                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), convertAmt), 2, RoundingMode.HALF_UP);
                 item.setConvertAmt(convertAmtTemp);
                 convertAmtTailDifference = ArithmeticUtil.subtract(convertAmtTailDifference, item.getConvertAmt());
             }
             if (shareAmt != null) {
                 BigDecimal shareAmtTemp = ArithmeticUtil.round(
                         ArithmeticUtil.multiply(
-                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), shareAmt), 4, RoundingMode.HALF_UP);
+                                ArithmeticUtil.divide(item.getTradeAmt(), tradeAmt, 12, RoundingMode.HALF_UP), shareAmt), 2, RoundingMode.HALF_UP);
                 item.setShareAmt(shareAmtTemp);
                 shareAmtTailDifference = ArithmeticUtil.subtract(shareAmtTailDifference, item.getShareAmt());
             }
@@ -2130,11 +2166,43 @@ public class IbuQuoteRepoService extends BaseService {
      */
     private void handleTailDifference(List<RepoPtlAllocationDto> ptlAllocations, BigDecimal tailDifference, int type) {
         //递增维度
-        BigDecimal addDimension = dimension;
+        BigDecimal addDimension = new BigDecimal(dimension);
         int size = ptlAllocations.size();
-        while (tailDifference.compareTo(BigDecimal.ZERO) > 0 && size > 0) {
+        while (tailDifference.compareTo(BigDecimal.ZERO) != 0 && size > 0) {
             if (tailDifference.compareTo(new BigDecimal("1")) >= 0) {
-                addDimension = ArithmeticUtil.divide(tailDifference, size, 4);
+                addDimension = ArithmeticUtil.divide(tailDifference, size, 2);
+            }
+            if (size > 0 && tailDifference.compareTo(BigDecimal.ZERO) < 0) {
+                RepoPtlAllocationDto ptlAllocationDto = ptlAllocations.get(size - 1);
+                //回购利息
+                if (type == 0) {
+                    ptlAllocationDto.setmIntAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getmIntAmt(), tailDifference));
+                }
+                //到期结算金额
+                if (type == 1) {
+                    ptlAllocationDto.setMtradeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getMtradeAmt(), tailDifference));
+                }
+                //交易手续费
+                if (type == 2) {
+                    ptlAllocationDto.setDealFeeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getDealFeeAmt(), tailDifference));
+                }
+                //结算服务费
+                if (type == 3) {
+                    ptlAllocationDto.setSettFeeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getSettFeeAmt(), tailDifference));
+                }
+                //交易金额
+                if (type == 4) {
+                    ptlAllocationDto.setTradeAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getTradeAmt(), tailDifference));
+                }
+                //折算质押券
+                if (type == 5) {
+                    ptlAllocationDto.setConvertAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getConvertAmt(), tailDifference));
+                }
+                //质押券面
+                if (type == 6) {
+                    ptlAllocationDto.setShareAmt(ArithmeticUtil.doAdd(ptlAllocationDto.getShareAmt(), tailDifference));
+                }
+                break;
             }
             for (RepoPtlAllocationDto item : ptlAllocations) {
                 //回购利息
@@ -2166,6 +2234,9 @@ public class IbuQuoteRepoService extends BaseService {
                     item.setShareAmt(ArithmeticUtil.doAdd(item.getShareAmt(), addDimension));
                 }
                 tailDifference = ArithmeticUtil.subtract(tailDifference, addDimension);
+                if (tailDifference.compareTo(BigDecimal.ZERO) == 0) {
+                    break;
+                }
             }
         }
     }
@@ -2265,10 +2336,25 @@ public class IbuQuoteRepoService extends BaseService {
                 etrEntrust.setRemark(StringUtil.join(etrEntrust.getRemark(), (String) param.get("remark")));
                 // 修改委托指令表中值
                 int flag = etrEntrustMapper.updateByPrimaryKeySelective(etrEntrust);
+                // 委托指令附属表查询
+                EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(item.getEntrustId());
+                //获取已完成额度
+                Map<String, Object> params = new HashMap<>();
+                params.put("sumTradeFlag","01");
+                params.put("portfolioId",etrEntrust.getPortfolioId());
+                params.put("entrustId",etrEntrust.getEntrustId());
+                params.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+                params.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+                params.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+                BigDecimal finshAmt = cfetsIbuQuoteRepoMapper.selectFinshAmt(params);
+                BigDecimal entrustAmt = etrEntrust.getEntrustNum() != null ? etrEntrust.getEntrustNum() : etrEntrust.getEntrustAmt();
+                etrEntrustAdd.setForcedFinishAmt(ArithmeticUtil.subtract(entrustAmt, finshAmt));
+                etrEntrustAddMapper.updateByPrimaryKeySelective(etrEntrustAdd);
                 // 修改委托指令分发表中值 add by yangwenjun 20201209
                 baseEtrInvestInfoMapper.updatEetrDistribute(etrEntrust);
                 CfetsEtribBondInfo003Dto etrInvestBondInfoDto = new CfetsEtribBondInfo003Dto();
                 BeanUtil.copyPropertiesIgnoreNull(etrInvestBondInfoDto, item);
+                etrInvestBondInfoDto.setForcedFinishAmt(ArithmeticUtil.subtract(entrustAmt, finshAmt));
                 dtolist.add(etrInvestBondInfoDto);
             }
             List<String> entrustIdList = dtolist.stream().map(
@@ -2309,6 +2395,12 @@ public class IbuQuoteRepoService extends BaseService {
             // ZGZGST-2330:委托关闭判断是否有完成额度，分情况处理 fuyongsheng 20210919 edit end
             // add by zhangrui1 批量委托关闭 end
 
+            if (StringUtil.equals(com.joyintech.tams.constant.DictCodeList.是否_是.getValue(), CacheUtil.getSysParam(BussinessConstant.IS_HANDLE_OLDPOS_FLAG))){
+                //插入旧头寸
+                dtolist.forEach(item ->{
+                    baseEtrCashPositionCommService.entrustCloseExecute(item.getEntrustId(), com.joyintech.tams.constant.DictCodeList.是否_是.getValue());
+                });
+            }
 //            //发送头寸，批量关闭
             cfetsEtrIbBondinfoService.closeDelegatePositionMethod(dtolist, DictCodeList.平安资产类型_质押式回购.getValue());
 //            //更新操作日志
@@ -2413,7 +2505,7 @@ public class IbuQuoteRepoService extends BaseService {
             for (RepoEntrustPledgeDto temp : list) {
                 shareAmt = ArithmeticUtil.doAdd(shareAmt, ArithmeticUtil.divide(ArithmeticUtil.multiply(temp.getPledgePrin(), temp.getPledgeRatio()), new BigDecimal(100), 2));
             }
-            entrustOrderDto.setSumShareAmt(ArithmeticUtil.divide(shareAmt, new BigDecimal(10000), 2));
+            entrustOrderDto.setSumShareAmt(shareAmt);
             resultData.put(dtCode + "_table", infoForm1);
             resultData.put(dtCode + "_tableData", list);
         }
@@ -2451,7 +2543,11 @@ public class IbuQuoteRepoService extends BaseService {
                 }
             }
         }
-        if (statusFlag) {
+        param.put("QUOTE_STUTAS_IBU_08", BussinessDictCodeList.银行间上行报价状态_已终止.getValue());
+        param.put("QUOTE_STUTAS_IBU_14", BussinessDictCodeList.银行间上行报价状态_已拒绝.getValue());
+        param.put("QUOTE_STUTAS_IBU_15", BussinessDictCodeList.银行间上行报价状态_已撤销.getValue());
+        int s = cfetsIbuQuoteRepoMapper.checkWflData(param);
+        if (statusFlag||s>0) {
             errorList.add(new ValidMessage("只可对待分发或者已接收执行进度为0%的指令执行退回操作!"));
         }
         if (flowFlag) {

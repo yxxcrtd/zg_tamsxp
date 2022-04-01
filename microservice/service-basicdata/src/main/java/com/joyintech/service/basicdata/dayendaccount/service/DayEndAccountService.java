@@ -5,8 +5,10 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.service.basicdata.dayendaccount.constant.StlDataGatherConstant;
 import com.joyintech.service.basicdata.dayendaccount.dao.DayEndAccountMapper;
 import com.joyintech.service.basicdata.dayendaccount.dto.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author chengzhong
@@ -113,9 +116,16 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         pageParam.put("PS_T56", DictCodeListExt3.交易方向_到期续做.getValue());
         pageParam.put("PS_T95", DictCodeListExt3.交易方向_到期购回.getValue());
         pageParam.put("PS_T96", DictCodeListExt3.交易方向_提前购回.getValue());
+        pageParam.put("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
         pageParam.put("prodType2_F07", DictCodeList.平安资产类型_质押式回购.getValue());
+        pageParam.put("prodType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("prodType2_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         pageParam.put("prodType2_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        pageParam.put("BUSI_SCENE_CALSS_0902RS03", DictCodeListStl.业务场景分类明细_债券协议正回购_到期.getValue());
+        pageParam.put("BUSI_SCENE_CALSS_0902RB01", DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue());
+        pageParam.put("BUSI_SCENE_CALSS_0902RB04", DictCodeListStl.业务场景分类明细_债券协议逆回购_到期续作.getValue());
+        pageParam.put("TRADE_MARKET_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        pageParam.put("TRADE_MARKET_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         Page<DayEndAccountDto> result = super.queryForPage(page, length, () -> dayEndAccountMapper.findAccountInfo(pageParam));
         for(DayEndAccountDto dto:result.getRoot()){
             if(StringUtil.isNotEmpty(dto.getFinprodId())){
@@ -272,9 +282,20 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                     // 处理误差值
                     DayEndAccountDaichuliDto daichuliDto = covertToDaichuliDto(dto);
                     reconciliationCommonService.chuliWucha(daichuliDto);
-
+                    // GZYHTZJY-1106: 协议回购到期续作,更新首期的成交明细 modify fuyongsheng 20220112 start
+                    SettleTransData updateSettleTransData = settleTransDatas.get(0);
+                    // 协议回购到期续作更新成交明细更新首期
+                    if(DictCodeListExt3.交易方向_到期续做.getValue().equals(settleTransDatas.get(0).getPs())){
+                        for(SettleTransData settleTransData : settleTransDatas){
+                            if(DictCodeListStl.业务场景分类明细_债券协议逆回购_首期_买入.getValue().equals(settleTransData.getBusiSceneCalss())
+                            || DictCodeListStl.业务场景分类明细_债券协议正回购_首期_买入.getValue().equals(settleTransData.getBusiSceneCalss())){
+                                updateSettleTransData = settleTransData;
+                            }
+                        }
+                    }
+                    // GZYHTZJY-1106: 协议回购到期续作,更新首期的成交明细 modify fuyongsheng 20220112 end
                     // 重新结算交易明细数据
-                    SettleTransData std = reconciliationCommonService.getReCalSettleTransData(settleTransDatas.get(0),daichuliDto);
+                    SettleTransData std = reconciliationCommonService.getReCalSettleTransData(updateSettleTransData,daichuliDto);
                     settleTransDataMapper.updateByPrimaryKeySelective(std);
                 }else if(DictCodeListStl.对账维度_成交明细.getValue().equals(dto.getStlSecDeme())){
                     for(SettleTransData settleTransData : settleTransDatas){
@@ -592,6 +613,11 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 dealDetailList.add(dealDetail);
             }
         }
+        // GNS-847:资产类型优先取明细数据的 modify by fuyongsheng 20220215 start
+        if(CollectionUtils.isNotEmpty(reconDealInfoList) && CollectionUtils.isNotEmpty(dealDetailList)){
+            reconDealInfoList.forEach(deal->deal.setFinprodType(dealDetailList.get(0).getFinprodType2()));
+        }
+        // GNS-847:资产类型优先取明细数据的 modify by fuyongsheng 20220215 e
         dto.setReconDealInfoList(reconDealInfoList);
         dto.setDealDetailList(dealDetailList);
         return dto;
@@ -694,6 +720,7 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
 
     public Page<DayEndAccountDto> selectPage(int page, int length, Map<String, Object> param) {
         Object busiAcctNo = param.get("busiAcctNo");
+        param.put("finProdType2_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         Page<DayEndAccountDto> result;
         if (busiAcctNo != null) {
             param.put("busiAcctNoList",
@@ -702,16 +729,30 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
         else {
             param.put("busiAcctNoList", new ArrayList<>());
         }
+        // 新老头寸开关(Y:新头寸,N:老头寸)
+        String newSecPositionSwitch = CacheUtil.getSysParam("NEW_SEC_POSITION_SWITCH");
+
         if(StringUtil.isNotEmpty(param.get("parentId")) && !StringUtil.equals(param.get("parentId"),"root")) {
             String param1 = (String) param.get("parentId");
             String[] s = param1.split(",");
-            if(!"null".equals(s[0]))return new Page<>();
+            if(!"null".equals(s[0])){
+                Page page1 = new Page();
+                page1.setRoot(new ArrayList());
+                return page1;
+            }
 
             if("1".equals(s[1])){
                 param.put("busiAcctNo",s[2]);
                 param.put("settleDate",s[3]);
                 param.put("ccy",s[4]);
-                return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
+                // 开关配置N查老头存
+                if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)) {
+                    return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage1(param));
+                }else{// 默认查新头寸
+                    param.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+                    param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+                    return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPageNew1(param));
+                }
             }else{
                 param.put("finprodId",s[2]);
                 param.put("settleDate",s[3]);
@@ -719,10 +760,23 @@ public class DayEndAccountService extends BaseService<DayEndAccountDto>{
                 if(StringUtil.isNotEmpty(s[5])&&!"null".equals(s[5])){
                     param.put("termType",s[5]);
                 }
-                return  super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
+                if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)) {
+                    return  super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage2(param));
+                }else{// 默认查新头寸
+                    param.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+                    param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+                    return  super.queryForPage(page, length, () -> dayEndAccountMapper.selectPageNew2(param));
+                }
             }
         }
-        return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
+        // 开关配置N查老头存
+        if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)) {
+            return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPage(param));
+        }else{// 默认查新头寸
+            param.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            param.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+            return super.queryForPage(page, length, () -> dayEndAccountMapper.selectPageNew(param));
+        }
     }
 
     private void setFinprodMarketId(Page<DayEndAccountDto> page){

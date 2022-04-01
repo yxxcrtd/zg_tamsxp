@@ -11,6 +11,8 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="PBC_BANK_CODE" property="pbcBankCode" jdbcType="VARCHAR" />
+        <result column="belogCodeCBRC" property="belogCodeCBRC" jdbcType="VARCHAR" />
+
         <result column="IS_FIN_SUB_COMPANY" property="isFinSubCompany" jdbcType="VARCHAR" />
         <result column="INSITITUTE_CODE" property="insitituteCode" jdbcType="VARCHAR" />
     </resultMap>
@@ -19,7 +21,7 @@
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
         , PBC_BANK_CODE PBC_BANK_CODE, IS_FIN_SUB_COMPANY IS_FIN_SUB_COMPANY
-        , INSITITUTE_CODE INSITITUTE_CODE
+        , INSITITUTE_CODE INSITITUTE_CODE,belogCodeCBRC
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
     </sql>
     <sql id="Sql_All_Data" >
@@ -54,14 +56,20 @@
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
             , PBC_BANK_CODE, IS_FIN_SUB_COMPANY,INSITITUTE_CODE
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
-            )
+            /**新增所属银保监局字段   20220307 leipeng****/
+            ,belogCodeCBRC
+            /**新增所属银保监局字段   20220307 leipeng****/
+        )
         values (#{orgCode,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
             , #{pbcBankCode,jdbcType=VARCHAR}, #{isFinSubCompany,jdbcType=VARCHAR}, #{insitituteCode,jdbcType=VARCHAR}
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
-            )
+            /**新增所属银保监局字段   20220307 leipeng****/
+            , #{belogCodeCBRC,jdbcType=VARCHAR}
+            /**新增所属银保监局字段   20220307 leipeng****/
+        )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
         insert into CHB_ORG_REGIST_BANK_CODE
@@ -98,6 +106,12 @@
                 IS_FIN_SUB_COMPANY,
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+
+            /**新增所属银保监局字段   20220307 leipeng****/
+            <if test="belogCodeCBRC != null" >
+                belogCodeCBRC
+            </if>
+            /**新增所属银保监局字段   20220307 leipeng****/
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="orgCode != null" >
@@ -132,6 +146,14 @@
                 #{isFinSubCompany,jdbcType=VARCHAR},
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+
+            /**新增所属银保监局字段   20220307 leipeng****/
+            <if test="belogCodeCBRC != null" >
+               #{belogCodeCBRC,jdbcType=VARCHAR}
+            </if>
+            /**新增所属银保监局字段   20220307 leipeng****/
+
+
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
@@ -140,12 +162,18 @@
          <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
          , PBC_BANK_CODE, IS_FIN_SUB_COMPANY
           <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+        /**新增所属银保监局字段   20220307 leipeng****/
+        ,belogCodeCBRC
+        /**新增所属银保监局字段   20220307 leipeng****/
         )
         select ORG_CODE, REGIST_BANK_CODE, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, 
             CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
              <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
              , PBC_BANK_CODE, IS_FIN_SUB_COMPANY
              <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+            /**新增所属银保监局字段   20220307 leipeng****/
+            ,belogCodeCBRC
+            /**新增所属银保监局字段   20220307 leipeng****/
              from CHB_ORG_REGIST_BANK_CODE
              where STATUS = 'E' and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </insert>
@@ -172,6 +200,11 @@
                 IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR},
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+            /**新增所属银保监局字段   20220307 leipeng****/
+            <if test="belogCodeCBRC != null" >
+                belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
+            </if>
+            /**新增所属银保监局字段   20220307 leipeng****/
         </set>
         where ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </update>
@@ -201,6 +234,11 @@
                 IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR},
             </if>
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+            /**新增所属银保监局字段   20220307 leipeng****/
+            <if test="belogCodeCBRC != null" >
+                belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
+            </if>
+            /**新增所属银保监局字段   20220307 leipeng****/
         </set>
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
@@ -216,6 +254,9 @@
         , PBC_BANK_CODE = #{pbcBankCode,jdbcType=VARCHAR}
         , IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR}
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
+        /**新增所属银保监局字段   20220307 leipeng****/
+            ,belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
+        /**新增所属银保监局字段   20220307 leipeng****/
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
@@ -229,6 +270,9 @@
             , IS_FIN_SUB_COMPANY = #{isFinSubCompany,jdbcType=VARCHAR}
             <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
             , INSITITUTE_CODE = #{insitituteCode,jdbcType=VARCHAR}
+            /**新增所属银保监局字段   20220307 leipeng****/
+            ,belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
+            /**新增所属银保监局字段   20220307 leipeng****/
         where ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </update>
 </mapper>

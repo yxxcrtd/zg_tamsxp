@@ -22,6 +22,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.etrbrowdepoinfo.dao.EtrBrowDepoInfoMapper;
 import com.joyintech.service.entrust.etrbrowdepoinfo.dto.EtrBrowDepoInfoDto;
+import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.service.entrust.etrinstruction.dto.EtrInstructionDto;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
@@ -104,6 +105,9 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
 
     @Autowired(required=false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+
+    @Autowired(required = false)
+    private EtrCommandDispatcherService etrCommandDispatcherService;
 
     /**
      * 使用给定的检索分页数据。返回类型是Service的泛型。
@@ -412,6 +416,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
         BaseEtrInvestInfoDto baseEtrInvestInfoDto = new BaseEtrInvestInfoDto();
         EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
         String type = entity.getOperateType();
+        String isPushMsg = DictCodeList.是否_否.getValue();
         if (StringUtil.equals(type, "DELETE")) {
             // 删除委托
         }
@@ -440,7 +445,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
 
             // List<委托指令分发Entity>
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
-            if(StringUtil.isNotEmpty(entity.getBussEtrInvestPersonInfoDto().getTrader())){
+          /*  if(StringUtil.isNotEmpty(entity.getBussEtrInvestPersonInfoDto().getTrader())){
                 List<String> traderList = StringUtil.splitToList(GlobalConstant.COMMA,entity.getBussEtrInvestPersonInfoDto().getTrader());
                 for(String trader:traderList){
                     EtrDistribute etrDistribute = new EtrDistribute();
@@ -453,7 +458,7 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
                     //
                     etrDistributeList.add(etrDistribute);
                 }
-            }
+            }*/
             // List<委托完成状况表Entity>
             List<EtrFinishStatus> etrFinishStatusList = new ArrayList<>();
             /* EtrFinishStatus etrFinishStatus = new EtrFinishStatus();
@@ -468,12 +473,14 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
                 if(!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)){
                     //跳出自动分发
                     baseEtrInvestInfoDto.setEtrDistributeList(etrDistributeList);
+                    isPushMsg = DictCodeList.是否_是.getValue();
                 }
                 else{
                     //查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
                     if(busiAutoEtrDispService.checkEntrustTime(etrEntrust)){
                         //自动分发
                         baseEtrInvestInfoDto.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+                        isPushMsg = DictCodeList.是否_是.getValue();
                     }
                 }
             }
@@ -545,12 +552,14 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
                 if(!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)){
                     //跳出自动分发
                     baseEtrInvestInfoDto.setEtrDistributeList(etrDistributeList);
+                    isPushMsg = DictCodeList.是否_是.getValue();
                 }
                 else{
                     //查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
                     if(busiAutoEtrDispService.checkEntrustTime(etrEntrust)){
                         //自动分发
                         baseEtrInvestInfoDto.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+                        isPushMsg = DictCodeList.是否_是.getValue();
                     }
                 }
             }
@@ -574,6 +583,11 @@ public class EtrBrowDepoInfoService extends BaseService<EtrBrowDepoInfoDto> {
 //        if (baseEtrCashPositionCommService != null) {
 //            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
 //        }
+        if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
+            Map<String, Object> param = new HashMap<>();
+            param.put("entrustId", entity.getEntrustId());
+            etrCommandDispatcherService.pushCommandMsg(param);
+        }
     }
 
     /**

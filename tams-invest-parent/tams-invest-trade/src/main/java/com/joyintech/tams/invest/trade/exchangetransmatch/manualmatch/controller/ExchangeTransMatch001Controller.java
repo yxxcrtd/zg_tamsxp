@@ -1,5 +1,5 @@
 package com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.controller;
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.trade.cstptrdmatchinfo.service.CstpTrdMatchInfoService;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -69,6 +69,8 @@ public class ExchangeTransMatch001Controller  extends BaseController {
         model.addAttribute("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
         model.addAttribute("PS_T47", DictCodeListExt2.交易方向_增发.getValue());
         model.addAttribute("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
+
+        model.addAttribute("TARGET_BACK_TYPE_H01",DictCodeList.回购类型_质押式协议回购.getValue());
 
         model.addAttribute("TRD_MATCH_TYPE_0", DictCodeListExt3.下行交易匹配类型_自动匹配.getValue());
         model.addAttribute("TRD_MATCH_TYPE_1", DictCodeListExt3.下行交易匹配类型_手动匹配.getValue());
@@ -183,15 +185,30 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("matchSearch")
     public Page<ExchangeTransMatch003Dto> matchSearch(@RequestBody Map<String,Object> map) {
+
+        if(StringUtil.isNotEmpty(map.get("ps"))) {
+            String ps = (String)map.get("ps");
+            if(StringUtil.equals(ps,DictCodeList.交易方向_到期.getValue())) {
+                map.put("ps",DictCodeListExt3.交易方向_到期购回.getValue());
+            }
+            else if (StringUtil.equals(ps,DictCodeListExt3.交易方向_投资端_提前终止.getValue())) {
+                map.put("ps",DictCodeListExt3.交易方向_提前购回.getValue());
+            }
+        }
+
         if(StringUtil.isNotEmpty(map.get("finprodType1"))) {
             String finprodType = (String)map.get("finprodType1");
-            if(StringUtil.equals(finprodType,DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+            String ps = (String)map.get("ps");
+            if(StringUtil.equals(finprodType,DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+                    && StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())) {
                 map.put("ps",DictCodeList.回购拆借方向_正回购.getValue());
             }
-            else if (StringUtil.equals(finprodType,DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
+            else if (StringUtil.equals(finprodType,DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
+                    && StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())) {
                 map.put("ps",DictCodeList.回购拆借方向_逆回购.getValue());
             }
         }
+
         return exchangeTransMatch001Service.findEntrustPage(map);
     }
 
@@ -231,12 +248,12 @@ public class ExchangeTransMatch001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("transactionMacth")
     public AjaxResult transactionMacth(@RequestBody ExchangeTransMatch002Dto dto){
-        try {
+//        try {
             exchangeTransMatch001Service.transactionMacth(dto);
-        } catch (Exception e) {
-            logger.error("交易匹配确认失败"+e.getMessage());
-            return new AjaxResult("成交匹配失败", MessageType.错误消息);
-        }
+//        } catch (Exception e) {
+//            logger.error("交易匹配确认失败"+e.getMessage());
+//            return new AjaxResult("成交匹配失败", MessageType.错误消息);
+//        }
         return new AjaxResult("成交匹配成功",MessageType.提示消息);
     }
 

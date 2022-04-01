@@ -367,28 +367,54 @@
         WHERE EXISTS (SELECT 1
         FROM WFL_TRD_PRODUCT_DEAL_PRE T2
         WHERE T1.TRADE_ID = T2.TRADE_ID
-        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR})
+        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        union all
+        SELECT 1
+        FROM wfl_reg_fin_product_deal T3
+        WHERE T1.TRADE_ID = T3.TRADE_ID
+        AND T3.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        )
     </delete>
     <delete id="deletePtlCashPositionFlow">
         DELETE FROM PTL_CASH_POSITION_FLOW T1
         WHERE EXISTS (SELECT 1
         FROM WFL_TRD_PRODUCT_DEAL_PRE T2
         WHERE T1.ORDER_ID = T2.TRADE_ID
-        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR})
+        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        union all
+        SELECT 1
+        FROM wfl_reg_fin_product_deal T3
+        WHERE T1.ORDER_ID = T3.TRADE_ID
+        AND T3.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        )
+
+
     </delete>
     <delete id="deleteEtrSecPositionFlow">
         DELETE FROM ETR_SEC_POSITION_FLOW T1
         WHERE EXISTS (SELECT 1
         FROM WFL_TRD_PRODUCT_DEAL_PRE T2
         WHERE T1.TRADE_ID = T2.TRADE_ID
-        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR})
+        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        union all
+        SELECT 1
+        FROM wfl_reg_fin_product_deal T3
+        WHERE T1.TRADE_ID = T3.TRADE_ID
+        AND T3.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        )
     </delete>
     <delete id="deleteEtrCashPositionFlow">
         DELETE FROM ETR_CASH_POSITION_FLOW T1
         WHERE EXISTS (SELECT 1
         FROM WFL_TRD_PRODUCT_DEAL_PRE T2
         WHERE T1.ORDER_ID = T2.TRADE_ID
-        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR})
+        AND T2.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        union all
+        SELECT 1
+        FROM wfl_reg_fin_product_deal T3
+        WHERE T1.ORDER_ID = T3.TRADE_ID
+        AND T3.WORKFLOW_ID = #{workflowId, jdbcType = VARCHAR}
+        )
     </delete>
 
     <!-- 根据交易编号查询另一笔未撤销的转仓交易信息 add by hpp 2020-09-17 end -->

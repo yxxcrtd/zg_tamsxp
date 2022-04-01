@@ -84,4 +84,56 @@
             </otherwise>
         </choose>
     </update>
+
+    <update id="insertFlows" parameterType="Map" >
+        <choose>
+            <when test="tableName == 'ETR_CASH_POSITION_FLOW_RULE' ">
+                INSERT INTO ETR_CASH_POSITION_FLOW_RULE 
+                    (SEQNO, PORTFOLIO_ID, ACCT_ID, HODING_TYPE, CDATE, DATE_TYPE, CCY, AMOUNT, ENTRUST_ID, TRADE_ID, TOTAL_TRADE_ID, UPBLSTM, BUSI_ACT, BUSI_TYPE, PS, SYSTEM_ACT, OPERATIONTYPE, ATAMOUNT, CREATE_USER, CREATE_TIME, CASCADEUPDATE, WORK_FLOW_ID)
+                VALUES 
+                    (#{SEQNO},#{PORTFOLIO_ID},#{ACCT_ID},#{HODING_TYPE},#{CDATE},#{DATE_TYPE},#{CCY},#{AMOUNT},#{ENTRUST_ID},#{TRADE_ID,jdbcType=VARCHAR},#{TOTAL_TRADE_ID},#{UPBLSTM},#{BUSI_ACT},#{BUSI_TYPE},#{PS},#{SYSTEM_ACT},#{OPERATIONTYPE},#{ATAMOUNT},#{CREATE_USER},#{CREATE_TIME},#{CASCADEUPDATE},#{WORK_FLOW_ID,jdbcType=VARCHAR})
+            </when>
+            <when test="tableName == 'ETR_SEC_POSITION_FLOW_RULE' ">
+                INSERT INTO ETR_SEC_POSITION_FLOW_RULE
+                    (SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, HODING_TYPE, CDATE, DATE_TYPE, CCY, AMOUNT, ENTRUST_ID, TOTAL_TRADE_ID, TRADE_ID, BUSI_ACT, BUSI_TYPE, PS, SYSTEM_ACT, OPERATIONTYPE, UPBLSTM, ATAMOUNT, CREATE_USER, CREATE_TIME, CASCADEUPDATE, WORK_FLOW_ID)
+                VALUES
+                    (#{SEQNO},#{PORTFOLIO_ID},#{SEC_ACCT_ID},#{FINPROD_ID},#{HODING_TYPE},#{CDATE},#{DATE_TYPE},#{CCY},#{AMOUNT},#{ENTRUST_ID},#{TOTAL_TRADE_ID},#{TRADE_ID},#{BUSI_ACT},#{BUSI_TYPE},#{PS},#{SYSTEM_ACT},#{OPERATIONTYPE},#{UPBLSTM},#{ATAMOUNT},#{CREATE_USER},#{CREATE_TIME},#{CASCADEUPDATE},#{WORK_FLOW_ID})
+            </when>
+            <when test="tableName == 'PTL_CASH_POSITION_FLOW_RULE' ">
+                INSERT INTO PTL_CASH_POSITION_FLOW_RULE
+                    (SEQNO, PORTFOLIO_ID, ACCT_ID, HODING_TYPE, DATE_TYPE, CDATE, CCY, AMOUNT, TRADE_ID, TOTAL_TRADE_ID, ENTRUST_ID, BUSI_ACT, BUSI_TYPE, PS, SYSTEM_ACT, OPERATIONTYPE, UPBLSTM, ATAMOUNT, CREATE_USER, CREATE_TIME, CASCADEUPDATE, ORD_ID, WORK_FLOW_ID)
+                VALUES
+                    (#{SEQNO},#{PORTFOLIO_ID},#{ACCT_ID},#{HODING_TYPE},#{DATE_TYPE},#{CDATE},#{CCY},#{AMOUNT},#{TRADE_ID},#{TOTAL_TRADE_ID},#{ENTRUST_ID},#{BUSI_ACT},#{BUSI_TYPE},#{PS},#{SYSTEM_ACT},#{OPERATIONTYPE},#{UPBLSTM},#{ATAMOUNT},#{CREATE_USER},#{CREATE_TIME},#{CASCADEUPDATE},#{ORD_ID},#{WORK_FLOW_ID})
+            </when>
+            <when test="tableName == 'PTL_SEC_POSITION_FLOW_RULE' ">
+                INSERT INTO PTL_SEC_POSITION_FLOW_RULE
+                    (SEQNO, PORTFOLIO_ID, SEC_ACCT_ID, FINPROD_ID, HODING_TYPE, CDATE, DATE_TYPE, CCY, AMOUNT, TRADE_ID, TOTAL_TRADE_ID, ENTRUST_ID, BUSI_ACT, BUSI_TYPE, PS, SYSTEM_ACT, OPERATIONTYPE, CREATE_USER, CREATE_TIME, UPBLSTM, ATAMOUNT, CASCADEUPDATE, ORD_ID, WORK_FLOW_ID)
+                VALUES
+                    (#{SEQNO},#{PORTFOLIO_ID},#{SEC_ACCT_ID},#{FINPROD_ID},#{HODING_TYPE},#{CDATE},#{DATE_TYPE},#{CCY},#{AMOUNT},#{TRADE_ID},#{TOTAL_TRADE_ID},#{ENTRUST_ID},#{BUSI_ACT},#{BUSI_TYPE},#{PS},#{SYSTEM_ACT},#{OPERATIONTYPE},#{CREATE_USER},#{CREATE_TIME},#{UPBLSTM},#{ATAMOUNT},#{CASCADEUPDATE},#{ORD_ID},#{WORK_FLOW_ID})
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="deleteFlows" parameterType="Map" >
+        <choose>
+            <when test="tableName == 'ETR_CASH_POSITION_FLOW_RULE' ">
+                DELETE FROM ETR_CASH_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <when test="tableName == 'ETR_SEC_POSITION_FLOW_RULE' ">
+                DELETE FROM ETR_SEC_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <when test="tableName == 'PTL_CASH_POSITION_FLOW_RULE' ">
+                DELETE FROM PTL_CASH_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <when test="tableName == 'PTL_SEC_POSITION_FLOW_RULE' ">
+                DELETE FROM PTL_SEC_POSITION_FLOW_RULE WHERE SEQNO = #{SEQNO}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </update>
+    
 </mapper>

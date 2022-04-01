@@ -2,7 +2,7 @@ package com.joyintech.service.trade.manualsettle.dao;
 
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleDto;
 import com.joyintech.service.trade.manualsettle.dto.ManualSettleFlowDto;
-import com.joyintech.tams.common.base.entity.StlPayTempOrders;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import org.apache.ibatis.annotations.Param;
@@ -47,5 +47,51 @@ public interface ManualSettleMapper {
 
     List<EtrSecPositionFlowDto> selectEtrSecPositionFlow(@Param("tradeId") String tradeId);
 
+    List<ManualSettleDto> findPageExport(Map<String, Object> param);
+
+    InfContractDetailfile selectInfContractDetailfile(String entrustNo, String dealNo);
+
+    /**
+     * 组合持仓流水
+     * @param tradeId
+     * @return
+     */
+    List<PtlSecPosition> listPtlSecPositionFlow(String tradeId);
+
+    /**
+     *组合现金流水
+     * @param orderId
+     * @return
+     */
+    List<PtlCashPosition> listPtlCashPositionFlow(String orderId);
+
+    /**
+     * 委托持仓流水
+     * @param tradeId
+     * @return
+     */
+    List<EtrSecPosition> listEtrSecPositionFlow(String tradeId);
+
+    /**
+     * 委托现金流水
+     * @param orderId
+     * @return
+     */
+    List<EtrCashPosition> listEtrCashPositionFlow(String orderId);
+
+    /**
+     * 删除日间委托完成度
+     * @param tradeId 参数
+     * @return
+     */
+    int deleteEtrFinishStatus(String tradeId);
+
+    int updatePtlCashPosition(PtlCashPosition ptlCashPosition);
+
+    int updatePtlSecPosition(PtlSecPosition ptlSecPosition);
+
+    int updateEtrCashPosition(EtrCashPosition etrCashPosition);
+
+    int updateEtrSecPosition(EtrSecPosition etrSecPosition);
 } 
 

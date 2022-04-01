@@ -15,6 +15,10 @@ public class EtrCashPosition extends EtrCashPositionKey {
      * 通道金融产品代码，是通道账户时存储
      */
     private String chlFinprodId;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     /**
      * 取得 数量
@@ -46,5 +50,13 @@ public class EtrCashPosition extends EtrCashPositionKey {
      */
     public void setChlFinprodId(String chlFinprodId) {
         this.chlFinprodId = chlFinprodId == null ? null : chlFinprodId.trim();
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

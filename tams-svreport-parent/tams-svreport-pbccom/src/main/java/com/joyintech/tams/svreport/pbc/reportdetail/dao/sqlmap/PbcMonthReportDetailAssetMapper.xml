@@ -169,7 +169,7 @@
             row_number() over(partition by ASSET_ID order by change_date desc) row_number
             FROM CHB_ASSET_RATE
             WHERE asset_rate is not null
-            AND CHANGE_DATE &lt;= ADD_MONTHS(TO_DATE(#{enddate,jdbcType=VARCHAR}||'01','yyyyMMdd'),1)-1) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
+            AND CHANGE_DATE &lt;= #{enddateDate,jdbcType=DATE}) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
 
             WHERE P.AMT IS NOT NULL AND P.AMT !=0
 

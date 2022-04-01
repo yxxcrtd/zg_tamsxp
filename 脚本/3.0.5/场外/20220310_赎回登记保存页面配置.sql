@@ -1,0 +1,1 @@
+update sys_page set page_file='cfets/trdredeem/CfetsTrdRedeem001' where page_id='CfetsTrdRedeem001';

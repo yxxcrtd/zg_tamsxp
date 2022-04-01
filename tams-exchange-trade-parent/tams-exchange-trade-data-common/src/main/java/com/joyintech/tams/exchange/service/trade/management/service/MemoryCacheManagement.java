@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.cache.impl.QuoteTickServiceImpl;
+import com.joyintech.tams.exchange.common.cache.impl.RedisCacheServiceImpl;
 import com.joyintech.tams.exchange.common.constant.CacheClassMappingEnum;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.ExchangeConstant;
@@ -12,13 +13,16 @@ import com.joyintech.tams.exchange.common.db.domain.KeyMethodInterface;
 import com.joyintech.tams.exchange.common.utils.ConvertListUtils;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.common.utils.SpringContextUtils;
+import com.joyintech.tams.exchange.datacommon.cache.AsyncService;
 import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -27,6 +31,26 @@ public class MemoryCacheManagement {
 
     @Autowired
     private QuoteTickServiceImpl quoteTickService;
+
+    public ResultBean queryCacheMonitor() {
+        Map<String, AsyncService> asyncServiceMap = SpringContextUtils.getApplicationContext().getBeansOfType(AsyncService.class);
+        Map<String, Integer> countMap = new HashMap<String, Integer>();
+        if (Objects.nonNull(asyncServiceMap)) {
+            asyncServiceMap.values().forEach(asyncService -> {
+                try {
+                    Class tClass = Class.forName(asyncService.getClass().getName());
+                    RedisCacheServiceImpl genericPersistenceService = (RedisCacheServiceImpl) SpringContextUtils.getBean(tClass);
+                    int num = genericPersistenceService.getMap().values().size();
+                    if (!Strings.isNullOrEmpty(CacheClassMappingEnum.getNameByClassPath(asyncService.getClass().getName()))) {
+                        countMap.put(CacheClassMappingEnum.getNameByClassPath(asyncService.getClass().getName()), num);
+                    }
+                } catch (Exception e) {
+                    logger.error("queryCacheMonitor error:", e);
+                }
+            });
+        }
+        return new ResultBean(ErrorCode.SUCCESS, countMap);
+    }
 
     public ResultBean getData(String serviceName, int page, int perPage) {
         return getPageData(serviceName, page, perPage);

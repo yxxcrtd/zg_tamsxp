@@ -13,7 +13,7 @@
     DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, BALANCE, REPORTUUID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_AREA
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
@@ -23,10 +23,10 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportAreaDetailDto" >
-    insert into PBC_REPORT_AREA (DETAILUUID, REPORTTYPE, GROUPTYPE, 
+    insert into PBC_REPORT_AREA (DETAILUUID, REPORTTYPE, GROUPTYPE,
       PROPERTYCODE, BALANCE, REPORTUUID
       )
-    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR},
       #{propertycode,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR}
       )
   </insert>
@@ -103,30 +103,30 @@
       REPORTUUID = #{reportuuid,jdbcType=CHAR}
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
-  
+
   <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_AREA
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
   </select>
-  
+
   <delete id="deleteByReportDate"  parameterType="map" >
     delete
     from PBC_REPORT_AREA prp
     where prp.REPORTUUID in(
-        select pr.REPORTUUID from PBC_REPORT pr
-       where 1=1 
-       <if test="reportStartDate != null" >
-       and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
-       </if>
-       <if test="reportEndDate != null" >
-       and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
-       </if>
-       <if test="reporttype != null" >
-         and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
-       </if> 
-       and pr.send_status = '01'/*只删除未报送数据*/
+    select pr.REPORTUUID from PBC_REPORT pr
+    where 1=1
+    <if test="reportStartDate != null" >
+      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reportEndDate != null" >
+      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reporttype != null" >
+      and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+    </if>
+    and pr.send_status = '01'/*只删除未报送数据*/
     )
   </delete>
 </mapper>

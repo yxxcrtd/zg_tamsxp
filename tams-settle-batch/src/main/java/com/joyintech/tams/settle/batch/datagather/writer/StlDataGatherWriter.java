@@ -150,6 +150,18 @@ public class StlDataGatherWriter extends BaseWriter<NeedToWriteEntity> {
         if (CollectionUtils.isNotEmpty(tradeWriteDto.getFinProductDealTotalList())) {
             List<String> totalTradeIdList = tradeWriteDto.getFinProductDealTotalList()
                     .stream().map(TotalTrdProductDealDto::getTotleTradeId).collect(Collectors.toList());
+            // modify by etliu 20220228 start
+            // 广农商二阶段 GNS-890:【广农商场内清算】场内债券存续期交易重复跑批时，未对原交易数据进行撤销操作
+            List<String> pTotalTradeIdList = tradeWriteDto.getFinProductDealTotalList()
+                    .stream().map(TotalTrdProductDealDto::getpTotleTradeId).collect(Collectors.toList());
+            if (!StringUtil.isEmptyList(pTotalTradeIdList)) {
+                for (String pTotalTradeId : pTotalTradeIdList) {
+                    if (totalTradeIdList.contains(pTotalTradeId)) {
+                        totalTradeIdList.remove(pTotalTradeId);
+                    }
+                }
+            }
+            // modify by etliu 20220228 end
             params.put("totalTradeIdList", totalTradeIdList);
         }
         params.put("busiType", tradeWriteDto.getSecType());

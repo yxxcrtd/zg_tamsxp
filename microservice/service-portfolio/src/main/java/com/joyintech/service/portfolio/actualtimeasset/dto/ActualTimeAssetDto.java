@@ -110,13 +110,13 @@ public class ActualTimeAssetDto extends BaseEntity {
     private BigDecimal instructionsAmount;
     
     /**
-     * 预减持仓
+     * 质押持仓
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal pledgeAmount;
     
     /**
-     * 质押持仓
+     * 预减持仓
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal preReductionAmount;

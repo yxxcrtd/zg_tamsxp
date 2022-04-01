@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.system.base.entity.SysWflBusinessList;
+import com.joyintech.workflow.engine.constant.OperationType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,10 +92,10 @@ public class TrdConBondService extends BaseService {
 
     @Autowired
     private TrdConBondMapper trdConBondMapper;
-    
+
     @Autowired
     private WflTrdFinProductDealTotalMapper wflTrdFinProductDealTotalMapper;
-    
+
     @Autowired
     private WflPaTrdFinDealTotalMapper wflPaTrdFinDealTotalMapper;
 
@@ -159,7 +161,10 @@ public class TrdConBondService extends BaseService {
 
     @Autowired
     private StlPayOrdersMapper stlPayOrdersMapper;
-    
+
+    @Autowired
+    private PositionRequestTrdConBondService positionRequestService;
+
     /**
      * 分页查询
      *
@@ -210,27 +215,27 @@ public class TrdConBondService extends BaseService {
                 } else {
                     tfitDto.setFlg("02");
                 }
-            } 
+            }
             else if(StringUtil.equals(tfitDto.getPs(), DictCodeList.交易方向_申购确认.getValue())
                     && StringUtil.equals(tfitDto.getValidStatus(), DictCodeListExt1.交易流程状态_有效.getValue())){
-            	Map<String, Object> param = new HashMap<>();
+                Map<String, Object> param = new HashMap<>();
                 param.put("bTradeId", tfitDto.getBusiCode());
                 param.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
                 param.put("yes", DictCodeList.是否_是.getValue());
                 int flg1 = trdConBondMapper.selectConfirmInfo(param);
                 int flg2 = trdConBondMapper.selectWflConfirmInfo(tfitDto.getBusiCode());
                 if (flg1 == 0 && flg2 == 0 ) {
-                	TrdConBondDto trdConBondDto=this.getTrdConBondDto(tfitDto.getBusiCode());
-                	if(StringUtil.isNotEmpty(trdConBondDto.getRefundAmt())&&BigDecimal.ZERO.compareTo(trdConBondDto.getRefundAmt())<0){
-                    	tfitDto.setFlg("01");
+                    TrdConBondDto trdConBondDto=this.getTrdConBondDto(tfitDto.getBusiCode());
+                    if(StringUtil.isNotEmpty(trdConBondDto.getRefundAmt())&&BigDecimal.ZERO.compareTo(trdConBondDto.getRefundAmt())<0){
+                        tfitDto.setFlg("01");
                     }else {
-                    	tfitDto.setFlg("02");
+                        tfitDto.setFlg("02");
                     }
                 } else {
                     tfitDto.setFlg("02");
                 }
             }
-            
+
             else {
                 tfitDto.setFlg("02");
             }
@@ -337,7 +342,7 @@ public class TrdConBondService extends BaseService {
             WflTrdFinProductDealTotal wflTrdFinProductDealTotal = new WflTrdFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(wflTrdFinProductDealTotal, entity.getTrdFinProductDealTotal());
             if(!StringUtil.isNotEmpty(wflTrdFinProductDealTotal.getbTradeId())){
-            	wflTrdFinProductDealTotal.setbTradeId(entity.getbTradeId());
+                wflTrdFinProductDealTotal.setbTradeId(entity.getbTradeId());
             }
             wflTrdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             wflTrdFinProductDealTotal.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -347,12 +352,12 @@ public class TrdConBondService extends BaseService {
             BeanUtil.copyPropertiesIgnoreNull(wflTrdDealTotalAdd, entity.getTrdDealTotalAdd());
 //            wflTrdDealTotalAdd.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
             wflTrdDealTotalAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
-            
+
             WflPaTrdFinDealTotal wflPaTrdFinDealTotal = new WflPaTrdFinDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(wflPaTrdFinDealTotal, entity.getPaTrdFinProductDealTotal());
             wflPaTrdFinDealTotal.setWorkflowId(entity.getWorkflowId());
             wflPaTrdFinDealTotal.setWorkflowStatus(DictCodeListExt1.画面数据状态_流程中.getValue());
-           
+
 
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易业务流程表
             WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
@@ -369,7 +374,7 @@ public class TrdConBondService extends BaseService {
                 wflTrdProductDealAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
                 wflTrdProductDealAdd.setPortfolioId(entity.getActPortfolioId());
             }
-            
+
             WflPaTrdProductDeal wflPaTrdProductDeal = new WflPaTrdProductDeal();
             if(StringUtil.isNotEmpty(entity.getPaTrdProductDeal())){
                 BeanUtil.copyPropertiesIgnoreNull(wflPaTrdProductDeal, entity.getPaTrdProductDeal());
@@ -388,7 +393,7 @@ public class TrdConBondService extends BaseService {
                 wflTrdProductDealAddMapper.insertSelective(wflTrdProductDealAdd);
             }
             if(StringUtil.isNotEmpty( entity.getPaTrdProductDeal())){
-            	 wflPaTrdProductDealMapper.insert(wflPaTrdProductDeal);
+                wflPaTrdProductDealMapper.insert(wflPaTrdProductDeal);
             }
             // 金融产品交易信息DTO.划款指令表Entity -> 划款指令业务流程表
             if (!StringUtil.isEmptyList(entity.getBussTrdTransferOrder())) {
@@ -408,6 +413,18 @@ public class TrdConBondService extends BaseService {
             }
         } else if (entity.getOperateType().equals("REVOKE")) {
             doRevokeDeal(entity);
+        }
+
+        if (!entity.getOperateType().equals(OperationType.REVOKE)) {
+            //对接头寸引擎
+            String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+            String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+            if (StringUtil.equals(entity.getOperateType(), "modify")) {
+                systemAct = DictCodeListExt3.系统动作_修改.getValue();
+            }
+            positionRequestService.sendTrdConBondDto(entity,decisionAct,systemAct);
+        }else{
+            positionRequestService.sendRevoke(entity);
         }
     }
 
@@ -444,34 +461,34 @@ public class TrdConBondService extends BaseService {
             trdConBondMapper.insertWflPayOrdersOfDeal(params);
         }
         if(StringUtil.equals(trdConBondDto.getPs(), DictCodeList.交易方向_申购确认.getValue())&&StringUtil.isNotEmpty(trdConBondDto.getRefundAmt())&&BigDecimal.ZERO.compareTo(trdConBondDto.getRefundAmt())<0){
-        	//申购确认撤销时，撤销退款到账
-        	String bizcode = trdConBondMapper.getTradeId(trdConBondDto.getBusiCode());
-        	if(StringUtil.isNotEmpty(bizcode)){
-        		params.put("bizCode", bizcode);
-            	
-            	trdConBondMapper.insertWflTotle(params);
-//              // 汇总扩展表
-              trdConBondMapper.insertWflPaTotal(params);
+            //申购确认撤销时，撤销退款到账
+            String bizcode = trdConBondMapper.getTradeId(trdConBondDto.getBusiCode());
+            if(StringUtil.isNotEmpty(bizcode)){
+                params.put("bizCode", bizcode);
 
-            	params.put("ORDER_STATUS_03", DictCodeListExt1.指令状态_撤销.getValue());
-	              // 划款指令表
-            	trdConBondMapper.insertWflPayOrders(params);
-	              // 修改参数
-            	params.put("totleTradeId", bizcode);
-            	deals = trdConBondMapper.findDealByTotalId(params);
-            	if (!deals.isEmpty()) {
-            		params.put("deals", deals);
-	                  // 交易表
-            		trdConBondMapper.insertWflTrade(params);
-	//                  // 交易扩展表
-	                  trdConBondMapper.insertWflPaTrade(params);
-	                  // 交易附属表
-            		trdConBondMapper.insertWflTradeAdd(params);
-	                  // 划款指令表
-            		trdConBondMapper.insertWflPayOrdersOfDeal(params);
-	              
-            	}
-        	}
+                trdConBondMapper.insertWflTotle(params);
+//              // 汇总扩展表
+                trdConBondMapper.insertWflPaTotal(params);
+
+                params.put("ORDER_STATUS_03", DictCodeListExt1.指令状态_撤销.getValue());
+                // 划款指令表
+                trdConBondMapper.insertWflPayOrders(params);
+                // 修改参数
+                params.put("totleTradeId", bizcode);
+                deals = trdConBondMapper.findDealByTotalId(params);
+                if (!deals.isEmpty()) {
+                    params.put("deals", deals);
+                    // 交易表
+                    trdConBondMapper.insertWflTrade(params);
+                    //                  // 交易扩展表
+                    trdConBondMapper.insertWflPaTrade(params);
+                    // 交易附属表
+                    trdConBondMapper.insertWflTradeAdd(params);
+                    // 划款指令表
+                    trdConBondMapper.insertWflPayOrdersOfDeal(params);
+
+                }
+            }
         }
     }
 
@@ -505,16 +522,20 @@ public class TrdConBondService extends BaseService {
 
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = paTrdFinProductDealTotalMapper
                 .selectByPrimaryKey(bizCode);
-        paTrdFinProductDealTotal.setTotleTradeId(newTotalTradeId);
-        paTrdFinProductDealTotal.setUpdateTime(updateTime);
-        paTrdFinProductDealTotal.setUpdateUser(updateUser);
-        paTrdFinProductDealTotalMapper.insertSelective(paTrdFinProductDealTotal);
+        if(StringUtil.isNotEmpty(paTrdFinProductDealTotal)) {
+            paTrdFinProductDealTotal.setTotleTradeId(newTotalTradeId);
+            paTrdFinProductDealTotal.setUpdateTime(updateTime);
+            paTrdFinProductDealTotal.setUpdateUser(updateUser);
+            paTrdFinProductDealTotalMapper.insertSelective(paTrdFinProductDealTotal);
+        }
 
         TrdDealTotalAdd trdDealTotalAdd = trdDealTotalAddMapper.selectByPrimaryKey(bizCode);
-        trdDealTotalAdd.setTotleTradeId(newTotalTradeId);
-        trdDealTotalAdd.setUpdateTime(updateTime);
-        trdDealTotalAdd.setUpdateUser(updateUser);
-        trdDealTotalAddMapper.insertSelective(trdDealTotalAdd);
+        if(StringUtil.isNotEmpty(trdDealTotalAdd)) {
+            trdDealTotalAdd.setTotleTradeId(newTotalTradeId);
+            trdDealTotalAdd.setUpdateTime(updateTime);
+            trdDealTotalAdd.setUpdateUser(updateUser);
+            trdDealTotalAddMapper.insertSelective(trdDealTotalAdd);
+        }
 
         // 划款指令
         List<StlPayOrders> ordersTotal = trdConBondMapper.findOrdersByOrderId(bizCode);
@@ -593,15 +614,15 @@ public class TrdConBondService extends BaseService {
 
         // 一体化对应etliu start
         if (!StringUtil.isEmptyList(trdProductDeals)) {
-        	
+
             List<TrdProductDeal> trdProductDeals1 = trdConBondMapper.findDealByTotalIdForInterf(map);
             List<TrdProductDealAdd> trdProductDealAdds = trdConBondMapper.findDealAddByTradeIds(trdProductDeals1);
             List<PtlTrade> ptlTradeList = trdConBondMapper.findPtlTradeByTradeIds(trdProductDeals1);
             // 所有交易生效后调用的共通方法
             for (TrdProductDeal baseDto : trdProductDeals1) {
-            	if(StringUtil.isEmpty(baseDto.getpTradeId())){
-            		continue;
-            	}
+                if(StringUtil.isEmpty(baseDto.getpTradeId())){
+                    continue;
+                }
                 AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
                 inputDto.setProdid(portfolioIdMap.get("portfolioId"));
                 inputDto.setProdFinprodType(DictCodeListExt1.金融产品类型_投资组合.getValue());
@@ -619,12 +640,12 @@ public class TrdConBondService extends BaseService {
             }
         }
         // 一体化对应etliu end
-        
+
         if(StringUtil.equals(trdFinProductDealTotal.getPs(), DictCodeList.交易方向_申购确认.getValue())){
-        	String tradeId= trdConBondMapper.getTradeId(bizCode);
-        	if(StringUtil.isNotEmpty(tradeId)){
-        		revoke汇总和交易相关表(tradeId,updateUser,revokeReason,actPortfolio);
-        	}
+            String tradeId= trdConBondMapper.getTradeId(bizCode);
+            if(StringUtil.isNotEmpty(tradeId)){
+                revoke汇总和交易相关表(tradeId,updateUser,revokeReason,actPortfolio);
+            }
         }
 
         return trdFinProductDealTotal;
@@ -740,7 +761,7 @@ public class TrdConBondService extends BaseService {
 //
 //                }
 //            }
-        
+
         } else if (StringUtil.equals(entity.getOperateType(), "REVOKE")) {
             doDelete(entity.getWorkflowId());
             revoke汇总和交易相关表(entity.getBusiCode(), entity.getUpdateUser(), entity.getRevokeReason(), entity.getActPortfolioId());
@@ -854,6 +875,10 @@ public class TrdConBondService extends BaseService {
                 wflPaTrdProductDealMapper.insert(wptpd);
             }
         }
+        //头寸接口引擎
+        String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+        String systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        positionRequestService.sendTrdConBondDto(entity,decisionAct,systemAct);
     }
 
     /**
@@ -877,8 +902,8 @@ public class TrdConBondService extends BaseService {
         // 金融产品交易信息DTO.金融产品交易Entity -> 	金融产品交易汇总附属表
         mapperDelegateService.deleteBySpecificKey("WFL_TRD_DEAL_TOTAL_ADD", "WORKFLOW_ID",
                 workflowId);
-        
-     // 金融产品交易信息DTO.金融产品交易Entity -> 	金融产品交易汇总扩展表
+
+        // 金融产品交易信息DTO.金融产品交易Entity -> 	金融产品交易汇总扩展表
         mapperDelegateService.deleteBySpecificKey("WFL_PA_TRD_FIN_DEAL_TOTAL", "WORKFLOW_ID",
                 workflowId);
 
@@ -897,7 +922,8 @@ public class TrdConBondService extends BaseService {
         // 金融产品交易信息DTO.划款指令表Entity -> 划款指令业务流程表
         mapperDelegateService.deleteBySpecificKey("WFL_STL_PAY_ORDERS", "WORKFLOW_ID",
                 workflowId);
-
+        //头寸引擎对接
+        positionRequestService.sendDelete(workflowId);
     }
 
     public List<StlPayOrders> getStlPayOrders(Map<String, Object> param) {
@@ -906,10 +932,10 @@ public class TrdConBondService extends BaseService {
         List<StlPayOrders> ordersTotal = trdConBondMapper.findOrdersByOrderId(bizCode);
         return ordersTotal;
     }
-    
+
     /**
      * 查询撤销数据是否有后继交易 <功能详细描述>
-     * 
+     *
      * @param dto
      * @return
      * @see
@@ -924,14 +950,14 @@ public class TrdConBondService extends BaseService {
         result = trdConBondMapper.selectConfirmInfo(param);
         int result2 = trdConBondMapper.selectConfirmInfoWfl(param);
         if(StringUtil.isNotEmpty(dto.getPs())&&StringUtil.equals(DictCodeList.交易方向_申购确认.getValue(), dto.getPs())){
-        	return result2 == 0?true:false;
+            return result2 == 0?true:false;
         }
         return result + result2 == 0 ? true : false;
     }
-    
+
     /**
      * 查询撤销数据是否有撤销流程中数据
-     * 
+     *
      * @param dto
      * @return
      * @see
@@ -949,8 +975,8 @@ public class TrdConBondService extends BaseService {
 
 
 
-	public TrdConBondDto getTrdConBondDtoForAccount(String tradeId) {
-		Map<String, Object> params = new HashMap<>();
+    public TrdConBondDto getTrdConBondDtoForAccount(String tradeId) {
+        Map<String, Object> params = new HashMap<>();
         params.put("tradeId", tradeId);
         params.put("B09", DictCodeListExt1.一次性费用类型_通道费.getValue());
         params.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -961,26 +987,26 @@ public class TrdConBondService extends BaseService {
         params.put("PS_T04", DictCodeList.交易方向_申购.getValue());
         TrdConBondDto resultDto = trdConBondMapper.getTrdConBondDtoForAccount(params);
         return resultDto;
-	}
+    }
 
 
 
-	/**
-	 * 根据交易id找寻后续退款到账交易id
-	 * @param tradeId
-	 * @return
-	 */
-	public Map<String, Object> getBusicode(String tradeId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("bTradeId", tradeId);
-		map.put("PS_T51", DictCodeListExt1.交易方向_保证金回款.getValue());
-		return trdConBondMapper.getBusicode(map);
-	}
+    /**
+     * 根据交易id找寻后续退款到账交易id
+     * @param tradeId
+     * @return
+     */
+    public Map<String, Object> getBusicode(String tradeId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("bTradeId", tradeId);
+        map.put("PS_T51", DictCodeListExt1.交易方向_保证金回款.getValue());
+        return trdConBondMapper.getBusicode(map);
+    }
 
 
 
-	public TrdConBondDto getTrdConBondDtoForTradeId(String tradeId) {
-		Map<String, Object> params = new HashMap<>();
+    public TrdConBondDto getTrdConBondDtoForTradeId(String tradeId) {
+        Map<String, Object> params = new HashMap<>();
         params.put("tradeId", tradeId);
         params.put("B09", DictCodeListExt1.一次性费用类型_通道费.getValue());
         params.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -991,33 +1017,33 @@ public class TrdConBondService extends BaseService {
         params.put("PS_T04", DictCodeList.交易方向_申购.getValue());
         TrdConBondDto resultDto = trdConBondMapper.getTrdConBondDtoForTradeId(params);
         return resultDto;
-	}
-	
-	/**
-	 * 获取生效退款到账交易编号
-	 */
-	public String  getTradeId(String busiCode) {
-		return trdConBondMapper.getTradeId(busiCode);
-	}
-	
-	
-	/**
-	 * 获取退款到账交易编号(包括流程中)
-	 */
-	public String  getRefundTradeId(String busiCode) {
-		String tradeId= trdConBondMapper.getTradeId(busiCode);
-		if(StringUtil.isNotEmpty(tradeId)){
-			return tradeId;
-		}else{
-			Map<String, Object> map = this.getBusicode(busiCode);
-			if(StringUtil.isNotEmpty(map.get("BUSICODE"))){
-				return (String)map.get("BUSICODE");
-			}
-			return null;
-		}
-	}
+    }
+
+    /**
+     * 获取生效退款到账交易编号
+     */
+    public String  getTradeId(String busiCode) {
+        return trdConBondMapper.getTradeId(busiCode);
+    }
+
+
+    /**
+     * 获取退款到账交易编号(包括流程中)
+     */
+    public String  getRefundTradeId(String busiCode) {
+        String tradeId= trdConBondMapper.getTradeId(busiCode);
+        if(StringUtil.isNotEmpty(tradeId)){
+            return tradeId;
+        }else{
+            Map<String, Object> map = this.getBusicode(busiCode);
+            if(map != null && StringUtil.isNotEmpty(map.get("BUSICODE"))){
+                return (String)map.get("BUSICODE");
+            }
+            return null;
+        }
+    }
 
     public List<StlPayOrders> getTrdProductDeals(Map<String, Object> param) {
-	    return trdConBondMapper.getTrdProductDeals(param);
+        return trdConBondMapper.getTrdProductDeals(param);
     }
 }

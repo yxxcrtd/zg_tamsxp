@@ -95,6 +95,10 @@ update SYS_BATCH_TASK set TASK_PRI = '3270' where TASK_ID in ('3045','3056','305
 
 update SYS_BATCH_TASK set TASK_PRI = '3280' where TASK_ID in ('3041');
 
+update SYS_BATCH_TASK set TASK_PRI = '3300' where TASK_ID in ('3100','3101','3107','3108','3102','3104','3105','3106','3099','3103');
+
+update SYS_BATCH_TASK set TASK_PRI = '3200' where TASK_ID in ('3080','3083','3084','3085','3086','3087','3088','3089','3111');
+
 delete from SYS_BATCH_GRP where SEQ_NO = 'yy3.0_step1_zhxpsjjrall';
 INSERT INTO SYS_BATCH_GRP (SEQ_NO, SYSTEM_CODE, BATCH_NAME, DETAIL, PRE_CONDITION, PRE_BATCH_GROUP, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_HANDWORK) VALUES ('yy3.0_step1_zhxpsjjrall', 'SVR', '运营3.0_step1_综合信披全量接口数据接入批处理任务组', '运营3.0_step1_综合信披全量接口数据接入批处理任务组', null, null, 'system', null, TIMESTAMP '2022-01-28 00:00:39', 'system', TIMESTAMP '2022-01-28 00:00:39', '01');
 

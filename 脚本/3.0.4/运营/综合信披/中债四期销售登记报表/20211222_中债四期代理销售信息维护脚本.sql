@@ -77,8 +77,8 @@ alter table CHB_AGENT_PRD_INFO
   --菜单配置
 DELETE FROM SYS_PAGE WHERE PAGE_ID in ('AgentTabManage001','AgentInstitution001','AgentInstitution002','AgentInstitution003','AgentPrdInfo001','AgentPrdInfo002');
 delete from SYS_MENU where MENU_ID = 'REPORT_MAINTAIN_001_004_008';
-INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_MAINTAIN_001_004_008','REP',null,'REPORT_MAINTAIN_001_004','AgentTabManage001',8,02,'代理销售机构信息维护','system',null,sysdate,'system',sysdate);
-INSERT INTO SYS_PAGE VALUES ('AgentTabManage001','REP','/report/submitmaintenance/agenttabmanage/AgentTabManage001','report/submitmaintenance/agenttabmanage/AgentTabManage001','REPORT_MAINTAIN_001_004_008',null,null,'02','01','代理销售机构信息维护','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values('REPORT_MAINTAIN_001_004_008','REP',null,'REPORT_MAINTAIN_001_004','AgentTabManage001',8,02,'代理销售信息维护','system',null,sysdate,'system',sysdate);
+INSERT INTO SYS_PAGE VALUES ('AgentTabManage001','REP','/report/submitmaintenance/agenttabmanage/AgentTabManage001','report/submitmaintenance/agenttabmanage/AgentTabManage001','REPORT_MAINTAIN_001_004_008',null,null,'02','01','代理销售信息维护','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution001','REP','/report/submitmaintenance/agentinstitution/AgentInstitution001','report/submitmaintenance/agentinstitution/AgentInstitution001',null,null,null,'02','01','代理销售机构信息','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution002','REP','/report/submitmaintenance/agentinstitution/AgentInstitution002','report/submitmaintenance/agentinstitution/AgentInstitution002',null,null,null,'02','01','代理销售机构信息新建','system',null,sysdate,'system',sysdate);
 INSERT INTO SYS_PAGE VALUES ('AgentInstitution003','REP','/report/submitmaintenance/agentinstitution/AgentInstitution003','report/submitmaintenance/agentinstitution/AgentInstitution003',null,null,null,'02','01','附件上传','system',null,sysdate,'system',sysdate);
@@ -142,7 +142,7 @@ values ('CHB_AGENT_PRD_INFO-2021-1119-005','AgentPrdInfo002','lessThanCharLength
 --批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3061';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3061', 'VAL', '代理销售信息登记报表生成', null, 'SvrAgentManageTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
+values ('3061', 'SVR', '代理销售信息登记报表生成', null, 'SvrAgentManageTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
 
 --代理销售信息登记获取报送截止日配置
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '40';

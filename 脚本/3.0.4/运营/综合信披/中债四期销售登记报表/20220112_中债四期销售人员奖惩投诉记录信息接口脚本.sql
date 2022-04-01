@@ -1,6 +1,6 @@
 delete from sys_batch_task  where task_id='3093';
 Insert into sys_batch_task (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_BATCH_START_TARGET) 
-values ('3093','VAL','销售人员奖惩投诉记录信息接口数据接入',null,'svrSaleIRewPenaInterfTaskService',3000,'system',null,sysdate,'system',sysdate,null);
+values ('3093','SVR','销售人员奖惩投诉记录信息接口数据接入',null,'svrSaleIRewPenaInterfTaskService',3000,'system',null,sysdate,'system',sysdate,null);
 
 delete  from  CHB_INTERF_CONFIG  where  INTERF_ID='CHB_SALER_REW_PENA_INFO';
 Insert into CHB_INTERF_CONFIG (INTERF_ID,LAST_UPDATETIME,REMARK,INTERF_NAME,CONTENT_TYPE,CONTENT_SRC,REF_REPORT,SYS_SCOPE,STATUS) 

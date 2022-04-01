@@ -128,7 +128,9 @@ public class EtrAgreRepTrade002Service extends CommonExportService<EtrAgreRepTra
      * @return
      */
     public Page<UnOpenQuota002Dto> findUnOpenQuotaPage(Map<String, Object> map) {
-        map.put("userId", SecurityUtil.getLoginUser().getUserName());
+        if (SecurityUtil.getLoginUser() != null) {
+            map.put("userId", SecurityUtil.getLoginUser().getUserName());
+        }
         Page<UnOpenQuota002Dto> page = new Page<UnOpenQuota002Dto>();
         List<UnOpenQuota002Dto> list = new ArrayList<UnOpenQuota002Dto>();
         List<Map<String, Object>> repurchaseQuotes = new ArrayList<>();
@@ -144,6 +146,9 @@ public class EtrAgreRepTrade002Service extends CommonExportService<EtrAgreRepTra
             if (!StringUtil.isEmptyList(quoteList)) {
                 repurchaseQuotes.addAll(quoteList);
             }
+        }
+        else {
+            return page;
         }
         //接行情数据 end
         //去重

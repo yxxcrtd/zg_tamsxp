@@ -6,7 +6,7 @@
 //import com.joyintech.tams.exchange.common.domain.Message;
 //import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 //import com.joyintech.tams.exchange.service.trade.management.service.IntegratedQuoteManagement;
-//import com.joyintech.tams.exchange.util.EntrustPropUtils;
+//import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
 //import org.apache.commons.lang3.StringUtils;

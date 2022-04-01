@@ -43,6 +43,7 @@
             <div class="pro-module-container">
             <input type="hidden" id="finprodIdhid" name="finprodId" th:value="${entity?.finprodId}">
             <input type="hidden" id="mySideTrader" name="mySideTrader" th:value="${entity?.mySideTrader}">
+            <input type="hidden" id="totleTradeId" name="totleTradeId" th:value="${entity?.totleTradeId}" />
                 <div class="pro-module-wrapper pro-module-base" title="基本信息">
                     <div class="pro-module-wrap">
                         <div class="pro-module">
@@ -80,12 +81,14 @@
                                     <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                         <label class="layui-form-label form-lable" style="width: 105px;">资产代码</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" id="finprodMarketId" name="finprodMarketId"
-                                                   class="layui-input form-input"
-                                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                   required="required"
-                                                   data-th-value="${entity?.finprodMarketId}" disabled="disabled">
-                                            </input>
+                                            <select type="text" id="finprodMarketId" name="finprodMarketId"
+                                                    class="layui-input form-input input-select" allowClear="true"
+                                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                    required="required"
+                                                    data-th-data-url="@{/common/joyinbusinessCommon/getfinprodIdForSelect(ps=${entity?.ps})}"
+                                                    data-th-initvalue="${entity?.finprodMarketId}"
+                                            >
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
@@ -105,7 +108,7 @@
                                         <label class="layui-form-label form-label-wrap" >理论行权日</label>
                                         <div class="layui-input-inline input-inline buss-inline-wrap">
                                             <div class="layui-input-inline input-inline buss-inline-wrap">
-                                                <input disabled type="text"  name="theoreticalExerciseDate"
+                                                <input disabled type="text"  id="theoreticalExerciseDate" name="theoreticalExerciseDate"
                                                        class="layui-input form-input input-dateSelect" placeholder="请输入内容"
                                                        th:placeholder="#{SysCommon.placeholder}"
                                                        th:value="${#dates.format(entity?.theoreticalExerciseDate,'yyyy-MM-dd')}">
@@ -116,7 +119,7 @@
                                         <label class="layui-form-label form-label-wrap" >实际行权日</label>
                                         <div class="layui-input-inline input-inline buss-inline-wrap">
                                             <div class="layui-input-inline input-inline buss-inline-wrap">
-                                                <input disabled type="text"  name="actSetteDate"
+                                                <input disabled type="text"  id="actSetteDate" name="actSetteDate"
                                                        class="layui-input form-input input-dateSelect" placeholder="请输入内容"
                                                        th:placeholder="#{SysCommon.placeholder}"
                                                        th:value="${#dates.format(entity?.actSetteDate,'yyyy-MM-dd')}">
@@ -133,7 +136,7 @@
                                 <textarea id="remark" name="remark" th:value="${entity?.remark}"
                                           data-th-text="${entity?.remark}" class="layui-textarea"
                                           placeholder="请输入内容"
-                                          data-th-placeholder="#{SysCommon.placeholder}" disabled></textarea>
+                                          data-th-placeholder="#{SysCommon.placeholder}" ></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -152,7 +155,7 @@
                                     <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                         <label class="layui-form-label form-label-wrap">币种</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select required disabled type="text"  name="ccy" class="layui-input form-input input-select"
+                                            <select required disabled type="text"  name="ccy" class="layui-input form-input input-select" id="ccy"
                                                     placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
                                                     th:data-result='${CCY}' allowClear="true" formatoption="true"
                                                     th:initValue="*{entity?.ccy}"></select>
@@ -161,9 +164,9 @@
                                     <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                         <label class="layui-form-label form-lable" style="width: 105px;">行权净价</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" id="exercisePrice" name="exercisePrice" placeholder="请输入内容"
+                                            <input required type="text" id="exercisePrice" name="exercisePrice" placeholder="请输入内容"
                                                    data-pattern="" data-fixtype="2" data-textrange='4'
-                                                   class="layui-input form-input text-number" disabled="disabled"
+                                                   class="layui-input form-input text-number"
                                                    data-th-value="${entity?.exercisePrice}">
                                             <span class="input-right-show">元</span>
                                         </div>
@@ -171,9 +174,9 @@
                                     <div class="form-inline-wrap" style=" width: 25%; padding:0px;">
                                         <label class="layui-form-label form-lable" style="width: 105px;">赎回比例</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" id="redeemRate" name="redeemRate" placeholder="请输入内容"
+                                            <input required type="text" id="redeemRate" name="redeemRate" placeholder="请输入内容"
                                                    data-pattern="" data-fixtype="2" data-textrange='4'
-                                                   class="layui-input form-input text-number" disabled="disabled"
+                                                   class="layui-input form-input text-number"
                                                    data-th-value="${entity?.redeemRate}">
                                         </div>
                                     </div>
@@ -209,6 +212,8 @@
                     </div>
                     <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
                         <div class="text-center">
+                            <a id="CfetsTrdRedeem001_btn_save" class="layui-btn layui-btn-sm btn-save" style="display: none;"
+                               data-th-text="#{SysCommon.save}">保存</a>
                             <a id="CfetsTrdRedeem001_btn_submit" class="layui-btn layui-btn-sm  btn-submit"
                                style="display: none;"
                                data-th-text="#{SysCommon.submit}">提交</a>

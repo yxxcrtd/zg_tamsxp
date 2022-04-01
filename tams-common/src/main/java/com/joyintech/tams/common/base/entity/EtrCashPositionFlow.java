@@ -74,6 +74,10 @@ public class EtrCashPositionFlow extends BaseEntity {
      * 备注
      */
     private String remark;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     /**
      * 取得 流水号
@@ -282,5 +286,13 @@ public class EtrCashPositionFlow extends BaseEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

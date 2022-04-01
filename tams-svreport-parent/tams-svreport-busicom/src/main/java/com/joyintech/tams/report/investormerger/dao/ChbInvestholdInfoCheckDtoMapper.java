@@ -3,6 +3,7 @@ package com.joyintech.tams.report.investormerger.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
@@ -16,6 +17,13 @@ import org.springframework.stereotype.Repository;
 public interface ChbInvestholdInfoCheckDtoMapper {
     int insert(ChbInvestholdInfoCheckDto record);
 
+    int insertAfterDeal(@Param("insert") List<ChbInvestholdInfoCheckDto> insert);
+
+    int updataOperateStatus(@Param("list") List<ChbInvestholdInfoCheckDto> dtoAfterDealList);
+
+    int updataOperateStatusNew();
+
+
     int insertSelective(ChbInvestholdInfoCheckDto record);
     
     /**
@@ -25,6 +33,10 @@ public interface ChbInvestholdInfoCheckDtoMapper {
      */
     List<ChbInvestholdInfoCheckDto> selectBymodel(ChbInvestholdInfoCheckDto record);
     int deleteBymodel(ChbInvestholdInfoCheckDto record);
+    int deleteBymodelAfterDeal(@Param("deleteList") List<ChbInvestholdInfoCheckDto> deleteList);
+
+    int deleteBymodelAfterDealNew();
+
     int updateMergerIdAndOperatestatus(ChbInvestholdInfoCheckDto record);
     
     /**
@@ -35,6 +47,8 @@ public interface ChbInvestholdInfoCheckDtoMapper {
     List<ChbInvestholdInfoCheckDto> selectByIndentifyMark(@Param("recordlist") List<ChbEquHoldCheckDto> recordlist);
     
     int insertToChbInvestholdInfo(ChbInvestholdInfoCheckDto record);
+
+    int insertToChbInvestholdInfoAfterDeal(@Param("insertToChbInvestholdInfoList") List<ChbInvestholdInfoCheckDto> insertToChbInvestholdInfoList);
     
     int deleteChbInvestholdInfo(ChbEquHoldCheckDto record);
     /**
@@ -91,13 +105,13 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 	
 	List<InvestorsHoldInfo001Dto> queryRepeatEquityInfoHoldUnSubmit(@Param("keys")List<String> keys);
 	List<InvestorsHoldInfo001Dto>queryNotInHoldButIncheckInfoHold(@Param("keys")List<String> keys);
-	List<InvestorsHoldInfoRegist001Dto> queryInvestorsHoldInfoRegistByPkUnsubmit(@Param("keys")List<String> keys);
+	List<InvestorsHoldInfoRegist001Dto> queryInvestorsHoldInfoRegistByPkUnsubmit(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);
 	
 	int deleteInvestholdInfoBatch(@Param("keys")List<String> keys);
 	int deleteInvestholdInfoSubBatch(@Param("keys")List<String> keys);
-	int updateUnMergeInvestorsHoldInfo(@Param("keys")List<String> keys);
-	int updateUnMergeInvestorsHoldInfoSub(@Param("keys")List<String> keys);
-	int updateUnMergeInvestorsHoldInfoCheck(@Param("keys")List<String> keys);
+	int updateUnMergeInvestorsHoldInfo(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);
+	int updateUnMergeInvestorsHoldInfoSub(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);
+	int updateUnMergeInvestorsHoldInfoCheck(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);
 	
 	int checkInvestholdInfoSub(InvestorsHoldInfo001Dto item);
 
@@ -118,9 +132,27 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 	
 	List<ChbInvestholdInfoCheckDto> selectNeedCheckDtoList(List<Map<String, String>> list);
 
-	
-	List<ChbEquHoldCheckDto> getMergerindentifymark(ChbInvestholdInfoCheckDto dto);
+    List<ChbInvestholdInfoCheckDto> selectNeedCheckDtoListNew();
 
-	int isExistsMergerindentifymark(ChbInvestholdInfoCheckDto queryModel);
+
+    List<ChbInvestholdInfoCheckDto> selectNeedDealDtoList(List<ChbInvestholdInfoCheckDto> list);
+
+    List<ChbInvestholdInfoCheckDto> selectNeedDealDtoListNew();
+
+
+    List<ChbEquHoldCheckDto> getMergerindentifymark(ChbInvestholdInfoCheckDto dto);
+
+
+    int isExistsMergerindentifymark(ChbInvestholdInfoCheckDto queryModel);
+
+    List<ChbInvestholdInfoCheckDto> selectAllChbEquHoldCheck(List<ChbInvestholdInfoCheckDto> list);
+
+    List<ChbInvestholdInfoCheckDto> selectAllChbEquHoldCheckNew();
+
+    int deleteChbInvestholdInfoByTmp();
+
+    int deleteChbInvestholdInfoSubByTmp();
+
+    void truncateInvestholdTmp();
 
 }

@@ -1,11 +1,13 @@
 package com.joyintech.tams.exchange.common.domain;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @ApiModel(value = "消息对象", description = "消息对象")
 public class Message<T> implements Serializable {
@@ -57,6 +59,20 @@ public class Message<T> implements Serializable {
         this.data = data;
     }
 
+    public static boolean isSuccess(Message message) {
+        if (Objects.isNull(message) || StringUtil.isEmpty(message.getCode())) {
+            return false;
+        }
+        if (SUCCESS.equals(message.getCode())) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isFail(Message message) {
+        return !isSuccess(message);
+    }
+
     public Message<T> success() {
         this.code = SUCCESS;
         return this;
@@ -78,7 +94,6 @@ public class Message<T> implements Serializable {
         this.message = message;
         return this;
     }
-
 
     public String getCode() {
         return code;
@@ -106,5 +121,4 @@ public class Message<T> implements Serializable {
         this.data = data;
         return this;
     }
-
 }

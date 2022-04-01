@@ -61,7 +61,7 @@ public class DeadlineService extends BaseService<ChbDeadLine001Dto>{
     public  List<Date> getChbSubmitDeadlineByMark(Date date,ChbDeadLineDto regTimePoints001Dto,Map<String,List<Date>> map
                                                   ,String flag, String timeConfig){
         String dates = DateUtil.format(date);
-        String key = dates+ "|" + regTimePoints001Dto.getReportCode() ;
+        String key = dates+ "|" + flag + "|" + regTimePoints001Dto.getReportCode() ;
         //中债报送截止日
         ChbDeadLine001Dto holidaymarket001DtoChb = new ChbDeadLine001Dto();
         //行内报送截止日

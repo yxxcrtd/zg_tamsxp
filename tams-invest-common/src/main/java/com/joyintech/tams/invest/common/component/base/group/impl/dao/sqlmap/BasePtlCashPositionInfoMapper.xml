@@ -14,6 +14,7 @@
                 <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
                 )
             </if>
+            and (is_exist_new is null or  is_exist_new!='Y')
         </if>
         <!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
         <if test="chlFinprodId != null">
@@ -39,6 +40,7 @@
                 <foreach collection="acctType" open=" and sfpa.ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
                 )
             </if>
+            and (is_exist_new is null or  is_exist_new!='Y')
         </if>
         <!-- add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳 -->
     </select>
@@ -159,6 +161,7 @@
                 <foreach collection="acctType" open=" and ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
                 )
             </if>
+            and (is_exist_new is null or  is_exist_new!='Y')
         </if>
         <!-- add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳 -->
         <if test="chlFinprodId != null">
@@ -185,6 +188,7 @@
                 <foreach collection="acctType" open=" and sfpa.ACCT_TYPE in (" close=")" item="item" separator=",">#{item}</foreach>
                 )
             </if>
+            and (pcpf.is_exist_new is null or  pcpf.is_exist_new!='Y')
         </if>
         <!-- add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳 -->
     </select>
@@ -226,6 +230,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isExistNew != null" >
+                is_Exist_New = #{isExistNew,jdbcType=VARCHAR},
+            </if>
         </set>
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
         and ACCT_ID = #{acctId,jdbcType=VARCHAR}
@@ -233,4 +240,18 @@
         and CDATE = #{cdate,jdbcType=DATE}
         and CCY = #{ccy,jdbcType=VARCHAR}
     </update>
-    <!--add by etliu 汇总表更新并发问题解决 20210511 end--></mapper>
+    <!--add by etliu 汇总表更新并发问题解决 20210511 end-->
+
+    <select id="queryTrdAvailableCashNew" resultType="java.math.BigDecimal" >
+        select
+        sum(a.AMOUNT*nvl(b.CAL_FLAG,1)) AS amount
+        from PTL_CASH_POSITION_RULE a
+        LEFT JOIN PTL_POSITION_CFG b
+        ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE  = #{hodingType,jdbcType=VARCHAR}
+        where a.cdate =#{cdate,jdbcType=DATE}
+        and b.S_HOLDINGTYPE =#{hodingType,jdbcType=VARCHAR}
+        and a.ccy = #{ccy,jdbcType=VARCHAR}
+        AND a.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and a.DATE_TYPE=#{dateType,jdbcType=INTEGER}
+    </select>
+</mapper>

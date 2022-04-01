@@ -2,10 +2,12 @@ package com.joyintech.tams.settle.batch.datadeal.reader;
 
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datadeal.dto.StlDownDataDealDeleteOperatorDto;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealReaderService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -74,8 +76,20 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 	        	}
 	        }*/
 			secTypeList = Arrays.asList(DictCodeListExt1.证券品种_债券.getValue(),DictCodeListExt1.证券品种_基金.getValue(),DictCodeListExt1.证券品种_股票.getValue(),DictCodeListExt1.证券品种_回购.getValue());
-			otherBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
-			xgsgBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+			otherBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_配债代码.getValue()
+					// GNS-853:重复跑批，删除配股数据 modify by fuyongsheng 20220214 start
+					,DictCodeListExt3.金融产品其他代码类型_配股代码.getValue()
+					// GNS-853:重复跑批，删除配股数据 modify by fuyongsheng 20220214 end
+			);
+			// GZYHTZJY-1136:删除上市流通数据 modify fuyongsheng 20220115 start
+			xgsgBusinessTypeList = Arrays.asList(DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue(), DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+			// GZYHTZJY-1136:删除上市流通数据 modify fuyongsheng 20220115 end
+
+			// 删除清算相关表
+			List<SettleTransDataTotalMatch> settleTransDataTotalMatches = stlDownDataDealService.selectNeedRevokeSettleTransDataTotals(
+					execInfo.getExecuteDate(), portfolioIdList, secTypeList);
+			stlDownDataDealService.transactionMacthRevokeBatch(settleTransDataTotalMatches);
+
 	        // 删除【成交数据与投管交易关系】
 	        stlDownDataDealService.deleteSettleTransTgMapping(execInfo.getExecuteDate(), portfolioIdList, secTypeList);
 	        
@@ -97,6 +111,11 @@ public class StlDownDataDealDeleteReader extends BaseReader<StlDownDataDealDelet
 	        // 删除交易所品种额度（新股申购业务类型List）
 	        stlDownDataDealService.deleteFinProdQuotByXgsgBussType(execInfo.getExecuteDate(), xgsgBusinessTypeList);
 
+			// 删除【送股权益登记】
+		    stlDownDataDealService.deleteShareBonusRegByCdate(execInfo.getExecuteDate());
+
+			// 删除【基金分红公告】
+		    stlDownDataDealService.deletemstFundBonusNoticeByCdate(execInfo.getExecuteDate());
         	return new ArrayList<StlDownDataDealDeleteOperatorDto>();
 	}
 }

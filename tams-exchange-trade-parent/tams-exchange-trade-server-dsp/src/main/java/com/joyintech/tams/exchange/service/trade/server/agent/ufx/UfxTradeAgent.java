@@ -1,18 +1,17 @@
 package com.joyintech.tams.exchange.service.trade.server.agent.ufx;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PostConstruct;
-
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.joyintech.tams.exchange.common.bean.*;
+import com.joyintech.tams.exchange.common.bean.bond.StandardBondQryBean;
+import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.db.domain.*;
+import com.joyintech.tams.exchange.common.net.protocol.FunctionCode;
+import com.joyintech.tams.exchange.common.utils.*;
+import com.joyintech.tams.exchange.service.trade.dao.domain.TerminalAgentInfo;
+import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentDsp;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -22,62 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONArray;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.joyintech.tams.exchange.common.bean.AccountFinance;
-import com.joyintech.tams.exchange.common.bean.AccountLoginReqBean;
-import com.joyintech.tams.exchange.common.bean.EnableQryBean;
-import com.joyintech.tams.exchange.common.bean.HistoryQryBean;
-import com.joyintech.tams.exchange.common.bean.HistoryTrade;
-import com.joyintech.tams.exchange.common.bean.InstrumentQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedQuote;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.PledgeDiscount;
-import com.joyintech.tams.exchange.common.bean.PositionQueryBean;
-import com.joyintech.tams.exchange.common.bean.QuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.StandardBonds;
-import com.joyintech.tams.exchange.common.bean.TerminalId;
-import com.joyintech.tams.exchange.common.bean.bond.StandardBondQryBean;
-import com.joyintech.tams.exchange.common.constant.AgentType;
-import com.joyintech.tams.exchange.common.constant.EntrustBs;
-import com.joyintech.tams.exchange.common.constant.EntrustProp;
-import com.joyintech.tams.exchange.common.constant.EntrustStatus;
-import com.joyintech.tams.exchange.common.constant.ErrorCode;
-import com.joyintech.tams.exchange.common.constant.ExchangeType;
-import com.joyintech.tams.exchange.common.constant.FullPriceConst;
-import com.joyintech.tams.exchange.common.constant.Market;
-import com.joyintech.tams.exchange.common.constant.QuoteType;
-import com.joyintech.tams.exchange.common.constant.TradeType;
-import com.joyintech.tams.exchange.common.db.domain.Account;
-import com.joyintech.tams.exchange.common.db.domain.CancelEntrustBean;
-import com.joyintech.tams.exchange.common.db.domain.Entrust;
-import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
-import com.joyintech.tams.exchange.common.db.domain.Instrument;
-import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
-import com.joyintech.tams.exchange.common.db.domain.LoginInfo;
-import com.joyintech.tams.exchange.common.db.domain.PositionBean;
-import com.joyintech.tams.exchange.common.db.domain.PositionStr;
-import com.joyintech.tams.exchange.common.db.domain.Trade;
-import com.joyintech.tams.exchange.common.net.protocol.FunctionCode;
-import com.joyintech.tams.exchange.common.utils.CbptransTypeUtils;
-import com.joyintech.tams.exchange.common.utils.ErrorMsgUtils;
-import com.joyintech.tams.exchange.common.utils.IntegratedEntrustUtils;
-import com.joyintech.tams.exchange.common.utils.JsonUtils;
-import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
-import com.joyintech.tams.exchange.common.utils.TradeUtils;
-import com.joyintech.tams.exchange.service.trade.dao.domain.TerminalAgentInfo;
-import com.joyintech.tams.exchange.common.constant.AccountLoginStatus;
-import com.joyintech.tams.exchange.service.trade.server.agent.TradeAgentDsp;
+import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lifangpeng
@@ -952,11 +901,10 @@ public class UfxTradeAgent extends TradeAgentDsp {
         for (Map.Entry<String, LoginInfo> entry : loginAccounts.entrySet()) {
             String accountId = entry.getKey();
             LoginInfo loginInfo = entry.getValue();
-
-//            if (getStatus(accountId) != AccountLoginStatus.TRADING.value) {
-//                return;
-//            }
-            logger.info("status：{}", getStatus(accountId));
+            logger.info("account：{}，status：{}", accountId, getStatus(accountId));
+            if (getStatus(accountId) != AccountLoginStatus.TRADING.value) {
+                return;
+            }
             boolean loginStatus = tradeAgentManager.getAgentLoginStatus(accountId);
             if (loginStatus) {
                 executeQueryNextTrade(accountId, loginInfo);

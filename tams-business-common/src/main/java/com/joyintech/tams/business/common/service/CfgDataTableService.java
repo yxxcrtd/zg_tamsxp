@@ -1,6 +1,7 @@
 package com.joyintech.tams.business.common.service;
 
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.business.common.dao.CfgDataTableFlagMapper;
 import com.joyintech.tams.business.common.dao.CfgDataTableMapper;
@@ -153,12 +154,14 @@ public class CfgDataTableService {
     public List<CfgDataTableShow> getByPageCodeAndDtCodes(String pageCode, String dtCode, List<String> spcdCodes) {
         List<CfgDataTableShow> list;
         //获取登录用户的ID
+        //区分投资目的和业务模式
+        String showInvaimOrBussinssmodel =CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
         String userId = SecurityUtil.getLoginUser().getUserName();
         CfgDataTableShowFlag flag = cfgDataTableFlagMapper.getByPageCodeAndDtCodes(pageCode, dtCode, spcdCodes, userId);
         if (null == flag) {
-            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_NO, USER_ID);
+            list = cfgDataTableMapper.getBySpcdCodesshowInvaim(pageCode, dtCode, spcdCodes, EFFERANGE_NO, USER_ID,showInvaimOrBussinssmodel);
         } else {
-            list = cfgDataTableMapper.getBySpcdCodes(pageCode, dtCode, spcdCodes, EFFERANGE_IS, userId);
+            list = cfgDataTableMapper.getBySpcdCodesshowInvaim(pageCode, dtCode, spcdCodes, EFFERANGE_IS, userId,showInvaimOrBussinssmodel);
         }
         return list;
     }

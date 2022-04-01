@@ -170,9 +170,6 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinProductOthCode" >
         update FIN_PRODUCT_OTH_CODE
         <set >
-            <if test="othType != null" >
-                OTH_TYPE = #{othType,jdbcType=VARCHAR},
-            </if>
             <if test="othCodeType != null" >
                 OTH_CODE_TYPE = #{othCodeType,jdbcType=VARCHAR},
             </if>
@@ -203,11 +200,11 @@
         </set>
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
+          and OTH_TYPE = #{othType,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinProductOthCode" >
         update FIN_PRODUCT_OTH_CODE
-        set OTH_TYPE = #{othType,jdbcType=VARCHAR},
-            OTH_CODE_TYPE = #{othCodeType,jdbcType=VARCHAR},
+        set OTH_CODE_TYPE = #{othCodeType,jdbcType=VARCHAR},
             OTH_CODE = #{othCode,jdbcType=VARCHAR},
             OTH_NAME = #{othName,jdbcType=VARCHAR},
             DECLARED_PRICE = #{declaredPrice,jdbcType=DECIMAL},
@@ -218,5 +215,6 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
+          and OTH_TYPE = #{othType,jdbcType=VARCHAR}
     </update>
 </mapper>

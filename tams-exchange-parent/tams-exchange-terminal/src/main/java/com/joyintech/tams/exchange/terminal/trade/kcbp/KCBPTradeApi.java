@@ -84,7 +84,7 @@ public class KCBPTradeApi {
     public static final String KCBP_FUNCTION_CODE_QRY_PLEDGE_DISCOUNT = "410575";
     //持仓查询
     public static final String KCBP_FUNCTION_CODE_QRY_ACCOUNT_POSITION = "410504";
-    private SimpleDateFormat formatBeginDate = new SimpleDateFormat("YYYYMMdd");
+    private SimpleDateFormat formatBeginDate = new SimpleDateFormat("yyyyMMdd");
 
     private Splitter commaSplitter = Splitter.on(",");
 

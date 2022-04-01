@@ -19,36 +19,55 @@ public class EtrExchangeTradeCommonRequest {
      */
     @ApiModelProperty(name="portfolioId",value="组合代码")
     private String portfolioId;
-
     /**
-     * 市场代码
+     * 资金账户
      */
-    @ApiModelProperty(name="tradeMarket",value="资产代码")
-    private String tradeMarket;
-
-    /**
-     * 资产代码
-     */
-    @ApiModelProperty(name="finprodType2",value="资产类型")
-    private String finprodType2;
-
-    /**
-     * 资产代码
-     */
-    @ApiModelProperty(name="ps",value="委托方向")
-    private String ps;
-
+    @ApiModelProperty(name="accId",value="资金账户")
+    private String accId;
     /**
      * 证券账户
      */
     @ApiModelProperty(name="secAcctId",value="证券账户")
     private String secAcctId;
+    /**
+     * 证券账户
+     */
+    @ApiModelProperty(name="acctId",value="资金账户")
+    private String acctId;
 
     /**
-     * 交易时间
+     * 业务类型
      */
-    @ApiModelProperty(name="cDate",value="交易日期")
-    private String cDate;
+    @ApiModelProperty(name="othType",value="业务类型")
+    private String othType;
+
+    @ApiModelProperty(name="finprodType2",value="金融产品类型")
+    private String finprodType2;
+
+    @ApiModelProperty(name="ps",value="交易方向")
+    private String ps;
+
+    @ApiModelProperty(name="finprodMarketId",value="市场代码")
+    private String finprodMarketId;
+
+    @ApiModelProperty(name="unitCprice",value="净价")
+    private String unitCprice;
+
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    public String getFinprodType2() {
+        return finprodType2;
+    }
+
+    public void setFinprodType2(String finprodType2) {
+        this.finprodType2 = finprodType2;
+    }
 
     public String getFinprodId() {
         return finprodId;
@@ -74,35 +93,43 @@ public class EtrExchangeTradeCommonRequest {
         this.secAcctId = secAcctId;
     }
 
-    public String getcDate() {
-        return cDate;
+    public String getOthType() {
+        return othType;
     }
 
-    public void setcDate(String cDate) {
-        this.cDate = cDate;
+    public void setOthType(String othType) {
+        this.othType = othType;
     }
 
-    public String getTradeMarket() {
-        return tradeMarket;
+    public String getFinprodMarketId() {
+        return finprodMarketId;
     }
 
-    public void setTradeMarket(String tradeMarket) {
-        this.tradeMarket = tradeMarket;
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
     }
 
-    public String getFinprodType2() {
-        return finprodType2;
+    public String getUnitCprice() {
+        return unitCprice;
     }
 
-    public void setFinprodType2(String finprodType2) {
-        this.finprodType2 = finprodType2;
+    public void setUnitCprice(String unitCprice) {
+        this.unitCprice = unitCprice;
     }
 
-    public String getPs() {
-        return ps;
+    public String getAcctId() {
+        return acctId;
     }
 
-    public void setPs(String ps) {
-        this.ps = ps;
+    public void setAcctId(String acctId) {
+        this.acctId = acctId;
+    }
+
+    public String getAccId() {
+        return accId;
+    }
+
+    public void setAccId(String accId) {
+        this.accId = accId;
     }
 }

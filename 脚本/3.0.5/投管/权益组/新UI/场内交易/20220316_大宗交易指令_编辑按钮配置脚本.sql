@@ -1,0 +1,2 @@
+delete from  SYS_PAGE_ELEMENT where PAGE_ID = 'EtrExchangeBlockTrade' and  ELEMENT_ID = 'EtrExchangeBlockTradeTab_btn_edit';
+INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG, PARENT_ELEMENT_ID) VALUES ('EtrExchangeBlockTrade', 'EtrExchangeBlockTradeTab_btn_edit', '01', '01', null, '编辑', 'system', null, TIMESTAMP '2022-03-01 19:25:28', 'system', TIMESTAMP '2022-03-01 19:25:28', null, null);

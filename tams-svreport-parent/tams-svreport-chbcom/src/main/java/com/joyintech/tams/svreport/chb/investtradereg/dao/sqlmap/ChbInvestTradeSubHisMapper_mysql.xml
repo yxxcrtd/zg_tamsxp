@@ -119,7 +119,7 @@
     DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from CHB_INVEST_TRADE_SUB_HIS
     where HIS_NO = #{hisNo,jdbcType=CHAR}
@@ -613,30 +613,30 @@
       NUM = #{num,jdbcType=DECIMAL}
     where HIS_NO = #{hisNo,jdbcType=CHAR}
   </update>
-    <select id="selectInvestTradeRegByTradeCode" resultMap="BaseResultMapReg"
-        parameterType="java.util.Map">
-        select *
-        from (select
-        <include refid="Base_Column_List_Reg" />
-        ,rank() over(partition by trade_code order by create_time desc) ranknum
-        from CHB_INVEST_TRADE_SUB_HIS
-        where 1 =1 
-        <if test='tradeList != null and tradeList.size() > 0'>
-          <foreach collection="tradeList" item="tradeCode" index="index" open="AND TRADE_CODE in (" close=")" separator=",">
-          #{tradeCode,jdbcType=VARCHAR} 
-          </foreach>
-        </if>
-        )
-        where 1 = 1 limit 1
-    </select>
-    
-    <delete id="deleteByHisno" parameterType="java.util.Map">
-      delete from CHB_INVEST_TRADE_SUB_HIS
-      where 1 =1
-      <if test='deleteList != null and deleteList.size() > 0'>
-        <foreach collection="deleteList" item="hisno" index="index" open="AND HIS_NO in (" close=")" separator=",">
-        #{hisno,jdbcType=VARCHAR} 
-        </foreach>
-      </if>
-    </delete>
+  <select id="selectInvestTradeRegByTradeCode" resultMap="BaseResultMapReg"
+          parameterType="java.util.Map">
+    select *
+    from (select
+    <include refid="Base_Column_List_Reg" />
+    ,rank() over(partition by trade_code order by create_time desc) ranknum
+    from CHB_INVEST_TRADE_SUB_HIS
+    where 1 =1
+    <if test='tradeList != null and tradeList.size() > 0'>
+      <foreach collection="tradeList" item="tradeCode" index="index" open="AND TRADE_CODE in (" close=")" separator=",">
+        #{tradeCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    )
+    where 1 = 1 limit 1
+  </select>
+
+  <delete id="deleteByHisno" parameterType="java.util.Map">
+    delete from CHB_INVEST_TRADE_SUB_HIS
+    where 1 =1
+    <if test='deleteList != null and deleteList.size() > 0'>
+      <foreach collection="deleteList" item="hisno" index="index" open="AND HIS_NO in (" close=")" separator=",">
+        #{hisno,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </delete>
 </mapper>

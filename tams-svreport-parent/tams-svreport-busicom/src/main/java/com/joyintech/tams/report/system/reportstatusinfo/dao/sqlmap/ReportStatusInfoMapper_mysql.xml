@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.reportstatusinfo.dao.ReportStatusInfoMapper_mysql">
+
+    <select id="queryReportStatusInfoList" resultType="com.joyintech.tams.report.system.reportstatusinfo.dto.ReportStatusInfoDto">
+        select REGIST_SEQNO registSeqNo, REP_TYPE as repType, SUMIT_SEQ repSeqNo, SUBMIT_TIME repDate, SEND_STATUS repStatus,
+            SUBMIT_FEEDBACK_STATUS feedbackStatus, STATUS_DATE statusDate, STATUS status, SUBMIT_FEEDBACK_MSG feedbackMsg,
+            UNIQUE_CODE as uniqueCode
+        from CHB_SUB_TWO_VIEW
+        where 1=1
+        <if test="repType != null and !repType.equals('') and !repType.isEmpty()">
+            AND REP_TYPE=#{repType}
+        </if>
+        <if test="registSeqNo != null and !registSeqNo.equals('') and !registSeqNo.isEmpty()">
+            AND REGIST_SEQNO = #{registSeqNo}
+        </if>
+        <if test="repStatus != null and !repStatus.equals('') and !repStatus.isEmpty()">
+            AND SEND_STATUS = #{repStatus}
+        </if>
+        <if test="feedbackStatus != null and !feedbackStatus.equals('') and !feedbackStatus.isEmpty()">
+            AND SUBMIT_FEEDBACK_STATUS = #{feedbackStatus}
+        </if>
+        <if test="startDate != null and !startDate.equals('') and !startDate.isEmpty()">
+            AND SUBMIT_TIME >= DATE_FORMAT(#{startDate}, '%Y-%m-%d')
+        </if>
+        <if test="endDate != null and !endDate.equals('') and !endDate.isEmpty()">
+            AND SUBMIT_TIME &lt;= DATE_FORMAT(#{endDate}, '%Y-%m-%d')+1
+        </if>
+        order by repDate desc
+    </select>
+</mapper>

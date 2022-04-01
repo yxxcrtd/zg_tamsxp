@@ -34,6 +34,7 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -122,6 +123,7 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     @Override
     public void doComplete(PtlFundAllocationDto entity, OperationType type) {
         entity.setActPortfolioId(entity.getPortfolioId());
+        entity.setPositionType(entity.getOperateType());
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
         PtlFundAllocationDto dto = this.setEntity(entity, type);
         dto.setOperateType(type.toString());
@@ -141,14 +143,18 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     @Override
     public void doDelete(String workflowId) {
         PtlFundAllocationDto entity = this.getBussinessEntityByWorkflowId(workflowId);
+        entity.setPositionType(entity.getOperateType());
         if (StringUtil.isNotEmpty(entity.getOrderId())) {
-            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity.getOrderId(), Integer.class);
+            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity, String.class);
         }
     }
 
     @Override
     public void doInsert(PtlFundAllocationDto entity, OperationType type) {
         entity.setActPortfolioId(entity.getPortfolioId());
+        if(StringUtils.isEmpty(entity.getPositionType())){
+            entity.setPositionType(entity.getOperateType());
+        }
         entity.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(entity.getPortfolioId()));
         this.setEntity(entity, type);
         restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doInsertAction", entity,
@@ -158,7 +164,12 @@ public class PtlFundAllocation002Service extends CommonExportService<PtlFundAllo
     @Override
     public void doUpdate(PtlFundAllocationDto entity){
         if(bussCommonMapperDelegateService != null){
-            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity.getOrderId(), Integer.class);
+            if(!StringUtil.equals("save", entity.getOperateType())){
+                entity.setPositionType("update");
+            } else{
+                entity.setPositionType(entity.getOperateType());
+            }
+            restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlFundAllocation/doDelete", entity, String.class);
             doInsert(entity, OperationType.NEW);
         }
     }

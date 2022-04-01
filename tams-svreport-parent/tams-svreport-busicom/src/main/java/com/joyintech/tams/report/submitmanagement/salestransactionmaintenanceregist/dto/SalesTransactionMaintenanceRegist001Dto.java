@@ -141,6 +141,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     /**
      * 销售结算资金交易币种
      */
+    @DictFormat(DictCode.币种_中债)
     private String tradeCcy;
 
     /**
@@ -411,7 +412,7 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
         return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getDataStatus());
     }
     public String getTradeCcyName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.币种, this.getTradeCcy());
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getTradeCcy());
     }
     public String getSendStatusName() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送状态, this.getSendStatus());

@@ -160,6 +160,11 @@ public class EtrExchangeTrade001Dto extends EtrEntrust{
      * 清算速度
      */
     private String settleSpeed;
+
+    /**
+     * 是否多组合
+     */
+    private String isMulti;
     /**
      * 取得 委托代码
      * @return 委托代码
@@ -418,5 +423,11 @@ public class EtrExchangeTrade001Dto extends EtrEntrust{
 		this.settleSpeed = settleSpeed;
 	}
 
+    public String getIsMulti() {
+        return isMulti;
+    }
 
+    public void setIsMulti(String isMulti) {
+        this.isMulti = isMulti;
+    }
 }

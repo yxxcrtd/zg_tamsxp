@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.assettypesetting.dao.AssetTypeSetting001Mapper_mysql">
+    <!--分页查询-->
+    <select id="selectForPage" parameterType="java.util.HashMap" resultType="com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto">
+        SELECT DISTINCT
+        TYPEUUID typeuuid,
+        ASSET_TYPE1 assetType1,
+        ASSET_TYPE2 assetType2,
+        ASSET_TYPE3 assetType3,
+        ASSET_BUSI_TYPE assetBusiType,
+        DEPT_CODE deptCode
+        FROM CHB_ASSET_TYPE_MAPPING A
+        WHERE 1=1
+        <if test="assetType1 != null and assetType1 != ''">
+            AND A.ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR}
+        </if>
+        <if test="assetType2 != null and assetType2 != ''">
+            AND A.ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR}
+        </if>
+        <if test="assetType3 != null and assetType3 != ''">
+            AND A.ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR}
+        </if>
+        <if test="assetBusiType != null and assetBusiType != ''">
+            AND A.ASSET_BUSI_TYPE = #{assetBusiType,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!--点击左侧列表数据事件-->
+    <select id="selectById" parameterType="java.util.HashMap" resultType="com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto">
+        SELECT DISTINCT
+        TYPEUUID typeuuid,
+        CHB_ASSET_TYPE chbAssetType,
+        CHB_ASSET_TYPE2 chbAssetType2
+        FROM CHB_ASSET_TYPE_MAPPING_EX B
+        <where>
+            <if test="typeuuid != null and typeuuid != ''">
+                B.MAPPING_UUID = #{typeuuid,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectTypeUuidExById" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT DISTINCT TYPEUUID FROM CHB_ASSET_TYPE_MAPPING_EX A
+        where A.MAPPING_UUID = #{typeuuid}
+    </select>
+
+    <select id="isConfilct" parameterType="java.util.Map" resultType="com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto">
+        SELECT
+        ASSET_TYPE1,
+        ASSET_TYPE2,
+        ASSET_TYPE3,
+        ASSET_BUSI_TYPE
+        FROM CHB_ASSET_TYPE_MAPPING A
+        <where>
+            <choose>
+                <when test="assetType1 !=null and assetType1 != ''">
+                    AND A.ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    AND A.ASSET_TYPE1 IS NULL
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="assetType2 !=null and assetType2 != ''">
+                    AND A.ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    AND A.ASSET_TYPE2 IS NULL
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="assetType3 !=null and assetType3 != ''">
+                    AND A.ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    AND A.ASSET_TYPE3 IS NULL
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="assetBusiType !=null and assetBusiType != ''">
+                    AND A.ASSET_BUSI_TYPE = #{assetBusiType,jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    AND A.ASSET_BUSI_TYPE IS NULL
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <select id="findExPage" parameterType="java.util.Map" resultType="com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto">
+        SELECT DISTINCT
+        CHB_ASSET_TYPE chbAssetType,
+        CHB_ASSET_TYPE2 chbAssetType2
+        FROM CHB_ASSET_TYPE_MAPPING_EX B
+        WHERE B.MAPPING_UUID = #{typeuuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectForExport" parameterType="java.util.Map" resultType="com.joyintech.tams.svreport.chb.assettypesetting.dto.AssetTypeSetting001Dto">
+        <foreach collection="list" open="SELECT * FROM (" close=") t" item="item" separator="UNION ALL">
+            SELECT
+            #{item.typeuuid} typeuuid,
+            #{item.assetType1,jdbcType=VARCHAR} assetType1,
+            #{item.assetType2,jdbcType=VARCHAR} assetType2,
+            #{item.assetType3,jdbcType=VARCHAR} assetType3,
+            null chbAssetType,
+            null chbAssetType2
+            FROM DUAL
+            UNION ALL
+            SELECT
+            null typeuuid,
+            null assetType1,
+            null assetType2,
+            null assetType3,
+            CHB.CHB_ASSET_TYPE chbAssetType,
+            CHB.CHB_ASSET_TYPE2 chbAssetType2
+            FROM CHB_ASSET_TYPE_MAPPING_EX CHB
+            WHERE CHB.MAPPING_UUID = #{item.typeuuid}
+        </foreach>
+    </select>
+
+</mapper>

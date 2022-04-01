@@ -47,10 +47,10 @@
             ,{field:'dataStatusStr', title: '数据状态', width:'150',sortField:'dataStatus'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
             ,{field:'salerInsNo', title: '内部编号', width:'150',sortField:'salerInsNo'}
-            ,{field:'salerRewPenaTyepStr', title: '记录分类', width:'150',sortField:'salerRewPenaTyep'}
+            ,{field:'salerRewPenaTyep', title: '记录分类', width:'150',sortField:'salerRewPenaTyep'}
             ,{field:'salerRewPenaName', title: '奖惩名称', width:'150',sortField:'salerRewPenaName'}
             ,{field:'salerRewPenaComments', title: '奖惩说明', width:'150',sortField:'salerRewPenaComments'}
-            ,{field:'salerRewPenaInstStr', title: '奖惩单位', width:'150',sortField:'salerRewPenaInst'}
+            ,{field:'salerRewPenaInst', title: '奖惩单位', width:'150',sortField:'salerRewPenaInst'}
             ,{field:'salerRewPenaInstName', title: '奖惩单位具体名称', width:'150',sortField:'salerRewPenaInstName'}
             ,{field:'salerRewPenaStart', title: '奖惩起始日期', width:'150',sortField:'salerRewPenaStart',type:'date'}
             ,{field:'salerRewPenaEnd', title: '奖惩结束日期', width:'150',sortField:'salerRewPenaEnd',type:'date'}

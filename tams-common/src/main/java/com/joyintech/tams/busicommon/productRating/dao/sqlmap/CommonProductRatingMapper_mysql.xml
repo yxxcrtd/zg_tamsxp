@@ -3,78 +3,78 @@
 <mapper namespace="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql">
 	<sql id="searchProductRatingSql">
 		SELECT * FROM (
-			SELECT
-  			OCODE 		OCODE,
-  			MARKETID 		MARKETID,
-  			ORGID		ORGID,
-    		OTYPE       OTYPE,
-    		GRADEORGID   GRADEORGID,
-    		GRADEDATE    GRADEDATE,
-    		NOTICEDATE        	NOTICEDATE,
-    		SHORTLONGTERM 	SHORTLONGTERM,
-    		<choose>
-    			
-                <when test="mstDisType != null and mstDisType == '02'">
-                    MSTRATINGRESULT02 	GRADERESULT,
-                </when>
-                <otherwise>
-                    MSTRATINGRESULT01 	GRADERESULT,
-                </otherwise>
-            </choose>
-    		INPUTTYPE 	INPUTTYPE,
-    		GRADEEXPECTATION     	GRADEEXPECTATION,
-    		DIRECTIONCHANGE		DIRECTIONCHANGE, 
-    		ISSUERRATETYPE ISSUERRATETYPE,
-    		INNEROUTER INNEROUTER,
-    		rank() over (partition by OCODE,OTYPE,GRADEORGID order by GRADEDATE desc) rk
-			FROM 
-	    		view_fin_product_rating
-	    	where 
-	   			1=1
-	   		
-			
-            <if test="sqlSearchString != null and sqlSearchString != ''">	
-				AND ${sqlSearchString}
-			</if>
-			
-			<if test="oCode != null and oCode != ''">	
-				AND OCODE = #{oCode,jdbcType=VARCHAR}
-			</if>
-			
-			<if test="gradeOrgId != null and gradeOrgId != ''">	
-				AND GRADEORGID = #{gradeOrgId,jdbcType=VARCHAR}
-			</if>
-			
-			<if test="gradeDateStr != null and gradeDateStr != ''">	
-				AND GRADEDATE = STR_TO_DATE(#{gradeDateStr,jdbcType=VARCHAR}, '%Y-%m-%d')
-			</if>
-			
-			<if test="gradeDateStart != null and gradeDateStart != ''">	
-				AND GRADEDATE <![CDATA[ >= ]]> STR_TO_DATE(#{gradeDateStart,jdbcType=VARCHAR}, '%Y-%m-%d')
-			</if>
-			
-			<if test="gradeDateEnd != null and gradeDateEnd != ''">	
-				AND GRADEDATE <![CDATA[ <= ]]> STR_TO_DATE(#{gradeDateEnd,jdbcType=VARCHAR}, '%Y-%m-%d')
-			</if>
-			
-			<if test="gradeSourceType != null and gradeSourceType != ''">	
-				AND INNEROUTER = #{gradeSourceType,jdbcType=VARCHAR}
-			</if>
-			
-			<if test="shortLongTerm != null and shortLongTerm != ''">	
-				AND shortLongTerm = #{shortLongTerm,jdbcType=VARCHAR}
-			</if>
-	   		
-	   		<if test="oType != null and oType != ''">
-				AND oType = #{oType,jdbcType=VARCHAR}
-			</if>
-			
-	   		<if test="gradeResult != null and gradeResult != ''">
-				AND MSTRATINGRESULT01 = #{gradeResult,jdbcType=VARCHAR}
-			</if>
+		SELECT
+		OCODE 		OCODE,
+		MARKETID 		MARKETID,
+		ORGID		ORGID,
+		OTYPE       OTYPE,
+		GRADEORGID   GRADEORGID,
+		GRADEDATE    GRADEDATE,
+		NOTICEDATE        	NOTICEDATE,
+		SHORTLONGTERM 	SHORTLONGTERM,
+		<choose>
+
+			<when test="mstDisType != null and mstDisType == '02'">
+				MSTRATINGRESULT02 	GRADERESULT,
+			</when>
+			<otherwise>
+				MSTRATINGRESULT01 	GRADERESULT,
+			</otherwise>
+		</choose>
+		INPUTTYPE 	INPUTTYPE,
+		GRADEEXPECTATION     	GRADEEXPECTATION,
+		DIRECTIONCHANGE		DIRECTIONCHANGE,
+		ISSUERRATETYPE ISSUERRATETYPE,
+		INNEROUTER INNEROUTER,
+		rank() over (partition by OCODE,OTYPE,GRADEORGID order by GRADEDATE desc) rk
+		FROM
+		view_fin_product_rating
+		where
+		1=1
+
+
+		<if test="sqlSearchString != null and sqlSearchString != ''">
+			AND ${sqlSearchString}
+		</if>
+
+		<if test="oCode != null and oCode != ''">
+			AND OCODE = #{oCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="gradeOrgId != null and gradeOrgId != ''">
+			AND GRADEORGID = #{gradeOrgId,jdbcType=VARCHAR}
+		</if>
+
+		<if test="gradeDateStr != null and gradeDateStr != ''">
+			AND GRADEDATE = STR_TO_DATE(#{gradeDateStr,jdbcType=VARCHAR}, '%Y-%m-%d')
+		</if>
+
+		<if test="gradeDateStart != null and gradeDateStart != ''">
+			AND GRADEDATE <![CDATA[ >= ]]> STR_TO_DATE(#{gradeDateStart,jdbcType=VARCHAR}, '%Y-%m-%d')
+		</if>
+
+		<if test="gradeDateEnd != null and gradeDateEnd != ''">
+			AND GRADEDATE <![CDATA[ <= ]]> STR_TO_DATE(#{gradeDateEnd,jdbcType=VARCHAR}, '%Y-%m-%d')
+		</if>
+
+		<if test="gradeSourceType != null and gradeSourceType != ''">
+			AND INNEROUTER = #{gradeSourceType,jdbcType=VARCHAR}
+		</if>
+
+		<if test="shortLongTerm != null and shortLongTerm != ''">
+			AND shortLongTerm = #{shortLongTerm,jdbcType=VARCHAR}
+		</if>
+
+		<if test="oType != null and oType != ''">
+			AND oType = #{oType,jdbcType=VARCHAR}
+		</if>
+
+		<if test="gradeResult != null and gradeResult != ''">
+			AND MSTRATINGRESULT01 = #{gradeResult,jdbcType=VARCHAR}
+		</if>
 		) WHERE 1=1
-		
-   		<if test="baseDataType != null and baseDataType == '01'">
+
+		<if test="baseDataType != null and baseDataType == '01'">
 			AND rk = 1
 		</if>
 	</sql>

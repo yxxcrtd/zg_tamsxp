@@ -142,6 +142,9 @@ public class CfetsManualSettleInfoOtherListRespond {
     @ApiModelProperty(name="isRight",value="是否含权",example="A1")
     private String isRight;
 
+    @ApiModelProperty(name="accountPosition",value="账户持仓",example="99.99")
+    private BigDecimal accountPosition;
+
     public String getSpanTextOneStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.分配方式, this.getSpanTextOne());
     }
@@ -508,5 +511,13 @@ public class CfetsManualSettleInfoOtherListRespond {
 
     public void setIsRight(String isRight) {
         this.isRight = isRight;
+    }
+
+    public BigDecimal getAccountPosition() {
+        return accountPosition;
+    }
+
+    public void setAccountPosition(BigDecimal accountPosition) {
+        this.accountPosition = accountPosition;
     }
 }

@@ -13,11 +13,11 @@
     <result column="ACTUAL_AMT" property="actualAmt" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    DETAILUUID, REPORTUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, DEBT_INSTRUMENT, STOCK_RIGHT, 
+    DETAILUUID, REPORTUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, DEBT_INSTRUMENT, STOCK_RIGHT,
     SPECIAL_SHARE, ACTUAL_AMT
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_BALANCETERM
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
@@ -27,12 +27,12 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportDebtTermDetail" >
-    insert into PBC_REPORT_BALANCETERM (DETAILUUID, REPORTUUID, REPORTTYPE, 
-      GROUPTYPE, PROPERTYCODE, DEBT_INSTRUMENT, 
+    insert into PBC_REPORT_BALANCETERM (DETAILUUID, REPORTUUID, REPORTTYPE,
+      GROUPTYPE, PROPERTYCODE, DEBT_INSTRUMENT,
       STOCK_RIGHT, SPECIAL_SHARE, ACTUAL_AMT
       )
-    values (#{detailuuid,jdbcType=CHAR}, #{reportuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, 
-      #{grouptype,jdbcType=VARCHAR}, #{propertycode,jdbcType=VARCHAR}, #{debtInstrument,jdbcType=DECIMAL}, 
+    values (#{detailuuid,jdbcType=CHAR}, #{reportuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR},
+      #{grouptype,jdbcType=VARCHAR}, #{propertycode,jdbcType=VARCHAR}, #{debtInstrument,jdbcType=DECIMAL},
       #{stockRight,jdbcType=DECIMAL}, #{specialShare,jdbcType=DECIMAL}, #{actualAmt,jdbcType=DECIMAL}
       )
   </insert>
@@ -139,9 +139,9 @@
       ACTUAL_AMT = #{actualAmt,jdbcType=DECIMAL}
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
-  
+
   <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_BALANCETERM
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
@@ -150,17 +150,17 @@
     delete
     from PBC_REPORT_BALANCETERM prp
     where prp.REPORTUUID in(
-         select pr.REPORTUUID from PBC_REPORT pr
-          where 1=1 
-          <if test="reportStartDate != null" >
-          and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
-          </if>
-          <if test="reportEndDate != null" >
-          and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
-          </if>
-          <if test="reporttype != null" >
-            and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
-          </if> 
-       and pr.send_status = '01'/*只删除未报送数据*/)
+    select pr.REPORTUUID from PBC_REPORT pr
+    where 1=1
+    <if test="reportStartDate != null" >
+      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reportEndDate != null" >
+      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reporttype != null" >
+      and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+    </if>
+    and pr.send_status = '01'/*只删除未报送数据*/)
   </delete>
 </mapper>

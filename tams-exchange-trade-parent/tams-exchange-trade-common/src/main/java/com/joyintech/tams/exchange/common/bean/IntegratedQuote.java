@@ -27,7 +27,7 @@ public class IntegratedQuote implements Serializable {
     private String accountId;
 
     //盘后大宗
-
+    private double weightavgPrice;//日均价
     private int dealCount1;//  成交笔数1
     private int dealCount2;//  成交笔数2
     private double buyRemainQuantity1;//买盘剩余数量1
@@ -809,5 +809,13 @@ public class IntegratedQuote implements Serializable {
 
     public void setDealCount2(int dealCount2) {
         this.dealCount2 = dealCount2;
+    }
+
+    public double getWeightavgPrice() {
+        return weightavgPrice;
+    }
+
+    public void setWeightavgPrice(double weightavgPrice) {
+        this.weightavgPrice = weightavgPrice;
     }
 }

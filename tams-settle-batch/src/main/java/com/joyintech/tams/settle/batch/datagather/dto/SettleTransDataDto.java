@@ -66,6 +66,75 @@ public class SettleTransDataDto extends SettleTransData {
 
     private List<TrdProductDealDto> trdProductDealList;
 
+    /**
+     * 权益登记日
+     */
+    private Date regDate;
+
+    /**
+     * 除权除息日
+     */
+    private Date exDevidentDate;
+
+    /**
+     * 前置交易编号
+     */
+    private String bTradeId;
+
+    /**
+     * 持仓数量
+     */
+    private BigDecimal amount;
+
+    /**
+     * 申购交易份额
+     */
+    private BigDecimal shareAmtSg;
+
+    //是否货币基金
+    private String isHuobi;
+
+    public String getIsHuobi() {
+        return isHuobi;
+    }
+
+    public void setIsHuobi(String isHuobi) {
+        this.isHuobi = isHuobi;
+    }
+
+
+    public BigDecimal getShareAmtSg() {
+        return shareAmtSg;
+    }
+
+    public void setShareAmtSg(BigDecimal shareAmtSg) {
+        this.shareAmtSg = shareAmtSg;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getbTradeId() {
+        return bTradeId;
+    }
+
+    public void setbTradeId(String bTradeId) {
+        this.bTradeId = bTradeId;
+    }
+
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
     public String getOrderId() {
         return orderId;
     }
@@ -150,4 +219,71 @@ public class SettleTransDataDto extends SettleTransData {
         return StringUtil.joinString(Arrays.asList(getFinprodId(), DateUtil.format(getMdate()),getSecAcctId(),getSeatNumber(),getAcctNo()),"_");
     }
 
+    private String purchModle;
+
+    private String purchType;
+
+    private Date purchDate;
+
+    private String purchCounter;
+
+    private BigDecimal purchAmt;
+
+    private String tradeTotalId;
+
+    public String getPurchModle() {
+        return purchModle;
+    }
+
+    public void setPurchModle(String purchModle) {
+        this.purchModle = purchModle;
+    }
+
+    public String getPurchType() {
+        return purchType;
+    }
+
+    public void setPurchType(String purchType) {
+        this.purchType = purchType;
+    }
+
+    public Date getPurchDate() {
+        return purchDate;
+    }
+
+    public void setPurchDate(Date purchDate) {
+        this.purchDate = purchDate;
+    }
+
+    public String getPurchCounter() {
+        return purchCounter;
+    }
+
+    public void setPurchCounter(String purchCounter) {
+        this.purchCounter = purchCounter;
+    }
+
+    public BigDecimal getPurchAmt() {
+        return purchAmt;
+    }
+
+    public void setPurchAmt(BigDecimal purchAmt) {
+        this.purchAmt = purchAmt;
+    }
+
+    public String getTradeTotalId() {
+        return tradeTotalId;
+    }
+
+    public void setTradeTotalId(String tradeTotalId) {
+        this.tradeTotalId = tradeTotalId;
+    }
+
+    public Date getExDevidentDate() {
+        return exDevidentDate;
+    }
+
+    public void setExDevidentDate(Date exDevidentDate) {
+        this.exDevidentDate = exDevidentDate;
+    }
 }

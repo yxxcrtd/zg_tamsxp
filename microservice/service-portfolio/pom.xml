@@ -50,8 +50,20 @@
           <groupId>com.joyintech</groupId>
           <artifactId>framework-data</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-exchange-entrust</artifactId>
+            <version>3.0.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-exchange-entrust</artifactId>
+            <version>3.0.4</version>
+            <scope>compile</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<properties>
         <start-class>com.joyintech.service.portfolio.PortfolioApplication</start-class>

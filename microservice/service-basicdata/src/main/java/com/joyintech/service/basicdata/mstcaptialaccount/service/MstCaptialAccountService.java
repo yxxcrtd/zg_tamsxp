@@ -397,9 +397,15 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
         finCashInfo.setFinprodType(DictCodeListExt1.现金流业务类型_资金账户.getValue());
         finCashInfo.setBranch(Long.valueOf(0));
         FinCashInfo oldCashId = finCashInfoMapper.selectByPrimaryKey(cashId);
+        // modify by etliu 20220320 start
+        // 3.0.5产品 ZGTFCP-1165:清算交收资金账户管理新建时，提交后显示系统异常
         if(oldCashId == null){
             finCashInfoMapper.insertSelective(finCashInfo);
+        } else {
+            finCashInfoMapper.deleteByPrimaryKey(cashId);
+            finCashInfoMapper.insertSelective(finCashInfo);
         }
+        // modify by etliu 20220320 end
 
         FinRateInfo finRateInfo = new FinRateInfo();
         finRateInfo.setCashId(cashId);
@@ -421,7 +427,14 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
         finRateInfo.setBranch(Long.valueOf(0));
         finRateInfo.setFinprodId(dto.getLargePayno()+":"+dto.getBusiAcctNo());
         finRateInfo.setFinprodType(DictCodeListExt1.现金流业务类型_资金账户.getValue());
+
+        // modify by etliu 20220320 start
+        // 3.0.5产品 ZGTFCP-1165:清算交收资金账户管理新建时，提交后显示系统异常
+        if (finRateInfoMapper.selectByPrimaryKey(finRateInfo) != null) {
+            finRateInfoMapper.deleteByPrimaryKey(finRateInfo);
+        }
         finRateInfoMapper.insertSelective(finRateInfo);
+        // modify by etliu 20220320 end
 
         FinCashCalcRule finCashCalcRule = new FinCashCalcRule();
         finCashCalcRule.setCashId(cashId);
@@ -439,6 +452,13 @@ public class MstCaptialAccountService extends BaseService<MstCaptialAccountDto>{
         finCashCalcRule.setFinprodType(DictCodeListExt1.现金流业务类型_资金账户.getValue());
         
         finCashCalcRule.setBranch(Long.valueOf(0));
+
+        // modify by etliu 20220320 start
+        // 3.0.5产品 ZGTFCP-1165:清算交收资金账户管理新建时，提交后显示系统异常
+        if (finCashCalcRuleMapper.selectByPrimaryKey(finCashCalcRule) != null) {
+            finCashCalcRuleMapper.deleteByPrimaryKey(finCashCalcRule);
+        }
+        // modify by etliu 20220320 end
         finCashCalcRuleMapper.insertSelective(finCashCalcRule);
     }
     

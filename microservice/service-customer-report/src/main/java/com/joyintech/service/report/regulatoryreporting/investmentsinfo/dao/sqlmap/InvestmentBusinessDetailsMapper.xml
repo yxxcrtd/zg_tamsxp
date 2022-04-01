@@ -459,11 +459,17 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			't3_41_amt' propertycode,
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			't3_42_amt' propertycode,
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			't3_43_amt' propertycode,
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
 			't3_44_amt' propertycode,
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			't3_45_amt' propertycode,
 		</if>
 		(
 		SELECT
@@ -491,18 +497,27 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			 	or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+				or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+				or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -535,18 +550,27 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -571,7 +595,7 @@
 			and CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		</if>
 
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="modetype != null  and modetype.equals('40')">
 			and INFO.INDUSTRY_FLAG='01'
 			and INFO.MONIT_TYPE='02'
@@ -579,18 +603,27 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -614,7 +647,7 @@
 		<if test="lastStartDate != null">
 			and CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		</if>
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="modetype != null  and modetype.equals('40')">
 			and INFO.INDUSTRY_FLAG='01'
 			and INFO.MONIT_TYPE='02'
@@ -622,18 +655,27 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -665,18 +707,27 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -708,18 +759,27 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -773,18 +833,27 @@
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
+		<if test="modetype != null  and modetype.equals('42')">
+			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
+			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
+			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
+			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
+			or instr(#{INDUSTRY4, jdbcType=VARCHAR},mst.INDUSTRY4) >0)
+		</if>
 		<if test="modetype != null  and modetype.equals('43')">
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			and mst.IS_FIN_LICENCE='N'
-			<if test="provinces!=null and provinces.size>0">
-				and  mst.PROVINCE not in
-				<foreach collection="provinces" item="province" open="("
-						 separator="," close=")">
-					#{province,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
+			and not exists (
+			SELECT 1 FROM
+			SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
+			AND (instr(P.PARAM_VALUE,mst.PROVINCE) >0 OR instr(P.PARAM_VALUE,mst.CITY) >0)
+			)
+		</if>
+		<if test="modetype != null  and modetype.equals('45')">
+			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
+			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -899,7 +968,7 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
 				and  mst.PROVINCE in
@@ -939,7 +1008,7 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
 				and  mst.PROVINCE in
@@ -1193,7 +1262,7 @@
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1216,7 +1285,7 @@
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
 		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
 		AND mst.province IS NOT NULL
-		AND INFO.ASSET_TYPE2 IN ('2101', '2201', '2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
+		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
@@ -1366,4 +1435,15 @@
 		FROM DUAL
 	</select>
 
+
+
+
+	<select id="queryOrgName" resultType="com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessDetailsDto"
+			parameterType="map">
+		SELECT 't8_00_Code' propertycode,L.ITEM_VALUE cbrcCode,I.INSTITUTION_NAME orgName
+		FROM CHB_ORG_REGIST_BANK_CODE B
+		LEFT JOIN SYS_INSTITUTION I ON I.INSTITUTION_CODE=B.ORG_CODE
+    	LEFT JOIN SYS_DATADICT_LIST L ON B.BELOGCODECBRC = L.ITEM_CODE AND L.DICT_CODE = 'SVR_BANK_REGU_BURE'
+		 WHERE B.STATUS IN ('E','M') AND I.INSTITUTION_TYPE = '01'
+	</select>
 </mapper>

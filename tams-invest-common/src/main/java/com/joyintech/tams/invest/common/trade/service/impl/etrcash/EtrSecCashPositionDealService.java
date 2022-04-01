@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.service.InvestDateCalService;
+import com.joyintech.tams.invest.common.trade.dao.EtrCommonCashPositionMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -268,7 +269,11 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                             // 预增现金 支付日减少到账金额
                             现金处理(etrPositionHoldDto, deal, dealAdd, stlPayOrdersDtos, etrCashPositionFlowDto);
                         }
-                        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
+                        // modify by etliu 20220228 start
+                        // 广农商二阶段 GNS-974: 【广农商场内清算】场内债券存续期重复跑批时，冲销的指令现金有误
+//                        if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
+                        if (DictCodeList.持仓类型_可用.equals(持仓类型) || (etrPositionHoldDto.isNeedNegative() && !finProductTradeDto.isNotWorkflow())) { // 提交
+                            // modify by etliu 20220228 end
                             if (StringUtil.isEmpty(entrustId)) { // 无委托
                                 // 预增现金 支付日增加到账金额
                                 EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto();
@@ -284,13 +289,27 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                         if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
                             现金处理(etrPositionHoldDto, deal, dealAdd, stlPayOrdersDtos, etrCashPositionFlowDto);
                         }
+                        // modify by etliu 20220228 start
+                        // 广农商二阶段 GNS-977:【广农商场内清算】场内债券存续期-到期交易生成时，未处理持仓数据
+                        if (finProductTradeDto.isNotWorkflow() && !etrPositionHoldDto.isNeedNegative()) {
+                            // 可用持仓 提交日削减至0
+                            etrSecPositionFlowDto.setAmount(deal.getShareAmt().negate());
+                            etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                        }
+                        // modify by etliu 20220228 end
                     }
+                    // modify by etliu 20220228 start
+                    // 广农商二阶段 GNS-974: 【广农商场内清算】场内债券存续期重复跑批时，冲销的指令现金有误
                     if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
                         if (StringUtil.isEmpty(entrustId)) { // 无委托
                             // 可用持仓 提交日削减至0
                             etrSecPositionFlowDto.setAmount(deal.getShareAmt().negate());
                             etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
-                            if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
+                            // modify by etliu 20220228 start
+                            // 广农商二阶段 GNS-974: 【广农商场内清算】场内债券存续期重复跑批时，冲销的指令现金有误
+//                            if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
+                            if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty() && !finProductTradeDto.isNotWorkflow()) {
+                                // modify by etliu 20220228 end
                                 // 预增现金 支付日增加到账金额
                                 EtrCashPositionFlowDto etrCashPositionFlowDto1 = new EtrCashPositionFlowDto();
                                 BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto1, etrCashPositionFlowDto);
@@ -757,6 +776,17 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                 etrCashPositionFlowDto.setAmount(交割日增加交易金额);
                 // 添加现金流水到目标dto
                 etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+
+                // modify by etliu 20220228 start
+                // 广农商二阶段 GNS-975:【广农商场内清算】场内债券存续期-行权赎回交易生成时，处理相关头寸有误
+                if (finProductTradeDto.isNotWorkflow() && !etrPositionHoldDto.isNeedNegative()) {
+                    // 持仓流水dto处理
+                    // 交割日增加交易券面总额/债券面值
+                    etrSecPositionFlowDto.setAmount(交易日减少数量);
+                    // 添加持仓流水到目标dto
+                    etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                }
+                // modify by etliu 20220228 end
             }
         }
         // 交易提交
@@ -910,16 +940,24 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             etrCashPositionFlowDto1.setSeqno(getSeqNo());
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto1);
 
-            // 预增现金 支付日减少到账金额
-            EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
-            BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto1);
-            etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt().negate());
-            etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
-            etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
-            etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
-            etrCashPositionFlowDto2.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
-            etrCashPositionFlowDto2.setSeqno(getSeqNo());
-            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
+            // modify by etliu 20220226 start
+            // 广农商二阶段 GNS-947:【广农商场内清算】场内债券存续交易生成的时候，指令现金流水处理有误
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("orderId", stlPayOrdersDto.getOrderId());
+            paramMap.put("holdingType", DictCodeListExt1.持仓类型_委托指令预增.getValue());
+            if (SpringContextUtil.getBean(EtrCommonCashPositionMapper.class).selectEtrCashPositionFlowCount(paramMap) > 0) {
+                // 预增现金 支付日减少到账金额
+                EtrCashPositionFlowDto etrCashPositionFlowDto2 = new EtrCashPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlowDto2, etrCashPositionFlowDto1);
+                etrCashPositionFlowDto2.setAmount(stlPayOrdersDto.getSettleAmt().negate());
+                etrCashPositionFlowDto2.setAcctId(stlPayOrdersDto.getMyAcctNo());
+                etrCashPositionFlowDto2.setCdate(stlPayOrdersDto.getSettleDate());
+                etrCashPositionFlowDto2.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
+                etrCashPositionFlowDto2.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
+                etrCashPositionFlowDto2.setSeqno(getSeqNo());
+                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto2);
+            }
+            // modify by etliu 20220226 end
         });
     }
 
@@ -935,7 +973,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
      * @param etrCashPositionFlowDto 流水dto
      * @return 账号
      */
-    private static String gen账号(String tradePlace, String chlId, String portfolioId, String ccy, String secManageAcctId,String counterId,
+    public static String gen账号(String tradePlace, String chlId, String portfolioId, String ccy, String secManageAcctId,String counterId,
                                 EtrCashPositionFlowDto etrCashPositionFlowDto) {
         return gen账号(tradePlace,chlId,portfolioId,ccy,secManageAcctId,counterId,false,etrCashPositionFlowDto);
     }
@@ -967,8 +1005,9 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             if (StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_境外交易场所.getValue())) {
                 return EtrCommonCashPositionDealService.select组合托管户(portfolioId, ccy, DictCodeListExt2.资金账户类型_托管户.getValue());
             }
-            else if (!StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_银行间.getValue()) && StringUtil.isNotEmpty(secManageAcctId)
-            &&!(is卖出&&EtrCommonCashPositionDealService.isInTrade(counterId))) {
+            else if ((!StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_银行间.getValue()) &&
+                    !StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_商业银行柜台.getValue()))
+                            && StringUtil.isNotEmpty(secManageAcctId) &&!(is卖出&&EtrCommonCashPositionDealService.isInTrade(counterId))) {
                 return EtrCommonCashPositionDealService.select资金账户(secManageAcctId, ccy);
             }
             else {
@@ -1097,6 +1136,10 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
                 amount = ArithmeticUtil.subtract(amount, EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map));
                 //amount = ArithmeticUtil.subtract(amount, EtrCommonCashPositionDealService.getEtrExchangeFinishAmt(map));
             }
+            if (StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue())) {
+                map.put("sumTradeFlag", "01");
+                amount = ArithmeticUtil.subtract(amount, EtrCommonCashPositionDealService.getEtrExchangeFinishAmtMuilt(map));
+            }
 
             etrCashPositionFlowDto.setAmount(amount);
             etrCashPositionFlowDto.setAcctId(acctId);
@@ -1197,14 +1240,23 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 //                    }
                 }
               //交易所债券特殊处理end----------------------------------------------------------------
-                if (entrustCommonDto.getEtrEntrustAdd() != null && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed() != null
-                        && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue() != 0) {
-                    InvestDateCalService dateCalService = SpringContextUtil.getBean(InvestDateCalService.class);
-                    List<String> holiday = dateCalService.getDealCalendarHoliday(dealDate,
-                            DateUtil.addDays(dealDate, 31), entrustCommonDto.getEtrEntrust().getCalendarId());
-                    dealDate = dateCalService.calculationTradingDay(dealDate, entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue(), holiday, "1");
+                if (!isJiaoYiSuo) {
+                    if (entrustCommonDto.getEtrEntrustAdd() != null && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed() != null
+                            && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue() != 0) {
+                        InvestDateCalService dateCalService = SpringContextUtil.getBean(InvestDateCalService.class);
+                        List<String> holiday = dateCalService.getDealCalendarHoliday(dealDate,
+                                DateUtil.addDays(dealDate, 31), entrustCommonDto.getEtrEntrust().getCalendarId());
+                        dealDate = dateCalService.calculationTradingDay(dealDate, 0, holiday, "1");
+                    }
+                } else {
+                    if (entrustCommonDto.getEtrEntrustAdd() != null && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed() != null
+                            && entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue() != 0) {
+                        InvestDateCalService dateCalService = SpringContextUtil.getBean(InvestDateCalService.class);
+                        List<String> holiday = dateCalService.getDealCalendarHoliday(dealDate,
+                                DateUtil.addDays(dealDate, 31), entrustCommonDto.getEtrEntrust().getCalendarId());
+                        dealDate = dateCalService.calculationTradingDay(dealDate, entrustCommonDto.getEtrEntrustAdd().getSettleSpreed().intValue(), holiday, "1");
+                    }
                 }
-
                 EtrCommonCashPositionDealService etrCommonCashPositionDealService = SpringContextUtil.getBean(EtrCommonCashPositionDealService.class);
                 BigDecimal 单位应计利息 = etrCommonCashPositionDealService.gen应计利息(entrustCommonDto.getEtrEntrust().getFinprodId(),dealDate);
                 委托全价 = ArithmeticUtil.doAdd(单位应计利息,委托净价);

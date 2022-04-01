@@ -17,6 +17,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.business.common.dto.CfetsSearchInfoRequest;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
@@ -32,9 +33,11 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -50,6 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,7 +92,7 @@ public class IbuQuoteRepo004Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度, DictCode.回购方式, DictCode.价格模式,
-                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种, DictCode.期限品种_回购);
+                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种, DictCode.期限品种_回购,DictCode.登记托管机构);
         model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
         model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
@@ -110,6 +114,18 @@ public class IbuQuoteRepo004Controller extends BaseController {
         //本币导出按钮配置
         model.addAttribute("EXPORT_SHOW", CacheUtil.getSysParam("EXPORT_SHOW"));
         model.addAttribute("ps", cfetsRepoDealRegisterQuoteDto.getPs());
+        model.addAttribute("quoteStyle", cfetsRepoDealRegisterQuoteDto.getQuoteStyle());
+        // 对手方是否可编辑
+        String isEdit = DictCodeList.是否_是.getValue();
+        List<String> entrustIdList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(cfetsRepoDealRegisterQuoteDto.getPtlAllocations())) {
+            cfetsRepoDealRegisterQuoteDto.getPtlAllocations().forEach(item -> entrustIdList.add(item.getEntrustId()));
+        }
+        if (StringUtil.equals(cfetsRepoDealRegisterQuoteDto.getQuoteStyle(), "05")
+                || cfetsRepoQuotedPrice004Service.getIsExistCounterId(entrustIdList) > 0) {
+            isEdit = DictCodeList.是否_否.getValue();
+        }
+        model.addAttribute("isEdit", isEdit);
         //卖空模式
         model.addAttribute(GlobalConstant.ENTITY, cfetsRepoDealRegisterQuoteDto);
         return super.init(model);
@@ -122,6 +138,14 @@ public class IbuQuoteRepo004Controller extends BaseController {
         //check必填项
         AjaxResult ajaxResult = cfetsRepoQuotedPrice004Service.checkSave(cfetsRepoDealQuoteCommonDto);
         return new Message<AjaxResult>().success().setData(ajaxResult);
+    }
+
+    @PostMapping("/checkByHome")
+    @ResponseBody
+    public AjaxResult checkByHome(@RequestBody CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto) {
+        //check必填项
+        AjaxResult ajaxResult = cfetsRepoQuotedPrice004Service.checkSave(cfetsRepoDealQuoteCommonDto);
+        return ajaxResult;
     }
 
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
@@ -169,11 +193,17 @@ public class IbuQuoteRepo004Controller extends BaseController {
                 && StringUtil.equals(CacheUtil.getSysParam("EXPORT_SHOW"), "02")) {
             counterTrader = "-对手方交易员:" + dto.getCounterTrader() + "-";
         }
-        DecimalFormat df = new DecimalFormat("#,##0.00");
-        String tradeAmtStr = df.format(ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP));
-        String finalCounterTrader = StringUtil.isEmpty(counterTrader) ? "-" : counterTrader;
-        params.setComment(entity -> "交易日期:" + DateUtil.format(iPlatformDate.getSysDate()) + "-回购期限:"
-                + dto.getRepoTerm() + "天" + finalCounterTrader + "交易金额:" + tradeAmtStr + "元");
+        String str = "交易日期:" + DateUtil.format(iPlatformDate.getSysDate());
+        if (StringUtil.isNotEmpty(dto.getRepoTerm())) {
+            str += "-回购期限:" + dto.getRepoTerm() + "天";
+        }
+        str += StringUtil.isEmpty(counterTrader) ? "-" : counterTrader;
+        if (StringUtil.isNotEmpty(dto.getTradeAmt())) {
+            DecimalFormat df = new DecimalFormat("#,##0.00");
+            str += "交易金额:" + df.format(ArithmeticUtil.round(dto.getTradeAmt(), 2, RoundingMode.HALF_UP)) + "元";
+        }
+        String finalStr = str;
+        params.setComment(entity -> finalStr);
         cfetsBondDealRegisterQuoteDto.setQuoteType(DictCodeListExt3.报价系统区分类型_质押式回购登记报价.getValue());
         processParameter.setWorkFlowParameter(params);
         processParameter.setOperationType(OperationType.NEW);

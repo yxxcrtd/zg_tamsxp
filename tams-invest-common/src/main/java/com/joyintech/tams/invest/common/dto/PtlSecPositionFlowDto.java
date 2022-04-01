@@ -45,6 +45,10 @@ public class PtlSecPositionFlowDto extends PtlSecPositionFlow {
      * 非此投资目的字段
      */
     private String notInvAim;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
 
     /**
@@ -152,4 +156,12 @@ public class PtlSecPositionFlowDto extends PtlSecPositionFlow {
 	public void setNotInvAim(String notInvAim) {
 		this.notInvAim = notInvAim;
 	}
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
+    }
 }

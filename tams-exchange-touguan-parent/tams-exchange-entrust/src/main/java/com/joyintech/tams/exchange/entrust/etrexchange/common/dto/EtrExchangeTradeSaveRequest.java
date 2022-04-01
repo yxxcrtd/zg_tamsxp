@@ -37,7 +37,7 @@ import java.util.List;
  * @see EtrExchangeTradeSaveRequest
  * @since 1.0
  */
-@PageId("EtrExchangeTradeSaveRequest")
+@PageId("EtrExchangeTradeCommon004")
 @ValidLogic(targetClass = EtrExchangeTradeJj001Validator.class , groups = {ValidateGroupEdit.class,
     ValidateGroupDelete.class})
 @ApiModel(value="指令下单表单",description="指令下单表单")
@@ -103,7 +103,7 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
     private String businessTypeName;
 
     @ApiModelProperty(name="standardBondVolume",value="标准券数量",example="")
-    private Integer standardBondVolume;
+    private Long standardBondVolume;
 
     @ApiModelProperty(name="repoAmt",value="回购金额",example="12")
     private BigDecimal repoAmt;
@@ -124,6 +124,9 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     @ApiModelProperty(name="assetType2",value="资产类型2",example="H01")
     private String assetType2;
+    
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
     /**
      * 约定号
      */
@@ -241,12 +244,36 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
      * 申报类型
      */
     private String declaTypeStr;
-    
-
-
-
-
     /**
+     * 风险预占是否来自场内
+     */
+    private String fromEtrExchange;
+    
+    /**
+     * 头寸使用序列号
+     */
+    private Long positionSeqno;
+
+
+    private BigDecimal disRate;
+
+    public BigDecimal getDisRate() {
+        return disRate;
+    }
+
+    public void setDisRate(BigDecimal disRate) {
+        this.disRate = disRate;
+    }
+
+	public Long getPositionSeqno() {
+		return positionSeqno;
+	}
+
+	public void setPositionSeqno(Long positionSeqno) {
+		this.positionSeqno = positionSeqno;
+	}
+
+	/**
      * 取得 委托代码
      * @return 委托代码
      */
@@ -526,6 +553,14 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
 
 
+	public String getSoftSkipMode() {
+		return softSkipMode;
+	}
+
+	public void setSoftSkipMode(String softSkipMode) {
+		this.softSkipMode = softSkipMode;
+	}
+
 	public String getEntrustBussType() {
 		return entrustBussType;
 	}
@@ -556,11 +591,11 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
         this.priceModel = priceModel;
     }
 
-    public Integer getStandardBondVolume() {
+    public Long getStandardBondVolume() {
         return standardBondVolume;
     }
 
-    public void setStandardBondVolume(Integer standardBondVolume) {
+    public void setStandardBondVolume(Long standardBondVolume) {
         this.standardBondVolume = standardBondVolume;
     }
 
@@ -680,5 +715,43 @@ public class EtrExchangeTradeSaveRequest extends EtrEntrust implements ProcessEn
 
     public void setAssetType2(String assetType2) {
         this.assetType2 = assetType2;
+    }
+
+    public String getFromEtrExchange() {
+        return fromEtrExchange;
+    }
+
+    public void setFromEtrExchange(String fromEtrExchange) {
+        this.fromEtrExchange = fromEtrExchange;
+    }
+
+    public List<EtrExchangeTradeSaveRequest> selectedItem;
+
+    public List<EtrExchangeTradeSaveRequest> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(List<EtrExchangeTradeSaveRequest> selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    private String isDoRkRedisFlag;
+
+    public String getIsDoRkRedisFlag() {
+        return isDoRkRedisFlag;
+    }
+
+    public void setIsDoRkRedisFlag(String isDoRkRedisFlag) {
+        this.isDoRkRedisFlag = isDoRkRedisFlag;
+    }
+
+    private String currentTab;
+
+    public String getCurrentTab() {
+        return currentTab;
+    }
+
+    public void setCurrentTab(String currentTab) {
+        this.currentTab = currentTab;
     }
 }

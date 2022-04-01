@@ -914,7 +914,12 @@
 	<select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub">
 		select
 		t1.REGIST_SEQNO registSeqno,
-		t1.pbc_prod_id pbcProdId,
+		<if test="datFlag != null and datFlag != ''">
+			NVL(t2.pbc_code,t1.PBC_PROD_ID) PBC_PROD_ID,
+		</if>
+		<if test="datFlag == null">
+			t1.PBC_PROD_ID PBC_PROD_ID,
+		</if>
 		T2.pbc_code pbcPoolCode,
 		t1.ISSUE_PARTY_ID issuePartyId,
 		SI.INSTITUTION_NAME issuePartyName,

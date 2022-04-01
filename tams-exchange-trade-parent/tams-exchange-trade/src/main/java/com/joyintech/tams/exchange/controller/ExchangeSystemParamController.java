@@ -5,10 +5,9 @@ import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.db.domain.ServiceNode;
 import com.joyintech.tams.exchange.common.db.domain.Terminal;
 import com.joyintech.tams.exchange.common.db.domain.TerminalMapping;
-import com.joyintech.tams.exchange.service.ExchangeSystemParamService;
+import com.joyintech.tams.exchange.service.trade.management.service.ServiceNodeManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.TerminalManagement;
 import com.joyintech.tams.exchange.service.trade.management.service.TerminalMappingManagement;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +18,17 @@ import java.util.List;
 @RequestMapping("/joyin")
 public class ExchangeSystemParamController {
 
-    @Autowired
-    private ExchangeSystemParamService exchangeSystemParamService;
-    
+//    @Autowired
+//    private ExchangeSystemParamService exchangeSystemParamService;
+
     @Autowired
     private TerminalMappingManagement terminalMappingManagement;
-    
+
     @Autowired
     private TerminalManagement terminalManagement;
+
+    @Autowired
+    private ServiceNodeManagement serviceNodeManagement;
 
     /**
      * 自定义节点查询
@@ -37,9 +39,11 @@ public class ExchangeSystemParamController {
     @RequestMapping(value = "/serviceNode", method = RequestMethod.GET)
     public ResultBean queryServiceNode(@RequestParam(value = "user_id") String userId,
                                        @RequestParam(value = "node_name", required = false) String nodeName) {
-        String param = "?user_id=" + userId;
-        if (!Strings.isNullOrEmpty(nodeName)) param += "&node_name=" + nodeName;
-        return exchangeSystemParamService.queryServiceNode(param);
+//        String param = "?user_id=" + userId;
+//        if (!Strings.isNullOrEmpty(nodeName)) param += "&node_name=" + nodeName;
+//        return exchangeSystemParamService.queryServiceNode(param);
+////////////////////////兼容新UI后端
+        return serviceNodeManagement.queryServiceNode(nodeName);
     }
 
     /**
@@ -52,9 +56,11 @@ public class ExchangeSystemParamController {
     @RequestMapping(value = "/add/serviceNode", method = RequestMethod.POST)
     public ResultBean addServiceNode(@RequestParam(value = "user_id") String userId,
                                      @RequestBody ServiceNode serviceNode) {
-        String param = "?user_id=" + userId;
-        HttpEntity<ServiceNode> request = new HttpEntity<>(serviceNode);
-        return exchangeSystemParamService.addServiceNode(param, request);
+//        String param = "?user_id=" + userId;
+//        HttpEntity<ServiceNode> request = new HttpEntity<>(serviceNode);
+//        return exchangeSystemParamService.addServiceNode(param, request);
+////////////////////////兼容新UI后端
+        return serviceNodeManagement.addServiceNode(serviceNode);
     }
 
     /**
@@ -68,9 +74,11 @@ public class ExchangeSystemParamController {
     public ResultBean updateServiceNode(@RequestParam(value = "user_id") String userId,
                                         @RequestParam(value = "node_name") String nodeName,
                                         @RequestBody ServiceNode serviceNode) {
-        String param = "?user_id=" + userId + "&node_name=" + nodeName;
-        HttpEntity<ServiceNode> request = new HttpEntity<>(serviceNode);
-        return exchangeSystemParamService.updateServiceNode(param, request);
+//        String param = "?user_id=" + userId + "&node_name=" + nodeName;
+//        HttpEntity<ServiceNode> request = new HttpEntity<>(serviceNode);
+//        return exchangeSystemParamService.updateServiceNode(param, request);
+////////////////////////兼容新UI后端
+        return serviceNodeManagement.updateServiceNode(serviceNode);
     }
 
     /**
@@ -83,8 +91,10 @@ public class ExchangeSystemParamController {
     @RequestMapping(value = "/delete/serviceNode", method = RequestMethod.DELETE)
     public ResultBean deleteServiceNode(@RequestParam(value = "user_id") String userId,
                                         @RequestParam(value = "node_name") String nodeName) {
-        String param = "?user_id=" + userId + "&node_name=" + nodeName;
-        return exchangeSystemParamService.deleteServiceNode(param);
+//        String param = "?user_id=" + userId + "&node_name=" + nodeName;
+//        return exchangeSystemParamService.deleteServiceNode(param);
+//////////////////////兼容新UI后端
+        return serviceNodeManagement.deleteServiceNode(nodeName);
     }
 
     /**
@@ -126,9 +136,11 @@ public class ExchangeSystemParamController {
     public ResultBean updateTerminal(@RequestParam(value = "user_id") String userId,
                                      @RequestParam(value = "terminal_name") String terminalName,
                                      @RequestBody Terminal terminal) {
-        String param = "?user_id=" + userId + "&terminal_name=" + terminalName;
-        HttpEntity<Terminal> request = new HttpEntity<>(terminal);
-        return exchangeSystemParamService.updateTerminal(param, request);
+//        String param = "?user_id=" + userId + "&terminal_name=" + terminalName;
+//        HttpEntity<Terminal> request = new HttpEntity<>(terminal);
+//        return exchangeSystemParamService.updateTerminal(param, request);
+//////////////////////////兼容新UI后端
+        return terminalManagement.updateTerminalInfo(terminalName, terminal);
     }
 
     /**
@@ -139,8 +151,10 @@ public class ExchangeSystemParamController {
     @RequestMapping(value = "/delete/terminal", method = RequestMethod.DELETE)
     public ResultBean deleteTerminal(@RequestParam(value = "user_id") String userId,
                                      @RequestParam(value = "terminal_name") String terminalName) {
-        String param = "?user_id=" + userId + "&terminal_name=" + terminalName;
-        return exchangeSystemParamService.deleteTerminal(param);
+//        String param = "?user_id=" + userId + "&terminal_name=" + terminalName;
+//        return exchangeSystemParamService.deleteTerminal(param);
+//////////////////////////兼容新UI后端
+        return terminalManagement.deleteTerminalInfo(terminalName);
     }
 
     /**
@@ -185,9 +199,11 @@ public class ExchangeSystemParamController {
     public ResultBean updateTerminalMapping(@RequestParam(value = "user_id") String userId,
                                             @RequestParam(value = "id") String id,
                                             @RequestBody TerminalMapping terminalMapping) {
-        String param = "?user_id=" + userId + "&id=" + id;
-        HttpEntity<TerminalMapping> request = new HttpEntity<>(terminalMapping);
-        return exchangeSystemParamService.updateTerminalMapping(param, request);
+//        String param = "?user_id=" + userId + "&id=" + id;
+//        HttpEntity<TerminalMapping> request = new HttpEntity<>(terminalMapping);
+//        return exchangeSystemParamService.updateTerminalMapping(param, request);
+//////////////////////////兼容新UI后端
+        return terminalMappingManagement.updateTerminalMappingInfo(id, terminalMapping);
     }
 
     /**

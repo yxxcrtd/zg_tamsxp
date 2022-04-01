@@ -503,6 +503,7 @@
 		<result column="paymentDate"  property="paymentDate"/>
 		<result column="listingDate"  property="listingDate"/>
 		<result column="mainConsignee"  property="mainConsignee"/>
+		<result column="mainConsigneeValue"  property="mainConsigneeValue"/>
 		<result column="biddingRange"  property="biddingRange"/>
 		<result column="businessModel"  property="businessModel"/>
 		<association property="etrInvestPersonInfo" javaType="com.joyintech.service.entrust.etrbondfirstlbidding.dto.BussEtrInvestPersonInfoDto">
@@ -545,7 +546,8 @@
 		T6.LISTING_DATE listingDate,
 		T6.MAIN_CONSIGNEE mainConsignee,
 		T6.BIDDING_RANGE biddingRange ,
-		'' businessModel
+		'' businessModel,
+		mci.CUSTOMER_NAME mainConsigneeValue
 		FROM
 		WFL_ETR_ENTRUST T1
 		LEFT JOIN
@@ -558,9 +560,8 @@
 		T1.FINPROD_ID = T3.FINPROD_ID
 		AND T3.FINPROD_TYPE2 =#{bond}
 		LEFT JOIN
-		WFL_ETR_ENTRUST_ADD T6
-		ON
-		T1.ENTRUST_ID = T6.ENTRUST_ID
+		WFL_ETR_ENTRUST_ADD T6 ON T1.ENTRUST_ID = T6.ENTRUST_ID
+		LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = T6.main_consignee AND mci.IS_SALER = 'Y'
 		<where>
 			<if test="portfolioId != null and !portfolioId.equals('')">
 				T1.PORTFOLIO_ID=#{portfolioId}
@@ -603,22 +604,13 @@
 		T6.LISTING_DATE listingDate,
 		T6.MAIN_CONSIGNEE mainConsignee,
 		T6.BIDDING_RANGE biddingRange ,
-		T1.BUSINESS_MODEL  businessModel
+		T1.BUSINESS_MODEL  businessModel,
+		mci.CUSTOMER_NAME mainConsigneeValue
 		FROM
-		ETR_ENTRUST T1
-		LEFT JOIN
-		ETR_DISTRIBUTE T2
-		ON
-		T1.ENTRUST_ID = T2.ENTRUST_ID
-		LEFT JOIN
-		FIN_PRODUCT T3
-		ON
-		T1.FINPROD_ID = T3.FINPROD_ID
-		AND T3.FINPROD_TYPE2 =#{bond}
-		LEFT JOIN
-		ETR_ENTRUST_ADD T6
-		ON
-		T1.ENTRUST_ID = T6.ENTRUST_ID
+		ETR_ENTRUST T1 LEFT JOIN ETR_DISTRIBUTE T2 ON T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID AND T3.FINPROD_TYPE2 =#{bond}
+		LEFT JOIN ETR_ENTRUST_ADD T6 ON T1.ENTRUST_ID = T6.ENTRUST_ID
+		LEFT JOIN MST_CUSTOMER_INFO mci ON mci.CUSTOMER_ID = T6.main_consignee AND mci.IS_SALER = 'Y'
 		<where>
 			<if test="portfolioId != null and !portfolioId.equals('')">
 				T1.PORTFOLIO_ID=#{portfolioId}

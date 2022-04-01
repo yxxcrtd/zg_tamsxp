@@ -157,6 +157,13 @@ public class EtrBoutRepoController {
 
     @Transactional
     @DTXTransaction
+    @PostMapping("doDelete")
+    public void doDelete(@RequestBody String workflowId){
+        WFlowCommonService.deleteFlow(workflowId);
+    }
+
+    @Transactional
+    @DTXTransaction
     @PostMapping("doUpdate")
     public void doUpdate(@RequestBody EtrBoutRepoDto dto){
         WFlowCommonService.doUpdateFlow(dto.getOperateType(), etrBoutRepoService.initBaseDto(dto));

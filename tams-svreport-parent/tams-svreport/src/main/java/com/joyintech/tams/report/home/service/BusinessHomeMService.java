@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -16,6 +18,9 @@ import com.joyintech.tams.report.interf.common.constant.DateUtil;
 @Service
 public class BusinessHomeMService extends BaseService<ITableRow>{
 
+    @Autowired
+    private IPlatformDate iPlatformDate;
+
     public List<VbusinessHomeDto> searchBusinessHomeInfo(String searchDate, List<String> menulist) {
         Map<String,Object> param = new HashMap<>();
         param.put("searchDate", searchDate);
@@ -27,7 +32,7 @@ public class BusinessHomeMService extends BaseService<ITableRow>{
 
     public AjaxResult getSystemNow(){
         AjaxResult result = new AjaxResult();
-        result.setData(DateUtil.format(DateUtil.now()));
+        result.setData(DateUtil.format(iPlatformDate.getSysDate()));
         return result;
     }
 

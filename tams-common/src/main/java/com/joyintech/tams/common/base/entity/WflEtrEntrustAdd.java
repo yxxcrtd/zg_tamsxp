@@ -503,6 +503,27 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
     private String entrustCreateSource;
 
     /**
+     * 权重方式
+     */
+    private String weighType;
+
+    /**
+     * 权重方式
+     */
+    private String mulDistriClass;
+
+    /**
+     * 目标值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal mulTarget;
+
+    /**
+     * 目标值单位
+     */
+    private String mulUnit;
+
+    /**
      * 取得 清算速度
      * @return 清算速度
      */
@@ -1999,5 +2020,37 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
      */
     public void setEntrustCreateSource(String entrustCreateSource) {
         this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
+    }
+
+    public String getWeighType() {
+        return weighType;
+    }
+
+    public void setWeighType(String weighType) {
+        this.weighType = weighType;
+    }
+
+    public String getMulDistriClass() {
+        return mulDistriClass;
+    }
+
+    public void setMulDistriClass(String mulDistriClass) {
+        this.mulDistriClass = mulDistriClass;
+    }
+
+    public BigDecimal getMulTarget() {
+        return mulTarget;
+    }
+
+    public void setMulTarget(BigDecimal mulTarget) {
+        this.mulTarget = mulTarget;
+    }
+
+    public String getMulUnit() {
+        return mulUnit;
+    }
+
+    public void setMulUnit(String mulUnit) {
+        this.mulUnit = mulUnit;
     }
 }

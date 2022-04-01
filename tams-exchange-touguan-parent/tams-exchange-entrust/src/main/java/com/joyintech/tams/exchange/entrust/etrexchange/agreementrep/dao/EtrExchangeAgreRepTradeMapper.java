@@ -12,6 +12,7 @@ package com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade002Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade003Dto;
@@ -96,4 +97,25 @@ public interface EtrExchangeAgreRepTradeMapper {
      * @return
      */
     List<SelectOptionDto> selectTradeId(Map<String, Object> map);
+
+    /**
+     * 查询资产信息
+     * @param map 参数
+     * @return 资产信息
+     */
+    List<FinProduct> selectFinProductData(Map<String, Object> map);
+
+    /**
+     * 查询已经做了的提前购回、到期购回、到期续作、解除质押指令条数
+     * @param map 参数
+     * @return 指令条数
+     */
+    int selectDoneEtrEntrustCount(Map<String, Object> map);
+
+    /**
+     * 查询市场代码信息
+     * @param map 参数
+     * @return 市场代码信息
+     */
+    List<String> selectFinprodMarketIdData(Map<String, Object> map);
 }

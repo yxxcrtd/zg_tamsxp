@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.salestransaction.dao.SvrSalesTransactionDBInterfMapper_mysql" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbSalesTransactionInfo">
+		SELECT
+		REGIST_SEQNO,
+		DATA_STATUS,
+		INSTITUTION_CODE,
+		PRD_REGIST_CODE,
+		ACCOUNT_NO,
+		ACCOUNT_NAME,
+		TRADE_NO,
+		TRADE_PS,
+		TRADE_COUNTER_ACC_NO,
+		TRADE_COUNTER_ACC_NAME,
+		TRADE_COUNTER_ACC_BANK_NAME,
+		TRADE_COUNTER_ACC_BANK_NO,
+		TRADE_CCY,
+		TRADE_AMT,
+		TRADE_VDATE,
+		TRADE_TIME,
+		POSTSCRIPT,
+		RECEPT_DATE,
+		CREATE_USER,
+		ORG_CODE,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		REMARK
+	    FROM CHB_SALER_STL_DEAL_INFO
+		WHERE DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+
+	</select>
+	
+	 <select id="selectRegSalesTransactionData" resultType="com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub">
+		SELECT
+		 REGIST_SEQNO,
+		 DATA_STATUS,
+		 INSTITUTION_CODE,
+		 PRD_REGIST_CODE,
+		 ACCOUNT_NO,
+		 ACCOUNT_NAME,
+		 TRADE_NO,
+		 TRADE_PS,
+		 TRADE_COUNTER_ACC_NO,
+		 TRADE_COUNTER_ACC_NAME,
+		 TRADE_COUNTER_ACC_BANK_NAME,
+		 TRADE_COUNTER_ACC_BANK_NO,
+		 TRADE_CCY,
+		 TRADE_AMT,
+		 TRADE_VDATE,
+		 TRADE_TIME,
+		 POSTSCRIPT,
+		 CREATE_USER,
+		 ORG_CODE,
+		 CREATE_DEPT,
+		 CREATE_TIME,
+		 UPDATE_USER,
+		 UPDATE_TIME,
+		 SUMIT_SEQ,
+		 CHB_SUBMIT_DEADLINE,
+		 SUBMIT_DEADLINE,
+		 SUBMIT_FEEDBACK_STATUS,
+		 SEND_STATUS,
+		 STATUS_DATE,
+		 SUBMIT_TIME,
+		 REMARK
+		FROM CHB_SALER_STL_DEAL_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+	
+	<delete id="deleteBatchData" parameterType="map">
+		DELETE FROM CHB_SALER_STL_DEAL_SUB
+		<where>
+  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+				INSTITUTION_CODE = #{item.institutionCode,jdbcType=VARCHAR}
+  				AND TRADE_NO = #{item.tradeNo,jdbcType=VARCHAR}
+  				AND SEND_STATUS = '01'
+    		</foreach>
+  		</where>
+	</delete>
+	
+	<insert id="insertChbSalesTransactionSubData">
+		insert into CHB_SALER_STL_DEAL_SUB (REGIST_SEQNO,INSTITUTION_CODE,PRD_REGIST_CODE,ACCOUNT_NO,ACCOUNT_NAME,
+		TRADE_NO,TRADE_PS,TRADE_COUNTER_ACC_NO,TRADE_COUNTER_ACC_NAME,
+		TRADE_COUNTER_ACC_BANK_NAME,TRADE_COUNTER_ACC_BANK_NO,TRADE_CCY,
+		TRADE_AMT,TRADE_VDATE,TRADE_TIME,POSTSCRIPT,DATA_STATUS,
+		ORG_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,
+		SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SUBMIT_FEEDBACK_STATUS,
+		SEND_STATUS,STATUS_DATE,SUBMIT_TIME,REMARK)
+		select REGIST_SEQNO,INSTITUTION_CODE,PRD_REGIST_CODE,ACCOUNT_NO,ACCOUNT_NAME,
+		TRADE_NO,TRADE_PS,TRADE_COUNTER_ACC_NO,TRADE_COUNTER_ACC_NAME,
+		TRADE_COUNTER_ACC_BANK_NAME,TRADE_COUNTER_ACC_BANK_NO,TRADE_CCY,
+		TRADE_AMT,TRADE_VDATE,TRADE_TIME,POSTSCRIPT,DATA_STATUS,
+		ORG_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,
+		SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SUBMIT_FEEDBACK_STATUS,
+		SEND_STATUS,STATUS_DATE,SUBMIT_TIME,REMARK from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="subList" item="item" open="select * from("
+				 close=")" separator="union all">
+			SELECT
+			#{item.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO,
+			#{item.institutionCode,jdbcType=VARCHAR} INSTITUTION_CODE,
+			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+			#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
+			#{item.accountName,jdbcType=VARCHAR} ACCOUNT_NAME,
+			#{item.tradeNo,jdbcType=VARCHAR} TRADE_NO,
+			#{item.tradePs,jdbcType=VARCHAR} TRADE_PS,
+			#{item.tradeCounterAccNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NO,
+			#{item.tradeCounterAccName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NAME,
+			#{item.tradeCounterAccBankName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NAME,
+			#{item.tradeCounterAccBankNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NO,
+			#{item.tradeCcy,jdbcType=VARCHAR} TRADE_CCY,
+			#{item.tradeAmt,jdbcType=VARCHAR} TRADE_AMT,
+			#{item.tradeVdate,jdbcType=VARCHAR} TRADE_VDATE,
+			#{item.tradeTime,jdbcType=VARCHAR} TRADE_TIME,
+			#{item.postscript,jdbcType=VARCHAR} POSTSCRIPT,
+			#{item.dataStatus,jdbcType=VARCHAR} DATA_STATUS,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=VARCHAR} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=VARCHAR} CREATE_TIME,
+			#{item.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
+			#{item.chbSubmitDeadline,jdbcType=VARCHAR} CHB_SUBMIT_DEADLINE,
+			#{item.submitDeadline,jdbcType=VARCHAR} SUBMIT_DEADLINE,
+			#{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+			#{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
+			#{item.statusDate,jdbcType=VARCHAR} STATUS_DATE,
+			#{item.submitTime,jdbcType=VARCHAR} SUBMIT_TIME,
+			#{item.remark,jdbcType=VARCHAR} REMARK
+			FROM DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_SALER_STL_DEAL_SUB CII where CII.INSTITUTION_CODE = TEMP.INSTITUTION_CODE
+		AND CII.TRADE_NO = TEMP.TRADE_NO
+		AND CII.DATA_STATUS = TEMP.DATA_STATUS
+		AND 1 = 2 <!-- 更新废弃，直接先删后插 -->)
+		) de ;
+
+		UPDATE  CHB_SALER_STL_DEAL_SUB as A,
+		(
+		select REGIST_SEQNO,INSTITUTION_CODE,PRD_REGIST_CODE,ACCOUNT_NO,ACCOUNT_NAME,
+		TRADE_NO,TRADE_PS,TRADE_COUNTER_ACC_NO,TRADE_COUNTER_ACC_NAME,
+		TRADE_COUNTER_ACC_BANK_NAME,TRADE_COUNTER_ACC_BANK_NO,TRADE_CCY,
+		TRADE_AMT,TRADE_VDATE,TRADE_TIME,POSTSCRIPT,DATA_STATUS,
+		ORG_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,
+		SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SUBMIT_FEEDBACK_STATUS,
+		SEND_STATUS,STATUS_DATE,SUBMIT_TIME,REMARK from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="subList" item="item" open="select * from("
+				 close=")" separator="union all">
+			SELECT
+			#{item.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO,
+			#{item.institutionCode,jdbcType=VARCHAR} INSTITUTION_CODE,
+			#{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+			#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
+			#{item.accountName,jdbcType=VARCHAR} ACCOUNT_NAME,
+			#{item.tradeNo,jdbcType=VARCHAR} TRADE_NO,
+			#{item.tradePs,jdbcType=VARCHAR} TRADE_PS,
+			#{item.tradeCounterAccNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NO,
+			#{item.tradeCounterAccName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NAME,
+			#{item.tradeCounterAccBankName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NAME,
+			#{item.tradeCounterAccBankNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NO,
+			#{item.tradeCcy,jdbcType=VARCHAR} TRADE_CCY,
+			#{item.tradeAmt,jdbcType=VARCHAR} TRADE_AMT,
+			#{item.tradeVdate,jdbcType=VARCHAR} TRADE_VDATE,
+			#{item.tradeTime,jdbcType=VARCHAR} TRADE_TIME,
+			#{item.postscript,jdbcType=VARCHAR} POSTSCRIPT,
+			#{item.dataStatus,jdbcType=VARCHAR} DATA_STATUS,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=VARCHAR} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=VARCHAR} CREATE_TIME,
+			#{item.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
+			#{item.chbSubmitDeadline,jdbcType=VARCHAR} CHB_SUBMIT_DEADLINE,
+			#{item.submitDeadline,jdbcType=VARCHAR} SUBMIT_DEADLINE,
+			#{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+			#{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
+			#{item.statusDate,jdbcType=VARCHAR} STATUS_DATE,
+			#{item.submitTime,jdbcType=VARCHAR} SUBMIT_TIME,
+			#{item.remark,jdbcType=VARCHAR} REMARK
+			FROM DUAL
+		</foreach>
+		) TEMP
+		) de
+		) AS B
+		set  A.INSTITUTION_CODE = B.INSTITUTION_CODE,
+		A.PRD_REGIST_CODE = B.PRD_REGIST_CODE,
+		A.ACCOUNT_NO = B.ACCOUNT_NO,
+		A.ACCOUNT_NAME = B.ACCOUNT_NAME,
+		A.TRADE_NO = B.TRADE_NO,
+		A.TRADE_PS = B.TRADE_PS,
+		A.TRADE_COUNTER_ACC_NO = B.TRADE_COUNTER_ACC_NO,
+		A.TRADE_COUNTER_ACC_NAME = B.TRADE_COUNTER_ACC_NAME,
+		A.TRADE_COUNTER_ACC_BANK_NAME = B.TRADE_COUNTER_ACC_BANK_NAME,
+		A.TRADE_COUNTER_ACC_BANK_NO = B.TRADE_COUNTER_ACC_BANK_NO,
+		A.TRADE_CCY = B.TRADE_CCY,
+		A.TRADE_AMT = B.TRADE_AMT,
+		A.TRADE_VDATE = B.TRADE_VDATE,
+		A.TRADE_TIME = B.TRADE_TIME,
+		A.POSTSCRIPT = B.POSTSCRIPT,
+		A.ORG_CODE = B.ORG_CODE,
+		A.UPDATE_TIME = B.UPDATE_TIME,
+		A.UPDATE_USER = B.UPDATE_USER,
+		A.REMARK = B.REMARK where  exists (select 1 from CHB_SALER_STL_DEAL_SUB CII where CII.INSTITUTION_CODE = B.INSTITUTION_CODE
+		AND CII.TRADE_NO = B.TRADE_NO
+		AND CII.DATA_STATUS = B.DATA_STATUS);
+	</insert>
+
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub">
+		insert into CHB_SALER_STL_DEAL_SUB(REGIST_SEQNO, DATA_STATUS, INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME, TRADE_NO, TRADE_PS, TRADE_COUNTER_ACC_NO,
+		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY, TRADE_AMT, TRADE_VDATE,TRADE_TIME,POSTSCRIPT, REMARK,
+		CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+		STATUS_DATE,SUMIT_SEQ,SEND_STATUS,
+		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+		values(
+		#{registSeqno,jdbcType=VARCHAR},#{dataStatus,jdbcType=VARCHAR},#{institutionCode,jdbcType=VARCHAR},#{prdRegistCode,jdbcType=VARCHAR},
+		#{accountNo,jdbcType=VARCHAR},#{accountName,jdbcType=VARCHAR},#{tradeNo,jdbcType=VARCHAR}, #{tradePs,jdbcType=VARCHAR},
+		#{tradeCounterAccNo,jdbcType=VARCHAR}, #{tradeCounterAccName,jdbcType=VARCHAR},
+		#{tradeCounterAccBankName,jdbcType=VARCHAR},#{tradeCounterAccBankNo,jdbcType=VARCHAR},
+		#{tradeCcy,jdbcType=VARCHAR},#{tradeAmt,jdbcType=DECIMAL},#{tradeVdate,jdbcType=DATE},#{tradeTime,jdbcType=VARCHAR},
+		#{postscript,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+		#{chbSubmitDeadline,jdbcType=DATE},#{submitDeadline,jdbcType=DATE},now(),
+		#{sumitSeq,jdbcType=VARCHAR},#{sendStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},
+		now(),#{updateUser},now())
+	</insert>
+
+</mapper>

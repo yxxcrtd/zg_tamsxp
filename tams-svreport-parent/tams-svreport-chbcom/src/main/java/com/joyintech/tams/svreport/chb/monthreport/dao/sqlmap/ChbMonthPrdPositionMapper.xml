@@ -467,6 +467,8 @@
                 then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val5.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val5.TDY_UNIT_VALUE_SUM, 1) * to_number(info.MDATE - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
             when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{startdate,jdbcType=DATE}-1, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) = substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
                 then (nvl(val3.TDY_UNIT_VALUE_SUM, 1) - nvl(val2.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val2.TDY_UNIT_VALUE_SUM, 1) * to_number(info.MDATE - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            when info.VDATE <![CDATA[<=]]> #{startdate,jdbcType=DATE} and info.MDATE  <![CDATA[>=]]> #{enddate, jdbcType=DATE}
+                then (nvl(val.TDY_UNIT_VALUE_SUM, 1) - nvl(val2.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val2.TDY_UNIT_VALUE_SUM, 1) * (to_number(#{startdate, jdbcType=DATE} - #{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
             else (nvl(val.TDY_UNIT_VALUE_SUM, 1) - nvl(val5.TDY_UNIT_VALUE_SUM, 1)) / (nvl(val5.TDY_UNIT_VALUE_SUM, 1) * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
       when info.PRODTYPE = 'N' then
             case when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) != substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
@@ -475,6 +477,8 @@
             then (nvl(val3.UNIT_VALUE_TOTAL, 1) - nvl(val5.UNIT_VALUE_TOTAL, 1)) / (nvl(val5.UNIT_VALUE_TOTAL, 1) * to_number(info.MDATE - info.VDATE)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
             when substr(to_char(info.VDATE, 'yyyy-MM-dd'), 0, 7) = substr(to_char(#{startdate,jdbcType=DATE}-1, 'yyyy-MM-dd'), 0, 7) and substr(to_char(#{enddate, jdbcType=DATE}, 'yyyy-MM-dd'), 0, 7) = substr(to_char(info.MDATE, 'yyyy-MM-dd'), 0, 7)
             then (nvl(val3.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (nvl(val2.UNIT_VALUE_TOTAL, 1) * to_number(info.MDATE - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1)
+            when info.VDATE <![CDATA[<=]]> #{startdate,jdbcType=DATE} and info.MDATE  <![CDATA[>=]]> #{enddate, jdbcType=DATE}
+            then (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val2.UNIT_VALUE_TOTAL, 1)) / (nvl(val2.UNIT_VALUE_TOTAL, 1) * (to_number(#{startdate, jdbcType=DATE} - #{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
             else (nvl(val.UNIT_VALUE_TOTAL, 1) - nvl(val5.UNIT_VALUE_TOTAL, 1)) / (nvl(val5.UNIT_VALUE_TOTAL, 1) * to_number(#{enddate, jdbcType=DATE} - #{startdate, jdbcType=DATE} + 1)) * decode(info.BASIC, 'A/360', 360, 'A/365', 365, 1) end
       when info.PRODTYPE = 'R' then
           case when info.OPERATE_MODE in ('01', '02') then info.EXP_AVG_YIELD

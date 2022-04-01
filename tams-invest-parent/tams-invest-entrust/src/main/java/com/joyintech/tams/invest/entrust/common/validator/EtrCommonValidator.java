@@ -210,7 +210,10 @@ public interface EtrCommonValidator extends BeanValidator {
             else {
                 checkOrder(value, validMessageList);
             }
-            
+
+//            if (CacheUtil.getSysParam(BussinessConstant.ETR_TRADE_TIME_SWITCH).equals(DictCodeListExt1.是否_是.getValue())){
+//                validMessageList.add(new ValidMessage("vdate", "已闭市不能下达当日指令"));
+//            }
             // 委托开始日不得小于平台日
             Field vdate = ReflectionUtils.findField(value.getClass(), "vdate");
             if (vdate != null ) {

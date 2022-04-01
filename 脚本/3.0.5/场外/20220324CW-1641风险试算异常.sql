@@ -1,0 +1,2 @@
+--现金管理类产品市值法资产净值与摊余成本法计算的资产净值负偏离度绝对值不超过0.25%    公式配置修改
+update RSK_ISUP_INDICATOR set EXPR = '${CPGZPLD}' where RSK_ISUP_INDICATOR.IND_ID = 'd2f8f79486fc491cbc36965be16080a0' AND RSK_ISUP_INDICATOR.IND_NUM = 'SUP033023';

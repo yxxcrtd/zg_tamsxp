@@ -1,28 +1,26 @@
 package com.joyintech.tams.settle.batch.datagather.reader;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleBatchPara;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListStl;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.settle.batch.datadeal.service.StlDownDataDealService;
+import com.joyintech.tams.settle.batch.datagather.constant.StlDataGatherConstant;
 import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
 import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
 import com.joyintech.tams.settle.batch.datagather.service.StlDataGatherService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 分红和送转股票交易数据处理
- * 
+ *
  * @author chenzhuo
  * @date 2020/7/20
  * @see StlDataGatherShares2Reader
@@ -40,6 +38,8 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
 
     @Override
     public List<InvestTradeReaderDto> createList() {
+        List<InvestTradeReaderDto> resultList = new ArrayList<InvestTradeReaderDto>();
+        InvestTradeReaderDto investTradeReaderDto = new InvestTradeReaderDto();
         // 批处理执行信息
         SysBatchExecInfo execInfo = getBatchExecuteInfo();
         // 数据清算参数表
@@ -60,60 +60,43 @@ public class StlDataGatherShares2Reader extends StlDataGatherReader {
         Map<String, Object> searchParam = new HashMap<String, Object>();
         searchParam.put("portfolioIdList", portfolioIdList);
         setSearchParam(searchParam);
-        // 除权交易明细数据
-        searchParam.put("startDate", execInfo.getExecuteDate());
-        searchParam.put("endDate", execInfo.getExecuteDate());
-        searchParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
-        List<SettleDelDealDetailDto> settleDelDealDetailDtoList = stlDataGatherService.selectSettleDelDealDetail(searchParam);
+        // 除权交易
+        searchParam.put("dealDate", execInfo.getExecuteDate());
 
-        if (CollectionUtils.isNotEmpty(settleDelDealDetailDtoList)) {
-            // 公告基本信息按照资产代码分组
-            Map<String, List<SettleDelDealDetailDto>> regMap = settleDelDealDetailDtoList.stream().collect(Collectors.groupingBy(x -> {
-                return x.getFinprodId();
-            }));
-            
-            // 现金分红和送转的相关交易数据
-            searchParam.put("finprodIdList", new ArrayList<>(regMap.keySet()));
-            List<SettleTransDataDto> tempSettleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
-            if (CollectionUtils.isNotEmpty(tempSettleTransDataDtos)) {
-                // 交易数据根据资产代码分组
-                Map<String, List<SettleTransDataDto>> dataMap = tempSettleTransDataDtos.stream().collect(Collectors.groupingBy(x -> {
-                    return x.getFinprodId();
-                }));
+        // GNS-932:除权交易不从SHARE_BONUS_REG读取数据 modify by fuyongsheng 20220224 start
+//        List<SettleDelDealDetailDto> settleDelDealDetailDtoList = stlDataGatherService.selectSettleDelDealDetail(searchParam);
+//        investTradeReaderDto.setSettleTransDataDelDtoList(settleDelDealDetailDtoList);
+        // GNS-932:除权交易不从SHARE_BONUS_REG读取数据 modify by fuyongsheng 20220224 end
 
-                List<SettleTransDataDto> settleTransDataDtos = new ArrayList<SettleTransDataDto>();
-                for (String key : dataMap.keySet()) {
-                    settleTransDataDtos.addAll(dataMap.get(key).stream().filter(x -> {
-                        return ((StringUtil.equals(x.getPs(), DictCodeList.交易方向_现金分红.getValue())
-                                 && !StringUtil.isEmptyList(regMap.get(key))
-                                 && DateUtil.compareDate(x.getDealDate(), regMap.get(key).get(0).getRegDate()) == 0)// 权益登记日
-                                || (StringUtil.equals(x.getPs(), DictCodeListStl.交易方向_送股.getValue())
-                                    && !StringUtil.isEmptyList(regMap.get(key))
-                                    && DateUtil.compareDate(x.getDealDate(), regMap.get(key).get(0).getDelDate()) == 0));// 除权除息日
-                    }).collect(Collectors.toList()));
-                }
-                
-                if (CollectionUtils.isNotEmpty(settleTransDataDtos)) {
-                    List<InvestTradeReaderDto> resultList = new ArrayList<InvestTradeReaderDto>();
-                    InvestTradeReaderDto investTradeReaderDto = new InvestTradeReaderDto();
-                    investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
-                    investTradeReaderDto.setSettleTransDataDelDtoList(settleDelDealDetailDtoList);
-                    resultList.add(investTradeReaderDto);
-                    return resultList;
-                }
-            }
+        //现金分红和送转和除权登记
+        // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+        // List<SettleTransDataDto> settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
+        List<SettleTransDataDto> settleTransDataDtos;
+        // 新老头寸开关(Y:新头寸,N:老头寸)
+        String newSecPositionSwitch = CacheUtil.getSysParam("NEW_SEC_POSITION_SWITCH");
+        // 开关配置N查老头存
+        if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+            settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
+        }else{ // 默认查新头寸
+            searchParam.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            searchParam.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+            settleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransDataNewPosition(searchParam);
         }
+        // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
+        investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
 
-        return null;
+        //申购确认
+        investTradeReaderDto.setSettleTransDataSgqrList(stlDataGatherMapper.selectCashBonusSettleTransData1(searchParam));
+
+        resultList.add(investTradeReaderDto);
+        return resultList;
     }
 
     @Override
     protected void setSearchParam(Map<String, Object> searchParam) {
-        // 业务类型
-        searchParam.put("busiType", DictCodeList.业务类型_股票交易.getValue());
         // 交易方向列表
         searchParam.put("psList",
-            Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeListStl.交易方向_送股.getValue()));
+                Arrays.asList(DictCodeList.交易方向_现金分红.getValue(), DictCodeList.交易方向_红利再投.getValue()));
     }
 
     @Override

@@ -240,7 +240,7 @@ $(function(){
             param = getPageParams();
             param.flag = flag;
             if(flag=="01"){
-               param.status="01";
+               param.status="01,02";
                param.sendStatus="01";
             }
             var isHaveData = true;

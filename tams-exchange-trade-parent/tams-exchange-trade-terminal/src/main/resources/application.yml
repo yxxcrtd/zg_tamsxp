@@ -2,8 +2,8 @@ server:
   port: 8889
 agent:
   servers: 127.0.0.1:9190
-  name: terminal_ufx
-  type: ufx #mock #ufx #KDGateway #ufx #kcbp
+  name: kcbp
+  type: mock #mock #ufx #KDGateway #ufx #kcbp
   query:
     interval: 1000
     count: 2
@@ -27,7 +27,7 @@ trade:
 
 log:
   path: /home/tams/logs/terminal
-  level: INFO
+  level: debug
 
 netty:
   port: 9190
@@ -71,7 +71,7 @@ kcbp:
 
 # ufx config
 ufx:
-  active: true
+  active: false
   path: tams-exchange-terminal/ufxconfig/t2sdk_hundsun-config.xml
   opStation:
     #终端名称
@@ -93,75 +93,27 @@ KDGateway:
     mark: JOYIN;V0.0.0.1@V1.0
 
 jsd:
-  active: true
+  active: false
   connectTimeout: 10000
 
 ctp:
   active: false
-
----
-spring:
-  profiles: gaoyu
-  datasource:
-    url: jdbc:oracle:thin:@//211.152.51.188:1521/wind
-    username: yitihua1_0710
-    password: yitihua1_0710
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//211.152.51.188:1521/wind
-    username: yitihua1_0710
-    password: yitihua1_0710
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-eureka:
-  client:
-    enabled: false
-log:
-  path: /home/tams/logs/terminal
-  level: INFO
----
-spring:
-  profiles: joyin-216
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.217:1521/orcl
-    username: tams217
-    password: tams217
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.90.217:1521/orcl
-    username: tams217
-    password: tams217
-    maxTotal: 50
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
-eureka:
-  client:
-    enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-log:
-  path: /home/tams/logs/terminal
-  level: INFO
 ---
 spring:
   profiles: joyin-210
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
-    username: hgcs01
-    password: hgcs01
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS303INIT_EXCHANGE0106
+    password: BS303INIT_EXCHANGE0106
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.180:1521/orcl
-    username: hgcs01
-    password: hgcs01
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    username: BS303INIT_EXCHANGE0106
+    password: BS303INIT_EXCHANGE0106
     maxTotal: 50
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 eureka:
   client:
     enabled: false #是否启用eureka客户端，如果启用，则需要有eureka服务器，默认为true
-log:
-  path: /home/tams/logs/terminal
-  level: INFO

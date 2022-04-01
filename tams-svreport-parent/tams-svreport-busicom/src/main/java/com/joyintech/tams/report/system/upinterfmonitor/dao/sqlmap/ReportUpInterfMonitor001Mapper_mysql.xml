@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.system.upinterfmonitor.dao.ReportUpInterfMonitor001Mapper_mysql">
-
+	<select id="queryHandleFileNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
+	SELECT DISTINCT
+	A.HANDLE_FILE_NAME as text,
+	A.HANDLE_FILE_NAME as id
+	FROM CHB_FILE_READ_MONITOR_INFO A
+	</select>
 	<select id="searchForPage"
-		resultType="com.joyintech.tams.report.system.upinterfmonitor.dto.ReportUpInterfMonitor001Dto">
-		SELECT 
-		 A.HANDLE_SEQNO   handleSeqno,
+			resultType="com.joyintech.tams.report.system.upinterfmonitor.dto.ReportUpInterfMonitor001Dto">
+		SELECT
+		A.HANDLE_SEQNO   handleSeqno,
 		A.HANDLE_FILE_NAME  handleFileName,
 		A.HANDLE_FILE_PATH  handleFilePath,
 		A.HANDLE_FILE_TYPE  handleFileType,
@@ -18,17 +23,17 @@
 		FROM
 		CHB_FILE_READ_MONITOR_INFO A
 		<where>
-		<if test="handleFileTypeList!=null and handleFileTypeList.size()>0">
-			<foreach collection="handleFileTypeList" item="handleFileType" open=" AND A.HANDLE_FILE_TYPE IN (" close=")" separator=",">
-             		#{handleFileType,jdbcType=VARCHAR}
-            </foreach>
-		</if>
-		<if test="fileHandleStatusList!=null and fileHandleStatusList.size()>0">
-			<foreach collection="fileHandleStatusList" item="fileHandleStatus" open=" AND A.FILE_HANDLE_STATUS IN (" close=")" separator=",">
-             		#{fileHandleStatus,jdbcType=VARCHAR}
-            </foreach>		
-        </if>
-		<if test="startDate != null and startDate != ''">
+			<if test="handleFileTypeList!=null and handleFileTypeList.size()>0">
+				<foreach collection="handleFileTypeList" item="handleFileType" open=" AND A.HANDLE_FILE_TYPE IN (" close=")" separator=",">
+					#{handleFileType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="fileHandleStatusList!=null and fileHandleStatusList.size()>0">
+				<foreach collection="fileHandleStatusList" item="fileHandleStatus" open=" AND A.FILE_HANDLE_STATUS IN (" close=")" separator=",">
+					#{fileHandleStatus,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="startDate != null and startDate != ''">
 				AND  DATE_FORMAT(A.FILE_READ_START_TIME,'%Y-%m-%d') >= #{startDate}
 			</if>
 			<if test="endDate != null and endDate != ''">

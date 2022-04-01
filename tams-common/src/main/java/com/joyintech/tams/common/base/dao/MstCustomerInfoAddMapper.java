@@ -14,6 +14,7 @@ public interface MstCustomerInfoAddMapper {
 
     int insertBasicByBasicInfo(MstCustomerInfoAddWithBLOBs record);
 
+
     MstCustomerInfoAddWithBLOBs selectByPrimaryKey(String customerId);
 
     int updateByPrimaryKeySelective(MstCustomerInfoAddWithBLOBs record);

@@ -639,7 +639,10 @@ public class RedisViewController extends RedisBaseController {
             return;
         }
         // add by zhangrui1 end
-
+        if (isRedisKey(key, RedisKeyEnum.预占实占信息)) {
+            redisWriter.dealOccupyRelParamData();
+            return;
+        }
         cond.setParamCodeArray(StringUtil.substring(key, 0, StringUtil.indexOf(key, GlobalConstant.COLON)));
         cond.setIsUpdParVal(true);
         List<String> fList = new ArrayList<>();

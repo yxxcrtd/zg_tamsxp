@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport">
+    <id column="REPORTUUID" jdbcType="VARCHAR" property="reportuuid" />
+    <result column="TERMID" jdbcType="VARCHAR" property="termid" />
+    <result column="REPORTTYPE" jdbcType="VARCHAR" property="reporttype" />
+    <result column="REPROT_NAME" jdbcType="VARCHAR" property="reportName" />
+    <result column="REPORT_DATE" jdbcType="DATE" property="reportDate" />
+    <result column="STARTDATE" jdbcType="DATE" property="startdate" />
+    <result column="ENDDATE" jdbcType="DATE" property="enddate" />
+    <result column="ISSUE_PARTY_ID" jdbcType="VARCHAR" property="issuePartyId" />
+    <result column="ISSUE_PARTY_NAME" jdbcType="VARCHAR" property="issuePartyName" />
+    <result column="REPORTFREQU" jdbcType="VARCHAR" property="reportfrequ" />
+    <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="CHB_SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="chbSubmitDeadline" />
+    <result column="SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="submitDeadline" />
+    <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
+    <result column="DATA_STATUS" jdbcType="VARCHAR" property="dataStatus" />
+    <result column="SEND_STATUS" jdbcType="VARCHAR" property="sendStatus" />
+    <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    REPORTUUID, TERMID, REPORTTYPE, REPROT_NAME, REPORT_DATE, STARTDATE, ENDDATE, ISSUE_PARTY_ID, ISSUE_PARTY_NAME,
+    REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS,
+    DATA_STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+    ORG_CODE, DEPT_CODE, CREATE_DEPT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from CHB_SALE_MONTH_REPORT
+    where trim(REPORTUUID) = #{reportuuid,jdbcType=CHAR}
+  </select>
+<!--	分页查询-->
+    <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport">
+   select * from (
+   	 	select 
+	        REPORTUUID reportuuid,
+		    TERMID termid,
+		    REPORTTYPE reporttype,
+            REPROT_NAME reportName,
+		    REPORT_DATE reportDate,
+		    STARTDATE startdate,
+		    ENDDATE enddate,
+		    ISSUE_PARTY_ID issuePartyId,
+		    ISSUE_PARTY_NAME issuePartyName,
+		    REPORTFREQU reportfrequ,
+		    SUBMIT_TIME submitTime,
+		    CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+		    SUBMIT_DEADLINE submitDeadline,
+		    SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		    DATA_STATUS dataStatus,
+		    SEND_STATUS sendStatus,
+		    STATUS_DATE statusDate,
+		    CREATE_USER createUser,
+		    CREATE_TIME createTime,
+		    UPDATE_USER updateUser,
+		    UPDATE_TIME updateTime,
+		    ORG_CODE orgCode,
+		    DEPT_CODE deptCode,
+		    CREATE_DEPT createDept
+	    from CHB_SALE_MONTH_REPORT
+   		<where>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				CHB_SUBMIT_DEADLINE &gt;= #{submitDeadLineStart}
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				and CHB_SUBMIT_DEADLINE &lt;= #{submitDeadLineEnd}
+			</if>
+			<if test="sendStatusList != null and sendStatusList.size()&gt;0">
+				<foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="keyList != null and keyList.size()&gt;0">
+                <foreach close=")" collection="keyList" item="item" open="and REPORTUUID in(" separator=",">
+                #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+			<if test="dataStatusList != null and dataStatusList.size()&gt;0">
+				<foreach close=")" collection="dataStatusList" item="item" open="and DATA_STATUS in(" separator=",">
+				#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="statusDateStart != null and statusDateStart != ''">
+				and STATUS_DATE &gt;= #{statusDateStart}
+			</if>
+			<if test="statusDateEnd != null and statusDateEnd != ''">
+				and STATUS_DATE &lt;= #{statusDateEnd}
+			</if>
+			<if test="submitTimeStart != null and submitTimeStart != ''">
+				and SUBMIT_TIME &gt;= #{submitTimeStart}
+			</if>
+			<if test="submitTimeEnd != null and submitTimeEnd != ''">
+				and SUBMIT_TIME &lt;= #{submitTimeEnd}
+			</if>
+			<if test="termidDateStart != null and submitDateStart != ''">
+				and termid &gt;= #{termidDateStart}
+			</if>
+			<if test="termidDateEnd != null and submitDateEnd != ''">
+				and termid &lt;= #{termidDateEnd}
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() &gt; 0">
+		 		<foreach close=")" collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" separator=",">
+             		#{submitFeedbackStatus,jdbcType=VARCHAR}
+            	</foreach>	
+		 	</if>
+		 	<if test="sendStatus != null  and sendStatus != ''">
+				and SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+			</if>
+			<if test="termid != null and termid != ''">
+				and termid =  #{termid,jdbcType=VARCHAR}
+			</if>
+			<if test="enddate != null and enddate != ''">
+				and date_format(ENDDATE,'%Y-%m')  =  #{enddate,jdbcType=VARCHAR}
+			</if>
+		</where>
+   	) t ORDER BY STATUSDATE
+  </select>
+	<select id="setDataList" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReportDetail">
+		select
+		a.REGIST_SEQNO registSeqno,
+		a.SEND_STATUS sendStatus,
+		a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		a.SUBMIT_TIME submitTime,
+		a.SUBMIT_DEADLINE submitDeadline,
+		a.DATA_STATUS dataStatus,
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.ACCOUNT_NAME accountName,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		a.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		a.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		a.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		a.TRADE_CCY tradeCcy,
+		a.TRADE_AMT tradeAmt,
+		a.TRADE_VDATE tradeVdate,
+		a.TRADE_TIME tradeTime,
+		a.POSTSCRIPT postscript,
+		a.REMARK remark,
+		a.UPDATE_TIME
+		FROM
+		CHB_SALER_STL_DEAL_SUB a
+		CHB_SALER_STL_DEAL_SUB a
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+		/*LEFT JOIN
+		CHB_SUBMIT_STATUS status
+		ON
+		a.SUMIT_SEQ = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+		where 1=1
+		<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+			and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+		</if>
+		<if test="sendStatus != null and sendStatus != ''">
+			and a.SEND_STATUS = #{sendStatus}
+		</if>
+		<if test="dataStatus != null and dataStatus != ''">
+			and a.DATA_STATUS = #{dataStatus}
+		</if>
+		<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+			and a.SUBMIT_DEADLINE between #{searchSubmitDeadlineStart} and #{searchSubmitDeadlineEnd}
+		</if>
+		<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
+			and a.STATUS_DATE between #{searchStatusDateStart} and #{searchStatusDateEnd}
+		</if>
+		<if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+			and a.SUBMIT_TIME between #{searchSubmitTimeStart} and #{searchSubmitTimeEnd}
+		</if>
+	</select>
+
+<!--	手工处理-->
+	<update id="updateInterfSubmitAndSeqBatch" parameterType="string">
+		update CHB_SALE_MONTH_REPORT
+		set
+		SEND_STATUS = '03',
+		SUBMIT_FEEDBACK_STATUS = '03',
+		submit_time = now()
+		where
+		TERMID = #{termid,jdbcType=CHAR}
+	</update>
+
+<!--	取消手工处理-->
+	<update id="cancelMannultRegist" parameterType="string">
+		update CHB_SALE_MONTH_REPORT
+		set
+		SEND_STATUS = '01',
+		SUBMIT_FEEDBACK_STATUS = null,
+		submit_time = null
+		where
+		TERMID = #{termid,jdbcType=CHAR}
+	</update>
+
+<!--	查询机构名称-->
+	<select id="selectOrgName" parameterType="string" resultType="string">
+		select INSTITUTION_NAME from SYS_INSTITUTION
+		where
+		INSTITUTION_CODE = #{orgCode,jdbcType=VARCHAR}
+	</select>
+
+	<!--	查询中债银行机构代码-->
+	<select id="selectIssuePartyId" parameterType="string" resultType="string">
+		select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
+		where
+		ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+	</select>
+</mapper>

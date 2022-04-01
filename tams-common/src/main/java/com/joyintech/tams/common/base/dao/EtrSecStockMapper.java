@@ -18,4 +18,6 @@ public interface EtrSecStockMapper {
     int updateByPrimaryKeySelective(EtrSecStock record);
 
     int updateByPrimaryKey(EtrSecStock record);
+
+    int updateIsDefStockUser(EtrSecStock record);
 }

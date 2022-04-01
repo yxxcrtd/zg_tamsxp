@@ -2,6 +2,8 @@ package com.joyintech.tams.exchange.service.trade.management.service;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.HistoryTrade;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.common.bean.TradeQueryBean;
@@ -19,9 +21,11 @@ import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeHistoryService;
 import com.joyintech.tams.exchange.datacommon.db.service.TradeService;
 import com.joyintech.tams.exchange.service.trade.processor.others.TerminalHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,49 +53,54 @@ public class TradeManagement {
      * 根据Entrust行数据查询Trade表中数据
      */
     public ResultBean queryTrade(String userId, String entrustId, String instructionId, String accountId, String orderId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
-        }
+        }*/
         if (!Strings.isNullOrEmpty(entrustId)) {
             List<Trade> list = tradeService.queryTradeByEntrust(entrustId);
-            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
             setFutureStockCode(list);
             return new ResultBean(ErrorCode.SUCCESS, list);
         }
         if (!Strings.isNullOrEmpty(orderId)) {
             List<Trade> list = tradeService.queryTradeByOrder(orderId);
-            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
             setFutureStockCode(list);
             return new ResultBean(ErrorCode.SUCCESS, list);
         }
         if (!Strings.isNullOrEmpty(instructionId)) {
             List<Trade> list = tradeService.queryTradeByInstructionId(instructionId);
-            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
             setFutureStockCode(list);
             return new ResultBean(ErrorCode.SUCCESS, list);
         }
         if (!Strings.isNullOrEmpty(accountId)) {
             List<Trade> list = tradeService.queryTradeByAccountId(accountId);
-            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//            list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
             setFutureStockCode(list);
             return new ResultBean(ErrorCode.SUCCESS, list);
         } else {
             return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR);
         }
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
     }
 
     /**
      * 根据委托ID查询成交
      */
     public ResultBean queryTradeByEntrustId(String userId, String entrustId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return ResultBean.success(Collections.EMPTY_LIST);
-        }
+        }*/
 
         List<Trade> list = tradeService.queryTradeByEntrust(entrustId);
-        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         setFutureStockCode(list);
         return ResultBean.success(list);
     }
@@ -100,13 +109,15 @@ public class TradeManagement {
      * 根据订单ID查询成交
      */
     public ResultBean queryTradeByOrderId(String userId, String orderId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return ResultBean.success(Collections.EMPTY_LIST);
-        }
+        }*/
 
         List<Trade> list = tradeService.queryTradeByOrder(orderId);
-        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         setFutureStockCode(list);
         return ResultBean.success(list);
     }
@@ -115,28 +126,52 @@ public class TradeManagement {
      * 根据指令ID查询成交
      */
     public ResultBean queryTradeByInstructionId(String userId, String instructionId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return ResultBean.success(Collections.EMPTY_LIST);
-        }
+        }*/
 
         List<Trade> list = tradeService.queryTradeByInstructionId(instructionId);
-        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+/*        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId()))
+                .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                .collect(Collectors.toList());*/
+        list = list.stream()
+                .sorted((o1, o2) -> DateUtil.compareDate(o2.getCreateTime(), o1.getCreateTime()))
+                .collect(Collectors.toList());
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         setFutureStockCode(list);
-        return ResultBean.success(list);
+        List<Trade> trades = fillTradePrice(list);
+        return ResultBean.success(trades);
+    }
+
+    private List<Trade> fillTradePrice(List<Trade> tradeList) {
+        List<Trade> entrusts = Lists.newArrayListWithCapacity(tradeList.size());
+        tradeList.forEach(o -> {
+            Trade trade = new Trade();
+            BeanUtils.copyProperties(o, trade);
+            if ("EX005".equals(trade.getBusiTypeTg())) {
+                trade.setBondVolume(trade.getTradedPrice().multiply(BigDecimal.valueOf(trade.getTradedVolume())).longValue());
+                trade.setTradedPrice(trade.getTradedPrice().multiply(BigDecimal.valueOf(100)));
+            }
+            entrusts.add(trade);
+        });
+        return entrusts;
     }
 
     /**
      * 根据资金账户ID查询成交
      */
     public ResultBean queryTradeByAccountId(String userId, String accountId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return ResultBean.success(Collections.EMPTY_LIST);
-        }
+        }*/
 
         List<Trade> list = tradeService.queryTradeByAccountId(accountId);
-        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//        list = list.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         setFutureStockCode(list);
         return ResultBean.success(list);
     }
@@ -155,12 +190,14 @@ public class TradeManagement {
     }
 
     public ResultBean queryHistoryTrade(String startDay, String endDay, String accountId, String postStr, int pageSize, String userId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             return new ResultBean(ErrorCode.SUCCESS, new ArrayList());
-        }
+        }*/
         List<HistoryTrade> historyTrade = terminalHelper.queryHistoryTrade(startDay, endDay, accountId, postStr, pageSize);
-        historyTrade = historyTrade.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//        historyTrade = historyTrade.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
         return new ResultBean(ErrorCode.SUCCESS, historyTrade);
     }
 
@@ -168,21 +205,25 @@ public class TradeManagement {
         String userId = request.getUserId();
         String entrustId = request.getEntrustId();
         Integer historyType = request.getHistoryType();
+        request.getPageMode().setPageSize(99999);
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        List<String> ptlAuthList = null;
         //组合权限查询
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             if (!Strings.isNullOrEmpty(entrustId)) {
                 return new Message<PageInfo<TradeQueryBean>>(new PageInfo());
             }
             return new Message<PageInfo<TradeQueryBean>>(new PageInfo());
-        }
+        }*/
 
         if (historyType == PresentOrHistoryQryType.PRESENT.value) {
             if (!Strings.isNullOrEmpty(entrustId)) {
                 List<TradeQueryBean> tradeList = tradeService.queryTradeByEntrustId(entrustId);
-                tradeList = tradeList.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//                tradeList = tradeList.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
                 return new Message<PageInfo<TradeQueryBean>>(new PageInfo<TradeQueryBean>(tradeList));
             }
+            // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
             return new Message<PageInfo<TradeQueryBean>>(tradeService.queryAllForPage(request, ptlAuthList));
         } else if (historyType == PresentOrHistoryQryType.HISTORY.value) {
             if (!Strings.isNullOrEmpty(entrustId)) {
@@ -197,17 +238,20 @@ public class TradeManagement {
 
     @Deprecated
     public ResultBean queryAllForPage(int pageNum, int pageSize, int historyType, String userId, String startDay, String endDay, String accountId, String market, String stockCode, String entrustProp, String entrustId) {
-        List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
+        // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 start
+        List<String> ptlAuthList = null;
+        /*List<String> ptlAuthList = commonManagement.getPtlAuthInfo(userId);//组合权限查询
         if (Objects.isNull(ptlAuthList) || ptlAuthList.size() == 0) {
             if (!Strings.isNullOrEmpty(entrustId)) {
                 return new ResultBean(ErrorCode.SUCCESS, new ArrayList<>());
             }
             return new ResultBean(ErrorCode.SUCCESS, new PageInfo());
-        }
+        }*/
         if (historyType == PresentOrHistoryQryType.PRESENT.value) {
             if (!Strings.isNullOrEmpty(entrustId)) {
                 List<Trade> tradeList = tradeService.queryTradeByEntrust(entrustId);
-                tradeList = tradeList.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+//                tradeList = tradeList.stream().filter(trade -> ptlAuthList.contains(trade.getPortfolioId())).collect(Collectors.toList());
+                // modify by swwan ZGTFCP-606 只要是交易员下单操作过的都应该能查到 end
                 return new ResultBean(ErrorCode.SUCCESS, tradeList);
             }
             PageInfo<Trade> tradePageInfo = tradeService.queryAllForPage(pageNum, pageSize, userId, accountId, market, stockCode, entrustProp, ptlAuthList);

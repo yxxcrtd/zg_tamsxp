@@ -141,4 +141,6 @@ public interface RaiseTotalRegist001Mapper {
 	 * @return
 	 */
 	List<RaiseTotalRegist001Dto>   getEquCount(String prodId);
+
+	List<RaiseTotalRegist001Dto> selectAllDataForExport(Map<String, Object> pageParam);
 }

@@ -27,10 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -66,7 +66,7 @@ public class FairOrderHelper {
     private FuturesInstrumentService futuresInstrumentService;
 
     private int getRealVolume(double totalVolume, double totalOrderVolume, double leftVolume, int unit) {
-        return (int) TradeUtils.formatDouble(totalOrderVolume * leftVolume / totalVolume, -unit, BigDecimal.ROUND_UP);
+        return (int) TradeUtils.formatDouble(totalOrderVolume * leftVolume / totalVolume, -unit, RoundingMode.UP);
     }
 
     private double getFairOrderVolume(Map<String, Instruction> instructionBeanMap, Order order, Map<String, Double> volumeMap) {
@@ -176,7 +176,7 @@ public class FairOrderHelper {
                         // 买入 涨停价
                         flag = instructionMap.entrySet().stream().anyMatch(entry -> {
                             if (InstructionPriceMode.FIXED.value.equals(entry.getValue().getPriceMode())
-                                    && Double.compare(upperLimitPrice, entry.getValue().getEntrustPrice().doubleValue()) > 0 ) {
+                                    && Double.compare(upperLimitPrice, entry.getValue().getEntrustPrice().doubleValue()) > 0) {
                                 logger.debug("委托价格不优于指令价格系统参数[{}]，买卖方向[{}]，委托类型[{}],存在限价指令[{}]指令价格[{}]小于涨停价[{}]",
                                         commonManagement.getFairModeEntrustPriceBestThanInstruction(),
                                         order.getEntrustBs(),
@@ -192,7 +192,7 @@ public class FairOrderHelper {
                         // 卖出 跌停价
                         flag = instructionMap.entrySet().stream().anyMatch(entry -> {
                             if (InstructionPriceMode.FIXED.value.equals(entry.getValue().getPriceMode())
-                                    && Double.compare(lowerLimitPrice, entry.getValue().getEntrustPrice().doubleValue()) < 0 ) {
+                                    && Double.compare(lowerLimitPrice, entry.getValue().getEntrustPrice().doubleValue()) < 0) {
                                 logger.info("委托价格不优于指令价格系统参数[{}]，买卖方向[{}]，委托类型[{}],存在限价指令[{}]指令价格[{}]大于跌停价[{}]",
                                         commonManagement.getFairModeEntrustPriceBestThanInstruction(),
                                         order.getEntrustBs(),
@@ -284,6 +284,11 @@ public class FairOrderHelper {
             ReviewManagement.putReviewMap(order.getId(), workflow);
         }
         orderService.asyncUpdate(order);
+        if (fairEntrusts.values().isEmpty()) {
+            order.setErrorCode(ErrorCode.NOT_EXIST_FAIR_INSTRUCTION_ERROR.value());
+            order.setErrorMsg(ErrorCode.NOT_EXIST_FAIR_INSTRUCTION_ERROR.msg());
+            return;
+        }
         List<EntrustInterface> param = new ArrayList<>(fairEntrusts.values());
         List<ReqRiskTrigger> parameterList = new ArrayList<ReqRiskTrigger>(param.size());
         RiskOccupyBean riskOccupyBean = investRiskManagement.riskCheck(param, parameterList);

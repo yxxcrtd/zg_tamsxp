@@ -3,6 +3,7 @@ package com.joyintech.tams.settle.batch.transdatagather.dto;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,19 @@ public class StlSettleTransDataGatherParamDto extends NeedOperateEntity {
      */
     private List<SettleTransDataTotalAdd> settleTransDataTotalAddList;
 
+    /**
+     * 汇总成交数据质押品
+     */
+    private List<SettleTransDataTotalPledge> settleTransDataTotalPledge;
+
+
+    public List<SettleTransDataTotalPledge> getSettleTransDataTotalPledge() {
+        return settleTransDataTotalPledge;
+    }
+
+    public void setSettleTransDataTotalPledge(List<SettleTransDataTotalPledge> settleTransDataTotalPledge) {
+        this.settleTransDataTotalPledge = settleTransDataTotalPledge;
+    }
 
     /**
      * 交易日期
@@ -36,9 +50,10 @@ public class StlSettleTransDataGatherParamDto extends NeedOperateEntity {
     public StlSettleTransDataGatherParamDto() {
     }
 
-    public StlSettleTransDataGatherParamDto(List<SettleTransDataTotal> settleTransDataTotalList, List<SettleTransDataTotalAdd> settleTransDataTotalAddList) {
+    public StlSettleTransDataGatherParamDto(List<SettleTransDataTotal> settleTransDataTotalList, List<SettleTransDataTotalAdd> settleTransDataTotalAddList,List<SettleTransDataTotalPledge> settleTransDataTotalPledge) {
         this.settleTransDataTotalList = settleTransDataTotalList;
         this.settleTransDataTotalAddList = settleTransDataTotalAddList;
+        this.settleTransDataTotalPledge = settleTransDataTotalPledge;
     }
 
     public List<SettleTransDataTotal> getSettleTransDataTotalList() {

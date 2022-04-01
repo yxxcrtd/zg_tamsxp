@@ -226,7 +226,7 @@ public class ChbInvestTradeSubSetService {
 		if(StringUtil.isNotEmpty(item.getAmt())){
 		    CnBondInterfItemDto cnBondItem10 = new CnBondInterfItemDto();
 		    cnBondItem10.setValue(item.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
-		    cnBondItem10.setUnitRef(ChbConstant.币种全称_中债_人民币);
+		    cnBondItem10.setUnitRef(item.getCcy());
 		    cnBondItem10.setDecimals("2");
 		    cnBondItemMap1.put("SettlementAmount", cnBondItem10);
 		}
@@ -254,6 +254,44 @@ public class ChbInvestTradeSubSetService {
 		    cnBondItem13.setDecimals("7");
 		    cnBondItemMap1.put("RateOfAnnualReturn", cnBondItem13);
 		}
+
+
+		/***1217升级**/
+
+		//交易审批人身份证号
+		if(StringUtil.isNotEmpty(item.getInvestApproverId())){
+			CnBondInterfItemDto cnBondItem13 = new CnBondInterfItemDto();
+			cnBondItem13.setValue(item.getInvestApproverId());
+			cnBondItemMap1.put("TransactionApproverIDNumber", cnBondItem13);
+		}
+
+		//交易审批人姓名
+		if(StringUtil.isNotEmpty(item.getInvestApproverName())){
+			CnBondInterfItemDto cnBondItem13 = new CnBondInterfItemDto();
+			cnBondItem13.setValue(item.getInvestApproverName());
+			cnBondItemMap1.put("TransactionApproverName", cnBondItem13);
+		}
+
+
+		//交易员身份证号
+		if(StringUtil.isNotEmpty(item.getInvestTraderId())){
+			CnBondInterfItemDto cnBondItem13 = new CnBondInterfItemDto();
+			cnBondItem13.setValue(item.getInvestTraderId());
+			cnBondItemMap1.put("TraderIDNumber", cnBondItem13);
+		}
+
+
+
+		//交易员姓名
+		if(StringUtil.isNotEmpty(item.getInvestTraderName())){
+			CnBondInterfItemDto cnBondItem13 = new CnBondInterfItemDto();
+			cnBondItem13.setValue(item.getInvestTraderName());
+			cnBondItemMap1.put("TraderName", cnBondItem13);
+		}
+
+		/***1217升级**/
+
+
 		//交易对手方
 		if(StringUtil.isNotEmpty(item.getTradeCounter())){
 		    CnBondInterfItemDto cnBondItem14 = new CnBondInterfItemDto();

@@ -21,6 +21,12 @@ public class ChbOrgRegistBankCode extends BaseEntity {
      * 是否理财子公司
      */
     private String isFinSubCompany;
+
+
+    /**
+     * 所属银保监局
+     */
+    private String belogCodeCBRC;
     
     /**
      * 社会信用代码
@@ -52,7 +58,15 @@ public class ChbOrgRegistBankCode extends BaseEntity {
 		this.insitituteCode = insitituteCode;
 	}
 
-	/**
+    public String getBelogCodeCBRC() {
+        return belogCodeCBRC;
+    }
+
+    public void setBelogCodeCBRC(String belogCodeCBRC) {
+        this.belogCodeCBRC = belogCodeCBRC;
+    }
+
+    /**
      * 取得 机构代码
      * @return 机构代码
      */

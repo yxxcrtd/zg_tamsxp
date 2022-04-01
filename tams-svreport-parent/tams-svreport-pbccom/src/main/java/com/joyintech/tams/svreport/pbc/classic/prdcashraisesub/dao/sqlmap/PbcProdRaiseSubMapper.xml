@@ -43,7 +43,7 @@
     <result column="pbcProdIdShow" property="pbcProdIdShow" jdbcType="VARCHAR" />
     <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
   </resultMap>
-  
+
   <resultMap id="SearchResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo" >
     <result column="CODE" property="code" jdbcType="CHAR" />
     <result column="BUYPLACE" property="buyplace" jdbcType="VARCHAR" />
@@ -55,7 +55,7 @@
     <result column="FE" property="fe" jdbcType="DECIMAL" />
     <result column="ZRMB" property="zrmb" jdbcType="DECIMAL" />
   </resultMap>
-  
+
   <!-- <resultMap id="SearchResultMap" type="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo" >
     <result column="CODE" property="code" jdbcType="CHAR" />
     <result column="BUYPLACE" property="buyplace" jdbcType="VARCHAR" />
@@ -98,25 +98,25 @@
     <result column="JWMYZRMB" property="jwmyzrmb" jdbcType="DECIMAL" />
     <result column="SUMJW" property="sumjw" jdbcType="DECIMAL" />
   </resultMap> -->
-  
+
   <sql id="Base_Column_List" >
-    REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM, 
-    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY, 
-    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, 
-    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
-    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM,
+    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY,
+    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD,
+    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE,
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
   <sql id="Base_Column_List2" >
-    HIS_NO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM, 
-    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY, 
-    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, 
-    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
-    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    HIS_NO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM,
+    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY,
+    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD,
+    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE,
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_PROD_RAISING_SUB
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
@@ -126,30 +126,30 @@
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
-    insert into PBC_PROD_RAISING_SUB (REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID, 
-      BUY_PLACE, CUSTOMER_TYPE1, CCY, 
-      RAISING_AMTSUM, RAISING_AMTSUM_CNY, RAISING_QTY, 
-      REDAMT, REDAMT_CNY, REDQTY, 
-      ENDAMTSUM, ENDAMTSUM_CNY, ENDQTY, 
-      PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, 
-      UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, PROD_LOW_YIELD, 
-      SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, 
-      SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, STATUS, CREATE_USER, 
-      ORG_CODE, CREATE_DEPT, CREATE_TIME, 
-      UPDATE_USER, UPDATE_TIME)
-    values (#{registSeqno,jdbcType=CHAR}, #{raisingDate,jdbcType=TIMESTAMP}, #{pbcProdId,jdbcType=VARCHAR}, 
-      #{buyPlace,jdbcType=VARCHAR}, #{customerType1,jdbcType=VARCHAR}, #{ccy,jdbcType=CHAR}, 
-      #{raisingAmtsum,jdbcType=DECIMAL}, #{raisingAmtsumCny,jdbcType=DECIMAL}, #{raisingQty,jdbcType=DECIMAL}, 
-      #{redamt,jdbcType=DECIMAL}, #{redamtCny,jdbcType=DECIMAL}, #{redqty,jdbcType=DECIMAL}, 
-      #{endamtsum,jdbcType=DECIMAL}, #{endamtsumCny,jdbcType=DECIMAL}, #{endqty,jdbcType=DECIMAL}, 
-      #{prodValue,jdbcType=DECIMAL}, #{prodValueCny,jdbcType=DECIMAL}, #{unitValueTotal,jdbcType=DECIMAL}, 
-      #{unitValueTotalCny,jdbcType=DECIMAL}, #{prodHighYield,jdbcType=DECIMAL}, #{prodLowYield,jdbcType=DECIMAL}, 
-      #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
-      #{sumitSeq,jdbcType=VARCHAR}, sysdate, #{pbcSubmitDeadline,jdbcType=TIMESTAMP}, 
-      #{submitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-      #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, sysdate, 
-      #{updateUser,jdbcType=VARCHAR}, sysdate)
+    insert into PBC_PROD_RAISING_SUB (REGIST_SEQNO, RAISING_DATE, PBC_PROD_ID,
+                                      BUY_PLACE, CUSTOMER_TYPE1, CCY,
+                                      RAISING_AMTSUM, RAISING_AMTSUM_CNY, RAISING_QTY,
+                                      REDAMT, REDAMT_CNY, REDQTY,
+                                      ENDAMTSUM, ENDAMTSUM_CNY, ENDQTY,
+                                      PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL,
+                                      UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, PROD_LOW_YIELD,
+                                      SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS,
+                                      SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE,
+                                      SUBMIT_DEADLINE, STATUS, CREATE_USER,
+                                      ORG_CODE, CREATE_DEPT, CREATE_TIME,
+                                      UPDATE_USER, UPDATE_TIME)
+    values (#{registSeqno,jdbcType=CHAR}, #{raisingDate,jdbcType=TIMESTAMP}, #{pbcProdId,jdbcType=VARCHAR},
+            #{buyPlace,jdbcType=VARCHAR}, #{customerType1,jdbcType=VARCHAR}, #{ccy,jdbcType=CHAR},
+            #{raisingAmtsum,jdbcType=DECIMAL}, #{raisingAmtsumCny,jdbcType=DECIMAL}, #{raisingQty,jdbcType=DECIMAL},
+            #{redamt,jdbcType=DECIMAL}, #{redamtCny,jdbcType=DECIMAL}, #{redqty,jdbcType=DECIMAL},
+            #{endamtsum,jdbcType=DECIMAL}, #{endamtsumCny,jdbcType=DECIMAL}, #{endqty,jdbcType=DECIMAL},
+            #{prodValue,jdbcType=DECIMAL}, #{prodValueCny,jdbcType=DECIMAL}, #{unitValueTotal,jdbcType=DECIMAL},
+            #{unitValueTotalCny,jdbcType=DECIMAL}, #{prodHighYield,jdbcType=DECIMAL}, #{prodLowYield,jdbcType=DECIMAL},
+            #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR},
+            #{sumitSeq,jdbcType=VARCHAR}, sysdate, #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            #{submitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, sysdate,
+            #{updateUser,jdbcType=VARCHAR}, sysdate)
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
     insert into PBC_PROD_RAISING_SUB
@@ -479,147 +479,147 @@
   <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" >
     update PBC_PROD_RAISING_SUB
     set RAISING_DATE = #{raisingDate,jdbcType=TIMESTAMP},
-      PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
-      BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
-      CUSTOMER_TYPE1 = #{customerType1,jdbcType=VARCHAR},
-      CCY = #{ccy,jdbcType=CHAR},
-      RAISING_AMTSUM = #{raisingAmtsum,jdbcType=DECIMAL},
-      RAISING_AMTSUM_CNY = #{raisingAmtsumCny,jdbcType=DECIMAL},
-      RAISING_QTY = #{raisingQty,jdbcType=DECIMAL},
-      REDAMT = #{redamt,jdbcType=DECIMAL},
-      REDAMT_CNY = #{redamtCny,jdbcType=DECIMAL},
-      REDQTY = #{redqty,jdbcType=DECIMAL},
-      ENDAMTSUM = #{endamtsum,jdbcType=DECIMAL},
-      ENDAMTSUM_CNY = #{endamtsumCny,jdbcType=DECIMAL},
-      ENDQTY = #{endqty,jdbcType=DECIMAL},
-      PROD_VALUE = #{prodValue,jdbcType=DECIMAL},
-      PROD_VALUE_CNY = #{prodValueCny,jdbcType=DECIMAL},
-      UNIT_VALUE_TOTAL = #{unitValueTotal,jdbcType=DECIMAL},
-      UNIT_VALUE_TOTAL_CNY = #{unitValueTotalCny,jdbcType=DECIMAL},
-      PROD_HIGH_YIELD = #{prodHighYield,jdbcType=DECIMAL},
-      PROD_LOW_YIELD = #{prodLowYield,jdbcType=DECIMAL},
-      SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
-      SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
-      SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
-      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
-      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
-      PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
-      SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
-      STATUS = #{status,jdbcType=VARCHAR},
-      CREATE_USER = #{createUser,jdbcType=VARCHAR},
-      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+        BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+        CUSTOMER_TYPE1 = #{customerType1,jdbcType=VARCHAR},
+        CCY = #{ccy,jdbcType=CHAR},
+        RAISING_AMTSUM = #{raisingAmtsum,jdbcType=DECIMAL},
+        RAISING_AMTSUM_CNY = #{raisingAmtsumCny,jdbcType=DECIMAL},
+        RAISING_QTY = #{raisingQty,jdbcType=DECIMAL},
+        REDAMT = #{redamt,jdbcType=DECIMAL},
+        REDAMT_CNY = #{redamtCny,jdbcType=DECIMAL},
+        REDQTY = #{redqty,jdbcType=DECIMAL},
+        ENDAMTSUM = #{endamtsum,jdbcType=DECIMAL},
+        ENDAMTSUM_CNY = #{endamtsumCny,jdbcType=DECIMAL},
+        ENDQTY = #{endqty,jdbcType=DECIMAL},
+        PROD_VALUE = #{prodValue,jdbcType=DECIMAL},
+        PROD_VALUE_CNY = #{prodValueCny,jdbcType=DECIMAL},
+        UNIT_VALUE_TOTAL = #{unitValueTotal,jdbcType=DECIMAL},
+        UNIT_VALUE_TOTAL_CNY = #{unitValueTotalCny,jdbcType=DECIMAL},
+        PROD_HIGH_YIELD = #{prodHighYield,jdbcType=DECIMAL},
+        PROD_LOW_YIELD = #{prodLowYield,jdbcType=DECIMAL},
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+        PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+        STATUS = #{status,jdbcType=VARCHAR},
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
   <delete id="deleteBatch" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
-	delete from PBC_PROD_RAISING_SUB
-	where 1 = 1 
-	<if test="list!=null and list.size()>0">
-		<foreach collection="list" item="dto" open="and (PBC_PROD_ID,RAISING_DATE,nvl(ORG_CODE,'NULLORG')) in (" separator="union all"
-			close=")">
-			select #{dto.pbcProdId,jdbcType=VARCHAR},
-			#{dto.raisingDate,jdbcType=DATE},
-            nvl(#{dto.orgCode,jdbcType=VARCHAR},'NULLORG')
-			from dual
-		</foreach>
-		AND SEND_STATUS = '01'
-	</if>
+    delete from PBC_PROD_RAISING_SUB
+    where 1 = 1
+    <if test="list!=null and list.size()>0">
+      <foreach collection="list" item="dto" open="and (PBC_PROD_ID,RAISING_DATE,nvl(ORG_CODE,'NULLORG')) in (" separator="union all"
+               close=")">
+        select #{dto.pbcProdId,jdbcType=VARCHAR},
+        #{dto.raisingDate,jdbcType=DATE},
+        nvl(#{dto.orgCode,jdbcType=VARCHAR},'NULLORG')
+        from dual
+      </foreach>
+      AND SEND_STATUS = '01'
+    </if>
   </delete>
   <select id="selectPrdCashRaise" resultMap="BaseResultMap" parameterType="map" >
-	 select 
-      prdposition.ENDDATE RAISING_DATE,/*募集日期（月末日期）*/
-      prdbaseinfo.PROD_ID PROD_ID,/*中债产品代码*/
-      prdbaseinfo.PBC_PROD_ID PBC_PROD_ID,/*人行产品代码*/
-      prdposition.BUY_PLACE BUY_PLACE,/*地区代码*/
-      prdposition.CUSTOMER_TYPE2 CUSTOMER_TYPE1,/*客户一级类型*/
-      prdposition.ccy ccy,/*币种*/
-      nvl(prdposition.DIRTYAMTSUM,0) RAISING_AMTSUM,/*当期申购金额=当期募集金额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
-      nvl(prdposition.DIRTYQTY,0)   RAISING_QTY,/*当期申购份额=当期募集份额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
-      /*非净值型产品赎回交易取值（01 赎回金额=金额，赎回份额=份额；02 赎回金额=份额，赎回份额=份额；03 赎回金额=金额，赎回份额=金额)*/
-      case
-      when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '01' then nvl(PRDPOSITION.REDAMT,0)
-      when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '02' then nvl(PRDPOSITION.REDQTY,0)
-      when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '03' then nvl(PRDPOSITION.REDAMT,0)
-      else nvl(prdposition.REDAMT,0)
-      end as REDAMT,/*当期兑付/赎回金额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
-      case
-      when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '01' then nvl(PRDPOSITION.REDQTY,0)
-      when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '02' then nvl(PRDPOSITION.REDQTY,0)
-      when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '03' then nvl(PRDPOSITION.REDAMT,0)
-      else nvl(prdposition.REDQTY,0)
-      end as REDQTY,/*当期兑付/赎回份额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
-      nvl(prdposition.ENDAMTSUM_OTH,0) ENDAMTSUM,/*期末产品金额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/  
-      nvl(prdposition.ENDQTYSUM,0) ENDQTY,/*期末产品份额，需另外按照产品代码、地区代码、客户类型、币种代码汇*/
-      decode(prdbaseinfo.OPERATE_MODE,'2',nvl(maxyield.PROD_VALUE,1),'4',nvl(maxyield.PROD_VALUE,1),null) PROD_VALUE,/*净值型产品期末净值*/
-      decode(prdbaseinfo.OPERATE_MODE,'2',nvl(maxyield.UNIT_VALUE_TOTAL,1),'4',nvl(maxyield.UNIT_VALUE_TOTAL,1),null) UNIT_VALUE_TOTAL,/*净值型产品期末累计净值*/   
-      decode(prdbaseinfo.OPERATE_MODE,'3',prdbaseinfo.HIGH_YIELD_ISSUE,null) PROD_HIGH_YIELD,/*开放式非净值型产品预期最高收益率*/
-      decode(prdbaseinfo.OPERATE_MODE,'3',prdbaseinfo.LOW_YIELD_ISSUE,null) PROD_LOW_YIELD,/*开放式非净值型产品预期最低收益率*/
-      maxyield.CCY YEILD_CCY,/*收益率币种*/
-      prdposition.ORG_CODE ORG_CODE
+    select
+    prdposition.ENDDATE RAISING_DATE,/*募集日期（月末日期）*/
+    prdbaseinfo.PROD_ID PROD_ID,/*中债产品代码*/
+    prdbaseinfo.PBC_PROD_ID PBC_PROD_ID,/*人行产品代码*/
+    prdposition.BUY_PLACE BUY_PLACE,/*地区代码*/
+    prdposition.CUSTOMER_TYPE2 CUSTOMER_TYPE1,/*客户一级类型*/
+    prdposition.ccy ccy,/*币种*/
+    nvl(prdposition.DIRTYAMTSUM,0) RAISING_AMTSUM,/*当期申购金额=当期募集金额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
+    nvl(prdposition.DIRTYQTY,0)   RAISING_QTY,/*当期申购份额=当期募集份额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
+    /*非净值型产品赎回交易取值（01 赎回金额=金额，赎回份额=份额；02 赎回金额=份额，赎回份额=份额；03 赎回金额=金额，赎回份额=金额)*/
+    case
+    when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '01' then nvl(PRDPOSITION.REDAMT,0)
+    when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '02' then nvl(PRDPOSITION.REDQTY,0)
+    when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '03' then nvl(PRDPOSITION.REDAMT,0)
+    else nvl(prdposition.REDAMT,0)
+    end as REDAMT,/*当期兑付/赎回金额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
+    case
+    when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '01' then nvl(PRDPOSITION.REDQTY,0)
+    when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '02' then nvl(PRDPOSITION.REDQTY,0)
+    when prdbaseinfo.OPERATE_MODE in (3,5) and #{pbcProdRaising,jdbcType=VARCHAR} = '03' then nvl(PRDPOSITION.REDAMT,0)
+    else nvl(prdposition.REDQTY,0)
+    end as REDQTY,/*当期兑付/赎回份额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
+    nvl(prdposition.ENDAMTSUM_OTH,0) ENDAMTSUM,/*期末产品金额，需另外按照产品代码、地区代码、客户类型、币种代码汇总*/
+    nvl(prdposition.ENDQTYSUM,0) ENDQTY,/*期末产品份额，需另外按照产品代码、地区代码、客户类型、币种代码汇*/
+    decode(prdbaseinfo.OPERATE_MODE,'2',nvl(maxyield.PROD_VALUE,1),'4',nvl(maxyield.PROD_VALUE,1),null) PROD_VALUE,/*净值型产品期末净值*/
+    decode(prdbaseinfo.OPERATE_MODE,'2',nvl(maxyield.UNIT_VALUE_TOTAL,1),'4',nvl(maxyield.UNIT_VALUE_TOTAL,1),null) UNIT_VALUE_TOTAL,/*净值型产品期末累计净值*/
+    decode(prdbaseinfo.OPERATE_MODE,'3',prdbaseinfo.HIGH_YIELD_ISSUE,null) PROD_HIGH_YIELD,/*开放式非净值型产品预期最高收益率*/
+    decode(prdbaseinfo.OPERATE_MODE,'3',prdbaseinfo.LOW_YIELD_ISSUE,null) PROD_LOW_YIELD,/*开放式非净值型产品预期最低收益率*/
+    maxyield.CCY YEILD_CCY,/*收益率币种*/
+    prdposition.ORG_CODE ORG_CODE
     FROM PBC_MONTH_PRD_POSITION PRDPOSITION
     inner JOIN (
-    SELECT 
-      PROD_ID,
-      PBC_PROD_ID,
-      OPERATE_MODE,
-       HIGH_YIELD_ISSUE,
-      LOW_YIELD_ISSUE,
-      RANK() OVER (PARTITION BY PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
-    from PBC_PRD_BASEINFO_SUB 
+    SELECT
+    PROD_ID,
+    PBC_PROD_ID,
+    OPERATE_MODE,
+    HIGH_YIELD_ISSUE,
+    LOW_YIELD_ISSUE,
+    RANK() OVER (PARTITION BY PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+    from PBC_PRD_BASEINFO_SUB
     where  PBC_PROD_ID is not null
-	) prdbaseinfo
+    ) prdbaseinfo
     ON PRDPOSITION.PRODID = PRDBASEINFO.PROD_ID
-	AND RANKNUM = 1
+    AND RANKNUM = 1
     left join (
-      /*取离月末最近的净值和收益率，不需要判断CHANG_TYPE，默认净值型产品存净值，预期收益率产品存收益率*/
-      select 
-        YIELD.PROD_VALUE,
-        YIELD.PROD_ID,
-        YIELD.UNIT_VALUE_TOTAL,
-        YIELD.CCY,
-        rank() over (partition by yield.PROD_ID,yield.ccy order by YIELD.CHANGE_DATE desc) ranknum/*按产品+币种维度分类，按变动日期降序排序取最大的日期的净值*/
-      FROM CHB_PRD_PERIODYIELD YIELD
-      WHERE 1 =1 
-      AND YIELD.STATUS != 'D'
-      AND to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd') &lt;= #{cdate,jdbcType=VARCHAR}
+    /*取离月末最近的净值和收益率，不需要判断CHANG_TYPE，默认净值型产品存净值，预期收益率产品存收益率*/
+    select
+    YIELD.PROD_VALUE,
+    YIELD.PROD_ID,
+    YIELD.UNIT_VALUE_TOTAL,
+    YIELD.CCY,
+    rank() over (partition by yield.PROD_ID,yield.ccy order by YIELD.CHANGE_DATE desc) ranknum/*按产品+币种维度分类，按变动日期降序排序取最大的日期的净值*/
+    FROM CHB_PRD_PERIODYIELD YIELD
+    WHERE 1 =1
+    AND YIELD.STATUS != 'D'
+    AND to_char(YIELD.CHANGE_DATE,'yyyy-MM-dd') &lt;= #{cdate,jdbcType=VARCHAR}
     ) maxyield
     on PRDPOSITION.PRODID = maxyield.PROD_ID
     and maxyield.ranknum = 1
-	where 1 =1 
-	and to_char(prdposition.ENDDATE,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
-	<if test="ifpsbc !=null and ifpsbc='001' ">
-		 and (prdposition.BUY_PLACE not in('210200','330200','350200','370200','440300') or prdposition.BUY_PLACE is null)
-	</if>   
-	<if test="prodIdList != null and prodIdList.size() >0">
-		<foreach collection="prodIdList" item="prodid" open="and prdposition.PRODID in ("
-			separator="," close=")" >
-			#{prodid,jdbcType=VARCHAR}
-		</foreach>
-	</if>
+    where 1 =1
+    and to_char(prdposition.ENDDATE,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
+    <if test="ifpsbc !=null and ifpsbc='001' ">
+      and (prdposition.BUY_PLACE not in('210200','330200','350200','370200','440300') or prdposition.BUY_PLACE is null)
+    </if>
+    <if test="prodIdList != null and prodIdList.size() >0">
+      <foreach collection="prodIdList" item="prodid" open="and prdposition.PRODID in ("
+               separator="," close=")" >
+        #{prodid,jdbcType=VARCHAR}
+      </foreach>
+    </if>
   </select>
   <select id="selectPrdCashRaiseRegist" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select 
-    sub.REGIST_SEQNO, sub.RAISING_DATE, sub.PBC_PROD_ID, sub.BUY_PLACE, sub.CUSTOMER_TYPE1, sub.CCY, sub.RAISING_AMTSUM, 
-    sub.RAISING_AMTSUM_CNY, sub.RAISING_QTY, sub.REDAMT, sub.REDAMT_CNY, sub.REDQTY, sub.ENDAMTSUM, sub.ENDAMTSUM_CNY, 
-    sub.ENDQTY, sub.PROD_VALUE, sub.PROD_VALUE_CNY, sub.UNIT_VALUE_TOTAL, sub.UNIT_VALUE_TOTAL_CNY, sub.PROD_HIGH_YIELD, 
-    sub.PROD_LOW_YIELD, sub.SEND_STATUS, sub.SUBMIT_TIME, sub.SUBMIT_FEEDBACK_STATUS, sub.SUMIT_SEQ, sub.STATUS_DATE, 
-    sub.PBC_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE, sub.STATUS, sub.CREATE_USER, sub.ORG_CODE, sub.CREATE_DEPT, 
+    select
+    sub.REGIST_SEQNO, sub.RAISING_DATE, sub.PBC_PROD_ID, sub.BUY_PLACE, sub.CUSTOMER_TYPE1, sub.CCY, sub.RAISING_AMTSUM,
+    sub.RAISING_AMTSUM_CNY, sub.RAISING_QTY, sub.REDAMT, sub.REDAMT_CNY, sub.REDQTY, sub.ENDAMTSUM, sub.ENDAMTSUM_CNY,
+    sub.ENDQTY, sub.PROD_VALUE, sub.PROD_VALUE_CNY, sub.UNIT_VALUE_TOTAL, sub.UNIT_VALUE_TOTAL_CNY, sub.PROD_HIGH_YIELD,
+    sub.PROD_LOW_YIELD, sub.SEND_STATUS, sub.SUBMIT_TIME, sub.SUBMIT_FEEDBACK_STATUS, sub.SUMIT_SEQ, sub.STATUS_DATE,
+    sub.PBC_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE, sub.STATUS, sub.CREATE_USER, sub.ORG_CODE, sub.CREATE_DEPT,
     sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME,info.prod_id
     from PBC_PROD_RAISING_SUB sub
     LEFT JOIN (
-    SELECT 
-      PROD_ID,
-      PBC_PROD_ID,
-      OPERATE_MODE,
-      RANK() OVER (PARTITION BY PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
-    from PBC_PRD_BASEINFO_SUB 
-	) info
+    SELECT
+    PROD_ID,
+    PBC_PROD_ID,
+    OPERATE_MODE,
+    RANK() OVER (PARTITION BY PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME) DESC) RANKNUM
+    from PBC_PRD_BASEINFO_SUB
+    ) info
     ON sub.PBC_PROD_ID = info.PBC_PROD_ID
-	AND info.RANKNUM = 1
-    where 1 =1 
+    AND info.RANKNUM = 1
+    where 1 =1
     <!-- and sub.send_status in ('02','03') /*已报送数据*/ -->
     and to_char(sub.RAISING_DATE,'yyyy-MM-dd') = #{cdate,jdbcType=VARCHAR}
   </select>
@@ -1748,775 +1748,775 @@
     ,PBC_PROD_ID
     order by PBC_PROD_ID
   </select>
- <!-- 根据条件查询 -->
+  <!-- 根据条件查询 -->
   <select id="searchPageForOnePrd" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub" flushCache="true" useCache="false">
-    select 
-	    a.REGIST_SEQNO registSeqno,
-	    a.RAISING_DATE raisingDate,
-	    a.PBC_PROD_ID PBC_PROD_ID,
-	    a.BUY_PLACE buyPlace,
-	    a.CUSTOMER_TYPE1 customerType1,
-	    a.BUY_PLACE buyPlaceCode,
-	    a.CUSTOMER_TYPE1 customerType1Code,
-	    a.CCY ccy,
-	    a.RAISING_AMTSUM raisingAmtsum,
-	    a.RAISING_AMTSUM_CNY raisingAmtsumCny,
-	    a.RAISING_QTY raisingQty,
-	    a.REDAMT redamt,
-	    a.REDAMT_CNY redamtCny,
-	    a.REDQTY redqty,
-	    a.ENDAMTSUM endamtsum,
-	    a.ENDAMTSUM_CNY endamtsumCny,
-	    a.ENDQTY endqty,
-	    a.PROD_VALUE prodValue,
-	    a.PROD_VALUE_CNY prodValueCny,
-	    a.UNIT_VALUE_TOTAL unitValueTotal,
-	    a.UNIT_VALUE_TOTAL_CNY unitValueTotalCny,
-	    a.PROD_HIGH_YIELD prodHighYield,
-	    a.PROD_LOW_YIELD prodLowYield,
-	    a.SEND_STATUS sendStatus,
-	    a.SUBMIT_TIME submitTime,
-	    a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-	    a.SUMIT_SEQ sumitSeq,
-	    a.STATUS_DATE statusDate,
-	    a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
-	    a.SUBMIT_DEADLINE submitDeadline,
-	    a.STATUS status,
-	    a.CREATE_USER createUser,
-	    a.ORG_CODE orgCode,
-	    a.CREATE_DEPT createDept,
-	    a.CREATE_TIME createTime,
-	    a.UPDATE_USER updateUser,
-	    a.UPDATE_TIME updateTime,
-	    b.PROD_ID prodId,
-	    t2.PBC_CODE pbcCode,
-        nvl(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
-    from PBC_PROD_RAISING_SUB a 
+    select
+    a.REGIST_SEQNO registSeqno,
+    a.RAISING_DATE raisingDate,
+    a.PBC_PROD_ID PBC_PROD_ID,
+    a.BUY_PLACE buyPlace,
+    a.CUSTOMER_TYPE1 customerType1,
+    a.BUY_PLACE buyPlaceCode,
+    a.CUSTOMER_TYPE1 customerType1Code,
+    a.CCY ccy,
+    a.RAISING_AMTSUM raisingAmtsum,
+    a.RAISING_AMTSUM_CNY raisingAmtsumCny,
+    a.RAISING_QTY raisingQty,
+    a.REDAMT redamt,
+    a.REDAMT_CNY redamtCny,
+    a.REDQTY redqty,
+    a.ENDAMTSUM endamtsum,
+    a.ENDAMTSUM_CNY endamtsumCny,
+    a.ENDQTY endqty,
+    a.PROD_VALUE prodValue,
+    a.PROD_VALUE_CNY prodValueCny,
+    a.UNIT_VALUE_TOTAL unitValueTotal,
+    a.UNIT_VALUE_TOTAL_CNY unitValueTotalCny,
+    a.PROD_HIGH_YIELD prodHighYield,
+    a.PROD_LOW_YIELD prodLowYield,
+    a.SEND_STATUS sendStatus,
+    a.SUBMIT_TIME submitTime,
+    a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+    a.SUMIT_SEQ sumitSeq,
+    a.STATUS_DATE statusDate,
+    a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+    a.SUBMIT_DEADLINE submitDeadline,
+    a.STATUS status,
+    a.CREATE_USER createUser,
+    a.ORG_CODE orgCode,
+    a.CREATE_DEPT createDept,
+    a.CREATE_TIME createTime,
+    a.UPDATE_USER updateUser,
+    a.UPDATE_TIME updateTime,
+    b.PROD_ID prodId,
+    t2.PBC_CODE pbcCode,
+    nvl(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
+    from PBC_PROD_RAISING_SUB a
     left join PBC_PRD_BASEINFO_SUB b
-    on a.PBC_PROD_ID = b.PBC_PROD_ID 
+    on a.PBC_PROD_ID = b.PBC_PROD_ID
     LEFT JOIN(
-        SELECT
-            inside_prod_id,
-            pbc_code
-        FROM
-            pbc_prod_assetpool_code
-        WHERE
-            status='E'
-            AND code_type='01'
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
     <where>
-        <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-            <foreach collection="pbcProdIdList" item="items" open="and nvl(t2.pbc_code,a.PBC_PROD_ID) in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="actualDateList != null and actualDateList.size > 0">
-            <foreach collection="actualDateList" item="items" open="and to_char(a.RAISING_DATE,'yyyy-MM-dd') in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="prodIdList != null and prodIdList.size > 0">
-            <foreach collection="prodIdList" item="items" open="and b.PROD_ID in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="statusList != null and statusList.size > 0">
-            and a.STATUS in
-            <foreach collection="statusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="keyList != null and keyList.size > 0">
-            and trim(a.REGIST_SEQNO) in
-            <foreach collection="keyList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="sendStatusList != null and sendStatusList.size > 0">
-            and a.SEND_STATUS in
-            <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
-            and a.SUBMIT_FEEDBACK_STATUS in
-            <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="operateModeList != null and operateModeList.size > 0">
-            and b.OPERATE_MODE in
-            <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="ivstorientationList != null and ivstorientationList.size > 0">
-            and b.IVSTORIENTATION in
-            <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="statusDateStart != null and statusDateStart != ''">
-           and to_char(a.STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
-        </if>
-        <if test="statusDateEnd != null and statusDateEnd != ''">
-           and to_char(a.STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
-        </if>
-         <if test="submitTimeStart != null and submitTimeStart != ''">
-           and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
-        </if>
-        <if test="submitTimeEnd != null and submitTimeEnd != ''">
-           and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
-        </if>
-        <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
-           and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
-        </if>
-        <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
-           and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
-        </if>
-        <if test="vdateStart != null and vdateStart != ''">
-           and to_char(a.RAISING_DATE,'yyyy-MM') &gt;= #{vdateStart,jdbcType=VARCHAR}
-        </if>
-        <if test="vdateEnd != null and vdateEnd != ''">
-           and to_char(a.RAISING_DATE,'yyyy-MM') &lt;= #{vdateEnd,jdbcType=VARCHAR}
-        </if>
-        <if test="updateTime != null and updateTime != ''">
-           and to_char(a.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
-        </if>
+      <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+        <foreach collection="pbcProdIdList" item="items" open="and nvl(t2.pbc_code,a.PBC_PROD_ID) in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="actualDateList != null and actualDateList.size > 0">
+        <foreach collection="actualDateList" item="items" open="and to_char(a.RAISING_DATE,'yyyy-MM-dd') in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="prodIdList != null and prodIdList.size > 0">
+        <foreach collection="prodIdList" item="items" open="and b.PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusList != null and statusList.size > 0">
+        and a.STATUS in
+        <foreach collection="statusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size > 0">
+        and trim(a.REGIST_SEQNO) in
+        <foreach collection="keyList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size > 0">
+        and a.SEND_STATUS in
+        <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+        and a.SUBMIT_FEEDBACK_STATUS in
+        <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="operateModeList != null and operateModeList.size > 0">
+        and b.OPERATE_MODE in
+        <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="ivstorientationList != null and ivstorientationList.size > 0">
+        and b.IVSTORIENTATION in
+        <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and to_char(a.STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and to_char(a.STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
+      </if>
+      <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+        and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
+      </if>
+      <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+        and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
+      </if>
+      <if test="vdateStart != null and vdateStart != ''">
+        and to_char(a.RAISING_DATE,'yyyy-MM') &gt;= #{vdateStart,jdbcType=VARCHAR}
+      </if>
+      <if test="vdateEnd != null and vdateEnd != ''">
+        and to_char(a.RAISING_DATE,'yyyy-MM') &lt;= #{vdateEnd,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and to_char(a.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
+      </if>
     </where>
     <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
-  	 ORDER BY A.PBC_SUBMIT_DEADLINE ASC, A.UPDATE_TIME DESC
-  	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
+    ORDER BY A.PBC_SUBMIT_DEADLINE ASC, A.UPDATE_TIME DESC
+    <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
   </select>
   <!-- 手工处理 -->
   <update id="doManul" parameterType="map">
-  	update PBC_PROD_RAISING_SUB 
-  	set 
-  		SEND_STATUS = '03',
-  		SUBMIT_FEEDBACK_STATUS = '03',
-        <if test="submitadd != null and submitadd != ''">
-  			SUBMIT_TIME = sysdate + #{submitadd},
-  		</if>
-  		<if test="submitadd == null">
-  			SUBMIT_TIME = sysdate,
-  		</if>
-        UPDATE_TIME = sysdate
-        <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
-        , STATUS_DATE = sysdate
-        <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
+    update PBC_PROD_RAISING_SUB
+    set
+    SEND_STATUS = '03',
+    SUBMIT_FEEDBACK_STATUS = '03',
+    <if test="submitadd != null and submitadd != ''">
+      SUBMIT_TIME = sysdate + #{submitadd},
+    </if>
+    <if test="submitadd == null">
+      SUBMIT_TIME = sysdate,
+    </if>
+    UPDATE_TIME = sysdate
+    <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
+    , STATUS_DATE = sysdate
+    <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
     <where>
       <if test="list != null and list.size() >0">
-	      <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-	            select #{item.pbcProdId,jdbcType=CHAR},
-	            #{item.raisingDate,jdbcType=CHAR}
-	            from dual
-	      </foreach>
+        <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+          select #{item.pbcProdId,jdbcType=CHAR},
+          #{item.raisingDate,jdbcType=CHAR}
+          from dual
+        </foreach>
       </if>
-    </where> 
+    </where>
   </update>
   <!-- 取消手工处理 -->
   <update id="cancelManul" parameterType="java.util.List">
-  	update PBC_PROD_RAISING_SUB 
-  	set 
-  		SEND_STATUS = '01',
-		UPDATE_TIME = sysdate,
-		SUBMIT_TIME = null,
-		SUBMIT_FEEDBACK_STATUS = null
-	<where>
+    update PBC_PROD_RAISING_SUB
+    set
+    SEND_STATUS = '01',
+    UPDATE_TIME = sysdate,
+    SUBMIT_TIME = null,
+    SUBMIT_FEEDBACK_STATUS = null
+    <where>
       <if test="list != null and list.size() >0">
-          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-                select #{item.pbcProdId,jdbcType=CHAR},
-                #{item.raisingDate,jdbcType=CHAR}
-                from dual
-          </foreach>
+        <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+          select #{item.pbcProdId,jdbcType=CHAR},
+          #{item.raisingDate,jdbcType=CHAR}
+          from dual
+        </foreach>
       </if>
     </where>
   </update>
-     <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
-  	insert into PBC_PROD_RAISING_SUB_HIS (<include refid="Base_Column_List2"></include>)
-    select 
-      <include refid="Base_Column_List"></include>
+  <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
+    insert into PBC_PROD_RAISING_SUB_HIS (<include refid="Base_Column_List2"></include>)
+    select
+    <include refid="Base_Column_List"></include>
     from PBC_PROD_RAISING_SUB
     <where>
       <if test="list != null and list.size() >0">
-          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-                select #{item.pbcProdId,jdbcType=CHAR},
-                #{item.raisingDate,jdbcType=CHAR}
-                from dual
-          </foreach>
+        <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+          select #{item.pbcProdId,jdbcType=CHAR},
+          #{item.raisingDate,jdbcType=CHAR}
+          from dual
+        </foreach>
       </if>
       and SEND_STATUS in ('02','03')
-    </where> 
+    </where>
   </insert>
   <insert id="insetBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
-	insert into PBC_PROD_RAISING_SUB
-	 (<include refid="Base_Column_List"></include>)
-    select HIS_NO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM, 
-    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY, 
-    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD, 
-    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, 
-    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, 
+    insert into PBC_PROD_RAISING_SUB
+    (<include refid="Base_Column_List"></include>)
+    select HIS_NO, RAISING_DATE, PBC_PROD_ID, BUY_PLACE, CUSTOMER_TYPE1, CCY, RAISING_AMTSUM,
+    RAISING_AMTSUM_CNY, RAISING_QTY, REDAMT, REDAMT_CNY, REDQTY, ENDAMTSUM, ENDAMTSUM_CNY,
+    ENDQTY, PROD_VALUE, PROD_VALUE_CNY, UNIT_VALUE_TOTAL, UNIT_VALUE_TOTAL_CNY, PROD_HIGH_YIELD,
+    PROD_LOW_YIELD, SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE,
+    PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT,
     sysdate, UPDATE_USER, sysdate
-      from (
-      	select <include refid="Base_Column_List2"></include>,
-      	rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
-      	from PBC_PROD_RAISING_SUB_HIS
-	    <where>
-	      <if test="list != null and list.size() >0">
-	          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-	                select #{item.pbcProdId,jdbcType=CHAR},
-	                #{item.raisingDate,jdbcType=CHAR}
-	                from dual
-	          </foreach>
-	      </if>
-	    </where> 
-      )
-      where ranknum = 1
-</insert>
-<delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
-	delete from PBC_PROD_RAISING_SUB_HIS
-	where PBC_PROD_ID in (
-	    select  PBC_PROD_ID
-	      from (
-	      	select PBC_PROD_ID ,
-	      	rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
-	      	from PBC_PROD_RAISING_SUB_HIS
-	        <where>
-	          <if test="list != null and list.size() >0">
-	              <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-	                    select #{item.pbcProdId,jdbcType=CHAR},
-	                    #{item.raisingDate,jdbcType=CHAR}
-	                    from dual
-	              </foreach>
-	          </if>
-	        </where> 
-	      )
-	      where ranknum = 1
-    )
-</delete>
-<delete id="deleteBatchBySendStatus" parameterType="java.util.List">
-  	delete from PBC_PROD_RAISING_SUB 
+    from (
+    select <include refid="Base_Column_List2"></include>,
+    rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+    from PBC_PROD_RAISING_SUB_HIS
     <where>
       <if test="list != null and list.size() >0">
-          <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-                select #{item.pbcProdId,jdbcType=CHAR},
-                #{item.raisingDate,jdbcType=CHAR}
-                from dual
-          </foreach>
+        <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+          select #{item.pbcProdId,jdbcType=CHAR},
+          #{item.raisingDate,jdbcType=CHAR}
+          from dual
+        </foreach>
       </if>
-        and SEND_STATUS in ('02','03')
-    </where> 
- </delete>
-  
-  <select id="selectByDimension" parameterType="map" resultMap="BaseResultMap">
-  select 
-  		RAISING_DATE
-  		,PBC_PROD_ID
-  		<if test="nyield  == null">
-  		,max(PROD_HIGH_YIELD) PROD_HIGH_YIELD
-  		,max(PROD_LOW_YIELD) PROD_LOW_YIELD
-  		</if>
-  		<if test="nyield  != null">
-  		,max(PROD_VALUE) PROD_VALUE
-        ,max(PROD_VALUE_CNY) PROD_VALUE_CNY
-        ,max(UNIT_VALUE_TOTAL) UNIT_VALUE_TOTAL
-        ,max(UNIT_VALUE_TOTAL_CNY) UNIT_VALUE_TOTAL_CNY
-        </if>
-  		<if test="yield == null">
-	  		,CUSTOMER_TYPE1
-	  		,SUM(RAISING_AMTSUM) RAISING_AMTSUM
-	  		,SUM(nvl(RAISING_AMTSUM_CNY,RAISING_AMTSUM)) RAISING_AMTSUM_CNY
-	  		,SUM(RAISING_QTY) RAISING_QTY
-	  		,SUM(REDAMT) REDAMT
-	  		,SUM(nvl(REDAMT_CNY,REDAMT)) REDAMT_CNY
-	  		,SUM(REDQTY) REDQTY
-	  		,SUM(ENDAMTSUM) ENDAMTSUM
-	  		,SUM(nvl(ENDAMTSUM_CNY,ENDAMTSUM)) ENDAMTSUM_CNY
-	  		,SUM(ENDQTY) ENDQTY
-	  		<if test="buyPlace != null">
-	  		,#{buyPlace} BUY_PLACE
-	  		</if>
-	  		<if test="ccy != null">
-	  		,#{ccy} CCY
-	  		</if>
-	  		<if test="buyPlace == null">
-	  		,BUY_PLACE
-	  		</if>
-	  		<if test="ccy == null">
-	  		,CCY
-	  		</if>
-  		</if>
+    </where>
+    )
+    where ranknum = 1
+  </insert>
+  <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+    delete from PBC_PROD_RAISING_SUB_HIS
+    where PBC_PROD_ID in (
+    select  PBC_PROD_ID
+    from (
+    select PBC_PROD_ID ,
+    rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+    from PBC_PROD_RAISING_SUB_HIS
+    <where>
+      <if test="list != null and list.size() >0">
+        <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+          select #{item.pbcProdId,jdbcType=CHAR},
+          #{item.raisingDate,jdbcType=CHAR}
+          from dual
+        </foreach>
+      </if>
+    </where>
+    )
+    where ranknum = 1
+    )
+  </delete>
+  <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
+    delete from PBC_PROD_RAISING_SUB
+    <where>
+      <if test="list != null and list.size() >0">
+        <foreach collection="list" open="(PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+          select #{item.pbcProdId,jdbcType=CHAR},
+          #{item.raisingDate,jdbcType=CHAR}
+          from dual
+        </foreach>
+      </if>
+      and SEND_STATUS in ('02','03')
+    </where>
+  </delete>
 
-   from 
-  (
-      select 
-    a.REGIST_SEQNO, 
-    a.RAISING_DATE, 
-    nvl(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, 
-    a.BUY_PLACE, 
-    a.CUSTOMER_TYPE1, 
-    a.CCY, 
-    a.RAISING_AMTSUM, 
-    a.RAISING_AMTSUM_CNY, 
-    a.RAISING_QTY, 
-    a.REDAMT, 
-    a.REDAMT_CNY, 
-    a.REDQTY, 
-    a.ENDAMTSUM, 
-    a.ENDAMTSUM_CNY, 
-    a.ENDQTY, 
-    a.PROD_VALUE, 
-    a.PROD_VALUE_CNY, 
-    a.UNIT_VALUE_TOTAL, 
-    a.UNIT_VALUE_TOTAL_CNY, 
-    a.PROD_HIGH_YIELD, 
-    a.PROD_LOW_YIELD, 
-    a.SEND_STATUS, 
-    a.SUBMIT_TIME, 
-    a.SUBMIT_FEEDBACK_STATUS, 
-    a.SUMIT_SEQ, 
-    a.STATUS_DATE, 
-    a.PBC_SUBMIT_DEADLINE, 
-    a.SUBMIT_DEADLINE, 
-    a.STATUS, 
-    a.CREATE_USER, 
-    a.ORG_CODE, 
-    a.CREATE_DEPT, 
-    a.CREATE_TIME, 
-    a.UPDATE_USER, 
+  <select id="selectByDimension" parameterType="map" resultMap="BaseResultMap">
+    select
+    RAISING_DATE
+    ,PBC_PROD_ID
+    <if test="nyield  == null">
+      ,max(PROD_HIGH_YIELD) PROD_HIGH_YIELD
+      ,max(PROD_LOW_YIELD) PROD_LOW_YIELD
+    </if>
+    <if test="nyield  != null">
+      ,max(PROD_VALUE) PROD_VALUE
+      ,max(PROD_VALUE_CNY) PROD_VALUE_CNY
+      ,max(UNIT_VALUE_TOTAL) UNIT_VALUE_TOTAL
+      ,max(UNIT_VALUE_TOTAL_CNY) UNIT_VALUE_TOTAL_CNY
+    </if>
+    <if test="yield == null">
+      ,CUSTOMER_TYPE1
+      ,SUM(RAISING_AMTSUM) RAISING_AMTSUM
+      ,SUM(nvl(RAISING_AMTSUM_CNY,RAISING_AMTSUM)) RAISING_AMTSUM_CNY
+      ,SUM(RAISING_QTY) RAISING_QTY
+      ,SUM(REDAMT) REDAMT
+      ,SUM(nvl(REDAMT_CNY,REDAMT)) REDAMT_CNY
+      ,SUM(REDQTY) REDQTY
+      ,SUM(ENDAMTSUM) ENDAMTSUM
+      ,SUM(nvl(ENDAMTSUM_CNY,ENDAMTSUM)) ENDAMTSUM_CNY
+      ,SUM(ENDQTY) ENDQTY
+      <if test="buyPlace != null">
+        ,#{buyPlace} BUY_PLACE
+      </if>
+      <if test="ccy != null">
+        ,#{ccy} CCY
+      </if>
+      <if test="buyPlace == null">
+        ,BUY_PLACE
+      </if>
+      <if test="ccy == null">
+        ,CCY
+      </if>
+    </if>
+
+    from
+    (
+    select
+    a.REGIST_SEQNO,
+    a.RAISING_DATE,
+    nvl(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID,
+    a.BUY_PLACE,
+    a.CUSTOMER_TYPE1,
+    a.CCY,
+    a.RAISING_AMTSUM,
+    a.RAISING_AMTSUM_CNY,
+    a.RAISING_QTY,
+    a.REDAMT,
+    a.REDAMT_CNY,
+    a.REDQTY,
+    a.ENDAMTSUM,
+    a.ENDAMTSUM_CNY,
+    a.ENDQTY,
+    a.PROD_VALUE,
+    a.PROD_VALUE_CNY,
+    a.UNIT_VALUE_TOTAL,
+    a.UNIT_VALUE_TOTAL_CNY,
+    a.PROD_HIGH_YIELD,
+    a.PROD_LOW_YIELD,
+    a.SEND_STATUS,
+    a.SUBMIT_TIME,
+    a.SUBMIT_FEEDBACK_STATUS,
+    a.SUMIT_SEQ,
+    a.STATUS_DATE,
+    a.PBC_SUBMIT_DEADLINE,
+    a.SUBMIT_DEADLINE,
+    a.STATUS,
+    a.CREATE_USER,
+    a.ORG_CODE,
+    a.CREATE_DEPT,
+    a.CREATE_TIME,
+    a.UPDATE_USER,
     a.UPDATE_TIME
-    from PBC_PROD_RAISING_SUB a 
+    from PBC_PROD_RAISING_SUB a
     left join PBC_PRD_BASEINFO_SUB b
-    on a.PBC_PROD_ID = b.PBC_PROD_ID 
+    on a.PBC_PROD_ID = b.PBC_PROD_ID
     and nvl(a.ORG_CODE,'0') =  nvl(b.ORG_CODE,'0')
     LEFT JOIN(
-        SELECT
-            inside_prod_id,
-            pbc_code
-        FROM
-            pbc_prod_assetpool_code
-        WHERE
-            status='E'
-            AND code_type='01'
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
     <where>
-    	1=1
-    	<if test="yield != null and nyield==null">
-    	 and b.OPERATE_MODE in ('3','5')
-    	</if>
-    	<if test="nyield != null">
-    	 and b.OPERATE_MODE in ('2','4')
-    	</if>
-        <if test="pbcProdId != null and pbcProdId !=''">
-            and a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
-        </if>
-        <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-            <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="prodId != null and prodId !=''">
-            and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
-        </if>
-        <if test="actualDateList != null and actualDateList.size > 0">
-            <foreach collection="actualDateList" item="items" open="AND to_char(a.RAISING_DATE,'yyyy-MM-dd') in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="prodIdList != null and prodIdList.size > 0">
-            <foreach collection="prodIdList" item="items" open="and b.PROD_ID in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="statusList != null and statusList.size > 0">
-            and a.STATUS in
-            <foreach collection="statusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="keyList != null and keyList.size > 0">
-            and trim(a.REGIST_SEQNO) in
-            <foreach collection="keyList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="sendStatusList != null and sendStatusList.size > 0">
-            and a.SEND_STATUS in
-            <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
-            and a.SUBMIT_FEEDBACK_STATUS in
-            <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="operateModeList != null and operateModeList.size > 0">
-            and b.OPERATE_MODE in
-            <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="ivstorientationList != null and ivstorientationList.size > 0">
-            and b.IVSTORIENTATION in
-            <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="statusDateStart != null and statusDateStart != ''">
-           and to_char(a.STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
-        </if>
-        <if test="statusDateEnd != null and statusDateEnd != ''">
-           and to_char(a.STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
-        </if>
-         <if test="submitTimeStart != null and submitTimeStart != ''">
-           and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
-        </if>
-        <if test="submitTimeEnd != null and submitTimeEnd != ''">
-           and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
-        </if>
-        <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
-           and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
-        </if>
-        <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
-           and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
-        </if>
-        <if test="vdateStart != null and vdateStart != ''">
-           and to_char(a.VDATE,'yyyy-MM-dd') &gt;= #{vdateStart}
-        </if>
-        <if test="vdateEnd != null and vdateEnd != ''">
-           and to_char(a.VDATE,'yyyy-MM-dd') &lt;= #{vdateEnd}
-        </if>
-        <if test="updateTime != null and updateTime != ''">
-           and to_char(a.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
-        </if>
+      1=1
+      <if test="yield != null and nyield==null">
+        and b.OPERATE_MODE in ('3','5')
+      </if>
+      <if test="nyield != null">
+        and b.OPERATE_MODE in ('2','4')
+      </if>
+      <if test="pbcProdId != null and pbcProdId !=''">
+        and a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
+      </if>
+      <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+        <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="prodId != null and prodId !=''">
+        and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
+      </if>
+      <if test="actualDateList != null and actualDateList.size > 0">
+        <foreach collection="actualDateList" item="items" open="AND to_char(a.RAISING_DATE,'yyyy-MM-dd') in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="prodIdList != null and prodIdList.size > 0">
+        <foreach collection="prodIdList" item="items" open="and b.PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusList != null and statusList.size > 0">
+        and a.STATUS in
+        <foreach collection="statusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size > 0">
+        and trim(a.REGIST_SEQNO) in
+        <foreach collection="keyList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size > 0">
+        and a.SEND_STATUS in
+        <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+        and a.SUBMIT_FEEDBACK_STATUS in
+        <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="operateModeList != null and operateModeList.size > 0">
+        and b.OPERATE_MODE in
+        <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="ivstorientationList != null and ivstorientationList.size > 0">
+        and b.IVSTORIENTATION in
+        <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and to_char(a.STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and to_char(a.STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
+      </if>
+      <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+        and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
+      </if>
+      <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+        and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
+      </if>
+      <if test="vdateStart != null and vdateStart != ''">
+        and to_char(a.VDATE,'yyyy-MM-dd') &gt;= #{vdateStart}
+      </if>
+      <if test="vdateEnd != null and vdateEnd != ''">
+        and to_char(a.VDATE,'yyyy-MM-dd') &lt;= #{vdateEnd}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and to_char(a.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
+      </if>
     </where>
-  ) group by 
-  		RAISING_DATE
-  		,PBC_PROD_ID
-  		<if test="yield == null">
-  		,CUSTOMER_TYPE1
-	  	<if test="buyPlace == null">
-	  	,BUY_PLACE
-	  	</if>
-	  	<if test="ccy == null">
-	  	,CCY
-	  	</if>
-	   </if>
+    ) group by
+    RAISING_DATE
+    ,PBC_PROD_ID
+    <if test="yield == null">
+      ,CUSTOMER_TYPE1
+      <if test="buyPlace == null">
+        ,BUY_PLACE
+      </if>
+      <if test="ccy == null">
+        ,CCY
+      </if>
+    </if>
   </select>
   <select id="selectByDimension2" parameterType="map" resultMap="BaseResultMap">
-  select 
-  		RAISING_DATE
-  		,PBC_PROD_ID
-  		<if test="nyield  == null">
-  		,max(PROD_HIGH_YIELD) PROD_HIGH_YIELD
-  		,max(PROD_LOW_YIELD) PROD_LOW_YIELD
-  		</if>
-  		<if test="nyield  != null">
-			<if test="ccy != null">
-	  			,#{ccy} CCY
-	  			,max(PROD_VALUE) PROD_VALUE
-	  			,max(UNIT_VALUE_TOTAL) UNIT_VALUE_TOTAL
-	  		</if>
-	  		<if test="ccy == null">
-	  			,CCY
-	  			,max(PROD_VALUE) PROD_VALUE
-	  			,max(UNIT_VALUE_TOTAL) UNIT_VALUE_TOTAL
-	  			,max(PROD_VALUE_CNY) PROD_VALUE_CNY
-        	    ,max(UNIT_VALUE_TOTAL_CNY) UNIT_VALUE_TOTAL_CNY
-	  		</if>
-        </if>
-  		<if test="yield == null">
-	  		,CUSTOMER_TYPE1
-	  		,SUM(RAISING_AMTSUM) RAISING_AMTSUM
-	  		,SUM(nvl(RAISING_AMTSUM_CNY,RAISING_AMTSUM)) RAISING_AMTSUM_CNY
-	  		,SUM(RAISING_QTY) RAISING_QTY
-	  		,SUM(REDAMT) REDAMT
-	  		,SUM(nvl(REDAMT_CNY,REDAMT)) REDAMT_CNY
-	  		,SUM(REDQTY) REDQTY
-	  		,SUM(ENDAMTSUM) ENDAMTSUM
-	  		,SUM(nvl(ENDAMTSUM_CNY,ENDAMTSUM)) ENDAMTSUM_CNY
-	  		,SUM(ENDQTY) ENDQTY
-	  		<if test="buyPlace != null">
-	  		,#{buyPlace} BUY_PLACE
-	  		</if>
-	  		<if test="ccy != null">
-	  		,#{ccy} CCY
-	  		</if>
-	  		<if test="buyPlace == null">
-	  		,BUY_PLACE
-	  		</if>
-	  		<if test="ccy == null">
-	  		,CCY
-	  		</if>
-  		</if>
+    select
+    RAISING_DATE
+    ,PBC_PROD_ID
+    <if test="nyield  == null">
+      ,max(PROD_HIGH_YIELD) PROD_HIGH_YIELD
+      ,max(PROD_LOW_YIELD) PROD_LOW_YIELD
+    </if>
+    <if test="nyield  != null">
+      <if test="ccy != null">
+        ,#{ccy} CCY
+        ,max(PROD_VALUE) PROD_VALUE
+        ,max(UNIT_VALUE_TOTAL) UNIT_VALUE_TOTAL
+      </if>
+      <if test="ccy == null">
+        ,CCY
+        ,max(PROD_VALUE) PROD_VALUE
+        ,max(UNIT_VALUE_TOTAL) UNIT_VALUE_TOTAL
+        ,max(PROD_VALUE_CNY) PROD_VALUE_CNY
+        ,max(UNIT_VALUE_TOTAL_CNY) UNIT_VALUE_TOTAL_CNY
+      </if>
+    </if>
+    <if test="yield == null">
+      ,CUSTOMER_TYPE1
+      ,SUM(RAISING_AMTSUM) RAISING_AMTSUM
+      ,SUM(nvl(RAISING_AMTSUM_CNY,RAISING_AMTSUM)) RAISING_AMTSUM_CNY
+      ,SUM(RAISING_QTY) RAISING_QTY
+      ,SUM(REDAMT) REDAMT
+      ,SUM(nvl(REDAMT_CNY,REDAMT)) REDAMT_CNY
+      ,SUM(REDQTY) REDQTY
+      ,SUM(ENDAMTSUM) ENDAMTSUM
+      ,SUM(nvl(ENDAMTSUM_CNY,ENDAMTSUM)) ENDAMTSUM_CNY
+      ,SUM(ENDQTY) ENDQTY
+      <if test="buyPlace != null">
+        ,#{buyPlace} BUY_PLACE
+      </if>
+      <if test="ccy != null">
+        ,#{ccy} CCY
+      </if>
+      <if test="buyPlace == null">
+        ,BUY_PLACE
+      </if>
+      <if test="ccy == null">
+        ,CCY
+      </if>
+    </if>
 
-   from 
-  (
-      select 
-    a.REGIST_SEQNO, 
-    a.RAISING_DATE, 
-    nvl(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID,  
-    a.BUY_PLACE, 
-    a.CUSTOMER_TYPE1, 
-    a.CCY, 
-    a.RAISING_AMTSUM, 
-    a.RAISING_AMTSUM_CNY, 
-    a.RAISING_QTY, 
-    a.REDAMT, 
-    a.REDAMT_CNY, 
-    a.REDQTY, 
-    a.ENDAMTSUM, 
-    a.ENDAMTSUM_CNY, 
-    a.ENDQTY, 
-    a.PROD_VALUE, 
-    a.PROD_VALUE_CNY, 
-    a.UNIT_VALUE_TOTAL, 
-    a.UNIT_VALUE_TOTAL_CNY, 
-    a.PROD_HIGH_YIELD, 
-    a.PROD_LOW_YIELD, 
-    a.SEND_STATUS, 
-    a.SUBMIT_TIME, 
-    a.SUBMIT_FEEDBACK_STATUS, 
-    a.SUMIT_SEQ, 
-    a.STATUS_DATE, 
-    a.PBC_SUBMIT_DEADLINE, 
-    a.SUBMIT_DEADLINE, 
-    a.STATUS, 
-    a.CREATE_USER, 
-    a.ORG_CODE, 
-    a.CREATE_DEPT, 
-    a.CREATE_TIME, 
-    a.UPDATE_USER, 
+    from
+    (
+    select
+    a.REGIST_SEQNO,
+    a.RAISING_DATE,
+    nvl(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID,
+    a.BUY_PLACE,
+    a.CUSTOMER_TYPE1,
+    a.CCY,
+    a.RAISING_AMTSUM,
+    a.RAISING_AMTSUM_CNY,
+    a.RAISING_QTY,
+    a.REDAMT,
+    a.REDAMT_CNY,
+    a.REDQTY,
+    a.ENDAMTSUM,
+    a.ENDAMTSUM_CNY,
+    a.ENDQTY,
+    a.PROD_VALUE,
+    a.PROD_VALUE_CNY,
+    a.UNIT_VALUE_TOTAL,
+    a.UNIT_VALUE_TOTAL_CNY,
+    a.PROD_HIGH_YIELD,
+    a.PROD_LOW_YIELD,
+    a.SEND_STATUS,
+    a.SUBMIT_TIME,
+    a.SUBMIT_FEEDBACK_STATUS,
+    a.SUMIT_SEQ,
+    a.STATUS_DATE,
+    a.PBC_SUBMIT_DEADLINE,
+    a.SUBMIT_DEADLINE,
+    a.STATUS,
+    a.CREATE_USER,
+    a.ORG_CODE,
+    a.CREATE_DEPT,
+    a.CREATE_TIME,
+    a.UPDATE_USER,
     a.UPDATE_TIME
-    from PBC_PROD_RAISING_SUB a 
+    from PBC_PROD_RAISING_SUB a
     left join PBC_PRD_BASEINFO_SUB b
-    on a.PBC_PROD_ID = b.PBC_PROD_ID 
+    on a.PBC_PROD_ID = b.PBC_PROD_ID
     and nvl(a.ORG_CODE,'0') =  nvl(b.ORG_CODE,'0')
     LEFT JOIN(
-        SELECT
-            inside_prod_id,
-            pbc_code
-        FROM
-            pbc_prod_assetpool_code
-        WHERE
-            status='E'
-            AND code_type='01'
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
     )t2 ON t2.inside_prod_id=b.PROD_ID
     <where>
-    	1=1
-    	<if test="yield != null and nyield==null">
-    	 and b.OPERATE_MODE in ('3','5')
-    	</if>
-    	<if test="nyield != null">
-    	 and b.OPERATE_MODE in ('2','4')
-    	</if>
-        <if test="pbcProdId != null and pbcProdId !=''">
-            and a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
-        </if>
-        <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-            <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="prodId != null and prodId !=''">
-            and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
-        </if>
-        <if test="actualDateList != null and actualDateList.size > 0">
-            <foreach collection="actualDateList" item="items" open="AND to_char(a.RAISING_DATE,'yyyy-MM-dd') in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="prodIdList != null and prodIdList.size > 0">
-            <foreach collection="prodIdList" item="items" open="and b.PROD_ID in (" separator="," close =")">
-            #{items,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="statusList != null and statusList.size > 0">
-            and a.STATUS in
-            <foreach collection="statusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="keyList != null and keyList.size > 0">
-            and trim(a.REGIST_SEQNO) in
-            <foreach collection="keyList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="sendStatusList != null and sendStatusList.size > 0">
-            and a.SEND_STATUS in
-            <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
-            and a.SUBMIT_FEEDBACK_STATUS in
-            <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="operateModeList != null and operateModeList.size > 0">
-            and b.OPERATE_MODE in
-            <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="ivstorientationList != null and ivstorientationList.size > 0">
-            and b.IVSTORIENTATION in
-            <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-        </if>
-        <if test="statusDateStart != null and statusDateStart != ''">
-           and to_char(a.STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
-        </if>
-        <if test="statusDateEnd != null and statusDateEnd != ''">
-           and to_char(a.STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
-        </if>
-         <if test="submitTimeStart != null and submitTimeStart != ''">
-           and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
-        </if>
-        <if test="submitTimeEnd != null and submitTimeEnd != ''">
-           and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
-        </if>
-        <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
-           and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
-        </if>
-        <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
-           and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
-        </if>
-        <if test="vdateStart != null and vdateStart != ''">
-           and to_char(a.VDATE,'yyyy-MM-dd') &gt;= #{vdateStart}
-        </if>
-        <if test="vdateEnd != null and vdateEnd != ''">
-           and to_char(a.VDATE,'yyyy-MM-dd') &lt;= #{vdateEnd}
-        </if>
-        <if test="updateTime != null and updateTime != ''">
-           and to_char(a.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
-        </if>
+      1=1
+      <if test="yield != null and nyield==null">
+        and b.OPERATE_MODE in ('3','5')
+      </if>
+      <if test="nyield != null">
+        and b.OPERATE_MODE in ('2','4')
+      </if>
+      <if test="pbcProdId != null and pbcProdId !=''">
+        and a.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR}
+      </if>
+      <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
+        <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="prodId != null and prodId !=''">
+        and b.PROD_ID = #{prodId,jdbcType=VARCHAR}
+      </if>
+      <if test="actualDateList != null and actualDateList.size > 0">
+        <foreach collection="actualDateList" item="items" open="AND to_char(a.RAISING_DATE,'yyyy-MM-dd') in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="prodIdList != null and prodIdList.size > 0">
+        <foreach collection="prodIdList" item="items" open="and b.PROD_ID in (" separator="," close =")">
+          #{items,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusList != null and statusList.size > 0">
+        and a.STATUS in
+        <foreach collection="statusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size > 0">
+        and trim(a.REGIST_SEQNO) in
+        <foreach collection="keyList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size > 0">
+        and a.SEND_STATUS in
+        <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
+        and a.SUBMIT_FEEDBACK_STATUS in
+        <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="operateModeList != null and operateModeList.size > 0">
+        and b.OPERATE_MODE in
+        <foreach collection="operateModeList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="ivstorientationList != null and ivstorientationList.size > 0">
+        and b.IVSTORIENTATION in
+        <foreach collection="ivstorientationList" open="(" close=")" separator="," item="item">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and to_char(a.STATUS_DATE,'yyyy-MM-dd') &gt;= #{statusDateStart}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and to_char(a.STATUS_DATE,'yyyy-MM-dd') &lt;= #{statusDateEnd}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitTimeStart}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and to_char(a.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitTimeEnd}
+      </if>
+      <if test="pbcSubmitDeadlineDateStart != null and pbcSubmitDeadlineDateStart != ''">
+        and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{pbcSubmitDeadlineDateStart}
+      </if>
+      <if test="pbcSubmitDeadlineDateEnd != null and pbcSubmitDeadlineDateEnd != ''">
+        and to_char(a.PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
+      </if>
+      <if test="vdateStart != null and vdateStart != ''">
+        and to_char(a.VDATE,'yyyy-MM-dd') &gt;= #{vdateStart}
+      </if>
+      <if test="vdateEnd != null and vdateEnd != ''">
+        and to_char(a.VDATE,'yyyy-MM-dd') &lt;= #{vdateEnd}
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        and to_char(a.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
+      </if>
     </where>
-  ) group by 
-  		RAISING_DATE
-  		,PBC_PROD_ID
-  		<if test="yield == null">
-  		,CUSTOMER_TYPE1
-	  	<if test="buyPlace == null">
-	  	,BUY_PLACE
-	  	</if>
-	  	<if test="ccy == null">
-	  	,CCY
-	  	</if>
-	   </if>
-	   <if test="nyield  != null">
-			<if test="ccy == null">
-				,CCY
-			</if>
-		</if>
+    ) group by
+    RAISING_DATE
+    ,PBC_PROD_ID
+    <if test="yield == null">
+      ,CUSTOMER_TYPE1
+      <if test="buyPlace == null">
+        ,BUY_PLACE
+      </if>
+      <if test="ccy == null">
+        ,CCY
+      </if>
+    </if>
+    <if test="nyield  != null">
+      <if test="ccy == null">
+        ,CCY
+      </if>
+    </if>
   </select>
-    <select id="selectRegList" resultMap="BaseResultMap"
-        parameterType="java.util.Map">
-        select
-        <include refid="Base_Column_List" />
-        from CHB_ASSET_INFO_SUB
-        where 1 =1 
-        and send_status in ('02','03') /*已报送数据*/
-        <if test="registList !=null and registList.size()>0">
-           <foreach collection="registList" item="regist" open="and PBC_PROD_ID IN (" separator=","  close=")">
-             #{regist.pbcProdId,jdbcType=VARCHAR}
-           </foreach>
-        </if>
-    </select>
-    
-    <select id="queryListByKeys" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
-    	SELECT  r.REGIST_SEQNO, r.RAISING_DATE, f.PROD_ID PROD_ID, r.BUY_PLACE, r.CUSTOMER_TYPE1, r.CCY, r.RAISING_AMTSUM,
-        r.RAISING_AMTSUM_CNY, r.RAISING_QTY, r.REDAMT, r.REDAMT_CNY, r.REDQTY, r.ENDAMTSUM, r.ENDAMTSUM_CNY,
-        r.ENDQTY, r.PROD_VALUE, r.PROD_VALUE_CNY, r.UNIT_VALUE_TOTAL, r.UNIT_VALUE_TOTAL_CNY, r.PROD_HIGH_YIELD,
-        r.PROD_LOW_YIELD, r.SEND_STATUS, r.SUBMIT_TIME, r.SUBMIT_FEEDBACK_STATUS, r.SUMIT_SEQ, r.STATUS_DATE,
-        r.PBC_SUBMIT_DEADLINE, r.SUBMIT_DEADLINE, r.STATUS, r.CREATE_USER, r.ORG_CODE, r.CREATE_DEPT,
-        r.CREATE_TIME, r.UPDATE_USER, r.UPDATE_TIME
-    	FROM PBC_PROD_RAISING_SUB r
-        left join pbc_prd_baseinfo_sub f
-        on f.PBC_PROD_ID=r.PBC_PROD_ID
-    	where 1=1 
-    	<if test="list!=null and list.size()!=0">
-			<foreach collection="list" item="item" open="and ((" close="))"
-				separator=") or (">
-				trim(r.REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-    </select>
-    
-     <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
-   	select REGIST_SEQNO
-      from PBC_PROD_RAISING_SUB
-      where 1 =1
-      <if test="flag == '02'">
+  <select id="selectRegList" resultMap="BaseResultMap"
+          parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from CHB_ASSET_INFO_SUB
+    where 1 =1
+    and send_status in ('02','03') /*已报送数据*/
+    <if test="registList !=null and registList.size()>0">
+      <foreach collection="registList" item="regist" open="and PBC_PROD_ID IN (" separator=","  close=")">
+        #{regist.pbcProdId,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </select>
+
+  <select id="queryListByKeys" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
+    SELECT  r.REGIST_SEQNO, r.RAISING_DATE, f.PROD_ID PROD_ID, r.BUY_PLACE, r.CUSTOMER_TYPE1, r.CCY, r.RAISING_AMTSUM,
+    r.RAISING_AMTSUM_CNY, r.RAISING_QTY, r.REDAMT, r.REDAMT_CNY, r.REDQTY, r.ENDAMTSUM, r.ENDAMTSUM_CNY,
+    r.ENDQTY, r.PROD_VALUE, r.PROD_VALUE_CNY, r.UNIT_VALUE_TOTAL, r.UNIT_VALUE_TOTAL_CNY, r.PROD_HIGH_YIELD,
+    r.PROD_LOW_YIELD, r.SEND_STATUS, r.SUBMIT_TIME, r.SUBMIT_FEEDBACK_STATUS, r.SUMIT_SEQ, r.STATUS_DATE,
+    r.PBC_SUBMIT_DEADLINE, r.SUBMIT_DEADLINE, r.STATUS, r.CREATE_USER, r.ORG_CODE, r.CREATE_DEPT,
+    r.CREATE_TIME, r.UPDATE_USER, r.UPDATE_TIME
+    FROM PBC_PROD_RAISING_SUB r
+    left join pbc_prd_baseinfo_sub f
+    on f.PBC_PROD_ID=r.PBC_PROD_ID
+    where 1=1
+    <if test="list!=null and list.size()!=0">
+      <foreach collection="list" item="item" open="and ((" close="))"
+               separator=") or (">
+        trim(r.REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </select>
+
+  <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub">
+    select REGIST_SEQNO
+    from PBC_PROD_RAISING_SUB
+    where 1 =1
+    <if test="flag == '02'">
       and SEND_STATUS in ('02','03')
-      </if>
-      <if test="flag == '01'">
+    </if>
+    <if test="flag == '01'">
       and SEND_STATUS = '01'
-      </if>
-      <if test="list != null and list.size() >0">
-	      <foreach collection="list" open="and (PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
-	            select #{item.pbcProdId,jdbcType=CHAR},
-	            #{item.raisingDate,jdbcType=CHAR}
-	            from dual
-	      </foreach>
-      </if>
-   </select>
-   
-  <!-- 产品资金募集信息页面导出人行Excel报表中的第一个sheet起始募集信息的明细数据 
+    </if>
+    <if test="list != null and list.size() >0">
+      <foreach collection="list" open="and (PBC_PROD_ID,RAISING_DATE) in (" close=")" separator="union all" item="item">
+        select #{item.pbcProdId,jdbcType=CHAR},
+        #{item.raisingDate,jdbcType=CHAR}
+        from dual
+      </foreach>
+    </if>
+  </select>
+
+  <!-- 产品资金募集信息页面导出人行Excel报表中的第一个sheet起始募集信息的明细数据
   <select id="searchListDetailSheet1" parameterType="map" resultMap="SearchResultMap">
   		子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额
 		WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM zhrmbje,a.RAISING_QTY zhrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM zhmyje,a.RAISING_QTY zhmyfe,a.RAISING_AMTSUM_CNY zhmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM zfrmbje,a.RAISING_QTY zfrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM zfmyje,a.RAISING_QTY zfmyfe,a.RAISING_AMTSUM_CNY zfmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM fjrrmbje,a.RAISING_QTY fjrrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM fjrmyje,a.RAISING_QTY fjrmyfe,a.RAISING_AMTSUM_CNY fjrmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM jrjgrmbje,a.RAISING_QTY jrjgrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM jrjgmyje,a.RAISING_QTY jrjgmyfe,a.RAISING_AMTSUM_CNY jrjgmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM tdztrmbje,a.RAISING_QTY tdztrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM tdztmyje,a.RAISING_QTY tdztmyfe,a.RAISING_AMTSUM_CNY tdztmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM jwrmbje,a.RAISING_QTY jwrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM jwmyje,a.RAISING_QTY jwmyfe,a.RAISING_AMTSUM_CNY jwmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		查询字段一一对应导出的Excel模板
 		SELECT
 		    sys.ITEM_VALUE,
@@ -2529,76 +2529,76 @@
 		    jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,nvl(jwrmb.jwrmbje,0) + nvl(jwmy.jwmyzrmb,0)  sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE'
-		
+
 		求出全国和总行的起始募集信息值
 		UNION All
 		SELECT '全国','000000','全国','buyplace000000',
 		      sum(zhrmbje) zhrmbje,sum(zhrmbfe) zhrmbfe,sum(zhmyje) zhmyje,sum(zhmyfe) zhmyfe,sum(zhmyzrmb) zhmyzrmb,sum(nvl(zhrmbje,0) + nvl(zhmyzrmb,0)) sumzh,
 		      sum(zfrmbje) zfrmbje,sum(zfrmbfe) zfrmbfe,sum(zfmyje) zfmyje,sum(zfmyfe) zfmyfe,sum(zfmyzrmb) zfmyzrmb,sum(nvl(zfrmbje,0) + nvl(zfmyzrmb,0)) sumzf,
 		      sum(fjrrmbje) fjrrmbje,sum(fjrrmbfe) fjrrmbfe,sum(fjrmyje) fjrmyje,sum(fjrmyfe) fjrmyfe,sum(fjrmyzrmb) fjrmyzrmb,sum(nvl(fjrrmbje,0) + nvl(fjrmyzrmb,0)) sumfjr,
-		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,       
+		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,
 		      sum(tdztrmbje) tdztrmbje,sum(tdztrmbfe) tdztrmbfe,sum(tdztmyje) tdztmyje,sum(tdztmyfe) tdztmyfe,sum(tdztmyzrmb) tdztmyzrmb,sum(nvl(tdztrmbje,0) + nvl(tdztmyzrmb,0)) sumtdzt,
 		      sum(jwrmbje) jwrmbje,sum(jwrmbfe) jwrmbfe,sum(jwmyje) jwmyje,sum(jwmyfe) jwmyfe,sum(jwmyzrmb) jwmyzrmb,sum(nvl(jwrmbje,0) + nvl(jwmyzrmb,0)) sumjw
-		from 
+		from
 		(WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM zhrmbje,a.RAISING_QTY zhrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM zhmyje,a.RAISING_QTY zhmyfe,a.RAISING_AMTSUM_CNY zhmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM zfrmbje,a.RAISING_QTY zfrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM zfmyje,a.RAISING_QTY zfmyfe,a.RAISING_AMTSUM_CNY zfmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM fjrrmbje,a.RAISING_QTY fjrrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM fjrmyje,a.RAISING_QTY fjrmyfe,a.RAISING_AMTSUM_CNY fjrmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM jrjgrmbje,a.RAISING_QTY jrjgrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM jrjgmyje,a.RAISING_QTY jrjgmyfe,a.RAISING_AMTSUM_CNY jrjgmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM tdztrmbje,a.RAISING_QTY tdztrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM tdztmyje,a.RAISING_QTY tdztmyfe,a.RAISING_AMTSUM_CNY tdztmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.RAISING_AMTSUM jwrmbje,a.RAISING_QTY jwrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.RAISING_AMTSUM jwmyje,a.RAISING_QTY jwmyfe,a.RAISING_AMTSUM_CNY jwmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		SELECT
 		    sys.ITEM_VALUE,
 		    sys.ITEM_CODE,
@@ -2610,72 +2610,72 @@
 		    jwrmb.BUY_PLACEZHRMB,jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,jwrmb.jwrmbje+jwmy.jwmyzrmb sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE') tab
-		  	
+
   </select>
-   
-   
+
+
    产品资金募集信息页面导出人行Excel报表中的第二个sheet页当期兑付的明细数据
   <select id="searchListDetailSheet2" parameterType="map" resultMap="SearchResultMap">
   		子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额
 		WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT zhrmbje,a.REDQTY zhrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT zhmyje,a.REDQTY zhmyfe,a.REDAMT_CNY zhmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT zfrmbje,a.REDQTY zfrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT zfmyje,a.REDQTY zfmyfe,a.REDAMT_CNY zfmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT fjrrmbje,a.REDQTY fjrrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT fjrmyje,a.REDQTY fjrmyfe,a.REDAMT_CNY fjrmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT jrjgrmbje,a.REDQTY jrjgrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT jrjgmyje,a.REDQTY jrjgmyfe,a.REDAMT_CNY jrjgmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT tdztrmbje,a.REDQTY tdztrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT tdztmyje,a.REDQTY tdztmyfe,a.REDAMT_CNY tdztmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT jwrmbje,a.REDQTY jwrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT jwmyje,a.REDQTY jwmyfe,a.REDAMT_CNY jwmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		查询字段一一对应导出的Excel模板
 		SELECT
 		    sys.ITEM_VALUE,
@@ -2688,76 +2688,76 @@
 		    jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,nvl(jwrmb.jwrmbje,0) + nvl(jwmy.jwmyzrmb,0)  sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE'
-		
+
 		求出全国和总行的起始募集信息值
 		UNION All
 		SELECT '全国','000000','全国','buyplaceSheet2000000',
 		      sum(zhrmbje) zhrmbje,sum(zhrmbfe) zhrmbfe,sum(zhmyje) zhmyje,sum(zhmyfe) zhmyfe,sum(zhmyzrmb) zhmyzrmb,sum(nvl(zhrmbje,0) + nvl(zhmyzrmb,0)) sumzh,
 		      sum(zfrmbje) zfrmbje,sum(zfrmbfe) zfrmbfe,sum(zfmyje) zfmyje,sum(zfmyfe) zfmyfe,sum(zfmyzrmb) zfmyzrmb,sum(nvl(zfrmbje,0) + nvl(zfmyzrmb,0)) sumzf,
 		      sum(fjrrmbje) fjrrmbje,sum(fjrrmbfe) fjrrmbfe,sum(fjrmyje) fjrmyje,sum(fjrmyfe) fjrmyfe,sum(fjrmyzrmb) fjrmyzrmb,sum(nvl(fjrrmbje,0) + nvl(fjrmyzrmb,0)) sumfjr,
-		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,       
+		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,
 		      sum(tdztrmbje) tdztrmbje,sum(tdztrmbfe) tdztrmbfe,sum(tdztmyje) tdztmyje,sum(tdztmyfe) tdztmyfe,sum(tdztmyzrmb) tdztmyzrmb,sum(nvl(tdztrmbje,0) + nvl(tdztmyzrmb,0)) sumtdzt,
 		      sum(jwrmbje) jwrmbje,sum(jwrmbfe) jwrmbfe,sum(jwmyje) jwmyje,sum(jwmyfe) jwmyfe,sum(jwmyzrmb) jwmyzrmb,sum(nvl(jwrmbje,0) + nvl(jwmyzrmb,0)) sumjw
-		from 
+		from
 		(WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT zhrmbje,a.REDQTY zhrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT zhmyje,a.REDQTY zhmyfe,a.REDAMT_CNY zhmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT zfrmbje,a.REDQTY zfrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT zfmyje,a.REDQTY zfmyfe,a.REDAMT_CNY zfmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT fjrrmbje,a.REDQTY fjrrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT fjrmyje,a.REDQTY fjrmyfe,a.REDAMT_CNY fjrmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT jrjgrmbje,a.REDQTY jrjgrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT jrjgmyje,a.REDQTY jrjgmyfe,a.REDAMT_CNY jrjgmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT tdztrmbje,a.REDQTY tdztrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT tdztmyje,a.REDQTY tdztmyfe,a.REDAMT_CNY tdztmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.REDAMT jwrmbje,a.REDQTY jwrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.REDAMT jwmyje,a.REDQTY jwmyfe,a.REDAMT_CNY jwmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		SELECT
 		    sys.ITEM_VALUE,
 		    sys.ITEM_CODE,
@@ -2769,72 +2769,72 @@
 		    jwrmb.BUY_PLACEZHRMB,jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,jwrmb.jwrmbje+jwmy.jwmyzrmb sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE') tab
-		  	
+
   </select>
-   
-   
+
+
    产品资金募集信息页面导出人行Excel报表中的第三个sheet页期末产品的明细数据
   <select id="searchListDetailSheet3" parameterType="map" resultMap="SearchResultMap">
   		子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额
 		WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM zhrmbje,a.ENDQTY zhrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM zhmyje,a.ENDQTY zhmyfe,a.ENDAMTSUM_CNY zhmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM zfrmbje,a.ENDQTY zfrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM zfmyje,a.ENDQTY zfmyfe,a.ENDAMTSUM_CNY zfmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM fjrrmbje,a.ENDQTY fjrrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM fjrmyje,a.ENDQTY fjrmyfe,a.ENDAMTSUM_CNY fjrmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM jrjgrmbje,a.ENDQTY jrjgrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM jrjgmyje,a.ENDQTY jrjgmyfe,a.ENDAMTSUM_CNY jrjgmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM tdztrmbje,a.ENDQTY tdztrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM tdztmyje,a.ENDQTY tdztmyfe,a.ENDAMTSUM_CNY tdztmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM jwrmbje,a.ENDQTY jwrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM jwmyje,a.ENDQTY jwmyfe,a.ENDAMTSUM_CNY jwmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		查询字段一一对应导出的Excel模板
 		SELECT
 		    sys.ITEM_VALUE,
@@ -2847,76 +2847,76 @@
 		    jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,nvl(jwrmb.jwrmbje,0) + nvl(jwmy.jwmyzrmb,0)  sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE'
-		
+
 		求出全国和总行的起始募集信息值
 		UNION All
 		SELECT '全国','000000','全国','buyplaceSheet3000000',
 		      sum(zhrmbje) zhrmbje,sum(zhrmbfe) zhrmbfe,sum(zhmyje) zhmyje,sum(zhmyfe) zhmyfe,sum(zhmyzrmb) zhmyzrmb,sum(nvl(zhrmbje,0) + nvl(zhmyzrmb,0)) sumzh,
 		      sum(zfrmbje) zfrmbje,sum(zfrmbfe) zfrmbfe,sum(zfmyje) zfmyje,sum(zfmyfe) zfmyfe,sum(zfmyzrmb) zfmyzrmb,sum(nvl(zfrmbje,0) + nvl(zfmyzrmb,0)) sumzf,
 		      sum(fjrrmbje) fjrrmbje,sum(fjrrmbfe) fjrrmbfe,sum(fjrmyje) fjrmyje,sum(fjrmyfe) fjrmyfe,sum(fjrmyzrmb) fjrmyzrmb,sum(nvl(fjrrmbje,0) + nvl(fjrmyzrmb,0)) sumfjr,
-		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,       
+		      sum(jrjgrmbje) jrjgrmbje,sum(jrjgrmbfe) jrjgrmbfe,sum(jrjgmyje) jrjgmyje,sum(jrjgmyfe) jrjgmyfe,sum(jrjgmyzrmb) jrjgmyzrmb,sum(nvl(jrjgrmbje,0) + nvl(jrjgmyzrmb,0)) sumjrjg,
 		      sum(tdztrmbje) tdztrmbje,sum(tdztrmbfe) tdztrmbfe,sum(tdztmyje) tdztmyje,sum(tdztmyfe) tdztmyfe,sum(tdztmyzrmb) tdztmyzrmb,sum(nvl(tdztrmbje,0) + nvl(tdztmyzrmb,0)) sumtdzt,
 		      sum(jwrmbje) jwrmbje,sum(jwrmbfe) jwrmbfe,sum(jwmyje) jwmyje,sum(jwmyfe) jwmyfe,sum(jwmyzrmb) jwmyzrmb,sum(nvl(jwrmbje,0) + nvl(jwmyzrmb,0)) sumjw
-		from 
+		from
 		(WITH zhrmb as (select 'ZHRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM zhrmbje,a.ENDQTY zhrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zhmy as (select 'ZHMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM zhmyje,a.ENDQTY zhmyfe,a.ENDAMTSUM_CNY zhmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='4' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		zfrmb as (select 'ZFRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM zfrmbje,a.ENDQTY zfrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		zfmy as (select 'ZFMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM zfmyje,a.ENDQTY zfmyfe,a.ENDAMTSUM_CNY zfmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='5' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		fjrrmb as (select 'FJRRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM fjrrmbje,a.ENDQTY fjrrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		fjrmy as (select 'FJRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM fjrmyje,a.ENDQTY fjrmyfe,a.ENDAMTSUM_CNY fjrmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='6' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		jrjgrmb as (select 'JRJZRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM jrjgrmbje,a.ENDQTY jrjgrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jrjgmy as (select 'JRJZRMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM jrjgmyje,a.ENDQTY jrjgmyfe,a.ENDAMTSUM_CNY jrjgmyzrmb
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='7' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		
+
 		tdztrmb as (select 'TDZTRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM tdztrmbje,a.ENDQTY tdztrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		tdztmy as (select 'TDZTMY' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM tdztmyje,a.ENDQTY tdztmyfe,a.ENDAMTSUM_CNY tdztmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),       
-		
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='8' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
+
 		jwrmb as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE BUY_PLACEZHRMB,a.ENDAMTSUM jwrmbje,a.ENDQTY jwrmbfe
 		       from PBC_PROD_RAISING_SUB a
 		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='CNY' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP}),
-		       
+
 		jwmy as (select 'JWRMB' code,a.CUSTOMER_TYPE1,a.CCY,a.REGIST_SEQNO,a.PBC_PROD_ID,a.BUY_PLACE,a.ENDAMTSUM jwmyje,a.ENDQTY jwmyfe,a.ENDAMTSUM_CNY jwmyzrmb
 		       from PBC_PROD_RAISING_SUB a
-		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})     
+		       left join view_PBC_PROD_RAISING_SUB aview on a.regist_seqno = aview.REGIST_SEQNO WHERE a.CUSTOMER_TYPE1='9' and a.CCY='USD' and a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP})
 		SELECT
 		    sys.ITEM_VALUE,
 		    sys.ITEM_CODE,
@@ -2928,138 +2928,201 @@
 		    jwrmb.BUY_PLACEZHRMB,jwrmb.jwrmbje,jwrmb.jwrmbfe,jwmy.jwmyje,jwmy.jwmyfe,jwmy.jwmyzrmb,jwrmb.jwrmbje+jwmy.jwmyzrmb sumjw
 		FROM SYS_DATADICT_LIST sys
 		LEFT JOIN zhrmb ON sys.ITEM_CODE=zhrmb.BUY_PLACEZHRMB
-		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE 
-		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB 
-		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE 
-		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB 
-		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE 
-		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE 
-		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB 
-		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE 
-		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB 
-		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE 
+		LEFT JOIN zhmy ON sys.ITEM_CODE=zhmy.BUY_PLACE
+		LEFT JOIN zfrmb ON sys.ITEM_CODE=zfrmb.BUY_PLACEZHRMB
+		LEFT JOIN zfmy ON sys.ITEM_CODE=zfmy.BUY_PLACE
+		LEFT JOIN fjrrmb ON sys.ITEM_CODE=fjrrmb.BUY_PLACEZHRMB
+		LEFT JOIN fjrmy ON sys.ITEM_CODE=fjrmy.BUY_PLACE
+		LEFT JOIN jrjgrmb ON sys.ITEM_CODE=jrjgrmb.BUY_PLACEZHRMB
+		LEFT JOIN jrjgmy ON sys.ITEM_CODE=jrjgmy.BUY_PLACE
+		LEFT JOIN tdztrmb ON sys.ITEM_CODE=tdztrmb.BUY_PLACEZHRMB
+		LEFT JOIN tdztmy ON sys.ITEM_CODE=tdztmy.BUY_PLACE
+		LEFT JOIN jwrmb ON sys.ITEM_CODE=jwrmb.BUY_PLACEZHRMB
+		LEFT JOIN jwmy ON sys.ITEM_CODE=jwmy.BUY_PLACE
 		WHERE sys.DICT_CODE='SVR_BUY_PLACE') tab
-		  	
-  </select> -->
-  
-   <!-- 产品资金募集信息页面导出人行Excel报表中的第一个sheet起始募集信息的明细数据  -->
-  <select id="searchListDetailSheet1" parameterType="map" resultMap="SearchResultMap">
-  	<!-- 子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额 -->
-  	WITH 
-		tab AS (select 
-        'buyplace'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
-        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe
-		from PBC_PROD_RAISING_SUB a
-		LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-		where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP})
 
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
-	union all
-	select 'buyplace4000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
-	union all
-	select 'buyplace5000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='5' group by tab.ITEM_VALUE
-	union all
-	select 'buyplace6000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='6' group by tab.ITEM_VALUE
-	union all
-	select 'buyplace7000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='7' group by tab.ITEM_VALUE
-	union all
-	select 'buyplace8000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
-	union all
-	select 'buyplace9000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
-  	
+  </select> -->
+
+  <!-- 产品资金募集信息页面导出人行Excel报表中的第一个sheet起始募集信息的明细数据  -->
+  <select id="searchListDetailSheet1" parameterType="map" resultMap="SearchResultMap">
+    <!-- 子查询出不同客户类型、不同币种的当期申购金额、当期申购金额折人民币、当期申购份额的金额 -->
+    WITH
+    tab AS (select * from ( select
+    'buyplace'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
+    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.RAISING_AMTSUM je,a.RAISING_AMTSUM_CNY zrmb,a.RAISING_QTY fe,
+    RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.RAISING_DATE,a.CCY ORDER BY NVL(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
+    from PBC_PROD_RAISING_SUB a
+    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+    inner join pbc_prd_baseinfo_sub b on a.pbc_prod_id = b.pbc_prod_id
+    LEFT JOIN(
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
+    and TO_CHAR(a.STATUS_DATE,'yyyy-MM-dd')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+    and TO_CHAR(a.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')  )t where t.RANKNUM=1 )
+
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
+    union all
+    select 'buyplace4000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
+    union all
+    select 'buyplace5000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='5' group by tab.ITEM_VALUE
+    union all
+    select 'buyplace6000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='6' group by tab.ITEM_VALUE
+    union all
+    select 'buyplace7000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='7' group by tab.ITEM_VALUE
+    union all
+    select 'buyplace8000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
+    union all
+    select 'buyplace9000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
+
   </select>
-  
+
   <!-- 产品资金募集信息页面导出人行Excel报表中的第二个sheet页当期兑付的明细数据 -->
   <select id="searchListDetailSheet2" parameterType="map" resultMap="SearchResultMap">
-  		<!-- 子查询出不同客户类型、不同币种的当期兑付金额、当期兑付金额折人民币、当期兑付份额的金额 -->
-  		WITH 
-		tab AS (select 
-        'buyplaceSheet2'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
-        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe
-		from PBC_PROD_RAISING_SUB a
-		LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-		where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP})
+    <!-- 子查询出不同客户类型、不同币种的当期兑付金额、当期兑付金额折人民币、当期兑付份额的金额 -->
+    WITH
+    tab AS (select * from (   select
+    'buyplaceSheet2'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
+    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.REDAMT je,a.REDAMT_CNY zrmb,a.REDQTY fe,
+    RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.RAISING_DATE,a.CCY ORDER BY NVL(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
+    from PBC_PROD_RAISING_SUB a
+    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+    inner join pbc_prd_baseinfo_sub b on a.pbc_prod_id = b.pbc_prod_id
+    LEFT JOIN(
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
+    and to_char(a.STATUS_DATE,'yyyy-MM-dd')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+    and to_char(a.RAISING_DATE,'yyyy-MM-dd')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
+    t where t.RANKNUM=1
+    )
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
+    union all
+    select 'buyplaceSheet24000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet25000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='5' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet26000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='6' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet27000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='7' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet28000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet29000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
 
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
-	union all
-	select 'buyplaceSheet24000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet25000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='5' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet26000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='6' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet27000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='7' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet28000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet29000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
-  		
   </select>
-  
- <!--  产品资金募集信息页面导出人行Excel报表中的第三个sheet页期末产品的明细数据 -->
+
+  <!--  产品资金募集信息页面导出人行Excel报表中的第三个sheet页期末产品的明细数据 -->
   <select id="searchListDetailSheet3" parameterType="map" resultMap="SearchResultMap">
-  		<!-- 子查询出不同客户类型、不同币种的期末产品金额、期末产品金额折人民币、期末产品份额的金额 -->
-  		
-  		WITH 
-		tab AS (select 
-        'buyplaceSheet3'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
-        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe
-		from PBC_PROD_RAISING_SUB a
-		LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-		where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR} and a.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and a.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP})
+    <!-- 子查询出不同客户类型、不同币种的期末产品金额、期末产品金额折人民币、期末产品份额的金额 -->
+    WITH
+    tab AS (select * from (  select
+    'buyplaceSheet3'||a.CUSTOMER_TYPE1||a.BUY_PLACE code,
+    list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.ENDAMTSUM je,a.ENDAMTSUM_CNY zrmb,a.ENDQTY fe,
+    RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.RAISING_DATE ,a.CCY ORDER BY NVl(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
+    from PBC_PROD_RAISING_SUB a
+    LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+    inner join pbc_prd_baseinfo_sub b on a.pbc_prod_id = b.pbc_prod_id
+    LEFT JOIN(
+    SELECT
+    inside_prod_id,
+    pbc_code
+    FROM
+    pbc_prod_assetpool_code
+    WHERE
+    status='E'
+    AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    where NVL(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
+    and  to_char(a.STATUS_DATE,'yyyy-MM-dd')=  to_char(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+    and  to_char(a.RAISING_DATE,'yyyy-MM-dd')= to_char(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd'))
+    t where RANKNUM=1
+    )
+    SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
+    union all
+    select 'buyplaceSheet34000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet35000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='5' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet36000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='6' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet37000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='7' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet38000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
+    union all
+    select 'buyplaceSheet39000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
 
-	SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
-	union all
-	select 'buyplaceSheet34000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet35000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='5' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet36000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='6' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet37000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='7' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet38000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='8' group by tab.ITEM_VALUE
-	union all
-	select 'buyplaceSheet39000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='9' group by tab.ITEM_VALUE
-  		
   </select>
-  	
-  
-  
+
+
+
   <!-- 产品资金募集信息页面导出人行Excel报表中的第四个sheet页净值的明细数据 -->
   <select id="searchListDetailSheet4" parameterType="map" resultMap="BaseResultMap">
-  		SELECT DISTINCT 'sheet4' code,decode(rais.PROD_VALUE,null,null,rais.ccy) CCY,decode(rais.UNIT_VALUE_TOTAL,null,null,rais.ccy) RAISE_CCY,
-						to_char(rais.PROD_VALUE,'FM9999999999999999.00000') PROD_VALUE,
-						to_char(rais.PROD_VALUE_CNY,'FM9999999999999999.00000') PROD_VALUE_CNY,
-                		to_char(rais.UNIT_VALUE_TOTAL,'FM9999999999999999.00000') UNIT_VALUE_TOTAL,
-                		to_char(rais.UNIT_VALUE_TOTAL_CNY,'FM9999999999999999.00000') UNIT_VALUE_TOTAL_CNY
-		from PBC_PROD_RAISING_SUB rais
-		LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
-		WHERE 
-		info.OPERATE_MODE  in   ('2','4')
-		and rais.PBC_PROD_ID= #{pbcProdId,jdbcType=VARCHAR} and rais.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and rais.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
-		  
+    SELECT DISTINCT 'sheet4' code,decode(rais.PROD_VALUE,null,null,rais.ccy) CCY,decode(rais.UNIT_VALUE_TOTAL,null,null,rais.ccy) RAISE_CCY,
+                    to_char(rais.PROD_VALUE,'FM9999999999999999.00000') PROD_VALUE,
+                    to_char(rais.PROD_VALUE_CNY,'FM9999999999999999.00000') PROD_VALUE_CNY,
+                    to_char(rais.UNIT_VALUE_TOTAL,'FM9999999999999999.00000') UNIT_VALUE_TOTAL,
+                    to_char(rais.UNIT_VALUE_TOTAL_CNY,'FM9999999999999999.00000') UNIT_VALUE_TOTAL_CNY
+    from PBC_PROD_RAISING_SUB rais
+           LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
+           inner join pbc_prd_baseinfo_sub b on rais.pbc_prod_id = b.pbc_prod_id
+           LEFT JOIN(
+      SELECT
+        inside_prod_id,
+        pbc_code
+      FROM
+        pbc_prod_assetpool_code
+      WHERE
+        status='E'
+        AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    WHERE
+      info.OPERATE_MODE  in   ('2','4')
+      and nvl(t2.pbc_code,b.PBC_PROD_ID)= #{pbcProdId,jdbcType=VARCHAR}
+      and TO_CHAR(rais.STATUS_DATE,'yyyy-MM-dd')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+      and TO_CHAR(rais.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+
+
   </select>
-  
+
   <select id="searchListDetailSheet4Yield" parameterType="map" resultMap="BaseResultMap">
     SELECT DISTINCT 'sheet4' code, to_char(rais.PROD_HIGH_YIELD,'FM9999999999999999.00000') PROD_HIGH_YIELD,
-            to_char(rais.PROD_LOW_YIELD,'FM9999999999999999.00000') PROD_LOW_YIELD
+                    to_char(rais.PROD_LOW_YIELD,'FM9999999999999999.00000') PROD_LOW_YIELD
     FROM PBC_PROD_RAISING_SUB rais
-    LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
+           LEFT JOIN PBC_PRD_BASEINFO_SUB info ON info.PBC_PROD_ID=rais.PBC_PROD_ID
     WHERE
-    info.OPERATE_MODE = '3'
-    AND rais.PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR} and rais.STATUS_DATE= #{statusDate,jdbcType=TIMESTAMP} and rais.RAISING_DATE= #{raisingDate,jdbcType=TIMESTAMP}
+      info.OPERATE_MODE = '3'
+      AND TO_CHAR(rais.STATUS_DATE,'yyyy-MM-dd')=  TO_CHAR(#{statusDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
+      AND TO_CHAR(rais.RAISING_DATE,'yyyy-MM-dd')= TO_CHAR(#{raisingDate,jdbcType=TIMESTAMP},'yyyy-MM-dd')
   </select>
 
   <select id="selectOperateMode" resultType="string">
-    SELECT
-    b.operate_mode
-    FROM
-    pbc_prod_raising_sub   r,
-    pbc_prd_baseinfo_sub   b
-    WHERE
-    r.pbc_prod_id = b.pbc_prod_id
-    AND r.pbc_prod_id = #{pbcProdId}
+    select b.operate_mode from pbc_prod_raising_sub r
+    inner join pbc_prd_baseinfo_sub b on r.pbc_prod_id = b.pbc_prod_id
+     LEFT JOIN(
+      SELECT
+        inside_prod_id,
+        pbc_code
+      FROM
+        pbc_prod_assetpool_code
+      WHERE
+        status='E'
+        AND code_type='01'
+    )t2 ON t2.inside_prod_id=b.PROD_ID
+    where  NVL(t2.pbc_code,b.PBC_PROD_ID)=#{pbcProdId}
   </select>
 </mapper>

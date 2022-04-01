@@ -16,6 +16,8 @@ import java.util.List;
 @ApiModel(value="债券报价实体(输入输出共用)",description="债券报价实体(输入输出共用)")
 public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEntity {
 
+    private String totleTradeId;
+
     @ApiModelProperty(name="quoteId",value="报价编号")
     private String quoteId;
 
@@ -208,6 +210,11 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     @ApiModelProperty(name="tradeStatus",value="报价状态")
     private String tradeStatus;
+
+    @ApiModelProperty(name="softSkipMode",value="软控,是否确认")
+    private String softSkipMode;
+
+    private List<String> counterIdList;
 
     public String getQuoteId() {
         return quoteId;
@@ -719,6 +726,30 @@ public class CfetsBondDealQuoteCommonDto extends BaseEntity implements ProcessEn
 
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
+    }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
+    }
+
+    public List<String> getCounterIdList() {
+        return counterIdList;
+    }
+
+    public void setCounterIdList(List<String> counterIdList) {
+        this.counterIdList = counterIdList;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }
 

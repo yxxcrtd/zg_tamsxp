@@ -67,7 +67,15 @@
     </update>
 
     <update id="updateChbSubmitStatus" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
-        update CHB_SUBMIT_STATUS
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        <if test="flag != null and flag.equals('14')" >
+            update CHB_EQU_SUB
+        </if>
+        <if test="flag != null and flag.equals('16')" >
+            update CHB_INVESTHOLD_INFO_SUB
+        </if>
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
         <set >
             <if test="submitFeedbackStatus != null" >
                 SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},

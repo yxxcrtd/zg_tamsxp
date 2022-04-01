@@ -1397,9 +1397,10 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
                 //获取退款到账清算指令
             	String refundTradeId = restTemplate.getForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdConBond/getRefundTradeId/"+ entity.getBusiCode(),
             			String.class);//获取退款到账交易编号
-            	map.put("busiCode", refundTradeId);
+                Map<String,Object> refundMap = new HashMap<>();
+                refundMap.put("busiCode", refundTradeId);
                 result = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdConBond/getStlPayOrders",
-                        map, StlPayOrders.class);
+                        refundMap, StlPayOrders.class);
                 stlPayOrders = null;
                 if (!StringUtil.isEmptyList(result)) {
                     stlPayOrders = new StlPayOrdersDto();
@@ -1413,6 +1414,10 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
                 		result.get(0));
             }
 
+            //场内债券申购确认交易页面撤销时报错,因为没有留痕表数据
+            if(!StringUtil.isNotEmpty(entity.getTrdFinProductDealTotal())) {
+                this.prepareEntity(entity);
+            }
             List<TrdProductDeal> productDealList = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdConBond/getTrdProductDeals",
                     map, TrdProductDeal.class);
             entity.setTrdProductDealList(productDealList);
@@ -1502,7 +1507,7 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
             //成交录单---调用共通
             exchangeTransMatchCommonService.transactionRecord(entity.getDealSqeId(),entity.getTotleTradeId(),OperationType.REVOKE);
 
-        
+
         }
         //        调用接口  add by zhangpuyu 2019/12/6 start
         try {

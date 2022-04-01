@@ -10,16 +10,19 @@
 
 package com.joyintech.component.svrreport.chb.msgassemble.service;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.ChbConstant;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
+import com.joyintech.component.svrreport.chb.dto.*;
+import com.joyintech.component.svrreport.chb.util.ChbXmlUtil;
+import com.joyintech.component.svrreport.chb.util.InterfLogUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,35 +30,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.background.component.common.pack.common.util.DateUtil;
-import com.joyintech.background.component.common.pack.common.util.StringUtil;
-import com.joyintech.component.svrreport.chb.contant.*;
-import com.joyintech.component.svrreport.chb.dto.BaseInfoEntity;
-import com.joyintech.component.svrreport.chb.dto.BusinessForXMLEntity;
-import com.joyintech.component.svrreport.chb.dto.ChbBondSubmitPara;
-import com.joyintech.component.svrreport.chb.dto.ChbMsgBuildInfoDto;
-import com.joyintech.component.svrreport.chb.dto.CnBondInterfItemDto;
-import com.joyintech.component.svrreport.chb.dto.CommonNodeEntity;
-import com.joyintech.component.svrreport.chb.dto.CommonNodeListEntity;
-import com.joyintech.component.svrreport.chb.dto.Feild;
-import com.joyintech.component.svrreport.chb.dto.InterfLog;
-import com.joyintech.component.svrreport.chb.dto.LinkSchemaRefEntity;
-import com.joyintech.component.svrreport.chb.dto.XbrliContextEntity;
-import com.joyintech.component.svrreport.chb.dto.XbrliDivide;
-import com.joyintech.component.svrreport.chb.dto.XbrliEntity;
-import com.joyintech.component.svrreport.chb.dto.XbrliIdentifierEntity;
-import com.joyintech.component.svrreport.chb.dto.XbrliPeriodEntity;
-import com.joyintech.component.svrreport.chb.dto.XbrliUnitEntity;
-import com.joyintech.component.svrreport.chb.dto.XbrliuUnitDenominator;
-import com.joyintech.component.svrreport.chb.util.ChbXmlUtil;
-import com.joyintech.component.svrreport.chb.util.InterfLogUtil;
-
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * 报文拼接共通服务
@@ -83,7 +61,7 @@ public class ChbMsgSetCommonService {
      * 需要拼接的报文
      * @param chbBondSubmitPara 标准接口参数
      */
-    public ChbMsgBuildInfoDto buildMsg(ChbBondSubmitPara chbBondSubmitPara) {
+    public ChbMsgBuildInfoDto buildMsg(ChbBondSubmitPara chbBondSubmitPara) throws Exception {
     	ChbMsgBuildInfoDto res = new ChbMsgBuildInfoDto();
         logger.debug("开始拼接报文...");
         autoId = 0;
@@ -413,7 +391,7 @@ public class ChbMsgSetCommonService {
      */
     private Map<String, XbrliUnitEntity> setEntity(List<BaseInfoEntity> bases,
                                                    List<Map<String, CnBondInterfItemDto>> infos,
-                                                   String[] contextRefIds, InterfLog log) {
+                                                   String[] contextRefIds, InterfLog log)  throws Exception {
         // 全部单位标签
         Map<String, XbrliUnitEntity> mapUtils = getUnits();
         // 使用的单位标签
@@ -445,21 +423,10 @@ public class ChbMsgSetCommonService {
      */
     private void setBaseInfo(Map<String, CnBondInterfItemDto> items, BaseInfoEntity entity,
                              String[] contextRefIds, Map<String, XbrliUnitEntity> mapUtils,
-                             Map<String, XbrliUnitEntity> returnMap, InterfLog log) {
-
-        items.entrySet().forEach(item -> {
-            // 逐项设值
-            try {
-                setBaseInfo(item.getKey(), item.getValue(), entity, contextRefIds,mapUtils,returnMap);
-            }
-            catch (Exception e) {
-                logger.error("逐项设值失败：" + item.getKey(), e);
-                // TODO 写日志
-               // printLog(log, DictCodeListExt2.接口类型_报文转化.getValue(), FAILURE, WARNING,
-                //        "逐项设值失败：" + item.getKey(), false);
-
-            }
-        });
+                             Map<String, XbrliUnitEntity> returnMap, InterfLog log) throws Exception {
+        for(Map.Entry<String, CnBondInterfItemDto> dto :items.entrySet()){
+            setBaseInfo(dto.getKey(), dto.getValue(), entity, contextRefIds,mapUtils,returnMap);
+        }
     }
 
     /**
@@ -478,10 +445,9 @@ public class ChbMsgSetCommonService {
      * @since 1.0
      */
     private void setBaseInfo(String key, CnBondInterfItemDto item, Feild entity,
-                             String[] contextRefIds,Map<String, XbrliUnitEntity> mapUtils,
+                             String[] contextRefIds, Map<String, XbrliUnitEntity> mapUtils,
                              Map<String, XbrliUnitEntity> returnMap)
-            throws NoSuchMethodException, SecurityException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
+            throws Exception {
         // 项目值
         String value = item.getValue();
         // check key and value
@@ -779,13 +745,13 @@ public class ChbMsgSetCommonService {
      * @return
      */
     private String setMsgInfos(ChbBondSubmitPara chbBondSubmitPara,
-                             String dealType,
-                             BusinessForXMLEntity entity,
-                             List<XbrliContextEntity> contextList,
-                             XbrliContextEntity context1,
-                             XbrliContextEntity context2,
-                             String[] contextRefIds,
-                             List<BaseInfoEntity> bases) {
+                               String dealType,
+                               BusinessForXMLEntity entity,
+                               List<XbrliContextEntity> contextList,
+                               XbrliContextEntity context1,
+                               XbrliContextEntity context2,
+                               String[] contextRefIds,
+                               List<BaseInfoEntity> bases) {
         String fileType = null;
         if (DictCodeList.报表名称_产品申报登记.getValue().equals(dealType)) {
             // 设置基本信息@modify zhaoyongsheng 修复主标签显示  20201028

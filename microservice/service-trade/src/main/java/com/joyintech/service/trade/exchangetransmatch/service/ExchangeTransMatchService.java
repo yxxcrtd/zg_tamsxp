@@ -9,6 +9,7 @@ import com.joyintech.service.trade.exchangetransmatch.dao.ExchangeTransMatchMapp
 import com.joyintech.service.trade.exchangetransmatch.dto.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,11 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
         map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+        map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+        map.put("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
+        map.put("PS_T07", DictCodeList.交易方向_到期.getValue());
+
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findPage(map));
     }
 
@@ -46,7 +52,9 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("TRD_MATCH_STATUS_0", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
         map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
+        map.put("ENTRUST_CLASS_02",DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         map.put("SEC_TYPE_09", DictCodeListExt1.证券品种_回购.getValue());
+        map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         if(StringUtil.isNotEmpty(map.get("finprodType2"))) {
             if(StringUtil.equals((String)map.get("finprodType2"),DictCodeListExt1.金融产品类型_投管用_债券.getValue())) {
                 map.put("secType", DictCodeListExt1.证券品种_债券.getValue());
@@ -78,12 +86,16 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         map.put("ENTRUST_STATUS_03",DictCodeList.委托状态_已接收.getValue());
         map.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("ENTRUST_CLASS_02",DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
 
         map.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         map.put("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         map.put("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         map.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         map.put("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+
+        map.put("PS_T93", DictCodeListExt3.交易方向_解除质押.getValue());
+        map.put("PS_T94", DictCodeListExt3.交易方向_中途换券.getValue());
 
         map.put("SEC_TYPE_01", DictCodeListExt1.证券品种_债券.getValue());
         map.put("SEC_TYPE_06", DictCodeListExt1.证券品种_股票.getValue());
@@ -98,6 +110,23 @@ public class ExchangeTransMatchService extends BaseService {
 
         map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+
+        // GNS-956:特殊场景不加日期条件查询指令 modify by fuyongsheng 20220224 start
+        String ps = String.valueOf(map.get("ps"));
+        String finprodType = String.valueOf(map.get("finprodType1"));
+        if(com.joyintech.framework.util.StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(),ps)
+                || (com.joyintech.framework.util.StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue(), finprodType)
+                && com.joyintech.framework.util.StringUtil.equals(DictCodeList.交易方向_申购.getValue(), ps)
+        )
+                || (com.joyintech.framework.util.StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue(), finprodType)
+                && com.joyintech.framework.util.StringUtil.equals(DictCodeList.交易方向_申购.getValue(), ps)
+        )
+                || com.joyintech.framework.util.StringUtil.equals(DictCodeListExt3.交易方向_配债.getValue(), ps)
+                || com.joyintech.framework.util.StringUtil.equals(DictCodeListExt2.交易方向_配股.getValue(), ps)
+        ){
+            map.put("dealDate", null);
+        }
+        // GNS-956:特殊场景不加日期条件查询指令 modify by fuyongsheng 20220224 end
 
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.findEntrustPage(map));
     }
@@ -137,8 +166,9 @@ public class ExchangeTransMatchService extends BaseService {
      * @return
      */
     public Page<SelectOptionDto> getApplyNo(Map<String, Object> map, int page, int length) {
-        map.put("TRD_MATCH_STATUS_01", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
-        map.put("TRD_MATCH_STATUS_02",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_0", DictCodeListExt3.下行交易匹配状态_未匹配.getValue());
+        map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
+        map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
         return super.queryForPage(page, length, () -> exchangeTransMatchMapper.getApplyNo(map));
     }
 
@@ -180,6 +210,7 @@ public class ExchangeTransMatchService extends BaseService {
         map.put("TRD_MATCH_STATUS_1",DictCodeListExt3.下行交易匹配状态_部分匹配.getValue());
         map.put("TRD_MATCH_STATUS_2",DictCodeListExt3.下行交易匹配状态_匹配完成.getValue());
         map.put("TRADE_TYPE_02", DictCodeListExt3.交易类型_投资指令.getValue());
+        map.put("ENTRUST_CLASS_02",DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         return  exchangeTransMatchMapper.findEntrustList(map);
     }
 

@@ -1,5 +1,6 @@
 package com.joyintech.tams.cfets.etrib.socket;
 
+import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.business.common.util.PositionUtil;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +52,7 @@ public class PositionSocketClient {
     @PostConstruct
     public void init(){
         logger.info("WebSocketClient初始化一次...");
-        new Thread(this::loopStart).start();
+//        new Thread(this::loopStart).start();
     }
 
     @Autowired
@@ -77,9 +79,29 @@ public class PositionSocketClient {
                 @Override
                 public void onMessage(String message) {
                     try {
-                        List<String> list = JsonUtils.json2Object(message, List.class);
+                        List<Object> list = JsonUtils.json2Object(message, List.class);
 
                         logger.info(MessageFormat.format("收到webSocket消息: {0}", message));
+
+                        if (list.size() == 2) {
+                            String tableName = (String)list.get(0);
+                            List arr = (ArrayList)list.get(1);
+                            if ("ETR_CASH_POSITION_FLOW".equals(tableName)){
+//                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "ETR_CASH_POSITION_FLOW_RULE");
+                            }else if ("ETR_SEC_POSITION_FLOW".equals(tableName)){
+//                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "ETR_SEC_POSITION_FLOW_RULE");
+                            }else if ("PTL_CASH_POSITION_FLOW".equals(tableName)){
+//                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "PTL_CASH_POSITION_FLOW_RULE");
+                            }else if ("PTL_SEC_POSITION_FLOW".equals(tableName)){
+//                                List arr = JSON.parseObject(jsonStr, List.class);
+                                webSocketService.insertOrUpdateForFlows(arr, "PTL_SEC_POSITION_FLOW_RULE");
+                            }
+                            logger.info(MessageFormat.format("socket同步数据结束: {0}", tableName));
+                            return ;
+                        }
                         
                         if (list != null && !list.isEmpty()){
                             // 转换成map
@@ -158,8 +180,8 @@ public class PositionSocketClient {
      * @param list
      * @return
      */
-    private BaseMap convertedMap(List<String> list) {
-        String tableName = list.get(0);
+    private BaseMap convertedMap(List<Object> list) {
+        String tableName = (String)list.get(0);
         if (StringUtils.equals(tableName, "ETR_CASH_POSITION")){
             return BaseMap.newMap()
                     .put(TABLE_NAME, "ETR_CASH_POSITION_RULE")

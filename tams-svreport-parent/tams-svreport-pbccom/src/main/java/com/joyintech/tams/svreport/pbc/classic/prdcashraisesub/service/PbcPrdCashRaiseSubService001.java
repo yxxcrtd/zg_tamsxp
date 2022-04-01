@@ -180,7 +180,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 
 	/**
 	 * 手工处理
-	 * @param updateList
+	 * @param map
 	 */
 	@SuppressWarnings("unchecked")
 	public void doManul(Map<String,Object> map) {
@@ -247,7 +247,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 	}
 	/**
 	 * 取消手工处理
-	 * @param updateList
+	 * @param map
 	 */
 	@SuppressWarnings("unchecked")
 	public String doCancelManul(Map<String,Object> map) {
@@ -325,7 +325,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 	}
 	/**
 	    * 数据检查
-	    * @param map 查询条件
+	    * @param checkKeys 查询条件
 	    * @return 检查结果
 	    * @see
 	    * @since 1.0
@@ -519,7 +519,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 //	    		template="PbcReport_PbcRaisProd_Oth";
 	    	}
             // add by zcw  TISHKS-244 新人行代码关联不上老人行表。改为老人行代码
-            param.put("pbcProdId", dto.getValue().getPbcProdId());
+            //param.put("pbcProdId", dto.getValue().getPbcProdId());
 	    	List<PbcInitProdRaisingSubVo> listDetailSheet1 = pbcProdRaiseSubMapper.searchListDetailSheet1(param);
 	    	if (!CollectionUtils.isEmpty(listDetailSheet1)) {
 	            for (PbcInitProdRaisingSubVo detailVo1 : listDetailSheet1) {
@@ -620,6 +620,14 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 			File depositfile = TisUtil.createFile(data, "pbc/PbcReport_PbcRaisProd_CNY", fileName);
 			sourceFiles.add(depositfile);
 		}
+		 /*add by zhoubin 20220325 start*/
+		if (sourceFiles0.isEmpty()){
+			String fileName = "资金募集数据-"+DateUtil.format(new Date(), "yyyy-MM-dd")+".xls";
+			Map<String,Object> data  = new HashMap<String,Object>();
+			File depositfile = TisUtil.createFile(data, "pbc/PbcReport_PbcRaisProd_CNY", fileName);
+			sourceFiles0.add(depositfile);
+		}
+		/*add by zhoubin 20220325 end*/
         // 如果生成excel文件个数大于1，生成压缩文件
         File outFile = null;
         if (sourceFiles.size() > 1) {

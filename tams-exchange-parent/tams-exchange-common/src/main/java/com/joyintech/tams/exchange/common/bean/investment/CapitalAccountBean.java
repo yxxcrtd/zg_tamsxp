@@ -57,6 +57,7 @@ public class CapitalAccountBean implements Serializable {
      */
     private String tradePwd;
 
+
     public String getAcctNo() {
         return acctNo;
     }
@@ -156,4 +157,6 @@ public class CapitalAccountBean implements Serializable {
             return null;
         }
     }
+
+
 }

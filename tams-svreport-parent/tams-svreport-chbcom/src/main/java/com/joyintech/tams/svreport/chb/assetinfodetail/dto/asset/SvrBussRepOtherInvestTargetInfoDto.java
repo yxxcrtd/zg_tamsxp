@@ -195,6 +195,82 @@ public class SvrBussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      */
     private String pbcAssetType3;
 
+
+    /**
+     * 结构化业务类型
+     */
+    private String constracteBusiType;
+
+    /**
+     * 结构化层级
+     */
+    private String constracteGrade;
+
+    /**
+     * 结构化杠杆倍数
+     */
+    private BigDecimal constracteHeaverTimes;
+
+    /**
+     * 公共PPP
+     */
+    private String pppflag;
+
+    /**
+     * 是否投向市场化债转股相关产品的部分
+     */
+    private String bondtostockFlag;
+
+    private String privateprdFlag;
+
+    public String getPrivateprdFlag() {
+        return privateprdFlag;
+    }
+
+    public void setPrivateprdFlag(String privateprdFlag) {
+        this.privateprdFlag = privateprdFlag;
+    }
+
+    public String getPppflag() {
+        return pppflag;
+    }
+
+    public void setPppflag(String pppflag) {
+        this.pppflag = pppflag;
+    }
+
+    public String getBondtostockFlag() {
+        return bondtostockFlag;
+    }
+
+    public void setBondtostockFlag(String bondtostockFlag) {
+        this.bondtostockFlag = bondtostockFlag;
+    }
+
+    public String getConstracteBusiType() {
+        return constracteBusiType;
+    }
+
+    public void setConstracteBusiType(String constracteBusiType) {
+        this.constracteBusiType = constracteBusiType;
+    }
+
+    public String getConstracteGrade() {
+        return constracteGrade;
+    }
+
+    public void setConstracteGrade(String constracteGrade) {
+        this.constracteGrade = constracteGrade;
+    }
+
+    public BigDecimal getConstracteHeaverTimes() {
+        return constracteHeaverTimes;
+    }
+
+    public void setConstracteHeaverTimes(BigDecimal constracteHeaverTimes) {
+        this.constracteHeaverTimes = constracteHeaverTimes;
+    }
+
     public String getDeptEquity() {
         return deptEquity;
     }

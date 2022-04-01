@@ -42,6 +42,17 @@ public class StandardCouponReConversionRateDto extends BaseEntity implements ITa
 
     private String moreConvrate;//标准券再折算率
 
+    // modify by etliu 标准券再折算率涉及头寸调整 20220308 start
+    private String finprodId;//金融产品代码
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+    // modify by etliu 标准券再折算率涉及头寸调整 20220308 end
+
     public String getOperateType() {
         return operateType;
     }

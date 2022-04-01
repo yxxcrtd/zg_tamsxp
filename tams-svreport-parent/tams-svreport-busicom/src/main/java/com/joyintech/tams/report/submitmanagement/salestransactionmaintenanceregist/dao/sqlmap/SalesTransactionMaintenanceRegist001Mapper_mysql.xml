@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dao.SalesTransactionMaintenanceRegist001Mapper_mysql">
+
+	<select id="queryForRegistPage" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
+		SELECT
+		a.REGIST_SEQNO registSeqno,
+		a.SEND_STATUS sendStatus,
+		a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		a.SUBMIT_TIME submitTime,
+		a.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+		a.SUBMIT_DEADLINE submitDeadline,
+		a.DATA_STATUS dataStatus,
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.ACCOUNT_NAME accountName,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		a.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		a.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		a.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		a.TRADE_CCY tradeCcy,
+		a.TRADE_AMT tradeAmt,
+		a.TRADE_VDATE tradeVdate,
+		a.TRADE_TIME tradeTime,
+		a.POSTSCRIPT postscript,
+		a.REMARK remark,
+		a.UPDATE_TIME
+		FROM
+		CHB_SALER_STL_DEAL_SUB a
+		LEFT JOIN
+		CHB_SUBMIT_STATUS status
+		ON
+		a.SUMIT_SEQ = status.seqno
+		where 1=1
+			<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+				and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+			</if>
+			<if test="sendStatus != null and sendStatus != ''">
+				and a.SEND_STATUS = #{sendStatus}
+			</if>
+			<if test="dataStatus != null and dataStatus != ''">
+				and a.DATA_STATUS = #{dataStatus}
+			</if>
+		    <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+			    and a.CHB_SUBMIT_DEADLINE between STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+	    	</if>
+		    <if test="searchStatusDateStart != null and searchStatusDateStart != ''">
+			    and  DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
+		    </if>
+	    	<if test="searchStatusDateEnd != null and searchStatusDateEnd != ''">
+			    and  DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchStatusDateEnd,jdbcType=VARCHAR}
+	    	</if>
+		    <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+			    and  DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+		    </if>
+		    <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+			    and  DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+		    </if>
+		ORDER BY a.UPDATE_TIME DESC
+	</select>
+
+	<select id="searchPage" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
+		SELECT
+		REGIST_SEQNO registSeqno,
+		SEND_STATUS sendStatus,
+		SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		SUBMIT_TIME submitTime,
+		SUBMIT_DEADLINE submitDeadline,
+		DATA_STATUS dataStatus,
+		INSTITUTION_CODE institutionCode,
+		PRD_REGIST_CODE prdRegistCode,
+		ACCOUNT_NO accountNo,
+		ACCOUNT_NAME accountName,
+		TRADE_NO tradeNo,
+		TRADE_PS tradePs,
+		TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		TRADE_CCY tradeCcy,
+		TRADE_AMT tradeAmt,
+		TRADE_VDATE tradeVdate,
+		TRADE_TIME tradeTime,
+		POSTSCRIPT postscript,
+		REMARK remark,
+		UPDATE_TIME
+		FROM
+		CHB_SALER_STL_DEAL_SUB
+		<where>
+			<if test="sendStatusList != null and sendStatusList.size()&gt;0">
+				<foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="keyList != null and keyList.size()&gt;0">
+				<foreach close=")" collection="keyList" item="item" open="and REGIST_SEQNO in(" separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="dataStatusList != null and dataStatusList.size()&gt;0">
+				<foreach close=")" collection="dataStatusList" item="item" open="and DATA_STATUS in(" separator=",">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() &gt; 0">
+				<foreach close=")" collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" separator=",">
+					#{submitFeedbackStatus,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+				and CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+			</if>
+			<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
+				and  DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="searchStatusDateEnd != null and searchStatusDateEnd != ''">
+				and  DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchStatusDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+				and  DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+				and  DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertIntoHis" parameterType="java.util.Map">
+		insert into CHB_SALER_STL_DEAL_SUB_HIS (
+		HIS_NO,DATA_STATUS, INSTITUTION_CODE,
+		PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME,
+		TRADE_NO, TRADE_PS,TRADE_COUNTER_ACC_NO,
+		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO,
+		TRADE_CCY, TRADE_AMT, TRADE_VDATE,
+		TRADE_TIME, POSTSCRIPT, REMARK,CHB_SUBMIT_DEADLINE,
+		SUBMIT_DEADLINE,STATUS_DATE,SUBMIT_TIME,SUMIT_SEQ,
+		SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,
+		CREATE_USER,ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,
+		UPDATE_TIME)
+		select
+		REGIST_SEQNO,DATA_STATUS, INSTITUTION_CODE,
+		PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME,
+		TRADE_NO, TRADE_PS,  TRADE_COUNTER_ACC_NO,
+		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO,
+		TRADE_CCY, TRADE_AMT, TRADE_VDATE,
+		TRADE_TIME, POSTSCRIPT, REMARK,CHB_SUBMIT_DEADLINE,
+		SUBMIT_DEADLINE,STATUS_DATE,SUBMIT_TIME,SUMIT_SEQ,
+		SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,
+		CREATE_USER,ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,
+		UPDATE_TIME
+		from CHB_SALER_STL_DEAL_SUB
+		<where>
+			<if test="registList !=null and registList.size()>0">
+				INSTITUTION_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.institutionCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				AND TRADE_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			and SEND_STATUS in ('02','03')
+		</where>
+	</insert>
+
+	<delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+		delete from CHB_SALER_STL_DEAL_SUB
+		<where>
+			<if test="registList !=null and registList.size()>0">
+				INSTITUTION_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.institutionCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				AND TRADE_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			and SEND_STATUS in ('02','03')
+		</where>
+	</delete>
+
+	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+		update CHB_SALER_STL_DEAL_SUB sub
+		<set>
+			<if test="sendStatus != null and sendStatus != ''">
+				sub.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+			</if>
+			sub.SUBMIT_FEEDBACK_STATUS = '03',
+			sub.submit_time = now()
+		</set>
+		<where>
+			<foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+				sub.REGIST_SEQNO = #{regist.registSeqno,jdbcType=CHAR}
+			</foreach>
+		</where>
+	</update>
+
+	<update id="cancelMannultRegist" parameterType="java.util.Map">
+		update CHB_SALER_STL_DEAL_SUB
+		<set>
+			SEND_STATUS = '01',
+			SUBMIT_TIME = null,
+			SUBMIT_FEEDBACK_STATUS = null
+		</set>
+		<where>
+			<foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+				REGIST_SEQNO = #{dto.registSeqno}
+			</foreach>
+		</where>
+	</update>
+
+	<insert id="insertReportDataFromHis" parameterType="java.util.Map">
+		insert into CHB_SALER_STL_DEAL_SUB (
+		REGIST_SEQNO,DATA_STATUS, INSTITUTION_CODE,
+		PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME,
+		TRADE_NO, TRADE_PS, TRADE_COUNTER_ACC_NO,
+		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO,
+		TRADE_CCY, TRADE_AMT, TRADE_VDATE,
+		TRADE_TIME, POSTSCRIPT, REMARK,CHB_SUBMIT_DEADLINE,
+		SUBMIT_DEADLINE,STATUS_DATE,SUBMIT_TIME,SUMIT_SEQ,
+		SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,
+		CREATE_USER,ORG_CODE,CREATE_DEPT,CREATE_TIME,UPDATE_USER,
+		UPDATE_TIME)
+		select
+		HIS_NO,DATA_STATUS, INSTITUTION_CODE,
+		PRD_REGIST_CODE, ACCOUNT_NO, ACCOUNT_NAME,
+		TRADE_NO, TRADE_PS, TRADE_COUNTER_ACC_NO,
+		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO,
+		TRADE_CCY, TRADE_AMT, TRADE_VDATE,
+		TRADE_TIME, POSTSCRIPT, REMARK,CHB_SUBMIT_DEADLINE,
+		SUBMIT_DEADLINE,STATUS_DATE,SUBMIT_TIME,SUMIT_SEQ,
+		SEND_STATUS,SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,
+		CREATE_USER,ORG_CODE,CREATE_DEPT,his.CREATE_TIME,UPDATE_USER,
+		UPDATE_TIME
+		from CHB_SALER_STL_DEAL_SUB_HIS  his
+		INNER join (
+		SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_STL_DEAL_SUB_HIS
+		<where>
+			<if test="registList !=null and registList.size()>0">
+				INSTITUTION_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.institutionCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				and TRADE_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where> ) maxtime
+		on his.CREATE_TIME=maxtime.CREATE_TIME
+	</insert>
+
+	<delete id="deleteReportDataHis" parameterType="java.util.Map">
+		delete
+		from CHB_SALER_STL_DEAL_SUB_HIS his
+		where his.CREATE_TIME=(
+		select t1.CREATE_TIME from (
+		SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_STL_DEAL_SUB_HIS
+		<where>
+			<if test="registList !=null and registList.size()>0">
+				INSTITUTION_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator="," close=")">
+					#{regist.institutionCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				and TRADE_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator="," close=")">
+					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+
+		)t1
+		)
+	</delete>
+
+	<select id="queryExportListByKeys" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
+		select
+		sub.SEND_STATUS sendStatus,
+		sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		sub.SUBMIT_TIME submitTime,
+		sub.SUBMIT_DEADLINE submitDeadline,
+		sub.DATA_STATUS dataStatus,
+		sub.INSTITUTION_CODE institutionCode,
+		sub.PRD_REGIST_CODE prdRegistCode,
+		sub.ACCOUNT_NO accountNo,
+		sub.ACCOUNT_NAME accountName,
+		sub.TRADE_NO tradeNo,
+		sub.TRADE_PS tradePs,
+		sub.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		sub.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		sub.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		sub.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		sub.TRADE_CCY tradeCcy,
+		sub.TRADE_AMT tradeAmt,
+		a.TRADE_VDATE tradeVdate,
+		sub.TRADE_TIME tradeTime,
+		sub.POSTSCRIPT postscript,
+		sub.REMARK remark,
+		sub.UPDATE_TIME
+		FROM
+		CHB_SALER_STL_DEAL_SUB sub
+		LEFT JOIN
+		CHB_SUBMIT_STATUS status
+		ON
+		a.SUMIT_SEQ = status.seqno
+    	<where>
+		   	<if test="registList!=null and registList.size()!=0">
+			 	<foreach collection="registList" item="regist" open=" (" close=")" separator=") or (">
+			 		       1=1
+			 	 		<if test="regist.institutionCode!=null and regist.institutionCode!=''">
+			 	 			and sub.INSTITUTION_CODE = #{regist.institutionCode}
+			 	 		</if>
+			 	 		<if test="regist.tradeNo!=null and regist.tradeNo!=''">
+			 	 			and sub.TRADE_NO = #{regist.tradeNo}
+			 	 		</if>
+			 	 		<if test="regist.sendStatus!=null and regist.sendStatus!=''">
+			 	 			and sub.SEND_STATUS = #{regist.sendStatus}
+			 	 		</if>
+						<if test="regist.updateTimeStart != null and regist.updateTimeStart != ''">
+							and DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') &gt;= #{regist.updateTimeStart,jdbcType=VARCHAR}
+						</if>
+						<if test="regist.updateTimeEnd != null and regist.updateTimeEnd != ''">
+							and DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') &lt;= #{regist.updateTimeEnd,jdbcType=VARCHAR}
+						</if>
+						<if test="regist.sumitSeq != null and regist.sumitSeq != ''">
+							and sub.SUMIT_SEQ = #{equityRegist.sumitSeq,jdbcType=VARCHAR}
+						</if>
+			 	</foreach>
+		   	</if>
+		</where>
+	</select>
+
+    <update id="updateSubmitStatusToOk" parameterType="java.util.List">
+        update CHB_SUBMIT_STATUS subStatus
+        <set> 
+            subStatus.SUBMIT_FEEDBACK_STATUS = '03'
+        </set>
+        <where>
+            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                subStatus.SEQNO = #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
+	<select id= "isNotSubmitP" resultType="java.lang.Integer">
+    SELECT count(1)
+    	from chb_equ_sub 
+    where 
+    	INDENTIFY_MARK = #{indentifyMark}
+   		and REGIST_BANK_CODE = #{registBankCode}
+    	and SUBMIT_STATUS = #{noSubmit}
+    </select>
+
+	<select id="setDataList" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
+		select
+		a.REGIST_SEQNO registSeqno,
+		a.SEND_STATUS sendStatus,
+		a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		a.SUBMIT_TIME submitTime,
+		a.SUBMIT_DEADLINE submitDeadline,
+		a.DATA_STATUS dataStatus,
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.ACCOUNT_NAME accountName,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		a.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		a.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		a.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		a.TRADE_CCY tradeCcy,
+		a.TRADE_AMT tradeAmt,
+		a.TRADE_VDATE tradeVdate,
+		a.TRADE_TIME tradeTime,
+		a.POSTSCRIPT postscript,
+		a.REMARK remark,
+		a.UPDATE_TIME
+		FROM
+		CHB_SALER_STL_DEAL_SUB a
+		LEFT JOIN
+		CHB_SUBMIT_STATUS status
+		ON
+		a.SUMIT_SEQ = status.seqno
+		where 1=1
+		<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+			and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+		</if>
+		<if test="sendStatus != null and sendStatus != ''">
+			and a.SEND_STATUS = #{sendStatus}
+		</if>
+		<if test="dataStatus != null and dataStatus != ''">
+			and a.DATA_STATUS = #{dataStatus}
+		</if>
+		<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+			and a.CHB_SUBMIT_DEADLINE between STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		</if>
+		<if test="searchStatusDateStart != null and searchStatusDateStart != ''">
+			and  DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchStatusDateStart,jdbcType=VARCHAR}
+		</if>
+		<if test="searchStatusDateEnd != null and searchStatusDateEnd != ''">
+			and  DATE_FORMAT(a.STATUS_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchStatusDateEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+			and  DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+			and  DATE_FORMAT(a.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+</mapper>

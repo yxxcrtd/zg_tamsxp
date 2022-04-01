@@ -6,6 +6,8 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.TrdManualSettleFlow;
 import com.joyintech.tams.constant.DictCode;
 
+import java.math.BigDecimal;
+
 /**
  * @author zhangnian
  * @ClassName ManualSettleFlowDto
@@ -23,6 +25,46 @@ public class ManualSettleFlowDto extends TrdManualSettleFlow {
      */
     private String finprodName;
     private String operator;
+
+    /**
+     * 质押品ID
+     */
+    private String pledgeId;
+
+    /**
+     * 质押品ID abbr
+     */
+    private String pledgeIdAbbr;
+
+    /**
+     * 原质押品ID
+     */
+    private String bPledgeId;
+
+    /**
+     * 原质押品ID简称
+     */
+    private String bPledgeIdAbbr;
+
+    /**
+     * 质押品名称 abbr
+     */
+    private String pledgeName;
+
+    /**
+     *回购金额（质押式回购）
+     */
+    private BigDecimal prin;
+
+    /**
+     *到期结算金额（质押式回购）
+     */
+    private BigDecimal mTradeAmt;
+
+    /**
+     * 质押数量（质押式回购）
+     */
+    private BigDecimal pledgeNumber;
 
     public String getOperator() {
         return operator;
@@ -49,7 +91,10 @@ public class ManualSettleFlowDto extends TrdManualSettleFlow {
     }
 
     public String getOperTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.交收操作类型, this.getOperType());
+        if(StringUtil.isNotEmpty(this.getOperType())){
+            return SysDataUtil.getNameFromDataDict(DictCode.交收操作类型, this.getOperType());
+        }
+        return StringUtil.EMPTY;
     }
 
     public String getSettleTimeStr(){
@@ -64,6 +109,70 @@ public class ManualSettleFlowDto extends TrdManualSettleFlow {
             return DateUtil.format(super.getSettleTime(),"yyyy-MM-dd");
         }
         return StringUtil.EMPTY;
+    }
+
+    public String getPledgeId() {
+        return pledgeId;
+    }
+
+    public void setPledgeId(String pledgeId) {
+        this.pledgeId = pledgeId;
+    }
+
+    public String getPledgeIdAbbr() {
+        return pledgeIdAbbr;
+    }
+
+    public void setPledgeIdAbbr(String pledgeIdAbbr) {
+        this.pledgeIdAbbr = pledgeIdAbbr;
+    }
+
+    public String getPledgeName() {
+        return pledgeName;
+    }
+
+    public void setPledgeName(String pledgeName) {
+        this.pledgeName = pledgeName;
+    }
+
+    public BigDecimal getPrin() {
+        return prin;
+    }
+
+    public void setPrin(BigDecimal prin) {
+        this.prin = prin;
+    }
+
+    public BigDecimal getmTradeAmt() {
+        return mTradeAmt;
+    }
+
+    public void setmTradeAmt(BigDecimal mTradeAmt) {
+        this.mTradeAmt = mTradeAmt;
+    }
+
+    public BigDecimal getPledgeNumber() {
+        return pledgeNumber;
+    }
+
+    public void setPledgeNumber(BigDecimal pledgeNumber) {
+        this.pledgeNumber = pledgeNumber;
+    }
+
+    public String getbPledgeId() {
+        return bPledgeId;
+    }
+
+    public void setbPledgeId(String bPledgeId) {
+        this.bPledgeId = bPledgeId;
+    }
+
+    public String getbPledgeIdAbbr() {
+        return bPledgeIdAbbr;
+    }
+
+    public void setbPledgeIdAbbr(String bPledgeIdAbbr) {
+        this.bPledgeIdAbbr = bPledgeIdAbbr;
     }
 }
 

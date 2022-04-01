@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.reportdetail.dao.PbcMonthReportDetailAssetMapper_mysql" >
+
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset" >
+        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="DETAILNO" property="detailno" jdbcType="VARCHAR" />
+        <result column="POSITION_TYPE" property="positionType" jdbcType="VARCHAR" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE1" property="assetType1" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="END_DAYS" property="endDays" jdbcType="DECIMAL" />
+        <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
+        <result column="COST_AMT" property="costAmt" jdbcType="DECIMAL" />
+        <result column="FLOAT_INGPL" property="floatIngpl" jdbcType="DECIMAL" />
+        <result column="INTINCEXP" property="intincexp" jdbcType="DECIMAL" />
+        <result column="INTADJEXP_ADD" property="intadjexpAdd" jdbcType="DECIMAL" />
+        <result column="TDY_LOSS_AMT" property="lossAmt" jdbcType="DECIMAL" />
+        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="OPENPLAN" property="openplan" jdbcType="DATE" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2" property="industryLevel2" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE1" property="orgAssetType1" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE2" property="orgAssetType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE3" property="orgAssetType3" jdbcType="VARCHAR" />
+        <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+
+        <result column="reportType1" property="reportType1" jdbcType="VARCHAR" />
+        <result column="reportType2" property="reportType2" jdbcType="VARCHAR" />
+        <result column="reportType3" property="reportType3" jdbcType="VARCHAR" />
+        <result column="reportType4" property="reportType4" jdbcType="VARCHAR" />
+        <result column="reportType5" property="reportType5" jdbcType="VARCHAR" />
+        <result column="reportType6" property="reportType6" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="MstBaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" >
+        <id column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY2" property="industry2" jdbcType="VARCHAR" />
+        <result column="INSITITUTE_CODE" property="insitituteCode" jdbcType="VARCHAR" />
+        <result column="IS_GOV" property="isGov" jdbcType="VARCHAR" />
+        <result column="MAIN_CAPITAL" property="mainCapital" jdbcType="DECIMAL" />
+        <result column="REGISTER_CAPITAL" property="registerCapital" jdbcType="DECIMAL" />
+        <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+        <result column="CITY" property="city" jdbcType="VARCHAR" />
+        <result column="COUNTY" property="county" jdbcType="VARCHAR" />
+        <result column="HOLDING_TYPE" property="holdingType" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_OBJ_TYPE" property="customerObjType" jdbcType="VARCHAR" />
+        <result column="IS_LISTED_COMPANY" property="isListedCompany" jdbcType="VARCHAR" />
+        <result column="IS_GROUP_CUSTOMER" property="isGroupCustomer" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_ID" property="parentCustomerId" jdbcType="VARCHAR" />
+        <result column="PARENT_CUSTOMER_NAME" property="parentCustomerName" jdbcType="VARCHAR" />
+        <result column="IS_PRIVATE" property="isPrivate" jdbcType="VARCHAR" />
+        <result column="IS_ESCAPE_DEPT" property="isEscapeDept" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="IS_CREDIT_RELATED_TRD" property="isCreditRelatedTrd" jdbcType="VARCHAR" />
+        <result column="STRUCT_ADJUST_TYPE" property="structAdjustType" jdbcType="VARCHAR" />
+        <result column="INDUS_UPGRATE_TYPE" property="indusUpgrateType" jdbcType="VARCHAR" />
+        <result column="SEX" property="sex" jdbcType="VARCHAR" />
+        <result column="PERSON_ID" property="personId" jdbcType="VARCHAR" />
+        <result column="M_PHONE" property="mPhone" jdbcType="VARCHAR" />
+        <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+        <result column="POSITION" property="position" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+        <result column="MAIL" property="mail" jdbcType="VARCHAR" />
+        <result column="PROPERTY" property="property" jdbcType="VARCHAR" />
+        <result column="COMPANY_NATURE" property="companyNature" jdbcType="VARCHAR" />
+        <result column="LINK_ID1" property="linkId1" jdbcType="VARCHAR" />
+        <result column="LINK_ID2" property="linkId2" jdbcType="VARCHAR" />
+        <result column="LINK_ID3" property="linkId3" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="HS_TYPE" property="hsType" jdbcType="VARCHAR" />
+        <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+        <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+        <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+
+    <select id="selectDetailList" resultType="com.joyintech.tams.svreport.pbc.reportdetail.dto.PbcMonthReportDetailAsset">
+        select *
+        from (
+        select *
+        from (
+            SELECT
+            P1.PROPERNAME reportType1,
+            P2.PROPERNAME reportType2,
+            P3.PROPERNAME reportType3,
+            P4.PROPERNAME reportType4,
+            P5.PROPERNAME reportType5,
+            P6.PROPERNAME reportType6,
+            P.DETAILNO,P.DETAILNO2,
+            P.PRODID,
+            PB.PROD_NAME prodName,
+            PB.IS_FHXGCP isFhxgcp,
+            CASE WHEN EX.SRCFIELD1 IS NOT NULL AND EX.SRCFIELD1 != '3003' THEN NULL
+            else P.ASSET_CODE end assetCode,
+            CASE WHEN EX.SRCFIELD1 IS NOT NULL AND EX.SRCFIELD1 != '3003' THEN '现金'
+            ELSE
+            IFNULL(B.SUBJECT_NAME,I.ASSET_NAME)
+            END assetName,
+            I.VDATE,
+            I.MDATE,
+            /**企业债,取资产基本信息(2-5逻辑)其余取贷款的信息(2-2~2-4逻辑)**/
+            P.party_Type1 partyType1,
+            IFNULL(MC.CUSTOMER_NAME, IFNULL(mp1.COUNTER_NAME,P.SUBJECT_NAME)) subjectName,
+            P.INDUSTRY INDUSTRY,
+            P.borrower_city buyPlace,
+            IFNULL(I.ASSET_YIELD,RATE.ASSET_RATE) RATE,
+            P.CCY,
+            AP.POS_AMT  delayPayAmt,
+            AP.TDY_COST_AMT  costAmt,
+            AP.TDY_FLOAT_INGPL  floatIngpl,
+            AP.TDY_INTINCEXP INTINCEXP,
+            AP.TDY_INTADJEXP_ADD intadjexpAdd,
+            AP.TDY_LOSS_AMT lossAmt,
+            P.AMT,
+            IFNULL(mp.COUNTER_NAME,p.RIVAL_PARTY) rivalParty,
+            I.ORG_ASSET_TYPE1 orgAssetType1,
+            I.ORG_ASSET_TYPE2 orgAssetType2,
+            I.ORG_ASSET_TYPE3 orgAssetType3,
+            P.END_DAYS endDays,
+            CASE WHEN AP.MDATE != I.MDATE and  I.MDATE is not null THEN AP.MDATE END openplan
+            /*CASE WHEN         i.option_flag = '01' and AP.MDATE!=I.MDATE THEN AP.MDATE END openplan*/
+            FROM PBC_MONTH_ASSET_POSITIONDETAIL P
+            LEFT JOIN PBC_REPORT_TEMPLATE T ON T.PROPERTYCODE = P.DETAILNO AND T.REPORTTYPE != 'ONEPRD_ASSET_DEBT'
+            LEFT JOIN PBC_REPORT_TEMPLATE T1 ON T1.PROPERTYCODE = P.DETAILNO2 AND T1.REPORTTYPE != 'ONEPRD_ASSET_DEBT'
+            LEFT JOIN CHB_PRD_BASEINFO PB ON P.PRODID=PB.PROD_ID AND PB.FPROD_ID IS NULL AND PB.STATUS IN ('E','M')
+            LEFT JOIN CHB_ASSET_INFO I ON I.ASSET_CODE = P.ASSET_CODE
+            LEFT JOIN BOK_SUBJECT B ON B.BOOKSET_ID = '00000000000000000002' AND B.SUBJECT_NO = P.ASSET_CODE
+            LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = P.SUBJECT_NAME
+            LEFT JOIN CHB_MST_COUNTER_PARTY MP1 ON MP1.COUNTER_ID = P.SUBJECT_NAME
+            LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
+            /*LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)*/
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = (case P.TERM when NULL then STR_TO_DATE('19000101','%Y-%m-%d') when  adddate(STR_TO_DATE(concat(P.TERM,'01')),'%Y-%m-%d'),interval 1 month) then -1 end)
+            LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P6 ON P6.PROPERTYCODE = P.DETAILNO AND P6.PROPLEVEL = '6' AND P6.STATUS='E'
+            LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P5 ON (P5.PROPERTYCODE = P6.CODEPARENT or (p.detailno2 is not null and p5.propertycode = p.detailno2)) AND P5.PROPLEVEL = '5' AND P5.STATUS='E'
+            LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P4 ON P4.PROPERTYCODE = P5.CODEPARENT AND P4.PROPLEVEL = '4' AND P4.STATUS='E'
+            LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P3 ON P3.PROPERTYCODE = P4.CODEPARENT AND P3.PROPLEVEL = '3' AND P3.STATUS='E'
+            LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P2 ON P2.PROPERTYCODE = P3.CODEPARENT AND P2.PROPLEVEL = '2' AND P2.STATUS='E'
+            LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P1 ON P1.PROPERTYCODE = P2.CODEPARENT AND P1.PROPLEVEL = '1' AND P1.STATUS='E'
+            LEFT JOIN CHB_TYPE_MAPPING_EX EX ON EX.SRCFIELD1 = P.ASSET_CODE AND EX.MAPPINGCODE = 'MAPPINGCODE_SUBJECTNO' AND EX.OBJFIELD3 = 'C01'
+            LEFT JOIN (SELECT ASSET_ID,IFNULL(ASSET_RATE,0)*100 ASSET_RATE,change_date,
+            row_number() over(partition by ASSET_ID order by change_date desc) row_number
+            FROM CHB_ASSET_RATE
+            WHERE asset_rate is not null
+            AND CHANGE_DATE &lt;= #{enddateDate,jdbcType=DATE}) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
+
+            WHERE P.AMT IS NOT NULL AND P.AMT !=0
+
+            <if test="enddate != null and enddate != ''">
+                and P.TERM =  #{enddate,jdbcType=VARCHAR}
+            </if>
+
+            <if test="prodIds != null and prodIds!= ''">
+                <foreach item="item" index="index" collection="prodIds" separator="," open=" AND P.PRODID IN(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="keysList != null and keysList.size()>0 ">
+
+                <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR P.POSUUID in (
+                    </if>
+                    #{item}
+                </foreach>
+            </if>
+        ) a
+        where 1=1
+        <if test="assetCodes != null and assetCodes != ''  ">
+            <foreach item="item" index="index" collection="assetCodes" separator="," open="AND a.assetCode IN(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY A.DETAILNO)
+    </select>
+
+    <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT  a.id,IFNULL(a.text,a.id) text
+            FROM (SELECT I.ASSET_CODE id,I.ASSET_NAME text FROM CHB_ASSET_INFO I
+            UNION ALL
+            SELECT subject_no id,SUBJECT_NAME text FROM BOK_SUBJECT GROUP BY subject_no,SUBJECT_NAME)A
+        <where>
+            A.id like concat(concat('%',#{search,
+			jdbcType=VARCHAR}),'%')
+			or  A.text like concat(concat('%',#{search,
+			jdbcType=VARCHAR}),'%')
+            <!-- and A.FINPROD_TYPE2 = 'F16' -->
+        </where>
+        order by A.id
+
+    </select>
+
+    <select id="getInvestorType" resultType="com.joyintech.tams.common.base.entity.ChbTypeMappingEx">
+        SELECT SRCFIELD1,OBJFIELD1 FROM chb_type_mapping_ex
+        where mappingcode='MONTH_REPORT_INVESTOR_TYPE' and STATUS = 'E'
+    </select>
+
+
+
+    <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbMonthAssetPositiondetail" >
+        insert into PBC_MONTH_ASSET_POSITIONDETAIL (POSUUID, PRODID, TERM,
+                    DETAILNO, DETAILNO2, POSITION_TYPE,
+                    CHL_ID, ASSET_CODE, ASSET_TYPE1,
+                    ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME,
+                    RIVAL_PARTY, RATE, CCY,
+                    AMT, INT_AMT, END_DAYS,
+                    DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL,
+                    INTINCEXP, INTADJEXP_ADD, LOSS_AMT,
+                    BAL_FLAG, VDATE, MDATE,
+                    OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2,
+                    PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2,
+                    ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3,
+                    BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO,
+                    ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST,
+                    EACH_PROPORTION)
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            sys_guid(), #{item.prodid,jdbcType=VARCHAR}, #{item.term,jdbcType=VARCHAR},
+            #{item.detailno,jdbcType=VARCHAR}, #{item.detailno2,jdbcType=VARCHAR}, #{item.positionType,jdbcType=VARCHAR},
+            #{item.chlId,jdbcType=VARCHAR}, #{item.assetCode,jdbcType=VARCHAR}, #{item.assetType1,jdbcType=VARCHAR},
+            #{item.assetType2,jdbcType=VARCHAR}, #{item.assetType3,jdbcType=VARCHAR}, #{item.subjectName,jdbcType=VARCHAR},
+            #{item.rivalParty,jdbcType=VARCHAR}, #{item.rate,jdbcType=DECIMAL}, #{item.ccy,jdbcType=VARCHAR},
+            #{item.amt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL}, #{item.endDays,jdbcType=DECIMAL},
+            #{item.delayPayAmt,jdbcType=DECIMAL}, #{item.costAmt,jdbcType=DECIMAL}, #{item.floatIngpl,jdbcType=DECIMAL},
+            #{item.intincexp,jdbcType=DECIMAL}, #{item.intadjexpAdd,jdbcType=DECIMAL}, #{item.lossAmt,jdbcType=DECIMAL},
+            #{item.balFlag,jdbcType=VARCHAR}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE},
+            #{item.openplan,jdbcType=DATE}, #{item.industry,jdbcType=VARCHAR}, #{item.industryLevel2,jdbcType=VARCHAR},
+            #{item.partyType1,jdbcType=VARCHAR}, #{item.partyType3,jdbcType=VARCHAR}, #{item.partyType2,jdbcType=VARCHAR},
+            #{item.orgAssetType1,jdbcType=VARCHAR}, #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR},
+            #{item.buyPlace,jdbcType=VARCHAR}, #{item.borrowerType,jdbcType=VARCHAR}, #{item.industryInfo,jdbcType=VARCHAR},
+            #{item.enterpriseScale,jdbcType=VARCHAR}, #{item.borrowerCity,jdbcType=VARCHAR}, #{item.assetsInvest,jdbcType=VARCHAR},
+            #{item.eachProportion,jdbcType=VARCHAR}
+        </foreach>
+
+    </insert>
+
+
+    <delete id="deleteDetail" parameterType="java.lang.String" >
+        delete from PBC_MONTH_ASSET_POSITIONDETAIL
+        where TERM = #{term,jdbcType=CHAR}
+  </delete>
+
+    <select id="selectChbAssetInfoByAssetCodeList" resultMap="com.joyintech.tams.common.base.dao.ChbAssetInfoMapper.BaseResultMap" fetchSize="1">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbAssetInfoMapper.Base_Column_List" />
+        from CHB_ASSET_INFO
+        where STATUS in ('E', 'M')
+        <if test="assetCodeList != null and assetCodeList.size() > 0">
+            <foreach collection="assetCodeList" item="item" index= "index" open="AND (ASSET_CODE in (" close=")" separator="," >
+                <if test="(index % 998) == 0">
+                    null) or ASSET_CODE in (
+                </if>
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT  A.CODE id,A.TRADE_COUNTER text,A.COUNTER_ID col,A.LINK_ID parentId from(
+        SELECT /*T.PROD_ID||'_'||T.ASSET_CODE CODE,*/
+        concat(concat(T.PROD_ID,'_'),T.ASSET_CODE CODE),
+        /*DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,*/
+        (case MP.COUNTER_NAME when NULL then (case MC.CUSTOMER_NAME when NULL then T.TRADE_COUNTER else MC.CUSTOMER_NAME end) else MP.COUNTER_NAME end ) TRADE_COUNTER,
+        MP.COUNTER_ID,MP.LINK_ID,
+        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) row_number
+        FROM CHB_INVEST_TRADE T
+        LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
+        LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
+        WHERE 1=1
+        <if test="keysList != null and keysList.size()>0 ">
+            <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.PROD_ID||'_'||T.ASSET_CODE IN (" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR /*T.PROD_ID||'_'||T.ASSET_CODE*/ concat(concat(T.PROD_ID,'_'),T.ASSET_CODE) IN (
+                </if>
+                #{item}
+            </foreach>
+        </if>
+        ) a
+        WHERE A.row_number = 1
+    </select>
+
+
+    <select id="getCustomerList" resultMap="MstBaseResultMap">
+        SELECT  *
+        FROM MST_CUSTOMER_INFO_ADD T
+        WHERE 1=1
+        <if test="keysList != null and keysList.size()>0 ">
+            <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.CUSTOMER_ID (" close=")">
+                <if test="(index % 999) == 998">
+                    null) OR T.CUSTOMER_ID IN (
+                </if>
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

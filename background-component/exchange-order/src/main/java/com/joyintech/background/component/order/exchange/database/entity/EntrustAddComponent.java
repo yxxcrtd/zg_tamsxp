@@ -266,6 +266,10 @@ public class EntrustAddComponent extends BaseEntity {
      * 指令创建来源
      */
     private String entrustCreateSource;
+    /**
+     * 指令下达时间
+     */
+    private Date transmitTime;
 
     /**
      * 取得 委托代码
@@ -1037,5 +1041,13 @@ public class EntrustAddComponent extends BaseEntity {
      */
     public void setEntrustCreateSource(String entrustCreateSource) {
         this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
+    }
+
+    public Date getTransmitTime() {
+        return transmitTime;
+    }
+
+    public void setTransmitTime(Date transmitTime) {
+        this.transmitTime = transmitTime;
     }
 }

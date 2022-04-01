@@ -4,14 +4,11 @@ import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteBean;
 import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteBean;
 import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteBean;
 import com.joyintech.tams.exchange.common.bean.IntegratedQuote;
-import com.joyintech.tams.exchange.common.db.domain.Trade;
-import com.joyintech.tams.exchange.terminal.trade.kcbp.KCBPConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MockConverter {
     private static final Logger logger = LoggerFactory.getLogger(MockConverter.class);
@@ -23,7 +20,7 @@ public class MockConverter {
             integratedBulkQuoteBean.setErrorCode(integratedQuote.getErrorCode());
             integratedBulkQuoteBean.setErrorMsg(integratedQuote.getErrorMsg());
             integratedBulkQuoteBean.setOrderNo(integratedQuote.getOrderNo());
-            integratedBulkQuoteBean.setSeatNo(integratedQuote.getSeatNo());
+            integratedBulkQuoteBean.setSeatNo(integratedQuote.getPropSeatNo());
             integratedBulkQuoteBean.setEntrustProp(integratedQuote.getEntrustProp());
             integratedBulkQuoteBean.setEntrustBs(integratedQuote.getEntrustBs());
             integratedBulkQuoteBean.setStockCode(integratedQuote.getStockCode());
@@ -55,10 +52,10 @@ public class MockConverter {
             item.setStockName(integratedQuote.getStockName());
             item.setBusinessBalance(integratedQuote.getTradeBalance());
             //item.setBusinessAmount(integratedQuote.getTR);
-            // item.setClosingPrice(integratedQuote.get());
+            item.setClosingPrice(integratedQuote.getEntrustPrice());
             item.setBuyAmount1(integratedQuote.getBuyRemainQuantity1());
             item.setSaleAmount1(integratedQuote.getSellRemainQuantity1());
-            //item.setWeightavgPrice(integratedQuote.());
+            item.setWeightavgPrice(integratedQuote.getWeightavgPrice());
             item.setBuyAmount2(integratedQuote.getBuyRemainQuantity2());
             item.setSaleAmount2(integratedQuote.getSellRemainQuantity2());
 

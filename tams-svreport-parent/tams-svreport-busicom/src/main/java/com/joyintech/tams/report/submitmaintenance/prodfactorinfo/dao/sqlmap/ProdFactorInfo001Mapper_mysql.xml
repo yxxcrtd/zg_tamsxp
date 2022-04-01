@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dao.ProdFactorInfo001Mapper_mysql">
 	<select id="queryForPage"
-		resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+			resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		SELECT
 		PROD_ID prodId,
 		ORG_CODE orgCode,
@@ -126,43 +126,43 @@
 		<where>
 			<if test="profitTypeList != null and profitTypeList.size() > 0">
 				<foreach collection="profitTypeList" item="profitType"
-					open=" AND cpb.PROFIT_TYPE IN (" close=")" separator=",">
+						 open=" AND cpb.PROFIT_TYPE IN (" close=")" separator=",">
 					#{profitType}
 				</foreach>
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size() > 0">
 				<foreach collection="orgCodeList" item="orgCode"
-					open="AND cpb.ORG_CODE IN (" close=")" separator=",">
+						 open="AND cpb.ORG_CODE IN (" close=")" separator=",">
 					#{orgCode}
 				</foreach>
 			</if>
 			<if test="investorTypeList != null and investorTypeList.size() > 0">
 				<foreach collection="investorTypeList" item="investorType"
-					open=" AND cpb.INVESTOR_TYPE IN (" close=")" separator=",">
+						 open=" AND cpb.INVESTOR_TYPE IN (" close=")" separator=",">
 					#{investorType}
 				</foreach>
 			</if>
 			<if test="isIntactList != null and isIntactList.size() > 0">
 				<foreach collection="isIntactList" item="isIntact"
-					open=" AND cpb.IS_INTACT IN (" close=")" separator=",">
+						 open=" AND cpb.IS_INTACT IN (" close=")" separator=",">
 					#{isIntact}
 				</foreach>
 			</if>
 			<if test="declareStatusList != null and declareStatusList.size() > 0">
 				<foreach collection="declareStatusList" item="declareStatus"
-					open=" AND cpb.DECLARE_STATUS IN (" close=")" separator=",">
+						 open=" AND cpb.DECLARE_STATUS IN (" close=")" separator=",">
 					#{declareStatus}
 				</foreach>
 			</if>
 			<if test="issuingStatusList != null and issuingStatusList.size() > 0">
 				<foreach collection="issuingStatusList" item="issuingStatus"
-					open=" AND cpb.ISSUING_STATUS IN (" close=")" separator=",">
+						 open=" AND cpb.ISSUING_STATUS IN (" close=")" separator=",">
 					#{issuingStatus}
 				</foreach>
 			</if>
 			<if test="statusList != null and statusList.size() > 0">
 				<foreach collection="statusList" item="status" open=" AND cpb.STATUS IN ("
-					close=")" separator=",">
+						 close=")" separator=",">
 					#{status}
 				</foreach>
 			</if>
@@ -206,8 +206,8 @@
 			<!-- 选中导出使用的参数 -->
 			<if test="keys != null and keys.size() > 0">
 				<foreach collection="keys" item="key"
-					open=" AND concat_ws('',cpb.PROD_ID, '|', cpb.ORG_CODE, '|', cpb.STATUS) IN ("
-					close=")" separator=",">
+						 open=" AND concat_ws('',cpb.PROD_ID, '|', cpb.ORG_CODE, '|', cpb.STATUS) IN ("
+						 close=")" separator=",">
 					#{key}
 				</foreach>
 			</if>
@@ -223,14 +223,14 @@
 		UPDATE_TIME = #{nowDate}
 		WHERE
 		<foreach collection="keyList" item="key"
-			open="concat_ws('',PROD_ID,  '|', ORG_CODE, '|', STATUS) in(" close=")"
-			separator=",">
+				 open="concat_ws('',PROD_ID,  '|', ORG_CODE, '|', STATUS) in(" close=")"
+				 separator=",">
 			#{key}
 		</foreach>
 	</update>
 
 	<select id="selectByPrimaryKey"
-		resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+			resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		select
 		STATUS
 		from CHB_PRD_BASEINFO
@@ -240,7 +240,7 @@
 	</select>
 
 	<update id="updateDtoEByPrimaryKey"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		update CHB_PRD_BASEINFO
 		<set>
 			<if test="prodName != null">
@@ -526,7 +526,7 @@
 	</update>
 
 	<select id="selectByPrimaryKey1"
-		resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+			resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		select SEND_STATUS sendStatus
 		from CHB_PRD_DECLARE_SUB
 		where PROD_INS_ID =
@@ -539,7 +539,7 @@
 	</select>
 
 	<update id="updateDtoEByPrimaryKey1"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdDeclareSub">
 		update CHB_PRD_DECLARE_SUB
 		<set>
 			<if test="prodName != null">
@@ -778,7 +778,7 @@
 	</update>
 
 	<select id="selectByPrimaryKey2"
-		resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+			resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		select SEND_STATUS sendStatus
 		from CHB_PRD_ISSUE_SUB
 		where PROD_ID =
@@ -793,7 +793,7 @@
 	</select>
 
 	<update id="updateDtoEByPrimaryKey2"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdIssueSub">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdIssueSub">
 		update CHB_PRD_ISSUE_SUB
 		<set>
 			<if test="prodRegistCode != null">
@@ -902,7 +902,7 @@
 	</update>
 
 	<select id="selectByPrimaryKey3"
-		resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+			resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		select SEND_STATUS sendStatus
 		from CHB_PRD_ORG_DECLARE_SUB
 		where PROD_ID =
@@ -916,7 +916,7 @@
 	</select>
 
 	<update id="updateDtoEByPrimaryKey3"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdOrgDeclareSub">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdOrgDeclareSub">
 		update CHB_PRD_ORG_DECLARE_SUB
 		<set>
 			<if test="prodName != null">
@@ -1199,7 +1199,7 @@
 	</update>
 
 	<select id="isDeal" resultType="java.lang.Integer"
-		parameterType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+			parameterType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		SELECT
 		COUNT(PROD_ID)
 		FROM
@@ -1248,7 +1248,7 @@
 		#{issuePartyId,jdbcType=VARCHAR}
 	</delete>
 	<select id="getAllProdList"
-		resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
+			resultType="com.joyintech.tams.report.submitmaintenance.prodfactorinfo.dto.ProdFactorInfo001Dto">
 		SELECT
 		PROD_ID prodId,
 		ORG_CODE orgCode,
@@ -1367,7 +1367,7 @@
 		where Table_Name = #{tableName,jdbcType=VARCHAR}
 	</select>
 	<insert id="insertBatchPrd"
-		parameterType="java.util.List">
+			parameterType="java.util.List">
 		insert into CHB_PRD_BASEINFO (PROD_ID, ORG_CODE, STATUS,
 		PROD_NAME,
 		REG_CODE, PROD_INS_ID,
@@ -1416,7 +1416,7 @@
 		)
 		select A.* from (
 		<foreach collection="list" item="item" index="index"
-			separator="union all">
+				 separator="union all">
 			select #{item.prodId,jdbcType=VARCHAR},
 			#{item.orgCode,jdbcType=VARCHAR},
 			#{item.status,jdbcType=CHAR},
@@ -1506,110 +1506,110 @@
 			#{item.isConstracteIssue,jdbcType=VARCHAR},
 			#{item.gradeTypeIssue,jdbcType=VARCHAR},
 			#{item.targetCustomerType,jdbcType=VARCHAR}
-			 from dual
+			from dual
 		</foreach>
 		)A
 	</insert>
 	<select id="getAllProdListByKeys"
-		resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+			resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		SELECT PROD_ID             prodId,
-       ORG_CODE            orgCode,
-       STATUS              status,
-       PROD_NAME           prodName,
-       REG_CODE            regCode,
-       PROD_INS_ID         prodInsId,
-       PROFIT_TYPE         profitType,
-       INVESTOR_TYPE       investorType,
-       IS_INTACT           isIntact,
-       RAISE_PSTRDATE      raisePstrdate,
-       RAISE_PENDDATE      raisePenddate,
-       DECLARE_STATUS      declareStatus,
-       ISSUING_STATUS      issuingStatus,
-       RISK_LEVEL          riskLevel,
-       TERM                term,
-       RAISE_CCY           raiseCcy,
-       RAISE_VDATE         raiseVdate,
-       RAISE_ENDDATE       raiseEnddate,
-       TEMPLATE_NAME       templateName,
-       PROD_BRAND          prodBrand,
-       PROD_STAGE          prodStage,
-       DESIGNER_NAME       designerName,
-       DESIGNER_ID         designerId,
-       APPROVER_NAME       approverName,
-       APPROVER_ID         approverId,
-       MANAGER_NAME        managerName,
-       MANAGER_ID          managerId,
-       BOOK_MODE           bookMode,
-       LIAISON_NAME        liaisonName,
-       LIAISON_TEL         liaisonTel,
-       LIAISON_MOBILE      liaisonMobile,
-       LIAISON_EMAIL       liaisonEmail,
-       INVEST_ARAE         investArae,
-       INVEST_COUNTRY      investCountry,
-       FINAN_SER_MODEL     finanSerModel,
-       OPERATE_MODE        operateMode,
-       CMMODE              cmmode,
-       PMMODE              pmmode,
-       MNAME               mname,
-       INV_ASSET_TYPE      invAssetType,
-       CONT_MODE           contMode,
-       COOPERATION_NAME    cooperationName,
-       CON_PRD_TRAGET      conPrdTraget,
-       IS_YIELD            isYield,
-       IS_YIELD_MEAS_BASIS isYieldMeasBasis,
-       INV_TYPE_RAT        invTypeRat,
-       RISK_TYPE           riskType,
-       HIGH_YIELD          highYield,
-       LOW_YIELD           lowYield,
-       SALE_AREA           saleArea,
-       SALE_AMT_STR        saleAmtStr,
-       CASH_PRIN_CCY       cashPrinCcy,
-       CASH_PROF_CCY       cashProfCcy,
-       RAISE_AMT_PLAN      raiseAmtPlan,
-       SALE_FEE_RATE       saleFeeRate,
-       INVEST_PRIN_DATE    investPrinDate,
-       INVEST_PROF_DATE    investProfDate,
-       TRU_FEE_RATE        truFeeRate,
-       IN_DEP_CODE         inDepCode,
-       IN_DEP_NAME         inDepName,
-       OUT_DEP_CTRY        outDepCtry,
-       OUT_DEP_NAME        outDepName,
-       TERM_RIGHT_FLAG     termRightFlag,
-       CUS_REDEEM_FLAG     cusRedeemFlag,
-       CREDIT_FLAG         creditFlag,
-       CREDIT_TYPE         creditType,
-       PRICED_MODE         pricedMode,
-       PRD_VDATE           prdVdate,
-       PRD_MDATE           prdMdate,
-       EXP_AVG_YIELD       expAvgYield,
-       IS_CONSTRACTE       isConstracte,
-       GRADE_TYPE          gradeType,
-       YIELD_COMMENT       yieldComment,
-       OPEN_MODE           openMode,
-       OPEN_CIRCLE         openCircle,
-       OPEN_CIRCLE_DAYS    openCircleDays,
-       RULE_COMMENT        ruleComment,
-       FIRST_OPEN_DAY      firstOpenDay,
-       HOLIDAY_ON_FLAG     holidayOnFlag,
-       AVG_OPEN_COUNT      avgOpenCount,
-       OPEN_BUSS           openBuss,
-       OPEN_BUSS_REMARK    openBussRemark,
-       VDATE               vdate,
-       MDATE               mdate,
-       DEPT_CODE deptCode,
-       WORKFLOW_ID workflowId,
-       DATA_SOURCE dataSource,
-       PROFIT_MODE profitMode,
-       REMARK              remark,
-       UPDATE_USER updateUser,
-       UPDATE_TIME updateTime,
-       CREATE_USER createUser,
-       CREATE_TIME createTime,
-       CREDIT_MODE creditMode
-  FROM CHB_PRD_BASEINFO
+		ORG_CODE            orgCode,
+		STATUS              status,
+		PROD_NAME           prodName,
+		REG_CODE            regCode,
+		PROD_INS_ID         prodInsId,
+		PROFIT_TYPE         profitType,
+		INVESTOR_TYPE       investorType,
+		IS_INTACT           isIntact,
+		RAISE_PSTRDATE      raisePstrdate,
+		RAISE_PENDDATE      raisePenddate,
+		DECLARE_STATUS      declareStatus,
+		ISSUING_STATUS      issuingStatus,
+		RISK_LEVEL          riskLevel,
+		TERM                term,
+		RAISE_CCY           raiseCcy,
+		RAISE_VDATE         raiseVdate,
+		RAISE_ENDDATE       raiseEnddate,
+		TEMPLATE_NAME       templateName,
+		PROD_BRAND          prodBrand,
+		PROD_STAGE          prodStage,
+		DESIGNER_NAME       designerName,
+		DESIGNER_ID         designerId,
+		APPROVER_NAME       approverName,
+		APPROVER_ID         approverId,
+		MANAGER_NAME        managerName,
+		MANAGER_ID          managerId,
+		BOOK_MODE           bookMode,
+		LIAISON_NAME        liaisonName,
+		LIAISON_TEL         liaisonTel,
+		LIAISON_MOBILE      liaisonMobile,
+		LIAISON_EMAIL       liaisonEmail,
+		INVEST_ARAE         investArae,
+		INVEST_COUNTRY      investCountry,
+		FINAN_SER_MODEL     finanSerModel,
+		OPERATE_MODE        operateMode,
+		CMMODE              cmmode,
+		PMMODE              pmmode,
+		MNAME               mname,
+		INV_ASSET_TYPE      invAssetType,
+		CONT_MODE           contMode,
+		COOPERATION_NAME    cooperationName,
+		CON_PRD_TRAGET      conPrdTraget,
+		IS_YIELD            isYield,
+		IS_YIELD_MEAS_BASIS isYieldMeasBasis,
+		INV_TYPE_RAT        invTypeRat,
+		RISK_TYPE           riskType,
+		HIGH_YIELD          highYield,
+		LOW_YIELD           lowYield,
+		SALE_AREA           saleArea,
+		SALE_AMT_STR        saleAmtStr,
+		CASH_PRIN_CCY       cashPrinCcy,
+		CASH_PROF_CCY       cashProfCcy,
+		RAISE_AMT_PLAN      raiseAmtPlan,
+		SALE_FEE_RATE       saleFeeRate,
+		INVEST_PRIN_DATE    investPrinDate,
+		INVEST_PROF_DATE    investProfDate,
+		TRU_FEE_RATE        truFeeRate,
+		IN_DEP_CODE         inDepCode,
+		IN_DEP_NAME         inDepName,
+		OUT_DEP_CTRY        outDepCtry,
+		OUT_DEP_NAME        outDepName,
+		TERM_RIGHT_FLAG     termRightFlag,
+		CUS_REDEEM_FLAG     cusRedeemFlag,
+		CREDIT_FLAG         creditFlag,
+		CREDIT_TYPE         creditType,
+		PRICED_MODE         pricedMode,
+		PRD_VDATE           prdVdate,
+		PRD_MDATE           prdMdate,
+		EXP_AVG_YIELD       expAvgYield,
+		IS_CONSTRACTE       isConstracte,
+		GRADE_TYPE          gradeType,
+		YIELD_COMMENT       yieldComment,
+		OPEN_MODE           openMode,
+		OPEN_CIRCLE         openCircle,
+		OPEN_CIRCLE_DAYS    openCircleDays,
+		RULE_COMMENT        ruleComment,
+		FIRST_OPEN_DAY      firstOpenDay,
+		HOLIDAY_ON_FLAG     holidayOnFlag,
+		AVG_OPEN_COUNT      avgOpenCount,
+		OPEN_BUSS           openBuss,
+		OPEN_BUSS_REMARK    openBussRemark,
+		VDATE               vdate,
+		MDATE               mdate,
+		DEPT_CODE deptCode,
+		WORKFLOW_ID workflowId,
+		DATA_SOURCE dataSource,
+		PROFIT_MODE profitMode,
+		REMARK              remark,
+		UPDATE_USER updateUser,
+		UPDATE_TIME updateTime,
+		CREATE_USER createUser,
+		CREATE_TIME createTime,
+		CREDIT_MODE creditMode
+		FROM CHB_PRD_BASEINFO
 		<where>
 			<foreach collection="list" item="item" open="(PROD_ID, ORG_CODE) in ("
-				close=")" separator=",">
+					 close=")" separator=",">
 				(
 				#{item.prodId,jdbcType=VARCHAR},
 				#{item.orgCode,jdbcType=VARCHAR}
@@ -1620,7 +1620,7 @@
 	<update id="updateBatchByPrimaryKey" parameterType="java.util.List">
 		begin
 		<foreach collection="list" item="item" index="index"
-			separator=";">
+				 separator=";">
 			update CHB_PRD_BASEINFO
 			set PROD_NAME = #{item.prodName,jdbcType=VARCHAR},
 			REG_CODE = #{item.regCode,jdbcType=VARCHAR},
@@ -1714,8 +1714,8 @@
 			HIGH_YIELD_ISSUE = #{item.highYieldIssue,jdbcType=DECIMAL},
 			LOW_YIELD_ISSUE = #{item.lowYieldIssue,jdbcType=DECIMAL},
 			RAISE_TYPE = #{item.raiseType,jdbcType=VARCHAR},
-        	<!--MANAGE_TYPE = #{item.manageType,jdbcType=VARCHAR},
-			CREDIT_MODE = #{item.creditMode,jdbcType=VARCHAR},-->
+			<!--MANAGE_TYPE = #{item.manageType,jdbcType=VARCHAR},
+            CREDIT_MODE = #{item.creditMode,jdbcType=VARCHAR},-->
 			AGENT = #{item.agent,jdbcType=VARCHAR},
 			IS_CONSTRACTE_ISSUE = #{item.isConstracteIssue,jdbcType=VARCHAR},
 			GRADE_TYPE_ISSUE = #{item.gradeTypeIssue,jdbcType=VARCHAR},

@@ -9,6 +9,7 @@ import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.common.TrdCommonDeleteDto;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.SecPositionExerciseInfoDto;
 import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondDurationDto;
+import com.joyintech.tams.invest.common.dto.period.trdbondduration.TrdBondExerciseProcessDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -248,4 +249,17 @@ public class TrdBondDurationController {
         return trdBondDurationService.getBusiCodeNew(page, length, param);
     }
 
+    // modify by etliu 20220228 start
+    // 广农商二阶段 GNS-896:【广农商场内清算】场内债券存续期-行权赎回，批处理后未生成交易
+    /**
+     * 查询存续期交易数据(行权)
+     *
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @PostMapping("findEffectiveDataXq")
+    public TrdBondExerciseProcessDto findEffectiveDataXq(@RequestBody Map<String, Object> params) {
+        return trdBondDurationService.findEffectiveDataXq(params);
+    }
+    // modify by etliu 20220228 end
 }

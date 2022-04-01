@@ -366,6 +366,11 @@ public class ChbPrdDeclareSubSetService {
 		    cnBondItem3.setValue(sub.getIssuePartyId());
 		    cnBondItemMap.put("IssuerIdentificationCode", cnBondItem3);
 		    }
+
+
+
+
+
 		    //产品审批人身份证号
 		    if(StringUtil.isNotEmpty(sub.getApproverId())){
 		    CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
@@ -555,7 +560,7 @@ public class ChbPrdDeclareSubSetService {
 		    }
 
 		    cnBondItem29.setMaps(mapList2);//第一个父子节点组合结束
-		    
+
 		    cnBondItemMap.put("ProductSalesRegionTuple", cnBondItem29);
 		    }
 		    //起点销售金额
@@ -725,6 +730,26 @@ public class ChbPrdDeclareSubSetService {
 		    cnBondItem46.setValue(sub.getProdBrand());
 		    cnBondItemMap.put("ProductBrand", cnBondItem46);
 		    }
+
+			/***1217升级**/
+			//产品特殊属性
+			if(StringUtil.isNotEmpty(sub.getPrdSpecProperty())){
+				CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
+				//子节点开始
+				List<Map<String, CnBondInterfItemDto>> cnBondItemMap3 = new ArrayList<Map<String, CnBondInterfItemDto>>();
+				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.SEMICOLON);
+				for(String str : prdSpecPropertys){
+					Map<String, CnBondInterfItemDto> cnBondItemMap3_1 =  new LinkedHashMap<String, CnBondInterfItemDto>();//子节点map
+					CnBondInterfItemDto cnBondItem3_1 = new CnBondInterfItemDto();//第一个子节点
+					cnBondItem3_1.setValue(str);
+					cnBondItemMap3_1.put("ProductSpecialProperty",cnBondItem3_1);
+					cnBondItemMap3.add(cnBondItemMap3_1);
+				}
+				cnBondItem3.setMaps(cnBondItemMap3);//第一个父子节点组合结束
+				cnBondItemMap.put("ProductSpecialPropertyTuple", cnBondItem3);
+			}
+			/***1217升级**/
+
 		    //产品期次
 		    if(sub.getProdStage() != null){
 		    CnBondInterfItemDto cnBondItem47 = new CnBondInterfItemDto();

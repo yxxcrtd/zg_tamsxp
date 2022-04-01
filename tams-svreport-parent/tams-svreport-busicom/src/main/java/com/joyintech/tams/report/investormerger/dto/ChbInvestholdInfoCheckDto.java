@@ -3,6 +3,7 @@ package com.joyintech.tams.report.investormerger.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 
 /**
@@ -11,7 +12,7 @@ import com.joyintech.framework.export.paginator.domain.ITableRow;
  * @author:  Administrator
  * @创建时间: 2019-03-18
  */
-public class ChbInvestholdInfoCheckDto implements ITableRow {
+public class ChbInvestholdInfoCheckDto extends BaseEntity implements ITableRow {
     /**
      * 登记银行代码
      */

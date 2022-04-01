@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbhz.inBottomAssetPosition.dao.InBottomAstPositionSvrMapper_mysql" >
+
+    <select id="genChbInBottomAstPosTmpList"  resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSubTmp">
+	  SELECT
+	    ISSUE_PARTY_ID AS  issuePartyId,
+		POS_DATE AS  posDate,
+		PLAN_ASSET_ID AS  planAssetId,
+		ASSET_CODE AS  assetCode,
+		TOTAL_NUM AS  totalNum,
+		ISSUE_AMT AS  issueAmt,
+		UNINVEST_CASH AS  uninvestCash,
+		POS_NUM AS  posNum,
+		POS_AMT AS  posAmt,
+		ORG_CODE AS  orgCode,
+		DEPT_CODE AS  deptCode,
+		CREATE_USER AS  createUser,
+		CREATE_DEPT AS  createDept,
+		CREATE_TIME AS  createTime,
+		UPDATE_USER AS  updateUser,
+		UPDATE_TIME AS  updateTime,
+		DATA_SOURCE AS  dataSource,
+		STATUS AS  status
+      FROM CHB_BOT_AST_POS_SUB_TMP
+	  WHERE DATE_FORMAT(ROW_DATE,'%Y-%m-%d') = #{batchdate,jdbcType = VARCHAR}
+	</select>
+
+    <select id="genChbInBottomAstPosSubList"  resultType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSubTmp">
+        SELECT * FROM
+        (SELECT
+        REGIST_SEQNO  AS registSeqno,
+        REGIST_BANK_CODE  AS registBankCode,
+        ISSUE_PARTY_ID  AS issuePartyId,
+        POS_DATE  AS posDate,
+        PLAN_ASSET_ID  AS planAssetId,
+        ASSET_CODE  AS assetCode,
+        TOTAL_NUM  AS totalNum,
+        ISSUE_AMT  AS issueAmt,
+        UNINVEST_CASH  AS uninvestCash,
+        POS_NUM  AS posNum,
+        POS_AMT  AS posAmt,
+        SEND_STATUS  AS sendStatus,
+        CHB_SUBMIT_DEADLINE  AS chbSubmitDeadline,
+        SUBMIT_DEADLINE  AS submitDeadline,
+        SUBMIT_TIME  AS submitTime,
+        SUMIT_SEQ  AS sumitSeq,
+        SUBMIT_FEEDBACK_STATUS  AS submitFeedbackStatus,
+        STATUS  AS status,
+        STATUS_DATE  AS statusDate,
+        ORG_CODE  AS orgCode,
+        DEPT_CODE  AS deptCode,
+        CREATE_USER  AS createUser,
+        CREATE_DEPT  AS createDept,
+        CREATE_TIME  AS createTime,
+        UPDATE_USER  AS updateUser,
+        UPDATE_TIME  AS updateTime,
+        ROW_NUMBER() OVER(PARTITION BY concat_ws('',POS_DATE,ASSET_CODE) ORDER BY UPDATE_TIME DESC) RANK
+        FROM CHB_BOT_AST_POS_SUB
+        <where>
+            <if test="list != null and list.size() > 0">
+                <foreach collection="list" index="index" item="item" open="(" separator=")or(" close=")">
+                    POS_DATE = #{item.posDate,jdbcType=DATE}
+                    AND ASSET_CODE = #{item.assetCode,jdbcType=VARCHAR}
+                    AND PLAN_ASSET_ID = #{item.planAssetId,jdbcType=VARCHAR}
+                    AND SEND_STATUS  in ('02','03')
+                    <!-- delete by wm 20201031 start 去掉中债通过的条件   -->
+                    <!-- AND SUBMIT_FEEDBACK_STATUS = '03' -->
+                    <!-- delete by wm 20201031 end 去掉中债通过的条件   -->
+                </foreach>
+            </if>
+        </where>
+        )
+        WHERE RANK = 1
+    </select>
+
+    <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPositionSubTmp">
+        insert into CHB_BOT_AST_POS_SUB (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID,
+        POS_DATE, PLAN_ASSET_ID, ASSET_CODE,
+        TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH,
+        POS_NUM, POS_AMT, SEND_STATUS,
+        CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS,
+        STATUS, STATUS_DATE, ORG_CODE,
+        DEPT_CODE, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        <foreach collection="insertList" item="dto" open=" select * from (select " close="from dual)" separator="from dual union all select ">
+            #{dto.registSeqno,jdbcType=CHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.issuePartyId,jdbcType=VARCHAR},
+            #{dto.posDate,jdbcType=DATE}, #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=VARCHAR},
+            #{dto.totalNum,jdbcType=DECIMAL}, #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL},
+            #{dto.posNum,jdbcType=DECIMAL}, #{dto.posAmt,jdbcType=DECIMAL}, #{dto.sendStatus,jdbcType=VARCHAR},
+            #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP}, #{dto.submitDeadline,jdbcType=TIMESTAMP},
+            #{dto.submitTime,jdbcType=TIMESTAMP}, #{dto.sumitSeq,jdbcType=VARCHAR}, #{dto.submitFeedbackStatus,jdbcType=VARCHAR},
+            #{dto.status,jdbcType=VARCHAR},  #{dto.rowDate,jdbcType=TIMESTAMP} STATUS_DATE, #{dto.orgCode,jdbcType=VARCHAR},
+            #{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR},
+            now() CREATE_TIME,#{dto.updateUser,jdbcType=VARCHAR},now() UPDATE_TIME
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatch" parameterType="map">
+        DELETE FROM CHB_BOT_AST_POS_SUB
+        <where>
+            <foreach collection="deleteList" index="index" item="item" open="(" separator=")or(" close=")">
+                POS_DATE = #{item.posDate,jdbcType=DATE}
+                <!-- delete by wm 上一次一个资管计划对应n个底层资产，本次传入n-1个时，未报送数据需要删除 start 20201031 -->
+                <!-- AND ASSET_CODE = #{item.assetCode,jdbcType=VARCHAR} -->
+                <!-- delete by wm 上一次一个资管计划对应n个底层资产，本次传入n-1个时，未报送数据需要删除 end 20201031 -->
+                AND PLAN_ASSET_ID = #{item.planAssetId,jdbcType=VARCHAR}
+                <if test="flag != null and flag != ''">
+                    AND SEND_STATUS = #{flag,jdbcType=VARCHAR}
+                </if>
+            </foreach>
+        </where>
+    </delete>
+</mapper>

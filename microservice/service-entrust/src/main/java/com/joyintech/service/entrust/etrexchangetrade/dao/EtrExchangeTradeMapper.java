@@ -14,16 +14,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.service.entrust.etrexchangetrade.dto.FinProductOthCodeDto;
-import com.joyintech.service.entrust.etrexchangetrade.dto.SubEqutityDto;
+import com.joyintech.service.entrust.etrexchangetrade.dto.*;
 import com.joyintech.tams.common.base.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
-import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import org.springframework.stereotype.Repository;
@@ -320,4 +317,41 @@ public interface EtrExchangeTradeMapper {
 	 **/
 	List<FinExercisePlan> selectFinExercisePlanData(Map<String, Object> map);
 	// add by etliu 20211207 end
+
+	/**
+	 * 查询多组合名称下拉框
+	 * @param map
+	 * @return
+	 */
+	List<SelectOptionDto> selectPortfolioTreeId(Map<String,Object> map);
+
+	/**
+	 * 查询多组合树关联的组合
+	 * @param map
+	 * @return
+	 */
+	List<SelectOptionDto> selectPortfolioId(Map<String,Object> map);
+
+	/**
+	 * 查询多组合明细
+	 * @param map
+	 * @return
+	 */
+	List<EtrExchangeTradeMultiPtl001Dto> selectPortfolioTreeDetail(Map<String,Object> map);
+
+	/**
+	 * 获取多组合分配资金账户
+	 * @param paraMap
+	 * @return
+	 */
+	List<SelectOptionDto> selectMultiAcctNo(Map<String,Object> paraMap);
+
+	/**
+	 * 查询组合+资金账户+交易场所对应的证券账户（多组合）
+	 * @param paraMap
+	 * @return
+	 */
+	public String selectMultiSecAcctId(Map<String,Object> paraMap);
+	EtrExchangeTradeMulti001Dto selectMultDetail(Map<String,Object> map);
+
 }

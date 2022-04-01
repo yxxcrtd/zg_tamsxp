@@ -9,32 +9,15 @@
  */
 package com.joyintech.background.component.uplink.interbank.business.service;
 
+import com.joyintech.background.component.common.pack.common.grid.Page;
+import com.joyintech.background.component.common.pack.common.security.User;
+import com.joyintech.background.component.uplink.interbank.business.dto.*;
+import com.joyintech.background.component.uplink.interbank.database.entity.IbuIntfScheme;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.background.component.common.pack.common.grid.Page;
-import com.joyintech.background.component.common.pack.common.security.User;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondQuoteExtDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondQuoteSearchDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.BondRequestQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.GateWayReturnMsgDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuInrfErrMsgSearchDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuIntfErrMsgDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteErrlogDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultBatDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ReceiveBondDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ReceiveBondRequestQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ReceiveRepoDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.RepoDialogueQuoteDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteExtDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
-import com.joyintech.background.component.uplink.interbank.database.entity.IbuIntfScheme;
 
 /**
  * 银行间上行组件服务统一接口
@@ -117,6 +100,29 @@ public interface IbuMainService {
      */
     List<RepoQuoteExtDto> getRepoDialogueQuoteList2(RepoQuoteSearchDto inputBean,
                                                    User userInfo);
+
+    /**
+     * 质押式回购报价查询-指定条件<br />
+     * 根据传入的不为空的属性进行查询，需支持数据权限
+     *
+     * @param inputBean RepoQuoteSearchDto 质押式回购报价查询条件
+     * @param userInfo  User 登录用户信息
+     * @return List<RepoDialogueQuoteDto>
+     */
+    com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteExtDto> getRepoDialogueQuoteList(int pageNum, int pageSize, RepoQuoteSearchDto inputBean,
+                                                                User userInfo);
+
+    /**
+     * 质押式回购报价查询-指定条件<br />
+     * 根据传入的不为空的属性进行查询，需支持数据权限
+     * add by chenjiaxing 质押式回购报价改造
+     *
+     * @param inputBean RepoQuoteSearchDto 质押式回购报价查询条件
+     * @param userInfo  User 登录用户信息
+     * @return List<RepoDialogueQuoteDto>
+     */
+    com.joyintech.background.component.common.pack.common.grid.Page<RepoQuoteExtDto> getRepoDialogueQuoteList2(int pageNum, int pageSize, RepoQuoteSearchDto inputBean,
+                                                                 User userInfo);
 
     /**
      * 质押式回购报价查询-按指定条件分页查询<br />

@@ -83,4 +83,6 @@ public interface EtrConBondMapper {
      * 获取交易对手通过资产代码
      */
     String getCounterId(@Param("finprodId") String finprodId);
+
+    String getAccNo(Map<String,String> param);
 }

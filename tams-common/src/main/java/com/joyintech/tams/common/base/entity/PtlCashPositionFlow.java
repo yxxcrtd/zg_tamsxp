@@ -81,6 +81,11 @@ public class PtlCashPositionFlow extends BaseEntity {
     private String entrustId;
 
     /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -303,5 +308,13 @@ public class PtlCashPositionFlow extends BaseEntity {
      */
     public void setEntrustId(String entrustId) {
         this.entrustId = entrustId == null ? null : entrustId.trim();
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

@@ -42,7 +42,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 〈一句话功能简述〉 
+ * 〈一句话功能简述〉
  * 〈功能详细描述〉
  * @author jiangxiao
  * @version 3.0 2019年01月21日
@@ -56,48 +56,48 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 	@Autowired
 	private RaiseTotalRegist001Mapper raiseTotalRegist001Mapper;
 	@Autowired
-    private CheckReport001Mapper checkReport001Mapper;
-    @Autowired
-    private ChbCheckRuleoutMapper chbCheckRuleoutMapper;
-    @Autowired
-    private BeforeSubCheck beforeSubCheck;
-	
+	private CheckReport001Mapper checkReport001Mapper;
+	@Autowired
+	private ChbCheckRuleoutMapper chbCheckRuleoutMapper;
+	@Autowired
+	private BeforeSubCheck beforeSubCheck;
+
 	/**
 	 * logger
 	 */
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * 长sql最大一次插入或者更新条数
-     */
-    @Value("${application.reportInsertLongCount}")
-    public  String reportInsertLongCount;
-    
-    /**
-     * sql最大一次最大删除条数
-     */
-    @Value("${application.reportSelectOrDeleteCount}")
-    public  String reportSelectOrDeleteCount;
-    
-    /**
-     * 短sql最大一次最大插入条数
-     */
-    @Value("${application.reportInsertCount}")
-    public  String reportInsertCount;
-    
-    /**
-     * 短sql最大一次最大插入条数
-     */
-    @Value("${application.reportSelectOrDeleteCountForShenFen}")
-    public  int reportSelectOrDeleteCountForShenFen;
+	/**
+	 * 长sql最大一次插入或者更新条数
+	 */
+	@Value("${application.reportInsertLongCount}")
+	public  String reportInsertLongCount;
 
-    /**
-     * sqlldr用数据库连接
-     */
-    @Value("${spring.datasource.reportSqlldrDatabaseName}")
-    private String reportSqlldrDatabaseName;
-    @Autowired
-    private ChbPrdRaisetotSubHisMapper chbPrdRaisetotSubHisMapper;
+	/**
+	 * sql最大一次最大删除条数
+	 */
+	@Value("${application.reportSelectOrDeleteCount}")
+	public  String reportSelectOrDeleteCount;
+
+	/**
+	 * 短sql最大一次最大插入条数
+	 */
+	@Value("${application.reportInsertCount}")
+	public  String reportInsertCount;
+
+	/**
+	 * 短sql最大一次最大插入条数
+	 */
+	@Value("${application.reportSelectOrDeleteCountForShenFen}")
+	public  int reportSelectOrDeleteCountForShenFen;
+
+	/**
+	 * sqlldr用数据库连接
+	 */
+	@Value("${spring.datasource.reportSqlldrDatabaseName}")
+	private String reportSqlldrDatabaseName;
+	@Autowired
+	private ChbPrdRaisetotSubHisMapper chbPrdRaisetotSubHisMapper;
 	/**
 	 * 中债基础数据mapper
 	 */
@@ -109,7 +109,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 
 	@Autowired
 	private BeforeSubErrorCheck beforeSubErrorCheck;
-    
+
 	/**
 	 * @Description 产品募集总量分页查询
 	 * @param pageParam
@@ -118,16 +118,16 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 	 */
 	public Page<RaiseTotalRegist001Dto> selectForPage(Map<String, Object> pageParam) {
 		dealSearchParam(pageParam);
-		
+
 		//add by leipeng 20200628
 		if(CommonUtil.isBAmodel()){
 			pageParam.put("model_type", "01");
 		}
-		
+
 		if (null != pageParam.get(GlobalConstant.PARAM_PAGE)
 				&& null != pageParam.get(GlobalConstant.PARAM_LENGTH)) {
 			int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
-	        int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
+			int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
 			Page<RaiseTotalRegist001Dto> page = queryForPage(
 					pagenum,legth,()->raiseTotalRegist001Mapper.selectAllData(pageParam));
 			dealResultlist(page.getRoot());
@@ -137,9 +137,9 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 			dealResultlist(page.getRoot());
 			return page;
 		}
-		
+
 	}
-	
+
 	private void dealResultlist(List<RaiseTotalRegist001Dto> resultlist){
 		if(!CollectionUtils.isEmpty(resultlist)){
 			for(RaiseTotalRegist001Dto dto : resultlist){
@@ -154,7 +154,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 			}
 		}
 	}
-	
+
 	private void dealSearchParam(Map<String, Object> pageParam) {
 		// 选择行数据时
 		if (pageParam.containsKey("keyList")) {
@@ -164,7 +164,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 						RaiseTotalRegist001Dto.class);
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
-	            logger.error(e.getMessage(),e);
+				logger.error(e.getMessage(),e);
 			}
 		} else {
 			// 查询参数条件
@@ -196,7 +196,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 				pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
 			}
 		}
-		
+
 	}
 
 	public List<RaiseTotalRegist001Dto> selectForExport(Map<String, Object> pageParam) {
@@ -211,28 +211,28 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 
 	private void selectAllDataBatch(List<RaiseTotalRegist001Dto> dataList, List<RaiseTotalRegist001Dto> dtoList) {
 		if (StringUtil.isEmptyList(dataList)) {
-            return;
-        }
-        int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
-        int dataCount = dataList.size();
-        if (dataCount <= maxDataCountOneTime) {
-        	dtoList.addAll(raiseTotalRegist001Mapper.selectAllDataByList(dataList));
-            return;
-        }
+			return;
+		}
+		int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
+		int dataCount = dataList.size();
+		if (dataCount <= maxDataCountOneTime) {
+			dtoList.addAll(raiseTotalRegist001Mapper.selectAllDataByList(dataList));
+			return;
+		}
 
-        List<RaiseTotalRegist001Dto> newDataList = new ArrayList<RaiseTotalRegist001Dto>();
-        newDataList.addAll(dataList);
+		List<RaiseTotalRegist001Dto> newDataList = new ArrayList<RaiseTotalRegist001Dto>();
+		newDataList.addAll(dataList);
 
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++ ) {
-        	dtoList.addAll(raiseTotalRegist001Mapper.selectAllDataByList(newDataList.subList(0, maxDataCountOneTime)));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-        	dtoList.addAll(raiseTotalRegist001Mapper.selectAllDataByList(newDataList));
-        }
+		// 分批处理
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			dtoList.addAll(raiseTotalRegist001Mapper.selectAllDataByList(newDataList.subList(0, maxDataCountOneTime)));
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			dtoList.addAll(raiseTotalRegist001Mapper.selectAllDataByList(newDataList));
+		}
 	}
 
 	/**
@@ -253,20 +253,20 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		dealSearchParam(pageParam);
 		//无查询参数的情况
 		exportParam.config("/com/joyintech/tams/svreport/chb/prodraisetotalregist/conf/export_conf.xml")
-		.select(() -> raiseTotalRegist001Mapper.selectAllData(pageParam));
+				.select(() -> raiseTotalRegist001Mapper.selectAllDataForExport(pageParam));
 
 	}
-    public List<RaiseTotalRegist001Dto> selectAllData(Map<String, Object> pageParam){
-        return raiseTotalRegist001Mapper.selectAllData(pageParam);
-    }
-    @Override
-    public com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto> selectPageData(Map<String, Object> pageParam) {
-        List<RaiseTotalRegist001Dto> data = restTemplate.postForList(
-                    SvrServiceApplication.CHB_SERVICE_NAME + "/RaiseTotalRegist/selectAllData",pageParam,
-                    RaiseTotalRegist001Dto.class);
-        com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto> page = new com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto>();
-        page.setRoot(data);
-        //page.setTotal(data.size());
+	public List<RaiseTotalRegist001Dto> selectAllData(Map<String, Object> pageParam){
+		return raiseTotalRegist001Mapper.selectAllDataForExport(pageParam);
+	}
+	@Override
+	public com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto> selectPageData(Map<String, Object> pageParam) {
+		List<RaiseTotalRegist001Dto> data = restTemplate.postForList(
+				SvrServiceApplication.CHB_SERVICE_NAME + "/RaiseTotalRegist/selectAllData",pageParam,
+				RaiseTotalRegist001Dto.class);
+		com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto> page = new com.joyintech.framework.grid.Page<RaiseTotalRegist001Dto>();
+		page.setRoot(data);
+		//page.setTotal(data.size());
 		if(!CollectionUtils.isEmpty(page.getRoot())){
 			for(RaiseTotalRegist001Dto dto : page.getRoot()){
 				dto.setBelongInstitutionCode(null);
@@ -280,35 +280,35 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 			page.setTotal(0);
 		}
 
-        return  page;
-    }
+		return  page;
+	}
 	/**
-     * 配置项中非空处理
-     * @param Count
-     * @param flag
-     * @return
-     */
-    public int parsToInt(String count,String flag){
-   	 if(StringUtil.isNotEmpty(count)&&Integer.parseInt(count)<=0){
-   		 if("1".equals(flag)){
-   	         	return 20;
-   		 }
-   		 else if("2".equals(flag)){
-	         	return 500;
-   		 }
-   		 else {
-	         	return 100;
-   		 }
-        }
-        else{
-        	return Integer.parseInt(count);
-        }
-   }
-    
-    /**
-     * 手动处理
-     * @param map 
-     */
+	 * 配置项中非空处理
+	 * @param Count
+	 * @param flag
+	 * @return
+	 */
+	public int parsToInt(String count,String flag){
+		if(StringUtil.isNotEmpty(count)&&Integer.parseInt(count)<=0){
+			if("1".equals(flag)){
+				return 20;
+			}
+			else if("2".equals(flag)){
+				return 500;
+			}
+			else {
+				return 100;
+			}
+		}
+		else{
+			return Integer.parseInt(count);
+		}
+	}
+
+	/**
+	 * 手动处理
+	 * @param map
+	 */
 	@SuppressWarnings("unchecked")
 	public void updateSumStaus(Map<String, Object> map) {
 		dealSearchParam(map);
@@ -326,34 +326,34 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 			}
 		}else{
 			//未选中数据
-        	prodTerminationList = raiseTotalRegist001Mapper.selectAllData(map);
+			prodTerminationList = raiseTotalRegist001Mapper.selectAllData(map);
 		}
-        if(!CollectionUtils.isEmpty(prodTerminationList)){
-        	// 每批处理的数据条数
-        	int partSize = 500;
-        	// 存放业务数据的临时list，数据量不超过partSize
-        	List<RaiseTotalRegist001Dto> tmpList = new ArrayList<RaiseTotalRegist001Dto>();
-        	// 分批次处理
-        	for (int j = 0; j < prodTerminationList.size(); j++) {
-        		tmpList.add(prodTerminationList.get(j));
-        		if (partSize == tmpList.size() || j == prodTerminationList.size() - 1) {
-        			//找sub表有没有已报送的数据
-        			List<String> regList = raiseTotalRegist001Mapper.selectRegistSeqnoList(tmpList,"02");
-        			//更新sub表数据（中债通过、手工处理）
-                	this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), tmpList, false);
-                	if(!CollectionUtils.isEmpty(regList)){
-        				List<List<String>> regseqnolist = createStringList(regList,20);
-        				for(int i=0;i<regseqnolist.size();i++){
-        					//将已报送的数据移至his表 insert select 
-        					chbPrdRaisetotSubHisMapper.insertSubHisBatch(regseqnolist.get(i));
-        					//将已报送的数据从sub表物理删除
-        					raiseTotalRegist001Mapper.deleteRegistSeqnoList(regseqnolist.get(i));
-        				}
-        			}
-        			tmpList.clear();
-        		}
-        	}
-        }
+		if(!CollectionUtils.isEmpty(prodTerminationList)){
+			// 每批处理的数据条数
+			int partSize = 500;
+			// 存放业务数据的临时list，数据量不超过partSize
+			List<RaiseTotalRegist001Dto> tmpList = new ArrayList<RaiseTotalRegist001Dto>();
+			// 分批次处理
+			for (int j = 0; j < prodTerminationList.size(); j++) {
+				tmpList.add(prodTerminationList.get(j));
+				if (partSize == tmpList.size() || j == prodTerminationList.size() - 1) {
+					//找sub表有没有已报送的数据
+					List<String> regList = raiseTotalRegist001Mapper.selectRegistSeqnoList(tmpList,"02");
+					//更新sub表数据（中债通过、手工处理）
+					this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), tmpList, false);
+					if(!CollectionUtils.isEmpty(regList)){
+						List<List<String>> regseqnolist = createStringList(regList,20);
+						for(int i=0;i<regseqnolist.size();i++){
+							//将已报送的数据移至his表 insert select
+							chbPrdRaisetotSubHisMapper.insertSubHisBatch(regseqnolist.get(i));
+							//将已报送的数据从sub表物理删除
+							raiseTotalRegist001Mapper.deleteRegistSeqnoList(regseqnolist.get(i));
+						}
+					}
+					tmpList.clear();
+				}
+			}
+		}
 	}
 	/**
 	 * @Description 分批次执行updateInterfSubmitAndSeq
@@ -376,10 +376,10 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 
 		// 对于批处理报送全量的数据，直接更新所有检查通过的未报送数据，状态修改为接口报送
 		if (isSendAllData) {
-		    logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表start===");
-		    raiseTotalRegist001Mapper.updateAllInterfSubmitAndSeqBatch(sendStatus);
-		    logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表end===");
-		    return;
+			logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表start===");
+			raiseTotalRegist001Mapper.updateAllInterfSubmitAndSeqBatch(sendStatus);
+			logger.info("updateAllInterfSubmitAndSeqBatch全量更新登记表end===");
+			return;
 		}
 
 		List<RaiseTotalRegist001Dto> newDataList = new ArrayList<RaiseTotalRegist001Dto>();
@@ -390,7 +390,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		for (int i = 0; i < part; i++) {
 			logger.info("单次更新登记表start===");
 			raiseTotalRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus,
-                newDataList.subList(0, maxDataCountOneTime));
+					newDataList.subList(0, maxDataCountOneTime));
 			newDataList.subList(0, maxDataCountOneTime).clear();
 			logger.info("单次更新登记表end===");
 		}
@@ -414,21 +414,21 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		List<RaiseTotalRegist001Dto> prodTerminationList = new ArrayList<RaiseTotalRegist001Dto>();
 		//选择的手动处理
 		prodTerminationList = (List<RaiseTotalRegist001Dto>) map.get("investList");
-        if (StringUtil.isEmptyList(prodTerminationList)) {
-        	//未选中数据
-        	map.put("sendStatus", "03");
-        	prodTerminationList = raiseTotalRegist001Mapper.selectAllData(map);
+		if (StringUtil.isEmptyList(prodTerminationList)) {
+			//未选中数据
+			map.put("sendStatus", "03");
+			prodTerminationList = raiseTotalRegist001Mapper.selectAllData(map);
 		}
-        if(!CollectionUtils.isEmpty(prodTerminationList)){
-        	//找sub表有没有未报送的数据
+		if(!CollectionUtils.isEmpty(prodTerminationList)){
+			//找sub表有没有未报送的数据
 			List<String> unregList = raiseTotalRegist001Mapper.selectRegistSeqnoList(prodTerminationList,"01");
 			if(!CollectionUtils.isEmpty(unregList)){
 				return "fail";
 			}
-        	//查询his表，取最新的已报送数据
- 			List<String> seqnolist = chbPrdRaisetotSubHisMapper.selectByprodId(prodTerminationList);
-        	cancelMannultRegist(prodTerminationList);
-        	if(!CollectionUtils.isEmpty(seqnolist)){
+			//查询his表，取最新的已报送数据
+			List<String> seqnolist = chbPrdRaisetotSubHisMapper.selectByprodId(prodTerminationList);
+			cancelMannultRegist(prodTerminationList);
+			if(!CollectionUtils.isEmpty(seqnolist)){
 				List<List<String>> regList = createStringList(seqnolist, 20);
 				for(int i=0;i<regList.size();i++){
 					//将his表数据移至sub表
@@ -437,40 +437,40 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 					chbPrdRaisetotSubHisMapper.deleteBySeqno(regList.get(i));
 				}
 			}
-        }
-        return "success";
+		}
+		return "success";
 	}
-	
+
 	private void cancelMannultRegist(List<RaiseTotalRegist001Dto> prodTerminationList){
 		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
-        List<String> registSeqList = new ArrayList<String>();
+		List<String> registSeqList = new ArrayList<String>();
 		for(RaiseTotalRegist001Dto m : prodTerminationList){
 			registSeqList.add(m.getRegistSeqno());
 		}
 		if (!StringUtil.isEmptyList(registSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = 300;
-            int dataCount = registSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-            	raiseTotalRegist001Mapper.updateRaiseTotalRegist(registSeqList);
-            }
-            else {
-                List<String> newDataList = new ArrayList<String>();
-                newDataList.addAll(registSeqList);
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                	raiseTotalRegist001Mapper.updateRaiseTotalRegist(newDataList.subList(0, maxDataCountOneTime));
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                	raiseTotalRegist001Mapper.updateRaiseTotalRegist(newDataList);
-                }
-            }
-        }
+			// 分批处理
+			int maxDataCountOneTime = 300;
+			int dataCount = registSeqList.size();
+			if (dataCount <= maxDataCountOneTime) {
+				raiseTotalRegist001Mapper.updateRaiseTotalRegist(registSeqList);
+			}
+			else {
+				List<String> newDataList = new ArrayList<String>();
+				newDataList.addAll(registSeqList);
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+					raiseTotalRegist001Mapper.updateRaiseTotalRegist(newDataList.subList(0, maxDataCountOneTime));
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					raiseTotalRegist001Mapper.updateRaiseTotalRegist(newDataList);
+				}
+			}
+		}
 	}
-	
+
 	private List<List<String>> createStringList(List<String> targe,int size) {
 		List<List<String>> listArr = new ArrayList<List<String>>();
 		//获取被拆分的数组个数
@@ -487,7 +487,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		}
 		return listArr;
 	}
-	
+
 	public Map<String,Object> checkData(List<String> checkKeys){
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 		Map<String,RaiseTotalRegist001Dto> repmap = new HashMap<String,RaiseTotalRegist001Dto>();
@@ -522,7 +522,7 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		returnMap.put("resultList",issuelist);
 		return returnMap;
 	}
-	
+
 	/**
 	 * @Description 检查登记表中小于今天所有未报送的数据
 	 * @return
@@ -539,20 +539,20 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 		// 删除今天所有已检查的数据
 		checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),checkdate,keys);
 		//增加例外情况过滤
-        List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_RAISETOT_SUB);
-        Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
-                 JoyinCollectors.groupingBy(x -> x.getProdId()));
+		List<ChbCheckRuleout> listRuleout=chbCheckRuleoutMapper.selectDataByCheckTypeAndReprotCode(CheckConfConstants.CHB_CHECK_TYPE_B, CheckConfConstants.CHB_PRD_RAISETOT_SUB);
+		Map<String, List<ChbCheckRuleout>> mapRuleout = listRuleout.stream().collect(
+				JoyinCollectors.groupingBy(x -> x.getProdId()));
 
-        //检查数据
+		//检查数据
 		//警告逻辑检查
-        // List<CheckReport001Dto> resultList = beforeSubCheck.checkProdRaiseTotalReg(checkdate, mapRuleout);
+		// List<CheckReport001Dto> resultList = beforeSubCheck.checkProdRaiseTotalReg(checkdate, mapRuleout);
 		//报送前强制的错误检查
 		List<CheckReport001Dto> resultList = beforeSubErrorCheck.checkProdRaiseTotalReg(checkdate,keys,mapRuleout);
 //		//警告逻辑检查
 //		resultList.addAll(beforeSubCheck.checkProdRaiseTotalReg(checkdate,mapRuleout));
 
-        //报错检查异常数据
-        int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
+		//报错检查异常数据
+		int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 		int batchLastIndex = batchCount;// 每批最后一个的下标
 		for (int index = 0; index < resultList.size();) {
 			if (batchLastIndex > resultList.size() - 1) {

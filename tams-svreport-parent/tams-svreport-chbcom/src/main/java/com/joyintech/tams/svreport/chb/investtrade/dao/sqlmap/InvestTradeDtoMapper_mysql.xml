@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.investtrade.dao.InvestTradeDtoMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.investtrade.dto.InvestTradeDto">
+        <id column="TRADE_SEQNO" jdbcType="CHAR" property="tradeSeqno" />
+        <result column="TRADE_CODE" jdbcType="VARCHAR" property="tradeCode" />
+        <result column="INVEST_VARIETY" jdbcType="VARCHAR" property="investVariety" />
+        <result column="INVEST_TYPE" jdbcType="VARCHAR" property="investType" />
+        <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+        <result column="REGIST_BANK_CODE" jdbcType="VARCHAR" property="registBankCode" />
+        <result column="ASSET_CODE" jdbcType="VARCHAR" property="assetCode" />
+        <result column="CCY" jdbcType="VARCHAR" property="ccy" />
+        <result column="AMT" jdbcType="DECIMAL" property="amt" />
+        <result column="CNY_AMT" jdbcType="DECIMAL" property="cnyAmt" />
+        <result column="NUM" jdbcType="DECIMAL" property="num" />
+        <result column="CUR_ASSET_TYPE" jdbcType="VARCHAR" property="curAssetType" />
+        <result column="CUR_ASSETDET_TYPE" jdbcType="VARCHAR" property="curAssetdetType" />
+        <result column="DEALDATE" jdbcType="DATE" property="dealdate" />
+        <result column="TRADE_COUNTER" jdbcType="VARCHAR" property="tradeCounter" />
+        <result column="UNIT_PRICE_FULL" jdbcType="DECIMAL" property="unitPriceFull" />
+        <result column="UNIT_PRICE_NET" jdbcType="DECIMAL" property="unitPriceNet" />
+        <result column="END_RATE" jdbcType="DECIMAL" property="endRate" />
+        <result column="CONTRACT_CODE" jdbcType="VARCHAR" property="contractCode" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <result column="CHL_CPCT_ID" jdbcType="VARCHAR" property="chlCpctId" />
+        <result column="TRADE_TYPE" jdbcType="VARCHAR" property="tradeType" />
+        <result column="CHL_AGRT_NAME" jdbcType="VARCHAR" property="chlAgrtName" />
+        <result column="IS_UNDER_TRADE" jdbcType="VARCHAR" property="isUnderTrade" />
+        <result column="STATUS" jdbcType="VARCHAR" property="status" />
+        <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+        <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="DATE" />
+        <result column="REV_DATE" jdbcType="DATE" property="revDate" />
+        <result column="DATA_SOURCE" jdbcType="VARCHAR" property="dataSource" />
+        <result column="RATE" jdbcType="DECIMAL" property="rate" />
+        <result column="BASIS" jdbcType="VARCHAR" property="basis" />
+        <result column="DEALTYPE" jdbcType="VARCHAR" property="dealtype" />
+        <result column="FACEVALUE" jdbcType="DECIMAL" property="facevalue" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY, INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
+    ASSET_CODE, CCY, AMT, CNY_AMT, NUM, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, DEALDATE,
+    TRADE_COUNTER, UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, CONTRACT_CODE, REMARK,
+    CHL_CPCT_ID, TRADE_TYPE, CHL_AGRT_NAME, IS_UNDER_TRADE, STATUS, ORG_CODE, DEPT_CODE,
+    CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS_DATE, REV_DATE, DATA_SOURCE,
+    RATE, BASIS, DEALTYPE, FACEVALUE
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_INVEST_TRADE
+        where TRADE_SEQNO = #{tradeSeqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHB_INVEST_TRADE
+    where TRADE_SEQNO = #{tradeSeqno,jdbcType=CHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.InvestTradeDto">
+    insert into CHB_INVEST_TRADE (TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
+      INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
+      ASSET_CODE, CCY, AMT,
+      CNY_AMT, NUM, CUR_ASSET_TYPE,
+      CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
+      UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+      CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+      TRADE_TYPE, CHL_AGRT_NAME, IS_UNDER_TRADE,
+      STATUS, ORG_CODE, DEPT_CODE,
+      CREATE_USER, CREATE_TIME, UPDATE_USER,
+      UPDATE_TIME, STATUS_DATE, REV_DATE,
+      DATA_SOURCE, RATE, BASIS,
+      DEALTYPE, FACEVALUE)
+    values (#{tradeSeqno,jdbcType=CHAR}, #{tradeCode,jdbcType=VARCHAR}, #{investVariety,jdbcType=VARCHAR},
+      #{investType,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR},
+      #{assetCode,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL},
+      #{cnyAmt,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}, #{curAssetType,jdbcType=VARCHAR},
+      #{curAssetdetType,jdbcType=VARCHAR}, #{dealdate,jdbcType=TIMESTAMP}, #{tradeCounter,jdbcType=VARCHAR},
+      #{unitPriceFull,jdbcType=DECIMAL}, #{unitPriceNet,jdbcType=DECIMAL}, #{endRate,jdbcType=DECIMAL},
+      #{contractCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{chlCpctId,jdbcType=VARCHAR},
+      #{tradeType,jdbcType=VARCHAR}, #{chlAgrtName,jdbcType=VARCHAR}, #{isUnderTrade,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{statusDate,jdbcType=TIMESTAMP}, #{revDate,jdbcType=TIMESTAMP},
+      #{dataSource,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{basis,jdbcType=VARCHAR},
+      #{dealtype,jdbcType=VARCHAR}, #{facevalue,jdbcType=DECIMAL})
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.InvestTradeDto">
+        insert into CHB_INVEST_TRADE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeSeqno != null">
+                TRADE_SEQNO,
+            </if>
+            <if test="tradeCode != null">
+                TRADE_CODE,
+            </if>
+            <if test="investVariety != null">
+                INVEST_VARIETY,
+            </if>
+            <if test="investType != null">
+                INVEST_TYPE,
+            </if>
+            <if test="prodId != null">
+                PROD_ID,
+            </if>
+            <if test="registBankCode != null">
+                REGIST_BANK_CODE,
+            </if>
+            <if test="assetCode != null">
+                ASSET_CODE,
+            </if>
+            <if test="ccy != null">
+                CCY,
+            </if>
+            <if test="amt != null">
+                AMT,
+            </if>
+            <if test="cnyAmt != null">
+                CNY_AMT,
+            </if>
+            <if test="num != null">
+                NUM,
+            </if>
+            <if test="curAssetType != null">
+                CUR_ASSET_TYPE,
+            </if>
+            <if test="curAssetdetType != null">
+                CUR_ASSETDET_TYPE,
+            </if>
+            <if test="dealdate != null">
+                DEALDATE,
+            </if>
+            <if test="tradeCounter != null">
+                TRADE_COUNTER,
+            </if>
+            <if test="unitPriceFull != null">
+                UNIT_PRICE_FULL,
+            </if>
+            <if test="unitPriceNet != null">
+                UNIT_PRICE_NET,
+            </if>
+            <if test="endRate != null">
+                END_RATE,
+            </if>
+            <if test="contractCode != null">
+                CONTRACT_CODE,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="chlCpctId != null">
+                CHL_CPCT_ID,
+            </if>
+            <if test="tradeType != null">
+                TRADE_TYPE,
+            </if>
+            <if test="chlAgrtName != null">
+                CHL_AGRT_NAME,
+            </if>
+            <if test="isUnderTrade != null">
+                IS_UNDER_TRADE,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null">
+                DEPT_CODE,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="statusDate != null">
+                STATUS_DATE,
+            </if>
+            <if test="revDate != null">
+                REV_DATE,
+            </if>
+            <if test="dataSource != null">
+                DATA_SOURCE,
+            </if>
+            <if test="rate != null">
+                RATE,
+            </if>
+            <if test="basis != null">
+                BASIS,
+            </if>
+            <if test="dealtype != null">
+                DEALTYPE,
+            </if>
+            <if test="facevalue != null">
+                FACEVALUE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeSeqno != null">
+                #{tradeSeqno,jdbcType=CHAR},
+            </if>
+            <if test="tradeCode != null">
+                #{tradeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investVariety != null">
+                #{investVariety,jdbcType=VARCHAR},
+            </if>
+            <if test="investType != null">
+                #{investType,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null">
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null">
+                #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null">
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null">
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null">
+                #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="cnyAmt != null">
+                #{cnyAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="num != null">
+                #{num,jdbcType=DECIMAL},
+            </if>
+            <if test="curAssetType != null">
+                #{curAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="curAssetdetType != null">
+                #{curAssetdetType,jdbcType=VARCHAR},
+            </if>
+            <if test="dealdate != null">
+                #{dealdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tradeCounter != null">
+                #{tradeCounter,jdbcType=VARCHAR},
+            </if>
+            <if test="unitPriceFull != null">
+                #{unitPriceFull,jdbcType=DECIMAL},
+            </if>
+            <if test="unitPriceNet != null">
+                #{unitPriceNet,jdbcType=DECIMAL},
+            </if>
+            <if test="endRate != null">
+                #{endRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contractCode != null">
+                #{contractCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="chlCpctId != null">
+                #{chlCpctId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeType != null">
+                #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="chlAgrtName != null">
+                #{chlAgrtName,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnderTrade != null">
+                #{isUnderTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null">
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statusDate != null">
+                #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="revDate != null">
+                #{revDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataSource != null">
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null">
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="basis != null">
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtype != null">
+                #{dealtype,jdbcType=VARCHAR},
+            </if>
+            <if test="facevalue != null">
+                #{facevalue,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.InvestTradeDto">
+        update CHB_INVEST_TRADE
+        <set>
+            <if test="tradeCode != null">
+                TRADE_CODE = #{tradeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investVariety != null">
+                INVEST_VARIETY = #{investVariety,jdbcType=VARCHAR},
+            </if>
+            <if test="investType != null">
+                INVEST_TYPE = #{investType,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null">
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null">
+                REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null">
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null">
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null">
+                AMT = #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="cnyAmt != null">
+                CNY_AMT = #{cnyAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="num != null">
+                NUM = #{num,jdbcType=DECIMAL},
+            </if>
+            <if test="curAssetType != null">
+                CUR_ASSET_TYPE = #{curAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="curAssetdetType != null">
+                CUR_ASSETDET_TYPE = #{curAssetdetType,jdbcType=VARCHAR},
+            </if>
+            <if test="dealdate != null">
+                DEALDATE = #{dealdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tradeCounter != null">
+                TRADE_COUNTER = #{tradeCounter,jdbcType=VARCHAR},
+            </if>
+            <if test="unitPriceFull != null">
+                UNIT_PRICE_FULL = #{unitPriceFull,jdbcType=DECIMAL},
+            </if>
+            <if test="unitPriceNet != null">
+                UNIT_PRICE_NET = #{unitPriceNet,jdbcType=DECIMAL},
+            </if>
+            <if test="endRate != null">
+                END_RATE = #{endRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contractCode != null">
+                CONTRACT_CODE = #{contractCode,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="chlCpctId != null">
+                CHL_CPCT_ID = #{chlCpctId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeType != null">
+                TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="chlAgrtName != null">
+                CHL_AGRT_NAME = #{chlAgrtName,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnderTrade != null">
+                IS_UNDER_TRADE = #{isUnderTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null">
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statusDate != null">
+                STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="revDate != null">
+                REV_DATE = #{revDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dataSource != null">
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null">
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="basis != null">
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtype != null">
+                DEALTYPE = #{dealtype,jdbcType=VARCHAR},
+            </if>
+            <if test="facevalue != null">
+                FACEVALUE = #{facevalue,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where TRADE_SEQNO = #{tradeSeqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.InvestTradeDto">
+    update CHB_INVEST_TRADE
+    set TRADE_CODE = #{tradeCode,jdbcType=VARCHAR},
+      INVEST_VARIETY = #{investVariety,jdbcType=VARCHAR},
+      INVEST_TYPE = #{investType,jdbcType=VARCHAR},
+      PROD_ID = #{prodId,jdbcType=VARCHAR},
+      REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+      ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+      CCY = #{ccy,jdbcType=VARCHAR},
+      AMT = #{amt,jdbcType=DECIMAL},
+      CNY_AMT = #{cnyAmt,jdbcType=DECIMAL},
+      NUM = #{num,jdbcType=DECIMAL},
+      CUR_ASSET_TYPE = #{curAssetType,jdbcType=VARCHAR},
+      CUR_ASSETDET_TYPE = #{curAssetdetType,jdbcType=VARCHAR},
+      DEALDATE = #{dealdate,jdbcType=TIMESTAMP},
+      TRADE_COUNTER = #{tradeCounter,jdbcType=VARCHAR},
+      UNIT_PRICE_FULL = #{unitPriceFull,jdbcType=DECIMAL},
+      UNIT_PRICE_NET = #{unitPriceNet,jdbcType=DECIMAL},
+      END_RATE = #{endRate,jdbcType=DECIMAL},
+      CONTRACT_CODE = #{contractCode,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CHL_CPCT_ID = #{chlCpctId,jdbcType=VARCHAR},
+      TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+      CHL_AGRT_NAME = #{chlAgrtName,jdbcType=VARCHAR},
+      IS_UNDER_TRADE = #{isUnderTrade,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+      REV_DATE = #{revDate,jdbcType=TIMESTAMP},
+      DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      RATE = #{rate,jdbcType=DECIMAL},
+      BASIS = #{basis,jdbcType=VARCHAR},
+      DEALTYPE = #{dealtype,jdbcType=VARCHAR},
+      FACEVALUE = #{facevalue,jdbcType=DECIMAL}
+    where TRADE_SEQNO = #{tradeSeqno,jdbcType=CHAR}
+  </update>
+</mapper>

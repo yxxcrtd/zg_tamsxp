@@ -96,11 +96,10 @@ public class CnBondSendService {
 		else {
 			asynReportEntity = recurrence(sendMsgInfo.getMsgType(), sendMsgInfo.getFilePath());
 		}
-
 		/** 根据挡板标识来确认是否打开 end**/
 		logger.debug("报送中债处理结束...");
 		if (asynReportEntity == null) {
-
+			logger.info("报送中债获取信息失败:返回报文为空!");
 			logList.addAll(InterfLogUtil.createLogList(log, DictCodeList.接口类型_发送联机交易.getValue(), ChbConstant.FAILURE,
 					ChbConstant.WARNING, "返回报文为空,文件地址：" + FileUtil.exist("./AppCfg/DC/cfg"), true));
 			// 返回之前写日志

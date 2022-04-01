@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.joyintech.background.component.common.pack.common.util.BeanUtil;
 import com.joyintech.background.component.uplink.interbank.business.dto.*;
+import com.joyintech.background.component.uplink.interbank.business.repodlgservice.RepoDialogueQuoteSubService;
 import com.joyintech.background.component.uplink.interbank.business.service.impl.IbuMainServiceImpl;
 import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
 import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteBondDetMapper;
@@ -50,6 +51,7 @@ import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.dto.cstp.IbuQuoteEntCrepPledgeCommonDto;
 import com.joyintech.tams.invest.common.service.DateCalCommonService;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -116,6 +118,9 @@ public class CfetsInterfReceiveService {
 
     @Autowired
     private CstpCommonService cstpCommonService;
+
+    @Autowired
+    private RepoDialogueQuoteSubService repoDialogueQuoteSubService;
 	/**
      * Cfets接口数据转IbuQuoteBondDto
      * 现券对话报价主表
@@ -400,16 +405,19 @@ public class CfetsInterfReceiveService {
         String msgType = (String)param.get("msgType");
 
         if (MsgTypeEnum.j.getValue().equals(msgType) && null != param.get("clOrdID")) {// 35域-报文类型 // 11域-客户参考编号
-            IbuQuoteCrep ibuQuoteCrep = ibuQuoteCrepMapper.selectByPrimaryKey((String)param.get("clOrdID"));
-            BeanUtil.copyPropertiesIgnoreNull(ibuQuoteCrepDto, ibuQuoteCrep);
-            ibuQuoteCrepDto.setVersion(ibuQuoteCrepDto.getVersion() + 1);
-            ibuQuoteCrepDto.setSendStatus(DictCodeList.银行间上行发送状态_失败.getValue());// j报文发送状态设为失败
+            RepoDialogueQuoteDto inputBean = repoDialogueQuoteSubService.getRepoDialogueQuote((String) param.get("clOrdID"));
+            IbuQuoteCrep ibuQuoteCrep = inputBean.getIbuQuoteCrepDto();
+            ibuQuoteCrep.setVersion(ibuQuoteCrepDto.getVersion() + 1);
+            ibuQuoteCrep.setSendStatus(DictCodeList.银行间上行发送状态_失败.getValue());// j报文发送状态设为失败
             // 根据原操作类型，获取失败报文对应的操作类型
-            ibuQuoteCrepDto.setExeType(CfetsDataConvertUtil.genExeTypeForFailMsg(ibuQuoteCrepDto.getExeType()));
-            ibuQuoteCrepMapper.updateByPrimaryKeySelective(ibuQuoteCrepDto);
+            ibuQuoteCrep.setExeType(CfetsDataConvertUtil.genExeTypeForFailMsg(ibuQuoteCrepDto.getExeType()));
+            repoDialogueQuoteSubService.deleteRepoDialogueQuoteByKey((String) param.get("clOrdID"), false);
+            repoDialogueQuoteSubService.insertRepoDialogueQuote(inputBean, true);
+            BeanUtil.copyPropertiesIgnoreNull(resultDto, inputBean);
+            //多组合
             //登录错误日志
             this.saveIbuQuoteErrlog(ibuQuoteCrepDto.getQuoteId(), param);
-            return null;
+            return resultDto;
         }
         
         //报文类型为8客户编号取报价编号
@@ -1481,7 +1489,7 @@ public class CfetsInterfReceiveService {
      * @param param 参数
      * @return 发送方交易账户21位码
      */
-    private String getCfetsPartyID(Map<String, Object> param, String 本方机构) {
+    public String getCfetsPartyID(Map<String, Object> param, String 本方机构) {
         List<NoPartyIDDto> noPartyIDs = JSONObject.parseObject(JSON.toJSONString(param.get("noPartyIDs")),new TypeReference<List<NoPartyIDDto>>() {});
         if (!StringUtil.isEmptyList(noPartyIDs)) {
             for(NoPartyIDDto noPartyIDDto:noPartyIDs) {

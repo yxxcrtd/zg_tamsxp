@@ -13,10 +13,7 @@ import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
@@ -426,6 +423,12 @@ public class MonthReportAssetService {
 					String key7 = null;//主键7
 					String key8 = null;//主键8
 					String key9 = null;//主键9
+					if(StringUtil.equals(key1, DictCodeListExt2.资产_负债二级类别_公司债券.getValue())){
+						key2 = position.getBankSecKzzq();
+					}
+					else if(StringUtil.equals(key1, DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())){
+						key2 = chbAssetInfo.getBankSecPrefer();
+					}
 					ChbTypeMappingEx mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
 							key1, key2, key3, key4, key5, key6, key7, key8, key9);
 					if (mapping != null) {
@@ -438,26 +441,31 @@ public class MonthReportAssetService {
 							!DictCodeListExt3.银行资本补充工具_其他银行资本补充工具.getValue().equals(chbAssetInfo.getBankCapital())) {
 						key5 = chbAssetInfo.getBankCapital();
 						key1 = null;
+						key2 = null;
 					}
 					//是否PPN等低流动性债券
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsPpn()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsPpn())) {
 						key6 = chbAssetInfo.getIsPpn();
 						key1 = null;
+						key2 = null;
 					}
 					//是否商业银行优先股
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getBankSecPrefer()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())) {
 						key7 = chbAssetInfo.getBankSecPrefer();
 						key1 = null;
+						key2 = null;
 					}
 					//创业投资基金
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsGovernFund()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsGovernFund())) {
 						key8 = chbAssetInfo.getIsGovernFund();
 						key1 = null;
+						key2 = null;
 					}
 					//是否未上市企业-政府出资产业投资基金
 					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsunlisted()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsunlisted())) {
 						key9 = chbAssetInfo.getIsunlisted();
 						key1 = null;
+						key2 = null;
 					}
 					// 如果一条数据符合多个规则，则重复计算
 					if(key1 == null && (key5 != null || key6 != null || key7 != null || key8 != null || key9 != null)){
@@ -471,6 +479,7 @@ public class MonthReportAssetService {
 
 					if(supAssetInfo != null){
 						key4 = supAssetInfo.getAssetType2();
+						key2 = null;
 					}
 
 					mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,

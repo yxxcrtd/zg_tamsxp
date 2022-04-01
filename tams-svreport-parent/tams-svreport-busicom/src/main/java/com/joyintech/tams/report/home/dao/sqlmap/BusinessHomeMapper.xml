@@ -132,6 +132,11 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
+	<if test="businessinfolist != null and businessinfolist.size>0">
+		<foreach collection="businessinfolist" item = "item" open=" and a.INTERF_TYPE in(" separator="," close=")">
+			#{item.interfFileType,jdbcType=VARCHAR}
+		</foreach>
+	</if>
 	) as checkfailnum /*检查不通过*/
 	from CHB_INTERF_ERRODATA a
 	where to_char(a.CREATE_TIME,'yyyy-MM-dd') = #{searchDate,jdbcType=VARCHAR}
@@ -150,6 +155,11 @@
         #{item,jdbcType=VARCHAR}
         </foreach>
     </if>
+	<if test="businessinfolist != null and businessinfolist.size>0">
+		<foreach collection="businessinfolist" item = "item" open=" and a.INTERF_TYPE in(" separator="," close=")">
+			#{item.interfFileType,jdbcType=VARCHAR}
+		</foreach>
+	</if>
 	group by INTERF_TYPE
 </select>
 

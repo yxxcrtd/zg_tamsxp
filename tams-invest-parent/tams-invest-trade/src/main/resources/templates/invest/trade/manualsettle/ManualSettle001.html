@@ -12,11 +12,12 @@
 <body>
 <div layout:fragment="content">
     <div style="overflow:hidden;">
-        <div class="form-button-area"  style="float:left; margin-top:3px!important;">
+        <div class="form-button-area"  style="float:left; margin-top:3px!important;" export="false">
             <a id="ManualSettle001_btn_settle" class="layui-btn layui-btn-sm">交收</a>
             <a id="ManualSettle001_btn_back" class="layui-btn layui-btn-sm">回溯</a>
             <a id="ManualSettle001_btn_settledelay" class="layui-btn layui-btn-sm">交收延期</a>
             <a id="ManualSettle001_btn_settlefail" class="layui-btn layui-btn-sm">交收失败</a>
+            <a id="ManualSettle001_btn_export" class="layui-btn layui-btn-sm btn-export btn-default">导出</a>
         </div>
         <div id="settleStatus_div" style="float:left;margin-left:30px;display:block;line-height:30px;">
             <label><input name="settleStatus" type="radio" checked lay-filter="settleStatus" value=""  />全部</label>

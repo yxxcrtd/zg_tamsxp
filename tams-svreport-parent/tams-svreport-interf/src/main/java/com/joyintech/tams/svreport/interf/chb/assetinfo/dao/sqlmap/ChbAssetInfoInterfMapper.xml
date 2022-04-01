@@ -274,7 +274,9 @@
     <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
     <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
     <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
-
+    <result column="CONSTRACTE_BUSI_TYPE" property="constracteBusiType" jdbcType="VARCHAR" />
+    <result column="CONSTRACTE_GRADE" property="constracteGrade" jdbcType="VARCHAR" />
+    <result column="CONSTRACTE_HEAVER_TIMES" property="constracteHeaverTimes" jdbcType="DECIMAL" />
     </resultMap>
     <resultMap id="PsbcBaseResultMap"
         type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
@@ -779,7 +781,7 @@
             #{item.createUser,jdbcType=VARCHAR},
             sysdate,
             #{item.updateUser,jdbcType=VARCHAR},
-            sysdatte,
+            sysdate,
             #{item.deptCode,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},
             #{item.dataSource,jdbcType=VARCHAR},
             #{item.privatefundFlag,jdbcType=VARCHAR},
@@ -986,7 +988,7 @@
             #{item.createUser,jdbcType=VARCHAR},
             sysdate,
             #{item.updateUser,jdbcType=VARCHAR},
-            sysdatte,
+            sysdate,
             #{item.deptCode,jdbcType=VARCHAR}, #{item.orgCode,jdbcType=VARCHAR},
             #{item.dataSource,jdbcType=VARCHAR},
             #{item.privatefundFlag,jdbcType=VARCHAR},
@@ -13213,6 +13215,9 @@
                 #{item.isFbzb,jdbcType=VARCHAR} IS_FBZB
                 <!-- add by zhangliang G06升级字段新增  end -->
                 ,#{item.privateFlag,jdbcType=VARCHAR} PRIVATE_FLAG
+                ,#{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE
+                ,#{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE
+                ,#{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES
                 from dual
             </foreach>
         ) TEMP
@@ -13437,6 +13442,9 @@
             CII.IS_FBZB	=	TEMP.IS_FBZB
             <!-- add by zhangliang G06升级字段新增  end -->
             ,CII.PRIVATE_FLAG	=	TEMP.PRIVATE_FLAG
+            ,CII.CONSTRACTE_BUSI_TYPE	=	TEMP.CONSTRACTE_BUSI_TYPE
+            ,CII.CONSTRACTE_GRADE	=	TEMP.CONSTRACTE_GRADE
+            ,CII.CONSTRACTE_HEAVER_TIMES	=	TEMP.CONSTRACTE_HEAVER_TIMES
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13545,6 +13553,9 @@
         IS_FBZB
         <!-- add by zhangliang G06升级字段新增  end -->
         ,PRIVATE_FLAG
+        ,CONSTRACTE_BUSI_TYPE
+        ,CONSTRACTE_GRADE
+        ,CONSTRACTE_HEAVER_TIMES
         )
         values(
             TEMP.ASSET_UUID,
@@ -13763,6 +13774,9 @@
             TEMP.IS_FBZB
             <!-- add by zhangliang G06升级字段新增  end -->
             ,TEMP.PRIVATE_FLAG
+            ,TEMP.CONSTRACTE_BUSI_TYPE
+            ,TEMP.CONSTRACTE_GRADE
+            ,TEMP.CONSTRACTE_HEAVER_TIMES
         )
     </insert>
 

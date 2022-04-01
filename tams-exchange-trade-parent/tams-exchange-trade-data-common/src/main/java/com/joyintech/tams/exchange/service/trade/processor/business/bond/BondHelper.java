@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.bond;
 
+import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.constant.*;
@@ -58,24 +59,26 @@ public class BondHelper {
             return false;
         }
         boolean isFullPrice = false;
-        // 申报类不需要check最小价差和涨跌停
-        if (!EntrustUtils.isNoTrade(orderInterface.getEntrustProp())) {
+        // 申报类不需要check最小价差和涨跌停,
+        // 质押券出入库不需要check最小价差和涨跌停 by lifangpeng 20220319
+        if (!EntrustUtils.isNoTrade(orderInterface.getEntrustProp()) && !EntrustProp.ZYCRK.getValue().equals(orderInterface.getEntrustProp())) {
+            MinPrice minPrice = instrumentService.getMinPrice(tradePlat, instrument.getMarket(), instrument);
             if (EntrustUtils.isFullPrice(instrument, orderInterface.getAssetType(), orderInterface.getEntrustProp(), orderInterface.getIsFullPrice())) {
                 isFullPrice = true;
-                if (Double.compare(instrument.getPriceStep().doubleValue(), 0.0) > 0
-                        && TradeUtils.divideAndRemainder(fullPrice, instrument.getPriceStep()).compareTo(BigDecimal.ZERO) != 0) {
+                if (Double.compare(minPrice.getMinPrice().doubleValue(), 0.0) > 0
+                        && TradeUtils.divideAndRemainder(fullPrice, minPrice.getMinPrice()).compareTo(BigDecimal.ZERO) != 0) {
                     orderInterface.setErrorCode(ErrorCode.INNER_RISK_ERROR.value());
-                    orderInterface.setErrorMsg("委托全价价格不满足最小价差：" + instrument.getPriceStep().doubleValue());
+                    orderInterface.setErrorMsg("委托全价 {" + fullPrice + "} 不满足最小价差：" + minPrice.getMinPrice().doubleValue());
                     return false;
                 }
                 orderInterface.setIsFullPrice(FullPriceConst.FULL_PRICE.value);
             } else {
                 orderInterface.setIsFullPrice(FullPriceConst.NET_PRICE.value);
             }
-            if (Double.compare(instrument.getPriceStep().doubleValue(), 0.0) > 0
-                    && TradeUtils.divideAndRemainder(entrustPrice, instrument.getPriceStep()).compareTo(BigDecimal.ZERO) != 0) {
+            if (Double.compare(minPrice.getMinPrice().doubleValue(), 0.0) > 0
+                    && TradeUtils.divideAndRemainder(entrustPrice, minPrice.getMinPrice()).compareTo(BigDecimal.ZERO) != 0) {
                 orderInterface.setErrorCode(ErrorCode.INNER_RISK_ERROR.value());
-                orderInterface.setErrorMsg("委托价格 {" + entrustPrice + "} 不满足最小价差：" + instrument.getPriceStep().doubleValue());
+                orderInterface.setErrorMsg("委托价格 {" + entrustPrice + "} 不满足最小价差：" + minPrice.getMinPrice().doubleValue());
                 return false;
             }
             QuoteProto.TickBean tick = quoteTickService.getTickFromCache(orderInterface.getStockCode());

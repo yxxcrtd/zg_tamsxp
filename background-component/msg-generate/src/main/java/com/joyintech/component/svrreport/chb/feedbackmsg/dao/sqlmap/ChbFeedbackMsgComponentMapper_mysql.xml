@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.component.svrreport.chb.feedbackmsg.dao.ChbFeedbackMsgComponentMapper_mysql" >
+
+	<resultMap id="BaseResultMap" type="com.joyintech.component.svrreport.chb.dto.ChbPrdresistCode" >
+        <id column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <id column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="PRODNAME" property="prodname" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="INVESTOR" property="investor" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+	
+	<!-- 更新中债报送结果 -->
+    <update id="updateChbSubmitStatusTwo" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_SUBMIT_STATUS_TWO
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null" >
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where 
+          REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+        <if test="submitNum != null" >
+          AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <update id="updateChbEquDetSubmitStatus" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_EQUDET_SUBMIT_STATUS
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null" >
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where
+        REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+        <if test="submitNum != null" >
+            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <update id="updateChbSubmitStatus" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        <if test="flag != null and flag.equals('14')" >
+            update CHB_EQU_SUB
+        </if>
+        <if test="flag != null and flag.equals('16')" >
+            update CHB_INVESTHOLD_INFO_SUB
+        </if>
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null" >
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where
+        REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+        <if test="submitNum != null" >
+            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <update id="updateInfoReportByPrimaryKey" parameterType="com.joyintech.component.svrreport.chb.dto.ChbInfoReportDto" >
+        update CHB_INFO_REPORT
+        <set >
+            <if test="repMesNo != null" >
+                REP_MES_NO = #{repMesNo,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResult != null" >
+                UPLOAD_RESULT = #{uploadResult,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadResultMsg != null" >
+                UPLOAD_RESULT_MSG = #{uploadResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadFileId != null" >
+                UPLOAD_FILE_ID = #{uploadFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileId != null" >
+                CHECK_FILE_ID = #{checkFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResultMsg != null" >
+                CHECK_RESULT_MSG = #{checkResultMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFileName != null" >
+                CHECK_FILE_NAME = #{checkFileName,jdbcType=VARCHAR},
+            </if>
+            <if test="checkTotalCount != null" >
+                CHECK_TOTAL_COUNT = #{checkTotalCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkSuccessCount != null" >
+                CHECK_SUCCESS_COUNT = #{checkSuccessCount,jdbcType=DECIMAL},
+            </if>
+            <if test="checkFailedCount != null" >
+                CHECK_FAILED_COUNT = #{checkFailedCount,jdbcType=DECIMAL},
+            </if>
+            <if test="insideFileId != null" >
+                INSIDE_FILE_ID = #{insideFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendTime != null" >
+                SEND_TIME = #{sendTime,jdbcType=DATE},
+            </if>
+            <if test="replyTime != null" >
+                REPLY_TIME = #{replyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitCount != null" >
+                SUBMIT_COUNT = #{submitCount,jdbcType=DECIMAL},
+            </if>
+            <if test="submitType != null" >
+                SUBMIT_TYPE = #{submitType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+    </update>
+
+
+    <!-- 更新中债报送结果 -->
+    <update id="updateChbAssetValSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_AST_VAL_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+
+            UPDATE_TIME = SYSDATE
+
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                    SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                    REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="updateChbPrdDeclareSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_PRD_DECLARE_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="updateChbPrdIssueSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_PRD_ISSUE_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="updateChbPrdRaisetotSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_PRD_RAISETOT_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+
+    <update id="updateChbPrdDealSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_PRD_DEAL_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+
+    <update id="updateChbPrdEndSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_PRD_END_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="updateChbBottomAstPosSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_BOT_AST_POS_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+    <update id="updateChbInvestTradeSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_INVEST_TRADE_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="updateChbAssetInfoSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_ASSET_INFO_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="updateChbEmployeeInfoSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+    update CHB_EMPLOYEE_INFO_SUB
+    <set >
+        <if test="submitFeedbackStatus != null" >
+            SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+        </if>
+        <if test="submitFeedbackMsg != null">
+            SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+        </if>
+        UPDATE_TIME = SYSDATE
+    </set>
+    where
+    <choose>
+        <when test="submitNum !=null and submitNum != ''">
+            SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+        </when>
+        <otherwise>
+            SUMIT_SEQ IN (
+            SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+            REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+            )
+        </otherwise>
+    </choose>
+
+</update>
+
+
+	<select id="selectOrgCodeByRegistBankCode" resultType="java.lang.String">
+        select max(ORG_CODE) as orgCode from CHB_ORG_REGIST_BANK_CODE where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+    </select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.component.svrreport.chb.dto.ChbPrdresistCode" >
+        select 
+        PRODID PRODID, ORG_CODE ORG_CODE, PRODNAME PRODNAME, REG_CODE REG_CODE, VDATE VDATE, 
+        MDATE MDATE, DEPT_CODE DEPT_CODE, INVESTOR INVESTOR, REMARK REMARK, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT
+        from CHB_PRDRESIST_CODE
+        <where>
+        	1=1
+        	<if test="reg_code != null  and flag == '1'.toString()" >
+                and REG_CODE = #{reg_code,jdbcType=VARCHAR}
+            </if>
+            <if test="prodid != null and flag == '2'.toString()" >
+                and PRODID = #{prodid,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+	<insert id="insertSelective" parameterType="com.joyintech.component.svrreport.chb.dto.ChbPrdresistCode" >
+        insert into CHB_PRDRESIST_CODE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="prodname != null" >
+                PRODNAME,
+            </if>
+            <if test="regCode != null" >
+                REG_CODE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="investor != null" >
+                INVESTOR,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+                UPDATE_TIME,
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+                CREATE_TIME,
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodname != null" >
+                #{prodname,jdbcType=VARCHAR},
+            </if>
+            <if test="regCode != null" >
+                #{regCode,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investor != null" >
+                #{investor,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+                sysdate,
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+                sysdate,
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.component.svrreport.chb.dto.ChbPrdresistCode" >
+        update CHB_PRDRESIST_CODE
+        <set >
+            <if test="prodname != null" >
+                PRODNAME = #{prodname,jdbcType=VARCHAR},
+            </if>
+            
+            <if test="regCode != null" >
+                REG_CODE = #{regCode,jdbcType=VARCHAR},
+            </if>
+            
+             <!-- <if test="newProdId != null" >
+                PRODID = #{newProdId,jdbcType=VARCHAR},
+            </if> -->
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="investor != null" >
+                INVESTOR = #{investor,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+                UPDATE_TIME = sysdate,
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where PRODID = #{prodid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryChbOrgRegistBankCodeList" resultType="java.lang.String">
+        select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
+    </select>
+
+</mapper>

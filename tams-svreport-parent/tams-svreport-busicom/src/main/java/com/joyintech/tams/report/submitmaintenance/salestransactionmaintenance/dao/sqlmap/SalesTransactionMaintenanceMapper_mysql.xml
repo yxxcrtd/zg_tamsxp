@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper_mysql">
+
+    <!--	查询-->
+	<select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		SELECT *
+		FROM (
+		select
+		null                      as disabledThing,
+		erro.REGIST_SEQNO         as registSeqno,
+		'01'                      as maintainStatus,
+		'A'              as dataStatus,
+		null             as accountName,
+		null             as tradeCounterAccNo,
+		null             as tradeCounterAccName,
+		null             as tradeCounterAccBankName,
+		null             as tradeCounterAccBankNo,
+		null             as tradeCcy,
+		null             as tradeAmt,
+		null             as tradeTime,
+		null             as postscript,
+		erro.INSTITUTION_CODE     as institutionCode,
+		erro.PRD_REGIST_CODE      as prdRegistCode,
+		erro.ACCOUNT_NO           as accountNo,
+		erro.TRADE_NO             as tradeNo,
+		erro.TRADE_PS             as tradePs,
+		erro.TRADE_VDATE          as tradeVdate,
+		null                      as remark,
+		erro.ERR_MSG              as errMsg
+		from CHB_SALER_STL_DEA_ERRODATA erro
+		where 1=1
+		<if test="tradePs != null and tradePs != ''">
+			and erro.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
+		</if>
+		<if test="institutionCode != null and institutionCode != ''">
+			and erro.INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="dataStatus != null and dataStatus != ''">
+			and erro.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="prdRegistCode != null and prdRegistCode != ''">
+			and erro.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="tradeNo != null and tradeNo != ''">
+			and erro.TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+		</if>
+		<if test="searchTradeVdateStart != null and searchTradeVdateStart != ''">
+			and erro.TRADE_VDATE between str_to_date(#{searchTradeVdateStart,jdbcType=VARCHAR},'%Y-%m-%d') and str_to_date(#{searchTradeVdateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		</if>
+
+
+    UNION ALL
+
+
+		select
+		'01'                      as disabledThing,
+		info.REGIST_SEQNO         as registSeqno,
+		'02'                      as maintainStatus,
+		info.DATA_STATUS          as dataStatus,
+		info.ACCOUNT_NAME              as accountName,
+		info.TRADE_COUNTER_ACC_NO              as tradeCounterAccNo,
+		info.TRADE_COUNTER_ACC_NAME              as tradeCounterAccName,
+		info.TRADE_COUNTER_ACC_BANK_NAME              as tradeCounterAccBankName,
+		info.TRADE_COUNTER_ACC_BANK_NO              as tradeCounterAccBankNo,
+		info.TRADE_CCY              as tradeCcy,
+		info.TRADE_AMT              as tradeAmt,
+		info.TRADE_TIME              as tradeTime,
+		info.POSTSCRIPT              as postscript,
+		info.INSTITUTION_CODE     as institutionCode,
+		info.PRD_REGIST_CODE      as prdRegistCode,
+		info.ACCOUNT_NO           as accountNo,
+		info.TRADE_NO             as tradeNo,
+		info.TRADE_PS             as tradePs,
+		info.TRADE_VDATE          as tradeVdate,
+		info.REMARK               as remark,
+		null                      as errMsg
+		from CHB_SALER_STL_DEAL_INFO info
+		where 1=1
+		<if test="tradePs != null and tradePs != ''">
+			and info.TRADE_PS = #{tradePs,jdbcType=VARCHAR}
+		</if>
+		<if test="institutionCode != null and institutionCode != ''">
+			and info.INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR}
+		</if>
+		<if test="dataStatus != null and dataStatus != ''">
+			and info.DATA_STATUS = #{dataStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="prdRegistCode != null and prdRegistCode != ''">
+			and info.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="tradeNo != null and tradeNo != ''">
+			and info.TRADE_NO = #{tradeNo,jdbcType=VARCHAR}
+		</if>
+		<if test="searchTradeVdateStart != null and searchTradeVdateStart != ''">
+			and info.TRADE_VDATE between str_to_date(#{searchTradeVdateStart,jdbcType=VARCHAR},'%Y-%m-%d') and str_to_date(#{searchTradeVdateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		</if>
+		)  as a ORDER BY dataStatus DESC
+	</select>
+
+
+	<!--保存提交-->
+	<insert id="insert"
+			parameterType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+	insert into CHB_SALER_STL_DEAL_INFO (
+	REGIST_SEQNO,
+	DATA_STATUS,
+	INSTITUTION_CODE,
+	PRD_REGIST_CODE,
+	ACCOUNT_NO,
+	ACCOUNT_NAME,
+	TRADE_NO,
+	TRADE_PS,
+	TRADE_COUNTER_ACC_NO,
+	TRADE_COUNTER_ACC_NAME,
+	TRADE_COUNTER_ACC_BANK_NAME,
+	TRADE_COUNTER_ACC_BANK_NO,
+	TRADE_CCY,
+	TRADE_AMT,
+	TRADE_VDATE,
+	TRADE_TIME,
+	POSTSCRIPT,
+	REMARK,
+	RECEPT_DATE,
+	ORG_CODE,
+	CREATE_USER,
+	UPDATE_USER,
+	UPDATE_TIME) VALUES
+	(
+	#{registSeqno,jdbcType=VARCHAR},
+	#{dataStatus,jdbcType=VARCHAR},
+	#{institutionCode,jdbcType=VARCHAR},
+	#{prdRegistCode,jdbcType=VARCHAR},
+	#{accountNo,jdbcType=VARCHAR},
+	#{accountName,jdbcType=VARCHAR},
+	#{tradeNo,jdbcType=VARCHAR},
+	#{tradePs,jdbcType=VARCHAR},
+	#{tradeCounterAccNo,jdbcType=VARCHAR},
+	#{tradeCounterAccName,jdbcType=VARCHAR},
+	#{tradeCounterAccBankName,jdbcType=VARCHAR},
+	#{tradeCounterAccBankNo,jdbcType=VARCHAR},
+	#{tradeCcy,jdbcType=VARCHAR},
+	#{tradeAmt,jdbcType=NUMERIC},
+	#{tradeVdate,jdbcType=DATE},
+	#{tradeTime,jdbcType=VARCHAR},
+	#{postscript,jdbcType=VARCHAR},
+	#{remark,jdbcType=VARCHAR},
+	#{receptDate,jdbcType=DATE},
+	#{orgCode,jdbcType=VARCHAR},
+	#{createUser,jdbcType=VARCHAR},
+	#{updateUser,jdbcType=VARCHAR},
+	NOW()
+	)
+	</insert>
+	<!--	修改-->
+	<update id="update" parameterType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		UPDATE CHB_SALER_STL_DEAL_INFO
+		SET
+		REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR},
+		DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+		TRADE_AMT = #{tradeAmt,jdbcType=NUMERIC},
+		POSTSCRIPT = #{postscript,jdbcType=VARCHAR},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		UPDATE_TIME = NOW()
+		where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+	</update>
+
+	<!--	提供销售结算资金服务机构代码下拉框-->
+	<select id="getInstitutionCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+		select distinct(code),name,shortName,hidCode
+		from(
+		SELECT
+		INSTITUTION_CODE code,
+		INSTITUTION_CODE name,
+		INSTITUTION_CODE shortName,
+		INSTITUTION_CODE hidCode
+		FROM CHB_SALER_STL_DEAL_INFO
+		<where>
+			<if test="institutionCode != null and institutionCode != ''">
+				AND	INSTITUTION_CODE like concat('%',concat(#{institutionCode,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+
+		union all
+
+		SELECT
+		INSTITUTION_CODE code,
+		INSTITUTION_CODE name,
+		INSTITUTION_CODE shortName,
+		INSTITUTION_CODE hidCode
+		FROM CHB_SALER_STL_DEA_ERRODATA
+		<where>
+			<if test="institutionCode != null and institutionCode != ''">
+				AND	INSTITUTION_CODE like concat('%',concat(#{institutionCode,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+		)  as a
+	</select>
+
+	<!--登记编码下拉框-->
+	<select id="getPrdRegistCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+		select distinct(code),name,shortName,hidCode
+		from(
+		SELECT
+		PRD_REGIST_CODE code,
+		PRD_REGIST_CODE name,
+		PRD_REGIST_CODE shortName,
+		PRD_REGIST_CODE hidCode
+		FROM CHB_SALER_STL_DEAL_INFO
+		<where>
+			<if test="prdRegistCode != null and prdRegistCode != ''">
+				AND	PRD_REGIST_CODE like concat('%',concat(#{prdRegistCode,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+
+		union all
+
+		SELECT
+		PRD_REGIST_CODE code,
+		PRD_REGIST_CODE name,
+		PRD_REGIST_CODE shortName,
+		PRD_REGIST_CODE hidCode
+		FROM CHB_SALER_STL_DEA_ERRODATA
+		<where>
+			<if test="prdRegistCode != null and prdRegistCode != ''">
+				AND	PRD_REGIST_CODE like concat('%',concat(#{prdRegistCode,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+		) as a
+	</select>
+	<!--交易流水下拉框-->
+	<select id="getTradeNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct(id),text
+		from
+		(SELECT
+		TRADE_NO id,
+		TRADE_NO text
+		from CHB_SALER_STL_DEAL_INFO
+		<where>
+			1=1
+			<if test="search != null and search != ''">
+				and TRADE_NO like concat(concat('%', #{search}),'%')
+			</if>
+		</where>
+
+		union all
+
+		SELECT
+		TRADE_NO id,
+		TRADE_NO text
+		from CHB_SALER_STL_DEA_ERRODATA
+		<where>
+			<if test="search != null and search != ''">
+				and TRADE_NO like concat(concat('%', #{search}),'%')
+			</if>
+		</where>
+		) as a
+
+	</select>
+</mapper>

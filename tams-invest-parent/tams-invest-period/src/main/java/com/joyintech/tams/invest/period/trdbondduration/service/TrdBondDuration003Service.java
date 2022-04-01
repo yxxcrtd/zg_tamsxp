@@ -822,6 +822,27 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         if (null != temp && StringUtil.isNotEmpty(temp.getBusinessData())) {
             entity = JsonUtils.json2Object(temp.getBusinessData(), TrdBondDuration003ProcessDto.class);
         }
+        // modify by etliu 20220228 start
+        // 广农商二阶段 GNS-896:【广农商场内清算】场内债券存续期-行权赎回，批处理后未生成交易
+        else {
+            // 留痕表没数据的时候，从业务表查
+            Map<String, Object> paramMap = new HashMap<>();
+            String totalTradeId = (String) params.get("busiCode");
+            paramMap.put("totalTradeId", totalTradeId);
+            entity = simpleRestTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdBondDuration/findEffectiveDataXq",
+                    paramMap, TrdBondDuration003ProcessDto.class);
+            if (entity != null && !StringUtil.isEmptyList(entity.getTrdBondPtlSecExerciseInfos())) {
+                List<BussTrdTransferOrderDto> orderList = new ArrayList<>();
+                for (TrdBondPtlSecExerciseInfo tempDto : entity.getTrdBondPtlSecExerciseInfos()) {
+                    // 查询划款指令
+                    orderList.addAll(simpleRestTemplate.postForList(
+                            ServiceApplication.SETTLE_SERVICE_NAME + "/BussSettleOrderComm/selectOrdersByBizCode",
+                            tempDto.getTotalTradeId(), BussTrdTransferOrderDto.class));
+                }
+                entity.setBussTrdTransferOrder(orderList);
+            }
+        }
+        // modify by etliu 20220228 end
         return entity;
     }
 

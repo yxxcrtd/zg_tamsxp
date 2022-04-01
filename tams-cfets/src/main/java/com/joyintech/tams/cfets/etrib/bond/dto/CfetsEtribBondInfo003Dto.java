@@ -86,6 +86,10 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     private BigDecimal assetAvailablePosition;
 
     /**
+     * 强制完成额度
+     */
+    private BigDecimal forcedFinishAmt;
+    /**
      * 资产起息日
      */
     private Date finvdate;
@@ -116,6 +120,11 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
      * 资产类型
      */
     private String assetType;
+
+    /**
+     * 资产4级分类
+     */
+    private String assetType11;
 
     /**
      * 文件上传dto
@@ -415,6 +424,10 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
     @ApiModelProperty(name="transmitTime",value="指令下达时间",example="11")
     private Date transmitTime;
 
+    private String isRight;
+
+    private String profitType;/*收益方式*/
+
     public String getOperateType() {
         return operateType;
     }
@@ -680,5 +693,37 @@ public class CfetsEtribBondInfo003Dto extends EtrEntrust implements ProcessEntit
 
     public void setSystemAct(String systemAct) {
         this.systemAct = systemAct;
+    }
+
+    public String getIsRight() {
+        return isRight;
+    }
+
+    public void setIsRight(String isRight) {
+        this.isRight = isRight;
+    }
+
+    public String getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(String profitType) {
+        this.profitType = profitType;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
+    }
+
+    public BigDecimal getForcedFinishAmt() {
+        return forcedFinishAmt;
+    }
+
+    public void setForcedFinishAmt(BigDecimal forcedFinishAmt) {
+        this.forcedFinishAmt = forcedFinishAmt;
     }
 }

@@ -32,7 +32,12 @@
         A.TRADE_PLAT tradePlat,
         A.PS ps,
         ifnull(A.SHARE_AMT,0) - ifnull(F.MARCH_QTY,0) remainNum,
-        ifnull(A.FPRICE_AMT,0) - ifnull(F.MARCH_AMT,0) remainAmount,
+        CASE
+        WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN
+            ifnull(A.SHARE_AMT,0) - ifnull(F.MARCH_AMT,0)
+        ELSE
+            ifnull(A.FPRICE_AMT,0) - ifnull(F.MARCH_AMT,0)
+        END remainAmount,
         CASE
             WHEN A.SEC_TYPE = #{SEC_TYPE_09} THEN A.UNIT_CPRICE
         ELSE
@@ -46,13 +51,34 @@
         A.SETTLE_DATE settleDate,
         D.ACCT_NO acctNo,
         D.ACCT_NAME acctName,
-        ifnull(A.STAMP_FEE,0) stampFee,
+	    ifnull(A.STAMP_FEE,0) stampFee,
         ifnull(A.JSF_AMT,0) jsfAmt,
         ifnull(A.GHF_AMT,0) ghfAmt,
         ifnull(A.ZGF_AMT,0) zgfAmt,
         ifnull(A.SXF_AMT,0) sxfAmt,
         ifnull(A.SETTLE_FEE,0) settleFee,
-        ifnull(A.COMMISSION_AMT,0) commissionAmt
+        ifnull(A.COMMISSION_AMT,0) commissionAmt,
+        A.TRADE_ID_RAW tradeIdRaw,
+        A.VDATE,
+        A.MDATE,
+        A.TERM_TYPE,
+        A.VPAY_DATE,
+        A.MPAY_DATE,
+        A.SETTLE_MODE,
+        A.SHARE_AMT shareAmt,
+        A.FPRICE_AMT fpriceAmt,
+        A.INT_AMT,
+        A.PRIN_AMT,
+        A.TRADE_AMT,
+        A1.REPO_TYPE repoType,
+        A1.CON_PRICE conPrice,
+        A1.CON_AMT conAmt,
+        A1.R_FINPROD_ID rFinMarketId,
+        E1.FINPROD_ID  rFinprodId,
+        A.F_CJBH fCjbh,
+        <!--GNS-878:增加busitype,手动成交匹配需要 modify by fuyongsheng 20220217 start-->
+        A.BUSI_TYPE
+        <!--GNS-878:增加busitype,手动成交匹配需要 modify by fuyongsheng 20220217 end-->
         from SETTLE_TRANS_DATA_TOTAL A
         LEFT JOIN SETTLE_TRANS_DATA_TOTAL_STATUS B
         ON A.SEQ_ID = B.SEQ_NO
@@ -66,7 +92,23 @@
         from SETTLE_TRANS_DATA_TOTAL_MATCH T
         GROUP BY T.SEQ_NO) F
         ON A.SEQ_ID = F.SEQ_NO
+        LEFT JOIN SETTLE_TRANS_DATA_TOTAL_ADD A1
+        ON A.SEQ_ID = A1.TRADE_ID
+        LEFT JOIN FIN_PRODUCT E1
+        ON A1.R_FINPROD_ID  = E1.FINPROD_MARKET_ID
+        AND E1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10}
         <where>
+            <!--上交所逆回购到期购回没有指令，不需要成交匹配-->
+            A.SEQ_ID NOT IN (
+                select A2.SEQ_ID
+                from SETTLE_TRANS_DATA_TOTAL A2
+                INNER JOIN SETTLE_TRANS_DATA_TOTAL_ADD B2
+                    ON A2.SEQ_ID = B2.TRADE_ID
+                WHERE A2.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F03})
+                    AND A2.TRADE_MARKET IN (#{TRADE_PLACE_03})
+                    AND B2.REPO_TYPE = #{TARGET_BACK_TYPE_H01}
+                    AND A2.PS IN (#{PS_T07})
+            )
             <if test="tradeMarket!=null and tradeMarket!='' ">
                 AND A.TRADE_MARKET = #{tradeMarket}
             </if>
@@ -75,6 +117,9 @@
             </if>
             <if test="ps!=null and ps!='' ">
                 AND A.PS = #{ps}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND A.FINPROD_TYPE2 = #{finprodType2}
             </if>
             <if test="secAcctNo!=null and secAcctNo!='' ">
                 AND A.SEC_ACCT_ID = #{secAcctNo}
@@ -101,7 +146,10 @@
             <if test="matchStatus == null or matchStatus == '' ">
                 AND (B.MATCH_STATUS in (#{TRD_MATCH_STATUS_01},#{TRD_MATCH_STATUS_02}) OR B.MATCH_STATUS IS NULL)
             </if>
-            <if test=" matchStatus != null and matchStatus != ''">
+            <if test=" matchStatus != null and matchStatus != '' and matchStatus == '0'.toString()">
+                AND (B.MATCH_STATUS = #{matchStatus} or B.MATCH_STATUS IS NULL)
+            </if>
+            <if test=" matchStatus != null and matchStatus != '' and matchStatus != '0'.toString()">
                 AND B.MATCH_STATUS = #{matchStatus}
             </if>
             <if test="tradeAmt1 != null and tradeAmt1 != ''">
@@ -120,7 +168,12 @@
         A1.UPDATE_TIME updateTime,
         #{TRADE_TYPE_02} tradeType,
         A1.PORTFOLIO_ID portfolioId,
-        B1.PORTFOLIO_NAME portfolioName,
+        CASE
+        WHEN A1.ENTRUST_CLASS = #{ENTRUST_CLASS_02} THEN
+            B2.TREE_NAME
+        ELSE
+            B1.PORTFOLIO_NAME
+        END portfolioName,
         CASE
         WHEN A1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F01} THEN #{SEC_TYPE_01}
         WHEN A1.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F10} THEN #{SEC_TYPE_06}
@@ -132,28 +185,45 @@
         ELSE A1.FINPROD_ID
         END finprodId,
         A1.FINPROD_TYPE2 finprodType2,
-        C1.FINPROD_MARKET_ID finprodMarketId,
+        CASE
+            WHEN A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) THEN
+            NULL
+        ELSE
+            C1.FINPROD_MARKET_ID
+        END finprodMarketId,
         A1.ENTRUST_DATE entrustDate,
         A1.PS ps,
         A1.TRADE_MARKET tradeMarket,
         A1.TRADE_PLAT tradePlat,
-        A1.ENTRUST_AMT entrustAmt,
+        CASE
+            WHEN (A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND A1.PS IN (#{PS_T93},#{PS_T94})) THEN
+                ifnull(G1.PLEDGE_NUMBER,0)-ifnull(S.MARCH_QTY_EN,0)
+            ELSE
+                ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0)
+        END entrustAmt,
         A1.PRICE price,
         CASE
         WHEN
-        A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) THEN
-        ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0)
+            (A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND A1.PS NOT IN (#{PS_T93},#{PS_T94})) THEN
+                ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0)
+        WHEN
+            (A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}) AND A1.PS IN (#{PS_T93},#{PS_T94})) THEN
+                ifnull(G1.PLEDGE_NUMBER,0)-ifnull(S.MARCH_QTY_EN,0)
         ELSE
-        ifnull(A1.ENTRUST_NUM,0) - ifnull(S.MARCH_QTY_EN,0)
+                ifnull(A1.ENTRUST_NUM,0) - ifnull(S.MARCH_QTY_EN,0)
         END
         entrustNum,
         E1.SEC_ACCT_ID secAcctId,
         E1.SEC_ACCT_NAME secAcctName,
         F1.ACCT_NO acctNo,
-        F1.ACCT_NAME acctName
+        F1.ACCT_NAME acctName,
+        A1.ENTRUST_CLASS entrustClass
         FROM ETR_ENTRUST A1
-        INNER JOIN PTL_PORTFOLIO B1
+        LEFT JOIN PTL_PORTFOLIO B1
         ON A1.PORTFOLIO_ID = B1.PORTFOLIO_ID
+        LEFT JOIN MUTIPTL_PORTFOLIO_TREE B2
+        ON A1.PORTFOLIO_ID = B2.TREE_ID
+        AND B2.PAR_TREE_ID IS NOT NULL
         LEFT JOIN FIN_PRODUCT C1
         ON A1.FINPROD_ID = C1.FINPROD_ID
         LEFT JOIN ETR_ENTRUST_ADD D1
@@ -168,6 +238,9 @@
         ON E1.SEC_ACCT_ID = D1.SEC_ACCT_ID
         LEFT JOIN STL_CAPACCT_INFO F1
         ON F1.ACCT_NO = E1.TRD_ACCT_ID
+        LEFT JOIN ETR_PLEDGE G1
+        ON G1.ENTRUST_ID = A1.ENTRUST_ID
+        AND G1.FINPROD_ID = A1.FINPROD_ID
         WHERE A1.ENTRUST_STATUS = #{ENTRUST_STATUS_03}
         AND A1.TRADE_MARKET IN (#{TRADE_PLACE_03},#{TRADE_PLACE_04})
         AND A1.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F01}, #{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03}, #{FINPROD_TYPE_TG_F06}, #{FINPROD_TYPE_TG_F10})
@@ -204,6 +277,9 @@
         <if test="tradeDateEnd!=null and tradeDateEnd!='' ">
             AND <![CDATA[ A1.ENTRUST_DATE <= STR_TO_DATE(#{tradeDateEnd}, '%Y-%m-%d') ]]>
         </if>
+        <if test="tradeMarket!=null and tradeMarket!='' ">
+            AND A1.TRADE_MARKET = #{tradeMarket}
+        </if>
         <if test="tradePlat!=null and tradePlat!='' ">
             AND A1.TRADE_PLAT = #{tradePlat}
         </if>
@@ -213,6 +289,19 @@
         <if test="secAccount!=null and secAccount!='' ">
             AND D1.SEC_ACCT_ID = #{secAccount}
         </if>
+        <if test="repoType!=null and repoType!='' and repoType == 'H01'.toString()">
+            <if test="ps!=null and ps!='' and (ps == 'T93'.toString() or ps == 'T94'.toString())">
+                AND ifnull(G1.PLEDGE_NUMBER,0)-ifnull(S.MARCH_AMT_EN,0) >=  #{remainNum}
+            </if>
+            <if test="ps!=null and ps!='' and (ps != 'T93'.toString() and ps != 'T94'.toString())">
+                AND ifnull(A1.ENTRUST_AMT,0)-ifnull(S.MARCH_AMT_EN,0) >= #{remainNum}
+            </if>
+        </if>
+        <!--GNS-847:竞价回购增加期限品种查询条件 modify by fuyongsheng 20220215 start-->
+        <if test="termType !=null and termType!='' and repoType!=null and repoType!='' and repoType == 'H02'.toString()">
+            AND A1.FINPROD_ID = #{termType}
+        </if>
+        <!--GNS-847:竞价回购增加期限品种查询条件 modify by fuyongsheng 20220215 end-->
     </select>
 
     <select id="findDealList" resultType="com.joyintech.service.trade.exchangetransmatch.dto.ExchangeTransMatch002Dto">
@@ -330,9 +419,14 @@
         C.TRADE_MARKET tradeMarket,
         C.APPLY_TRADE_ID applyTradeId,
         D.PORTFOLIO_ID portfolioId,
-        F.PORTFOLIO_NAME portfolioName,
         CASE
-        WHEN C.SEC_TYPE = '09' THEN NULL
+        WHEN D.ENTRUST_CLASS =  #{ENTRUST_CLASS_02} THEN
+        F1.TREE_NAME
+        ELSE
+        F.PORTFOLIO_NAME
+        END portfolioName,
+        CASE
+        WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN NULL
         ELSE
         E.FINPROD_MARKET_ID
         END finprodMarketId,
@@ -346,7 +440,11 @@
         C.PS ps,
         A.MARCH_AMT_EN tradeAmt,
         A.MARCH_QTY_EN tradeNum,
-        C.UNIT_FPRICE tradePrice,
+        CASE
+            WHEN C.SEC_TYPE = #{SEC_TYPE_09} THEN C.UNIT_CPRICE
+        ELSE
+            C.UNIT_FPRICE
+        END tradePrice ,
         C.DEAL_DATE tradeDate,
         C.CCY ccy
         from SETTLE_TRANS_DATA_TOTAL_MATCH A
@@ -361,11 +459,14 @@
         ON E.FINPROD_ID = C.FINPROD_ID
         LEFT JOIN PTL_PORTFOLIO F
         ON D.PORTFOLIO_ID = F.PORTFOLIO_ID
+        LEFT JOIN MUTIPTL_PORTFOLIO_TREE F1
+        ON D.PORTFOLIO_ID = F1.TREE_ID
+        AND F1.PAR_TREE_ID IS NOT NULL
         <where>
             <if test="matchType!=null and matchType!='' ">
                 AND A.MATCH_CLASS = #{matchType}
             </if>
-            <if test="dealIdList!=null and dealIdList.size()>0 ">
+            <!--<if test="dealIdList!=null and dealIdList.size()>0 ">
                 AND (A.SEQ_NO IN
                 <foreach item="item" index="index" collection="dealIdList" open="(" close=")" separator=",">
                     <if test="(index % 998) == 0">
@@ -373,6 +474,9 @@
                     </if>
                     #{item}
                 </foreach>)
+            </if>-->
+            <if test="dealId!=null and dealId!='' ">
+                AND C.APPLY_TRADE_ID = #{dealId}
             </if>
             <if test="tradeMarket!=null and tradeMarket!='' ">
                 AND C.TRADE_MARKET = #{tradeMarket}
@@ -393,7 +497,13 @@
                 AND C.SEC_ACCT_ID = #{secAcctNo}
             </if>
             <if test="ps!=null and ps!='' ">
-                AND C.PS = #{ps}
+                AND D.PS = #{ps}
+            </if>
+            <if test="finprodType2_hg!=null and finprodType2_hg!='' ">
+                AND C.FINPROD_TYPE2 = #{finprodType2_hg}
+            </if>
+            <if test="finprodType2!=null and finprodType2!='' ">
+                AND C.FINPROD_TYPE2 = #{finprodType2}
             </if>
             <if test="tradeDateBegin != null and tradeDateBegin != ''">
                 <![CDATA[ AND C.TRADE_DATE  >= STR_TO_DATE(#{tradeDateBegin},'%Y-%m-%d') ]]>

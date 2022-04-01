@@ -414,23 +414,24 @@ public class TerminalAgent extends Agent implements ITerminalMsgHandler, ITermin
 
     @Override
     public void onEntrust(Entrust entrust) {
-        asyncWrite(FunctionCode.NOTIFY_ENTRUST, entrust);
+        asyncWrite(FunctionCode.NOTIFY_ENTRUST, 2000000000 + generateReqId(), entrust);
     }
 
     @Override
     public void onIntegratedEntrust(IntegratedEntrust integratedEntrust) {
-        asyncWrite(FunctionCode.NOTIFY_INTEGRATED_ENTRUST, integratedEntrust);
+        asyncWrite(FunctionCode.NOTIFY_INTEGRATED_ENTRUST, 2000000000 + generateReqId(), integratedEntrust);
     }
 
     @Override
     public void onTrade(Trade trade) {
-        logger.info("terminalAgent onTrade {}", JsonUtils.getJsonFromObject(trade));
-        asyncWrite(FunctionCode.NOTIFY_TRADE, trade);
+        logger.info("onTrade()，{}-{}，{}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(),
+                JsonUtils.getJsonFromObject(trade));
+        asyncWrite(FunctionCode.NOTIFY_TRADE, 2000000000 + generateReqId(), trade);
     }
 
     @Override
     public void onRTGSStatus(RTGSStatusBean rtgsStatusBean) {
-        asyncWrite(FunctionCode.NOTIFY_RTGS_STATUS, rtgsStatusBean);
+        asyncWrite(FunctionCode.NOTIFY_RTGS_STATUS, 2000000000 + generateReqId(), rtgsStatusBean);
     }
 
     @Override

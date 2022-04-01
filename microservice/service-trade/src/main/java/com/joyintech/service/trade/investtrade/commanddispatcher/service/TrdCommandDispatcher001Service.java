@@ -116,6 +116,7 @@ public class TrdCommandDispatcher001Service extends BaseService<TrdCommandDispat
         //add by gaopeng 20191126 增加交易方向 start
         pageParam.put("ps_49", DictCodeListExt3.交易方向_债转股.getValue());
         //add by gaopeng 20191126 增加交易方向 end
+        pageParam.put("ENTRUST_CLASS_02", DictCodeListExt3.投资指令类型_多组合单资产指令.getValue());
         Page<TrdCommandDispatcher001Dto> pageLimit = super.queryForPage(page, length,
             () -> trdCommandDispatcher001Mapper.selectForPage(pageParam));
         // 将金融产品类型数据字典转换为平安资产类型字典

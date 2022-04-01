@@ -1,7 +1,7 @@
 prod:
   bussRep: 1
 server:
-  port: 8081
+  port: 8080
   address: 0.0.0.0
   maxHttpHeaderSize: 102400
   context-path: /tams
@@ -191,7 +191,7 @@ application:
     isExceptionWhenSendTimeout: 01  #中债报送文件发送超时的时候，是否抛出异常
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top  #菜单默认位置（设置主题后失效），支持left和top两种
@@ -223,39 +223,39 @@ application:
     lastChromeVersion: 73
     customerName: 某某银行
   runOptimize: Y  #启动优化开关
-#  不使用服务注册中心,tams和tams-service-container分开部署的方式
-#  loadbalance: false
-#  micorservice:
-#    contextPath:
-#      single: true
-#      commonService: http://127.0.0.1:8114
-#      basicDataService: http://127.0.0.1:8114
-#      documentService: http://127.0.0.1:8114
-#      entrustService: http://127.0.0.1:8114
-#      periodService: http://127.0.0.1:8114
-#      assetService: http://127.0.0.1:8114
-#      portfolioService: http://127.0.0.1:8114
-#      productService: http://127.0.0.1:8114
-#      quotaService: http://127.0.0.1:8114
-#      reportService: http://127.0.0.1:8114
-#      riskService: http://127.0.0.1:8114
-#      riskRdsService: http://127.0.0.1:8114
-#      riskInfService: http://127.0.0.1:8114
-#      settleService: http://127.0.0.1:8114
-#      tradeService: http://127.0.0.1:8114
-#      disclosureService: http://127.0.0.1:8114
-#      valuationService: http://127.0.0.1:8114
-#      chbService: http://127.0.0.1:8114
-#      chb3Service: http://127.0.0.1:8114
-#      svrcomService: http://127.0.0.1:8114
-#      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
-#      customerInterfService: http://127.0.0.1:8114
-#      tamsServer: http://127.0.0.1:8114
-#      investInterfService: http://127.0.0.1:8114
-#      adapterService: http://127.0.0.1:8114
+  #  不使用服务注册中心,tams和tams-service-container分开部署的方式
+  #  loadbalance: false
+  #  micorservice:
+  #    contextPath:
+  #      single: true
+  #      commonService: http://127.0.0.1:8114
+  #      basicDataService: http://127.0.0.1:8114
+  #      documentService: http://127.0.0.1:8114
+  #      entrustService: http://127.0.0.1:8114
+  #      periodService: http://127.0.0.1:8114
+  #      assetService: http://127.0.0.1:8114
+  #      portfolioService: http://127.0.0.1:8114
+  #      productService: http://127.0.0.1:8114
+  #      quotaService: http://127.0.0.1:8114
+  #      reportService: http://127.0.0.1:8114
+  #      riskService: http://127.0.0.1:8114
+  #      riskRdsService: http://127.0.0.1:8114
+  #      riskInfService: http://127.0.0.1:8114
+  #      settleService: http://127.0.0.1:8114
+  #      tradeService: http://127.0.0.1:8114
+  #      disclosureService: http://127.0.0.1:8114
+  #      valuationService: http://127.0.0.1:8114
+  #      chbService: http://127.0.0.1:8114
+  #      chb3Service: http://127.0.0.1:8114
+  #      svrcomService: http://127.0.0.1:8114
+  #      pbcService: http://127.0.0.1:8114
+  #      channelService: http://127.0.0.1:8114
+  #      customerInterfService: http://127.0.0.1:8114
+  #      tamsServer: http://127.0.0.1:8114
+  #      investInterfService: http://127.0.0.1:8114
+  #      adapterService: http://127.0.0.1:8114
 
-#  不使用服务注册中心,tams和tams-service-container整体部署的方式
+  #  不使用服务注册中心,tams和tams-service-container整体部署的方式
   loadbalance: false
   micorservice:
     contextPath:
@@ -337,11 +337,11 @@ spring:
     host: 192.168.90.165
     port: 6379
     timeout: 20000
-#  redis:
-#    cluster:
-#      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
-#  redislock:
-#    redissonEnabled: false
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.70.246:6379,192.168.70.246:6380,192.168.70.246:6381,192.168.70.246:6382,192.168.70.246:6383,192.168.70.246:6384
+  #  redislock:
+  #    redissonEnabled: false
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
@@ -464,7 +464,7 @@ trade:
 #分页插件超过最后一页返回空数据
 pagehelper:
   reasonable: false
-  
+
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
 

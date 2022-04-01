@@ -186,7 +186,13 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal accAvailablePos;
-    
+
+    /**
+     * 最新价格
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal latestPrice;
+
     /**
      * 业务类型名称
      */
@@ -232,7 +238,13 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
      * 清算速度
      */
     private String settleSpeed;
-    
+
+    /**
+     * 是否多组合系列户的指令
+     */
+    private String isMulti;
+
+
     /**
      * 取得 委托代码
      * @return 委托代码
@@ -508,8 +520,16 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
 	public void setAccAvailablePos(BigDecimal accAvailablePos) {
 		this.accAvailablePos = accAvailablePos;
 	}
-	
-	public String getBusinessTypeName() {
+
+    public BigDecimal getLatestPrice() {
+        return latestPrice;
+    }
+
+    public void setLatestPrice(BigDecimal latestPrice) {
+        this.latestPrice = latestPrice;
+    }
+
+    public String getBusinessTypeName() {
 		return businessTypeName;
 	}
 	public void setBusinessTypeName(String businessTypeName) {
@@ -676,5 +696,13 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
 
     public String getTargetTypeStr() {
         return  SysDataUtil.getNameFromDataDict(DictCode.目标类型, this.getTargetType());
+    }
+
+    public String getIsMulti() {
+        return isMulti;
+    }
+
+    public void setIsMulti(String isMulti) {
+        this.isMulti = isMulti;
     }
 }

@@ -9,10 +9,12 @@
 	</select>
 
 	<select id="countExportNum" parameterType="map" resultType="int">
-		select count(*) from chb_equ_sub sub 
-			left join CHB_SUBMIT_STATUS status
-    		on sub.sumit_seq = status.seqno
-    		<where>
+		select count(*) from chb_equ_sub sub
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS status
+    		on sub.sumit_seq = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<where>
 			<if test="bankCode != null and bankCode != ''">
 		 	sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
 		 	</if>
@@ -48,11 +50,13 @@
 		 	<if test="orgIndentifyMark != null and orgIndentifyMark != ''">
 		 	AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
 		 	</if>
-		 	<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
              		#{submitFeedbackStatus}
-            	</foreach>	
-		 	</if>
+            	</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				</if>
 		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
 		 		<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SUBMIT_STATUS IN (" close=")" separator=",">
              		#{submitStatus}
@@ -133,8 +137,10 @@
 	       		status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
 	       		sub.CHECK_SEQNO    		  as checkSeqno
 	  		from chb_equ_sub sub
-	  		left join CHB_SUBMIT_STATUS status
-	    	on sub.sumit_seq = status.seqno
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			/*left join CHB_SUBMIT_STATUS status
+				on sub.sumit_seq = status.seqno*/
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<where>
 			<if test="bankCode != null and bankCode != ''">
 		 	sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
@@ -172,10 +178,12 @@
 		 	AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
 		 	</if>
 		 	<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
              		#{submitFeedbackStatus}
-            	</foreach>	
-		 	</if>
+            	</foreach>
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			</if>
 		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
 		 		<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SUBMIT_STATUS IN (" close=")" separator=",">
              		#{submitStatus}

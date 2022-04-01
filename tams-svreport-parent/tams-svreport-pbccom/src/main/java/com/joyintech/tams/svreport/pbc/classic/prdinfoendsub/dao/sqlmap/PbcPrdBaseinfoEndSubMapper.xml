@@ -329,7 +329,12 @@
   <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" flushCache="true" useCache="false">
       select
       a.REGIST_SEQNO registSeqno,
-      a.PBC_PROD_ID PBC_PROD_ID,
+      <if test="datFlag != null and datFlag != ''">
+          nvl(t2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
+      </if>
+      <if test="datFlag == null">
+          a.PBC_PROD_ID PBC_PROD_ID,
+      </if>
       a.MDATE mdate,
       a.CCY ccy,
       a.PROFIT profit,

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.chbsalerstldealInfo.dao.ChbSalerStlDealInfoMpper_mysql">
+<!--入库 -->
+    <insert id="mergeInfoList" parameterType="com.joyintech.tams.common.base.entity.ChbSalerStlDealInfo">
+        insert into CHB_SALER_STL_DEAL_INFO(
+        INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO,
+        TRADE_NO, REGIST_SEQNO, DATA_STATUS, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO,
+        TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY,
+        TRADE_AMT, TRADE_VDATE, TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER,
+        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select
+        INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO,
+        TRADE_NO, REGIST_SEQNO, DATA_STATUS, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO,
+        TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY,
+        TRADE_AMT, TRADE_VDATE, TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER,
+        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        from (
+        select
+        TEMP.*
+        from (
+        <foreach collection="newDataList" item="item" separator="union all">
+            select
+            #{item.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO,
+            #{item.status,jdbcType=VARCHAR} DATA_STATUS ,
+            #{item.accountName,jdbcType=VARCHAR} ACCOUNT_NAME ,
+            #{item.institutionCode,jdbcType=VARCHAR} INSTITUTION_CODE,
+            #{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+            #{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
+            #{item.tradeNo,jdbcType=VARCHAR} TRADE_NO,
+            #{item.tradePs,jdbcType=VARCHAR} TRADE_PS ,
+            #{item.tradeCounterAccNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NO ,
+            #{item.tradeCounterAccName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NAME ,
+            #{item.tradeCounterAccBankName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NAME ,
+            #{item.tradeCounterAccBankNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NO ,
+            #{item.tradeCcy,jdbcType=VARCHAR} TRADE_CCY ,
+            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT ,
+            #{item.tradeVdate,jdbcType=DATE} TRADE_VDATE ,
+            #{item.tradeTime,jdbcType=TIMESTAMP} TRADE_TIME ,
+            #{item.postscript,jdbcType=VARCHAR} POSTSCRIPT ,
+            #{item.remark,jdbcType=VARCHAR} REMARK ,
+            now() RECEPT_DATE ,
+            #{item.orgCode,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.createDept,jdbcType=VARCHAR} ORG_CODE ,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER ,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} CREATE_TIME
+            from dual
+        </foreach>
+        ) TEMP where not EXISTS (select 1 from CHB_SALER_STL_DEAL_INFO CII where CII.INSTITUTION_CODE = TEMP.INSTITUTION_CODE
+        and CII.TRADE_NO = TEMP.TRADE_NO
+        and CII.ACCOUNT_NO = TEMP.ACCOUNT_NO
+        and CII.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE)
+        ) de ;
+
+        UPDATE  CHB_SALER_STL_DEAL_INFO as A,
+        (
+        select
+        INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO,
+        TRADE_NO, REGIST_SEQNO, DATA_STATUS, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO,
+        TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY,
+        TRADE_AMT, TRADE_VDATE, TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER,
+        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        from (
+        select
+        TEMP.*
+        from (
+        <foreach collection="newDataList" item="item" separator="union all">
+            select
+            #{item.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO,
+            #{item.status,jdbcType=VARCHAR} DATA_STATUS ,
+            #{item.accountName,jdbcType=VARCHAR} ACCOUNT_NAME ,
+            #{item.institutionCode,jdbcType=VARCHAR} INSTITUTION_CODE,
+            #{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+            #{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO,
+            #{item.tradeNo,jdbcType=VARCHAR} TRADE_NO,
+            #{item.tradePs,jdbcType=VARCHAR} TRADE_PS ,
+            #{item.tradeCounterAccNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NO ,
+            #{item.tradeCounterAccName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_NAME ,
+            #{item.tradeCounterAccBankName,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NAME ,
+            #{item.tradeCounterAccBankNo,jdbcType=VARCHAR} TRADE_COUNTER_ACC_BANK_NO ,
+            #{item.tradeCcy,jdbcType=VARCHAR} TRADE_CCY ,
+            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT ,
+            #{item.tradeVdate,jdbcType=DATE} TRADE_VDATE ,
+            #{item.tradeTime,jdbcType=TIMESTAMP} TRADE_TIME ,
+            #{item.postscript,jdbcType=VARCHAR} POSTSCRIPT ,
+            #{item.remark,jdbcType=VARCHAR} REMARK ,
+            now() RECEPT_DATE ,
+            #{item.orgCode,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.createDept,jdbcType=VARCHAR} ORG_CODE ,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER ,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} CREATE_TIME
+            from dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        SET
+         A.PRD_REGIST_CODE = B.PRD_REGIST_CODE
+        ,A.ACCOUNT_NO = B.ACCOUNT_NO
+        ,A.REGIST_SEQNO                  = B.REGIST_SEQNO
+        ,A.DATA_STATUS                   = B.DATA_STATUS
+        ,A.ACCOUNT_NAME                  = B.ACCOUNT_NAME
+        ,A.TRADE_PS                      = B.TRADE_PS
+        ,A.TRADE_COUNTER_ACC_NO          = B.TRADE_COUNTER_ACC_NO
+        ,A.TRADE_COUNTER_ACC_NAME        = B.TRADE_COUNTER_ACC_NAME
+        ,A.TRADE_COUNTER_ACC_BANK_NAME   = B.TRADE_COUNTER_ACC_BANK_NAME
+        ,A.TRADE_COUNTER_ACC_BANK_NO     = B.TRADE_COUNTER_ACC_BANK_NO
+        ,A.TRADE_CCY                     = B.TRADE_CCY
+        ,A.TRADE_AMT                     = B.TRADE_AMT
+        ,A.TRADE_VDATE                   = B.TRADE_VDATE
+        ,A.TRADE_TIME                    = B.TRADE_TIME
+        ,A.POSTSCRIPT                    = B.POSTSCRIPT
+        ,A.REMARK                        = B.REMARK
+        ,A.RECEPT_DATE                   = B.RECEPT_DATE
+        ,A.CREATE_USER                   = B.CREATE_USER
+        ,A.ORG_CODE                      = B.ORG_CODE
+        ,A.CREATE_DEPT                   = B.CREATE_DEPT
+        ,A.CREATE_TIME                   = B.CREATE_TIME
+        ,A.UPDATE_USER                   = B.UPDATE_USER
+        ,A.UPDATE_TIME                   = B.UPDATE_TIME
+        where A.INSTITUTION_CODE = B.INSTITUTION_CODE
+        and A.TRADE_NO = B.TRADE_NO
+        and A.ACCOUNT_NO = B.ACCOUNT_NO
+        and A.PRD_REGIST_CODE = B.PRD_REGIST_CODE;
+    </insert>
+
+</mapper>

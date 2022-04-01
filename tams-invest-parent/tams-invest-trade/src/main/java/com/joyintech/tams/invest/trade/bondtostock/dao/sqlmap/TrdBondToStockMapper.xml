@@ -25,7 +25,10 @@
         <!--转股券面总额-->
         total.SHARE_AMT * 100 shareAmt,
         <!--转股价-->
-        fpc.CON_PRICE conPrice,
+        <!--GZYHTZJY-1137:转股价从交易表取 modify fuyongsheng 20220115 start-->
+        <!--fpc.CON_PRICE conPrice,-->
+        tfpd.UNIT_CPRICE conPrice,
+        <!--GZYHTZJY-1137:转股价从交易表取 modify fuyongsheng 20220115 end-->
         <!--转股数-->
         tfpbt.SHARE_AMT conNum,
         <!--零股数量-->
@@ -67,6 +70,8 @@
         LEFT JOIN FIN_PRODUCT fpzg on fpzg.FINPROD_ID = fpc.CON_FINPROD_ID
         <!--实物交易汇总表-->
         LEFT JOIN TRD_FIN_PRODUCT_BARTER_TOTAL tfpbt on tfpbt.TRADE_ID = total.TOTLE_TRADE_ID
+        <!--金融产品交易表-->
+        LEFT JOIN TRD_PRODUCT_DEAL tfpd on tfpd.TOTLE_TRADE_ID = total.TOTLE_TRADE_ID
     </sql>
     <sql id="whereSql">
         WHERE

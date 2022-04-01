@@ -86,6 +86,11 @@ public class PtlSecPositionFlow extends BaseEntity {
     private String entrustId;
 
     /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -322,4 +327,11 @@ public class PtlSecPositionFlow extends BaseEntity {
         return entrustId;
     }
 
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
+    }
 }

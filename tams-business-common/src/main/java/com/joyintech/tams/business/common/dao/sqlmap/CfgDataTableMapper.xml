@@ -169,4 +169,28 @@
         </where>
         and STATUS = 1 order by SEQNO
     </select>
+
+    <select id="getBySpcdCodesshowInvaim" parameterType="String"
+            resultType="com.joyintech.tams.business.common.entity.CfgDataTableShow">
+        <include refid="selectCfgDataTableShow"/>
+        <where>
+            <if test="pageCode != null  and pageCode != ''">and PAGECODE = #{pageCode}</if>
+            <if test="dtCode != null  and dtCode != ''">and DTCODE = #{dtCode}</if>
+            <if test="spcdCodes != null and spcdCodes.size() > 0 ">
+                AND SPCDCODE IN
+                <foreach collection="spcdCodes" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="effeRange != null">and EFFERANGE = #{effeRange}</if>
+            <if test="rangeId != null  and rangeId != ''">and RANGEID = #{rangeId}</if>
+            <if test="showInvaimOrBussinssmodel =='01'  and (pageCode=='EtrExchangeTradeJj' or pageCode=='EtrExchangeTradeFjyywzl001' or pageCode=='EtrExchangeAgreeBond002' or pageCode=='EtrExchangeBlockTrade' or pageCode=='EtrExchangeAgreRepTrade001')">
+                and COLCODE!='businessModelStr'
+            </if>
+            <if test="showInvaimOrBussinssmodel =='02'  and (pageCode=='EtrExchangeTradeJj' or pageCode=='EtrExchangeTradeFjyywzl001' or pageCode=='EtrExchangeAgreeBond002' or pageCode=='EtrExchangeBlockTrade' or pageCode=='EtrExchangeAgreRepTrade001')">
+                and COLCODE!='invAimStr'
+            </if>
+        </where>
+        and STATUS = 1 order by SEQNO
+    </select>
 </mapper>

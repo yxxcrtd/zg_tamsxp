@@ -81,6 +81,7 @@ public class TradeAgentTerminal extends Agent implements TradeAgent, IAgentMsgHa
 
     @Override
     protected void handleAsyncMessage(long requestId, int functionCode, Object message) {
+        logger.info("handleAsyncMessage: functionCode={}，requestId={}，message{}", functionCode, requestId, JsonUtils.getJsonFromObject(message));
         if (functionCode == FunctionCode.NOTIFY_ENTRUST.value) {
             onRtnEntrust((Entrust) message);
         } else if (functionCode == FunctionCode.NOTIFY_INTEGRATED_ENTRUST.value) {
@@ -135,8 +136,7 @@ public class TradeAgentTerminal extends Agent implements TradeAgent, IAgentMsgHa
             return JsonUtils.getObjectFromJson(message.getBody(), CancelEntrustBean.class);
         } else if (message.getFc() == FunctionCode.RESP_ACCOUNT_LOGIN.value) {
             return JsonUtils.getObjectFromJson(message.getBody(), ResultBean.class);
-        }
-        if (message.getFc() == FunctionCode.RESP_QRY_ENTRUST.value) {
+        } else if (message.getFc() == FunctionCode.RESP_QRY_ENTRUST.value) {
             return Strings.isNullOrEmpty(message.getBody()) ? Lists.newArrayList() :
                     JsonUtils.getObjectListFromJson(message.getBody(), Entrust.class);
         } else if (message.getFc() == FunctionCode.RESP_QRY_TRADE.value) {
@@ -399,14 +399,18 @@ public class TradeAgentTerminal extends Agent implements TradeAgent, IAgentMsgHa
 
     @Override
     public void onRtnTrade(Trade tradeRecord) {
+        logger.info("onRtnTrade()，成交回报信息：{}-{}-{}", tradeRecord.getBrokerEntrustId(), tradeRecord.getBrokerTradeId(),
+                JsonUtils.getJsonFromObject(tradeRecord));
         String key = tradeRecord.getAccountId() + "_" + tradeRecord.getBrokerEntrustId();
         String entrustId = tradeHelper.getEntrustMap().get(key);
+        logger.info("onRtnTrade()，委托编号：{}",  entrustId);
         if (!Strings.isNullOrEmpty(entrustId)) {
             TradeMsgReceiver msgReceiver = msgReceiverManager.getTradeReceiverByEntrustId(entrustId);
             if (Objects.nonNull(msgReceiver)) {
+                logger.info("处理成交回报信息：{} - {}", tradeRecord.getBrokerEntrustId(), JsonUtils.getJsonFromObject(tradeRecord));
                 msgReceiver.handleRtnTradeRecord(tradeRecord);
             } else {
-                logger.warn("tradeRecord  not found receiver: {}", JsonUtils.getJsonFromObject(tradeRecord));
+                logger.warn("tradeRecord not found receiver: {}", JsonUtils.getJsonFromObject(tradeRecord));
             }
         } else {
             logger.info("tradeRecord return before entrust {} - {}", tradeRecord.getAccountId(), tradeRecord.getBrokerEntrustId());

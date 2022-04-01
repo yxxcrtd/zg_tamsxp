@@ -47,6 +47,7 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="REPO_TYPE" property="repoType" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQ_NO SEQ_NO, TRADE_ID TRADE_ID, INSTRUCTION_ID INSTRUCTION_ID, CUSTOMER_ID CUSTOMER_ID, 
@@ -58,7 +59,8 @@
         FULL_PRICE FULL_PRICE, UNIT UNIT, INT_AMT INT_AMT, HGDQJE HGDQJE, HGDQR HGDQR, STAMP_FEE STAMP_FEE, 
         JSF_AMT JSF_AMT, GHF_AMT GHF_AMT, ZGF_AMT ZGF_AMT, SXF_AMT SXF_AMT, SETTLE_FEE SETTLE_FEE, 
         TRADE_FEE TRADE_FEE, COMMISSION_AMT COMMISSION_AMT, TOTAL_TEEAMT TOTAL_TEEAMT, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_TIME UPDATE_TIME, UPDATE_USER UPDATE_USER
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_TIME UPDATE_TIME, UPDATE_USER UPDATE_USER,
+        REPO_TYPE REPO_TYPE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -95,7 +97,8 @@
             GHF_AMT, ZGF_AMT, SXF_AMT, 
             SETTLE_FEE, TRADE_FEE, COMMISSION_AMT, 
             TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_TIME, UPDATE_USER
+            CREATE_TIME, UPDATE_TIME, UPDATE_USER,
+            REPO_TYPE
             )
         values (#{seqNo,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{instructionId,jdbcType=VARCHAR}, 
             #{customerId,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR}, #{saleDepid,jdbcType=VARCHAR}, 
@@ -111,7 +114,8 @@
             #{ghfAmt,jdbcType=DECIMAL}, #{zgfAmt,jdbcType=DECIMAL}, #{sxfAmt,jdbcType=DECIMAL}, 
             #{settleFee,jdbcType=DECIMAL}, #{tradeFee,jdbcType=DECIMAL}, #{commissionAmt,jdbcType=DECIMAL}, 
             #{totalTeeamt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}
+            #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{repoType,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDeal" >
@@ -252,6 +256,9 @@
             <if test="updateUser != null" >
                 UPDATE_USER,
             </if>
+            <if test="repoType != null" >
+                REPO_TYPE,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqNo != null" >
@@ -389,6 +396,9 @@
             <if test="updateUser != null" >
                 #{updateUser,jdbcType=VARCHAR},
             </if>
+            <if test="repoType != null" >
+                #{repoType,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDeal" >
@@ -398,14 +408,14 @@
         ORDER_DATE, CCY, TRADE_NUM, TRADE_AMT, HAPPEN_AMT, PRICE, FULL_PRICE, UNIT, INT_AMT, 
         HGDQJE, HGDQR, STAMP_FEE, JSF_AMT, GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, TRADE_FEE, 
         COMMISSION_AMT, TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_TIME, 
-        UPDATE_USER)
+        UPDATE_USER, REPO_TYPE)
         select SEQ_NO, TRADE_ID, INSTRUCTION_ID, CUSTOMER_ID, TRADE_NO, 
             SALE_DEPID, SEAT_NUMBER, PORTFOLIO_ID, FINPROD_ID, FINPROD_TYPE, MARKET_ID, FINPROD_NAME, 
             TRADE_MARKET, TRADE_PLAT, TRADE_DATE, SETTLE_DATE, ACCOUT, SEC_ACCT_ID, PS, SETTLEMEN_TYPE, 
             ORDER_DATE, CCY, TRADE_NUM, TRADE_AMT, HAPPEN_AMT, PRICE, FULL_PRICE, UNIT, INT_AMT, 
             HGDQJE, HGDQR, STAMP_FEE, JSF_AMT, GHF_AMT, ZGF_AMT, SXF_AMT, SETTLE_FEE, TRADE_FEE, 
             COMMISSION_AMT, TOTAL_TEEAMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, REPO_TYPE
              from STL_SEC_RECON_DEAL
              where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </insert>
@@ -535,6 +545,9 @@
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
+            <if test="repoType != null" >
+                REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
@@ -580,7 +593,8 @@
             COMMISSION_AMT = #{commissionAmt,jdbcType=DECIMAL},
             TOTAL_TEEAMT = #{totalTeeamt,jdbcType=DECIMAL},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            REPO_TYPE = #{repoType,jdbcType=VARCHAR}
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
 </mapper>

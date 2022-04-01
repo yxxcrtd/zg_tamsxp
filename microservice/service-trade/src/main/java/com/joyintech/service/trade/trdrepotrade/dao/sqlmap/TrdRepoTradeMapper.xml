@@ -87,6 +87,7 @@
                   LEFT JOIN   sys_datadict_list dict ON wtpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
                   WHERE pp.INVEST_YESORNO='Y'
                   AND  wtpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
+                  and wtpd.ps not in (#{ps_T22},#{ps_T23})
 				  and (wtpd.IS_CANCEL = 'Y' or wtpd.is_swap_transaction is null or wtpd.is_swap_transaction='N')
                     <if test="loginUserName != null and loginUserName != ''">
                         AND (pp.PORTFOLIO_ID IN ( SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO_AUTHORITY WHERE USER_ID = #{loginUserName})
@@ -211,6 +212,7 @@
                 LEFT JOIN   sys_datadict_list dict ON tpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
                   where pp.INVEST_YESORNO='Y'
                      and  tpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
+                     and tpd.ps not in (#{ps_T22},#{ps_T23})
                     <if test="loginUserName != null and loginUserName != ''">
                         AND (pp.PORTFOLIO_ID IN ( SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO_AUTHORITY WHERE USER_ID = #{loginUserName})
                         OR pp.PARENT_PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
@@ -345,6 +347,7 @@
                 LEFT JOIN   sys_datadict_list dict ON tpd.trade_market=dict.item_code and dict.dict_code='TRADE_PLACE'
                 where pp.INVEST_YESORNO='Y'
                     and  tpd.FINPROD_TYPE2 IN (#{FINPROD_TYPE_TG_F02}, #{FINPROD_TYPE_TG_F03})
+                    and tpd.ps not in (#{ps_T22},#{ps_T23})
                 <if test="loginUserName != null and loginUserName != ''">
                     AND (pp.PORTFOLIO_ID IN ( SELECT PORTFOLIO_ID FROM PTL_PORTFOLIO_AUTHORITY WHERE USER_ID = #{loginUserName})
                     OR pp.PARENT_PORTFOLIO_ID IN (select PORTFOLIO_ID from PTL_PORTFOLIO_AUTHORITY where USER_ID = #{loginUserName}))
@@ -489,7 +492,7 @@
           LEFT JOIN   PA_TRD_PRODUCT_DEAL ptrd
                   ON   ptrd.TRADE_ID = tpd.TRADE_ID
           LEFT JOIN PTL_TRADE PT ON tpd.TRADE_ID = PT.BUSI_NO
-          LEFT JOIN PTL_PORTFOLIO PP ON PT.PORTFOLIO_ID = PP.PORTFOLIO_ID
+          LEFT JOIN PTL_PORTFOLIO PP ON tpda.PORTFOLIO_ID = PP.PORTFOLIO_ID
           LEFT JOIN   FIN_TRADE_PRODUCT ftp
                           ON (case when tpd.IS_OUT_TRADE='N' and tpd.R_TRADE_ID is not null then tpd.R_TRADE_ID else tpd.TRADE_ID end) = ftp.FINPROD_ID
                   <!--ON  (
@@ -1226,5 +1229,18 @@
                 </if>
             </otherwise>
         </choose>
+    </select>
+
+    <!--add by jiangpeng on 20210416 ZGBSS-1149 【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误-->
+    <select id="selectEtrSecPositionFlow" resultMap="com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper.BaseResultMap">
+        SELECT
+        <include refid="com.joyintech.tams.common.base.dao.EtrSecPositionFlowMapper.Base_Column_List"></include>
+        FROM
+        ETR_SEC_POSITION_FLOW
+        WHERE
+        TRADE_ID = #{bizCode}
+        AND TRADE_ID != FINPROD_ID
+        AND FINPROD_ID = #{finprodId}
+        AND HODING_TYPE = #{POSITION_TYPE_E01}
     </select>
 </mapper>

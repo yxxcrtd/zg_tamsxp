@@ -146,6 +146,23 @@ public class ChbPrdRaisetotSubSetService {
 	    cnBondItem2.setValue(sub.getIssuePartyId());
 	    cnBondItemMap1.put("IssuerIdentificationCode", cnBondItem2);
 		}
+
+		/***1217升级**/
+		//5.3.3 资金托管账号
+		if(StringUtil.isNotEmpty(sub.getBusiAcctNo())){
+			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
+			cnBondItem1.setValue(sub.getBusiAcctNo());
+			cnBondItemMap1.put("FundCustodyAccountNumber", cnBondItem1);
+		}
+
+		//5.3.4 资金托管账户
+		if(StringUtil.isNotEmpty(sub.getAcctName())){
+			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
+			cnBondItem1.setValue(sub.getAcctName());
+			cnBondItemMap1.put("FundCustodyAccountName", cnBondItem1);
+		}
+		/***1217升级**/
+
 		//个人投资者总数
 		if(sub.getSingleTotal() != null){
 	    CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
@@ -266,6 +283,9 @@ public class ChbPrdRaisetotSubSetService {
 	    cnBondItem12.setValue(sub.getSumitSeq());
 	    cnBondItemMap1.put("RegistrationSerialNumber", cnBondItem12);
 	    }
+
+
+
 
 	}
 }

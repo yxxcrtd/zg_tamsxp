@@ -249,6 +249,9 @@
             <if test="exerYield != null" >
                 EXER_YIELD,
             </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
+            </if>
             <if test="invAim != null" >
                 INV_AIM,
             </if>
@@ -452,6 +455,9 @@
             <if test="invAim != null" >
                 #{invAim,jdbcType=VARCHAR},
             </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=VARCHAR},
+            </if>
             <if test="deliveryType != null" >
                 #{deliveryType,jdbcType=VARCHAR},
             </if>
@@ -580,6 +586,57 @@
              from TRD_PRODUCT_TEMP_DEAL
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
+
+    <insert id="insertToDeal" parameterType="java.lang.String">
+        INSERT INTO TRD_PRODUCT_DEAL(
+             TRADE_ID, BUSI_TYPE, FINPROD_ID,
+             FINPROD_TYPE, FINPROD_TYPE2, BRANCH,
+             TRADE_DATE, VDATE, MDATE, PAY_DATE,
+             SETTLE_DATE, SETTLE_SPEED, CCY,
+             CPRICE_DATE, UNIT_CPRICE, UNIT_INT,
+             UNIT_FPRICE, PAR_VALUE, CPRICE_AMT,
+             SHARE_AMT, PRIN_AMT, INT_AMT,
+             FPRICE_AMT, FEE_AMT_PAY, TRADE_AMT,
+             PS_PAYMENT, FEE_AMT_UNPAY, FEE_AMT,
+             PS, YIELD, EXER_YIELD,
+             INV_AIM, DELIVERY_TYPE, TRADE_STATUS,
+             IS_CANCEL, P_TRADE_ID, IS_CLEAN,
+             TOTLE_TRADE_ID, R_TRADE_ID,
+             B_TRADE_ID, CHL_ID, COUNTER_ID,
+             IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT,
+             TRADE_MARKET_MODE, TRADER, COUNTER_TRADER,
+             COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID,
+             CASH_ID, REGIST_ORG, REMARK,
+             CANCEL_REMARK, TG_BUSI_TYPE, SALE_CODE,
+             ACCR_NUM, SETTLEMEN_TYPE, SEAT_ID,
+             CREATE_USER, CREATE_DEPT, CREATE_TIME,
+             UPDATE_USER, UPDATE_TIME)
+        SELECT TRADE_ID, BUSI_TYPE, FINPROD_ID,
+               FINPROD_TYPE, FINPROD_TYPE2, BRANCH,
+               TRADE_DATE, VDATE, MDATE, PAY_DATE,
+               SETTLE_DATE, SETTLE_SPEED, CCY,
+               CPRICE_DATE, UNIT_CPRICE, UNIT_INT,
+               UNIT_FPRICE, PAR_VALUE, CPRICE_AMT,
+               SHARE_AMT, PRIN_AMT, INT_AMT,
+               FPRICE_AMT, FEE_AMT_PAY, TRADE_AMT,
+               PS_PAYMENT, FEE_AMT_UNPAY, FEE_AMT,
+               PS, YIELD, EXER_YIELD,
+               INV_AIM, DELIVERY_TYPE, TRADE_STATUS,
+               IS_CANCEL, P_TRADE_ID, IS_CLEAN,
+               TOTLE_TRADE_ID, R_TRADE_ID,
+               B_TRADE_ID, CHL_ID, COUNTER_ID,
+               IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT,
+               TRADE_MARKET_MODE, TRADER, COUNTER_TRADER,
+               COUNTER_CONTACT, SEC_MANAGE_ACCT_ID, F_TRADE_ID,
+               CASH_ID, REGIST_ORG, REMARK,
+               CANCEL_REMARK, TG_BUSI_TYPE, SALE_CODE,
+               ACCR_NUM, SETTLEMEN_TYPE, SEAT_ID,
+               CREATE_USER, CREATE_DEPT, CREATE_TIME,
+               UPDATE_USER, UPDATE_TIME
+        FROM TRD_PRODUCT_TEMP_DEAL WHERE TOTLE_TRADE_ID = #{totalTradeId,jdbcType=VARCHAR}
+    </insert>
+
+
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDeal" >
         update TRD_PRODUCT_TEMP_DEAL
         <set >

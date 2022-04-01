@@ -13,10 +13,12 @@ package com.joyintech.tams.cfets.etrib.repo.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
+import com.joyintech.tams.common.base.entity.EtrSecStock;
 import com.joyintech.tams.common.base.entity.EtrSecStockConfig;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -118,4 +120,14 @@ public interface CfetsEtrIbRepoinfoMapper {
     int deleteWflEtrEntrustAddByEntrustId(String entrustId);
 
     CfetsEtribRepoInfo003Dto findEtrinfo(Map<String,Object> map);
+
+    BigDecimal getPledgeable(Map<String,Object> map);
+
+    List<EtrSecStock> selectEtrSecStockByUser(Map<String, Object> param);
+
+    List<CfetsEtrIbRepoRkDto> selectRepoRkInfoAndCofigs(Map<String, Object> param);
+
+    CfetsEtrSecStockConfig selectFinprodInfo(Map<String, Object> param);
+
+    CfetsEtrIbRepoLibDto findSecPosition(Map<String, Object> param);
 }

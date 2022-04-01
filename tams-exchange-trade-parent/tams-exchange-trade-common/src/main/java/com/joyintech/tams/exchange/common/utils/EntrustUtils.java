@@ -15,13 +15,13 @@ import com.joyintech.tams.exchange.common.enums.DeliveryMethodEnum;
 import com.joyintech.tams.exchange.common.enums.ETFTypeEnum;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EntrustUtils {
     private static final Set<String> buyBsFlag = new HashSet<>();
     private static final Set<String> sellBsFlag = new HashSet<>();
+    private static final Map<String, EntrustProp> entrustPropMap = new HashMap<>();
 
     static {
         buyBsFlag.add(BSFlag.ZQMR.value);
@@ -84,6 +84,8 @@ public class EntrustUtils {
         sellBsFlag.add(BSFlag.GHJYFHZJ.value);
         sellBsFlag.add(BSFlag.GHJYSQZJ.value);
         sellBsFlag.add(BSFlag.YXRCZJ.value);
+
+        entrustPropMap.putAll(Arrays.stream(EntrustProp.values()).collect(Collectors.toMap(EntrustProp::getValue, o -> o)));
     }
 
     // 是否未拆单委托
@@ -603,6 +605,14 @@ public class EntrustUtils {
         return InstructionPriceMode.MARKET.value.equals(instruction.getPriceMode());
     }
 
+    public static boolean isMarketPriceByPriceMode(String priceMode) {
+        return InstructionPriceMode.MARKET.value.equals(priceMode);
+    }
+
+    public static boolean isMarketPriceByEntrustProp(String entrustProp) {
+        return EntrustProp.isMarketPrice(entrustProp);
+    }
+
     // 判断是否为需要进行自成交检测的业务
     public static boolean isSelfTradeTyper(String entrustProp) {
         return EntrustProp.NORMAL.value.equals(entrustProp)
@@ -894,5 +904,13 @@ public class EntrustUtils {
     // 是否为竞价指令
     public static boolean isNormalTrade(Instruction instruction) {
         return TradePlat.NORMAL.value.equals(instruction.getTradePlat());
+    }
+
+    public static String getEntrustPropStr(String code) {
+        EntrustProp entrustProp = entrustPropMap.get(code);
+        if (null == entrustProp) {
+            return code;
+        }
+        return entrustProp.getName();
     }
 }

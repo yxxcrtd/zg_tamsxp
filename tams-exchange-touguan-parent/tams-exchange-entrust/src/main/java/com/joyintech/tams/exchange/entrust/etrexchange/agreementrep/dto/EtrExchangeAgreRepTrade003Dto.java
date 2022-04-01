@@ -16,6 +16,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -153,6 +154,81 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
      * 质押券单位
      */
     private String pledgeUnit;
+
+    /**
+     * 业务类型
+     */
+    private String busiTypeTg;
+    /**
+     * 业务类型
+     */
+    private String busiTypeTgStr;
+
+    /**
+     * 投资经理
+     */
+    private String invManagerName;
+
+    /**
+     * 本方交易员
+     */
+    private String homeTrader;
+
+    /**
+     * 补充协议
+     */
+    private String addCla;
+
+    @ApiModelProperty(name="finishAmt",value="已完成额度(元)")
+    private String finishAmt;
+
+    @ApiModelProperty(name="avaNum",value="剩余指令额度(元)")
+    private String avaNum;
+
+    @ApiModelProperty(name="finishDealAmt",value="已成交额度(元)")
+    private String finishDealAmt;
+
+    @ApiModelProperty(name="avaDealAmt",value="剩余成交额度(元)")
+    private String avaDealAmt;
+
+    @ApiModelProperty(name="psStr",value="委托方向")
+    private String psStr;
+
+    @ApiModelProperty(name="requestId",value="请求编号")
+    private String requestId;
+
+    public String getFinishAmt() {
+        return finishAmt;
+    }
+
+    public void setFinishAmt(String finishAmt) {
+        this.finishAmt = finishAmt;
+    }
+
+    public String getAvaNum() {
+        return avaNum;
+    }
+
+    public void setAvaNum(String avaNum) {
+        this.avaNum = avaNum;
+    }
+
+    public String getFinishDealAmt() {
+        return finishDealAmt;
+    }
+
+    public void setFinishDealAmt(String finishDealAmt) {
+        this.finishDealAmt = finishDealAmt;
+    }
+
+    public String getAvaDealAmt() {
+        return avaDealAmt;
+    }
+
+    public void setAvaDealAmt(String avaDealAmt) {
+        this.avaDealAmt = avaDealAmt;
+    }
+
     /**
      * 获取 implementPercent
      * @return implementPercent.
@@ -234,7 +310,14 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
      * @return getPsStr.
      */
     public String getPsStr() {
+        if (StringUtil.isNotBlank(this.psStr)) {
+            return this.psStr;
+        }
         return SysDataUtil.getNameFromDataDict(DictCode.交易方向, super.getPs());
+    }
+
+    public void setPsStr(String psStr) {
+        this.psStr = psStr;
     }
 
     public  String getFinprodType2String(){
@@ -578,5 +661,49 @@ public class EtrExchangeAgreRepTrade003Dto extends EtrEntrust{
 
     public String getPledgeUnitStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.交易单位,getPledgeUnit());
+    }
+
+    public String getBusiTypeTg() {
+        return busiTypeTg;
+    }
+
+    public void setBusiTypeTg(String busiTypeTg) {
+        this.busiTypeTg = busiTypeTg;
+    }
+
+    public String getBusiTypeTgStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.投管业务类型, this.getBusiTypeTg());
+    }
+
+    public String getInvManagerName() {
+        return invManagerName;
+    }
+
+    public void setInvManagerName(String invManagerName) {
+        this.invManagerName = invManagerName;
+    }
+
+    public String getHomeTrader() {
+        return homeTrader;
+    }
+
+    public void setHomeTrader(String homeTrader) {
+        this.homeTrader = homeTrader;
+    }
+
+    public String getAddCla() {
+        return addCla;
+    }
+
+    public void setAddCla(String addCla) {
+        this.addCla = addCla;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

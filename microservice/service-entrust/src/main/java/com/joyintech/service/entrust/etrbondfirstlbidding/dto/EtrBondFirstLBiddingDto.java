@@ -16,11 +16,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.SysUploadFileInfo;
 import com.joyintech.tams.common.base.entity.EtrEntrustBidPrice;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 
 /**
@@ -741,5 +744,107 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
 
     public void setNextUser(String nextUser) {
         this.nextUser = nextUser;
+    }
+
+    /*********************** 下面是指令分发明细 使用的字段 **************************************/
+    //资产二级分类
+    private String assetType1Value;
+    //资产三级分类
+    private String assetType10Value;
+    //资产四级分类
+    private String assetType11Value;
+    //币种
+    private String ccyValue;
+    //交易场所
+    private String tradeMarketValue;
+    //缴款方式
+    private String etrPayTypeValue;
+    //投资目的
+    private String invAimValue;
+    //主承销商
+    private String mainConsigneeValue;
+    private BigDecimal proAvailableCash1;
+    private BigDecimal proAvailableCash;
+
+    public String getAssetType1Value() {
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类,this.getAssetType1());
+    }
+
+    public void setAssetType1Value(String assetType1Value) {
+        this.assetType1Value = assetType1Value;
+    }
+
+    public String getAssetType10Value() {
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产三级分类,this.getAssetType10());
+    }
+
+    public void setAssetType10Value(String assetType10Value) {
+        this.assetType10Value = assetType10Value;
+    }
+
+    public String getAssetType11Value() {
+        return SysDataUtil.getNameFromDataDict(DictCode.行内资产四级分类,this.getAssetType11());
+    }
+
+    public void setAssetType11Value(String assetType11Value) {
+        this.assetType11Value = assetType11Value;
+    }
+
+    public String getCcyValue() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.币种,this.getCcy());
+    }
+
+    public void setCcyValue(String ccyValue) {
+        this.ccyValue = ccyValue;
+    }
+
+    public String getTradeMarketValue() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,this.getTradeMarket());
+    }
+
+    public void setTradeMarketValue(String tradeMarketValue) {
+        this.tradeMarketValue = tradeMarketValue;
+    }
+
+    public String getEtrPayTypeValue() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.缴款方式,this.getEtrPayType());
+    }
+
+    public void setEtrPayTypeValue(String etrPayTypeValue) {
+        this.etrPayTypeValue = etrPayTypeValue;
+    }
+
+    public String getInvAimValue() {
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.投资目的,this.getInvAim());
+    }
+
+    public void setInvAimValue(String invAimValue) {
+        this.invAimValue = invAimValue;
+    }
+
+    public String getMainConsigneeValue() {
+        return this.mainConsigneeValue;
+    }
+
+    public void setMainConsigneeValue(String mainConsigneeValue) {
+        this.mainConsigneeValue = mainConsigneeValue;
+    }
+
+    public BigDecimal getProAvailableCash1() {
+        return proAvailableCash1;
+    }
+
+    public void setProAvailableCash1(BigDecimal proAvailableCash1) {
+        this.proAvailableCash1 = proAvailableCash1;
+    }
+
+    @Override
+    public BigDecimal getProAvailableCash() {
+        return proAvailableCash;
+    }
+
+    @Override
+    public void setProAvailableCash(BigDecimal proAvailableCash) {
+        this.proAvailableCash = proAvailableCash;
     }
 }

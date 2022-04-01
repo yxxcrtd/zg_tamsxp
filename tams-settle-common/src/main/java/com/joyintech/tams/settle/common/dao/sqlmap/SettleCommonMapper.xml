@@ -2,27 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.settle.common.dao.SettleCommonMapper">
     <select id="selectAllStlDownDataDealAccountInfoDtoList" parameterType="java.util.Map" resultType="com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto">
-        SELECT
+        SELECT DISTINCT
         	A.SEAT_ID as seatNumber,
         	B.BROKER_ID as brokerId,
         	C.ACCT_NO as acctNo,
         	C.CCY as ccy,
-        	F.BOND_ID as secAcctId,
-        	E.PORTFOLIO_ID as portfolioId,
+        	F.BOND_ID as shareholdersCode,
+        	F.SEC_ACCT_ID secAcctId,
         	F.REGIST_ORG as registOrg
         FROM
-        	MST_SEAT A,
-        	MST_SALE_DEPARTMENT B,
-        	STL_CAPACCT_INFO C,
-        	PTL_CAPACCT_INFO D,
-        	PTL_SEC_ACCT E,
-        	STL_SEC_ACCT_INFO F
+        	STL_SEC_ACCT_INFO F 
+        	LEFT JOIN STL_CAPACCT_INFO C ON  
+        		C.ACCT_NO = F.TRD_ACCT_ID
+        		AND C.CCY = F.TRD_ACCT_CCY
+        	LEFT JOIN MST_SALE_DEPARTMENT B ON 
+        		B.SALE_DEPID =  C.OWN_DEPT
+			LEFT JOIN	MST_SEAT A ON 
+				(A.SEAT_ID = B.SH_SEATNO OR A.SEAT_ID = B.SZ_SEATNO)
         WHERE
         	(A.SEAT_ID = B.SH_SEATNO OR A.SEAT_ID = B.SZ_SEATNO)
         	AND B.SALE_DEPID = C.OWN_DEPT
-        	AND C.ACCT_NO = D.ACCT_NO AND C.CCY = D.CCY AND D.ACCT_TYPE = 'A07'
-        	AND D.PORTFOLIO_ID = E.PORTFOLIO_ID
-        	AND E.ACCT_NO = F.SEC_ACCT_ID
     </select>
     
     <select id="getAllFundInfoDto" parameterType="java.util.Map" resultType="com.joyintech.tams.settle.common.dto.FundInfoDto">

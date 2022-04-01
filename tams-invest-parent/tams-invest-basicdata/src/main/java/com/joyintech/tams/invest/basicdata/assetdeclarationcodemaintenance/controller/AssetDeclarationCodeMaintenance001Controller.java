@@ -76,7 +76,8 @@ public class AssetDeclarationCodeMaintenance001Controller extends BaseController
 		SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.金融产品类型_投管用, null);
 		for (SelectOptionDto dto : selectDto1.getOptions()) {
 			if (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(dto.getId())
-					|| DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(dto.getId())) {// 债券、股票
+					|| DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(dto.getId())
+					|| DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(dto.getId())) {// 债券、股票、基金
 				listFinprodType.add(dto);
 			}
 		}
@@ -138,6 +139,7 @@ public class AssetDeclarationCodeMaintenance001Controller extends BaseController
 		} else {
 			assetsTypeList.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 			assetsTypeList.add(DictCodeListExt1.金融产品类型_投管用_股票.getValue());
+			assetsTypeList.add(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
 		}
 		SelectDto selectDto1 = this.getSelectDataFromDataDic(DictCode.金融产品其他代码类型, null);
 
@@ -157,6 +159,10 @@ public class AssetDeclarationCodeMaintenance001Controller extends BaseController
 					}
 				} else if (DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(assetsType)) {
 					if (DictCodeListExt3.金融产品其他代码类型_配股代码.getValue().equals(dto.getId()) || DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue().equals(dto.getId())) {// 股票
+						othOtherType.add(dto);
+					}
+				} else if (DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(assetsType)) {
+					if (DictCodeListExt3.金融产品其他代码类型_基金分红设置代码.getValue().equals(dto.getId())) {// 基金
 						othOtherType.add(dto);
 					}
 				}

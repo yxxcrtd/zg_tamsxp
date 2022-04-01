@@ -92,4 +92,9 @@ public interface DayEndAccountMapper {
     List<SelectOptionDto> selectSecAcctId(Map<String, Object> param);
 
     StlSecReconDeal getStlSecReconDeal(String seqno);
+
+    List<DayEndAccountDto> selectPageNew(Map<String, Object> param);
+    List<DayEndAccountDto> selectPageNew1(Map<String, Object> param);
+    List<DayEndAccountDto> selectPageNew2(Map<String, Object> param);
+
 }

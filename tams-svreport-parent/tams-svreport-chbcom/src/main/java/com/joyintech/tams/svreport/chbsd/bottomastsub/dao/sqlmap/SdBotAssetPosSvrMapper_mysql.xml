@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbsd.bottomastsub.dao.SdBotAssetPosSvrMapper_mysql">
+    <sql id="baseInfo">
+			SELECT
+			    POS.REGIST_SEQNO as registSeqno,
+			    POS.ISSUE_PARTY_ID  as issuePartyId,
+			    POS_DATE as posDate,
+			    POS.PLAN_ASSET_ID as planAssetId,
+			    POS.ASSET_CODE as assetCode,
+			    POS.TOTAL_NUM as totalNum,
+			    POS.ISSUE_AMT as issueAmt,
+			    POS.UNINVEST_CASH as uninvestCash,
+			    POS.POS_NUM as posNum,
+			    POS.POS_AMT as posAmt,
+			    POS.ORG_CODE as orgCode,
+			    POS.DEPT_CODE as deptCode,
+			    POS.CREATE_USER as createUser,
+			    POS.CREATE_TIME as createTime,
+			    POS.UPDATE_USER as updateUser,
+			    POS.UPDATE_TIME as updateTime,
+			    POS.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+			    POS.SUBMIT_DEADLINE as submitDeadline,
+			    POS.SEND_STATUS as sendStatus,
+			    POS.SUBMIT_TIME as submitTime,
+			    POS.REGIST_SEQNO registSeqno,
+			    POS.STATUS_DATE as statusDate,
+			    POS.STATUS as status,
+			    POS.SUMIT_SEQ as sumitSeq,
+			    POS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+			FROM
+			    CHB_BOT_AST_POS_SUB POS
+	</sql>
+
+    <select id="selcteUnRegData" resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
+        <include refid="baseInfo"/>
+        <where>
+            <!--<if test="batchDate!=null and batchDate!=''">
+                to_char(POS.POS_DATE,'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR}
+            </if>-->
+            AND POS.SEND_STATUS = '01'
+            AND POS.STATUS = '01' /*暂时只报送新建状态数据*/
+        </where>
+        ORDER BY POS.PLAN_ASSET_ID,POS.POS_DATE /*后续报文需要根据父子节点对应封装*/
+    </select>
+</mapper>

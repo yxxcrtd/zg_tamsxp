@@ -89,6 +89,71 @@ public class EtrAgreRepTradeDto  extends BaseEntity implements ProcessEntity{
 	 */
 	@JsonSerialize(using= BigDecimalSerializer.class)
 	private BigDecimal accAvailablePos;
+
+	// add by etliu 20220116 start
+	// GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
+	/**
+	 * 投资目的
+	 */
+	private String pledgeInvAim;
+	/**
+	 * 投资目的
+	 */
+	private String newPledgeInvAim;
+	/**
+	 * 投资目的
+	 */
+	private String finDealPledgePledgeInvAim;
+	/**
+	 * 投资目的
+	 */
+	private String dataPledgeInvAim;
+	/**
+	 * 投资目的
+	 */
+	private String finPledgeDispDetailPledgeInvAim;
+
+	public String getPledgeInvAim() {
+		return pledgeInvAim;
+	}
+
+	public void setPledgeInvAim(String pledgeInvAim) {
+		this.pledgeInvAim = pledgeInvAim;
+	}
+
+	public String getNewPledgeInvAim() {
+		return newPledgeInvAim;
+	}
+
+	public void setNewPledgeInvAim(String newPledgeInvAim) {
+		this.newPledgeInvAim = newPledgeInvAim;
+	}
+
+	public String getFinDealPledgePledgeInvAim() {
+		return finDealPledgePledgeInvAim;
+	}
+
+	public void setFinDealPledgePledgeInvAim(String finDealPledgePledgeInvAim) {
+		this.finDealPledgePledgeInvAim = finDealPledgePledgeInvAim;
+	}
+
+	public String getDataPledgeInvAim() {
+		return dataPledgeInvAim;
+	}
+
+	public void setDataPledgeInvAim(String dataPledgeInvAim) {
+		this.dataPledgeInvAim = dataPledgeInvAim;
+	}
+
+	public String getFinPledgeDispDetailPledgeInvAim() {
+		return finPledgeDispDetailPledgeInvAim;
+	}
+
+	public void setFinPledgeDispDetailPledgeInvAim(String finPledgeDispDetailPledgeInvAim) {
+		this.finPledgeDispDetailPledgeInvAim = finPledgeDispDetailPledgeInvAim;
+	}
+	// add by etliu 20220116 end
+
 	public String getTradeId() {
 		return tradeId;
 	}

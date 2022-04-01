@@ -96,11 +96,11 @@
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
-			<if test="prdCodeList != null and prdCodeList.size()>0">
-				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+<!--			<if test="prdCodeList != null and prdCodeList.size()>0">-->
+<!--				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">-->
+<!--					#{item,jdbcType=VARCHAR}-->
+<!--				</foreach>-->
+<!--			</if>-->
 			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
 				<foreach collection="prdRegistCodeList" item="item" open="and ciis.REG_CODE in(" separator="," close=")">
 					#{item,jdbcType=VARCHAR}
@@ -183,11 +183,11 @@
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
-			<if test="prdCodeList != null and prdCodeList.size()>0">
-				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+<!--			<if test="prdCodeList != null and prdCodeList.size()>0">-->
+<!--				<foreach collection="prdCodeList" item="item" open="and ciis.ACCOUNT in(" separator="," close=")">-->
+<!--					#{item,jdbcType=VARCHAR}-->
+<!--				</foreach>-->
+<!--			</if>-->
 			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
 				<foreach collection="prdRegistCodeList" item="item" open="and ciis.REG_CODE in(" separator="," close=")">
 					#{item,jdbcType=VARCHAR}
@@ -374,25 +374,24 @@
 		</where>
 	</update>
 
-	<!-- 批量插入报送状态表 -->
-	<insert id="insertSubmitStatus" parameterType="java.util.List" >
-		insert into CHB_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
-		SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
-		CREATE_USER, CREATE_TIME)
-		select A.* from (
-		<foreach collection="list" item="item" index="index" separator="UNION ALL">
-			select  #{item.seqno,jdbcType=VARCHAR} SEQNO,
-			#{item.submitNum,jdbcType=DECIMAL} SUBMIT_NUM,
-			#{item.submitType,jdbcType=VARCHAR} SUBMIT_TYPE,
-			#{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
-			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME
-			from dual
+
+	<update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		begin
+		<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
+			update CHB_EQU_SUB
+			<set >
+				<if test="item.submitFeedbackStatus != null" >
+					SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus.reqId,jdbcType=VARCHAR},
+				</if>
+			</set>
+			where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
 		</foreach>
-		)A
-	</insert>
+		end;
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+	</update>
+
+
 
 	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
 		update CHB_EQUDET_SUBMIT_STATUS subStatus
@@ -975,7 +974,9 @@
 		ciis.SUMIT_SEQ				sumitSeq,
 		ciis.CHECK_SEQNO			checkSeqno
 		from CHB_EQUDET_SUB ciis
-		left join CHB_SUBMIT_STATUS status
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		left join CHB_EQUDET_SUBMIT_STATUS status
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		on ciis.sumit_seq = status.seqno
 		<where>
 			ciis.SUBMIT_STATUS='01'

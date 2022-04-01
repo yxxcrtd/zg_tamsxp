@@ -30,7 +30,6 @@ public class CounterController {
             @ApiImplicitParam(required = false, name = "counterId", value = "对手方编号", paramType = "query")
     })
     public Message<List<CounterSeatInfo>> counterPartyInfo(@RequestParam(required = false) String counterId) {
-
         return counterManagement.queryCounterParty(counterId);
     }
 

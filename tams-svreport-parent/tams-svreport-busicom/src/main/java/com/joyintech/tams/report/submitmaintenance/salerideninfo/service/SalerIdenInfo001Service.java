@@ -8,8 +8,10 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -42,7 +44,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      */
     public Page<SalerIdenInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
     {
-        return super.queryForPage(page,length,() -> chbSalerIdenInfoMapper.selectForPage(pageParam));
+        Page<SalerIdenInfoDto> pageList = super.queryForPage(page,length,() -> chbSalerIdenInfoMapper.selectForPage(pageParam));
+        this.formatByType(pageList.getRoot());
+        return pageList;
     }
 
     /**
@@ -985,5 +989,40 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         }
         return length;
 
+    }
+
+    public static List<SalerIdenInfoDto> formatByType(List<SalerIdenInfoDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerSex(getDictCodeAndName(DictCode.性别_中债, item.getSalerSex()));
+                item.setSalerCredentType(getDictCodeAndName(DictCode.销售人员证件类型, item.getSalerCredentType()));
+                item.setSalerAreaType(getDictCodeAndName(DictCode.销售区域_中债, item.getSalerAreaType()));
+                item.setSalerEduLevel(getDictCodeAndName(DictCode.销售人员学历, item.getSalerEduLevel()));
+                item.setSalerStatus(getDictCodeAndName(DictCode.销售人员当前状态, item.getSalerStatus()));
+                item.setSalerDegree(getDictCodeAndName(DictCode.销售人员学位, item.getSalerDegree()));
+                item.setSalerLevle(getDictCodeAndName(DictCode.销售人员专业技术职称, item.getSalerLevle()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

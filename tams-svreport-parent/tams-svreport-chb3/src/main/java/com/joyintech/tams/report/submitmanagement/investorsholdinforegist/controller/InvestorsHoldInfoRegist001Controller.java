@@ -82,6 +82,9 @@ public class InvestorsHoldInfoRegist001Controller extends BaseController {
 	@Override
 	public String init(Model model) {
 		Map<String, Object> map = RequestUtil.getPageParam();
+		// add by zcw 中债三期优化 start
+		model.addAttribute("holdDateStr",DateUtil.format(DateUtil.addDay(DateUtil.platDateFromCache(), -1)));
+		// add by zcw 中债三期优化 end
 		if (StringUtil.isNotEmpty(map.get("submitStatus"))) {
 			model.addAttribute("submitStatus", map.get("submitStatus").toString().trim());
 			if (StringUtil.isNotEmpty(map.get("status"))) {

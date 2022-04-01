@@ -1,200 +1,204 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{layout/default}">
 <head>
-<meta charset="utf-8">
-<title data-th-text="#{EquityInfo002}">新建投资者信息</title>
-<link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
+    <meta charset="utf-8">
+    <title data-th-text="#{EquityInfo002}">新建投资者信息</title>
+    <link rel="stylesheet" type="text/css" data-th-href="@{/css/report/report.css}">
 </head>
 
 <body>
 <div layout:fragment="content">
-  <form class="layui-form joyin-form-wrap" id="submitForm">
-    <input hidden type="text" id="bankCode" data-th-value="${entity?.bankCode}" style="display:none;">
-    <input hidden type="text" id="orgCode" data-th-value="${entity?.orgCode}" style="display:none;">
-    <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">识别标识</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="indentifyMark" name="indentifyMark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.indentifyMark}" required>
-        </div>
-      </div>
-      <div id="editOrNew" class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">原识别标识</label>
-        <div class="layui-input-inline input-inline">
-          <input disabled type="text" id="orgIndentifyMark" name="orgIndentifyMark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.orgIndentifyMark}" >
-        </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">该投资者是否属于本行</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="isBelongBank" name="isBelongBank" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.isBelongBank}"  data-th-data-result='${SVR_YES_OR_NO}' >
-        </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">投资者名称</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderName" name="holderName" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderName}"  required>
-        </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">投资者所属银行名称</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="theBankName" name="theBankName" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.theBankName}" >
-        </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">投资者所属银行代码</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="theBankCode" name="theBankCode" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.theBankCode}" >
-        </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">投资者境内外标识</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderMark" name="holderMark" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderMark}"  data-th-data-result='${BLN_AREA}' required>
-        </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">投资者所属国家或地区</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderRegion" name="holderRegion" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderRegion}" data-th-data-result='${SVR_COUNTRY_AREA}'>
-        </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">投资者类别</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderType" name="holderType" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderType}"  data-th-data-result='${HOLDER_TYPE}' required>
-        </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">个人证件类别</label>
-        <div class="layui-input-inline input-inline">
-        
-        	<select id="personalIdentifyType" name="personalIdentifyType" class="layui-input form-input input-select" data-th-formatoption="false"
-                          placeholder="请输入内容" data-th-initValue="${entity?.personalIdentifyType}"  data-th-data-result='${PERSONAL_IDENTIFY_TYPE}' required>
-                        </select>
-        
+    <form class="layui-form joyin-form-wrap" id="submitForm">
+        <input hidden type="text" id="bankCode" data-th-value="${entity?.bankCode}" style="display:none;">
+        <input hidden type="text" id="orgCode" data-th-value="${entity?.orgCode}" style="display:none;">
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">登记银行代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="registBankCode"  class="layui-input form-input" data-th-value="${entity?.bankCode}?:${registBankCode}" disabled>
+                </div>
             </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">机构证件类别</label>
-        <div class="layui-input-inline input-inline">
-        <select id="institutionIdentifyType" name="institutionIdentifyType" class="layui-input form-input input-select" data-th-formatoption="false"
-                         placeholder="请输入内容"  data-th-initValue="${entity?.institutionIdentifyType}"  data-th-data-result='${INSTITUTION_IDENTIFY_TYPE}' required>
-                        </select>
-          </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">其他证件名称</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="otherIdentifyName" name="otherIdentifyName" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.otherIdentifyName}" >
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者分类</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderClassify" name="holderClassify" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderClassify}"  data-th-data-result='${HOLDER_CLASSIFY}' required>
+                </div>
+            </div>
         </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">证件号码</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="identifyNumber" name="identifyNumber" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.identifyNumber}" required>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">识别标识</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="indentifyMark" name="indentifyMark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.indentifyMark}" required>
+                </div>
+            </div>
+            <div id="editOrNew" class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">原识别标识</label>
+                <div class="layui-input-inline input-inline">
+                    <input disabled type="text" id="orgIndentifyMark" name="orgIndentifyMark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.orgIndentifyMark}" >
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">性别</label>
-        <div class="layui-input-inline input-inline">
-        	<select id="holderSex" name="holderSex" class="layui-input form-input input-select" data-th-formatoption="false"
-                         placeholder="请输入内容"  data-th-initValue="${entity?.holderSex}"  data-th-data-result='${SVR_SEX}' required>
-                        </select>
-          </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">SPV资金托管账户开户行</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="spvCapAccBank" name="spvCapAccBank" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.spvCapAccBank}"  data-th-data-result='${SPV_CAP_ACC_BANK}'>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">该投资者是否属于本行</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="isBelongBank" name="isBelongBank" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.isBelongBank}"  data-th-data-result='${SVR_YES_OR_NO}' >
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者名称</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderName" name="holderName" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderName}"  required>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">其他资金托管账户开户行</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="otherCapAccBank" name="otherCapAccBank" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.otherCapAccBank}"  data-th-data-result='${SPV_CAP_ACC_BANK}'>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者所属银行名称</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="theBankName" name="theBankName" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.theBankName}" >
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者所属银行代码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="theBankCode" name="theBankCode" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.theBankCode}" >
+                </div>
+            </div>
         </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">手机号码</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderCellphone" name="holderCellphone" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderCellphone}" >
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者境内外标识</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderMark" name="holderMark" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderMark}"  data-th-data-result='${BLN_AREA}' required>
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者所属国家或地区</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderRegion" name="holderRegion" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderRegion}" data-th-data-result='${SVR_COUNTRY_AREA}'>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">固定电话</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderTelephone" name="holderTelephone" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderTelephone}" >
-        </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">电子邮箱</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderEmail" name="holderEmail" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderEmail}" >
-        </div>
-      </div>
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">风险偏好</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="holderRiskPrefer" name="holderRiskPrefer" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderRiskPrefer}"  data-th-data-result='${SVR_RISKTYPE}' >
-        </div>
-      </div>
-      </div>
-      <div class="layui-form-item">
-        <div class="layui-inline layui-col-md6">
-          <label class="layui-form-label form-lable">投资者分类</label>
-          <div class="layui-input-inline input-inline">
-            <input type="text" id="holderClassify" name="holderClassify" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderClassify}"  data-th-data-result='${HOLDER_CLASSIFY}' required>
-          </div>
-        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">投资者类别</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderType" name="holderType" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderType}"  data-th-data-result='${HOLDER_TYPE}' required>
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">个人证件类别</label>
+                <div class="layui-input-inline input-inline">
 
-    </div>
-    <div class="layui-form-item">
+                    <select id="personalIdentifyType" name="personalIdentifyType" class="layui-input form-input input-select" data-th-formatoption="false"
+                            placeholder="请输入内容" data-th-initValue="${entity?.personalIdentifyType}"  data-th-data-result='${PERSONAL_IDENTIFY_TYPE}' required>
+                    </select>
 
-      <div class="layui-inline layui-col-md6">
-        <label class="layui-form-label form-lable">备注</label>
-        <div class="layui-input-inline input-inline">
-          <input type="text" id="remark" name="remark" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.remark}" >
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="layui-col-md11" style="margin:50px;">
-      <div class="text-center"> <a id="EquityInfo002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.submit}">提交</a> <a id="EquityInfo002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a> </div>
-    </div>
-  </form>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">机构证件类别</label>
+                <div class="layui-input-inline input-inline">
+                    <select id="institutionIdentifyType" name="institutionIdentifyType" class="layui-input form-input input-select" data-th-formatoption="false"
+                            placeholder="请输入内容"  data-th-initValue="${entity?.institutionIdentifyType}"  data-th-data-result='${INSTITUTION_IDENTIFY_TYPE}' required>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">其他证件名称</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="otherIdentifyName" name="otherIdentifyName" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.otherIdentifyName}" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">证件号码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="identifyNumber" name="identifyNumber" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.identifyNumber}" required>
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">性别</label>
+                <div class="layui-input-inline input-inline">
+                    <select id="holderSex" name="holderSex" class="layui-input form-input input-select" data-th-formatoption="false"
+                            placeholder="请输入内容"  data-th-initValue="${entity?.holderSex}"  data-th-data-result='${SVR_SEX}' required>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">SPV资金托管账户开户行</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="spvCapAccBank" name="spvCapAccBank" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.spvCapAccBank}"  data-th-data-result='${SPV_CAP_ACC_BANK}'>
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">其他资金托管账户开户行</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="otherCapAccBank" name="otherCapAccBank" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.otherCapAccBank}"  data-th-data-result='${SPV_CAP_ACC_BANK}'>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">手机号码</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderCellphone" name="holderCellphone" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderCellphone}" >
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">固定电话</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderTelephone" name="holderTelephone" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderTelephone}" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">电子邮箱</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderEmail" name="holderEmail" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.holderEmail}" >
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md6">
+                <label class="layui-form-label form-lable">风险偏好</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="holderRiskPrefer" name="holderRiskPrefer" class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-initValue="${entity?.holderRiskPrefer}"  data-th-data-result='${SVR_RISKTYPE}' >
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div>
+                <label class="layui-form-label form-lable" style='width: 18%;'>备注</label>
+                <div class="layui-input-inline input-inline" style="width: 80%!important;">
+                    <input type="text" id="remark" name="remark" class="layui-textarea mst-textarea" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.remark}" >
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md11" style="margin:50px;">
+            <div class="text-center"> <a id="EquityInfo002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.submit}">提交</a> <a id="EquityInfo002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a> </div>
+        </div>
+    </form>
 </div>
 <div layout:fragment="script">
-  <script data-th-inline="javascript" type="text/javascript">
-    /* var CNY="${CNY}"; */
-    /* var entity = '${entity}'; */
-    var indentifyMarkDefault = /*[[${entity?.indentifyMark}]]*/'';
-    var orgIndentifyMarkDefault = /*[[${entity?.orgIndentifyMark}]]*/'';
-    var isSubmit = /*[[${isSubmit}]]*/'';
-    var no = /*[[${no}]]*/'';
-  </script>
-  <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
-  <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
-  <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
-  <script data-th-src="@{/js/report/submitmaintenance/equityinfo/EquityInfo002.js}" type="text/javascript"></script> 
+    <script data-th-inline="javascript" type="text/javascript">
+        /* var CNY="${CNY}"; */
+        /* var entity = '${entity}'; */
+        var indentifyMarkDefault = /*[[${entity?.indentifyMark}]]*/'';
+        var orgIndentifyMarkDefault = /*[[${entity?.orgIndentifyMark}]]*/'';
+        var isSubmit = /*[[${isSubmit}]]*/'';
+        var no = /*[[${no}]]*/'';
+    </script>
+    <script data-th-src="@{/js/report/jquery.validate.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/joyinvalid.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/report-common.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/report/submitmaintenance/equityinfo/EquityInfo002.js}" type="text/javascript"></script>
 </div>
 </body>
 </html>

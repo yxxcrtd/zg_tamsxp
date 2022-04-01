@@ -230,6 +230,19 @@ public class StlSecReconDeal extends BaseEntity {
     private BigDecimal totalTeeamt;
 
     /**
+     * 回购类型
+     */
+    private String repoType;
+
+    public String getRepoType() {
+        return repoType;
+    }
+
+    public void setRepoType(String repoType) {
+        this.repoType = repoType == null ? null : repoType.trim();
+    }
+
+    /**
      * 取得 券商对账单流水号
      * @return 券商对账单流水号
      */

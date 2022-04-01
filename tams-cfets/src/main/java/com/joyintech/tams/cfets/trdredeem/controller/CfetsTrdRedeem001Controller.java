@@ -13,6 +13,7 @@ package com.joyintech.tams.cfets.trdredeem.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -23,6 +24,8 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondRegCheckRequst;
 import com.joyintech.tams.cfets.bankuplink.bond.dto.PtlAllocationDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsQuotedCommonService;
 import com.joyintech.tams.cfets.bankuplink.bond.service.IbuQuoteBondService;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealRegisterQuoteDto;
+import com.joyintech.tams.cfets.bankuplink.repo.service.CfetsRepoQuotedPrice004Service;
 import com.joyintech.tams.cfets.etrib.bond.controller.CfetsEtrIbBondinfoController;
 import com.joyintech.tams.cfets.etrib.bond.dto.CfetsBussCombDistribtBaseDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemCheckRequst;
@@ -30,6 +33,7 @@ import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealCommonDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemDealRegisterQuoteDto;
 import com.joyintech.tams.cfets.trdredeem.dto.CfetsTrdRedeemRegInfoListResponse;
 import com.joyintech.tams.cfets.trdredeem.service.CfetsTrdRedeem001Service;
+import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -87,6 +91,8 @@ public class CfetsTrdRedeem001Controller extends BaseController {
     private IbuQuoteBondService ibuQuoteBondService;
     @Autowired
     private CfetsQuotedCommonService cfetsQuotedCommonService;
+    @Autowired
+    private CfetsRepoQuotedPrice004Service cfetsRepoQuotedPrice004Service;
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向,  BussinessDictCode.币种);
@@ -138,7 +144,11 @@ public class CfetsTrdRedeem001Controller extends BaseController {
         }
         List<CfetsTrdRedeemDealRegisterQuoteDto> CfetsBondDealRegisterQuoteDtos = new ArrayList<>();
         for (CfetsTrdRedeemRegInfoListResponse cfetsBondRegCheckDetaileRequst : cfetsBondRegCheckRequst.getCfetsBondRegCheckDetaileRequsts()) {
-            CfetsTrdRedeemDealRegisterQuoteDto cfetsTrdRedeemDealRegisterQuoteDto = new CfetsTrdRedeemDealRegisterQuoteDto();
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+            wflValidInputParameter.setPageId("CfetsTrdRedeem001");
+            wflValidInputParameter.setBusinessDataPk1(cfetsBondRegCheckDetaileRequst.getBusiCode());
+            ProcessMark processMark = cfetsRepoQuotedPrice004Service.getBusinessInfoByPageIdAndPk(wflValidInputParameter);
+            CfetsTrdRedeemDealRegisterQuoteDto cfetsTrdRedeemDealRegisterQuoteDto =cfetsTrdRedeem001Service.getBussinessEntity(processMark);
             cfetsTrdRedeemDealRegisterQuoteDto.setTotleTradeId(cfetsBondRegCheckDetaileRequst.getBusiCode());
             cfetsTrdRedeemDealRegisterQuoteDto.setRevokeReason(cfetsBondRegCheckRequst.getRemark());
             cfetsTrdRedeemDealRegisterQuoteDto.setOperatorType("revoke");
@@ -166,13 +176,22 @@ public class CfetsTrdRedeem001Controller extends BaseController {
         return new Message<AjaxResult>().success().setData(ajaxResult);
     }
 
+    /**
+     * 待办事项页面,保存校验
+     * @param CfetsTrdRedeemDealCommonDto
+     * @return
+     */
+    @PostMapping("/checkByHome")
+    @ResponseBody
+    public AjaxResult checkByHome(@RequestBody CfetsTrdRedeemDealCommonDto cfetsTrdRedeemDealCommonDto){
+        //check必填项
+        return cfetsTrdRedeem001Service.checkNotEmpty(cfetsTrdRedeemDealCommonDto);
+    }
+
     @ApiOperation(value = "登记提交(保存)", notes = "登记提交(保存)")
     @ResponseBody
     @PostMapping("save")
 	public Message<AjaxResult> save(@RequestBody CfetsTrdRedeemDealCommonDto dto, BindingResult br) throws Exception{
-        if (br.hasErrors()) {
-            return new Message<AjaxResult>().success().setData(new AjaxResult(br));
-		}
         CfetsTrdRedeemDealRegisterQuoteDto cfetsTrdRedeemDealRegisterQuoteDto = new CfetsTrdRedeemDealRegisterQuoteDto();
         //前台实体转成后台dto
         BeanUtil.copyPropertiesIgnoreNull(cfetsTrdRedeemDealRegisterQuoteDto, dto);

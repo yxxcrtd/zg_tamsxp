@@ -76,12 +76,22 @@ public class FinProductTradeDto extends BaseEntity {
      * 是否处理委托完成度
      */
     private boolean needHandleFinishEntrust;
-    
+
+    /**
+     * 是否走工作流（结算下行过来的数据没有流程中的记录）
+     */
+    private boolean isNotWorkflow;
+
 //    /**
 //     * 是否有报价信息（01：是，02：否,03:撤销）
 //     */
 //    private String isOfferFlag;
-    
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
+
     public String getIsDealSettlePosition() {
         return isDealSettlePosition;
     }
@@ -271,11 +281,26 @@ public class FinProductTradeDto extends BaseEntity {
         this.needHandleFinishEntrust = needHandleFinishEntrust;
     }
 
-//	public String getIsOfferFlag() {
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
+    }
+    //	public String getIsOfferFlag() {
 //		return isOfferFlag;
 //	}
 //
 //	public void setIsOfferFlag(String isOfferFlag) {
 //		this.isOfferFlag = isOfferFlag;
 //	}
+
+    public boolean isNotWorkflow() {
+        return isNotWorkflow;
+    }
+
+    public void setNotWorkflow(boolean notWorkflow) {
+        isNotWorkflow = notWorkflow;
+    }
 }

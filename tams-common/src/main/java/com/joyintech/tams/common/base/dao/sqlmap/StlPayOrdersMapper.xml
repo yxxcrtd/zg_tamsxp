@@ -350,6 +350,65 @@
         </set>
         where ORDER_ID = #{orderId,jdbcType=VARCHAR}
     </update>
+
+    <update id="updateByTradeId" parameterType="com.joyintech.tams.common.base.entity.StlPayOrders" >
+        update STL_PAY_ORDERS
+        <set >
+            <if test="settleAmt != null" >
+                SETTLE_AMT = #{settleAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleStatus != null" >
+                SETTLE_STATUS = #{settleStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="purpose != null" >
+                PURPOSE = #{purpose,jdbcType=VARCHAR},
+            </if>
+            <if test="isNeedSend != null" >
+                IS_NEED_SEND = #{isNeedSend,jdbcType=VARCHAR},
+            </if>
+            <if test="isTotalTrade != null" >
+                IS_TOTAL_TRADE = #{isTotalTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null" >
+                ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE = #{sendDate,jdbcType=DATE},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRecStatus != null" >
+                ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRetStatus != null" >
+                ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where  TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlPayOrders" >
         update STL_PAY_ORDERS
         set ORDER_TYPE = #{orderType,jdbcType=VARCHAR},

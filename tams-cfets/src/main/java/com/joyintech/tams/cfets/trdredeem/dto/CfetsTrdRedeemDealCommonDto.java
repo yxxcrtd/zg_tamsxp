@@ -195,6 +195,9 @@ public class CfetsTrdRedeemDealCommonDto extends BaseEntity implements ProcessEn
     @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
     private String softSkipMode;
 
+    @ApiModelProperty(name="totleTradeId",value="汇总交易编号")
+    private String totleTradeId;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -664,6 +667,14 @@ public class CfetsTrdRedeemDealCommonDto extends BaseEntity implements ProcessEn
 
     public void setSoftSkipMode(String softSkipMode) {
         this.softSkipMode = softSkipMode;
+    }
+
+    public String getTotleTradeId() {
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
 }
 

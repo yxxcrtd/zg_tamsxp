@@ -7,8 +7,11 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.ChbSalerInstSub;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
+import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.util.Date;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -23,6 +26,83 @@ public class SalerInstInfoRegistDto extends ChbSalerInstSub implements ProcessEn
 
     @BusinessKey("SALER_ORG_CODE")
     public String salerOrgCode;//总部或分支机构编码业务主键
+
+    /**
+     * 登记序列
+     */
+    private String registSeqno;
+
+    /**
+     * 销售机构代码
+     */
+    private String salerInstCode;
+
+    /**
+     * 销售机构名称
+     */
+    private String salerInstName;
+
+    /**
+     * 总部或分支机构名称
+     */
+    private String salerOrgName;
+
+    /**
+     * 机构层级
+     */
+    @DictFormat(DictCode.机构层级)
+    private String salerOrgLevel;
+
+    /**
+     * 报送流水号
+     */
+    private String sumitSeq;
+
+    /**
+     * 中债报送截止日
+     */
+    private Date chbSubmitDeadline;
+
+    /**
+     * 行内报送截止日
+     */
+    private Date submitDeadline;
+
+    /**
+     * 报送状态
+     */
+    private String sendStatus;
+
+    /**
+     * 报送时间
+     */
+    private Date submitTime;
+
+    /**
+     * 反馈状态
+     */
+    @DictFormat(DictCode.报送反馈状态)
+    private String submitFeedbackStatus;
+
+    /**
+     * 报送反馈消息
+     */
+    private String submitFeedbackMsg;
+
+    /**
+     * 数据日期
+     */
+    private Date dataDate;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 机构代码
+     */
+    private String orgCode;
     //报送状态字符串化
     public String getStatusStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());

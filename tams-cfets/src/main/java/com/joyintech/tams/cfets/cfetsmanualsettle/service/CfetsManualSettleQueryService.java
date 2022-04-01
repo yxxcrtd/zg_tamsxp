@@ -42,9 +42,6 @@ import java.util.*;
 @Service("CfetsManualSettleQueryService")
 public class CfetsManualSettleQueryService extends BaseService{
 
-    /**
-     * 日志
-     */
     private Logger logger = LoggerFactory.getLogger(CfetsManualSettleQueryService.class);
 
     @Autowired
@@ -64,18 +61,14 @@ public class CfetsManualSettleQueryService extends BaseService{
 
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
-
     /**
      * 默认设置
      */
     private static final int EFFERANGE_NO = 0;
-
-
     /**
      * 默认设置用户ID
      */
     private static final String USER_ID = "COMM";
-
     /**
      * 用户自定义设置
      */
@@ -89,7 +82,6 @@ public class CfetsManualSettleQueryService extends BaseService{
      */
     public Page<CfetsManualSettleTradeListRespond> findPage(CfetsManualSettleTradeListRequest dto) {
         Map<String,Object> pageParam = BeanUtil.object2Map(dto);
-
         List<String> listTemp = Arrays.asList(dto.getSettleStatus());
         if(!listTemp.contains("all")){
             pageParam.put("settleStatusList", listTemp);
@@ -99,7 +91,6 @@ public class CfetsManualSettleQueryService extends BaseService{
         }else{
             pageParam.put("isContainDelivery01", true);
         }
-
         if(dto.getSettleDate() == null){
             pageParam.put("settleDateStart", DateUtil.format(DateUtil.platDateFromCache()));
             pageParam.put("settleDateEnd", DateUtil.format(DateUtil.platDateFromCache()));
@@ -111,19 +102,14 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("tradeDateStart", DateUtil.parse(dto.getTradeDate()[0]));
             pageParam.put("tradeDateEnd", DateUtil.parse(dto.getTradeDate()[1]));
         }
-
-        String portfolioId = (String)pageParam.get("portfolioId");
         if(StringUtil.isNotEmpty(pageParam.get("portfolioId"))){
             List<String> portfolioIdList = StringUtil.splitToList(",",(String)pageParam.get("portfolioId"));
             pageParam.put("portfolioIdList", portfolioIdList);
         }
-
-        String finprodMarketId = (String)pageParam.get("finprodMarketId");
         if(StringUtil.isNotEmpty(pageParam.get("finprodMarketId"))){
             List<String> finprodMarketIdList = StringUtil.splitToList(",",(String)pageParam.get("finprodMarketId"));
             pageParam.put("finprodMarketIdList", finprodMarketIdList);
         }
-
         //平安业务类型
         pageParam.put("PINAN_BUSINESS_TYPE_09", DictCodeListExt1.平安业务类型_债券类资产买入.getValue());
         pageParam.put("PINAN_BUSINESS_TYPE_10", DictCodeListExt1.平安业务类型_债券类资产卖出.getValue());
@@ -142,7 +128,6 @@ public class CfetsManualSettleQueryService extends BaseService{
         pageParam.put("PINAN_BUSINESS_TYPE_106", DictCodeListExt2.平安业务类型_债券借贷融出.getValue());
         pageParam.put("PINAN_BUSINESS_TYPE_107", DictCodeListExt2.平安业务类型_债券借贷融入到期.getValue());
         pageParam.put("PINAN_BUSINESS_TYPE_108", DictCodeListExt2.平安业务类型_债券借贷融出到期.getValue());
-
         //收付方向
         pageParam.put("feePs02", DictCodeListExt1.收付方向_支出.getValue());
         //结算状态
@@ -155,17 +140,17 @@ public class CfetsManualSettleQueryService extends BaseService{
         pageParam.put("cleanStatus01", DictCodeListExt3.清算状态_清算成功.getValue());
         pageParam.put("cleanStatus02", DictCodeListExt3.清算状态_清算失败.getValue());
         pageParam.put("cleanStatus03", DictCodeListExt3.清算状态_清算中.getValue());
-
         //交收状态
         pageParam.put("DELIVERY_STATUS_01", DictCodeListExt3.交收状态_未交收.getValue());
         pageParam.put("DELIVERY_STATUS_02", DictCodeListExt3.交收状态_已交收.getValue());
         pageParam.put("DELIVERY_STATUS_04", DictCodeListExt3.交收状态_交收失败.getValue());
         pageParam.put("DELIVERY_STATUS_NAME01", DictCodeListExt3.交收状态_未交收.getCodeName());
-
+        //交易状态
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
         pageParam.put("TRADE_STATUS_03", DictCodeListExt1.交易状态_撤销.getValue());
 
         pageParam.put("isCalcN", BussinessDictCodeList.是否_否.getValue());
+        //交易状态
         pageParam.put("PS_T07", DictCodeList.交易方向_到期.getValue());
         pageParam.put("PS_T08", DictCodeList.交易方向_还本.getValue());
         pageParam.put("PS_T09", DictCodeList.交易方向_收息.getValue());
@@ -178,12 +163,9 @@ public class CfetsManualSettleQueryService extends BaseService{
         c.setTime(new Date());
         int year = c.get(Calendar.YEAR);
         pageParam.put("year",year);
-
         pageParam.put("sort",dto.getPageMode().getSort());
         pageParam.put("direction",dto.getPageMode().getDirection());
-
-        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                () -> cfetsManualSettleMapper.findPage(pageParam));
+        return super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),() -> cfetsManualSettleMapper.findPage(pageParam));
     }
 
     /**
@@ -193,44 +175,38 @@ public class CfetsManualSettleQueryService extends BaseService{
      * @return Page<CfetsManualSettleFlowRespond>
      */
     public Page<CfetsManualSettleFlowRespond> findManualSettleFlow(CfetsManualSettleCommonRequest dto) {
-        if(dto.getSelectedItem().size()==0){
+        if(dto.getSelectedItem().size() == 0){
             return new Page<CfetsManualSettleFlowRespond>();
         }
-        CfetsManualSettleDto cfetsManualSettleDto =dto.getSelectedItem().get(0);
+        CfetsManualSettleDto cfetsManualSettleDto = dto.getSelectedItem().get(0);
         Map<String,Object> pageParam = BeanUtil.object2Map(cfetsManualSettleDto);
         List<CfetsManualSettleFlowRespond> cfetsManualSettleFlowRespondList = new ArrayList<CfetsManualSettleFlowRespond>();
         Page<CfetsManualSettleFlowRespond> pageLimit = new Page<CfetsManualSettleFlowRespond>();
-        if(StringUtil.isBlank((String)pageParam.get("settleStatus"))
-                ||(StringUtil.equals(DictCodeListExt3.交收状态_未交收.getValue(),(String)pageParam.get("settleStatus"))
-                    && StringUtil.isBlank((String)pageParam.get("settleSeqNo")))){
+        if(StringUtil.isBlank((String)pageParam.get("settleStatus")) ||(StringUtil.equals(DictCodeListExt3.交收状态_未交收.getValue(),(String)pageParam.get("settleStatus"))
+           && StringUtil.isBlank((String)pageParam.get("settleSeqNo")))) { //组装流水信息
             CfetsManualSettleFlowRespond cfetsManualSettleFlowRespond = new CfetsManualSettleFlowRespond();
-            //组装流水信息
             cfetsManualSettleFlowRespond.setSeqNo(1);
             cfetsManualSettleFlowRespond.setSettleDate(cfetsManualSettleDto.getSettleDate());
             cfetsManualSettleFlowRespond.setJiaoShouDate(DateUtil.format(new Date(),"HH:mm:ss"));
             cfetsManualSettleFlowRespond.setFinprodMarketId(cfetsManualSettleDto.getFinprodMarketId());
             cfetsManualSettleFlowRespond.setFinprodAbbr(cfetsManualSettleDto.getFinprodAbbr());
             cfetsManualSettleFlowRespond.setSettleNum(cfetsManualSettleDto.getSettleNum());
-
-            if(StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
-                    && StringUtil.equals(cfetsManualSettleDto.getPs(),DictCodeList.交易方向_买入.getValue())){
+            if(StringUtil.equals(cfetsManualSettleDto.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue()) && StringUtil.equals(cfetsManualSettleDto.getPs(),DictCodeList.交易方向_买入.getValue())) {
             }else{
                 cfetsManualSettleFlowRespond.setSettleAmt(cfetsManualSettleDto.getSettleAmt());
             }
             cfetsManualSettleFlowRespond.setCreateUser(LoginUserUtil.getUserName());
-
             cfetsManualSettleFlowRespondList.add(cfetsManualSettleFlowRespond);
             pageLimit.setRoot(cfetsManualSettleFlowRespondList);
         }else{
-            pageLimit =  super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),
-                    () -> cfetsManualSettleMapper.findManualSettleFlow(pageParam));
+            pageLimit =  super.queryForPage(dto.getPageMode().getPageNo(), dto.getPageMode().getPageSize(),() -> cfetsManualSettleMapper.findManualSettleFlow(pageParam));
         }
         //将交易员和投资经理转为真实姓名
         List<CfetsManualSettleFlowRespond> list = pageLimit.getRoot();
         if(!list.isEmpty()){
             for(CfetsManualSettleFlowRespond cfetsManualSettleFlowRespond : list) {
                 if (StringUtil.isNotEmpty(cfetsManualSettleFlowRespond.getCreateUser())) {
-                    User user=cfetsManualSettleMapper.getRealNameByUserName(cfetsManualSettleFlowRespond.getCreateUser());
+                    User user = cfetsManualSettleMapper.getRealNameByUserName(cfetsManualSettleFlowRespond.getCreateUser());
                     if(StringUtil.isNotEmpty(user)){
                         cfetsManualSettleFlowRespond.setCreateUser(user.getRealName());
                     }
@@ -255,9 +231,9 @@ public class CfetsManualSettleQueryService extends BaseService{
         }
         String userId = SecurityUtil.getLoginUser().getUserName();
         CfetsManualSettleDto settleDto = dto.getSelectedItem().get(0);
-        if("05".equals(settleDto.getTgBusiType()) || "06".equals(settleDto.getTgBusiType())) {//质押式回购
+        if("05".equals(settleDto.getTgBusiType()) || "06".equals(settleDto.getTgBusiType())) {//质押式回购        String totalTradeId = settleDto.getFinprodId()t();
             if("06".equals(settleDto.getTgBusiType())) {
-                settleDto.setTradeId(cfetsTrdQueryMapper.getTotalTradeId(settleDto.getTradeId()));
+                settleDto.setTradeId(cfetsTrdQueryMapper.getTotalTradeId(settleDto.getFinprodId()));
             }
             //基础信息
             List<CfgReadonlyFormShow> baseForm = cfgReadonlyFormShowMapper.getReadonlyForm(pageCode, dtCode, "05");
@@ -286,7 +262,7 @@ public class CfetsManualSettleQueryService extends BaseService{
             //逆回购剔除组合代码和名称
             List<CfgDataTableShow> pledgeTable04 = new ArrayList<>();
             for(CfgDataTableShow show : pledgeTable) {
-                if(settleDto.getPs().equals("04") && ("portfolioId".equals(show.getColCode()) || "portfolioName".equals(show.getColCode())))continue;
+                if(settleDto.getPs().equals("04") && ("portfolioId".equals(show.getColCode()) || "portfolioName".equals(show.getColCode()))) continue;
                 pledgeTable04.add(show);
             }
             resultData.put("CfetsTrdQueryRegInfo_formb", baseForm);
@@ -297,15 +273,10 @@ public class CfetsManualSettleQueryService extends BaseService{
             resultData.put("CfetsTrdQueryRegInfo_tablepledge", pledgeTable04);
 
             Map<String, Object> pageParam = new HashMap<>();
-
-
             pageParam.put("totleTradeId", settleDto.getTradeId());
             //判断角色配置
             List<String> roleList = cfetsTrdQueryMapper.selectSysRoleById(userId);
-            if (roleList.contains(DictCodeList.角色岗位_领导.getValue())
-                    || roleList.contains(DictCodeList.角色岗位_投资处长.getValue())
-                    || roleList.contains(DictCodeList.角色岗位_交易处长.getValue())
-            ) {
+            if (roleList.contains(DictCodeList.角色岗位_领导.getValue()) || roleList.contains(DictCodeList.角色岗位_投资处长.getValue())|| roleList.contains(DictCodeList.角色岗位_交易处长.getValue())) {
                 //角色配置为领导、交易处长、投资处长可查看所有数据
             } else if (roleList.contains(DictCodeList.角色岗位_交易员.getValue())) {
                 //交易员
@@ -378,7 +349,9 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("feeType06", BussinessDictCodeList.费用类型_交易手续费.getValue());
             pageParam.put("feeType08", BussinessDictCodeList.费用类型_结算手续费.getValue());
             pageParam.put("psT39", BussinessDictCodeList.交易方向_行权赎回.getValue());
-
+            pageParam.put("A_001", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            pageParam.put("cdate",iPlatformDate.getSysDate());
+            pageParam.put("DATE_TYPE_0", 0);
             resultData.put(dtCode + "_form", infoForm);
             resultData.put(dtCode + "_form1", infoForm1);
             resultData.put(dtCode + "_form2", infoForm2);
@@ -387,13 +360,21 @@ public class CfetsManualSettleQueryService extends BaseService{
             pageParam.put("CASH_TYPE_1_02", DictCodeListExt1.现金流一级类型_利息.getValue());
             pageParam.put("CASH_TYPE_2_C02", DictCodeListExt1.现金流二级类型_利息.getValue());
             List<PortIntFenPeiInfoDto> portIntFenPeiInfoDtoList = cfetsManualSettleMapper.findPortIntFenPeiInfoList(pageParam);
-
+            if(CollectionUtils.isEmpty(portIntFenPeiInfoDtoList)) {
+                portIntFenPeiInfoDtoList = cfetsManualSettleMapper.findTempPortIntFenPeiInfoList(pageParam);
+            }
             if (StringUtil.equals(spcdCodeTemp, "04")) {
                 CfetsManualSettleInfoRespond cfetsManualSettleInfoRespond = cfetsManualSettleMapper.findManualSettleInfo(pageParam);
+                if(Objects.isNull(cfetsManualSettleInfoRespond)) {
+                    cfetsManualSettleInfoRespond = cfetsManualSettleMapper.findTempManualSettleInfo(pageParam);
+                }
                 resultData.put(dtCode + "_data", cfetsManualSettleInfoRespond);
                 resultData.put(dtCode + "_data1", cfetsManualSettleInfoRespond);
             } else {
                 CfetsManualSettleInfoOtherListRespond cfetsManualSettleInfoOtherListRespond = cfetsManualSettleMapper.findManualSettleInfoOther(pageParam);
+                if(Objects.isNull(cfetsManualSettleInfoOtherListRespond)) {
+                    cfetsManualSettleInfoOtherListRespond = cfetsManualSettleMapper.findTempManualSettleInfoOther(pageParam);
+                }
                 resultData.put(dtCode + "_data", cfetsManualSettleInfoOtherListRespond);
                 resultData.put(dtCode + "_data1", cfetsManualSettleInfoOtherListRespond);
             }

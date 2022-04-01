@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.mst.mstholiday.dao.SvrMstHolidayInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstHoliday" >
+        <id column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="IS_HOLIDAY" property="isHoliday" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        SELECT
+        CDATE                        AS CDATE,
+        CALENDAR_ID,
+        '01'                         AS MARKET_CODE,
+        IS_HOLIDAY AS IS_HOLIDAY,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        '' AS CREATE_DEPT2,
+        '' AS AGENT,
+        'E'  AS STATUS
+        FROM
+        MST_HOLIDAY A
+        where 1=1
+        AND A.CALENDAR_ID = '01'
+        <if test="updatetime != null" >
+            and ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

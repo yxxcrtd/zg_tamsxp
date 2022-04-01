@@ -22,13 +22,14 @@
         <result column="OFFSET_ID" property="offsetId" jdbcType="VARCHAR" />
         <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR" />
         <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="IS_EXIST_NEW" property="isExistNew" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID, 
         BRANCH BRANCH, INV_AIM INV_AIM, HODING_TYPE HODING_TYPE, CDATE CDATE, CCY CCY, AMOUNT AMOUNT, 
         P_FINPROD_ID P_FINPROD_ID, TRADE_ID TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, OFFSET_ID OFFSET_ID, 
-        OFFSET_FLAG OFFSET_FLAG, ENTRUST_ID ENTRUST_ID
+        OFFSET_FLAG OFFSET_FLAG, ENTRUST_ID ENTRUST_ID,IS_EXIST_NEW IS_EXIST_NEW
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -57,14 +58,14 @@
             AMOUNT, P_FINPROD_ID, TRADE_ID, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, OFFSET_ID, 
-            OFFSET_FLAG, ENTRUST_ID)
+            OFFSET_FLAG, ENTRUST_ID,IS_EXIST_NEW)
         values (#{seqno,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
             #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{invAim,jdbcType=VARCHAR}, 
             #{hodingType,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
             #{amount,jdbcType=DECIMAL}, #{pFinprodId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{offsetId,jdbcType=VARCHAR}, 
-            #{offsetFlag,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR})
+            #{offsetFlag,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR},#{isExistNew,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecPositionFlow" >
         insert into PTL_SEC_POSITION_FLOW
@@ -129,6 +130,9 @@
             <if test="entrustId != null" >
                 ENTRUST_ID,
             </if>
+            <if test="isExistNew != null" >
+                is_Exist_New,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -190,6 +194,9 @@
             </if>
             <if test="entrustId != null" >
                 #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="isExistNew != null" >
+                #{isExistNew,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -254,6 +261,9 @@
             <if test="entrustId != null" >
                 ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
             </if>
+            <if test="isExistNew != null" >
+                IS_EXIST_NEW = #{isExistNew,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -274,7 +284,8 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
             OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
-            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            IS_EXIST_NEW = #{isExistNew,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 

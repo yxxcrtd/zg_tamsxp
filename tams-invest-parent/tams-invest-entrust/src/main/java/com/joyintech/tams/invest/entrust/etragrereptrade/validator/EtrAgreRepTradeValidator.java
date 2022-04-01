@@ -58,18 +58,27 @@ public class EtrAgreRepTradeValidator implements EtrCommonValidator {
 
         //判断提前购回、到期购回、到期续作、中途换券、解除质押需要判断回购持仓
         if(StringUtil.isNotEmpty(psMap.get(dto.getPs())) && !StringUtil.equals(dto.getRedoType(),"1")) {
+
             Map<String, Object> param = new HashMap<String, Object>();
-            param.put("portfolioId", dto.getPortfolioId());
-            param.put("finprodId", StringUtil.isNotEmpty(dto.getIntiTradeId())?dto.getIntiTradeId():dto.getTradeId());
-//            if (null != dto.getSecAcctId()) {
-//                param.put("secAcctId", dto.getSecAcctId());
-//            }
-            param.put("secAcctId", "999999");
-            param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
-            BigDecimal availableNum =  etrExchangeTrade001Service.selectAvailableNum(param);
-            if(StringUtil.isNotEmpty(availableNum) && BigDecimal.ZERO.compareTo(availableNum)>=0) {
-                errorList.add(new ValidMessage("", psMap.get(dto.getPs()).getCodeName()+"不能重复做！"));
+            param.put("tradeId",StringUtil.isNotEmpty(dto.getTradeId())?dto.getTradeId():dto.getIntiTradeId());
+            EtrAgreRepTradeDto firstEtrAgreRepTradeDto= etrAgreRepTrade001Service.getEntrustInfoByTradeId(param);
+            if(!StringUtil.isNotEmpty(firstEtrAgreRepTradeDto)) {
+                errorList.add(new ValidMessage("", "未找到质押式回购首期信息！"));
             }
+            else {
+                param.put("portfolioId", dto.getPortfolioId());
+                param.put("finprodId", firstEtrAgreRepTradeDto.getTradeId());
+                //if (null != dto.getSecAcctId()) {
+                //    param.put("secAcctId", dto.getSecAcctId());
+               // }
+//            param.put("secAcctId", "999999");
+                param.put("ccy", DictCodeList.币种_人民币_CNY.getValue());
+                BigDecimal availableNum =  etrExchangeTrade001Service.selectAvailableNum(param);
+                if(StringUtil.isNotEmpty(availableNum) && BigDecimal.ZERO.compareTo(availableNum)>=0) {
+                    errorList.add(new ValidMessage("", psMap.get(dto.getPs()).getCodeName()+"不能重复做！"));
+                }
+            }
+
         }
 
 //        if(StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {

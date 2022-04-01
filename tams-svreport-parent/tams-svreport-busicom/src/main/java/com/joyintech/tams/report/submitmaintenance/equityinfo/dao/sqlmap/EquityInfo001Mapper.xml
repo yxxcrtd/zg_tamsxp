@@ -105,13 +105,16 @@
 		T.HOLDER_CLASSIFY as holderClassify,
 		T.FUND_ACC_PLACE as fundAccPlace,
 		'' as agent,
-		status.SUBMIT_FEEDBACK_MSG as repFailedInfo
-		FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
-		on T.sumit_seq = status.seqno
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		FROM CHB_EQU_SUB T
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
 			</if>
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 			<if test="SEQNO !=null and SEQNO.size()>0 ">
 				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
 					#{SUMIT_SEQ,jdbcType=VARCHAR}
@@ -154,15 +157,14 @@
 		T.HOLDER_CLASSIFY as holderClassify,
 		T.FUND_ACC_PLACE as fundAccPlace,
 		'' as agent,
-		status.SUBMIT_FEEDBACK_MSG as repFailedInfo
-		FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
-		on T.sumit_seq = status.seqno
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		FROM CHB_EQU_SUB T
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
 			</if>
 			<if test="reportNo !=null and reportNo !=''">
-				AND status.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+				AND T.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
 			</if>
 
 		</where>
@@ -171,8 +173,6 @@
 	<select id="queryAlSumbitEquityList" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfoDto">
 		select sub.indentify_mark as indentifyMark,sub.regist_bank_code as registBankCode
 		from chb_equ_sub sub
-		left join CHB_SUBMIT_STATUS status
-		on sub.SUMIT_SEQ = status.seqno
 		<where>
 			<if test="equityList != null and equityList.size() > 0">
 				<foreach collection="equityList" item="indentifyMark" open=" AND sub.indentify_mark IN (" close=")" separator=",">
@@ -182,18 +182,16 @@
 					#{registBankCode.registBankCode}
 				</foreach>
 			</if>
-			and status.submit_feedback_status != '02'
+			and sub.submit_feedback_status != '02'
 		</where>
 	</select>
 	<!-- 根据输入的识别标识与登记银行代码查询登记表中的额数据  -->
 	<select id="querySumbitEquityByCode" parameterType="com.joyintech.tams.common.base.entity.ChbEquHold"
 			resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfoDto">
 		select sub.indentify_mark as indentifyMark,sub.regist_bank_code as registBankCode,sub.type,
-		sub.SUBMIT_STATUS as submitStatus,status.submit_feedback_status as submitFeedbackStatus,
+		sub.SUBMIT_STATUS as submitStatus,sub.submit_feedback_status as submitFeedbackStatus,
 		sub.status as status
 		from chb_equ_sub sub
-		left join CHB_SUBMIT_STATUS status
-		on sub.SUMIT_SEQ = status.seqno
 		<where>
 			sub.indentify_mark = #{indentifyMark}
 			and sub.regist_bank_code = #{registBankCode}

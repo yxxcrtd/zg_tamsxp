@@ -105,8 +105,8 @@ public class FinBondTargetAssetController {
      * @since 1.0
      */
     @GetMapping("getBasicInfo")
-    public FinBondTargetAssetDto getBasicInfo(String finprodId) {
-        return finBondTargetAssetService.getBasicInfo(finprodId);
+    public FinBondTargetAssetDto getBasicInfo(String finprodId, String finprodType) {
+        return finBondTargetAssetService.getBasicInfo(finprodId, finprodType);
     }
     // 债券新建新增快捷录入功能 add by renping 20191010 start
     /**

@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PaTrdProdTempDealTotalMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
+        <id column="TOTLE_TRADE_ID" property="totleTradeId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="VARCHAR" />
+        <result column="UNIT_INT" property="unitInt" jdbcType="DECIMAL" />
+        <result column="UNIT_PRIN" property="unitPrin" jdbcType="DECIMAL" />
+        <result column="PRIN" property="prin" jdbcType="DECIMAL" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="THEORY_AMT" property="theoryAmt" jdbcType="DECIMAL" />
+        <result column="THEORY_INT" property="theoryInt" jdbcType="DECIMAL" />
+        <result column="THEORY_PRIN" property="theoryPrin" jdbcType="DECIMAL" />
+        <result column="THEORY_PAY_DATE" property="theoryPayDate" jdbcType="DATE" />
+        <result column="INTEREST" property="interest" jdbcType="DECIMAL" />
+        <result column="PA_BUSS_TYPE" property="paBussType" jdbcType="VARCHAR" />
+        <result column="CURRENT_SUB" property="currentSub" jdbcType="DECIMAL" />
+        <result column="LAST_AMT" property="lastAmt" jdbcType="DECIMAL" />
+        <result column="LAST_RED" property="lastRed" jdbcType="DECIMAL" />
+        <result column="LAST_AMT_SUB" property="lastAmtSub" jdbcType="DECIMAL" />
+        <result column="ACCOUNTING_AMT" property="accountingAmt" jdbcType="DECIMAL" />
+        <result column="REMAIN_PRIN_AMT" property="remainPrinAmt" jdbcType="DECIMAL" />
+        <result column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="BONUS_CFM_DATE" property="bonusCfmDate" jdbcType="DATE" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_BREAK" property="isBreak" jdbcType="VARCHAR" />
+        <result column="FEEAMT" property="feeamt" jdbcType="DECIMAL" />
+        <result column="YESTERDAY_DEBT_VALUATION" property="yesterdayDebtValuation" jdbcType="DECIMAL" />
+        <result column="PRICE_OUTDEBT_VALUATION" property="priceOutdebtValuation" jdbcType="DECIMAL" />
+        <result column="THEORY_PENALTY_INT" property="theoryPenaltyInt" jdbcType="DECIMAL" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="REFUND_RATE" property="refundRate" jdbcType="DECIMAL" />
+        <result column="REFUND_AMOUNT" property="refundAmount" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TOTLE_TRADE_ID TOTLE_TRADE_ID, BRANCH BRANCH, UNIT_INT UNIT_INT, UNIT_PRIN UNIT_PRIN, 
+        PRIN PRIN, RATE RATE, THEORY_AMT THEORY_AMT, THEORY_INT THEORY_INT, THEORY_PRIN THEORY_PRIN, 
+        THEORY_PAY_DATE THEORY_PAY_DATE, INTEREST INTEREST, PA_BUSS_TYPE PA_BUSS_TYPE, CURRENT_SUB CURRENT_SUB, 
+        LAST_AMT LAST_AMT, LAST_RED LAST_RED, LAST_AMT_SUB LAST_AMT_SUB, ACCOUNTING_AMT ACCOUNTING_AMT, 
+        REMAIN_PRIN_AMT REMAIN_PRIN_AMT, REG_DATE REG_DATE, BONUS_CFM_DATE BONUS_CFM_DATE, 
+        PAY_TYPE PAY_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_BREAK IS_BREAK, FEEAMT FEEAMT,
+        YESTERDAY_DEBT_VALUATION YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION PRICE_OUTDEBT_VALUATION,
+        THEORY_PENALTY_INT THEORY_PENALTY_INT, DEPT_CODE DEPT_CODE,REFUND_RATE REFUND_RATE,REFUND_AMOUNT REFUND_AMOUNT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper.Base_Column_List" />
+        from PA_TRD_PROD_TEMP_DEAL_TOTAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper.Base_Column_List" />
+        from PA_TRD_PROD_TEMP_DEAL_TOTAL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper.Base_Column_List" />
+        from PA_TRD_PROD_TEMP_DEAL_TOTAL
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PA_TRD_PROD_TEMP_DEAL_TOTAL
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
+        insert into PA_TRD_PROD_TEMP_DEAL_TOTAL (TOTLE_TRADE_ID, BRANCH, UNIT_INT, 
+            UNIT_PRIN, PRIN, RATE, 
+            THEORY_AMT, THEORY_INT, THEORY_PRIN, 
+            THEORY_PAY_DATE, INTEREST, PA_BUSS_TYPE, 
+            CURRENT_SUB, LAST_AMT, LAST_RED, 
+            LAST_AMT_SUB, ACCOUNTING_AMT, REMAIN_PRIN_AMT, 
+            REG_DATE, BONUS_CFM_DATE, PAY_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, IS_BREAK,
+            FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION,
+            THEORY_PENALTY_INT, DEPT_CODE,REFUND_RATE,REFUND_AMOUNT)
+        values (#{totleTradeId,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR}, #{unitInt,jdbcType=DECIMAL}, 
+            #{unitPrin,jdbcType=DECIMAL}, #{prin,jdbcType=DECIMAL}, #{rate,jdbcType=DECIMAL}, 
+            #{theoryAmt,jdbcType=DECIMAL}, #{theoryInt,jdbcType=DECIMAL}, #{theoryPrin,jdbcType=DECIMAL}, 
+            #{theoryPayDate,jdbcType=DATE}, #{interest,jdbcType=DECIMAL}, #{paBussType,jdbcType=VARCHAR}, 
+            #{currentSub,jdbcType=DECIMAL}, #{lastAmt,jdbcType=DECIMAL}, #{lastRed,jdbcType=DECIMAL}, 
+            #{lastAmtSub,jdbcType=DECIMAL}, #{accountingAmt,jdbcType=DECIMAL}, #{remainPrinAmt,jdbcType=DECIMAL}, 
+            #{regDate,jdbcType=DATE}, #{bonusCfmDate,jdbcType=DATE}, #{payType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isBreak,jdbcType=VARCHAR},
+            #{feeamt,jdbcType=DECIMAL}, #{yesterdayDebtValuation,jdbcType=DECIMAL}, #{priceOutdebtValuation,jdbcType=DECIMAL},
+            #{theoryPenaltyInt,jdbcType=DECIMAL}, #{deptCode,jdbcType=VARCHAR},#{refundRate,jdbcType=DECIMAL},#{refundAmount,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
+        insert into PA_TRD_PROD_TEMP_DEAL_TOTAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                TOTLE_TRADE_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT,
+            </if>
+            <if test="unitPrin != null" >
+                UNIT_PRIN,
+            </if>
+            <if test="prin != null" >
+                PRIN,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="theoryAmt != null" >
+                THEORY_AMT,
+            </if>
+            <if test="theoryInt != null" >
+                THEORY_INT,
+            </if>
+            <if test="theoryPrin != null" >
+                THEORY_PRIN,
+            </if>
+            <if test="theoryPayDate != null" >
+                THEORY_PAY_DATE,
+            </if>
+            <if test="interest != null" >
+                INTEREST,
+            </if>
+            <if test="paBussType != null" >
+                PA_BUSS_TYPE,
+            </if>
+            <if test="currentSub != null" >
+                CURRENT_SUB,
+            </if>
+            <if test="lastAmt != null" >
+                LAST_AMT,
+            </if>
+            <if test="lastRed != null" >
+                LAST_RED,
+            </if>
+            <if test="lastAmtSub != null" >
+                LAST_AMT_SUB,
+            </if>
+            <if test="accountingAmt != null" >
+                ACCOUNTING_AMT,
+            </if>
+            <if test="remainPrinAmt != null" >
+                REMAIN_PRIN_AMT,
+            </if>
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="bonusCfmDate != null" >
+                BONUS_CFM_DATE,
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isBreak != null" >
+                IS_BREAK,
+            </if>
+            <if test="feeamt != null" >
+                FEEAMT,
+            </if>
+            <if test="yesterdayDebtValuation != null" >
+                YESTERDAY_DEBT_VALUATION,
+            </if>
+            <if test="priceOutdebtValuation != null" >
+                PRICE_OUTDEBT_VALUATION,
+            </if>
+            <if test="theoryPenaltyInt != null" >
+                THEORY_PENALTY_INT,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="refundRate != null" >
+                REFUND_RATE,
+            </if>
+            <if test="refundAmount != null" >
+                REFUND_AMOUNT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                #{totleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="unitInt != null" >
+                #{unitInt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitPrin != null" >
+                #{unitPrin,jdbcType=DECIMAL},
+            </if>
+            <if test="prin != null" >
+                #{prin,jdbcType=DECIMAL},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryAmt != null" >
+                #{theoryAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryInt != null" >
+                #{theoryInt,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryPrin != null" >
+                #{theoryPrin,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryPayDate != null" >
+                #{theoryPayDate,jdbcType=DATE},
+            </if>
+            <if test="interest != null" >
+                #{interest,jdbcType=DECIMAL},
+            </if>
+            <if test="paBussType != null" >
+                #{paBussType,jdbcType=VARCHAR},
+            </if>
+            <if test="currentSub != null" >
+                #{currentSub,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmt != null" >
+                #{lastAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lastRed != null" >
+                #{lastRed,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmtSub != null" >
+                #{lastAmtSub,jdbcType=DECIMAL},
+            </if>
+            <if test="accountingAmt != null" >
+                #{accountingAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="remainPrinAmt != null" >
+                #{remainPrinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="bonusCfmDate != null" >
+                #{bonusCfmDate,jdbcType=DATE},
+            </if>
+            <if test="payType != null" >
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isBreak != null" >
+                #{isBreak,jdbcType=VARCHAR},
+            </if>
+            <if test="feeamt != null" >
+                #{feeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayDebtValuation != null" >
+                #{yesterdayDebtValuation,jdbcType=DECIMAL},
+            </if>
+            <if test="priceOutdebtValuation != null" >
+                #{priceOutdebtValuation,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryPenaltyInt != null" >
+                #{theoryPenaltyInt,jdbcType=DECIMAL},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="refundRate != null" >
+                #{refundRate,jdbcType=DECIMAL},
+            </if>
+            <if test="refundAmount != null" >
+                #{refundAmount,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
+        insert into PA_TRD_PROD_TEMP_DEAL_TOTAL(TOTLE_TRADE_ID, BRANCH, UNIT_INT, UNIT_PRIN, 
+        PRIN, RATE, THEORY_AMT, THEORY_INT, THEORY_PRIN, THEORY_PAY_DATE, INTEREST, PA_BUSS_TYPE, 
+        CURRENT_SUB, LAST_AMT, LAST_RED, LAST_AMT_SUB, ACCOUNTING_AMT, REMAIN_PRIN_AMT, REG_DATE, 
+        BONUS_CFM_DATE, PAY_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        IS_BREAK, FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION, THEORY_PENALTY_INT,
+        DEPT_CODE,REFUND_RATE,REFUND_AMOUNT
+        )
+        select TOTLE_TRADE_ID, BRANCH, UNIT_INT, UNIT_PRIN, 
+            PRIN, RATE, THEORY_AMT, THEORY_INT, THEORY_PRIN, THEORY_PAY_DATE, INTEREST, PA_BUSS_TYPE, 
+            CURRENT_SUB, LAST_AMT, LAST_RED, LAST_AMT_SUB, ACCOUNTING_AMT, REMAIN_PRIN_AMT, REG_DATE, 
+            BONUS_CFM_DATE, PAY_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            IS_BREAK, FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION, THEORY_PENALTY_INT,
+        DEPT_CODE,REFUND_RATE,REFUND_AMOUNT
+             from PA_TRD_PROD_TEMP_DEAL_TOTAL
+             where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </insert>
+
+    <insert id="insertToPaDealTotal" parameterType="java.lang.String">
+        INSERT INTO PA_TRD_FIN_PRODUCT_DEAL_TOTAL(
+            TOTLE_TRADE_ID, BRANCH, UNIT_INT,
+            UNIT_PRIN, PRIN, RATE,
+            THEORY_AMT, THEORY_INT, THEORY_PRIN,
+            THEORY_PAY_DATE, INTEREST, PA_BUSS_TYPE,
+            CURRENT_SUB, LAST_AMT, LAST_RED,
+            LAST_AMT_SUB, ACCOUNTING_AMT, REMAIN_PRIN_AMT,
+            REG_DATE, BONUS_CFM_DATE, PAY_TYPE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, IS_BREAK,
+            FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION,
+            THEORY_PENALTY_INT, DEPT_CODE,REFUND_RATE,REFUND_AMOUNT )
+        SELECT TOTLE_TRADE_ID, BRANCH, UNIT_INT,
+               UNIT_PRIN, PRIN, RATE,
+               THEORY_AMT, THEORY_INT, THEORY_PRIN,
+               THEORY_PAY_DATE, INTEREST, PA_BUSS_TYPE,
+               CURRENT_SUB, LAST_AMT, LAST_RED,
+               LAST_AMT_SUB, ACCOUNTING_AMT, REMAIN_PRIN_AMT,
+               REG_DATE, BONUS_CFM_DATE, PAY_TYPE,
+               CREATE_USER, CREATE_DEPT, CREATE_TIME,
+               UPDATE_USER, UPDATE_TIME, IS_BREAK,
+               FEEAMT, YESTERDAY_DEBT_VALUATION, PRICE_OUTDEBT_VALUATION,
+               THEORY_PENALTY_INT, DEPT_CODE,REFUND_RATE,REFUND_AMOUNT
+        FROM PA_TRD_PROD_TEMP_DEAL_TOTAL where TOTLE_TRADE_ID=#{totalTradeId,jdbcType=VARCHAR}
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
+        update PA_TRD_PROD_TEMP_DEAL_TOTAL
+        <set >
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitPrin != null" >
+                UNIT_PRIN = #{unitPrin,jdbcType=DECIMAL},
+            </if>
+            <if test="prin != null" >
+                PRIN = #{prin,jdbcType=DECIMAL},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryAmt != null" >
+                THEORY_AMT = #{theoryAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryInt != null" >
+                THEORY_INT = #{theoryInt,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryPrin != null" >
+                THEORY_PRIN = #{theoryPrin,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryPayDate != null" >
+                THEORY_PAY_DATE = #{theoryPayDate,jdbcType=DATE},
+            </if>
+            <if test="interest != null" >
+                INTEREST = #{interest,jdbcType=DECIMAL},
+            </if>
+            <if test="paBussType != null" >
+                PA_BUSS_TYPE = #{paBussType,jdbcType=VARCHAR},
+            </if>
+            <if test="currentSub != null" >
+                CURRENT_SUB = #{currentSub,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmt != null" >
+                LAST_AMT = #{lastAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lastRed != null" >
+                LAST_RED = #{lastRed,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmtSub != null" >
+                LAST_AMT_SUB = #{lastAmtSub,jdbcType=DECIMAL},
+            </if>
+            <if test="accountingAmt != null" >
+                ACCOUNTING_AMT = #{accountingAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="remainPrinAmt != null" >
+                REMAIN_PRIN_AMT = #{remainPrinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="regDate != null" >
+                REG_DATE = #{regDate,jdbcType=DATE},
+            </if>
+            <if test="bonusCfmDate != null" >
+                BONUS_CFM_DATE = #{bonusCfmDate,jdbcType=DATE},
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isBreak != null" >
+                IS_BREAK = #{isBreak,jdbcType=VARCHAR},
+            </if>
+            <if test="feeamt != null" >
+                FEEAMT = #{feeamt,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayDebtValuation != null" >
+                YESTERDAY_DEBT_VALUATION = #{yesterdayDebtValuation,jdbcType=DECIMAL},
+            </if>
+            <if test="priceOutdebtValuation != null" >
+                PRICE_OUTDEBT_VALUATION = #{priceOutdebtValuation,jdbcType=DECIMAL},
+            </if>
+            <if test="theoryPenaltyInt != null" >
+                THEORY_PENALTY_INT = #{theoryPenaltyInt,jdbcType=DECIMAL},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="refundRate != null" >
+                REFUND_RATE = #{refundRate,jdbcType=DECIMAL},
+            </if>
+            <if test="refundAmount != null" >
+                REFUND_AMOUNT = #{refundAmount,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal" >
+        update PA_TRD_PROD_TEMP_DEAL_TOTAL
+        set BRANCH = #{branch,jdbcType=VARCHAR},
+            UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            UNIT_PRIN = #{unitPrin,jdbcType=DECIMAL},
+            PRIN = #{prin,jdbcType=DECIMAL},
+            RATE = #{rate,jdbcType=DECIMAL},
+            THEORY_AMT = #{theoryAmt,jdbcType=DECIMAL},
+            THEORY_INT = #{theoryInt,jdbcType=DECIMAL},
+            THEORY_PRIN = #{theoryPrin,jdbcType=DECIMAL},
+            THEORY_PAY_DATE = #{theoryPayDate,jdbcType=DATE},
+            INTEREST = #{interest,jdbcType=DECIMAL},
+            PA_BUSS_TYPE = #{paBussType,jdbcType=VARCHAR},
+            CURRENT_SUB = #{currentSub,jdbcType=DECIMAL},
+            LAST_AMT = #{lastAmt,jdbcType=DECIMAL},
+            LAST_RED = #{lastRed,jdbcType=DECIMAL},
+            LAST_AMT_SUB = #{lastAmtSub,jdbcType=DECIMAL},
+            ACCOUNTING_AMT = #{accountingAmt,jdbcType=DECIMAL},
+            REMAIN_PRIN_AMT = #{remainPrinAmt,jdbcType=DECIMAL},
+            REG_DATE = #{regDate,jdbcType=DATE},
+            BONUS_CFM_DATE = #{bonusCfmDate,jdbcType=DATE},
+            PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_BREAK = #{isBreak,jdbcType=VARCHAR},
+            FEEAMT = #{feeamt,jdbcType=DECIMAL},
+            YESTERDAY_DEBT_VALUATION = #{yesterdayDebtValuation,jdbcType=DECIMAL},
+            PRICE_OUTDEBT_VALUATION = #{priceOutdebtValuation,jdbcType=DECIMAL},
+            THEORY_PENALTY_INT = #{theoryPenaltyInt,jdbcType=DECIMAL},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            REFUND_RATE = #{refundRate,jdbcType=DECIMAL},
+            REFUND_AMOUNT = #{refundAmount,jdbcType=DECIMAL}
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

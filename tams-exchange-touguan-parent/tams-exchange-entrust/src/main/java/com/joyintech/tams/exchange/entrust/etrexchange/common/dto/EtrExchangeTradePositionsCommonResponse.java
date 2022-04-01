@@ -10,6 +10,10 @@
  
 package com.joyintech.tams.exchange.entrust.etrexchange.common.dto;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -40,10 +44,10 @@ public class EtrExchangeTradePositionsCommonResponse {
     private String secAcctName;
 
     @ApiModelProperty(name="acctNo",value="资金账户",example="12")
-    private BigDecimal acctNo;
+    private String acctNo;
     
     @ApiModelProperty(name="secId",value="证券代码",example="12")
-    private BigDecimal secId;
+    private String secId;
     
     @ApiModelProperty(name="secName",value="证券名称",example="12")
     private String secName;
@@ -57,14 +61,19 @@ public class EtrExchangeTradePositionsCommonResponse {
     @ApiModelProperty(name="finprodId",value="资产代码",example="12")
     private String finprodId;
     
-    @ApiModelProperty(name="finpordName",value="资产名称",example="12")
-    private String finpordName;
-    
+    @ApiModelProperty(name="finprodName",value="资产名称",example="12")
+    private String finprodName;
+
     @ApiModelProperty(name="finprodType2",value="金融产品类型（投管分类）",example="12")
     private String finprodType2;
     
     @ApiModelProperty(name="invAim",value="投资目的",example="12")
     private String invAim;
+
+    @ApiModelProperty(name="businessModel",value="业务模式",example="12")
+    private String businessModel;
+
+
     
     @ApiModelProperty(name="positionsNum",value="持仓数量",example="12")
     private BigDecimal positionsNum;
@@ -96,6 +105,16 @@ public class EtrExchangeTradePositionsCommonResponse {
 
     @ApiModelProperty(name="PtlPositionsNum",value="组合持仓.数量",example="12")
     private BigDecimal PtlPositionsNum;
+
+    private String dealCurAcctName;
+
+    public String getDealCurAcctName() {
+        return dealCurAcctName;
+    }
+
+    public void setDealCurAcctName(String dealCurAcctName) {
+        this.dealCurAcctName = dealCurAcctName;
+    }
 
     public BigDecimal getPtlPositionsNum() {
         return PtlPositionsNum;
@@ -137,19 +156,19 @@ public class EtrExchangeTradePositionsCommonResponse {
         this.secAcctName = secAcctName;
     }
 
-    public BigDecimal getAcctNo() {
+    public String getAcctNo() {
         return acctNo;
     }
 
-    public void setAcctNo(BigDecimal acctNo) {
+    public void setAcctNo(String acctNo) {
         this.acctNo = acctNo;
     }
 
-    public BigDecimal getSecId() {
+    public String getSecId() {
         return secId;
     }
 
-    public void setSecId(BigDecimal secId) {
+    public void setSecId(String secId) {
         this.secId = secId;
     }
 
@@ -185,12 +204,12 @@ public class EtrExchangeTradePositionsCommonResponse {
         this.finprodId = finprodId;
     }
 
-    public String getFinpordName() {
-        return finpordName;
+    public String getFinprodName() {
+        return finprodName;
     }
 
-    public void setFinpordName(String finpordName) {
-        this.finpordName = finpordName;
+    public void setFinprodName(String finprodName) {
+        this.finprodName = finprodName;
     }
 
     public String getFinprodType2() {
@@ -279,5 +298,56 @@ public class EtrExchangeTradePositionsCommonResponse {
 
     public void setFloating(BigDecimal floating) {
         this.floating = floating;
+    }
+    /**
+     * 获取交易场所中文名称
+     * @return tradeMarketStr
+     */
+    public String getTradeMarketStr(){
+        if(StringUtil.isNotEmpty(getTradeMarket())){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.交易场所,getTradeMarket());
+        }
+        else {
+            return "";
+        }
+    }
+
+    /**
+     * 获取投资目的中文名称
+     * @return invAimStr
+     */
+    public String getInvAimStr(){
+        if(StringUtil.isNotEmpty(getInvAim())){
+            return SysDataUtil.getNameFromDataDict(DictCode.投资目的,getInvAim());
+        }
+        else {
+            return "";
+        }
+    }
+
+    /**
+     * 获取业务模式名称
+     * @return businessModelStr
+     */
+    public String getBusinessModelStr(){
+        if(StringUtil.isNotEmpty(getBusinessModel())){
+            return SysDataUtil.getNameFromDataDict(DictCode.业务模式,getBusinessModel());
+        }
+        else {
+            return "";
+        }
+    }
+
+
+    public  String getFinprodType2Str(){
+        return SysDataUtil.getNameFromDataDict(DictCode.金融产品类型_投管用, this.getFinprodType2());
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

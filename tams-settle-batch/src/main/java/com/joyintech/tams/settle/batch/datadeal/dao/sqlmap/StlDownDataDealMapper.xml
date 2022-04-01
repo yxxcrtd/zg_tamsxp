@@ -34,6 +34,77 @@
 			</if>
 	</sql>
 
+	<select id="selectNeedRevokeSettleTransDataTotals" resultType="com.joyintech.tams.common.base.entity.SettleTransDataTotalMatch">
+		SELECT
+			stdt.SEQ_ID SEQ_NO,
+			NVL(tpda.ENTRUST_ID,tdta.ENTRUST_ID) ENTRUNST_TRADE_ID
+			<!--'0' MATCH_CLASS-->
+		FROM
+			SETTLE_TRANS_DATA T1
+		LEFT JOIN
+		    SETTLE_TRANS_DATA_STATUS T2 ON T2.TRADE_ID = T1.TRADE_ID
+		LEFT JOIN
+			SETTLE_TRANS_DATA_TOTAL stdt ON T1.DEAL_DATE = stdt.DEAL_DATE
+				AND T1.APPLY_TRADE_ID = stdt.APPLY_TRADE_ID AND T1.SEAT_NUMBER = stdt.SEAT_NUMBER
+		LEFT JOIN
+			SETTLE_TRANS_TG_MAPPING sttm ON T1.TRADE_ID = sttm.TRADE_ID
+		LEFT JOIN
+			TRD_PRODUCT_DEAL_ADD tpda ON sttm.TRADE_ID_TG = tpda.TRADE_ID
+		LEFT JOIN
+			TRD_DEAL_TOTAL_ADD tdta ON sttm.TRADE_ID_TG = tdta.TOTLE_TRADE_ID
+		WHERE
+			(tpda.ENTRUST_ID IS NOT NULL OR tdta.ENTRUST_ID IS NOT NULL)
+			AND stdt.SEQ_ID IS NOT NULL
+			AND T1.DEAL_DATE = #{dealDate,jdbcType=DATE} and (T2.CHECK_RESULT IS NULL OR T2.CHECK_RESULT in ('0', '2'))
+			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+				AND
+				<foreach collection="portfolioIdList" item="portfolioId" open="T1.PORTFOLIO_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="secTypeList != null and secTypeList.size() > 0">
+				AND
+				<foreach collection="secTypeList" item="secType" open="T1.SEC_TYPE IN (" close=")" separator=",">
+					#{secType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		<!--GNS-902:配股配债 applyTradeId可能为空 modify by fuyongsheng 20220226 start-->
+		UNION
+		SELECT
+		stdt.SEQ_ID SEQ_NO,
+		NVL(tpda.ENTRUST_ID,tdta.ENTRUST_ID) ENTRUNST_TRADE_ID
+		FROM
+		SETTLE_TRANS_DATA T1
+		LEFT JOIN
+		SETTLE_TRANS_DATA_STATUS T2 ON T2.TRADE_ID = T1.TRADE_ID
+		LEFT JOIN
+		SETTLE_TRANS_DATA_TOTAL stdt ON T1.DEAL_DATE = stdt.DEAL_DATE AND T1.SEAT_NUMBER = stdt.SEAT_NUMBER
+		LEFT JOIN
+		SETTLE_TRANS_TG_MAPPING sttm ON T1.TRADE_ID = sttm.TRADE_ID
+		LEFT JOIN
+		TRD_PRODUCT_DEAL_ADD tpda ON sttm.TRADE_ID_TG = tpda.TRADE_ID
+		LEFT JOIN
+		TRD_DEAL_TOTAL_ADD tdta ON sttm.TRADE_ID_TG = tdta.TOTLE_TRADE_ID
+		WHERE
+		(tpda.ENTRUST_ID IS NOT NULL OR tdta.ENTRUST_ID IS NOT NULL)
+		AND stdt.SEQ_ID IS NOT NULL
+		AND T1.PS IN ('T46','T97')
+		AND T1.DEAL_DATE = #{dealDate,jdbcType=DATE} and (T2.CHECK_RESULT IS NULL OR T2.CHECK_RESULT in ('0', '2'))
+		<if test="portfolioIdList != null and portfolioIdList.size() > 0">
+			AND
+			<foreach collection="portfolioIdList" item="portfolioId" open="T1.PORTFOLIO_ID IN (" close=")" separator=",">
+				#{portfolioId,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="secTypeList != null and secTypeList.size() > 0">
+			AND
+			<foreach collection="secTypeList" item="secType" open="T1.SEC_TYPE IN (" close=")" separator=",">
+				#{secType,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<!--GNS-902:配股配债 applyTradeId可能为空 modify by fuyongsheng 20220226 end-->
+	</select>
+
     <delete id="deleteSettleTransTgMapping">
         DELETE FROM SETTLE_TRANS_TG_MAPPING
         <where>
@@ -334,7 +405,12 @@
 		JGBYBZ
 		FROM
 		SZD_SJSJG T1
-		LEFT JOIN SETTLE_TRANS_DATA T2 ON (T2.CJBH = T1.JGDDBH OR T2.CJBH = T1.JGYWLSH ) AND T2.SEAT_NUMBER = T1.JGJYDY AND T2.DEAL_DATE = #{dealDate,jdbcType=DATE}
+		LEFT JOIN SETTLE_TRANS_DATA T2 ON
+		    <!--GZYHTZJY-980:查询时未匹配上,导致查询到旧数据,重新跑批有重复数据 modify fuyongsheng 20220110 start-->
+			(T2.CJBH = T1.JGDDBH OR T2.CJBH = T1.JGZXBH)
+		    <!--(T2.CJBH = T1.JGDDBH OR T2.CJBH = T1.JGYWLSH )-->
+			<!--GZYHTZJY-980:查询时未匹配上,导致查询到旧数据,重新跑批有重复数据 modify fuyongsheng 20220110 end-->
+			AND T2.SEAT_NUMBER = T1.JGJYDY AND T2.DEAL_DATE = #{dealDate,jdbcType=DATE}
 		LEFT JOIN SETTLE_TRANS_DATA_STATUS T3 ON T3.TRADE_ID = T2.TRADE_ID
 		<where>
         	T1.IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(T1.DATA_FILE) LIKE CONCAT(#{dataFile}, '%')) AND T1.IS_SETTLE_TARGET = 'Y'
@@ -496,8 +572,47 @@
         	OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
         	AND OTH_CODE = #{othCode,jdbcType=VARCHAR}
     </select>
-    
-    <delete id="deleteFinProdQuotByOthBussType">
+
+	<select id="getLastFinproductIdByApprovalNo" parameterType="java.util.Map"
+			resultType="java.lang.String">
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					FINPROD_ID
+				FROM
+					FIN_PRODUCT_OTH_CODE
+				WHERE
+					OTH_CODE = #{othCode,jdbcType=VARCHAR}
+				ORDER BY declared_start_date desc
+			)
+		where ROWNUM = 1
+	</select>
+
+	<select id="getPriceByFinproductId" parameterType="java.util.Map"
+			resultType="java.math.BigDecimal">
+		SELECT
+			DECLARED_PRICE
+		FROM
+			FIN_PRODUCT_OTH_CODE
+		WHERE
+			OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+		  AND FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+		  AND ROWNUM = 1
+	</select>
+
+	<select id="getFinproductByFinProdMarketId" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+		SELECT
+			<include refid="com.joyintech.tams.common.base.dao.FinProductMapper.Base_Column_List" />
+		FROM
+			FIN_PRODUCT
+		WHERE
+			FINPROD_MARKET_ID = #{finProdMarketId,jdbcType=VARCHAR}
+	</select>
+
+
+	<delete id="deleteFinProdQuotByOthBussType">
         DELETE FROM FIN_PRODUCT_QUTO
         <where>
       		CDATE = #{dealDate,jdbcType=DATE}
@@ -521,7 +636,7 @@
         <where>
       		CDATE = #{dealDate,jdbcType=DATE}
        		<if test="xgsgBusinessTypeList != null and xgsgBusinessTypeList.size() > 0">
-           		AND 
+           		AND
            		<foreach collection="xgsgBusinessTypeList" item="xgsgBusinessType" open="OTH_TYPE IN (" close=")" separator=",">
            			#{xgsgBusinessType,jdbcType=VARCHAR}
            		</foreach>
@@ -551,4 +666,128 @@
         	</foreach>
         </where>
     </select>
+
+	<select id="selectSzdTzxx" parameterType="java.util.Map"
+			resultMap="com.joyintech.tams.common.base.dao.SzdTzxxMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.SzdTzxxMapper.Sql_All_Data"></include>
+		<where>
+			IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%'))
+			<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
+				AND ${searchMapKey} IN
+				<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
+					#{searchMapValueData}
+				</foreach>
+			</foreach>
+		</where>
+	</select>
+
+	<delete id="deleteShareBonusRegByCdate">
+		DELETE FROM SHARE_BONUS_REG
+		<where>
+			REG_DATE = #{dealDate,jdbcType=DATE}
+		</where>
+	</delete>
+
+	<delete id="deletemstFundBonusNoticeByCdate">
+		DELETE FROM MST_FUND_BONUS_NOTICE
+		<where>
+			REG_DATE = #{dealDate,jdbcType=DATE}
+		</where>
+	</delete>
+
+	<select id="selectSzdSjsgb" parameterType="java.util.Map"
+			resultMap="com.joyintech.tams.common.base.dao.SzdSjsgbMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.SzdSjsgbMapper.Sql_All_Data"></include>
+		<where>
+			IMPORT_DATE = #{dealDate,jdbcType=DATE} AND (upper(DATA_FILE) LIKE CONCAT(#{dataFile}, '%'))
+			<foreach item="searchMapValue" index="searchMapKey" collection="searchMap">
+				AND ${searchMapKey} IN
+				<foreach collection="searchMapValue" item ="searchMapValueData" open="(" close=")" separator=",">
+					#{searchMapValueData}
+				</foreach>
+			</foreach>
+		</where>
+	</select>
+
+	<select id="getAllStlDownDataDealAccountInfoDtoList" resultType="com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto">
+		SELECT DISTINCT
+		B.BROKER_ID as brokerId,
+		B.SH_SEATNO as szSeatno,
+		F.SEC_ACCT_ID as secAcctId,
+		F.TRD_ACCT_ID as acctNo,
+		F.BOND_ID as shareholdersCode,
+		F.TRADE_PLACE as registOrg
+		FROM
+		STL_SEC_ACCT_INFO F
+		LEFT JOIN STL_CAPACCT_INFO C
+		ON C.ACCT_NO = F.TRD_ACCT_ID
+		AND C.CCY = F.TRD_ACCT_CCY
+		LEFT JOIN MST_SALE_DEPARTMENT B
+		ON B.SALE_DEPID =  C.OWN_DEPT
+	</select>
+
+	<select id="getZzgFinprodId"  resultType="String">
+		SELECT DISTINCT
+		CON_FINPROD_ID conFinprodId
+		FROM
+		FIN_PRODUCT_CONVERTIBLE
+		where CON_SHARE_ID = #{zqdm1}
+	</select>
+
+	<select id="selectSqSettleTransDatas" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+		SELECT
+		<include refid="com.joyintech.tams.common.base.dao.SettleTransDataMapper.Base_Column_List" />
+		FROM
+			SETTLE_TRANS_DATA
+		WHERE
+			CJBH = #{sqcjbh, jdbcType=VARCHAR}
+			AND SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
+			AND SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectShSqSettleTransDatas" resultType="com.joyintech.tams.common.base.entity.SettleTransData">
+		SELECT
+		<include refid="com.joyintech.tams.common.base.dao.SettleTransDataMapper.Base_Column_List" />
+		FROM
+		SETTLE_TRANS_DATA
+		WHERE
+		CJBH = #{sqcjbh, jdbcType=VARCHAR}
+		AND SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
+		AND SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+		AND VDATE = #{vdate, jdbcType=DATE}
+	</select>
+
+
+	<select id="selectSqSettleTransDataPledges" resultType="com.joyintech.tams.common.base.entity.SettleTransDataPledge">
+		SELECT
+			std.TRADE_ID,
+			stdp.PLEDGE_RATIO
+		FROM
+			SETTLE_TRANS_DATA std
+		LEFT JOIN
+			SETTLE_TRANS_DATA_PLEDGE stdp ON std.TRADE_ID = stdp.TRADE_ID
+		WHERE
+			std.CJBH = #{sqcjbh, jdbcType=VARCHAR}
+			AND std.SEAT_NUMBER = #{seatNumber, jdbcType=VARCHAR}
+			AND std.SEC_ACCT_ID = #{secAcctId, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 是否节假日 0:工作日 -->
+	<select id="getIsHoliday" parameterType="java.util.Map" resultType="String">
+		SELECT
+			IS_HOLIDAY
+		FROM
+			VAL_VW_MST_HOLIDAY
+		WHERE CDATE = #{cdate}
+		  AND TRADE_CALENDAR_ID = #{calendarId}
+	</select>
+
+	<select id="getSzdSjsjgByApplyTradeId" resultType="com.joyintech.tams.common.base.entity.SzdSjsjg">
+		SELECT
+		<include refid="com.joyintech.tams.common.base.dao.SzdSjsjgMapper.Base_Column_List" />
+		FROM
+			SZD_SJSJG
+		WHERE
+			JGDDBH = #{applyTradeId}
+	</select>
 </mapper>

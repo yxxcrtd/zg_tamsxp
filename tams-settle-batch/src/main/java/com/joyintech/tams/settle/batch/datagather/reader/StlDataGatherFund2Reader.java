@@ -10,28 +10,22 @@
 
 package com.joyintech.tams.settle.batch.datagather.reader;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.SettleBatchPara;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.settle.batch.datagather.constant.StlDataGatherConstant;
+import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
+import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
+import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.SettleBatchPara;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListStl;
-import com.joyintech.tams.settle.batch.datagather.dto.InvestTradeReaderDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleDelDealDetailDto;
-import com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 基金分红处理
@@ -63,7 +57,7 @@ public class StlDataGatherFund2Reader extends StlDataGatherReader {
             }
         });
 
-        Map<String, Object> searchParam = new HashMap<>(4);
+        Map<String, Object> searchParam = new HashMap<>();
         searchParam.put("portfolioIdList", portfolioIdList);
         searchParam.put("dealDate", execInfo.getExecuteDate());
         setSearchParam(searchParam);
@@ -71,43 +65,59 @@ public class StlDataGatherFund2Reader extends StlDataGatherReader {
         List<InvestTradeReaderDto> res = new ArrayList<InvestTradeReaderDto>();
         
         InvestTradeReaderDto investTradeReaderDto = new InvestTradeReaderDto();
-        
+        investTradeReaderDto.setSettleTransDataList(new ArrayList<>());
         // 除权公告数据（仅针对非货基的现金分红）
-        List<SettleDelDealDetailDto> settleTransDataDelDtos = stlDataGatherMapper.selectFundDelSettleTransData(searchParam);
+        // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+        List<SettleDelDealDetailDto> settleTransDataDelDtos;
+        // 新老头寸开关(Y:新头寸,N:老头寸)
+        String newSecPositionSwitch = CacheUtil.getSysParam("NEW_SEC_POSITION_SWITCH");
+        // 开关配置N查老头存
+        if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+            settleTransDataDelDtos = stlDataGatherMapper.selectFundDelSettleTransData(searchParam);
+        }else{ // 默认查新头寸
+            searchParam.put("hodingType", DictCodeListExt3.资产类型_资产账户持仓.getValue());
+            searchParam.put("dateType", StlDataGatherConstant.DATE_TYPE_T_0);
+            settleTransDataDelDtos = stlDataGatherMapper.selectFundDelSettleTransDataNewPosition(searchParam);
+        }
+        // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
         if (settleTransDataDelDtos != null && settleTransDataDelDtos.size() > 0) {
 	        investTradeReaderDto.setSettleTransDataDelDtoList(settleTransDataDelDtos);
         }
-        
-        // 公告基本信息按照资产代码分组
-        Map<String, List<SettleDelDealDetailDto>> regMap = settleTransDataDelDtos.stream().collect(Collectors.groupingBy(x -> {
-            return x.getFinprodId();
-        }));
-        // 现金分红和送转的相关交易数据
-        searchParam.put("finprodIdList", new ArrayList<>(regMap.keySet()));
-        // 检索货基红利再投以及非货基的现金分红数据（非货基的现金分红是除权日之后，现金分红当日生成数据。货基的红利再投和除权无关）
-        List<SettleTransDataDto> tempSettleTransDataDtos = stlDataGatherMapper.selectCashBonusSettleTransData(searchParam);
-        List<SettleTransDataDto> settleTransDataDtos = new ArrayList<SettleTransDataDto>();
-        if (CollectionUtils.isNotEmpty(tempSettleTransDataDtos)) {
-            // 交易数据根据资产代码分组
-            Map<String, List<SettleTransDataDto>> dataMap = tempSettleTransDataDtos.stream().collect(Collectors.groupingBy(x -> {
-                return x.getFinprodId();
-            }));
-            
-            for (String key : dataMap.keySet()) {
-                settleTransDataDtos.addAll(dataMap.get(key).stream().filter(x -> {
-                    return ((StringUtil.equals(x.getPs(), DictCodeList.交易方向_现金分红.getValue())
-                             && !StringUtil.isEmptyList(regMap.get(key))
-                             && DateUtil.compareDate(x.getDealDate(), regMap.get(key).get(0).getRegDate()) == 0)// 权益登记日
-                            || (!StringUtil.equals(x.getPs(), DictCodeList.交易方向_现金分红.getValue())
-                                && DateUtil.compareDate(x.getTradeDate(), execInfo.getExecuteDate()) == 0));// 除权除息日
-                }).collect(Collectors.toList()));
+        List<SettleTransDataDto> tempSettleTransDataDtos = stlDataGatherMapper.selectFundSettleTransData(searchParam);
+        if(CollectionUtils.isNotEmpty(tempSettleTransDataDtos)) {
+            for (SettleTransDataDto dto : tempSettleTransDataDtos) {
+                // GNS-872:参数传入sql中不能为空 modify by fuyongsheng 20220218 start
+                dto.setUnitCprice(StringUtil.isNotEmpty(dto.getUnitCprice())? dto.getUnitCprice() : new BigDecimal(0));
+                dto.setPrinAmt(StringUtil.isNotEmpty(dto.getPrinAmt())? dto.getPrinAmt() : new BigDecimal(0));
+                dto.setIntAmt(StringUtil.isNotEmpty(dto.getIntAmt())? dto.getIntAmt() : new BigDecimal(0));
+                dto.setFpriceAmt(StringUtil.isNotEmpty(dto.getFpriceAmt())? dto.getFpriceAmt() : new BigDecimal(0));
+                dto.setFragmentaryFunds(StringUtil.isNotEmpty(dto.getFragmentaryFunds())? dto.getFragmentaryFunds() : new BigDecimal(0));
+                dto.setTradeAmt(StringUtil.isNotEmpty(dto.getTradeAmt())? dto.getTradeAmt() : new BigDecimal(0));
+                // GNS-872:参数传入sql中不能为空 modify by fuyongsheng 20220218 end
+                if("Y".equals(dto.getIsHuobi())){
+                    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+                    // investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData1(dto));
+                    // 新老头寸开关(Y:新头寸,N:老头寸)
+                    if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+                        investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData1(dto));
+                    }else{ // 默认查新头寸
+                        investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData1NewPosition(dto));
+                    }
+                    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
+                }else {
+                    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 start
+                    // investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData2(dto));
+                    // 开关配置N查老头存
+                    if(DictCodeList.是否_否.getValue().equals(newSecPositionSwitch)){
+                        investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData2(dto));
+                    }else{ // 默认查新头寸
+                        investTradeReaderDto.getSettleTransDataList().addAll(stlDataGatherMapper.selectFundSettleTransData2NewPosition(dto));
+                    }
+                    // ZGTFCP-1363:通过开关控制查询新老头寸,默认查询新头寸 modify by fuyongsheng 20220321 end
+                }
             }
         }
-        if(CollectionUtils.isNotEmpty(settleTransDataDtos)) {
-            investTradeReaderDto.setSettleTransDataList(settleTransDataDtos);
-
-            res.add(investTradeReaderDto);
-        }
+        res.add(investTradeReaderDto);
         return res;
     }
 

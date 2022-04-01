@@ -260,6 +260,18 @@ public class TrdProductTempDealAdd extends BaseEntity {
     private String rFinprodId;
 
     /**
+     * 本方券交易份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal ourShareAmt;
+
+    /**
+     * 融入券交易份额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal lendinShareAmt;
+
+    /**
      * 取得 交易编号
      * @return 交易编号
      */
@@ -1017,5 +1029,21 @@ public class TrdProductTempDealAdd extends BaseEntity {
      */
     public void setrFinprodId(String rFinprodId) {
         this.rFinprodId = rFinprodId == null ? null : rFinprodId.trim();
+    }
+
+    public BigDecimal getOurShareAmt() {
+        return ourShareAmt;
+    }
+
+    public void setOurShareAmt(BigDecimal ourShareAmt) {
+        this.ourShareAmt = ourShareAmt;
+    }
+
+    public BigDecimal getLendinShareAmt() {
+        return lendinShareAmt;
+    }
+
+    public void setLendinShareAmt(BigDecimal lendinShareAmt) {
+        this.lendinShareAmt = lendinShareAmt;
     }
 }

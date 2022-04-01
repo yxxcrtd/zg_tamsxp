@@ -1,3 +1,4 @@
+delete SYS_PAGE where PAGE_ID = 'PtlActivityPeriod004';
 INSERT INTO SYS_PAGE(PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('PtlActivityPeriod004', 'TRA', '/invest/portfolio/ptlactivityperiod/PtlActivityPeriod004', 'invest/portfolio/ptlactivityperiod/PtlActivityPeriod004', NULL, NULL, NULL, '02', '01', '活期结息批量导入', 'system', NULL, SYSDATE, 'system', SYSDATE);
-
+delete SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'PtlActivityPeriod004' and ELEMENT_ID = 'PtlActivityPeriod004_btn_submit';
 INSERT INTO SYS_WFL_BUSINESS_MODULE(PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('PtlActivityPeriod004', 'PtlActivityPeriod004_btn_submit', 'oneApproval', 'system', NULL, SYSDATE, 'system', SYSDATE, 'ALL', '02');

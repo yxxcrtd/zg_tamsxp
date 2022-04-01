@@ -121,6 +121,11 @@
 			<version>1.54</version>
 		</dependency>
 		<!-- add by zengchengfa end -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-business-common</artifactId>
+			<version>3.0.4</version>
+		</dependency>
 	</dependencies>
 	<build>
 	   <plugins>

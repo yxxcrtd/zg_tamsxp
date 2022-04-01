@@ -2,6 +2,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.joyintech.tams.exchange.common.constant.InstructionStatus;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.InstructionExample;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
@@ -32,15 +33,22 @@ public class InstructionServiceImpl extends AsyncServiceImpl<String, Instruction
         List<Instruction> instructionCache = new ArrayList<>();
         if (Objects.nonNull(instructionList)) {
             instructionList.forEach(instruction -> {
+            	logger.info("origin cache instructionId:{},tradeId:{}",instruction.getEntrustId(),instruction.getTradeId());
+            	logger.info("origin cache instruction:{}",com.joyintech.framework.util.JsonUtils.object2Json(instruction));
                 if (!Strings.isNullOrEmpty(instruction.getTradersInfo())) {
                     List<String> traderSet = JsonUtils.getObjectListFromJson(instruction.getTradersInfo(), String.class);
-                    if (Objects.nonNull(traderSet) && traderSet.size() > 0) {
-                        traderSet.forEach(s -> {
-                            if (!s.equals(instruction.getTradeId())) {
-                                instruction.setTradeId(s);
-                                instructionCache.add(instruction);
-                            }
-                        });
+                    if(InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())) {//未接收缓存到每个用户
+                    	if (Objects.nonNull(traderSet) && traderSet.size() > 0) {
+                    		traderSet.forEach(s -> {
+                    			if (!s.equals(instruction.getTradeId())) {
+                                	Instruction i = instruction.cloneInstruction();
+                                    i.setTradeId(s);
+                                    instructionCache.add(i);
+                                    logger.info("new cache instruction:{}",com.joyintech.framework.util.JsonUtils.object2Json(i));
+                                    logger.info("new cache instructionId:{},tradeId:{}",i.getEntrustId(),i.getTradeId());
+                                }
+                    		});
+                    	}
                     }
                 }
             });

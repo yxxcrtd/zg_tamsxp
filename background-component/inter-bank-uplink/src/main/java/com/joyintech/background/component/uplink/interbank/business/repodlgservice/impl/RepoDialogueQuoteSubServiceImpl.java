@@ -365,7 +365,8 @@ public class RepoDialogueQuoteSubServiceImpl extends BaseService<IbuQuoteCrep> i
      * @param inputBean BondDialogueQuoteDto
      * @return int
      */
-    private int insertHistoryData(RepoDialogueQuoteDto inputBean) {
+    @Override
+    public int insertHistoryData(RepoDialogueQuoteDto inputBean) {
         IbuQuoteCrepHis quoteBondHis = new IbuQuoteCrepHis();
         List<IbuQuoteCrepPledgeHis> quoteBondDetHisList = new ArrayList<IbuQuoteCrepPledgeHis>();
         //银行间报价指令关系
@@ -381,9 +382,9 @@ public class RepoDialogueQuoteSubServiceImpl extends BaseService<IbuQuoteCrep> i
         try {
             BeanUtils.copyProperties(quoteBondHis, inputBean.getIbuQuoteCrepDto());
             //新增报价入历史表  状态特殊处理  用于回退
-            if(StringUtils.equals(inputBean.getExeTypeIBU(),DictCodeList.银行间上行操作类型_本方新增发送.getValue())
-            &&StringUtils.equals(inputBean.getIbuQuoteCrepDto().getTradeStatus(),DictCodeList.银行间上行报价状态_新增中.getValue())
-            &&StringUtils.equals(inputBean.getIbuQuoteCrepDto().getSendStatus(),DictCodeList.银行间上行发送状态_已发送.getValue())){
+            if (StringUtils.equals(inputBean.getExeTypeIBU(), DictCodeList.银行间上行操作类型_本方新增发送.getValue())
+                    && StringUtils.equals(inputBean.getIbuQuoteCrepDto().getTradeStatus(), DictCodeList.银行间上行报价状态_新增中.getValue())
+                    && StringUtils.equals(inputBean.getIbuQuoteCrepDto().getSendStatus(), DictCodeList.银行间上行发送状态_已发送.getValue())) {
                 quoteBondHis.setSendStatus(DictCodeList.银行间上行发送状态_待发送.getValue());
                 quoteBondHis.setTradeStatus(StringUtils.EMPTY);
             }

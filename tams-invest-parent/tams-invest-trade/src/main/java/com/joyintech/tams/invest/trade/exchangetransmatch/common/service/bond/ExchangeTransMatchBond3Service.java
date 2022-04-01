@@ -103,20 +103,20 @@ public class ExchangeTransMatchBond3Service extends ExchangeTransMatchBondCommon
         return trdProductDeal;
     }
 
-    @Override
-    public List<StlPayOrdersDto> generateStlPayOrdersList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
-        List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
-
-        StlPayOrdersDto stlPayOsrdersDto = createStlPayOrders(dealDto, entrustDto, trdProductDeal);
-        // 收付方向
-        if(StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dealDto.getPs())) {
-            stlPayOsrdersDto.setPs(DictCodeListExt1.收付方向_支出.getValue());
-        }
-        else {
-            stlPayOsrdersDto.setPs(DictCodeList.收付方向_收入.getValue());
-        }
-        stlPayOrdersList.add(stlPayOsrdersDto);
-
-        return stlPayOrdersList;
-    }
+//    @Override
+//    public List<StlPayOrdersDto> generateStlPayOrdersList(ExchangeTransMatchCommonDto dealDto, ExchangeTransMatchCommonEntrustDto entrustDto, TrdProductDeal trdProductDeal) {
+//        List<StlPayOrdersDto> stlPayOrdersList = new ArrayList<>();
+//
+//        StlPayOrdersDto stlPayOsrdersDto = createStlPayOrders(dealDto, entrustDto, trdProductDeal);
+//        // 收付方向
+//        if(StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dealDto.getPs())) {
+//            stlPayOsrdersDto.setPs(DictCodeListExt1.收付方向_支出.getValue());
+//        }
+//        else {
+//            stlPayOsrdersDto.setPs(DictCodeList.收付方向_收入.getValue());
+//        }
+//        stlPayOrdersList.add(stlPayOsrdersDto);
+//
+//        return stlPayOrdersList;
+//    }
 }

@@ -207,4 +207,8 @@ public class InstrumentManagement extends BaseService {
         MinPriceAndMinTrdUnitLimitBean minPriceAndMinTrdUnitLimitBean = instrumentService.queryMinPriceAndMinTrdUnitLimit(stockCode, tradePlat, instructionPs);
         return new ResultBean(ErrorCode.SUCCESS, minPriceAndMinTrdUnitLimitBean);
     }
+
+    public void trdUnitLimitFlush() {
+        instrumentService.trdUnitLimitFlush();
+    }
 }

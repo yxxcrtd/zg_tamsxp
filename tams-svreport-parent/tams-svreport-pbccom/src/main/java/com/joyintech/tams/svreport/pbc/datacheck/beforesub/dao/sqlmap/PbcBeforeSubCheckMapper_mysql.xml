@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dao.PbcBeforeSubCheckMapper_mysql">
- 
-  <select id="selectPbcPrdBaseInfoSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
- 	parameterType="java.util.Date">
+
+	<select id="selectPbcPrdBaseInfoSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto"
+			parameterType="java.util.Date">
 	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,
 	ifnull(r.HIGH_YIELD_ISSUE,0) prodprofit1,ifnull(r.LOW_YIELD_ISSUE,0) prodprofit2
 	from pbc_prd_baseinfo_sub r
 	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
 	and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
- </select> 
- 
- <select id="selectPbcPrdBaseInfoEndSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
- 	parameterType="java.util.Date">
+ </select>
+
+	<select id="selectPbcPrdBaseInfoEndSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto"
+			parameterType="java.util.Date">
 	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,r.CCY,
 	ifnull(r.PROFIT,0) prodprofit1,ifnull(r.CUSTOM_PROFIT,0) custprofit1
 	from PBC_PRD_BASEINFO_END_SUB r
 	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
 	and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
- </select> 
- 
- <select id="selectPbcPrdRaisingSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto" 
- 	parameterType="java.util.Date">
+ </select>
+
+	<select id="selectPbcPrdRaisingSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto"
+			parameterType="java.util.Date">
 	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,f.OPERATE_MODE operateMode,
 	r.RAISING_DATE raisingDate,f.VDATE vdate,
 	r.CUSTOMER_TYPE1 customerType,f.CUSTOMER_TYPE customerType1,ifnull(r.RAISING_AMTSUM,0) prodprofit1

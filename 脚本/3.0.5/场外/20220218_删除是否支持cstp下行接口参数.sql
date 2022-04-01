@@ -1,0 +1,1 @@
+delete from sys_para where para_code='IS_SUPPORT_CSTP_FLAG';

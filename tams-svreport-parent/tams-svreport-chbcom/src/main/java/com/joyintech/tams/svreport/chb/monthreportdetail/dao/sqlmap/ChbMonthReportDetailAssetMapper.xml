@@ -123,9 +123,8 @@
     </resultMap>
 
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset">
-        select *
-        from (
-        SELECT
+        SELECT * FROM (
+            SELECT
             P.POSUUID,
             D1.propername reportType1,
             D2.propername reportType2,
@@ -170,7 +169,7 @@
             P.INDUSTRY4,
             nvl(mp.COUNTER_NAME, p.RIVAL_PARTY) rivalParty,
             P.PRIVATEPRD_FLAG privateprdFlag,
-            P.PRIVATEFUND_FLAG privatefundFlag,
+            DECODE(D2.propertycode,'AMT2_1_12',P.PRIVATEFUND_FLAG) privatefundFlag,
             P.MAIN_GRADE mainGrade,
             P.CREDIT_GRADE creditGrade,
             P.RATING,
@@ -198,7 +197,7 @@
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
             LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)
-            LEFT JOIN (SELECT ASSET_ID,ASSET_RATE,change_date,
+            LEFT JOIN (SELECT ASSET_ID,nvl(ASSET_RATE,0)*100 ASSET_RATE,change_date,
             row_number() over(partition by ASSET_ID order by change_date desc) row_number
             FROM CHB_ASSET_RATE
             WHERE asset_rate is not null
@@ -239,7 +238,8 @@
                 </foreach>
 
             </if>
-        ORDER BY D4.ORDERNO)
+            ORDER BY D4.ORDERNO
+        )
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -313,7 +313,7 @@
         SELECT T.PROD_ID||'_'||T.ASSET_CODE CODE,
         DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,
         MP.COUNTER_ID,MP.LINK_ID,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) row_number
+        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) row_number
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER

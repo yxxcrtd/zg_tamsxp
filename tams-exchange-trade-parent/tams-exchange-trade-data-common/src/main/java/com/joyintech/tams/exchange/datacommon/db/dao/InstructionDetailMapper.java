@@ -17,11 +17,13 @@ public interface InstructionDetailMapper extends IMybatisMapper<InstructionDetai
 
     int deleteByPrimaryKey(String id);
 
+    int deleteBatchByPrimaryKey(List<String> ids);
+
     int insert(InstructionDetail record);
 
     int insertSelective(InstructionDetail record);
     
-    int updateOrInsertSelective(InstructionPledge record);
+    int updateOrInsertSelective(InstructionDetail record);
 
     int insertBasicByBasicInfo(InstructionDetail record);
 

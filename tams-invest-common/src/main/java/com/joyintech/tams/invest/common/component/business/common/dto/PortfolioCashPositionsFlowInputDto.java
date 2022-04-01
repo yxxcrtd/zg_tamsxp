@@ -48,6 +48,12 @@ public class PortfolioCashPositionsFlowInputDto {
      * 是否撤销交易
      */
     private Boolean needNegative;
+
+    /**
+     * 是否走工作流（结算下行过来的数据没有流程中的记录）
+     */
+    private boolean isNotWorkflow;
+
     /**
      * 收支方向
      */
@@ -204,6 +210,22 @@ public class PortfolioCashPositionsFlowInputDto {
      */
     public void setAssetType2(String assetType2) {
         this.assetType2 = assetType2;
+    }
+
+    /**
+     * 获取 isNotWorkflow
+     * @return isNotWorkflow.
+     */
+    public boolean isNotWorkflow() {
+        return isNotWorkflow;
+    }
+
+    /**
+     * 设置 isNotWorkflow
+     * @param isNotWorkflow isNotWorkflow
+     */
+    public void setNotWorkflow(boolean isNotWorkflow) {
+        this.isNotWorkflow = isNotWorkflow;
     }
 
 }

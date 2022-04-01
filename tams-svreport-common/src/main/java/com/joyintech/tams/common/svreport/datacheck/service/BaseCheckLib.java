@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * 基本检查方法苦，实现了多个数据检查方法
  * @author chenxc
  * @version 1.7 2019年4月29日
@@ -56,17 +56,17 @@ public class BaseCheckLib {
      * 日志
      */
     private  static Logger logger = LoggerFactory.getLogger(BaseCheckLib.class);
-	  public static Map<String,List<ChbTransformRuleObjDto>> objFiledsMap;
-	  public static Map<String,TransformRule001Dto> spzMap;
-	  public static final String PATTERN_ALL = "^[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
-	  public static final String PATTERN_COMMON="^[\\u0020-\\u0026-\\u0028-\\u002F-\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B\\u007D\\u007E\\u0030-\\u0039-\\u0041-\\u005A-\\u0061-\\u007A]{0,}$";
-	  public static final String PATTERN_NOCHINESE="^[\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
-	  public static final String PATTERN_NOSYMBOL="(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+;)*(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+)";
-		public static final String FIXED_PATTERN ="^([\\s]*[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF]{1,}[\\s]*)+$";
-	 
-	  	  
-public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF]{0,}$";
-	  public static final String NEW_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF-\\u0020\\u0020]{0,}$"; 
+    public static Map<String,List<ChbTransformRuleObjDto>> objFiledsMap;
+    public static Map<String,TransformRule001Dto> spzMap;
+    public static final String PATTERN_ALL = "^[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
+    public static final String PATTERN_COMMON="^[\\u0020-\\u0026-\\u0028-\\u002F-\\u003A-\\u003F\\u0040\\u005B-\\u005F\\u0060\\u007B\\u007D\\u007E\\u0030-\\u0039-\\u0041-\\u005A-\\u0061-\\u007A]{0,}$";
+    public static final String PATTERN_NOCHINESE="^[\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF]{0,}$";
+    public static final String PATTERN_NOSYMBOL="(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+;)*(((\\d+%)|(\\d+%-\\d+%)):[\\u4e00-\\u9fef-\\u3400-\\u4db5-\\u20000-\\u2a6d6-\\u2a700-\\u2b734-\\u2b740-\\u2b81d-\\u2b820-\\u2cea1-\\u2ceb0-\\u2ebe0-\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0020-\\u0026-\\u0028-\\u007B-\\u007D-\\u007E-\\u2000-\\u2040-\\u2160-\\u216B-\\u3000-\\u301F-\\uFF00-\\uFF65-\\uFFE0-\\uFFEF&&[^\\u0025\\u003A-\\u003B\\u002D]]+)";
+    public static final String FIXED_PATTERN ="^([\\s]*[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF]{1,}[\\s]*)+$";
+
+
+    public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF]{0,}$";
+    public static final String NEW_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{00020000}-\\x{0002a6d6}\\x{0002a700}-\\x{0002b734}\\x{0002b740}-\\x{0002b81d}\\x{0002b820}-\\x{0002cea1}\\x{0002ceb0}-\\x{0002ebe0}\\uf900-\\ufad9\\ue815-\\ue86f\\u00b7\\u0021-\\u0026\\u0028-\\u007B\\u007D\\u007E\\u2000-\\u2040\\u2160-\\u216B\\u3000-\\u301F\\uFF00-\\uFF65\\uFFE0-\\uFFEF-\\u0020\\u0020]{0,}$";
 //	  public static void main(String[] args) {
 ////        String s = "12.345.6";
 ////        System.out.println(isNumeric(s));
@@ -140,7 +140,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 //    }
 
     /**
-     * 根据指定的规则，判断数据是否为空 
+     * 根据指定的规则，判断数据是否为空
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -153,7 +153,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     }
 
     /**
-     * 根据指定的规则，判断数据是长度是否超过指定的长度 
+     * 根据指定的规则，判断数据是长度是否超过指定的长度
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -170,7 +170,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         return (srcValue.length() < length);
     }
 
-        /**
+    /**
      * 根据指定的规则，判断数据字符长度是否超过指定的长度 ，默认GBK编码
      * @param data 被检查的数据
      * @param rule 检查规则实体
@@ -179,27 +179,27 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
      * @since 1.0
      */
     public static boolean lessThanCharLength(Map<String, String> data, CheckElement rule){
-    	String srcValue = data.get(rule.getSrcproperty());
+        String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true start
         if(StringUtils.isEmpty(srcValue)  && StringUtil.isEmpty(rule.getNullable()) && StringUtil.equals("0", rule.getObjvalue()) )
-        	return true;
+            return true;
         //add by wm condition表中无nullable字段，并且当字段比较为0时，返回true end
         if ( StringUtils.isEmpty(srcValue) )
             return false;
         int length = Integer.parseInt(rule.getObjvalue());
         try {
-			byte[] b_gbk = srcValue.getBytes("GBK");
-			return (b_gbk.length < length);
-		} catch (UnsupportedEncodingException e) {
+            byte[] b_gbk = srcValue.getBytes("GBK");
+            return (b_gbk.length < length);
+        } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage(),e);
-			return false;
-		}
+            return false;
+        }
     }
 
     /**
-     * 根据指定的规则，判断数据指定的值与目标值大小 
+     * 根据指定的规则，判断数据指定的值与目标值大小
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -222,7 +222,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         // add by zhangliang 20201023 判断符号如果是!=的场合 end
 
         if ( StringUtils.isEmpty(srcValue) )
-            return false;        
+            return false;
         switch (compareTo) {
             case ">":
                 r = (compareToAll(srcValue, objValue) > 0);
@@ -249,7 +249,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     }
 
     /**
-     * 根据指定的规则，判断数据指定的值与目标属性大小 
+     * 根据指定的规则，判断数据指定的值与目标属性大小
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -270,7 +270,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
         // add by zhangliang 20201023 判断符号如果是!=的场合 end
         if ( StringUtils.isEmpty(srcValue) )
-            return false;        
+            return false;
         String objValue = data.get(rule.getObjvalue());
         if ( objValue==null ) objValue="";
 
@@ -298,9 +298,9 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         return r;
 
     }
-    
+
     /**
-     * 根据指定的规则，判断数据指定的值与目标值大小 
+     * 根据指定的规则，判断数据指定的值与目标值大小
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -322,16 +322,16 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         // add by zhangliang 20201023 判断符号如果是!=的场合 end
 
         if ( StringUtils.isEmpty(srcValue) )
-            return false;        
+            return false;
         String objValue = rule.getObjvalue();
 
         if (  !isNumeric(srcValue)  || !isNumeric(objValue) ) {
             return false;
         }
-        
+
         BigDecimal s = new BigDecimal(srcValue);
         BigDecimal o = new BigDecimal(objValue);
-        
+
         switch (compareTo) {
             case ">":
                 r = (s.compareTo(o) > 0);
@@ -358,7 +358,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     }
 
     /**
-     * 根据指定的规则，判断数据指定的值与目标属性大小 
+     * 根据指定的规则，判断数据指定的值与目标属性大小
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -380,7 +380,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         // add by zhangliang 20201023 判断符号如果是!=的场合 end
 
         if ( StringUtils.isEmpty(srcValue) )
-            return false;        
+            return false;
         String objValue = data.get(rule.getObjvalue());
         if ( objValue==null ) objValue="";
 
@@ -390,7 +390,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 
         BigDecimal s = new BigDecimal(srcValue);
         BigDecimal o = new BigDecimal(objValue);
-        
+
         switch (compareTo) {
             case ">":
                 r = (s.compareTo(o)  > 0);
@@ -414,10 +414,10 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
         return r;
 
-    }    
+    }
 
     /**
-     * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内 
+     * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -432,7 +432,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             return false;
         // add by zhangmingming 数据字典增加多选情况 20191224 start
         if(StringUtils.equals(rule.getCompareto(),"<")){
-        	 List<String> srcValueList = Arrays.asList(srcValue.split(","));
+            List<String> srcValueList = Arrays.asList(srcValue.split(","));
             // 可以多选 但是不能重复
             if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
                 return false;
@@ -456,7 +456,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             if(flag == srcValueList.size())  return true;
 
             return false;
-        // add by zhangmingming 数据字典增加多选情况 20191224 end
+            // add by zhangmingming 数据字典增加多选情况 20191224 end
         }else {
             String objValue = rule.getObjvalue();
             DataDict dto = CacheUtil.getDictCode(objValue);
@@ -472,9 +472,9 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
 
     }
-    
-    
-    
+
+
+
     /**
      * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内 (带字符判断)
      * @param data 被检查的数据
@@ -491,7 +491,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             return false;
         // add by zhangmingming 数据字典增加多选情况 20191224 start
         if(StringUtils.equals(rule.getCompareto(),"<")){
-        	 List<String> srcValueList = Arrays.asList(srcValue.split(","));
+            List<String> srcValueList = Arrays.asList(srcValue.split(","));
             // 可以多选 但是不能重复
             if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
                 return false;
@@ -510,7 +510,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             if(flag == srcValueList.size())  return true;
 
             return false;
-        // add by zhangmingming 数据字典增加多选情况 20191224 end
+            // add by zhangmingming 数据字典增加多选情况 20191224 end
         }else {
             String objValue = rule.getObjvalue();
             DataDict dto = CacheUtil.getDictCode(objValue);
@@ -526,9 +526,9 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
 
     }
-    
-    
-    
+
+
+
     /**
      * 根据指定的规则，判断指定的值是否在数据字典枚举类型范围内 (带字符判断)
      * @param data 被检查的数据
@@ -544,14 +544,14 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue) )
             return false;
         List<String> srcValueList = Arrays.asList(srcValue.split(","));
-        
+
         //添加多选判断
         if(!canMultiple){
-        	if(null!=srcValueList&&srcValueList.size()>1){
-        		return false;
-        	}
+            if(null!=srcValueList&&srcValueList.size()>1){
+                return false;
+            }
         }
-        
+
         // 可以多选 但是不能重复
         if(srcValueList.size() != new HashSet<String>(srcValueList).size()){
             return false;
@@ -569,12 +569,12 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if(flag == srcValueList.size())  return true;
 
         return false;
-    // add by zhangmingming 数据字典增加多选情况 20191224 end
+        // add by zhangmingming 数据字典增加多选情况 20191224 end
 
     }
 
     /**
-     * 根据指定的规则，判断日期数据是否是指定的格式 
+     * 根据指定的规则，判断日期数据是否是指定的格式
      * @param data 被检查的数据
      * @param rule 检查规则实体，年:小写，月:大写，日:小写，时:大写,分:小写，秒:小写
      * @return
@@ -587,7 +587,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
-            return false;                
+            return false;
         String objValue = rule.getObjvalue();
 
         SimpleDateFormat sdf = new SimpleDateFormat(objValue);
@@ -603,7 +603,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     }
 
     /**
-     * 根据指定的规则，判断数据指定的属性的值是否是数字 
+     * 根据指定的规则，判断数据指定的属性的值是否是数字
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -616,8 +616,8 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
-            return false;                
-        
+            return false;
+
         String objValue = rule.getObjvalue();
         if ( !StringUtils.isEmpty( objValue ) ) { //如果对格式要求不为空
             //格式如：10,5
@@ -626,11 +626,11 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             int decbit = Integer.parseInt(objFormat[1]);
             //"^[-+]?[1-9]{5}[.][0-9]{2}$";
             String format = "";
-            if ( decbit>0) 
+            if ( decbit>0)
                 format = "^([-+]?[0-9]{1,"+(allbit-decbit)+"})?[.][0-9]{"+decbit+"}$";
             else
                 format = "^([-+]?[0-9]{1,"+(allbit-decbit)+"})?[.]?[0-9]{"+decbit+"}$";
-            
+
             return srcValue.matches(format);
         } else {
             return isNumeric(srcValue);
@@ -638,7 +638,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
     }
 
     /**
-     * 根据指定的规则，判断数据指定的属性的值是否是否是特殊格式的字符串，格式使用正则表达式规则 
+     * 根据指定的规则，判断数据指定的属性的值是否是否是特殊格式的字符串，格式使用正则表达式规则
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -651,8 +651,8 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
-            return false;                
-        
+            return false;
+
         String format = rule.getObjvalue();
         try {
             return srcValue.matches(format);
@@ -662,7 +662,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
     }
     /**
-     * 根据指定的规则，判断数据指定的属性的值是否是否是特殊格式的字符串，格式使用正则表达式规则 
+     * 根据指定的规则，判断数据指定的属性的值是否是否是特殊格式的字符串，格式使用正则表达式规则
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -675,8 +675,8 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue))
-            return false;                
-        
+            return false;
+
         String format = rule.getObjvalue();
         boolean ff;
         try {
@@ -688,23 +688,23 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         //白名单验证不通过后继续检查有没有存在生僻字库中
         if(!ff){
             if(objFiledsMap==null){
-                TransformRuleMapper transformRuleMapper = 
-                    SpringContextUtil.getBean(TransformRuleMapper.class);
-                TransformRuleObjMapper transformRuleObjMapper = 
-                    SpringContextUtil.getBean(TransformRuleObjMapper.class);
+                TransformRuleMapper transformRuleMapper =
+                        SpringContextUtil.getBean(TransformRuleMapper.class);
+                TransformRuleObjMapper transformRuleObjMapper =
+                        SpringContextUtil.getBean(TransformRuleObjMapper.class);
                 Map<String, Object> paramap=new HashMap<String, Object>();
                 paramap.put("statusList", Arrays.asList("E"));
                 List<TransformRule001Dto> allList=transformRuleMapper.selectAllData(paramap);
                 spzMap=allList.stream().collect(
-                    Collectors.toMap(x ->x.getTransType()+x.getOrgField(),part->part,(k1,k2)->k1));
+                        Collectors.toMap(x ->x.getTransType()+x.getOrgField(),part->part,(k1,k2)->k1));
                 List<ChbTransformRuleObjDto> allRuleObjList=transformRuleObjMapper.selectAllDataByTableId("CHB_EQUDET");
                 objFiledsMap=allRuleObjList.stream().collect(
-                    JoyinCollectors.groupingBy(
-                        x -> x.getInfoProperty() ));
+                        JoyinCollectors.groupingBy(
+                                x -> x.getInfoProperty() ));
             }
             List<ChbTransformRuleObjDto> objFileds=null;
             if(objFiledsMap!=null){
-                 objFileds=objFiledsMap.get(rule.getSrcproperty());
+                objFileds=objFiledsMap.get(rule.getSrcproperty());
             }
             //对于白名单检查不过的且在规则对象中配置了的数据继续检查
             if(!StringUtil.isEmptyList(objFileds)){
@@ -724,8 +724,8 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
                                 ff = true;
                                 result+=spzMap.get(key).getTargetField();;
                             }else{
-                                TransformRuleMapper transformRuleMapper = 
-                                    SpringContextUtil.getBean(TransformRuleMapper.class);
+                                TransformRuleMapper transformRuleMapper =
+                                        SpringContextUtil.getBean(TransformRuleMapper.class);
                                 TransformRule001Dto bb=new  TransformRule001Dto();
                                 bb.setOrgField(""+cc);
                                 bb.setTransType("02");
@@ -734,7 +734,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
                                 if(transformRuleMapper.getTransFieldCount(bb)<=0){
                                     transformRuleMapper.insertTransField(bb);
                                 }
-                                ff = false;  
+                                ff = false;
                                 result+=cc;
                             }
                         }else{
@@ -746,7 +746,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
                     data.put(objFileds.get(0).getObjTableFiled(), result);
                 }
             }
-            
+
         }
         return ff;
     }
@@ -760,7 +760,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         return flag;
     }
     /**
-     * 根据指定的规则，执行逻辑语句 
+     * 根据指定的规则，执行逻辑语句
      * @param data 被检查的数据
      * @param rule 检查规则实体
      * @return
@@ -834,7 +834,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
      * @return
      */
     public static boolean inWhitelistAll(String str){
-    	 return str.matches(PATTERN_ALL);
+        return str.matches(PATTERN_ALL);
     }
     /**
      * 判断是否在常用白名单中
@@ -842,7 +842,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
      * @return
      */
     public static boolean inWhitelistCommon(String str){
-    	 return str.matches(PATTERN_COMMON);
+        return str.matches(PATTERN_COMMON);
     }
     /**
      * 判断是否在非中文白名单中
@@ -850,7 +850,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
      * @return
      */
     public static boolean inWhitelistNoChines(String str){
-    	  return str.matches(PATTERN_NOCHINESE);
+        return str.matches(PATTERN_NOCHINESE);
     }
     /**
      * 判断是否在非符号白名单中
@@ -858,9 +858,9 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
      * @return
      */
     public static boolean inWhitelistNoSymbol(String str){
-	        return str.matches(PATTERN_NOSYMBOL);
+        return str.matches(PATTERN_NOSYMBOL);
     }
-     // etliu 20191115 add start
+    // etliu 20191115 add start
     /**
      * 根据指定的规则，判断数据的长度是否是定长
      * 允许【固定14位】，或者【固定14位或者15位】
@@ -887,9 +887,9 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
         return false;
     }
-    
+
     /**
-     * 根据指定的规则，判断数据指定的属性的值是否是数字 
+     * 根据指定的规则，判断数据指定的属性的值是否是数字
      * 对于小数位数的check，只要小数位数小于规定长度，都认为符合要求
      * @param data 被检查的数据
      * @param rule 检查规则实体
@@ -903,8 +903,8 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
-            return false;                
-        
+            return false;
+
         String objValue = rule.getObjvalue();
         if ( !StringUtils.isEmpty( objValue ) ) { //如果对格式要求不为空
             //格式如：10,5
@@ -913,18 +913,18 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             int decbit = Integer.parseInt(objFormat[1]);
             //"^[-+]?[1-9]{5}[.][0-9]{2}$";
             String format = "";
-            if ( decbit>0 && StringUtil.contains(srcValue, GlobalConstant.POINT)) 
+            if ( decbit>0 && StringUtil.contains(srcValue, GlobalConstant.POINT))
                 format = "^([-+])?([0-9]{1,"+(allbit-decbit)+"})?[.][0-9]{1,"+decbit+"}$";
             else
                 format = "^([-+])?([0-9]{1,"+(allbit-decbit)+"})$";
-            
+
             return srcValue.matches(format);
         } else {
             return isNumeric(srcValue);
         }
     }
     /**
-     * 根据指定的规则，判断日期数据是否是指定的格式 
+     * 根据指定的规则，判断日期数据是否是指定的格式
      * ※严格判断是否符合日期格式
      * @param data 被检查的数据
      * @param rule 检查规则实体，年:小写，月:大写，日:小写，时:大写,分:小写，秒:小写
@@ -938,7 +938,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
-            return false;                
+            return false;
         String objValue = rule.getObjvalue();
 
         SimpleDateFormat sdf = new SimpleDateFormat(objValue);
@@ -949,10 +949,10 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         } catch (ParseException e) {
             ret = false;
         }
-        
+
         // ※严格判断是否符合日期格式
         if (ret && DateUtil.isDateStr(srcValue, objValue)
-            && srcValue.length() == objValue.length()) {
+                && srcValue.length() == objValue.length()) {
             ret = true;
         }
         else {
@@ -989,9 +989,9 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 
         return ret;
     }
-    
+
     /**
-     * 根据指定的规则，判断日期数据是否是指定的格式 
+     * 根据指定的规则，判断日期数据是否是指定的格式
      * ※严格判断是否符合日期格式
      * @param srcValue 被检查的数据
      * @param isNull 是否可为空
@@ -1003,7 +1003,7 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         if ( StringUtils.isEmpty(srcValue)  && isNull )  //传入数据为空，且允许为空
             return true;
         if ( StringUtils.isEmpty(srcValue) )
-            return false;                
+            return false;
 
         SimpleDateFormat sdf = new SimpleDateFormat(objValue);
         try {
@@ -1013,10 +1013,10 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         } catch (ParseException e) {
             ret = false;
         }
-        
+
         // ※严格判断是否符合日期格式
         if (ret && DateUtil.isDateStr(srcValue, objValue)
-            && srcValue.length() == objValue.length()) {
+                && srcValue.length() == objValue.length()) {
             ret = true;
         }
         else {
@@ -1025,10 +1025,10 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
 
         return ret;
     }
-    
-    
+
+
     // etliu 20191115 add end
-    
+
     /**
      * 判断是否是字符数组中
      * @param data 被检查的数据
@@ -1052,20 +1052,20 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             return false;
         String objValue = rule.getObjvalue();
         List<String> objValueList = Arrays.asList(objValue.split(","));
-            if(null != objValueList){
-                if("==".equals(compareto)){
-                    if(objValueList.contains(srcValue))
-                        return true;
-                }else if("!=".equals(compareto)){
-                    if(!objValueList.contains(srcValue))
-                        return true;
-                }
-
+        if(null != objValueList){
+            if("==".equals(compareto)){
+                if(objValueList.contains(srcValue))
+                    return true;
+            }else if("!=".equals(compareto)){
+                if(!objValueList.contains(srcValue))
+                    return true;
             }
+
+        }
 
         return false;
     }
-    
+
     /**
      * 求数组中最大的值
      * @param data  被检查的数据
@@ -1073,22 +1073,22 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
      * @return
      */
     public static boolean inArrayMax(Map<String, String> data, CheckElement rule){
-    	//传入进来的数据值 
-    	String srcValue = data.get(rule.getSrcproperty());
-         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
-             return true;
-         if ( StringUtils.isEmpty(srcValue) )
-             return false;   
-         //给的固定值
-         String objValue = rule.getObjvalue();
-         List<String> srcValueList = Arrays.asList(srcValue.split(","));
-         String max= Collections.max(srcValueList);
-         if(StringUtil.equals(max, objValue)){
-        	 return true;
-         }
-    	 return  false;
+        //传入进来的数据值
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        //给的固定值
+        String objValue = rule.getObjvalue();
+        List<String> srcValueList = Arrays.asList(srcValue.split(","));
+        String max= Collections.max(srcValueList);
+        if(StringUtil.equals(max, objValue)){
+            return true;
+        }
+        return  false;
     }
-    
+
 
     /**
      * 求数组中最小的值是否等于固定值
@@ -1097,20 +1097,20 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
      * @return
      */
     public static boolean inArrayMin(Map<String, String> data, CheckElement rule){
-    	//传入进来的数据值 
-    	String srcValue = data.get(rule.getSrcproperty());
-         if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
-             return true;
-         if ( StringUtils.isEmpty(srcValue) )
-             return false;   
-         //给的固定值
-         String objValue = rule.getObjvalue();
-         List<String> srcValueList = Arrays.asList(srcValue.split(","));
-         String min= Collections.min(srcValueList);
-         if(StringUtil.equals(min, objValue)){
-        	 return true;
-         }
-    	 return  false;
+        //传入进来的数据值
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtils.isEmpty(srcValue) )
+            return false;
+        //给的固定值
+        String objValue = rule.getObjvalue();
+        List<String> srcValueList = Arrays.asList(srcValue.split(","));
+        String min= Collections.min(srcValueList);
+        if(StringUtil.equals(min, objValue)){
+            return true;
+        }
+        return  false;
     }
 
     /**
@@ -1173,59 +1173,59 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
 
     }
-    
-	//addBy zhangjinyang  start 20201023
+
+    //addBy zhangjinyang  start 20201023
     /**
      * 判断姓名长度是否为2位或三位，是则不通过（姓名为汉字时才判断）
      * @param data 被检查的数据
-     * @param rule 
+     * @param rule
      * @return boolean
      */
     public  static boolean checkNameLength(Map<String,String> data, CheckElement rule) {
-    	String srcValue = data.get(rule.getSrcproperty());
+        String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtils.isEmpty(srcValue) ) {
             return true;
         }else {
-        	char[] c=srcValue.toCharArray();
-        	int count=0;
-        	for(int i=0;i<c.length;i++) {
-	        	Character.UnicodeBlock ub = Character.UnicodeBlock.of(c[i]);
-	            if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
-	                    || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
-	                    || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
-	                    || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
-	                    || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-	                    || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {//判断是否为汉字
-	            		count++;
-	            	}
-        	}
-        	if(count==c.length) {
-	        	if(srcValue.length()==Integer.parseInt(rule.getObjvalue())) {
-	        		return false;
-	        	}else {
-	        		return true;	
-	        	}
-        	}else {
-        		return true;
-        	}
-        	 
+            char[] c=srcValue.toCharArray();
+            int count=0;
+            for(int i=0;i<c.length;i++) {
+                Character.UnicodeBlock ub = Character.UnicodeBlock.of(c[i]);
+                if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                        || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                        || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                        || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+                        || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                        || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {//判断是否为汉字
+                    count++;
+                }
+            }
+            if(count==c.length) {
+                if(srcValue.length()==Integer.parseInt(rule.getObjvalue())) {
+                    return false;
+                }else {
+                    return true;
+                }
+            }else {
+                return true;
+            }
+
         }
     }
-    
+
     /**
      * 判断业务确认日是否大于当前日期，大于则不通过
      * @param data 被检查的数据
-     * @param rule 
+     * @param rule
      * @return boolean
      */
     public  static boolean checkConfigDate(Map<String,String> data, CheckElement rule) {
         String srcValue = data.get(rule.getSrcproperty());
-        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() ) {  
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() ) {
             return true;
         }
         if ( StringUtils.isEmpty(srcValue) ) {
-        	return true;
-        }                   
+            return true;
+        }
         String objValue = rule.getObjvalue();
         Date date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat(objValue);
@@ -1233,29 +1233,29 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
             sdf.setLenient(false);
             Date date1=sdf.parse(srcValue);
             if(date1.compareTo(date)>0) {
-            	return false;
+                return false;
             }else {
-            	return true;
+                return true;
             }
         } catch (ParseException e) {
-        	return true;
+            return true;
         }
     }
     /**
      * 判断是否全部为空格是则不通过
      * @param data 被检查的数据
-     * @param rule 
+     * @param rule
      * @return boolean
      */
     public  static boolean checkIsALLSpace(Map<String,String> data, CheckElement rule) {
-    	String srcValue = data.get(rule.getSrcproperty());
+        String srcValue = data.get(rule.getSrcproperty());
         if ( StringUtils.isEmpty(srcValue) ) {
             return true;
         }else {
-        	return srcValue.matches(FIXED_PATTERN);
+            return srcValue.matches(FIXED_PATTERN);
         }
     }
-  //addBy zhangjinyang  end 20201023
+    //addBy zhangjinyang  end 20201023
 
     /**
      * 根据指定的规则，判断数据指定的值与目标值大小
@@ -1331,4 +1331,40 @@ public static final String OLD_PATTERN ="^[\\u4e00-\\u9fef\\u3400-\\u4db5\\x{000
         }
         return true;
     }
+
+    /**
+     * 判断子下拉框是否属于父下拉框
+     * @param data 被检查的数据
+     * @param rule
+     * @return boolean
+     */
+    public  static boolean isBelongTo(Map<String,String> data, CheckElement rule) {
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtils.isEmpty(srcValue)  && rule.allowNullable() ) {
+            return true;
+        }
+        if ( StringUtils.isEmpty(srcValue) ) {
+            return true;
+        }
+        String objValue = data.get(rule.getObjvalue());
+        if ( StringUtils.isEmpty(objValue)  && rule.allowNullable() ) {
+            return true;
+        }
+        if ( StringUtils.isEmpty(objValue) ) {
+            return true;
+        }
+        String compareto = rule.getCompareto();
+        int value=0;
+        try{
+            value = Integer.valueOf(compareto);
+        }catch (Exception e){
+            return true;
+        }
+        if (StringUtil.equals(srcValue.substring(0,value),objValue.substring(0,value))){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

@@ -2,28 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dao.InvestorsQualityCheckDJWZXMapper_mysql">
     <sql id="objRec" >
-        SELECT objRec.* FROM (
+        WITH  objRec  AS(
         SELECT
         tmp1.PROD_ID,
         tmp1.VDATE,
-       IFNULL(tmp1.actEndMDate,tmp1.MDate) MDATE,
+        IFNULL(tmp1.actEndMDate,tmp1.MDate) MDATE,
         STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d') as holdDate
         FROM (
         SELECT
-        @rownum :=@rownum +1 rownum,
         A.PROD_ID,
         A.VDATE,
         A.MDATE,
         B.MDATE AS actEndMDate,
         B.STATUS,
-        IF
-        (@PROD_ID = A.PROD_ID, @rank :=@rank + 1, @rank :=1 ) AS endStatusNo,
-        @PROD_ID := A.PROD_ID
-        FROM
-        (SELECT * FROM CHB_PRD_BASEINFO ORDER BY PROD_ID, UPDATE_TIME ) A
+        ROW_NUMBER() over( partition by A.PROD_ID ORDER BY B.UPDATE_TIME DESC)  AS endStatusNo
+        FROM CHB_PRD_BASEINFO A
         LEFT JOIN CHB_PRD_END_SUB B
-        ON A.PROD_ID = B.PROD_ID left join
-        (SELECT @rownum :=0, @PROD_ID := NULL, @rank := 0) tmp on 1=1
+        ON A.PROD_ID = B.PROD_ID
         WHERE
         A.STATUS  != 'D'
         <if test="orgCodeList != null and orgCodeList.size() > 0">
@@ -31,105 +26,46 @@
                 #{orgCode,jdbcType=VARCHAR}
             </foreach>
         </if>
+        AND A.ISSUING_STATUS != '02'
         AND A.FPROD_ID is null
         AND STR_TO_DATE(DATE_FORMAT(A.VDATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[<=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
         ) tmp1
         WHERE
         endStatusNo = 1
         AND IFNULL(tmp1.STATUS,'01') != '03'
-        AND STR_TO_DATE(DATE_FORMAT(ifnull(actEndMDate,MDATE), '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[>]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
-        ) objRec
+        AND STR_TO_DATE(DATE_FORMAT(IFNULL(actEndMDate,MDATE), '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[>]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+        )
     </sql>
 
 
     <!-- 余额、份额共通-核查对象数量取得 -->
     <select id="cntDJWZXTol" resultType="java.math.BigDecimal">
-
+        <include refid="objRec"></include>
         SELECT
         COUNT(*)
         FROM
-        (<include refid="objRec"></include>) cc
+        objRec
     </select>
 
     <!-- 余额、份额共通-错误记录取得 -->
     <select id="searchDJWZXRec" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 
+        <include refid="objRec"></include>
         SELECT
         A.PROD_ID as prodId,
         A.VDATE as prdVDate,
         A.MDATE as prdMDate,
         A.holdDate,
         B.REG_CODE as prdRegistCode
-        FROM  (<include refid="objRec"></include>) A
+        FROM  objRec A
         LEFT JOIN CHB_PRDRESIST_CODE B
         ON A.PROD_ID = B.PRODID
-        LEFT JOIN CHB_INVESTHOLD_INFO_SUB C
+        LEFT JOIN CHB_INVESTHOLD_INFO_SUB_SUM C
         ON (A.PROD_ID = C.PRODID
         AND A.holdDate  = STR_TO_DATE(DATE_FORMAT(C.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d')
         )
         WHERE
         C.PRODID is null
-
-        UNION ALL
-
-        SELECT
-        tmp3.prodId,
-        tmp3.prdVDate,
-        tmp3.prdMDate,
-        tmp3.holdDate,
-        tmp3.prdRegistCode
-        FROM (
-        SELECT
-        tmp2.prodId,
-        tmp2.prdVDate,
-        tmp2.prdMDate,
-        tmp2.holdDate,
-        tmp2.prdRegistCode,
-        SUM(tmp2.lateNums) as validateTol
-        FROM (
-        SELECT
-        tmp1.prodId,
-        tmp1.prdVDate,
-        tmp1.prdMDate,
-        tmp1.holdDate,
-        tmp1.prdRegistCode,
-        CASE WHEN tmp1.STATUS = '03' THEN 0
-        ELSE 1 END lateNums
-        FROM (
-        SELECT
-        @rownum :=@rownum +1 rownum,
-        A.PROD_ID as prodId,
-        A.VDATE as prdVDate,
-        A.MDATE as prdMDate,
-        A.holdDate,
-        B.REG_CODE as prdRegistCode,
-        C.STATUS,
-        IF
-        ((@PROD_ID = A.PROD_ID AND @PROD_ID = A.PROD_ID), @rank :=@rank + 1, @rank :=1 ) AS investStsNo,
-        @PROD_ID := A.PROD_ID,
-        @INDENTIFY_MARK := C.INDENTIFY_MARK
-        FROM
-        (SELECT * FROM (<include refid="objRec"></include>) ZZ ORDER BY PROD_ID ) A
-        LEFT JOIN CHB_PRDRESIST_CODE B
-        ON A.PROD_ID = B.PRODID
-        INNER JOIN CHB_INVESTHOLD_INFO_SUB C
-        ON (A.PROD_ID = C.PRODID
-        AND A.holdDate  = STR_TO_DATE(DATE_FORMAT(C.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d')
-        )  left join
-        (SELECT @rownum :=0, @PROD_ID := NULL, @rank := 0) tmp on 1=1
-        ) tmp1
-        WHERE
-        investStsNo = 1
-        ) tmp2
-        GROUP BY
-        tmp2.prodId,
-        tmp2.prdVDate,
-        tmp2.prdMDate,
-        tmp2.holdDate,
-        tmp2.prdRegistCode
-        ) tmp3
-        WHERE
-        tmp3.validateTol = 0
 
     </select>
 </mapper>

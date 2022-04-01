@@ -15,11 +15,13 @@ import com.joyintech.tams.invest.common.dto.TrdStaSecInfoDto;
 import com.joyintech.tams.invest.common.dto.mock.trade.MockTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.mock.trade.MockTrdProductDealDto;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
+import com.joyintech.tams.invest.common.trade.dto.OrderInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -361,4 +363,58 @@ public interface TrdCommonBaseMapper {
      * @since 1.0
      */
     String queryFinprodIdByFinprodMarketId(Map<String, Object> param);
+
+    // modify by etliu 20220110 start
+    /**
+     * 根据首期成交编号查询协议回购首期的交易编号
+     * @param paraMap 参数
+     * @return 协议回购首期的交易编号
+     */
+    String selectHgsqFinprodId(Map<String, Object> paraMap);
+    // modify by etliu 20220110 end
+
+
+    /**
+     * 查询指令详情信息
+     * @param entrustId
+     * @return
+     */
+    List<EtrEntrustDetail> selectEtrEntrustDetailByEntrustId(String entrustId);
+
+    /**
+     * 查询关联交易编号
+     * @param tradeId
+     * @return
+     */
+    String selectFTradeId(String tradeId);
+
+    /**
+     * 查询下单对应的委托编号信息
+     * @param dealNo
+     * @return
+     */
+    InfContractDetailfile selectInfContractDetailfile(String dealNo);
+
+    /**
+     * 查询下单信息
+     * @param dealNo
+     * @return
+     */
+    OrderInfoDto selectOrderInfo(String dealNo);
+
+    PtlCapacctInfo getPtlCapAcctInfo(Map<String, Object> map);
+
+    List<FinPledgeDispDetailTemp> getFinPledgeDispDetailTemps(Map<String, Object> map);
+
+    FinDealPledge selectFinDealPledgeByPrimaryKey(FinDealPledgeKey finDealPledgeKey);
+
+    /**
+     * 根据金融产品代码，日期，查询出当日折算率
+     *
+     * @param finprodId 金融产品代码
+     * @return EtrEntrust
+     * @see
+     * @since 1.0
+     */
+    BigDecimal queryConverseRadio(@Param("finprodId") String finprodId, @Param("vdate") Date vdate);
 }

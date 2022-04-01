@@ -24,6 +24,8 @@ import com.joyintech.background.component.order.exchange.database.dao.EntrustCom
 import com.joyintech.background.component.order.exchange.database.entity.EntrustAddComponent;
 import com.joyintech.background.component.order.exchange.database.entity.EntrustComponent;
 
+import java.util.Date;
+
 /**
  * 子组件
  * 
@@ -86,6 +88,10 @@ public abstract class EtrSubComponentService<V extends EtrBaseDto> implements Et
         }
         EntrustAddComponent etrAddEntity = new EntrustAddComponent();
         BeanUtil.copyPropertiesIgnoreNull(etrAddEntity, dto);
+        if (dto.getAddMdate() != null) {
+            etrAddEntity.setMdate(dto.getAddMdate());
+        }
+
         etrAddEntity.setEntrustCreateSource(DictCodeList.指令创建来源_场内实时.getValue());
         if (StringUtil.isEmpty(etrAddEntity.getAssetType1())
             && StringUtil.isNotEmpty(etrEntity.getFinprodId())) {
@@ -97,6 +103,9 @@ public abstract class EtrSubComponentService<V extends EtrBaseDto> implements Et
         // 登录指令表
         etrMapper.insertSelective(etrEntity);
         // 登录指令附属表
+        if (etrAddEntity!= null&&etrAddEntity.getTransmitTime()==null) {
+            etrAddEntity.setTransmitTime(new Date());
+        }
         etrAddMapper.insertSelective(etrAddEntity);
         // 个别登录
         doInsert(dto);
@@ -122,6 +131,11 @@ public abstract class EtrSubComponentService<V extends EtrBaseDto> implements Et
                 etrAddEntity.setAssetType1(info.getAssetType1());
             }
         }
+
+        if (dto.getAddMdate() != null) {
+            etrAddEntity.setMdate(dto.getAddMdate());
+        }
+
         // 更新指令表
         etrMapper.updateByPrimaryKeySelective(etrEntity);
         // 更新指令附属表

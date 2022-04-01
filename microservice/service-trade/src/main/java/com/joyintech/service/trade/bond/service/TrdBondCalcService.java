@@ -118,10 +118,10 @@ public class TrdBondCalcService extends BaseService{
             validMessageList.add(validMessage);
         }
         // 投资目的
-        if (StringUtil.isBlank(dto.getInvAim())) {
-        	ValidMessage validMessage = new ValidMessage("invAim","投资目的不能为空");
-            validMessageList.add(validMessage);
-        }
+//        if (StringUtil.isBlank(dto.getInvAim())) {
+//        	ValidMessage validMessage = new ValidMessage("invAim","投资目的不能为空");
+//            validMessageList.add(validMessage);
+//        }
         // 3.劵面总额
         if (dto.getTradeAmt() == null) {
         	ValidMessage validMessage = new ValidMessage("tradeAmt","劵面总额不能为空");

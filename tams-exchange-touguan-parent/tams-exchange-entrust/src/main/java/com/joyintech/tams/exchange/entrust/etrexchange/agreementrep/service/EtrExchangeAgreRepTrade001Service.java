@@ -11,8 +11,46 @@
 package com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.service;
 
 
+import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_修改;
+import static com.joyintech.tams.constant.DictCodeListExt3.系统动作_新建;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.joyintech.framework.exception.BusinessException;
+import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.*;
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
+import com.joyintech.tams.business.common.dto.CfetsOprHisInfoRequest;
+import com.joyintech.tams.business.common.exception.PositionException;
+import com.joyintech.tams.business.common.pojo.BaseMap;
+import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
+import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BindingResult;
+
 import com.joyintech.background.component.common.pack.common.security.User;
-import com.joyintech.background.component.order.exchange.business.dto.*;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepAdvBuyDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepExpireDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepExpireUnBuyDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepFristIssueDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepHwayChgSecDto;
+import com.joyintech.background.component.order.exchange.business.dto.AgreRepOpenSecDto;
 import com.joyintech.background.component.order.exchange.common.dto.EtrBaseDto;
 import com.joyintech.background.component.order.exchange.common.dto.EtrParameterDto;
 import com.joyintech.background.component.order.exchange.common.dto.EtrSinglePortfolioDto;
@@ -23,15 +61,11 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
 import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
-import com.joyintech.system.base.entity.SysUser;
-import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
-import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
+import com.joyintech.tams.component.base.core.impl.dao.MstWorkflowCommonServiceMapperImpl;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
@@ -40,9 +74,9 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dao.EtrExchangeAgreRepTradeMapper;
-import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.*;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.agreementrep.dto.EtrExchangeAgreRepTrade001Dto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SelectOptionRequestDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.position.service.PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -52,21 +86,11 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.position.dto.PostionParameter;
 import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.BindingResult;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.*;
 
 
 /**
@@ -118,6 +142,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Autowired
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+    
+    @Autowired
+    private MstWorkflowCommonServiceMapperImpl mstWorkflowCommonServiceMapperImpl;
 
     /**
      * 指令分发接口
@@ -139,12 +166,35 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
     @Autowired
     private CommonPositionService commonPositionService;
+    
+    @Autowired
+	private PositionRequestServiceEtrExchangeAgreRepTrade001DtoRequest positionRequestService;
+    
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
+
+    @Autowired
+    private TrdCommonBaseService trdCommonBaseService;
+    
+    /**
+     * 指令废弃表
+     */
+    @Autowired
+    private EtrEntrustBackupMapper etrEntrustBackupMapper;
+    @Autowired
+    private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
+    @Autowired
+    private EtrEntrustDetailMapper etrEntrustDetailMapper;
 
     public static final String ENTRUST_RECORD_MODIFY = "modify";
     
     public static final String ENTRUST_RECORD_NEW = "new";
 
+    @Autowired
+    private JoyinbusinessCommonService joyinbusinessCommonService;
 
+    @Autowired
+    private EtrPledgeMapper etrPledgeMapper;
     /**
      * 对手方交易员联想文本框初始化。
      *
@@ -161,14 +211,37 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         List<SelectOptionDto> resultList = new ArrayList<>();
         if (object instanceof List<?>){
             List<Map<String,Object>> mapList = (List<Map<String,Object>>)object;
+            Map<String, String> counterTraderIdMap = new HashMap<>();
             mapList.forEach(item ->{
-                SelectOptionDto dto = new SelectOptionDto();
-                dto.setId(item.get("counterTraderId").toString());
-                dto.setText(item.get("counterTraderId").toString());
-                dto.setObject(item);
-                resultList.add(dto);
+                if (!counterTraderIdMap.containsKey(item.get("counterTraderId").toString())) {
+                    SelectOptionDto dto = new SelectOptionDto();
+                    dto.setId(item.get("counterTraderId").toString());
+                    dto.setText(item.get("counterTraderId").toString());
+                    dto.setObject(item);
+                    resultList.add(dto);
+                    counterTraderIdMap.put(dto.getId(), dto.getId());
+                }
             });
         }
+        return resultList;
+    }
+
+    /**
+     * 对手方交易员联想文本框初始化。
+     *
+     * @param map 检索参数
+     * @return 联想文本框
+     */
+    public List<SuggestDto> selectCounterTraderWfl(Map<String, Object> map) {
+        List<SuggestDto> resultList = new ArrayList<>();
+
+        List<SelectOptionDto> tempList = etrExchangeAgreRepTradeMapper.selectCounterTrader(map);
+        tempList.forEach(item ->{
+            SuggestDto dto = new SuggestDto();
+            dto.setCode(item.getId());
+            dto.setObject(item);
+            resultList.add(dto);
+        });
         return resultList;
     }
 
@@ -182,6 +255,26 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         List<SelectOptionDto> suggestDtos = etrExchangeAgreRepTradeMapper.selectTrader(map);
         return suggestDtos;
     }
+
+    /**
+     * 本方交易员联想文本框初始化。
+     *
+     * @param map 检索参数
+     * @return 联想文本框
+     */
+    public List<SuggestDto> selectTraderWfl(Map<String, Object> map) {
+        List<SuggestDto> resultList = new ArrayList<>();
+
+        List<SelectOptionDto> tempList = etrExchangeAgreRepTradeMapper.selectTrader(map);
+        tempList.forEach(item ->{
+            SuggestDto dto = new SuggestDto();
+            dto.setCode(item.getId());
+            dto.setObject(item);
+            resultList.add(dto);
+        });
+        return resultList;
+    }
+
     /**
      * 查询原成交信息
      *
@@ -230,9 +323,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         String tradeMarket = (String)map.get("tradeMarket");
         Date mDate = DateUtil.addDay(DateUtil.parse(fristSettleDate), term);
         map.put("mDate", DateUtil.format(mDate));
-        String dealCalId = "04";
+        String dealCalId = "05";
         if(DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(tradeMarket)){
-            dealCalId = "05";
+            dealCalId = "04";
         }
         List<String> holidayList =  dateCalService.getDealCalendarHoliday(mDate, DateUtil.addDay(mDate,30), dealCalId);
 
@@ -355,6 +448,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             // 质押券代码
             agreRepFristIssueDto.setRepSecId(entity.getRepSecId());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepFristIssueDto);
+            etrEntrust.setPs(entity.getBusiPs());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepFristIssueDto);
             if(StringUtil.isNotEmpty(agreRepFristIssueDto.getFinprodId())) {
             	BeanUtil.copyPropertiesIgnoreNull(etrPledge, agreRepFristIssueDto);
@@ -693,6 +787,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             else {
                 agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
             }
+
+            agreRepOpenSecDto.setEntrustNum(agreRepOpenSecDto.getPledgeNumber());
   
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());
@@ -787,6 +883,9 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             }
         }
         dto.setEtrEntrust(etrEntrust);
+        if (etrEntrustAdd.getVpayDate() != null && etrEntrustAdd.getTermDays() != null) {
+            etrEntrustAdd.setMdate(DateUtil.addDay(etrEntrustAdd.getVpayDate(), etrEntrustAdd.getTermDays().intValue()));
+        }
         dto.setEtrEntrustAdd(etrEntrustAdd);
         dto.setEtrPledgeList(list);
         return dto;
@@ -810,26 +909,6 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
 
         // 构造单组合单资产DTO
         EtrSinglePortfolioDto etrSinglePortfolioDto = getEtrSinglePortfolio(entity);
-
-        //待分发逻辑处理
-        List<EtrDistribute> etrDistributeList = new ArrayList<>();
-        if (busiAutoEtrDispService != null) {
-            // 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
-            // 设置指令日期 add by yufei 20200808 start
-            if(etrEntrust.getEntrustDate() == null) {
-                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
-            }
-            // 设置指令日期 add by yufei 20200808 end
-            if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
-                // 自动分发
-            	etrDistributeList = busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd);
-                isPushMsg = DictCodeList.是否_是.getValue();
-            }
-
-        }
-        if(StringUtil.isEmptyList(etrDistributeList)){//无分发人员
-        	etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
-        }
 
         //协议回购首期指令
     	AgreRepFristIssueDto agreRepFristIssueDto = new AgreRepFristIssueDto();
@@ -855,6 +934,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             	// 到期交收日
                 agreRepFristIssueDto.setMpayDate(DateUtil.parse(entity.getExpireSettleDate()));
             }
+
             // 到期应计利息
             agreRepFristIssueDto.setmIntAmt(entity.getIntAmt());
             //到期结算金额
@@ -884,6 +964,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
                 agreRepFristIssueDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepFristIssueDto.getVpayDate() != null && agreRepFristIssueDto.getTermDays() != null) {
+                agreRepFristIssueDto.setAddMdate(DateUtil.addDay(agreRepFristIssueDto.getVpayDate(), agreRepFristIssueDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepFristIssueDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -904,7 +989,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             }else if(DictCodeList.回购拆借方向_逆回购.getValue().equals(entity.getRepPs())){
             	agreRepFristIssueDto.setAssetType10("H04");
             }
-
+            //委托方向
+            agreRepFristIssueDto.setPs(entity.getRepPs());
             // 质押券代码
             agreRepFristIssueDto.setRepSecId(entity.getRepSecId());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, agreRepFristIssueDto);
@@ -950,6 +1036,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
             	agreRepAdvBuyDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepAdvBuyDto.getVpayDate() != null && agreRepAdvBuyDto.getTermDays() != null) {
+                agreRepAdvBuyDto.setAddMdate(DateUtil.addDay(agreRepAdvBuyDto.getVpayDate(), agreRepAdvBuyDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepAdvBuyDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1022,6 +1113,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
             	agreRepExpireDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepExpireDto.getVpayDate() != null && agreRepExpireDto.getTermDays() != null) {
+                agreRepExpireDto.setAddMdate(DateUtil.addDay(agreRepExpireDto.getVpayDate(), agreRepExpireDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepExpireDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1093,6 +1189,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             if(entity.getTerm()!=null){
             	agreRepExpireUnBuyDto.setTermDays(Long.valueOf(entity.getTerm()));
             }
+
+            if (agreRepExpireUnBuyDto.getVpayDate() != null && agreRepExpireUnBuyDto.getTermDays() != null) {
+                agreRepExpireUnBuyDto.setAddMdate(DateUtil.addDay(agreRepExpireUnBuyDto.getVpayDate(), agreRepExpireUnBuyDto.getTermDays().intValue()));
+            }
+
             // 交易对手
             agreRepExpireUnBuyDto.setCounterId(entity.getCounterId());
             // 对手方交易员
@@ -1211,6 +1312,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                     if(item.getTerm()!=null){
                         agreRepHwayChgSecDto.setTermDays(Long.valueOf(item.getTerm()));
                     }
+
+                    if (agreRepHwayChgSecDto.getVpayDate() != null && agreRepHwayChgSecDto.getTermDays() != null) {
+                        agreRepHwayChgSecDto.setAddMdate(DateUtil.addDay(agreRepHwayChgSecDto.getVpayDate(), agreRepHwayChgSecDto.getTermDays().intValue()));
+                    }
                 });
             }
 
@@ -1230,6 +1335,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             else {
                 agreRepOpenSecDto.setPledgeNumber(entity.getRepSecNum());
             }
+
+            agreRepOpenSecDto.setEntrustNum(agreRepOpenSecDto.getPledgeNumber());
 
             // 交易对手
             agreRepOpenSecDto.setCounterId(entity.getCounterId());
@@ -1295,6 +1402,10 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                         agreRepOpenSecDto.setTermDays(Long.valueOf(item.getTerm()));
                     }
 
+                    if (agreRepOpenSecDto.getVpayDate() != null && agreRepOpenSecDto.getTermDays() != null) {
+                        agreRepOpenSecDto.setAddMdate(DateUtil.addDay(agreRepOpenSecDto.getVpayDate(), agreRepOpenSecDto.getTermDays().intValue()));
+                    }
+
                     //质押率
                     if(item.getOrigConRatio()!=null){
                         agreRepOpenSecDto.setPledgeRatio(ArithmeticUtil.divide(item.getOrigConRatio(),new BigDecimal(100),10));
@@ -1318,30 +1429,74 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, agreRepOpenSecDto);
         }
 
+        if (etrEntrustAdd.getVpayDate() != null && etrEntrustAdd.getTermDays() != null) {
+            etrEntrustAdd.setMdate(DateUtil.addDay(etrEntrustAdd.getVpayDate(), etrEntrustAdd.getTermDays().intValue()));
+        }
+
+        //待分发逻辑处理
+        List<EtrDistribute> etrDistributeList = new ArrayList<>();
+        if (busiAutoEtrDispService != null) {
+            // 查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
+            // 设置指令日期 add by yufei 20200808 start
+            if(etrEntrust.getEntrustDate() == null) {
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            // 设置指令日期 add by yufei 20200808 end
+            if (busiAutoEtrDispService.checkEntrustTime(etrEntrust)) {
+                // 自动分发
+                etrDistributeList = busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd);
+                isPushMsg = DictCodeList.是否_是.getValue();
+            }
+
+        }
+
+        if(StringUtil.isEmptyList(etrDistributeList)) {//无分发人员
+            etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
+        }
+
         String optType = ENTRUST_RECORD_NEW;
 
 		if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
 			optType = ENTRUST_RECORD_MODIFY;
 		}
+        if (StringUtil.equals(optType,ENTRUST_RECORD_NEW)
+                && null != entity.getEntrustId() &&  null != etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId())) {
+            EtrPledgeKey key = new EtrPledgeKey();
+            key.setEntrustId(entity.getEntrustId());
+            key.setFinprodId(entity.getFinprodId());
+            etrPledgeMapper.deleteByPrimaryKey(key);
+        }
 		EtrParameterDto paraDto = new EtrParameterDto();
         setUser(paraDto);
         if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {//
         	if (DictCodeListExt3.上农商_指令业务类型_协议回购首期指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepFristIssueDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
         		 EtrComponentFactory.getComponentService(AgreRepFristIssueDto.class).updateSettings(paraDto);
                  EtrComponentFactory.getComponentService(AgreRepFristIssueDto.class).entrustNew(agreRepFristIssueDto);
             } else if (DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepAdvBuyDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
             	EtrComponentFactory.getComponentService(AgreRepAdvBuyDto.class).updateSettings(paraDto);
             	EtrComponentFactory.getComponentService(AgreRepAdvBuyDto.class).entrustNew(agreRepAdvBuyDto);
             }else if (DictCodeListExt3.上农商_指令业务类型_协议回购到期购回指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepExpireDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
             	EtrComponentFactory.getComponentService(AgreRepExpireDto.class).updateSettings(paraDto);
             	EtrComponentFactory.getComponentService(AgreRepExpireDto.class).entrustNew(agreRepExpireDto);
             }else if (DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepExpireUnBuyDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
             	EtrComponentFactory.getComponentService(AgreRepExpireUnBuyDto.class).updateSettings(paraDto);
             	EtrComponentFactory.getComponentService(AgreRepExpireUnBuyDto.class).entrustNew(agreRepExpireUnBuyDto);
             } else if (DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepHwayChgSecDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
             	EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).updateSettings(paraDto);
             	EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).entrustNew(agreRepHwayChgSecDto);
             }else if (DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepOpenSecDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
             	EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).updateSettings(paraDto);
             	EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).entrustNew(agreRepOpenSecDto);
             }
@@ -1353,18 +1508,28 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                     agreRepFristIssueDto.setOldFinprodId(oldEtrEntrust.getFinprodId());
                 }
 
+                agreRepFristIssueDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
        		    EtrComponentFactory.getComponentService(AgreRepFristIssueDto.class).updateSettings(paraDto);
                 EtrComponentFactory.getComponentService(AgreRepFristIssueDto.class).entrustEdit(agreRepFristIssueDto);
            } else if (DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepAdvBuyDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
            	    EtrComponentFactory.getComponentService(AgreRepAdvBuyDto.class).updateSettings(paraDto);
            	    EtrComponentFactory.getComponentService(AgreRepAdvBuyDto.class).entrustEdit(agreRepAdvBuyDto);
            }else if (DictCodeListExt3.上农商_指令业务类型_协议回购到期购回指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepExpireDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
            	    EtrComponentFactory.getComponentService(AgreRepExpireDto.class).updateSettings(paraDto);
            	    EtrComponentFactory.getComponentService(AgreRepExpireDto.class).entrustEdit(agreRepExpireDto);
            }else if (DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepExpireUnBuyDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
            	    EtrComponentFactory.getComponentService(AgreRepExpireUnBuyDto.class).updateSettings(paraDto);
            	    EtrComponentFactory.getComponentService(AgreRepExpireUnBuyDto.class).entrustEdit(agreRepExpireUnBuyDto);
            } else if (DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepHwayChgSecDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
                 //退回后改变质押券后需要更新指令质押券信息，这里设置旧的质押券金融产品代码
                 EtrEntrust oldEtrEntrust = etrEntrustMapper.selectByPrimaryKey(agreRepHwayChgSecDto.getEntrustId());
                 if(StringUtil.isNotEmpty(oldEtrEntrust)) {
@@ -1373,6 +1538,8 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
                 EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).updateSettings(paraDto);
            	    EtrComponentFactory.getComponentService(AgreRepHwayChgSecDto.class).entrustEdit(agreRepHwayChgSecDto);
            }else if (DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue().equals(etrSinglePortfolioDto.getEntrustType())) {
+                agreRepOpenSecDto.setEntrustStatus(etrSinglePortfolioDto.getEntrustStatus());
+
            	    EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).updateSettings(paraDto);
            	    EtrComponentFactory.getComponentService(AgreRepOpenSecDto.class).entrustEdit(agreRepOpenSecDto);
            }
@@ -1388,18 +1555,18 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             param.put("entrustId", entity.getEntrustId());
             etrCommandDispatcherService.pushCommandMsg(param);
         }
-        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 start
-        if(!StringUtil.isEmptyList(etrDistributeList) && etrDistributeList.size() == 1){
-            baseEtrInvestInfoService.receptionDelegate(etrDistributeList);
-            // 上交所和深交所推送接收信息到交易系统
-            if (StringUtil.equals(entity.getTradeMarket(),
-                DictCodeListExt1.交易场所_上海证券交易所.getValue()) || StringUtil.equals(
-                		entity.getTradeMarket(),
-                DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
-                // TODO 调用交易接口做接收操作
-            }
-        }
-        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 end
+//        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 start
+//        if(!StringUtil.isEmptyList(etrDistributeList) && etrDistributeList.size() == 1){
+//            baseEtrInvestInfoService.receptionDelegate(etrDistributeList);
+//            // 上交所和深交所推送接收信息到交易系统
+//            if (StringUtil.equals(entity.getTradeMarket(),
+//                DictCodeListExt1.交易场所_上海证券交易所.getValue()) || StringUtil.equals(
+//                		entity.getTradeMarket(),
+//                DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+//                // TODO 调用交易接口做接收操作
+//            }
+//        }
+//        // 自动分发自动接收 ，杭银投资poc add by yufei 20200905 end
     }
     /**
      * 配置用户
@@ -1812,7 +1979,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         for(Field field : fields) {
             if(StringUtil.equals(field.getName(), "messageType")) {
                 field.setAccessible(true);
-                ReflectionUtils.setField(field, ajax, MessageType.错误消息.name());
+                ReflectionUtils.setField(field, ajax, MessageType.错误消息.getCode());
                 break;
             }
         }
@@ -1950,6 +2117,7 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             this.doHandleComplete(etrExchangeAgreRepTrade001Dto,etrExchangeAgreRepTrade001Dto.getOperateType());
         } catch (Exception e) {
             e.printStackTrace();
+            throw new BusinessException("MSG:指令审批发生异常，异常信息：" + e.getMessage());
         }
         doDeleteWflEntity(etrExchangeAgreRepTrade001Dto.getWorkflowId());
     }
@@ -1959,32 +2127,116 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
         if ("save".equals(entity.getOperateType())) {
             return;
         }
+        //增加调用头寸引擎代码start
+        String optType = ENTRUST_RECORD_NEW;
+        if (null != entity.getEntrustId() && null != etrEntrustMapper.selectByPrimaryKey(entity.getEntrustId())) {
+            optType = ENTRUST_RECORD_MODIFY;
+        }
         try {
+            //退回的移到备份表
+            BaseEtrInvestInfoDto dto = new BaseEtrInvestInfoDto();
+            EtrEntrust etrEntrust=new EtrEntrust();
+            etrEntrust.setEntrustId(entity.getEntrustId());
+            dto.setEtrEntrust(etrEntrust);
+            doInsertBackupQuery(dto);
+
             doInsertWflEntity(entity);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new BusinessException("MSG:指令提交发生异常，异常信息：" + e.getMessage());
         }
+        //处理履历
+        updateCfetsOprHis(entity.getEntrustId(),optType);
+
+        String decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+  		String systemAct = DictCodeListExt3.系统动作_修改.getValue();
+  		if (StringUtil.equals(optType, ENTRUST_RECORD_NEW)) {
+          	systemAct = DictCodeListExt3.系统动作_新建.getValue();
+          	decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+        }
+  		positionRequestService.send(entity,decisionAct,systemAct);
+  		//增加调用头寸引擎代码end
+
     }
 
     @Override
     public void doUpdate(EtrExchangeAgreRepTrade001Dto entity) {
+        if ("save".equals(entity.getOperateType())) {
+            return;
+        }
+
         if (!StringUtil.equals("save", entity.getOperateType()) && !StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
             try {
+                //退回的移到备份表
+                BaseEtrInvestInfoDto dto = new BaseEtrInvestInfoDto();
+                EtrEntrust etrEntrust=new EtrEntrust();
+                etrEntrust.setEntrustId(entity.getEntrustId());
+                dto.setEtrEntrust(etrEntrust);
+                doInsertBackupQuery(dto);
+                if (StringUtil.isNotBlank(entity.getWorkflowId())) {
+                    doDeleteWflEntity(entity.getWorkflowId());
+                }
                 doInsertWflEntity(entity);
             } catch (Exception e) {
                 e.printStackTrace();
+                throw new BusinessException("MSG:指令提交发生异常，异常信息：" + e.getMessage());
             }
         }
+        //增加调用头寸引擎代码start
+        String decisionAct = 系统动作_修改.getValue();
+		String systemAct = 系统动作_修改.getValue();
+		EtrEntrust etrEntrust = etrEntrustBackupMapper.selectByPrimaryKey(entity.getEntrustId());
+        SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(entity.getWorkflowId());
+        if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(),DictCodeList.流程状态_已退回.getValue())){
+        	if(etrEntrust==null) {
+        		systemAct = 系统动作_新建.getValue();
+        		decisionAct = 系统动作_修改.getValue();
+        	}
+        }else {
+        	if(etrEntrust==null) {
+        		systemAct = 系统动作_新建.getValue();
+        		decisionAct = 系统动作_新建.getValue();
+        	}
+        }
+        if(StringUtil.equals("1", RequestUtil.getParam("confirmOk"))){
+            entity.setSoftSkipMode("Y");
+        }
+        try {
+            positionRequestService.send(entity,decisionAct,systemAct);
+        } catch (PositionException e) {
+            Message message = PositionUtil.ajaxErrorReturn(e);
+            if (StringUtil.isNotBlank(message.getMessage())) {
+                WorkFlowUtil.showMessage(message.getMessage(), MessageType.错误消息);
+            }
+            else {
+                if (!StringUtil.equals("1", RequestUtil.getParam("confirmOk"))) {
+                    BaseMap bm = (BaseMap) message.getData();
+                    StringBuffer messageStr = (StringBuffer) bm.get("message");
+                    WorkFlowUtil.showMessage(messageStr.toString(), MessageType.确认消息);
+                }
+            }
+        }
+        //增加调用头寸引擎代码end
     }
 
     @Override
     public void doDelete(String workflowId) {
         doDeleteWflEntity(workflowId);
+        //增加调用头寸引擎代码start
+        ProcessMark processMark = mstWorkflowCommonServiceMapperImpl.getBusinessInfo(workflowId);
+        if (StringUtil.isNotEmpty(processMark)
+                && StringUtil.equals(processMark.getStatus(), DictCodeList.数据状态_修改中.getValue())) {
+        	EtrExchangeAgreRepTrade001Dto entity = getBussinessEntityByWorkflowId(workflowId);
+      		positionRequestService.sendDelete(entity);
+        }
+  		//增加调用头寸引擎代码end
     }
 
     @Override
     public void doBack(EtrExchangeAgreRepTrade001Dto entity) {
         doDeleteWflEntity(entity.getWorkflowId());
+        //从废弃表还原
+        backReRoll(entity.getEntrustId());
         // 释放指令头寸
         EtrExchangeAgreRepTrade001Dto postionFlowDto = new EtrExchangeAgreRepTrade001Dto();
         BeanUtil.copyPropertiesIgnoreNull(postionFlowDto,entity);
@@ -2074,6 +2326,11 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
      * @return
      */
     public EtrExchangeAgreRepTrade001Dto preEntity(EtrExchangeAgreRepTrade001Dto dto) {
+        // 单位面值
+        if (dto.getPledgeFaceValue() == null && StringUtil.isNotBlank(dto.getFinprodId())) {
+            dto.setPledgeFaceValue(trdCommonBaseService.getFaceValue(dto.getFinprodId(), iPlatformDate.getSysDate()));
+        }
+
         if(!StringUtil.isNotEmpty(dto.getEntrustBussType())) {
             if(DictCodeListExt3.交易方向_提前购回.getValue().equals(dto.getPs())){
                 dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_协议回购提前购回指令.getValue());
@@ -2220,5 +2477,104 @@ public class EtrExchangeAgreRepTrade001Service extends CommonExportService<EtrEx
             });
         }
         return resultList;
+    }
+
+    /**
+     *风险试算时，后台数据转换
+     * @return
+     */
+    public  Map<String, Object> doRiskcalPackageEquity(EtrExchangeAgreRepTrade001Dto dto) {
+        Map<String, Object> dataMap = BeanUtil.object2Map(dto);
+        dataMap.put("repPs", dto.getRepPs());
+        dataMap.put("redoType", dto.getRedoType());
+        dataMap.put("assetType2", dto.getAssetType2());
+        dataMap.put("busiPs", dto.getBusiPs());
+        dataMap.put("counterId", dto.getCounterId());
+        dataMap.put("expireSettleAmt", dto.getExpireSettleAmt());
+        dataMap.put("expireSettleDate", dto.getExpireSettleDate());
+        dataMap.put("finprodId", dto.getFinprodId());
+        dataMap.put("fristSettleDate", dto.getFristSettleDate());
+        dataMap.put("fromEtrExchange", "Y");
+        dataMap.put("intAmt", dto.getIntAmt());
+        dataMap.put("vdate", dto.getVdate());
+        dataMap.put("mdate", dto.getMdate());
+        dataMap.put("portfolioId", dto.getPortfolioId());
+        dataMap.put("printAmt", dto.getPrintAmt());
+        dataMap.put("ps", dto.getPs());
+        dataMap.put("repSecId", dto.getRepSecId());
+        dataMap.put("repSecNum", dto.getRepSecNum());
+        dataMap.put("secAcctId", dto.getSecAcctId());
+        dataMap.put("term", dto.getTerm());
+        dataMap.put("tradeAmt", dto.getTradeAmt());
+        dataMap.put("tradeMarket", dto.getTradeMarket());
+        dataMap.put("yield", dto.getYield());
+
+        return dataMap;
+    }
+
+    private void doInsertBackupQuery(BaseEtrInvestInfoDto dto) {
+        WFlowCommonService.inserBackuptWithQuery(dto);
+    }
+
+    /**
+     * 修改指令回退时,从废弃表将数据取出重新插入
+     *
+     * @param entrustId 指令代码
+     */
+    public void backReRoll(String entrustId) {
+        //从废弃表中获取，转移到指令表
+        etrEntrustBackupMapper.insertEtrFromQuery(entrustId);
+        etrEntrustBackupMapper.insertEtrAddFromQuery(entrustId);
+        List<EtrEntrustDetailBackUp> list=etrEntrustDetailBackUpMapper.selectList(entrustId);
+        if(!org.apache.commons.collections.CollectionUtils.isEmpty(list)){
+            for(EtrEntrustDetailBackUp etrEntrustDetailBackUp:list){
+                EtrEntrustDetail etrEntrustDetail = new EtrEntrustDetail();
+                BeanUtil.copyPropertiesIgnoreNull(etrEntrustDetail,etrEntrustDetailBackUp);
+                etrEntrustDetailMapper.insert(etrEntrustDetail);
+            }
+        }
+        // 删除废弃表
+        etrEntrustBackupMapper.deleteByPrimaryKey(entrustId);
+        etrEntrustBackupMapper.deleteAddByPrimaryKey(entrustId);
+        etrEntrustBackupMapper.deleteDetailByPrimaryKey(entrustId);
+    }
+
+    /**
+     * 判断是否已经存在提前购回、到期购回、到期续作、解除质押的指令
+     * @param ps 交易方向
+     * @param initTradeId 首期成交编号
+     * @return 是否已经存在提前购回、到期购回、到期续作、解除质押的指令
+     */
+    public boolean isAlreadyDoEntrust(String ps, String initTradeId) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("ps", ps);
+        paramMap.put("initTradeId", initTradeId);
+
+        int count = etrExchangeAgreRepTradeMapper.selectDoneEtrEntrustCount(paramMap);
+        if (count > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 处理履历
+     */
+    public void updateCfetsOprHis(String entrustId,String optType){
+        CfetsOprHisInfoRequest oprHisReq=new CfetsOprHisInfoRequest();
+        oprHisReq.setEntrustId(entrustId);
+        if(ENTRUST_RECORD_NEW.equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_新建.getValue());
+        }else if(ENTRUST_RECORD_MODIFY.equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_修改.getValue());
+        }else if("close".equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_关闭.getValue());
+        }else if("revoke".equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_撤回.getValue());
+        }else if("export".equals(optType)){
+            oprHisReq.setOperType(DictCodeListExt3.操作类型_导出.getValue());
+        }
+        joyinbusinessCommonService.updateCfetsOprHis(oprHisReq);
     }
 }

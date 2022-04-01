@@ -2,195 +2,195 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dao.ChbTotalCheckCBMapper_mysql">
     <resultMap id="TotalCheckDetailBaseResultMap" type="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
-    <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
-    <result column="TOTALSEQNO" property="totalseqno" jdbcType="VARCHAR" />
-    <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
-    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
-    <result column="PRD_ID" property="prdId" jdbcType="VARCHAR" />
-    <result column="PRD_NAME" property="prdName" jdbcType="VARCHAR" />
-    <result column="PRD_NUM" property="prdNum" jdbcType="DECIMAL" />
-    <result column="PRD_AMT" property="prdAmt" jdbcType="DECIMAL" />
-    <result column="MONTH_PRD_NUM" property="monthPrdNum" jdbcType="DECIMAL" />
-    <result column="MONTH_PRD_AMT" property="monthPrdAmt" jdbcType="DECIMAL" />
-    <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
-    <result column="PRD_NUM_CNY" property="prdNumCny" jdbcType="DECIMAL" />
-    <result column="PRD_AMT_CNY" property="prdAmtCny" jdbcType="DECIMAL" />
-    <result column="MONTH_PRD_NUM_CNY" property="monthPrdNumCny" jdbcType="DECIMAL" />
-    <result column="MONTH_PRD_AMT_CNY" property="monthPrdAmtCny" jdbcType="DECIMAL" />
-    <result column="DEVIATION_CNY" property="deviationCny" jdbcType="DECIMAL" />
-    <result column="DETAIL_YIELD" property="detailYield" jdbcType="DECIMAL" />
-    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
-    <result column="HOLD_AMT" property="holdAmt" jdbcType="DECIMAL" />
-    <result column="PRD_ASTHOLD_AMT" property="prdAstholdAmt" jdbcType="DECIMAL" />
-    <result column="PRD_BALHOLD_AMT" property="prdBalholdAmt" jdbcType="DECIMAL" />
-    <result column="PRD_CASHHOLD_AMT" property="prdCashholdAmt" jdbcType="DECIMAL" />
-    <result column="PRD_HOLDDATE" property="prdHolddate" jdbcType="TIMESTAMP" />
-    <result column="PRD_INS_ID" property="prdInsId" jdbcType="VARCHAR" />
-    <result column="PRD_VDATE" property="prdVdate" jdbcType="TIMESTAMP" />
-    <result column="RAISE_STARTDATE" property="raiseStartdate" jdbcType="TIMESTAMP" />
-    <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="TIMESTAMP" />
-    <result column="RAISE_REGDATE" property="raiseRegdate" jdbcType="TIMESTAMP" />
-    <result column="RAISE_IS_DELAY" property="raiseIsDelay" jdbcType="VARCHAR" />
-    <result column="BOT_ISSUE_NUM" property="botIssueNum" jdbcType="DECIMAL" />
-    <result column="BOT_ISSUE_AMT" property="botIssueAmt" jdbcType="DECIMAL" />
-    <result column="BOT_UNINVEST_CASH" property="botUninvestCash" jdbcType="DECIMAL" />
-    <result column="BOT_ASSET_AMT" property="botAssetAmt" jdbcType="DECIMAL" />
-    <result column="BOT_DEBT_AMT" property="botDebtAmt" jdbcType="DECIMAL" />
-    <result column="AST_HOLD_NUM" property="astHoldNum" jdbcType="DECIMAL" />
-    <result column="AST_HOLD_IS_COUNT" property="astHoldIsCount" jdbcType="VARCHAR" />
-    <result column="AST_MIN_UPRICE" property="astMinUprice" jdbcType="DECIMAL" />
-    <result column="AST_MAX_UPRICE" property="astMaxUprice" jdbcType="DECIMAL" />
-    <result column="IS_REG" property="isReg" jdbcType="VARCHAR" />
-    <result column="IS_DEVIATION" property="isDeviation" jdbcType="VARCHAR" />
-    <result column="CHECK_DATE" property="checkDate" jdbcType="TIMESTAMP" />
-    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
-    <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
-    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="IS_ISSUE_REG" property="isIssueReg" jdbcType="VARCHAR" />
-    <result column="SUBSCRIBE_CCY_AMT" property="subscribeCcyAmt" jdbcType="VARCHAR" />
-    <result column="PRD_ASSET_AMT" property="prdAssetAmt" jdbcType="VARCHAR" />
-    <result column="PRD_ASSET_CCY" property="prdAssetCcy" jdbcType="VARCHAR" />
-    <result column="ASSET_HOLD_CCY" property="assetHoldCcy" jdbcType="VARCHAR" />
-    <result column="PRD_INIT_AMT" property="prdInitAmt" jdbcType="VARCHAR" />
-    <result column="CCY_PURCHASE" property="ccyPurchase" jdbcType="VARCHAR" />
-    <result column="INIT_CCY" property="initCcy" jdbcType="VARCHAR" />
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="TOTALSEQNO" property="totalseqno" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="PRD_ID" property="prdId" jdbcType="VARCHAR" />
+        <result column="PRD_NAME" property="prdName" jdbcType="VARCHAR" />
+        <result column="PRD_NUM" property="prdNum" jdbcType="DECIMAL" />
+        <result column="PRD_AMT" property="prdAmt" jdbcType="DECIMAL" />
+        <result column="MONTH_PRD_NUM" property="monthPrdNum" jdbcType="DECIMAL" />
+        <result column="MONTH_PRD_AMT" property="monthPrdAmt" jdbcType="DECIMAL" />
+        <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
+        <result column="PRD_NUM_CNY" property="prdNumCny" jdbcType="DECIMAL" />
+        <result column="PRD_AMT_CNY" property="prdAmtCny" jdbcType="DECIMAL" />
+        <result column="MONTH_PRD_NUM_CNY" property="monthPrdNumCny" jdbcType="DECIMAL" />
+        <result column="MONTH_PRD_AMT_CNY" property="monthPrdAmtCny" jdbcType="DECIMAL" />
+        <result column="DEVIATION_CNY" property="deviationCny" jdbcType="DECIMAL" />
+        <result column="DETAIL_YIELD" property="detailYield" jdbcType="DECIMAL" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="HOLD_AMT" property="holdAmt" jdbcType="DECIMAL" />
+        <result column="PRD_ASTHOLD_AMT" property="prdAstholdAmt" jdbcType="DECIMAL" />
+        <result column="PRD_BALHOLD_AMT" property="prdBalholdAmt" jdbcType="DECIMAL" />
+        <result column="PRD_CASHHOLD_AMT" property="prdCashholdAmt" jdbcType="DECIMAL" />
+        <result column="PRD_HOLDDATE" property="prdHolddate" jdbcType="TIMESTAMP" />
+        <result column="PRD_INS_ID" property="prdInsId" jdbcType="VARCHAR" />
+        <result column="PRD_VDATE" property="prdVdate" jdbcType="TIMESTAMP" />
+        <result column="RAISE_STARTDATE" property="raiseStartdate" jdbcType="TIMESTAMP" />
+        <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="TIMESTAMP" />
+        <result column="RAISE_REGDATE" property="raiseRegdate" jdbcType="TIMESTAMP" />
+        <result column="RAISE_IS_DELAY" property="raiseIsDelay" jdbcType="VARCHAR" />
+        <result column="BOT_ISSUE_NUM" property="botIssueNum" jdbcType="DECIMAL" />
+        <result column="BOT_ISSUE_AMT" property="botIssueAmt" jdbcType="DECIMAL" />
+        <result column="BOT_UNINVEST_CASH" property="botUninvestCash" jdbcType="DECIMAL" />
+        <result column="BOT_ASSET_AMT" property="botAssetAmt" jdbcType="DECIMAL" />
+        <result column="BOT_DEBT_AMT" property="botDebtAmt" jdbcType="DECIMAL" />
+        <result column="AST_HOLD_NUM" property="astHoldNum" jdbcType="DECIMAL" />
+        <result column="AST_HOLD_IS_COUNT" property="astHoldIsCount" jdbcType="VARCHAR" />
+        <result column="AST_MIN_UPRICE" property="astMinUprice" jdbcType="DECIMAL" />
+        <result column="AST_MAX_UPRICE" property="astMaxUprice" jdbcType="DECIMAL" />
+        <result column="IS_REG" property="isReg" jdbcType="VARCHAR" />
+        <result column="IS_DEVIATION" property="isDeviation" jdbcType="VARCHAR" />
+        <result column="CHECK_DATE" property="checkDate" jdbcType="TIMESTAMP" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_ISSUE_REG" property="isIssueReg" jdbcType="VARCHAR" />
+        <result column="SUBSCRIBE_CCY_AMT" property="subscribeCcyAmt" jdbcType="VARCHAR" />
+        <result column="PRD_ASSET_AMT" property="prdAssetAmt" jdbcType="VARCHAR" />
+        <result column="PRD_ASSET_CCY" property="prdAssetCcy" jdbcType="VARCHAR" />
+        <result column="ASSET_HOLD_CCY" property="assetHoldCcy" jdbcType="VARCHAR" />
+        <result column="PRD_INIT_AMT" property="prdInitAmt" jdbcType="VARCHAR" />
+        <result column="CCY_PURCHASE" property="ccyPurchase" jdbcType="VARCHAR" />
+        <result column="INIT_CCY" property="initCcy" jdbcType="VARCHAR" />
     </resultMap>
-	<select id="selectProdSubstainsCount" resultType="java.math.BigDecimal"
-		parameterType="java.util.Map">
-		select count(1)
-		from CHB_PRD_ISSUE_SUB issuesub
-		left join chb_prd_baseinfo prdinfo
-		on prdinfo.prod_id = issuesub.prod_id
-		where 1 =1
+    <select id="selectProdSubstainsCount" resultType="java.math.BigDecimal"
+            parameterType="java.util.Map">
+        select count(1)
+        from CHB_PRD_ISSUE_SUB issuesub
+        left join chb_prd_baseinfo prdinfo
+        on prdinfo.prod_id = issuesub.prod_id
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
         and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
-		<!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
-		and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
-		and issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		<!-- and issuesub.STATUS != '03' /*数据状态！=删除*/ -->
-		and DATE_FORMAT(issuesub.PRD_VDATE,'%Y-%m-%d') &lt;=
-		DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		and not exists(
-			select 1
-			from chb_prd_end_sub endsub
-			where 1 =1
-			and issuesub.prod_id = endsub.prod_id
-			<!-- and endsub.status != '03' /*数据状态！=删除*/ -->
-            and endsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-			and DATE_FORMAT(endsub.mdate,'%Y-%m-%d') &lt;=
-			DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		)
-		<if test="ccy != null and !ccy.isEmpty()">
-			and prdinfo.RAISE_CCY = #{ccy,jdbcType=VARCHAR}
-		</if>
-		<!-- 根据开放模式筛选 -->
-		<if test="openType != null and !openType.isEmpty()">
-			<choose>
-				<when test='openType.equals("01")'>
-					and prdinfo.OPERATE_MODE in ('03','04')
-				</when>
-				<otherwise>
-					and prdinfo.OPERATE_MODE in ('01','02')
-				</otherwise>
-			</choose>
-		</if>
+        <!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
+        and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
+        and issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        <!-- and issuesub.STATUS != '03' /*数据状态！=删除*/ -->
+        and DATE_FORMAT(issuesub.PRD_VDATE,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and not exists(
+        select 1
+        from chb_prd_end_sub endsub
+        where 1 =1
+        and issuesub.prod_id = endsub.prod_id
+        <!-- and endsub.status != '03' /*数据状态！=删除*/ -->
+        and endsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(endsub.mdate,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        )
+        <if test="ccy != null and !ccy.isEmpty()">
+            and prdinfo.RAISE_CCY = #{ccy,jdbcType=VARCHAR}
+        </if>
+        <!-- 根据开放模式筛选 -->
+        <if test="openType != null and !openType.isEmpty()">
+            <choose>
+                <when test='openType.equals("01")'>
+                    and prdinfo.OPERATE_MODE in ('03','04')
+                </when>
+                <otherwise>
+                    and prdinfo.OPERATE_MODE in ('01','02')
+                </otherwise>
+            </choose>
+        </if>
         <if test="prodIgnoreList != null and prodIgnoreList.size() > 0">
             <foreach collection="prodIgnoreList" item="prodid" open="and prdinfo.prod_id not in (" close=")" separator=",">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
-	</select>
+    </select>
 
 
-	<select id="selectProdSubstainsAmt" resultType="java.util.HashMap"
-		parameterType="java.util.Map">
-		select 
-			ifnull(prddeal.PRDQTY,0) "prdqty",
-			ifnull(prdrate.PROD_VALUE,1) "prdvalue",
-			prdinfo.RAISE_CCY "raiseccy"
-		from (
-			select 
-			    ifnull(prddealsub.PRD_QTY,prdraisetotalsub.RAISE_QTY) PRDQTY,
-			    ifnull(prddealsub.prod_id,prdraisetotalsub.prod_id) prod_id,
-                rank() over (partition by ifnull(prddealsub.prod_id,prdraisetotalsub.prod_id) order by  prddealsub.mdate desc) rowindex
-			from chb_prd_deal_sub prddealsub
-            left join CHB_PRD_RAISETOT_SUB prdraisetotalsub
-			on prddealsub.prod_id = prdraisetotalsub.prod_id
-            right join CHB_PRD_RAISETOT_SUB prdraisetotalsub
-            on prddealsub.prod_id = prdraisetotalsub.prod_id
-			where 1 =1
-			and DATE_FORMAT(prddealsub.mdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-            and ifnull(prddealsub.SUBMIT_FEEDBACK_STATUS,prdraisetotalsub.SUBMIT_FEEDBACK_STATUS) = '03'/*反馈状态=中债通过*/
-            <!-- and ifnull(prddealsub.STATUS,prdraisetotalsub.STATUS) != '03' /*数据状态！=删除*/ -->
-		) prddeal
-		left join (
-			select 
-			prdrate.prod_id prod_id,
-			prdrate.PROD_VALUE prod_value,
-			rank() over (partition by prdrate.prod_id order by prdrate.CHANGE_DATE desc) ranknum
-			from chb_prd_periodyield prdrate
-			where 1 =1
-			<!-- and prdrate.status != '03' /*数据状态！=删除*/ -->
-			and prdrate.CHANG_TYPE = '01' /*变动类型=净值变动*/
-			and DATE_FORMAT(prdrate.CHANGE_DATE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		)prdrate
-		on prddeal.prod_id = prdrate.prod_id
-		and prdrate.ranknum = 1
-		left join chb_prd_baseinfo prdinfo
-		on prdinfo.prod_id = prddeal.prod_id
-		where 1 =1
+    <select id="selectProdSubstainsAmt" resultType="java.util.HashMap"
+            parameterType="java.util.Map">
+        select
+        ifnull(prddeal.PRDQTY,0) "prdqty",
+        ifnull(prdrate.PROD_VALUE,1) "prdvalue",
+        prdinfo.RAISE_CCY "raiseccy"
+        from (
+        select
+        ifnull(prddealsub.PRD_QTY,prdraisetotalsub.RAISE_QTY) PRDQTY,
+        ifnull(prddealsub.prod_id,prdraisetotalsub.prod_id) prod_id,
+        rank() over (partition by ifnull(prddealsub.prod_id,prdraisetotalsub.prod_id) order by  prddealsub.mdate desc) rowindex
+        from chb_prd_deal_sub prddealsub
+        left join CHB_PRD_RAISETOT_SUB prdraisetotalsub
+        on prddealsub.prod_id = prdraisetotalsub.prod_id
+        right join CHB_PRD_RAISETOT_SUB prdraisetotalsub
+        on prddealsub.prod_id = prdraisetotalsub.prod_id
+        where 1 =1
+        and DATE_FORMAT(prddealsub.mdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and ifnull(prddealsub.SUBMIT_FEEDBACK_STATUS,prdraisetotalsub.SUBMIT_FEEDBACK_STATUS) = '03'/*反馈状态=中债通过*/
+        <!-- and ifnull(prddealsub.STATUS,prdraisetotalsub.STATUS) != '03' /*数据状态！=删除*/ -->
+        ) prddeal
+        left join (
+        select
+        prdrate.prod_id prod_id,
+        prdrate.PROD_VALUE prod_value,
+        rank() over (partition by prdrate.prod_id order by prdrate.CHANGE_DATE desc) ranknum
+        from chb_prd_periodyield prdrate
+        where 1 =1
+        <!-- and prdrate.status != '03' /*数据状态！=删除*/ -->
+        and prdrate.CHANG_TYPE = '01' /*变动类型=净值变动*/
+        and DATE_FORMAT(prdrate.CHANGE_DATE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        )prdrate
+        on prddeal.prod_id = prdrate.prod_id
+        and prdrate.ranknum = 1
+        left join chb_prd_baseinfo prdinfo
+        on prdinfo.prod_id = prddeal.prod_id
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
         and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
         limit 1
-	</select>
-	
+    </select>
+
     <select id="selectProdSubstainsAmtFromPosition" resultType="java.util.HashMap"
-        parameterType="java.util.Map">
-		select
-		ifnull(prddeal.PRDQTY,0) "prdqty",
-		ifnull(prdrate.PROD_VALUE,1) "prdvalue",
-		ifnull(prdrate.ccy,prddeal.posccy) "raiseccy",
+            parameterType="java.util.Map">
+        select
+        ifnull(prddeal.PRDQTY,0) "prdqty",
+        ifnull(prdrate.PROD_VALUE,1) "prdvalue",
+        ifnull(prdrate.ccy,prddeal.posccy) "raiseccy",
         prddeal.prod_id "prodid"
-		from (
-		select
-		sum(prdposition.BALANCE_QTY) PRDQTY,/*取产品头寸的剩余份额，按照同一产品同一币种同一天去汇总*/
-		prdposition.prod_id prod_id,
+        from (
+        select
+        sum(prdposition.BALANCE_QTY) PRDQTY,/*取产品头寸的剩余份额，按照同一产品同一币种同一天去汇总*/
+        prdposition.prod_id prod_id,
         prdposition.ccy posccy
-		from chb_prd_position prdposition
-		where 1 =1
-		and DATE_FORMAT(prdposition.CDATE,'%Y-%m-%d') =
-		DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		group by prdposition.prod_id,prdposition.ccy
-		) prddeal
-		left join (
-		select
-		prdrate.prod_id prod_id,
-		prdrate.PROD_VALUE prod_value,
+        from chb_prd_position prdposition
+        where 1 =1
+        and DATE_FORMAT(prdposition.CDATE,'%Y-%m-%d') =
+        DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        group by prdposition.prod_id,prdposition.ccy
+        ) prddeal
+        left join (
+        select
+        prdrate.prod_id prod_id,
+        prdrate.PROD_VALUE prod_value,
         prdrate.CCY CCY,
-		rank() over (partition by prdrate.prod_id order by prdrate.CHANGE_DATE desc)
-		ranknum
-		from chb_prd_periodyield prdrate
-		where 1 =1
-		<!-- and prdrate.status != '03' /*数据状态！=删除*/ -->
-		and prdrate.CHANG_TYPE = '01' /*变动类型=净值变动*/
-		and DATE_FORMAT(prdrate.CHANGE_DATE,'%Y-%m-%d') &lt;=
-		DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		)prdrate
-		on prddeal.prod_id = prdrate.prod_id
-		and prdrate.ranknum = 1
-		left join chb_prd_baseinfo prdinfo
-		on prdinfo.prod_id = prddeal.prod_id
+        rank() over (partition by prdrate.prod_id order by prdrate.CHANGE_DATE desc)
+        ranknum
+        from chb_prd_periodyield prdrate
+        where 1 =1
+        <!-- and prdrate.status != '03' /*数据状态！=删除*/ -->
+        and prdrate.CHANG_TYPE = '01' /*变动类型=净值变动*/
+        and DATE_FORMAT(prdrate.CHANGE_DATE,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        )prdrate
+        on prddeal.prod_id = prdrate.prod_id
+        and prdrate.ranknum = 1
+        left join chb_prd_baseinfo prdinfo
+        on prdinfo.prod_id = prddeal.prod_id
         left join CHB_PRD_ISSUE_SUB issuesub
         on prdinfo.prod_id = issuesub.prod_id
-		where 1 =1
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
-		and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
-        
+        and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
+
         and
         issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         <!-- and issuesub.STATUS
@@ -210,107 +210,107 @@
         DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         )
     </select>
-	
-	<select id="selectAssetPosition" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-		select 
-			prdinfo.prod_id prd_id,
-			prdinfo.OPERATE_MODE OPERATE_MODE,
-			assetposition.PRD_ASTHOLD_AMT PRD_ASTHOLD_AMT,/*资产持仓*/
-			assetposition.PRD_BALHOLD_AMT PRD_BALHOLD_AMT,/*负债持仓*/
-			assetposition.ccy ASSET_HOLD_CCY/*资产负债持仓币种*/
-		from chb_prd_baseinfo prdinfo
-		left join CHB_PRD_RAISETOT_SUB prdraisesub
-		on prdinfo.prod_id = prdraisesub.prod_id
-		left join CHB_PRD_ISSUE_SUB issuesub
-		on prdinfo.prod_id = issuesub.prod_id
-		left join (
-			select assetposition.prod_id prod_id,
-                SUM(case ifnull(assetinfosub.asset_type2,'NULLTYPE') when 'NULLTYPE' then 0
-                when 'REMAININGCASH'  then 0
-                when '1901'  then assetposition.ACCUAMT
-                when '1902'  then assetposition.ACCUAMT
-                when '2000'  then assetposition.ACCUAMT
-                else 0 end
-                ) PRD_BALHOLD_AMT,
-                SUM(case ifnull(assetinfosub.asset_type2,'NULLTYPE') when 'NULLTYPE' then 0
-                when 'REMAININGCASH'  then 0
-                when '1901'  then 0
-                when '1902'  then 0
-                when '2000'  then 0
-                else assetposition.ACCUAMT end
-                ) PRD_ASTHOLD_AMT,
-			    assetposition.ccy ccy
-			from chb_asset_position assetposition
-			left join chb_asset_info_sub assetinfosub
-			on assetinfosub.asset_code = assetposition.asset_code
-		    and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		    <!-- and assetinfosub.STATUS != '03' /*数据状态！=删除*/ -->
-	        and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-	        where 1 =1
-			<!-- 穿透报送：过滤通道交易、不穿透报送过滤通道资产交易-->
-			<if test='isChlBtm != null and !isChlBtm.isEmpty()'>
-				<choose>
-					<when test='isChlBtm.equals("01")'>
-					    and assetposition.CHL_ID = assetposition.ASSET_CODE
-					    and assetposition.CHL_ID is not null
-					</when>
-					<otherwise>
-					    and assetposition.CHL_ID != assetposition.ASSET_CODE
-					    and assetposition.CHL_ID is not null
-					</otherwise>
-				</choose>
-			</if>
-			and DATE_FORMAT(assetposition.cdate ,'%Y-%m-%d') = DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-			group by assetposition.prod_id,assetposition.CCY/*产品+币种汇总*/
-		)assetposition
-	    on assetposition.prod_id = prdinfo.prod_id
-		where 1 =1
+
+    <select id="selectAssetPosition" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
+        select
+        prdinfo.prod_id prd_id,
+        prdinfo.OPERATE_MODE OPERATE_MODE,
+        assetposition.PRD_ASTHOLD_AMT PRD_ASTHOLD_AMT,/*资产持仓*/
+        assetposition.PRD_BALHOLD_AMT PRD_BALHOLD_AMT,/*负债持仓*/
+        assetposition.ccy ASSET_HOLD_CCY/*资产负债持仓币种*/
+        from chb_prd_baseinfo prdinfo
+        left join CHB_PRD_RAISETOT_SUB prdraisesub
+        on prdinfo.prod_id = prdraisesub.prod_id
+        left join CHB_PRD_ISSUE_SUB issuesub
+        on prdinfo.prod_id = issuesub.prod_id
+        left join (
+        select assetposition.prod_id prod_id,
+        SUM(case ifnull(assetinfosub.asset_type2,'NULLTYPE') when 'NULLTYPE' then 0
+        when 'REMAININGCASH'  then 0
+        when '1901'  then assetposition.ACCUAMT
+        when '1902'  then assetposition.ACCUAMT
+        when '2000'  then assetposition.ACCUAMT
+        else 0 end
+        ) PRD_BALHOLD_AMT,
+        SUM(case ifnull(assetinfosub.asset_type2,'NULLTYPE') when 'NULLTYPE' then 0
+        when 'REMAININGCASH'  then 0
+        when '1901'  then 0
+        when '1902'  then 0
+        when '2000'  then 0
+        else assetposition.ACCUAMT end
+        ) PRD_ASTHOLD_AMT,
+        assetposition.ccy ccy
+        from chb_asset_position assetposition
+        left join chb_asset_info_sub assetinfosub
+        on assetinfosub.asset_code = assetposition.asset_code
+        and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        <!-- and assetinfosub.STATUS != '03' /*数据状态！=删除*/ -->
+        and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        where 1 =1
+        <!-- 穿透报送：过滤通道交易、不穿透报送过滤通道资产交易-->
+        <if test='isChlBtm != null and !isChlBtm.isEmpty()'>
+            <choose>
+                <when test='isChlBtm.equals("01")'>
+                    and assetposition.CHL_ID = assetposition.ASSET_CODE
+                    and assetposition.CHL_ID is not null
+                </when>
+                <otherwise>
+                    and assetposition.CHL_ID != assetposition.ASSET_CODE
+                    and assetposition.CHL_ID is not null
+                </otherwise>
+            </choose>
+        </if>
+        and DATE_FORMAT(assetposition.cdate ,'%Y-%m-%d') = DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        group by assetposition.prod_id,assetposition.CCY/*产品+币种汇总*/
+        )assetposition
+        on assetposition.prod_id = prdinfo.prod_id
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
         and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
-		<!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
-		and
-		prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
-		and
-		issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		<!-- and issuesub.STATUS
-		!= '03' /*数据状态！=删除*/ -->
-		and DATE_FORMAT(issuesub.PRD_VDATE,'%Y-%m-%d') &lt;=
-		DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		and not exists(
-		select 1
-		from chb_prd_end_sub endsub
-		where 1 =1
+        <!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
+        and
+        prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
+        and
+        issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        <!-- and issuesub.STATUS
+        != '03' /*数据状态！=删除*/ -->
+        and DATE_FORMAT(issuesub.PRD_VDATE,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and not exists(
+        select 1
+        from chb_prd_end_sub endsub
+        where 1 =1
         and endsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		and issuesub.prod_id =
-		endsub.prod_id
-		<!-- and endsub.status != '03' /*数据状态！=删除*/ -->
-		and
-		DATE_FORMAT(endsub.mdate,'%Y-%m-%d') &lt;=
-		DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		)
-		<!-- 根据开放模式筛选 -->
-		<if test="openType != null and !openType.isEmpty()">
-			<choose>
-				<when test='openType.equals("01")'>
-					and prdinfo.OPERATE_MODE in ('03','04')
-				</when>
-				<otherwise>
-					and prdinfo.OPERATE_MODE in ('01','02')
-				</otherwise>
-			</choose>
-		</if>
+        and issuesub.prod_id =
+        endsub.prod_id
+        <!-- and endsub.status != '03' /*数据状态！=删除*/ -->
+        and
+        DATE_FORMAT(endsub.mdate,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        )
+        <!-- 根据开放模式筛选 -->
+        <if test="openType != null and !openType.isEmpty()">
+            <choose>
+                <when test='openType.equals("01")'>
+                    and prdinfo.OPERATE_MODE in ('03','04')
+                </when>
+                <otherwise>
+                    and prdinfo.OPERATE_MODE in ('01','02')
+                </otherwise>
+            </choose>
+        </if>
         <if test="prodIgnoreList != null and prodIgnoreList.size() > 0">
             <foreach collection="prodIgnoreList" item="prodid" open="and prdinfo.prod_id not in (" close=")" separator=",">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
     </select>
-    
+
     <select id="selectPrdRaiseDeal" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-        select 
-            prdinfo.prod_id prd_id,
-            prdinfo.OPERATE_MODE OPERATE_MODE,
-            prdraisesub.SUBSCRIBE_CCY_AMT SUBSCRIBE_CCY_AMT/*认购币种及金额*/
+        select
+        prdinfo.prod_id prd_id,
+        prdinfo.OPERATE_MODE OPERATE_MODE,
+        prdraisesub.SUBSCRIBE_CCY_AMT SUBSCRIBE_CCY_AMT/*认购币种及金额*/
         from chb_prd_baseinfo prdinfo
         left join CHB_PRD_RAISETOT_SUB prdraisesub
         on prdinfo.prod_id = prdraisesub.prod_id
@@ -360,27 +360,27 @@
             </foreach>
         </if>
     </select>
-    
-    
+
+
     <select id="selectPrdDurDeal" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-        select 
-            prdinfo.prod_id prd_id,
-            prdinfo.OPERATE_MODE OPERATE_MODE,
-            prddealsub.CCY_PURCHASE CCY_PURCHASE,/*存续期交易币种及申购兑付金额*/
-            prddealsub.MDATE raiseEnddate
+        select
+        prdinfo.prod_id prd_id,
+        prdinfo.OPERATE_MODE OPERATE_MODE,
+        prddealsub.CCY_PURCHASE CCY_PURCHASE,/*存续期交易币种及申购兑付金额*/
+        prddealsub.MDATE raiseEnddate
         from chb_prd_baseinfo prdinfo
         left join CHB_PRD_ISSUE_SUB issuesub
         on prdinfo.prod_id = issuesub.prod_id
         left join (
-           select prddealsub.prod_id,
-           prddealsub.CCY_PURCHASE CCY_PURCHASE,
-           prddealsub.MDATE MDATE
-           from chb_prd_deal_sub prddealsub
-           where 1 =1 
-           <!-- and prddealsub.status != '03' /*数据状态！=删除*/ -->
-           and prddealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-           and DATE_FORMAT(prddealsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-        )prddealsub 
+        select prddealsub.prod_id,
+        prddealsub.CCY_PURCHASE CCY_PURCHASE,
+        prddealsub.MDATE MDATE
+        from chb_prd_deal_sub prddealsub
+        where 1 =1
+        <!-- and prddealsub.status != '03' /*数据状态！=删除*/ -->
+        and prddealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(prddealsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        )prddealsub
         on prddealsub.prod_id = prdinfo.prod_id
         where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
@@ -423,35 +423,35 @@
             </foreach>
         </if>
     </select>
-    
+
     <select id="selectPrdAssetDeal" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-        select 
-            prdinfo.prod_id prd_id,
-            prdinfo.OPERATE_MODE OPERATE_MODE,
-            ifnull(assetdealsub.PRD_ASSET_AMT,0) PRD_ASSET_AMT,/*交易登记金额*/
-            assetdealsub.ccy PRD_ASSET_CCY/*交易登记币种*/
+        select
+        prdinfo.prod_id prd_id,
+        prdinfo.OPERATE_MODE OPERATE_MODE,
+        ifnull(assetdealsub.PRD_ASSET_AMT,0) PRD_ASSET_AMT,/*交易登记金额*/
+        assetdealsub.ccy PRD_ASSET_CCY/*交易登记币种*/
         from chb_prd_baseinfo prdinfo
         left join CHB_PRD_ISSUE_SUB issuesub
         on prdinfo.prod_id = issuesub.prod_id
         left join (
-           select assetdealsub.prod_id,
-            SUM(assetdealsub.AMT*(case assetdealsub.CUR_ASSET_TYPE when '02' then 1
-            when '04'  then 1
-            when '06'  then 1
-            when '07'  then 1
-            when '09'  then 1
-            when '11'  then 1
-            else -1 end
-            )) PRD_ASSET_AMT,
-           assetdealsub.CCY CCY
-           from chb_invest_trade_sub assetdealsub
-           where 1 =1 
-           <!-- and assetdealsub.status != '03' /*数据状态！=删除*/ -->
-           and assetdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-           and assetdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','06','07','08','09','10','11','12')
-           and DATE_FORMAT(assetdealsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-           group by assetdealsub.prod_id,assetdealsub.CCY/*产品+币种汇总*/
-        )assetdealsub 
+        select assetdealsub.prod_id,
+        SUM(assetdealsub.AMT*(case assetdealsub.CUR_ASSET_TYPE when '02' then 1
+        when '04'  then 1
+        when '06'  then 1
+        when '07'  then 1
+        when '09'  then 1
+        when '11'  then 1
+        else -1 end
+        )) PRD_ASSET_AMT,
+        assetdealsub.CCY CCY
+        from chb_invest_trade_sub assetdealsub
+        where 1 =1
+        <!-- and assetdealsub.status != '03' /*数据状态！=删除*/ -->
+        and assetdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and assetdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','06','07','08','09','10','11','12')
+        and DATE_FORMAT(assetdealsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        group by assetdealsub.prod_id,assetdealsub.CCY/*产品+币种汇总*/
+        )assetdealsub
         on assetdealsub.prod_id = prdinfo.prod_id
         where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
@@ -494,136 +494,136 @@
             </foreach>
         </if>
     </select>
-    
+
     <select id="selectPrdRaiseTotal" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
         select issuesub.prod_id prd_id,
-		prdinfo.PROD_NAME PRD_NAME,
-		issuesub.RAISE_ENDDATE RAISE_ENDDATE,
-		prdraisetotalsub.SUBMIT_TIME RAISE_REGDATE,
+        prdinfo.PROD_NAME PRD_NAME,
+        issuesub.RAISE_ENDDATE RAISE_ENDDATE,
+        prdraisetotalsub.SUBMIT_TIME RAISE_REGDATE,
         (case prdraisetotalsub.SUBMIT_TIME when null then '02'
         else '01' end
         ) IS_REG,
-		case when ifnull(prdraisetotalsub.SUBMIT_TIME,#{queryDate,jdbcType=DATE})>prdraisetotalsub.CHB_SUBMIT_DEADLINE then '01'
-		else '02'
-		end RAISE_IS_DELAY
-		from chb_prd_baseinfo prdinfo
-		left join CHB_PRD_ISSUE_SUB issuesub
-		on prdinfo.prod_id = issuesub.prod_id
-		left join chb_prd_raisetot_sub prdraisetotalsub
-		on prdinfo.prod_id = prdraisetotalsub.prod_id
-		and prdraisetotalsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		and DATE_FORMAT(prdraisetotalsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		where 1 =1
+        case when ifnull(prdraisetotalsub.SUBMIT_TIME,#{queryDate,jdbcType=DATE})>prdraisetotalsub.CHB_SUBMIT_DEADLINE then '01'
+        else '02'
+        end RAISE_IS_DELAY
+        from chb_prd_baseinfo prdinfo
+        left join CHB_PRD_ISSUE_SUB issuesub
+        on prdinfo.prod_id = issuesub.prod_id
+        left join chb_prd_raisetot_sub prdraisetotalsub
+        on prdinfo.prod_id = prdraisetotalsub.prod_id
+        and prdraisetotalsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(prdraisetotalsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
-		<!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
-		and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
-		and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
-		and issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		<!-- and issuesub.STATUS != '03' /*数据状态！=删除*/ -->
-		and DATE_FORMAT(issuesub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        <!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
+        and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
+        and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
+        and issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        <!-- and issuesub.STATUS != '03' /*数据状态！=删除*/ -->
+        and DATE_FORMAT(issuesub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         <if test="prodIgnoreList != null and prodIgnoreList.size() > 0">
             <foreach collection="prodIgnoreList" item="prodid" open="and prdinfo.prod_id not in (" close=")" separator=",">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
     </select>
-    
+
     <select id="selectMonthBotAssetHold" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-	    select 
-			asset_code,
-			IS_REG,
-			BOT_ISSUE_NUM,
-			BOT_ISSUE_AMT,
-			BOT_UNINVEST_CASH,
-			sum(ifnull(BOT_ASSET_AMT,0)) BOT_ASSET_AMT,
-			sum(ifnull(BOT_DEBT_AMT,0)) BOT_DEBT_AMT,
-			CHECK_DATE
-		from(
-		  select assetinfosub.asset_code asset_code,
-            (case bottomassetsub.REGIST_SEQNO when null then '02'
-            else '01'
-            end) IS_REG,
-		  bottomassetsub.TOTAL_NUM BOT_ISSUE_NUM,
-		  bottomassetsub.ISSUE_AMT BOT_ISSUE_AMT,
-		  bottomassetsub.UNINVEST_CASH BOT_UNINVEST_CASH,
-          (case ifnull(bottomassetsub.asset_type2 ,'NOASSET') when '1901' then bottomassetsub.POS_AMT
-            when '1902'  then bottomassetsub.POS_AMT
-            when '2000'  then bottomassetsub.POS_AMT
-            else 0
-            end)  BOT_DEBT_AMT,
-          (case ifnull(bottomassetsub.asset_type2 ,'NOASSET') when '1901' then 0
-            when '1902'  then 0
-            when '2000'  then 0
-            when 'NOASSET'  then 0
-            else bottomassetsub.POS_AMT
-            end)  BOT_ASSET_AMT,
-		  bottomassetsub.POS_DATE CHECK_DATE
-		  <!--, rank() over (order by bottomassetsub.POS_DATE desc) rowIndex -->
-		  from chb_asset_info_sub assetinfosub
-		  left join (
-		    select investdealsub.asset_code asset_code,sum((case investdealsub.CUR_ASSET_TYPE when '01' then 1 else -1 end)*investdealsub.num) asset_deal_num
-		    from chb_invest_trade_sub investdealsub
-		    where 1 = 1
-		    and investdealsub.CUR_ASSET_TYPE in ('01','02')
-		    <!-- and investdealsub.status != '03' /*数据状态！=删除*/ -->
-		    and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		    and DATE_FORMAT(investdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{monthEndDate,jdbcType=DATE},'%Y-%m-%d')
-			and DATE_FORMAT(investdealsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		    group by investdealsub.asset_code
-		  ) assetdeal
-		  on assetinfosub.asset_code = assetdeal.asset_code
-          left join  (
-	        select bottomassetsub.REGIST_SEQNO REGIST_SEQNO,
-	        bottomassetsub.TOTAL_NUM TOTAL_NUM,
-	        bottomassetsub.ISSUE_AMT ISSUE_AMT,
-	        bottomassetsub.UNINVEST_CASH UNINVEST_CASH,
-	        bottomassetsub.POS_AMT POS_AMT,
-	        bottomassetsub.plan_asset_id plan_asset_id,
-	        subassetinfo.asset_type2 asset_type2,
-	        bottomassetsub.POS_DATE
-	        from chb_bot_ast_pos_sub bottomassetsub
-	        left join chb_asset_info_sub subassetinfo
-	        on subassetinfo.asset_code = bottomassetsub.asset_code
-	        <!-- and subassetinfo.status != '03' /*数据状态！=删除*/ -->
-	        and subassetinfo.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-	        and DATE_FORMAT(subassetinfo.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-	        where 1 =1
-	        <!-- and bottomassetsub.status != '03' /*数据状态！=删除*/ -->
-	        and bottomassetsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-	        and DATE_FORMAT(bottomassetsub.pos_date,'%Y-%m-%d') = DATE_FORMAT(#{monthEndDate,jdbcType=DATE},'%Y-%m-%d')
-	        and DATE_FORMAT(bottomassetsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-	      )bottomassetsub 
-          on bottomassetsub.plan_asset_id = assetinfosub.asset_code
-		  where assetinfosub.asset_type in ('12','16','19')
-		  <!-- and assetinfosub.status != '03' /*数据状态！=删除*/ -->
-		  and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		  and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		  and assetdeal.asset_deal_num > 0
-		)
-		<!-- where rowIndex = 1 -->
-		group by asset_code,
-		IS_REG,
-		BOT_ISSUE_NUM,
-		BOT_ISSUE_AMT,
-		BOT_UNINVEST_CASH,
-		CHECK_DATE
+        select
+        asset_code,
+        IS_REG,
+        BOT_ISSUE_NUM,
+        BOT_ISSUE_AMT,
+        BOT_UNINVEST_CASH,
+        sum(ifnull(BOT_ASSET_AMT,0)) BOT_ASSET_AMT,
+        sum(ifnull(BOT_DEBT_AMT,0)) BOT_DEBT_AMT,
+        CHECK_DATE
+        from(
+        select assetinfosub.asset_code asset_code,
+        (case bottomassetsub.REGIST_SEQNO when null then '02'
+        else '01'
+        end) IS_REG,
+        bottomassetsub.TOTAL_NUM BOT_ISSUE_NUM,
+        bottomassetsub.ISSUE_AMT BOT_ISSUE_AMT,
+        bottomassetsub.UNINVEST_CASH BOT_UNINVEST_CASH,
+        (case ifnull(bottomassetsub.asset_type2 ,'NOASSET') when '1901' then bottomassetsub.POS_AMT
+        when '1902'  then bottomassetsub.POS_AMT
+        when '2000'  then bottomassetsub.POS_AMT
+        else 0
+        end)  BOT_DEBT_AMT,
+        (case ifnull(bottomassetsub.asset_type2 ,'NOASSET') when '1901' then 0
+        when '1902'  then 0
+        when '2000'  then 0
+        when 'NOASSET'  then 0
+        else bottomassetsub.POS_AMT
+        end)  BOT_ASSET_AMT,
+        bottomassetsub.POS_DATE CHECK_DATE
+        <!--, rank() over (order by bottomassetsub.POS_DATE desc) rowIndex -->
+        from chb_asset_info_sub assetinfosub
+        left join (
+        select investdealsub.asset_code asset_code,sum((case investdealsub.CUR_ASSET_TYPE when '01' then 1 else -1 end)*investdealsub.num) asset_deal_num
+        from chb_invest_trade_sub investdealsub
+        where 1 = 1
+        and investdealsub.CUR_ASSET_TYPE in ('01','02')
+        <!-- and investdealsub.status != '03' /*数据状态！=删除*/ -->
+        and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(investdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{monthEndDate,jdbcType=DATE},'%Y-%m-%d')
+        and DATE_FORMAT(investdealsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        group by investdealsub.asset_code
+        ) assetdeal
+        on assetinfosub.asset_code = assetdeal.asset_code
+        left join  (
+        select bottomassetsub.REGIST_SEQNO REGIST_SEQNO,
+        bottomassetsub.TOTAL_NUM TOTAL_NUM,
+        bottomassetsub.ISSUE_AMT ISSUE_AMT,
+        bottomassetsub.UNINVEST_CASH UNINVEST_CASH,
+        bottomassetsub.POS_AMT POS_AMT,
+        bottomassetsub.plan_asset_id plan_asset_id,
+        subassetinfo.asset_type2 asset_type2,
+        bottomassetsub.POS_DATE
+        from chb_bot_ast_pos_sub bottomassetsub
+        left join chb_asset_info_sub subassetinfo
+        on subassetinfo.asset_code = bottomassetsub.asset_code
+        <!-- and subassetinfo.status != '03' /*数据状态！=删除*/ -->
+        and subassetinfo.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(subassetinfo.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        where 1 =1
+        <!-- and bottomassetsub.status != '03' /*数据状态！=删除*/ -->
+        and bottomassetsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(bottomassetsub.pos_date,'%Y-%m-%d') = DATE_FORMAT(#{monthEndDate,jdbcType=DATE},'%Y-%m-%d')
+        and DATE_FORMAT(bottomassetsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        )bottomassetsub
+        on bottomassetsub.plan_asset_id = assetinfosub.asset_code
+        where assetinfosub.asset_type in ('12','16','19')
+        <!-- and assetinfosub.status != '03' /*数据状态！=删除*/ -->
+        and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and assetdeal.asset_deal_num > 0
+        )
+        <!-- where rowIndex = 1 -->
+        group by asset_code,
+        IS_REG,
+        BOT_ISSUE_NUM,
+        BOT_ISSUE_AMT,
+        BOT_UNINVEST_CASH,
+        CHECK_DATE
     </select>
-    
+
     <select id="selectAssetHoldLoad" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-	    select
-		  prdinfo.prod_id prd_id,
-		  prdinfo.PROD_INS_ID PRD_INS_ID,
-		  prdinfo.PROD_NAME PRD_NAME,
-		  prdinfo.RAISE_VDATE RAISE_STARTDATE,
-		  prdinfo.RAISE_ENDDATE RAISE_ENDDATE,
-		  prdinfo.VDATE PRD_VDATE,
-		  assetdeal.asset_type2 asset_type2,
-		  assetdeal.asset_code asset_code,
-		  assetdeal.asset_deal_num+initposition.AST_HOLD_NUM AST_HOLD_NUM,/*资产持仓需加上初始持仓*/
+        select
+        prdinfo.prod_id prd_id,
+        prdinfo.PROD_INS_ID PRD_INS_ID,
+        prdinfo.PROD_NAME PRD_NAME,
+        prdinfo.RAISE_VDATE RAISE_STARTDATE,
+        prdinfo.RAISE_ENDDATE RAISE_ENDDATE,
+        prdinfo.VDATE PRD_VDATE,
+        assetdeal.asset_type2 asset_type2,
+        assetdeal.asset_code asset_code,
+        assetdeal.asset_deal_num+initposition.AST_HOLD_NUM AST_HOLD_NUM,/*资产持仓需加上初始持仓*/
         (case ifnull(issuesub.REGIST_SEQNO,'NOSEQNO') when 'NOSEQNO' then '02' else '01' end) IS_ISSUE_REG
-		from chb_prd_baseinfo prdinfo
-		left join CHB_PRD_ISSUE_SUB issuesub
-		on prdinfo.prod_id = issuesub.prod_id
+        from chb_prd_baseinfo prdinfo
+        left join CHB_PRD_ISSUE_SUB issuesub
+        on prdinfo.prod_id = issuesub.prod_id
         and issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         <!-- and issuesub.STATUS != '03' /*数据状态！=删除*/ -->
         and DATE_FORMAT(issuesub.PRD_VDATE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
@@ -636,57 +636,57 @@
         and endsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         and DATE_FORMAT(endsub.mdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         )
-		left join (
-		    select investdealsub.prod_id prod_id,
-		    assetinfosub.asset_code asset_code,
-		    assetinfosub.asset_type2 asset_type2,
-		    sum((case investdealsub.CUR_ASSET_TYPE when '01' then 1 when '03' then 1  when '05' then 1 else -1 end)*ifnull(investdealsub.num,0)) asset_deal_num
-		    from chb_invest_trade_sub investdealsub
-		    left join chb_asset_info_sub assetinfosub
-		    on assetinfosub.asset_code = investdealsub.asset_code
-		    where 1 = 1
-		    and investdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','07')
-		    <!-- and investdealsub.status != '03' /*数据状态！=删除*/ -->
-		    and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		    and DATE_FORMAT(investdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-            and DATE_FORMAT(investdealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		    <!-- and assetinfosub.status != '03' /*数据状态！=删除*/ -->
-		    and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		    and DATE_FORMAT(assetinfosub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		    group by investdealsub.prod_id,assetinfosub.asset_code,assetinfosub.asset_type2
-		    ) assetdeal
-		on assetdeal.prod_id = prdinfo.prod_id
-		left join chb_totalcheck_detail initposition
-		on initposition.totalseqno = '111111111111111111111111111111111111'/*初始持仓默认36个1*/
-		and initposition.prd_id = prdinfo.prod_id
-		and initposition.ASSET_CODE = assetdeal.asset_code
-		where 1 =1
+        left join (
+        select investdealsub.prod_id prod_id,
+        assetinfosub.asset_code asset_code,
+        assetinfosub.asset_type2 asset_type2,
+        sum((case investdealsub.CUR_ASSET_TYPE when '01' then 1 when '03' then 1  when '05' then 1 else -1 end)*ifnull(investdealsub.num,0)) asset_deal_num
+        from chb_invest_trade_sub investdealsub
+        left join chb_asset_info_sub assetinfosub
+        on assetinfosub.asset_code = investdealsub.asset_code
+        where 1 = 1
+        and investdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','07')
+        <!-- and investdealsub.status != '03' /*数据状态！=删除*/ -->
+        and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(investdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and DATE_FORMAT(investdealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        <!-- and assetinfosub.status != '03' /*数据状态！=删除*/ -->
+        and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(assetinfosub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        group by investdealsub.prod_id,assetinfosub.asset_code,assetinfosub.asset_type2
+        ) assetdeal
+        on assetdeal.prod_id = prdinfo.prod_id
+        left join chb_totalcheck_detail initposition
+        on initposition.totalseqno = '111111111111111111111111111111111111'/*初始持仓默认36个1*/
+        and initposition.prd_id = prdinfo.prod_id
+        and initposition.ASSET_CODE = assetdeal.asset_code
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
         and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
-		<!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
-		and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
-		<!-- and assetdeal.asset_deal_num &lt; 0 -->
+        <!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
+        and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
+        <!-- and assetdeal.asset_deal_num &lt; 0 -->
         <if test="prodIgnoreList != null and prodIgnoreList.size() > 0">
             <foreach collection="prodIgnoreList" item="prodid" open="and prdinfo.prod_id not in (" close=")" separator=",">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
-    
+
     </select>
-    
+
     <select id="selectCashHoldLoad" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-	    select
-		  prdinfo.prod_id prd_id,
-		  prdinfo.PROD_INS_ID PRD_INS_ID,
-		  prdinfo.PROD_NAME PRD_NAME,
-		  prdinfo.RAISE_VDATE RAISE_STARTDATE,
-		  prdinfo.RAISE_ENDDATE RAISE_ENDDATE,
-		  prdinfo.VDATE PRD_VDATE,
-		  ifnull(prdraisesub.TOTAL_AMT,0) - ifnull(assetdealsub.PRD_ASSET_AMT,0)  PRD_CASHHOLD_AMT,
-          (case ifnull(prdissuesub.REGIST_SEQNO,'NOSEQNO') when 'NOSEQNO' then '02' else '01' end) IS_ISSUE_REG
-		from chb_prd_baseinfo prdinfo
-		left join CHB_PRD_ISSUE_SUB prdissuesub
-		on prdinfo.prod_id = prdissuesub.prod_id
+        select
+        prdinfo.prod_id prd_id,
+        prdinfo.PROD_INS_ID PRD_INS_ID,
+        prdinfo.PROD_NAME PRD_NAME,
+        prdinfo.RAISE_VDATE RAISE_STARTDATE,
+        prdinfo.RAISE_ENDDATE RAISE_ENDDATE,
+        prdinfo.VDATE PRD_VDATE,
+        ifnull(prdraisesub.TOTAL_AMT,0) - ifnull(assetdealsub.PRD_ASSET_AMT,0)  PRD_CASHHOLD_AMT,
+        (case ifnull(prdissuesub.REGIST_SEQNO,'NOSEQNO') when 'NOSEQNO' then '02' else '01' end) IS_ISSUE_REG
+        from chb_prd_baseinfo prdinfo
+        left join CHB_PRD_ISSUE_SUB prdissuesub
+        on prdinfo.prod_id = prdissuesub.prod_id
         and prdissuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         <!-- and prdissuesub.STATUS != '03' /*数据状态！=删除*/ -->
         and DATE_FORMAT(prdissuesub.PRD_VDATE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
@@ -700,162 +700,162 @@
         <!-- and prdendsub.status != '03' /*数据状态！=删除*/ -->
         and DATE_FORMAT(prdendsub.mdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         )
-		left join CHB_PRD_RAISETOT_SUB prdraisesub
-		on prdinfo.prod_id = prdraisesub.prod_id
+        left join CHB_PRD_RAISETOT_SUB prdraisesub
+        on prdinfo.prod_id = prdraisesub.prod_id
         and prdraisesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         <!-- and prdraisesub.STATUS != '03' /*数据状态！=删除*/ -->
         and DATE_FORMAT(prdraisesub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		left join (
-		 select assetdealsub.prod_id,sum(
+        left join (
+        select assetdealsub.prod_id,sum(
         (case assetdealsub.CUR_ASSET_TYPE when '01' then 1  when '03' then 1  when '05' then 1  when '08' then 1  when '10' then 1  when '12' then 1 else -1 end)*ifnull(assetdealsub.CNY_AMT,0)) PRD_ASSET_AMT
-		 from chb_invest_trade_sub assetdealsub
-		 where 1 =1 
-		 <!-- and assetdealsub.status != '03' /*数据状态！=删除*/ -->
-		   and assetdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		   and assetdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','06','07','08','09','10','11','12')
-		   and DATE_FORMAT(assetdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-           and DATE_FORMAT(assetdealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		   group by assetdealsub.prod_id
-		)assetdealsub 
-		on assetdealsub.prod_id = prdinfo.prod_id
-		where 1 =1
+        from chb_invest_trade_sub assetdealsub
+        where 1 =1
+        <!-- and assetdealsub.status != '03' /*数据状态！=删除*/ -->
+        and assetdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and assetdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','06','07','08','09','10','11','12')
+        and DATE_FORMAT(assetdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and DATE_FORMAT(assetdealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        group by assetdealsub.prod_id
+        )assetdealsub
+        on assetdealsub.prod_id = prdinfo.prod_id
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
         and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
-		<!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
-		and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
+        <!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
+        and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
         <if test="prodIgnoreList != null and prodIgnoreList.size() > 0">
             <foreach collection="prodIgnoreList" item="prodid" open="and prdinfo.prod_id not in (" close=")" separator=",">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
-    
+
     </select>
-    
+
     <select id="selectPrdDealAmt" parameterType="java.util.Map" resultType="java.util.HashMap">
         select prddealsub.prod_id "prodid",
-            CCY_PURCHASE "ccycash"
+        CCY_PURCHASE "ccycash"
         from chb_prd_deal_sub prddealsub
-        where 1 =1 
+        where 1 =1
         <!-- and prddealsub.status != '03' /*数据状态！=删除*/ -->
         and prddealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         and DATE_FORMAT(prddealsub.MDATE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         and DATE_FORMAT(prddealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
     </select>
-    
+
     <select id="selectTradePrice" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
         select
-		  prdinfo.prod_id prd_id,
-		  assetdeal.asset_code asset_code,
-		  sum((case assetdeal.rowindexlast when 1 then assetdeal.unit_price else 0 end)) AST_MAX_UPRICE,
-		  sum((case assetdeal.rowindexfirst when 1 then assetdeal.unit_price else 0 end)) AST_MIN_UPRICE,
-          (case ifnull(prdissuesub.REGIST_SEQNO,'NOSEQNO') when 'NOSEQNO' then '02' else '01' end) IS_ISSUE_REG
-		from chb_prd_baseinfo prdinfo
-		left join CHB_PRD_ISSUE_SUB prdissuesub
-		on prdinfo.prod_id = prdissuesub.prod_id
+        prdinfo.prod_id prd_id,
+        assetdeal.asset_code asset_code,
+        sum((case assetdeal.rowindexlast when 1 then assetdeal.unit_price else 0 end)) AST_MAX_UPRICE,
+        sum((case assetdeal.rowindexfirst when 1 then assetdeal.unit_price else 0 end)) AST_MIN_UPRICE,
+        (case ifnull(prdissuesub.REGIST_SEQNO,'NOSEQNO') when 'NOSEQNO' then '02' else '01' end) IS_ISSUE_REG
+        from chb_prd_baseinfo prdinfo
+        left join CHB_PRD_ISSUE_SUB prdissuesub
+        on prdinfo.prod_id = prdissuesub.prod_id
         and prdissuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         <!-- and prdissuesub.STATUS != '03' /*数据状态！=删除*/ -->
         and DATE_FORMAT(prdissuesub.PRD_VDATE,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		and not exists(
-	        select 1
-	        from chb_prd_end_sub prdendsub
-	        where 1 =1
-	        and prdendsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-	        and prdissuesub.prod_id = prdendsub.prod_id
-	        <!-- and prdendsub.status != '03' /*数据状态！=删除*/ -->
-	        and DATE_FORMAT(prdendsub.mdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and not exists(
+        select 1
+        from chb_prd_end_sub prdendsub
+        where 1 =1
+        and prdendsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and prdissuesub.prod_id = prdendsub.prod_id
+        <!-- and prdendsub.status != '03' /*数据状态！=删除*/ -->
+        and DATE_FORMAT(prdendsub.mdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         )
-		left join (
-		  select *
-		  from(
-		    select investdealsub.prod_id prod_id,
-		    assetinfosub.asset_code asset_code,
-            (case investdealsub.num when 0 then 0 else investdealsub.CNY_AMT/investdealsub.num end) unit_price,
-		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num desc) rowindexlast,
-		    rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num asc) rowindexfirst
-		    from chb_invest_trade_sub investdealsub
-		    left join chb_asset_info_sub assetinfosub
-		    on assetinfosub.asset_code = investdealsub.asset_code
-		    where 1 = 1
-		    and investdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','06','07','08')
-		    <!-- and investdealsub.status != '03' /*数据状态！=删除*/ -->
-		    and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-		    and DATE_FORMAT(investdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		    and DATE_FORMAT(investdealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		  ) where rowindexlast = 1 or rowindexfirst = 1
-		) assetdeal
-		on assetdeal.prod_id = prdinfo.prod_id
-		where 1 =1
+        left join (
+        select *
+        from(
+        select investdealsub.prod_id prod_id,
+        assetinfosub.asset_code asset_code,
+        (case investdealsub.num when 0 then 0 else investdealsub.CNY_AMT/investdealsub.num end) unit_price,
+        rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num desc) rowindexlast,
+        rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num asc) rowindexfirst
+        from chb_invest_trade_sub investdealsub
+        left join chb_asset_info_sub assetinfosub
+        on assetinfosub.asset_code = investdealsub.asset_code
+        where 1 = 1
+        and investdealsub.CUR_ASSET_TYPE in ('01','02','03','04','05','06','07','08')
+        <!-- and investdealsub.status != '03' /*数据状态！=删除*/ -->
+        and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(investdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and DATE_FORMAT(investdealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        ) where rowindexlast = 1 or rowindexfirst = 1
+        ) assetdeal
+        on assetdeal.prod_id = prdinfo.prod_id
+        where 1 =1
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
         and ifnull(prdinfo.fprod_id,'NULLFP') = 'NULLFP'/*过滤母产品*/
-		<!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
-		and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
+        <!-- and prdinfo.status != '03' /*数据状态！=删除*/ -->
+        and prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
         <if test="prodIgnoreList != null and prodIgnoreList.size() > 0">
             <foreach collection="prodIgnoreList" item="prodid" open="and prdinfo.prod_id not in (" close=")" separator=",">
                 #{prodid,jdbcType=VARCHAR}
             </foreach>
         </if>
-		group by prdinfo.prod_id,assetdeal.asset_code,(case ifnull(prdissuesub.REGIST_SEQNO,'NOSEQNO') when 'NOSEQNO' then '02' else '01' end)
+        group by prdinfo.prod_id,assetdeal.asset_code,(case ifnull(prdissuesub.REGIST_SEQNO,'NOSEQNO') when 'NOSEQNO' then '02' else '01' end)
     </select>
-    
+
     <select id="selectAstBotAmt" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-	    select 
-			asset_code,
-			IS_REG,
-			BOT_ISSUE_NUM,
-			BOT_ISSUE_AMT,
-			BOT_UNINVEST_CASH,
-			sum(BOT_ASSET_AMT) BOT_ASSET_AMT,
-			sum(BOT_DEBT_AMT) BOT_DEBT_AMT,
-			CHECK_DATE,
-			'01' IS_REG,
-			'01' IS_DEVIATION
-		from(
-		  select bottomassetsub.PLAN_ASSET_ID asset_code,
-		  (case bottomassetsub.REGIST_SEQNO when null then '02' else '01' end) IS_REG,
-		  bottomassetsub.TOTAL_NUM BOT_ISSUE_NUM,
-		  bottomassetsub.ISSUE_AMT BOT_ISSUE_AMT,
-		  bottomassetsub.UNINVEST_CASH BOT_UNINVEST_CASH,
-          (case ifnull(assetinfosub.asset_type2 ,'NOASSET') when '1901' then bottomassetsub.POS_AMT
-            when '1902'  then bottomassetsub.POS_AMT
-            when '2000'  then bottomassetsub.POS_AMT
-            else 0 end) BOT_DEBT_AMT,
-          (case ifnull(assetinfosub.asset_type2 ,'NOASSET') when '1901' then 0
-            when '1902'  then 0
-            when '2000'  then 0
-            when 'NOASSET'  then 0
-            else bottomassetsub.POS_AMT end) BOT_ASSET_AMT,
-		  bottomassetsub.POS_DATE CHECK_DATE
-		  <!-- ,rank() over (order by bottomassetsub.POS_DATE desc) rowIndex -->
-		  from chb_bot_ast_pos_sub bottomassetsub 
-		  left join chb_asset_info_sub assetinfosub
-		  on bottomassetsub.asset_code = assetinfosub.asset_code
-          <!-- and assetinfosub.status != '03' /*数据状态！=删除*/ -->
-          and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-          and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		  where 1 =1
-		  <!-- and assetinfosub.asset_type in ('12','16','19') -->
-		  <!-- and bottomassetsub.status != '03' /*数据状态！=删除*/ -->
-		  and bottomassetsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
-          and DATE_FORMAT(bottomassetsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-		  and DATE_FORMAT(bottomassetsub.pos_date,'%Y-%m-%d') = DATE_FORMAT(#{monthEndDate,jdbcType=DATE},'%Y-%m-%d')
-		)
-		<!-- where rowIndex = 1 -->
-		group by asset_code,
-		IS_REG,
-		BOT_ISSUE_NUM,
-		BOT_ISSUE_AMT,
-		BOT_UNINVEST_CASH,
-		CHECK_DATE
-    
+        select
+        asset_code,
+        IS_REG,
+        BOT_ISSUE_NUM,
+        BOT_ISSUE_AMT,
+        BOT_UNINVEST_CASH,
+        sum(BOT_ASSET_AMT) BOT_ASSET_AMT,
+        sum(BOT_DEBT_AMT) BOT_DEBT_AMT,
+        CHECK_DATE,
+        '01' IS_REG,
+        '01' IS_DEVIATION
+        from(
+        select bottomassetsub.PLAN_ASSET_ID asset_code,
+        (case bottomassetsub.REGIST_SEQNO when null then '02' else '01' end) IS_REG,
+        bottomassetsub.TOTAL_NUM BOT_ISSUE_NUM,
+        bottomassetsub.ISSUE_AMT BOT_ISSUE_AMT,
+        bottomassetsub.UNINVEST_CASH BOT_UNINVEST_CASH,
+        (case ifnull(assetinfosub.asset_type2 ,'NOASSET') when '1901' then bottomassetsub.POS_AMT
+        when '1902'  then bottomassetsub.POS_AMT
+        when '2000'  then bottomassetsub.POS_AMT
+        else 0 end) BOT_DEBT_AMT,
+        (case ifnull(assetinfosub.asset_type2 ,'NOASSET') when '1901' then 0
+        when '1902'  then 0
+        when '2000'  then 0
+        when 'NOASSET'  then 0
+        else bottomassetsub.POS_AMT end) BOT_ASSET_AMT,
+        bottomassetsub.POS_DATE CHECK_DATE
+        <!-- ,rank() over (order by bottomassetsub.POS_DATE desc) rowIndex -->
+        from chb_bot_ast_pos_sub bottomassetsub
+        left join chb_asset_info_sub assetinfosub
+        on bottomassetsub.asset_code = assetinfosub.asset_code
+        <!-- and assetinfosub.status != '03' /*数据状态！=删除*/ -->
+        and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        where 1 =1
+        <!-- and assetinfosub.asset_type in ('12','16','19') -->
+        <!-- and bottomassetsub.status != '03' /*数据状态！=删除*/ -->
+        and bottomassetsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
+        and DATE_FORMAT(bottomassetsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
+        and DATE_FORMAT(bottomassetsub.pos_date,'%Y-%m-%d') = DATE_FORMAT(#{monthEndDate,jdbcType=DATE},'%Y-%m-%d')
+        )
+        <!-- where rowIndex = 1 -->
+        group by asset_code,
+        IS_REG,
+        BOT_ISSUE_NUM,
+        BOT_ISSUE_AMT,
+        BOT_UNINVEST_CASH,
+        CHECK_DATE
+
     </select>
-    
-    
+
+
     <select id="selectPrdInitAmt" parameterType="java.util.Map" resultMap="TotalCheckDetailBaseResultMap">
-        select 
-            prdinfo.prod_id prd_id,
-            prdinfo.OPERATE_MODE OPERATE_MODE,
-            initposition.PRD_CASHHOLD_AMT PRD_INIT_AMT,/*初始剩余现金*/
-            initposition.INIT_CCY INIT_CCY /*初始剩余现金币种*/
+        select
+        prdinfo.prod_id prd_id,
+        prdinfo.OPERATE_MODE OPERATE_MODE,
+        initposition.PRD_CASHHOLD_AMT PRD_INIT_AMT,/*初始剩余现金*/
+        initposition.INIT_CCY INIT_CCY /*初始剩余现金币种*/
         from chb_prd_baseinfo prdinfo
         left join chb_totalcheck_detail initposition
         on initposition.totalseqno = '111111111111111111111111111111111111'/*初始持仓默认36个1*/
@@ -870,7 +870,7 @@
         prdinfo.ISSUING_STATUS = '01'/*发行状态=发行成功*/
         and prdinfo.status in ('E','M')/*有效状态：有效、修改*/
         and initposition.SEQNO is not null
-        
+
         and
         issuesub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         <!-- and issuesub.STATUS

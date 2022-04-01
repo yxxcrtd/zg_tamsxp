@@ -13,8 +13,13 @@ package com.joyintech.tams.invest.trade.stockdeal.controller;
 import javax.validation.Valid;
 
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,6 +49,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +72,9 @@ public class TrdStock001Controller extends BaseController {
     
     @Autowired
     private TrdStock002Service trdStock002Service;
+
+    @Autowired
+    private BussSettleOrderCommService bussSettleOrderCommService;
 
     @Override
     public String init(Model model) {
@@ -134,6 +143,16 @@ public class TrdStock001Controller extends BaseController {
     @RequestMapping("doRevoke")
     @ResponseBody
     AjaxResult doRevoke(@RequestBody TrdStockDto inputDto) throws WorkFlowException {
+        inputDto = trdStock002Service.getTrdProductDealDto(inputDto.getTradeId());
+        inputDto.setActPortfolioId(inputDto.getPortfolioId());
+        List<BussTrdTransferOrderBase> bussTrdTransferOrderBases = bussSettleOrderCommService.selectOrdersByBizCode(inputDto.getTradeId());
+        if(CollectionUtils.isNotEmpty(bussTrdTransferOrderBases)){
+            BussTrdTransferOrderDto dto = new BussTrdTransferOrderDto();
+            BeanUtil.copyPropertiesIgnoreNull(dto, bussTrdTransferOrderBases.get(0));
+            inputDto.setBussTrdTransferOrder(new ArrayList<BussTrdTransferOrderDto>(){{
+                add(dto);
+            }});
+        }
 
         ProcessParameter<TrdStockDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdStockDto> workFlowParameter = new WorkFlowParameter<>();

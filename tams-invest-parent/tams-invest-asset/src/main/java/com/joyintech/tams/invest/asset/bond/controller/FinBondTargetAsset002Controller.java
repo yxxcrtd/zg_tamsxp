@@ -102,6 +102,7 @@ public class FinBondTargetAsset002Controller extends BaseController{
         //初始化基本信息画面数据字典
         setSelectOptionToModel(model, DICT_CODES);
         String finprodId = this.getParam("finprodId");
+        String finprodType = this.getParam("finprodType");
         //String status = getParam("status");
         String workflowId = getParam("workflowId");
         model.addAttribute("YES",DictCodeList.是否_是.getValue());
@@ -128,8 +129,8 @@ public class FinBondTargetAsset002Controller extends BaseController{
             model.addAttribute("isTransInAsset", commonBusinessService.isTransInAsset(finprodId)!=0?true:false);
             model.addAttribute("isHqTrade", finBondTargetAssetService.isHqTrade(finprodId)>0?true:false);
           //根据主键获取业务实体--标的金融产品基本信息
-            FinBondTargetAssetDto finBondTargetAssetDto = finBondTargetAssetService.getBasicInfo(
-                finprodId);
+            FinBondTargetAssetDto finBondTargetAssetDto = finBondTargetAssetService.getBasicInfos(
+                finprodId, finprodType);
             //commonBusinessService.setTradeMarketId(finBondTargetAssetDto,model);
             //点击修改保存提交会校验实际授信主体必填问题
             String a = CacheUtil.getSysParam(BussinessConstant.CEMODEL);

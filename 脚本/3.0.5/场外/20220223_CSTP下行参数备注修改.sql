@@ -1,0 +1,2 @@
+update sys_para set remark='是否支持CSTP下行接口(Y:是，N:否)_现券买卖' where para_code='IS_SUPPORT_CSTP_FLAG_BOND';
+update sys_para set remark='是否支持CSTP下行接口(Y:是，N:否)_质押式回购首期' where para_code='IS_SUPPORT_CSTP_FLAG_REPO';

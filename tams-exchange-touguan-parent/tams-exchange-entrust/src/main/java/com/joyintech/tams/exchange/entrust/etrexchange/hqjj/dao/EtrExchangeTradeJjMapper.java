@@ -62,7 +62,9 @@ public interface EtrExchangeTradeJjMapper {
      * @see
      * @since 1.0
      */
-    List<EtrExchangeTradePositionsJjResponse> findZqzyPositionsPage(Map<String, Object> pageParam);
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start
+//    List<EtrExchangeTradePositionsJjResponse> findZqzyPositionsPage(Map<String, Object> pageParam);
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 end
     /**
      * 查询证券代码联想框文本框
      *
@@ -192,7 +194,9 @@ public interface EtrExchangeTradeJjMapper {
 	 * @param map
 	 * @return
 	 */
-	String queryStandandTicketCanUse(Map<String, Object> map);
+	// modify by etliu 标准券持仓可用查询只有非交易业务指令使用，代码删除 20220308 start
+//	String queryStandandTicketCanUse(Map<String, Object> map);
+	// modify by etliu 标准券持仓可用查询只有非交易业务指令使用，代码删除 20220308 end
 
     /**
      * 根据委托id查询委托

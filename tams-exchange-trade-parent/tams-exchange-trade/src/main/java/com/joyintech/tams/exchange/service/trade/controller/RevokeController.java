@@ -2,6 +2,8 @@ package com.joyintech.tams.exchange.service.trade.controller;
 
 import com.joyintech.tams.exchange.common.bean.ResultBean;
 import com.joyintech.tams.exchange.service.trade.management.service.RevokeManagement;
+import com.joyintech.tams.exchange.util.MasterUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class RevokeController {
     public ResultBean handleEntrustRevokeExamine(@RequestParam(value = "eventId") String eventId,
                                                  @RequestParam(value = "approveResult") String status,
                                                  @RequestParam(value = "approveReason", required = false) String reason) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(null);
+    	}
         return revokeManagement.handleExamine(eventId, status, reason);
     }
     //    @RequestMapping(value = "/order/revoke/examine", method = RequestMethod.POST)

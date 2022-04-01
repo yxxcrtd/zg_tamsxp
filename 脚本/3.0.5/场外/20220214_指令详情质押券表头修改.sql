@@ -1,0 +1,2 @@
+UPDATE CFG_DATATABLE_SHOW SET EXTENDCFG = '{"colAlign": "right","dataType":"amount","precision":"4"}' WHERE PAGECODE = 'IbuQuoteRepo' AND DTCODE = 'ETRDETINFO' AND COLCODE = 'firstNetPrice' ;
+UPDATE CFG_DATATABLE_SHOW SET EXTENDCFG = '{"colAlign": "right","dataType":"amount","precision":"2"}' WHERE PAGECODE = 'IbuQuoteRepo' AND DTCODE = 'ETRDETINFO' AND COLCODE = 'pledgeRatio' ;

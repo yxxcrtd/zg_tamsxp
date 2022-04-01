@@ -151,11 +151,17 @@ public enum ErrorCode {
 
     NOT_FAIR_INSTRUCTION_ERROR(4017, "非公平交易模式，无法进行公平交易！"),
 
+    NOT_EXIST_FAIR_INSTRUCTION_ERROR(4018, "没有符合公平交易的指令，无法进行公平交易！"),
+
     INSTRUCTIONS_DERIVATIVE_BS_OC_ERROR(4030, "指令中衍生品买卖方向和开平仓标志不能为空"),
 
     INSTRUCTIONS_DERIVATIVE_BS_OC_NOT_MATCH_ERROR(4031, "指令中衍生品买卖方向和开平标志不匹配"),
 
     INSTRUCTION_PLEDGE_NUMBER_ERROR(4050, "抵押券数量错误"),
+
+    INSTRUCTIONS_RETURN_FORBID(4051, "当前指令不可退回"),
+
+    QUOTATION_NOT_EXIST(4052, "未获取到当前资产行情信息"),
 
     INSTRUCTIONS_ERROR_CODE_END(5000, "instruction error code end"),
     /**

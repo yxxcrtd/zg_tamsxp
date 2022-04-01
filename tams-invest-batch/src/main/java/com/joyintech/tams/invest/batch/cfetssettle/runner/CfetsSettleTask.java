@@ -58,9 +58,7 @@ public class CfetsSettleTask extends BatchBaseService {
      * {@inheritDoc}
      */
     @Override
-    public JobExecution execute()
-            throws BatchException {
-
+    public JobExecution execute() throws BatchException {
         JobExecution result = new JobExecution(1l);
         result.setStatus(BatchStatus.FAILED);
         SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
@@ -68,23 +66,17 @@ public class CfetsSettleTask extends BatchBaseService {
             logger.info("无启动参数，批处理退出。");
             return result;
         }
-
         // 自动批处理，取平台日期为跑批日，手动批处理，取画面选择日期为跑批日
         Date batchDate = batchExecuteInfo.getExecuteDate();
-        if (StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),
-                batchExecuteInfo.getStartMode())) {
+        if (StringUtil.equals(BatchDictCodeList.批处理启动模式_自动.getValue(),batchExecuteInfo.getStartMode())) {
             batchDate = platformDateService.getSysDate();
         }
-
-
         try {
             cfetsSettleService.autoSettle(batchDate, this.getProductIdList());
             result.setStatus(BatchStatus.COMPLETED);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
            logger.error(e.getMessage());
         }
-
         return result;
     }
 }

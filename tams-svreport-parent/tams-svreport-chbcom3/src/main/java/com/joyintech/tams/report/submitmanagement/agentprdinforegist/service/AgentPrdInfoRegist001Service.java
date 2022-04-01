@@ -224,6 +224,8 @@ public class AgentPrdInfoRegist001Service extends CommonExportService<AgentPrdIn
         List<AgentPrdInfoRegistDto> dateTempList=new ArrayList<AgentPrdInfoRegistDto>();//本行机构代码
         AgentPrdInfoRegistDto nullDate = new AgentPrdInfoRegistDto();//没有未报送数据时塞入空model
         if(datas == null){
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbAgentPrdSubMapper.setDataList(selectParam);
             if(tempList.size() != 0) {
                 dateTempList.add(tempList.get(0));//获取本行机构代码

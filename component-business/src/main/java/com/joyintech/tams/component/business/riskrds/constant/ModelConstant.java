@@ -39,6 +39,8 @@ public final class ModelConstant {
 
     public static final String ETREXCHANGEIMPORT = "EtrExchangeImport";
 
+    public static final String ETREXCHANGETRADEMULTI = "EtrExchangeTradeMulti001";
+
     /*************************************************************/
     /** *接口字段区域 * */
     /*************************************************************/
@@ -196,50 +198,54 @@ public final class ModelConstant {
         modelMap.put(CALENDARID, INF_CALENDARCODE);
         // 设置方向交易配置
         PAGEMODEL.put(ETREXCHANGEIMPORT, new PageModel(ETREXCHANGEIMPORT, modelMap));
-        PageModel model = PAGEMODEL.get(ETREXCHANGEIMPORT);
-        // 反向交易相关配置
-        model.setReverse(BussinessDictCodeList.交易方向_卖出.getValue(),
-            BussinessDictCodeList.交易方向_买入.getValue(), NEED_REVERSE_PS);
-        // 事件类型
-        model.addReverse(INF_EVENTTYPE, INF_EVENTTYPE);
-        // 指令编号
-        model.addReverse(ENTRUST_ID, INF_EVENTID);
-        // 组合代码
-        model.addReverse(PORTFOLIO_ID, INF_PORTFOLIOCODE);
-        // 资产代码(债转股的股票)
-        model.addReverse(CONFINPRODID, INF_ASSETCODE);
-        // 资产类型
-        modelMap.put(FINPRODTYPE2, INF_ASSETTYPE);
-        // 交易方向
-        model.addReverse(INF_PS, INF_PS);
-        // 指令价格
-        model.addReverse(ENTRUST_PRICE, INF_PRICEAMT);
-        // 全价
-        model.addReverse("fprice", INF_ALLPRICE);
-        // 收益率
-        model.addReverse("yield", INF_YIELDENDRATE);
-        // 指令数量
-        model.addReverse(ENTRUST_NUM, INF_TRADENUM);
-        // 指令金额
-        /** model.addReverse(ENTRUST_AMT, INF_AMOUNT); */
-        // 指令开始日期
-        model.addReverse(VDATE, INF_EVENTDATE);
-        // 指令结束日期
-        model.addReverse(INF_MDATE, INF_OCCUPYDATE);
-        // 券面总额
-        model.addReverse(ENTRUST_AMT, INF_TOTALFACEAMT);
-        // 日历代码
-        model.addReverse(CALENDARID, INF_CALENDARCODE);
-        // 组合代码联动
-        Set<Setting<?>> settings = new HashSet<>();
-        MtdSetting setting = new MtdSetting(true, null, null);
-        setting.setPortfolio(true);
-        settings.add(setting);
-        Reactor reactor = new Reactor(PORTFOLIO_ID, PORTFOLIO_ID, false, settings);
-        model.addReactor(reactor);
-        // 不需要处理的投资品种
-        model.addNoNeedAsset(DictCodeListExt3.交易方向_质押券入库.getValue(),
-            DictCodeListExt3.交易方向_质押券出库.getValue());
+        PAGEMODEL.put(ETREXCHANGETRADEMULTI, new PageModel(ETREXCHANGETRADEMULTI, modelMap));
+
+        for(String key: PAGEMODEL.keySet()) {
+            PageModel model = PAGEMODEL.get(key);
+            // 反向交易相关配置
+            model.setReverse(BussinessDictCodeList.交易方向_卖出.getValue(),
+                    BussinessDictCodeList.交易方向_买入.getValue(), NEED_REVERSE_PS);
+            // 事件类型
+            model.addReverse(INF_EVENTTYPE, INF_EVENTTYPE);
+            // 指令编号
+            model.addReverse(ENTRUST_ID, INF_EVENTID);
+            // 组合代码
+            model.addReverse(PORTFOLIO_ID, INF_PORTFOLIOCODE);
+            // 资产代码(债转股的股票)
+            model.addReverse(CONFINPRODID, INF_ASSETCODE);
+            // 资产类型
+            modelMap.put(FINPRODTYPE2, INF_ASSETTYPE);
+            // 交易方向
+            model.addReverse(INF_PS, INF_PS);
+            // 指令价格
+            model.addReverse(ENTRUST_PRICE, INF_PRICEAMT);
+            // 全价
+            model.addReverse("fprice", INF_ALLPRICE);
+            // 收益率
+            model.addReverse("yield", INF_YIELDENDRATE);
+            // 指令数量
+            model.addReverse(ENTRUST_NUM, INF_TRADENUM);
+            // 指令金额
+            /** model.addReverse(ENTRUST_AMT, INF_AMOUNT); */
+            // 指令开始日期
+            model.addReverse(VDATE, INF_EVENTDATE);
+            // 指令结束日期
+            model.addReverse(INF_MDATE, INF_OCCUPYDATE);
+            // 券面总额
+            model.addReverse(ENTRUST_AMT, INF_TOTALFACEAMT);
+            // 日历代码
+            model.addReverse(CALENDARID, INF_CALENDARCODE);
+            // 组合代码联动
+            Set<Setting<?>> settings = new HashSet<>();
+            MtdSetting setting = new MtdSetting(true, null, null);
+            setting.setPortfolio(true);
+            settings.add(setting);
+            Reactor reactor = new Reactor(PORTFOLIO_ID, PORTFOLIO_ID, false, settings);
+            model.addReactor(reactor);
+            // 不需要处理的投资品种
+            model.addNoNeedAsset(DictCodeListExt3.交易方向_质押券入库.getValue(),
+                    DictCodeListExt3.交易方向_质押券出库.getValue());
+        }
     }
 
     public static final Map<String, PageModel> modelMap() {

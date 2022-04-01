@@ -643,9 +643,9 @@
 					OR to_char(y.I_Q_B_SHARE_AMT/100,'FM99999.90')=#{keywords}
 					OR to_char(y.I_Q_B_D_PRIN_AMT/10000,'FM99999')=#{keywords}
 					OR y.I_Q_B_SETTLE_SPEED LIKE '%' || decode(#{keywords},'T+0','0','T+1','1','T+2','2',#{keywords})||'%'
-					OR to_char(y.I_Q_B_D_UNIT_CPRICE,'FM99990.9999')=#{keywords} or  y.I_Q_B_D_UNIT_CPRICE||'' =#{keywords}
-					OR to_char(y.I_Q_B_D_YIELD*100,'FM99990.9999')=#{keywords} or  y.I_Q_B_D_YIELD||'' =#{keywords}
-					OR to_char(y.I_Q_B_D_EXER_YIELD*100,'FM99990.9999')=#{keywords} or   y.I_Q_B_D_EXER_YIELD||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_UNIT_CPRICE,'FM99990.9990')=#{keywords} or  y.I_Q_B_D_UNIT_CPRICE||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_YIELD*100,'FM99990.9990')=#{keywords} or  y.I_Q_B_D_YIELD||'' =#{keywords}
+					OR to_char(y.I_Q_B_D_EXER_YIELD*100,'FM99990.9990')=#{keywords} or   y.I_Q_B_D_EXER_YIELD||'' =#{keywords}
 					OR y.I_Q_B_CFETS_QUOTE_ID like '%' || #{keywords} || '%'
 					OR y.I_Q_B_D_EXECID LIKE '%' || #{keywords} || '%'
 					OR y.I_Q_B_QUOTE_ID LIKE  '%'||#{keywords}||'%')
@@ -784,6 +784,7 @@
 	
 	<select id="selectRepoQuoteList" parameterType="com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto" 
                 resultMap="RepoQuoteExtResultMap">
+		select * from (
 		select
 			a.QUOTE_ID           I_Q_C_QUOTE_ID,
 		    a.QUOTE_TYPE         I_Q_C_QUOTE_TYPE,
@@ -1179,12 +1180,12 @@ SELECT T.QUOTE_ID,
                      OR A.CP_TRADER_ID LIKE '%' || #{keywords} || '%' OR M2.TRADER_NAME LIKE '%' || #{keywords} || '%'
                      OR A.OU_PARTY_ID LIKE '%' || #{keywords} || '%' OR N1.PARTY_ABBR LIKE '%' || #{keywords} || '%'
                      OR A.CP_PARTY_ID LIKE '%' || #{keywords} || '%' OR N2.PARTY_ABBR LIKE '%' || #{keywords} || '%'
-                     OR A.RATE LIKE '%' || #{keywords} || '%'
+                     OR to_char(A.RATE*100, 'FM99990.9990') = #{keywords}
                      OR A.FPRICE_AMT LIKE '%' || #{keywords} || '%'
-                     OR A.M_SETTLE_DATE LIKE '%' || #{keywords} || '%'
-                     OR A.V_SETTLE_DATE LIKE '%' || #{keywords} || '%'
-                     OR A.TERM LIKE '%' || #{keywords} || '%'
-                     OR A.SETTLE_SPEED LIKE '%' || #{keywords} || '%' OR G.ITEM_VALUE LIKE '%' || #{keywords} || '%'
+                     OR to_char(A.M_SETTLE_DATE, 'yyyy-MM-dd')=#{keywords}
+                     OR to_char(A.V_SETTLE_DATE, 'yyyy-MM-dd')=#{keywords}
+                     OR to_char(A.TERM) =#{keywords}
+                     OR A.SETTLE_SPEED LIKE '%' || decode(#{keywords}, 'T+0', '0', 'T+1', '1', 'T+2', '2', #{keywords}) || '%'
                      OR A.QUOTE_ID LIKE '%' || #{keywords} || '%'
 					 OR A.CFETS_QUOTE_ID LIKE '%' || #{keywords} || '%'
                      OR A.EXECID LIKE '%' || #{keywords} || '%')
@@ -1192,11 +1193,16 @@ SELECT T.QUOTE_ID,
 	    </where>
 	    order by decode(a.TRADE_STATUS, '09', 1, '06', 3, '08', 4, '07', 5, 2) asc, a.UPDATE_TIME desc
         <!-- order by decode(a.TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(a.TRADE_STATUS)) asc, a.UPDATE_TIME desc -->
+		)
+		<if test="sort != null and sort != '' and direction != null and direction != ''">
+			order by ${sort} ${direction}
+		</if>
     </select>
 
 	<!--add by chenjiaxing 质押式回购改造 start-->
 	<select id="selectRepoQuoteList2" parameterType="com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto"
 			resultMap="RepoQuoteExtResultMap">
+		select * from (
 		select
 		a.QUOTE_ID           I_Q_C_QUOTE_ID,
 		a.QUOTE_TYPE         I_Q_C_QUOTE_TYPE,
@@ -1619,6 +1625,10 @@ SELECT T.QUOTE_ID,
 		</where>
 		order by decode(a.TRADE_STATUS, '06', 2, '08', 3, '13', 4, '07', 5, 1) asc, a.UPDATE_TIME desc
 		<!-- order by decode(a.TRADE_STATUS, '06', 96, '08', 97, '13', 98,  '07', 99, to_number(a.TRADE_STATUS)) asc, a.UPDATE_TIME desc -->
+		)
+		<if test="sort != null and sort != '' and direction != null and direction != ''">
+			order by ${sort} ${direction}
+		</if>
 	</select>
 	<!--add by chenjiaxing 质押式回购改造 end-->
 

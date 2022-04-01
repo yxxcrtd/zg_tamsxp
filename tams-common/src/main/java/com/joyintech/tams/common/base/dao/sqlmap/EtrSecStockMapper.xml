@@ -9,10 +9,11 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_DEF_STOCK" property="isDefStock" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         PLEDGE_STOCK_ID PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME PLEDGE_STOCK_NAME, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,IS_DEF_STOCK
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -37,10 +38,10 @@
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.EtrSecStock" >
         insert into ETR_SEC_STOCK (PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME, CREATE_USER, 
             CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME)
+            UPDATE_TIME,IS_DEF_STOCK)
         values (#{pledgeStockId,jdbcType=VARCHAR}, #{pledgeStockName,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
             #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+            #{updateTime,jdbcType=TIMESTAMP}, #{isDefStock,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.EtrSecStock" >
         insert into ETR_SEC_STOCK
@@ -66,6 +67,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="isDefStock != null" >
+                IS_DEF_STOCK,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="pledgeStockId != null" >
@@ -89,13 +93,16 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isDefStock != null" >
+                #{isDefStock,jdbcType=TIMESTAMP},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.EtrSecStock" >
         insert into ETR_SEC_STOCK(PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME,IS_DEF_STOCK)
         select PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,#{isDefStock,jdbcType=TIMESTAMP} IS_DEF_STOCK
              from ETR_SEC_STOCK
              where 1 = 1 and PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
     </insert>
@@ -120,5 +127,16 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
         where PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateIsDefStockUser" parameterType="com.joyintech.tams.common.base.entity.EtrSecStock" >
+        update ETR_SEC_STOCK
+        set IS_DEF_STOCK = #{isDefStock,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CREATE_USER = #{createUser,jdbcType=VARCHAR}
+        <if test="defaultStock != null and defaultStock != ''">
+            AND PLEDGE_STOCK_ID = #{defaultStock,jdbcType=VARCHAR}
+        </if>
     </update>
 </mapper>

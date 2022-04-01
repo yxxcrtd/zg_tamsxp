@@ -83,7 +83,7 @@
     detail.ORG_CODE, detail.CREATE_USER, detail.CREATE_DEPT, detail.CREATE_TIME, detail.UPDATE_USER, detail.UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from CHB_TOTALCHECK_DETAIL
     where SEQNO = #{seqno,jdbcType=VARCHAR}
@@ -629,7 +629,7 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where SEQNO = #{seqno,jdbcType=VARCHAR}
   </update>
-  
+
   <delete id="deletTotalCheckDeatailByCdate" parameterType="java.util.Map">
 	  delete from CHB_TOTALCHECK_DETAIL
 	  where TOTALSEQNO in (
@@ -638,32 +638,32 @@
 	    where DATE_FORMAT(cdate,'%Y-%m-%d') >= DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
 	  )
   </delete>
-  
-  <select id="selectTotalCheckDetailByPage" parameterType="java.util.Map" 
-    resultType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
-    select 
+
+  <select id="selectTotalCheckDetailByPage" parameterType="java.util.Map"
+          resultType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
+    select
     <include refid="Base_Column_List_With_Pro" />
     from(
-	    select 
-	    <include refid="Base_Column_List_Detail" />
-	    ,rank() over (partition by total.CHECK_TYPE order by total.CDATE desc) rowindex
-	    from CHB_TOTALCHECK total
-	    left join CHB_TOTALCHECK_DETAIL detail
-	    on detail.TOTALSEQNO = total.seqno
-	    where 1 =1 
-	    and detail.seqno is not null
-	    <if test="searchDate != null and !searchDate.isEmpty()">
-	        and DATE_FORMAT(total.CDATE,'%Y-%m-%d') &lt;= #{searchDate,jdbcType=VARCHAR}
-	    </if>
-        <if test="index != null and !index.isEmpty()">
-            and total.CHECK_TYPE = #{index,jdbcType=VARCHAR}
-        </if>
-	    <if test="orgCodeList != null and orgCodeList.size() > 0">
-		    <foreach collection="orgCodeList" item="orgCode" 
-		        open=" AND detail.ISSUE_PARTY_ID IN (" close=")" separator=",">
-		        #{orgCode,jdbcType=VARCHAR}
-		    </foreach>
-	    </if>
+    select
+    <include refid="Base_Column_List_Detail" />
+    ,rank() over (partition by total.CHECK_TYPE order by total.CDATE desc) rowindex
+    from CHB_TOTALCHECK total
+    left join CHB_TOTALCHECK_DETAIL detail
+    on detail.TOTALSEQNO = total.seqno
+    where 1 =1
+    and detail.seqno is not null
+    <if test="searchDate != null and !searchDate.isEmpty()">
+      and DATE_FORMAT(total.CDATE,'%Y-%m-%d') &lt;= #{searchDate,jdbcType=VARCHAR}
+    </if>
+    <if test="index != null and !index.isEmpty()">
+      and total.CHECK_TYPE = #{index,jdbcType=VARCHAR}
+    </if>
+    <if test="orgCodeList != null and orgCodeList.size() > 0">
+      <foreach collection="orgCodeList" item="orgCode"
+               open=" AND detail.ISSUE_PARTY_ID IN (" close=")" separator=",">
+        #{orgCode,jdbcType=VARCHAR}
+      </foreach>
+    </if>
     )
     where 1 = 1 limit 1
   </select>

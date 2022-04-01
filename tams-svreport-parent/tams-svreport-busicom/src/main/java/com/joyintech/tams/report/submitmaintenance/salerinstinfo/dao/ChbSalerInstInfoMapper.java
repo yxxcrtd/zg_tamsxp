@@ -120,7 +120,7 @@ public interface ChbSalerInstInfoMapper {
      * 双击查看详细信息查询，修改信息查询 <功能详细描述>erro
      *
      */
-    SalerInstInfoDto selectErroDetail(Map<String, Object> param);
+    List<SalerInstInfoDto> selectErroDetail(Map<String, Object> param);
 
     //总部或分支机构编码重复校验
     int checkSalerOrgCode(String salerOrgCode);

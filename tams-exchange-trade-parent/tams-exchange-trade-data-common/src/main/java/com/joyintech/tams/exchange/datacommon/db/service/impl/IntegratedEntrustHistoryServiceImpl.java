@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
 import com.joyintech.tams.exchange.common.bean.EntrustQueryBean;
 import com.joyintech.tams.exchange.common.constant.EntrustType;
@@ -20,6 +21,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -128,8 +130,8 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
         String stockCode = request.getStockCode();
         String entrustProp = request.getEntrustProp();
         Integer entrustStatus = request.getEntrustStatus();
-        String startDay = request.getStartDay();
-        String endDay = request.getEndDay();
+        String startDay = DateUtil.formatDate(request.getStartDay());
+        String endDay = DateUtil.formatDate(request.getEndDay());
 
         PageHelper.startPage(pageMode.getPageNo(), pageMode.getPageSize());
         //过滤撤单委托
@@ -138,6 +140,9 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
         entrustQueryBeanList.forEach(entrustQueryBean -> {
             if (InvestmentAssetType.isFutures(entrustQueryBean.getAssetType())) {
                 entrustQueryBean.setStockCode(StockCodeUtils.getStockCode(entrustQueryBean.getStockCode()));
+            }
+            if("EX005".equals(entrustQueryBean.getBusiTypeTg())){
+                entrustQueryBean.setEntrustPrice(entrustQueryBean.getEntrustPrice().multiply(BigDecimal.valueOf(100)));
             }
         });
         return new PageInfo<>(entrustQueryBeanList);

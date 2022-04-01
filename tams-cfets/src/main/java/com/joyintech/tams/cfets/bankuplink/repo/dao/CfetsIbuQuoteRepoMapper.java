@@ -95,7 +95,7 @@ public interface CfetsIbuQuoteRepoMapper {
      * @author jiangpeng
      * @date 2021/12/11 16:27
      */
-    CfetsRepoDealEntrustOrderDto findEtrLastNumByEtrId(@Param("etrId") String etrId);
+    CfetsRepoDealEntrustOrderDto findEtrLastNumByEtrId(@Param("etrId") String etrId, @Param("totleTradeId") String totleTradeId);
 
     /**
      * 查询产品质押债券 证券账户
@@ -233,4 +233,16 @@ public interface CfetsIbuQuoteRepoMapper {
      * @since 1.0
      */
     ProcessMark getBusinessInfoByPageIdAndPk(WflValidInputParameter wflValidInputParameter);
+
+    /**
+     * 查询指令完成额度
+     *
+     * @param param
+     * @return java.math.BigDecimal
+     * @author jiangpeng
+     * @date 2022/3/29 10:57
+     */
+    BigDecimal selectFinshAmt(Map<String, Object> param);
+
+    int checkWflData(Map<String, Object> param);
 }

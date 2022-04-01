@@ -18,6 +18,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
+import com.joyintech.tams.component.base.core.MstWorkflowCommonService;
+import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -29,6 +31,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +74,12 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
 
     @Autowired
     private EtrCommonService etrCommonService;
+
+    /**
+     * 流程组件
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
 
     @PostMapping("/getPageParams")
     public Message<Map<String,Object>> init() {
@@ -104,6 +114,7 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
                 return new Message<AjaxResult>().success().setData(new AjaxResult(result));
             }
             List<ValidMessage> errList = new ArrayList<>();
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
             List<EtrExchangeTradeOperateRequest>  tradeOperateRequests = dto.getSelectedItem();
             for(EtrExchangeTradeOperateRequest item : tradeOperateRequests){
                 //银行间保持一致
@@ -111,6 +122,14 @@ public class EtrExchangeTradeCommon003Controller extends BaseController{
                 &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue())
                         &&!StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())){
                     errList.add(new ValidMessage(item.getEntrustStatusString()+"的指令不允许关闭!"));
+                    break;
+                }else if(StringUtil.equals(item.getEntrustStatus(), DictCodeList.委托状态_已接收.getValue())
+                        &&item.getDealPercent()!=null && BigDecimal.ZERO.compareTo(item.getDealPercent())<0){
+                    errList.add(new ValidMessage(item.getEntrustStatusString()+"成交进度大于0的指令不允许关闭!"));
+                }
+                wflValidInputParameter.setBusinessDataPk1(item.getEntrustId());
+                if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                    errList.add(new ValidMessage("所选对象存在有效或流程中的数据不能关闭"));
                 }
             }
             if(null!=errList&&errList.size()>0){

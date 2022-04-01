@@ -9,23 +9,22 @@
  */
 package com.joyintech.tams.settle.common.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.settle.common.dao.SettleCommonMapper;
+import com.joyintech.tams.settle.common.dto.FundInfoDto;
+import com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.JoyinRestTemplate;
-import com.joyintech.framework.base.BaseDictCodeList;
-import com.joyintech.tams.settle.common.dao.SettleCommonMapper;
-import com.joyintech.tams.settle.common.dto.FundInfoDto;
-import com.joyintech.tams.settle.common.dto.StlDownDataDealAccountInfoDto;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 清结算共通service
@@ -66,7 +65,7 @@ public class SettleCommonService {
 		Map<String, List<StlDownDataDealAccountInfoDto>> map = new HashMap<String, List<StlDownDataDealAccountInfoDto>>();
 		if (isNeedSeatNumber) {
 			for (StlDownDataDealAccountInfoDto stlDownDataDealAccountInfoDto : list) {
-				String key = stlDownDataDealAccountInfoDto.getSecAcctId() + stlDownDataDealAccountInfoDto.getSeatNumber();
+				String key = stlDownDataDealAccountInfoDto.getShareholdersCode() + stlDownDataDealAccountInfoDto.getSeatNumber();
 				if (map.containsKey(key)) {
 					map.get(key).add(stlDownDataDealAccountInfoDto);
 				}
@@ -79,7 +78,7 @@ public class SettleCommonService {
 		}
 		else {
 			for (StlDownDataDealAccountInfoDto stlDownDataDealAccountInfoDto : list) {
-				String key = stlDownDataDealAccountInfoDto.getSecAcctId();
+				String key = stlDownDataDealAccountInfoDto.getShareholdersCode();
 				if (map.containsKey(key)) {
 					map.get(key).add(stlDownDataDealAccountInfoDto);
 				}

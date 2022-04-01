@@ -9,6 +9,26 @@
  */
 package com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.controller;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -22,40 +42,25 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.util.ExcelUitl;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.EtrExchangeTradeQuotationRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.EtrExchangeTradeQuotationResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.dto.SelectOptionsRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001Service;
 import com.joyintech.tams.exchange.entrust.etrexchange.blocktrade.service.EtrExchangeBlockTrade001ValidatorService;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dao.EtrExchangeTradeCommonMapper;
-import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.*;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeQuotation001Dto;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 大宗交易所指令交易（债券股票回购基金场内指令交易）
@@ -177,6 +182,46 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 		}
 	}
 
+	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="导出交易行情信息",notes = "导出交易行情信息")
+	@ResponseBody
+	@PostMapping("exportTradeQuotationsPage")
+	public void exportTradeQuotationsPage(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response){
+		// 导出
+		ExcelUitl.doExport(requestDto, response, "交易行情", () -> {
+			EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
+            String secId = dto.getSecId();
+			List dataList = etrExchangeBlockTrade001Service.findTradeQuotationsPage(secId).getRoot();
+			return dataList;
+		});
+	}
+
+	/**
+	 * 查询盘后行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="导出盘后行情信息",notes = "导出盘后行情信息")
+	@ResponseBody
+	@PostMapping("exportAfterHoursPage")
+	public void exportAfterHoursPage(@RequestBody EtrExchangeTradeExportCommonRequest requestDto, HttpServletResponse response){
+	    // 导出
+		ExcelUitl.doExport(requestDto, response, "盘后行情", () -> {
+			EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
+			String secId = dto.getSecId();
+			List dataList = etrExchangeBlockTrade001Service.findAfterHoursPage(secId).getRoot();
+			return dataList;
+		});
+	}
+
 
 	/**
 	 * 查询盘后行情信息
@@ -288,7 +333,6 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 		ExcelUitl.doExport(requestDto, response, "指令列表", () -> {
 			EtrExchangeTradeEtrExchangeCommonRequest dto = requestDto.getDto(EtrExchangeTradeEtrExchangeCommonRequest.class);
 			List dataList = etrExchangeBlockTrade001Service.selectEtrExchange(dto).getRoot();
-			etrExchangeBlockTrade001Service.handExportTimes(dataList);
 			return dataList;
 		});
 	}
@@ -338,10 +382,10 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 							dto.setStockId(secAcctId);
 						}
 					}
-					ajax= etrExchangeTradeCommon001Service.check(dto, br);
-					if (null != ajax) {
-						break;
-					}
+//					ajax= etrExchangeTradeCommon001Service.check(dto, br);
+//					if (null != ajax) {
+//						break;
+//					}
                     List<ValidMessage> validList = etrExchangeBlockTrade001ValidatorService.valid(dto);
 					if(validList.size()>0) {
 						if (null == ajax) {
@@ -391,5 +435,57 @@ public class EtrExchangeBlockTrade001Controller extends BaseController{
 		}
 	}
 
+
+	@ApiOperation(value="查询是否全价报送",notes = "查询是否全价报送")
+	@ResponseBody
+	@PostMapping("getIsFullPrice")
+	public Message<String> getIsFullPrice(@RequestBody EtrExchangeTradeCommonRequest request){
+		try {
+			String finprodId = request.getFinprodId();
+			String isFullPrice = etrExchangeBlockTrade001Service.getIsFullPrice(finprodId);
+			return new Message<String>().success().setData(isFullPrice);
+		}catch (Exception e) {
+			logger.error("查询指令管理分页数据异常",e);
+			return new Message<String>().setMessage("查询交易行情信息数据异常");
+		}
+	}
+
+	@ApiOperation(value="查询净值偏离度",notes = "查询净值偏离度")
+	@ResponseBody
+	@PostMapping("calcDeviationDegree")
+	public Message<String> calcDeviationDegree(@RequestBody EtrExchangeTradeCommonRequest request){
+		try {
+			Map<String,Object> param= JsonUtils.object2Map(request);
+			String deviationDegree = etrExchangeBlockTrade001Service.calcDeviationDegree(param);
+			return new Message<String>().success().setData(deviationDegree);
+		}catch (Exception e) {
+			logger.error("查询净值偏离度数据异常",e);
+			return new Message<String>().setMessage("查询净值偏离度信息数据异常");
+		}
+	}
+
+	/**
+	 * 查询交易行情信息
+	 * <一句话功能简述>
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ApiOperation(value="查询竞价交易行情信息",notes = "查询竞价交易行情信息")
+	@ResponseBody
+	@PostMapping("findQuotations")
+	public Message<EtrExchangeTradeQuotationHqResponse> findQuotations(@RequestBody EtrExchangeTradeEtrExchangeCommonRequest request) {
+		try {
+			if (!StringUtil.isNotEmpty(request) || !StringUtil.isNotEmpty(request.getSecId())){
+				return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(new EtrExchangeTradeQuotationHqResponse());
+			}
+			String secId = request.getSecId();
+			EtrExchangeTradeQuotationHqResponse quotations = etrExchangeTradeCommon001Service.findQuotations(secId);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().success().setData(quotations);
+		}catch (Exception e) {
+			logger.error("查询竞价易行情数据异常",e);
+			return new Message<EtrExchangeTradeQuotationHqResponse>().fail().setMessage("查询竞价交易行情信息数据异常");
+		}
+	}
 }
 	

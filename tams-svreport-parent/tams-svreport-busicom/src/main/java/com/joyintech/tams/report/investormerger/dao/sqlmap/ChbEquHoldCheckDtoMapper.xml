@@ -92,6 +92,42 @@
 
   </insert>
   
+  <insert id="insertByBatch" parameterType="java.util.List" >
+	    insert into CHB_EQU_HOLD_CHECK (INDENTIFY_MARK, ORG_INDENTIFY_MARK, 
+	      REGIST_BANK_CODE, IS_BELONG_BANK, THE_BANK_NAME, 
+	      THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION, 
+	      HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE, 
+	      OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK, 
+	      OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE, 
+	      HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER, 
+	      HOLDER_CELLPHONE, HOLDER_TELEPHONE, IS_SUBMIT, 
+	      HOLDER_EMAIL, REMARK, STATUS, 
+	      WORKFLOW_ID, DEPT_CODE, UPDATE_USER, 
+	      UPDATE_TIME, CREATE_USER, CREATE_TIME,DATA_DATE, 
+	      DATA_SOURCE, ORG_CODE, AGENT, 
+	      CREATE_DEPT, INTERF_CHECK_RESULT,OPERATE_STATUS,MERGER_INDENTIFY_MARK,HOLDER_CLASSIFY,FUND_ACC_PLACE
+        )
+	  <foreach collection="List" index="index" item = "item" separator="UNION ALL">
+		  select
+      	  #{item.indentifyMark,jdbcType=VARCHAR}, 
+      	  #{item.orgIndentifyMark,jdbcType=VARCHAR}, 
+	      #{item.registBankCode,jdbcType=VARCHAR}, #{item.isBelongBank,jdbcType=CHAR}, #{item.theBankName,jdbcType=VARCHAR}, 
+	      #{item.theBankCode,jdbcType=VARCHAR}, #{item.holderMark,jdbcType=CHAR}, #{item.holderRegion,jdbcType=VARCHAR}, 
+	      #{item.holderType,jdbcType=CHAR}, #{item.personalIdentifyType,jdbcType=CHAR}, #{item.institutionIdentifyType,jdbcType=VARCHAR}, 
+	      #{item.otherIdentifyName,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.spvCapAccBank,jdbcType=VARCHAR}, 
+	      #{item.otherCapAccBank,jdbcType=VARCHAR}, #{item.spvRegistCode,jdbcType=VARCHAR}, #{item.holderDate,jdbcType=TIMESTAMP}, 
+	      #{item.holderName,jdbcType=VARCHAR}, #{item.holderSex,jdbcType=CHAR}, #{item.holderRiskPrefer,jdbcType=VARCHAR}, 
+	      #{item.holderCellphone,jdbcType=VARCHAR}, #{item.holderTelephone,jdbcType=VARCHAR}, #{item.isSubmit,jdbcType=CHAR}, 
+	      #{item.holderEmail,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR}, 
+	      #{item.workflowId,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, 
+	      sysdate, #{item.createUser,jdbcType=VARCHAR}, sysdate, 
+	      sysdate,#{item.dataSource,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR}, 
+	      #{item.createDept,jdbcType=VARCHAR}, #{item.interfCheckResult,jdbcType=VARCHAR}, #{item.operatestatus,jdbcType=VARCHAR}
+	      , #{item.mergerindentifymark,jdbcType=VARCHAR},#{item.holderClassify,jdbcType=VARCHAR},#{item.fundAccPlace,jdbcType=VARCHAR}
+		  from dual
+	  </foreach>
+  </insert>
+  
   <select id="selectAllData" resultMap="BaseResultMap" parameterType="java.util.Map">
   	select a.INDENTIFY_MARK, a.ORG_INDENTIFY_MARK,
 	a.REGIST_BANK_CODE, a.IS_BELONG_BANK, a.THE_BANK_NAME,
@@ -174,7 +210,8 @@
            a.MERGER_INDENTIFY_MARK
  FROM CHB_EQU_HOLD_CHECK a
   </select>
-  
+
+	<!-- 该sql目前没有方法调用-->
   <select id="queryAllCheckData" resultMap="BaseResultMap" parameterType="java.util.List">
   	select <include refid="Base_Column_List"/>
   	from CHB_EQU_HOLD_CHECK
@@ -565,16 +602,16 @@
   </delete>
 
    <delete id="delCheckDataBatch" parameterType="java.util.List">
-     DELETE FROM CHB_EQU_HOLD_CHECK
-            WHERE REGIST_BANK_CODE
-		            ||'_'||IDENTIFY_NUMBER
-		            ||'_'||HOLDER_NAME
-		            ||'_'||PERSONAL_IDENTIFY_TYPE
-		            ||'_'||INSTITUTION_IDENTIFY_TYPE
-		            ||'_'||OTHER_IDENTIFY_NAME = #{key,jdbcType=VARCHAR} 
-	       <!--  AND OPERATE_STATUS = '01' -->
+     DELETE FROM CHB_EQU_HOLD_CHECK HOLD
+     WHERE 1 = 1
+     <if test="key !=null and key.size()>0">
+	    <foreach collection="key" item="item" open="AND (HOLD.REGIST_BANK_CODE, HOLD.IDENTIFY_NUMBER, HOLD.HOLDER_NAME, NVL(HOLD.PERSONAL_IDENTIFY_TYPE,' '), NVL(HOLD.INSTITUTION_IDENTIFY_TYPE,' '), NVL(HOLD.OTHER_IDENTIFY_NAME,' ')) in(" separator="," close=")">
+			(#{item.bankCode,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.holderName,jdbcType=VARCHAR}, NVL(#{item.personalIdentifyType,jdbcType=VARCHAR},' '), NVL(#{item.institutionIdentifyType,jdbcType=VARCHAR},' '), NVL(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+		 </foreach>		    
+     </if>            
   </delete>
-  
+
+	<!-- 该sql目前没有方法调用-->
    <update id="updateMergerIndentifyMark" parameterType="java.util.Map">
      UPDATE CHB_EQU_HOLD_CHECK HOLD 
        SET MERGER_INDENTIFY_MARK =  #{indentifyMark,jdbcType=VARCHAR} 
@@ -588,6 +625,40 @@
        ||'_'||HOLD.OTHER_IDENTIFY_NAME = #{key,jdbcType=VARCHAR} 
   </update>
   
+  <update id="updateMergerIndentifyMarkByBatch" parameterType="java.util.List">
+  	MERGE INTO CHB_EQU_HOLD_CHECK CK
+        	USING (
+        	<foreach collection="keyList" item="item" open="select * from("
+                 close=")" separator="union all">
+            select
+            #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,            
+            #{item.identifyNumber,jdbcType=VARCHAR} IDENTIFY_NUMBER,
+			#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME,
+            NVL(#{item.personalIdentifyType,jdbcType=VARCHAR},'null') PERSONAL_IDENTIFY_TYPE,
+            NVL(#{item.institutionIdentifyType,jdbcType=VARCHAR},'null') INSTITUTION_IDENTIFY_TYPE,
+            NVL(#{item.otherIdentifyName,jdbcType=VARCHAR},'null') OTHER_IDENTIFY_NAME,
+			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK 			
+            from dual
+        </foreach>
+        ) TEMP
+        <!-- 业务主键匹配 -->
+        ON (
+				CK.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE 
+			AND CK.IDENTIFY_NUMBER = TEMP.IDENTIFY_NUMBER
+			AND CK.HOLDER_NAME = TEMP.HOLDER_NAME
+			AND NVL(CK.PERSONAL_IDENTIFY_TYPE,'null') = TEMP.PERSONAL_IDENTIFY_TYPE
+			AND NVL(CK.INSTITUTION_IDENTIFY_TYPE,'null') = TEMP.INSTITUTION_IDENTIFY_TYPE
+			AND NVL(CK.OTHER_IDENTIFY_NAME,'null') = TEMP.OTHER_IDENTIFY_NAME
+		)
+        <!-- 匹配到则更新 -->
+        WHEN MATCHED THEN
+        UPDATE
+        SET        
+			CK.MERGER_INDENTIFY_MARK = TEMP.INDENTIFY_MARK,
+			CK.OPERATE_STATUS =  '02'
+  </update>
+
+	<!-- 该sql使用时 传的参数为null-->
   <select id="mergerData" resultMap="BaseResultMap" parameterType="java.lang.String">
       select 
         HOLD.INDENTIFY_MARK,
@@ -656,8 +727,73 @@
      HOLD.IS_BELONG_BANK,
      HOLD.INDENTIFY_MARK
    </select>
+
+	<select id="selectChekForRepair" resultMap="BaseResultMap" parameterType="java.util.List">
+		select
+		HOLD.INDENTIFY_MARK,
+		HOLD.ORG_INDENTIFY_MARK,
+		HOLD.MERGER_INDENTIFY_MARK,
+		HOLD.REGIST_BANK_CODE,
+		HOLD.IS_BELONG_BANK,
+		HOLD.THE_BANK_NAME,
+		HOLD.THE_BANK_CODE,
+		HOLD.HOLDER_MARK,
+		HOLD.HOLDER_REGION,
+		HOLD.HOLDER_TYPE,
+		HOLD.PERSONAL_IDENTIFY_TYPE,
+		HOLD.INSTITUTION_IDENTIFY_TYPE,
+		HOLD.OTHER_IDENTIFY_NAME,
+		HOLD.IDENTIFY_NUMBER,
+		HOLD.SPV_CAP_ACC_BANK,
+		HOLD.OTHER_CAP_ACC_BANK,
+		HOLD.SPV_REGIST_CODE,
+		HOLD.HOLDER_DATE,
+		HOLD.HOLDER_NAME,
+		HOLD.HOLDER_SEX,
+		HOLD.HOLDER_RISK_PREFER,
+		HOLD.HOLDER_CELLPHONE,
+		HOLD.HOLDER_TELEPHONE,
+		HOLD.IS_SUBMIT,
+		HOLD.HOLDER_EMAIL,
+		HOLD.REMARK,
+		HOLD.STATUS,
+		HOLD.OPERATE_STATUS,
+		HOLD.WORKFLOW_ID,
+		HOLD.DEPT_CODE,
+		HOLD.UPDATE_USER,
+		HOLD.UPDATE_TIME,
+		HOLD.CREATE_USER,
+		HOLD.CREATE_TIME,
+		HOLD.DATA_DATE,
+		HOLD.DATA_SOURCE,
+		HOLD.ORG_CODE,
+		HOLD.AGENT,
+		HOLD.CREATE_DEPT,
+		HOLD.INTERF_CHECK_RESULT,
+		HOLD.HOLDER_CLASSIFY,
+		HOLD.FUND_ACC_PLACE
+		from CHB_EQU_HOLD_CHECK HOLD
+		where 1=1
+		<if test="list !=null and list.size() >0">
+			AND (HOLD.REGIST_BANK_CODE
+			,HOLD.IDENTIFY_NUMBER
+			,HOLD.HOLDER_NAME
+			,nvl(HOLD.PERSONAL_IDENTIFY_TYPE,' ')
+			,nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ')
+			,nvl(HOLD.OTHER_IDENTIFY_NAME,' ')
+			)in
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode,jdbcType=VARCHAR},
+				#{item.identifyNumber,jdbcType=VARCHAR},
+				#{item.holderName,jdbcType=VARCHAR},
+				nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
+				nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
+				nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+			</foreach>
+		</if>
+	</select>
    
-   <select id="selectChekForRepair" resultMap="BaseResultMap" parameterType="java.lang.String">
+   <select id="selectChekForRepairMax" resultMap="BaseResultMap">
       select 
         HOLD.INDENTIFY_MARK,
 		HOLD.ORG_INDENTIFY_MARK,
@@ -703,64 +839,95 @@
 	  	HOLD.FUND_ACC_PLACE
   	  from CHB_EQU_HOLD_CHECK HOLD
       where 1=1
-      <if test="keys !=null and keys.size()>0">
-        AND HOLD.REGIST_BANK_CODE
-            ||'_'||HOLD.IDENTIFY_NUMBER
-            ||'_'||HOLD.HOLDER_NAME
-            ||'_'||HOLD.PERSONAL_IDENTIFY_TYPE
-            ||'_'||HOLD.INSTITUTION_IDENTIFY_TYPE
-            ||'_'||HOLD.OTHER_IDENTIFY_NAME IN
-        <foreach collection="keys" item="key" open="(" separator=","  close=")">
-            #{key,jdbcType=VARCHAR}
-        </foreach>
-	 </if>
-	 ORDER BY 
-	 HOLD.REGIST_BANK_CODE,
-     HOLD.IDENTIFY_NUMBER,
-     HOLD.HOLDER_NAME,
-     HOLD.PERSONAL_IDENTIFY_TYPE,
-     HOLD.INSTITUTION_IDENTIFY_TYPE,
-     HOLD.OTHER_IDENTIFY_NAME,
-     HOLD.IS_BELONG_BANK,
-     HOLD.INDENTIFY_MARK
+      	/*** add by zcw 三期性能优化 start **/
+		/***  六要素入临时表。sql对临时表操作 **/
+		and EXISTS(select 1 from CHB_EQU_TMP tmp
+		where HOLD.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		and HOLD.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
+		and HOLD.HOLDER_NAME = tmp.HOLDER_NAME
+		and nvl(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = nvl(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+		and nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+		and nvl(HOLD.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
+		)
+		/*** add by zcw 三期性能优化 end **/
    </select>
    
    <delete id="deleteEquityInfoBatch" parameterType="java.util.List">
 	            DELETE FROM CHB_EQU_HOLD HOLD
 	            WHERE 1=1
-	            <if test="keys !=null and keys.size()>0">
-	            AND HOLD.REGIST_BANK_CODE
-			            ||'_'||HOLD.IDENTIFY_NUMBER
-			            ||'_'||HOLD.HOLDER_NAME
-			            ||'_'||HOLD.PERSONAL_IDENTIFY_TYPE
-			            ||'_'||HOLD.INSTITUTION_IDENTIFY_TYPE
-			            ||'_'||HOLD.OTHER_IDENTIFY_NAME IN
-	              	<foreach collection="keys" item="key" open="(" separator=","  close=")">
-            		 #{key,jdbcType=VARCHAR}
-        			</foreach>
-        			 </if>
+			   <if test="list !=null and list.size() >0">
+				   AND (HOLD.REGIST_BANK_CODE
+				   ,HOLD.IDENTIFY_NUMBER
+				   ,HOLD.HOLDER_NAME
+				   ,nvl(HOLD.PERSONAL_IDENTIFY_TYPE,' ')
+				   ,nvl(HOLD.INSTITUTION_IDENTIFY_TYPE,' ')
+				   ,nvl(HOLD.OTHER_IDENTIFY_NAME,' ')
+				   )in
+				   <foreach collection="list" item="item" open="(" separator="," close=")">
+					   (#{item.registBankCode,jdbcType=VARCHAR},
+					   #{item.identifyNumber,jdbcType=VARCHAR},
+					   #{item.holderName,jdbcType=VARCHAR},
+					   nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
+					   nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
+					   nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				   </foreach>
+			   </if>
 			    AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
 				    			WHERE HOLD.INDENTIFY_MARK = T.INDENTIFY_MARK
 				    		    AND T.SUBMIT_STATUS in('02','03')
 			                  )
   </delete>
-  
-  <delete id="deleteEquitySubInfoBatch" parameterType="java.util.List">
-	            DELETE FROM CHB_EQU_SUB
-	            WHERE SUBMIT_STATUS = '01'
-	              <if test="keys !=null and keys.size()>0">
-	            	AND REGIST_BANK_CODE
-			            ||'_'||IDENTIFY_NUMBER
-			            ||'_'||HOLDER_NAME
-			            ||'_'||PERSONAL_IDENTIFY_TYPE
-			            ||'_'||INSTITUTION_IDENTIFY_TYPE
-			            ||'_'||OTHER_IDENTIFY_NAME IN 
-			          	<foreach collection="keys" item="key" open="(" separator=","  close=")">
-            		 	#{key,jdbcType=VARCHAR}
-        				</foreach>
-        			 </if>
-	     
-  </delete>
+
+	<delete id="deleteEquitySubInfoBatch" parameterType="java.util.List">
+		DELETE FROM CHB_EQU_SUB
+		WHERE SUBMIT_STATUS = '01'
+
+		<if test="list !=null and list.size() >0">
+			AND (REGIST_BANK_CODE
+			,IDENTIFY_NUMBER
+			,HOLDER_NAME
+			,nvl(PERSONAL_IDENTIFY_TYPE,' ')
+			,nvl(INSTITUTION_IDENTIFY_TYPE,' ')
+			,nvl(OTHER_IDENTIFY_NAME,' ')
+			)in
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode,jdbcType=VARCHAR},
+				#{item.identifyNumber,jdbcType=VARCHAR},
+				#{item.holderName,jdbcType=VARCHAR},
+				nvl(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
+				nvl(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
+				nvl(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+			</foreach>
+		</if>
+	</delete>
+
+	<delete id="deleteEquityInfoBatchTmp">
+		DELETE FROM CHB_EQU_HOLD hold
+			where EXISTS(select 1 from CHB_EQU_TMP tmp
+				where hold.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+				and hold.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
+				and hold.HOLDER_NAME = tmp.HOLDER_NAME
+				and nvl(hold.PERSONAL_IDENTIFY_TYPE,' ') = nvl(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+				and nvl(hold.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+				and nvl(hold.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
+				)
+	</delete>
+
+	<delete id="deleteEquitySubBatchTmp">
+		DELETE FROM CHB_EQU_SUB sub
+			where EXISTS(select 1 from CHB_EQU_TMP tmp
+				where sub.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+				and sub.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
+				and sub.HOLDER_NAME = tmp.HOLDER_NAME
+				and nvl(sub.PERSONAL_IDENTIFY_TYPE,' ') = nvl(tmp.PERSONAL_IDENTIFY_TYPE,' ')
+				and nvl(sub.INSTITUTION_IDENTIFY_TYPE,' ') = nvl(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
+				and nvl(sub.OTHER_IDENTIFY_NAME,' ') = nvl(tmp.OTHER_IDENTIFY_NAME,' ')
+				)
+	</delete>
+
+	<delete id="truncateEquityTmp">
+		truncate table CHB_EQU_TMP
+	</delete>
   
   <select id="selectBythreeInfo" resultType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto" parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
   select <include refid="Base_Column_List"/>

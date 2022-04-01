@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodbonusregister.dao.ProdBonusInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdBonusRegister" >
+        <result column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="BONUS_REGISTER_DATE" property="bonusRegisterDate" jdbcType="DATE" />
+        <result column="BONUS_DEALT_DATE" property="bonusDealtDate" jdbcType="DATE" />
+        <result column="BONUS_REGISTER_UNIT_VALUE" property="bonusRegisterUnitValue" jdbcType="DECIMAL" />
+        <result column="UNIT_BONUS_AMT" property="unitBonusAmt" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        SELECT
+        N.TRADE_ID ID,
+        F.FINPROD_MARKET_ID PROD_ID,
+        N.TRADE_DATE BONUS_REGISTER_DATE,
+        N.TRADE_DATE BONUS_DEALT_DATE,
+        N.TRADE_AMT UNIT_BONUS_AMT
+        FROM trd_product_deal N
+        LEFT JOIN FIN_PRODUCT F ON N.FINPROD_ID=F.FINPROD_ID
+        WHERE 1=1
+        /*AND BONU_SCALC_FLAG = '01'   已被注释     */
+
+        AND N.ps = 'C9'
+        <if test="updatetime != null" >
+            and ifnull(N.UPDATE_TIME,N.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+
+    </select>
+</mapper>

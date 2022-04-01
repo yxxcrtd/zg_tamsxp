@@ -73,6 +73,14 @@ public interface OverallInfoMapper {
 	 * @throws
 	 */
 	List<OverallInfoDto> queryBottomOverallInfoList(Map<String,Object> map);
+
+
+	/**
+	 * 获取表5的对应数据
+	 * @param map
+	 * @return
+	 */
+	List<Map<String,Object>> createTable5Data(Map<String,Object> map);
 	/**
 	 * @Description 查询商业性金融债券及发行人所属行业为金融业的信用债信息
 	 * @Author      高健

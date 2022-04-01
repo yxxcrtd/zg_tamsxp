@@ -11,7 +11,7 @@
         create table ${newTableName} as select * from CHB_INFO_REPORT  where 1=0
     </update>
 	<!-- 插入 ChbInfoReport数据-->
-    <insert id="insertChbInfoReportData">
+	<insert id="insertChbInfoReportData">
     	insert into ${newTableName}
 		select * from CHB_INFO_REPORT rep where rep.REPORT_NO in (
     		select distinct REPORT_NO from CHB_SUBMIT_STATUS
@@ -21,8 +21,8 @@
     		and REPORT_NO is not null
 			)
     </insert>
-    <!-- 插入 ChbInfoReport数据-->
-    <delete id="deleteChbInfoReportData">
+	<!-- 插入 ChbInfoReport数据-->
+	<delete id="deleteChbInfoReportData">
     	delete from CHB_INFO_REPORT rep where rep.REPORT_NO in (
     		select distinct REPORT_NO from CHB_SUBMIT_STATUS
     		left join CHB_INVESTHOLD_INFO_SUB
@@ -31,69 +31,69 @@
     		and REPORT_NO is not null
 			)
     </delete>
-    <!-- 插入 ChbSubmitStatus数据-->
-    <insert id="insertChbSubmitStatusData">
+	<!-- 插入 ChbSubmitStatus数据-->
+	<insert id="insertChbSubmitStatusData">
     	insert into ${newTableName}
 		select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS
     		left join CHB_INVESTHOLD_INFO_SUB
     		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
     		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE = str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </insert>
-    <!-- 插入 ChbSubmitStatus数据-->
-    <delete id="deleteChbSubmitStatusData">
+	<!-- 插入 ChbSubmitStatus数据-->
+	<delete id="deleteChbSubmitStatusData">
     	delete from CHB_SUBMIT_STATUS where CHB_SUBMIT_STATUS.SEQNO in(
     		select SUMIT_SEQ from CHB_INVESTHOLD_INFO_SUB
     		where HOLD_DATE = str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     		)
     </delete>
-    <!-- 插入 ChbInvestHoldInfo数据-->
-    <insert id="insertChbInvestHoldInfoData">
+	<!-- 插入 ChbInvestHoldInfo数据-->
+	<insert id="insertChbInvestHoldInfoData">
     	insert into ${newTableName}
 		select info.* from CHB_INVESTHOLD_INFO info
     		where info.HOLD_DATE = str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </insert>
-    <!-- 插入 ChbInvestHoldInfo数据-->
-    <delete id="deleteChbInvestHoldInfoData">
+	<!-- 插入 ChbInvestHoldInfo数据-->
+	<delete id="deleteChbInvestHoldInfoData">
 		delete from CHB_INVESTHOLD_INFO info
 		where info.HOLD_DATE = str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </delete>
-    <!-- 插入 ChbInvestHoldInfoSub数据-->
-    <insert id="insertChbInvestHoldInfoSubData">
+	<!-- 插入 ChbInvestHoldInfoSub数据-->
+	<insert id="insertChbInvestHoldInfoSubData">
     	insert into ${newTableName}
 		select sub.* from  CHB_INVESTHOLD_INFO_SUB sub
     		where sub.HOLD_DATE = str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </insert>
-    <!-- 插入 ChbInvestHoldInfoSub数据-->
-    <delete id="deleteChbInvestHoldInfoSubData">
+	<!-- 插入 ChbInvestHoldInfoSub数据-->
+	<delete id="deleteChbInvestHoldInfoSubData">
 		delete from  CHB_INVESTHOLD_INFO_SUB sub where
     		sub.HOLD_DATE = str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </delete>
-    <select id="isExistBackupData" resultType="java.lang.Integer">
+	<select id="isExistBackupData" resultType="java.lang.Integer">
     	select count(1) from CHB_INVESTHOLD_INFO_SUB
     	where SEND_STATUS = '01' and HOLD_DATE <![CDATA[<]]> str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </select>
-    <!-- 获取所有需要归档的日期 -->
-    <select id="getDateByBackupData" resultType="java.util.Date">
+	<!-- 获取所有需要归档的日期 -->
+	<select id="getDateByBackupData" resultType="java.util.Date">
     	select distinct hold_date from CHB_INVESTHOLD_INFO_SUB
     	where SEND_STATUS in ('02','03') and HOLD_DATE <![CDATA[<]]> str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     	order by HOLD_DATE desc
     </select>
-    <!-- 将未归档的数据移至临时表中 -->
-    <update id="insertChbSubmitStatusTemp">
+	<!-- 将未归档的数据移至临时表中 -->
+	<update id="insertChbSubmitStatusTemp">
         insert into  ${newTableName}
          select CHB_SUBMIT_STATUS.* from CHB_SUBMIT_STATUS
     		left join CHB_INVESTHOLD_INFO_SUB
     		on CHB_SUBMIT_STATUS.SEQNO = CHB_INVESTHOLD_INFO_SUB.SUMIT_SEQ
     		where CHB_INVESTHOLD_INFO_SUB.HOLD_DATE >= str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </update>
-    <!-- 创建表备份createChbInvestHoldInfoTemp -->
-    <update id="insertChbInvestHoldInfoTemp">
+	<!-- 创建表备份createChbInvestHoldInfoTemp -->
+	<update id="insertChbInvestHoldInfoTemp">
         insert into ${newTableName}
         select info.* from CHB_INVESTHOLD_INFO info
     		where info.HOLD_DATE >= str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')
     </update>
-    <!-- 创建表备份ChbInvestHoldInfoSub -->
-    <update id="insertChbInvestHoldInfoSubTemp">
+	<!-- 创建表备份ChbInvestHoldInfoSub -->
+	<update id="insertChbInvestHoldInfoSubTemp">
         insert into ${newTableName}
         select sub.* from  CHB_INVESTHOLD_INFO_SUB sub
     		where sub.HOLD_DATE >= str_to_date(#{dataBackupDate,jdbcType=VARCHAR},'%Y-%m-%d')

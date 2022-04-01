@@ -14,11 +14,17 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrconbond.dto.EtrConBondDto;
 import com.joyintech.service.entrust.etrconbond.service.EtrConBondService;
+import com.joyintech.service.entrust.etrconbond.service.PositionRequestEtrConBondService;
+import com.joyintech.system.base.dao.SysWflBusinessListMapper;
+import com.joyintech.system.base.entity.SysWflBusinessList;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +46,12 @@ public class EtrConBondController {
     
     @Autowired
     private EtrConBondService service;
+
+    @Autowired
+    private PositionRequestEtrConBondService positionRequestService;
+
+    @Autowired
+    private SysWflBusinessListMapper sysWflBusinessListMapper;
     
     /**
      * 
@@ -113,7 +125,9 @@ public class EtrConBondController {
     @DTXTransaction
     @PostMapping("recall")
     public boolean recallDelegate(@RequestBody EtrConBondDto dto) throws IllegalAccessException, InvocationTargetException{
-        return service.recallDelegate(dto);
+        boolean result = service.recallDelegate(dto);
+        positionRequestService.sendRevoke(dto);
+        return result;
     }
     /**
      * 关闭委托
@@ -126,7 +140,9 @@ public class EtrConBondController {
     @DTXTransaction
     @GetMapping("close")
     public boolean closeDelegate(String entrustId,String closeWay) {
-        return service.closeDelegate(entrustId, closeWay);
+        boolean result = service.closeDelegate(entrustId, closeWay);
+        positionRequestService.sendClose(entrustId, closeWay);
+        return result;
     }
     /**
      * 通过主键查询数据
@@ -153,7 +169,6 @@ public class EtrConBondController {
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrConBondDto dto) throws IllegalAccessException, InvocationTargetException{
         WFlowCommonService.doCompleteFlow(dto.getWorkflowId());
-        
         service.doComplete(dto, dto.getOperateType());
     }
 
@@ -162,8 +177,14 @@ public class EtrConBondController {
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrConBondDto dto){
         WFlowCommonService.doInsertFlow(dto.getOperateType(), service.initBaseDto(dto));
-        
         service.doInsert(dto, dto.getOperateType());
+
+        String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+        String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        if (StringUtil.equals(dto.getOperateType(), "modify")) {
+            systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+        positionRequestService.sendEtrConBondDto(dto,decisionAct,systemAct);
     }
 
     @Transactional
@@ -173,6 +194,18 @@ public class EtrConBondController {
         WFlowCommonService.doUpdateFlow(dto.getOperateType(), service.initBaseDto(dto));
         
         service.doInsert(dto, dto.getOperateType());
+
+        String decisionAct = DictCodeListExt3.系统动作_新建.getValue();
+        String systemAct = DictCodeListExt3.系统动作_新建.getValue();
+        SysWflBusinessList sysBus=sysWflBusinessListMapper.selectByPrimaryKey(dto.getWorkflowId());
+        if(null!=sysBus && StringUtil.equals(sysBus.getProcessState(), DictCodeList.流程状态_已退回.getValue())){
+            decisionAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+        if (StringUtil.equals(dto.getOperateType(), "modify")) {
+            systemAct = DictCodeListExt3.系统动作_修改.getValue();
+        }
+//        dto.setSoftSkipMode("Y");
+        positionRequestService.sendEtrConBondDto(dto,decisionAct,systemAct);
     }
 
     @Transactional
@@ -180,6 +213,7 @@ public class EtrConBondController {
     @PostMapping("doBack")
     public void doBack(@RequestBody EtrConBondDto dto){
         WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+        positionRequestService.sendDelete(dto);
     }
     /**
      * 
@@ -233,6 +267,4 @@ public class EtrConBondController {
     public String getCounterIdByFinprodId(@RequestBody String finprodId) {
         return service.getCounterIdByFinprodId(finprodId);
     }
-
-
 }

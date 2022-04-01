@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
+import com.joyintech.tams.invest.riskredis.quota.superviseindicator.dto.RskSupervisionIndicator002Dto;
 import com.joyintech.tams.invest.riskredis.quota.superviseindicator.service.RskSupervisionIndicator002Service;
 import com.joyintech.tams.invest.riskredis.quota.supervisionindividuation.dto.*;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -189,7 +190,30 @@ public class RskSupervisionIndividuation001Controller extends BaseController{
 	@RequestMapping("findPageForCustomizedItem")
 	public List<RskIndividConditionLineDto> findPageForCustomizedItem(){
 		Map<String, Object> params = RequestUtil.getPageParam();
-		return rskSupervisionIndividuation001Service.findPageForCustomizedItem(params);
+
+		// modify by etliu 20211229 start
+		// GZYHTZJY-368：【产品问题】【风险管理-指标管理】页面：1、选择框错位了；2、预警线、禁止线、审批线，显示错乱。
+		// 框架调整，导致画面显示异常，需要业务代码自行处理
+//		return rskSupervisionIndividuation001Service.findPageForCustomizedItem(params);
+		List<RskIndividConditionLineDto> resultList = rskSupervisionIndividuation001Service.findPageForCustomizedItem(params);
+		if (!StringUtil.isEmptyList(resultList)) {
+			for(RskIndividConditionLineDto resultDto : resultList) {
+				if (StringUtil.isNotBlank(resultDto.getWarnCond())) {
+					resultDto.setWarnCond(StringUtil.replaceAll(resultDto.getWarnCond(), ">", "&gt;"));
+					resultDto.setWarnCond(StringUtil.replaceAll(resultDto.getWarnCond(), "<", "&lt;"));
+				}
+				if (StringUtil.isNotBlank(resultDto.getFoulCond())) {
+					resultDto.setFoulCond(StringUtil.replaceAll(resultDto.getFoulCond(), ">", "&gt;"));
+					resultDto.setFoulCond(StringUtil.replaceAll(resultDto.getFoulCond(), "<", "&lt;"));
+				}
+				if (StringUtil.isNotBlank(resultDto.getApproveCond())) {
+					resultDto.setApproveCond(StringUtil.replaceAll(resultDto.getApproveCond(), ">", "&gt;"));
+					resultDto.setApproveCond(StringUtil.replaceAll(resultDto.getApproveCond(), "<", "&lt;"));
+				}
+			}
+		}
+		return resultList;
+		// modify by etliu 20211229 end
 	}
 
     /**

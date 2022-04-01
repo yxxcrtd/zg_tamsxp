@@ -1041,12 +1041,15 @@
   
   
     <select id="searchListDetailCNY" parameterType="map" resultMap="SearchResultMap">
-	SELECT tab.code,tab.rmbje,tab.rmbfe from (select
-        concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-        list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM rmbje, a.INIT_RAISING_QTY rmbfe
-        from PBC_INIT_PROD_RAISING_SUB a
-        LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-        where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}) tab
+      with tab as ( select * from (
+           select
+            concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+            list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM rmbje, a.INIT_RAISING_QTY rmbfe,
+            RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.CCY ORDER BY ifnull(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
+            from PBC_INIT_PROD_RAISING_SUB a
+            LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+            where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+            )t where t.RANKNUM=1 )
 	union all
 	select 'buyplace4000000',sum(rmbje),sum(rmbfe) from tab WHERE tab.CUSTOMER_TYPE1='4'
 	union all
@@ -1063,12 +1066,16 @@
     </select>
     
     <select id="searchListDetailOth" parameterType="map" resultMap="SearchResultMap">
-      SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from (select
-          concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
-          list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM je,a.INIT_RAISING_AMTSUMCNY zrmb,a.INIT_RAISING_QTY fe
-          from PBC_INIT_PROD_RAISING_SUB a
-          LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
-          where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}) tab
+      WITH tab as (select * from (
+            select
+            concat_ws('','buyplace', a.CUSTOMER_TYPE1,a.BUY_PLACE) code,
+            list.ITEM_VALUE,a.BUY_PLACE,a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM je,a.INIT_RAISING_AMTSUMCNY zrmb,a.INIT_RAISING_QTY fe,
+             RANK() OVER (PARTITION BY a.pbc_prod_id,a.BUY_PLACE,a.CUSTOMER_TYPE1,a.CCY ORDER BY ifnull(a.STATUS_DATE,a.CREATE_TIME) DESC) RANKNUM
+              from PBC_INIT_PROD_RAISING_SUB a
+               LEFT JOIN SYS_DATADICT_LIST list ON a.CCY=list.ITEM_CODE and list.DICT_CODE='CURRENCY_CHB'
+               where a.pbc_prod_id= #{pbcProdId,jdbcType=VARCHAR}
+            )t where t.RANKNUM=1 )
+      SELECT tab.code,tab.ITEM_VALUE,tab.je,tab.zrmb,tab.fe from tab
       union all
       select 'buyplace4000000',tab.ITEM_VALUE,sum(je),sum(zrmb),sum(fe) from tab WHERE tab.CUSTOMER_TYPE1='4' group by tab.ITEM_VALUE
       union all

@@ -18,6 +18,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice003Service;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
@@ -101,7 +102,7 @@ public class IbuQuoteBond003Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
-                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种);
+                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种,  DictCode.分配方式,DictCode.业务模式,DictCode.价格模式);
 
         model.addAttribute("test123", "01");
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
@@ -121,7 +122,7 @@ public class IbuQuoteBond003Controller extends BaseController {
             cfetsBondDealRequestQuoteDto = cfetsBondDealQuotedPrice003Service.getBussinessEntityByWorkflowId(getParam(GlobalConstant.WORKFLOW_ID));
 //            cfetsBondDealRequestQuoteDto.setAvaNum(cfetsBondDealRequestQuoteDto.getAvaNum().multiply(new BigDecimal(10000)));
             if ((null == cfetsBondDealRequestQuoteDto.getCounterInfoList()|| org.springframework.util.CollectionUtils.isEmpty(cfetsBondDealRequestQuoteDto.getCounterInfoList()))
-                    && cfetsBondDealRequestQuoteDto.getCounterIdList().size() > 0) {
+                    && null!=cfetsBondDealRequestQuoteDto.getCounterIdList() && cfetsBondDealRequestQuoteDto.getCounterIdList().size() > 0) {
                 List<CounterInfoDto> counterInfoList = new ArrayList<CounterInfoDto>();
                 for (String counterId : cfetsBondDealRequestQuoteDto.getCounterIdList()) {
                     CounterInfoDto counterInfoDto = new CounterInfoDto();
@@ -451,6 +452,66 @@ public class IbuQuoteBond003Controller extends BaseController {
     }
 
     /**
+     * 待办事项页面，保存验证
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    @RequestMapping("checkByHome")
+    @ResponseBody
+    public AjaxResult checkByHome(@RequestBody CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto) {
+        AjaxResult ar = new AjaxResult();
+        StringBuffer sb = new StringBuffer();
+        ar = cfetsBondDealQuotedPrice003Service.checkNotEmpty(cfetsBondDealQuoteCommonDto);
+        if(CollectionUtils.isNotEmpty(ar.getErrorList())){
+            return ar;
+        }
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar = cfetsQuotedCommonServiceVue.positionCheck(cfetsBondDealQuoteCommonDto);
+        }
+        CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsQuotedCommonServiceVue.createReueust(cfetsBondDealQuoteCommonDto);
+        if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+            cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
+        }
+        List<ValidMessage> valid = cfetsBondDealQuotedPrice003Service.valid(cfetsBondDealRequestQuoteDto);
+        if(CollectionUtils.isNotEmpty(valid)){
+            ar.setErrorList(valid);
+            return ar;
+        }
+
+        // 银行间报价-现券买卖报价-超委托的价格校验开关（01 硬阻挡 02 软阻挡）
+        if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustPrice"), "02")) {
+            cfetsBondDealQuotedPrice003Service.checkCalcFieldEntrust(cfetsBondDealRequestQuoteDto,
+                    null, sb, false);
+        }
+
+        if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")) {
+            List<CfetsBondDealRequestQuoteDto> cfetsBondDealRequestQuoteDtoList = cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList();
+            for(CfetsBondDealRequestQuoteDto dto : cfetsBondDealRequestQuoteDtoList) {
+                if (dto.getEntrustAvaNum() == null
+                        || dto.getAvaNum().compareTo(dto.getEntrustAvaNum()) > 0) {
+                    sb.append(this.getMessage("CFETS_COMMON_E_041",dto.getEntrustId()));
+                    sb.append(GlobalConstant.HTML_NEWLINE);
+                }
+            }
+        }
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar= cfetsQuotedCommonServiceVue.reclasCheck(cfetsBondDealQuoteCommonDto);
+        }
+        /*if (sb.length() > 0) {
+            sb.append("请确认是否继续？");
+            ar.setData(sb);
+        }
+        else {
+            String msg = this.getMessage("SysCommon.save");
+            if (StringUtil.equals(cfetsBondDealRequestQuoteDto.getOperatorType(), "submit")) {
+                msg = this.getMessage("SysCommon.submit");
+            }
+            ar.setData(this.getMessage("COMMON_C_0001", msg));
+        }*/
+        return ar;
+    }
+
+    /**
      * 成交验证
      * @param cfetsBondDealQuoteCommonDto
      * @return
@@ -617,9 +678,6 @@ public class IbuQuoteBond003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto, BindingResult br) throws WorkFlowException {
-        if (br.hasErrors()) {
-            return new Message<AjaxResult>().success().setData(new AjaxResult(br));
-        }
         CfetsBondDealRequestQuoteDto cfetsBondDealRequestQuoteDto = cfetsQuotedCommonServiceVue.createReueust(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealRequestQuoteDto.setCfetsBondDealRequestQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealRequestQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
@@ -667,6 +725,7 @@ public class IbuQuoteBond003Controller extends BaseController {
         String quoteOperatorType = "发起";
         if (StringUtil.equals(cfetsBondDealRequestQuoteDto.getQuotaPageModel(), "response")&&StringUtil.equals(cfetsBondDealRequestQuoteDto.getOperatorType(), "done")) {
             quoteOperatorType = "成交";
+            cfetsBondDealRequestQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
         }
         cfetsBondDealRequestQuoteDto.setQuoteOperatorType(quoteOperatorType);
         DecimalFormat  df = new DecimalFormat("###,###.00");

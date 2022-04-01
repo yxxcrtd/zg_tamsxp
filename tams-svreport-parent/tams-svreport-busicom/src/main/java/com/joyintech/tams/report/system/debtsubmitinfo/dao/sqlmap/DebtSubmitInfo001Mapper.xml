@@ -21,7 +21,6 @@
 			cir.CHECK_FAILED_COUNT as checkFailedCount
 		from CHB_INFO_REPORT cir 
 		LEFT JOIN CHB_SUBMIT_STATUS css ON cir.REPORT_NO = css.REPORT_NO
-		<!-- LEFT JOIN SYS_DATADICT_LIST csdl on csdl.DICT_CODE = #{reportName} and csdl.ITEM_CODE = css.SUBMIT_TYPE -->
 		<where>
 		<if test="repNameList != null and repNameList.size() > 0">
 		 	<foreach collection="repNameList" item="repName" open=" css.SUBMIT_TYPE IN (" close=")" separator=",">
@@ -40,7 +39,10 @@
 	<select id="searchInfoNew" resultType="com.joyintech.tams.report.system.debtsubmitinfo.dto.DebtSubmitInfo001Dto">
 	SELECT
 			cir.SUBMIT_TYPE repName,
-			cir.UPLOAD_FILE_ID as repFileId,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		cir.SUBMIT_TYPE repCode,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		cir.UPLOAD_FILE_ID as repFileId,
 			cir.CREATE_TIME as repDate,
 			(case when 
 			cir.CHECK_TOTAL_COUNT= '0' then '01'
@@ -70,30 +72,52 @@
 	</select>
 	<select id="viewDetailPage" resultType="com.joyintech.tams.report.system.debtsubmitinfo.dto.DebtSubmitInfo001Dto">
 	SELECT
-		    css.SEQNO as seqNo,
-		    css.SUBMIT_NUM as submitNum,
-		    <!-- csdl.ITEM_VALUE as repName, -->
-		    css.SUBMIT_TYPE as repName,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		css.SUMIT_SEQ as seqNo,
+			null AS submitNum,
+			<if test="repCode != null and repCode.equals('14')" >
+				'14' as repName,
+			</if>
+			<if test="repCode != null and repCode.equals('16')" >
+				'16' as repName,
+			</if>
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		    css.SUBMIT_FEEDBACK_STATUS repResult,
 		    css.UPDATE_TIME repDate,
 		    cir.UPLOAD_FILE_ID as repFileId,
 		    css.REPORT_NO reportNo,
 		    css.SUBMIT_FEEDBACK_MSG repFailedInfo,
-		    css.UNIQUE_IDENTI uniqueIdenti
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			<if test="repCode != null and repCode.equals('14')" >
+				css.INDENTIFY_MARK as uniqueIdenti
+			</if>
+			<if test="repCode != null and repCode.equals('16')" >
+				css.ORG_CODE||','||css.INDENTIFY_MARK||','||css.PRD_REGIST_CODE||','||to_char(css.HOLD_DATE,'yyyy-MM-dd')||','||css.CCY as uniqueIdenti
+			</if>
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		FROM
-		    CHB_SUBMIT_STATUS css
+
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		<if test="repCode != null and repCode.equals('14')" >
+			CHB_EQU_SUB css
+		</if>
+		<if test="repCode != null and repCode.equals('16')" >
+			CHB_INVESTHOLD_INFO_SUB css
+		</if>
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		left join CHB_INFO_REPORT cir on css.REPORT_NO = cir.REPORT_NO
-		<!-- LEFT JOIN CHB_SYS_DATADICT_LIST csdl on csdl.DICT_CODE = #{reportName} and csdl.ITEM_CODE = css.SUBMIT_TYPE -->
-		where 
+		where
 			css.REPORT_NO= #{reportNo}
 		<if test="repResultList != null and repResultList.size() > 0">
 		 	<foreach collection="repResultList" item="repResult" open=" and css.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
 		 	 #{repResult}
 		 	</foreach>
 	 	</if>
-	 	<if test="uniqueIdenti != null and uniqueIdenti !='' ">
-	 	and css.UNIQUE_IDENTI like '%' || #{uniqueIdenti} || '%'
-	 	</if>
+		<if test="uniqueIdenti != null and uniqueIdenti !='' ">
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			and css.ORG_CODE||','||css.INDENTIFY_MARK||','||css.PRD_REGIST_CODE||','||to_char(css.HOLD_DATE,'yyyy-MM-dd')||','||css.CCY like '%' || #{uniqueIdenti} || '%'
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		</if>
 	 	<!--增加投资者明细信息-->
 	UNION ALL
 

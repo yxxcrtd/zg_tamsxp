@@ -34,6 +34,19 @@ public class FinProductQuto extends BaseEntity {
      */
     private String othType;
 
+    public String getPs() {
+        return ps;
+    }
+
+    public void setPs(String ps) {
+        this.ps = ps;
+    }
+
+    /**
+     * 交易方向
+     */
+    private String ps;
+
     /**
      * 日期
      */
@@ -221,4 +234,6 @@ public class FinProductQuto extends BaseEntity {
     public void setTradeMarket(String tradeMarket) {
         this.tradeMarket = tradeMarket == null ? null : tradeMarket.trim();
     }
+
+
 }

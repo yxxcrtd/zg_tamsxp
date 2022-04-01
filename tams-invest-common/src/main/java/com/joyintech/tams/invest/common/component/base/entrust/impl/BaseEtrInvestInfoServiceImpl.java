@@ -5,12 +5,16 @@
 
 package com.joyintech.tams.invest.common.component.base.entrust.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.message.PropertyMessageSource;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
@@ -23,15 +27,19 @@ import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinish
 import com.joyintech.tams.invest.common.component.base.entrust.impl.dao.BaseEtrInvestInfoMapper;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
+import com.joyintech.tams.invest.common.position.service.CommonPositionEngineService;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 投资委托
@@ -44,7 +52,10 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
-
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(BaseEtrInvestInfoServiceImpl.class);
     /**
      * 委托指令Mapper
      */
@@ -65,7 +76,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
      */
     @Autowired
     private EtrEntrustBackupMapper etrEntrustBackupMapper;
-    
+
     /**
      * 委托指令回购质押品Mapper
      */
@@ -83,6 +94,11 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
      */
     @Autowired
     private EtrDistributeMapper etrDistributeMapper;
+    /**
+     * 委托指令明细
+     */
+    @Autowired
+    private EtrEntrustDetailMapper etrEntrustDetailMapper;
 
     /**
      * 投资委托信息Mapper
@@ -165,8 +181,13 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 
     @Autowired
     private EtrDistributeInterfTmpMapper etrDistributeInterfTmpMapper;
-    /**
-     * 委托操作相关校验 <一句话功能简述> <功能详细描述>
+
+    @Autowired
+    private EtrEntrustDetailBackUpMapper etrEntrustDetailBackUpMapper;
+
+    @Autowired
+    private CommonPositionEngineService commonPositionEngineService;
+    /* 委托操作相关校验 <一句话功能简述> <功能详细描述>
      *
      * @return
      * @see
@@ -451,7 +472,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
      */
     @Override
     public String findEtrWordInfo(String entrustId) {
-        return etrEntrustMapper.selectByPrimaryKey(entrustId).getBusinessModel(); 
+        return etrEntrustMapper.selectByPrimaryKey(entrustId).getBusinessModel();
     }
 
     /**
@@ -532,6 +553,9 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             }
             etrEntrustMapper.insertSelective(dto.getEtrEntrust());
             // 保存委托指令附属表
+            if (dto.getEtrEntrustAdd() != null) {
+                dto.getEtrEntrustAdd().setTransmitTime(new Date());
+            }
             etrEntrustAddMapper.insertSelective(dto.getEtrEntrustAdd());
             // 保存List<委托指令回购质押品>
             if (dto.getEtrPledgeList() != null && dto.getEtrPledgeList().size() > 0) {
@@ -1050,6 +1074,8 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         if (CollectionUtils.isEmpty(etrFinishStatusList)) {
             return false;
         }
+        // 是否日终批处理数据
+        boolean isDayEndBatch = etrFinishStatusList.get(0).isDayEndBatch();
         // 遍历List<委托完成状况表Entity>，保存到“委托完成状况表”
         int count = 0;
         for (EtrFinishStatusDto etrFinishStatus : etrFinishStatusList) {
@@ -1070,18 +1096,46 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         for (EtrFinishStatus etrFinishStatus : etrFinishStatusList) {
             entrustIdList.add(etrFinishStatus.getEntrustId());
         }
-
+        entrustIdList = entrustIdList.stream().distinct().collect(Collectors.toList());
         List<BaseEtrFinishAmtDto> etrFinishAmtDtoList = etrInvestInfoServiceImpl.queryDelegateStatus(entrustIdList);
         // 判断委托代码的完成额度是否大于等于100
         BigDecimal bigDecimal = new BigDecimal("100.00");
+        // 指令完成关闭
+        Map<String, Object> batchClose = new HashMap<>();
+        // 完成指令关闭列表
+        List<Map<String, Object>> dataList = new ArrayList<>();
         for (BaseEtrFinishAmtDto etrFinishAmtDto : etrFinishAmtDtoList) {
             if (etrFinishAmtDto.getSumFinishPercent().compareTo(bigDecimal) == 1
                 || etrFinishAmtDto.getSumFinishPercent().compareTo(bigDecimal) == 0) {
                 // 如果满足，则调用投资委托组件的更新委托状态接口，将委托状态设置为“已完成”
-                etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
-
+                boolean result = etrInvestInfoServiceImpl.updateDelegateStatus(etrFinishAmtDto.getEntrustId(), DictCodeList.委托状态_已完成.getValue());
+                // ZGTFCP-1529:指令完成后调用新头寸批量关闭接口 modify by fuyongsheng 20220327 start
+                // 只有日终批处理数据才需调用新头寸接口
+                if(result && isDayEndBatch){
+                    EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(etrFinishAmtDto.getEntrustId());
+                    EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(etrFinishAmtDto.getEntrustId());
+                    if(etrEntrust != null){
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("busiType", commonPositionEngineService.getPositionBusiType(etrEntrust.getFinprodType2(), etrEntrust.getPs(),
+                                etrEntrustAdd.getAssetType1()));
+                        data.put("ps", etrEntrust.getPs());
+                        data.put("closeId", etrEntrust.getEntrustId());
+                        data.put("systemAct", DictCodeListExt3.系统动作_完成.getValue());
+                        data.put("busiAct", DictCodeListExt3.业务动作_指令自动完成.getValue());
+                        dataList.add(data);
+                    }
+                }
             }
         }
+        if(CollectionUtils.isNotEmpty(dataList)){
+            batchClose.put("data", dataList);
+            batchClose.put("userId", LoginUserUtil.getUserName());
+            batchClose.put("totalTradeId", IDGenerator.generate());
+            batchClose.put("modelType",DictCodeListExt1.子系统代码_委托.getValue());
+            logger.debug("【批量关闭指令数据】batchRevoke:{}", JSON.toJSONString(batchClose));
+            PositionHttpRequest.batchClose(batchClose);
+        }
+        // ZGTFCP-1529:指令完成后调用新头寸批量关闭接口 modify by fuyongsheng 20220327 end
         // 判断完成委托是否完成
         if (count == etrFinishStatusList.size()) {
             return true;
@@ -1157,7 +1211,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     public BaseEtrFinishAmtDto selectEtrFinishAmtDtoByPrimaryKey(String entrustId) {
         return etrInvestInfoMapper.selectEtrFinishAmtDtoByPrimaryKey(entrustId);
     }
-	
+
 	@Override
     public String findInvAim(String portfolioId, String finprodId) {
         String invAim = baseEtrInvestInfoMapper.findInvAimByPortIdAndFinId(portfolioId, finprodId);
@@ -1333,8 +1387,41 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         }else{
             dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
         }
-        
+
         // 指令流程表入库
         return newDelegateFlow(dto);
     }
+    /**
+     * 撤回或退回再启动流程时转移至废弃备份表
+     * 流程表数据入库
+     * @param dto
+     * @return
+     */
+    public void inserBackuptWithQuery(BaseEtrInvestInfoDto dto){
+        EtrEntrust etr = etrEntrustMapper.selectByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+        if(etr != null){
+            /**
+             * 此处，流程启动时，检查指令有效表，发现有数据，正常情况为已退回或已撤回状态的数据，转移至备份表
+             */
+            // 有效数据转移
+            // 转移至废弃表
+            etrEntrustBackupMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.deleteAddByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.deleteDetailByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.insertAddFromQuery(dto.getEtrEntrust().getEntrustId());
+            List<EtrEntrustDetail> list=etrEntrustDetailMapper.selectList(dto.getEtrEntrust().getEntrustId());
+            if(!CollectionUtils.isEmpty(list)){
+                for(EtrEntrustDetail etrEntrustDetail:list){
+                    EtrEntrustDetailBackUp etrEntrustDetailBackUp = new EtrEntrustDetailBackUp();
+                    BeanUtil.copyPropertiesIgnoreNull(etrEntrustDetailBackUp,etrEntrustDetail);
+                    etrEntrustDetailBackUpMapper.insert(etrEntrustDetailBackUp);
+                }
+            }
+            etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
+            etrEntrustDetailMapper.deleteByEntrustId(dto.getEtrEntrust().getEntrustId());
+        }
+    }
 }
+

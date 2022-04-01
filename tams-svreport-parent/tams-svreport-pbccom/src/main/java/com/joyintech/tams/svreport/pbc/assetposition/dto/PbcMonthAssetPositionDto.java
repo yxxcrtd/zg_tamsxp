@@ -278,7 +278,12 @@ public class PbcMonthAssetPositionDto extends CommonProductRatingDto implements 
      * 投资方向
      */
     private String investDirection;
-    
+
+    /**
+     * 是否回购拆借 广州银行个性化:01 是/02 否
+     */
+    private String isRepmnm;
+
     
     /**  
 	 * @Description TODO  
@@ -826,5 +831,13 @@ public class PbcMonthAssetPositionDto extends CommonProductRatingDto implements 
 
     public void setIsPerpetual(String isPerpetual) {
         this.isPerpetual = isPerpetual;
+    }
+
+    public String getIsRepmnm() {
+        return isRepmnm;
+    }
+
+    public void setIsRepmnm(String isRepmnm) {
+        this.isRepmnm = isRepmnm;
     }
 }

@@ -436,9 +436,12 @@ public abstract class StlDataGatherRepoBaseProcessor extends StlDataGatherProces
         // 到期本金
         tradeProductDto.setmPrinAmt(trdProductDealDto.getShareAmt());
         // 到期利息
+        mIntAmt = ArithmeticUtil.multiply(ArithmeticUtil.multiply(tradeProductDto.getmPrinAmt(), tradeProductDto.getIntRate()),
+                ArithmeticUtil.divide(new BigDecimal(DateUtil.getBetweenDayNumber(tradeProductDto.getVpayDate(), tradeProductDto.getMpayDate())), 365, 14));
+        // 到期利息
         tradeProductDto.setmIntAmt(mIntAmt);
         // 到期金额
-        tradeProductDto.setmTradeAmt(mTradeAmt);
+        tradeProductDto.setmTradeAmt(tradeProductDto.getmPrinAmt().add(tradeProductDto.getmIntAmt()));
         // 交易场所
         tradeProductDto.setTradeMarket(trdProductDealDto.getTradeMarket());
         // 交易日历

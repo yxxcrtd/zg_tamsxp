@@ -10,7 +10,8 @@
 			<Cell order="6" name="反馈状态">submitFeedbackStatusStr</Cell>
 			<Cell order="7" name="资产池代码">pbcAccountIdShow</Cell>
 			<Cell order="8" name="反馈资产池代码">pbcCode</Cell>
-			<Cell order="9" name="资产池终止日期">mdateStr</Cell>
+			<Cell order="9" name="内部产品代码">accountId</Cell>
+			<Cell order="10" name="资产池终止日期">mdateStr</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

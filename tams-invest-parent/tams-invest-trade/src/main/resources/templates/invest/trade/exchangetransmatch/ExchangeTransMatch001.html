@@ -73,7 +73,7 @@
                                             <select type="text" id="applyNo" name="applyNo"
                                                    class="layui-input form-input input-select" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}" multiple="true"
-                                                   data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getApplyNo}"
+                                                   data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getApplyNo?isFromMatch=Y}"
                                                    allowClear="true" >
                                             </select>
                                         </div>
@@ -210,7 +210,7 @@
                                     </div>
 
                                     <div class="layui-inline layui-col-md4 layui-col-sm4 layui-col-lg4 layui-col-xs4 layui-inline-width">
-                                        <label class="layui-form-label form-lable label-width" data-th-text="#{ExchangeTransMatch001.tradeDate}">交易日期</label>
+                                        <label class="layui-form-label form-lable label-width" data-th-text="#{ExchangeTransMatch001.entrustDate}">指令日期</label>
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" id="deaalTradeDate" name="tradeDate"
                                                    class="layui-input form-input input-dateRangeSelect" placeholder="请输入时间区间"
@@ -262,12 +262,12 @@
 
                                     <div class="layui-inline layui-col-md3 layui-col-sm3 layui-col-lg3 layui-col-xs3">
                                         <label class="layui-form-label form-lable"
-                                               data-th-text="#{ExchangeTransMatch001.dealId}">成交编号</label>
+                                               data-th-text="#{ExchangeTransMatch001.applyNo}">申请编号</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select type="text" id="trdMatchInfo_dealId" name="dealId"  multiple="true"
+                                            <select type="text" id="trdMatchInfo_dealId" name="dealId"
                                                     class="layui-input form-input input-select" placeholder="请输入内容" formatoption="false"
                                                     data-th-placeholder="#{SysCommon.placeholder}" allowClear="true"
-                                                    data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getDealId}">
+                                                    data-th-data-url="@{/invest/trade/exchangetransmatch/ExchangeTransMatch001/getApplyNo?isFromMatch=N}">
                                             </select>
                                         </div>
                                     </div>
@@ -555,6 +555,7 @@
             var PS_T46 = /*[[${PS_T46}]]*/'';
             var TRD_MATCH_TYPE_0  = /*[[${TRD_MATCH_TYPE_0}]]*/'';
             var TRD_MATCH_TYPE_1  = /*[[${TRD_MATCH_TYPE_1}]]*/'';
+            var TARGET_BACK_TYPE_H01  = /*[[${TARGET_BACK_TYPE_H01}]]*/'';
         </script>
         <script data-th-src="@{/js/invest/trade/exchangetransmatch/ExchangeTransMatch001.js}" type="text/javascript"></script>
     </div>

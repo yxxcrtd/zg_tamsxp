@@ -65,6 +65,22 @@ public class TradeFeatureInformation {
 	 */
 	private String finprodType2;
 
+	// add by etliu 20220104 start
+	// GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
+	/**
+	 * 回购类型
+	 */
+	private String repoType;
+
+	public String getRepoType() {
+		return repoType;
+	}
+
+	public void setRepoType(String repoType) {
+		this.repoType = repoType;
+	}
+	// add by etliu 20220104 end
+
 	public String getTradeMarket() {
 		return tradeMarket;
 	}

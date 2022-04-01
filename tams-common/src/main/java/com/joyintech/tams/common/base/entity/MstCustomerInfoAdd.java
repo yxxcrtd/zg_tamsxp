@@ -6,12 +6,6 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import java.math.BigDecimal;
 
 public class MstCustomerInfoAdd extends BaseEntity {
-	
-	/**
-	 * 序列化ID
-	 */
-	private static final long serialVersionUID = -1878849706798601908L;
-	
     /**
      * 客户代码
      */
@@ -41,14 +35,7 @@ public class MstCustomerInfoAdd extends BaseEntity {
      * 国标二级分类
      */
     private String industry2;
-    /**
-     * 行业三级类别
-     */
-    private String industry3;
-    /**
-     * 行业四级类别
-     */
-    private String industry4;
+
     /**
      * 组织机构代码/统一社会信用代码
      */
@@ -225,6 +212,26 @@ public class MstCustomerInfoAdd extends BaseEntity {
      * 是否持有金融牌照
      */
     private String isFinLicence;
+
+    /**
+     * 行业三级分类
+     */
+    private String industry3;
+
+    /**
+     * 行业四级分类
+     */
+    private String industry4;
+
+    /**
+     * 机构类型(风险)
+     */
+    private String orgType;
+
+    /**
+     * 是否股东及其关联方
+     */
+    private String isShareholderRelated;
 
     /**
      * 取得 客户代码
@@ -882,19 +889,67 @@ public class MstCustomerInfoAdd extends BaseEntity {
         this.isFinLicence = isFinLicence == null ? null : isFinLicence.trim();
     }
 
+    /**
+     * 取得 行业三级分类
+     * @return 行业三级分类
+     */
     public String getIndustry3() {
         return industry3;
     }
 
+    /**
+     * 设置 行业三级分类
+     * @param industry3 行业三级分类
+     */
     public void setIndustry3(String industry3) {
-        this.industry3 = industry3;
+        this.industry3 = industry3 == null ? null : industry3.trim();
     }
 
+    /**
+     * 取得 行业四级分类
+     * @return 行业四级分类
+     */
     public String getIndustry4() {
         return industry4;
     }
 
+    /**
+     * 设置 行业四级分类
+     * @param industry4 行业四级分类
+     */
     public void setIndustry4(String industry4) {
-        this.industry4 = industry4;
+        this.industry4 = industry4 == null ? null : industry4.trim();
+    }
+
+    /**
+     * 取得 机构类型(风险)
+     * @return 机构类型(风险)
+     */
+    public String getOrgType() {
+        return orgType;
+    }
+
+    /**
+     * 设置 机构类型(风险)
+     * @param orgType 机构类型(风险)
+     */
+    public void setOrgType(String orgType) {
+        this.orgType = orgType == null ? null : orgType.trim();
+    }
+
+    /**
+     * 取得 是否股东及其关联方
+     * @return 是否股东及其关联方
+     */
+    public String getIsShareholderRelated() {
+        return isShareholderRelated;
+    }
+
+    /**
+     * 设置 是否股东及其关联方
+     * @param isShareholderRelated 是否股东及其关联方
+     */
+    public void setIsShareholderRelated(String isShareholderRelated) {
+        this.isShareholderRelated = isShareholderRelated == null ? null : isShareholderRelated.trim();
     }
 }

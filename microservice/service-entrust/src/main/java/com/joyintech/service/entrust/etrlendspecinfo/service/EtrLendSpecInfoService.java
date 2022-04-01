@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -425,6 +426,27 @@ public class EtrLendSpecInfoService extends BaseService<EtrLendSpecInfoDto> {
                 cashT1 = basePtlCashPositionInfoService.queryUsableCashPosition(dto2);
             }
             result.put("cashT1", cashT1);
+        }
+
+        //查询新表可用现金
+        PtlCashPositionFlowDto dtoNew = new PtlCashPositionFlowDto();
+        dtoNew.setHodingType(DictCodeListExt3.资产类型_汇总可用现金.getValue());
+        dtoNew.setCdate(dto.getCdate());
+        dtoNew.setPortfolioId((String)param.get("portfolioId"));
+        dtoNew.setCcy((String)param.get("ccy"));
+        dtoNew.setDateType(0);
+        BigDecimal cashT0_new = baseEtrCashPositionCommService.queryEtrAvailableCashNew(dtoNew);
+        BigDecimal cashT0_old= new BigDecimal(result.get("cashT").toString());
+        if(StringUtil.isNotEmpty(cashT0_new)){
+            result.put("cashT",  ArithmeticUtil.doAdd(cashT0_old, cashT0_new));// 组合T日可用
+        }
+        dtoNew.setDateType(1);
+        BigDecimal cashT1_new = baseEtrCashPositionCommService.queryEtrAvailableCashNew(dtoNew);
+        if(null!=result.get("cashT1")){
+            BigDecimal cashT1_old= new BigDecimal(result.get("cashT1").toString());
+            if(StringUtil.isNotEmpty(cashT1_new)){
+                result.put("cashT1",  ArithmeticUtil.doAdd(cashT1_old, cashT1_new));// 组合T+1日可用
+            }
         }
         return result;
     }

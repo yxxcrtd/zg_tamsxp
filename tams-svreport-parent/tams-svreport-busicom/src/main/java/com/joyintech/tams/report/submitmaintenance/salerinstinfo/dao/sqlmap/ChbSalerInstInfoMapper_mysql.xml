@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dao.ChbSalerInstInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto" >
+        <id column="SALER_ORG_CODE" property="salerOrgCode" jdbcType="VARCHAR" />
+        <result column="SALER_INST_CODE" property="salerInstCode" jdbcType="VARCHAR" />
+        <result column="SALER_INST_NAME" property="salerInstName" jdbcType="VARCHAR" />
+        <result column="SALER_ORG_NAME" property="salerOrgName" jdbcType="VARCHAR" />
+        <result column="SALER_ORG_LEVEL" property="salerOrgLevel" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SALER_ORG_CODE SALER_ORG_CODE, SALER_INST_CODE SALER_INST_CODE, SALER_INST_NAME SALER_INST_NAME, 
+        SALER_ORG_NAME SALER_ORG_NAME, SALER_ORG_LEVEL SALER_ORG_LEVEL, STATUS STATUS, DATA_DATE DATA_DATE, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dao.ChbSalerInstInfoMapper.Base_Column_List" />
+        from CHB_SALER_INST_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dao.ChbSalerInstInfoMapper.Base_Column_List" />
+        from CHB_SALER_INST_INFO
+        where STATUS = 'E'
+    </sql>
+
+    <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+        SELECT *
+        FROM (
+        select
+        'erro'                      as erroOrInfo,
+        null                      as salerInstCode,
+        null                      as salerInstName,
+        erro.SALER_ORG_CODE       as salerOrgCode,
+        erro.SALER_ORG_NAME       as salerOrgName,
+        erro.SALER_ORG_LEVEL      as salerOrgLevel,
+        'A'                       as dataStatus,
+        erro.DATA_DATE            as dataDate,
+        erro.WORKFLOW_ID          as workflowId,
+        null                      as remark,
+        to_char(erro.ERR_MSG)     as errMsg
+        from CHB_SALER_INST_ERRODATA erro
+        where 1=1
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and erro.SALER_ORG_CODE like concat(concat('%',#{salerOrgCode,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="salerOrgLevel != null and salerOrgLevel != ''">
+            and erro.SALER_ORG_LEVEL = #{salerOrgLevel,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != ''">
+            and erro.STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+
+        UNION ALL
+
+        select
+        'info'                      as erroOrInfo,
+        info.SALER_INST_CODE      as salerInstCode,
+        info.SALER_INST_NAME      as salerInstName,
+        info.SALER_ORG_CODE       as salerOrgCode,
+        info.SALER_ORG_NAME       as salerOrgName,
+        info.SALER_ORG_LEVEL      as salerOrgLevel,
+        info.STATUS               as dataStatus,
+        info.DATA_DATE            as dataDate,
+        null                      as workflowId,
+        info.REMARK               as remark,
+        null                      as errMsg
+        from CHB_SALER_INST_INFO info
+        where 1=1
+        <if test="salerOrgCode != null and salerOrgCode != ''">
+            and info.SALER_ORG_CODE like concat(concat('%',#{salerOrgCode,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="salerOrgLevel != null and salerOrgLevel != ''">
+            and info.SALER_ORG_LEVEL = #{salerOrgLevel,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != ''">
+            and info.STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+        ) ORDER BY dataStatus DESC
+    </select>
+
+    <!--    删除检查-->
+    <select id="deleteCheck" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from CHB_SALER_IDEN_INFO
+        where SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--	查询中债银行机构代码-->
+    <select id="selectIssuePartyId" parameterType="string" resultType="string">
+        select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
+        where
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--    导入检查数据是否重复-->
+    <select id="checkSalerInstInfoImport" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+        select
+        SALER_ORG_CODE  salerOrgCode,
+        SALER_ORG_NAME  salerOrgName
+        from
+        CHB_SALER_INST_INFO
+        where
+        STATUS = 'E'
+    </select>
+
+    <!--    检查表中是否有已删除状态数据-->
+    <select id="checkSalerInstInfoDImport" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+        select
+        SALER_ORG_CODE salerOrgCode,
+        SALER_ORG_NAME  salerOrgName
+        from
+        CHB_SALER_INST_INFO
+        where
+        STATUS = 'D'
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dao.ChbSalerInstInfoMapper.Base_Column_List" />
+        from CHB_SALER_INST_INFO
+        where SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </select>
+
+<!--    删除info表中的已逻辑删除的数据-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SALER_INST_INFO
+        where SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </delete>
+
+<!--    查询销售人员信息-->
+    <select id="selectIdenInfo" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+        select
+        SALER_ORG_CODE salerOrgCode,
+        SALER_INS_NO  salerInsNo
+        from
+        CHB_SALER_IDEN_INFO
+        where
+        STATUS = 'E'
+    </select>
+
+<!--    查询奖惩记录-->
+    <select id="selectRewPenaInfo" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+        select
+        DISTINCT(SALER_INS_NO) salerInsNo
+        from
+        CHB_SALER_REW_PENA_INFO
+        where
+        STATUS = 'E'
+    </select>
+
+<!--    删除erro表-->
+    <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SALER_INST_ERRODATA
+        where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </delete>
+
+    <!--	根据主键删除info-->
+    <update id="deleteInfo" parameterType="java.lang.String">
+        UPDATE CHB_SALER_INST_INFO
+        SET
+        STATUS = 'D'
+        where
+        SALER_ORG_CODE = #{salerOrgCode}
+    </update>
+
+    <!--	根据机构主键逻辑删除身份info-->
+    <update id="deleteIdenInfo" parameterType="java.lang.String">
+        UPDATE CHB_SALER_IDEN_INFO
+        SET
+        STATUS = 'D'
+        where
+        SALER_ORG_CODE = #{salerOrgCode}
+    </update>
+
+    <!--	根据身份主键逻辑删除奖惩info-->
+    <update id="deleteRewPenaInfo" parameterType="java.lang.String">
+        UPDATE CHB_SALER_REW_PENA_INFO
+        SET
+        STATUS = 'D'
+        where
+        SALER_INS_NO = #{salerInsNo}
+    </update>
+
+    <!--    新建，导入插入-->
+    <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto" >
+        insert into CHB_SALER_INST_INFO (SALER_ORG_CODE, SALER_INST_CODE, SALER_INST_NAME, 
+            SALER_ORG_NAME, SALER_ORG_LEVEL, STATUS, 
+            DATA_DATE, REMARK, CREATE_USER, CREATE_DEPT,ORG_CODE,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{salerOrgCode,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, #{salerInstName,jdbcType=VARCHAR}, 
+            #{salerOrgName,jdbcType=VARCHAR}, #{salerOrgLevel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+            sysdate, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+            sysdate, #{updateUser,jdbcType=VARCHAR}, sysdate
+            )
+    </insert>
+
+    <update id="update" parameterType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto" >
+        update CHB_SALER_INST_INFO
+        set SALER_INST_CODE = #{salerInstCode,jdbcType=VARCHAR},
+            SALER_INST_NAME = #{salerInstName,jdbcType=VARCHAR},
+            SALER_ORG_NAME = #{salerOrgName,jdbcType=VARCHAR},
+            SALER_ORG_LEVEL = #{salerOrgLevel,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_TIME = sysdate
+        where SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </update>
+
+    <!--    总部或分支机构编码联想框-->
+    <select id="getSalerOrgCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        select distinct(code),name,shortName,hidCode
+        from(
+        SELECT
+        SALER_ORG_CODE  code,
+        SALER_ORG_NAME  name,
+        SALER_ORG_NAME  shortName,
+        SALER_ORG_CODE  hidCode
+        FROM CHB_SALER_INST_INFO
+        <where>
+            <if test="salerOrgCode != null and salerOrgCode != ''">
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                    OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+
+        union all
+
+        SELECT
+        SALER_ORG_CODE  code,
+        SALER_ORG_NAME  name,
+        SALER_ORG_NAME  shortName,
+        SALER_ORG_CODE  hidCode
+        FROM CHB_SALER_INST_ERRODATA
+        <where>
+            <if test="salerOrgCode != null and salerOrgCode != ''">
+                AND	(SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
+                OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+        )
+    </select>
+
+    <!--	双击查看详细信息查询info-->
+    <select id="selectDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+        select
+        'info'            erroOrInfo,
+        SALER_INST_CODE salerInstCode,
+        SALER_ORG_CODE salerOrgCode,
+        SALER_ORG_NAME salerOrgName,
+        SALER_ORG_LEVEL salerOrgLevel,
+        REMARK remark
+        from CHB_SALER_INST_INFO
+        where
+        SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--	双击查看详细信息查询erro-->
+    <select id="selectErroDetail" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
+        select
+        'erro'            erroOrInfo,
+        SALER_INST_CODE salerInstCode,
+        SALER_ORG_CODE salerOrgCode,
+        SALER_ORG_NAME salerOrgName,
+        SALER_ORG_LEVEL salerOrgLevel,
+        WORKFLOW_ID     workflowId,
+        ORG_DATA        orgData,
+        ERR_MSG         errMsg,
+        null remark
+        from CHB_SALER_INST_ERRODATA
+        where
+        WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+    </select>
+
+    <!--    总部或分支机构编码重复校验-->
+    <select id="checkSalerOrgCode" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from
+        CHB_SALER_INST_INFO
+        where
+        STATUS = 'E'
+        and SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--    总部或分支机构名称重复校验-->
+    <select id="checkSalerOrgName" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from
+        CHB_SALER_INST_INFO
+        where
+        STATUS = 'E'
+        and SALER_ORG_NAME = #{salerOrgName,jdbcType=VARCHAR}
+    </select>
+
+    <!--    总部或分支机构名称重复校验-->
+    <select id="checkSalerOrgNameEdit" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from
+        CHB_SALER_INST_INFO
+        where
+        STATUS = 'E'
+        and SALER_ORG_NAME = #{salerOrgName,jdbcType=VARCHAR}
+        and SALER_ORG_CODE != #{salerOrgCode,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

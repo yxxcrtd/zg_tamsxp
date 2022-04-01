@@ -170,4 +170,22 @@
             </if>
         </where>
     </delete>
+
+    <delete id="removeTempDataTZXX">
+        DELETE FROM SZD_TZXX
+        <where>
+            IMPORT_DATE = #{importDate,jdbcType=DATE}
+            and DATA_FILE = #{dataFile,jdbcType=VARCHAR}
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                and SZD_TZXX.ZQZH IN (
+                SELECT BOND_ID
+                FROM STL_VW_BOND_SEAT_PTL_NO
+                <foreach collection="portfolioIdList" item="portfolioId"
+                         open="where PORTFOLIO_ID IN (" close=")" separator=",">
+                    #{portfolioId,jdbcType=VARCHAR}
+                </foreach>
+                )
+            </if>
+        </where>
+    </delete>
 </mapper>

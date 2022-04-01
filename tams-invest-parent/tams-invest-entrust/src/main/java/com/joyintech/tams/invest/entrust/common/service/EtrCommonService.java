@@ -249,6 +249,27 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 
             }
         }
+
+        //查询新表可用现金
+        PtlCashPositionFlowDto dtoNew = new PtlCashPositionFlowDto();
+        dtoNew.setHodingType(DictCodeListExt3.资产类型_汇总可用现金.getValue());
+        dtoNew.setCdate(dto.getCdate());
+        dtoNew.setPortfolioId((String)param.get("portfolioId"));
+        dtoNew.setCcy((String)param.get("ccy"));
+        dtoNew.setDateType(0);
+        BigDecimal cashT0_new = baseEtrCashPositionCommService.queryEtrAvailableCashNew(dtoNew);
+        BigDecimal cashT= new BigDecimal(result.get("cashT").toString());
+        if(StringUtil.isNotEmpty(cashT0_new)){
+            result.put("cashT",  ArithmeticUtil.doAdd(cashT, cashT0_new));// 组合T日可用
+        }
+        dtoNew.setDateType(1);
+        BigDecimal cashT1_new = baseEtrCashPositionCommService.queryEtrAvailableCashNew(dtoNew);
+        if(null!=result.get("cashT1")){
+            BigDecimal cashT1= new BigDecimal(result.get("cashT1").toString());
+            if(StringUtil.isNotEmpty(cashT1_new)){
+                result.put("cashT1",  ArithmeticUtil.doAdd(cashT1, cashT1_new));// 组合T+1日可用
+            }
+        }
         return result;
     }
 
@@ -609,12 +630,12 @@ public class EtrCommonService extends BaseService<ITableRow> {
             if (DateUtil.compareDate(platedate,startDate) != 0
                     || DateUtil.compareDate(platedate,endDate) != 0){
 
-                return "指令开始日与指令终止日应为【"+platedate+"】(行号为"+indexId+")";
+                return "指令日期应为【"+platedate+"】(行号为"+indexId+")";
 
             }else {
 
                 if (DateUtil.compareDate(startDate,startDate) != 0){
-                    return "指令开始日与指令终止日应为【"+platedate+"】(行号为"+indexId+")";
+                    return "指令日期终止日应为【"+platedate+"】(行号为"+indexId+")";
                 }else {
                     return "";
                 }
@@ -2174,5 +2195,116 @@ public class EtrCommonService extends BaseService<ITableRow> {
             }
         }
         return "";
+    }
+
+    /**
+     * 组合指令可用现金查询
+     *
+     * @param param
+     * @return cashT 组合T日可用, cashT1 组合T+1日可用, cashT3 托管户可用, cashT2 通道可用， cashT4 交易所资金账户可用
+     * @see
+     * @since 1.0
+     */
+    public Map<String, Object> getProAvailableCashExchange(Map<String, Object> param) {
+        PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
+        Date sysdate = DateUtil.parse(DateUtil.getSysDate());
+        if (StringUtil.isNotEmpty(param.get("acctId"))){
+            dto.setAcctId((String)param.get("acctId"));
+        }
+        if (StringUtil.isNotEmpty(param.get("finprodId"))){
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey((String)param.get("finprodId"));
+            List<String> holidayList = new ArrayList<>();
+            if (Objects.nonNull(finProduct)) {
+                holidayList = dateCalService.getDealCalendarHoliday(sysdate,DateUtil.addDay(sysdate, 15),finProduct.getCalendarId());
+            }
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysdate).toString()), 1, holidayList, "1");
+            param.put("sysDateT1", DateUtil.format(tradeDay));
+        }else {
+            String calId = (String)param.get("calId");
+            Date vdate = DateUtil.parse((String)param.get("vdate"));
+            if(StringUtil.isNotEmpty(calId)&&vdate!=null){
+                List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(vdate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(vdate)), 15),calId);
+                Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(vdate)), 1, holidayList, "1");
+                param.put("sysDateT1",DateUtil.format(tradeDay));
+            }
+        }
+
+        dto.setCdate(sysdate);
+        List<String> acctTypeList = new ArrayList<>();
+        acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+        dto.setPortfolioId((String)param.get("portfolioId"));
+        dto.setCcy((String)param.get("ccy"));
+        Map<String, Object> result = new HashMap<>();
+        dto.setAcctType(acctTypeList);
+
+        if (baseEtrCashPositionCommService != null) {
+            BigDecimal cashT = BigDecimal.ZERO;
+            //期货保证金单独处理
+            if(param.containsKey("acctType")&&StringUtil.equals(param.get("acctType"),DictCodeListExt1.资金账户类型_期货资金账户.getValue())){
+                acctTypeList.clear();
+                acctTypeList.add(DictCodeListExt1.资金账户类型_期货资金账户.getValue());
+                BigDecimal cashQH = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                cashT = ArithmeticUtil.doAdd(cashT, cashQH == null ? BigDecimal.ZERO : cashQH);
+            }else{
+                BigDecimal cashT3 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                result.put("cashT3", cashT3); // 托管户可用
+                cashT = ArithmeticUtil.doAdd(cashT, cashT3 == null ? BigDecimal.ZERO : cashT3);
+
+                acctTypeList.clear();
+                acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+                BigDecimal cashT4 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                result.put("cashT4", cashT4);// 交易所资金账户可用
+                cashT = ArithmeticUtil.doAdd(cashT, cashT4 == null ? BigDecimal.ZERO : cashT4);
+            }
+
+            if (StringUtil.isNotEmpty(param.get("chlFinprodId"))) {
+                FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey((String)param.get("chlFinprodId"));
+                result.put("payType", "02");
+                if (finProductAdd != null) {
+                    result.put("payType", finProductAdd.getPayType());
+                }
+                dto.setAcctType(null);
+                dto.setChlFinprodId((String)param.get("chlFinprodId"));
+                BigDecimal cashT2 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                result.put("cashT2", cashT2 == null ? BigDecimal.ZERO : cashT2);// 通道可用
+                //组合T日可用现金不加通道可用现金
+                //cashT = ArithmeticUtil.doAdd(cashT, cashT2);
+            }
+            result.put("cashT", cashT);// 组合T日可用
+
+            if (StringUtil.isNotEmpty(param.get("sysDateT1"))) {
+                PtlCashPositionFlowDto dto2 = new PtlCashPositionFlowDto();
+                Date sysdateT1 = DateUtil.parse((String)param.get("sysDateT1"));
+                dto2.setCdate(sysdateT1);
+                acctTypeList.clear();
+                acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+                acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                dto2.setAcctType(acctTypeList);
+                dto2.setPortfolioId((String)param.get("portfolioId"));
+                dto2.setCcy((String)param.get("ccy"));
+                BigDecimal cashT1 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);
+                if (StringUtil.isNotEmpty(param.get("chlFinprodId"))) {
+                    FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey((String)param.get("chlFinprodId"));
+                    result.put("payType", "02");
+                    if (finProductAdd != null) {
+                        result.put("payType", finProductAdd.getPayType());
+                    }
+                    dto2.setAcctType(null);
+                    //组合T日可用现金不加通道可用现金
+                    dto2.setChlFinprodId((String)param.get("chlFinprodId"));
+                    BigDecimal cashT2 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);
+                    result.put("cashT21", cashT2 == null ? BigDecimal.ZERO : cashT2);// 通道T+1可用
+                }
+                result.put("cashT1", cashT1 == null ? result.get("cashT") : cashT1);// 组合T+1日可用
+
+                acctTypeList.clear();
+                acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
+                BigDecimal cashTT1 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);//组合托管户T+1可用
+                result.put("cashTT1", cashTT1 == null ? BigDecimal.ZERO : cashTT1);// 组合托管户T+1可用
+
+            }
+        }
+
+        return result;
     }
 }

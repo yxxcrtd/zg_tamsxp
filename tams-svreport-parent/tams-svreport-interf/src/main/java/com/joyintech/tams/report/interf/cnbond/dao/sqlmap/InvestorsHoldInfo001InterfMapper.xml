@@ -577,7 +577,8 @@ where
 	
 	<select id="getSubmitFeedbackStatusList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" resultType="com.joyintech.tams.report.interf.cnbond.dto.InvestorsHoldInfoRegist001InterfDto">
 		select distinct
-		    status.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 		    ciis.CCY ccy,
 		    ciis.HOLD_DATE holdDate,
 		    ciis.INDENTIFY_MARK indentifyMark,
@@ -587,8 +588,7 @@ where
 		    ciis.QTY qty,
 		    ciis.CNY_AMT cnyAmt
 		  from CHB_INVESTHOLD_INFO_SUB ciis
-		  left join CHB_SUBMIT_STATUS status
-		  on ciis.SUMIT_SEQ = status.SEQNO
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<where>
 			<foreach collection="list" item="investDto" open=" (" close=")" separator=") or (">
 		 	 		ciis.PRODID = #{investDto.prodid,jdbcType=VARCHAR} 
@@ -617,13 +617,13 @@ where
 		 T.STATUS status,
 		 T.CCY ccyCode,
 		 '' as  agent,
-		 status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
 		 from CHB_INVESTHOLD_INFO_SUB T
-		 left join CHB_SUBMIT_STATUS status
-		 on T.sumit_seq = status.seqno
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="SEQNO !=null and SEQNO.size()>0 ">
 				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
@@ -653,16 +653,16 @@ where
 		 T.STATUS status,
 		 T.CCY ccyCode,
 		 '' as  agent,
-		 status.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
 		 from CHB_INVESTHOLD_INFO_SUB T
-		 left join CHB_SUBMIT_STATUS status
-		 on T.sumit_seq = status.seqno
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
 			</if>
 			<if test="reportNo !=null and reportNo !=''">
-				AND status.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+				AND T.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 		</where>
 	</select>

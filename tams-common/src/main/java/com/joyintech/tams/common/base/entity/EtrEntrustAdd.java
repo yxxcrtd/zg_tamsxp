@@ -512,6 +512,39 @@ public class EtrEntrustAdd extends BaseEntity {
     private Date transmitTime;
 
     /**
+     * 权重方式
+     */
+    private String weighType;
+
+    /**
+     * 权重方式
+     */
+    private String mulDistriClass;
+
+    /**
+     * 目标值
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal mulTarget;
+
+    /**
+     * 强制完成金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal forcedFinishAmt;
+
+    /**
+     * 已关闭额度
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal closeAmt;
+
+    /**
+     * 目标值单位
+     */
+    private String mulUnit;
+
+    /**
      * 取得 委托代码
      * @return 委托代码
      */
@@ -2014,7 +2047,7 @@ public class EtrEntrustAdd extends BaseEntity {
         this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
     }
 
-    public String getBusiTypePosition() {
+	public String getBusiTypePosition() {
         return busiTypePosition;
     }
 
@@ -2028,5 +2061,53 @@ public class EtrEntrustAdd extends BaseEntity {
 
     public void setTransmitTime(Date transmitTime) {
         this.transmitTime = transmitTime;
+    }
+
+    public String getWeighType() {
+        return weighType;
+    }
+
+    public void setWeighType(String weighType) {
+        this.weighType = weighType;
+    }
+
+    public String getMulDistriClass() {
+        return mulDistriClass;
+    }
+
+    public void setMulDistriClass(String mulDistriClass) {
+        this.mulDistriClass = mulDistriClass;
+    }
+
+    public BigDecimal getMulTarget() {
+        return mulTarget;
+    }
+
+    public void setMulTarget(BigDecimal mulTarget) {
+        this.mulTarget = mulTarget;
+    }
+
+    public String getMulUnit() {
+        return mulUnit;
+    }
+
+    public void setMulUnit(String mulUnit) {
+        this.mulUnit = mulUnit;
+    }
+
+    public BigDecimal getForcedFinishAmt() {
+        return forcedFinishAmt;
+    }
+
+    public void setForcedFinishAmt(BigDecimal forcedFinishAmt) {
+        this.forcedFinishAmt = forcedFinishAmt;
+    }
+
+    public BigDecimal getCloseAmt() {
+        return closeAmt;
+    }
+
+    public void setCloseAmt(BigDecimal closeAmt) {
+        this.closeAmt = closeAmt;
     }
 }

@@ -11,10 +11,7 @@ import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.business.common.service.PositionHttpRequest;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dao.CfetsManualSettleMapper;
 import com.joyintech.tams.cfets.cfetsmanualsettle.dto.*;
-import com.joyintech.tams.common.base.dao.TrdBankManualSetDetailMapper;
-import com.joyintech.tams.common.base.dao.TrdBankManualSettleFlowMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.constant.DictCodeList;
@@ -30,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
@@ -45,9 +43,6 @@ import java.util.*;
 @Service("CfetsManualSettleUpdateService")
 public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettleUpdateRequest> implements BaseProcessService<CfetsManualSettleUpdateRequest>{
 
-    /**
-     * 日志
-     */
     private Logger logger = LoggerFactory.getLogger(CfetsManualSettleUpdateService.class);
 
     @Autowired
@@ -58,21 +53,27 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
 
     @Autowired
     private TrdFinProductDealTotalMapper trdFinProductDealTotalMapper;
+    @Autowired
+    private TrdProductTempDealTotalMapper trdProductTempDealTotalMapper;
 
     @Autowired
     private TrdProductDealMapper trdProductDealMapper;
 
     @Autowired
-    private TrdBankManualSettleFlowMapper trdBankManualSettleFlowMapper;
+    private TrdProductTempDealMapper trdProductTempDealMapper;
 
     @Autowired
-    private TrdBankManualSetDetailMapper trdBankManualSetDetailMapper;
+    private TrdBankManualSettleFlowMapper trdBankManualSettleFlowMapper;
 
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private StlPayOrdersMapper stlPayOrdersMapper;
+
 
     /**
      * 手工交收修改check
@@ -111,7 +112,7 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
         List<String> resultu = cfetsManualSettleMapper.getBusinessData(wflValidInputParameter);
         if(!StringUtil.isEmptyList(result) || !StringUtil.isEmptyList(resultu)){
             //存在流程中数据
-            returnMsg =getMessage("BUSS_COM_E_0023");
+            returnMsg = getMessage("BUSS_COM_E_0023");
         }
         return returnMsg;
     }
@@ -123,44 +124,68 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
      */
     public List<PortSettleinfoDto> queryPortSettleinfo(CfetsManualSettleUpdateRequest cfetsRequest) {
         Map<String,Object> pageParam = BeanUtil.object2Map(cfetsRequest);
-        return cfetsManualSettleMapper.queryPortSettleinfo(pageParam);
+        List<PortSettleinfoDto> list = cfetsManualSettleMapper.queryPortSettleinfo(pageParam);
+        if(CollectionUtils.isEmpty(list)) {
+            list = cfetsManualSettleMapper.queryTempPortSettleinfo(pageParam);
+        }
+        return list;
+    }
+
+
+    /**
+     * 更新交易表数据
+     * 处理逻辑：修改时同交收，直接复制到交收表或者修改状态
+     */
+    private void updateDealData(String tradeId) {
+        TrdFinProductDealTotal tempTotal = trdProductTempDealTotalMapper.selectByPrimaryKey(tradeId);
+        if(Objects.isNull(tempTotal)) return;
+        TrdFinProductDealTotal total = trdFinProductDealTotalMapper.selectByPrimaryKey(tradeId);
+        if(Objects.nonNull(total)) {
+            autoPeriodCommonService.updateDealDataCancel(tradeId,DictCodeList.是否_是.getValue());
+        }else {
+            autoPeriodCommonService.insertDealDataFromTemp(tradeId);
+            autoPeriodCommonService.updateDealDataCancel(tradeId,DictCodeList.是否_是.getValue());
+        }
     }
 
     @Override
-    public void doComplete(CfetsManualSettleUpdateRequest cfetsManualSettleUpdateRequest, OperationType operationType) {
+    public void doComplete(CfetsManualSettleUpdateRequest request, OperationType operationType) {
         try{
+            Map<String,Object> pageParam = new HashMap<>();
+            pageParam.put("tradeId",request.getTradeId());
+            List<PortSettleinfoDto> list = cfetsManualSettleMapper.queryTempPortSettleinfo(pageParam);
+            //重新分配temp表利息
+            calTempIntAmt(request,list);
+            //更新交易表,将临时表数据复制到交易表,状态是撤销
+            this.updateDealData(request.getTradeId());
+            //重新分配deal利息
+            list = cfetsManualSettleMapper.queryPortSettleinfo(pageParam);
+            calIntAmt(request,list);
             //处理业务数据
-            TrdBankManualSettleInfo trdBankManualSettleInfo =new TrdBankManualSettleInfo();
-
+            TrdBankManualSettleInfo trdBankManualSettleInfo = new TrdBankManualSettleInfo();
             BussinessCodeParameter parameter = new BussinessCodeParameter();
             parameter.setCommonBusinessType(DictCodeListExt3.共通业务类型_手工交收);
-            String settleSeqNo =autoPeriodCommonService.buildBussinessCode(parameter);
+            String settleSeqNo = autoPeriodCommonService.buildBussinessCode(parameter);
             //交收编号
-            trdBankManualSettleInfo.setSettleSeqNo(cfetsManualSettleUpdateRequest.getSettleSeqNo() ==null?
-                    settleSeqNo : cfetsManualSettleUpdateRequest.getSettleSeqNo());
+            trdBankManualSettleInfo.setSettleSeqNo(request.getSettleSeqNo() == null ? settleSeqNo : request.getSettleSeqNo());
             //原业务编号
-            trdBankManualSettleInfo.setTradeId(cfetsManualSettleUpdateRequest.getTradeId());
+            trdBankManualSettleInfo.setTradeId(request.getTradeId());
             //交收时间=平台日
             trdBankManualSettleInfo.setSettleDate(platformDateImpl.getSysDate());
             //金融产品代码
-            trdBankManualSettleInfo.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());
+            trdBankManualSettleInfo.setFinprodId(request.getFinprodId());
             //交收数量
-            trdBankManualSettleInfo.setSettleNum(cfetsManualSettleUpdateRequest.getSettleNumT());
+            trdBankManualSettleInfo.setSettleNum(request.getSettleNumT());
             //交收金额
-            if(StringUtil.equals(cfetsManualSettleUpdateRequest.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
-                    && StringUtil.equals(cfetsManualSettleUpdateRequest.getPs(),DictCodeList.交易方向_买入.getValue())){
+            if(StringUtil.equals(request.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue()) && StringUtil.equals(request.getPs(),DictCodeList.交易方向_买入.getValue())){
             }else{
-                trdBankManualSettleInfo.setSettleAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
+                trdBankManualSettleInfo.setSettleAmt(request.getSettleAmtT());
             }
             //业务类别
-            trdBankManualSettleInfo.setBusiType(cfetsManualSettleUpdateRequest.getTgBusiType());
-            //交收状态
-            trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
-
-            trdBankManualSettleInfo.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());
-
-            trdBankManualSettleInfo.setCreateDept("");
-
+            trdBankManualSettleInfo.setBusiType(request.getTgBusiType());
+            trdBankManualSettleInfo.setSettleStatus(DictCodeListExt3.交收状态_未交收.getValue());
+            trdBankManualSettleInfo.setFinprodId(request.getFinprodId());
+            trdBankManualSettleInfo.setCreateDept("system");
             TrdBankManualSettleFlow trdBankManualSettleFlow = new TrdBankManualSettleFlow();
             //交收流水编号=调用【共通】生成
             trdBankManualSettleFlow.setSeqNo(IDGenerator.generate());
@@ -169,90 +194,25 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             //交收时间=当前时间
             trdBankManualSettleFlow.setSettleTime(new Date());
             //交收数量=画面.交收数量
-            trdBankManualSettleFlow.setSettleNum(cfetsManualSettleUpdateRequest.getSettleNumT());
+            trdBankManualSettleFlow.setSettleNum(request.getSettleNumT());
             //交收金额=画面.交收金额
-            if(StringUtil.equals(cfetsManualSettleUpdateRequest.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue())
-                    && StringUtil.equals(cfetsManualSettleUpdateRequest.getPs(),DictCodeList.交易方向_买入.getValue())){
+            if(StringUtil.equals(request.getTgBusiType(),DictCodeListExt3.头寸业务类型_现券交易.getValue()) && StringUtil.equals(request.getPs(),DictCodeList.交易方向_买入.getValue())){
             }else{
-                trdBankManualSettleFlow.setSettleAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
+                trdBankManualSettleFlow.setSettleAmt(request.getSettleAmtT());
             }
             //金融产品代码=画面.资产代码
-            trdBankManualSettleFlow.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());
+            trdBankManualSettleFlow.setFinprodId(request.getFinprodId());
             //金融产品代码=画面.资产简称
-            trdBankManualSettleFlow.setFinprodAbbr(cfetsManualSettleUpdateRequest.getFinprodAbbr());
+            trdBankManualSettleFlow.setFinprodAbbr(request.getFinprodAbbr());
             //操作类型=交收
             trdBankManualSettleFlow.setOperType(DictCodeListExt3.交收操作类型_交收修改.getValue());
-
-            List<TrdBankManualSetDetail> listTrdBnakSetDetails =new ArrayList<TrdBankManualSetDetail>();
-
-            for(PortSettleinfoDto portSettleinfoDto : cfetsManualSettleUpdateRequest.getPortSettleinfoDtoList()){
-                //银行间手工交收明细Entiy
-                TrdBankManualSetDetail trdBankManualSetDetail =new TrdBankManualSetDetail();
-                //交收流水序号=调用【共通】生成
-                trdBankManualSetDetail.setSeqNo(IDGenerator.generate());
-                //交收编号=银行间手工交收信息Entiy.交收编号
-                trdBankManualSetDetail.setSettleSeqNo(trdBankManualSettleInfo.getSettleSeqNo());
-                //交收日期=平台日
-                trdBankManualSetDetail.setSettleDate(platformDateImpl.getSysDate());
-                //原业务编号=成交确认明细.交易编号
-                trdBankManualSetDetail.setTradeId(cfetsManualSettleUpdateRequest.getTradeId());
-                //金融产品代码=画面.资产代码
-                trdBankManualSetDetail.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());
-                //金融产品简称=画面.资产简称
-                trdBankManualSetDetail.setFinprodAbbr(cfetsManualSettleUpdateRequest.getFinprodAbbr());
-                //组合代码=成交确认明细.投资组合代码
-                trdBankManualSetDetail.setPortfolioId(portSettleinfoDto.getPortfolioId());
-                //交割数量=成交确认明细.交易份额
-                trdBankManualSetDetail.setSettleNum(portSettleinfoDto.getSettleNum());
-                //交割金额=成交确认明细.交易金额
-                trdBankManualSetDetail.setSettleAmt(portSettleinfoDto.getSettleAmt());
-                //业务类别=画面.投管业务类型
-                trdBankManualSetDetail.setBusiType(cfetsManualSettleUpdateRequest.getTgBusiType());
-
-                //交收状态=数据字典.交收状态.已交收
-                trdBankManualSetDetail.setSettleStatus(DictCodeListExt3.交收状态_已交收.getValue());
-
-                listTrdBnakSetDetails.add(trdBankManualSetDetail);
-            }
-
             //存在交收编号，说明是做过交收后又回溯，则做更新动作
             cfetsManualSettleMapper.mergeInfo(trdBankManualSettleInfo);
             //新增交收流水
             trdBankManualSettleFlowMapper.insertSelective(trdBankManualSettleFlow);
-            //新增交收明细
-            for(TrdBankManualSetDetail trdBankManualSetDetail:listTrdBnakSetDetails){
-                trdBankManualSetDetailMapper.insertSelective(trdBankManualSetDetail);
-            }
 
             //头寸
-            sendPositionMethod(cfetsManualSettleUpdateRequest,trdBankManualSettleInfo);
-//            //更新相关交易表
-//            //【金融产品交易汇总表】
-//            //【金融产品交易汇总附属表】
-//            TrdFinProductDealTotal record =new TrdFinProductDealTotal();
-//            // 金融产品交易汇总
-//            record = trdFinProductDealTotalMapper.selectByPrimaryKey(cfetsManualSettleUpdateRequest.getTradeId());
-//            record.setTotleTradeId(cfetsManualSettleUpdateRequest.getTradeId());
-//            record.setIntAmt(cfetsManualSettleUpdateRequest.getSettleAmtT());
-//            record.setFpriceAmt(record.getPrinAmt().add(record.getIntAmt()));
-//            record.setTradeAmt(record.getFpriceAmt());
-//            trdFinProductDealTotalMapper.updateByPrimaryKeySelective(record);
-//
-//            //【金融产品交易表】TRD_PRODUCT_DEAL
-//            //【金融产品交易附属表】
-//            List<TrdProductDealAdd> trdProductDealAdds = cfetsManualSettleMapper.queryTrdProductDealsByTotalTradeId(cfetsManualSettleUpdateRequest.getTradeId());
-//            for(TrdBankManualSetDetail trdBankManualSetDetail : listTrdBnakSetDetails){
-//                for(TrdProductDealAdd trdProductDealAdd : trdProductDealAdds){
-//                    if(StringUtil.equals(trdProductDealAdd.getPortfolioId(),trdBankManualSetDetail.getPortfolioId())){
-//                        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
-//                        trdProductDeal.setIntAmt(trdBankManualSetDetail.getSettleAmt());
-//                        trdProductDeal.setFpriceAmt(trdProductDeal.getPrinAmt().add(trdProductDeal.getIntAmt()));
-//                        trdProductDeal.setShareAmt(trdProductDeal.getFpriceAmt());
-//                        trdProductDealMapper.updateByPrimaryKeySelective(trdProductDeal);
-//                        continue;
-//                    }
-//                }
-//            }
+            sendPositionMethod(request,trdBankManualSettleInfo);
         }
         catch (Exception e) {
             logger.error("交收修改失败",e);
@@ -261,24 +221,101 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
     }
 
     /**
+     * 修改金额后重新计算利息
+     * @param request
+     */
+    private void calTempIntAmt(CfetsManualSettleUpdateRequest request,List<PortSettleinfoDto> list) {
+        //1.处理total表
+        TrdFinProductDealTotal dealTotal = trdProductTempDealTotalMapper.selectByPrimaryKey(request.getTradeId());
+        TrdFinProductDealTotal tempTotal = new TrdFinProductDealTotal();
+        //设置利息总额
+        if(request.getSettleAmtT().compareTo(dealTotal.getTradeAmt()) != 0) {
+            tempTotal.setIntAmt(ArithmeticUtil.subtract(request.getSettleAmtT(), dealTotal.getTradeAmt()));
+            tempTotal.setTradeAmt(request.getSettleAmtT());
+            tempTotal.setFpriceAmt(request.getSettleAmtT());
+            tempTotal.setTotleTradeId(request.getTradeId());
+            trdProductTempDealTotalMapper.updateByPrimaryKeySelective(tempTotal);
+        }
+        //2.处理deal表
+        if(!CollectionUtils.isEmpty(list)) {
+            for(PortSettleinfoDto trdBankManualSetDetail : request.getPortSettleinfoDtoList()){
+                for(PortSettleinfoDto trdProductDealAdd : list){
+                    if(StringUtil.equals(trdProductDealAdd.getPortfolioId(),trdBankManualSetDetail.getPortfolioId())){
+                        TrdProductTempDeal trdProductDeal = trdProductTempDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
+                        if(trdBankManualSetDetail.getSettleAmt().compareTo(trdProductDealAdd.getSettleAmt()) != 0) {
+                            trdProductDeal.setIntAmt(ArithmeticUtil.subtract(trdBankManualSetDetail.getSettleAmt(), trdProductDealAdd.getSettleAmt()));
+                            trdProductDeal.setFpriceAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDeal.setCpriceAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDeal.setTradeAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductTempDealMapper.updateByPrimaryKeySelective(trdProductDeal);
+                        }
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 修改金额后重新计算利息
+     * @param request
+     */
+    private void calIntAmt(CfetsManualSettleUpdateRequest request,List<PortSettleinfoDto> list) {
+        //1.处理total表
+        TrdFinProductDealTotal dealTotal = trdFinProductDealTotalMapper.selectByPrimaryKey(request.getTradeId());
+        TrdFinProductDealTotal tempTotal = new TrdFinProductDealTotal();
+        //设置利息总额
+        if(request.getSettleAmtT().compareTo(dealTotal.getTradeAmt()) != 0) {
+            tempTotal.setIntAmt(ArithmeticUtil.subtract(request.getSettleAmtT(), dealTotal.getTradeAmt()));
+            tempTotal.setTradeAmt(request.getSettleAmtT());
+            tempTotal.setFpriceAmt(request.getSettleAmtT());
+            tempTotal.setTotleTradeId(request.getTradeId());
+            trdFinProductDealTotalMapper.updateByPrimaryKeySelective(tempTotal);
+        }
+        //2.处理deal表
+        if(!CollectionUtils.isEmpty(list)) {
+            for(PortSettleinfoDto trdBankManualSetDetail : request.getPortSettleinfoDtoList()){
+                for(PortSettleinfoDto trdProductDealAdd : list){
+                    if(StringUtil.equals(trdProductDealAdd.getPortfolioId(),trdBankManualSetDetail.getPortfolioId())){
+                        TrdProductDeal trdProductDeal = trdProductDealMapper.selectByPrimaryKey(trdProductDealAdd.getTradeId());
+                        if(trdBankManualSetDetail.getSettleAmt().compareTo(trdProductDealAdd.getSettleAmt()) != 0) {
+                            trdProductDeal.setIntAmt(ArithmeticUtil.subtract(trdBankManualSetDetail.getSettleAmt(), trdProductDealAdd.getSettleAmt()));
+                            trdProductDeal.setFpriceAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDeal.setCpriceAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDeal.setTradeAmt(trdBankManualSetDetail.getSettleAmt());
+                            trdProductDealMapper.updateByPrimaryKeySelective(trdProductDeal);
+                        }
+                        continue;
+                    }
+                }
+            }
+        }
+        //3.更新划款指令表
+        StlPayOrders record = new StlPayOrders();
+        record.setTradeId(request.getTradeId());
+        record.setSettleAmt(request.getSettleAmtT());
+        stlPayOrdersMapper.updateByTradeId(record);
+    }
+
+
+    /**
      * 构建发送头寸信息
      * @param cfetsManualSettleUpdateRequest
      * @param trdBankManualSettleInfo
      * @return
      */
     private void sendPositionMethod(CfetsManualSettleUpdateRequest cfetsManualSettleUpdateRequest,TrdBankManualSettleInfo trdBankManualSettleInfo) {
-        List<PositionRulePtlData> ptlList=new ArrayList<>();
+        List<PositionRulePtlData> ptlList = new ArrayList<>();
         List<PortSettleinfoDto> listTemp = cfetsManualSettleUpdateRequest.getPortSettleinfoDtoList();
-
-        List<CfetsManualSettleDealInfo> listTemp1 = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleUpdateRequest.getTradeId());
+        List<CfetsManualSettleDealInfo> listTemp1 = cfetsManualSettleMapper.getDealDetailsByTradeId(cfetsManualSettleUpdateRequest.getTradeId(),null);
+        if(CollectionUtils.isEmpty(listTemp1)) {
+            listTemp1 = cfetsManualSettleMapper.getTempDealDetailsByTradeId(cfetsManualSettleUpdateRequest.getTradeId());
+        }
         //存放<交易编号,券面总额>
         Map<String,BigDecimal> mapTemp = new HashMap<>();
         for(CfetsManualSettleDealInfo cfetsManualSettleDealInfo : listTemp1){
-
             mapTemp.put(cfetsManualSettleDealInfo.getTradeId(),cfetsManualSettleDealInfo.getShareAmt());
-
             String key = cfetsManualSettleDealInfo.getTradeId();
-
             if(mapTemp.get(key) ==null){
                 mapTemp.put(cfetsManualSettleDealInfo.getTradeId(),cfetsManualSettleDealInfo.getShareAmt());
             }
@@ -307,15 +344,13 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
                     positionRulePtlData.setSecAcctId(secAcctId); // 证券账户
                 }
             }
-            positionRulePtlData.setSecAmount(mapTemp.get(dto.getTradeId())==null?BigDecimal.ZERO : mapTemp.get(dto.getTradeId()));
+            positionRulePtlData.setSecAmount(mapTemp.get(dto.getTradeId()) == null?BigDecimal.ZERO : mapTemp.get(dto.getTradeId()));
             positionRulePtlData.setCashAmount(dto.getSettleAmt());
             positionRulePtlData.setInvAim(dto.getInvAim());
-            positionRulePtlData.setOwnSecAmount(dto.getOurShareAmt()==null? BigDecimal.ZERO : ArithmeticUtil.multiply(dto.getOurShareAmt(),new BigDecimal(100)));
-            positionRulePtlData.setIntegrateSecAmount(dto.getLendinShareAmt()==null? BigDecimal.ZERO : ArithmeticUtil.multiply(dto.getLendinShareAmt(),new BigDecimal(100)));
-
+            positionRulePtlData.setOwnSecAmount(dto.getOurShareAmt() == null? BigDecimal.ZERO : ArithmeticUtil.multiply(dto.getOurShareAmt(),new BigDecimal(100)));
+            positionRulePtlData.setIntegrateSecAmount(dto.getLendinShareAmt() == null? BigDecimal.ZERO : ArithmeticUtil.multiply(dto.getLendinShareAmt(),new BigDecimal(100)));
             ptlList.add(positionRulePtlData);
         }
-
         CfetsManualSettlePositionDto req = new CfetsManualSettlePositionDto();
         req.setInterfaceType("Bond001");
         //指令或交易标识	ETR:指令,TRD:交易
@@ -347,14 +382,13 @@ public class CfetsManualSettleUpdateService extends BaseService<CfetsManualSettl
             req.setSettleSpeed("01");
         }
         //业务动作BUSI_ACT 09:交收确认 10:交收失败
-        req.setBusiAct("09");
+        req.setBusiAct(DictCodeListExt3.业务动作_待交收.getValue());
         //交易方向
         req.setPs(cfetsManualSettleUpdateRequest.getPs());
         //新建 修改 关闭
-        req.setSystemAct("01");
-        if("05".equals(cfetsManualSettleUpdateRequest.getButtonType())) {
-            req.setDecisionAct("01");
-        }
+        req.setSystemAct(DictCodeListExt3.系统动作_修改.getValue());
+        //决策传修改-02
+        req.setDecisionAct(DictCodeListExt3.系统动作_修改.getValue());
         req.setCdate(platformDateImpl.getSysDate());
         req.setCcy(cfetsManualSettleUpdateRequest.getCcy());
         req.setFinprodId(cfetsManualSettleUpdateRequest.getFinprodId());

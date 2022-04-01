@@ -11,15 +11,8 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.annotation.Amount;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.ValidLogic;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.constant.DictCodeList;
+
 
 import java.math.BigDecimal;
 
@@ -174,6 +167,45 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
      * 产品登记编码，中债新增字段
      */
     private String prodRegisterCode;
+
+    /**
+     * 是否为财产权信托产品，01 是/02 否
+     */
+    private String isPropertyTrust;
+
+    /**
+     * 公共PPP
+     */
+    private String pppflag;
+
+    /**
+     * 是否投向市场化债转股相关产品的部分
+     */
+    private String bondtostockFlag;
+
+    public String getPppflag() {
+        return pppflag;
+    }
+
+    public void setPppflag(String pppflag) {
+        this.pppflag = pppflag;
+    }
+
+    public String getBondtostockFlag() {
+        return bondtostockFlag;
+    }
+
+    public void setBondtostockFlag(String bondtostockFlag) {
+        this.bondtostockFlag = bondtostockFlag;
+    }
+
+    public String getIsPropertyTrust() {
+        return isPropertyTrust;
+    }
+
+    public void setIsPropertyTrust(String isPropertyTrust) {
+        this.isPropertyTrust = isPropertyTrust;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

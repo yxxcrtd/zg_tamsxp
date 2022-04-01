@@ -7,6 +7,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.trade.exchangetransmatch.manualmatch.validator.ExchangeTransMatchValidator;
@@ -84,6 +85,31 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     private String portfolioName;
 
     /**
+     * 回购类型
+     */
+    private String repoType;
+
+    /**
+     * 转股价格
+     */
+    private String conPrice;
+
+    /**
+     * 转股数量
+     */
+    private String conAmt;
+
+    /**
+     * 债转股的股票资产代码
+     */
+    private String rFinMarketId;
+
+    /**
+     *债转股的股票金融产品代码
+     */
+    private String rFinprodId;
+
+    /**
      * 委托交易list
      */
     private List<ExchangeTransMatch003Dto> entrustList;
@@ -135,6 +161,9 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     }
 
     public BigDecimal getRemainAmount() {
+        if(DictCodeListExt3.交易方向_债转股.getValue().equals(this.getPs())){
+            return BigDecimal.ZERO;
+        }
         return remainAmount;
     }
 
@@ -205,10 +234,35 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
     public String getPsStr() {
         // GZYHTZJY-716:成交明细汇总表回购方向与指令方向不一致,需特殊处理 fuyongsheng 20211206 edit start
         if(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(this.getFinprodType2())){
-            return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_正回购.getValue());
+            if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_买入.getValue())) {
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_正回购.getValue());
+            }
+            else if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_到期.getValue())){
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_到期购回.getValue());
+            }
+            else if(StringUtil.equals(this.getPs(), DictCodeListExt3.交易方向_投资端_提前终止.getValue())){
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_提前购回.getValue());
+            }
+            else {
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+            }
+
         }else if(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(this.getFinprodType2())){
-            return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_逆回购.getValue());
-        }else{
+
+            if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_买入.getValue())) {
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_逆回购.getValue());
+            }
+            else if(StringUtil.equals(this.getPs(), DictCodeList.交易方向_到期.getValue())){
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_到期购回.getValue());
+            }
+            else if(StringUtil.equals(this.getPs(), DictCodeListExt3.交易方向_投资端_提前终止.getValue())){
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, DictCodeListExt3.交易方向_提前购回.getValue());
+            }
+            else {
+                return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
+            }
+        }
+        else{
             return SysDataUtil.getNameFromDataDict(DictCode.交易方向, this.getPs());
         }
         // GZYHTZJY-716:成交明细汇总表回购方向与指令方向不一致,需特殊处理 fuyongsheng 20211206 edit end
@@ -240,6 +294,46 @@ public class ExchangeTransMatch002Dto extends SettleTransDataTotal implements IT
      */
     public String getTradeDateStr() {
         return DateUtil.format(this.getTradeDate());
+    }
+
+    public String getRepoType() {
+        return repoType;
+    }
+
+    public void setRepoType(String repoType) {
+        this.repoType = repoType;
+    }
+
+    public String getConPrice() {
+        return conPrice;
+    }
+
+    public void setConPrice(String conPrice) {
+        this.conPrice = conPrice;
+    }
+
+    public String getConAmt() {
+        return conAmt;
+    }
+
+    public void setConAmt(String conAmt) {
+        this.conAmt = conAmt;
+    }
+
+    public String getrFinMarketId() {
+        return rFinMarketId;
+    }
+
+    public void setrFinMarketId(String rFinMarketId) {
+        this.rFinMarketId = rFinMarketId;
+    }
+
+    public String getrFinprodId() {
+        return rFinprodId;
+    }
+
+    public void setrFinprodId(String rFinprodId) {
+        this.rFinprodId = rFinprodId;
     }
 }
 

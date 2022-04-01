@@ -12,4 +12,9 @@ public interface StlDataGatherConstant {
      * 上中登结算明细数据
      */
     String STL_DATA_GATHER_REMARK = "数据清算自动处理";
+
+    /**
+     * 新头寸时间类型T+0
+     */
+    Integer DATE_TYPE_T_0 = 0;
 }

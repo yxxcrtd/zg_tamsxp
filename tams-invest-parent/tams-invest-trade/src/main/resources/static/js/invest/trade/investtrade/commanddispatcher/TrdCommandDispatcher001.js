@@ -197,7 +197,11 @@ $(function(){
                         });
                 }
                 else {
-                    pagePath = "invest/entrust/etrexchangetrade/EtrExchangeTrade001/init";
+					if(data.entrustClass==ENTRUST_CLASS_02){
+						pagePath = "invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/init";
+					}else{
+						pagePath = "invest/entrust/etrexchangetrade/EtrExchangeTrade001/init";
+					}
                     Joyin.dialog(JoyinUtil.getLabel(label), basePath + pagePath,
                         "95%", "90%", {
                             pageModel: PAGE_MODEL_REFERENCE,
@@ -398,7 +402,7 @@ $(function(){
         		title: 'TrdCommandDispatcher001.portfolioId',
                 render : function(data, type, row, meta) {
         			var portfolioId = row.portfolioId;
-        			if (portfolioId){
+        			if (portfolioId&&row.entrustClass==ENTRUST_CLASS_01){
                         portfolioId = '<a onclick="showPtlManagement(\'' + row.portfolioId
                             + '\')" class="pro-link"  style="cursor: pointer;">'+row.portfolioId+'</a>';
 					} else {

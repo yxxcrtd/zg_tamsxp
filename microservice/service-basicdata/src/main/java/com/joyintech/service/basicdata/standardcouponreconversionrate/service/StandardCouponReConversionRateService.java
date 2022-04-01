@@ -81,6 +81,9 @@ public class StandardCouponReConversionRateService extends BaseService<StandardC
         return basicStandardCouponReConversionRateMapper.selectByPrimaryKey(dto);
     }
 
+    public List<StandardCouponReConversionRateDto> getList(StandardCouponReConversionRateDto dto){
+        return basicStandardCouponReConversionRateMapper.getList(dto);
+    }
 
     /**
      * 删除操作

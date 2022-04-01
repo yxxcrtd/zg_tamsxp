@@ -12,7 +12,9 @@
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
         ,T5.PORTFOLIO_ID
-        ,T5.PORTFOLIO_NAME
+        ,CASE
+        WHEN T1.ENTRUST_CLASS= #{ENTRUST_CLASS_02} THEN TREE.TREE_NAME
+        ELSE T5.PORTFOLIO_NAME END AS PORTFOLIO_NAME
         ,T1.FINPROD_ID
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS FINPROD_ABBR
@@ -76,7 +78,10 @@
             T8.ENTRUST_ID ) T9 ON
             T9.ENTRUST_ID = T1.ENTRUST_ID -->    LEFT JOIN PTL_PORTFOLIO T5 ON
         T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
-        INNER JOIN PTL_PORTFOLIO_AUTHORITY T6 ON
+        LEFT JOIN MUTIPTL_PORTFOLIO_TREE TREE
+        ON T1.PORTFOLIO_ID = TREE.TREE_ID
+        AND TREE.PAR_TREE_ID IS NOT NULL
+        LEFT JOIN PTL_PORTFOLIO_AUTHORITY T6 ON
         T6.PORTFOLIO_ID = T5.PORTFOLIO_ID
         <if test="userId != null and userId != ''">
             AND T6.USER_ID = #{userId}
@@ -116,7 +121,9 @@
         ,case when T2.TARGET_TYPE = '01' then ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_NUM,4)
         else ROUND(T4.ENT_FINISH_AMT/T1.ENTRUST_AMT,4) end as dealPercent
         ,T5.PORTFOLIO_ID
-        ,T5.PORTFOLIO_NAME
+        ,CASE
+        WHEN T1.ENTRUST_CLASS= #{ENTRUST_CLASS_02} THEN TREE.TREE_NAME
+        ELSE T5.PORTFOLIO_NAME END AS PORTFOLIO_NAME
         ,T1.FINPROD_ID
         ,T7.FINPROD_MARKET_ID
         ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS FINPROD_ABBR
@@ -161,7 +168,10 @@
         LEFT JOIN   ETR_FINISH_STATUS T4  ON T4.ENTRUST_ID = T1.ENTRUST_ID AND T1.ENTRUST_ID = T4.TRADE_ID
         LEFT JOIN PTL_PORTFOLIO T5 ON
         T5.PORTFOLIO_ID = T1.PORTFOLIO_ID
-        INNER JOIN PTL_PORTFOLIO_AUTHORITY T6 ON
+        LEFT JOIN MUTIPTL_PORTFOLIO_TREE TREE
+        ON T1.PORTFOLIO_ID = TREE.TREE_ID
+        AND TREE.PAR_TREE_ID IS NOT NULL
+        LEFT JOIN PTL_PORTFOLIO_AUTHORITY T6 ON
         T6.PORTFOLIO_ID = T5.PORTFOLIO_ID
         <if test="userId != null and userId != ''">
             AND T6.USER_ID = #{userId}
@@ -315,52 +325,93 @@
         ON
         TEMP.FINPROD_ID = FP.FINPROD_ID
         <!-- 债券行情 -->
+        <!-- modify by etliu 20220228 start -->
+        <!-- 广农商二阶段 GNS-916：【广农商场内清算】场内交易指令页面 股票买入下单后右侧持仓TAB不应出现多条数据 -->
+        <!--LEFT JOIN
+            MST_BOND_VALUATION_INFO MBVI
+        ON
+            FP.FINPROD_MARKET_ID = MBVI.SEC_ID
+        AND MBVI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+        AND MBVI.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
+        LEFT JOIN
+            (SELECT MAX(M.VALUE_DATE) VALUE_DATE,
+                M.SEC_ID,
+                M.VALUE_SOURCE
+            FROM MST_BOND_VALUATION_INFO M
+            WHERE M.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+            AND M.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
+            GROUP BY M.SEC_ID,M.VALUE_SOURCE) MBVI2
+        ON MBVI.SEC_ID = MBVI2.SEC_ID
+        AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
+        AND MBVI.VALUE_DATE = MBVI2.VALUE_DATE-->
+        LEFT JOIN
+        (SELECT MAX(M.VALUE_DATE) VALUE_DATE,
+        M.SEC_ID
+        FROM MST_BOND_VALUATION_INFO M
+        WHERE M.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+        AND M.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
+        GROUP BY M.SEC_ID) MBVI2
+        ON FP.FINPROD_MARKET_ID = MBVI2.SEC_ID
         LEFT JOIN
         MST_BOND_VALUATION_INFO MBVI
         ON
         FP.FINPROD_MARKET_ID = MBVI.SEC_ID
-        AND MBVI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
-        AND MBVI.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
-        LEFT JOIN
-        (SELECT MAX(M.VALUE_DATE) VALUE_DATE,
-        M.SEC_ID,
-        M.VALUE_SOURCE
-        FROM MST_BOND_VALUATION_INFO M
-        WHERE M.VALUE_DATE <![CDATA[<=]]> #{sysDate}
-        AND M.VALUE_SOURCE = #{VALUATION_SOURCE_CSD}
-        GROUP BY M.SEC_ID,M.VALUE_SOURCE) MBVI2
-        ON MBVI.SEC_ID = MBVI2.SEC_ID
-        AND MBVI.VALUE_SOURCE = MBVI2.VALUE_SOURCE
         AND MBVI.VALUE_DATE = MBVI2.VALUE_DATE
         <!-- 基金行情 -->
-        LEFT JOIN
-        MST_FUND_MARKET_INFO MFMI
+        <!--LEFT JOIN
+            MST_FUND_MARKET_INFO MFMI
         ON
-        FP.FINPROD_MARKET_ID = MFMI.FUND_CODE
+            FP.FINPROD_MARKET_ID = MFMI.FUND_CODE
         AND MFMI.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+        LEFT JOIN
+            (SELECT MAX(MF.VALUE_DATE) VALUE_DATE,
+                     MF.FUND_CODE
+            FROM MST_FUND_MARKET_INFO MF
+            WHERE MF.VALUE_DATE <![CDATA[<=]]> #{sysDate}
+            GROUP BY  MF.FUND_CODE) MFMI2
+        ON MFMI.FUND_CODE = MFMI2.FUND_CODE
+        AND MFMI.VALUE_DATE = MFMI2.VALUE_DATE-->
         LEFT JOIN
         (SELECT MAX(MF.VALUE_DATE) VALUE_DATE,
         MF.FUND_CODE
         FROM MST_FUND_MARKET_INFO MF
         WHERE MF.VALUE_DATE <![CDATA[<=]]> #{sysDate}
         GROUP BY  MF.FUND_CODE) MFMI2
-        ON MFMI.FUND_CODE = MFMI2.FUND_CODE
+        ON FP.FINPROD_MARKET_ID = MFMI2.FUND_CODE
+        LEFT JOIN
+        MST_FUND_MARKET_INFO MFMI
+        ON
+        FP.FINPROD_MARKET_ID = MFMI.FUND_CODE
         AND MFMI.VALUE_DATE = MFMI2.VALUE_DATE
         <!-- 股票行情 -->
-        LEFT JOIN
-        MST_SHARE_PRICE MSP
+        <!--LEFT JOIN
+            MST_SHARE_PRICE MSP
         ON
-        FP.FINPROD_MARKET_ID = MSP.SHARES_ID
+            FP.FINPROD_MARKET_ID = MSP.SHARES_ID
         AND MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
+        LEFT JOIN
+            (SELECT MAX(MSP.DEAL_DATE) DEAL_DATE,
+                    MSP.SHARES_ID
+            FROM MST_SHARE_PRICE MSP
+            WHERE MSP.SHARES_ID = MSP.SHARES_ID
+            AND MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
+            GROUP BY MSP.SHARES_ID) MSP2
+        ON MSP.SHARES_ID = MSP2.SHARES_ID
+        AND  MSP.DEAL_DATE = MSP2.DEAL_DATE-->
         LEFT JOIN
         (SELECT MAX(MSP.DEAL_DATE) DEAL_DATE,
         MSP.SHARES_ID
         FROM MST_SHARE_PRICE MSP
-        WHERE MSP.SHARES_ID = MSP.SHARES_ID
-        AND MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
+        WHERE
+        MSP.DEAL_DATE <![CDATA[<=]]> #{sysDate}
         GROUP BY MSP.SHARES_ID) MSP2
-        ON MSP.SHARES_ID = MSP2.SHARES_ID
-        AND  MSP.DEAL_DATE = MSP2.DEAL_DATE
+        ON FP.FINPROD_MARKET_ID = MSP2.SHARES_ID
+        LEFT JOIN
+        MST_SHARE_PRICE MSP
+        ON
+        FP.FINPROD_MARKET_ID = MSP.SHARES_ID
+        AND MSP.DEAL_DATE = MSP2.DEAL_DATE
+        <!-- modify by etliu 20220228 end -->
         LEFT JOIN
         (
         SELECT
@@ -518,6 +569,7 @@
         SSAI.SEC_ACCT_NAME AS secAcctName,
         TEMP.FINPROD_ID AS finprodId,
         FP.FINPROD_MARKET_ID AS finprodMarketId,
+        FP.FINPROD_ABBR as finprodName,
         CASE WHEN instr(FP.FINPROD_MARKET_ID,'.') > 0 THEN
         SUBSTR(FP.FINPROD_MARKET_ID,1,instr(FP.FINPROD_MARKET_ID,'.',-1,1)-1)
         ELSE FP.FINPROD_MARKET_ID
@@ -740,9 +792,28 @@
         <if test="finprodMarketId != null and finprodMarketId !=''">
             AND FP.FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
         </if>
-        )
+        <if test="finprodId != null and finprodId !=''">
+            AND TEMP.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+        ) a
+        left join SYS_DATADICT_LIST sdl1 on a.tradeMarket=sdl1.ITEM_CODE and sdl1.DICT_CODE='TRADE_PLACE'
         where rank = 1
+        <!-- 关键字模糊查询 -->
+        <include refid="etrExchangeQueryAnd1"/>
     </select>
+
+    <sql id="etrExchangeQueryAnd1">
+        <if test="search != null and search != ''">
+            and (
+            a.portfolioName|| '|' ||a.acctNo|| '|' ||a.finprodMarketId|| '|' ||a.finprodName|| '|' ||sdl1.ITEM_VALUE
+            like '%' || #{search} || '%'
+            )
+            <if test="search_isNumberFlag != null and search_isNumberFlag == true">
+                or (a.secNum = #{search})
+                or (a.canRepoNum = #{search})
+            </if>
+        </if>
+    </sql>
     <!-- 证券账户代码下拉框查询-->
     <select id="getSecAcctId" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT DISTINCT
@@ -1045,6 +1116,7 @@
         AND t.VDATE <![CDATA[<=]]> #{date}
         AND t.MDATE <![CDATA[>=]]> #{date}
         and rownum = 1
+        order by t.VDATE desc
     </select>
 
     <!-- 自定义二级类型查询 -->
@@ -1238,7 +1310,7 @@
         to_date(START_DATE,'yyyy-MM-dd') <![CDATA[<=]]> to_date(#{sysDate},'yyyy-MM-dd')
         ) SBMCICP2
         ON 'BROKER' = SBMCICP2.FINPROD_ID AND TEMP.CUSTOMER_ID = SBMCICP2.BROKER_ID
-        ) T
+        ) T where ROWNUM = 1
     </select>
 
     <select id="selectEntrustByKey" resultMap="com.joyintech.tams.common.base.dao.EtrEntrustMapper.BaseResultMap">
@@ -1534,4 +1606,180 @@
             and MDATE &gt;= #{sysDate,jdbcType=DATE}
     </select>
     <!--add by etliu 20211207 end-->
+
+    <select id="selectPortfolioTreeId" resultType="com.joyintech.framework.select.SelectOptionDto">
+            select T.TREE_ID id,
+                   T.TREE_NAME text
+                    from MUTIPTL_PORTFOLIO_TREE T
+            <where>
+                 T.PAR_TREE_ID IS NOT NULL
+                <if test="search != null and search != ''">
+                    AND
+                    (
+                    T.TREE_ID LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    OR
+                    T.TREE_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+                    )
+                </if>
+                <if test="initValue != null and initValue != ''">
+                    AND T.TREE_ID = #{initValue}
+                </if>
+            </where>
+    </select>
+
+    <select id="selectPortfolioId" resultType="com.joyintech.framework.select.SelectOptionDto">
+            select A.PORTFOLIO_ID id,
+                   B.PORTFOLIO_NAME text
+              from MUTIPTL_PORTFOLIO_DETAIL A
+             INNER JOIN PTL_PORTFOLIO B
+            ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+            <where>
+               A.TREE_ID = #{portfolioTreeId}
+            </where>
+    </select>
+
+    <select id="selectPortfolioTreeDetail" resultType="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMultiPtl001Dto">
+        select
+            A.TREE_ID treeId,
+            A.PORTFOLIO_ID portfolioId,
+            B.PORTFOLIO_NAME portfolioName,
+            <!--A.ACCT_NO acctNo,
+            D.ACCT_NAME acctName,-->
+            <if test="finprodId != null and finprodId != ''">
+                E.FINPROD_ID finprodId,
+                E.FINPROD_MARKET_ID finprodMarketId,
+                E.FINPROD_ABBR finprodName,
+                E.FINPROD_TYPE2 finprodType2,
+            </if>
+            <if test="ps != null and ps != ''">
+                case when #{ps} = #{PS_T100}
+                    then null
+                else
+                    #{ps}
+                end ps,
+            </if>
+            A.CCY ccy,
+            nvl(F.TDY_ASSET_NETVALUE,0) productNetValue
+        from
+            MUTIPTL_PORTFOLIO_DETAIL A
+        INNER JOIN PTL_PORTFOLIO B
+            ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+        INNER JOIN PTL_PORTFOLIO_AUTHORITY C
+            ON B.PORTFOLIO_ID = C.PORTFOLIO_ID
+        <!--INNER JOIN STL_CAPACCT_INFO D
+            ON A.ACCT_NO = D.ACCT_NO-->
+        <if test="finprodId != null and finprodId != ''">
+        LEFT JOIN FIN_PRODUCT E
+            ON E.FINPROD_ID = #{finprodId}
+        </if>
+        LEFT JOIN PTL_PORTFOLIO_VALUATION F
+            ON F.PORTFOLIO_ID = A.PORTFOLIO_ID
+            AND F.CDATE <![CDATA[<=]]> to_date(#{ptlDate},'yyyy-mm-dd') -1
+            AND A.CCY = F.CCY
+        <where>
+            A.TREE_ID = #{portfolioTreeId}
+            AND A.EFF_DATE <![CDATA[<=]]> to_date(#{ptlDate},'yyyy-mm-dd')
+            AND C.USER_ID = #{userId}
+            <if test="portfolioId != null and portfolioId != ''">
+                AND A.PORTFOLIO_ID  = #{portfolioId}
+            </if>
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                and  A.PORTFOLIO_ID in
+                <foreach collection="portfolioIdList" item="item" open="("
+                         close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectMultiAcctNo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select A.ACCT_NO id,
+               B.ACCT_NAME text
+          from MUTIPTL_PORTFOLIO_DETAIL A
+         INNER JOIN STL_CAPACCT_INFO B
+            ON A.ACCT_NO = B.ACCT_NO
+         WHERE A.PORTFOLIO_ID = #{portfolioId}
+           AND A.TREE_ID = #{portfolioTreeId}
+    </select>
+
+    <select id="selectMultiSecAcctId" resultType="java.lang.String">
+        select B.SEC_ACCT_ID
+          from PTL_SEC_ACCT A
+         INNER JOIN STL_SEC_ACCT_INFO B
+            ON A.ACCT_NO = B.SEC_ACCT_ID
+         WHERE A.PORTFOLIO_ID = #{portfolioId}
+           AND B.TRD_ACCT_ID = #{acctNo}
+           AND B.TRADE_PLACE = #{tradeMarket}
+           AND B.SEC_ACCT_TYPE = 'SEC'
+    </select>
+    <resultMap type="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMulti001Dto" id="detailInfoMap">
+        <id property="portfolioTreeId" column="TREE_ID" />
+        <result property="mulDistriClass" column="MUL_CAL_CLASS" />
+        <result property="mulTargetUnit" column="MUL_TARGET_UNIT" />
+        <result property="weightType" column="WEIGH_TYPE" />
+        <result property="finprodId" column="FINPROD_ID" />
+        <result property="finprodName" column="FINPROD_ABBR" />
+        <result property="ps" column="PS" />
+        <result property="price" column="PRICE" />
+        <result property="yield" column="yield" />
+        <result property="entrustNum" column="ENTRUST_NUM" />
+        <result property="entrustAmt" column="ENTRUST_AMT" />
+        <result property="vdate" column="VDATE" />
+        <result property="mdate" column="MDATE" />
+        <collection property="tradeMultiPtl001Dtos" resultMap="colResultList_resultMap" />
+    </resultMap>
+    <resultMap type="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMultiPtl001Dto" id="colResultList_resultMap">
+        <result property="portfolioId" column="PORTFOLIO_NAME" />
+        <result property="portfolioName" column="PORTFOLIO_NAME" />
+        <result property="finprodId" column="FINPROD_ID" />
+        <result property="finprodName" column="FINPROD_ABBR" />
+        <result property="proportion" column="PROPORTION" />
+        <result property="ps" column="PS" />
+        <result property="price" column="PRICE" />
+        <result property="fullPrice" column="FULL_PRICE" />
+        <result property="yield" column="yield" />
+        <result property="vdate" column="VDATE" />
+        <result property="mdate" column="MDATE" />
+    </resultMap>
+
+    <select id="selectMultDetail" resultType="com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTradeMulti001Dto">
+        select
+        T4.TREE_ID as portfolioTreeId,
+        ,T2.MUL_CAL_CLASS
+        ,T2.MUL_TARGET_UNIT
+        ,T2.WEIGH_TYPE
+        ,T1.FINPROD_ID
+        ,CASE WHEN T1.PS IN ('03','04') THEN T1.FINPROD_ID ELSE T7.FINPROD_ABBR END AS FINPROD_ABBR
+        ,T1.PS
+        ,T1.PRICE_MODEL
+        ,CASE WHEN T1.PS IN (#{PS_T68}, #{PS_T69}, #{PS_03}, #{PS_04}) THEN T1.PRICE * 100 ELSE
+        T1.PRICE END price
+        ,T1.TRADE_MARKET
+        ,T2.FULL_PRICE as fprice
+        ,T2.MATURE_YIELD * 100 as yield
+        ,T2.DEAL_MODE as declaType
+        ,T1.COUNTER_ID
+        ,T2.COUNTER_SEAT
+        ,T2.COUNTER_CON_NO
+        ,T2.TRADER
+        ,T1.VDATE
+        ,T1.MDATE,
+         ,T5.PORTFOLIO_ID
+        ,T5.PORTFOLIO_NAME
+        ,T3.PROPORTION
+        FROM
+        ETR_ENTRUST			T1
+        INNER JOIN	  ETR_ENTRUST_ADD	T2 ON T2.ENTRUST_ID = T1.ENTRUST_ID
+        INNER JOIN    ETR_ENTRUST_DETAIL T3 ON T3.ENTRUST_ID = T1.ENTRUST_ID
+        LEFT JOIN FIN_PRODUCT T7 ON
+            T7.FINPROD_ID = T1.FINPROD_ID
+        LEFT JOIN     MUTIPTL_PORTFOLIO_TREE T4 ON T1.PORTFOLIO_ID = T4.TREE_ID
+        AND T4.PAR_TREE_ID IS NOT NULL
+        LEFT JOIN PTL_PORTFOLIO T5 ON T5.PORTFOLIO_ID = T2.PORTFOLIO_ID
+        where
+        T1.ENTRUST_ID=#{entrustId}
+    </select>
+
 </mapper>

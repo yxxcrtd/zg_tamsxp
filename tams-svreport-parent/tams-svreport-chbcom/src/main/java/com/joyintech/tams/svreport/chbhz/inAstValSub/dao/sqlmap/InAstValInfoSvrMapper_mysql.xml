@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbhz.inAstValSub.dao.InAstValInfoSvrMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAstValSubTmp" >
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <result column="UNIT_VAL_NET" property="unitValNet" jdbcType="DECIMAL" />
+        <result column="UNIT_VAL_TOTAL" property="unitValTotal" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap type="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto" id="ChbAstValueRegist001DtoRM">
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <result column="UNIT_VAL_NET" property="unitValNet" jdbcType="DECIMAL" />
+        <result column="UNIT_VAL_TOTAL" property="unitValTotal" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+
+    </resultMap>
+
+    <select id="genChbAstValSubTmpList"  resultMap="BaseResultMap">
+  select  * from  CHB_AST_VAL_SUB_TMP
+  where  1=1
+  and   DATE_FORMAT(ROW_DATE,'%Y-%m-%d') = #{batchdate,jdbcType = VARCHAR}
+ </select>
+    <select id="genChbAstValSubList"  resultMap="ChbAstValueRegist001DtoRM">
+        select * from CHB_AST_VAL_SUB
+        where 1=1
+        and  SEND_STATUS  in ('02','03')
+        <if test="keylist != null and keylist.size() > 0">
+            AND concat_ws('|',ASSET_CODE,DATE_FORMAT(VAL_DATE,'%Y-%m-%d')) IN
+            <trim suffixOverrides=" OR concat_ws('|',ASSET_CODE,DATE_FORMAT(VAL_DATE,'%Y-%m-%d')) IN ()">
+                <foreach collection='keylist' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR concat_ws('|',ASSET_CODE,DATE_FORMAT(VAL_DATE,'%Y-%m-%d')) (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="genChbAstValSubAllList"  resultMap="ChbAstValueRegist001DtoRM">
+  select * from CHB_AST_VAL_SUB 
+    where 1=1
+    and  SEND_STATUS  in ('02','03')
+ </select>
+</mapper>

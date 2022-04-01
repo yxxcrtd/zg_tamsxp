@@ -3,12 +3,12 @@
 <mapper namespace="com.joyintech.tams.report.system.autbatchproresultquery.dao.AutBatchProResultQuery001Mapper_mysql">
 	<select id="queryBatchProResult" resultType="com.joyintech.tams.report.system.autbatchproresultquery.dto.AutBatchProResultQuery001Dto">
 		SELECT CBL.TASK_ID taskId,
-<!-- 		CST.TASK_NAME taskName, -->
+		<!-- 		CST.TASK_NAME taskName, -->
 		CBL.START_TIME startTime,
 		CBL.END_TIME endTime,
 		CBL.BATCH_RESULT batchResult
 		FROM CHB_AUTOSEND_BATCH_LOG CBL
-<!-- 		INNER JOIN SYS_BATCH_TASK CST -->
+		<!-- 		INNER JOIN SYS_BATCH_TASK CST -->
 		<!-- on CBL.TASK_ID=CST.TASK_ID -->
 		<where>
 			<if test="taskId!=null and taskId!=''">

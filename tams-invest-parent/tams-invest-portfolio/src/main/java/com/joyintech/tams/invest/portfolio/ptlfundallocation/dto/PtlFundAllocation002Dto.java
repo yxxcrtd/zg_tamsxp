@@ -27,6 +27,7 @@ import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocati
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -102,6 +103,27 @@ public class PtlFundAllocation002Dto extends StlPayOrders implements ITableRow,P
      *明细信息
      */
     private List<PtlFundAllocation001Dto> ptlFundAllocation001Dtos;
+
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
+
+    private String positionType;
+
+    public String getPositionType() {
+        return positionType;
+    }
+
+    public void setPositionType(String positionType) {
+        this.positionType = positionType;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
 
     public List<PtlFundAllocation001Dto> getPtlFundAllocation001Dtos() {
         return ptlFundAllocation001Dtos;

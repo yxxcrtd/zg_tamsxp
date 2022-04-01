@@ -82,6 +82,16 @@ $(function() {
         page: true,
         searchOnInit: true,
         addbtn:true,
+        // GZYHTZJY-1127:回购时.成交金额不准许修改 modify fuyongsheng start
+        beforeEditCell: function(preVal, field, rowData){
+            if(field == "tradeAmt" && (rowData.finprodType2 == 'F02' || rowData.finprodType2 == 'F03'
+                || rowData.finprodType2 == 'F04' || rowData.finprodType2 == 'F05')){
+                return false;
+            }else{
+                return true;
+            }
+        },
+        // GZYHTZJY-1127:回购时.成交金额不准许修改 modify fuyongsheng end
         editCell : function(value, data, field, cell, column){
             if(field=='commissionAmt') {
                 var rowData = {};

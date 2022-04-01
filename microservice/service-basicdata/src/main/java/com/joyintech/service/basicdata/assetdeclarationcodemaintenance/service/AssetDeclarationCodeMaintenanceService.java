@@ -140,6 +140,8 @@ public class AssetDeclarationCodeMaintenanceService extends BaseService<AssetDec
 	 * @return SelectOptionDto
 	 */
 	public List<SelectOptionDto> getfinprodType(Map<String, Object> map) {
+		map.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+		map.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
 		return assetDeclarationCodeMaintenanceMapper.getfinprodType(map);
 	}
 

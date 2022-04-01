@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbsd.prdraisetotsub.dao.SdRaiseTotalSvrMapper_mysql">
+    <resultMap  id="SdRaiseTotalSvrDtoRM" type="com.joyintech.tams.svreport.chbsd.prdraisetotsub.dto.SdRaiseTotalSvrDto">
+        <id column="REGIST_SEQNO" jdbcType="VARCHAR" property="registSeqno" />
+        <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+        <result column="FPROD_ID" jdbcType="VARCHAR" property="fprodId" />
+        <result column="ISSUE_PARTY_ID" jdbcType="VARCHAR" property="issuePartyId" />
+        <result column="SINGLE_TOTAL" jdbcType="DECIMAL" property="singleTotal" />
+        <result column="LEGAL_TOTAL" jdbcType="DECIMAL" property="legalTotal" />
+        <result column="UNLEGAL_TOTAL" jdbcType="DECIMAL" property="unlegalTotal" />
+        <result column="SUBSCRIBE_CCY_AMT" jdbcType="VARCHAR" property="subscribeCcyAmt" />
+        <result column="SALE_AREA_AMT" jdbcType="VARCHAR" property="saleAreaAmt" />
+        <result column="TOTAL_AMT" jdbcType="DECIMAL" property="totalAmt" />
+        <result column="RAISE_QTY" jdbcType="DECIMAL" property="raiseQty" />
+        <result column="IS_CONSIGN" jdbcType="VARCHAR" property="isConsign" />
+        <result column="CONSIGN_AMT" jdbcType="DECIMAL" property="consignAmt" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <result column="SEND_STATUS" jdbcType="VARCHAR" property="sendStatus" />
+        <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
+        <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
+        <result column="STATUS" jdbcType="VARCHAR" property="status" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
+        <result column="CHB_SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="chbSubmitDeadline" />
+        <result column="SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="submitDeadline" />
+        <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+        <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+    REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    ORG_CODE, DEPT_CODE,PROD_REGIST_CODE,SUMIT_SEQ
+  </sql>
+    <select id="selcteDataByIds" parameterType="java.util.List" resultMap="SdRaiseTotalSvrDtoRM">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_PRD_RAISETOT_SUB
+        where SEND_STATUS = '01'
+        AND STATUS = '01'
+        <!--AND   to_char(STATUS_DATE,'yyyy-MM-dd') = #{batchdate,jdbcType = VARCHAR}-->
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PROD_ID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+</mapper>

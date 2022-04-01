@@ -38,6 +38,10 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 	private CommissionCaclProcessMapper commissionCaclProcessMapper;
 	@Autowired
 	private FinProductQutoMapper finProductQutoMapper;
+	@Autowired
+	private ShareBonusRegMapper shareBonusRegMapper;
+	@Autowired
+	private MstFundBonusNoticeMapper mstFundBonusNoticeMapper;
 	
 	@Override
     public void write(List<? extends NeedToWriteEntity> items) throws Exception {
@@ -85,6 +89,22 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 							finProductQutoMapper.insertSelective(finProductQuto);
 						}
 					}
+					// 送股权益登记
+					if (dealWriteDto.getShareBonusRegList() != null && dealWriteDto.getShareBonusRegList().size() > 0) {
+						for (ShareBonusReg shareBonusReg : dealWriteDto.getShareBonusRegList()) {
+							shareBonusRegMapper.insertSelective(shareBonusReg);
+						}
+					}
+					// 基金分红通告
+					if (dealWriteDto.getMstFundBonusNoticeList() != null && dealWriteDto.getMstFundBonusNoticeList().size() > 0) {
+						for (MstFundBonusNotice mstFundBonusNotice : dealWriteDto.getMstFundBonusNoticeList()) {
+							try {
+								mstFundBonusNoticeMapper.insertSelective(mstFundBonusNotice);
+							}catch (Exception ex){
+
+							}
+						}
+					}
 				}
 			}
 		}
@@ -108,7 +128,7 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 			// 成交数据与投管交易关系
 //			SettleTransTgMapping settleTransTgMapping = dataDealWriteBaseDto.getSettleTransTgMapping();
 
-			if(null != settleTransData) {
+			if(null != settleTransData && StringUtil.isNotEmpty(settleTransData.getTradeId())) {
 				try {
 					settleTransDataMapper.insertSelective(settleTransData);
 				} catch (Exception e) {

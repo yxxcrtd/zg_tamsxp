@@ -1605,6 +1605,25 @@ public class AllTradeCommonUtil {
         return trdTradeFeeDetail;
     }
 
+    /**
+     * 根据登记编号删除 可用持仓和现金流水
+     * @param revokeReason
+     * @param busiCode
+     */
+    public static void deleteRegPosition(String revokeReason, String busiCode) {
+        //BSTOT-1822撤销退回 处理撤销交易编号
+        if(StringUtil.isNotEmpty(revokeReason)) {
+            if (busiCode.substring(busiCode.length() - 1).equals("R")) {
+                busiCode = busiCode.substring(0, busiCode.length() - 1);
+            }
+            AllTradeCommonUtil.deleteRegPositionReal(busiCode);
+        }
+        //BSTOT-1822撤销退回 处理撤销交易编号
+        else {
+            AllTradeCommonUtil.deleteRegPositionReal(busiCode);
+        }
+    }
+
     public static void deletePosition(String revokeReason, String busiCode) {
         //BSTOT-1822撤销退回 处理撤销交易编号
         if(StringUtil.isNotEmpty(revokeReason)) {
@@ -1619,6 +1638,27 @@ public class AllTradeCommonUtil {
         }
     }
 
+    /**
+     * 根据登记编号删除 可用持仓和现金流水
+     * @param tradeId
+     */
+    public static void deleteRegPositionReal(String tradeId) {
+        //处理可用持仓流水
+        List<PtlSecPositionFlow> flows = baseAssetCashPositionCommMapper.selectAllPosition(tradeId).stream()
+                .filter( flow -> DictCodeList.持仓类型_可用.getValue().equals(flow.getHodingType())).collect(Collectors.toList());
+        if (!flows.isEmpty()) {
+            baseAssetCashPositionCommMapper.deletePositionByTradeId(tradeId);
+        }
+
+        //处理可用现金流水
+        List<String> csahorderIds = new ArrayList<>();
+        csahorderIds.add(tradeId);
+        List<PtlCashPositionFlow> cashFlows = baseAssetCashPositionCommMapper.selectAllCashPosition(csahorderIds).stream()
+                .filter( flow -> DictCodeList.持仓类型_可用.getValue().equals(flow.getHodingType())).collect(Collectors.toList());;
+        if (!cashFlows.isEmpty()) {
+            baseAssetCashPositionCommMapper.deleteCashPositionByOrderId(tradeId);
+        }
+    }
     /**
      * 根据交易编号，删除可用，质押，融入，融出，在途FLOW持仓</br>
      * 如果持仓是质押，融入，融出，在途时，更新持仓表
@@ -1655,6 +1695,7 @@ public class AllTradeCommonUtil {
         }
 
         List<String> orderIds = baseAssetCashPositionCommMapper.selectOrderIdsByTradeId(tradeId);
+        orderIds.add(tradeId);
         if (orderIds.isEmpty()) {
             orderIds = baseAssetCashPositionCommMapper.selectOrderIdsByPTotalTradeId(tradeId);
         }

@@ -722,6 +722,10 @@ $(function () {
                     data: function() {
                         var parm={};
                         parm=delayVerification.getPageParams();
+                        if(parm.searchDateStart==''||parm.searchDateStart==null||parm.searchDateEnd==''||parm.searchDateEnd==null){
+                            Joyin.error("查询日期不可为空！");
+                            return;
+                        }
                         if(indexTotal=='02'){
                            parm.index=curSelectedIndexPbc+1;
                            parm.indexTotal='02';

@@ -7,7 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
@@ -27,13 +26,10 @@ import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service.PbcDatUtil;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat;
-import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDto;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.service.PbcPrdBaseinfoSubDatService;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDat;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDto;
-import com.joyintech.tams.svreport.pbc.common.util.ExcelListToEntity;
-import com.joyintech.tams.systemtools.dto.CommonAjaxResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +37,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -54,7 +51,8 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
     private static Logger logger = LoggerFactory.getLogger(PbcPrdBaseinfoSubDatService.class);
 
     private static final String TIPS_SUFFIX_ERROR = "只支持2003版的excel导入，请修改文件重新导入";
-
+    private static final String PRODUCT_BASE_INFO_NAME = "产品基本信息";
+    private static final String PRODUCT_END_INFO_NAME = "产品终止信息";
     @Autowired
     private PbcPrdBaseinfoEndSubDatMapper pbcPrdBaseinfoEndSubDatMapper;
 
@@ -80,7 +78,17 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
             ajaxResult.setErrorList(Arrays.asList(message));
             return ajaxResult;
         }
-        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
+        List<List<String>> dataList = null;
+        if(fileName.contains(PRODUCT_BASE_INFO_NAME)){//有两个sheet页的情况
+            try {
+                dataList = ExcelUtil.readToList(
+                        fileName, null, null, 1, 1, 0);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }else{
+            dataList = ExcelUtil.getDataList1(fileName);
+        }
         if(CollectionUtil.isNotEmpty(dataList)){
             List<PbcPrdBaseinfoEndSubDto> pbcPrdBaseinfoSubDatDtos = new ArrayList<>();
             //将excel中的行数据转换为实体
@@ -143,7 +151,17 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
 
     public List<ExcelValidDto> importBaseInfoSubDat(String fileName){
         List<ExcelValidDto> errorList = new ArrayList<>();
-        List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
+        List<List<String>> dataList = null;
+        if(fileName.contains(PRODUCT_BASE_INFO_NAME)){//有两个sheet页的情况
+            try {
+                dataList = ExcelUtil.readToList(
+                        fileName, null, null, 1, 1, 0);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }else{
+            dataList = ExcelUtil.getDataList1(fileName);
+        }
         if(!StringUtil.isEmptyList(dataList)){
             List<PbcPrdBaseinfoEndSubDto> pbcPrdBaseinfoEndSubDtos = new ArrayList<>();
             //将excel中的行数据转换为实体

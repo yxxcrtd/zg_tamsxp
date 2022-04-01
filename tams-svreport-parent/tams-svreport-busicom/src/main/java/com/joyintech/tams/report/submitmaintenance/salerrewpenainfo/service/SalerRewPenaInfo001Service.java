@@ -8,8 +8,11 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto;
 import com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dao.ChbSalerRewPenaInfoMapper;
 import com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -42,7 +45,9 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
      */
     public Page<SalerRewPenaInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
     {
-        return super.queryForPage(page,length,() -> chbSalerRewPenaInfoMapper.selectForPage(pageParam));
+        Page<SalerRewPenaInfoDto> pageList = super.queryForPage(page,length,() -> chbSalerRewPenaInfoMapper.selectForPage(pageParam));
+        this.formatByType(pageList.getRoot());
+        return pageList;
     }
 
     /**
@@ -533,5 +538,35 @@ public class SalerRewPenaInfo001Service extends CommonExportService<SalerRewPena
         }
         return length;
 
+    }
+
+    public static List<SalerRewPenaInfoDto> formatByType(List<SalerRewPenaInfoDto> dataList) {
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                item.setSalerRewPenaTyep(getDictCodeAndName(DictCode.记录分类, item.getSalerRewPenaTyep()));
+                item.setSalerRewPenaInst(getDictCodeAndName(DictCode.奖惩单位, item.getSalerRewPenaInst()));
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

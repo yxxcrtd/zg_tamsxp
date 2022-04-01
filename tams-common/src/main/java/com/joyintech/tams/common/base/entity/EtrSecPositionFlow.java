@@ -84,6 +84,10 @@ public class EtrSecPositionFlow extends BaseEntity {
      * 冲正标识
      */
     private String offsetFlag;
+    /**
+     *数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
 
     /**
      * 取得 流水号
@@ -324,5 +328,13 @@ public class EtrSecPositionFlow extends BaseEntity {
      */
     public void setOffsetFlag(String offsetFlag) {
         this.offsetFlag = offsetFlag == null ? null : offsetFlag.trim();
+    }
+
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

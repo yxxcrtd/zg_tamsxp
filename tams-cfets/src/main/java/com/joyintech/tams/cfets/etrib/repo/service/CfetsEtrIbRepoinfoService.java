@@ -11,6 +11,7 @@
 package com.joyintech.tams.cfets.etrib.repo.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
@@ -24,13 +25,18 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.business.common.dao.JoyinbusinessCommonMapper;
 import com.joyintech.tams.business.common.dto.SecManageAcctIdRequestDto;
+import com.joyintech.tams.business.common.pojo.Message;
 import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
+import com.joyintech.tams.cfets.bankuplink.repo.dao.CfetsIbuQuoteRepoMapper;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.CfetsRepoDealQuoteCommonDto;
+import com.joyintech.tams.cfets.bankuplink.repo.dto.RepoEntrustPledgeDto;
 import com.joyintech.tams.cfets.etrib.bond.dao.CfetsEtrIbBondinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoLib001Mapper;
 import com.joyintech.tams.cfets.etrib.repo.dao.CfetsEtrIbRepoinfoMapper;
 import com.joyintech.tams.cfets.etrib.repo.dto.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -38,9 +44,13 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -90,6 +100,12 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
 
     @Autowired
     private JoyinbusinessCommonService joyinbusinessCommonService;
+
+    @Autowired
+    private CfetsIbuQuoteRepoMapper cfetsIbuQuoteRepoMapper;
+
+    @Autowired(required = false)
+    private DateCalService dateCalService;
 
     /**
      * 指令管理查询
@@ -250,16 +266,18 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      * @since 1.0
      */
     public Page<CfetsEtrRepoZLCXPositionResponse> findZlglPositionPage(CfetsEtrRepoZLCXPositionRequest cfetsEtrRepoZLCXPositionRequest) {
+        String userId = SecurityUtil.getLoginUser().getUserName();
         Map<String, Object> map = new HashMap<>();
         map.put("role_pos", DictCodeListExt2.角色岗位_投资处长.getValue());
-        map.put("userId", SecurityUtil.getLoginUser().getUserName());
+        map.put("userId", userId);
         Long count = selectUserRolePosList(map) ;
         Map<String, Object> pageParam = BeanUtil.object2Map(cfetsEtrRepoZLCXPositionRequest);
         if(count > 0){
             pageParam.put("userId", null);
         }else{
-            pageParam.put("userId", SecurityUtil.getLoginUser().getUserName());
+            pageParam.put("userId", userId);
         }
+        pageParam.put("loginUserId", userId);
         pageParam.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
         pageParam.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
         pageParam.put("TRADE_STATUS_01", DictCodeListExt1.交易状态_初始.getValue());
@@ -273,7 +291,9 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
         pageParam.put("year",year);
         pageParam.put("sort",cfetsEtrRepoZLCXPositionRequest.getPageMode().getSort());
         pageParam.put("direction",cfetsEtrRepoZLCXPositionRequest.getPageMode().getDirection());
-        Page<CfetsEtrRepoZLCXPositionResponse> result = super.queryForPage(cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageNo(), cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageSize(), () -> cfetsEtrIbRepoinfoMapper.findZlglPositionPage(pageParam));
+        Page<CfetsEtrRepoZLCXPositionResponse> result =
+                super.queryForPage(cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageNo(),
+                        cfetsEtrRepoZLCXPositionRequest.getPageMode().getPageSize(), () -> cfetsEtrIbRepoinfoMapper.findZlglPositionPage(pageParam));
         for (CfetsEtrRepoZLCXPositionResponse dto : result.getRoot()) {
             String pendingPeriodStr = joyinbusinessCommonService.calPendingPeriod(dto.getFinprodId());
             String period = pendingPeriodStr.substring(0, pendingPeriodStr.length() - 1);
@@ -504,6 +524,7 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
     */
    public List<SelectOptionDto> getPledgeStockIdByPortfolioId(CfetsSearchPledgeStockRequest cfetsSearchPledgeStockRequest) {
 	   Map<String,Object> param = BeanUtil.object2Map(cfetsSearchPledgeStockRequest);
+	   param.put("userId",SecurityUtil.getLoginUser().getUserName());
        return  cfetsEtrIbRepoinfoMapper.getPledgeStockIdByPortfolioId(param);
    }
 
@@ -513,6 +534,8 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
      */
     public List<SelectOptionDto> getPledgeStockId(CfetsSearchPledgeStockRequest cfetsSearchPledgeStockRequest) {
         Map<String,Object> param = BeanUtil.object2Map(cfetsSearchPledgeStockRequest);
+        String userId = SecurityUtil.getLoginUser().getUserName();
+        param.put("userId", userId);
         return  cfetsEtrIbRepoinfoMapper.getPledgeStockId(param);
     }
 
@@ -753,6 +776,79 @@ public class CfetsEtrIbRepoinfoService extends BaseService{
             //组合关联的银行间机构,此处前端能拿到组合的21位码
             return joyinbusinessCommonMapper.queryMySideList(param);
         }
+    }
+
+    public BigDecimal getPledgeable(Map<String,Object> param) {
+        BigDecimal pledgeable = BigDecimal.ZERO;
+        param.put("A_012", DictCodeListExt3.资产类型_质押式双边回购本方券已质押持仓.getValue());
+        param.put("S_002", DictCodeListExt3.资产类型_可质押持仓.getValue());
+        param.put("sysDate", iPlatformDate.getSysDateStr());
+        pledgeable = cfetsEtrIbRepoinfoMapper.getPledgeable(param);
+        if (pledgeable == null) {
+            pledgeable = BigDecimal.ZERO;
+        }
+        return pledgeable;
+    }
+
+    public AjaxResult checkBondInfo(@RequestBody CfetsEtrRepoBondInfoRequest request) {
+        AjaxResult result = new AjaxResult();
+        if (CollectionUtils.isEmpty(request.getCfetsEtrRepoZLCXPositionResponses())) {
+            return result;
+        }
+        Map<String, Object> param = new HashMap<>();
+        List<String> finProdIds = new ArrayList<>();
+        for (CfetsEtrRepoZLCXPositionResponse response : request.getCfetsEtrRepoZLCXPositionResponses()) {
+            finProdIds.add(response.getFinprodId());
+        }
+        param.put("finProdIds", finProdIds);
+        param.put("platDate", iPlatformDate.getSysDateStr());
+        if (StringUtil.equals(request.getPs(), DictCodeListExt3.交易方向_正回购.getValue())) {
+            List<FinExercisePlan> finExercisePlans = cfetsIbuQuoteRepoMapper.findFinExercisePlan(param);
+            if (CollectionUtils.isEmpty(finExercisePlans)) {
+                return result;
+            }
+            Date settlementStartDate = null;
+            // 回购期限
+            int repoTerm = request.getRepoTerm().intValue();
+            // 银行间交易日历的节假日取得
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(request.getEntrustDate(), DateUtil.addDay(request.getEntrustDate(), repoTerm + 15), "03");
+            // 首次结算日：平台日+清算速度，根据银行间节假日规则遇节假日顺延至下一个工作日
+            if (StringUtil.equals(request.getSettleSpreed(), BussinessDictCodeList.清算速度_T加0.getValue())) {
+                settlementStartDate = request.getEntrustDate();
+            }
+            if (StringUtil.equals(request.getSettleSpreed(), BussinessDictCodeList.清算速度_T加1.getValue())) {
+                settlementStartDate = dateCalService.calculationTradingDay(request.getEntrustDate(), 1, holidayList, "1");
+            }
+            if (StringUtil.equals(request.getSettleSpreed(), BussinessDictCodeList.清算速度_T加2.getValue())) {
+                settlementStartDate = dateCalService.calculationTradingDay(request.getEntrustDate(), 2, holidayList, "1");
+            }
+            Date SettlementEndDate = null;
+            // 到期结算日=首次结算日+回购期限，遇银行间节假日调整到下一工作日
+            if (StringUtil.isNotEmpty(settlementStartDate)) {
+                SettlementEndDate = DateUtil.addDay(settlementStartDate, repoTerm - 1);
+                SettlementEndDate =
+                        dateCalService.calculationTradingDay(SettlementEndDate, 1, holidayList, "1");
+            }
+            for (FinExercisePlan finExercisePlan : finExercisePlans) {
+                for (CfetsEtrRepoZLCXPositionResponse response : request.getCfetsEtrRepoZLCXPositionResponses()) {
+                    if (StringUtil.isNotEmpty(SettlementEndDate)
+                            && DateUtil.compareTo(SettlementEndDate, response.getMdate()) < 0) {
+                        result.setMessage("所选质押券" + response.getFinprodMarketId() +
+                                response.getFinprodAbbr() + "到期日为" + response.getMdate() + "，不可小于等于回购到期结算日", MessageType.错误消息);
+                        return result;
+                    }
+                    if (DateUtil.compareTo(finExercisePlan.getExerciseDate(), SettlementEndDate) < 0) {
+                        result.setMessage("债券" + response.getFinprodMarketId() +
+                                response.getFinprodAbbr() + "已做赎回登记，是否确认继续质押", MessageType.确认消息);
+                    } else {
+                        result.setMessage("债券" + response.getFinprodMarketId() +
+                                response.getFinprodAbbr() + "已赎回登记，且到期结算日大于等于理论行权日，不可质押", MessageType.错误消息);
+                    }
+                    return result;
+                }
+            }
+        }
+        return result;
     }
 }
 

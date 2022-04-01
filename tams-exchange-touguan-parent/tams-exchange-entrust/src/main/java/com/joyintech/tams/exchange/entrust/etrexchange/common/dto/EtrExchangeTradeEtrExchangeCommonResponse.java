@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.exchange.entrust.etrexchange.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
@@ -117,6 +118,12 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
      */
     @ApiModelProperty(name="trader",value="本方交易员",example="A1")
     private String trader;
+
+    /**
+     * 本方交易员
+     */
+    @ApiModelProperty(name="counterTrader ",value="对本方交易员",example="A1")
+    private String counterTrader ;
 
     /**
      * 对手方交易商
@@ -239,6 +246,29 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     @ApiModelProperty(name="entrustType",value="指令类型",example="12")
     private String entrustType;
 
+    @ApiModelProperty(name="acctNo",value="资金账户")
+    private String acctNo;
+
+    @ApiModelProperty(name="finishAmt",value="已完成额度(元)")
+    private String finishAmt;
+
+    @ApiModelProperty(name="avaNum",value="剩余指令额度(元)")
+    private String avaNum;
+
+    @ApiModelProperty(name="finishDealAmt",value="已成交额度(元)")
+    private String finishDealAmt;
+
+    @ApiModelProperty(name="avaDealAmt",value="剩余成交额度(元)")
+    private String avaDealAmt;
+
+    @ApiModelProperty(name="businessModel",value="业务模式")
+    private String businessModel;
+
+    @ApiModelProperty(name="stockId",value="stockId")
+    private String stockId;
+    @ApiModelProperty(name="expConNum",value="预计转换股数")
+    private BigDecimal expConNum;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -270,7 +300,7 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
      * @since 1.0
      */
     public BigDecimal getImplementPercentAge(){
-        if(StringUtil.isNotEmpty(dealPercent)){
+        if(StringUtil.isNotEmpty(implementPercent)){
             return implementPercent.multiply(new BigDecimal(100));
         }else{
             return new BigDecimal(0);
@@ -511,6 +541,14 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
         this.trader = trader;
     }
 
+    public String getCounterTrader() {
+        return counterTrader;
+    }
+
+    public void setCounterTrader(String counterTrader) {
+        this.counterTrader = counterTrader;
+    }
+
     /**
      * 获取 counterOrg
      *
@@ -647,7 +685,7 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
     public void setInvAim(String invAim) {
         this.invAim = invAim;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     public Date getEntrustDate() {
         return entrustDate;
     }
@@ -671,5 +709,85 @@ public class EtrExchangeTradeEtrExchangeCommonResponse {
 
     public void setEntrustType(String entrustType) {
         this.entrustType = entrustType;
+    }
+
+    public String getDeclaTypeStr(){
+        return  SysDataUtil.getNameFromDataDict(DictCode.申报类型, getDeclaType());
+    }
+
+    public String getAcctNo() {
+        return acctNo;
+    }
+
+    public void setAcctNo(String acctNo) {
+        this.acctNo = acctNo;
+    }
+
+    public String getFinishAmt() {
+        return finishAmt;
+    }
+
+    public void setFinishAmt(String finishAmt) {
+        this.finishAmt = finishAmt;
+    }
+
+    public String getAvaNum() {
+        return avaNum;
+    }
+
+    public void setAvaNum(String avaNum) {
+        this.avaNum = avaNum;
+    }
+
+    public String getFinishDealAmt() {
+        return finishDealAmt;
+    }
+
+    public void setFinishDealAmt(String finishDealAmt) {
+        this.finishDealAmt = finishDealAmt;
+    }
+
+    public String getAvaDealAmt() {
+        return avaDealAmt;
+    }
+
+    public void setAvaDealAmt(String avaDealAmt) {
+        this.avaDealAmt = avaDealAmt;
+    }
+
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
+
+    @ApiModelProperty(name="counterId",value="交易对手")
+    private String counterId;
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
+    }
+
+    public BigDecimal getExpConNum() {
+        return expConNum;
+    }
+
+    public void setExpConNum(BigDecimal expConNum) {
+        this.expConNum = expConNum;
     }
 }

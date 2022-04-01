@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.background.component.common.pack.common.util.HtmlEncode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,9 @@ public class TrdCommandReceive001Controller{
         List<TrdCommandReceive001Dto> list=pageLimit.getRoot();
         if(!list.isEmpty()){
           for(TrdCommandReceive001Dto dto:list){
+              if(StringUtil.isNotEmpty(dto.getRemark())) {
+                  dto.setRemark(HtmlEncode.htmlEncode(HtmlEncode.htmlEncode(dto.getRemark())));
+              }
               if(StringUtil.isNotEmpty(dto.getTrader())){
                   User user=trdCommandReceive001Service.getRealNameByUserName(dto.getTrader());
                   if(StringUtil.isNotEmpty(user)){
@@ -133,6 +137,9 @@ public class TrdCommandReceive001Controller{
         List<TrdCommandReceive001Dto> list=pageLimit.getRoot();
         if(!list.isEmpty()){
           for(TrdCommandReceive001Dto dto:list){
+              if(StringUtil.isNotEmpty(dto.getRemark())) {
+                    dto.setRemark(HtmlEncode.htmlEncode(HtmlEncode.htmlEncode(dto.getRemark())));
+              }
               if(StringUtil.isNotEmpty(dto.getTrader())){
                   User user=trdCommandReceive001Service.getRealNameByUserName(dto.getTrader());
                   if(StringUtil.isNotEmpty(user)){

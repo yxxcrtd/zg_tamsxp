@@ -186,7 +186,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
         Page<EquityInfoRegist001Dto> pageList = super.queryForPage(
         		pagenum,legth,()->equityInfoRegist001Mapper.queryForEquityInfoRegistPage(param));
  //       EquityInfoRegistCommonUtil.format(pageList.getRoot());
-        EquityInfoRegistCommonUtil.formatByType(pageList.getRoot(), false);
+        EquityInfoRegistCommonUtil.formatForEquHoldSearchByType(pageList.getRoot(), false);
         return pageList;
     }
     /**
@@ -510,7 +510,9 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                     //删除已报送数据
                     equityInfoRegist001Mapper.deleteSubmitRegist(list);
                 }
-                equityInfoRegist001Mapper.insertSubmitStatus(listStatus);
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+                equityInfoRegist001Mapper.updateChbEquSubSubmitStatus(listStatus);
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
             }
 
             if(StringUtil.isNotEmpty(submitStatus)||StringUtil.isNotEmpty(remark)){
@@ -627,6 +629,7 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                 }
             }
         }
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 
         // 未报送的数据 插入报送状态表
         if (!StringUtil.isEmptyList(listStatus)) {
@@ -634,7 +637,8 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
             int maxDataCountOneTime = 50;
             int dataCount = listStatus.size();
             if (dataCount <= maxDataCountOneTime) {
-                equityInfoRegist001Mapper.insertSubmitStatus(listStatus);
+
+                equityInfoRegist001Mapper.updateChbEquSubSubmitStatus(listStatus);
             }
             else {
                 List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
@@ -643,15 +647,16 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                 // 分批处理
                 int part = dataCount / maxDataCountOneTime; // 分批数
                 for (int i = 0; i < part; i++ ) {
-                    equityInfoRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
+                    equityInfoRegist001Mapper.updateChbEquSubSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
                     newDataList.subList(0, maxDataCountOneTime).clear();
                 }
                 // 最后剩下的数据
                 if (CollectionUtils.isNotEmpty(newDataList)) {
-                    equityInfoRegist001Mapper.insertSubmitStatus(newDataList);
+                    equityInfoRegist001Mapper.updateChbEquSubSubmitStatus(newDataList);
                 }
             }
         }
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 
         // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新报送状态
         if (!StringUtil.isEmptyList(equiytRegistAlreadySendList)) {
@@ -803,10 +808,12 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
         //未报送的数据，插入报送状态表
         if (!StringUtil.isEmptyList(listStatus)) {
             // 分批处理
+            /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
             int maxDataCountOneTime = 50;
             int dataCount = listStatus.size();
             if (dataCount <= maxDataCountOneTime) {
-                equityInfoRegist001Mapper.insertSubmitStatus(listStatus);
+                equityInfoRegist001Mapper.updateChbEquSubSubmitStatus(listStatus);
             }
             else {
                 List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
@@ -815,13 +822,15 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
                 // 分批处理
                 int part = dataCount / maxDataCountOneTime; // 分批数
                 for (int i = 0; i < part; i++ ) {
-                    equityInfoRegist001Mapper.insertSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
+                    equityInfoRegist001Mapper.updateChbEquSubSubmitStatus(newDataList.subList(0, maxDataCountOneTime));
                     newDataList.subList(0, maxDataCountOneTime).clear();
                 }
                 // 最后剩下的数据
                 if (CollectionUtils.isNotEmpty(newDataList)) {
-                    equityInfoRegist001Mapper.insertSubmitStatus(newDataList);
+                    equityInfoRegist001Mapper.updateChbEquSubSubmitStatus(newDataList);
                 }
+                /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
             }
         }
         

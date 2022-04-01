@@ -209,7 +209,7 @@ public class TradeResponseImpl implements ITradeResponse {
      */
     @Override
     public void entrustWriteBack(Entrust entrust) {
-        terminalAgent.asyncWrite(FunctionCode.NOTIFY_ENTRUST, entrust);
+        terminalAgent.asyncWrite(FunctionCode.NOTIFY_ENTRUST, 2000000000 + terminalAgent.generateReqId(), entrust);
     }
 
     /***
@@ -221,7 +221,7 @@ public class TradeResponseImpl implements ITradeResponse {
      */
     @Override
     public void integratedEntrustWriteBack(IntegratedEntrust entrust) {
-        terminalAgent.asyncWrite(FunctionCode.NOTIFY_INTEGRATED_ENTRUST, entrust);
+        terminalAgent.asyncWrite(FunctionCode.NOTIFY_INTEGRATED_ENTRUST, 2000000000 + terminalAgent.generateReqId(), entrust);
     }
 
     /***
@@ -233,7 +233,7 @@ public class TradeResponseImpl implements ITradeResponse {
      */
     @Override
     public void dealReturn(Trade trade) {
-        terminalAgent.asyncWrite(FunctionCode.NOTIFY_TRADE, trade);
+        terminalAgent.asyncWrite(FunctionCode.NOTIFY_TRADE, 2000000000 + terminalAgent.generateReqId(), trade);
     }
 
     /**

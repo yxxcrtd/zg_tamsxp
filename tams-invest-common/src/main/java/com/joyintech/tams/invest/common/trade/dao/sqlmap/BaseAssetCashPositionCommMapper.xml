@@ -42,15 +42,35 @@
             ZGBSS-1149【债券借贷存续期】：融入到期交易和撤销融入到期交易产生的错误*/
     </select>
 
+    <select id="selectAllPositionByOffsetFlag" resultMap="com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper.BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecPositionFlowMapper.Base_Column_List" />
+        from PTL_SEC_POSITION_FLOW
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR} AND HODING_TYPE IN ('01', '02', '04', '05', '06', '09','10','12')
+                AND OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR}
+    </select>
+
     <select id="selectAllEtrPosition" resultType="com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto"
             parameterType="java.lang.String" >
         select
         SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID,
         BRANCH BRANCH, INV_AIM INV_AIM, HODING_TYPE HODING_TYPE, CDATE CDATE, CCY CCY, AMOUNT*-1 AMOUNT,
         P_FINPROD_ID P_FINPROD_ID, TRADE_ID TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,is_Exist_New is_Exist_New
         from ETR_SEC_POSITION_FLOW
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAllEtrPositionByOffsetFlag" resultType="com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto"
+            parameterType="java.lang.String" >
+        select
+        SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, SEC_ACCT_ID SEC_ACCT_ID, FINPROD_ID FINPROD_ID,
+        BRANCH BRANCH, INV_AIM INV_AIM, HODING_TYPE HODING_TYPE, CDATE CDATE, CCY CCY, AMOUNT*-1 AMOUNT,
+        P_FINPROD_ID P_FINPROD_ID, TRADE_ID TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,is_Exist_New is_Exist_New
+        from ETR_SEC_POSITION_FLOW
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+                AND OFFSET_FLAG = #{tradeId,jdbcType=VARCHAR}
     </select>
 
     <select id="selectAllCashPosition" resultMap="com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper.BaseResultMap">
@@ -65,7 +85,7 @@
         SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, ACCT_ID ACCT_ID, HODING_TYPE HODING_TYPE,
         CDATE CDATE, CCY CCY, AMOUNT*-1 AMOUNT, ORDER_ID ORDER_ID, CHL_FINPROD_ID CHL_FINPROD_ID,
         OFFSET_FLAG OFFSET_FLAG, OFFSET_ID OFFSET_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
-        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,is_Exist_New is_Exist_New
         from ETR_CASH_POSITION_FLOW
         where ORDER_ID in (<foreach collection="list" separator="," item="item">#{item}</foreach>)
     </select>
@@ -74,6 +94,12 @@
         DELETE
         from PTL_SEC_POSITION_FLOW
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR} AND HODING_TYPE IN ('01', '02', '04', '05', '06', '12')
+    </delete>
+
+    <delete id="deleteEtrPositionByTradeId" parameterType="java.lang.String" >
+        DELETE
+        from ETR_SEC_POSITION_FLOW
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR} AND HODING_TYPE IN ('E01')
     </delete>
 
     <delete id="deleteCashPositionByOrderIds" >
@@ -186,4 +212,12 @@
         where T.finprod_id=#{chlId,jdbcType=VARCHAR}
     </select>
 
+    <select id="queryAccountNo" resultType="java.lang.String">
+        SELECT
+            TRD_ACCT_ID
+        FROM
+            STL_SEC_ACCT_INFO
+        WHERE
+            SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+    </select>
 </mapper>

@@ -493,7 +493,7 @@ values ('CHB_SALER_STL_DEAL_INFO', DATE '2021-01-01', '销售结算资金交易�
 
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3053';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3053', 'VAL', '销售结算资金交易信息表报送接口数据接入', null, 'svrChbSalerStlDealInfoInterfTastService', 3000, 'system', null, sysdate, 'system', sysdate, null);
+values ('3053', 'SVR', '销售结算资金交易信息表报送接口数据接入', null, 'svrChbSalerStlDealInfoInterfTastService', 3000, 'system', null, sysdate, 'system', sysdate, null);
 
 --销售结算资金流动方向枚举值
 DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'TRADE_PS';
@@ -508,7 +508,7 @@ values ('TRADE_PS', '02', '流入', 2, '0', 'system', null, SYSDATE, 'system', S
 --批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3054';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3054', 'VAL', '销售结算资金交易登记报表生成', null, 'svrSalesTransactionInterfTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
+values ('3054', 'SVR', '销售结算资金交易登记报表生成', null, 'svrSalesTransactionInterfTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
 
 --销售结算资金交易信息登记获取报送截止日配置
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_REPORT_CODE' and ITEM_CODE = '34';
@@ -557,12 +557,12 @@ INSERT INTO SYS_PAGE_ELEMENT VALUES('SalesTransactionMaintenanceRegist001','Sale
 --销售月报每日明细汇总批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3058';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3058', 'VAL', '理财业务销售数据月度统计表日头寸批处理', null, 'svrDayCollectInterfTaskService', 3030, 'system', null, sysdate, 'system', sysdate, null);
+values ('3058', 'SVR', '理财业务销售数据月度统计表日头寸批处理', null, 'svrDayCollectInterfTaskService', 3150, 'system', null, sysdate, 'system', sysdate, null);
 
 --销售身份信息其他信息修复批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3059';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3059', 'VAL', '理财业务销售数据月度统计表身份信息修复批处理', null, 'svrIdentityRepairInterfTaskService', 3020, 'system', null, sysdate, 'system', sysdate, null);
+values ('3059', 'SVR', '理财业务销售数据月度统计表身份信息修复批处理', null, 'svrIdentityRepairInterfTaskService', 3100, 'system', null, sysdate, 'system', sysdate, null);
 
 --投资者分类枚举值
 DELETE from SYS_DATADICT WHERE DICT_CODE =  'HOLDER_CLASSIFY';
@@ -574,7 +574,7 @@ INSERT INTO SYS_DATADICT_LIST VALUES ('HOLDER_CLASSIFY','02','合格投资者','
 --销售信息月度统计表生成批处理配置
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3060';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('3060', 'VAL', '理财业务销售数据月度统计表报表生成', null, 'svrMonthCollectInterfTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
+values ('3060', 'SVR', '理财业务销售数据月度统计表报表生成', null, 'svrMonthCollectInterfTaskService', 3200, 'system', null, sysdate, 'system', sysdate, null);
 
 --理财业务销售数据月度统计表菜单配置
 delete from SYS_PAGE where PAGE_ID = 'SellMonthReport001';

@@ -28,6 +28,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.validator.EtribBondInfo003Validator;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @PageId("CfetsEtrIbBondinfo003")
@@ -95,8 +97,13 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
         boolean todoList = false;
         // 代办中过来
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            entity = cfetsetribBondInfo003Service.getBussinessEntityByWorkflowId(
-                    workflowId);
+            entity = cfetsetribBondInfo003Service.getBussinessEntityByWorkflowId(workflowId);
+            if(Objects.isNull(entity.getTradeAmt())) {
+                entity.setTradeAmt(BigDecimal.ZERO);
+            }
+            if(Objects.isNull(entity.getEntrustOwnNum())) {
+                entity.setEntrustOwnNum(BigDecimal.ZERO);
+            }
             entity.setMatureYield(ArithmeticUtil.multiply(entity.getMatureYield(),new BigDecimal(100)));
             entity.setExerYield(ArithmeticUtil.multiply(entity.getExerYield(),new BigDecimal(100)));
             model.addAttribute(GlobalConstant.ENTITY, entity);
@@ -106,6 +113,7 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
             model.addAttribute("businessId",workflowId);
             model.addAttribute("entity_BussCombDistribtList",  JsonUtils.object2Json(entity.getBussCombDistribtList()));
             model.addAttribute("entity_RiskTrialRetList",  JsonUtils.object2Json(entity.getRiskTrialRetDto()));
+
             todoList = true;
             model.addAttribute("businessId", entity.getTotalEtrustId());
             model.addAttribute("totalEtrustId", entity.getTotalEtrustId());
@@ -143,6 +151,19 @@ public class CfetsEtribBondInfo003Controller extends BaseController {
         model.addAttribute("SHORT_SELLING_SUPPORTED", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
 
         return super.init(model);
+    }
+
+    /**
+     * 获取组合分配的相关值
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/getEntrustId")
+    public Message<String> getEntrustId() {
+        BussinessCodeParameter param = new BussinessCodeParameter();
+        param.setCommonBusinessType(DictCodeList.共通业务类型_债券投资委托);
+        String code = bussGetBussinessIdService != null? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+        return new Message<String>().success().setData(code);
     }
 
     /**

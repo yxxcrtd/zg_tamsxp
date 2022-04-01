@@ -1255,4 +1255,106 @@
             FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
           AND FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
     </select>
+
+    <!--modify by etliu 20220116 start-->
+    <select id="selectHgsqFinprodId" resultType="string">
+        select max(FINPROD_ID)
+        from TRD_PRODUCT_DEAL tpd
+                 inner join TRD_PRODUCT_DEAL_ADD tpda
+                            on tpd.TRADE_ID = tpda.TRADE_ID
+        where
+            tpda.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+            and tpd.F_TRADE_ID = #{firstFTradeId,jdbcType=VARCHAR}
+    </select>
+    <!--modify by etliu 20220116 end-->
+
+    <select id="selectInfContractDetailfile" resultType="com.joyintech.tams.common.base.entity.InfContractDetailfile">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.InfContractDetailfileMapper.Base_Column_List" />
+        from INF_CONTRACT_DETAILFILE
+        where DEAL_NO = #{dealNo}
+    </select>
+
+    <select id="selectEtrEntrustDetailByEntrustId" resultType="com.joyintech.tams.common.base.entity.EtrEntrustDetail">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.EtrEntrustDetailMapper.Base_Column_List" />
+        from ETR_ENTRUST_DETAIL
+        WHERE ENTRUST_ID =#{entrustId}
+    </select>
+
+    <select id="selectFTradeId" resultType="java.lang.String">
+        select
+            F_TRADE_ID
+        from TRD_PRODUCT_TEMP_DEAL
+        WHERE TRADE_ID =#{tradeId}
+    </select>
+
+    <select id="selectOrderInfo" resultType="com.joyintech.tams.invest.common.trade.dto.OrderInfoDto">
+        select
+            ID,
+            INSTRUCTION_ID,
+            ACCOUNT_ID,
+            SEC_ACCT_ID,
+            ENTRUST_VOLUME
+        from T_ENTRUST
+        where ID = #{dealNo}
+        UNION
+        select
+            ID,
+            INSTRUCTION_ID,
+            ACCOUNT_ID,
+            SEC_ACCT_ID,
+            ENTRUST_VOLUME
+        from T_INTEGRATED_ENTRUST
+        where ID = #{dealNo}
+    </select>
+
+    <select id="getPtlCapAcctInfo" resultType="com.joyintech.tams.common.base.entity.PtlCapacctInfo">
+        select
+        <include refid="com.joyintech.tams.common.base.dao.PtlCapacctInfoMapper.Base_Column_List" />
+        from PTL_CAPACCT_INFO
+        where ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+        and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and CCY = #{ccy,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getFinPledgeDispDetailTemps" resultType="com.joyintech.tams.common.base.entity.FinPledgeDispDetailTemp">
+        select
+            fpddt.SEQ_NO              SEQ_NO,
+            fpddt.TRADE_ID            TRADE_ID,
+            fpddt.FINPROD_ID          FINPROD_ID,
+            fpddt.BRANCH              BRANCH,
+            fpddt.TRADE_TYPE          TRADE_TYPE,
+            fpddt.PLEDGE_DISPLACE_AMT PLEDGE_DISPLACE_AMT,
+            fpddt.SCALE               SCALE,
+            fpddt.FIRST_NETPRICE      FIRST_NETPRICE
+        from FIN_PLEDGE_DISP_DETAIL_TEMP fpddt
+                 LEFT JOIN
+             FIN_PLEDGE_DISP_TEMP fpdt ON fpddt.TRADE_ID = fpdt.TRADE_ID
+        where fpdt.F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectFinDealPledgeByPrimaryKey" resultType="com.joyintech.tams.common.base.entity.FinDealPledge" parameterType="com.joyintech.tams.common.base.entity.FinDealPledgeKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinDealPledgeMapper.Base_Column_List" />
+        from FIN_DEAL_PLEDGE
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+    </select>
+
+    <select id="queryConverseRadio" parameterType="map" resultType="BigDecimal">
+        select
+            NVL(FSCR.SCALE, 0)
+        from FIN_STDSEC_CONVERSE_RADIO FSCR
+        where FSCR.FINPROD_ID = #{finprodId, jdbcType=VARCHAR}
+          AND FSCR.BRANCH = '0'
+          AND FSCR.VDATE  &lt;= #{vdate, jdbcType=DATE}
+          AND NOT EXISTS (SELECT 1
+              FROM FIN_STDSEC_CONVERSE_RADIO FSCRINNER
+              WHERE FSCRINNER.FINPROD_ID = FSCR.FINPROD_ID
+                AND FSCRINNER.BRANCH ='0'
+                AND FSCRINNER.VDATE &lt;= #{vdate, jdbcType=DATE}
+                AND FSCRINNER.VDATE > FSCR.VDATE
+            )
+    </select>
 </mapper>

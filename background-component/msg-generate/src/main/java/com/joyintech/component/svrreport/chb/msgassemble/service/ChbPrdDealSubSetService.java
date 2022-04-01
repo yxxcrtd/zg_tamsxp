@@ -229,6 +229,18 @@ public class ChbPrdDealSubSetService {
 	    cnBondItem12.setValue(sub.getVdate());
 	    cnBondItemMap1.put("BusinessStartDate", cnBondItem12);
 		}
+
+		/***1217升级**/
+
+		//净值日期
+		if(StringUtil.isNotEmpty(sub.getYieldDate())){
+			CnBondInterfItemDto cnBondItem12 = new CnBondInterfItemDto();
+			cnBondItem12.setValue(DateUtil.format(sub.getYieldDate(), "yyyy-MM-dd"));
+			cnBondItemMap1.put("NetValueDate", cnBondItem12);
+		}
+		/***1217升级**/
+
+
 		//业务结束日
 		if(StringUtil.isNotEmpty(sub.getMdate())){
 	    CnBondInterfItemDto cnBondItem13 = new CnBondInterfItemDto();

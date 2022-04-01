@@ -45,4 +45,11 @@ public interface CfetsPositionPriceMapper {
     void insert(CfetsUnitCostDto dto);
 
     void delete(CfetsUnitCostDto dto);
+    /**
+     * 交易所当日交易数据查询
+     * @param baseMap
+     * @return
+     */
+    List<BaseMap> selectExchangeCurrTrdData(BaseMap baseMap);
+
 }

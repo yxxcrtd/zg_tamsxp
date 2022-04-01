@@ -333,7 +333,7 @@
   <select id="selectByprodId" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.astvalueregist.dto.ChbAstValueRegist001Dto">
   select a.REGIST_SEQNO from (
       SELECT
-      @rownum:=@rownum+1 rownum,
+      @rownum:=@rownum+1 `rownum`,
       REGIST_SEQNO,
       IF
       (

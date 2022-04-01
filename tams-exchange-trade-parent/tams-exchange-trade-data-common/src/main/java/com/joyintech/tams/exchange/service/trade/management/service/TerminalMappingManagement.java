@@ -41,6 +41,10 @@ public class TerminalMappingManagement {
         return new ResultBean(ErrorCode.SUCCESS, terminalMappingService.insertTerminalMappingInfo(terminalMappings));
     }
 
+    public ResultBean deleteTerminalMappings(String accountId) {
+        return new ResultBean(ErrorCode.SUCCESS, terminalMappingService.deleteTerminalMappingInfoByAccountId(accountId));
+    }
+
     public ResultBean updateTerminalMappingInfo(String id, TerminalMapping terminalMapping) {
         if (Strings.isNullOrEmpty(id) || Objects.isNull(terminalMapping))
             return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR);

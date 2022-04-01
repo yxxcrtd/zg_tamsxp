@@ -30,7 +30,9 @@ public interface CfetsEntrustStatusMapper {
 
     void updateEntrustStatus(Map<String, String> sysDate);
 
-    List<CfetsEntrustClosePosEtrReqDto> selectEntrustIds(Map<String, String> sysDate);
+    List<CfetsEntrustClosePosEtrReqDto> selectEntrustList(Map<String, String> sysDate);
+
+    List<String> selectEntrustIds(Map<String, String> sysDate);
 
     void updateDistributeStatus(Map<String, String> sysDate);
 

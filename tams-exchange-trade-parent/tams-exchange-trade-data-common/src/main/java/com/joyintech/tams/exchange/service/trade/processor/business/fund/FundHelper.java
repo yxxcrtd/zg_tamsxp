@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.fund;
 
+import com.joyintech.tams.exchange.common.bean.MinPrice;
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
 import com.joyintech.tams.exchange.common.constant.EntrustBs;
@@ -47,10 +48,11 @@ public class FundHelper {
         }
         // 申报类不需要check最小价差和涨跌停
         if (!EntrustUtils.isNoTrade(orderInterface.getEntrustProp())) {
-            if (Double.compare(instrument.getPriceStep().doubleValue(), 0.0) > 0
-                    && TradeUtils.divideAndRemainder(entrustPrice, instrument.getPriceStep()).compareTo(BigDecimal.ZERO) != 0) {
+            MinPrice minPrice = instrumentService.getMinPrice(tradePlat, instrument.getMarket(), instrument);
+            if (Double.compare(minPrice.getMinPrice().doubleValue(), 0.0) > 0
+                    && TradeUtils.divideAndRemainder(entrustPrice, minPrice.getMinPrice()).compareTo(BigDecimal.ZERO) != 0) {
                 orderInterface.setErrorCode(ErrorCode.INNER_RISK_ERROR.value());
-                orderInterface.setErrorMsg("委托价格不满足最小价差：" + instrument.getPriceStep().doubleValue());
+                orderInterface.setErrorMsg("委托价格不满足最小价差：" + minPrice.getMinPrice().doubleValue());
                 return false;
             }
             QuoteProto.TickBean tick = quoteTickService.getTickFromCache(orderInterface.getStockCode());

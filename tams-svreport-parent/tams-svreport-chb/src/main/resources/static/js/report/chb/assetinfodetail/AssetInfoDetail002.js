@@ -270,9 +270,9 @@ var QueryFunc=function(){
                 //利息发布方式
                 $("#svrBussRepAssetCreditNonstdInfoDto_repIntpayRule").attr("disabled",false);
                 //还本付息情况
-              //  $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
+                //  $("#svrBussRepAssetCreditNonstdInfoDto_repRepayCmt").attr("disabled",false);
 
-               //浮动因子
+                //浮动因子
                 $("#svrBussRepAssetCreditNonstdInfoDto_floatFactor").attr("disabled",false);
                 //担保方式
                 $("#svrBussRepAssetCreditNonstdInfoDto_repGuaType").attr("disabled",false);
@@ -491,6 +491,13 @@ var QueryFunc=function(){
     var assetVal = function(){
         // $("input[id$='_assetId']").val($('#assetCode').val());
         $("input[id$='_assetName']").val($('#assetName').val());
+        var repAssetType = $('#assetType2').val();
+
+        if (repAssetType == '1503'){
+            $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
+        }else {
+            $("#svrBussRepQDIIStructureInfoDto_contractName").val('');
+        }
     }
 
     // 置空

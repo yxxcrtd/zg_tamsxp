@@ -154,5 +154,38 @@ public interface PbcMonthReportMapper {
 
     int updatePbcReportSendInfo(@Param("sendStatus")String sendStatus,@Param("submitTime") Date submitTime
             ,@Param("submitFeedbackStatus")String submitFeedbackStatus,@Param("registList")List<PbcSendZipDatFile> datFileList);
+    /**
+     * 功能:将已报送数据移入履历表
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：weiyuqiang 2019年5月23日
+     * @param registList
+     * @return
+     * int
+     */
+    int insertReportHisForOnePrd(@Param("registList")List<PbcMonthReport> registList);
 
+    void updateInterfSubmitAndSeqBatchForOnePrd(@Param("sendStatus")String sendStatus, @Param("registList")List<PbcMonthReport> registList
+            ,@Param("submitadd")String submitadd);
+
+    Integer cancelMannultRegistForOnePrd(List<PbcMonthReport> list);
+
+    /**
+     * 取消手工处理时将履历表中的数据移回登记表
+     * @param list
+     * @see
+     * @since 1.0
+     */
+    void insertReportDataFromHisForOnePrd(@Param("registList")List<PbcMonthReport> registList);
+
+    /**
+     * 功能:删除履历表中的最新已报送数据
+     * @since 1.7.0
+     * @version 1.7.0
+     * @author：weiyuqiang 2019年5月23日
+     * @param registList
+     * @return
+     * int
+     */
+    int deleteLastSubmitHisForOnePrd(@Param("registList")List<PbcMonthReport> registList);
 }

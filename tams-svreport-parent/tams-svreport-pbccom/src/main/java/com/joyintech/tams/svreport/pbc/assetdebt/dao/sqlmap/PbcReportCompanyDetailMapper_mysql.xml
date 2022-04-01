@@ -15,11 +15,11 @@
     <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, LARGE_COMPANY_AMT, MEDIUM_COMPANY_AMT, 
+    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, LARGE_COMPANY_AMT, MEDIUM_COMPANY_AMT,
     SMALL_COMPANY_AMT, MICRO_COMPANY_AMT, OTH_AMT, SUM_AMT, REPORTUUID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_COMPANY
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
@@ -29,13 +29,13 @@
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportCompanyDetailDto" >
-    insert into PBC_REPORT_COMPANY (DETAILUUID, REPORTTYPE, GROUPTYPE, 
-      PROPERTYCODE, LARGE_COMPANY_AMT, MEDIUM_COMPANY_AMT, 
-      SMALL_COMPANY_AMT, MICRO_COMPANY_AMT, OTH_AMT, 
+    insert into PBC_REPORT_COMPANY (DETAILUUID, REPORTTYPE, GROUPTYPE,
+      PROPERTYCODE, LARGE_COMPANY_AMT, MEDIUM_COMPANY_AMT,
+      SMALL_COMPANY_AMT, MICRO_COMPANY_AMT, OTH_AMT,
       SUM_AMT, REPORTUUID)
-    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
-      #{propertycode,jdbcType=VARCHAR}, #{largeCompanyAmt,jdbcType=DECIMAL}, #{mediumCompanyAmt,jdbcType=DECIMAL}, 
-      #{smallCompanyAmt,jdbcType=DECIMAL}, #{microCompanyAmt,jdbcType=DECIMAL}, #{othAmt,jdbcType=DECIMAL}, 
+    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR},
+      #{propertycode,jdbcType=VARCHAR}, #{largeCompanyAmt,jdbcType=DECIMAL}, #{mediumCompanyAmt,jdbcType=DECIMAL},
+      #{smallCompanyAmt,jdbcType=DECIMAL}, #{microCompanyAmt,jdbcType=DECIMAL}, #{othAmt,jdbcType=DECIMAL},
       #{sumAmt,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcReportCompanyDetailDto" >
@@ -161,9 +161,9 @@
       REPORTUUID = #{reportuuid,jdbcType=CHAR}
     where DETAILUUID = #{detailuuid,jdbcType=CHAR}
   </update>
-  
+
   <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from PBC_REPORT_COMPANY
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
@@ -172,17 +172,17 @@
     delete
     from PBC_REPORT_COMPANY prp
     where prp.REPORTUUID in(
-         select pr.REPORTUUID from PBC_REPORT pr
-          where 1=1 
-          <if test="reportStartDate != null" >
-          and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
-          </if>
-          <if test="reportEndDate != null" >
-          and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
-          </if>
-          <if test="reporttype != null" >
-            and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
-          </if> 
-       and pr.send_status = '01'/*只删除未报送数据*/)
+    select pr.REPORTUUID from PBC_REPORT pr
+    where 1=1
+    <if test="reportStartDate != null" >
+      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reportEndDate != null" >
+      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+    </if>
+    <if test="reporttype != null" >
+      and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+    </if>
+    and pr.send_status = '01'/*只删除未报送数据*/)
   </delete>
 </mapper>

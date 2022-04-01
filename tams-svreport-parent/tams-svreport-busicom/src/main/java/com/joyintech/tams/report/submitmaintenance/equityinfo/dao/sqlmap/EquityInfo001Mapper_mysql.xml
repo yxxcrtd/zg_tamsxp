@@ -32,7 +32,9 @@
 		STATUS as status,
 		AGENT as agent,
 		<!-- 查询接口导入校验信息 -->
-		INTERF_CHECK_RESULT as interfCheckResult
+		INTERF_CHECK_RESULT as interfCheckResult,
+		HOLDER_CLASSIFY as holderClassify,
+		FUND_ACC_PLACE as fundAccPlace
 
 		from CHB_EQU_HOLD A
 		<where>
@@ -62,6 +64,9 @@
 			</if>
 			<if test="identifyNumber != null and identifyNumber != ''">
 				AND A.IDENTIFY_NUMBER LIKE concat('%',#{identifyNumber},'%')
+			</if>
+			<if test="holderClassify != null and holderClassify != ''">
+				AND A.HOLDER_CLASSIFY LIKE concat('%',#{holderClassify},'%')
 			</if>
 		</where>
 		ORDER BY UPDATE_TIME DESC, INDENTIFY_MARK ASC
@@ -96,14 +101,17 @@
 		T.ORG_CODE orgCode,
 		T.STATUS as status,
 		'' as interfCheckResult,
+		T.HOLDER_CLASSIFY as holderClassify,
+		T.FUND_ACC_PLACE as fundAccPlace,
 		'' as agent,
-		status.SUBMIT_FEEDBACK_MSG as repFailedInfo
-		FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
-		on T.sumit_seq = status.seqno
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		FROM CHB_EQU_SUB T
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
 			</if>
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			<if test="SEQNO !=null and SEQNO.size()>0 ">
 				<foreach collection="SEQNO" item="SUMIT_SEQ" open=" AND T.SUMIT_SEQ IN (" close=")" separator=",">
 					#{SUMIT_SEQ,jdbcType=VARCHAR}
@@ -143,16 +151,17 @@
 		T.ORG_CODE orgCode,
 		T.STATUS as status,
 		'' as interfCheckResult,
+		T.HOLDER_CLASSIFY as holderClassify,
+		T.FUND_ACC_PLACE as fundAccPlace,
 		'' as agent,
-		status.SUBMIT_FEEDBACK_MSG as repFailedInfo
-		FROM CHB_EQU_SUB T left join CHB_SUBMIT_STATUS status
-		on T.sumit_seq = status.seqno
+		T.SUBMIT_FEEDBACK_MSG as repFailedInfo
+		FROM CHB_EQU_SUB T
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
-				status.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
+				T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
 			</if>
 			<if test="reportNo !=null and reportNo !=''">
-				AND status.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+				AND T.REPORT_NO = #{reportNo,jdbcType=VARCHAR}
 			</if>
 
 		</where>
@@ -161,8 +170,6 @@
 	<select id="queryAlSumbitEquityList" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfoDto">
 		select sub.indentify_mark as indentifyMark,sub.regist_bank_code as registBankCode
 		from chb_equ_sub sub
-		left join CHB_SUBMIT_STATUS status
-		on sub.SUMIT_SEQ = status.seqno
 		<where>
 			<if test="equityList != null and equityList.size() > 0">
 				<foreach collection="equityList" item="indentifyMark" open=" AND sub.indentify_mark IN (" close=")" separator=",">
@@ -172,18 +179,16 @@
 					#{registBankCode.registBankCode}
 				</foreach>
 			</if>
-			and status.submit_feedback_status != '02'
+			and sub.submit_feedback_status != '02'
 		</where>
 	</select>
 	<!-- 根据输入的识别标识与登记银行代码查询登记表中的额数据  -->
 	<select id="querySumbitEquityByCode" parameterType="com.joyintech.tams.common.base.entity.ChbEquHold"
 			resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfoDto">
 		select sub.indentify_mark as indentifyMark,sub.regist_bank_code as registBankCode,sub.type,
-		sub.SUBMIT_STATUS as submitStatus,status.submit_feedback_status as submitFeedbackStatus,
+		sub.SUBMIT_STATUS as submitStatus,sub.submit_feedback_status as submitFeedbackStatus,
 		sub.status as status
 		from chb_equ_sub sub
-		left join CHB_SUBMIT_STATUS status
-		on sub.SUMIT_SEQ = status.seqno
 		<where>
 			sub.indentify_mark = #{indentifyMark}
 			and sub.regist_bank_code = #{registBankCode}
@@ -202,7 +207,7 @@
 		HOLDER_EMAIL, REMARK, STATUS,
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		DATA_SOURCE,ORG_CODE ,AGENT, CREATE_DEPT)
+		DATA_SOURCE,ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY,FUND_ACC_PLACE)
 		select A.* from (
 		<foreach collection="list" item="item" index="index" separator="union all">
 			select
@@ -241,7 +246,10 @@
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.agent,jdbcType=VARCHAR} AGENT,
-			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT,
+			#{item.holderClassify,jdbcType=CHAR} HOLDER_CLASSIFY,
+			#{item.fundAccPlace,jdbcType=CHAR} FUND_ACC_PLACE
 			from dual
 		</foreach>
 		) A
@@ -342,6 +350,12 @@
 				<if test="item.interfCheckResult !=null and item.interfCheckResult != '' ">
 					INTERF_CHECK_RESULT=#{item.interfCheckResult,jdbcType=VARCHAR},
 				</if>
+				<if test="item.holderClassify != null and item.holderClassify != '' " >
+					HOLDER_CLASSIFY = #{item.holderClassify,jdbcType=CHAR},
+				</if>
+				<if test="item.fundAccPlace != null and item.fundAccPlace != '' " >
+					FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=CHAR},
+				</if>
 			</set>
 			<where>
 				<if test="item.type !=null and item.type == '02'.toString()">
@@ -378,7 +392,7 @@
 		HOLDER_EMAIL, REMARK, STATUS,
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT)
+		DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY,FUND_ACC_PLACE)
 		select  _NEXTINDEX('seq_equity_info'),
 		A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
 		A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
@@ -390,7 +404,7 @@
 		A.Holder_Email,A.Remark,A.Status,
 		A.Workflow_Id,A.Dept_Code,A.Update_User,
 		A.Update_Time,A.Create_User,A.Create_Time,A.Data_Source,A.ORG_CODE,
-		A.AGENT, A.CREATE_DEPT
+		A.AGENT, A.CREATE_DEPT, A.INTERF_CHECK_RESULT, A.HOLDER_CLASSIFY,A.FUND_ACC_PLACE
 		from chb_equ_hold A
 		<where>
 			<foreach collection="list" index="index" item="item" open="(" separator=") or (" close=")">
@@ -434,6 +448,8 @@
 		STATUS as status,
 		AGENT  as agent,
 		INTERF_CHECK_RESULT as interfCheckResult,
+		HOLDER_CLASSIFY as holderClassify,
+		FUND_ACC_PLACE as fundAccPlace,
 		ORG_CODE as orgCode
 		from CHB_EQU_HOLD A
 		<where>
@@ -456,7 +472,7 @@
 		HOLDER_EMAIL, REMARK, STATUS,
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		DATA_SOURCE, ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT)
+		DATA_SOURCE, ORG_CODE ,AGENT, CREATE_DEPT,INTERF_CHECK_RESULT,HOLDER_CLASSIFY,FUND_ACC_PLACE)
 		<foreach collection="list" item="item" index="index" separator="union all">
 			select
 			#{item.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK,
@@ -475,7 +491,7 @@
 			#{item.spvCapAccBank,jdbcType=VARCHAR} SPV_CAP_ACC_BANK,
 			#{item.otherCapAccBank,jdbcType=VARCHAR} OTHER_CAP_ACC_BANK,
 			#{item.spvRegistCode,jdbcType=VARCHAR} SPV_REGIST_CODE,
-<!--			#{item.holderDate,jdbcType=VARCHAR} HOLDER_DATE,-->
+			<!--			#{item.holderDate,jdbcType=VARCHAR} HOLDER_DATE,-->
 			#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME,
 			#{item.holderSex,jdbcType=CHAR} HOLDER_SEX,
 			#{item.holderRiskPrefer,jdbcType=VARCHAR} HOLDER_RISK_PREFER,
@@ -488,14 +504,16 @@
 			'' WORKFLOW_ID,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			sysdate() UPDATE_TIME,
+			NOW() UPDATE_TIME,
 			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			sysdate() CREATE_TIME,
+			NOW() CREATE_TIME,
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.agent,jdbcType=VARCHAR} AGENT,
 			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-			#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT
+			#{item.interfCheckResult,jdbcType=VARCHAR} INTERF_CHECK_RESULT,
+			#{item.holderClassify,jdbcType=CHAR} HOLDER_CLASSIFY,
+			#{item.fundAccPlace,jdbcType=CHAR} FUND_ACC_PLACE
 			from dual
 		</foreach>
 
@@ -511,6 +529,8 @@
 		HOLDER_MARK as holderMark,
 		HOLDER_REGION as holderRegion,
 		HOLDER_TYPE as holderType,
+		HOLDER_CLASSIFY as holderClassify,
+		FUND_ACC_PLACE as fundAccPlace,
 		PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
 		INSTITUTION_IDENTIFY_TYPE as institutionInentifyType,
 		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
@@ -539,6 +559,48 @@
 			</if>
 			REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
 			limit 1
+		</where>
+	</select>
+
+	<select id="getEquityInfoSub001DtoByKey" resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select
+		INDENTIFY_MARK as indentifyMark,
+		REGIST_BANK_CODE as bankCode,
+		ORG_INDENTIFY_MARK as orgIndentifyMark,
+		IS_BELONG_BANK as isBelongBank,
+		THE_BANK_NAME as theBankName,
+		THE_BANK_CODE as theBankCode,
+		HOLDER_MARK as holderMark,
+		HOLDER_REGION as holderRegion,
+		HOLDER_TYPE as holderType,
+		HOLDER_CLASSIFY as holderClassify,
+		FUND_ACC_PLACE as fundAccPlace,
+		PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
+		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
+		IDENTIFY_NUMBER as identifyNumber,
+		OTHER_IDENTIFY_NAME as otherIdentifyName,
+		SPV_CAP_ACC_BANK as spvCapAccBank,
+		OTHER_CAP_ACC_BANK as otherCapAccBank,
+		SPV_REGIST_CODE as spvRegistCode,
+		HOLDER_NAME as holderName,
+		HOLDER_SEX as holderSex,
+		HOLDER_RISK_PREFER as holderRiskPrefer,
+		HOLDER_CELLPHONE as holderCellphone,
+		HOLDER_TELEPHONE as holderTelephone,
+		HOLDER_EMAIL as holderEmail,
+		REMARK as remark,
+		A.ORG_CODE orgCode,
+		STATUS as status
+		from CHB_EQU_SUB A
+		<where>
+			<if test="type !=null and type == '02'.toString()">
+				INDENTIFY_MARK in (#{orgIndentifyMark,jdbcType=VARCHAR},#{indentifyMark,jdbcType=VARCHAR} ) and
+			</if>
+			<if test="type !=null and type != '02'">
+				INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and
+			</if>
+			REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
 		</where>
 	</select>
 
@@ -594,6 +656,8 @@
 		HOLDER_MARK as holderMark,
 		HOLDER_REGION as holderRegion,
 		HOLDER_TYPE as holderType,
+		HOLDER_CLASSIFY as holderClassify,
+		FUND_ACC_PLACE as fundAccPlace,
 		PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
 		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
 		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
@@ -621,7 +685,7 @@
 	</select>
 	<!-- 批量更新  Excel-->
 	<update id="updateBatchEquityInfoExcel" parameterType="java.util.List">
-		
+
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update chb_equ_hold
 			<set>
@@ -633,6 +697,8 @@
 				HOLDER_MARK = #{item.holderMark,jdbcType=CHAR},
 				HOLDER_REGION = #{item.holderRegion,jdbcType=VARCHAR},
 				HOLDER_TYPE = #{item.holderType,jdbcType=CHAR},
+				HOLDER_CLASSIFY = #{item.holderClassify,jdbcType=CHAR},
+				FUND_ACC_PLACE = #{item.fundAccPlace,jdbcType=CHAR} ,
 				PERSONAL_IDENTIFY_TYPE = #{item.personalIdentifyType,jdbcType=CHAR},
 				INSTITUTION_IDENTIFY_TYPE = #{item.institutionIdentifyType,jdbcType=VARCHAR},
 				OTHER_IDENTIFY_NAME = #{item.otherIdentifyName,jdbcType=VARCHAR},
@@ -667,7 +733,7 @@
 				REGIST_BANK_CODE = #{item.bankCode,jdbcType=VARCHAR}
 			</where>
 		</foreach>
-		
+
 	</update>
 	<!-- 识别标识变更时，将有效数据移植履历表 -->
 	<insert id="insertEquityIdHis" parameterType="java.util.List">
@@ -682,7 +748,7 @@
 		HOLDER_EMAIL, REMARK, STATUS,
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT)
+		DATA_SOURCE,ORG_CODE,AGENT, CREATE_DEPT, INTERF_CHECK_RESULT, HOLDER_CLASSIFY,FUND_ACC_PLACE)
 		select  _NEXTINDEX('seq_equity_info'),
 		A.Indentify_Mark,A.Regist_Bank_Code,A.Org_Indentify_Mark,
 		A.Is_Belong_Bank,A.The_Bank_Name,A.The_Bank_Code,A.Holder_Mark,
@@ -694,7 +760,7 @@
 		A.Holder_Email,A.Remark,A.Status,
 		A.Workflow_Id,A.Dept_Code,A.Update_User,
 		A.Update_Time,A.Create_User,A.Create_Time,A.Data_Source,A.ORG_CODE,
-		A.AGENT, A.CREATE_DEPT
+		A.AGENT, A.CREATE_DEPT, A.INTERF_CHECK_RESULT ,A.HOLDER_CLASSIFY,A.FUND_ACC_PLACE
 		from chb_equ_hold A
 		<where>
 			<foreach collection="list" index="index" item="item" open="(" separator=") or (" close=")">
@@ -857,6 +923,12 @@
 			<if test="interfCheckResult !=null and interfCheckResult != '' ">
 				INTERF_CHECK_RESULT=#{interfCheckResult,jdbcType=VARCHAR},
 			</if>
+			<if test="holderClassify != null and holderClassify != '' " >
+				HOLDER_CLASSIFY = #{holderClassify,jdbcType=CHAR},
+			</if>
+			<if test="fundAccPlace != null and fundAccPlace != '' " >
+				FUND_ACC_PLACE = #{fundAccPlace,jdbcType=CHAR},
+			</if>
 		</set>
 		<where>
 			<if test="type !=null and type == '02'.toString()">
@@ -898,7 +970,9 @@
 		REMARK,
 		ORG_CODE                  as orgCode,
 		DEPT_CODE                  as deptCode,
-		CREATE_DEPT                  as createDept
+		CREATE_DEPT                  as createDept,
+		HOLDER_CLASSIFY           as holderClassify,
+		FUND_ACC_PLACE      as     fundAccPlace
 		from
 		CHB_EQU_HOLD A
 		<where>
@@ -943,9 +1017,47 @@
         	ORG_CODE orgCode,
         	STATUS as status,
         	AGENT as agent,
-        	INTERF_CHECK_RESULT as interfCheckResult
+        	INTERF_CHECK_RESULT as interfCheckResult,
+			HOLDER_CLASSIFY as holderClassify,
+		    FUND_ACC_PLACE as fundAccPlace
    		from
-   		 CHB_EQU_HOLD 
+   		 CHB_EQU_HOLD
 		where STATUS = 'A'
 	</select>
+
+	<select id="selectAllEquityInfo"
+			resultType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
+		select
+			INDENTIFY_MARK as indentifyMark,
+			REGIST_BANK_CODE as bankCode,
+			ORG_INDENTIFY_MARK as orgIndentifyMark,
+			IS_BELONG_BANK as isBelongBank,
+			THE_BANK_NAME as theBankName,
+			THE_BANK_CODE as theBankCode,
+			HOLDER_MARK as holderMark,
+			HOLDER_REGION as holderRegion,
+			HOLDER_TYPE as holderType,
+			HOLDER_CLASSIFY as holderClassify,
+			FUND_ACC_PLACE as fundAccPlace,
+			PERSONAL_IDENTIFY_TYPE as personalIdentifyType,
+			INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+			ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as inentify_Type,
+			IDENTIFY_NUMBER as identifyNumber,
+			OTHER_IDENTIFY_NAME as otherIdentifyName,
+			SPV_CAP_ACC_BANK as spvCapAccBank,
+			OTHER_CAP_ACC_BANK as otherCapAccBank,
+			SPV_REGIST_CODE as spvRegistCode,
+			HOLDER_NAME as holderName,
+			HOLDER_SEX as holderSex,
+			HOLDER_RISK_PREFER as holderRiskPrefer,
+			HOLDER_CELLPHONE as holderCellphone,
+			HOLDER_TELEPHONE as holderTelephone,
+			HOLDER_EMAIL as holderEmail,
+			REMARK as remark,
+			A.ORG_CODE orgCode,
+			STATUS as status,
+			DATA_SOURCE as dataSource
+		from CHB_EQU_HOLD A
+	</select>
+
 </mapper>

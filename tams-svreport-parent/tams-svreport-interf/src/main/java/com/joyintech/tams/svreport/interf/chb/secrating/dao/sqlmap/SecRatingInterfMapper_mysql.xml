@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.secrating.dao.SecRatingInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstBondCreditRating" >
+        <id column="O_CODE" property="oCode" jdbcType="VARCHAR" />
+        <id column="GRADE_ORG_ID" property="gradeOrgId" jdbcType="VARCHAR" />
+        <id column="GRADE_DATE" property="gradeDate" jdbcType="DATE" />
+        <id column="O_TYPE" property="oType" jdbcType="VARCHAR" />
+        <result column="SHORT_LONG_TERM" property="shortLongTerm" jdbcType="VARCHAR" />
+        <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="SOURCE" property="source" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_RECOMMAND" property="isRecommand" jdbcType="VARCHAR" />
+        <result column="ISSUER_RATE_TYPE" property="issuerRateType" jdbcType="VARCHAR" />
+        <result column="NOTICE_DATE" property="noticeDate" jdbcType="DATE" />
+        <result column="GRADE_EXPECTATION" property="gradeExpectation" jdbcType="VARCHAR" />
+        <result column="DIRECTION_CHANGE" property="directionChange" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        SELECT
+        A.O_CODE O_CODE,
+        A.GRADE_ORG_ID GRADE_ORG_ID,
+        A.GRADE_DATE GRADE_DATE,
+        A.O_TYPE O_TYPE,
+        A.SHORT_LONG_TERM SHORT_LONG_TERM,
+        A.GRADE_RESULT GRADE_RESULT,
+        'wind' SOURCE ,
+        B.IS_RECOMMAND,
+        'interf' CREATE_USER,
+        'wind' SOURCE,
+        A.CREATE_DEPT,
+        A.CREATE_TIME,
+        'interf' UPDATE_USER,
+        A.UPDATE_TIME
+        FROM
+        MST_BOND_CREDIT_RATING A
+        LEFT JOIN (
+        SELECT O_CODE,
+        GRADE_DATE,
+        GRADE_ORG_ID,
+        '01' IS_RECOMMAND
+        FROM
+        (
+        SELECT O_CODE,
+        GRADE_DATE,
+        GRADE_ORG_ID,
+        ROW_NUMBER() OVER(PARTITION BY O_CODE ORDER BY GRADE_DATE DESC, GRADE_RESULT DESC) ROWNO
+        FROM
+        MST_BOND_CREDIT_RATING) T
+        WHERE
+        ROWNO = 1
+        AND EXISTS (
+        SELECT COUNT(1),
+        O_CODE,
+        GRADE_DATE
+        FROM
+        MST_BOND_CREDIT_RATING A
+        WHERE
+        A.O_CODE = T.O_CODE
+        AND A.GRADE_DATE = T.GRADE_DATE
+        GROUP BY
+        O_CODE,
+        GRADE_DATE
+        HAVING
+        COUNT(1)>1) ) B ON
+        A.O_CODE = B.O_CODE
+        AND A.GRADE_DATE = B.GRADE_DATE
+        AND A.GRADE_ORG_ID = B.GRADE_ORG_ID
+        where 1=1
+        <if test="updatetime != null" >
+            and ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

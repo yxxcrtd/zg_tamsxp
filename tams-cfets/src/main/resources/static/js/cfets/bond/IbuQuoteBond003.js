@@ -59,77 +59,184 @@
             $('#CfetsBondDealQuotedPrice005_settleDate').val(platDate);
         }
     };
+
     /**
-     * 保存
+     * 组合分配列表
+     * @type {*[]}
      */
-    var saveAction = function(){
+    var colsReg = [
+
+        {
+            field: 'entrustId',
+            width: 180,
+            title: '指令代码',
+            sortable: false,
+            disabled: true
+        }
+        , {
+            field: 'portfolioId',
+            width: 150,
+            title: '组合代码',
+            edit: false,
+            sortable: false,
+            disabled: true
+        }
+        , {
+            field: 'portfolioName',
+            width: 160,
+            title: '组合名称',
+            edit: false,
+            sortable: false,
+        }
+        , {
+            field: 'entrustAvaNum',
+            width: 160,
+            title: '剩余指令额度（万元）',
+            type: 'number', sortable: false
+        }
+        , {
+            field: 'avaNum',
+            width: 150,
+            title: '券面总额（万元）',
+            sortable: false,
+            edit: true,
+            type: 'number', digit: 2
+        }
+        , {
+            field: 'dealFeeAmt',
+            width: 150,
+            title: '交易手续费（元）',
+            sortable: false,
+            edit: true,
+            type: 'number',
+            digit: 2
+        }
+        , {
+            field: 'settFeeAmt',
+            width: 150,
+            title: '结算服务费（元）',
+            sortable: false,
+            edit: true,
+            type: 'number',
+            digit: 2
+        }
+        , {
+            field: 'businessModel',
+            width: 100,
+            title: '业务模式',
+            sortable: true,
+            edit: true,
+            editOption: {
+                type: 'select',
+                id: "businessModel",
+                formatoption: true,
+                result: BUSINESS_MODEL
+            },
+            visible: true
+        }
+        , {
+            field: 'priceModel',
+            width: 100,
+            title: '价格模式',
+            sortable: false,
+            edit: true,
+            editOption: {
+                type: 'select',
+                id: "priceModel",
+                formatoption: true,
+                result: PRICE_MODEL
+            },
+            visible: true
+        }
+        , {field: 'secAcctName', width: 150, title: '证券账户', sortable: false}
+        , {field: 'price', width: 120, title: '指令净价(元)', sortable: false, type: 'number', digit: 2}
+        , {
+            field: 'matureYield',
+            width: 120,
+            title: '到期收益率%',
+            edit: false,
+            sortable: false,
+            visible: true,
+            type: 'number',
+            digit: 4
+        }
+       , {
+            field: 'exerYield',
+            width: 120,
+            title: '行权收益率%',
+            sortable: false,
+            type: 'number',
+            digit: 4
+        }
+
+    ];
+    var tableTedCommon = $("#cfetsQuoTedCommonTable").joyintable({
+            data: cfetsBondDealRequestQuoteDtoList == null ? [] : cfetsBondDealRequestQuoteDtoList,
+            searchOnInit: true,
+            loadonce: true,
+            page: false,
+            addbtn: false,
+            checkbox: false,
+            height: 200,
+            cols: colsReg
+    });
+
+
+
+    /**
+     * 保存或提交
+     */
+    var saveOrSubmitAction = function(operatorType){
         var object = $.serializeToObject('#submitForm', true);
-        if(!object.finprodId){
-            object.finprodId = $("#CfetsBondDealQuotedPrice005_hidden_finprodId").val();
-        }
-        if(object.cfetsBondDealDialogueQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
-        }
         var orgList = table.getAllRows();
         if(orgList != null && orgList.length>0){
+           // var orgInfoList = [];
             var orgIdList = [];
             for(var i = 0 ;i<orgList.length; i++){
                 var org = orgList[i];
+               // orgInfoList.push(org);
                 orgIdList.push(org.counterId);
             }
+          //  object.counterInfoList = orgInfoList;
             object.counterIdList = orgIdList;
         }
         object.isDzh = 'Y';
-        object.operatorType = 'save';
-        object.pageId = "CfetsBondDealQuotedPrice005";
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice005/check', object, function(result) {
-            if (result.data){
-                var param = result.data;
-                Joyin.confirm(param, function() {
-                    WorkFlow.doSaveList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice005/save', object, "CfetsBondDealQuotedPrice005_btn_save", null,
-                        function() {
-                            var index = window.parent.layer.getFrameIndex(window.name);
-                            window.parent.layer.close(index);
-                        })
-                })
-            }
-        });
-    };
-    /**
-     * 提交
-     */
-    var submitAction = function(){
-        var object = $.serializeToObject('#submitForm', true);
-        if(!object.finprodId){
-            object.finprodId = $("#CfetsBondDealQuotedPrice005_hidden_finprodId").val();
-        }
-        var orgList = table.getAllRows();
-        if(orgList != null && orgList.length>0){
-            var orgIdList = [];
-            for(var i = 0 ;i<orgList.length; i++){
-                var org = orgList[i];
-                orgIdList.push(org.counterId);
-            }
-            object.counterIdList = orgIdList;
-        }
-        object.isDzh = 'Y';
-        object.operatorType = 'submit';
-        object.pageId = "CfetsBondDealQuotedPrice005";
+        object.operatorType = operatorType;
+        object.pageId = "IbuQuoteBond003";
+        object.shareAmt = JoyinMath.doMul(object.avaNum, 10000);
         if(object.cfetsBondDealDialogueQuoteDtoList){
             object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
+             var ptlAllocations=[];
+             for ( var i = 0; i <object.cfetsBondDealRequestQuoteDtoList.length; i++){
+                  var ptlAllocation=JSON.parse(JSON.stringify(object.cfetsBondDealRequestQuoteDtoList[i]));
+                  ptlAllocation.shareAmt = JoyinMath.doMul(ptlAllocation.avaNum, 10000);
+                  ptlAllocation.avaNum = JoyinMath.doMul(ptlAllocation.entrustAvaNum, 10000);
+                  ptlAllocation.avaNumOld = JoyinMath.doMul(ptlAllocation.entrustAvaNum, 10000);
+                  ptlAllocations.push(ptlAllocation);
+             }
+             object.ptlAllocatios= ptlAllocations;
         }
-        /*Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice005/check', object, function(result) {
-            if (result.data){*/
-                var param = result.data;
-                Joyin.confirm("请确认是否要提交?", function() {
-                    WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPrice005/save', object, "CfetsBondDealQuotedPrice005_btn_submit", null,
-                        function() {
+          Joyin.confirm("是否确认提交?",
+            function () {
+                //保存 走流程
+                if (operatorType === 'save') {
+                    WorkFlow.doSaveList(basePath + 'cfets/bond/IbuQuoteBond003/save', object, "IbuQuoteBond003_btn_save", "IbuQuoteBond003",
+                        function () {
                             var index = window.parent.layer.getFrameIndex(window.name);
                             window.parent.layer.close(index);
                         })
-                })
-         /*   }
-        });*/
+                }
+                //提交 走流程
+                else if (operatorType === 'submit') {
+                     Joyin.ajaxJson(basePath + 'cfets/bond/IbuQuoteBond003/checkByHome', object, function(result1) {
+                      WorkFlow.doSubmitList(basePath + 'cfets/bond/IbuQuoteBond003/save', object, "IbuQuoteBond003_btn_submit", "IbuQuoteBond003",
+                         function () {
+                             var index = window.parent.layer.getFrameIndex(window.name);
+                             window.parent.layer.close(index);
+                         })
+                     })
+                }
+        })
     };
     /**
      * 撤回
@@ -292,6 +399,8 @@
         $('#CfetsBondDealQuotedPrice005_finprodName').attr('disabled', true);
         $('#CfetsBondDealQuotedPrice005_settleSpreed').attr('disabled', true);
         $('#CfetsBondDealQuotedPrice005_mySide').attr('disabled', true);
+        $('#CfetsBondDealQuotedPrice005_settleMethod').attr('disabled', true);
+        $('#CfetsBondDealQuotedPrice005_settleType').attr('disabled', true);
         /*}else{
             //未选择委托时,默认：T+0
             if ($("#CfetsBondDealQuotedPrice005_settleSpreed").val() == ''){
@@ -372,13 +481,15 @@
          * 保存按钮按下处理
          */
         $('#IbuQuoteBond003_btn_save').click(function(){
-            saveAction();
+             saveOrSubmitAction('save');
         });
         /**
          * 提交按钮按下处理
          */
         $('#IbuQuoteBond003_btn_submit').click(function(){
-            submitAction();
+             if(paramCheck()) {
+                 saveOrSubmitAction('submit');
+             }
         });
         /**
          * 添加按钮按下处理
@@ -404,7 +515,111 @@
         $('#CfetsBondDealQuotedPrice005_mySide').change(function(){
             mySideChangeAction();
         });
+        $("#btn_autoAllocation").click(function () {
+            autoAllocation();
+        })
+        $('#CfetsBondDealQuotedPrice005_avaNum').on('change',function(){
+           calcAmt();
+        });
     });
+    /**
+     * 参数校验
+     */
+    var paramCheck = function () {
+        if(!$('#CfetsBondDealQuotedPrice005_avaNum').val()||!$('#CfetsBondDealQuotedPrice005_mySideTrader').val()){
+            Joyin.error("有*必填项未填写,请填写完整")
+            return false;
+        }
+        return true;
+    }
+    /**
+     * 计算金额相关
+     */
+    var calcAmt = function(calculateField){
+        var finprodId = $('#CfetsBondDealQuotedPrice005_hidden_finprodId').val();
+        if(!finprodId){
+            return;
+        }
+        var object = $.serializeToObject('#submitForm', true);
+        // 区分画面打开模式
+        var quotaPageModel = $('#CfetsBondDealQuotedPrice005_hidden_quotaPageModel').val();
+        // 做市报价回复
+        if (quotaPageModel && quotaPageModel == 'marketResponse' ){
+            if (!object.responseAmt){
+                return;
+            }
+            object.avaNum = new BigNumber(object.responseAmt).multipliedBy(new BigNumber(10000));
+        }else{
+            if (!object.avaNum){
+                return;
+            }
+            object.avaNum = new BigNumber(object.avaNum).multipliedBy(new BigNumber(10000))
+        }
+         var param = {};
+         param.finprodId = finprodId;
+         param.shareAmt =object.avaNum;
+         param.settleDate = object.settleDate;
+         param.price = object.price;
+         param.fpriceAmt = object.fpriceAmt;
+         param.ps = object.ps;
+         param.secManageAcctId = object.secManageAcctId;
+        Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/calculation', param, function(result){
+            if (result.data){
+                $('#dealFeeAmt').val(result.data.dealFeeAmt).trigger('blur');
+                $('#settFeeAmt').val(result.data.settFeeAmt).trigger('blur');
+            }
+        })
+    };
+    /**
+     * 计算金额相关
+     */
+    var autoAllocation = function () {
+    debugger;
+        var finprodId = $('#CfetsBondDealQuotedPrice005_hidden_finprodId').val();
+        if (!$("#distribution").val()) {
+            Joyin.error("无法自动分配，请先选择分配方式");
+            return;
+        }
+        var object = $.serializeToObject('#submitForm', true);
+        var param = {};
+        var shareAmt = $('#CfetsBondDealQuotedPrice005_avaNum').val();
+        param.finprodId = finprodId;
+        param.shareAmt = shareAmt * 10000;
+        param.settleDate = object.settleDate;
+        param.ps = object.ps;
+        param.secManageAcctId = object.secManageAcctId;
+        param.dealFeeAmt = object.dealFeeAmt;
+        param.distribution = object.distribution;
+        param.settFeeAmt = object.settFeeAmt;
+        if (object.cfetsBondDealDialogueQuoteDtoList) {
+            $.each(object.cfetsBondDealDialogueQuoteDtoList, function (index, obj) {
+                if(obj.avaNum){
+                    obj.shareAmt = JoyinMath.doMul(obj.avaNum, 10000);
+                }else{
+                    obj.shareAmt = 0;
+                }
+                if(obj.entrustAvaNum){
+                    obj.avaNum = JoyinMath.doMul(obj.entrustAvaNum, 10000);
+                    obj.avaNumOld = JoyinMath.doMul(obj.entrustAvaNum, 10000);
+                }else{
+                   obj.avaNum = 0;
+                   obj.avaNumOld = 0;
+                }
+            });
+        }
+        param.ptlAllocations = object.cfetsBondDealDialogueQuoteDtoList;
+        Joyin.ajaxJson(basePath + 'cfets/bankuplink/bond/IbuQuoteBond/autoAllocation', param, function (result) {
+            if (result.data) {
+                 $.each(result.data, function (index, item) {
+                     item.entrustAvaNum = JoyinMath.doDiv(item.avaNum, 10000);
+                     item.avaNumOld = JoyinMath.doDiv(item.avaNumOld, 10000);
+                     item.avaNum=JoyinMath.doDiv(item.shareAmt,10000)
+                 })
+                 tableTedCommon.clear();
+                 tableTedCommon.addRow(result.data);
+            }
+        })
+    };
     /**
      * 本方
      */
@@ -419,7 +634,7 @@
     }
     //撤回按钮不应该在待办及审批环节出现
     if(busWorkflowId){
-        $("#CfetsBondDealQuotedPrice005_btn_revokeBtn").hide();
+        $("#IbuQuoteBond003_btn_revokeBtn").hide();
     }
 
     window.CfetsBondDealQuotedPrice005 = {

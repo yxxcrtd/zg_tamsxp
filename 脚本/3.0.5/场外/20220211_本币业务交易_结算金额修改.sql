@@ -1,0 +1,1 @@
+update cfg_readonly_form_show set  colname='结算金额' where pagecode='IbuQuoteBond' and dtcode='ETRDETINFO' and colcode='fpriceAmt';

@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.employeeinforegist.dao.EmployeeInfoReg001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.employeeinforegist.dto.EmployeeInfoReg001Dto">
+        <result column="EMPLOYEE_TYPE" property="employeeType" jdbcType="VARCHAR" />
+        <result column="EMPLOYEE_NAME" property="employeeName" jdbcType="VARCHAR" />
+        <result column="EMPLOYEE_SEX" property="employeeSex" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="IDENTIFY_NUMBER" property="identifyNumber" jdbcType="VARCHAR" />
+        <result column="BELONGS_BANK" property="belongsBank" jdbcType="VARCHAR" />
+        <result column="BELONGS_PLACE" property="belongsPlace" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="BELONGS_DEPT" property="belongsDept" jdbcType="VARCHAR" />
+        <result column="POSITION" property="position" jdbcType="VARCHAR" />
+        <result column="EDUCATION" property="education" jdbcType="VARCHAR" />
+        <result column="ACADEMIC_DEGREE" property="academicDegree" jdbcType="VARCHAR" />
+        <result column="FIRSTTIME2WORK" property="firsttime2work" jdbcType="VARCHAR" />
+        <result column="FIRSTTIME2FINWORK" property="firsttime2finwork" jdbcType="VARCHAR" />
+        <result column="PROFESSIONAL_TITLE" property="professionalTitle" jdbcType="VARCHAR" />
+        <result column="FIN_PROFESSIONAL_CRTF" property="finProfessionalCrtf" jdbcType="VARCHAR" />
+        <result column="FIN_TRAINING_NO" property="finTrainingNo" jdbcType="VARCHAR" />
+        <result column="AWARDS" property="awards" jdbcType="VARCHAR" />
+        <result column="OFFICE_TEL" property="officeTel" jdbcType="VARCHAR" />
+        <result column="MOBILE_TEL" property="mobileTel" jdbcType="VARCHAR" />
+        <result column="MAIL" property="mail" jdbcType="VARCHAR" />
+        <result column="REG_BUSI_TYPE" property="regBusiType" jdbcType="VARCHAR" />
+        <result column="REG_EMPLOYEE_TYPE" property="regEmployeeType" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+			EMPLOYEE_TYPE, EMPLOYEE_NAME, EMPLOYEE_SEX,
+            ISSUE_PARTY_ID, IDENTIFY_NUMBER, BELONGS_BANK,
+            BELONGS_PLACE, COMPANY_NAME, BELONGS_DEPT,
+            POSITION, EDUCATION, ACADEMIC_DEGREE,
+            FIRSTTIME2WORK, FIRSTTIME2FINWORK, PROFESSIONAL_TITLE,
+            FIN_PROFESSIONAL_CRTF, FIN_TRAINING_NO, AWARDS,
+            OFFICE_TEL, MOBILE_TEL, MAIL,
+            REG_BUSI_TYPE, REG_EMPLOYEE_TYPE, STATUS,
+            DEPT_CODE, ORG_CODE, UPDATE_USER,
+            UPDATE_TIME, CREATE_USER, CREATE_TIME,
+            SUMIT_SEQ, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,SUBMIT_FEEDBACK_STATUS,
+            SEND_STATUS, STATUS_DATE, SUBMIT_TIME,
+            REMARK
+    </sql>
+
+    <select id="selectAllData" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM CHB_EMPLOYEE_INFO_SUB
+        WHERE 1=1
+        <if test="employeeTypeList != null and employeeTypeList.size()>0">
+            <foreach collection="employeeTypeList" item="item" open="and EMPLOYEE_TYPE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="statusList != null and statusList.size()>0">
+            <foreach collection="statusList" item="item" open="and STATUS in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+            <foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+                #{submitFeedbackStatus,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            AND DATE_FORMAT(CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitendDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            AND DATE_FORMAT(CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitendDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &gt;= #{dataDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &lt;= #{dataDateEnd,jdbcType=VARCHAR}
+        </if>
+
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="registSeqno != null and registSeqno != ''">
+            and SUMIT_SEQ = #{registSeqno,jdbcType=VARCHAR}
+        </if>
+        <if test="registList!=null and registList.size()!=0">
+            <foreach collection="registList" item="items"
+                     open=" AND TRIM(SUMIT_SEQ) IN (" close=")" separator=",">
+                #{items,jdbcType=CHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="updateSubmitStatusToOk" parameterType="java.util.List">
+        update CHB_EMPLOYEE_INFO_SUB
+        <set>
+            SUBMIT_FEEDBACK_STATUS = '03'
+        </set>
+        <where>
+            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                concat_ws('|',EMPLOYEE_TYPE,IDENTIFY_NUMBER) = #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
+    <insert id="insertReportHis" parameterType="java.util.Map">
+        INSERT INTO CHB_EMPLOYEE_INFO_SUB_HIS (
+        HIS_NO,
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK,
+        SUBMIT_FEEDBACK_MSG
+        )
+        SELECT
+        _nextIndex('EMPLOYEEINFO_SEQUENCE'),
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK,
+        SUBMIT_FEEDBACK_MSG
+        FROM CHB_EMPLOYEE_INFO_SUB
+        WHERE 1 =1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+                concat_ws('',EMPLOYEE_TYPE,IDENTIFY_NUMBER) = concat_ws('',#{regist.employeeType,jdbcType=VARCHAR},#{regist.identifyNumber,jdbcType=VARCHAR}) and SUMIT_SEQ != #{regist.sumitSeq,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+    </insert>
+
+    <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+        DELETE FROM CHB_EMPLOYEE_INFO_SUB
+        WHERE 1 =1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+                concat_ws('',EMPLOYEE_TYPE,IDENTIFY_NUMBER) = concat_ws('',#{regist.employeeType,jdbcType=VARCHAR},#{regist.identifyNumber,jdbcType=VARCHAR}) and SUMIT_SEQ != #{regist.sumitSeq,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        AND SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+    </delete>
+
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+        update CHB_EMPLOYEE_INFO_SUB sub
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            sub.submit_time = now(),
+            sub.UPDATE_TIME = now()
+        </set>
+        WHERE 1 =1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open="AND concat_ws('',EMPLOYEE_TYPE,IDENTIFY_NUMBER) IN (" separator=","  close=")">
+                concat_ws('',#{regist.employeeType,jdbcType=VARCHAR},#{regist.identifyNumber,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+    </update>
+
+    <insert id="insertReportDataFromHis" parameterType="java.util.Map">
+        insert into CHB_EMPLOYEE_INFO_SUB (
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK,
+        SUBMIT_FEEDBACK_MSG
+        )
+        select
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK,
+        SUBMIT_FEEDBACK_MSG
+        from (
+        select HIS_NO,
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK,
+        SUBMIT_FEEDBACK_MSG,
+        rank() over (partition by  EMPLOYEE_TYPE,IDENTIFY_NUMBER order by IFNULL(update_time,create_time) desc) ranknum
+        from CHB_EMPLOYEE_INFO_SUB_HIS
+        where 1=1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open="AND concat_ws('',EMPLOYEE_TYPE,IDENTIFY_NUMBER) IN (" separator=","  close=")">
+                concat_ws('',#{regist.employeeType,jdbcType=VARCHAR},#{regist.identifyNumber,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+        ) A
+        where ranknum = 1
+    </insert>
+
+    <delete id="deleteLastSubmitHis" parameterType="java.util.Map">
+        DELETE FROM CHB_EMPLOYEE_INFO_SUB_HIS
+        WHERE 1 =1
+        AND HIS_NO IN
+        (SELECT A.HIS_NO
+        FROM (SELECT
+        HIS_NO,
+        ROW_NUMBER() OVER(PARTITION BY EMPLOYEE_TYPE,IDENTIFY_NUMBER ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME) DESC) MYRANK
+        FROM CHB_EMPLOYEE_INFO_SUB_HIS
+        WHERE 1=1
+        <if test="registList !=null and registList.size()>0">
+            <foreach collection="registList" item="regist" open="AND concat_ws('',EMPLOYEE_TYPE,IDENTIFY_NUMBER) IN (" separator=","  close=")">
+                concat_ws('',#{regist.employeeType,jdbcType=VARCHAR},#{regist.identifyNumber,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+        )A
+        WHERE A.MYRANK=1
+        )
+    </delete>
+
+    <update id="updateEmployeeInfoRegist" parameterType="java.util.Map">
+        UPDATE CHB_EMPLOYEE_INFO_SUB
+        SET
+        SEND_STATUS = '01',
+        UPDATE_TIME = now(),
+        SUBMIT_TIME = null,
+        SUBMIT_FEEDBACK_STATUS = null
+        WHERE 1=1
+        <if test="list !=null and list.size()>0">
+            <foreach collection="list" item="item" open="AND concat_ws('|',EMPLOYEE_TYPE,IDENTIFY_NUMBER) IN (" separator=","  close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
+
+    <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+        IDENTIFY_NUMBER
+        FROM CHB_EMPLOYEE_INFO_SUB
+        WHERE
+        <if test="flag == '02'">
+            SEND_STATUS in ('02','03')
+        </if>
+        <if test="flag == '01'">
+            SEND_STATUS = '01'
+        </if>
+        <if test="list !=null and list.size()>0">
+            <foreach collection="list" item="item" open="AND concat_ws('|',EMPLOYEE_TYPE,IDENTIFY_NUMBER) IN (" separator=","  close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectAllDataByList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM CHB_EMPLOYEE_INFO_SUB
+        WHERE 1=1
+        <if test="keyList != null and keyList.size()>0">
+            <!--
+                <foreach collection="keyList" item="item" open="AND (EMPLOYEE_TYPE||IDENTIFY_NUMBER||STATUS) IN (" separator="," close=")">
+                    #{item.employeeType,jdbcType=VARCHAR}||#{item.identifyNumber,jdbcType=VARCHAR}||#{item.status,jdbcType=VARCHAR}
+                </foreach>
+             add by zhangweiqi   HYXXDJZL-131 从业人员登记页面导出中债excel，导出的压缩包是空的-->
+            <foreach collection="keyList" item="item" open="AND SUMIT_SEQ IN (" separator="," close=")">
+                #{item.sumitSeq,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        ORDER BY SUBMIT_DEADLINE
+    </select>
+    <insert id="insertReportHisBySeq" parameterType="java.lang.String">
+        INSERT INTO CHB_EMPLOYEE_INFO_SUB_HIS (
+        HIS_NO,
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK,
+        SUBMIT_FEEDBACK_MSG
+        )
+        SELECT
+        _nextIndex('EMPLOYEEINFO_SEQUENCE'),
+        EMPLOYEE_TYPE,
+        EMPLOYEE_NAME,
+        EMPLOYEE_SEX,
+        ISSUE_PARTY_ID,
+        IDENTIFY_NUMBER,
+        BELONGS_BANK,
+        BELONGS_PLACE,
+        COMPANY_NAME,
+        BELONGS_DEPT,
+        POSITION,
+        EDUCATION,
+        ACADEMIC_DEGREE,
+        FIRSTTIME2WORK,
+        FIRSTTIME2FINWORK,
+        PROFESSIONAL_TITLE,
+        FIN_PROFESSIONAL_CRTF,
+        FIN_TRAINING_NO,
+        AWARDS,
+        OFFICE_TEL,
+        MOBILE_TEL,
+        MAIL,
+        REG_BUSI_TYPE,
+        REG_EMPLOYEE_TYPE,
+        STATUS,
+        DEPT_CODE,
+        ORG_CODE,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        SUMIT_SEQ,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        SUBMIT_FEEDBACK_STATUS,
+        SEND_STATUS,
+        STATUS_DATE,
+        SUBMIT_TIME,
+        REMARK,
+        SUBMIT_FEEDBACK_MSG
+        FROM CHB_EMPLOYEE_INFO_SUB
+        WHERE 1 =1
+        AND SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+        <if test="regList !=null and regList.size()>0">
+            <foreach collection="regList" item="item" open="and SUMIT_SEQ IN (" separator=","  close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </insert>
+    <!-- 根据报送流水号更新报送状态-->
+    <update id="updateInterfSubmitBySeqBatch" parameterType="java.util.Map">
+        update CHB_EMPLOYEE_INFO_SUB sub
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            <if test="submitFeeBackStatus != null and submitFeeBackStatus != ''">
+                sub.SUBMIT_FEEDBACK_STATUS = #{submitFeeBackStatus},
+            </if>
+            sub.submit_time = now(),
+            sub.UPDATE_TIME = now()
+        </set>
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                trim(sub.SUMIT_SEQ) = #{regist.sumitSeq}
+            </foreach>
+        </where>
+    </update>
+</mapper>

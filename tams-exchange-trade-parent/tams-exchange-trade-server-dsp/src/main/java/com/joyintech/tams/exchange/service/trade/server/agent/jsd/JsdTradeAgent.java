@@ -119,6 +119,7 @@ public class JsdTradeAgent extends TradeAgentDsp {
                 tradeAgentManager.addAccounts(this, accountId);
                 tradeAgentManager.addAgentLoginStatus(accountId, true);
                 accountManager.addAccounts(account);
+                addTradeRequest(accountId, this);
                 addAccount(accountId, account);
                 setStatus(account.getId(), AccountLoginStatus.LOGGED);
 
@@ -762,7 +763,10 @@ public class JsdTradeAgent extends TradeAgentDsp {
         for (Map.Entry<String, Account> entry : accountMap.entrySet()) {
             Account account = entry.getValue();
             String accountId = account.getId();
-            logger.info("status：{}", getStatus(accountId));
+            logger.info("account：{}，status：{}", accountId, getStatus(accountId));
+            if (getStatus(accountId) != AccountLoginStatus.TRADING.value) {
+                return;
+            }
             boolean loginStatus = tradeAgentManager.getAgentLoginStatus(accountId);
             if (loginStatus) {
                 executeQueryNextTrade(account);

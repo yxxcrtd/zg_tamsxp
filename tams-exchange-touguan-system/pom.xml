@@ -83,6 +83,18 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- 交易画面端 -->
+		<dependency>
+			<groupId>com.joyintech</groupId>
+			<artifactId>tams-exchange-trade</artifactId>
+			<version>3.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 	</dependencies>
 

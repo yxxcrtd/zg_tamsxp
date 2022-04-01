@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dao.ChbSalerRewPenaInfoRegistMapper_mysql" >
+
+    <select id="queryForRegistPage" resultType="com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto">
+        SELECT
+        REGIST_SEQNO registSeqno,
+        SALER_REW_PENA_NO salerRewPenaNo,
+        SALER_INST_CODE salerInstCode,
+        SALER_INS_NO salerInsNo,
+        SALER_REW_PENA_TYEP salerRewPenaTyep,
+        SALER_REW_PENA_NAME salerRewPenaName,
+        SALER_REW_PENA_COMMENTS salerRewPenaComments,
+        SALER_REW_PENA_INST salerRewPenaInst,
+        SALER_REW_PENA_INST_NAME salerRewPenaInstName,
+        SALER_REW_PENA_START salerRewPenaStart,
+        SALER_REW_PENA_END salerRewPenaEnd,
+        SALER_COMPLAIN_DETAIL salerComplainDetail,
+        SALER_COMPLAIN_RESULT salerComplainResult,
+        SALER_COMPLAIN_DATE salerComplainDate,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        SUBMIT_TIME submitTime,
+        CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        SUBMIT_DEADLINE submitDeadline,
+        STATUS status,
+        SUMIT_SEQ sumitSeq,
+        DATA_DATE dataDate,
+        UPDATE_TIME
+        FROM
+        CHB_SALER_REW_PENA_SUB
+        where 1=1
+        <if test="salerRewPenaTyep != null and salerRewPenaTyep != ''">
+            and SALER_REW_PENA_TYEP = #{salerRewPenaTyep}
+        </if>
+        <if test="salerRewPenaInst != null and salerRewPenaInst != ''">
+            and SALER_REW_PENA_INST = #{salerRewPenaInst}
+        </if>
+        <if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+            and SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+        </if>
+        <if test="sendStatus != null and sendStatus != ''">
+            and SEND_STATUS = #{sendStatus}
+        </if>
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
+        </if>
+        <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+            and CHB_SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+        </if>
+        <if test="searchDataDateStart != null and searchDataDateStart != ''">
+            and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+            and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+        </if>
+        ORDER BY UPDATE_TIME DESC
+    </select>
+
+    <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto">
+        select * from (
+        SELECT
+        REGIST_SEQNO registSeqno,
+        SALER_REW_PENA_NO salerRewPenaNo,
+        SALER_INST_CODE salerInstCode,
+        SALER_INS_NO salerInsNo,
+        SALER_REW_PENA_TYEP salerRewPenaTyep,
+        SALER_REW_PENA_NAME salerRewPenaName,
+        SALER_REW_PENA_COMMENTS salerRewPenaComments,
+        SALER_REW_PENA_INST salerRewPenaInst,
+        SALER_REW_PENA_INST_NAME salerRewPenaInstName,
+        SALER_REW_PENA_START salerRewPenaStart,
+        SALER_REW_PENA_END salerRewPenaEnd,
+        SALER_COMPLAIN_DETAIL salerComplainDetail,
+        SALER_COMPLAIN_RESULT salerComplainResult,
+        SALER_COMPLAIN_DATE salerComplainDate,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        SUBMIT_TIME submitTime,
+        CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        SUBMIT_DEADLINE submitDeadline,
+        STATUS status,
+        SUMIT_SEQ sumitSeq,
+        DATA_DATE dataDate,
+        UPDATE_TIME
+        FROM
+        CHB_SALER_REW_PENA_SUB
+        <where>
+            <if test="salerRewPenaTyep != null and salerRewPenaTyep != ''">
+                and SALER_REW_PENA_TYEP = #{salerRewPenaTyep}
+            </if>
+            <if test="salerRewPenaInst != null and salerRewPenaInst != ''">
+                and SALER_REW_PENA_INST = #{salerRewPenaInst}
+            </if>
+            <if test="sendStatusList != null and sendStatusList.size()&gt;0">
+                <foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="keyList != null and keyList.size()&gt;0">
+                <foreach close=")" collection="keyList" item="item" open="and trim(REGIST_SEQNO) in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="statusList != null and statusList.size()&gt;0">
+                <foreach close=")" collection="statusList" item="item" open="and STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() &gt; 0">
+                <foreach close=")" collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" separator=",">
+                    #{submitFeedbackStatus,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+                and CHB_SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/ STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d')and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+            </if>
+            <if test="searchDataDateStart != null and searchDataDateStart != ''">
+                and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/DATE_FORMAT(DATA_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+                and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+                and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
+                and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
+                and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
+                and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
+                and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ) ORDER BY dataDate
+    </select>
+
+
+    <insert id="insertIntoHis" parameterType="java.util.Map">
+        insert into CHB_SALER_REW_PENA_SUB_HIS (
+        HIS_NO,
+        SALER_REW_PENA_NO,SALER_INST_CODE,SALER_INS_NO,
+        SALER_REW_PENA_TYEP,SALER_REW_PENA_NAME,SALER_REW_PENA_COMMENTS,SALER_REW_PENA_INST,
+        SALER_REW_PENA_INST_NAME,SALER_REW_PENA_START,SALER_REW_PENA_END,SALER_COMPLAIN_DETAIL,
+        SALER_COMPLAIN_RESULT,SALER_COMPLAIN_DATE,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        select
+        REGIST_SEQNO,
+        SALER_REW_PENA_NO,SALER_INST_CODE,SALER_INS_NO,
+        SALER_REW_PENA_TYEP,SALER_REW_PENA_NAME,SALER_REW_PENA_COMMENTS,SALER_REW_PENA_INST,
+        SALER_REW_PENA_INST_NAME,SALER_REW_PENA_START,SALER_REW_PENA_END,SALER_COMPLAIN_DETAIL,
+        SALER_COMPLAIN_RESULT,SALER_COMPLAIN_DATE,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+        from CHB_SALER_REW_PENA_SUB
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_REW_PENA_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </insert>
+
+
+    <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+        delete from CHB_SALER_REW_PENA_SUB
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_REW_PENA_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and SEND_STATUS in ('02','03')
+        </where>
+    </delete>
+
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+        update CHB_SALER_REW_PENA_SUB
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            SUBMIT_FEEDBACK_STATUS = '03',
+            submit_time = sysdate
+        </set>
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                trim(REGIST_SEQNO) = #{regist.registSeqno,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="cancelMannultRegist" parameterType="java.util.Map">
+        update CHB_SALER_REW_PENA_SUB
+        <set>
+            SEND_STATUS = '01',
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                trim(REGIST_SEQNO) = #{dto.registSeqno}
+            </foreach>
+        </where>
+    </update>
+
+    <insert id="insertReportDataFromHis" parameterType="java.util.Map">
+        insert into CHB_SALER_REW_PENA_SUB (
+        REGIST_SEQNO,
+        SALER_REW_PENA_NO,SALER_INST_CODE,SALER_INS_NO,
+        SALER_REW_PENA_TYEP,SALER_REW_PENA_NAME,SALER_REW_PENA_COMMENTS,SALER_REW_PENA_INST,
+        SALER_REW_PENA_INST_NAME,SALER_REW_PENA_START,SALER_REW_PENA_END,SALER_COMPLAIN_DETAIL,
+        SALER_COMPLAIN_RESULT,SALER_COMPLAIN_DATE,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        select
+        HIS_NO,
+        SALER_REW_PENA_NO,SALER_INST_CODE,SALER_INS_NO,
+        SALER_REW_PENA_TYEP,SALER_REW_PENA_NAME,SALER_REW_PENA_COMMENTS,SALER_REW_PENA_INST,
+        SALER_REW_PENA_INST_NAME,SALER_REW_PENA_START,SALER_REW_PENA_END,SALER_COMPLAIN_DETAIL,
+        SALER_COMPLAIN_RESULT,SALER_COMPLAIN_DATE,
+        STATUS,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
+        DATA_DATE,SUBMIT_TIME,SUMIT_SEQ, SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,SUBMIT_FEEDBACK_MSG,CREATE_DEPT,ORG_CODE,
+        CREATE_USER,his.CREATE_TIME,UPDATE_USER,UPDATE_TIME
+        from CHB_SALER_REW_PENA_SUB_HIS  his
+        INNER join (
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_REW_PENA_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_REW_PENA_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> ) maxtime
+        on his.CREATE_TIME=maxtime.CREATE_TIME
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_REW_PENA_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </insert>
+
+    <delete id="deleteReportDataHis" parameterType="java.util.Map">
+        delete
+        from CHB_SALER_REW_PENA_SUB_HIS  his
+        where his.CREATE_TIME=(
+        SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_REW_PENA_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_REW_PENA_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> )
+        <if test="registList !=null and registList.size()>0">
+            and SALER_REW_PENA_NO
+            IN
+            <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </delete>
+
+    <select id="setDataList" resultType="com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto">
+        select
+        REGIST_SEQNO registSeqno,
+        SALER_REW_PENA_NO salerRewPenaNo,
+        SALER_INST_CODE salerInstCode,
+        SALER_INS_NO salerInsNo,
+        SALER_REW_PENA_TYEP salerRewPenaTyep,
+        SALER_REW_PENA_NAME salerRewPenaName,
+        SALER_REW_PENA_COMMENTS salerRewPenaComments,
+        SALER_REW_PENA_INST salerRewPenaInst,
+        SALER_REW_PENA_INST_NAME salerRewPenaInstName,
+        SALER_REW_PENA_START salerRewPenaStart,
+        SALER_REW_PENA_END salerRewPenaEnd,
+        SALER_COMPLAIN_DETAIL salerComplainDetail,
+        SALER_COMPLAIN_RESULT salerComplainResult,
+        SALER_COMPLAIN_DATE salerComplainDate,
+        SEND_STATUS sendStatus,
+        SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        SUBMIT_TIME submitTime,
+        CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        SUBMIT_DEADLINE submitDeadline,
+        STATUS status,
+        SUMIT_SEQ sumitSeq,
+        DATA_DATE dataDate,
+        UPDATE_TIME
+        FROM
+        CHB_SALER_REW_PENA_SUB
+        where 1=1
+        <if test="salerRewPenaTyep != null and salerRewPenaTyep != ''">
+            and SALER_REW_PENA_TYEP = #{salerRewPenaTyep}
+        </if>
+        <if test="salerRewPenaInst != null and salerRewPenaInst != ''">
+            and SALER_REW_PENA_INST = #{salerRewPenaInst}
+        </if>
+        <if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
+            and SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
+        </if>
+        <if test="sendStatus != null and sendStatus != ''">
+            and SEND_STATUS = #{sendStatus}
+        </if>
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
+        </if>
+        <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
+            and SUBMIT_DEADLINE between /*to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and /*to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')*/STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+        </if>
+        <if test="searchDataDateStart != null and searchDataDateStart != ''">
+            and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchDataDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchDataDateEnd != null and searchDataDateEnd != ''">
+            and  /*to_char(DATA_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(DATA_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchDataDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeStart != null and searchSubmitTimeStart != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/ DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d')<![CDATA[>=]]> #{searchSubmitTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSubmitTimeEnd != null and searchSubmitTimeEnd != ''">
+            and  /*to_char(SUBMIT_TIME,'yyyy-MM-dd')*/DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{searchSubmitTimeEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
+            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+        </if>
+        <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
+            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

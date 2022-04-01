@@ -37,7 +37,9 @@
         </foreach>
         ) TEMP
         ON (L.INSTITUTION_CODE = TEMP.INSTITUTION_CODE
-        and L.TRADE_NO = TEMP.TRADE_NO)
+        and L.TRADE_NO = TEMP.TRADE_NO
+        and L.ACCOUNT_NO = TEMP.ACCOUNT_NO
+        and L.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE)
         WHEN MATCHED THEN
         UPDATE
         SET

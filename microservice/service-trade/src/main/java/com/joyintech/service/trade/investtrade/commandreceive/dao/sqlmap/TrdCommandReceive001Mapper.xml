@@ -726,6 +726,7 @@
 	<!-- 未接收查询 -->
 	<select id="otherSelectForPage"
 		resultType="com.joyintech.service.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto">
+		select distinct * from (
 		SELECT
 			ETR_ENTRUST.ENTRUST_DATE	createTimeVal,
 			ETR_ENTRUST.PORTFOLIO_ID	portfolioId, 
@@ -757,7 +758,7 @@
 			100,0),NVL(ETR_FINISH_STATUS_A.FINISH_AMT,0)) proAvailableCash,
 			decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_FINISH_STATUS_A.FINISH_AMT * 100,0),'F10',NVL(ETR_FINISH_STATUS_A.FINISH_AMT *
 			100,0),NVL(ETR_FINISH_STATUS_A.FINISH_AMT,0)) finshAmt,
-			round(ETR_FINISH_STATUS_A.FINISH_AMT/NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM),4) percent,
+			round(ETR_FINISH_STATUS_A.FINISH_AMT/ETR_ENTRUST.ENTRUST_NUM,4) percent,
 			ETR_ENTRUST.CCY	ccy,
 			ETR_DISTRIBUTE.TRADER	trader,
 			ETR_ENTRUST.REMARK		remark,
@@ -1016,6 +1017,7 @@
             </if> -->
             <include refid="notShowEntrustData"></include>
 		</where>
+		)
 	</select>
 	<!-- modify by  gaopeng 20191126 增加可转债转股 委托额度查询 END -->
 	<!-- 市场代码下拉框  共有类资产 ： 债券，基金，股票  edit by songyawei -->

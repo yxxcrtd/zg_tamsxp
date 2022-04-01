@@ -13,15 +13,18 @@ package com.joyintech.tams.exchange.entrust.etrexchange.common.dao;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
+import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.dto.FinStockInfoDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeEtrExchangeCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePositionsCommonResponse;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.FinProductOthCodeDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.fjyywzl.dto.EtrExchangeTradeFjyywzlZqzyDto;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -64,7 +67,9 @@ public interface EtrExchangeTradeCommonMapper {
      * @see
      * @since 1.0
      */
-    List<EtrExchangeTradePositionsCommonResponse> findZqzyPositionsPage(Map<String, Object> pageParam);
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 start
+//    List<EtrExchangeTradePositionsCommonResponse> findZqzyPositionsPage(Map<String, Object> pageParam);
+	// modify by etliu 债券质押持仓查询只有非交易业务指令使用，代码删除 20220308 end
     /**
      * 查询证券代码联想框文本框
      *
@@ -100,6 +105,9 @@ public interface EtrExchangeTradeCommonMapper {
      * @since 1.0
      */
     BigDecimal getCurSecAmt(Map<String, Object> param);
+
+
+	String IsSpeedTOneOrZero(Map<String, Object> map);
 
     /**
      * 查询债券利率重置信息
@@ -319,5 +327,55 @@ public interface EtrExchangeTradeCommonMapper {
 	 * @return
 	 */
 	List<Map<String, Object>> selectCounterTraderId(Map<String, Object> params);
+
+	/**
+	 * 查询指令编号联想框文本框
+	 *
+	 * @param param 画面参数
+	 * @return 证券代码联想框文本框
+	 * @see
+	 * @since 1.0
+	 */
+	List<SelectOptionDto> getId(Map<String, Object> param);
+
+	List<EtrExchangeTradeSaveRequest>	selectWflEntrustDetail(EtrExchangeTradeSaveRequest dto);
+
+	/**
+	 * 头寸信息
+	 *
+	 * @param RequestDto 条件
+	 * @return java.util.Map
+	 * @author jiangpeng
+	 * @date 2021/12/4 15:39
+	 */
+	Map queryPositionInfo(Map RequestDto);
+
+	/**
+	 * 查询前一日持仓指标
+	 * @param baseMap
+	 * @return
+	 */
+	List<BaseMap> selectLastCostAmt(BaseMap baseMap);
+
+	/**
+	 * 当日交易数据查询
+	 * @param baseMap
+	 * @return
+	 */
+	List<BaseMap> selectCurrTrdData(BaseMap baseMap);
+
+
+	List<RiskTrialRetDto> selectRiskList(Map<String, Object> param);
+
+	BigDecimal getResidualFace(Map<String, Object> param);
+
+	int deleteWflEtrEntrustByEntrustId(String entrustId);
+
+	int deleteWflEtrEntrustAddByEntrustId(String entrustId);
+
+	int deleteWflEtrEntrustDetailByEntrustId(String entrustId);
+
+	Map findTandardRate(Map<String, Object> pageParam);
+
 
 }

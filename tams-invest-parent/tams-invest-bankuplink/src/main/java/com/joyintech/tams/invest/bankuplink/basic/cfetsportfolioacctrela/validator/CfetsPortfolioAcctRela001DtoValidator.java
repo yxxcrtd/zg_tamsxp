@@ -56,10 +56,14 @@ public class CfetsPortfolioAcctRela001DtoValidator implements BeanValidator {
             dto.setCfetsAcctTypeOld(dto.getCfetsAcctType());
         }
         List<ValidMessage> validList = new ArrayList<ValidMessage>();
-        if (StringUtil.equals(dto.getOperateType(), "submit")) {
-        	int count = cfetsPortfolioAcctRelaService.checkPortfolioIdAcctTypeExists(dto);
-            if (count > 0) {
-                validList.add(new ValidMessage("组合代码+账户来源已经存在！"));
+        String portfolioIds = dto.getPortfolioId();
+        for(String portfolioId:portfolioIds.split(",")) {
+            dto.setPortfolioId(portfolioId);
+            if (StringUtil.equals(dto.getOperateType(), "submit")) {
+                int count = cfetsPortfolioAcctRelaService.checkPortfolioIdAcctTypeExists(dto);
+                if (count > 0) {
+                    validList.add(new ValidMessage("组合代码[" + portfolioId + "]+账户来源[" + dto.getPartyIdOld() + "]已经存在！"));
+                }
             }
         }
         return validList;

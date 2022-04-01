@@ -38,8 +38,8 @@
                     function(){table.reload();});
         },
         cols:[
-             {field:'statusStr', title: '数据状态', width:'150',sortField:'status'}
-            ,{field:'issuePartyId', title: '发行机构代码', width:'200',sortField:'issuePartyId'}
+             {field:'statusStr', title: '数据状态', width:'100',sortField:'status'}
+            ,{field:'issuePartyId', title: '发行机构代码', width:'150',sortField:'issuePartyId'}
             ,{field:'agentInstitutionCode', title: '代理销售机构代码', width:'200',sortField:'agentInstitutionCode'}
             ,{field:'agentInstitutionName', title: '代理销售机构名称', width:'200',sortField:'agentInstitutionName'}
             ,{field:'remark', title: '备注', width:'200',sortField:'remark'}

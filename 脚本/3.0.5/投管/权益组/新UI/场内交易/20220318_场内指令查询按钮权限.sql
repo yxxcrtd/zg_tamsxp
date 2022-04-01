@@ -1,0 +1,1 @@
+update SYS_PAGE_ELEMENT set IS_CONTROL='02' where PAGE_ID='EtrExchangeTrade002' and ELEMENT_ID='EtrExchangeTrade002_btn_search';

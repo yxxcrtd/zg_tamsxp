@@ -410,7 +410,11 @@ public class TrdFeeCalcService {
 				localPlanSearchInfo.setAssetClassify2(finProductType.getType7());
 			}
 			// 结算数据下行相关处理（针对上农商只有竞价回购）
-			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())) {
+			// modify by etliu 20220104 start
+			// GZYHTZJY-868: 日终清算，协议回购的佣金没有计算出来
+//			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())) {
+			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())
+					&& !StringUtil.equals(DictCodeList.回购类型_质押式协议回购.getValue(), tradeFeatureInformation.getRepoType())) {
 				// 质押式回购需要单独设置成竞价回购
 				localPlanSearchInfo.setAssetClassify1(DictCodeList.回购类型_质押式竞价回购.getValue());
 				localPlanSearchInfo.setAssetClassify2(DictCodeList.回购类型_质押式竞价回购.getValue());
@@ -422,6 +426,32 @@ public class TrdFeeCalcService {
 					localPlanSearchInfo.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
 				}
 			}
+			else if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_质押式回购.getValue())
+					&& StringUtil.equals(DictCodeList.回购类型_质押式协议回购.getValue(), tradeFeatureInformation.getRepoType())) {
+				localPlanSearchInfo.setAssetClassify1(DictCodeList.回购类型_质押式协议回购.getValue());
+				localPlanSearchInfo.setAssetClassify2(DictCodeList.回购类型_质押式协议回购.getValue());
+				// modify by etliu 20220117 start
+				// GZYHTZJY-1080:【场内对账清结算1231】深交所协议回购 逆回购首期佣金没有计算出来，正回购到期续作佣金计算有误【解决日期：2022-01-12】
+				if (!StringUtil.isEmptyList(detailDtos)) {
+//					localPlanSearchInfo.setPs(detailDtos.get(0).getPs());
+					if ((!StringUtil.equals(DictCodeListExt3.交易方向_正回购.getValue(), detailDtos.get(0).getPs())
+							&& !StringUtil.equals(DictCodeListExt3.交易方向_逆回购.getValue(), detailDtos.get(0).getPs()))
+							|| StringUtil.equals(DictCodeList.交易方向_买入.getValue(), detailDtos.get(0).getPs())) {
+						// 交易方向重新设置
+						if (StringUtil.equals(tradeFeatureInformation.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())) {
+							localPlanSearchInfo.setPs(DictCodeList.回购拆借方向_正回购.getValue());
+						}
+						else if (StringUtil.equals(tradeFeatureInformation.getFinprodType2(), DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())) {
+							localPlanSearchInfo.setPs(DictCodeList.回购拆借方向_逆回购.getValue());
+						}
+					}
+					else {
+						localPlanSearchInfo.setPs(detailDtos.get(0).getPs());
+					}
+				}
+				// modify by etliu 20220117 end
+			}
+			// modify by etliu 20220104 end
 			
 			if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_基金.getValue())){
 			    FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(tradeFeatureInformation.getFinprodId());
@@ -438,6 +468,21 @@ public class TrdFeeCalcService {
 				localPlanSearchInfo.setCapitalAccountNo(stlDownDataDealAccountInfoDto.getAcctNo());
 			}
 		}
+
+		// add by etliu 20220126 start
+		// TISHKS-780: 交易所费用设置了费用，清算时无法计算出费用
+		if (StringUtil.equals(tradeType, DictCodeList.平安资产类型_债券.getValue())){
+			if (StringUtil.isNotBlank(localPlanSearchInfo.getAssetClassify2())
+					&& !StringUtil.startsWith(localPlanSearchInfo.getAssetClassify2(), "B0")) {
+				localPlanSearchInfo.setAssetClassify2("B0" + localPlanSearchInfo.getAssetClassify2());
+			}
+		}
+		else if (StringUtil.equals(tradeType, DictCodeListExt2.平安资产类型_股票.getValue())){
+			localPlanSearchInfo.setAssetClassify1(DictCodeListExt2.平安资产类型_股票.getValue());
+			localPlanSearchInfo.setAssetClassify2(DictCodeListExt2.平安资产类型_股票.getValue());
+		}
+		// add by etliu 20220126 end
+
         // 查询费用方案
 		FeePlan feePlan = getFeePlan(localPlanSearchInfo, dealDate);
 
@@ -768,27 +813,11 @@ public class TrdFeeCalcService {
         List<TrdFeeConfig> trdFeeConfigs = trdFeeCalcMapper.getTrdFeeConfig(searchParam);
         if (trdFeeConfigs != null && !trdFeeConfigs.isEmpty()) {
             feePlan = new FeePlan();
-			TrdFeeConfig trdFeetConfig = trdFeeConfigs.get(0);
-            // 资金账户不为空
-			if(StringUtil.isNotEmpty(planSearchInfo.getCapitalAccountNo())){
-				List<TrdFeeConfig> trdFeeConfigs_capitalAccountNo = trdFeeConfigs.stream().filter(x->StringUtil.equals(x.getCapitalAccountNo(),planSearchInfo.getCapitalAccountNo())).collect(Collectors.toList());
-				if (trdFeeConfigs_capitalAccountNo != null && !trdFeeConfigs_capitalAccountNo.isEmpty()) {
-					trdFeetConfig = trdFeeConfigs_capitalAccountNo.get(0);
-				}
-			}else if(StringUtil.isNotEmpty(planSearchInfo.getBrokerageNo())){
-				List<TrdFeeConfig> trdFeeConfigs_brokerageNo = trdFeeConfigs.stream().filter(x->
-						StringUtil.equals(x.getCustomerId(),planSearchInfo.getBrokerageNo())
-						&&!StringUtil.isNotEmpty(planSearchInfo.getCapitalAccountNo())
-				).collect(Collectors.toList());
-				if (trdFeeConfigs_brokerageNo != null && !trdFeeConfigs_brokerageNo.isEmpty()) {
-					trdFeetConfig = trdFeeConfigs_brokerageNo.get(0);
-				}
-			}
-            // 取第一条数据
-            feePlan.setTrdFeeConfig(trdFeetConfig);
-            // 1.2 交易费用配置明细
-            List<TrdFeeConfigDetail> trdFeeConfigDetails = trdFeeCalcMapper
-                    .getTrdFeeConfigDetail(trdFeetConfig.getSeqNo());
+			// 取第一条数据
+			feePlan.setTrdFeeConfig(trdFeeConfigs.get(0));
+			// 1.2 交易费用配置明细
+			List<TrdFeeConfigDetail> trdFeeConfigDetails = trdFeeCalcMapper
+					.getTrdFeeConfigDetail(trdFeeConfigs.get(0).getSeqNo());
             feePlan.setTrdFeeConfigDetails(trdFeeConfigDetails);
         }
         return feePlan;

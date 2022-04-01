@@ -417,6 +417,24 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             model.addAttribute("TURN_INV_AIM", JsonUtils.objectArray2Json(options.toArray())); 
         }
 
+        // add by etliu 20220219 start
+        // GNS-894:【广农商场内清算】交易查询 页面查询条件“交易方向”缺少枚举值“T97：配债”，查询结果也要能查到配债交易
+        // 只有查看模式展示配债选项
+        if (!StringUtil.equals(this.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE)) {
+            SelectDto psSelectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);
+            if (selectDto != null && !StringUtil.isEmptyList(psSelectDto.getOptions())) {
+                List<SelectOptionDto> options = psSelectDto.getOptions();
+                for (int index = options.size() - 1; index >= 0; index-- ) {
+                    SelectOptionDto option = options.get(index);
+                    if (StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_配债.getValue())) {
+                        options.remove(option);
+                    }
+                }
+                model.addAttribute("PS", JsonUtils.objectArray2Json(options.toArray()));
+            }
+        }
+        // add by etliu 20220219 start
+
         model.addAttribute("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
         model.addAttribute("TRADE_PLACE_02", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
@@ -642,9 +660,12 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             p);
         if (!StringUtil.isEmptyList(planList)) {
             for (FinExercisePlan planDto : planList) {
-                if (planDto.getActExerciseDate().compareTo(inputDto.getSettleDate()) == 0) {
-                    ajaxResult.setData(DateUtil.format(planDto.getActExerciseDate()));;
+                if (planDto.getActExerciseDate() != null && inputDto.getSettleDate() != null) {
+                    if (planDto.getActExerciseDate().compareTo(inputDto.getSettleDate()) == 0) {
+                        ajaxResult.setData(DateUtil.format(planDto.getActExerciseDate()));
+                    }
                 }
+
             }
         }
         return ajaxResult;

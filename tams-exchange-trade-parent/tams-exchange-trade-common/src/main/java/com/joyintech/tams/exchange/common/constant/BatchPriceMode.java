@@ -14,4 +14,13 @@ public enum BatchPriceMode {
         this.name = name;
         this.value = value;
     }
+
+    public static String getBatchPriceMode(int value) {
+        for (BatchPriceMode priceMode : values()) {
+            if (priceMode.value == value) {
+                return priceMode.name;
+            }
+        }
+        return null;
+    }
 }

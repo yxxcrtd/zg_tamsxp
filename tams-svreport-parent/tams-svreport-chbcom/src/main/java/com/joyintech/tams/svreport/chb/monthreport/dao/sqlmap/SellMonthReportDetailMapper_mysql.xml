@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.SellMonthReportDetailMapper_mysql" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReportDetail" >
+    <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+    <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+    <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+    <result column="PRD_REGIST_CODE" property="prdRegistCode" jdbcType="VARCHAR" />
+    <result column="IS_CONSIGN" property="isConsign" jdbcType="CHAR" />
+    <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+    <result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+    <result column="HOLDER_TYPE" property="holderType" jdbcType="CHAR" />
+    <result column="HOLDER_NUM" property="holderNum" jdbcType="DECIMAL" />
+    <result column="SALE_AMOUNT_TOTAL" property="saleAmountTotal" jdbcType="DECIMAL" />
+    <result column="VALUE_AMOUNT_TOTAL" property="valueAmountTotal" jdbcType="DECIMAL" />
+    <result column="BALANCE_AMT" property="balanceAmt" jdbcType="DECIMAL" />
+    <result column="BALANCE_SHARES" property="balanceShares" jdbcType="DECIMAL" />
+      <result column="SALE_SHARES_TOTAL" property="saleSharesTotal" jdbcType="DECIMAL" />
+      <result column="VALUE_SHARES_TOTAL" property="valueSharesTotal" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DETAILUUID, REPORTUUID, REPORTTYPE, PRD_REGIST_CODE, IS_CONSIGN, INSTITUTION_CODE, AREA_CODE,
+      HOLDER_TYPE, HOLDER_NUM, SALE_AMOUNT_TOTAL, VALUE_AMOUNT_TOTAL, BALANCE_AMT, BALANCE_SHARES,SALE_SHARES_TOTAL,
+      VALUE_SHARES_TOTAL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CHB_MONTH_REPORT_DETAIL
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_MONTH_REPORT_DETAIL
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </delete>
+
+  <select id="selectByModel" parameterType="map" resultMap="BaseResultMap">
+   	 	select 
+	        DETAILUUID,REPORTUUID,REPORTTYPE,PRD_REGIST_CODE,IS_CONSIGN,INSTITUTION_CODE,AREA_CODE,HOLDER_TYPE,HOLDER_NUM,
+      SALE_AMOUNT_TOTAL, VALUE_AMOUNT_TOTAL, BALANCE_AMT, BALANCE_SHARES, SALE_SHARES_TOTAL, VALUE_SHARES_TOTAL,
+   			 ''  as createUser,'' as createDept,
+	    from CHB_SALE_MONTH_REPORT_DETAIL
+   		<where>
+			<if test="termid != null and termid != ''">
+				and TERMID =  #{termid,jdbcType=VARCHAR}
+			</if>
+			<if test="reportuuid != null and reportuuid != ''">
+				and REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
+			</if>
+		</where>
+  </select>
+
+  <select id="selectAllPropertyCode" resultType="String">
+  	select PROPERTYCODE from CHB_MONTH_REPORT_TEMPLATE where REPORTTYPE='BALANCE'
+  </select>
+    <select id="selectReportDetail" parameterType="string" resultMap="BaseResultMap">
+        select
+        DETAILUUID,REPORTUUID,REPORTTYPE,PRD_REGIST_CODE,IS_CONSIGN,INSTITUTION_CODE,AREA_CODE,HOLDER_TYPE,HOLDER_NUM,
+        SALE_AMOUNT_TOTAL, VALUE_AMOUNT_TOTAL, BALANCE_AMT, BALANCE_SHARES, SALE_SHARES_TOTAL, VALUE_SHARES_TOTAL
+        from CHB_SALE_MONTH_REPORT_DETAIL
+        <where>
+            <if test="reportuuid != null and reportuuid != ''">
+                REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectReportDate" parameterType="string" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport">
+        select
+        TERMID,ISSUE_PARTY_ID,ISSUE_PARTY_NAME
+        from CHB_SALE_MONTH_REPORT
+        where REPORTUUID =  #{reportuuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectReportuuid" parameterType="string" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.SellMonthReport">
+        select
+        REPORTUUID,REPORTTYPE
+        from CHB_SALE_MONTH_REPORT
+        where TERMID =  #{termid,jdbcType=VARCHAR}
+    </select>
+</mapper>

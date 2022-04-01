@@ -44,7 +44,7 @@
 				 <![CDATA[and b.finprod_type2 in (select REGEXP_SUBSTR(str, '[^,]+', 1, LEVEL) STR from (select #{assetsType} as str from dual) CONNECT BY LEVEL <= REGEXP_COUNT(str, '[^,]+'))]]>
 			</when>
 			<otherwise>
-				and b.finprod_type2 in ('F01','F10')
+				and b.finprod_type2 in ('F01','F10','F06')
 			</otherwise>
 		</choose>
 		<if test="finprodId != null and finprodId != ''">
@@ -75,7 +75,7 @@
 				 <![CDATA[and a.finprod_type2 in (select REGEXP_SUBSTR(str, '[^,]+', 1, LEVEL) STR from (select #{assetsType} as str from dual) CONNECT BY LEVEL <= REGEXP_COUNT(str, '[^,]+'))]]>
 			</when>
 			<otherwise>
-				and a.finprod_type2 in ('F01','F10')
+				and a.finprod_type2 in ('F01','F10','F06')
 			</otherwise>
 		</choose>
 		<if test="finprodId !=null and finprodId != ''">
@@ -96,7 +96,7 @@
 		SELECT a.finprod_id id, a.finprod_type2 text,a.FINPROD_ABBR parentId,
 		 'FINPROD_TYPE_TG' as col
 		FROM FIN_PRODUCT a
-		WHERE a.finprod_type2 in ('F01', 'F10')
+		WHERE a.finprod_type2 in ('F01', 'F10','F06')
 		<if test="finprodId !=null and finprodId != ''">
 			AND a.finprod_id = #{finprodId,jdbcType=VARCHAR}
 		</if>
@@ -105,6 +105,7 @@
 			AND a.FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
 		</if>
 		<!-- add by dubaojun 2020-07-30 画面资产代码展示为市场代码 end -->
+		AND a.TRADE_MARKET in (#{TRADE_PLACE_03}, #{TRADE_PLACE_04})
 		order by id asc
 	</select>
 	<!-- 主键验证   去掉BRANCH =#{branch,jdbcType=VARCHAR}，业务不涉及 -->

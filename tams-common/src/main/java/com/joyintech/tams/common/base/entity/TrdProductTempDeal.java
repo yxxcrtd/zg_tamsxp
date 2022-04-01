@@ -65,6 +65,11 @@ public class TrdProductTempDeal extends BaseEntity {
     private Date settleDate;
 
     /**
+     *业务模式
+     */
+    private String businessModel;
+
+    /**
      * 清算速度
      */
     private Long settleSpeed;
@@ -1310,5 +1315,13 @@ public class TrdProductTempDeal extends BaseEntity {
      */
     public void setSeatId(String seatId) {
         this.seatId = seatId == null ? null : seatId.trim();
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

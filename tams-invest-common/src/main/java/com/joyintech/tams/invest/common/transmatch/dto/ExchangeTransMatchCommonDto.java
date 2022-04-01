@@ -6,6 +6,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.SettleTransDataAdd;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotal;
 import com.joyintech.tams.common.base.entity.SettleTransDataTotalAdd;
+import com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge;
 import com.joyintech.tams.constant.DictCodeList;
 
 import java.math.BigDecimal;
@@ -53,6 +54,11 @@ public class ExchangeTransMatchCommonDto extends SettleTransDataTotal {
      * 汇总成交数据附属表
      */
     private SettleTransDataTotalAdd settleTransDataTotalAdd;
+
+    /**
+     * 汇总成交质押品信息表(质押式协议回购时使用)
+     */
+    private List<SettleTransDataTotalPledge> settleTransDataTotalPledgeList;
 
     /**
      *  转换资产代码/债转股代码（基金转换/债转股）
@@ -132,5 +138,13 @@ public class ExchangeTransMatchCommonDto extends SettleTransDataTotal {
 
     public void setrFinprodType(String rFinprodType) {
         this.rFinprodType = rFinprodType;
+    }
+
+    public List<SettleTransDataTotalPledge> getSettleTransDataTotalPledgeList() {
+        return settleTransDataTotalPledgeList;
+    }
+
+    public void setSettleTransDataTotalPledgeList(List<SettleTransDataTotalPledge> settleTransDataTotalPledgeList) {
+        this.settleTransDataTotalPledgeList = settleTransDataTotalPledgeList;
     }
 }

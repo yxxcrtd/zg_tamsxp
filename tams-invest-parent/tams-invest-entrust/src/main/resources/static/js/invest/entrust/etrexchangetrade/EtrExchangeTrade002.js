@@ -39,6 +39,12 @@
         },
         dblclick:function(table, data) {
             if(window.parent.dbclickCheck(data)){
+                //多组合单资产指令拼装数据
+                if(data.entrustClass=ENTRUST_CLASS_02) {
+                    Joyin.ajax(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTradeMulti001/selectMultDetail', data, function (result) {
+                        data.tradeMultiPtl001Dtos = result.tradeMultiPtl001Dtos;
+                    });
+                }
                 if (data.priceModel == PRICE_MODEL_PRM03) {
                     data.entrustPrice = "0.00";//市价指令，价格默认显示0
                 } else {
@@ -52,7 +58,12 @@
                 if((data.tradePlat == '02' || data.tradePlat == '04' || data.tradePlat == '05') && (data.ps == '03' || data.ps == '04')){
                     data.finprodType2 ='ZYSHG';
                 }
-                parent.EtrExchangeTrade001.dbclickRefresh(data);
+                if(data.entrustClass=ENTRUST_CLASS_02) {
+                    parent.EtrExchangeTradeMulti001.dbclickRefresh(data);
+                }else{
+                    parent.EtrExchangeTrade001.dbclickRefresh(data);
+                }
+
             }
         },
         /**

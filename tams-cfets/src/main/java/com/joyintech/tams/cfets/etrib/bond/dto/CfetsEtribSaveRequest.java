@@ -79,6 +79,10 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
 
    /* @ApiModelProperty(name="entrustId",value="指令代码",example="11")
     private String entrustId;*/
+    /**
+     * 资产4级分类
+     */
+    private String assetType11;
 
     public String getOperateType() {
         return operateType;
@@ -251,5 +255,13 @@ public class CfetsEtribSaveRequest extends EtrEntrust implements ProcessEntity {
 
     public void setFinprodAbbr(String finprodAbbr) {
         this.finprodAbbr = finprodAbbr;
+    }
+
+    public String getAssetType11() {
+        return assetType11;
+    }
+
+    public void setAssetType11(String assetType11) {
+        this.assetType11 = assetType11;
     }
 }

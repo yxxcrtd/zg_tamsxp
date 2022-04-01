@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.boksubject.dao.BokSubjectInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokSubject" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="FSUBJECT_ID" property="fsubjectId" jdbcType="VARCHAR" />
+        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+        <result column="SUBJECT_TYPE" property="subjectType" jdbcType="VARCHAR" />
+        <result column="SUBJECT_LEVEL" property="subjectLevel" jdbcType="DECIMAL" />
+        <result column="ACC_QUA_FLAG" property="accQuaFlag" jdbcType="VARCHAR" />
+        <result column="ACC_INT_FLAG" property="accIntFlag" jdbcType="VARCHAR" />
+        <result column="OVERDRAWN_FLAG" property="overdrawnFlag" jdbcType="VARCHAR" />
+        <result column="GEN_DETSUB_FLAG" property="genDetsubFlag" jdbcType="VARCHAR" />
+        <result column="BASE_SUBJECT_NATURE" property="baseSubjectNature" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="SEC_MANAGE_ACCT_ID" property="secManageAcctId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, SUBJECT_NO SUBJECT_NO, SUBJECT_NAME SUBJECT_NAME, FSUBJECT_ID FSUBJECT_ID,
+        BAL_FLAG BAL_FLAG, SUBJECT_TYPE SUBJECT_TYPE, SUBJECT_LEVEL SUBJECT_LEVEL, ACC_QUA_FLAG ACC_QUA_FLAG,
+        ACC_INT_FLAG ACC_INT_FLAG, OVERDRAWN_FLAG OVERDRAWN_FLAG, GEN_DETSUB_FLAG GEN_DETSUB_FLAG,
+        BASE_SUBJECT_NATURE BASE_SUBJECT_NATURE, INV_AIM INV_AIM, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
+        from BOK_SUBJECT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
+        from BOK_SUBJECT
+    </sql>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokSubjectMapper.Base_Column_List" />
+        from BOK_SUBJECT
+        where 1=1
+        <if test="updatetime != null" >
+            and ifnull(BOK_SUBJECT.UPDATE_TIME,BOK_SUBJECT.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

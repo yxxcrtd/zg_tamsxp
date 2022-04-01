@@ -1089,7 +1089,31 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						}
 					}
 					/**添加日期格式的字段处理  ZZOTZL-114   add  by  dongxiangyang  start 20201021*/
-
+					if(StringUtil.equals("CHB_PRD_DECLARE_SUB_TMP",tableName)){
+						if (StringUtil.equals("PRD_SPEC_PROPERTY",str)){
+							if (StringUtil.isNotEmpty(map.get(str))){
+								if (map.get(str).toString().contains(GlobalConstant.SEMICOLON)){
+									List<String> targetTypeList = StringUtil.splitToList(GlobalConstant.SEMICOLON, map.get(str).toString());
+									StringBuffer sb = new StringBuffer();
+									for(String targetType : targetTypeList) {
+										if (targetType.split(" ")[0].length() > 0){
+											sb.append(";");
+											SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,targetType.split(" ")[0]);
+											sb.append(targetType.split(" ")[0]+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,targetType.split(" ")[0]));
+										}
+									}
+									if (sb.length() > 0){
+										//map.get(str).toString() = sb.substring(1, sb.length());
+										map.put(str,sb.substring(1, sb.length()));
+									}
+								}else{
+									if (StringUtil.isNotEmpty(map.get(str))){
+										map.put(str,map.get(str).toString().split(" ")[0]+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,map.get(str).toString().split(" ")[0]));
+									}
+								}
+							}
+						}
+					}
 				}
 				listMap.add(map);
 			}
@@ -2614,7 +2638,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								} else if (dateColumnList.contains(column) && !("").equals(columnData)) {
 									// 特殊情况,CREATE_TIME和UPDATE_TIME为DATE类型
 									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-										columnData = "SYSDATE";
+										columnData = "NOW()";
 									} else {
 										//excel中输入了时间戳数据处理
 										if(columnData.length() > 10){
@@ -2626,7 +2650,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 										} else {
 											columnData = null;
 										}
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
+//            						columnData = "DATE'" + columnData.substring(0, 10) +"'";
 									}
 									// 时间类型字段全存入当前时间
 								} else if (timeColumnList.contains(column)) {
@@ -2650,8 +2674,8 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
 								insertMap.put("ASSET_TYPE", "'" + assetType + "'");
 								insertMap.put("STATUS", "'" + "E" + "'");
-								insertMap.put("CREATE_TIME", "SYSDATE");
-								insertMap.put("UPDATE_TIME", "SYSDATE");
+								insertMap.put("CREATE_TIME", "now()");
+								insertMap.put("UPDATE_TIME", "now()");
 								insertMap.put("CREATE_USER", "'" + userName + "'");
 								insertMap.put("UPDATE_USER", "'" + userName + "'");
 								String industryShares2 = insertMap.get("INDUSTRY_SHARES2");
@@ -2718,7 +2742,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 										(timeColumnList.contains(column) && !("").equals(columnData))) {
 									// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
 									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-										columnData = "SYSDATE";
+										columnData = "now()";
 										// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
 									}else{
 										String dateStr = formatDateStr(columnData);
@@ -2771,7 +2795,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								if (dateColumnList.contains(column) && !("").equals(columnData)) {
 									// 特殊情况,UPDATE_TIME为DATE类型
 									if ("UPDATE_TIME".equals(column)) {
-										columnData = "SYSDATE";
+										columnData = "now()";
 									} else {
 										//excel中输入了时间戳数据处理
 										if(columnData.length() > 10){
@@ -2783,13 +2807,13 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 										} else {
 											columnData = null;
 										}
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
+//            						columnData = "DATE'" + columnData.substring(0, 10) +"'";
 									}
 									// 时间类型字段
 								} else if (timeColumnList.contains(column)) {
 									// 修改时间变动,其余时间不变
 									if(column.indexOf("UPDATE") > -1) {
-										columnData = "SYSDATE";
+										columnData = "now()";
 									} else {
 										continue;
 									}
@@ -2815,7 +2839,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
 								updateMap.put("ASSET_TYPE", "'" + assetType + "'");
 								updateMap.put("STATUS", "'" + "M" + "'");
-								updateMap.put("UPDATE_TIME", "SYSDATE");
+								updateMap.put("UPDATE_TIME", "now()");
 								updateMap.put("UPDATE_USER", "'" + userName + "'");
 								String industryShares2 = updateMap.get("INDUSTRY_SHARES2");
 								if (StringUtil.isNotEmpty(industryShares2)) {
@@ -2976,9 +3000,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				if (null != primarykeyList && primarykeyList.contains(key)) {
 					if ((dateColumnList.contains(key) && !("").equals(key)) ||
 							(timeColumnList.contains(key) && !("").equals(key))) {
-						String dateStr = formatDateStr((String) jsonMap.get(key));
+						String dateStr = formatDateTimeStr((String) jsonMap.get(key));
 						if (null != dateStr) {
-							itemMap.put(key, "DATE'" + dateStr +"'");
+							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning start
+//							itemMap.put(key, "'" + dateStr +"'");
+							itemMap.put(key, "to_date('" + dateStr +"' , 'yyyy-mm-dd hh24:mi:ss')");
+							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning end
 						} else {
 							itemMap.put(key, null);
 						}
@@ -3103,6 +3130,25 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		}
 		return formatDateStr;
 	}
+
+	private String formatDateTimeStr(String dateStr) {
+		if(!StringUtil.isBlank(dateStr) && dateStr.endsWith(".0")){
+			dateStr = dateStr.replace(".0","");
+		}
+
+		String formatDateStr = null;
+
+		try {
+			Date date = DateUtil.parse(dateStr);
+			if (null !=  date) {
+				formatDateStr = DateUtil.formatDateTime(date);
+			}
+		} catch (Exception e) {
+			logger.error(e.getLocalizedMessage(),e);
+		}
+		return formatDateStr;
+	}
+
 
 	/**
 	 * @Title: queryValueByDictAndKeyCache

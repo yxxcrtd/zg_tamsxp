@@ -483,7 +483,8 @@
 		SUBMIT_TIME submitTime,
 		REMARK remark,
 		SHARE_AMT_WAN shareAmtWan,
-		CASH_AMT_WAN  cashAmtWan
+		CASH_AMT_WAN  cashAmtWan,
+		YIELD_DATE yieldDate
 		from CHB_PRD_DEAL_SUB
 		where REGIST_SEQNO=#{registSeqno,jdbcType=VARCHAR}
   </select>

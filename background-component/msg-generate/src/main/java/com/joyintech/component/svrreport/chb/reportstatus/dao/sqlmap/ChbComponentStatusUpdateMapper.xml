@@ -220,8 +220,11 @@
         FROM
             ${tableName}
         WHERE
-            <foreach collection="registNo" item="item" open="SUMIT_SEQ in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
+        <foreach collection="registNo" item = "item" index="index" open=" SUMIT_SEQ in(" separator="," close=")">
+            <if test="(index % 999) == 998">
+                null) OR SUMIT_SEQ in (
+            </if>
+            #{item,jdbcType=VARCHAR}
+        </foreach>
     </select>
 </mapper>

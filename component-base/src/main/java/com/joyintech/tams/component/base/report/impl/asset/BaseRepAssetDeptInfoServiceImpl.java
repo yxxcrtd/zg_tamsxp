@@ -41,8 +41,9 @@ public class BaseRepAssetDeptInfoServiceImpl extends BaseService<RepAssetDept> i
      */
     @Override
     public boolean deleteByPrimaryKey(BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto) {
-        
-        baseRepAssetDeptInfoMapper.deleteByPrimaryKeyList(baseRepAssetDeptInfoDto.getFinprodIdList());
+        if(null != baseRepAssetDeptInfoDto){
+            baseRepAssetDeptInfoMapper.deleteByPrimaryKeyList(baseRepAssetDeptInfoDto.getFinprodIdList());
+        }
         return true;
         
     }

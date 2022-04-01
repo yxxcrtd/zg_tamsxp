@@ -21,6 +21,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -62,7 +63,7 @@ public class InstiInfoErrdataConvertUtil {
                         continue;
                     }
                     //根据数据库字段获取类的属性字段
-                    Field field = ReflectionUtils.findField(chbSaleInfo.getClass(), subBlank(StringUtil.lowerCase(column)));
+                    Field field = ReflectionUtils.findField(chbSaleInfo.getClass(), subBlank(StringUtil.lowerCase(column)).replace(" ", ""));
                     //如果字段没有则跳过。
                     if(field==null){
                         logger.warn("该字段在所转换的实体类中没有，对象名：{}，字段名：{}", chbSaleInfo.getClass().getName(), column);
@@ -91,8 +92,13 @@ public class InstiInfoErrdataConvertUtil {
                             field.set(chbSaleInfo, Short.valueOf(value.toString()));
                             //对于Date类型处理
                         } else if ("java.util.Date".equals(type.getTypeName())) {
-                            //对类的实例字段进行赋值
-                            field.set(chbSaleInfo, DateUtil.parse(value.toString()));
+                            if(!checkDate(value.toString())){
+                                Date newDate = new Date();
+                                field.set(chbSaleInfo, newDate);
+                            }else {
+                                //对类的实例字段进行赋值
+                                field.set(chbSaleInfo, DateUtil.parse(value.toString()));
+                            }
                         } else {
                             //其它类型处理
                             //对类的实例字段进行赋值
@@ -140,5 +146,51 @@ public class InstiInfoErrdataConvertUtil {
             result = result + (new StringBuilder()).append(Character.toUpperCase(strarray[i].charAt(0)))
                     .append(strarray[i].substring(1)).toString();
         return result;
+    }
+
+    /**
+     * 日期格式校验
+     *
+     * @param
+     * @return 返回boolean
+     */
+    private static boolean checkDate(String date) {
+        boolean flag = true;
+        if(!com.joyintech.framework.util.DateUtil.isDateStr(date, com.joyintech.framework.util.DateUtil.DEFAULT_OTHER_FORMAT,
+                com.joyintech.framework.util.DateUtil.DEFAULT_ANOTHER_FORMAT, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN)){
+            flag = false;
+        }else{
+            date = date.replace("-", "").replace("/", "");
+            //年
+            int year = Integer.valueOf(date.substring(0, 4));
+            //月
+            int month = Integer.valueOf(date.substring(4, 6));
+            //日
+            int day = Integer.valueOf(date.substring(6));
+            if(month < 1 || month > 12){
+                flag = false;
+            }else{
+                if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
+                    if(day < 1 || day > 31){
+                        flag = false;
+                    }
+                }else if(month == 4 || month == 6 || month == 9 || month == 11){
+                    if(day < 1 || day > 30){
+                        flag = false;
+                    }
+                }else if(month == 2){
+                    if((year % 4 == 0 && year % 100 != 0) ||year % 400 == 0){
+                        if(day < 1 || day > 29){
+                            flag = false;
+                        }
+                    }else{
+                        if(day < 1 || day > 28){
+                            flag = false;
+                        }
+                    }
+                }
+            }
+        }
+        return flag;
     }
 }

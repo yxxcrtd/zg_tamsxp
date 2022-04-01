@@ -16,20 +16,17 @@
   	<div class="joyin-form-wrap joyin-filter-form condition-area">
   	<form class="layui-form" id="searchForm">
 	   	<div class="layui-form-item">
-	    	<div class="layui-inline layui-col-md4">
-	        	<label class="layui-form-label form-lable">产品登记编码</label>
-	        	<div class="layui-input-inline input-inline">
-	            	<select id="regCode" name="regCode" 
-		            data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}' 
-		            data-th-data-formatoption=true data-th-data-parentids="orgCode" 
-		            class="input-select" placeholder="请选择" 
-		            data-th-placeholder="#{SysCommon.selectplaceholder}" 
-		            allowClear="true" multiple="multiple">
-		            </select>
-	        	</div>
-	      	</div>
+			<div class="layui-inline layui-col-md4">
+				<label class="layui-form-label form-lable">业务确认日期</label>
+				<div class="layui-input-inline input-inline">
+					<input id="equityConfDate" name="equityConfDate" type="text"
+						   class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期"
+						   data-th-value="${DATE_START}+' - '+${DATE_END}" />
+				</div>
+			</div>
+
 	      	<div class="layui-inline layui-col-md4">
-	        	<label class="layui-form-label form-lable">产品</label>
+	        	<label class="layui-form-label form-lable">产品代码</label>
 	        	<div class="layui-input-inline input-inline">
 	         		<select id="account" name="account" class="input-select" 
 			         data-th-data-url='@{/svreport/submitmaintenance/businessdetailed/SvrEquityBusinessDetails001/getPrdName}' 
@@ -38,28 +35,50 @@
 			      	</select>
 	      		</div>
 	      	</div>
-	      	<div class="layui-inline layui-col-md4">
-		        <label class="layui-form-label form-lable">识别标识</label>
-		        <div class="layui-input-inline input-inline">
-		          	<input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input input-lenovoselect" maxlength="30" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
-		        </div>
-	      	</div>
+			<div class="layui-inline layui-col-md4">
+				<label class="layui-form-label form-lable">产品登记编码</label>
+				<div class="layui-input-inline input-inline">
+					<select id="regCode" name="regCode"
+							data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage001/getRegCode}'
+							data-th-data-formatoption=true data-th-data-parentids="orgCode"
+							class="input-select" placeholder="请选择"
+							data-th-placeholder="#{SysCommon.selectplaceholder}"
+							allowClear="true" multiple="multiple">
+					</select>
+				</div>
+			</div>
+<!--	      	<div class="layui-inline layui-col-md4">-->
+<!--		        <label class="layui-form-label form-lable">识别标识</label>-->
+<!--		        <div class="layui-input-inline input-inline">-->
+<!--		          	<input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input input-lenovoselect" maxlength="30" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--		        </div>-->
+<!--	      	</div>-->
 		</div>
 	    <div class="layui-form-item">
-	    	<div class="layui-inline layui-col-md4">
-		        <label class="layui-form-label form-lable">核心交易流水号</label>
-		        <div class="layui-input-inline input-inline">
-		          	<input id="busiSeqno" name="busiSeqno" type="text" class="layui-input form-input input-lenovoselect" maxlength="60" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
-		        </div>
-	      	</div>
-	      	<div class="layui-inline layui-col-md4">
-		        <label class="layui-form-label form-lable">业务确认日期</label>
-		        <div class="layui-input-inline input-inline">
-		           	<input id="equityConfDate" name="equityConfDate" type="text" 
-		           	class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期"
-							data-th-value="${DATE_START}+' - '+${DATE_END}" />
-		        </div>
-	      	</div>
+			<div class="layui-inline layui-col-md4">
+				<label class="layui-form-label form-lable">数据状态</label>
+				<div class="layui-input-inline input-inline">
+					<select id="status" class="input-select"
+							allowClear="true" multiple="multiple"
+							data-th-data-result='${MAINTAIN_STATUS}'
+							initvalue="" placeholder="请选择"
+							data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
+				</div>
+			</div>
+<!--	    	<div class="layui-inline layui-col-md4">-->
+<!--		        <label class="layui-form-label form-lable">核心交易流水号</label>-->
+<!--		        <div class="layui-input-inline input-inline">-->
+<!--		          	<input id="busiSeqno" name="busiSeqno" type="text" class="layui-input form-input input-lenovoselect" maxlength="60" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--		        </div>-->
+<!--	      	</div>-->
+<!--	      	<div class="layui-inline layui-col-md4">-->
+<!--		        <label class="layui-form-label form-lable">业务确认日期</label>-->
+<!--		        <div class="layui-input-inline input-inline">-->
+<!--		           	<input id="equityConfDate" name="equityConfDate" type="text" -->
+<!--		           	class="layui-input form-input input-dateRangeSelect" placeholder="请选择日期"-->
+<!--							data-th-value="${DATE_START}+' - '+${DATE_END}" />-->
+<!--		        </div>-->
+<!--	      	</div>-->
 	      	<div class="layui-inline layui-col-md4">
 		        <label class="layui-form-label form-lable">业务种类</label>
 		        <div class="layui-input-inline input-inline">
@@ -68,6 +87,12 @@
 		          	data-th-data-result='${SVR_BUSINESS_TYPE}'></select>
 		        </div>
 	      	</div>
+			<div class="layui-inline layui-col-md4">
+				<label class="layui-form-label form-lable">识别标识</label>
+				<div class="layui-input-inline input-inline">
+					<input id="indentifyMark" name="indentifyMark" type="text" class="layui-input form-input input-lenovoselect" maxlength="30" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+				</div>
+			</div>
 		</div>
 	    <div class="layui-form-item">
 	    	<div class="layui-inline layui-col-md4">
@@ -78,16 +103,22 @@
 		        	data-th-data-result='${SVR_CHANNEL}'></select>
 		        </div>
 	      	</div>
-	    	<div class="layui-inline layui-col-md4">
-		        <label class="layui-form-label form-lable">数据状态</label>
-		        <div class="layui-input-inline input-inline">
-		          	<select id="status" class="input-select" 
-		          	allowClear="true" multiple="multiple" 
-		          	data-th-data-result='${MAINTAIN_STATUS}' 
-		          	initvalue="" placeholder="请选择" 
-		          	data-th-placeholder="#{SysCommon.selectplaceholder}"></select>
-		        </div>
-	      	</div>
+			<div class="layui-inline layui-col-md4">
+				<label class="layui-form-label form-lable">核心交易流水号</label>
+				<div class="layui-input-inline input-inline">
+					<input id="busiSeqno" name="busiSeqno" type="text" class="layui-input form-input input-lenovoselect" maxlength="60" placeholder="请输入关键词" data-th-placeholder="#{SysCommon.placeholder}">
+				</div>
+			</div>
+<!--	    	<div class="layui-inline layui-col-md4">-->
+<!--		        <label class="layui-form-label form-lable">数据状态</label>-->
+<!--		        <div class="layui-input-inline input-inline">-->
+<!--		          	<select id="status" class="input-select" -->
+<!--		          	allowClear="true" multiple="multiple" -->
+<!--		          	data-th-data-result='${MAINTAIN_STATUS}' -->
+<!--		          	initvalue="" placeholder="请选择" -->
+<!--		          	data-th-placeholder="#{SysCommon.selectplaceholder}"></select>-->
+<!--		        </div>-->
+<!--	      	</div>-->
 	    </div>
 	</form>
 	</div>

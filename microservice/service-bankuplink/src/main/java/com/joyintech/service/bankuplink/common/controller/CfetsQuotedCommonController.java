@@ -21,6 +21,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.bankuplink.common.dto.CfetsQuotedTradeCommonDto;
+import com.joyintech.service.bankuplink.common.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedTradeCommonService;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentReceiveService;
@@ -29,6 +30,7 @@ import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.invest.common.service.DateCalCommonService;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.concurrent.ExecutorService;
 /**
  * 银行间上行共通Controller
  * 
@@ -51,6 +53,7 @@ import java.util.Map;
 @RestController("cfetsQuotedCommonCtl_dtx")
 @RequestMapping("/CfetsQuotedCommon")
 public class CfetsQuotedCommonController {
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(CfetsQuotedCommonController.class);
 
     /**
      * {@linkplain}
@@ -72,6 +75,8 @@ public class CfetsQuotedCommonController {
      */
     @Autowired
     private DateCalCommonService dateCalCommonService;
+    //创建公共的线程池
+    private final ExecutorService service = new JoyinThreadPoolExecutor(10);
 
     /**
      * 委托放弃处理
@@ -243,11 +248,26 @@ public class CfetsQuotedCommonController {
      * @see
      * @since 1.0
      */
-    @Transactional
-    @DTXTransaction
     @PostMapping("receiveBondDialogueRequest")
     public ResultBaseDto receiveBondDialogueRequest(@RequestBody Map<String, Object> map){
-        return ibuComponentReceiveService.updateBondDialogueQuoteInterfResp(map);
+        //return ibuComponentReceiveService.updateBondDialogueQuoteInterfResp(map);
+        ResultBaseDto resultBaseDto = new ResultBaseDto(true);
+        logger.info("【CFETS接口接收-现券对话报价】处理业务数据线程开启" + map.toString());
+
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ibuComponentReceiveService.updateBondDialogueQuoteInterfResp(map);
+                } catch (Exception e) {
+                    logger.error("【CFETS接口接收-现券对话报价】处理业务数据异常：", e);
+                }
+            }
+        });
+        service.execute(thread);
+//		thread.start();
+        return resultBaseDto;
     }
     
     /**
@@ -258,11 +278,24 @@ public class CfetsQuotedCommonController {
      * @see
      * @since 1.0
      */
-    @Transactional
-    @DTXTransaction
     @PostMapping("receiveBondRequestRequest")
     public ResultBaseDto receiveBondRequestRequest(@RequestBody Map<String, Object> map){
-        return ibuComponentReceiveService.updateBondRequestQuoteInterfResp(map);
+        //return ibuComponentReceiveService.updateBondRequestQuoteInterfResp(map);
+        ResultBaseDto resultBaseDto = new ResultBaseDto(true);
+        logger.info("【CFETS接口接收-现券请求报价】处理业务数据线程开启" + map.toString());
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ibuComponentReceiveService.updateBondRequestQuoteInterfResp(map);
+                } catch (Exception e) {
+                    logger.error("【CFETS接口接收-现券请求报价】处理业务数据异常：", e);
+                }
+            }
+        });
+        service.execute(thread);
+//		thread.start();
+        return resultBaseDto;
     }
     
     /**
@@ -273,11 +306,25 @@ public class CfetsQuotedCommonController {
      * @see
      * @since 1.0
      */
-    @Transactional
-    @DTXTransaction
     @PostMapping("receiveRepoDialogueRequest")
     public ResultBaseDto receiveRepoDialogueRequest(@RequestBody Map<String, Object> map){
-        return ibuComponentReceiveService.updateRepoDialogueQuoteInterfResp(map);
+       // return ibuComponentReceiveService.updateRepoDialogueQuoteInterfResp(map);
+        //        return ibuComponentReceiveService.updateRepoDialogueQuoteInterfResp(map);
+        ResultBaseDto resultBaseDto = new ResultBaseDto(true);
+        logger.info("【CFETS接口接收-回购对话报价】处理业务数据线程开启" + map.toString());
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ibuComponentReceiveService.updateRepoDialogueQuoteInterfResp(map);
+                } catch (Exception e) {
+                    logger.error("【CFETS接口接收-回购对话报价】处理业务数据异常：", e);
+                }
+            }
+        });
+        service.execute(thread);
+//		thread.start();
+        return resultBaseDto;
     }
 
     /**
@@ -428,12 +475,31 @@ public class CfetsQuotedCommonController {
      * @param  * @param map
      * @return void
     */
-    @Transactional(rollbackFor = { Exception.class })
-    @DTXTransaction
     @PostMapping("receiveCfetsTradeDialogueRequest")
-    public ResultBaseDto receive(@RequestBody Map<String,Object> map) throws Exception{
-        CfetsQuotedTradeCommonDto cfetsQuotedTradeCommonDto = (CfetsQuotedTradeCommonDto) JsonUtils.map2entity(map, CfetsQuotedTradeCommonDto.class);
-        return cfetsQuotedTradeCommonService.insertCstpTrade(cfetsQuotedTradeCommonDto);
+    public ResultBaseDto receive(@RequestBody Map<String,Object> map) throws Exception {
+       /* CfetsQuotedTradeCommonDto cfetsQuotedTradeCommonDto = (CfetsQuotedTradeCommonDto) JsonUtils.map2entity(map, CfetsQuotedTradeCommonDto.class);
+        return cfetsQuotedTradeCommonService.insertCstpTrade(cfetsQuotedTradeCommonDto);*/
+        //        try {
+//            Thread.sleep(maxWaitTime);
+//        }
+//        catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        ResultBaseDto resultBaseDto = new ResultBaseDto(true);
+        logger.info("银行间下行成交处理业务数据线程开启" + map.toString());
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    CfetsQuotedTradeCommonDto cfetsQuotedTradeCommonDto = (CfetsQuotedTradeCommonDto) JsonUtils.map2entity(map, CfetsQuotedTradeCommonDto.class);
+                    cfetsQuotedTradeCommonService.insertCstpTrade(cfetsQuotedTradeCommonDto);
+                }catch (Exception e){
+                    logger.error("CSTP下行匹配异常：", e);
+                }
+            }});
+        service.execute(thread);
+//        thread.start();
+        return resultBaseDto;
     }
     
     /**

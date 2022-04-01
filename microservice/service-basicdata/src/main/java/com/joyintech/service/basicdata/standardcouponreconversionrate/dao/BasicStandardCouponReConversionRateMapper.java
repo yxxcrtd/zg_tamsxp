@@ -31,6 +31,8 @@ public interface BasicStandardCouponReConversionRateMapper {
 
     StandardCouponReConversionRateDto selectByPrimaryKey(StandardCouponReConversionRateDto dto);
 
+    List<StandardCouponReConversionRateDto> getList(StandardCouponReConversionRateDto dto);
+
     int deleteByPrimaryKey(StandardCouponReConversionRateDto dto);
 
     int insertSelective(StandardCouponReConversionRateDto mstSeatInfo);

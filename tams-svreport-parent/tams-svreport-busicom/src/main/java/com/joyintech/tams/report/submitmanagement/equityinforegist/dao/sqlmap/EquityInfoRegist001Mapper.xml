@@ -38,11 +38,10 @@
       	 	STATUS                    as status,
        		sub.UPDATE_TIME           as updateTime,
        		sub.ORG_CODE orgCode,
-       		status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
        		sub.CHECK_SEQNO    		  as checkSeqno
   		from chb_equ_sub sub
-  		left join CHB_SUBMIT_STATUS status
-    		on sub.sumit_seq = status.seqno
 		<where>
 			<if test="bankCode != null and bankCode != ''">
 		 	sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
@@ -80,7 +79,7 @@
 		 	AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
 		 	</if>
 		 	<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
              		#{submitFeedbackStatus}
             	</foreach>
 		 	</if>
@@ -177,15 +176,12 @@
         SUBMIT_DEADLINE           as submitDeadline,
         STATUS                    as status,
         sub.UPDATE_TIME           as updateTime,
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             sub.REGIST_BANK_CODE = #{bankCode}
             AND sub.INDENTIFY_MARK = #{indentifyMark}
             and sub.submit_status !='01'
-            <!--   	AND status.SUBMIT_FEEDBACK_STATUS !='02'-->
         </where>
     </select>
     <!-- 查询权益人登记表中已报送内容(反馈状态不为02，即中债报送失败的内容)-->
@@ -220,10 +216,8 @@
         SUBMIT_DEADLINE           as submitDeadline,
         STATUS                    as status,
         sub.UPDATE_TIME           as updateTime,
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             sub.submit_status !='01'
             <foreach collection="list" item="item" separator="," open=" AND (sub.REGIST_BANK_CODE, sub.INDENTIFY_MARK) IN (" close=")">
@@ -463,11 +457,9 @@
         sub.UPDATE_TIME           as updateTime,
         sub.SUMIT_SEQ             as sumitSeq,
         sub.ORG_CODE              as orgCode,
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
         sub.CHECK_SEQNO			  as checkSeqno
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             <if test="equityRegistList!=null and equityRegistList.size()!=0">
                 <foreach collection="equityRegistList" item="equityRegist" open=" (" close=")" separator=") or (">
@@ -594,10 +586,8 @@
         SUBMIT_DEADLINE           as submitDeadline,
         STATUS                    as status,
         sub.UPDATE_TIME           as updateTime,
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             <foreach collection="indentifyMarkList" item="indentifyMark" open="(" close=")" separator="or">
                 sub.REGIST_BANK_CODE = #{indentifyMark.registBankCode,jdbcType=VARCHAR}
@@ -641,11 +631,9 @@
         SUBMIT_DEADLINE           as submitDeadline,
         STATUS                    as status,
         sub.UPDATE_TIME           as updateTime,
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
         sub.CHECK_SEQNO    		  as checkSeqno
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             sub.REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
             and sub.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
@@ -740,11 +728,9 @@
         SUBMIT_DEADLINE           as submitDeadline,
         STATUS                    as status,
         sub.UPDATE_TIME           as updateTime,
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
         sub.CHECK_SEQNO    		  as checkSeqno
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             <foreach collection="equityRegistList" item="equityRegist" open=" (" close=")" separator=") or (">
                 sub.REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR}
@@ -782,20 +768,6 @@
 
     <!-- 接口报送更新(手工处理，将接口报送状态修改为手工处理) -->
     <update id="updateInterfSubmitForAlreadySendData" parameterType="java.util.Map">
-        <!--        update chb_equ_sub  sub-->
-        <!--        <set> -->
-        <!--            <if test="submitStatus != null and submitStatus != ''">-->
-        <!--                sub.SUBMIT_STATUS = #{submitStatus}-->
-        <!--            </if>-->
-        <!--        </set>-->
-        <!--        <where>-->
-        <!--            <foreach collection="equityInfoRegistList" item="equityRegist" open="(" close=")" separator=") or (">-->
-        <!--                    REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR} -->
-        <!--                    and INDENTIFY_MARK = #{equityRegist.indentifyMark,jdbcType=VARCHAR}-->
-        <!--                    and sub.SUBMIT_STATUS = '02'-->
-        <!--            </foreach>-->
-        <!--        </where>-->
-
         begin
         <foreach collection="equityInfoRegistList" item="equityRegist" index="index" separator=";" >
             update CHB_EQU_SUB sub
@@ -848,34 +820,29 @@
         </foreach>
         ;end;
     </update>
-    <!-- 批量插入报送状态表 -->
-    <insert id="insertSubmitStatus" parameterType="java.util.List" >
-        insert into CHB_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
-        SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
-        CREATE_USER, CREATE_TIME)
-        select A.* from (
-        <foreach collection="list" item="item" index="index" separator="UNION ALL">
-            select  #{item.seqno,jdbcType=VARCHAR} SEQNO,
-            #{item.submitNum,jdbcType=DECIMAL} SUBMIT_NUM,
-            #{item.submitType,jdbcType=VARCHAR} SUBMIT_TYPE,
-            #{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
-            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME
-            from dual
+
+    <update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
+        begin
+        <foreach collection="list" item="item" index="index" open="" close=";" separator=";">
+            update CHB_EQU_SUB
+            <set >
+                <if test="item.submitFeedbackStatus != null" >
+                    SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+                </if>
+            </set>
+            where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
         </foreach>
-        )A
-    </insert>
+        end;
+    </update>
 
     <update id="updateSubmitStatusToOk" parameterType="java.util.List">
-        update CHB_SUBMIT_STATUS subStatus
+        update CHB_EQU_SUB subStatus
         <set>
             subStatus.SUBMIT_FEEDBACK_STATUS = '03'
         </set>
         <where>
             <foreach collection="list" item="item" open="(" close=")" separator=") or (">
-                subStatus.SEQNO = #{item,jdbcType=VARCHAR}
+                subStatus.SUMIT_SEQ = #{item,jdbcType=VARCHAR}
             </foreach>
         </where>
     </update>
@@ -915,11 +882,9 @@
         SUBMIT_DEADLINE           as submitDeadline,
         STATUS                    as status,
         sub.UPDATE_TIME           as updateTime,
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
         sub.CHECK_SEQNO    		  as checkSeqno
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             sub.INDENTIFY_MARK = #{mark,jdbcType=VARCHAR}
             and sub.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
@@ -942,16 +907,19 @@
         </where>
     </update>
     <!-- 批量删除 -->
-    <delete id="deleteMannulSubmitRegist" parameterType="java.util.List">
-        delete from CHB_SUBMIT_STATUS
+    <update id="deleteMannulSubmitRegist" parameterType="java.util.List">
+        update CHB_EQU_SUB subStatus
+        <set>
+            subStatus.SUBMIT_FEEDBACK_STATUS = null,
+            subStatus.report_no = null,
+            subStatus.submit_feedback_msg = null
+        </set>
         <where>
-            <if test="list != null and list.size() > 0">
-                <foreach collection="list" item="item" open=" (" close=")" separator=") or (">
-                    SEQNO = #{item.seqno}
-                </foreach>
-            </if>
+            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                subStatus.SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
+            </foreach>
         </where>
-    </delete>
+    </update>
     <select id= "isNotSubmitP" resultType="java.lang.Integer">
     SELECT count(1)
     	from chb_equ_sub
@@ -984,7 +952,9 @@
         STATUS, DEPT_CODE, UPDATE_USER,
         UPDATE_TIME, CREATE_USER, CREATE_TIME,
         SUMIT_SEQ, DELETE_RES, ORG_CODE,
-        CREATE_DEPT,CHECK_SEQNO,HOLDER_CLASSIFY,FUND_ACC_PLACE)
+        CREATE_DEPT,CHECK_SEQNO,HOLDER_CLASSIFY,FUND_ACC_PLACE,submit_feedback_status,
+        report_no,
+        submit_feedback_msg)
         select sub.INDENTIFY_MARK, sub.REGIST_BANK_CODE, sub.SUBMIT_STATUS,
         sub.ORG_INDENTIFY_MARK, sub.IS_BELONG_BANK, sub.THE_BANK_NAME,
         sub.THE_BANK_CODE, sub.HOLDER_MARK, sub.HOLDER_REGION,
@@ -998,7 +968,10 @@
         STATUS, DEPT_CODE, UPDATE_USER,
         sub.UPDATE_TIME, sub.CREATE_USER, sub.CREATE_TIME,
         sub.SUMIT_SEQ, sub.DELETE_RES, sub.ORG_CODE,
-        sub.CREATE_DEPT,sub.CHECK_SEQNO,sub.HOLDER_CLASSIFY,sub.FUND_ACC_PLACE
+        sub.CREATE_DEPT,sub.CHECK_SEQNO,sub.HOLDER_CLASSIFY,sub.FUND_ACC_PLACE,
+        sub.submit_feedback_status,
+        sub.report_no,
+        sub.submit_feedback_msg
         from (select max(HIS_NO) HIS_NO,INDENTIFY_MARK,REGIST_BANK_CODE
         from CHB_EQU_SUB_HIS where SUBMIT_STATUS NOT IN('01') GROUP BY INDENTIFY_MARK,REGIST_BANK_CODE) A
         left join CHB_EQU_SUB_HIS sub
@@ -1046,13 +1019,11 @@
         FUND_ACC_PLACE            as fundAccPlace,
         HOLDER_CLASSIFY           as holderClassify,
         t1.UPDATE_TIME           as updateTime,
-        t2.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        t1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
         row_number() OVER(partition by t1.INDENTIFY_MARK order by t1.update_time desc) rank
         from chb_view_equ_sub t1
-        inner join CHB_SUBMIT_STATUS t2
-        on  t1.SUMIT_SEQ = t2.SEQNO
         <where>
-            t2.SUBMIT_FEEDBACK_STATUS = '03'
+            t1.SUBMIT_FEEDBACK_STATUS = '03'
             <!-- 	and t1.update_time = (
                  select max(t3.update_time) from chb_view_equ_sub t3
                  where t1.INDENTIFY_MARK = t3.INDENTIFY_MARK
@@ -1100,13 +1071,11 @@
         OTHER_IDENTIFY_NAME       as otherIdentifyName,
         STATUS                    as status,
         t1.UPDATE_TIME           as updateTime,
-        t2.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        t1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
         row_number() OVER(partition by t1.INDENTIFY_MARK order by t1.update_time desc) rank
         from chb_view_equ_sub t1
-        inner join CHB_SUBMIT_STATUS t2
-        on  t1.SUMIT_SEQ = t2.SEQNO
         <where>
-            t2.SUBMIT_FEEDBACK_STATUS = '03'
+            t1.SUBMIT_FEEDBACK_STATUS = '03'
             <!--  		and t1.update_time = (
                    select max(t3.update_time) from chb_view_equ_sub t3
                    where t1.INDENTIFY_MARK = t3.INDENTIFY_MARK
@@ -1120,10 +1089,8 @@
 
     <select id="getSubmitFeedbackStatusList" parameterType="java.util.List" resultType="java.lang.String">
         select distinct
-        status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
         from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status
-        on sub.sumit_seq = status.seqno
         <where>
             <foreach collection="list" item="indentifyMark" open=" (" close=")" separator=") or (">
                 sub.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
@@ -1173,13 +1140,11 @@
         OTHER_IDENTIFY_NAME       as otherIdentifyName,
         STATUS                    as status,
         t1.UPDATE_TIME           as updateTime,
-        t2.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        t1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
         row_number() OVER(partition by t1.INDENTIFY_MARK order by t1.update_time desc) rank
         from chb_view_equ_sub t1
-        inner join CHB_SUBMIT_STATUS t2
-        on  t1.SUMIT_SEQ = t2.SEQNO
         <where>
-            t2.SUBMIT_FEEDBACK_STATUS = '03'
+            t1.SUBMIT_FEEDBACK_STATUS = '03'
             <!--  		and t1.update_time = (
                      select max(t3.update_time) from chb_view_equ_sub t3
                      where t1.INDENTIFY_MARK = t3.INDENTIFY_MARK
@@ -1262,7 +1227,6 @@
 
     <select id="countExportNum" parameterType="map" resultType="int">
         select count(1) from chb_equ_sub sub
-        left join CHB_SUBMIT_STATUS status on sub.sumit_seq = status.seqno
         <where>
             <if test="bankCode != null and bankCode != ''">
                 sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
@@ -1300,7 +1264,7 @@
                 AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
             </if>
             <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-                <foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+                <foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
                     #{submitFeedbackStatus}
                 </foreach>
             </if>
@@ -1373,16 +1337,12 @@
                     OTHER_IDENTIFY_NAME                                          AS otherIdentifyName,
                     STATUS                                                                  AS status,
                     t1.UPDATE_TIME                                                      AS updateTime,
-                    t2.SUBMIT_FEEDBACK_STATUS                                       AS submitFeedbackStatus,
+                    t1.SUBMIT_FEEDBACK_STATUS                                       AS submitFeedbackStatus,
                     row_number() OVER(partition BY t1.INDENTIFY_MARK ORDER BY t1.update_time DESC) rank
                 FROM
                     chb_view_equ_sub t1
-                INNER JOIN
-                    CHB_SUBMIT_STATUS t2
-                ON
-                    t1.SUMIT_SEQ = t2.SEQNO
                 <where>
-                    t2.SUBMIT_FEEDBACK_STATUS = '03'
+                    t1.SUBMIT_FEEDBACK_STATUS = '03'
                     <if test="bankCodeList != null and bankCodeList.size() > 0 ">
                         <foreach collection="bankCodeList" item="bankCode" open="AND t1.REGIST_BANK_CODE IN (" separator="," close=")">
                             #{bankCode}

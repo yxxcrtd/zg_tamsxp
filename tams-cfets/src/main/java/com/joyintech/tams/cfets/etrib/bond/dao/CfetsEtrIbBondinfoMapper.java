@@ -14,6 +14,7 @@ import com.joyintech.tams.business.common.pojo.BaseMap;
 import com.joyintech.tams.cfets.etrib.bond.dto.*;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
+import com.joyintech.tams.common.base.entity.SppiImportData;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -118,14 +119,32 @@ public interface CfetsEtrIbBondinfoMapper {
 
     List<CfetsBussCombDistribtBaseDto> queryCfetsBussCombDisList(Map pageParam);
 
-    public boolean queryAssetIsRight(Map pageParam);
+     boolean queryAssetIsRight(Map pageParam);
 
     List<CfetsBussCombDistribtDto> selectAllBusModelListByInfo(Map<String, Object> pageParam);
 
     CfetsEtribBondInfo003Dto  selectTransmitTimeByInfo(String entrustId);
 
+     boolean queryAssetIsShReg(Map pageParam);
 
+    /**
+     * 通过持仓查询业务模式
+     * @param pageParam
+     * @return
+     */
+    public String findInvAimInTrd(Map pageParam);
+    /**
+     * 通过指令查询业务模式
+     * @param pageParam
+     * @return
+     */
+    public String findInvAimInEtr(Map pageParam);
 
-
+    /**
+     * 判断是否做过sppi
+     * @param pageParam
+     * @return
+     */
+    SppiImportData queryAssetIsSppiTest(Map pageParam);
 
 }

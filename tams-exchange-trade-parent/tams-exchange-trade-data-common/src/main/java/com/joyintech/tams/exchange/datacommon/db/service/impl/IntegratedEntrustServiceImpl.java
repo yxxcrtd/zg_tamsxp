@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -194,6 +195,9 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
         entrustQueryBeanList.forEach(entrustQueryBean -> {
             if (InvestmentAssetType.isFutures(entrustQueryBean.getAssetType())) {
                 entrustQueryBean.setStockCode(StockCodeUtils.getStockCode(entrustQueryBean.getStockCode()));
+            }
+            if("EX005".equals(entrustQueryBean.getBusiTypeTg())){
+                entrustQueryBean.setEntrustPrice(entrustQueryBean.getEntrustPrice().multiply(BigDecimal.valueOf(100)));
             }
         });
         return new PageInfo<>(entrustQueryBeanList);

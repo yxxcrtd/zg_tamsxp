@@ -360,7 +360,7 @@
                     <!-- 风险试算 -->
                     <div th:if="${isEleShow['EtrBoutRepo002_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component"
                         th:data-path="@{/component/common/BaseRiskMathComm/init}"
-                        th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+                        th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',tradeId:'${tradeId}',workflowId: '${workflowId}'}|"></div>
                 </div>
                 <div class="pro-module-wrapper pro-module-block">
                     <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">

@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbhz.inAssetInfoSub.dao.InAssetInfoSvrMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAssetInfoTmp" >
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ASSET_YIELD" property="assetYield" jdbcType="DECIMAL" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="DEPO_TYPE" property="depoType" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="TARGET" property="target" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="CHB_SECTYPE" property="chbSectype" jdbcType="VARCHAR" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="SEC_MAIN_GRADE" property="secMainGrade" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2" property="industryLevel2" jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="REGISTORG_COMMENT" property="registorgComment" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY_TYPE" property="rivalPartyType" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE1" property="targetType1" jdbcType="VARCHAR" />
+        <result column="TARGET_AMT" property="targetAmt" jdbcType="DECIMAL" />
+        <result column="PRIN_BASEAMT" property="prinBaseamt" jdbcType="DECIMAL" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="IS_RESALE" property="isResale" jdbcType="VARCHAR" />
+        <result column="FMDATE" property="fmdate" jdbcType="DATE" />
+        <result column="RATE_FLAG" property="rateFlag" jdbcType="VARCHAR" />
+        <result column="COUPON_SPECIES" property="couponSpecies" jdbcType="VARCHAR" />
+        <result column="INTEREST_RULE_FLAG" property="interestRuleFlag" jdbcType="VARCHAR" />
+        <result column="INTPAY_CYCLE" property="intpayCycle" jdbcType="DECIMAL" />
+        <result column="INTPAY_RULE" property="intpayRule" jdbcType="VARCHAR" />
+        <result column="REPAY_CMT" property="repayCmt" jdbcType="VARCHAR" />
+        <result column="BASIS_TYPE" property="basisType" jdbcType="VARCHAR" />
+        <result column="FLOAT_FACTOR_FLAG" property="floatFactorFlag" jdbcType="VARCHAR" />
+        <result column="FLOAT_FACTOR" property="floatFactor" jdbcType="DECIMAL" />
+        <result column="SPREAD_RATE" property="spreadRate" jdbcType="DECIMAL" />
+        <result column="STRUCT_GRADE" property="structGrade" jdbcType="VARCHAR" />
+        <result column="REPAYMENT_TYPE" property="repaymentType" jdbcType="VARCHAR" />
+        <result column="PERIOD_REPAYMENT_FLAG" property="periodRepaymentFlag" jdbcType="VARCHAR" />
+        <result column="BASIC_ASSET_TYPE" property="basicAssetType" jdbcType="VARCHAR" />
+        <result column="EXCESS_PROFIT_RATE" property="excessProfitRate" jdbcType="DECIMAL" />
+        <result column="FINANCIE" property="financie" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_IN" property="fcrGradeIn" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_OUT" property="fcrGradeOut" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE1" property="financierType1" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE2" property="financierType2" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE3" property="financierType3" jdbcType="VARCHAR" />
+        <result column="FINANCE_PROJ" property="financeProj" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2_TYPE" property="industryLevel2Type" jdbcType="VARCHAR" />
+        <result column="PRO_INDUSTRY_LEVEL2" property="proIndustryLevel2" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_FLAG" property="industryFlag" jdbcType="VARCHAR" />
+        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
+        <result column="MON_TYPE_COMM" property="monTypeComm" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE" property="guaType" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE_REMARK" property="guaTypeRemark" jdbcType="VARCHAR" />
+        <result column="PLEDGE_TYPE" property="pledgeType" jdbcType="VARCHAR" />
+        <result column="PLEDGE_VALUE" property="pledgeValue" jdbcType="DECIMAL" />
+        <result column="NATURE_GUARANTEE" property="natureGuarantee" jdbcType="VARCHAR" />
+        <result column="RELATION_FINAN" property="relationFinan" jdbcType="VARCHAR" />
+        <result column="FINANCIER_GRADE" property="financierGrade" jdbcType="VARCHAR" />
+        <result column="IN_GRADE" property="inGrade" jdbcType="VARCHAR" />
+        <result column="OUT_GRADE" property="outGrade" jdbcType="VARCHAR" />
+        <result column="CONTAIN_TYPE" property="containType" jdbcType="VARCHAR" />
+        <result column="EXERCISE_TYPE" property="exerciseType" jdbcType="VARCHAR" />
+        <result column="EXERCISE_DATE" property="exerciseDate" jdbcType="DATE" />
+        <result column="FIRST_EXERCISE_DATE" property="firstExerciseDate" jdbcType="DATE" />
+        <result column="EXERCISE_PERIOD" property="exercisePeriod" jdbcType="DECIMAL" />
+        <result column="EXERCISE_PRICE" property="exercisePrice" jdbcType="DECIMAL" />
+        <result column="PERPETUAL_CLAUSE_TYPE" property="perpetualClauseType" jdbcType="VARCHAR" />
+        <result column="DEFERRED_INTEREST_TYPE" property="deferredInterestType" jdbcType="VARCHAR" />
+        <result column="DEFERRED_INTEREST_INT" property="deferredInterestInt" jdbcType="VARCHAR" />
+        <result column="FIRST_REPRCE_DATE" property="firstReprceDate" jdbcType="DATE" />
+        <result column="REPRCE_CYCLE" property="reprceCycle" jdbcType="DECIMAL" />
+        <result column="PART_REDEM_FLAG" property="partRedemFlag" jdbcType="VARCHAR" />
+        <result column="PART_REDEM_RATE" property="partRedemRate" jdbcType="DECIMAL" />
+        <result column="CHOSE" property="chose" jdbcType="VARCHAR" />
+        <result column="CONDITION_CMM" property="conditionCmm" jdbcType="VARCHAR" />
+        <result column="FIN_AREA" property="finArea" jdbcType="VARCHAR" />
+        <result column="CREDIT_ORG_CODE" property="creditOrgCode" jdbcType="VARCHAR" />
+        <result column="CREDIT_ORG_NAME" property="creditOrgName" jdbcType="VARCHAR" />
+        <result column="TOTAL_FEE_RATE" property="totalFeeRate" jdbcType="DECIMAL" />
+        <result column="FIN_ORG_CODE" property="finOrgCode" jdbcType="VARCHAR" />
+        <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_TYPE" property="notstandSecType" jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_NUM" property="notstandSecNum" jdbcType="DECIMAL" />
+        <result column="REMAIN_TERM" property="remainTerm" jdbcType="DECIMAL" />
+        <result column="MAX_REMAIN_TERM" property="maxRemainTerm" jdbcType="DECIMAL" />
+        <result column="MIN_REMAIN_TERM" property="minRemainTerm" jdbcType="DECIMAL" />
+        <result column="INDUSTRY_SHARES2" property="industryShares2" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+        <result column="INVEST_STAGE" property="investStage" jdbcType="VARCHAR" />
+        <result column="EQUITY_QUIT" property="equityQuit" jdbcType="DATE" />
+        <result column="SHARES_TYPE1" property="sharesType1" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE2" property="sharesType2" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE3" property="sharesType3" jdbcType="VARCHAR" />
+        <result column="IS_PLEDGE" property="isPledge" jdbcType="VARCHAR" />
+        <result column="NOM_CAPI" property="nomCapi" jdbcType="DECIMAL" />
+        <result column="TARGET_TYPE3" property="targetType3" jdbcType="VARCHAR" />
+        <result column="HOLD_PURPOSE" property="holdPurpose" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+        <result column="TERM_MONTH" property="termMonth" jdbcType="DECIMAL" />
+        <result column="PARTY_GRADE" property="partyGrade" jdbcType="VARCHAR" />
+        <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType" jdbcType="VARCHAR" />
+        <result column="GUARANTEE_CMT" property="guaranteeCmt" jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT" property="specialCmt" jdbcType="VARCHAR" />
+        <result column="COUNTRY_AREA" property="countryArea" jdbcType="VARCHAR" />
+        <result column="CONTRACT_NAME" property="contractName" jdbcType="VARCHAR" />
+        <result column="INCOME_RATIO" property="incomeRatio" jdbcType="DECIMAL" />
+        <result column="DER_INSTR_RATIO" property="derInstrRatio" jdbcType="DECIMAL" />
+        <result column="DER_INSTR_INV_TYPE" property="derInstrInvType" jdbcType="VARCHAR" />
+        <result column="DER_INSTR_TARGET" property="derInstrTarget" jdbcType="VARCHAR" />
+        <result column="ACCT_MODE" property="acctMode" jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT1" property="specialCmt1" jdbcType="VARCHAR" />
+        <result column="MAX_YIELD" property="maxYield" jdbcType="DECIMAL" />
+        <result column="MIN_YIELD" property="minYield" jdbcType="DECIMAL" />
+        <result column="BASIC_PRICE" property="basicPrice" jdbcType="DECIMAL" />
+        <result column="REG_DATE_PRICE" property="regDatePrice" jdbcType="DECIMAL" />
+        <result column="TRADE_FEE" property="tradeFee" jdbcType="VARCHAR" />
+        <result column="FINANCIAL_COMISSUE" property="financialComissue" jdbcType="VARCHAR" />
+        <result column="PARTY_CODE" property="partyCode" jdbcType="VARCHAR" />
+        <result column="CHECK_CODE" property="checkCode" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="TRUSTEE_ID" property="trusteeId" jdbcType="VARCHAR" />
+        <result column="TRU_ACT_TYPE" property="truActType" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="VARCHAR" />
+        <result column="PLAN_SDATE" property="planSdate" jdbcType="DATE" />
+        <result column="PLAN_EDATE" property="planEdate" jdbcType="DATE" />
+        <result column="PRO_PROPERTY" property="proProperty" jdbcType="VARCHAR" />
+        <result column="MAX_RATE" property="maxRate" jdbcType="DECIMAL" />
+        <result column="MIN_RATE" property="minRate" jdbcType="DECIMAL" />
+        <result column="BUY_STRUCT" property="buyStruct" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="MGR_FEE_RATE" property="mgrFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="TRADE_FEE_RATE" property="tradeFeeRate" jdbcType="DECIMAL" />
+        <result column="AGENCY_FEE_RATE" property="agencyFeeRate" jdbcType="DECIMAL" />
+        <result column="OTHER_FEE_RATE" property="otherFeeRate" jdbcType="DECIMAL" />
+        <result column="TERM_DATE" property="termDate" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
+        <result column="REGIST_ORG1" property="registOrg1" jdbcType="VARCHAR" />
+        <result column="IS_GOVERN_FUND" property="isGovernFund" jdbcType="VARCHAR" />
+        <result column="GOVERN_INVEST_FUND" property="governInvestFund" jdbcType="VARCHAR" />
+        <result column="FUND_ENPE_NAME" property="fundEnpeName" jdbcType="VARCHAR" />
+        <result column="MNG_ORG_NAME" property="mngOrgName" jdbcType="VARCHAR" />
+        <result column="TRU_ORG_NAME" property="truOrgName" jdbcType="VARCHAR" />
+        <result column="FUND_INVEST_ASSET" property="fundInvestAsset" jdbcType="VARCHAR" />
+        <result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
+        <result column="DEBT_SCALE" property="debtScale" jdbcType="DECIMAL" />
+        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE_CMM" property="inAssetTypeCmm" jdbcType="VARCHAR" />
+        <result column="DEPT_EQUITY" property="deptEquity" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ChbAssetSubDtoRM"
+               type="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ASSET_YIELD" property="assetYield" jdbcType="DECIMAL" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+        <result column="IS_STRUCT" property="isStruct" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="TARGET" property="target" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="CHB_SECTYPE" property="chbSectype" jdbcType="VARCHAR" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="PARTY_GRADE" property="partyGrade" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2" property="industryLevel2"
+                jdbcType="VARCHAR" />
+        <result column="SEC_MAIN_GRADE" property="secMainGrade"
+                jdbcType="VARCHAR" />
+        <result column="SEC_CREDIT_GRADE" property="secCreditGrade"
+                jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="REGISTORG_COMMENT" property="registorgComment"
+                jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE1" property="targetType1" jdbcType="VARCHAR" />
+        <result column="TARGET_AMT" property="targetAmt" jdbcType="DECIMAL" />
+        <result column="COUNTRY_AREA" property="countryArea" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="IS_RESALE" property="isResale" jdbcType="VARCHAR" />
+        <result column="TERM_DATE" property="termDate" jdbcType="DECIMAL" />
+        <result column="RATE_FLAG" property="rateFlag" jdbcType="VARCHAR" />
+        <result column="INTPAY_CYCLE" property="intpayCycle" jdbcType="DECIMAL" />
+        <result column="REPAY_CMT" property="repayCmt" jdbcType="VARCHAR" />
+        <result column="BASIS_TYPE" property="basisType" jdbcType="VARCHAR" />
+        <result column="FLOAT_FACTOR" property="floatFactor" jdbcType="DECIMAL" />
+        <result column="SPREAD_RATE" property="spreadRate" jdbcType="DECIMAL" />
+        <result column="FINANCIE" property="financie" jdbcType="VARCHAR" />
+        <result column="FIN_ORG_CODE" property="finOrgCode" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_IN" property="fcrGradeIn" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_OUT" property="fcrGradeOut" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE1" property="financierType1"
+                jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE2" property="financierType2"
+                jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE3" property="financierType3"
+                jdbcType="VARCHAR" />
+        <result column="FINANCE_PROJ" property="financeProj" jdbcType="VARCHAR" />
+        <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2_TYPE" property="industryLevel2Type"
+                jdbcType="VARCHAR" />
+        <result column="PRO_INDUSTRY" property="proIndustry" jdbcType="VARCHAR" />
+        <result column="PRO_INDUSTRY_LEVEL2" property="proIndustryLevel2"
+                jdbcType="VARCHAR" />
+        <result column="INDUSTRY_FLAG" property="industryFlag"
+                jdbcType="VARCHAR" />
+        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
+        <result column="MON_TYPE_COMM" property="monTypeComm" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE" property="guaType" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE_REMARK" property="guaTypeRemark"
+                jdbcType="VARCHAR" />
+        <result column="FINANCIER_GRADE" property="financierGrade"
+                jdbcType="VARCHAR" />
+        <result column="IN_GRADE" property="inGrade" jdbcType="VARCHAR" />
+        <result column="OUT_GRADE" property="outGrade" jdbcType="VARCHAR" />
+        <result column="CHOSE" property="chose" jdbcType="VARCHAR" />
+        <result column="CONDITION_CMM" property="conditionCmm"
+                jdbcType="VARCHAR" />
+        <result column="FIN_AREA" property="finArea" jdbcType="VARCHAR" />
+        <result column="TOTAL_FEE_RATE" property="totalFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_TYPE" property="notstandSecType"
+                jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_NUM" property="notstandSecNum"
+                jdbcType="DECIMAL" />
+        <result column="REMAIN_TERM" property="remainTerm" jdbcType="DECIMAL" />
+        <result column="MAX_REMAIN_TERM" property="maxRemainTerm"
+                jdbcType="DECIMAL" />
+        <result column="MIN_REMAIN_TERM" property="minRemainTerm"
+                jdbcType="DECIMAL" />
+        <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_SHARES" property="industryShares"
+                jdbcType="VARCHAR" />
+        <result column="INDUSTRY_SHARES2" property="industryShares2"
+                jdbcType="VARCHAR" />
+        <result column="INVEST_STAGE" property="investStage" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE1" property="sharesType1" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE2" property="sharesType2" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE3" property="sharesType3" jdbcType="VARCHAR" />
+        <result column="IS_PLEDGE" property="isPledge" jdbcType="VARCHAR" />
+        <result column="NOM_CAPI" property="nomCapi" jdbcType="DECIMAL" />
+        <result column="TARGET_TYPE3" property="targetType3" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId"
+                jdbcType="VARCHAR" />
+        <result column="TERM_MONTH" property="termMonth" jdbcType="DECIMAL" />
+        <result column="GUARANTEE_CMT" property="guaranteeCmt"
+                jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT" property="specialCmt" jdbcType="VARCHAR" />
+        <result column="CONTRACT_NAME" property="contractName"
+                jdbcType="VARCHAR" />
+        <result column="INCOME_RATIO" property="incomeRatio" jdbcType="DECIMAL" />
+        <result column="DER_INSTR_RATIO" property="derInstrRatio"
+                jdbcType="DECIMAL" />
+        <result column="DER_INSTR_INV_TYPE" property="derInstrInvType"
+                jdbcType="VARCHAR" />
+        <result column="DER_INSTR_TARGET" property="derInstrTarget"
+                jdbcType="VARCHAR" />
+        <result column="ACCT_MODE" property="acctMode" jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT1" property="specialCmt1" jdbcType="VARCHAR" />
+        <result column="MAX_YIELD" property="maxYield" jdbcType="DECIMAL" />
+        <result column="MIN_YIELD" property="minYield" jdbcType="DECIMAL" />
+        <result column="BASIC_PRICE" property="basicPrice" jdbcType="DECIMAL" />
+        <result column="REG_DATE_PRICE" property="regDatePrice"
+                jdbcType="DECIMAL" />
+        <result column="TRADE_FEE" property="tradeFee" jdbcType="VARCHAR" />
+        <result column="PARTY_CODE" property="partyCode" jdbcType="VARCHAR" />
+        <result column="CHECK_CODE" property="checkCode" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="TRUSTEE_ID" property="trusteeId" jdbcType="VARCHAR" />
+        <result column="TRU_ACT_TYPE" property="truActType" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="CAP_USE_INDU" property="capUseIndu" jdbcType="VARCHAR" />
+        <result column="PLAN_SDATE" property="planSdate" jdbcType="DATE" />
+        <result column="PLAN_EDATE" property="planEdate" jdbcType="DATE" />
+        <result column="PRO_PROPERTY" property="proProperty" jdbcType="VARCHAR" />
+        <result column="MAX_RATE" property="maxRate" jdbcType="DECIMAL" />
+        <result column="MIN_RATE" property="minRate" jdbcType="DECIMAL" />
+        <result column="DEBT_SCALE" property="debtScale" jdbcType="DECIMAL" />
+        <result column="BUY_STRUCT" property="buyStruct" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="IS_CTRL_BOTTOM" property="isCtrlBottom"
+                jdbcType="VARCHAR" />
+        <result column="MGR_FEE_RATE" property="mgrFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="TRADE_FEE_RATE" property="tradeFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="AGENCY_FEE_RATE" property="agencyFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="OTHER_FEE_RATE" property="otherFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
+        <result column="REGIST_ORG1" property="registOrg1" jdbcType="VARCHAR" />
+        <result column="MNG_ORG_NAME" property="mngOrgName" jdbcType="VARCHAR" />
+        <result column="TRU_ORG_NAME" property="truOrgName" jdbcType="VARCHAR" />
+        <result column="FUND_INVEST_ASSET" property="fundInvestAsset"
+                jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE_CMM" property="inAssetTypeCmm"
+                jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="IS_UNDER_ASSET" property="isUnderAsset"
+                jdbcType="VARCHAR" />
+        <result column="IS_GOVERN_FUND" property="isGovernFund"
+                jdbcType="VARCHAR" />
+        <result column="GOVERN_INVEST_FUND" property="governInvestFund"
+                jdbcType="VARCHAR" />
+        <result column="FUND_ENPE_NAME" property="fundEnpeName"
+                jdbcType="VARCHAR" />
+        <result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline"
+                jdbcType="TIMESTAMP" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline"
+                jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus"
+                jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
+        <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType" jdbcType="VARCHAR" />
+        <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="TIMESTAMP" />
+        <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+
+        <result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
+        <result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
+        <result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
+        <result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
+        <result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
+        <result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
+        <result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
+        <result column='FLOAT_FACTOR_FLAG' property='floatFactorFlag' jdbcType='VARCHAR' />
+        <result column='STRUCT_GRADE' property='structGrade' jdbcType='VARCHAR' />
+        <result column='REPAYMENT_TYPE' property='repaymentType' jdbcType='VARCHAR' />
+        <result column='PERIOD_REPAYMENT_FLAG' property='periodRepaymentFlag' jdbcType='VARCHAR' />
+        <result column='BASIC_ASSET_TYPE' property='basicAssetType' jdbcType='VARCHAR' />
+        <result column='EXCESS_PROFIT_RATE' property='excessProfitRate' jdbcType='DECIMAL' />
+        <result column='PLEDGE_TYPE' property='pledgeType' jdbcType='VARCHAR' />
+        <result column='PLEDGE_VALUE' property='pledgeValue' jdbcType='DECIMAL' />
+        <result column='NATURE_GUARANTEE' property='natureGuarantee' jdbcType='VARCHAR' />
+        <result column='RELATION_FINAN' property='relationFinan' jdbcType='VARCHAR' />
+        <result column='CONTAIN_TYPE' property='containType' jdbcType='VARCHAR' />
+        <result column='EXERCISE_TYPE' property='exerciseType' jdbcType='VARCHAR' />
+        <result column='EXERCISE_DATE' property='exerciseDate' jdbcType='TIMESTAMP' />
+        <result column='FIRST_EXERCISE_DATE' property='firstExerciseDate' jdbcType='TIMESTAMP' />
+        <result column='EXERCISE_PERIOD' property='exercisePeriod' jdbcType='DECIMAL' />
+        <result column='EXERCISE_PRICE' property='exercisePrice' jdbcType='DECIMAL' />
+        <result column='PERPETUAL_CLAUSE_TYPE' property='perpetualClauseType' jdbcType='VARCHAR' />
+        <result column='DEFERRED_INTEREST_TYPE' property='deferredInterestType' jdbcType='VARCHAR' />
+        <result column='DEFERRED_INTEREST_INT' property='deferredInterestInt' jdbcType='VARCHAR' />
+        <result column='FIRST_REPRCE_DATE' property='firstReprceDate' jdbcType='TIMESTAMP' />
+        <result column='REPRCE_CYCLE' property='reprceCycle' jdbcType='DECIMAL' />
+        <result column='PART_REDEM_FLAG' property='partRedemFlag' jdbcType='VARCHAR' />
+        <result column='PART_REDEM_RATE' property='partRedemRate' jdbcType='DECIMAL' />
+        <result column='CREDIT_ORG_CODE' property='creditOrgCode' jdbcType='VARCHAR' />
+        <result column='CREDIT_ORG_NAME' property='creditOrgName' jdbcType='VARCHAR' />
+        <result column='EQUITY_QUIT' property='equityQuit' jdbcType='TIMESTAMP' />
+        <result column='DEPT_EQUITY' property='deptEquity' jdbcType='VARCHAR' />
+        <result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
+        <result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
+
+    </resultMap>
+
+    <resultMap id="ChbAssetSubDtoRMRegist"
+               type="com.joyintech.tams.svreport.chb.assetinforeg.dto.ChbAssetInfoSub001Dto">
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ASSET_YIELD" property="assetYield" jdbcType="DECIMAL" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+        <result column="IS_STRUCT" property="isStruct" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="TARGET" property="target" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="CHB_SECTYPE" property="chbSectype" jdbcType="VARCHAR" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="PARTY_GRADE" property="partyGrade" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2" property="industryLevel2"
+                jdbcType="VARCHAR" />
+        <result column="SEC_MAIN_GRADE" property="secMainGrade"
+                jdbcType="VARCHAR" />
+        <result column="SEC_CREDIT_GRADE" property="secCreditGrade"
+                jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="REGISTORG_COMMENT" property="registorgComment"
+                jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE1" property="targetType1" jdbcType="VARCHAR" />
+        <result column="TARGET_AMT" property="targetAmt" jdbcType="DECIMAL" />
+        <result column="COUNTRY_AREA" property="countryArea" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="IS_RESALE" property="isResale" jdbcType="VARCHAR" />
+        <result column="TERM_DATE" property="termDate" jdbcType="DECIMAL" />
+        <result column="RATE_FLAG" property="rateFlag" jdbcType="VARCHAR" />
+        <result column="INTPAY_CYCLE" property="intpayCycle" jdbcType="DECIMAL" />
+        <result column="REPAY_CMT" property="repayCmt" jdbcType="VARCHAR" />
+        <result column="BASIS_TYPE" property="basisType" jdbcType="VARCHAR" />
+        <result column="FLOAT_FACTOR" property="floatFactor" jdbcType="DECIMAL" />
+        <result column="SPREAD_RATE" property="spreadRate" jdbcType="DECIMAL" />
+        <result column="FINANCIE" property="financie" jdbcType="VARCHAR" />
+        <result column="FIN_ORG_CODE" property="finOrgCode" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_IN" property="fcrGradeIn" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_OUT" property="fcrGradeOut" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE1" property="financierType1"
+                jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE2" property="financierType2"
+                jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE3" property="financierType3"
+                jdbcType="VARCHAR" />
+        <result column="FINANCE_PROJ" property="financeProj" jdbcType="VARCHAR" />
+        <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2_TYPE" property="industryLevel2Type"
+                jdbcType="VARCHAR" />
+        <result column="PRO_INDUSTRY" property="proIndustry" jdbcType="VARCHAR" />
+        <result column="PRO_INDUSTRY_LEVEL2" property="proIndustryLevel2"
+                jdbcType="VARCHAR" />
+        <result column="INDUSTRY_FLAG" property="industryFlag"
+                jdbcType="VARCHAR" />
+        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
+        <result column="MON_TYPE_COMM" property="monTypeComm" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE" property="guaType" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE_REMARK" property="guaTypeRemark"
+                jdbcType="VARCHAR" />
+        <result column="FINANCIER_GRADE" property="financierGrade"
+                jdbcType="VARCHAR" />
+        <result column="IN_GRADE" property="inGrade" jdbcType="VARCHAR" />
+        <result column="OUT_GRADE" property="outGrade" jdbcType="VARCHAR" />
+        <result column="CHOSE" property="chose" jdbcType="VARCHAR" />
+        <result column="CONDITION_CMM" property="conditionCmm"
+                jdbcType="VARCHAR" />
+        <result column="FIN_AREA" property="finArea" jdbcType="VARCHAR" />
+        <result column="TOTAL_FEE_RATE" property="totalFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_TYPE" property="notstandSecType"
+                jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_NUM" property="notstandSecNum"
+                jdbcType="DECIMAL" />
+        <result column="REMAIN_TERM" property="remainTerm" jdbcType="DECIMAL" />
+        <result column="MAX_REMAIN_TERM" property="maxRemainTerm"
+                jdbcType="DECIMAL" />
+        <result column="MIN_REMAIN_TERM" property="minRemainTerm"
+                jdbcType="DECIMAL" />
+        <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_SHARES" property="industryShares"
+                jdbcType="VARCHAR" />
+        <result column="INDUSTRY_SHARES2" property="industryShares2"
+                jdbcType="VARCHAR" />
+        <result column="INVEST_STAGE" property="investStage" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE1" property="sharesType1" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE2" property="sharesType2" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE3" property="sharesType3" jdbcType="VARCHAR" />
+        <result column="IS_PLEDGE" property="isPledge" jdbcType="VARCHAR" />
+        <result column="NOM_CAPI" property="nomCapi" jdbcType="DECIMAL" />
+        <result column="TARGET_TYPE3" property="targetType3" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId"
+                jdbcType="VARCHAR" />
+        <result column="TERM_MONTH" property="termMonth" jdbcType="DECIMAL" />
+        <result column="GUARANTEE_CMT" property="guaranteeCmt"
+                jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT" property="specialCmt" jdbcType="VARCHAR" />
+        <result column="CONTRACT_NAME" property="contractName"
+                jdbcType="VARCHAR" />
+        <result column="INCOME_RATIO" property="incomeRatio" jdbcType="DECIMAL" />
+        <result column="DER_INSTR_RATIO" property="derInstrRatio"
+                jdbcType="DECIMAL" />
+        <result column="DER_INSTR_INV_TYPE" property="derInstrInvType"
+                jdbcType="VARCHAR" />
+        <result column="DER_INSTR_TARGET" property="derInstrTarget"
+                jdbcType="VARCHAR" />
+        <result column="ACCT_MODE" property="acctMode" jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT1" property="specialCmt1" jdbcType="VARCHAR" />
+        <result column="MAX_YIELD" property="maxYield" jdbcType="DECIMAL" />
+        <result column="MIN_YIELD" property="minYield" jdbcType="DECIMAL" />
+        <result column="BASIC_PRICE" property="basicPrice" jdbcType="DECIMAL" />
+        <result column="REG_DATE_PRICE" property="regDatePrice"
+                jdbcType="DECIMAL" />
+        <result column="TRADE_FEE" property="tradeFee" jdbcType="VARCHAR" />
+        <result column="PARTY_CODE" property="partyCode" jdbcType="VARCHAR" />
+        <result column="CHECK_CODE" property="checkCode" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="TRUSTEE_ID" property="trusteeId" jdbcType="VARCHAR" />
+        <result column="TRU_ACT_TYPE" property="truActType" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="CAP_USE_INDU" property="capUseIndu" jdbcType="VARCHAR" />
+        <result column="PLAN_SDATE" property="planSdate" jdbcType="DATE" />
+        <result column="PLAN_EDATE" property="planEdate" jdbcType="DATE" />
+        <result column="PRO_PROPERTY" property="proProperty" jdbcType="VARCHAR" />
+        <result column="MAX_RATE" property="maxRate" jdbcType="DECIMAL" />
+        <result column="MIN_RATE" property="minRate" jdbcType="DECIMAL" />
+        <result column="DEBT_SCALE" property="debtScale" jdbcType="DECIMAL" />
+        <result column="BUY_STRUCT" property="buyStruct" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="IS_CTRL_BOTTOM" property="isCtrlBottom"
+                jdbcType="VARCHAR" />
+        <result column="MGR_FEE_RATE" property="mgrFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="TRADE_FEE_RATE" property="tradeFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="AGENCY_FEE_RATE" property="agencyFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="OTHER_FEE_RATE" property="otherFeeRate"
+                jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
+        <result column="REGIST_ORG1" property="registOrg1" jdbcType="VARCHAR" />
+        <result column="MNG_ORG_NAME" property="mngOrgName" jdbcType="VARCHAR" />
+        <result column="TRU_ORG_NAME" property="truOrgName" jdbcType="VARCHAR" />
+        <result column="FUND_INVEST_ASSET" property="fundInvestAsset"
+                jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE_CMM" property="inAssetTypeCmm"
+                jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="IS_UNDER_ASSET" property="isUnderAsset"
+                jdbcType="VARCHAR" />
+        <result column="IS_GOVERN_FUND" property="isGovernFund"
+                jdbcType="VARCHAR" />
+        <result column="GOVERN_INVEST_FUND" property="governInvestFund"
+                jdbcType="VARCHAR" />
+        <result column="FUND_ENPE_NAME" property="fundEnpeName"
+                jdbcType="VARCHAR" />
+        <result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline"
+                jdbcType="TIMESTAMP" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline"
+                jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus"
+                jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="DELETE_RES" property="deleteRes" jdbcType="VARCHAR" />
+        <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType" jdbcType="VARCHAR" />
+        <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="TIMESTAMP" />
+        <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+
+        <result column='DEPO_TYPE' property='depoType' jdbcType='VARCHAR' />
+        <result column='RIVAL_PARTY_TYPE' property='rivalPartyType' jdbcType='VARCHAR' />
+        <result column='PRIN_BASEAMT' property='prinBaseamt' jdbcType='DECIMAL' />
+        <result column='FMDATE' property='fmdate' jdbcType='TIMESTAMP' />
+        <result column='COUPON_SPECIES' property='couponSpecies' jdbcType='VARCHAR' />
+        <result column='INTEREST_RULE_FLAG' property='interestRuleFlag' jdbcType='VARCHAR' />
+        <result column='INTPAY_RULE' property='intpayRule' jdbcType='VARCHAR' />
+        <result column='FLOAT_FACTOR_FLAG' property='floatFactorFlag' jdbcType='VARCHAR' />
+        <result column='STRUCT_GRADE' property='structGrade' jdbcType='VARCHAR' />
+        <result column='REPAYMENT_TYPE' property='repaymentType' jdbcType='VARCHAR' />
+        <result column='PERIOD_REPAYMENT_FLAG' property='periodRepaymentFlag' jdbcType='VARCHAR' />
+        <result column='BASIC_ASSET_TYPE' property='basicAssetType' jdbcType='VARCHAR' />
+        <result column='EXCESS_PROFIT_RATE' property='excessProfitRate' jdbcType='DECIMAL' />
+        <result column='PLEDGE_TYPE' property='pledgeType' jdbcType='VARCHAR' />
+        <result column='PLEDGE_VALUE' property='pledgeValue' jdbcType='DECIMAL' />
+        <result column='NATURE_GUARANTEE' property='natureGuarantee' jdbcType='VARCHAR' />
+        <result column='RELATION_FINAN' property='relationFinan' jdbcType='VARCHAR' />
+        <result column='CONTAIN_TYPE' property='containType' jdbcType='VARCHAR' />
+        <result column='EXERCISE_TYPE' property='exerciseType' jdbcType='VARCHAR' />
+        <result column='EXERCISE_DATE' property='exerciseDate' jdbcType='TIMESTAMP' />
+        <result column='FIRST_EXERCISE_DATE' property='firstExerciseDate' jdbcType='TIMESTAMP' />
+        <result column='EXERCISE_PERIOD' property='exercisePeriod' jdbcType='DECIMAL' />
+        <result column='EXERCISE_PRICE' property='exercisePrice' jdbcType='DECIMAL' />
+        <result column='PERPETUAL_CLAUSE_TYPE' property='perpetualClauseType' jdbcType='VARCHAR' />
+        <result column='DEFERRED_INTEREST_TYPE' property='deferredInterestType' jdbcType='VARCHAR' />
+        <result column='DEFERRED_INTEREST_INT' property='deferredInterestInt' jdbcType='VARCHAR' />
+        <result column='FIRST_REPRCE_DATE' property='firstReprceDate' jdbcType='TIMESTAMP' />
+        <result column='REPRCE_CYCLE' property='reprceCycle' jdbcType='DECIMAL' />
+        <result column='PART_REDEM_FLAG' property='partRedemFlag' jdbcType='VARCHAR' />
+        <result column='PART_REDEM_RATE' property='partRedemRate' jdbcType='DECIMAL' />
+        <result column='CREDIT_ORG_CODE' property='creditOrgCode' jdbcType='VARCHAR' />
+        <result column='CREDIT_ORG_NAME' property='creditOrgName' jdbcType='VARCHAR' />
+        <result column='EQUITY_QUIT' property='equityQuit' jdbcType='TIMESTAMP' />
+        <result column='DEPT_EQUITY' property='deptEquity' jdbcType='VARCHAR' />
+        <result column='HOLD_PURPOSE' property='holdPurpose' jdbcType='VARCHAR' />
+        <result column='FINANCIAL_COMISSUE' property='financialComissue' jdbcType='VARCHAR' />
+
+    </resultMap>
+
+
+    <select id="genChbAssetInfoTmpList"  resultMap="BaseResultMap">
+  select  * from  CHB_ASSET_INFO_TMP
+  where  1=1
+  and   DATE_FORMAT(ROW_DATE,'%Y-%m-%d') = #{batchdate,jdbcType = VARCHAR}
+ </select>
+    <select id="genChbAssetInfoSubList"  resultMap="ChbAssetSubDtoRMRegist">
+        select * from CHB_ASSET_INFO_SUB
+        where 1=1
+        and  SEND_STATUS  in ('02','03')
+        <if test="keylist != null and keylist.size() > 0">
+            AND ASSET_CODE IN
+            <trim suffixOverrides=" OR ASSET_CODE IN ()">
+                <foreach collection='keylist' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR ASSET_CODE IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+</mapper>

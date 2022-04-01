@@ -66,6 +66,8 @@ public class CfetsEtrDispatcherTradeListRequest {
     @ApiModelProperty(name="search",value="关键字",example="12")
     private String search;
 
+    private String searchPageType;
+
     public String[] getEntrustStatus() {
         return entrustStatus;
     }
@@ -184,6 +186,14 @@ public class CfetsEtrDispatcherTradeListRequest {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getSearchPageType() {
+        return searchPageType;
+    }
+
+    public void setSearchPageType(String searchPageType) {
+        this.searchPageType = searchPageType;
     }
 
     public String getEntrustEndDate() {

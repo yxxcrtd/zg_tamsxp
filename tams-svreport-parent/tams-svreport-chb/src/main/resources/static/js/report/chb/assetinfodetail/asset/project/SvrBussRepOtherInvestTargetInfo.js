@@ -32,6 +32,17 @@
         }
     }
 
+    function inAssetTypeChangeType(){
+        var  inAssetType=getElementById('inAssetType').val();
+        if(inAssetType=='99'){
+            getElementById('inAssetTypeCmm').attr('disabled',false);
+        }else{
+            getElementById('inAssetTypeCmm').val('').trigger("change");
+            getElementById('inAssetTypeCmm').attr('disabled',true);
+
+        }
+    }
+
 
     //担保方式事件
     function otherbyRepGuaType() {
@@ -66,6 +77,10 @@
         //是否有预期收益率
         getElementById('rateFlag').change(function(){
             otherrepRateFlagChangeType();
+        });
+        //行内资产类别说明
+        getElementById('inAssetType').change(function(){
+            inAssetTypeChangeType();
         });
 
         //项目是否属于重点监控行业和领域

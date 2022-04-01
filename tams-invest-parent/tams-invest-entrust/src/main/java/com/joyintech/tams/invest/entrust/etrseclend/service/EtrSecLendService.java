@@ -205,7 +205,7 @@ public class EtrSecLendService extends CommonExportService<EtrSecLendDto> implem
         dto.setOperateType(operationType.toString());
         Date sysDate = DateUtil.platDateFromCache();
         dto.setEntrustDate(sysDate);
-//        deleteWflEntity(dto);
+        deleteWflEntity(dto);
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrSecLend/doComplete",dto,

@@ -1,6 +1,8 @@
 package com.joyintech.tams.exchange.service.trade.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageInfo;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.business.common.util.ExcelUitl;
 import com.joyintech.tams.exchange.common.ResponseResultBody;
 import com.joyintech.tams.exchange.common.bean.*;
@@ -14,10 +16,14 @@ import com.joyintech.tams.exchange.common.request.EntrustQueryRequest;
 import com.joyintech.tams.exchange.common.request.PageEntrustInfoRequest;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.service.trade.management.service.EntrustManagement;
-import com.joyintech.tams.exchange.util.EntrustPropUtils;
+import com.joyintech.tams.exchange.util.MasterUtil;
+import com.joyintech.tams.exchange.common.utils.EntrustPropUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +43,21 @@ public class EntrustController {
     private InstructionService instructionService;
 
     @ApiOperation(value = "查询委托信息", notes = "查询委托信息")
-    @RequestMapping(value = {"/entrust"}, method = RequestMethod.POST)
+    @PostMapping(value = {"/entrust"})
     public Message<OrderAndEntrustQryResult> queryAll(@RequestBody @Validated EntrustQueryRequest entrustQueryRequest) {
-        return new Message<OrderAndEntrustQryResult>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(entrustQueryRequest);
+    	}
+        return new Message<>(entrustManagement.queryEntrust(entrustQueryRequest.getUserId(), entrustQueryRequest.getInstructionId(), entrustQueryRequest.getAccountId(), entrustQueryRequest.getOrderId()));
     }
 
     @ApiOperation(value = "查询综合业务信息", notes = "查询综合业务信息")
-    @RequestMapping(value = {"/entrust/integrated"}, method = RequestMethod.POST)
+    @PostMapping(value = {"/entrust/integrated"})
     public Message<List<IntegratedEntrust>> queryIntegratedEntrustAll(@RequestBody @Validated EntrustQueryRequest request) {
-        return new Message<List<IntegratedEntrust>>(entrustManagement.queryIntegratedEntrust(request.getUserId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
+        return new Message<>(entrustManagement.queryIntegratedEntrust(request.getUserId(), request.getInstructionId(), request.getAccountId(), request.getOrderId()));
     }
 
     /**
@@ -56,26 +68,13 @@ public class EntrustController {
      * @return Message
      */
     @ApiOperation(value = "撤销委托", notes = "撤销委托")
-    @RequestMapping(value = "/entrust/cancel", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/cancel")
     public Message<Object> cancelEntrust(@RequestParam String userId,
                                          @RequestParam String entrustId) {
-        return new Message<Object>(entrustManagement.cancelEntrust(userId, entrustId));
-    }
-
-    /**
-     * 强制撤销对应entrust
-     *
-     * @param userId    用户Id
-     * @param userName  用户名称
-     * @param entrustId 委托单号
-     * @return Message
-     */
-    @ApiOperation(value = "撤销异常委托", notes = "撤销异常委托")
-    @RequestMapping(value = "/entrust/exception/cancel", method = RequestMethod.POST)
-    public Message<Object> cancelExceptionEntrust(@RequestParam String userId,
-                                                  @RequestParam String userName,
-                                                  @RequestParam String entrustId) {
-        return new Message<Object>(entrustManagement.cancelExceptionEntrust(userId, userName, entrustId));
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
+        return new Message<>(entrustManagement.cancelEntrust(userId, entrustId));
     }
 
     /**
@@ -85,8 +84,11 @@ public class EntrustController {
      * @param dto    委托单号
      * @return ResultBean
      */
-    @RequestMapping(value = "/entrust/cancel/revoke", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/cancel/revoke")
     public ResultBean cancelEntrustWithRevoke(String userId, @RequestBody RevokeDto dto) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(dto);
+    	}
         return entrustManagement.cancelEntrustWithRevoke(userId, dto);
     }
 
@@ -102,7 +104,7 @@ public class EntrustController {
 //     * @param accountId     账户Id
 //     * @return ResultBean
 //     */
-//    @RequestMapping(value = "/entrust/enable", method = RequestMethod.GET)
+//    @PostMapping(value = "/entrust/enable", method = RequestMethod.GET)
 //    public ResultBean queryEnable(@RequestParam(value = "user_id") String userId,
 //                                  @RequestParam(value = "stock_code") String stockCode,
 //                                  @RequestParam(value = "entrust_prop") String entrustProp,
@@ -118,8 +120,11 @@ public class EntrustController {
      * @param enableQryBean 查询参数
      * @return ResultBean
      */
-    @RequestMapping(value = "/entrust/enable", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/enable")
     public ResultBean queryEnable(@RequestBody @Validated EnableQryBean enableQryBean) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObjectResultBean(enableQryBean);
+    	}
         Instruction instruction = instructionService.findById(enableQryBean.getInstructionId());
         enableQryBean.setEntrustProp(EntrustPropUtils.getEntrustProp(instruction, enableQryBean.getEntrustProp()));
         enableQryBean.setEntrustBs(EntrustBsProp.getEntrustBs(instruction.getPs()));
@@ -139,45 +144,72 @@ public class EntrustController {
      * @Author: MAXX
      * @Date: 2020/6/5 
      */
-    @RequestMapping(value = "/entrust/getOthCode", method = RequestMethod.POST)
+    @PostMapping(value = "/entrust/getOthCode")
     public ResultBean getOthCode(@RequestParam(value = "finprod_id", required = false) String finprodId,
                                  @RequestParam(value = "oth_code_type", required = false) String othCodeType) {
-
         return entrustManagement.getOthCode(finprodId, othCodeType);
     }
 
     @ApiOperation(value = "查询分页委托信息", notes = "查询分页委托信息")
     @PostMapping(value = "/entrust/page")
     public Message<PageInfo<EntrustQueryBean>> queryAllEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return entrustManagement.queryAllEntrustForPage(request);
     }
 
     @ApiOperation(value = "查询分页综合业务委托信息", notes = "查询分页综合业务委托信息")
     @PostMapping(value = "/entrust/integrated/page")
     public Message<PageInfo<EntrustQueryBean>> queryIntegratedEntrustForPage(@RequestBody @Validated PageEntrustInfoRequest request) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(request);
+    	}
         return entrustManagement.queryIntegratedEntrustForPage(request);
     }
 
-    @PostMapping(value = "/entrust/export")
-    @ResponseBody
     @ApiOperation(value = "导出委托信息列表", notes = "导出委托信息列表")
+    @PostMapping(value = "/entrust/export")
     public void exportEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
         ExcelUitl.doExport(request, response, "委托列表", () -> entrustManagement.queryAllEntrustForPage(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
     }
 
     @ApiOperation(value = "查询异常委托", notes = "查询异常委托")
-    @RequestMapping(value = "/entrust/exception", method = RequestMethod.POST)
-    public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestParam String userId,
-                                                                 @RequestParam(required = false) String entrustStatus) {
-        if (StringUtils.isEmpty(entrustStatus)) {
-            entrustStatus = "1,3,4";
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "userId", value = "用户编号", paramType = "query"),
+            @ApiImplicitParam(required = false, name = "entrustStatusList", value = "委托状态列表", paramType = "body")
+    })
+    @PostMapping(value = "/entrust/exception")
+    public Message<List<EntrustInterface>> queryExceptionEntrust(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
+                                                                 @RequestBody(required = false) List<String> entrustStatusList) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(entrustStatusList);
+    	}
+        String entrustStatus = "1,3,4";
+        if (CollUtil.isNotEmpty(entrustStatusList)) {
+            entrustStatus = CollUtil.join(entrustStatusList, GlobalConstant.COMMA);
         }
-        return new Message<List<EntrustInterface>>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
+        return new Message<>(entrustManagement.queryEntrustByStatus(userId, entrustStatus));
     }
 
-//    @PostMapping(value = "/entrust/exception/export")
-//    @ResponseBody
+    @ApiOperation(value = "撤销异常委托", notes = "撤销异常委托")
+    @ApiImplicitParams({
+            @ApiImplicitParam(required = true, name = "userId", value = "用户编号", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "userName", value = "用户名称", paramType = "query"),
+            @ApiImplicitParam(required = true, name = "entrustId", value = "委托编号", paramType = "query"),
+    })
+    @PostMapping(value = "/entrust/exception/cancel")
+    public Message<Object> cancelExceptionEntrust(@RequestParam @NotBlank(message = "用户编号不可为空") String userId,
+                                                  @RequestParam @NotBlank(message = "用户名称不可为空") String userName,
+                                                  @RequestParam @NotBlank(message = "委托编号不可为空") String entrustId) {
+    	if(!MasterUtil.isMaster()) {
+    		return MasterUtil.postForObject(null);
+    	}
+        return new Message<>(entrustManagement.cancelExceptionEntrust(userId, userName, entrustId));
+    }
+
 //    @ApiOperation(value = "导出异常委托信息列表", notes = "导出异常委托信息列表")
+//    @PostMapping(value = "/entrust/exception/export")
 //    public void exportExceptionEntrust(@RequestBody EntrustExportRequest request, HttpServletResponse response) {
 //        ExcelUitl.doExport(request, response, "异常委托列表", () -> entrustManagement.queryEntrustByStatus(request.getDto(PageEntrustInfoRequest.class)).getData().getList());
 //    }

@@ -15,7 +15,7 @@ public class MinNumStepRequest {
     /**
      * 交易平台
      */
-    @ApiModelProperty(name="currentTab",value="交易平台",example="A1")
+    @ApiModelProperty(name="currentTab",value="交易平台:竞价交易:jj,大宗交易指令:dz,协议现券指令:gd",example="A1")
     private String currentTab;
 
     /**

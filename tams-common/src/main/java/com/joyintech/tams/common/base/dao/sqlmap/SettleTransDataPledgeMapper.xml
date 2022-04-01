@@ -14,11 +14,13 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="DISPLACE_DIRECTION" property="displaceDirection" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TRADE_ID TRADE_ID, BRANCH BRANCH, PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE, 
         PLEDGE_NUMBER PLEDGE_NUMBER, PLEDGE_RATIO PLEDGE_RATIO, PLEDGE_AMT PLEDGE_AMT, CREATE_USER CREATE_USER, 
-        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
+        DISPLACE_DIRECTION DISPLACE_DIRECTION
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -44,12 +46,13 @@
         insert into SETTLE_TRANS_DATA_PLEDGE (TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, 
             PLEDGE_FACE_VALUE, PLEDGE_NUMBER, PLEDGE_RATIO, 
             PLEDGE_AMT, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, DISPLACE_DIRECTION
             )
         values (#{tradeId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{pledgeFinprodId,jdbcType=VARCHAR}, 
             #{pledgeFaceValue,jdbcType=DECIMAL}, #{pledgeNumber,jdbcType=DECIMAL}, #{pledgeRatio,jdbcType=DECIMAL}, 
             #{pledgeAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{displaceDirection,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataPledge" >
@@ -91,6 +94,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -129,15 +135,18 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="displaceDirection != null" >
+                #{displaceDirection,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataPledge" >
         insert into SETTLE_TRANS_DATA_PLEDGE(TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE, 
         PLEDGE_NUMBER, PLEDGE_RATIO, PLEDGE_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME)
+        UPDATE_TIME, DISPLACE_DIRECTION)
         select TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE, 
             PLEDGE_NUMBER, PLEDGE_RATIO, PLEDGE_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DISPLACE_DIRECTION
              from SETTLE_TRANS_DATA_PLEDGE
              where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </insert>
@@ -168,6 +177,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR},
+            </if>
         </set>
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
@@ -180,7 +192,8 @@
             PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
             PLEDGE_AMT = #{pledgeAmt,jdbcType=DECIMAL},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR}
         where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
     </update>
 </mapper>

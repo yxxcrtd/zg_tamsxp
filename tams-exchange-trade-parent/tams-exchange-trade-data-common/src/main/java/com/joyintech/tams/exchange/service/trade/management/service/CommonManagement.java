@@ -21,7 +21,6 @@ import com.joyintech.tams.exchange.common.bean.investment.PtlAuthInfo;
 import com.joyintech.tams.exchange.common.bean.investment.TradeTimeBean;
 import com.joyintech.tams.exchange.common.bean.request.DeviationDegreeRequest;
 import com.joyintech.tams.exchange.common.bean.request.EtrDispatcherInfoRequest;
-import com.joyintech.tams.exchange.common.bean.response.EtrDispatcherInfoResponse;
 import com.joyintech.tams.exchange.common.bean.response.ExchangeContextResponse;
 import com.joyintech.tams.exchange.common.cache.TradeTimeService;
 import com.joyintech.tams.exchange.common.cache.config.DataServiceConfig;
@@ -41,6 +40,7 @@ import com.joyintech.tams.exchange.datacommon.db.service.InstrumentService;
 import com.joyintech.tams.exchange.datacommon.db.service.ServiceNodeService;
 import com.joyintech.tams.exchange.service.trade.processor.account.AccountPositionHelper;
 import com.joyintech.tams.exchange.service.trade.scheduled.TokenJob;
+import com.joyintech.tams.invest.common.entrust.inter.EtrTradeOtherCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -185,6 +186,14 @@ public class CommonManagement extends BaseService {
         response.setFairModeWithUnacceptInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_WITH_UNACCEPT_INSTRUCTION_IN_PARA));
         response.setFairModeEntrustPriceBestThanInstruction(CacheUtil.getSysParam(ExchangeConstant.FAIR_MODE_ENTRUST_PRICE_BEST_THAN_INSTRUCTION_IN_PARA));
         response.setTradeTimeSwitch(CacheUtil.getSysParam(ExchangeConstant.ETR_TRADE_TIME_SWITCH));
+        // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+//        response.setBondTradedUnit(CacheUtil.getSysParam(ExchangeConstant.BOND_TRADED_UNIT));
+        response.setBondTradedUnit("01");
+        // moddify by etliu 20220301 end
+
+        response.setTrdInstructionRefreshTime(CacheUtil.getSysParam(ExchangeConstant.TRD_INSTRUCTION_REFRESH_TIME));
+        response.setTrdQuoteRefreshTime(CacheUtil.getSysParam(ExchangeConstant.TRD_QUOTE_REFRESH_TIME));
+        response.setTrdEntrustRefreshTime(CacheUtil.getSysParam(ExchangeConstant.TRD_ENTRUST_REFRESH_TIME));
 
         return response;
     }
@@ -436,13 +445,10 @@ public class CommonManagement extends BaseService {
         return null;
     }
 
-    public Message<Map<String,Object>> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
+    public Message<Map<String, Object>> getEtrDispatcherInfo(EtrDispatcherInfoRequest request) {
         try {
-            String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getEtrDispatcherInfo;
-            if (request.getBusiTypePosition() == null) {
-                request.setBusiTypePosition(StrUtil.EMPTY);
-            }
-            Message<Map<String,Object>> response = null;
+            String url = ServiceApplication.INSTRUCTION_SERVICE + TradeServiceURL.getEtrDispatcherInfo + request.getBusiTypePosition();
+            Message<Map<String, Object>> response = null;
             if (isSingle) {
                 response = simpleRestTemplate.postForObject(url, request, Message.class);
             } else {
@@ -470,5 +476,15 @@ public class CommonManagement extends BaseService {
             logger.error("调用偏离度查询接口失败，" + e.getMessage(), e);
             return new Message<>(ResultBean.error(ErrorCode.API_RETURN_ERROR));
         }
+    }
+
+    @Autowired
+    private EtrTradeOtherCommonService etrTradeOtherCommonService;
+
+    public Message<BigDecimal> getFaceValue(String finprodId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("finprodId", finprodId);
+        BigDecimal faceValue = etrTradeOtherCommonService.selectFaceValue(params);
+        return new Message<>(faceValue);
     }
 }

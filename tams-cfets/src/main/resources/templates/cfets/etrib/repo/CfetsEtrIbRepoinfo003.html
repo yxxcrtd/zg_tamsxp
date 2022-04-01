@@ -17,10 +17,7 @@
             <input type="hidden" id="totalEtrustId" name="totalEtrustId" th:value="${entity?.totalEtrustId}">
             <input type="hidden" id="systemAct" name="systemAct" th:value="${entity?.systemAct}">
 
-
             <div class="layui-form-item" >
-
-
                 <div class="form-inline-wrap" >
                     <label class="layui-form-label" style="width: 125px;" data-th-text="#{EtrIbRepoinfo002.ps}">交易方向</label>
                             <div class="layui-input-inline input-inline">
@@ -45,8 +42,8 @@
                             <div class="layui-input-inline input-inline">
                                 <input
                                     type="text"
-                                    id="entrustAmt" disabled
-                                    name="entrustAmt"
+                                    id="entrustAmt"
+                                    name="entrustAmt" disabled
                                     placeholder="请输入内容"
                                     data-pattern=""
                                     data-fixtype="2"
@@ -64,7 +61,7 @@
                                 required
                                 type="text"
                                 id="settleSpreed"
-                                name="settleSpreed" disabled
+                                name="settleSpreed"
                                 allowClear="true"
                                 class="layui-input form-input input-select"
                                 data-th-data-result="${ACCOUNT_SPEED}"
@@ -85,7 +82,7 @@
                                     type="text"
                                     id="priceModel"
                                     name="priceModel"
-                                    required disabled
+                                    required
                                     class="layui-input form-input input-select"
                                     placeholder="请输入内容"
                                     th:placeholder="#{SysCommon.placeholder}"
@@ -99,7 +96,7 @@
                         <label class="layui-form-label" style="width: 125px;" >回购利率</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="price" name="price" placeholder="请输入内容"
-                                   data-pattern="" data-fixtype="2" disabled data-textrange="4"
+                                   data-pattern="" data-fixtype="2"  data-textrange="4"
                                    class="layui-input form-input text-number" required="required"
                                    data-th-value="${entity?.price}"/>
                             <span class="input-right-show">%</span>
@@ -110,7 +107,7 @@
                         <label class="layui-form-label" style="width: 125px;" data-th-text="#{EtrRepo002.repoTerm}">回购期限</label>
                         <div class="layui-input-inline input-inline">
                             <input type="text" id="repoTerm" name="repoTerm" placeholder="请输入内容"
-                                   data-pattern="" data-fixtype="2" disabled
+                                   data-pattern="" data-fixtype="2"
                                    class="layui-input form-input text-number" required="required" maxlength="10" data-textrange="0"
                                    data-th-value="${entity?.repoTerm}"/>
                             <span class="input-right-show">天</span>
@@ -153,10 +150,10 @@
                             <div class="layui-input-inline input-inline">
 
                                 <select type="text" id="counterId" name="counterId"
-                                        class="layui-input form-input input-select" disabled
+                                        class="layui-input form-input input-select"
                                         th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
-                                        th:data-url="@{/cfets/etrib/cfetsEtrIbRepoinfo/queryMySideListOfPage?dealType=01}" allowClear="true"
-                                        formatoption="true" required="required"
+                                        th:data-url="@{/common/joyinbusinessCommon/queryMySideListForSelect?dealType=01}" allowClear="true"
+                                        formatoption="true"
                                         th:initValue="${entity?.counterId}"></select>
                             </div>
                     </div>
@@ -172,12 +169,22 @@
                             <textarea id="remark" name="remark" th:value="${entity?.remark}"
                                       data-th-text="${entity?.remark}" class="layui-textarea"
                                       placeholder="请输入内容"
-                                      data-th-placeholder="#{SysCommon.placeholder}" disabled></textarea>
+                                      data-th-placeholder="#{SysCommon.placeholder}" ></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
-
+            <div>
+                <div th:if=" ${repo_pledge_model} =='02'"  class="pro-module" id="pledgeBondTotalTblDetailed_div" >
+                    <h3 class="pro-module-title">
+                        <span class="title-des" data-th-utext="#{BussRepoSecPtl.pledgeInfo}">质押券汇总信息</span>
+                        <i class="iconfont icon-arrow-down pro-down-icon"></i>
+                    </h3>
+                    <div>
+                        <table class="layui-table" id="pledgeBondTotalListDetailed" name="pledgeBondTotalListDetailed"></table>
+                    </div>
+                </div>
+            </div>
             <div id="combDistribt_div">
                 <div class="pro-module">
                     <h3 class="pro-module-title">
@@ -192,18 +199,7 @@
                     </div>
                 </div>
             </div>
-             <div>
-	            <div th:if=" ${repo_pledge_model} =='02'"  class="pro-module" id="pledgeBondTotalTblDetailed_div" >
-				    <h3 class="pro-module-title">
-				        <span class="title-des" data-th-utext="#{BussRepoSecPtl.pledgeInfo}">质押券汇总信息</span>
-				        <i class="iconfont icon-arrow-down pro-down-icon"></i>
-				    </h3>
-				    <div>
-				        <table class="layui-table" id="pledgeBondTotalListDetailed"
-				               name="pledgeBondTotalListDetailed"></table>
-				    </div>
-				 </div>
-			</div>
+
             <div id="riskTrialRet_div" class="pro-module-wrap">
                 <div class="pro-module">
                     <h3 class="pro-module-title pro-item-wrap">
@@ -213,14 +209,14 @@
                     <div class="pro-module-item">
                         <div class="riskclu" id="CfetsEtribBondinfo003_DIV2"><span id="riskTrialSpan"></span></div>
                         <div id="riskTrialRet">
-                            <table class="layui-table" id="riskTrialRetTable"
-                                   name="riskTrialRetList"></table>
+                            <table class="layui-table" id="riskTrialRetTable" name="riskTrialRetDto"></table>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
                 <div class="text-center">
+                    <a id="CfetsEtrIbRepoinfo003_btn_riskcal" class="layui-btn layui-btn-sm" >风险试算</a>
                     <a id="CfetsEtrIbRepoinfo003_btn_save" class="layui-btn layui-btn-sm btn-save" style="display: none;"
                        data-th-text="#{SysCommon.save}">保存</a>
                     <a id="CfetsEtrIbRepoinfo003_btn_submit" class="layui-btn layui-btn-sm  btn-submit"
@@ -313,6 +309,10 @@
         var entity_pledgeBondList = eval(/*[[${entity_pledgeBondList}]]*/'');
         var entity_PledgeBondTotalListDetailed = eval(/*[[${entity_PledgeBondTotalListDetailed}]]*/'');
         var entity_RiskTrialRetList = eval(/*[[${entity_RiskTrialRetList}]]*/'');
+        var entity_riskTrialSpan = /*[[${entity_riskTrialSpan}]]*/'';
+        var entity_RiskcalResponse = eval(/*[[${entity_RiskcalResponse}]]*/'');
+
+
     </script>
     <script data-th-src="@{/js/cfets/etrib/repo/CfetsEtrIbRepoinfo003.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/component/autocoupon/AutoCoupon.js}" type="text/javascript"></script>

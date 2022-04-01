@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.system.proregistcodemanage.dao.ProRegistCodeManage001Mapper_mysql">
-     <!-- 产品登记编码列表数据查询 -->
+	<!-- 产品登记编码列表数据查询 -->
 	<select id="queryForPage" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		SELECT
 		b.PROD_INS_ID prodId,
@@ -61,7 +61,7 @@
 				</foreach>
 			</if>
 			<if test="isNotNull == true">
-				AND A.REG_CODE is null
+				AND A.REG_CODE is null or A.REG_CODE=''
 			</if>
 			<!-- dingzhipeng add Start 2017-10-23-->
 			<if test="orgCodeList != null and orgCodeList.size() > 0">
@@ -84,75 +84,76 @@
 	</select>
 	<select id="queryForPageOld" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		SELECT
-		  A.PRODID prodId,
-		  A.ORG_CODE orgCode,
-          b.PROD_NAME prodName,
-		  A.REG_CODE regCode,TrdProjectDurationMapper.xml
-		  b.OPERATE_MODE operateMode,
-		  DATE_FORMAT(b.VDATE,'%Y-%m-%d') vdate,
-		  DATE_FORMAT(b.MDATE,'%Y-%m-%d') mdate,
-		  A.INVESTOR investor,
-		  A.REMARK remark
-		 FROM CHB_PRDRESIST_CODE A
-		 <where>
-		    <if test="prodList != null and prodList.size() > 0">
-		 	<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
-		 	 #{prodid,jdbcType=VARCHAR}
-		 	</foreach>
-		 	</if>
-		 	<if test="investorList != null and investorList.size() > 0">
-		 	<foreach collection="investorList" item="investor" open=" AND INVESTOR IN (" close=")" separator=",">
-		 	 #{investor,jdbcType=VARCHAR}
-		 	</foreach>
-		 	</if>
-		 	<if test="vdateStart != null and vdateStart != ''" >
-	    	AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStart}
-	    	</if>
-	    	<if test="vdateEnd != null and vdateEnd != ''" >
-	    	AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd}
-	    	</if>
-	    	<if test="mdateStart != null and mdateStart != ''" >
-	    	AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[>=]]> #{mdateStart}
-	    	</if>
-	    	<if test="mdateEnd != null and mdateEnd != ''" >
-	    	AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[<=]]> #{mdateEnd}
-	    	</if>
-		 	<if test="regCodeList != null and regCodeList.size() > 0">
-		 	<foreach collection="regCodeList" item="regCode" open=" AND A.REG_CODE IN (" close=")" separator=",">
-		 	 #{regCode,jdbcType=VARCHAR}
-		 	</foreach>
-		 	</if>
-		 	<if test="isNotNull == true">
-		 	AND A.REG_CODE is null
-		 	</if>
-		 	<!-- dingzhipeng add Start 2017-10-23-->
-		 	<if test="orgCodeList != null and orgCodeList.size() > 0">
-			 	<foreach collection="orgCodeList" item="orgCode" open="AND A.ORG_CODE IN (" close=")" separator=",">
-			 	 #{orgCode,jdbcType=VARCHAR}
-		 		</foreach>
-		 	</if>
-		 	<!-- dingzhipeng add end 2017-10-23 -->
-		 	<!-- 选中导出使用的参数 -->
-		 	<if test="keys != null and keys.size() > 0">
-            <foreach collection="keys" item="key" open=" AND concat_ws('',concat_ws('',A.ORG_CODE, '|'), A.PRODID) IN (" close=")" separator=",">
-             #{key,jdbcType=VARCHAR}
-            </foreach>
-		 	</if>
-		 </where>
-		 ORDER BY A .UPDATE_TIME DESC,A .PRODID ASC
+		A.PRODID prodId,
+		A.ORG_CODE orgCode,
+		b.PROD_NAME prodName,
+		A.REG_CODE regCode,
+		b.OPERATE_MODE operateMode,
+		DATE_FORMAT(b.VDATE,'%Y-%m-%d') vdate,
+		DATE_FORMAT(b.MDATE,'%Y-%m-%d') mdate,
+		A.INVESTOR investor,
+		A.REMARK remark
+		FROM CHB_PRDRESIST_CODE A
+		left join chb_prd_baseinfo b  on b.prod_id = a.PRODID
+		<where>
+			<if test="prodList != null and prodList.size() > 0">
+				<foreach collection="prodList" item="prodid" open=" A.PRODID IN (" close=")" separator=",">
+					#{prodid,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="investorList != null and investorList.size() > 0">
+				<foreach collection="investorList" item="investor" open=" AND INVESTOR IN (" close=")" separator=",">
+					#{investor,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="vdateStart != null and vdateStart != ''" >
+				AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[>=]]> #{vdateStart}
+			</if>
+			<if test="vdateEnd != null and vdateEnd != ''" >
+				AND DATE_FORMAT(A.VDATE,'%Y-%m-%d') <![CDATA[<=]]> #{vdateEnd}
+			</if>
+			<if test="mdateStart != null and mdateStart != ''" >
+				AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[>=]]> #{mdateStart}
+			</if>
+			<if test="mdateEnd != null and mdateEnd != ''" >
+				AND DATE_FORMAT(A.MDATE,'%Y-%m-%d') <![CDATA[<=]]> #{mdateEnd}
+			</if>
+			<if test="regCodeList != null and regCodeList.size() > 0">
+				<foreach collection="regCodeList" item="regCode" open=" AND A.REG_CODE IN (" close=")" separator=",">
+					#{regCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="isNotNull == true">
+				AND A.REG_CODE is null or A.REG_CODE=''
+			</if>
+			<!-- dingzhipeng add Start 2017-10-23-->
+			<if test="orgCodeList != null and orgCodeList.size() > 0">
+				<foreach collection="orgCodeList" item="orgCode" open="AND A.ORG_CODE IN (" close=")" separator=",">
+					#{orgCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<!-- dingzhipeng add end 2017-10-23 -->
+			<!-- 选中导出使用的参数 -->
+			<if test="keys != null and keys.size() > 0">
+				<foreach collection="keys" item="key" open=" AND concat_ws('',concat_ws('',A.ORG_CODE, '|'), A.PRODID) IN (" close=")" separator=",">
+					#{key,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY A .UPDATE_TIME DESC,A .PRODID ASC
 	</select>
 	<!-- 产品下拉框查询 -->
 	<select id="queryProdList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
-		  B.PRODID id,
-		  B.PRODNAME text
-		 FROM CHB_PRDRESIST_CODE B
-		 <where>
-		 	<if test="likeStr != null and likeStr != ''">
-		 		B.PRODID like #{likeStr} or B.PRODNAME like #{likeStr}
-		 	</if>
-		 </where>
-		 order by B.PRODID
+		B.PRODID id,
+		B.PRODNAME text
+		FROM CHB_PRDRESIST_CODE B
+		<where>
+			<if test="likeStr != null and likeStr != ''">
+				B.PRODID like #{likeStr} or B.PRODNAME like #{likeStr}
+			</if>
+		</where>
+		order by B.PRODID
 	</select>
 	<select id="queryAllRegistCode" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
@@ -162,7 +163,7 @@
 		 where B.REG_CODE is not null
 		 order by B.REG_CODE
 	</select>
-    <select id="queryRegCode" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
+	<select id="queryRegCode" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		SELECT
 		  A.REG_CODE regCode,
 		  A.ORG_CODE orgCode,
@@ -172,123 +173,131 @@
 		 INNER JOIN CHB_EQUDET_IMP_TMP B
 		 	ON A.ORG_CODE = B.ORG_CODE AND A.PRODID = B.ACCOUNT
 	</select>
-	 <select id="queryProdid" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
-		SELECT 
-		  * 
+	<select id="queryProdid" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
+		SELECT
+		  *
 		 FROM CHB_PRDRESIST_CODE B
 		 where
 		 		B.PRODID = #{prodid}
 	</select>
 	<select id="isExist" resultType="java.lang.Integer">
-	SELECT 
-		count(1) 
-	from 
+		SELECT
+		count(1)
+		from
 		CHB_PRDRESIST_CODE
-	where 
-	PRODID = #{prodid}
-    <if test="orgCode != null and orgCode != '' ">
-	and ORG_CODE = #{orgCode}
-    </if>
+		where
+		PRODID = #{prodid}
+		<if test="orgCode != null and orgCode != '' ">
+			and ORG_CODE = #{orgCode}
+		</if>
 	</select>
-	
+
 	<!-- 产品登记编码下拉框查询 -->
 	<select id="queryPrdRegList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
-		  A.REG_CODE id,
-		  ifnull(b.prod_name,a.reg_code) text
-		 FROM CHB_PRDRESIST_CODE A
-		 left join chb_prd_baseinfo b
-		 on b.prod_id = a.PRODID
-		 <where>
-		 	A.REG_CODE is not null
-		 	<if test="search != null and search != ''">
-		 		and A.REG_CODE like concat_ws('','%', #{search},'%') or b.PROD_NAME like concat_ws('','%', #{search},'%')
-		 	</if>
-		 	<if test="orgCodeList !=null and orgCodeList.size()>0">
-					<!-- 机构代码不为空时 -->
-					<foreach collection="orgCodeList" item="orgCode" open="and A.ORG_CODE in (" close=")" separator=",">
-					#{orgCode}
-					</foreach>
+		A.REG_CODE id,
+		ifnull(b.prod_name,a.reg_code) text
+		FROM CHB_PRDRESIST_CODE A
+		left join chb_prd_baseinfo b
+		on b.prod_id = a.PRODID
+		<where>
+			A.REG_CODE is not null
+			<if test="search != null and search != ''">
+				and A.REG_CODE like concat_ws('','%', #{search},'%') or b.PROD_NAME like concat_ws('','%', #{search},'%')
 			</if>
-		 </where>
-		 ORDER BY A.REG_CODE
+			<if test="orgCodeList !=null and orgCodeList.size()>0">
+				<!-- 机构代码不为空时 -->
+				<foreach collection="orgCodeList" item="orgCode" open="and A.ORG_CODE in (" close=")" separator=",">
+					#{orgCode}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY A.REG_CODE
 	</select>
 	<select id="getRegistExcelList" resultType="string">
-		select A.Prodid prodId 
+		select A.Prodid prodId
 		from CHB_PRDRESIST_CODE A
 		<where>
 			<foreach collection="list" item="bankCode" open="AND A.Prodid in (" close=")" separator=",">
-		 	 	#{bankCode.prodId,jdbcType=VARCHAR} 
-		 	</foreach>
-		 	and A.org_code = #{orgCode,jdbcType=VARCHAR} 
+				#{bankCode.prodId,jdbcType=VARCHAR}
+			</foreach>
+			and A.org_code = #{orgCode,jdbcType=VARCHAR}
 		</where>
 	</select>
 	<select id="selectProdIsUsed" parameterType="map" resultType="int">
-	    select sum(num) from
-		(select COUNT(ACCOUNT) num from CHB_EQUDET where 
+		select sum(num) from
+		(select COUNT(ACCOUNT) num from CHB_EQUDET where
 		STATUS = #{status}
 		<foreach collection="prodIdList" item="prodId" open=" and ACCOUNT in (" close=")" separator=",">
-	 	 	#{prodId,jdbcType=VARCHAR} 
-	 	</foreach>
+			#{prodId,jdbcType=VARCHAR}
+		</foreach>
 		union all
-		select COUNT(PRODID) num from CHB_EQUPERIOD where 
+		select COUNT(PRODID) num from CHB_EQUPERIOD where
 		STATUS = #{status}
 		<foreach collection="prodIdList" item="prodId" open=" and PRODID in (" close=")" separator=",">
-	 	 	#{prodId,jdbcType=VARCHAR} 
-	 	</foreach>
+			#{prodId,jdbcType=VARCHAR}
+		</foreach>
 		union all
-		select COUNT(PRD_REGIST_CODE) num from CHB_INVESTHOLD_INFO where 
+		select COUNT(PRD_REGIST_CODE) num from CHB_INVESTHOLD_INFO where
 		STATUS = #{status}
 		<foreach collection="prdRegistCodeList" item="prdRegistCode" open=" and PRD_REGIST_CODE in (" close=")" separator=",">
-	 	 	#{prdRegistCode,jdbcType=VARCHAR} 
-	 	</foreach>)
+			#{prdRegistCode,jdbcType=VARCHAR}
+		</foreach>) t
 	</select>
-	
+
 	<select id="selectProdInfo" resultType="map">
 		select PRODID prodId , REG_CODE regCode
 		from CHB_PRDRESIST_CODE
 	</select>
-	
+
 	<select id="queryRegistCodeByProdId" parameterType="java.lang.String" resultType="map">
 		select PRODID prodId,REG_CODE regCode
-		from CHB_PRDRESIST_CODE 
+		from CHB_PRDRESIST_CODE
 		<where>
 			1=1
 			<if test="prodid != null  and prodid !=''">
 				and PRODID = #{prodid,jdbcType=VARCHAR}
 			</if>
 		</where>
-		order by update_time desc 
+		order by update_time desc
 	</select>
-    
-    <select id="getProdinfo" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" parameterType="java.util.Map">
-        SELECT p.prod_id,p.prod_name FROM chb_prd_baseinfo p
-        where p.status in ('E','M')
-        and p.fprod_id is null
-        <if test="search != null and search !='' ">
-        AND P.PROD_ID LIKE concat_ws('','%', #{search},'%')
-        </if>
-    </select>
-	
+
+	<select id="getProdinfo" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" parameterType="java.util.Map">
+		SELECT p.prod_id,p.prod_name FROM chb_prd_baseinfo p
+		where p.status in ('E','M')
+		and p.fprod_id is null
+		<if test="search != null and search !='' ">
+			AND P.PROD_ID LIKE concat_ws('','%', #{search},'%')
+		</if>
+	</select>
+
 	<select id="getProdinfoByInsId" resultType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo" parameterType="java.util.Map">
-        SELECT p.PROD_INS_ID as prodInsId,p.prod_name FROM chb_prd_baseinfo p
-        where p.status in ('E','M')
-        and p.fprod_id is null
-        <if test="search != null and search !='' ">
-        AND P.PROD_INS_ID LIKE concat_ws('','%', #{search},'%')
-        </if>
-    </select>
-    
-    <update id="updateOperateModeByProdId" parameterType="java.util.List">
+		SELECT p.PROD_INS_ID as prodInsId,p.prod_name FROM chb_prd_baseinfo p
+		where p.status in ('E','M')
+		and p.fprod_id is null
+		<if test="search != null and search !='' ">
+			AND P.PROD_INS_ID LIKE concat_ws('','%', #{search},'%')
+		</if>
+	</select>
+
+	<update id="updateOperateModeByProdId" parameterType="java.util.List">
 		begin
-		<foreach collection="list" item="item" index="index" separator=";" > 
+		<foreach collection="list" item="item" index="index" separator=";" >
 			update CHB_PRDRESIST_CODE
-				set 
-					OPERATE_MODE = #{item.operateMode},
-					UPDATE_TIME = NOW()
-            	where 
-					PRODID = #{item.prodId} 
+			set
+			OPERATE_MODE = #{item.operateMode},
+			UPDATE_TIME = NOW()
+			where
+			PRODID = #{item.prodId}
 		</foreach>
 		;end;
 	</update>
+
+	<select id="selectInfoByProdId" resultType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
+		select
+			prod_ins_id prodInsId,
+			raise_type raiseType
+		from chb_prd_declare_info
+		where prod_ins_id = #{prodId}
+	</select>
 </mapper>

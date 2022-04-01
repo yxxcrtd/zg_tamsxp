@@ -28,6 +28,11 @@ public class EtrCashPositionFlowDto extends EtrCashPositionFlow {
 
     private String splitType;
 
+    /**
+     * 数据已入新头寸，Y：已入
+     */
+    private String isExistNew;
+
     public String getSplitType() {
 		return splitType;
 	}
@@ -88,5 +93,19 @@ public class EtrCashPositionFlowDto extends EtrCashPositionFlow {
      */
     public void setNeedAcctType(boolean needAcctType) {
         this.needAcctType = needAcctType;
+    }
+
+    /**
+     * 数据已入新头寸，Y：已入
+     */
+    public String getIsExistNew() {
+        return isExistNew;
+    }
+
+    /**
+     * 数据已入新头寸，Y：已入
+     */
+    public void setIsExistNew(String isExistNew) {
+        this.isExistNew = isExistNew;
     }
 }

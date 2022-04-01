@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.service.bankuplink.common.dao.CfetsQuotedCommonMapper">
 
 	<select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
-		SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+		SELECT distinct MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
   FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
@@ -301,6 +301,18 @@
 	   AND PSA.PORTFOLIO_ID = #{portfolioId}
 	   AND R.FINPROD_ID = #{finprodId}
     </select>
+
+	<!--查询产品资金账户-->
+	<select id="qryPortfolioCashAcctId" resultType="java.lang.String">
+		SELECT P.ACCT_NO CASHACCTID
+		FROM
+		    PTL_CAPACCT_INFO P
+		LEFT JOIN
+		    STL_CAPACCT_INFO S ON P.ACCT_NO = S.ACCT_NO
+		where P.PORTFOLIO_ID = #{portfolioId}
+            AND P.ACCT_TYPE = #{acctType}
+            and rownum=1
+    </select>
     
     <select id="queryCfetsEntrustIdList" resultType="com.joyintech.framework.select.SuggestDto">
 		select distinct
@@ -329,7 +341,7 @@
 	   from
 	       MST_COUNTER_PARTY mcp
 	       INNER JOIN MST_CFETS_CUSTOMER_INFO mcci
-	       ON mcp.COUNTER_NAME = mcci.PARTY_NAME
+	       ON mcp.PARTY_ID = mcci.PARTY_ID
 	   WHERE
 	       mcci.PARTY_ID = #{cpPartyId,jdbcType=VARCHAR}
 	</select>

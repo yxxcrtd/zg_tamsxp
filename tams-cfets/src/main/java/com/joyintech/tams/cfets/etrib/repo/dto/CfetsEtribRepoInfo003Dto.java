@@ -67,7 +67,9 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
      */
     @ApiModelProperty(name="zyqkStr",value="质押券库")
     private String zyqkStr;
-    
+
+    @ApiModelProperty(name="avaPledgePrin",value="可用质押券总额")
+    private BigDecimal avaPledgePrin;
     /**
      * 质押券信息列表明细
      */
@@ -194,6 +196,12 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
      *
      */
     private String systemAct;
+
+    /**
+     * 质押券折算总额(元)
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal totalAmount;
 
     /**
      * 投资人员信息DTO
@@ -496,4 +504,21 @@ public class CfetsEtribRepoInfo003Dto extends EtrEntrust implements ProcessEntit
     public void setSystemAct(String systemAct) {
         this.systemAct = systemAct;
     }
+
+    public BigDecimal getAvaPledgePrin() {
+        return avaPledgePrin;
+    }
+
+    public void setAvaPledgePrin(BigDecimal avaPledgePrin) {
+        this.avaPledgePrin = avaPledgePrin;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
 }

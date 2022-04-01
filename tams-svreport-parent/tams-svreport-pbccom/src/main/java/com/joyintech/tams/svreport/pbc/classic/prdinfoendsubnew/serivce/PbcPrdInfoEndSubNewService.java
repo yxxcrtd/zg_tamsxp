@@ -85,6 +85,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 	public void generateRegistData(Date executeDate, List<String> prodIdList) {
 		// 根据跑批日和产品id集合查询所有需要生成登记的产品
 		logger.debug("人行产品终止登记所需信息：查询开始----------");
+		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 		List<PbcPrdBaseinfoEndSubNew> prodidsublist = new ArrayList<PbcPrdBaseinfoEndSubNew>();
 		if (!CollectionUtils.isEmpty(prodIdList)) {
 			int end = 0;
@@ -171,7 +172,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 							status = reg.getStatus();
 						}
 					}
-					Map<String, PbcPrdBaseinfoEndSubNew> result = dataProcess(sub, executeDate);
+					Map<String, PbcPrdBaseinfoEndSubNew> result = dataProcess(sub, executeDate,dateMap);
 					// 没有已登记的数据且没有头寸，删除未报送数据
 					if(MapUtils.isEmpty(regMap)&&MapUtils.isEmpty(result)){
 						deletelist.add(sub);
@@ -238,6 +239,14 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 									}else{
 										res.setStatus(DictCodeListExt2.报送数据状态_修改.getValue());
 									}
+								}
+								// 根据数据状态重新生成截止日期
+								List<Date> dateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_新人行产品终止信息.getValue(),
+										res.getStatus(), dateMap,
+										res.getMdate(),SVReportGlobalConstant.SVR_SUBMIT_TIME_PBC);
+								if (!StringUtil.isEmptyList(dateList)) {
+									res.setPbcSubmitDeadline(dateList.get(0));
+									res.setSubmitDeadline(dateList.get(1));
 								}
 								insertlist.add(res);
 							}
@@ -353,7 +362,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 		logger.debug("人行产品终止登记插入数据：插入结束----------");
 	}
 
-	private Map<String, PbcPrdBaseinfoEndSubNew> dataProcess(PbcPrdBaseinfoEndSubNew arg0, Date executeDate) {
+	private Map<String, PbcPrdBaseinfoEndSubNew> dataProcess(PbcPrdBaseinfoEndSubNew arg0, Date executeDate,Map<String, List<Date>> dateMap) {
 		// 币种Map
 		Map<String, PbcPrdBaseinfoEndSubNew> result = new HashMap<String, PbcPrdBaseinfoEndSubNew>();
 		// 产品交易头寸
@@ -429,7 +438,6 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 		}
 		// 报送截止日生成
 		// 当前批次报送时点集合
-		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 		List<Date> dateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_新人行产品终止信息.getValue(),
                 DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
                 arg0.getMdate(),SVReportGlobalConstant.SVR_SUBMIT_TIME_PBC);

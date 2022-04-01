@@ -243,6 +243,7 @@ public class CfetsEntrustCreditHandlerAop {
             }
           //add by longpeng 债券一级指令多对多导入不占授信 20201228 end
             if (StringUtil.isNotEmpty(mapTrd.get("operateType"))&& mapTrd.get("operateType").equals("submit")) {
+                if(!(args[0] instanceof CfetsEtribBondInfo003Dto)) return;
                 CfetsEtribBondInfo003Dto pageInputDto = (CfetsEtribBondInfo003Dto) args[0];
                 if(StringUtil.equals(DictCodeList.平安资产类型_质押式回购.getValue(),pageInputDto.getAssetType())){
                     return ;

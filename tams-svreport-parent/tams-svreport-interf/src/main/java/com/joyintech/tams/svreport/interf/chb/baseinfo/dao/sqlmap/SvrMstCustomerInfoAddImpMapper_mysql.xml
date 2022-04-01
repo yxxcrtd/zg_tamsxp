@@ -48,6 +48,12 @@
     <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
     <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
     <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="HS_TYPE" property="hsType" jdbcType="VARCHAR" />
+    <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+    <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
+    <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+    <result column="ORG_TYPE" property="orgType" jdbcType="VARCHAR" />
+    <result column="IS_SHAREHOLDER_RELATED" property="isShareholderRelated" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
     CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2, PARTY_TYPE1, INDUSTRY, INDUSTRY2, INSITITUTE_CODE,
@@ -57,7 +63,8 @@
     BUSI_SCOPE, MAIN_BUSI, SEX, PERSON_ID, M_PHONE, PHONE, POSITION, COMPANY_NAME, ADDRESS,
     MAIL, PROPERTY, COMPANY_NATURE, LINK_ID1, LINK_ID2, LINK_ID3, REMARK, CREATE_USER,
     CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, HS_TYPE HS_TYPE,
-    IS_FIN_LICENCE IS_FIN_LICENCE, INDUSTRY3 INDUSTRY3, INDUSTRY4 INDUSTRY4
+    IS_FIN_LICENCE IS_FIN_LICENCE, INDUSTRY3 INDUSTRY3, INDUSTRY4 INDUSTRY4,
+    ORG_TYPE ORG_TYPE, IS_SHAREHOLDER_RELATED IS_SHAREHOLDER_RELATED
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -95,7 +102,8 @@
       LINK_ID3, REMARK, CREATE_USER,
       CREATE_DEPT, CREATE_TIME, UPDATE_USER,
       UPDATE_TIME, HS_TYPE,
-      IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
+      IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,
+      ORG_TYPE, IS_SHAREHOLDER_RELATED)
     values (#{customerId,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR},
       #{partyType1,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{industry2,jdbcType=VARCHAR},
       #{insitituteCode,jdbcType=VARCHAR}, #{isGov,jdbcType=VARCHAR}, #{mainCapital,jdbcType=DECIMAL},
@@ -113,7 +121,8 @@
       #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP}, #{hsType,jdbcType=VARCHAR},
       #{isFinLicence,jdbcType=VARCHAR},
-      #{industry3,jdbcType=VARCHAR}, #{industry4,jdbcType=VARCHAR})
+      #{industry3,jdbcType=VARCHAR}, #{industry4,jdbcType=VARCHAR},
+      #{orgType,jdbcType=VARCHAR}, #{isShareholderRelated,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
     insert into MST_CUSTOMER_INFO_ADD
@@ -268,6 +277,12 @@
       <if test="industry4 != null" >
         INDUSTRY4,
       </if>
+      <if test="orgType != null" >
+        ORG_TYPE,
+      </if>
+      <if test="isShareholderRelated != null" >
+        IS_SHAREHOLDER_RELATED,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="customerId != null">
@@ -419,6 +434,12 @@
       </if>
       <if test="industry4 != null" >
         #{industry4,jdbcType=VARCHAR},
+      </if>
+      <if test="orgType != null" >
+        #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="isShareholderRelated != null" >
+        #{isShareholderRelated,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -572,6 +593,12 @@
       <if test="industry4 != null" >
         INDUSTRY4 = #{industry4,jdbcType=VARCHAR},
       </if>
+      <if test="orgType != null" >
+        ORG_TYPE = #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="isShareholderRelated != null" >
+        IS_SHAREHOLDER_RELATED = #{isShareholderRelated,jdbcType=VARCHAR},
+      </if>
     </set>
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
@@ -625,7 +652,9 @@
       HS_TYPE = #{hsType,jdbcType=VARCHAR},
       IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR},
       INDUSTRY3 = #{industry3,jdbcType=VARCHAR},
-      INDUSTRY4 = #{industry4,jdbcType=VARCHAR}
+      INDUSTRY4 = #{industry4,jdbcType=VARCHAR},
+      ORG_TYPE = #{orgType,jdbcType=VARCHAR},
+      IS_SHAREHOLDER_RELATED = #{isShareholderRelated,jdbcType=VARCHAR}
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
 
@@ -634,15 +663,48 @@
   </delete>
 
   <delete id="deleteTodayData">
-  delete from MST_CUSTOMER_INFO_ADD where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+  delete from MST_CUSTOMER_INFO_ADD where DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
   </delete>
 
   <insert id="mergeMstCustomerInfoData"
           parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
-    MERGE INTO MST_CUSTOMER_INFO_ADD CII
-    USING (
-    <foreach collection="list" item="item" open="select * from("
-             close=")" separator="union all">
+    insert into MST_CUSTOMER_INFO_ADD(CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
+    PARTY_TYPE1, INDUSTRY, INDUSTRY2,
+    INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
+    REGISTER_CAPITAL, PROVINCE, CITY,
+    COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE,
+    IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID,
+    PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT,
+    CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE,
+    INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI,
+    SEX, PERSON_ID, M_PHONE,
+    PHONE, POSITION, COMPANY_NAME,
+    ADDRESS, MAIL, PROPERTY,
+    COMPANY_NATURE, LINK_ID1, LINK_ID2,
+    LINK_ID3, REMARK, CREATE_USER,
+    CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
+    select CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
+    PARTY_TYPE1, INDUSTRY, INDUSTRY2,
+    INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
+    REGISTER_CAPITAL, PROVINCE, CITY,
+    COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE,
+    IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID,
+    PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT,
+    CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE,
+    INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI,
+    SEX, PERSON_ID, M_PHONE,
+    PHONE, POSITION, COMPANY_NAME,
+    ADDRESS, MAIL, PROPERTY,
+    COMPANY_NATURE, LINK_ID1, LINK_ID2,
+    LINK_ID3, REMARK, CREATE_USER,
+    CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,ORG_TYPE,
+    IS_SHAREHOLDER_RELATED from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item"  separator="union all">
       SELECT
       #{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3,
       #{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
@@ -686,75 +748,26 @@
       #{item.remark,jdbcType=VARCHAR} REMARK,
       #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
       #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-      sysdate CREATE_TIME,
+      now() CREATE_TIME,
       #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-      sysdate UPDATE_TIME,
+      now() UPDATE_TIME,
       #{item.hsType,jdbcType=VARCHAR} HS_TYPE,
       #{item.isFinLicence,jdbcType=VARCHAR} IS_FIN_LICENCE,
       #{item.industry3,jdbcType=VARCHAR} INDUSTRY3,
       #{item.industry4,jdbcType=VARCHAR} INDUSTRY4,
-      #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
+      #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID,
+      #{item.orgType,jdbcType=VARCHAR} ORG_TYPE,
+      #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED
       FROM
       DUAL
     </foreach>
-    ) TEMP
-    <!-- 业务主键匹配 -->
-    ON(CII.CUSTOMER_ID = TEMP.CUSTOMER_ID
-    )
-    <!-- 匹配到则更新 -->
-    WHEN MATCHED THEN UPDATE SET
-    PARTY_TYPE3 = TEMP.PARTY_TYPE3,
-    PARTY_TYPE2 = TEMP.PARTY_TYPE2,
-    PARTY_TYPE1 = TEMP.PARTY_TYPE1,
-    INDUSTRY = TEMP.INDUSTRY,
-    INDUSTRY2 = TEMP.INDUSTRY2,
-    INSITITUTE_CODE = TEMP.INSITITUTE_CODE,
-    IS_GOV = TEMP.IS_GOV,
-    MAIN_CAPITAL = TEMP.MAIN_CAPITAL,
-    REGISTER_CAPITAL = TEMP.REGISTER_CAPITAL,
-    PROVINCE = TEMP.PROVINCE,
-    CITY = TEMP.CITY,
-    COUNTY = TEMP.COUNTY,
-    HOLDING_TYPE = TEMP.HOLDING_TYPE,
-    CUSTOMER_OBJ_TYPE = TEMP.CUSTOMER_OBJ_TYPE,
-    IS_LISTED_COMPANY = TEMP.IS_LISTED_COMPANY,
-    IS_GROUP_CUSTOMER = TEMP.IS_GROUP_CUSTOMER,
-    PARENT_CUSTOMER_ID = TEMP.PARENT_CUSTOMER_ID,
-    PARENT_CUSTOMER_NAME = TEMP.PARENT_CUSTOMER_NAME,
-    IS_PRIVATE = TEMP.IS_PRIVATE,
-    IS_ESCAPE_DEPT = TEMP.IS_ESCAPE_DEPT,
-    CREDIT_TYPE = TEMP.CREDIT_TYPE,
-    IS_CREDIT_RELATED_TRD = TEMP.IS_CREDIT_RELATED_TRD,
-    STRUCT_ADJUST_TYPE = TEMP.STRUCT_ADJUST_TYPE,
-    INDUS_UPGRATE_TYPE = TEMP.INDUS_UPGRATE_TYPE,
-    BUSI_SCOPE = TEMP.BUSI_SCOPE,
-    MAIN_BUSI = TEMP.MAIN_BUSI,
-    SEX = TEMP.SEX,
-    PERSON_ID = TEMP.PERSON_ID,
-    M_PHONE = TEMP.M_PHONE,
-    PHONE = TEMP.PHONE,
-    POSITION = TEMP.POSITION,
-    COMPANY_NAME = TEMP.COMPANY_NAME,
-    ADDRESS = TEMP.ADDRESS,
-    MAIL = TEMP.MAIL,
-    PROPERTY = TEMP.PROPERTY,
-    COMPANY_NATURE = TEMP.COMPANY_NATURE,
-    LINK_ID1 = TEMP.LINK_ID1,
-    LINK_ID2 = TEMP.LINK_ID2,
-    LINK_ID3 = TEMP.LINK_ID2,
-    REMARK = TEMP.REMARK,
-    CREATE_USER = TEMP.CREATE_USER,
-    CREATE_DEPT = TEMP.CREATE_DEPT,
-    CREATE_TIME = TEMP.CREATE_TIME,
-    UPDATE_USER = TEMP.UPDATE_USER,
-    UPDATE_TIME = TEMP.UPDATE_TIME,
-    HS_TYPE = TEMP.HS_TYPE,
-    IS_FIN_LICENCE = TEMP.IS_FIN_LICENCE,
-    INDUSTRY3 = TEMP.INDUSTRY3,
-    INDUSTRY4 = TEMP.INDUSTRY4
-    <!-- 未匹配到这插入 -->
-    WHEN NOT MATCHED THEN INSERT
-    (CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
+    ) TEMP where not exists (select 1 from MST_CUSTOMER_INFO_ADD CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID)
+    ) de ;
+
+    UPDATE  MST_CUSTOMER_INFO_ADD as A,
+    (
+    select
+    CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
     PARTY_TYPE1, INDUSTRY, INDUSTRY2,
     INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
     REGISTER_CAPITAL, PROVINCE, CITY,
@@ -769,22 +782,122 @@
     COMPANY_NATURE, LINK_ID1, LINK_ID2,
     LINK_ID3, REMARK, CREATE_USER,
     CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
-    values (TEMP.CUSTOMER_ID, TEMP.PARTY_TYPE3, TEMP.PARTY_TYPE2,
-    TEMP.PARTY_TYPE1, TEMP.INDUSTRY, TEMP.INDUSTRY2,
-    TEMP.INSITITUTE_CODE, TEMP.IS_GOV, TEMP.MAIN_CAPITAL,
-    TEMP.REGISTER_CAPITAL, TEMP.PROVINCE, TEMP.CITY,
-    TEMP.COUNTY, TEMP.HOLDING_TYPE, TEMP.CUSTOMER_OBJ_TYPE,
-    TEMP.IS_LISTED_COMPANY, TEMP.IS_GROUP_CUSTOMER, TEMP.PARENT_CUSTOMER_ID,
-    TEMP.PARENT_CUSTOMER_NAME, TEMP.IS_PRIVATE, TEMP.IS_ESCAPE_DEPT,
-    TEMP.CREDIT_TYPE, TEMP.IS_CREDIT_RELATED_TRD, TEMP.STRUCT_ADJUST_TYPE,
-    TEMP.INDUS_UPGRATE_TYPE, TEMP.BUSI_SCOPE, TEMP.MAIN_BUSI,
-    TEMP.SEX, TEMP.PERSON_ID, TEMP.M_PHONE,
-    TEMP.PHONE, TEMP.POSITION, TEMP.COMPANY_NAME,
-    TEMP.ADDRESS, TEMP.MAIL, TEMP.PROPERTY,
-    TEMP.COMPANY_NATURE, TEMP.LINK_ID1, TEMP.LINK_ID2,
-    TEMP.LINK_ID3, TEMP.REMARK, TEMP.CREATE_USER,
-    TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
-    TEMP.UPDATE_TIME, TEMP.HS_TYPE, TEMP.IS_FIN_LICENCE, TEMP.INDUSTRY3, TEMP.INDUSTRY4)
+    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,
+    ORG_TYPE,IS_SHAREHOLDER_RELATED from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item"  separator="union all">
+      SELECT
+      #{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3,
+      #{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
+      #{item.partyType1,jdbcType=VARCHAR} PARTY_TYPE1,
+      #{item.industry,jdbcType=VARCHAR} INDUSTRY,
+      #{item.industry2,jdbcType=VARCHAR} INDUSTRY2,
+      #{item.insitituteCode,jdbcType=VARCHAR} INSITITUTE_CODE,
+      #{item.isGov,jdbcType=VARCHAR} IS_GOV,
+      #{item.mainCapital,jdbcType=DECIMAL} MAIN_CAPITAL,
+      #{item.registerCapital,jdbcType=DECIMAL} REGISTER_CAPITAL,
+      #{item.province,jdbcType=VARCHAR} PROVINCE,
+      #{item.city,jdbcType=VARCHAR} CITY,
+      #{item.county,jdbcType=VARCHAR} COUNTY,
+      #{item.holdingType,jdbcType=VARCHAR} HOLDING_TYPE,
+      #{item.customerObjType,jdbcType=VARCHAR} CUSTOMER_OBJ_TYPE,
+      #{item.isListedCompany,jdbcType=VARCHAR} IS_LISTED_COMPANY,
+      #{item.isGroupCustomer,jdbcType=VARCHAR} IS_GROUP_CUSTOMER,
+      #{item.parentCustomerId,jdbcType=VARCHAR} PARENT_CUSTOMER_ID,
+      #{item.parentCustomerName,jdbcType=VARCHAR} PARENT_CUSTOMER_NAME,
+      #{item.isPrivate,jdbcType=VARCHAR} IS_PRIVATE,
+      #{item.isEscapeDept,jdbcType=VARCHAR} IS_ESCAPE_DEPT,
+      #{item.creditType,jdbcType=VARCHAR} CREDIT_TYPE,
+      #{item.isCreditRelatedTrd,jdbcType=VARCHAR} IS_CREDIT_RELATED_TRD,
+      #{item.structAdjustType,jdbcType=VARCHAR} STRUCT_ADJUST_TYPE,
+      #{item.indusUpgrateType,jdbcType=VARCHAR} INDUS_UPGRATE_TYPE,
+      #{item.busiScope,jdbcType=VARCHAR} BUSI_SCOPE,
+      #{item.mainBusi,jdbcType=VARCHAR} MAIN_BUSI,
+      #{item.sex,jdbcType=VARCHAR} SEX,
+      #{item.personId,jdbcType=VARCHAR} PERSON_ID,
+      #{item.mPhone,jdbcType=VARCHAR} M_PHONE,
+      #{item.phone,jdbcType=VARCHAR} PHONE,
+      #{item.position,jdbcType=VARCHAR} POSITION,
+      #{item.companyName,jdbcType=VARCHAR} COMPANY_NAME,
+      #{item.address,jdbcType=VARCHAR} ADDRESS,
+      #{item.mail,jdbcType=VARCHAR} MAIL,
+      #{item.property,jdbcType=VARCHAR} PROPERTY,
+      #{item.companyNature,jdbcType=VARCHAR} COMPANY_NATURE,
+      #{item.linkId1,jdbcType=VARCHAR} LINK_ID1,
+      #{item.linkId2,jdbcType=VARCHAR} LINK_ID2,
+      #{item.linkId3,jdbcType=VARCHAR} LINK_ID3,
+      #{item.remark,jdbcType=VARCHAR} REMARK,
+      #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+      #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+      now() CREATE_TIME,
+      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+      now() UPDATE_TIME,
+      #{item.hsType,jdbcType=VARCHAR} HS_TYPE,
+      #{item.isFinLicence,jdbcType=VARCHAR} IS_FIN_LICENCE,
+      #{item.industry3,jdbcType=VARCHAR} INDUSTRY3,
+      #{item.industry4,jdbcType=VARCHAR} INDUSTRY4,
+      #{item.orgType,jdbcType=VARCHAR} ORG_TYPE,
+      #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED,
+      FROM
+      DUAL
+    </foreach>
+    ) TEMP
+    ) de
+    ) AS B
+    SET
+    A.PARTY_TYPE3 = B.PARTY_TYPE3,
+    A.PARTY_TYPE2 = B.PARTY_TYPE2,
+    A.PARTY_TYPE1 = B.PARTY_TYPE1,
+    A.INDUSTRY = B.INDUSTRY,
+    A.INDUSTRY2 = B.INDUSTRY2,
+    A.INSITITUTE_CODE = B.INSITITUTE_CODE,
+    A.IS_GOV = B.IS_GOV,
+    A.MAIN_CAPITAL = B.MAIN_CAPITAL,
+    A.REGISTER_CAPITAL = B.REGISTER_CAPITAL,
+    A.PROVINCE = B.PROVINCE,
+    A.CITY = B.CITY,
+    A.COUNTY = B.COUNTY,
+    A.HOLDING_TYPE = B.HOLDING_TYPE,
+    A.CUSTOMER_OBJ_TYPE = B.CUSTOMER_OBJ_TYPE,
+    A.IS_LISTED_COMPANY = B.IS_LISTED_COMPANY,
+    A.IS_GROUP_CUSTOMER = B.IS_GROUP_CUSTOMER,
+    A.PARENT_CUSTOMER_ID = B.PARENT_CUSTOMER_ID,
+    A.PARENT_CUSTOMER_NAME = B.PARENT_CUSTOMER_NAME,
+    A.IS_PRIVATE = B.IS_PRIVATE,
+    A.IS_ESCAPE_DEPT = B.IS_ESCAPE_DEPT,
+    A.CREDIT_TYPE = B.CREDIT_TYPE,
+    A.IS_CREDIT_RELATED_TRD = B.IS_CREDIT_RELATED_TRD,
+    A.STRUCT_ADJUST_TYPE = B.STRUCT_ADJUST_TYPE,
+    A.INDUS_UPGRATE_TYPE = B.INDUS_UPGRATE_TYPE,
+    A.BUSI_SCOPE = B.BUSI_SCOPE,
+    A.MAIN_BUSI = B.MAIN_BUSI,
+    A.SEX = B.SEX,
+    A.PERSON_ID = B.PERSON_ID,
+    A.M_PHONE = B.M_PHONE,
+    A.PHONE = B.PHONE,
+    A.POSITION = B.POSITION,
+    A.COMPANY_NAME = B.COMPANY_NAME,
+    A.ADDRESS = B.ADDRESS,
+    A.MAIL = B.MAIL,
+    A.PROPERTY = B.PROPERTY,
+    A.COMPANY_NATURE = B.COMPANY_NATURE,
+    A.LINK_ID1 = B.LINK_ID1,
+    A.LINK_ID2 = B.LINK_ID2,
+    A.LINK_ID3 = B.LINK_ID2,
+    A.REMARK = B.REMARK,
+    A.CREATE_USER = B.CREATE_USER,
+    A.CREATE_DEPT = B.CREATE_DEPT,
+    A.CREATE_TIME = B.CREATE_TIME,
+    A.UPDATE_USER = B.UPDATE_USER,
+    A.UPDATE_TIME = B.UPDATE_TIME,
+    A.HS_TYPE = B.HS_TYPE,
+    A.IS_FIN_LICENCE = B.IS_FIN_LICENCE,
+    A.INDUSTRY3 = B.INDUSTRY3,
+    A.INDUSTRY4 = B.INDUSTRY4,
+    A.ORG_TYPE = B.ORG_TYPE,
+    A.IS_SHAREHOLDER_RELATED = B.IS_SHAREHOLDER_RELATED
+    where  A.CUSTOMER_ID = B.CUSTOMER_ID;
   </insert>
 </mapper>

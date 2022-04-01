@@ -35,6 +35,10 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo i
 
     private String accountTypeStr;//资金账户
 
+    private String finprodIdStr;//资产代码
+
+    private String accountType ; //资金账户
+
     private String tandardRate;//标准券再折算率
 
     public String getOperateType() {
@@ -77,6 +81,18 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo i
         this.accountTypeStr = accountTypeStr;
     }
 
+    public void setFinprodIdStr(String finprodIdStr) {
+        this.finprodIdStr = finprodIdStr;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
     @NotEmpty(fieldName = "StandardCouponReConversionRate002.tandardRate",groups = {ValidateGroupEdit.class})
     public String getTandardRate() {
         return tandardRate;
@@ -109,7 +125,6 @@ public class StandardCouponReConversionRateDto extends StdBondMoreConvrateInfo i
 
     @Override
     @PrimaryKey(PrimaryKey.Field.PK_2)
-    @NotEmpty(fieldName = "StandardCouponReConversionRate001.finprodId",groups = {ValidateGroupEdit.class})
     public String getFinprodId() {
         return finprodId;
     }

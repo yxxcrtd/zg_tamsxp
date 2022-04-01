@@ -359,6 +359,11 @@ public class SettleTransDataTotal extends BaseEntity {
     private String isPurchTypeYx;
 
     /**
+     * 首期成交编号
+     */
+    private String fCjbh;
+
+    /**
      * 取得 流水号
      * @return 流水号
      */
@@ -1387,5 +1392,21 @@ public class SettleTransDataTotal extends BaseEntity {
      */
     public void setIsPurchTypeYx(String isPurchTypeYx) {
         this.isPurchTypeYx = isPurchTypeYx == null ? null : isPurchTypeYx.trim();
+    }
+
+    /**
+     * 取得 首期成交编号
+     * @return 首期成交编号
+     */
+    public String getfCjbh() {
+        return fCjbh;
+    }
+
+    /**
+     * 设置 首期成交编号
+     * @param fCjbh 首期成交编号
+     */
+    public void setfCjbh(String fCjbh) {
+        this.fCjbh = fCjbh == null ? null : fCjbh.trim();
     }
 }

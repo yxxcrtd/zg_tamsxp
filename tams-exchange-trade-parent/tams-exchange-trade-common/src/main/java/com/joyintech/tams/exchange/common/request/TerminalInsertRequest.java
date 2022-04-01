@@ -3,6 +3,8 @@ package com.joyintech.tams.exchange.common.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 /**
  * @author swwan
  * @date 2021/12/22 - 15:47
@@ -15,6 +17,9 @@ public class TerminalInsertRequest extends BaseRequest {
 
     @ApiModelProperty(required = true, name = "terminalType", value = "终端类型", example = "1")
     private int terminalType;
+
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
 
     public String getTerminalName() {
         return terminalName;
@@ -30,5 +35,13 @@ public class TerminalInsertRequest extends BaseRequest {
 
     public void setTerminalType(int terminalType) {
         this.terminalType = terminalType;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

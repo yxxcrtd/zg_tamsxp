@@ -32,6 +32,15 @@
                     </div>
                 </div>
 
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-lable" >名称</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" th:id="|${entityName}_assetName|" th:name="|${entityName}.assetName|"
+                               class="layui-input form-input"
+                               data-th-value="${entity?.assetName}" required>
+                    </div>
+                </div>
+
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepOthKindInfo.assetValue}">资产价值</label>
@@ -43,7 +52,9 @@
                     </div>
                 </div>
 
+            </div>
 
+            <div class="layui-form-item">
                 <div class="form-inline-wrap" th:id="|${entityName}_investRate_div|">
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepOthKindInfo.assetYield}">资产收益率%</label>
@@ -54,8 +65,8 @@
                         <span class="input-right-show">%</span>
                     </div>
                 </div>
-
             </div>
+
             <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
             <div class="layui-form-item">
 

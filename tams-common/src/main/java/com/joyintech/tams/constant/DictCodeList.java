@@ -1324,6 +1324,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	平安资产类型_买断式回购(DictCode.平安资产类型,"F10","买断式回购"),
 	平安资产类型_一级市场债(DictCode.平安资产类型,"F17","一级市场债"),
 	平安资产类型_现金资产(DictCode.平安资产类型,"F20","现金资产"),
+	平安资产类型_同业存单(DictCode.平安资产类型,"F21","同业存单"),
 	处理状态_已处理(DictCode.处理状态,"01","已处理"),
 	处理状态_未处理(DictCode.处理状态,"02","未处理"),
 	费用品种类型_托管费(DictCode.费用品种类型,"01","托管费"),
@@ -2018,8 +2019,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	分配状态_待处理(DictCode.分配状态, "02", "待处理"),
 	分配状态_流程中(DictCode.分配状态, "03", "流程中"),
 	共同业务类型_DVP资金调拨管理(DictCode.共通业务类型, "PTL09", "DVP资金调拨管理"),
-	产品数据来源_母行代销TA(DictCode.产品数据来源, "01", "母行代销TA"),
-	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
     释放状态_未释放(DictCode.释放状态,"0","未释放"),
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
 	;

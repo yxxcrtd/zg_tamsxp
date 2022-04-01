@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper_mysql">
 	<resultMap id="BaseResultMap"
-		type="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+			   type="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		<id column="UUID" property="uuid" jdbcType="VARCHAR" />
 		<result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
@@ -20,16 +20,16 @@
 		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
 		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="P_TYPE_ONE" property="counterType1"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result column="P_TYPE_TWO" property="counterType2"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result column="IS_CENTRAL_COUNTER" property="isCentralCounter"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 	</resultMap>
-	
-	
+
+
 	<resultMap id="ChbBaseResultMap"
-		type="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+			   type="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		<id column="UUID" property="uuid" jdbcType="VARCHAR" />
 		<result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
@@ -47,11 +47,11 @@
 		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
 		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="COUNTER_TYPE1" property="counterType1"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result column="COUNTER_TYPE2" property="counterType2"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 		<result column="IS_CENTRAL_COUNTER" property="isCentralCounter"
-			jdbcType="VARCHAR" />
+				jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		UUID,COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, HEAD_BANK, CONTACT,
@@ -61,18 +61,18 @@
 	</sql>
 
 	<delete id="deleteByCounterId"
-		parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		delete from CHB_MST_COUNTER_PARTY
 		<where>
 			<foreach collection="insertList" item="item" index="index"
-				open="COUNTER_ID in (" close=")" separator=",">
+					 open="COUNTER_ID in (" close=")" separator=",">
 				#{item.counterId,jdbcType=VARCHAR}
 			</foreach>
 		</where>
 	</delete>
 
 	<select id="selectCounterPartyByInterfdate" parameterType="java.util.Map"
-		resultMap="BaseResultMap">
+			resultMap="BaseResultMap">
 		select
 		COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, HEAD_BANK, CONTACT,
 		CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME,
@@ -80,48 +80,54 @@
 		<!-- COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER -->
 		from MST_COUNTER_PARTY
 		where 1 =1
-    <![CDATA[AND ifnull(UPDATE_TIME,CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+		<![CDATA[AND ifnull(UPDATE_TIME,CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
 	</select>
 
 	<insert id="insertBatch"
-		parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		insert into CHB_MST_COUNTER_PARTY (UUID,COUNTER_ID, COUNTER_TYPE,
 		COUNTER_NAME,
 		LINK_ID, MANAGER_ID, HEAD_BANK,
 		CONTACT, CONTACT_WAY, REMARK,
 		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS)
-		<foreach collection="insertList" item="item" index="index"
-			separator="union all ">
-			select #{item.uuid,jdbcType=VARCHAR},
+		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS) VALUES
+		<foreach collection="insertList" item="item" separator=",">
+			(
+			#{item.uuid,jdbcType=VARCHAR},
 			#{item.counterId,jdbcType=VARCHAR},
 			#{item.counterType,jdbcType=VARCHAR},
 			#{item.counterName,jdbcType=VARCHAR},
-			#{item.linkId,jdbcType=VARCHAR}, #{item.managerId,jdbcType=VARCHAR},
+			#{item.linkId,jdbcType=VARCHAR},
+			#{item.managerId,jdbcType=VARCHAR},
 			#{item.headBank,jdbcType=VARCHAR},
-			#{item.contact,jdbcType=VARCHAR}, #{item.contactWay,jdbcType=VARCHAR},
+			#{item.contact,jdbcType=VARCHAR},
+			#{item.contactWay,jdbcType=VARCHAR},
 			#{item.remark,jdbcType=VARCHAR},
-			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, NOW(),
+			#{item.createUser,jdbcType=VARCHAR},
+			#{item.createDept,jdbcType=VARCHAR},
+			NOW(),
 			#{item.updateUser,jdbcType=VARCHAR},
 			NOW(),
-			#{item.counterType1,jdbcType=VARCHAR},#{item.counterType2,jdbcType=VARCHAR},#{item.isCentralCounter,jdbcType=VARCHAR},
+			#{item.counterType1,jdbcType=VARCHAR},
+			#{item.counterType2,jdbcType=VARCHAR},
+			#{item.isCentralCounter,jdbcType=VARCHAR},
 			'E'
-			from dual
+			)
 		</foreach>
 	</insert>
-    <select id="getExists" parameterType="java.util.List" resultType="java.lang.String">
-        select counter_id from CHB_MST_COUNTER_PARTY
-        where 
-        1=1   <foreach collection="list" item="item" open="and counter_id in (" close=")" separator=",">
-            #{item.counterId}
-        </foreach>
-        and STATUS != 'D'
-    </select>
+	<select id="getExists" parameterType="java.util.List" resultType="java.lang.String">
+		select counter_id from CHB_MST_COUNTER_PARTY
+		where
+		1=1   <foreach collection="list" item="item" open="and counter_id in (" close=")" separator=",">
+		#{item.counterId}
+	</foreach>
+		and STATUS != 'D'
+	</select>
 	<update id="updateBatch"
-		parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		begin
 		<foreach collection="updateList" item="item" index="index"
-			separator=";">
+				 separator=";">
 			update CHB_MST_COUNTER_PARTY
 			<set>
 				<if test="counterType != null">
@@ -176,7 +182,7 @@
 	</update>
 
 	<insert id="insert"
-		parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		insert into CHB_MST_COUNTER_PARTY (UUID,COUNTER_ID, COUNTER_TYPE,
 		COUNTER_NAME,
 		LINK_ID, MANAGER_ID, HEAD_BANK,
@@ -196,8 +202,8 @@
 	</insert>
 
 	<select id="selectCounterPartyByInterfdateBatch" parameterType="java.util.Map"
-		resultMap="BaseResultMap"
-		resultSetType="FORWARD_ONLY" fetchSize="1000">
+			resultMap="BaseResultMap"
+			resultSetType="FORWARD_ONLY" fetchSize="1000">
 		select
 		COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, HEAD_BANK, CONTACT,
 		CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME,
@@ -207,55 +213,79 @@
     <![CDATA[AND ifnull(UPDATE_TIME,CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
 	</select>
 	<select id="selectByPrimaryKey" resultMap="ChbBaseResultMap"
-		parameterType="java.lang.String">
+			parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from CHB_MST_COUNTER_PARTY
 		where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
 	</select>
 	<select id="selectAllCounterParty" resultMap="ChbBaseResultMap"
-		parameterType="java.lang.String">
+			parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from CHB_MST_COUNTER_PARTY
 	</select>
-	
-	 <delete id="deleteAllData">
+
+	<delete id="deleteAllData">
       truncate table CHB_MST_COUNTER_PARTY
     </delete>
-    
+
 	<delete id="deleteByUpdateTime" parameterType="java.util.Map">
-	    delete from CHB_MST_COUNTER_PARTY
-	    <where>
-	        <if test="isToday != null ">
-	            <choose>
-	                <when test="isToday == true">
-	                    DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
-	                    = DATE_FORMAT(NOW(),'%Y-%m-%d')
-	                </when>
-	                <otherwise>
-	                    DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
-	                    &lt;= DATE_FORMAT(NOW(),'%Y-%m-%d')
-	                </otherwise>
-	            </choose>
-	        </if>
-	    </where>
-	</delete> 
-	
+		delete from CHB_MST_COUNTER_PARTY
+		<where>
+			<if test="isToday != null ">
+				<choose>
+					<when test="isToday == true">
+						DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
+						= DATE_FORMAT(NOW(),'%Y-%m-%d')
+					</when>
+					<otherwise>
+						DATE_FORMAT(ifnull(update_time,create_time),'%Y-%m-%d')
+						&lt;= DATE_FORMAT(NOW(),'%Y-%m-%d')
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</delete>
+
 	<insert id="mergeInto"
+			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
 		parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
-		merge into CHB_MST_COUNTER_PARTY a
-		using (
-		<foreach index="index" collection="list" item="item" open="("
-			close=")" separator="union all">
-			select #{item.uuid,jdbcType=VARCHAR} uuid,
+		UPDATE  CHB_MST_COUNTER_PARTY as a,
+		(
+		select
+		uuid,
+		counterId,
+		counterType,
+		counterName,
+		linkId,
+		managerId,
+		headBank,
+		contact,
+		contactWay,
+		remark,
+		createUser,
+		createDept,
+		createTime,
+		updateUser,
+		updateTime,
+		counterType1,
+		counterType2,
+		isCentralCounter
+		from
+		(
+		select TEMP.* from
+		(
+		<foreach index="index" collection="list" item="item"  separator="union all">
+			select
+			#{item.uuid,jdbcType=VARCHAR} uuid,
 			#{item.counterId,jdbcType=VARCHAR} counterId,
 			#{item.counterType,jdbcType=VARCHAR} counterType,
 			#{item.counterName,jdbcType=VARCHAR} counterName,
-			#{item.linkId,jdbcType=VARCHAR} linkId, 
+			#{item.linkId,jdbcType=VARCHAR} linkId,
 			#{item.managerId,jdbcType=VARCHAR} managerId,
 			#{item.headBank,jdbcType=VARCHAR} headBank,
-			#{item.contact,jdbcType=VARCHAR} contact, 
+			#{item.contact,jdbcType=VARCHAR} contact,
 			#{item.contactWay,jdbcType=VARCHAR} contactWay,
 			#{item.remark,jdbcType=VARCHAR} remark,
 			#{item.createUser,jdbcType=VARCHAR} createUser,
@@ -266,100 +296,163 @@
 			#{item.counterType1,jdbcType=VARCHAR} counterType1,
 			#{item.counterType2,jdbcType=VARCHAR} counterType2,
 			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter
-			from dual
+
+			FROM
+			DUAL
 		</foreach>
-		) b
-		on (
-		a.COUNTER_ID = b.counterId and a.STATUS != 'D'
-		)
-		when matched then update set
-		a.COUNTER_TYPE=b.counterType,a.COUNTER_NAME=b.counterName,a.LINK_ID=b.linkId,
-		a.MANAGER_ID=b.managerId,a.HEAD_BANK=b.headBank,a.CONTACT=b.contact,a.CONTACT_WAY=b.contactWay,
+		) TEMP
+		) de
+		) AS b
+		set
+		a.COUNTER_TYPE=b.counterType,
+		a.COUNTER_NAME=b.counterName,
+		a.LINK_ID=b.linkId,
+		a.MANAGER_ID=b.managerId,
+		a.HEAD_BANK=b.headBank,
+		a.CONTACT=b.contact,
+		a.CONTACT_WAY=b.contactWay,
 		a.REMARK=b.remark,
-		a.UPDATE_TIME=NOW(),a.COUNTER_TYPE1=b.counterType1,
+		a.UPDATE_TIME=NOW(),
+		a.COUNTER_TYPE1=b.counterType1,
 		a.UPDATE_USER=b.updateUser,
-		a.COUNTER_TYPE2=b.counterType2,a.IS_CENTRAL_COUNTER=b.isCentralCounter,
+		a.COUNTER_TYPE2=b.counterType2,
+		a.IS_CENTRAL_COUNTER=b.isCentralCounter,
 		a.STATUS = 'M'
-		
-		when not matched then insert (UUID,COUNTER_ID, COUNTER_TYPE,
+		where a.COUNTER_ID = b.counterId and a.STATUS != 'D';
+
+		insert into CHB_MST_COUNTER_PARTY(UUID,COUNTER_ID,
+		COUNTER_TYPE,
 		COUNTER_NAME,
-		LINK_ID, MANAGER_ID, HEAD_BANK,
-		CONTACT, CONTACT_WAY, REMARK,
-		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS)
-		values(
-		b.uuid,
-		b.counterId,b.counterType,b.counterName,b.linkId,b.managerId,b.headBank,b.contact,
-		b.contactWay,b.remark,b.createUser,b.createDept,NOW(),b.updateUser,NOW(),b.counterType1,
-		b.counterType2,b.isCentralCounter,'E'
-		)
+		LINK_ID,
+		MANAGER_ID,
+		HEAD_BANK,
+		CONTACT,
+		CONTACT_WAY,
+		REMARK,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		COUNTER_TYPE1,
+		COUNTER_TYPE2,
+		IS_CENTRAL_COUNTER,
+		STATUS)
+		select UUID,COUNTER_ID,
+		COUNTER_TYPE,
+		COUNTER_NAME,
+		LINK_ID,
+		MANAGER_ID,
+		HEAD_BANK,
+		CONTACT,
+		CONTACT_WAY,
+		REMARK,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		COUNTER_TYPE1,
+		COUNTER_TYPE2,
+		IS_CENTRAL_COUNTER,
+		STATUS from
+		(
+		select TEMP.* from
+		(
+		<foreach index="index" collection="list" item="item"  separator="union all">
+			select
+			#{item.uuid,jdbcType=VARCHAR} uuid,
+			#{item.counterId,jdbcType=VARCHAR} counterId,
+			#{item.counterType,jdbcType=VARCHAR} counterType,
+			#{item.counterName,jdbcType=VARCHAR} counterName,
+			#{item.linkId,jdbcType=VARCHAR} linkId,
+			#{item.managerId,jdbcType=VARCHAR} managerId,
+			#{item.headBank,jdbcType=VARCHAR} headBank,
+			#{item.contact,jdbcType=VARCHAR} contact,
+			#{item.contactWay,jdbcType=VARCHAR} contactWay,
+			#{item.remark,jdbcType=VARCHAR} remark,
+			#{item.createUser,jdbcType=VARCHAR} createUser,
+			#{item.createDept,jdbcType=VARCHAR} createDept,
+			#{item.createTime,jdbcType=TIMESTAMP} createTime,
+			#{item.updateUser,jdbcType=VARCHAR} updateUser,
+			#{item.updateTime,jdbcType=TIMESTAMP} updateTime,
+			#{item.counterType1,jdbcType=VARCHAR} counterType1,
+			#{item.counterType2,jdbcType=VARCHAR} counterType2,
+			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter,
+			'E' status
+			FROM
+			DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_MST_COUNTER_PARTY CII where CII.COUNTER_ID = TEMP.COUNTER_ID
+		AND CII.STATUS != 'D')
+		) de ;
 	</insert>
 	<!-- 根据数据状态皮量更新，传入的dto数据状态为D则更新为D否则更新为M -->
 	<update id="updateBachByStatus"
-        parameterType="java.util.List">
-        begin
-        <foreach collection="updateList" item="item" index="index"
-            separator=";">
-            update CHB_MST_COUNTER_PARTY
-            <set>
-                <if test="item.counterType != null">
-                    COUNTER_TYPE = #{item.counterType,jdbcType=VARCHAR},
-                </if>
-                <if test="item.counterName != null">
-                    COUNTER_NAME = #{item.counterName,jdbcType=VARCHAR},
-                </if>
-                <if test="item.linkId != null">
-                    LINK_ID = #{item.linkId,jdbcType=VARCHAR},
-                </if>
-                <if test="item.managerId != null">
-                    MANAGER_ID = #{item.managerId,jdbcType=VARCHAR},
-                </if>
-                <if test="item.headBank != null">
-                    HEAD_BANK = #{item.headBank,jdbcType=VARCHAR},
-                </if>
-                <if test="item.contact != null">
-                    CONTACT = #{item.contact,jdbcType=VARCHAR},
-                </if>
-                <if test="item.contactWay != null">
-                    CONTACT_WAY = #{item.contactWay,jdbcType=VARCHAR},
-                </if>
-                <if test="item.remark != null">
-                    REMARK = #{item.remark,jdbcType=VARCHAR},
-                </if>
-                <if test="item.createUser != null">
-                    CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
-                </if>
-                <if test="item.createDept != null">
-                    CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
-                </if>
-                <if test="item.updateUser != null">
-                    UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
-                </if>
-                <!-- <if test="item.updateTime != null">
+			parameterType="java.util.List">
+		/* begin*/
+		<foreach collection="updateList" item="item" index="index"
+				 separator=";">
+			update CHB_MST_COUNTER_PARTY
+			<set>
+				<if test="item.counterType != null">
+					COUNTER_TYPE = #{item.counterType,jdbcType=VARCHAR},
+				</if>
+				<if test="item.counterName != null">
+					COUNTER_NAME = #{item.counterName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.linkId != null">
+					LINK_ID = #{item.linkId,jdbcType=VARCHAR},
+				</if>
+				<if test="item.managerId != null">
+					MANAGER_ID = #{item.managerId,jdbcType=VARCHAR},
+				</if>
+				<if test="item.headBank != null">
+					HEAD_BANK = #{item.headBank,jdbcType=VARCHAR},
+				</if>
+				<if test="item.contact != null">
+					CONTACT = #{item.contact,jdbcType=VARCHAR},
+				</if>
+				<if test="item.contactWay != null">
+					CONTACT_WAY = #{item.contactWay,jdbcType=VARCHAR},
+				</if>
+				<if test="item.remark != null">
+					REMARK = #{item.remark,jdbcType=VARCHAR},
+				</if>
+				<if test="item.createUser != null">
+					CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="item.createDept != null">
+					CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
+				</if>
+				<if test="item.updateUser != null">
+					UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+				</if>
+				<!-- <if test="item.updateTime != null">
                     UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP},
                 </if> -->
-                <!-- <if test="item.updateTime == null"> -->
-                    UPDATE_TIME = NOW(),
-                <!-- </if> -->
-                <if test="item.counterType1 != null">
-                    COUNTER_TYPE1 = #{item.counterType1,jdbcType=VARCHAR},
-                </if>
-                <if test="item.counterType2 != null">
-                    COUNTER_TYPE2 = #{item.counterType2,jdbcType=VARCHAR},
-                </if>
-                <if test="item.isCentralCounter != null">
-                    IS_CENTRAL_COUNTER = #{item.isCentralCounter,jdbcType=VARCHAR},
-                </if>
-                <if test='item.status != null and item.status != "D"'>
-                    STATUS = 'M',
-                </if>
-                <if test='item.status != null and item.status == "D"'>
-                    STATUS = 'D'    
-                </if>
-            </set>
-            where COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
-            and STATUS != 'D'
-        </foreach>
-        ;end;
-    </update>
+				<!-- <if test="item.updateTime == null"> -->
+				UPDATE_TIME = NOW(),
+				<!-- </if> -->
+				<if test="item.counterType1 != null">
+					COUNTER_TYPE1 = #{item.counterType1,jdbcType=VARCHAR},
+				</if>
+				<if test="item.counterType2 != null">
+					COUNTER_TYPE2 = #{item.counterType2,jdbcType=VARCHAR},
+				</if>
+				<if test="item.isCentralCounter != null">
+					IS_CENTRAL_COUNTER = #{item.isCentralCounter,jdbcType=VARCHAR},
+				</if>
+				<if test='item.status != null and item.status != "D"'>
+					STATUS = 'M',
+				</if>
+				<if test='item.status != null and item.status == "D"'>
+					STATUS = 'D'
+				</if>
+			</set>
+			where COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}
+			and STATUS != 'D'
+		</foreach>
+		/*  ;end;*/
+	</update>
 </mapper>

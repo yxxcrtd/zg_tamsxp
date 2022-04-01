@@ -381,9 +381,11 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                message.add(this.getMessage("REPORT_COMMON_FILE_E_0004", "产品登记编码"));
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0026", "产品登记编码", "14", "15"));
             }
-            else if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[A]?[0-9]{6}$").matcher(list.get(2)).matches()){
-                message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
-            }
+            //delete by  wangyaning 2022-03-15 导入check应该与新建check保持一致 Start
+//            else if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[A]?[0-9]{6}$").matcher(list.get(2)).matches()){
+//                message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
+//            }
+            //delete by  wangyaning 2022-03-15 导入check应该与新建check保持一致 End
             else{
                 Boolean isRight=true;
                 //从产品申报信息中查询数据

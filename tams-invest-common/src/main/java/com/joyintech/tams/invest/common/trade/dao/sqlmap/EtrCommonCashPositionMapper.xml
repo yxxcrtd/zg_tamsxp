@@ -218,6 +218,7 @@
             and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
             )
         </if>
+        and (t.is_exist_new is null or  t.is_exist_new!='Y')
     </select>
      
     <!--ͨ指令现金余额数据 2019/10/14 add by yanya-->
@@ -585,6 +586,9 @@
 
     <update id="updatePosition" parameterType="map">
         UPDATE ETR_CASH_POSITION SET AMOUNT = AMOUNT + #{amount}
+        <if test="isExistNew != null and isExistNew!=''">
+            ,is_Exist_New=#{isExistNew}
+        </if>
         where CDATE between TO_DATE(#{minDate}, 'yyyy-MM-dd') AND TO_DATE(#{maxDate}, 'yyyy-MM-dd')
         <include refid="whereSql"/>
     </update>
@@ -631,6 +635,9 @@
 
     <update id="updateSecPosition" parameterType="map">
         UPDATE ETR_SEC_POSITION SET AMOUNT = AMOUNT + #{amount}
+        <if test="isExistNew != null and isExistNew!=''">
+            ,is_Exist_New=#{isExistNew}
+        </if>
         where CDATE between TO_DATE(#{minDate}, 'yyyy-MM-dd') AND TO_DATE(#{maxDate}, 'yyyy-MM-dd')
         <include refid="whereSql"/>
     </update>
@@ -883,6 +890,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="isExistNew != null" >
+                is_Exist_New = #{isExistNew,jdbcType=VARCHAR},
+            </if>
         </set>
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
         and ACCT_ID = #{acctId,jdbcType=VARCHAR}
@@ -910,6 +920,9 @@
             </if>
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isExistNew != null" >
+                is_Exist_New = #{isExistNew,jdbcType=VARCHAR},
             </if>
         </set>
         where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
@@ -1059,5 +1072,55 @@
         </if>
          )
     </select>
+    <!--ͨ查询指令可用现金新表-->
+    <select id="queryEtrAvailableCashNew" parameterType="com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto" resultType="java.math.BigDecimal">
+        select
+        sum(a.AMOUNT*nvl(b.CAL_FLAG,1)) AS amount
+        from ETR_CASH_POSITION_RULE a
+        LEFT JOIN PTL_POSITION_CFG b ON a.HODING_TYPE =b.HOLDINGTYPE AND b.S_HOLDINGTYPE = #{hodingType,jdbcType=VARCHAR}
+        where a.cdate =  #{cdate,jdbcType=DATE}
+        and b.S_HOLDINGTYPE =#{hodingType,jdbcType=VARCHAR}
+        and a.ccy = #{ccy,jdbcType=VARCHAR}
+        AND a.PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+        and a.DATE_TYPE=#{dateType,jdbcType=INTEGER}
+    </select>
+    <select id="selectCommandAvailableCashFlowSum" parameterType="com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto" resultType="java.math.BigDecimal">
+        select
+        sum(t.amount) as amount
+        from etr_cash_position_flow t
+        where
+        t.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+        <if test="acctId != null and acctId != '' ">
+            and t.acct_id = #{acctId,jdbcType=VARCHAR}
+        </if>
+        <if test="chlFinprodId != null and chlFinprodId != '' ">
+            and t.chl_finprod_id = #{chlFinprodId,jdbcType=VARCHAR}
+        </if>
+        and t.hoding_type = #{hodingType,jdbcType=VARCHAR}
+        and t.cdate <![CDATA[<=]]> #{cdate,jdbcType=DATE}
+        and t.ccy = #{ccy,jdbcType=VARCHAR}
+        <if test="acctType != null and acctType.size() > 0 ">
+            and t.acct_id in (
+            select t1.acct_no from ptl_capacct_info t1
+            where t1.acct_type in
+            <foreach collection="acctType" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            and t1.portfolio_id = #{portfolioId,jdbcType=VARCHAR}
+            )
+        </if>
+        and (t.is_exist_new is null or  t.is_exist_new!='Y')
+    </select>
 
+
+    <!--// modify by etliu 20220226 start-->
+    <!--// 广农商二阶段 GNS-947:【广农商场内清算】场内债券存续交易生成的时候，指令现金流水处理有误-->
+    <select id="selectEtrCashPositionFlowCount" resultType="int">
+        select count(1)
+        from ETR_CASH_POSITION_FLOW
+        where
+            ORDER_ID = #{orderId,jdbcType=VARCHAR}
+          and HODING_TYPE = #{holdingType,jdbcType=VARCHAR}
+    </select>
+    <!--// modify by etliu 20220226 end-->
 </mapper>

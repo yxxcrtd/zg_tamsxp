@@ -20,6 +20,7 @@ import com.joyintech.tams.common.base.entity.StlPayOrders;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 资金划拨实体类
@@ -77,6 +78,29 @@ public class PtlFundAllocationDto extends StlPayOrders{
      * 划款指令表
      */
     private List<StlPayOrdersDto> stlPayOrdersList;
+
+
+    @ApiModelProperty(name="softSkipMode",value="软控是否继续？Y：继续",example="Y")
+    private String softSkipMode;
+
+    private String positionType;
+
+    public String getPositionType() {
+        return positionType;
+    }
+
+    public void setPositionType(String positionType) {
+        this.positionType = positionType;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
+    }
+
     
     /**
      * 获取 stlPayOrdersList

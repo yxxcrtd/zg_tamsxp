@@ -29,4 +29,7 @@ public interface PtlPortfolioMapper {
 	String selectportfolioId(@Param("finprodId") String finprodId);
 
 	List<Map<String,Object>> getRiskInfoByPortfolioId(Map<String,Object> param);
+
+    List<PtlPortfolio> selectPortfolioByIds(@Param("portfolioIds") List<String> portfolioIds);
+
 }

@@ -21,6 +21,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.common.service.EntrustCommonPersonSelectService;
+import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.service.entrust.etrplanassetn.dto.EtrPlanAssetNDto;
 import com.joyintech.service.entrust.etrplanassetr.dao.EtrPlanAssetRMapper;
 import com.joyintech.service.entrust.etrplanassetr.dto.EtrPlanAssetRDto;
@@ -112,6 +113,9 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
     private FinProductMapper finProductMapper;
     @Autowired(required=false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+
+    @Autowired(required = false)
+    private EtrCommandDispatcherService etrCommandDispatcherService;
 
     /**
      * 拆借投资委托分页查询 <功能详细描述>
@@ -302,6 +306,7 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
         BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
         EtrEntrust etrEntrust = new EtrEntrust();
         EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+        String isPushMsg = DictCodeList.是否_否.getValue();
         if (StringUtil.equals(operationType, "NEW")) {
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
             dto.setIsOutTrade(judgeCounterType(dto.getEtrInvestPersonInfo().getCounterId()));
@@ -325,7 +330,7 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
                 etrEntrust.setInvAim("FVTPL");
             }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
-            if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
+            /*if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
                 
                 List<String> traderList = StringUtil.splitToList(GlobalConstant.COMMA,dto.getEtrInvestPersonInfo().getTrader());
                 for(String trader:traderList){
@@ -340,19 +345,21 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
                     etrDistributeList.add(etrDistribute);
                 }
                 //entity.setEtrDistributeList(etrDistributeList);
-            }
+            }*/
             //自动分发
             if(busiAutoEtrDispService != null){
                 //检测是否设置交易员
                 if(!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)){
                     //跳出自动分发
                     entity.setEtrDistributeList(etrDistributeList);
+                    isPushMsg = DictCodeList.是否_是.getValue();
                 }
                 else{
                     //查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
                     if(busiAutoEtrDispService.checkEntrustTime(etrEntrust)){
                         //自动分发
                         entity.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+                        isPushMsg = DictCodeList.是否_是.getValue();
                     }
                 }
             }
@@ -403,12 +410,15 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
                 if(!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)){
                     //跳出自动分发
                     entity.setEtrDistributeList(etrDistributeList);
+                    isPushMsg = DictCodeList.是否_是.getValue();
+
                 }
                 else{
                     //查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
                     if(busiAutoEtrDispService.checkEntrustTime(etrEntrust)){
                         //自动分发
                         entity.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+                        isPushMsg = DictCodeList.是否_是.getValue();
                     }
                 }
             }
@@ -422,6 +432,11 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
             if(mstFileCommonService != null){
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
+        }
+        if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
+            Map<String, Object> param = new HashMap<>();
+            param.put("entrustId", dto.getEntrustId());
+            etrCommandDispatcherService.pushCommandMsg(param);
         }
         //update by zznn 20210826  start
         //指令头寸在流程中处理

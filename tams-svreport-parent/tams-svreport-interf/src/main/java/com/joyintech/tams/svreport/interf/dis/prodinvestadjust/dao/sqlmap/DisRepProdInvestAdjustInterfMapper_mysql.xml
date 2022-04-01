@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodinvestadjust.dao.DisRepProdInvestAdjustInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdInvestAdjust" >
+        <result column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="INVEST_RANGE" property="investRange" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="RAISE_AMT_MAX" property="raiseAmtMax" jdbcType="DECIMAL" />
+        <result column="INVEST_ADJUST_DATE" property="investAdjustDate" jdbcType="DATE" />
+        <result column="ADJUST_DATE" property="adjustDate" jdbcType="DATE" />
+        <result column="RAISE_MAX" property="raiseMax" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        with tmpa as (
+            SELECT
+                t1.REP_FINPROD_ID,
+                t1.REP_INV_TYPE_RAT INVEST_RANGE,--投资范围
+                t1.REP_INV_ASSET_TYPE INVEST_TYPE--投资种类
+            FROM
+                REP_PROD_DECLARE t1
+            WHERE 1=1
+                AND T1.UPDATE_TIME >  #{updatetime,jdbcType=TIMESTAMP}
+        ),
+        tmpb as (
+            SELECT
+                t3.finprod_id,
+                SUM(t3.SALE_MAX) RAISE_MAX--募集上限(多地区之和)
+            FROM PRD_SALE_PARAM t3
+            WHERE 1=1
+                AND t3.UPDATE_TIME >  #{updatetime,jdbcType=TIMESTAMP}
+            GROUP BY t3.finprod_id
+        ),
+        ltmp as (
+            select
+                tmpa.REP_FINPROD_ID PROD_ID,
+                tmpa.INVEST_RANGE,
+                tmpa.INVEST_TYPE,
+                tmpb.RAISE_MAX
+            from tmpa
+            left join tmpb on tmpb.finprod_id = tmpa.rep_finprod_id
+        ),
+        rtmp as (
+            select
+                tmpb.finprod_id PROD_ID,
+                tmpa.INVEST_RANGE,
+                tmpa.INVEST_TYPE,
+                tmpb.RAISE_MAX
+            from tmpb
+            left join tmpa on tmpb.finprod_id = tmpa.rep_finprod_id
+        ),
+        lrtmp as (
+            select
+                distinct PROD_ID,
+                INVEST_RANGE,
+                INVEST_TYPE,
+                RAISE_MAX
+            from (
+                select * from ltmp
+                union all
+                select * from rtmp
+            ) temp
+        )
+        /*每天抽取全量数据*/
+        SELECT
+            A.ID,
+            F.FINPROD_MARKET_ID PROD_ID,
+            A.INVEST_RANGE,
+            A.INVEST_TYPE,
+            now() ADJUST_DATE,
+            A.RAISE_MAX
+        FROM (
+            select
+                F_GUID() ID,
+                PROD_ID,
+                INVEST_RANGE,
+                INVEST_TYPE,
+                RAISE_MAX
+            from lrtmp
+        ) A
+        LEFT JOIN FIN_PRODUCT F ON F.FINPROD_ID = A.PROD_ID
+        WHERE F.FINPROD_MARKET_ID IS NOT NULL
+            AND (INVEST_RANGE IS NOT NULL or RAISE_MAX is not null)
+    </select>
+
+</mapper>

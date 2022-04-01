@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportDetailMapper_mysql" >
 
-  <select id="selectPrdList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" >
-  
+    <select id="selectPrdList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthPrdPosition" >
+
   select fp.profit_type as prodtype,chbprd.raisemode as raisemode,chbprd.ivstorientation as ivstorientation,chbprd.operate_mode as operateMode,
   chbprd.cash_mana_cate as cashmanacate,chbprd.openduration as openduration,chbprd.termtype as termtype,
   ifnull(chbprd.endamtsum_Oth,0) as endamtsumOth,
@@ -22,7 +22,7 @@
    left join fin_product fp
    on concat_ws('','F16_', chbprd.prodid)=fp.finprod_id
    left join fin_cash_info cash
-   on fp.finprod_Id=cash.finprod_id 
+   on fp.finprod_Id=cash.finprod_id
    and cash.cash_type_1='02'
    left join (
             SELECT
@@ -98,12 +98,12 @@
     on finrate.cash_id=cash.cash_id and  cash.finprod_id=finrate.finprod_id
 	where chbprd.startdate = #{startdate,jdbcType=DATE}
 	and chbprd.enddate = #{enddate,jdbcType=DATE}
-	and d.is_lay = 'N'  and chbprd.profit_type='03' 
+	and d.is_lay = 'N'  and chbprd.profit_type='03'
   </select>
-  <select id="selectAssetList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" >
+    <select id="selectAssetList" resultType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" parameterType="com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthAssetPosition" >
    select  fp.profit_type as prodtype, chbasset.rating as rating,
     chbasset.assettype2 as assettype2,chbasset.is_govern_fund1 isgovernfund1,
-    chbinfo.bank_sec_capital bankseccapital, 
+    chbinfo.bank_sec_capital bankseccapital,
     chbinfo.bank_sec_perpetual banksecperpetual,chbinfo.bank_sec_prefer banksecprefer,
     coalesce(chbasset.assetvalue_b,chbasset.assetvalue_a,0) as assetvalueB,
     ifnull((ifnull(asset.mdate,deal.mdate)-  #{enddate,jdbcType=DATE}),0) as remainterm
@@ -112,7 +112,7 @@
     on (chbasset.prod_id=fp.finprod_market_id or chbasset.prod_id=fp.finprod_id)
     left join fin_product_add d
     on fp.finprod_id=d.finprod_id
-    and d.is_lay = 'N'  
+    and d.is_lay = 'N'
   	left join chb_asset_info chbinfo
  	on chbasset.asset_code=chbinfo.asset_code
 	 left join fin_product asset
@@ -127,4 +127,4 @@
 	and chbasset.enddate = #{enddate,jdbcType=DATE}
     and d.profit_flag='03'
   </select>
-</mapper>   
+</mapper>

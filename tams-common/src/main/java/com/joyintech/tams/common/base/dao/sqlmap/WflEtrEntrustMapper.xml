@@ -416,6 +416,9 @@
             <if test="workflowId != null" >
                 WORKFLOW_ID,
             </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="entrustId != null" >
@@ -540,6 +543,9 @@
             </if>
             <if test="workflowId != null" >
                 #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

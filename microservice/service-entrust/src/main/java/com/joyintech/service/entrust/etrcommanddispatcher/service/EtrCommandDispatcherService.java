@@ -1,10 +1,13 @@
 package com.joyintech.service.entrust.etrcommanddispatcher.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrEntrustDetailDto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.etrcommanddispatcher.dao.EtrCommandDispatcherMapper;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrCommandDispatcherDto;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrCommandDispatcherTotalDto;
 import com.joyintech.service.entrust.etrcommanddispatcher.dto.EtrTradePledgeDto;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 
@@ -64,8 +62,17 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
         			etrCommandDispatcherDto.setIsAutoReceive(DictCodeListExt1.是否_是.getValue());
         		}
         	}
+	    	if(selectList != null && selectList.size() > 0) {
+				for (EtrCommandDispatcherDto etrCommandDispatcherDto : selectList) {
+					if (!StringUtil.isNotEmpty(etrCommandDispatcherDto.getBusiTypeTg())
+							&& StringUtil.equals(etrCommandDispatcherDto.getPS(), DictCodeListExt3.交易方向_债转股.getValue())) {
+						etrCommandDispatcherDto.setBusiTypeTg(DictCodeListExt3.投管业务类型_债转股.getValue());
+					}
+				}
+			}
     		dto.setEtr_entrust_list(selectList);
     		dto.setEtr_pledge_list(this.selectPledgeList(selectList));
+		    dto.setEtr_entrust_detail_list(selectEtrDetailList(param));
     		if(selectList!=null && !selectList.isEmpty()) {
     			dto.setAMOUNT(selectList.size());
         		dto.setPageCount(1);
@@ -110,7 +117,8 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
     	}
     	return pledgelist;
     }
-    
+
+
 	@SuppressWarnings("unchecked")
 	public void sendMessageByInf(EtrCommandDispatcherTotalDto dto) {
 		logger.info("调用交易系统指令分发接口【{}】  接口URL：" + ServiceApplication.EXCHANGE_SERVICE_NAME + "/joyin/instruction/distribute");
@@ -120,5 +128,16 @@ public class EtrCommandDispatcherService extends BaseService<EtrCommandDispatche
 			logger.info("应答报文【{}】","errorCode:" + (Integer) result.get("errorCode") + ";errorMsg:" + (String) result.get("errorMsg"));
 			System.out.println(result);
 		}
+	}
+	/**
+	 * 委托指令明细列表查询
+	 * <功能详细描述>
+	 * @param param
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public List<EtrEntrustDetailDto> selectEtrDetailList(Map<String, Object> param){
+		return etrTradeSysInterfMapper.selectEtrDetailList(param);
 	}
 }

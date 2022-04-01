@@ -567,6 +567,17 @@
         <if test="mdateEnd != null and !mdateEnd.isEmpty()">
             AND T1.MDATE &lt;= STR_TO_DATE(#{mdateEnd}, '%Y-%m-%d')
         </if>
+        <if test="DELIVERY_STATUS_02 != null and !DELIVERY_STATUS_02.isEmpty()">
+            AND NOT EXISTS(
+            SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL WHERE TOTLE_TRADE_ID IN (
+            SELECT
+            TRADE_ID
+            FROM
+            TRD_BANK_MANUAL_SETTLE_INFO
+            WHERE
+            SETTLE_STATUS = '02') AND FINPROD_ID = T1.TRADE_ID
+            )
+        </if>
         
     </sql>
 

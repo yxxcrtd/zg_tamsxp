@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chbsd.proddealsub.dao.SdProdDealSvrMapper_mysql">
+    <resultMap  id="SdProdDealSvrDtoRM" type="com.joyintech.tams.svreport.chbsd.proddealsub.dto.SdProdDealSvrDto" >
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="VALUE_CCY" property="valueCcy" jdbcType="VARCHAR" />
+        <result column="BANK_IMP_INT" property="bankImpInt" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="BALANCE_AMT" property="balanceAmt" jdbcType="DECIMAL" />
+        <result column="CCY_PURCHASE" property="ccyPurchase" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="ORIGINAL_VALUE" property="originalValue" jdbcType="DECIMAL" />
+        <result column="PRD_VALUE" property="prdValue" jdbcType="DECIMAL" />
+        <result column="TOTAL_VALUE" property="totalValue" jdbcType="DECIMAL" />
+        <result column="CNY_ORL_VALUE" property="cnyOrlValue" jdbcType="DECIMAL" />
+        <result column="CNY_PRD_VALUE" property="cnyPrdValue" jdbcType="DECIMAL" />
+        <result column="CNY_TAL_VALUE" property="cnyTalValue" jdbcType="DECIMAL" />
+        <result column="PURCHASE_QTY" property="purchaseQty" jdbcType="DECIMAL" />
+        <result column="REDEEM_QTY" property="redeemQty" jdbcType="DECIMAL" />
+        <result column="PRD_QTY" property="prdQty" jdbcType="DECIMAL" />
+        <result column="REA_YIELD" property="reaYield" jdbcType="DECIMAL" />
+        <result column="NEW_EXP_YIELD" property="newExpYield" jdbcType="DECIMAL" />
+        <result column="SHARE_AMT_WAN" property="shareAmtWan" jdbcType="DECIMAL" />
+        <result column="CASH_AMT_WAN" property="cashAmtWan" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <select id="selcteDataByIds" parameterType="java.util.List"  resultMap="SdProdDealSvrDtoRM">
+        select
+        REGIST_SEQNO,
+        PROD_ID,
+        ISSUE_PARTY_ID,
+        PROD_REGIST_CODE,
+        VALUE_CCY,
+        BANK_IMP_INT,
+        DATE_FORMAT(VDATE,'%Y-%m-%d') VDATE,
+        DATE_FORMAT(MDATE,'%Y-%m-%d') MDATE,
+        BALANCE_AMT,
+        CCY_PURCHASE,
+        SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,
+        SUMIT_SEQ,
+        STATUS_DATE,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        STATUS,
+        CREATE_USER,
+        ORG_CODE,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        SUBMIT_TIME,
+        REMARK,
+        ORIGINAL_VALUE,
+        PRD_VALUE,
+        TOTAL_VALUE,
+        CNY_ORL_VALUE,
+        CNY_PRD_VALUE,
+        CNY_TAL_VALUE,
+        PURCHASE_QTY,
+        REDEEM_QTY,
+        PRD_QTY,
+        REA_YIELD,
+        NEW_EXP_YIELD,
+        SHARE_AMT_WAN,
+        CASH_AMT_WAN
+        from CHB_PRD_DEAL_SUB
+        where SEND_STATUS = '01'
+        AND STATUS = '01'
+        <!--AND   DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') = #{batchdate,jdbcType = VARCHAR}-->
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PROD_ID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+</mapper>

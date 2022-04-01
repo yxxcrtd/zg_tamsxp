@@ -1,17 +1,25 @@
 package com.joyintech.tams.report.submitmaintenance.equityinfo.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.concurrent.*;
 
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.common.InterfDefine;
+import com.joyintech.tams.common.base.entity.ChbEquTmp;
+import com.joyintech.tams.common.base.entity.ChbPrdOpensch;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import com.joyintech.tams.report.investormerger.dao.ChbInvestholdInfoCheckDtoMapper;
+import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto;
+import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
@@ -28,11 +36,13 @@ import org.springframework.stereotype.Service;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.investormerger.dao.ChbEquHoldCheckDtoMapper;
 import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfo001Mapper;
@@ -42,9 +52,11 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dao.EquityInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -64,13 +76,68 @@ public class EquityInfoDistinctService {
 	private EquityInfoDistinctMapper equityInfoDistinctMapper;
 
 	@Autowired
+	private ChbInvestholdInfoCheckDtoMapper chbInvestholdInfoCheckDtoMapper;
+
+	@Autowired
 	private SqlSessionTemplate template;
+	/**
+	 * 上游接口解析读取文件处理最大线程数
+	 */
+	@Value("${application.interfMaxCorePoolSize}")
+	private int interfMaxCorePoolSize;
 
 	/**
-	 * 长sql最大一次插入或者更新条数
+	 * 查询或者删除一次最大sql数
+	 */
+	@Value("${application.reportSelectOrDeleteCount}")
+	public int reportSelectOrDeleteCount;
+
+	/**
+	 * 查询或者删除一次最大sql数
+	 */
+	@Value("${application.reportSelectOrDeleteCount}")
+	public String reportSelectOrDeleteCountString;
+	
+	/**
+	 * check表 单次更新条数（合并后识别标识）
+	 */
+	@Value("${application.reportUpdateCountForShenFen}")
+	public String reportUpdateCountForShenFen;
+	
+	/**
+	 * 长sql最大一次插入或者更新条数 
 	 */
 	@Value("${application.reportSelectOrDeleteCountForShenFen}")
 	public String reportSelectOrDeleteCountForShenFen;
+
+	/**
+	 * 上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+	 */
+	@Value("${application.reportInterfOneTimeSqlLdrCommitCount}")
+	private int reportInterfOneTimeSqlLdrCommitCount;
+
+	/**
+	 * 上游接口解析分割符
+	 */
+	@Value("${application.reportInterfSplitCharacter}")
+	private String reportInterfSplitCharacter;
+
+	/**
+	 * sqlldr用数据库连接
+	 */
+	@Value("${spring.datasource.reportSqlldrDatabaseName}")
+	private String reportSqlldrDatabaseName;
+
+	/**
+	 * 上游接口解析读取文件处理,单次sqlldr处理最大数据条数
+	 */
+	@Value("${application.reportInterfOneTimeSqlLdrDataCount}")
+	private int reportInterfOneTimeSqlLdrDataCount;
+	/**
+	 * 短sql最大一次最大插入条数
+	 */
+	@Value("${application.reportInsertCount}")
+	public  int reportInsertCount;
 
 	/**
 	 * 跟已报送的数据进行对比,有重复则按照已报送的
@@ -82,7 +149,29 @@ public class EquityInfoDistinctService {
 		if(StringUtil.isEmptyList(equityList)){
 			return;
 		}
-		List<EquityInfoRegist001Dto> ybs = getEquInfoSubListYbs(keys);
+		List<ChbEquTmp> list = new ArrayList<ChbEquTmp>();
+		keys.stream().forEach(item->{
+			String[] strs = item.split(GlobalConstant.UNDER_LINE, -1);
+			ChbEquTmp dto = new ChbEquTmp();
+			dto.setRegistBankCode(strs[0]);
+			dto.setIdentifyNumber(strs[1]);
+			dto.setHolderName(strs[2]);
+			dto.setPersonalIdentifyType(strs[3]);
+			dto.setInstitutionIdentifyType(strs[4]);
+			dto.setOtherIdentifyName(strs[5]);
+			list.add(dto);
+		});
+
+		if(keys!= null && keys.size()>=1000){
+			// add by zcw 三期性能优化 start
+			// 删除临时表数据
+			chbEquHoldCheckDtoMapper.truncateEquityTmp();
+			// 六要素入临时表。sql对临时表操作
+			saveKeys(keys);
+			// add by zcw 三期性能优化 end
+		}
+
+		List<EquityInfoRegist001Dto> ybs = getEquInfoSubListYbs(list);
  
 		if(StringUtil.isEmptyList(ybs)){
 			return;
@@ -94,7 +183,7 @@ public class EquityInfoDistinctService {
 		//只有当系统参数为01：使用修复批的情况下，才取以前保存在库中的check表数据
 		if("01".equals(updateFlg)) {
 			//取得本次导入txt记录，对应的CHECK表记录
-			List<ChbEquHoldCheckDto> allList = chbEquHoldCheckDtoMapper.selectChekForRepair(keys);
+			List<ChbEquHoldCheckDto> allList = this.selectChekForRepairByList(list);
 
 			checkMap = allList.stream().collect(JoyinCollectors.groupingBy(
 					x -> getKey(x)));	
@@ -163,6 +252,7 @@ public class EquityInfoDistinctService {
 							 ChbEquHoldCheckDto checkModel = transformModelToCheck(model);
 							 //修复批启用的情况下，如果接入的txt对应的信息为空，则用之前check表的内容替换
 							 if("01".equals(updateFlg)) {
+								 if(checkMap.containsKey(yibaosongkey) &&  checkMap.get(yibaosongkey) != null) { 
 								for(ChbEquHoldCheckDto hdlDto : checkMap.get(yibaosongkey)) {
 									if(indentifyMark.equals(hdlDto.getIndentifyMark())) {
 										//设置 账号开户所在地
@@ -176,6 +266,7 @@ public class EquityInfoDistinctService {
 										
 									}
 								} 
+								 }
 							 }
 							 checkModel.setMergerindentifymark(yibaosongModel.getIndentifyMark());
 							 checkModel.setOperatestatus(DictCodeListExt2.处理状态_中债_已合并.getValue());
@@ -246,6 +337,7 @@ public class EquityInfoDistinctService {
 			 }
 		}
 		keys.removeAll(keyList);
+		//
 		//logger.info("step2跟已报送的数据进行对比合并入库结束");
 		
 		/**
@@ -257,6 +349,7 @@ public class EquityInfoDistinctService {
 		 * 
 		 * 
 		 */
+		list.clear();
 	}
 
 
@@ -281,6 +374,7 @@ public class EquityInfoDistinctService {
 		 *      下午又接进一笔【张三+XXXXXXXX+002】的数据,此时不查找维护表,无法判断是否重复;
 		 */
 		logger.info("查询库中未报送数据及check表数据开始");
+		// 查询所有未报送即反馈状态不等于成功的且三要素等于传入的key数据
 		List<EquityInfo001Dto> infoList = getEquInfoList(keys,0);
 		logger.info("查询库中未报送数据及check表数据结束");
 		//step2、equityList、infoList去重合并
@@ -313,13 +407,29 @@ public class EquityInfoDistinctService {
 		}
 		logger.info("过滤识别标识变更数据结束");
 		logger.info("数据比较入check表全删全插开始");
+		List<EquityInfo001Dto> listForDelete = new ArrayList<EquityInfo001Dto>(); 
+		List<ChbEquHoldCheckDto> listForInsert = new ArrayList<ChbEquHoldCheckDto>();
+		
 		for(Map.Entry<String, List<EquityInfo001Dto>> entry: allMap.entrySet()){
 			if(entry.getValue().size() > 1){
 				if("01".equals(intype)){
 					//重复数据,CHECK表全删全插
 					mergerkeys.add(entry.getKey());
-					chbEquHoldCheckDtoMapper.delCheckDataBatch(entry.getKey());
-					insertCheckData(entry.getValue());
+
+					//删除check表数据列表
+					List<String> strLsit = new ArrayList<String>();
+					strLsit.add(entry.getKey());					
+					listForDelete.addAll(tranStringToDtoForKey(strLsit));
+									
+					//插入身份check表数据列表
+					for(EquityInfo001Dto hdlDto : entry.getValue()) {
+						ChbEquHoldCheckDto model = transformModelToCheck(hdlDto);
+						model.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
+						if(!DictCodeListExt2.处理状态_中债_已合并.getValue().equals(model.getOperatestatus())){
+							model.setOperatestatus(DictCodeListExt2.处理状态_中债_未合并.getValue());
+						}
+						listForInsert.add(model);
+					}
 				}
 			}else{
 				if(type.equals("map")){
@@ -329,6 +439,17 @@ public class EquityInfoDistinctService {
 				}
 			}
 		}
+		
+		//对check表数据进行处理  删除check表对应的记录
+		if(listForDelete != null && listForDelete.size() > 0) {
+			this.delCheckByBatch(listForDelete);
+		}
+		
+		//对check表数据进行处理  插入check表信息
+		if(listForInsert != null && listForInsert.size() > 0) {
+			this.insertCheckByBatch(listForInsert);
+		}	
+		
 		logger.info("数据比较入check表全删全插结束");
 		return mergerkeys;
 	}
@@ -345,7 +466,9 @@ public class EquityInfoDistinctService {
 		String mergerFlag = SvrDataUtil.getSysParam("SVR_EQU_HOLD_MERGER");
 
 //		List<String> keys = getKeys(equityList);
+		logger.info("查询check表中所有未合并记录 开始");
 		List<ChbEquHoldCheckDto>  checkDataList = chbEquHoldCheckDtoMapper.mergerData(null);
+		logger.info("查询check表中所有未合并记录  结束");
 
 		if("0".equals(mergerFlag)){
 			manualMerger(checkDataList);
@@ -354,6 +477,7 @@ public class EquityInfoDistinctService {
 
 
 		HashMap<String,ChbEquHoldCheckDto> lastMergerMap = new HashMap<String,ChbEquHoldCheckDto>();
+		logger.info("根据规则获取主识别标识处理 开始");
 		if("1".equals(mergerFlag)){
 			//按照识别标识小的合并
 			lastMergerMap = getMinMark(checkDataList);
@@ -361,10 +485,15 @@ public class EquityInfoDistinctService {
 			//按照识别标识大的合并
 			lastMergerMap = getMaxMark(checkDataList);
 		}
+		logger.info("根据规则获取主识别标识处理 结束");
 
 		//CHECK表中合并识别标识按照规则刷新
+		logger.info("入库、返回数据结构构件处理 开始");
+		List<ChbEquHoldCheckDto> listForUpdate = new ArrayList<ChbEquHoldCheckDto>();
 		for(Map.Entry<String, ChbEquHoldCheckDto> entry: lastMergerMap.entrySet()){
-			chbEquHoldCheckDtoMapper.updateMergerIndentifyMark(entry.getKey(),entry.getValue().getIndentifyMark());
+//			chbEquHoldCheckDtoMapper.updateMergerIndentifyMark(entry.getKey(),entry.getValue().getIndentifyMark());
+
+			listForUpdate.add(entry.getValue());
 			//返回规则合并后的数据给原逻辑处理
 			if(type.equals("map")){
 				equityList.add(modelToMapByPrpperties(transformModelToEquHold(entry.getValue())));
@@ -372,6 +501,13 @@ public class EquityInfoDistinctService {
 				equityList.add(transformModelToEquHold(entry.getValue()));
 			}
 		}
+		logger.info("入库、返回数据结构构件处理 结束");
+		
+		logger.info("check表主识别标识刷新处理 开始");
+		this.updateMergerIndentifyMarkByBatch(listForUpdate);
+		logger.info("check表主识别标识刷新处理 结束");
+		
+		
 	}
 
 	/**
@@ -566,8 +702,25 @@ public class EquityInfoDistinctService {
 		}
 		String mergerFlag = SvrDataUtil.getSysParam("SVR_EQU_HOLD_MERGER");
 		if(!"0".equals(mergerFlag)){
-			deleteEquitInfo(keys);
-			deleteEquitInfoSub(keys);
+			/*** add by zcw 三期性能优化 start **/
+			// 如果需要删除数量大于1000条，使用sqldr入临时表关联临时表删除
+			if(keys!= null && keys.size()>=1000){
+				// 如果需要删除数量大于1000条，使用sqldr入临时表关联临时表删除
+				// 删除临时表数据
+				chbEquHoldCheckDtoMapper.truncateEquityTmp();
+				// 六要素入临时表。sql对临时表操作
+				saveKeys(keys);
+				// 根据临时表关联删除
+				chbEquHoldCheckDtoMapper.deleteEquityInfoBatchTmp();
+                chbEquHoldCheckDtoMapper.deleteEquitySubBatchTmp();
+				// 删除临时表数据
+				chbEquHoldCheckDtoMapper.truncateEquityTmp();
+                return;
+				/*** add by zcw 三期性能优化 end **/
+			}else{
+				deleteEquitInfo(keys);
+				deleteEquitInfoSub(keys);
+			}
 		}
 	}
 
@@ -577,7 +730,7 @@ public class EquityInfoDistinctService {
 	 * @param keys
 	 */
 //	@SuppressWarnings("rawtypes")
-	private List<EquityInfoRegist001Dto> getEquInfoSubList(List<String> keys,int type){
+	private List<EquityInfoRegist001Dto> getEquInfoSubList(List<EquityInfo001Dto> list,int type){
 		List<EquityInfoRegist001Dto> resultList = new ArrayList<EquityInfoRegist001Dto>();
 //		int maxDataCountOneTime =(null == reportSelectOrDeleteCountForShenFen ? 100:Integer.parseInt(reportSelectOrDeleteCountForShenFen));
 //        int dataCount = 0;
@@ -601,7 +754,28 @@ public class EquityInfoDistinctService {
 //        	if(0 == type){
 //        		resultList = equityInfoDistinctMapper.queryAllEquityInfoConStrastYbs(keys);
 //        	}else{
-		resultList = equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(keys);
+//		resultList = equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(keys);
+		int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCountString, "2");
+		int dataCount = list.size();
+		if (dataCount <= maxDataCountOneTime) {
+			resultList.addAll(equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(list));
+		} else {
+			List<EquityInfo001Dto> newKeyList = new ArrayList<EquityInfo001Dto>();
+			newKeyList.addAll(list);
+
+			// 分批处理
+			int part = dataCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++) {
+				resultList.addAll(
+						equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(newKeyList.subList(0, maxDataCountOneTime)));
+				//更新正确的识别标识
+				newKeyList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newKeyList)) {
+				resultList.addAll(equityInfoDistinctMapper.queryEquityInfoRegistByPkUnsubmit(newKeyList));
+			}
+		}
 //        	}
 //            return resultList;
 //        }
@@ -631,23 +805,39 @@ public class EquityInfoDistinctService {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	public List<EquityInfoRegist001Dto> getEquInfoSubListYbs(List<String> keys){
-		List<EquityInfoRegist001Dto> resultList = new ArrayList<EquityInfoRegist001Dto>();
+	public List<EquityInfoRegist001Dto> getEquInfoSubListYbs(List<ChbEquTmp> list){
+		List<EquityInfoRegist001Dto> resultList = new LinkedList<>();
 //		int maxDataCountOneTime =(null == reportSelectOrDeleteCountForShenFen ? 100:Integer.parseInt(reportSelectOrDeleteCountForShenFen));
 //        int dataCount = 0;
 //     if(equityList!=null){
 //    	 dataCount=equityList.size();
 //     }
-		Map<String,Object> params = new HashMap<>();
-//		 List<String> keys = getKeys(equityList);
-		params.put("keys", keys);
-		template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryAllEquityInfo",params,
+		// add by zcw 三期性能优化 start
+		// 六要素入临时表。sql对临时表操作
+		if(list!=null && list.size()>=1000){
+			template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryAllEquityInfoMax",
 				new ResultHandler() {
 					@Override
 					public void handleResult(ResultContext resultContext) {
 						resultList.add((EquityInfoRegist001Dto) resultContext.getResultObject());
 					}
-				});
+			});
+		}else{
+			Map<String,Object> params = new HashMap<>();
+
+//		 List<String> keys = getKeys(equityList);
+
+			params.put("list", list);
+			template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryAllEquityInfo",params,
+				new ResultHandler() {
+					@Override
+					public void handleResult(ResultContext resultContext) {
+						resultList.add((EquityInfoRegist001Dto) resultContext.getResultObject());
+					}
+			});
+		}
+		// add by zcw 三期性能优化 end
+
 //        template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryAllEquityInfo",keys,
 //        		new ResultHandler() {
 //        	@Override
@@ -699,20 +889,40 @@ public class EquityInfoDistinctService {
 		if(0 == type){
 			List<EquityInfo001Dto>	resultListAll=new  ArrayList<EquityInfo001Dto>();
 			logger.info("查询库中未报送数据及check表数据SQL流式查询开始");
-//	       		 if(null!=keys&&keys.size()==1){
-//	       			 resultListAll.addAll(equityInfoDistinctMapper.queryEquityInfoList(keys));
-//	       		 }else{
-			Map<String,Object> params = new HashMap<String, Object>();
-			params.put("keys", keys);
-			template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryEquityInfoList",params,
-					new ResultHandler() {
-						@Override
-						public void handleResult(ResultContext resultContext) {
-							EquityInfo001Dto pos = (EquityInfo001Dto) resultContext.getResultObject();
-							resultListAll.add(pos);
-						}
-					});
-//        		 }
+
+			// add by zcw 三期性能优化 start
+
+			if(keys!=null && keys.size()>=1000){
+				// 删除临时表数据
+				chbEquHoldCheckDtoMapper.truncateEquityTmp();
+				// 六要素入临时表。sql对临时表操作
+				saveKeys(keys);
+				template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryEquityInfoListMax",
+						new ResultHandler() {
+							@Override
+							public void handleResult(ResultContext resultContext) {
+								EquityInfo001Dto pos = (EquityInfo001Dto) resultContext.getResultObject();
+								resultListAll.add(pos);
+							}
+						});
+			}else{
+
+				List<ChbEquTmp> list = keysToList(keys);
+
+				Map<String,Object> params = new HashMap<String, Object>();
+				params.put("list", list);
+				template.select("com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper.queryEquityInfoList",params,
+						new ResultHandler() {
+							@Override
+							public void handleResult(ResultContext resultContext) {
+								EquityInfo001Dto pos = (EquityInfo001Dto) resultContext.getResultObject();
+								resultListAll.add(pos);
+							}
+						});
+				list.clear();
+			}
+			// add by zcw 三期性能优化 end
+
 			logger.info("查询库中未报送数据及check表数据SQL流式查询结束");
 //        		List<EquityInfo001Dto>	resultListAll = equityInfoDistinctMapper.queryEquityInfoList(keys);
 			if(resultListAll==null||resultListAll.isEmpty()){
@@ -770,7 +980,7 @@ public class EquityInfoDistinctService {
 //        }
 //        return resultList;
 	}
-
+	
 	/**
 	 * 维护表删除
 	 * @param equityList
@@ -787,7 +997,9 @@ public class EquityInfoDistinctService {
 			dataCount = keys.size();
 		}
 		if (CollectionUtils.isNotEmpty(keys)&&dataCount <= maxDataCountOneTime) {
-			chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(keys);
+			List<ChbEquTmp> list = keysToList(keys);
+			chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(list);
+			list.clear();
 			return;
 		}
 
@@ -797,12 +1009,16 @@ public class EquityInfoDistinctService {
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++ ) {
-			chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(newDataList.subList(0, maxDataCountOneTime));
+			List<ChbEquTmp> list = keysToList(newDataList.subList(0, maxDataCountOneTime));
+			chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(list);
 			newDataList.subList(0, maxDataCountOneTime).clear();
+			list.clear();
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-			chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(newDataList);
+			List<ChbEquTmp> list = keysToList(newDataList);
+			chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(list);
+			list.clear();
 		}
 	}
 
@@ -822,7 +1038,9 @@ public class EquityInfoDistinctService {
 			dataCount = keys.size();
 		}
 		if (CollectionUtils.isNotEmpty(keys)&&dataCount <= maxDataCountOneTime) {
-			chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(keys);
+			List<ChbEquTmp> list = keysToList(keys);
+			chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(list);
+			list.clear();
 			return;
 		}
 
@@ -832,12 +1050,16 @@ public class EquityInfoDistinctService {
 		// 分批处理
 		int part = dataCount / maxDataCountOneTime; // 分批数
 		for (int i = 0; i < part; i++ ) {
-			chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(newDataList.subList(0, maxDataCountOneTime));
+			List<ChbEquTmp> list = keysToList(newDataList.subList(0, maxDataCountOneTime));
+			chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(list);
 			newDataList.subList(0, maxDataCountOneTime).clear();
+			list.clear();
 		}
 		// 最后剩下的数据
 		if (CollectionUtils.isNotEmpty(newDataList)) {
-			chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(newDataList);
+			List<ChbEquTmp> list = keysToList(newDataList);
+			chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(list);
+			list.clear();
 		}
 	}
 
@@ -1203,7 +1425,7 @@ public class EquityInfoDistinctService {
 //				chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(keys);
 //	        	chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(keys);
 				//查询出对应的未报送登记信息
-				List<EquityInfoRegist001Dto> djlist= getEquInfoSubList(keys,1);
+				List<EquityInfoRegist001Dto> djlist= getEquInfoSubList(listR,1);
 				checkAllData(listR, getKeys(listR),"01");
 				//更新原检查表和登记表检查检查状态
 				dochecksafe(djlist,"02");
@@ -1259,7 +1481,7 @@ public class EquityInfoDistinctService {
 //				chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(keys);
 //	        	chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(keys);
 				//查询出对应的未报送登记信息
-				List<EquityInfoRegist001Dto> djlist = getEquInfoSubList(keys1,1);
+				List<EquityInfoRegist001Dto> djlist = getEquInfoSubList(listN,1);
 				//更新原检查表和登记表检查检查状态
 				dochecksafe(djlist,"01");
 				if("01".equals(type)){
@@ -1369,5 +1591,416 @@ public class EquityInfoDistinctService {
 		}
 		// 待处理数据批量插入维护表
 		return dataList;
+	}
+	
+	/**
+	 * @Title: tranStringToDtoForKey
+	 * @Description: 五要素String拆分为字段，并设置到DTO中
+	 * @param @param keys    拼接的五要素信息
+	 * @return List<EquityInfo001Dto>    返回类型
+	 * @throws
+	 */
+	public List<EquityInfo001Dto>  tranStringToDtoForKey(List<String> keys) {
+		//对五要素主键进行重组
+		List<EquityInfo001Dto> keyList = new ArrayList<EquityInfo001Dto>();
+		
+		for(String str : keys) {
+			EquityInfo001Dto hdlDto = new EquityInfo001Dto();
+			String strList[] = str.split(GlobalConstant.UNDER_LINE , -1);
+			//银行代码	
+			if(StringUtil.isNotEmpty(strList[0])) {
+				hdlDto.setBankCode(strList[0]);
+			} 
+			//证件号码	
+			if(StringUtil.isNotEmpty(strList[1])) {
+				hdlDto.setIdentifyNumber(strList[1]);
+			}
+			//权益人名称
+			if(StringUtil.isNotEmpty(strList[2])) {
+				hdlDto.setHolderName(strList[2]);
+			}
+			//个人证件类别
+			if(StringUtil.isNotEmpty(strList[3])) {
+				hdlDto.setPersonalIdentifyType(strList[3]);
+			}
+			//机构证件类别		
+			if(StringUtil.isNotEmpty(strList[4])) {
+				hdlDto.setInstitutionIdentifyType(strList[4]);
+			}
+			//其他证件名称
+			if(StringUtil.isNotEmpty(strList[5])) {
+				hdlDto.setOtherIdentifyName(strList[5]);
+			}
+			
+			keyList.add(hdlDto);
+		}
+		
+		//返回五要素的DTO
+		return keyList;
+	}
+		
+	/**
+	 * insertCheckByBatch
+	 *分批执行
+	 * @param insert 数据
+	 * @see
+	 * @since 1.0
+	 */
+	private void insertCheckByBatch(List<ChbEquHoldCheckDto> insertList) {
+		if (StringUtil.isEmptyList(insertList)) {
+			return;
+		}
+		int maxDataCountOneTime = reportInsertCount;
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			maxDataCountOneTime = 1;
+		}
+		int dataCount = insertList.size();
+		if (dataCount <= maxDataCountOneTime) {
+			logger.info("insertByBatch单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbEquHoldCheckDtoMapper.insertByBatch(insertList);
+			logger.info("insertByBatch单次处理结束：" + DateUtil.getCurrentDateTime());
+			return;
+		}
+		/*** add by zcw 三期性能优化 start **/
+
+		// 分批处理
+		logger.info("insertByBatch批量处理开始：" + DateUtil.getCurrentDateTime());
+		// 临时文件存放目录
+		if(!StringUtil.isEmptyList(insertList) && insertList.size()>1000){
+			String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+			ImpTable table = new ImpTable("CHB_EQU_HOLD_CHECK");
+			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+			for (ImpColumn column : table.getColumns()) {
+				if (StringUtil.equals(column.getName(), "OPERATE_STATUS")) {
+					column.setValueField("operatestatus");
+				}
+				if (StringUtil.equals(column.getName(), "MERGER_INDENTIFY_MARK")) {
+					column.setValueField("mergerindentifymark");
+				}
+			}
+			exeSqlldr(tmpPath, "CHB_EQU_HOLD_CHECK", insertList, table);
+		}else{
+			List<ChbEquHoldCheckDto> newDataList = new ArrayList<ChbEquHoldCheckDto>();
+			newDataList.addAll(insertList);
+
+			// 分批处理
+			logger.info("insertByBatch批量处理开始：" + DateUtil.getCurrentDateTime());
+			int part = dataCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++ ) {
+				chbEquHoldCheckDtoMapper.insertByBatch(newDataList.subList(0, maxDataCountOneTime));
+				newDataList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newDataList)) {
+				chbEquHoldCheckDtoMapper.insertByBatch(newDataList);
+			}
+		}
+		/*** add by zcw 三期性能优化 end **/
+		logger.info("insertByBatch批量处理结束：" + DateUtil.getCurrentDateTime());
+	}
+	
+	/**
+	 * delCheckByBatch
+	 *分批执行
+	 * @param deleteList 数据
+	 * @see
+	 * @since 1.0
+	 */
+	// TODO check表数据量一般不多暂不优化后续check表数据量超过百万可考虑优化
+	private void delCheckByBatch(List<EquityInfo001Dto> key) {
+		if (StringUtil.isEmptyList(key)) {
+			return;
+		}
+		
+		int maxDataCountOneTime = reportSelectOrDeleteCount;
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			maxDataCountOneTime = 1;
+		}
+		int dataCount = key.size();
+		if (dataCount <= maxDataCountOneTime) {
+			logger.info("delCheckDataBatch单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbEquHoldCheckDtoMapper.delCheckDataBatch(key);
+			logger.info("delCheckDataBatch单次处理结束：" + DateUtil.getCurrentDateTime());
+
+			return;
+		}
+		List<EquityInfo001Dto> newDataList = new ArrayList<EquityInfo001Dto>();
+		newDataList.addAll(key);
+
+		// 分批处理
+		logger.info("delCheckDataBatch批量处理开始：" + DateUtil.getCurrentDateTime());
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {			
+			chbEquHoldCheckDtoMapper.delCheckDataBatch(newDataList.subList(0, maxDataCountOneTime));			
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			chbEquHoldCheckDtoMapper.delCheckDataBatch(newDataList);			
+		}
+		logger.info("delCheckDataBatch批量处理结束：" + DateUtil.getCurrentDateTime());
+	}
+	
+	/**
+	 * updateMergerIndentifyMarkByBatch
+	 *分批执行
+	 * @param deleteList 数据
+	 * @see
+	 * @since 1.0
+	 */
+	// TODO check表数据量一般不多暂不优化后续check表数据量超过百万可考虑优化
+	private void updateMergerIndentifyMarkByBatch(List<ChbEquHoldCheckDto> key) {
+		if (StringUtil.isEmptyList(key)) {
+			return;
+		}
+		int maxDataCountOneTime = parsToInt(reportUpdateCountForShenFen,"1");
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			maxDataCountOneTime = 1;
+		}
+		int dataCount = key.size();
+		if (dataCount <= maxDataCountOneTime) {
+			logger.info("updateMergerIndentifyMarkByBatch单次处理开始：" + DateUtil.getCurrentDateTime());
+			chbEquHoldCheckDtoMapper.updateMergerIndentifyMarkByBatch(key);
+			logger.info("updateMergerIndentifyMarkByBatch单次处理结束：" + DateUtil.getCurrentDateTime());
+			return;
+		}
+		List<ChbEquHoldCheckDto> newDataList = new ArrayList<ChbEquHoldCheckDto>();
+		newDataList.addAll(key);
+
+		// 分批处理
+		logger.info("updateMergerIndentifyMarkByBatch批量处理开始：" + DateUtil.getCurrentDateTime());
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			chbEquHoldCheckDtoMapper.updateMergerIndentifyMarkByBatch(newDataList.subList(0, maxDataCountOneTime));
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			logger.info("最后一次批量处理开始：" + DateUtil.getCurrentDateTime());
+			chbEquHoldCheckDtoMapper.updateMergerIndentifyMarkByBatch(newDataList);
+			logger.info("最后一次批量处理结束：" + DateUtil.getCurrentDateTime());
+			
+		}
+		logger.info("updateMergerIndentifyMarkByBatch批量处理结束：" + DateUtil.getCurrentDateTime());
+	}
+	
+	/**
+	 * 
+	 *分批执行查询 放置IN 超长
+	 * @param selectChekForRepairByList 数据
+	 * @see   
+	 * @since 1.0
+	 */
+	private List<ChbEquHoldCheckDto> selectChekForRepairByList(List<ChbEquTmp> list) {
+//		List<ChbEquHoldCheckDto> returnList = new ArrayList<ChbEquHoldCheckDto>();
+		
+		if (StringUtil.isEmptyList(list)) {
+			return null;
+		}
+		// add by zcw 三期性能优化 start
+		if(list!= null && list.size()>=1000){
+			return chbEquHoldCheckDtoMapper.selectChekForRepairMax();
+
+		}else{
+			return chbEquHoldCheckDtoMapper.selectChekForRepair(list);
+		}
+		/*** add by zcw 三期性能优化 end **/
+
+//
+//		int maxDataCountOneTime = 1000;
+//
+//		int dataCount = key.size();
+//		if (dataCount < maxDataCountOneTime) {
+//			return chbEquHoldCheckDtoMapper.selectChekForRepair(key);
+//		}
+//		List<String> newDataList = new ArrayList<String>();
+//		newDataList.addAll(key);
+//
+//		// 分批处理
+//		int part = dataCount / maxDataCountOneTime; // 分批数
+//		for (int i = 0; i < part; i++ ) {
+//			List<ChbEquHoldCheckDto> hdlList = new ArrayList<ChbEquHoldCheckDto>();
+//			hdlList = chbEquHoldCheckDtoMapper.selectChekForRepair(newDataList.subList(0, maxDataCountOneTime));
+//			if(CollectionUtils.isNotEmpty(hdlList)) {
+//				returnList.addAll(hdlList);
+//			}
+//			newDataList.subList(0, maxDataCountOneTime).clear();
+//		}
+//		// 最后剩下的数据
+//		if (CollectionUtils.isNotEmpty(newDataList)) {
+//			List<ChbEquHoldCheckDto> hdlList1 = new ArrayList<ChbEquHoldCheckDto>();
+//			hdlList1 = chbEquHoldCheckDtoMapper.selectChekForRepair(newDataList);
+//			if(CollectionUtils.isNotEmpty(hdlList1)) {
+//				returnList.addAll(hdlList1);
+//			}
+//		}
+//		return returnList;
+	}
+
+	/**
+	 * 创建数据文件
+	 *
+	 * @param path 文件路径
+	 * @param baseinfoList 对象列表
+	 * @param columns 数据库表对应的列
+	 */
+	public void createDataFile(String path, List<? extends BaseEntity> baseinfoList, List<ImpColumn> columns) {
+		// 生成txt文件
+		List<String> lines = new ArrayList<>(baseinfoList.size());
+		baseinfoList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
+		try {
+			FileUtils.writeLines(
+					new SafelyFile(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
+					"UTF-8", lines, true);
+		}
+		catch (IOException e) {
+			e.getMessage();
+			logger.error(e.getMessage(),e);
+		}
+	}
+
+	public List<ChbEquTmp> keysToList(List<String> keys) {
+		List<ChbEquTmp> list = new ArrayList<ChbEquTmp>();
+		keys.stream().forEach(item->{
+			String[] strs = item.split(GlobalConstant.UNDER_LINE, -1);
+			ChbEquTmp dto = new ChbEquTmp();
+			dto.setRegistBankCode(strs[0]);
+			dto.setIdentifyNumber(strs[1]);
+			dto.setHolderName(strs[2]);
+			dto.setPersonalIdentifyType(strs[3]);
+			dto.setInstitutionIdentifyType(strs[4]);
+			dto.setOtherIdentifyName(strs[5]);
+			list.add(dto);
+		});
+		return list;
+	}
+
+	/**
+	 * 保存key到临时表
+	 * @param keys
+	 * todo 小数据量不用sqlldr
+	 */
+	public void saveKeys(List<String> keys) {
+		List<ChbEquTmp> list = keysToList(keys);
+		ImpTable table = new ImpTable("CHB_EQU_TMP");
+		table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+		// 临时文件存放目录
+		String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+		exeSqlldr(tmpPath, "CHB_EQU_TMP", list, table);
+		list.clear();
+	}
+
+	/**
+	 * SQLLDR共通方法
+	 * @param tmpPath
+	 * @param tablename
+	 * @param list
+	 * @param table
+	 */
+	public void exeSqlldr(String tmpPath, String tablename, List<? extends BaseEntity> list, ImpTable table) {
+		logger.info("执行sqlldr开始---入表："+tablename +" 时间"+ DateUtil.getCurrentDateTime());
+
+		// 创建一个线程池
+		if (interfMaxCorePoolSize < 1) {
+			interfMaxCorePoolSize = 20;
+		}
+		int size = list.size();
+		int max = (int) Math.ceil((double) size / 1000);
+		ExecutorService service = new JoyinThreadPoolExecutor( max>20?interfMaxCorePoolSize : max);
+		List<Callable<Boolean>> tasks = new ArrayList<>();
+		if (null != list) {
+			int start = 0;
+			int end = 0;
+			for (int i = 0; i < max; i++) {
+				start = end;
+				end = Math.min(size, 1000 * (i + 1));
+				List<? extends BaseEntity> subList = list.subList(start, end);
+				logger.debug("生成sqlloader文件"+i);
+				tasks.add(new Callable<Boolean>() {
+					@Override
+					public Boolean call() {
+						logger.debug("生成sqlloader文件----开始-----");
+						createDataFile(tmpPath + tablename, subList, table.getColumns());
+						logger.debug("生成sqlloader文件----结束-----:");
+						return true;
+					}
+				});
+			}
+		}
+		// 为线程池添加任务
+		List<Future<Boolean>> taskResult;
+		try {
+			taskResult = service.invokeAll(tasks);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+			return;
+		}
+		for (Future<Boolean> res : taskResult) {
+			try {
+				res.get();
+			} catch (InterruptedException | ExecutionException e) {
+				logger.error(e.getMessage(), e);
+				return;
+			}
+		}
+		// 任务结束，停止线程池的所有线程
+		service.shutdown();
+		Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath), new String[] { "tmp" }, false);
+		logger.debug("sqlloder文件个数"+files.size());
+		List<String> content = new ArrayList<>(list.size());
+		for (File f : files) {
+			if (f.getName().startsWith(tablename)) {
+				try {
+					content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
+					logger.debug("查找sqlloder文件"+f);
+				} catch (IOException e) {
+					logger.debug("查找sqlloder文件异常");
+					logger.error(e.getMessage(), e);
+				} finally {
+					f.delete();
+				}
+			}
+		}
+		logger.debug("读取sqlloder文件共"+content.size()+"条");
+		// 系统是否使用的db2数据库
+		boolean isDB2DataBase = CommonUtil.isDB2DataBase();
+		if (isDB2DataBase) {
+			// db2数据库处理
+			if (CollectionUtils.isNotEmpty(content)) {
+				try {
+					ImportGenerator.importToDBByPart(table, tmpPath+tablename+"/", content,
+							reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
+							reportSqlldrDatabaseName);
+				} catch (IOException | InterruptedException e) {
+					logger.error(e.getMessage(), e);
+					return;
+				}
+			}
+		} else {
+			// oracle原逻辑
+			if (CollectionUtils.isNotEmpty(content)) {
+				try {
+					logger.debug("sqlloader入库开始");
+					ImportGenerator.importToDBByPart(table, tmpPath+tablename+"/", content,
+							reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
+							reportSqlldrDatabaseName);
+					logger.debug("sqlloader入库结束");
+				} catch (IOException | InterruptedException e) {
+					logger.debug("sqlloader入库报错");
+					logger.error(e.getMessage(), e);
+					return;
+				}
+			}
+		}
+		logger.info("执行sqlldr结束---入表："+tablename +" 时间"+ DateUtil.getCurrentDateTime());
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+	public void deleteBymodelAfterDealNew() {
+		chbInvestholdInfoCheckDtoMapper.deleteBymodelAfterDealNew();
 	}
 }

@@ -1,6 +1,7 @@
 package com.joyintech.tams.cfets.bankuplink.repo.dto;
 
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -91,6 +92,9 @@ public class CfetsRepoDayRegDto {
 
     @ApiModelProperty(name = "tradeDate", value = "登记日期")
     private Date tradeDate;
+
+    @ApiModelProperty(name = "dealDate", value = "成交日期")
+    private Date dealDate;
 
     @ApiModelProperty(name = "statisticalTimes", value = "导出次数")
     private int statisticalTimes;
@@ -311,6 +315,18 @@ public class CfetsRepoDayRegDto {
 
     public void setTradeDate(Date tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public Date getDealDate() {
+        return dealDate;
+    }
+
+    public void setDealDate(Date dealDate) {
+        this.dealDate = dealDate;
+    }
+
+    public String getDealDateStr() {
+        return DateUtil.format(this.getDealDate());
     }
 
     public String getQuoteId() {

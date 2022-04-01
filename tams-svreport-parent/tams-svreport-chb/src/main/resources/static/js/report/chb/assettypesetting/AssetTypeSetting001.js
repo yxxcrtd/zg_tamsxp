@@ -80,6 +80,28 @@
         })
     });
 
+            /**
+             * 批量删除按钮
+             */
+            $('#AssetTypeSetting001_btn_delete').click(function() {
+                if(tableA!=null && tableA!=''){
+                    var selArr = tableA.getAllCheckedRows();
+                }
+                if (!selArr || selArr.length == 0) {
+                    Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                    return;
+                }
+                var object = {selectedItem: selArr, operateType:"delete"};//请求参数
+                        Joyin.ajaxJson(basePath + 'chb/assettypesetting/AssetTypeSetting001/check', object, function(result) {//请求路径，请求参数回调函数
+                            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("删除[资产一级分类]及配置的所有对应中债资产类型")), function(){//删除事件的请求
+                                WorkFlow.doDeleteList(basePath + 'chb/assettypesetting/AssetTypeSetting001/delete', object,"AssetTypeSetting001_btn_delete", "AssetTypeSetting002", function(){
+                                    tableA.reload();//删除事件请求及回调函数
+                                });
+                            });
+                        })
+            });
+
+
     /**
      * 右侧列表： 点击左侧数据触发查询
      * @type {jQuery}
@@ -124,10 +146,15 @@
             Joyin.exportExcel('export', paramObj);
         };
 
+
     /**
      * 画面加载完成
      */
     $(function () {
+          // 绑定重置按钮事件
+          $('#AssetTypeSetting001_btn_reset').click(function(){
+               window.location.reload();
+          });
         //导出按钮隐藏
 //        $('#AssetTypeSetting001_btn_export').hide();
         //筛选按钮隐藏

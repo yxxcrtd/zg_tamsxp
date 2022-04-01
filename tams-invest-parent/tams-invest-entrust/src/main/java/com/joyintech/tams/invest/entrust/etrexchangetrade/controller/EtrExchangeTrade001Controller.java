@@ -116,17 +116,20 @@ public class EtrExchangeTrade001Controller extends BaseController{
     @Override
     public String init(Model model) {
     	this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, DictCode.业务模式);
-    	this.setPsSelectOptions(model);
-    	this.setPriceModelSelectOptions(model);
-    	this.setDeclaTypeSelectOptions(model);
+        etrExchangeTrade001Service.setPsSelectOptions(model,this.getSelectDataFromDataDic(DictCode.交易方向, null),false);
+        etrExchangeTrade001Service.setPriceModelSelectOptions(model,this.getSelectDataFromDataDic(DictCode.价格模式, null));
+        etrExchangeTrade001Service.setDeclaTypeSelectOptions(model,this.getSelectDataFromDataDic(DictCode.申报类型, null));
         // 设置固定的数据字典明细参数
-        this.setConstSelectOption(model);
+        etrExchangeTrade001Service.setConstSelectOption(model);
         Date platformDate = DateUtil.platDateFromCache();
         model.addAttribute("iPlatformDate", DateUtil.format(platformDate));
 
         //配置单位 add by yeming 20210728 start
-        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
-        model.addAttribute("bond_traded_unit", bondTradedUnit );
+        // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+//        String bondTradedUnit = CacheUtil.getSysParam("bond_traded_unit");
+//        model.addAttribute("bond_traded_unit", bondTradedUnit );
+        model.addAttribute("bond_traded_unit", BussinessConstant.BOND_TRADED_UNIT_DEFAULT);
+        // moddify by etliu 20220301 end
         //配置单位 add by yeming 20210728 end
 
         //流程id
@@ -150,9 +153,16 @@ public class EtrExchangeTrade001Controller extends BaseController{
             entity = etrExchangeTrade001Service.getBussinessEntityByWorkflowId(
                 workflowId);
             //add by chenjiaxing 流程中不显示资产名称 start
-            String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
-            if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
-                entity.setStockId(secIds[1]);
+                        //如果是多组合的流程数据则，单组合置空
+            if(StringUtil.isNotEmpty(entity) && StringUtil.equals(entity.getIsMulti(),DictCodeList.是否_是.getValue())) {
+                entity = new EtrExchangeTrade001Dto();
+            }
+            else {
+                //add by chenjiaxing 流程中不显示资产名称 start
+                String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
+                if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
+                    entity.setStockId(secIds[1]);
+                }
             }
             //add by chenjiaxing 流程中不显示资产名称 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
@@ -192,7 +202,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
         model.addAttribute("CONTROL_TYPE_04", BussinessDictCodeListRds.控制类型_小于等于.getValue());
         
         //清算速度
-        setSettleSpreedSelectOptions(model);
+        etrExchangeTrade001Service.setSettleSpreedSelectOptions(model,getSelectDataFromDataDic(DictCode.清算速度, null));
         model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue());
         model.addAttribute("ACCOUNT_SPEED_02", DictCodeList.清算速度_T_1.getValue());
         //展示投资目的或业务模式参数
@@ -220,193 +230,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
         return super.init(model);
     }
     
-    /**
-     * 由于交易平台不同，设置不同交易平台对应的委托方向
-     * 
-     * @param model Model
-     */
-    private void setSettleSpreedSelectOptions(Model model) {
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.清算速度, null);
-        // 固定收益
-        List<SelectOptionDto> settleSpreed_gd = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeList.清算速度_T_0.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeList.清算速度_T_1.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("ACCOUNT_SPEED_GD", JsonUtils.objectArray2Json(settleSpreed_gd.toArray()));
-    }
-    
-    /**
-     * 由于交易平台不同，设置不同交易平台对应的委托方向
-     * 
-     * @param model Model
-     */
-    private void setPsSelectOptions(Model model) {
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.交易方向, null);
-        // 竞价平台
-        List<SelectOptionDto> ps_jj = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_行权_回售.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt2.交易方向_配股.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_配债.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_债转股.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_申购.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_质押券入库.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_质押券出库.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("PS_JJ", JsonUtils.objectArray2Json(ps_jj.toArray()));
-        // 大宗平台
-        List<SelectOptionDto> ps_dz = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_正回购.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.交易方向_逆回购.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("PS_DZ", JsonUtils.objectArray2Json(ps_dz.toArray()));
-        // 固定收益
-        List<SelectOptionDto> ps_gd = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeList.交易方向_买入.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeList.交易方向_卖出.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("PS_GD", JsonUtils.objectArray2Json(ps_gd.toArray()));
-    }
-    
-    /**
-     * 价格模式
-     * 
-     * @param model Model
-     */
-    private void setPriceModelSelectOptions(Model model) {
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.价格模式, null);
-        List<SelectOptionDto> priceModel_jj = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_指定价格.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("PRICE_MODEL_JJ", JsonUtils.objectArray2Json(priceModel_jj.toArray()));
-        
-        List<SelectOptionDto> priceModel = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_限价指令.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt2.价格模式_市价指令.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("PRICE_MODEL_DZ", JsonUtils.objectArray2Json(priceModel.toArray()));
-        model.addAttribute("PRICE_MODEL_GD", JsonUtils.objectArray2Json(priceModel.toArray()));
-    }
 
-    /**
-     * 由于交易平台不同，设置不同交易平台对应的申报类型
-     * 
-     * @param model Model
-     */
-    private void setDeclaTypeSelectOptions(Model model) {
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.申报类型, null);
-        // 大宗平台
-        List<SelectOptionDto> declaType_dz = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_不指定.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_意向申报.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_定价申报.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_点击成交申报.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_成交申报.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_收盘价固定价格申报.getValue())
-                    || StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_日均价固定价格申报.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("DECLA_TYPE_DZ", JsonUtils.objectArray2Json(declaType_dz.toArray()));
-        // 固定收益
-        List<SelectOptionDto> declaType_gd = selectDto.getOptions().stream().filter(option -> {
-            return StringUtil.equals(option.getId(), DictCodeListExt3.申报类型_指定对手方成交申报.getValue());
-        }).collect(Collectors.toList());
-        model.addAttribute("DECLA_TYPE_GD", JsonUtils.objectArray2Json(declaType_gd.toArray()));
-    }
-
-    /**
-     * 设置画面的一些固定的数据字典明细
-     * 
-     * @param model Model
-     */
-    private void setConstSelectOption(Model model) {
-        // 金融产品类型(投管用)
-        model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-        model.addAttribute("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
-        model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-        model.addAttribute("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
-        model.addAttribute("FINPROD_TYPE_TG_F10", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
-        model.addAttribute("FINPROD_TYPE_TG_ZYSHG", "ZYSHG");
-        // 交易方向
-        model.addAttribute("PS_T01", DictCodeList.交易方向_买入.getValue());
-        model.addAttribute("PS_T02", DictCodeList.交易方向_卖出.getValue());
-        model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
-        model.addAttribute("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
-        model.addAttribute("PS_T46", DictCodeListExt2.交易方向_配股.getValue());
-        model.addAttribute("PS_T48", DictCodeListExt2.交易方向_新股中签.getValue());
-        model.addAttribute("PS_T49", DictCodeListExt3.交易方向_债转股.getValue());
-        model.addAttribute("PS_T97", DictCodeListExt3.交易方向_配债.getValue());
-        model.addAttribute("PS_T03", DictCodeList.交易方向_行权_回售.getValue());
-        model.addAttribute("PS_T04", DictCodeList.交易方向_申购.getValue());
-        model.addAttribute("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
-        model.addAttribute("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
-        // 价格模式
-        model.addAttribute("PRICE_MODEL_PRM02", DictCodeListExt2.价格模式_限价指令.getValue());
-        model.addAttribute("PRICE_MODEL_PRM03", DictCodeListExt2.价格模式_市价指令.getValue());
-        model.addAttribute("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
-        model.addAttribute("DECLA_TYPE_PRM05", DictCodeListExt3.申报类型_不指定.getValue());
-        model.addAttribute("DECLA_TYPE_PRM06", DictCodeListExt3.申报类型_意向申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM07", DictCodeListExt3.申报类型_定价申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM08", DictCodeListExt3.申报类型_点击成交申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM09", DictCodeListExt3.申报类型_成交申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM10", DictCodeListExt3.申报类型_收盘价固定价格申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM11", DictCodeListExt3.申报类型_日均价固定价格申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM12", DictCodeListExt3.申报类型_最优价成交申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM13", DictCodeListExt3.申报类型_可转换成交申报.getValue());
-        model.addAttribute("DECLA_TYPE_PRM14", DictCodeListExt3.申报类型_指定对手方成交申报.getValue());
-        // 交易场所
-        model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-        model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
-        // 债券计算模式
-        model.addAttribute("SEC_CALC_MODE_01", DictCodeListExt3.债券计算模式_单位净价.getValue());
-        model.addAttribute("SEC_CALC_MODE_02", DictCodeListExt3.债券计算模式_单位全价.getValue());
-        model.addAttribute("SEC_CALC_MODE_03", DictCodeListExt3.债券计算模式_到期收益率.getValue());
-        // 指令业务类型
-        model.addAttribute("ENTRUST_BUSS_TYPE_01", DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_02", DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_03", DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_04", DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_05", DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_06", DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_07", DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_08", DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_09", DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_10", DictCodeListExt3.上农商_指令业务类型_配股指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_11", DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_12", DictCodeListExt3.上农商_指令业务类型_配债指令.getValue());
-        model.addAttribute("ENTRUST_BUSS_TYPE_13", DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue());
-        // 目标类型
-        model.addAttribute("TARGET_CLASS_01", DictCodeListExt3.目标类型_数量.getValue());
-        model.addAttribute("TARGET_CLASS_02", DictCodeListExt3.目标类型_金额.getValue());
-        
-        // 交易平台
-        model.addAttribute("SHARES_TRADE_PLATFORM_02", DictCodeList.交易平台_竞价撮合平台.getValue());
-        model.addAttribute("SHARES_TRADE_PLATFORM_03", DictCodeList.交易平台_固定收益平台.getValue());
-        model.addAttribute("SHARES_TRADE_PLATFORM_04", DictCodeList.交易平台_大宗交易平台.getValue());
-        model.addAttribute("SHARES_TRADE_PLATFORM_05", DictCodeList.交易平台_综合协议交易平台.getValue());
-        
-        // 金融产品其他代码类型
-        model.addAttribute("FINPROD_OTH_CODE_TYPE_06", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
-        model.addAttribute("FINPROD_OTH_CODE_TYPE_05", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
-
-        // add by etliu 20211013 start
-        // TISHKS-5 bug修复：在场内下指令时，资产选了万科之后，出现申购选项，但理论上不应该出现(万科很早就上市了)，我在申报信息维护中也没有看到万科的新股申报
-        model.addAttribute("FINPROD_OTH_CODE_TYPE_07", DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
-        // add by etliu 20211013 end
-        
-     // 金融产品其他代码类型
-        model.addAttribute("WINDTYPEONE_B07", DictCodeList.WIND一级分类_含债券一级分类等_公司债.getValue());
-        model.addAttribute("WINDTYPEONE_B13", DictCodeList.WIND一级分类_含债券一级分类等_资产支持证券.getValue());
-        model.addAttribute("WINDTYPEONE_B14", DictCodeList.WIND一级分类_含债券一级分类等_可转债.getValue());
-        model.addAttribute("WINDTYPEONE_B15", DictCodeList.WIND一级分类_含债券一级分类等_可交换债.getValue());
-        
-    }
     
     /**
      * 查询交易行情信息
@@ -482,62 +306,8 @@ public class EtrExchangeTrade001Controller extends BaseController{
 			return new AjaxResult(result);
 		}
 
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-			// add  start
-			if (StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_配股指令.getValue());
-			} else if (StringUtils.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue());
-			} else {//add  end
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue());
-			}
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue());
-		}
-		if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue());
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue());
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue());
-		}
-		// add start
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-			if (StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue());
-			} else if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_配债指令.getValue());
-			} else if (StringUtils.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue());
-			} else if (StringUtils.equals(dto.getPs(), DictCodeListExt1.交易方向_债转股.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue());
-			} else if (StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券入库.getValue()) || StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券出库.getValue())) {
-				/*
-				 * else if 画面.委托方向 = 数据字典.交易方向.质押入库        or 质押出库 
-				 * 指令业务类型     =  数据字典.共通业务类型.标准券出入库指令
-				 */		
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue());			
-			}else {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue());
-			}
-		}
-		// 债券质押式回购竞价指令
-		if ((dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) || dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue());
-		}
-		// 大宗债券质押式回购指令
-		if ((dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) || dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue());
-		}
+        etrExchangeTrade001Service.setEntrustBussType(dto);
+
 		AjaxResult ajax  = etrExchangeTrade001Service.checkSave(dto);
 		if (ajax != null && !StringUtil.isEmptyList(ajax.getErrorList()) && !StringUtil.equals(dto.getOperateType(),"save")) {
 			return ajax;
@@ -601,7 +371,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
             paramMap1.put("finprodId", dto.getFinprodId());//金融产品代码
             paramMap1.put("secAcctId",dto.getSecAcctId());
             paramMap1.put("cDate",DateUtil.getSysDate());
-            paramMap1.put("portfolioId",dto.getPortfolioId());
+//            paramMap1.put("portfolioId",dto.getPortfolioId());
             List<FinProductOthCodeDto> codeDtos = etrExchangeTrade001Service.getFinprodOthCodeInfo(paramMap);
             if (codeDtos.size() > 0) {
                 othType = codeDtos.get(0).getOthType();
@@ -609,7 +379,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
             }
             List<FinProductQuto> qutos = etrExchangeTrade001Service.getFinProductQutoInfo(paramMap1);
             if (qutos.size() == 0) {
-                confirmMsg = "当前资产无配股配债额度，是否继续？";
+                confirmMsg = "当前资产无配股/配债额度，是否继续？";
             }
 
         }
@@ -696,142 +466,12 @@ public class EtrExchangeTrade001Controller extends BaseController{
 			return new AjaxResult(br);
 		}
 		//业务类型
-		String businessType = String.valueOf("");
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-			// add  start
-			if (StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_配股指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_股票竞价指令.getValue();
-			} else if (StringUtils.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_新股申购指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_新股申购指令.getValue();
-			} else {//add  end
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_股票竞价指令.getValue();
-			}
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_基金竞价指令.getValue());
-			businessType = DictCodeListExt3.共通业务类型_基金竞价指令.getValue();
-		}
-		if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
-			businessType = DictCodeListExt3.共通业务类型_大宗债券质押式回购指令.getValue();
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗股票指令.getValue());
-			businessType = DictCodeListExt3.共通业务类型_大宗股票指令.getValue();
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗基金指令.getValue());
-			businessType = DictCodeListExt3.共通业务类型_大宗基金指令.getValue();
-		}
-		if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券指令.getValue());
-			businessType = DictCodeListExt3.共通业务类型_大宗债券指令.getValue();
-		}
-		//add start
-		if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())){
-			if(StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券回售指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_债券回售指令.getValue();
-			}else if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())){
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_配债指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_配债指令.getValue();
-			}else if(StringUtils.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())){
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_可转债申购指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_可转债申购指令.getValue();
-			}else if(StringUtils.equals(dto.getPs(), DictCodeListExt1.交易方向_债转股.getValue())) {
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债转股指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_债转股指令.getValue();
-			} else if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券入库.getValue()) || StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券出库.getValue())){
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_标准券出入库指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_标准券出入库指令.getValue();
-			}else{
-				dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券竞价指令.getValue());
-				businessType = DictCodeListExt3.共通业务类型_债券竞价指令.getValue();
-			}
-		}
-		// 债券质押式回购竞价指令
-		if ((dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-				|| dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
-				&& dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_债券质押式回购竞价指令.getValue());
-			businessType = DictCodeListExt3.共通业务类型_债券质押式回购竞价指令.getValue();
-		}
-		// 大宗债券质押式回购指令
-		if ((dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-				|| dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
-				&& dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_大宗债券质押式回购指令.getValue());
-			businessType = DictCodeListExt3.共通业务类型_大宗债券质押式回购指令.getValue();
-		}
-		if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())){
-			dto.setEntrustBussType(DictCodeListExt3.上农商_指令业务类型_上交所固定收益平台现券交易指令.getValue());	
-			businessType = DictCodeListExt3.共通业务类型_上交所固定收益平台现券交易指令.getValue();
-		}
+		String businessType = etrExchangeTrade001Service.setEntrustBussType(dto);
 		//add end
 		if (!StringUtil.isNotEmpty(dto.getEntrustId())) {
-			BussinessCodeParameter param = new BussinessCodeParameter();
-			if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-				// add  start
-				if (StringUtils.equals(dto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_配股指令));
-				} else if (StringUtils.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())) {
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_新股申购指令));
-				} else {
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_股票竞价指令));
-				}
-			}
-			if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_基金竞价指令));
-			}
-			if ((dto.getPs().equals(DictCodeListExt3.交易方向_正回购.getValue()) || dto.getPs().equals(DictCodeListExt3.交易方向_逆回购.getValue())) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_大宗债券质押式回购指令));
-			}
-			if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_大宗股票指令));
-			}
-			if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_大宗基金指令));
-			}
-			if (dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_大宗债券指令));
-			}
-			//add start
-			if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())){
-				if(StringUtils.equals(dto.getPs(), DictCodeList.交易方向_行权_回售.getValue())){
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_债券回售指令));
-				}else if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_配债.getValue())){
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_配债指令));
-				}else if(StringUtils.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue())){
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_可转债申购指令));
-				}else if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_债转股指令));
-				}else if(StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券入库.getValue()) || StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券出库.getValue())){
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_标准券出入库指令));
-				}else{
-					param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_债券竞价指令));
-				}
-			}
-			// 债券质押式回购竞价指令
-			if ((dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-					|| dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
-					&& dto.getTradePlat().equals(DictCodeList.交易平台_竞价撮合平台.getValue())) {
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_债券质押式回购竞价指令));
-			}
-			// 大宗债券质押式回购指令
-			if ((dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-					|| dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue()))
-					&& dto.getTradePlat().equals(DictCodeList.交易平台_大宗交易平台.getValue())) {
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_大宗债券质押式回购指令));
-			}
-			if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && dto.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())){
-				param.setCommonBusinessExtType(DictCodeListExt3.fromDictCodeList(DictCodeListExt3.共通业务类型_上交所固定收益平台现券交易指令));
-			}
-			//add end
-			String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
-			dto.setEntrustId(code);
+            BussinessCodeParameter param = etrExchangeTrade001Service.genBussinessCodeParameter(dto);
+            String code = bussGetBussinessIdService != null ? bussGetBussinessIdService.buildBussinessCode(param) : IDGenerator.generate();
+            dto.setEntrustId(code);
 		}
 		
 		

@@ -195,5 +195,7 @@ public interface RepoDialogueQuoteSubService {
      * @return QuoteResultDto
      */
     QuoteResultDto deleteWflRepoDialogueQuoteByKey(String quoteId);
+
+    int insertHistoryData(RepoDialogueQuoteDto inputBean);
     
 }

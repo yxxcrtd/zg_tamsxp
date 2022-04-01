@@ -259,7 +259,11 @@ public class TradeMessage implements Cloneable, Serializable {
             tradeMessage.setFinprodMarketId(trade.getStockCode());
             tradeMessage.setDealVolume((double) trade.getTradedVolume());
             tradeMessage.setDealPrice(trade.getTradedPrice());
-            tradeMessage.setDealBalance(trade.getTradedBalance());
+            if (trade.getClearBalance() != null && trade.getClearBalance().compareTo(BigDecimal.ZERO) > 0) {
+                tradeMessage.setDealBalance(trade.getClearBalance());
+            } else {
+                tradeMessage.setDealBalance(trade.getTradedBalance());
+            }
             if (!BusinessFlag.PROTOCOL_BACK.value.equals(trade.getBusinessFlag())) {
                 tradeMessage.setFullPrice(trade.getTradedVolume() > 0 ? TradeUtils.divide(trade.getTradedBalance(), trade.getTradedVolume(), 4).doubleValue() : 0);
             }

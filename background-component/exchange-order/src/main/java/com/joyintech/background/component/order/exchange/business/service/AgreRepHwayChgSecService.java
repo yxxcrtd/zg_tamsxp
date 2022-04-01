@@ -127,8 +127,14 @@ class AgreRepHwayChgSecService extends EtrSubComponentService<AgreRepHwayChgSecD
 	   public void doInsert(AgreRepHwayChgSecDto dto) {
 			EtrPledgeComponent etrPledgeEntity = new EtrPledgeComponent();
 	       BeanUtil.copyPropertiesIgnoreNull(etrPledgeEntity, dto);
-	       if(StringUtil.isNotEmpty(dto.getFinprodId()))
-	       etrPledgeComponentMapper.insertSelective(etrPledgeEntity);
+
+	       // 先根据指令编号删除所有该指令下的质押券数据，再插入新的质押券数据
+			etrPledgeComponentMapper.deleteByEntrustId(etrPledgeEntity);
+
+	       if(StringUtil.isNotEmpty(dto.getFinprodId())) {
+			   etrPledgeComponentMapper.insertSelective(etrPledgeEntity);
+		   }
+
 	   }
 		
 		 /**
@@ -139,14 +145,16 @@ class AgreRepHwayChgSecService extends EtrSubComponentService<AgreRepHwayChgSecD
 		@Override
 	   public void doUpdate(AgreRepHwayChgSecDto dto) {
 			EtrPledgeComponent etrPledgeEntity = new EtrPledgeComponent();
-			EtrPledgeComponent delEtrPledgeEntity = new EtrPledgeComponent();
+//			EtrPledgeComponent delEtrPledgeEntity = new EtrPledgeComponent();
 	        BeanUtil.copyPropertiesIgnoreNull(etrPledgeEntity, dto);
-			BeanUtil.copyPropertiesIgnoreNull(delEtrPledgeEntity, dto);
+//			BeanUtil.copyPropertiesIgnoreNull(delEtrPledgeEntity, dto);
 			//改变了质押券，这里需要先删除再插入，否则无法改变质押券信息
-			if(StringUtil.isNotEmpty(dto.getOldFinprodId())) {
-				delEtrPledgeEntity.setFinprodId(dto.getOldFinprodId());
-				etrPledgeComponentMapper.deleteByPrimaryKey(delEtrPledgeEntity);
-			}
+//			if(StringUtil.isNotEmpty(dto.getOldFinprodId())) {
+//				delEtrPledgeEntity.setFinprodId(dto.getOldFinprodId());
+//				etrPledgeComponentMapper.deleteByPrimaryKey(delEtrPledgeEntity);
+//			}
+			// 先根据指令编号删除所有该指令下的质押券数据，再插入新的质押券数据
+			etrPledgeComponentMapper.deleteByEntrustId(etrPledgeEntity);
 			if(StringUtil.isNotEmpty(dto.getFinprodId())) {
 				//        etrPledgeComponentMapper.updateByPrimaryKeySelective(etrPledgeEntity);
 				etrPledgeComponentMapper.insertSelective(etrPledgeEntity);

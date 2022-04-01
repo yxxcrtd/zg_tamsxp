@@ -183,6 +183,12 @@ public class EntrustMsgbyMQService extends BaseService<InfContractDetailfile>{
 		key.setTradeId(orderFinishAmtMessage.getEntrustId());
 		EtrFinishStatus etrFinishStatus1 = etrFinishStatusMapper.selectByPrimaryKey(key);
 		if(etrFinishStatus1!=null){
+			//add by meifaxin 20220226  防止同一指令多笔交易-交易金额小的覆盖金额大的记录 start
+			BigDecimal tradedBalanceTemp = orderFinishAmtMessage.getTradedBalance() !=null?new BigDecimal(orderFinishAmtMessage.getTradedBalance().toString()): BigDecimal.ZERO;
+            if(etrFinishStatus1.getEntFinishAmt()!=null&&tradedBalanceTemp.compareTo(etrFinishStatus1.getEntFinishAmt())==-1){
+                 return;
+			}
+			//add by meifaxin 20220226  防止同一指令多笔交易-交易金额小的覆盖金额大的记录 end
 			etrFinishStatusMapper.deleteByPrimaryKey(key);
 		}
 

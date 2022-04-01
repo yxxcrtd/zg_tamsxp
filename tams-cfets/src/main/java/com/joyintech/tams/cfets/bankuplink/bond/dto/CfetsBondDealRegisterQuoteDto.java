@@ -128,6 +128,8 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
      */
     private String finprodMarketId;
 
+    private String softSkipMode;
+
     public String getOperatorType() {
         return operatorType;
     }
@@ -384,5 +386,13 @@ public class CfetsBondDealRegisterQuoteDto extends RegFinProductDealTotal implem
 
     public void setCounterTraderName(String counterTraderName) {
         this.counterTraderName = counterTraderName;
+    }
+
+    public String getSoftSkipMode() {
+        return softSkipMode;
+    }
+
+    public void setSoftSkipMode(String softSkipMode) {
+        this.softSkipMode = softSkipMode;
     }
 }

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbhz.inPrdRaisetotSub.dao.InprodRaisetotInfoSvrMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdRaisetotSubTmp" >
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="SINGLE_TOTAL" property="singleTotal" jdbcType="DECIMAL" />
+        <result column="LEGAL_TOTAL" property="legalTotal" jdbcType="DECIMAL" />
+        <result column="UNLEGAL_TOTAL" property="unlegalTotal" jdbcType="DECIMAL" />
+        <result column="SUBSCRIBE_CCY_AMT" property="subscribeCcyAmt" jdbcType="VARCHAR" />
+        <result column="SALE_AREA_AMT" property="saleAreaAmt" jdbcType="VARCHAR" />
+        <result column="TOTAL_AMT" property="totalAmt" jdbcType="DECIMAL" />
+        <result column="IS_CONSIGN" property="isConsign" jdbcType="VARCHAR" />
+        <result column="CONSIGN_AMT" property="consignAmt" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="RAISE_QTY" property="raiseQty" jdbcType="DECIMAL" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ROW_DATE" property="rowDate" jdbcType="DATE" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap type="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto" id="RaiseTotalRegist001DtoRM">
+
+        <id column="REGIST_SEQNO" jdbcType="VARCHAR" property="registSeqno" />
+        <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+        <result column="FPROD_ID" jdbcType="VARCHAR" property="fprodId" />
+        <result column="ISSUE_PARTY_ID" jdbcType="VARCHAR" property="issuePartyId" />
+        <result column="SINGLE_TOTAL" jdbcType="DECIMAL" property="singleTotal" />
+        <result column="LEGAL_TOTAL" jdbcType="DECIMAL" property="legalTotal" />
+        <result column="UNLEGAL_TOTAL" jdbcType="DECIMAL" property="unlegalTotal" />
+        <result column="SUBSCRIBE_CCY_AMT" jdbcType="VARCHAR" property="subscribeCcyAmt" />
+        <result column="SALE_AREA_AMT" jdbcType="VARCHAR" property="saleAreaAmt" />
+        <result column="TOTAL_AMT" jdbcType="DECIMAL" property="totalAmt" />
+        <result column="RAISE_QTY" jdbcType="DECIMAL" property="raiseQty" />
+        <result column="IS_CONSIGN" jdbcType="VARCHAR" property="isConsign" />
+        <result column="CONSIGN_AMT" jdbcType="DECIMAL" property="consignAmt" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <result column="SEND_STATUS" jdbcType="VARCHAR" property="sendStatus" />
+        <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
+        <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
+        <result column="STATUS" jdbcType="VARCHAR" property="status" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
+        <result column="CHB_SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="chbSubmitDeadline" />
+        <result column="SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="submitDeadline" />
+        <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+        <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+        <result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
+        <result column="PROD_REGIST_CODE" jdbcType="VARCHAR" property="prodRegistCode" />
+        <result column="SALETARGET" jdbcType="VARCHAR" property="saletarget" />
+        <result column="RAISE_ENDDATE" jdbcType="TIMESTAMP" property="raiseEnddate" />
+        <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
+
+
+    </resultMap>
+
+    <select id="genChbPrdRaisetotSubTmpList"  resultMap="BaseResultMap">
+        select  pc.PRODID,rs.* from  CHB_PRD_RAISETOT_SUB_TMP rs left join CHB_PRDRESIST_CODE pc on rs.PROD_REGIST_CODE = pc.REG_CODE
+        where  1=1
+        and   DATE_FORMAT(ROW_DATE,'%Y-%m-%d') = #{batchdate,jdbcType = VARCHAR}
+
+        <!--add by zhangliang 20201022 从上游数据到tmp表新加字段PROD_ID-->
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND pc.PRODID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+    <select id="genChbPrdRaisetotSubList"  resultMap="RaiseTotalRegist001DtoRM">
+        select * from CHB_PRD_RAISETOT_SUB
+        where 1=1
+        and  SEND_STATUS  in ('02','03')
+        <if test="keylist != null and keylist.size() > 0">
+            AND PROD_REGIST_CODE IN
+            <trim suffixOverrides=" OR PROD_REGIST_CODE IN ()">
+                <foreach collection='keylist' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_REGIST_CODE IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+    <select id="selectRegistCodeByid" parameterType="java.util.List"  resultType="java.lang.String">
+        select REG_CODE from CHB_PRDRESIST_CODE
+        where REG_CODE IS NOT NULL
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PRODID IN
+            <trim suffixOverrides=" OR PRODID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PRODID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+    <select id="genChbPrdRaisetotSubAllList"  resultMap="RaiseTotalRegist001DtoRM">
+  select * from CHB_PRD_RAISETOT_SUB
+    where 1=1
+    and  SEND_STATUS  in ('02','03')
+ </select>
+    <select id="selectRaiseEnddateByRegistCode" parameterType="java.lang.String"  resultType="java.util.Date">
+    select  MAX(RAISE_ENDDATE) from CHB_PRD_ISSUE_SUB
+    where 1=1
+	AND PROD_REGIST_CODE = #{prodRegistCode,jdbcType = VARCHAR}
+ </select>
+</mapper>

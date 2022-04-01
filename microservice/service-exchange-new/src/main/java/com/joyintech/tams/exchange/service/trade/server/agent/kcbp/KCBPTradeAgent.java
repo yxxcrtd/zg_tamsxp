@@ -5,48 +5,11 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.joyintech.tams.exchange.common.bean.AccountFinance;
-import com.joyintech.tams.exchange.common.bean.AccountLoginReqBean;
-import com.joyintech.tams.exchange.common.bean.EnableQryBean;
-import com.joyintech.tams.exchange.common.bean.HistoryQryBean;
-import com.joyintech.tams.exchange.common.bean.HistoryTrade;
-import com.joyintech.tams.exchange.common.bean.InstrumentQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkCloseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedBulkQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedFixedIncomeQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedQuote;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteBean;
-import com.joyintech.tams.exchange.common.bean.IntegratedRepurchaseQuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.PledgeDiscount;
-import com.joyintech.tams.exchange.common.bean.PositionQueryBean;
-import com.joyintech.tams.exchange.common.bean.QuoteQryBean;
-import com.joyintech.tams.exchange.common.bean.ResultBean;
-import com.joyintech.tams.exchange.common.bean.StandardBonds;
-import com.joyintech.tams.exchange.common.bean.TerminalId;
+import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.bond.StandardBondQryBean;
 import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
-import com.joyintech.tams.exchange.common.constant.ActionIn;
-import com.joyintech.tams.exchange.common.constant.AgentType;
-import com.joyintech.tams.exchange.common.constant.BSFlag;
-import com.joyintech.tams.exchange.common.constant.EntrustBs;
-import com.joyintech.tams.exchange.common.constant.EntrustProp;
-import com.joyintech.tams.exchange.common.constant.EntrustStatus;
-import com.joyintech.tams.exchange.common.constant.ErrorCode;
-import com.joyintech.tams.exchange.common.constant.IDPrefix;
-import com.joyintech.tams.exchange.common.constant.Market;
-import com.joyintech.tams.exchange.common.constant.PledgeeType;
-import com.joyintech.tams.exchange.common.constant.QuoteType;
-import com.joyintech.tams.exchange.common.db.domain.Account;
-import com.joyintech.tams.exchange.common.db.domain.CancelEntrustBean;
-import com.joyintech.tams.exchange.common.db.domain.Entrust;
-import com.joyintech.tams.exchange.common.db.domain.EntrustInterface;
-import com.joyintech.tams.exchange.common.db.domain.Instrument;
-import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
-import com.joyintech.tams.exchange.common.db.domain.PositionBean;
-import com.joyintech.tams.exchange.common.db.domain.Trade;
+import com.joyintech.tams.exchange.common.constant.*;
+import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.net.protocol.FunctionCode;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
 import com.joyintech.tams.exchange.common.utils.IntegratedEntrustUtils;
@@ -67,11 +30,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -136,6 +95,7 @@ public class KCBPTradeAgent extends TradeAgent {
             parameters.put("financeAccount", account.getFinanceAccount());
             parameters.put("tradePwd", account.getTradePwd());
 
+            agentInfo.setDspUrl(account.getDspUrl());
             ResultBean resultBean = tradeAgentHelper.doRequest(agentInfo, parameters);
             // 账户登录成功，记录下登录成功的账户
             if (resultBean.getErrorCode() == ErrorCode.SUCCESS.value) {
@@ -1137,8 +1097,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getEntrustPositionStr());
+        parameters.put("poststr", kcbpAccount.getEntrustPositionStr());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "Bidding");
         agentInfo.setAccountId(accountId);
@@ -1169,8 +1128,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_entrust());
+        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_entrust());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "FixedIncome");
         agentInfo.setAccountId(accountId);
@@ -1204,8 +1162,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_entrust());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_entrust());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_ENTRUST_REISSUE.value, "ProtocolBack_SH");
         agentInfo.setAccountId(accountId);
@@ -1236,8 +1193,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("stkcode", "");
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_entrust());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_entrust());
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
 
@@ -1270,8 +1226,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getTradePositionStr());
+        parameters.put("poststr", kcbpAccount.getTradePositionStr());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "Bidding");
         agentInfo.setAccountId(accountId);
@@ -1302,8 +1257,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("count", "100");
         parameters.put("qryflag", "1");
-        parameters.put("poststr", "");
-//        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_trade());
+        parameters.put("poststr", kcbpAccount.getFixedIncome_PositionStr_trade());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "FixedIncome");
         agentInfo.setAccountId(accountId);
@@ -1334,8 +1288,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("ordersno", "");
         parameters.put("qryflag", "1");
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_trade());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SZ_PositionStr_trade());
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
 
@@ -1370,8 +1323,7 @@ public class KCBPTradeAgent extends TradeAgent {
         parameters.put("begindate", beginDate);
         parameters.put("enddate", beginDate);
         parameters.put("count", "100");
-        parameters.put("posstr", "");
-//        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_trade());
+        parameters.put("posstr", kcbpAccount.getProtocolBack_SH_PositionStr_trade());
 
         TerminalAgentInfo agentInfo = terminalAgentInfoService.selectOne(getTerminalName(), FunctionCode.REQ_ACCOUNT_TRADE_REISSUE.value, "ProtocolBack_SH");
         agentInfo.setAccountId(accountId);

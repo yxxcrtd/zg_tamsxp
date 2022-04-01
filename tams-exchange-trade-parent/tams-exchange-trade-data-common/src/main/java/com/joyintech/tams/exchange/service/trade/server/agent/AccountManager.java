@@ -40,7 +40,11 @@ public class AccountManager {
     }
 
     public Account getAccountById(String accountId) {
-        return accountMaps.get(accountId);
+        if(accountId != null){
+            return accountMaps.get(accountId);
+        }else{
+            return null;
+        }
     }
 
     public void clearAccountMaps(Collection<String> accountIds) {

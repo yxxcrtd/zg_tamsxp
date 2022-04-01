@@ -47,12 +47,16 @@
     DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
     decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',ETR_ENTRUST_ADD.TERM_DAYS,'F10',ETR_ENTRUST_ADD.TERM_DAYS,'F12',ETR_ENTRUST_ADD.TERM_DAYS,'F16',ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
     round(decode(btm.busi_type,#{busiTypePosition02},decode(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price',ETR_ENTRUST.PRICE,'exerYield',ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},ETR_ENTRUST.PRICE,#{busiTypePosition05},ETR_ENTRUST.PRICE*100,''),4) etrPrice,
-    case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+    case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and ETR_ENTRUST.ENTRUST_NUM != 0
     then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+    when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and ETR_ENTRUST.ENTRUST_NUM = 0 then 0
+    when ETR_ENTRUST.ENTRUST_AMT = 0 then 0
     else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.Ent_Finish_Amt, 0), 0) / ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
 
-    case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+    case when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and ETR_ENTRUST.ENTRUST_NUM != 0
     then trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+    when ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and ETR_ENTRUST.ENTRUST_NUM = 0 then 0
+    when ETR_ENTRUST.ENTRUST_AMT = 0 then 0
     else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)) /
     ETR_ENTRUST.ENTRUST_AMT, 4) * 100 end             as dealProgress,
 
@@ -76,7 +80,9 @@
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi:ss') transmitTime,
     to_char(ETR_ENTRUST_ADD.TRANSMIT_TIME,'hh24:mi') transmitTimeSer,
     ETR_ENTRUST_ADD.CALCULATE_FIELD calculateField
-    FROM (SELECT * FROM ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
+    FROM (SELECT * FROM ETR_ENTRUST  where ps in ('T01','T02','T03','03','04') and trade_market in ('01','02')
+        and finprod_type2 in ('F01','F02','F03')
+        ORDER BY ENTRUST_DATE DESC) ETR_ENTRUST
     LEFT JOIN
     PTL_PORTFOLIO
     ON
@@ -281,12 +287,16 @@
         DECODE(WFL_ETR_ENTRUST_ADD.SETTLE_SPREED,0,'01',1,'02','2','03') settleSpeed,
         decode(WFL_ETR_ENTRUST_ADD.ASSET_TYPE,'F01','','F07',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F10',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F12',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'F16',WFL_ETR_ENTRUST_ADD.TERM_DAYS,'') termDays,
         round(decode(btm.busi_type,#{busiTypePosition02},decode(WFL_ETR_ENTRUST_ADD.CAL_MODE,'price',WFL_ETR_ENTRUST.PRICE,'exerYield',WFL_ETR_ENTRUST_ADD.EXER_YIELD*100,'matureYield',WFL_ETR_ENTRUST_ADD.MATURE_YIELD*100),#{busiTypePosition03},WFL_ETR_ENTRUST.PRICE,#{busiTypePosition05},WFL_ETR_ENTRUST.PRICE*100,''),4) etrPrice,
-        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and WFL_ETR_ENTRUST.ENTRUST_NUM != 0
         then trunc(nvl(NVL(T7.FINISH_AMT, 0)+ NVL(T5.ENT_FINISH_AMT*100, 0),0)/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+        when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and WFL_ETR_ENTRUST.ENTRUST_NUM = 0 then 0
+        when WFL_ETR_ENTRUST.ENTRUST_AMT = 0 then 0
         else trunc(nvl(nvl(T7.FINISH_AMT, 0) + nvl(T5.Ent_Finish_Amt, 0), 0) / WFL_ETR_ENTRUST.ENTRUST_AMT,4) * 100 end  as exeProgress,
 
-        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01'
+        case when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and WFL_ETR_ENTRUST.ENTRUST_NUM != 0
         then trunc((NVL(CB.totalShareAmt,nvl(C2B.totalShareAmt,0))+NVL(T6.FINISH_AMT*100,0))/(WFL_ETR_ENTRUST.ENTRUST_NUM*100),4)*100
+        when WFL_ETR_ENTRUST_ADD.ASSET_TYPE = 'F01' and WFL_ETR_ENTRUST.ENTRUST_NUM = 0 then 0
+        when WFL_ETR_ENTRUST.ENTRUST_AMT = 0 then 0
         else trunc((nvl(C.totalShareAmt, nvl(C2.FPRICE_AMT, 0)) + nvl(T6.FINISH_AMT, 0)) /
         WFL_ETR_ENTRUST.ENTRUST_AMT, 4) * 100 end             as dealProgress,
 
@@ -310,7 +320,8 @@
         NULL transmitTime,
         NULL transmitTimeSer,
         WFL_ETR_ENTRUST_ADD.CAL_MODE calculateField
-        FROM (SELECT * FROM WFL_ETR_ENTRUST  ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
+        FROM (SELECT * FROM WFL_ETR_ENTRUST where ps in ('T01','T02','T03','03','04')  and trade_market in ('01','02')
+        and finprod_type2 in ('F01','F02','F03') ORDER BY ENTRUST_DATE DESC) WFL_ETR_ENTRUST
         LEFT JOIN
         PTL_PORTFOLIO
         ON

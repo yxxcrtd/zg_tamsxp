@@ -52,6 +52,8 @@
     <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
     <result column="INDUSTRY3" property="industry3" jdbcType="VARCHAR" />
     <result column="INDUSTRY4" property="industry4" jdbcType="VARCHAR" />
+    <result column="ORG_TYPE" property="orgType" jdbcType="VARCHAR" />
+    <result column="IS_SHAREHOLDER_RELATED" property="isShareholderRelated" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
     CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2, PARTY_TYPE1, INDUSTRY, INDUSTRY2, INSITITUTE_CODE, 
@@ -61,7 +63,8 @@
     BUSI_SCOPE, MAIN_BUSI, SEX, PERSON_ID, M_PHONE, PHONE, POSITION, COMPANY_NAME, ADDRESS, 
     MAIL, PROPERTY, COMPANY_NATURE, LINK_ID1, LINK_ID2, LINK_ID3, REMARK, CREATE_USER, 
     CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, HS_TYPE HS_TYPE,
-    IS_FIN_LICENCE IS_FIN_LICENCE, INDUSTRY3 INDUSTRY3, INDUSTRY4 INDUSTRY4
+    IS_FIN_LICENCE IS_FIN_LICENCE, INDUSTRY3 INDUSTRY3, INDUSTRY4 INDUSTRY4,
+    ORG_TYPE ORG_TYPE, IS_SHAREHOLDER_RELATED IS_SHAREHOLDER_RELATED
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -99,7 +102,7 @@
       LINK_ID3, REMARK, CREATE_USER, 
       CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
       UPDATE_TIME, HS_TYPE,
-      IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
+      IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4, ORG_TYPE, IS_SHAREHOLDER_RELATED)
     values (#{customerId,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR}, 
       #{partyType1,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{industry2,jdbcType=VARCHAR}, 
       #{insitituteCode,jdbcType=VARCHAR}, #{isGov,jdbcType=VARCHAR}, #{mainCapital,jdbcType=DECIMAL}, 
@@ -117,7 +120,8 @@
       #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{hsType,jdbcType=VARCHAR},
       #{isFinLicence,jdbcType=VARCHAR},
-      #{industry3,jdbcType=VARCHAR}, #{industry4,jdbcType=VARCHAR})
+      #{industry3,jdbcType=VARCHAR}, #{industry4,jdbcType=VARCHAR},
+      #{orgType,jdbcType=VARCHAR}, #{isShareholderRelated,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
     insert into MST_CUSTOMER_INFO_ADD
@@ -272,6 +276,12 @@
       <if test="industry4 != null" >
         INDUSTRY4,
       </if>
+      <if test="orgType != null" >
+        ORG_TYPE,
+      </if>
+      <if test="isShareholderRelated != null" >
+        IS_SHAREHOLDER_RELATED,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="customerId != null">
@@ -423,6 +433,12 @@
       </if>
       <if test="industry4 != null" >
         #{industry4,jdbcType=VARCHAR},
+      </if>
+      <if test="orgType != null" >
+        #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="isShareholderRelated != null" >
+        #{isShareholderRelated,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -576,6 +592,12 @@
       <if test="industry4 != null" >
         INDUSTRY4 = #{industry4,jdbcType=VARCHAR},
       </if>
+      <if test="orgType != null" >
+        ORG_TYPE = #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="isShareholderRelated != null" >
+        IS_SHAREHOLDER_RELATED = #{isShareholderRelated,jdbcType=VARCHAR},
+      </if>
     </set>
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
@@ -629,7 +651,9 @@
       HS_TYPE = #{hsType,jdbcType=VARCHAR},
       IS_FIN_LICENCE = #{isFinLicence,jdbcType=VARCHAR},
       INDUSTRY3 = #{industry3,jdbcType=VARCHAR},
-      INDUSTRY4 = #{industry4,jdbcType=VARCHAR}
+      INDUSTRY4 = #{industry4,jdbcType=VARCHAR},
+      ORG_TYPE = #{orgType,jdbcType=VARCHAR},
+      IS_SHAREHOLDER_RELATED = #{isShareholderRelated,jdbcType=VARCHAR}
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
   </update>
   
@@ -697,7 +721,9 @@
         #{item.isFinLicence,jdbcType=VARCHAR} IS_FIN_LICENCE,
         #{item.industry3,jdbcType=VARCHAR} INDUSTRY3,
         #{item.industry4,jdbcType=VARCHAR} INDUSTRY4,
-		#{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
+		#{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID,
+        #{item.orgType,jdbcType=VARCHAR} ORG_TYPE,
+        #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED
 		FROM
 		DUAL
 	</foreach>
@@ -755,7 +781,9 @@
     HS_TYPE = TEMP.HS_TYPE,
     IS_FIN_LICENCE = TEMP.IS_FIN_LICENCE,
     INDUSTRY3 = TEMP.INDUSTRY3,
-    INDUSTRY4 = TEMP.INDUSTRY4
+    INDUSTRY4 = TEMP.INDUSTRY4,
+    ORG_TYPE = TEMP.ORG_TYPE,
+    IS_SHAREHOLDER_RELATED = TEMP.IS_SHAREHOLDER_RELATED
     <!-- 未匹配到这插入 -->
 	WHEN NOT MATCHED THEN INSERT
 	(CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
@@ -773,7 +801,8 @@
 	COMPANY_NATURE, LINK_ID1, LINK_ID2,
 	LINK_ID3, REMARK, CREATE_USER,
 	CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-	UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
+	UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,
+	ORG_TYPE, IS_SHAREHOLDER_RELATED)
 	values (TEMP.CUSTOMER_ID, TEMP.PARTY_TYPE3, TEMP.PARTY_TYPE2,
 	TEMP.PARTY_TYPE1, TEMP.INDUSTRY, TEMP.INDUSTRY2,
 	TEMP.INSITITUTE_CODE, TEMP.IS_GOV, TEMP.MAIN_CAPITAL,
@@ -789,6 +818,7 @@
 	TEMP.COMPANY_NATURE, TEMP.LINK_ID1, TEMP.LINK_ID2,
 	TEMP.LINK_ID3, TEMP.REMARK, TEMP.CREATE_USER,
 	TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
-	TEMP.UPDATE_TIME, TEMP.HS_TYPE, TEMP.IS_FIN_LICENCE, TEMP.INDUSTRY3, TEMP.INDUSTRY4)
+	TEMP.UPDATE_TIME, TEMP.HS_TYPE, TEMP.IS_FIN_LICENCE, TEMP.INDUSTRY3, TEMP.INDUSTRY4,
+	TEMP.ORG_TYPE, TEMP.IS_SHAREHOLDER_RELATED)
 </insert>
 </mapper>

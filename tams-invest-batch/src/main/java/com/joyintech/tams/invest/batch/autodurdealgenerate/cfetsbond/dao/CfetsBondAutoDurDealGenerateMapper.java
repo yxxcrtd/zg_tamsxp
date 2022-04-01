@@ -74,4 +74,11 @@ public interface CfetsBondAutoDurDealGenerateMapper {
     String getSecAcctId(@Param("portfolioId") String portfolioId,@Param("finprodId") String finprodId,@Param("tradeMarket") String tradeMarket);
 
     TrdRepoDurationDto findRepoEffectiveData(Map<String, Object> param);
+
+    /**
+     * 存续期获取业务模式
+     * @param paramMap
+     * @return
+     */
+    String findInvAimData(Map<String, Object> paramMap);
 }

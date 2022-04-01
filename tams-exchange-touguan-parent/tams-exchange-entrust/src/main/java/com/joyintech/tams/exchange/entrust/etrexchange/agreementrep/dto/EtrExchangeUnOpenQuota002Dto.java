@@ -102,6 +102,12 @@ public class EtrExchangeUnOpenQuota002Dto extends BaseEntity {
      * 原质押券代码
      */
     private String origPledgeStampCode;
+
+    /**
+     * 原质押券名称
+     */
+    private String origPledgeStampName;
+
     /**
      * 回购利息
      */
@@ -139,6 +145,16 @@ public class EtrExchangeUnOpenQuota002Dto extends BaseEntity {
     private String acctNo;
 
     private String redoType;
+
+    /**
+     * 交易场所
+     */
+    private String tradeMarket;
+
+    /**
+     * 交易场所
+     */
+    private String tradeMarketStr;
 
     public String getReqOnId() {
         return reqOnId;
@@ -352,5 +368,25 @@ public class EtrExchangeUnOpenQuota002Dto extends BaseEntity {
         }else {
             return "";
         }
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    public String getTradeMarketStr() {
+        return SysDatadictUtil.getNameFromDataDict(DictCode.交易场所, this.tradeMarket);
+    }
+
+    public String getOrigPledgeStampName() {
+        return origPledgeStampName;
+    }
+
+    public void setOrigPledgeStampName(String origPledgeStampName) {
+        this.origPledgeStampName = origPledgeStampName;
     }
 }

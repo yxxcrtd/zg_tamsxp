@@ -1,334 +1,356 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.chb.prodraisetotalregist.dao.RaiseTotalRegist001Mapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-    <id column="REGIST_SEQNO" jdbcType="VARCHAR" property="registSeqno" />
-    <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
-    <result column="FPROD_ID" jdbcType="VARCHAR" property="fprodId" />
-    <result column="ISSUE_PARTY_ID" jdbcType="VARCHAR" property="issuePartyId" />
-    <result column="SINGLE_TOTAL" jdbcType="DECIMAL" property="singleTotal" />
-    <result column="LEGAL_TOTAL" jdbcType="DECIMAL" property="legalTotal" />
-    <result column="UNLEGAL_TOTAL" jdbcType="DECIMAL" property="unlegalTotal" />
-    <result column="SUBSCRIBE_CCY_AMT" jdbcType="VARCHAR" property="subscribeCcyAmt" />
-    <result column="SALE_AREA_AMT" jdbcType="VARCHAR" property="saleAreaAmt" />
-    <result column="TOTAL_AMT" jdbcType="DECIMAL" property="totalAmt" />
-    <result column="RAISE_QTY" jdbcType="DECIMAL" property="raiseQty" />
-    <result column="IS_CONSIGN" jdbcType="VARCHAR" property="isConsign" />
-    <result column="CONSIGN_AMT" jdbcType="DECIMAL" property="consignAmt" />
-    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
-    <result column="SEND_STATUS" jdbcType="VARCHAR" property="sendStatus" />
-    <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
-    <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
-    <result column="STATUS" jdbcType="VARCHAR" property="status" />
-    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
-    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
-    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
-    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
-    <result column="CHB_SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="chbSubmitDeadline" />
-    <result column="SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="submitDeadline" />
-    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
-    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
-    <result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
-    <result column="REG_CODE" jdbcType="VARCHAR" property="regCode" />
-    <result column="SALETARGET" jdbcType="VARCHAR" property="saletarget" />
-    <result column="RAISE_ENDDATE" jdbcType="TIMESTAMP" property="raiseEnddate" />
-    <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-    REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, 
-    CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    ORG_CODE, DEPT_CODE
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        <id column="REGIST_SEQNO" jdbcType="VARCHAR" property="registSeqno" />
+        <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+        <result column="FPROD_ID" jdbcType="VARCHAR" property="fprodId" />
+        <result column="ISSUE_PARTY_ID" jdbcType="VARCHAR" property="issuePartyId" />
+        <result column="SINGLE_TOTAL" jdbcType="DECIMAL" property="singleTotal" />
+        <result column="LEGAL_TOTAL" jdbcType="DECIMAL" property="legalTotal" />
+        <result column="UNLEGAL_TOTAL" jdbcType="DECIMAL" property="unlegalTotal" />
+        <result column="SUBSCRIBE_CCY_AMT" jdbcType="VARCHAR" property="subscribeCcyAmt" />
+        <result column="SALE_AREA_AMT" jdbcType="VARCHAR" property="saleAreaAmt" />
+        <result column="TOTAL_AMT" jdbcType="DECIMAL" property="totalAmt" />
+        <result column="RAISE_QTY" jdbcType="DECIMAL" property="raiseQty" />
+        <result column="IS_CONSIGN" jdbcType="VARCHAR" property="isConsign" />
+        <result column="CONSIGN_AMT" jdbcType="DECIMAL" property="consignAmt" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <result column="SEND_STATUS" jdbcType="VARCHAR" property="sendStatus" />
+        <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
+        <result column="STATUS_DATE" jdbcType="TIMESTAMP" property="statusDate" />
+        <result column="STATUS" jdbcType="VARCHAR" property="status" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
+        <result column="CHB_SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="chbSubmitDeadline" />
+        <result column="SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="submitDeadline" />
+        <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+        <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+        <result column="PROD_NAME" jdbcType="VARCHAR" property="prodName" />
+        <result column="REG_CODE" jdbcType="VARCHAR" property="regCode" />
+        <result column="SALETARGET" jdbcType="VARCHAR" property="saletarget" />
+        <result column="RAISE_ENDDATE" jdbcType="TIMESTAMP" property="raiseEnddate" />
+        <result column="ISSUING_STATUS" jdbcType="VARCHAR" property="issuingStatus" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="BUSI_ACCT_NO" property="busiAcctNo" jdbcType="VARCHAR" />
+        <result column="ACCT_NAME" property="acctName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+    REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+    ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from CHB_PRD_RAISETOT_SUB
-    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_PRD_RAISETOT_SUB
+        where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from CHB_PRD_RAISETOT_SUB
     where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-    insert into CHB_PRD_RAISETOT_SUB (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
-      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
-      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-      STATUS_DATE, STATUS, CREATE_USER, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-      UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+    insert into CHB_PRD_RAISETOT_SUB (SUMIT_SEQ,REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+      STATUS_DATE, STATUS, CREATE_USER,
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+      UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE,PROD_REGIST_CODE
       )
-    values (#{registSeqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR}, 
-      #{singleTotal,jdbcType=DECIMAL}, #{legalTotal,jdbcType=DECIMAL}, #{unlegalTotal,jdbcType=DECIMAL}, 
-      #{subscribeCcyAmt,jdbcType=VARCHAR}, #{saleAreaAmt,jdbcType=VARCHAR}, #{totalAmt,jdbcType=DECIMAL}, 
-      #{raiseQty,jdbcType=DECIMAL}, #{isConsign,jdbcType=VARCHAR}, #{consignAmt,jdbcType=DECIMAL}, 
-      #{remark,jdbcType=VARCHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
-      #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-      #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, 
-      #{submitDeadline,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}
+    values (#{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR},
+      #{singleTotal,jdbcType=DECIMAL}, #{legalTotal,jdbcType=DECIMAL}, #{unlegalTotal,jdbcType=DECIMAL},
+      #{subscribeCcyAmt,jdbcType=VARCHAR}, #{saleAreaAmt,jdbcType=VARCHAR}, #{totalAmt,jdbcType=DECIMAL},
+      #{raiseQty,jdbcType=DECIMAL}, #{isConsign,jdbcType=VARCHAR}, #{consignAmt,jdbcType=DECIMAL},
+      #{remark,jdbcType=VARCHAR}, #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR},
+      #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+      #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+      #{submitDeadline,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-    insert into CHB_PRD_RAISETOT_SUB
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="registSeqno != null">
-        REGIST_SEQNO,
-      </if>
-      <if test="prodId != null">
-        PROD_ID,
-      </if>
-      <if test="issuePartyId != null">
-        ISSUE_PARTY_ID,
-      </if>
-      <if test="singleTotal != null">
-        SINGLE_TOTAL,
-      </if>
-      <if test="legalTotal != null">
-        LEGAL_TOTAL,
-      </if>
-      <if test="unlegalTotal != null">
-        UNLEGAL_TOTAL,
-      </if>
-      <if test="subscribeCcyAmt != null">
-        SUBSCRIBE_CCY_AMT,
-      </if>
-      <if test="saleAreaAmt != null">
-        SALE_AREA_AMT,
-      </if>
-      <if test="totalAmt != null">
-        TOTAL_AMT,
-      </if>
-      <if test="raiseQty != null">
-        RAISE_QTY,
-      </if>
-      <if test="isConsign != null">
-        IS_CONSIGN,
-      </if>
-      <if test="consignAmt != null">
-        CONSIGN_AMT,
-      </if>
-      <if test="remark != null">
-        REMARK,
-      </if>
-      <if test="sendStatus != null">
-        SEND_STATUS,
-      </if>
-      <if test="submitFeedbackStatus != null">
-        SUBMIT_FEEDBACK_STATUS,
-      </if>
-      <if test="statusDate != null">
-        STATUS_DATE,
-      </if>
-      <if test="status != null">
-        STATUS,
-      </if>
-      <if test="createUser != null">
-        CREATE_USER,
-      </if>
-      <if test="createDept != null">
-        CREATE_DEPT,
-      </if>
-      <if test="createTime != null">
-        CREATE_TIME,
-      </if>
-      <if test="updateUser != null">
-        UPDATE_USER,
-      </if>
-      <if test="updateTime != null">
-        UPDATE_TIME,
-      </if>
-      <if test="submitTime != null">
-        SUBMIT_TIME,
-      </if>
-      <if test="chbSubmitDeadline != null">
-        CHB_SUBMIT_DEADLINE,
-      </if>
-      <if test="submitDeadline != null">
-        SUBMIT_DEADLINE,
-      </if>
-      <if test="orgCode != null">
-        ORG_CODE,
-      </if>
-      <if test="deptCode != null">
-        DEPT_CODE,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="registSeqno != null">
-        #{registSeqno,jdbcType=VARCHAR},
-      </if>
-      <if test="prodId != null">
-        #{prodId,jdbcType=VARCHAR},
-      </if>
-      <if test="issuePartyId != null">
-        #{issuePartyId,jdbcType=VARCHAR},
-      </if>
-      <if test="singleTotal != null">
-        #{singleTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="legalTotal != null">
-        #{legalTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="unlegalTotal != null">
-        #{unlegalTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="subscribeCcyAmt != null">
-        #{subscribeCcyAmt,jdbcType=VARCHAR},
-      </if>
-      <if test="saleAreaAmt != null">
-        #{saleAreaAmt,jdbcType=VARCHAR},
-      </if>
-      <if test="totalAmt != null">
-        #{totalAmt,jdbcType=DECIMAL},
-      </if>
-      <if test="raiseQty != null">
-        #{raiseQty,jdbcType=DECIMAL},
-      </if>
-      <if test="isConsign != null">
-        #{isConsign,jdbcType=VARCHAR},
-      </if>
-      <if test="consignAmt != null">
-        #{consignAmt,jdbcType=DECIMAL},
-      </if>
-      <if test="remark != null">
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="sendStatus != null">
-        #{sendStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="submitFeedbackStatus != null">
-        #{submitFeedbackStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="statusDate != null">
-        #{statusDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createDept != null">
-        #{createDept,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitTime != null">
-        #{submitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="chbSubmitDeadline != null">
-        #{chbSubmitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitDeadline != null">
-        #{submitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="orgCode != null">
-        #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="deptCode != null">
-        #{deptCode,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-    update CHB_PRD_RAISETOT_SUB
-    <set>
-      <if test="prodId != null">
-        PROD_ID = #{prodId,jdbcType=VARCHAR},
-      </if>
-      <if test="issuePartyId != null">
-        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
-      </if>
-      <if test="singleTotal != null">
-        SINGLE_TOTAL = #{singleTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="legalTotal != null">
-        LEGAL_TOTAL = #{legalTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="unlegalTotal != null">
-        UNLEGAL_TOTAL = #{unlegalTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="subscribeCcyAmt != null">
-        SUBSCRIBE_CCY_AMT = #{subscribeCcyAmt,jdbcType=VARCHAR},
-      </if>
-      <if test="saleAreaAmt != null">
-        SALE_AREA_AMT = #{saleAreaAmt,jdbcType=VARCHAR},
-      </if>
-      <if test="totalAmt != null">
-        TOTAL_AMT = #{totalAmt,jdbcType=DECIMAL},
-      </if>
-      <if test="raiseQty != null">
-        RAISE_QTY = #{raiseQty,jdbcType=DECIMAL},
-      </if>
-      <if test="isConsign != null">
-        IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
-      </if>
-      <if test="consignAmt != null">
-        CONSIGN_AMT = #{consignAmt,jdbcType=DECIMAL},
-      </if>
-      <if test="remark != null">
-        REMARK = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="sendStatus != null">
-        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="submitFeedbackStatus != null">
-        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="statusDate != null">
-        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        STATUS = #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null">
-        CREATE_USER = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createDept != null">
-        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitTime != null">
-        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="chbSubmitDeadline != null">
-        CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitDeadline != null">
-        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="orgCode != null">
-        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="deptCode != null">
-        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        insert into CHB_PRD_RAISETOT_SUB
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="registSeqno != null">
+                REGIST_SEQNO,
+            </if>
+            <if test="prodId != null">
+                PROD_ID,
+            </if>
+            <if test="issuePartyId != null">
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="singleTotal != null">
+                SINGLE_TOTAL,
+            </if>
+            <if test="legalTotal != null">
+                LEGAL_TOTAL,
+            </if>
+            <if test="unlegalTotal != null">
+                UNLEGAL_TOTAL,
+            </if>
+            <if test="subscribeCcyAmt != null">
+                SUBSCRIBE_CCY_AMT,
+            </if>
+            <if test="saleAreaAmt != null">
+                SALE_AREA_AMT,
+            </if>
+            <if test="totalAmt != null">
+                TOTAL_AMT,
+            </if>
+            <if test="raiseQty != null">
+                RAISE_QTY,
+            </if>
+            <if test="isConsign != null">
+                IS_CONSIGN,
+            </if>
+            <if test="consignAmt != null">
+                CONSIGN_AMT,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="sendStatus != null">
+                SEND_STATUS,
+            </if>
+            <if test="submitFeedbackStatus != null">
+                SUBMIT_FEEDBACK_STATUS,
+            </if>
+            <if test="statusDate != null">
+                STATUS_DATE,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="submitTime != null">
+                SUBMIT_TIME,
+            </if>
+            <if test="chbSubmitDeadline != null">
+                CHB_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null">
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null">
+                DEPT_CODE,
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ,
+            </if>
+            <if test="prodRegistCode != null" >
+                PROD_REGIST_CODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="registSeqno != null">
+                #{registSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null">
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null">
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="singleTotal != null">
+                #{singleTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="legalTotal != null">
+                #{legalTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="unlegalTotal != null">
+                #{unlegalTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="subscribeCcyAmt != null">
+                #{subscribeCcyAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="saleAreaAmt != null">
+                #{saleAreaAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="totalAmt != null">
+                #{totalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseQty != null">
+                #{raiseQty,jdbcType=DECIMAL},
+            </if>
+            <if test="isConsign != null">
+                #{isConsign,jdbcType=VARCHAR},
+            </if>
+            <if test="consignAmt != null">
+                #{consignAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null">
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackStatus != null">
+                #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null">
+                #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null">
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitTime != null">
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null">
+                #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null">
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null">
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistCode != null" >
+                #{prodRegistCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        update CHB_PRD_RAISETOT_SUB
+        <set>
+            <if test="prodId != null">
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null">
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="singleTotal != null">
+                SINGLE_TOTAL = #{singleTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="legalTotal != null">
+                LEGAL_TOTAL = #{legalTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="unlegalTotal != null">
+                UNLEGAL_TOTAL = #{unlegalTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="subscribeCcyAmt != null">
+                SUBSCRIBE_CCY_AMT = #{subscribeCcyAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="saleAreaAmt != null">
+                SALE_AREA_AMT = #{saleAreaAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="totalAmt != null">
+                TOTAL_AMT = #{totalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseQty != null">
+                RAISE_QTY = #{raiseQty,jdbcType=DECIMAL},
+            </if>
+            <if test="isConsign != null">
+                IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
+            </if>
+            <if test="consignAmt != null">
+                CONSIGN_AMT = #{consignAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null">
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackStatus != null">
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null">
+                STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitTime != null">
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null">
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null">
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null">
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="prodRegistCode != null" >
+                PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
     update CHB_PRD_RAISETOT_SUB
     set PROD_ID = #{prodId,jdbcType=VARCHAR},
       ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
@@ -355,132 +377,167 @@
       CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
       SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
       ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
   </update>
 
- <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-	select 
-    sub.REGIST_SEQNO registSeqno,
-    sub.PROD_ID prodId,
-    sub.ISSUE_PARTY_ID issuePartyId,
-    sub.SINGLE_TOTAL singleTotal,
-    sub.LEGAL_TOTAL legalTotal,
-    sub.UNLEGAL_TOTAL unlegalTotal,
-    sub.SUBSCRIBE_CCY_AMT subscribeCcyAmt,
-    sub.SALE_AREA_AMT saleAreaAmt,
-    sub.TOTAL_AMT totalAmt,
-    sub.RAISE_QTY raiseQty,
-    sub.IS_CONSIGN isConsign,
-    sub.CONSIGN_AMT consignAmt,
-    sub.REMARK remark,
-    sub.SEND_STATUS sendStatus,
-    sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-    sub.STATUS_DATE statusDate,
-    sub.STATUS status,
-    sub.CREATE_USER createUser,
-    sub.CREATE_DEPT createDept,
-    sub.CREATE_TIME createTime,
-    sub.UPDATE_USER updateUser,
-    sub.UPDATE_TIME updateTime,
-    sub.SUBMIT_TIME submitTime,
-    sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
-    sub.SUBMIT_DEADLINE submitDeadline,
-    sub.ORG_CODE orgCode,
-    sub.DEPT_CODE deptCode,
-    info.PROD_NAME prodName,
-    code.REG_CODE regCode
-    
-    from CHB_PRD_RAISETOT_SUB sub
-    left join chb_prd_baseinfo info
-    on info.prod_id=sub.prod_id
-    and info.status != 'D'
-    left join CHB_PRDRESIST_CODE code
-    on code.prodid=sub.prod_id
-    where 1=1
-    <if test="isConsign != null and isConsign !='' ">
-    and sub.IS_CONSIGN = #{isConsign,jdbcType=VARCHAR}
-    </if>
-    <if test="prodNameList != null and prodNameList.size()>0">
-    <foreach collection="prodNameList" item="items" open="and info.prod_id in (" separator="," close =")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
-    </if>
-    <if test="regCodeList != null and regCodeList.size()>0">
-    <foreach collection="regCodeList" item="items" open="and code.reg_code in (" separator="," close =")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
-    </if>
-    <if test="submitendDateStart != null and submitendDateStart != ''">
-    and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
-    </if>
-    <if test="submitendDateEnd != null and submitendDateEnd != ''">
-    and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
-    </if>
-    <if test="dataDateStart != null and dataDateStart != ''">
-	and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
-    </if>
-    <if test="dataDateEnd != null and dataDateEnd != ''">
-	and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
-    </if>
-    <if test="submitDateStart != null and submitDateStart != ''">
-	and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
-    </if>
-    <if test="submitDateEnd != null and submitDateEnd != ''">
-	and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
-    </if>
-    <if test="vdateStart != null and vdateStart != ''">
-	and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{vdateStart}
-    </if>
-    <if test="vdateEnd != null and vdateEnd != ''">
-	and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{vdateEnd}
-    </if>
-    <!-- 报送状态 -->
-    <if test="sendStatusList != null and sendStatusList.size()>0">
-    <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
-    </if>
-    <!-- 反馈状态 -->
-    <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
-    <foreach collection="submitFeedbackStatusList" item="items" open="and SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
-    </if>
-    <!-- 数据状态 -->
-    <if test="statusList != null and statusList.size()>0">
-    <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
-    #{items,jdbcType=VARCHAR}
-    </foreach>
-    </if>
-    order by sub.SUBMIT_DEADLINE
- </select>
- 
- <select id="selectAllDataByList" resultMap="BaseResultMap">
-	select 
-    sub.REGIST_SEQNO, sub.PROD_ID, sub.ISSUE_PARTY_ID, sub.SINGLE_TOTAL, sub.LEGAL_TOTAL, sub.UNLEGAL_TOTAL, 
-    sub.SUBSCRIBE_CCY_AMT, sub.SALE_AREA_AMT, sub.TOTAL_AMT, sub.RAISE_QTY, sub.IS_CONSIGN, sub.CONSIGN_AMT, 
-    sub.REMARK, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER, sub.CREATE_DEPT, 
-    sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE, 
-    sub.ORG_CODE, sub.DEPT_CODE,info.prod_name prodname,code.reg_code
-    
-    from CHB_PRD_RAISETOT_SUB sub
-    left join chb_prd_baseinfo info
-    on info.prod_id=sub.prod_id
-    left join CHB_PRDRESIST_CODE code
-    on code.prodid=sub.prod_id
-    where 1=1
-    <if test="keyList != null and keyList.size()>0">
-    <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
-    #{items.registSeqno,jdbcType=VARCHAR}
-    </foreach>
-    </if>
-    order by sub.SUBMIT_DEADLINE
- </select>
- 
- 	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
+    <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select
+        sub.REGIST_SEQNO registSeqno,
+        sub.PROD_ID prodId,
+        <if test="model_type != null">
+            info.REG_CODE issuePartyId, /*发行机构代码*/
+        </if>
+        <if test="model_type == null">
+            sub.ISSUE_PARTY_ID issuePartyId,
+        </if>
+        sub.SINGLE_TOTAL singleTotal,
+        sub.LEGAL_TOTAL legalTotal,
+        sub.UNLEGAL_TOTAL unlegalTotal,
+        sub.SUBSCRIBE_CCY_AMT subscribeCcyAmt,
+        sub.SALE_AREA_AMT saleAreaAmt,
+        sub.TOTAL_AMT totalAmt,
+        sub.RAISE_QTY raiseQty,
+        sub.IS_CONSIGN isConsign,
+        sub.CONSIGN_AMT consignAmt,
+        sub.REMARK remark,
+        sub.SEND_STATUS sendStatus,
+        sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        sub.STATUS_DATE statusDate,
+        sub.STATUS status,
+        sub.CREATE_USER createUser,
+        sub.CREATE_DEPT createDept,
+        sub.CREATE_TIME createTime,
+        sub.UPDATE_USER updateUser,
+        sub.UPDATE_TIME updateTime,
+        sub.SUBMIT_TIME submitTime,
+        sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE submitDeadline,
+        sub.ORG_CODE orgCode,
+        sub.DEPT_CODE deptCode,
+        info.PROD_NAME prodName,
+        code.REG_CODE regCode,
+        sub.SUMIT_SEQ sumitSeq,
+        sub.PROD_REGIST_CODE prodRegistCode,
+        sub.BUSI_ACCT_NO  busiAcctNo,
+        sub.ACCT_NAME  acctName
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        and info.status != 'D'
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1
+        <if test="isConsign != null and isConsign !='' ">
+            and sub.IS_CONSIGN = #{isConsign,jdbcType=VARCHAR}
+        </if>
+        <if test="prodNameList != null and prodNameList.size()>0">
+            <foreach collection="prodNameList" item="items" open="and info.prod_id in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="regCodeList != null and regCodeList.size()>0">
+            <foreach collection="regCodeList" item="items" open="and code.reg_code in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
+        </if>
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
+        </if>
+        <if test="vdateStart != null and vdateStart != ''">
+            and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{vdateStart}
+        </if>
+        <if test="vdateEnd != null and vdateEnd != ''">
+            and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{vdateEnd}
+        </if>
+        <!-- 报送状态 -->
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 反馈状态 -->
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+            <foreach collection="submitFeedbackStatusList" item="items" open="and SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 数据状态 -->
+        <if test="statusList != null and statusList.size()>0">
+            <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by sub.SUBMIT_DEADLINE
+    </select>
+
+    <select id="selectAllDataByList" resultMap="BaseResultMap">
+        select sub.* from (
+        select
+        sub.REGIST_SEQNO, sub.PROD_ID, sub.ISSUE_PARTY_ID, sub.SINGLE_TOTAL, sub.LEGAL_TOTAL, sub.UNLEGAL_TOTAL,
+        sub.SUBSCRIBE_CCY_AMT, sub.SALE_AREA_AMT, sub.TOTAL_AMT, sub.RAISE_QTY, sub.IS_CONSIGN, sub.CONSIGN_AMT,
+        sub.REMARK, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER,
+        sub.CREATE_DEPT,
+        sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE,
+        sub.ORG_CODE, sub.DEPT_CODE,info.prod_name prodname,code.reg_code,
+        sub.PROD_REGIST_CODE,sub.ACCT_NAME,sub.BUSI_ACCT_NO
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1 and sub.TOTAL_AMT>0 and info.OPERATE_MODE in('01','02')
+        <if test="keyList != null and keyList.size()>0">
+            <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+                #{items.registSeqno,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        union all
+        select
+        sub.REGIST_SEQNO, sub.PROD_ID, sub.ISSUE_PARTY_ID, sub.SINGLE_TOTAL, sub.LEGAL_TOTAL, sub.UNLEGAL_TOTAL,
+        sub.SUBSCRIBE_CCY_AMT, sub.SALE_AREA_AMT, sub.TOTAL_AMT, sub.RAISE_QTY, sub.IS_CONSIGN, sub.CONSIGN_AMT,
+        sub.REMARK, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS, sub.STATUS_DATE, sub.STATUS, sub.CREATE_USER, sub.CREATE_DEPT,
+        sub.CREATE_TIME, sub.UPDATE_USER, sub.UPDATE_TIME, sub.SUBMIT_TIME, sub.CHB_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE,
+        sub.ORG_CODE, sub.DEPT_CODE,info.prod_name prodname,code.reg_code, sub.PROD_REGIST_CODE,sub.ACCT_NAME,sub.BUSI_ACCT_NO
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1 and info.OPERATE_MODE in('03','04')
+        <if test="keyList != null and keyList.size()>0">
+            <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+                #{items.registSeqno,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        ) sub
+        order by sub.SUBMIT_DEADLINE
+
+    </select>
+
+    <update id="updateSubmitStatusToOk" parameterType="java.util.List">
         update CHB_PRD_RAISETOT_SUB subStatus
-        <set> 
+        <set>
             subStatus.SUBMIT_FEEDBACK_STATUS = '03',
             subStatus.UPDATE_TIME = NOW()
         </set>
@@ -490,10 +547,10 @@
             </foreach>
         </where>
     </update>
-    
-	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
-         update CHB_PRD_RAISETOT_SUB sub
-        <set> 
+
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+        update CHB_PRD_RAISETOT_SUB sub
+        <set>
             <if test="sendStatus != null and sendStatus != ''">
                 sub.SEND_STATUS = #{sendStatus},
             </if>
@@ -503,15 +560,15 @@
         </set>
         <where>
             <foreach collection="registList" item="item" open="(" close=")" separator=") or (">
-                sub.regist_Seqno = #{item.registSeqno} 
+                sub.regist_Seqno = #{item.registSeqno}
             </foreach>
         </where>
     </update>
-    
+
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateAllInterfSubmitAndSeqBatch" >
-         update CHB_PRD_RAISETOT_SUB sub
-        <set> 
+        update CHB_PRD_RAISETOT_SUB sub
+        <set>
             <if test="sendStatus != null and sendStatus != ''">
                 sub.SEND_STATUS = #{sendStatus},
             </if>
@@ -523,391 +580,463 @@
             sub.SEND_STATUS = '01'
         </where>
     </update>
-    
+
     <update id="updateRaiseTotalRegist" parameterType="java.util.Map">
-		update CHB_PRD_RAISETOT_SUB
-		<set> 
-		 	SEND_STATUS = '01',
-			UPDATE_TIME = NOW(),
-			SUBMIT_TIME = null,
-			SUBMIT_FEEDBACK_STATUS = null
-		</set>
-		<where>
-		 	<foreach collection="list" item="item" open="(" close=")" separator=") or (">
+        update CHB_PRD_RAISETOT_SUB
+        <set>
+            SEND_STATUS = '01',
+            UPDATE_TIME = NOW(),
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
                 regist_Seqno = #{item,jdbcType=VARCHAR}
             </foreach>
-		</where>
-	</update>
-	
-	<select id="selectDealData" resultType="com.joyintech.tams.common.base.entity.ChbPrdDeal">
-SELECT
-    fprodid,
-    prodid,
-    buyplace,
-    tradetype,
-    ccy,
-    SUM(tradeprince)tradeprince,
-    SUM(tradeqty)tradeqty,
-    remark,
-    settdatedate
-FROM(
-	select deal.fprod_id fprodid,
-<!-- 	deal.prod_id prodid, -->
-	ifnull(deal.fprod_id,deal.prod_id) prodid,
-	deal.buy_place
-	buyplace,deal.trade_type tradetype,deal.ccy ccy,deal.trade_prince
-	tradeprince,deal.trade_qty tradeqty,info.ISAGENCY remark,deal.SETTDATE_DATE settdateDate
-	from chb_prd_deal deal
-	left join chb_prd_baseinfo info
-	on info.prod_id = deal.prod_id
-	and info.status in ('E','M')
-	where trade_type='01'
-	and deal.status in ('E','M')
-	<foreach collection="list" item="prod" open="and ( (" close=" ) )"
-		separator=") or (">
-		deal.prod_id = #{prod.prodId,jdbcType = VARCHAR} or deal.fprod_id = #{prod.prodId,jdbcType = VARCHAR}
-	</foreach>
-)GROUP BY        
-    fprodid,
-    prodid,
-    buyplace,
-    tradetype,
-    ccy,
-    remark,
-    settdatedate
-</select>
-  
-   <select id="selectPositionData" resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition">
-  	select a.* from (
-  	select ifnull(info.fprod_id,info.prod_id) prodid,pos.buy_place buyplace,
-	pos.ccy ccy,pos.BALANCE_AMT balanceAmt, 
-	pos.BALANCE_QTY balanceQty,pos.CONSIGN_AMT ,pos.CDATE cdate,
-  	pos.CUST_COUNTS custCounts, pos.CUSTOMER_TYPE2 customerType2
-	from CHB_PRD_POSITION pos
-	left join chb_prd_baseinfo info
-	on info.prod_id = pos.prod_id
-	and info.status in ('E','M')
-	where pos.cdate=INFO.VDATE
-	) a
-	where 1=1
-	<foreach collection="list" item="prod" open="and ( (" close=" ) )"
-		separator=") or (">
-		a.prodid = #{prod.prodId,jdbcType = VARCHAR}
-	</foreach>
-  </select>
-  
-  <select id="selectInvestorNum"
-	resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-	SELECT SUM(
-	CASE
-	WHEN HOLDER_TYPE IN ('01','02','03')
-	THEN 1
-	ELSE 0
-	END ) singleTotal,
-	SUM(
-	CASE
-	WHEN HOLDER_TYPE IN
-	('04','05','06','07','08','09','10','11','12','13','14','15','16')
-	THEN 1
-	ELSE 0
-	END ) legalTotal,
-	SUM(
-	CASE
-	WHEN HOLDER_TYPE IN ('17','18','19','20','21','22','23','24','25','26')
-	THEN 1
-	ELSE 0
-	END ) unlegalTotal,PROD_ID,FPROD_ID
-	FROM
-	( SELECT DISTINCT deal.INDENTIFY_MARK,
-	hold.HOLDER_TYPE,deal.PROD_ID,deal.FPROD_ID
-	FROM CHB_PRD_DEAL deal
-	LEFT JOIN chb_equ_hold hold
-	ON (deal.INDENTIFY_MARK = hold.INDENTIFY_MARK)
-	and hold.status='E'
-	LEFT JOIN chb_prd_baseinfo info
-	on info.PROD_ID = deal.PROD_ID
-	and info.status in ('E','M')
-	WHERE deal.TRADE_TYPE = '01'
-	<foreach collection="list" item="prod" open="and ( (" close=" ) )"
-		separator=") or (">
-		deal.prod_id = #{prod.prodId,jdbcType = VARCHAR}
-	</foreach>
-	)
-	GROUP BY PROD_ID,FPROD_ID
-</select>
-  
-  <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-    insert into CHB_PRD_RAISETOT_SUB (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
-      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
-      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-      STATUS_DATE, STATUS, CREATE_USER, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-      UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
-      )
-      <foreach collection="insertList" item="item" index="index" separator="union all" >
-      select
-      #{item.registSeqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.issuePartyId,jdbcType=VARCHAR}, 
-      #{item.singleTotal,jdbcType=DECIMAL}, #{item.legalTotal,jdbcType=DECIMAL}, #{item.unlegalTotal,jdbcType=DECIMAL}, 
-      #{item.subscribeCcyAmt,jdbcType=VARCHAR}, #{item.saleAreaAmt,jdbcType=VARCHAR}, #{item.totalAmt,jdbcType=DECIMAL}, 
-      #{item.raiseQty,jdbcType=DECIMAL}, #{item.isConsign,jdbcType=VARCHAR}, #{item.consignAmt,jdbcType=DECIMAL}, 
-      #{item.remark,jdbcType=VARCHAR}, #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR}, 
-      #{item.statusDate,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR}, 
-      #{item.createDept,jdbcType=VARCHAR}, NOW(), #{item.updateUser,jdbcType=VARCHAR},
-      NOW(), #{item.submitTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
-      #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}
-      from dual
-      </foreach>
-  </insert>
-  <select id="selectIsExistAlreadyRegist"
-	parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"
-	resultType="java.lang.String">
-	select 1
-	from CHB_PRD_RAISETOT_SUB
-	where PROD_ID = #{prodId,jdbcType=VARCHAR}
-	<!-- 发行机构代码 and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR} -->
-	and SEND_STATUS = '01' /*去除未报送的内容*/
-</select>
-	
-	<update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-    begin
-	<foreach collection="updateList" item="item" index="index" separator=";">
-    update CHB_PRD_RAISETOT_SUB
-    <set>
-      <if test="item.prodId != null">
-        PROD_ID = #{item.prodId,jdbcType=VARCHAR},
-      </if>
-      <if test="item.issuePartyId != null">
-        ISSUE_PARTY_ID = #{item.issuePartyId,jdbcType=VARCHAR},
-      </if>
-      <if test="item.singleTotal != null">
-        SINGLE_TOTAL = #{item.singleTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="item.legalTotal != null">
-        LEGAL_TOTAL = #{item.legalTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="item.unlegalTotal != null">
-        UNLEGAL_TOTAL = #{item.unlegalTotal,jdbcType=DECIMAL},
-      </if>
-      <if test="item.subscribeCcyAmt != null">
-        SUBSCRIBE_CCY_AMT = #{item.subscribeCcyAmt,jdbcType=VARCHAR},
-      </if>
-      <if test="item.saleAreaAmt != null">
-        SALE_AREA_AMT = #{item.saleAreaAmt,jdbcType=VARCHAR},
-      </if>
-      <if test="item.totalAmt != null">
-        TOTAL_AMT = #{item.totalAmt,jdbcType=DECIMAL},
-      </if>
-      <if test="item.raiseQty != null">
-        RAISE_QTY = #{item.raiseQty,jdbcType=DECIMAL},
-      </if>
-      <if test="item.isConsign != null">
-        IS_CONSIGN = #{item.isConsign,jdbcType=VARCHAR},
-      </if>
-        CONSIGN_AMT = #{item.consignAmt,jdbcType=DECIMAL},
-      <if test="item.remark != null">
-        REMARK = #{item.remark,jdbcType=VARCHAR},
-      </if>
-      <if test="item.sendStatus != null">
-        SEND_STATUS = #{item.sendStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="item.submitFeedbackStatus != null">
-        SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="item.statusDate != null">
-        STATUS_DATE = #{item.statusDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="item.status != null">
-        STATUS = #{item.status,jdbcType=VARCHAR},
-      </if>
-      <if test="item.createUser != null">
-        CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="item.createDept != null">
-        CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
-      </if>
-      <if test="item.createTime != null">
-        CREATE_TIME = #{item.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="item.updateUser != null">
-        UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
-      </if>
-        UPDATE_TIME = NOW(),
-      <if test="item.submitTime != null">
-        SUBMIT_TIME = #{item.submitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="item.chbSubmitDeadline != null">
-        CHB_SUBMIT_DEADLINE = #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="item.submitDeadline != null">
-        SUBMIT_DEADLINE = #{item.submitDeadline,jdbcType=TIMESTAMP},
-      </if>
-      <if test="item.orgCode != null">
-        ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
-      </if>
-      <if test="item.deptCode != null">
-        DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where PROD_ID = #{item.prodId,jdbcType=VARCHAR}
-    and SEND_STATUS = '01'
-    </foreach>
-    ;end;
-  </update>
-<select id="selectRaiseTotallist" resultMap="BaseResultMap"
-	parameterType="java.lang.String">
-	select 
-<!-- 	a.prod_id, -->
-	ifnull(a.fprod_id,a.prod_id) prod_id,
-	a.RAISE_ENDDATE,
-	sub.REGIST_SEQNO as regseq,a.status status,a.ISSUING_STATUS
-	from
-	(select 
-<!-- 	ifnull(info.fprod_id,info.prod_id) prod_id, -->
-	info.prod_id prod_id,
-    info.fprod_id,
-    ifnull(info.RAISE_ENDDATE,info1.RAISE_ENDDATE) RAISE_ENDDATE,
-    ifnull(info.ISSUING_STATUS,info1.ISSUING_STATUS) ISSUING_STATUS,
-    deal.status
-	from CHB_PRD_BASEINFO info
-	left join CHB_PRD_DEAL deal
-	on info.prod_id = deal.prod_id
-	and info.status in ('E','M')
-	and deal.TRADE_TYPE='01'
-	left join CHB_PRD_BASEINFO info1
-  	on deal.fprod_id = info1.prod_id
-  	AND info1.status in ('E','M')
-	WHERE (DATE_FORMAT(info.vdate,'%Y-%m-%d') = #{vdate,jdbcType=VARCHAR}
-	or ifnull(DATE_FORMAT(deal.UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(deal.CREATE_TIME,'%Y-%m-%d')) = #{vdate,jdbcType=VARCHAR})
-	and info.issuing_status in ('01','03')) a
-	left join CHB_PRD_RAISETOT_SUB sub
-	on sub.prod_id = a.prod_id
-	and sub.send_status in ('02','03')
-	where 1=1
-	<if test="prodIdList!=null and prodIdList.size()>0">
-		and (a.prod_id in
-		<foreach collection="prodIdList" item="dto" open="("
-			separator="," close=")">
-			#{dto,jdbcType=VARCHAR}
-		</foreach>
-			 OR a.Fprod_id in
-			 <foreach collection="prodIdList" item="dto" open="("
-				separator="," close=")">
-				#{dto,jdbcType=VARCHAR}
-			</foreach>
-		)
-	</if>
-</select>
-<delete id="deleteBatch"
-	parameterType="java.lang.String">
-	delete from CHB_PRD_RAISETOT_SUB
-	where PROD_ID in
-	<if test="list!=null and list.size()>0">
-		<foreach collection="list" item="dto" open="(" separator=","
-			close=")">
-			#{dto,jdbcType=VARCHAR}
-		</foreach>
-		AND SEND_STATUS = '01'
-	</if>
-</delete>
+        </where>
+    </update>
 
-<update id="updateBySeqno" parameterType="java.lang.String">
-	update CHB_PRD_RAISETOT_SUB 
-	set status = '03',update_time=NOW()
-	where PROD_ID in
-	<if test="list!=null and list.size()>0">
-		<foreach collection="list" item="dto" open="(" separator=","
-			close=")">
-			#{dto,jdbcType=VARCHAR}
-		</foreach>
-		AND SEND_STATUS != '01'
-	</if>
-</update>
+    <select id="selectDealData" resultType="com.joyintech.tams.common.base.entity.ChbPrdDeal">
+        SELECT
+        fprodid,
+        prodid,
+        buyplace,
+        tradetype,
+        ccy,
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 start-->
+        /*SUM(case when tradetype = '15' then -1*tradeprince else tradeprince end) tradeprince,
+        SUM(case when tradetype = '15' then -1*tradeqty else tradeqty end) tradeqty,*/
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 end-->
+        SUM(tradeprince)tradeprince,
+        SUM(tradeqty)tradeqty,
+        remark,
+        settdatedate,
+        isagency,
+        /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+        sum(cust_counts) cust_counts,
+        customer_type2
+        FROM(
+        select deal.fprod_id fprodid,
+        <!-- 	deal.prod_id prodid, -->
+        ifnull(deal.fprod_id,deal.prod_id) prodid,
+        deal.buy_place
+        buyplace,deal.trade_type tradetype,deal.ccy ccy,deal.trade_prince
+        tradeprince,deal.trade_qty tradeqty,info.ISAGENCY remark,deal.SETTDATE_DATE settdateDate,
+        deal.ISAGENCY isagency
+        /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+        ,deal.customer_type2,deal.cust_counts
+        from chb_prd_deal deal
+        left join chb_prd_baseinfo info
+        on info.prod_id = deal.prod_id
+        and info.status in ('E','M')
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 start-->
+        where <!--trade_type='01'-->
+        /*trade_type in ('01','14','15')*/
+        trade_type='01'
+        AND info.vdate = deal.SETTDATE_DATE
+        <!--从青岛合并，起息日当天有强增强减，需要算到实际募集金额份额 add by wm 20220304 end-->
+        and deal.status in ('E','M')
+        <foreach collection="list" item="prod" open="and ( (" close=" ) )"
+                 separator=") or (">
+            deal.prod_id = #{prod.prodId,jdbcType = VARCHAR} or deal.fprod_id = #{prod.prodId,jdbcType = VARCHAR}
+        </foreach>
+        ) tmp GROUP BY
+        fprodid,
+        prodid,
+        buyplace,
+        tradetype,
+        ccy,
+        remark,
+        settdatedate,
+        isagency
+        /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+        ,customer_type2
+    </select>
 
-<delete id="deleteRegistSeqnoList">
-   delete from CHB_PRD_RAISETOT_SUB 
-   where 
-	<foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
-	#{item,jdbcType=VARCHAR}
-	</foreach>
-   </delete>
-   
-   <insert id="insertSeletForSub" parameterType="java.lang.String">
-   insert into CHB_PRD_RAISETOT_SUB (
-      REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
-      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
-      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-      STATUS_DATE, STATUS, CREATE_USER, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-      UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
-      )
-      select
-      REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
-      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-      SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, 
-      RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-      REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, 
-      STATUS_DATE, STATUS, CREATE_USER, 
-      CREATE_DEPT, NOW(), UPDATE_USER,
-      NOW(), SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
-      SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE
-    from CHB_PRD_RAISETOT_SUB_HIS
-    where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-  	<if test="regList !=null and regList.size()>0">
-          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+    <select id="selectPositionData" resultType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition">
+        select a.* from (
+        select ifnull(info.fprod_id,info.prod_id) prodid,pos.buy_place buyplace,
+        pos.ccy ccy,pos.BALANCE_AMT balanceAmt,pos.SINGLE_TOTAL singleTotal,
+        pos.LEGAL_TOTAL legalTotal, pos.UNLEGAL_TOTAL unlegalTotal,
+        pos.BALANCE_QTY balanceQty,pos.CONSIGN_AMT ,pos.CDATE cdate,
+        pos.CUST_COUNTS custCounts, pos.CUSTOMER_TYPE2 customerType2
+        from CHB_PRD_POSITION pos
+        left join chb_prd_baseinfo info
+        on info.prod_id = pos.prod_id
+        and info.status in ('E','M')
+        where pos.cdate=INFO.VDATE
+        ) a
+        where 1=1
+        <foreach collection="list" item="prod" open="and ( (" close=" ) )"
+                 separator=") or (">
+            a.prodid = #{prod.prodId,jdbcType = VARCHAR}
+        </foreach>
+    </select>
+
+    <select id="selectInvestorNum"
+            resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        SELECT SUM(
+        CASE
+        WHEN HOLDER_TYPE IN ('01','02','03')
+        THEN 1
+        ELSE 0
+        END ) singleTotal,
+        SUM(
+        CASE
+        WHEN HOLDER_TYPE IN
+        ('04','05','06','07','08','09','10','11','12','13','14','15','16')
+        THEN 1
+        ELSE 0
+        END ) legalTotal,
+        SUM(
+        CASE
+        WHEN HOLDER_TYPE IN ('17','18','19','20','21','22','23','24','25','26')
+        THEN 1
+        ELSE 0
+        END ) unlegalTotal,PROD_ID,FPROD_ID
+        FROM
+        ( SELECT DISTINCT deal.INDENTIFY_MARK,
+        hold.HOLDER_TYPE,deal.PROD_ID,deal.FPROD_ID
+        FROM CHB_PRD_DEAL deal
+        LEFT JOIN chb_equ_hold hold
+        ON (deal.INDENTIFY_MARK = hold.INDENTIFY_MARK)
+        and hold.status='E'
+        LEFT JOIN chb_prd_baseinfo info
+        on info.PROD_ID = deal.PROD_ID
+        and info.status in ('E','M')
+        WHERE deal.TRADE_TYPE = '01'
+        <foreach collection="list" item="prod" open="and ( (" close=" ) )"
+                 separator=") or (">
+            deal.prod_id = #{prod.prodId,jdbcType = VARCHAR}
+        </foreach>
+        )
+        GROUP BY PROD_ID,FPROD_ID
+    </select>
+
+    <insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        insert into CHB_PRD_RAISETOT_SUB (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+        RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+        REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+        STATUS_DATE, STATUS, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE,
+        ACCT_NAME,BUSI_ACCT_NO
+        )
+        <foreach collection="insertList" item="item" index="index" separator="union all" >
+            select
+            #{item.registSeqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.issuePartyId,jdbcType=VARCHAR},
+            #{item.singleTotal,jdbcType=DECIMAL}, #{item.legalTotal,jdbcType=DECIMAL}, #{item.unlegalTotal,jdbcType=DECIMAL},
+            #{item.subscribeCcyAmt,jdbcType=VARCHAR}, #{item.saleAreaAmt,jdbcType=VARCHAR}, #{item.totalAmt,jdbcType=DECIMAL},
+            #{item.raiseQty,jdbcType=DECIMAL}, #{item.isConsign,jdbcType=VARCHAR}, #{item.consignAmt,jdbcType=DECIMAL},
+            #{item.remark,jdbcType=VARCHAR}, #{item.sendStatus,jdbcType=VARCHAR}, #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+            #{item.statusDate,jdbcType=TIMESTAMP}, #{item.status,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+            #{item.createDept,jdbcType=VARCHAR}, NOW(), #{item.updateUser,jdbcType=VARCHAR},
+            NOW(), #{item.submitTime,jdbcType=TIMESTAMP}, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
+            #{item.submitDeadline,jdbcType=TIMESTAMP}, #{item.orgCode,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR},
+            #{item.sumitSeq,jdbcType=VARCHAR}, #{item.prodRegistCode,jdbcType=VARCHAR},#{item.acctName,jdbcType=VARCHAR}
+            ,#{item.busiAcctNo,jdbcType=VARCHAR}
+            from dual
+        </foreach>
+    </insert>
+    <select id="selectIsExistAlreadyRegist"
+            parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"
+            resultType="java.lang.String">
+        select 1
+        from CHB_PRD_RAISETOT_SUB
+        where PROD_ID = #{prodId,jdbcType=VARCHAR}
+        <!-- 发行机构代码 and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR} -->
+        and SEND_STATUS = '01' /*去除未报送的内容*/
+    </select>
+
+    <update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        begin
+        <foreach collection="updateList" item="item" index="index" separator=";">
+            update CHB_PRD_RAISETOT_SUB
+            <set>
+                <if test="item.prodId != null">
+                    PROD_ID = #{item.prodId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.issuePartyId != null">
+                    ISSUE_PARTY_ID = #{item.issuePartyId,jdbcType=VARCHAR},
+                </if>
+                <if test="item.singleTotal != null">
+                    SINGLE_TOTAL = #{item.singleTotal,jdbcType=DECIMAL},
+                </if>
+                <if test="item.legalTotal != null">
+                    LEGAL_TOTAL = #{item.legalTotal,jdbcType=DECIMAL},
+                </if>
+                <if test="item.unlegalTotal != null">
+                    UNLEGAL_TOTAL = #{item.unlegalTotal,jdbcType=DECIMAL},
+                </if>
+                <if test="item.subscribeCcyAmt != null">
+                    SUBSCRIBE_CCY_AMT = #{item.subscribeCcyAmt,jdbcType=VARCHAR},
+                </if>
+                <if test="item.saleAreaAmt != null">
+                    SALE_AREA_AMT = #{item.saleAreaAmt,jdbcType=VARCHAR},
+                </if>
+                <if test="item.totalAmt != null">
+                    TOTAL_AMT = #{item.totalAmt,jdbcType=DECIMAL},
+                </if>
+                <if test="item.raiseQty != null">
+                    RAISE_QTY = #{item.raiseQty,jdbcType=DECIMAL},
+                </if>
+                <if test="item.isConsign != null">
+                    IS_CONSIGN = #{item.isConsign,jdbcType=VARCHAR},
+                </if>
+                CONSIGN_AMT = #{item.consignAmt,jdbcType=DECIMAL},
+                <if test="item.remark != null">
+                    REMARK = #{item.remark,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sendStatus != null">
+                    SEND_STATUS = #{item.sendStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="item.submitFeedbackStatus != null">
+                    SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="item.statusDate != null">
+                    STATUS_DATE = #{item.statusDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.status != null">
+                    STATUS = #{item.status,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createUser != null">
+                    CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createDept != null">
+                    CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
+                </if>
+                <if test="item.createTime != null">
+                    CREATE_TIME = #{item.createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.updateUser != null">
+                    UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+                </if>
+                UPDATE_TIME = NOW(),
+                <if test="item.submitTime != null">
+                    SUBMIT_TIME = #{item.submitTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.chbSubmitDeadline != null">
+                    CHB_SUBMIT_DEADLINE = #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.submitDeadline != null">
+                    SUBMIT_DEADLINE = #{item.submitDeadline,jdbcType=TIMESTAMP},
+                </if>
+                <if test="item.orgCode != null">
+                    ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.deptCode != null">
+                    DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sumitSeq != null">
+                    SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
+                </if>
+                <if test="item.prodRegistCode != null">
+                    PROD_REGIST_CODE = #{item.prodRegistCode,jdbcType=VARCHAR},
+                </if>
+            </set>
+            where PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+            and SEND_STATUS = '01'
+        </foreach>
+        ;end;
+    </update>
+    <select id="selectRaiseTotallist" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <!-- 	a.prod_id, -->
+        ifnull(a.fprod_id,a.prod_id) prod_id,
+        a.RAISE_ENDDATE,
+        sub.REGIST_SEQNO as regseq,a.status status,a.ISSUING_STATUS,a.PROD_REGIST_CODE,
+        a.BUSI_ACCT_NO,
+        a.ACCT_NAME
+        from
+        (select
+        <!-- 	ifnull(info.fprod_id,info.prod_id) prod_id, -->
+        info.prod_id prod_id,
+        info.fprod_id,
+        code.REG_CODE PROD_REGIST_CODE,
+        ifnull(info.RAISE_ENDDATE,info1.RAISE_ENDDATE) RAISE_ENDDATE,
+        ifnull(info.ISSUING_STATUS,info1.ISSUING_STATUS) ISSUING_STATUS,
+        deal.status,
+        info.BUSI_ACCT_NO,
+        info.ACCT_NAME
+        from CHB_PRD_BASEINFO info
+        left join CHB_PRD_DEAL deal
+        on info.prod_id = deal.prod_id
+        and info.status in ('E','M')
+        and deal.TRADE_TYPE='01'
+        left join CHB_PRD_BASEINFO info1
+        on deal.fprod_id = info1.prod_id
+        AND info1.status in ('E','M')
+
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=ifnull(info.FPROD_ID,info.PROD_ID)
+
+        WHERE (DATE_FORMAT(info.vdate,'%Y-%m-%d') = #{vdate,jdbcType=VARCHAR}
+        or ifnull(DATE_FORMAT(deal.UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(deal.CREATE_TIME,'%Y-%m-%d')) = #{vdate,jdbcType=VARCHAR})
+        and info.issuing_status in ('01','03')) a
+        left join CHB_PRD_RAISETOT_SUB sub
+        on sub.prod_id = a.prod_id
+        and sub.send_status in ('02','03')
+        where 1=1
+        <if test="prodIdList!=null and prodIdList.size()>0">
+            and (a.prod_id in
+            <foreach collection="prodIdList" item="dto" open="("
+                     separator="," close=")">
+                <if test="(index % 999) == 998">
+                    null) OR a.prod_id in (
+                </if>
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            OR a.Fprod_id in
+            <foreach collection="prodIdList" item="dto" open="("
+                     separator="," close=")">
+                <if test="(index % 999) == 998">
+                    null) OR a.Fprod_id in (
+                </if>
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+    </select>
+    <delete id="deleteBatch"
+            parameterType="java.lang.String">
+        delete from CHB_PRD_RAISETOT_SUB
+        where PROD_ID in
+        <if test="list!=null and list.size()>0">
+            <foreach collection="list" item="dto" open="(" separator=","
+                     close=")">
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            AND SEND_STATUS = '01'
+        </if>
+    </delete>
+
+    <update id="updateBySeqno" parameterType="java.lang.String">
+        update CHB_PRD_RAISETOT_SUB
+        set status = '03',update_time=NOW()
+        where PROD_ID in
+        <if test="list!=null and list.size()>0">
+            <foreach collection="list" item="dto" open="(" separator=","
+                     close=")">
+                #{dto,jdbcType=VARCHAR}
+            </foreach>
+            AND SEND_STATUS != '01'
+        </if>
+    </update>
+
+    <delete id="deleteRegistSeqnoList">
+        delete from CHB_PRD_RAISETOT_SUB
+        where
+        <foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
             #{item,jdbcType=VARCHAR}
-          </foreach>
-       </if>
-   </insert>
-   
-   <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-   	select REGIST_SEQNO
-      from CHB_PRD_RAISETOT_SUB
-      where 
-      <if test="flag=='02'">
-      SEND_STATUS in ('02','03')
-      </if>
-      <if test="flag=='01'">
-      SEND_STATUS = '01'
-      </if>
-      <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
-      PROD_ID = #{item.prodId,jdbcType=VARCHAR}
-      </foreach>
-   </select>
-   <select id="selectRegPerProdList" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"
-   resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-   select PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,status
-      from CHB_PRD_RAISETOT_SUB
-      where SEND_STATUS in ('02','03')
-	<if test="list!=null and list.size()!=0">
-		<foreach collection="list" item="item" open="and ((" close="))"
-			separator=") or (">
-			trim(prod_id)= #{item.prodId}
-		</foreach>
-	</if>
-   </select>
-   
-   <select id="queryListByKeys" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
-   select  REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
-    REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, 
-    CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
-    ORG_CODE, DEPT_CODE from CHB_PRD_RAISETOT_SUB 
-    where 1=1 
-    <if test="list!=null and list.size()!=0">
-		<foreach collection="list" item="item" open="and ((" close="))"
-			separator=") or (">
-			trim(REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
-		</foreach>
-	</if>
-   </select>
-   <select id="getAllInterfRaiseSum" resultMap="BaseResultMap">
+        </foreach>
+    </delete>
+
+    <insert id="insertSeletForSub" parameterType="java.lang.String">
+        insert into CHB_PRD_RAISETOT_SUB (SUMIT_SEQ,PROD_REGIST_CODE,
+        REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+        RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+        REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+        STATUS_DATE, STATUS, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG,ACCT_NAME,BUSI_ACCT_NO
+        )
+        select  SUMIT_SEQ,PROD_REGIST_CODE,
+        REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT,
+        RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+        REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS,
+        STATUS_DATE, STATUS, CREATE_USER,
+        CREATE_DEPT, NOW(), UPDATE_USER,
+        NOW(), SUBMIT_TIME, CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE, ORG_CODE, DEPT_CODE, SUBMIT_FEEDBACK_MSG,ACCT_NAME,BUSI_ACCT_NO
+        from CHB_PRD_RAISETOT_SUB_HIS
+        where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+        <if test="regList !=null and regList.size()>0">
+            <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </insert>
+
+    <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select REGIST_SEQNO
+        from CHB_PRD_RAISETOT_SUB
+        where
+        <if test="flag=='02'">
+            SEND_STATUS in ('02','03')
+        </if>
+        <if test="flag=='01'">
+            SEND_STATUS = '01'
+        </if>
+        <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+            PROD_ID = #{item.prodId,jdbcType=VARCHAR} and REGIST_SEQNO != #{item.registSeqno,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="selectRegPerProdList" parameterType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"
+            resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select
+        REGIST_SEQNO,
+        PROD_ID,
+        ISSUE_PARTY_ID,
+        SINGLE_TOTAL,
+        LEGAL_TOTAL,
+        UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT,
+        SALE_AREA_AMT,
+        TOTAL_AMT,
+        IS_CONSIGN,
+        CONSIGN_AMT,
+        REMARK,
+        SEND_STATUS,
+        SUBMIT_FEEDBACK_STATUS,
+        STATUS_DATE,
+        STATUS,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        SUBMIT_TIME,
+        CHB_SUBMIT_DEADLINE,
+        SUBMIT_DEADLINE,
+        ORG_CODE,
+        DEPT_CODE,
+        RAISE_QTY,
+        PROD_REGIST_CODE,
+        SUMIT_SEQ
+        from CHB_PRD_RAISETOT_SUB
+        where SEND_STATUS in ('02','03')
+        <if test="list!=null and list.size()!=0">
+            <foreach collection="list" item="item" open="and ((" close="))"
+                     separator=") or (">
+                trim(prod_id)= #{item.prodId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryListByKeys" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select  REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL,
+        SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT,
+        REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        ORG_CODE, DEPT_CODE, SUMIT_SEQ, PROD_REGIST_CODE from CHB_PRD_RAISETOT_SUB
+        where 1=1
+        <if test="list!=null and list.size()!=0">
+            <foreach collection="list" item="item" open="and ((" close="))"
+                     separator=") or (">
+                trim(REGIST_SEQNO)= #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <select id="getAllInterfRaiseSum" resultMap="BaseResultMap">
 		select
 			FINPROD_ID PROD_ID,
 			PER_SUM SINGLE_TOTAL,
@@ -915,8 +1044,277 @@ FROM(
 			N_LEGALPERSON_SUM UNLEGAL_TOTAL,
 			RAISE_AREA_AMT SALE_AREA_AMT,
 			ISAGENCY IS_CONSIGN,
-			CONSIGN_AMT CONSIGN_AMT, 
+			CONSIGN_AMT CONSIGN_AMT,
 			CCY
 		from P_INTERF_RAISE_SUM
    </select>
+    <select id="getEquCount"  resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"  parameterType="java.lang.String">
+        <!-- 个人 -->
+        SELECT  '01' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
+        select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
+        LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
+        WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
+        AND DET.STATUS='E'
+        and   (DET.BUSI_TYPE='01' or (DET.BUSI_TYPE IN ('14','15')
+        and exists (select 1 from chb_prd_baseinfo info1 where info1.prod_id =det.account
+        and info1.vdate =det.equity_conf_date and info1.status !='D')))
+
+        AND EXISTS (select 1 from (select indentify_mark,sum(case when busi_type = '15' then -1*shares else shares end)shares
+        from chb_equdet where account=#{prodid,jdbcType=VARCHAR}
+        and equity_conf_date in (select vdate from chb_prd_baseinfo where prod_id=#{prodid,jdbcType=VARCHAR} )
+        group by indentify_mark)t where t.indentify_mark=det.indentify_mark and shares!=0)
+
+        AND  HOLDER_TYPE IN ('01','02','03')) GREN
+        union all
+        <!-- 法人 -->
+        SELECT  '02' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
+        select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
+        LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
+        WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
+        AND DET.STATUS='E'
+
+
+        and   (DET.BUSI_TYPE='01' or (DET.BUSI_TYPE IN ('14','15')
+        and exists (select 1 from chb_prd_baseinfo info1 where info1.prod_id =det.account
+        and info1.vdate =det.equity_conf_date and info1.status !='D')))
+
+        AND EXISTS (select 1 from (select indentify_mark,sum(case when busi_type = '15' then -1*shares else shares end)shares
+        from chb_equdet where account=#{prodid,jdbcType=VARCHAR}
+        and equity_conf_date in (select vdate from chb_prd_baseinfo where prod_id=#{prodid,jdbcType=VARCHAR} )
+        group by indentify_mark)t where t.indentify_mark=det.indentify_mark and shares!=0)
+
+        AND  HOLDER_TYPE IN('04','05','06','07','08','09','10','11','12','13','14','15','16')) GREN
+        union all
+        <!-- 非法人 -->
+        SELECT  '03' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
+        select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
+        LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
+        WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
+        AND DET.STATUS='E'
+        and   (DET.BUSI_TYPE='01' or (DET.BUSI_TYPE IN ('14','15')
+        and exists (select 1 from chb_prd_baseinfo info1 where info1.prod_id =det.account
+        and info1.vdate =det.equity_conf_date and info1.status !='D')))
+
+        AND EXISTS (select 1 from (select indentify_mark,sum(case when busi_type = '15' then -1*shares else shares end)shares
+        from chb_equdet where account=#{prodid,jdbcType=VARCHAR}
+        and equity_conf_date in (select vdate from chb_prd_baseinfo where prod_id=#{prodid,jdbcType=VARCHAR} )
+        group by indentify_mark)t where t.indentify_mark=det.indentify_mark and shares!=0)
+
+        AND  HOLDER_TYPE IN('17','18','19','20','21','22','23','24','25','26')) GREN
+    </select>
+
+    <select id="selectAllDataForExport" resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto">
+        select sub.* from (
+        select
+        sub.REGIST_SEQNO registSeqno,
+        sub.PROD_ID prodId,
+        <if test="model_type != null">
+            info.REG_CODE issuePartyId, /*发行机构代码*/
+        </if>
+        <if test="model_type == null">
+            sub.ISSUE_PARTY_ID issuePartyId,
+        </if>
+        sub.SINGLE_TOTAL singleTotal,
+        sub.LEGAL_TOTAL legalTotal,
+        sub.UNLEGAL_TOTAL unlegalTotal,
+        sub.SUBSCRIBE_CCY_AMT subscribeCcyAmt,
+        sub.SALE_AREA_AMT saleAreaAmt,
+        sub.TOTAL_AMT totalAmt,
+        sub.RAISE_QTY raiseQty,
+        sub.IS_CONSIGN isConsign,
+        sub.CONSIGN_AMT consignAmt,
+        sub.REMARK remark,
+        sub.SEND_STATUS sendStatus,
+        sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        sub.STATUS_DATE statusDate,
+        sub.STATUS status,
+        sub.CREATE_USER createUser,
+        sub.CREATE_DEPT createDept,
+        sub.CREATE_TIME createTime,
+        sub.UPDATE_USER updateUser,
+        sub.UPDATE_TIME updateTime,
+        sub.SUBMIT_TIME submitTime,
+        sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE submitDeadline,
+        sub.ORG_CODE orgCode,
+        sub.DEPT_CODE deptCode,
+        info.PROD_NAME prodName,
+        code.REG_CODE regCode,
+        sub.SUMIT_SEQ sumitSeq,
+        sub.PROD_REGIST_CODE prodRegistCode,
+        sub.BUSI_ACCT_NO busiAcctNo,
+        sub.ACCT_NAME acctName
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        and info.status != 'D'
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1 and sub.TOTAL_AMT>0 and info.OPERATE_MODE in('01','02')
+        <if test="isConsign != null and isConsign !='' ">
+            and sub.IS_CONSIGN = #{isConsign,jdbcType=VARCHAR}
+        </if>
+        <if test="prodNameList != null and prodNameList.size()>0">
+            <foreach collection="prodNameList" item="items" open="and info.prod_id in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="regCodeList != null and regCodeList.size()>0">
+            <foreach collection="regCodeList" item="items" open="and code.reg_code in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
+        </if>
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
+        </if>
+        <if test="vdateStart != null and vdateStart != ''">
+            and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{vdateStart}
+        </if>
+        <if test="vdateEnd != null and vdateEnd != ''">
+            and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{vdateEnd}
+        </if>
+        <!-- 报送状态 -->
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 反馈状态 -->
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+            <foreach collection="submitFeedbackStatusList" item="items" open="and SUBMIT_FEEDBACK_STATUS in ("
+                     separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 数据状态 -->
+        <if test="statusList != null and statusList.size()>0">
+            <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+        union all
+
+        select
+        sub.REGIST_SEQNO registSeqno,
+        sub.PROD_ID prodId,
+        <if test="model_type != null">
+            info.REG_CODE issuePartyId, /*发行机构代码*/
+        </if>
+        <if test="model_type == null">
+            sub.ISSUE_PARTY_ID issuePartyId,
+        </if>
+        sub.SINGLE_TOTAL singleTotal,
+        sub.LEGAL_TOTAL legalTotal,
+        sub.UNLEGAL_TOTAL unlegalTotal,
+        sub.SUBSCRIBE_CCY_AMT subscribeCcyAmt,
+        sub.SALE_AREA_AMT saleAreaAmt,
+        sub.TOTAL_AMT totalAmt,
+        sub.RAISE_QTY raiseQty,
+        sub.IS_CONSIGN isConsign,
+        sub.CONSIGN_AMT consignAmt,
+        sub.REMARK remark,
+        sub.SEND_STATUS sendStatus,
+        sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        sub.STATUS_DATE statusDate,
+        sub.STATUS status,
+        sub.CREATE_USER createUser,
+        sub.CREATE_DEPT createDept,
+        sub.CREATE_TIME createTime,
+        sub.UPDATE_USER updateUser,
+        sub.UPDATE_TIME updateTime,
+        sub.SUBMIT_TIME submitTime,
+        sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE submitDeadline,
+        sub.ORG_CODE orgCode,
+        sub.DEPT_CODE deptCode,
+        info.PROD_NAME prodName,
+        code.REG_CODE regCode,
+        sub.SUMIT_SEQ sumitSeq,
+        sub.PROD_REGIST_CODE prodRegistCode,
+        sub.BUSI_ACCT_NO busiAcctNo,
+        sub.ACCT_NAME acctName
+
+        from CHB_PRD_RAISETOT_SUB sub
+        left join chb_prd_baseinfo info
+        on info.prod_id=sub.prod_id
+        and info.status != 'D'
+        left join CHB_PRDRESIST_CODE code
+        on code.prodid=sub.prod_id
+        where 1=1 and info.OPERATE_MODE in('03','04')
+        <if test="isConsign != null and isConsign !='' ">
+            and sub.IS_CONSIGN = #{isConsign,jdbcType=VARCHAR}
+        </if>
+        <if test="prodNameList != null and prodNameList.size()>0">
+            <foreach collection="prodNameList" item="items" open="and info.prod_id in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="regCodeList != null and regCodeList.size()>0">
+            <foreach collection="regCodeList" item="items" open="and code.reg_code in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
+        </if>
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
+        </if>
+        <if test="vdateStart != null and vdateStart != ''">
+            and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{vdateStart}
+        </if>
+        <if test="vdateEnd != null and vdateEnd != ''">
+            and DATE_FORMAT(info.VDATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{vdateEnd}
+        </if>
+        <!-- 报送状态 -->
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 反馈状态 -->
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+            <foreach collection="submitFeedbackStatusList" item="items" open="and SUBMIT_FEEDBACK_STATUS in ("
+                     separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <!-- 数据状态 -->
+        <if test="statusList != null and statusList.size()>0">
+            <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        ) sub
+        order by sub.submitDeadline
+    </select>
 </mapper>

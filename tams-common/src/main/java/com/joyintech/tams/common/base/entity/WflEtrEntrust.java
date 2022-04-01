@@ -183,6 +183,10 @@ public class WflEtrEntrust extends WflEtrEntrustKey {
      * 流程id
      */
     private String workflowId;
+    /**
+     *业务模式
+     */
+    private String businessModel;
 
     /**
      * 取得 组合代码
@@ -729,5 +733,13 @@ public class WflEtrEntrust extends WflEtrEntrustKey {
      */
     public void setWorkflowId(String workflowId) {
         this.workflowId = workflowId == null ? null : workflowId.trim();
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

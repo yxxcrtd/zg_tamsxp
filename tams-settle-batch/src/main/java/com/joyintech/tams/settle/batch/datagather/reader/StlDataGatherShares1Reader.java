@@ -29,7 +29,11 @@ public class StlDataGatherShares1Reader extends StlDataGatherReader {
         // 交易方向列表
         searchParam.put("psList", Arrays.asList(DictCodeListExt2.交易方向_新股中签.getValue()
                 ,DictCodeListExt2.交易方向_增发.getValue(),DictCodeListExt2.交易方向_配股.getValue()
-                ,DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_卖出.getValue()));
+                ,DictCodeList.交易方向_买入.getValue(),DictCodeList.交易方向_卖出.getValue()
+                // GZYHTZJY-1014:增加申购方向 fuyongsheng 20211230 add start
+                , DictCodeList.交易方向_申购.getValue()
+                // GZYHTZJY-1014:增加申购方向 fuyongsheng 20211230 add end
+                ));
     }
 
     @Override

@@ -165,6 +165,10 @@ public class RepoQuoteSearchDto {
      */
     private String isDzh;
 
+    private String sort;
+
+    private String direction;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -707,5 +711,21 @@ public class RepoQuoteSearchDto {
 
     public void setPsList(List<String> psList) {
         this.psList = psList;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 }

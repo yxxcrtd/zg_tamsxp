@@ -503,4 +503,28 @@ public interface BussinessConstant {
      * 修改债券计划是否需要重新生成待交收数据
      */
     String IS_TODO_SETTLE_FLAG = "IS_TODO_SETTLE_FLAG";
+
+	 /**
+     * 场内交易指令是否开启多组合指令
+     */
+    String IS_NEED_EXCHANGE_MULTI_PTL = "IS_NEED_EXCHANGE_MULTI_PTL";
+    /**
+     * 是否处理旧头寸标识(Y:是，N:否)
+     */
+    String IS_HANDLE_OLDPOS_FLAG = "IS_HANDLE_OLDPOS_FLAG";
+    /**
+     * 旧头寸 不处理的业务
+     */
+    String finprodType2List = "finprodType2List";
+
+    // moddify by etliu 20220301 bond_traded_unit系统参数删除，默认张 start
+    /**
+     * 债券交易数量单位，值域为01-张；02-手（bond_traded_unit），默认值01
+     */
+    String BOND_TRADED_UNIT_DEFAULT = "01";
+    // moddify by etliu 20220301 end
+
+    // modfify by etliu 20220320 协议回购资产类型 start
+    String NEGOTIATED_REPURCHASE_TEXT = "协议回购";
+    // modfify by etliu 20220320 协议回购资产类型 end
 }

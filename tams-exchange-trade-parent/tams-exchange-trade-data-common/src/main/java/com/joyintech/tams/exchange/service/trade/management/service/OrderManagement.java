@@ -1,18 +1,26 @@
 package com.joyintech.tams.exchange.service.trade.management.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.google.common.base.Strings;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.tams.business.common.pojo.Message;
+import com.joyintech.tams.business.common.util.PositionUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.constant.EntrustProp;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
+import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.db.domain.Algorithm;
 import com.joyintech.tams.exchange.common.db.domain.Instruction;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrust;
 import com.joyintech.tams.exchange.common.db.domain.Order;
+import com.joyintech.tams.exchange.common.request.PositionInstructionRequest;
 import com.joyintech.tams.exchange.common.utils.CheckParamUtils;
+import com.joyintech.tams.exchange.common.utils.TradeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.InstructionService;
 import com.joyintech.tams.exchange.datacommon.db.service.OrderService;
+import com.joyintech.tams.exchange.service.trade.position.service.PositionRequestServiceInstructionRequest;
 import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.processor.algorithm.AlgorithmHelper;
 import com.joyintech.tams.exchange.service.trade.processor.business.common.CommonCheckHelper;
@@ -21,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -40,6 +49,8 @@ public class OrderManagement extends BaseService {
     private CommonCheckHelper commonCheckHelper;
     @Autowired
     private InstructionService instructionService;
+    @Autowired
+    private PositionRequestServiceInstructionRequest positionRequestServiceInstructionRequest;
 
     /**
      * 根据userId查询Order表中数据
@@ -68,6 +79,32 @@ public class OrderManagement extends BaseService {
         String uniqueCheck = commonCheckHelper.checkApplyEntrust(orderPlaceBean.getEntrustProp(), orderPlaceBean.getAccountId(), orderPlaceBean.getStockCode(), orderPlaceBean.getInstructionId());
         if (Objects.nonNull(uniqueCheck))
             return new ResultBean(ErrorCode.ACCOUNT_APPLY_NOT_UNIQUE.value, ErrorCode.ACCOUNT_APPLY_NOT_UNIQUE.errorMsg + ":" + uniqueCheck, orderPlaceBean);
+        //头寸引擎余额检查---start
+        try {
+            Instruction instruction = instructionService.findById(orderPlaceBean.getInstructionId());
+//        	PositionInstructionRequest instructionClone = (PositionInstructionRequest)instruction.cloneInstruction();
+            PositionInstructionRequest instructionClone = new PositionInstructionRequest();
+            BeanUtil.copyProperties(instruction, instructionClone);
+            instructionClone.setSoftSkipMode(orderPlaceBean.getSoftSkipMode());
+            //普通下单
+            if (tradeHelper.isOrdinaryTransaction(orderPlaceBean, instruction)) {
+                logger.info("普通交易头寸检查...");
+                instructionClone.setEntrustAmt(orderPlaceBean.getEntrustPrice().multiply(BigDecimal.valueOf(orderPlaceBean.getEntrustVolume())));
+                instructionClone.setEntrustNum(orderPlaceBean.getEntrustVolume());
+                instructionClone.setEntrustPrice(orderPlaceBean.getEntrustPrice());
+                instructionClone.setFullPrice(orderPlaceBean.getFullPrice());
+            } else {
+                tradeHelper.fillEntrustPriceAndAmt(orderPlaceBean, instructionClone);
+            }
+            instructionClone.setEntrustNo(instruction.getEntrustId());
+            instructionClone.setEntrustProp(orderPlaceBean.getEntrustProp());
+            positionRequestServiceInstructionRequest.sendRequest(instructionClone, DictCodeListExt3.业务动作_交易下单.getValue(), DictCodeListExt3.系统动作_检查.getValue(), DictCodeListExt3.系统动作_新建.getValue());
+        } catch (Exception e) {
+            logger.warn("场内交易下单头寸检测异常", e);
+            Message message = PositionUtil.ajaxErrorReturn(e);
+            return new ResultBean(Integer.parseInt(message.getCode()), message.getMessage(), message.getData());
+        }
+        //头寸引擎余额检查---end
         Order order = tradeHelper.handleOrder(orderPlaceBean);
         return new ResultBean(order.getErrorCode(), order.getErrorMsg());
     }
@@ -94,6 +131,33 @@ public class OrderManagement extends BaseService {
         String uniqueCheck = commonCheckHelper.checkApplyEntrust(integratedEntrust.getEntrustProp(), integratedEntrust.getAccountId(), integratedEntrust.getStockCode(), integratedEntrust.getInstructionId());
         if (Objects.nonNull(uniqueCheck))
             return new ResultBean(ErrorCode.INSTRUCTION_APPLY_NOT_UNIQUE.value, ErrorCode.INSTRUCTION_APPLY_NOT_UNIQUE.errorMsg + ":" + uniqueCheck, integratedEntrust);
+        //头寸引擎余额检查---start
+        try {
+            String instructionId = integratedEntrust.getInstructionId();
+            Instruction instruction = instructionService.findById(instructionId);
+            PositionInstructionRequest instructionClone = new PositionInstructionRequest();
+            BeanUtil.copyProperties(instruction, instructionClone);
+            instructionClone.setSoftSkipMode(integratedEntrust.getSoftSkipMode());
+            if (InvestmentAssetType1.NEGOTIATED_REPO.value.equals(instruction.getAssetType1())) {
+                logger.info("场内协议回购交易下单头寸检查，指令编号：{}，回购金额：{}", instructionId, integratedEntrust.getEntrustBalance());
+                instructionClone.setEntrustAmt(integratedEntrust.getEntrustBalance());
+            } else {
+                // 计算委托金额
+                BigDecimal entrustBalance = TradeUtils.calculateBalance(integratedEntrust.getEntrustBs(), integratedEntrust.getEntrustPrice(), integratedEntrust.getEntrustVolume(), integratedEntrust.getAssetType(), integratedEntrust);
+                instructionClone.setEntrustAmt(entrustBalance);
+            }
+            instructionClone.setEntrustNum(integratedEntrust.getEntrustVolume());
+            instructionClone.setEntrustPrice(integratedEntrust.getEntrustPrice());
+            instructionClone.setFullPrice(integratedEntrust.getFullPrice());
+            instructionClone.setEntrustNo(instruction.getEntrustId());
+            instructionClone.setEntrustProp(integratedEntrust.getEntrustProp());
+            positionRequestServiceInstructionRequest.sendRequest(instructionClone, DictCodeListExt3.业务动作_交易下单.getValue(), DictCodeListExt3.系统动作_检查.getValue(), DictCodeListExt3.系统动作_新建.getValue());
+        } catch (Exception e) {
+            logger.warn("场内交易大宗下单头寸检测异常", e);
+            Message message = PositionUtil.ajaxErrorReturn(e);
+            return new ResultBean(Integer.parseInt(message.getCode()), message.getMessage(), message.getData());
+        }
+        //头寸引擎余额检查---end
         IntegratedEntrust returnEntrust = tradeHelper.handIntegratedEntrust(integratedEntrust);
         return new ResultBean(returnEntrust.getErrorCode(), returnEntrust.getErrorMsg());
     }

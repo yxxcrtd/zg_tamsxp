@@ -113,6 +113,66 @@
         and not exists (select 1 from trd_product_deal TT where TT.TRADE_ID = tfpft.TRADE_ID AND  exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO where SETTLE_STATUS = '02' and TRADE_ID = TT.TOTLE_TRADE_ID))
     </delete>
 
+    <delete id="deletePaTrdFinTempDealTotalData">
+        delete from PA_TRD_PROD_TEMP_DEAL_TOTAL tfpft
+        where tfpft.TOTLE_TRADE_ID in (
+        select TOTLE_TRADE_ID from TRD_PRODUCT_TEMP_DEAL_TOTAL
+        where trade_date =#{batchDate}
+        and BUSI_TYPE = #{busiType}
+        and update_user = #{updateUser}
+        <if test="tradeMarket != null and tradeMarket != ''">
+            and TRADE_MARKET = #{tradeMarket}
+        </if>
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and FINPROD_TYPE2 = #{finProdType2}
+        </if>
+        )
+        and  not exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO  WHERE SETTLE_STATUS = '02' and TRADE_ID = tfpft.TOTLE_TRADE_ID)
+    </delete>
+
+    <delete id="deleteTrdFinProductTempDealTotalData">
+        delete from TRD_PRODUCT_TEMP_DEAL_TOTAL tfpft
+        where tfpft.trade_date =#{batchDate}
+        and tfpft.BUSI_TYPE = #{busiType}
+        and tfpft.update_user = #{updateUser}
+        <if test="tradeMarket != null and tradeMarket != ''">
+            and tfpft.TRADE_MARKET = #{tradeMarket}
+        </if>
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and tfpft.FINPROD_TYPE2 = #{finProdType2}
+        </if>
+        and  not exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO  WHERE SETTLE_STATUS = '02' and TRADE_ID = tfpft.TOTLE_TRADE_ID)
+    </delete>
+
+    <delete id="deleteTrdProductTempDeal">
+        delete from TRD_PRODUCT_TEMP_DEAL tfpft
+        where tfpft.trade_date =#{batchDate}
+        and tfpft.update_user = #{updateUser}
+        <if test="tradeMarket != null and tradeMarket != ''">
+            and tfpft.TRADE_MARKET = #{tradeMarket}
+        </if>
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and tfpft.FINPROD_TYPE2 = #{finProdType2}
+        </if>
+        and  not exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO  WHERE SETTLE_STATUS = '02' and TRADE_ID = tfpft.TOTLE_TRADE_ID)
+    </delete>
+
+    <delete id="deleteTrdProductTempDealAdd">
+        delete from TRD_PRODUCT_TEMP_DEAL_ADD tfpft
+        where tfpft.trade_id in (
+        select trade_id from TRD_PRODUCT_TEMP_DEAL
+        where trade_date =#{batchDate}
+        and update_user = #{updateUser}
+        <if test="tradeMarket != null and tradeMarket != ''">
+            and TRADE_MARKET = #{tradeMarket}
+        </if>
+        <if test="finProdType2 != null and finProdType2 != ''">
+            and FINPROD_TYPE2 = #{finProdType2}
+        </if>
+        )
+        and not exists (select 1 from trd_product_deal TT where TT.TRADE_ID = tfpft.TRADE_ID AND  exists (select 1 from TRD_BANK_MANUAL_SETTLE_INFO where SETTLE_STATUS = '02' and TRADE_ID = TT.TOTLE_TRADE_ID))
+    </delete>
+
     <select id="selectDealCapacctInfo" resultType="java.lang.String">
         SELECT
         DISTINCT

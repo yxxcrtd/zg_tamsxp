@@ -507,10 +507,10 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                     dto.setTransferType1(PbcDictCodeEnums.getCodeByName(transferType1));
                 }
                 //其他产品标识1
-                String transferType2 = rowsData.get(row++);
+//                String transferType2 = rowsData.get(row++);
 //                dto.setTransferType2(StrUtil.isEmpty(transferType2) ? null : transferType2);
                 //其他产品标识2
-                String transferType3 = rowsData.get(row++);
+//                String transferType3 = rowsData.get(row++);
 //                dto.setTransferType3(StrUtil.isEmpty(transferType3) ? null : transferType3);
                 //其他产品标识3
                 String transferType4 = rowsData.get(row++);

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.interf.cnbond.dao.CnBondInterfMapper_mysql" >
+    <select id="selectReportNoByRepMesNo" resultType ="com.joyintech.tams.common.base.entity.ChbInfoReport">
+        select
+	       REPORT_NO AS reportNo,
+	       REP_MES_NO AS repMesNo,
+		   UPLOAD_RESULT AS uploadResult,
+		   UPLOAD_RESULT_MSG AS uploadResultMsg,
+		   UPLOAD_FILE_ID AS uploadFileId,
+		   CHECK_FILE_ID AS checkFileId,
+		   CHECK_RESULT AS checkResult,
+		   CHECK_RESULT_MSG AS checkResultMsg,
+		   CHECK_FILE_NAME AS checkFileName,
+		   CHECK_TOTAL_COUNT AS checkTotalCount,
+		   CHECK_SUCCESS_COUNT AS  checkSuccessCount,
+		   CHECK_FAILED_COUNT AS checkFailedCount,
+		   INSIDE_FILE_ID AS insideFileId,
+		   SEND_TIME AS sendTime,
+		   REPLY_TIME AS replyTime,
+           SUBMIT_TYPE AS submitType
+        from
+            CHB_INFO_REPORT
+        where REP_MES_NO =  #{repMesNo,jdbcType=VARCHAR}
+    </select>
+    <!-- 更新中债报送结果 -->
+    <update id="updateChbSubmitStatus" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
+        update CHB_SUBMIT_STATUS
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null" >
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where
+        REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+        <if test="submitNum != null" >
+            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <update id="updateChbEquDetSubmitStatus" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
+        update CHB_EQUDET_SUBMIT_STATUS
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null" >
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where
+        REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+        <if test="submitNum != null" >
+            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+        </if>
+    </update>
+    <insert id="insertChbInfoReportList">
+        insert into CHB_INFO_REPORT (REPORT_NO, REP_MES_NO, UPLOAD_RESULT,
+        UPLOAD_RESULT_MSG, UPLOAD_FILE_ID, CHECK_FILE_ID,
+        CHECK_RESULT, CHECK_RESULT_MSG, CHECK_FILE_NAME,
+        CHECK_TOTAL_COUNT, CHECK_SUCCESS_COUNT, CHECK_FAILED_COUNT,
+        INSIDE_FILE_ID, SEND_TIME, REPLY_TIME,
+        WORKFLOW_ID, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TYPE
+        )
+        <foreach collection="dataList" item="item" separator=" union all select" open=" (select " close=")">
+            #{item.reportNo} as reportNo , #{item.repMesNo} as repMesNo , #{item.uploadResult} as uploadResult ,
+            #{item.uploadResultMsg} as uploadResultMsg, #{item.uploadFileId} as uploadFileId, #{item.checkFileId} as checkFileId,
+            #{item.checkResult} as checkResult, #{item.checkResultMsg} as checkResultMsg, #{item.checkFileName} as checkFileName,
+            #{item.checkTotalCount} as checkTotalCount, #{item.checkSuccessCount} as checkSuccessCount, #{item.checkFailedCount} as checkFailedCount,
+            #{item.insideFileId} as insideFileId, #{item.sendTime} as sendTime, #{item.replyTime} as replyTime,
+            #{item.workflowId} as workflowId, #{item.createUser} as createUser, #{item.createDept} as createDept,
+            #{item.createTime} as createTime, #{item.updateUser} as updateUser, #{item.updateTime} as updateTime,
+            #{item.submitType} as submitType
+        </foreach>
+    </insert>
+
+    <insert id="insertChbSubmitStatusList">
+        insert into CHB_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
+        SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
+        CREATE_USER, CREATE_TIME, REPORT_NO,
+        SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
+        <foreach collection="dataList" item="item" separator=" union all select" open="(select " close=")">
+            #{item.seqno} as seqno, #{item.submitNum} as submitNum, #{item.submitType} as submitType ,
+            #{item.submitFeedbackStatus} as submitFeedbackStatus, #{item.updateUser} as updateUser, #{item.updateTime} as updateTime,
+            #{item.createUser} as createUser, #{item.createTime} as createTime, #{item.reportNo} as reportNo,
+            #{item.submitFeedbackMsg} as submitFeedbackMsg,#{item.uniqueIdenti} as uniqueIdenti
+        </foreach>
+    </insert>
+    <insert id="insertChbEquDetSubmitStatusList">
+        insert into CHB_EQUDET_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
+        SUBMIT_FEEDBACK_STATUS,EQUITY_CONF_DATE, UPDATE_USER, UPDATE_TIME,
+        CREATE_USER, CREATE_TIME, REPORT_NO,
+        SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
+        <foreach collection="dataList" item="item" separator=" union all select" open="(select " close=")">
+            #{item.seqno} as seqno , #{item.submitNum} as submitNum , #{item.submitType} as submitType ,
+            #{item.submitFeedbackStatus} as submitFeedbackStatus ,#{item.equityConfDate} as equityConfDate,
+            #{item.updateUser} as updateUser, #{item.updateTime} as updateTime,
+            #{item.createUser} as createUser, #{item.createTime} as createTime , #{item.reportNo} as reportNo,
+            #{item.submitFeedbackMsg} as submitFeedbackMsg,#{item.uniqueIdenti} as uniqueIdenti
+        </foreach>
+    </insert>
+    <select id="selectOrgCodeByRegistBankCode" resultType="java.lang.String">
+        select max(ORG_CODE) as orgCode from CHB_ORG_REGIST_BANK_CODE where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+    </select>
+    <update id="mergerChbEquDetSubmitStatus">
+        UPDATE  CHB_EQUDET_SUBMIT_STATUS as A,
+        (
+        select
+        SEQNO,
+        SUBMIT_NUM,
+        SUBMIT_TYPE,
+        SUBMIT_FEEDBACK_STATUS,
+        EQUITY_CONF_DATE,
+        REPORT_NO,
+        SUBMIT_FEEDBACK_MSG,
+        UNIQUE_IDENTI,
+        UPDATE_USER,
+        UPDATE_TIME
+        from (
+        select
+        TEMP.*
+        from (
+        <foreach collection="list" item="item" separator="union all">
+            SELECT
+            #{item.seqno,jdbcType=VARCHAR} as SEQNO,
+            #{item.submitNum,jdbcType=VARCHAR} as SUBMIT_NUM,
+            #{item.submitType,jdbcType=VARCHAR} as SUBMIT_TYPE,
+            #{item.submitFeedbackStatus,jdbcType=VARCHAR} as
+            SUBMIT_FEEDBACK_STATUS,
+            #{item.equityConfDate,jdbcType=DATE} as
+            EQUITY_CONF_DATE, #{item.reportNo,jdbcType=VARCHAR} as
+            REPORT_NO, #{item.submitFeedbackMsg,jdbcType=VARCHAR} as
+            SUBMIT_FEEDBACK_MSG,
+            #{item.uniqueIdenti,jdbcType=VARCHAR} as UNIQUE_IDENTI,
+            #{item.updateUser,jdbcType=VARCHAR} as UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+            FROM DUAL
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        SET
+        A.SUBMIT_FEEDBACK_STATUS = B.SUBMIT_FEEDBACK_STATUS,
+        A.SUBMIT_FEEDBACK_MSG = B.SUBMIT_FEEDBACK_MSG,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME
+        where A.REPORT_NO=B.REPORT_NO AND
+        A.SUBMIT_NUM = B.SUBMIT_NUM;
+    </update>
+</mapper>

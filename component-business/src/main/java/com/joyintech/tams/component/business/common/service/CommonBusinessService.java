@@ -473,23 +473,28 @@ public class CommonBusinessService extends BaseService {
                 交易方向 = SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, tradeDirection);
             }
 
-            WorkFlowException e = new WorkFlowException(WflCode.WFL_E00025,
-                    "未授权或未设置授权: 金额：" + prinAmt + "，用户：" + userName + "，授权类型一级："
-                            + SysDataUtil.getNameFromDataDict(DictCode.授权类型一级,
-                                    finProductTypeConfig.getOutputValue1())
-                            + "(" + finProductTypeConfig.getOutputValue1() + ")，授权类型二级:"
-                            + (StringUtil.isEmpty(finProductTypeConfig.getOutputValue2()) ? "空"
-                                    : finProductTypeConfig.getOutputValue2())
-                            + "，交易场所：" + SysDataUtil.getNameFromDataDict(DictCode.交易场所, tradeMarket)
-                            + "，交易方向：" + 交易方向);
+            // modify by etliu 20220325 start
+            // 没做授权时，直接当时授权不足处理，由领导审批
+//            WorkFlowException e = new WorkFlowException(WflCode.WFL_E00025,
+//                    "未授权或未设置授权: 金额：" + prinAmt + "，用户：" + userName + "，授权类型一级："
+//                            + SysDataUtil.getNameFromDataDict(DictCode.授权类型一级,
+//                                    finProductTypeConfig.getOutputValue1())
+//                            + "(" + finProductTypeConfig.getOutputValue1() + ")，授权类型二级:"
+//                            + (StringUtil.isEmpty(finProductTypeConfig.getOutputValue2()) ? "空"
+//                                    : finProductTypeConfig.getOutputValue2())
+//                            + "，交易场所：" + SysDataUtil.getNameFromDataDict(DictCode.交易场所, tradeMarket)
+//                            + "，交易方向：" + 交易方向);
 //            WorkFlowException e = new WorkFlowException(
 //                WflCode.WFL_E00025, "未授权或未设置授权: 金额：" + prinAmt + "，用户：" + userName + "，资产类型："
 //                                    + SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, assetType) + "(" + assetType
 //                                    + ")，资产一级类型:" + assetSecType + "，交易场所："
 //                                    + SysDataUtil.getNameFromDataDict(DictCode.交易场所, tradeMarket) + "，交易方向：" + 交易方向);
             // 资产类型改为授权类型 modify by renping 2019-08-06  end
-            logger.error("未授权或未设置授权", e);
-            throw e;
+//            logger.error("未授权或未设置授权", e);
+//            throw e;
+            variables.put(BussinessConstant.是否需要上级审批, true);
+            return variables;
+            // modify by etliu 20220325 end
         }
         // 用户最大权限是无限授权jine
         try{
@@ -745,17 +750,22 @@ public class CommonBusinessService extends BaseService {
                 交易方向 = SysDataUtil.getNameFromDataDict(DictCode.回购拆借方向, tradeDirection);
             }
 
-            WorkFlowException e = new WorkFlowException(WflCode.WFL_E00025,
-                    "未授权或未设置授权: 金额：" + prinAmt + "，用户：" + userName + "，授权类型一级："
-                            + SysDataUtil.getNameFromDataDict(DictCode.授权类型一级,
-                                    finProductTypeConfig.getOutputValue1())
-                            + "(" + finProductTypeConfig.getOutputValue1() + ")，授权类型二级:"
-                            + (StringUtil.isEmpty(finProductTypeConfig.getOutputValue2()) ? "空"
-                                    : finProductTypeConfig.getOutputValue2())
-                            + "，交易场所：" + SysDataUtil.getNameFromDataDict(DictCode.交易场所, tradeMarket)
-                            + "，交易方向：" + 交易方向);
-            logger.error("未授权或未设置授权", e);
-            throw e;
+            // modify by etliu 20220325 start
+            // 没做授权时，直接当时授权不足处理，由领导审批
+//            WorkFlowException e = new WorkFlowException(WflCode.WFL_E00025,
+//                    "未授权或未设置授权: 金额：" + prinAmt + "，用户：" + userName + "，授权类型一级："
+//                            + SysDataUtil.getNameFromDataDict(DictCode.授权类型一级,
+//                                    finProductTypeConfig.getOutputValue1())
+//                            + "(" + finProductTypeConfig.getOutputValue1() + ")，授权类型二级:"
+//                            + (StringUtil.isEmpty(finProductTypeConfig.getOutputValue2()) ? "空"
+//                                    : finProductTypeConfig.getOutputValue2())
+//                            + "，交易场所：" + SysDataUtil.getNameFromDataDict(DictCode.交易场所, tradeMarket)
+//                            + "，交易方向：" + 交易方向);
+//            logger.error("未授权或未设置授权", e);
+//            throw e;
+            variables.put(BussinessConstant.是否需要上级审批, true);
+            return variables;
+            // modify by etliu 20220325 end
         }
         // 用户最大权限是无限授权jine
         boolean 是否需要上级审批 = !DictCodeList.授权类型_无限授权.getValue()

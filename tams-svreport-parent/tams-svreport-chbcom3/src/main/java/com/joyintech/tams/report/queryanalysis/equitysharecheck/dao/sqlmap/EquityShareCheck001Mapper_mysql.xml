@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.queryanalysis.equitysharecheck.dao.EquityShareCheck001Mapper_mysql">
 	<!--查询产品代码和名称 -->
 	<select id="queryPrdNameList" parameterType="java.lang.String"
-		resultType="com.joyintech.framework.select.SelectOptionDto">
+			resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
 		A.PRODID as id,
 		(ifnull(A.PRODNAME,A.PRODID)) as text
@@ -19,7 +19,7 @@
 
 	<!--查询识别标识 -->
 	<select id="queryIndentifyMarkList" parameterType="java.lang.String"
-		resultType="com.joyintech.framework.select.SelectOptionDto">
+			resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT
 		A.INDENTIFY_MARK as id,
 		A.INDENTIFY_MARK as text
@@ -34,13 +34,13 @@
 	</select>
 
 	<select id="searchPage"
-		resultType="com.joyintech.tams.report.queryanalysis.equitysharecheck.dto.EquityShareCheck001Dto">
+			resultType="com.joyintech.tams.report.queryanalysis.equitysharecheck.dto.EquityShareCheck001Dto">
 		select r.* ,
-			case
-			when r.CHECKRESTATUS= '01' then
-			'有偏差'
-			else '无偏差'
-			end CHECKRES/*检查结果*/
+		case
+		when r.CHECKRESTATUS= '01' then
+		'有偏差'
+		else '无偏差'
+		end CHECKRES/*检查结果*/
 		from (
 		select DATE_FORMAT(todayData.HOLD_DATE,'y%Y%m%d') holdDate, /*查询日期*/
 		case
@@ -71,16 +71,16 @@
 		</if>
 		<if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
 			<foreach collection="prdRegistCodeList" item="item"
-				open="and A.PRD_REGIST_CODE in(" separator="," close=")">
+					 open="and A.PRD_REGIST_CODE in(" separator="," close=")">
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
 		<if test="indentifyMark != null and indentifyMark != ''">
-		 	AND A.INDENTIFY_MARK LIKE concat_ws('','%',#{indentifyMark},'%')
+			AND A.INDENTIFY_MARK LIKE concat_ws('','%',#{indentifyMark},'%')
 		</if>
 		<if test="prdCodeList != null  and prdCodeList.size()>0">
 			<foreach collection="prdCodeList" item="item" open="and PRODID in("
-				separator="," close=")">
+					 separator="," close=")">
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
@@ -114,9 +114,9 @@
 		t.ccy,
 		t.equity_conf_date,
 		sum((
-			case when t.busi_type in('03','11','13','15','16') then -1 * t.shares
-			when t.busi_type in('06','07','08','09')  then null
-			else t.shares
+		case when t.busi_type in('03','11','13','15','16') then -1 * t.shares
+		when t.busi_type in('06','07','08','09')  then null
+		else t.shares
 		end )) shares /*当日变动份额*/
 		from chb_equdet t
 		where t.STATUS != 'D'
@@ -135,7 +135,7 @@
 		LEFT JOIN CHB_PRDRESIST_CODE P
 		ON todayData.PRODID = P.PRODID
 		order by todayData.PRODID, todayData.HOLD_DATE, todayData.CCY
-		)r 		
+		)r
 		<where>
 			<if test="checkResult != null and checkResult != ''">
 				r.CHECKRESTATUS=#{checkResult,jdbcType=VARCHAR}

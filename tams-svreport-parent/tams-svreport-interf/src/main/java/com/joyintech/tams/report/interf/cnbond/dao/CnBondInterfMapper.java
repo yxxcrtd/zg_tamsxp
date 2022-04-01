@@ -85,7 +85,9 @@ public interface CnBondInterfMapper {
      * @see
      * @since 1.0
      */
-    void insertChbSubmitStatusList(@Param("dataList") List<ChbSubmitStatus> chbSubmitStatusList);
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+    void insertChbSubmitStatusList(@Param("dataList") List<ChbSubmitStatus> chbSubmitStatusList,@Param("SubmitsType") String  SubmitsType);
+    /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     /**
      * 登录中债投资者明细报送状态数据
      *

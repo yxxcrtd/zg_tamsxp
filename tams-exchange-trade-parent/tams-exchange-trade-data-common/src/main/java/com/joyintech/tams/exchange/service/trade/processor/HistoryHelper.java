@@ -9,9 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class HistoryHelper {
@@ -58,6 +60,15 @@ public class HistoryHelper {
     @Autowired
     private AlgorithmHistoryService algorithmHistoryService;
 
+    @Autowired
+    private InstructionDetailService instructionDetailService;
+    @Autowired
+    private InstructionHistoryService instructionHistoryService;
+    @Autowired
+    private InstructionDetailHistoryService instructionDetailHistoryService;
+    @Autowired
+    private InstructionPledgeHistoryService instructionPledgeHistoryService;
+
     private SimpleDateFormat tradingDayFormat = new SimpleDateFormat("yyyyMMdd");
 
     public void handleEntrustHistory(Date date, String nextDate) {
@@ -71,8 +82,7 @@ public class HistoryHelper {
             Set<Entrust> deleteEntrusts = new HashSet<>(entrusts);
             entrusts.forEach(entrust -> {
                 //只归档当日历史，可能有老数据因为指令未到结束日而留存，不重复归历史
-                if (entrust.getTradingDay().compareTo(lastClearDate) > 0
-                        && entrust.getTradingDay().compareTo(platDate) <= 0) {
+                if (entrust.getTradingDay().compareTo(lastClearDate) > 0 && entrust.getTradingDay().compareTo(platDate) <= 0) {
                     EntrustHistory entrustHistory = new EntrustHistory();
                     BeanUtils.copyProperties(entrust, entrustHistory, "id");
                     entrustHistory.setEntrustId(entrust.getId());
@@ -108,8 +118,7 @@ public class HistoryHelper {
                     orderHistories.add(orderHistory);
                 } else {
                     // 批量订单----只归档当日历史，可能有老数据因为指令未到结束日而留存，不重复归历史
-                    if (order.getTradingDay().compareTo(lastClearDate) > 0
-                            && order.getTradingDay().compareTo(platDate) <= 0) {
+                    if (order.getTradingDay().compareTo(lastClearDate) > 0 && order.getTradingDay().compareTo(platDate) <= 0) {
                         OrderHistory orderHistory = new OrderHistory();
                         BeanUtils.copyProperties(order, orderHistory, "id");
                         orderHistory.setOrderId(order.getId());
@@ -142,8 +151,7 @@ public class HistoryHelper {
         if (Objects.nonNull(trades) && trades.size() > 0) {
             Set<Trade> deleteTrades = new HashSet<>(trades);
             trades.forEach(trade -> {
-                if (trade.getTradingDay().compareTo(lastClearDate) > 0
-                        && trade.getTradingDay().compareTo(platDate) <= 0) {
+                if (trade.getTradingDay().compareTo(lastClearDate) > 0 && trade.getTradingDay().compareTo(platDate) <= 0) {
                     TradeHistory tradeHistory = new TradeHistory();
                     BeanUtils.copyProperties(trade, tradeHistory, "id");
                     tradeHistory.setTradeId(trade.getId());
@@ -171,8 +179,7 @@ public class HistoryHelper {
         if (Objects.nonNull(integratedEntrusts) && integratedEntrusts.size() > 0) {
             Set<IntegratedEntrust> deleteEntrusts = new HashSet<>(integratedEntrusts);
             integratedEntrusts.forEach(integratedEntrust -> {
-                if (integratedEntrust.getTradingDay().compareTo(lastClearDate) > 0
-                        && integratedEntrust.getTradingDay().compareTo(platDate) <= 0) {
+                if (integratedEntrust.getTradingDay().compareTo(lastClearDate) > 0 && integratedEntrust.getTradingDay().compareTo(platDate) <= 0) {
                     IntegratedEntrustHistory integratedEntrustHistory = new IntegratedEntrustHistory();
                     BeanUtils.copyProperties(integratedEntrust, integratedEntrustHistory, "id");
                     integratedEntrustHistory.setIntegratedEntrustId(integratedEntrust.getId());
@@ -210,10 +217,16 @@ public class HistoryHelper {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteSysDateAfterInstructionDate(Date date) {
         logger.info("开始清算指令数据，当前系统平台日： {}", tradingDayFormat.format(date));
         List<Instruction> instructionList = instructionService.findAll();
         if (Objects.nonNull(instructionList)) {
+            List<InstructionPledge> pledgeList = instructionPledgeService.findAll();
+            List<InstructionDetail> detailList = instructionDetailService.findAll();
+            //同步指令数据
+            handleInstructionHistory(instructionList, pledgeList, detailList);
+
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -227,11 +240,56 @@ public class HistoryHelper {
                     stringSet.add(instruction.getEntrustId());
                 }
             });
-            logger.info("清算抵押券信息，清算抵押券数量：  {}", stringSet.size());
-            instructionPledgeService.deleteInstructionPledgesByInstructionsIds(stringSet);
+
+            List<InstructionPledge> pledges = pledgeList.stream()
+                    .filter(o -> stringSet.contains(o.getEntrustId())).collect(Collectors.toList());
+            logger.info("清算抵押券信息，清算抵押券数量：  {}", pledges.size());
+            if (pledges.size() > 0) instructionPledgeService.asyncDel(pledges);
+
+            List<InstructionDetail> details = detailList.stream()
+                    .filter(o -> stringSet.contains(o.getEntrustId())).collect(Collectors.toList());
+            logger.info("清算组合明细信息，组合明细数量：  {}", details.size());
+            if (details.size() > 0) instructionDetailService.asyncDel(details);
+
+//            instructionPledgeService.deleteInstructionPledgesByInstructionsIds(stringSet);
+//            instructionDetailService.deleteInstructionDetailsByInstructionsIds(stringSet);
+
             logger.info("指令清算完成，清算指令数量：  {}", instructions.size());
             if (instructions.size() > 0) instructionService.asyncDel(instructions);
         }
+    }
+
+    public void handleInstructionHistory(List<Instruction> instructionList, List<InstructionPledge> pledgeList,
+                                         List<InstructionDetail> detailList) {
+        logger.info("开始同步指令、质押券、组合信息数据到历史表...");
+        Set<String> instructionIdSet = instructionList.stream().map(Instruction::getEntrustId).collect(Collectors.toSet());
+        List<InstructionHistory> historyList = new ArrayList<>();
+        instructionList.forEach(instruction -> {
+            InstructionHistory instructionHistory = new InstructionHistory();
+            BeanUtils.copyProperties(instruction, instructionHistory);
+            historyList.add(instructionHistory);
+        });
+
+        List<InstructionPledgeHistory> pledgeHistoryList = pledgeList.stream()
+                .filter(o -> instructionIdSet.contains(o.getEntrustId()))
+                .map(pledge -> {
+                    InstructionPledgeHistory pledgeHistory = new InstructionPledgeHistory();
+                    BeanUtils.copyProperties(pledge, pledgeHistory);
+                    return pledgeHistory;
+                }).collect(Collectors.toList());
+
+        List<InstructionDetailHistory> detailHistoryList = detailList.stream()
+                .filter(o -> instructionIdSet.contains(o.getEntrustId()))
+                .map(pledge -> {
+                    InstructionDetailHistory detailHistory = new InstructionDetailHistory();
+                    BeanUtils.copyProperties(pledge, detailHistory);
+                    return detailHistory;
+                }).collect(Collectors.toList());
+
+        instructionHistoryService.saveInstructionHistory(historyList);
+        instructionPledgeHistoryService.saveInstructionPledgeHistory(pledgeHistoryList);
+        instructionDetailHistoryService.saveInstructionDetailHistory(detailHistoryList);
+        logger.info("完成同步指令、质押券、组合信息数据到历史表...");
     }
 
     public void handleAlgorithmHistory(Date date) {
@@ -243,8 +301,7 @@ public class HistoryHelper {
         if (algorithmMap.size() > 0) {
             Set<Algorithm> deleteAlgorithms = new HashSet<>(algorithmMap.values());
             algorithmMap.values().forEach(algorithm -> {
-                if (algorithm.getTradingDay().compareTo(lastClearDate) > 0
-                        && algorithm.getTradingDay().compareTo(platDate) <= 0) {
+                if (algorithm.getTradingDay().compareTo(lastClearDate) > 0 && algorithm.getTradingDay().compareTo(platDate) <= 0) {
                     AlgorithmHistory algorithmHistory = new AlgorithmHistory();
                     BeanUtils.copyProperties(algorithm, algorithmHistory, "id");
                     algorithmHistory.setAlgorithmId(algorithm.getId());
@@ -255,8 +312,7 @@ public class HistoryHelper {
                     deleteAlgorithms.remove(algorithm);
                 }
             });
-            if (algorithmHistories.size() > 0)
-                algorithmHistoryService.save(algorithmHistories);
+            if (algorithmHistories.size() > 0) algorithmHistoryService.save(algorithmHistories);
             if (algorithmHistories.size() > 0) algorithmService.asyncDel(deleteAlgorithms);
             logger.info("算法单清算完成,归历史综合委托数量 {}", deleteAlgorithms.size());
         }

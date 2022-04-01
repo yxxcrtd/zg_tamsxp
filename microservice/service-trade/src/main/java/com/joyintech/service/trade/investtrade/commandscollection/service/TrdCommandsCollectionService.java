@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.system.base.entity.SysPageDictlist;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,8 @@ public class TrdCommandsCollectionService extends BaseService<TrdCommandsCollect
 		if (MultilevelDataAuthorityUtil.isEnabled()) {
             List<String> institutionList = LoginUserUtil.getTreeInstCode(); 
             pageParam.put("institutionList",institutionList); 
-        } 
+        }
+		pageParam.put("ENTRUST_CLASS_01", DictCodeListExt3.投资指令类型_单组合单资产指令.getValue());
     	if("F01".equals(assetType) || "F06".equals(assetType) || "F10".equals(assetType) ) {
     		return super.queryForPage(page, length, () -> trdCommandsCollectionMapper.selectForCommonPage(pageParam));
     	}else {

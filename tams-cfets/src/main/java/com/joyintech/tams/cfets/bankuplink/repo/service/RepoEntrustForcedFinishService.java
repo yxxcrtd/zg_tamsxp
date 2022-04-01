@@ -32,6 +32,7 @@ public class RepoEntrustForcedFinishService extends BaseService<RepoEntrustForce
             ibuQuoteRepoService.doForcedFinish(param);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
 }

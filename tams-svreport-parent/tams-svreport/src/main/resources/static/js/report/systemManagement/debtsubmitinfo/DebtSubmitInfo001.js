@@ -31,11 +31,15 @@ var debtSubmitInfo = function() {
         	var param={};
             param.reportNo=data.reportNo;
             param.repName=data.repName;
+            /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+            param.repCode=data.repCode;
         	Joyin.dialog("反馈信息详情页",detailUrl,'900px','90%',param);
         },
         checkbox : false,
         cols: [
             {field: 'reportNo',visible:false},
+            {field: 'repCode',visible:false},
+            /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
             { title: "报表名称", field: 'repName',width:170},
             { title: "报送文件ID", field: 'repFileId',width:115 },
             { title: "报送时间", field: 'repDate',type: 'datetime',width:100},

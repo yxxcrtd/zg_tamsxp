@@ -12,6 +12,19 @@ import com.joyintech.tams.common.base.entity.EtrFinishStatus;
 public class EtrFinishStatusDto extends EtrFinishStatus {
     private String cstpTradeId;
 
+    public boolean isDayEndBatch() {
+        return isDayEndBatch;
+    }
+
+    public void setDayEndBatch(boolean dayEndBatch) {
+        isDayEndBatch = dayEndBatch;
+    }
+
+    /**
+     * 是否是日终批数据
+     */
+    private boolean isDayEndBatch;
+
     public String getCstpTradeId() {
         return cstpTradeId;
     }

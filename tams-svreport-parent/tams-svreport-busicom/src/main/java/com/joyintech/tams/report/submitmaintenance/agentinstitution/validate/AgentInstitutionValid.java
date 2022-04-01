@@ -45,6 +45,11 @@ public class AgentInstitutionValid implements BeanValidator {
                 }
             }
         }
+        if(dto.getPageModel() != null && dto.getPageModel() != "" && dto.getPageModel().equals(GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+            if(agentInstitution002Service.checkEditAgentInstitutionName(dto.getAgentInstitutionName(),dto.getAgentInstitutionCode()) > 0) {
+                errorList.add(new ValidMessage("agentInstitutionName", "代理销售机构名称已存在。"));
+            }
+        }
         //调用数据库配置脚本check方法
         errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, dto, "AgentInstitution002", null, ValidMessage.class);
         return errorList;

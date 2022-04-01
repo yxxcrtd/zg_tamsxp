@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.investtrade.dao.MstCounterPartyDtoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto" >
+        <id column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="COUNTER_TYPE" property="counterType" jdbcType="VARCHAR" />
+        <result column="COUNTER_NAME" property="counterName" jdbcType="VARCHAR" />
+        <result column="LINK_ID" property="linkId" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="HEAD_BANK" property="headBank" jdbcType="VARCHAR" />
+        <result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+        <result column="CONTACT_WAY" property="contactWay" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="COUNTER_TYPE1" property="counterType1" jdbcType="VARCHAR" />
+        <result column="COUNTER_TYPE2" property="counterType2" jdbcType="VARCHAR" />
+        <result column="IS_CENTRAL_COUNTER" property="isCentralCounter" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, HEAD_BANK, CONTACT,
+    CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+    ,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from CHB_MST_COUNTER_PARTY
+        where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_MST_COUNTER_PARTY
+    where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto" >
+    insert into CHB_MST_COUNTER_PARTY (COUNTER_ID, COUNTER_TYPE, COUNTER_NAME,
+      LINK_ID, MANAGER_ID, HEAD_BANK,
+      CONTACT, CONTACT_WAY, REMARK,
+      CREATE_USER, CREATE_DEPT, CREATE_TIME,
+      UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER)
+    values (#{counterId,jdbcType=VARCHAR}, #{counterType,jdbcType=VARCHAR}, #{counterName,jdbcType=VARCHAR},
+      #{linkId,jdbcType=VARCHAR}, #{managerId,jdbcType=VARCHAR}, #{headBank,jdbcType=VARCHAR},
+      #{contact,jdbcType=VARCHAR}, #{contactWay,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{counterType1,jdbcType=VARCHAR},#{counterType2,jdbcType=VARCHAR},#{isCentralCounter,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto" >
+        insert into CHB_MST_COUNTER_PARTY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="counterId != null" >
+                COUNTER_ID,
+            </if>
+            <if test="counterType != null" >
+                COUNTER_TYPE,
+            </if>
+            <if test="counterName != null" >
+                COUNTER_NAME,
+            </if>
+            <if test="linkId != null" >
+                LINK_ID,
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID,
+            </if>
+            <if test="headBank != null" >
+                HEAD_BANK,
+            </if>
+            <if test="contact != null" >
+                CONTACT,
+            </if>
+            <if test="contactWay != null" >
+                CONTACT_WAY,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="counterType1 != null" >
+                COUNTER_TYPE1,
+            </if>
+            <if test="counterType2 != null" >
+                COUNTER_TYPE2,
+            </if>
+            <if test="isCentralCounter != null" >
+                IS_CENTRAL_COUNTER,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="counterId != null" >
+                #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterType != null" >
+                #{counterType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterName != null" >
+                #{counterName,jdbcType=VARCHAR},
+            </if>
+            <if test="linkId != null" >
+                #{linkId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="headBank != null" >
+                #{headBank,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null" >
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactWay != null" >
+                #{contactWay,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="counterType1 != null" >
+                #{counterType1,jdbcType=VARCHAR},
+            </if>
+            <if test="counterType2 != null" >
+                #{counterType2,jdbcType=VARCHAR},
+            </if>
+            <if test="isCentralCounter != null" >
+                #{isCentralCounter,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto" >
+        update CHB_MST_COUNTER_PARTY
+        <set >
+            <if test="counterType != null" >
+                COUNTER_TYPE = #{counterType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterName != null" >
+                COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
+            </if>
+            <if test="linkId != null" >
+                LINK_ID = #{linkId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="headBank != null" >
+                HEAD_BANK = #{headBank,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null" >
+                CONTACT = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactWay != null" >
+                CONTACT_WAY = #{contactWay,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="counterType1 != null" >
+                COUNTER_TYPE1=#{counterType1,jdbcType=VARCHAR},
+            </if>
+            <if test="counterType2 != null" >
+                COUNTER_TYPE2=#{counterType2,jdbcType=VARCHAR},
+            </if>
+            <if test="isCentralCounter != null" >
+                IS_CENTRAL_COUNTER=#{isCentralCounter,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto" >
+    update CHB_MST_COUNTER_PARTY
+    set COUNTER_TYPE = #{counterType,jdbcType=VARCHAR},
+      COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
+      LINK_ID = #{linkId,jdbcType=VARCHAR},
+      MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+      HEAD_BANK = #{headBank,jdbcType=VARCHAR},
+      CONTACT = #{contact,jdbcType=VARCHAR},
+      CONTACT_WAY = #{contactWay,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      COUNTER_TYPE1=#{counterType1,jdbcType=VARCHAR},
+      COUNTER_TYPE2=#{counterType2,jdbcType=VARCHAR},
+      IS_CENTRAL_COUNTER=#{isCentralCounter,jdbcType=VARCHAR}
+    where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectTradeCounterNameByTradeCounterId" parameterType="java.util.List" resultType="java.lang.String">
+        select COUNTER_NAME
+        from chb_mst_counter_party
+        where 1 =1
+        <foreach collection="counterCodeList" item="counterCode" open="and COUNTER_ID in (" close=")" separator=",">
+            #{counterCode,jdbcType=VARCHAR}
+        </foreach>
+
+    </select>
+
+    <select id="selectAllTradeCounter" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from chb_mst_counter_party
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.mstexchangequote.dao.SvrMstExchangeQuoteInterfMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
+        <id column="EXCHARGE_CODE" property="exchargeCode" jdbcType="VARCHAR" />
+        <id column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <id column="DATASOURCE_TYPE" property="datasourceType" jdbcType="VARCHAR" />
+        <result column="OPEN_PRICE" property="openPrice" jdbcType="DECIMAL" />
+        <result column="CLOSE_PRICE" property="closePrice" jdbcType="DECIMAL" />
+        <result column="HIGH_PRICE" property="highPrice" jdbcType="DECIMAL" />
+        <result column="LOW_PRICE" property="lowPrice" jdbcType="DECIMAL" />
+        <result column="MID_PRICE" property="midPrice" jdbcType="DECIMAL" />
+        <result column="BASIS_CYY" property="basisCyy" jdbcType="VARCHAR" />
+        <result column="QUOT_CYY" property="quotCyy" jdbcType="VARCHAR" />
+        <result column="QUOT_UNIT" property="quotUnit" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="MARKET_TYPE" property="marketType" jdbcType="VARCHAR" />
+        <result column="DEAD_LINE" property="deadLine" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap"  >
+        select
+        A.EXCHARGE_CODE,
+        A.TRADE_DATE,
+        A.DATASOURCE_TYPE,
+        A.OPEN_PRICE,
+        A.CLOSE_PRICE,
+        A.HIGH_PRICE,
+        A.LOW_PRICE,
+        A.MID_PRICE,
+        A.BASIS_CYY,
+        A.QUOT_CYY,
+        A.QUOT_UNIT,
+        A.INPUT_TYPE,
+        'interf' CREATE_USER,
+        A.CREATE_DEPT,
+        A.CREATE_TIME,
+        'interf' UPDATE_USER,
+        UPDATE_TIME
+        from MST_EXCHARGE_QUOTE A
+        where 1=1
+        <if test="updatetime != null" >
+            and ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+</mapper>

@@ -159,10 +159,11 @@ public class MsgSendServiceImpl implements MsgSendService {
 				}
 			}
 		}
-
+		logger.info("数据库更新-修改状态为发送中");
 		//2. 更新数据库状态
 		chbComponentStatusUpdateService.updateSendStatus(para.getRegistSeq(), para.getDealType(),
 				DictCodeList.报送状态_接口报送.getValue(), DictCodeList.报送反馈状态_发送中.getValue());
+		logger.info("数据库更新结束,开始线程处理~发送中修改完毕");
 
 		// 线程异步处理
 		threadPoolTaskExecutor.execute(new Runnable() {
@@ -177,11 +178,12 @@ public class MsgSendServiceImpl implements MsgSendService {
 				}catch (Throwable e){
 					//调用中债发送API的时候，可能抛出Throwable、exception两种异常。这里只处理父类Throwable
 					chbMsgReturnInfoDto = null;
+					logger.error("调用中债发送API的时候，可能抛出Throwable、exception两种异常。这里只处理父类Throwable 调用异常:",e);
+				}finally{
+					//无论是否有错误.都需要更新数据状态.否则后面的操作全部无法执行下去,且无法判断数据状态
+					//4. 处理返回结果
+					chbComponentStatusUpdateService.sendBackHandle(chbMsgReturnInfoDto, para, chbMsgBuildInfoDto);
 				}
-
-				//4. 处理返回结果
-				chbComponentStatusUpdateService.sendBackHandle(chbMsgReturnInfoDto, para, chbMsgBuildInfoDto);
-				// return chbMsgReturnInfoDto;
 			}
 		});
 	}

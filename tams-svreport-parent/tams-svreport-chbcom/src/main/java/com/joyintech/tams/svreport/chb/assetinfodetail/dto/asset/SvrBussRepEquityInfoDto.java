@@ -10,10 +10,10 @@
  
 package com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset;
 
-import com.joyintech.framework.validation.annotation.ValidLogic;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+
 import com.joyintech.tams.common.base.entity.RepAssetEquity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -124,6 +124,71 @@ public class SvrBussRepEquityInfoDto extends RepAssetEquity{
      * 是否政府出资产业投资基金
      */
     private String isunlisted;
+
+    /**
+     * 结构化业务类型
+     */
+    private String constracteBusiType;
+
+    /**
+     * 结构化层级
+     */
+    private String constracteGrade;
+
+    /**
+     * 结构化杠杆倍数
+     */
+    private BigDecimal constracteHeaverTimes;
+
+    /**
+     * 公共PPP
+     */
+    private String pppflag;
+
+    /**
+     * 是否投向市场化债转股相关产品的部分
+     */
+    private String bondtostockFlag;
+
+    public String getPppflag() {
+        return pppflag;
+    }
+
+    public void setPppflag(String pppflag) {
+        this.pppflag = pppflag;
+    }
+
+    public String getBondtostockFlag() {
+        return bondtostockFlag;
+    }
+
+    public void setBondtostockFlag(String bondtostockFlag) {
+        this.bondtostockFlag = bondtostockFlag;
+    }
+
+    public String getConstracteBusiType() {
+        return constracteBusiType;
+    }
+
+    public void setConstracteBusiType(String constracteBusiType) {
+        this.constracteBusiType = constracteBusiType;
+    }
+
+    public String getConstracteGrade() {
+        return constracteGrade;
+    }
+
+    public void setConstracteGrade(String constracteGrade) {
+        this.constracteGrade = constracteGrade;
+    }
+
+    public BigDecimal getConstracteHeaverTimes() {
+        return constracteHeaverTimes;
+    }
+
+    public void setConstracteHeaverTimes(BigDecimal constracteHeaverTimes) {
+        this.constracteHeaverTimes = constracteHeaverTimes;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

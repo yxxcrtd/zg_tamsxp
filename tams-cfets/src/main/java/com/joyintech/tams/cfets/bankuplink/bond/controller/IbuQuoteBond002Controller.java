@@ -18,6 +18,7 @@ import com.joyintech.tams.cfets.bankuplink.bond.dto.CfetsBondDealQuoteCommonDto;
 import com.joyintech.tams.cfets.bankuplink.bond.service.CfetsBondDealQuotedPrice002Service;
 import com.joyintech.tams.cfets.position.service.PositionInfoService;
 import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -100,7 +101,7 @@ public class IbuQuoteBond002Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
-                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种);
+                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种,DictCode.分配方式, DictCode.业务模式,DictCode.价格模式);
 
         model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
@@ -453,6 +454,103 @@ public class IbuQuoteBond002Controller extends BaseController {
         }*/
         return new Message<AjaxResult>().success().setData(ar);
     }
+    /**
+     * 待办事项页面，保存验证
+     * @param cfetsBondDealQuoteCommonDto
+     * @return
+     */
+    @RequestMapping("checkByHome")
+    @ResponseBody
+    public AjaxResult checkByHome(@RequestBody  CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto) {
+        AjaxResult ar = new AjaxResult();
+        ar = cfetsBondDealQuotedPrice002Service.checkNotEmpty(cfetsBondDealQuoteCommonDto);
+        if(CollectionUtils.isNotEmpty(ar.getErrorList())){
+            return ar;
+        }
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar = cfetsQuotedCommonServiceVue.checkcheckAnchoring(cfetsBondDealQuoteCommonDto);
+        }
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar = cfetsQuotedCommonServiceVue.positionCheck(cfetsBondDealQuoteCommonDto);
+        }
+        CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = cfetsQuotedCommonServiceVue.createDialogue(cfetsBondDealQuoteCommonDto);
+        if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
+            cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealDialogueQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
+        }
+        StringBuffer sb = new StringBuffer();
+        String isDzh = "Y";
+        List<ValidMessage> valid = cfetsBondDealQuotedPrice002Service.valid(cfetsBondDealDialogueQuoteDto);
+        if(CollectionUtils.isNotEmpty(valid)){
+            ar.setErrorList(valid);
+            return ar;
+        }
+        // 委托剩余额度
+        List<CfetsBondDealDialogueQuoteDto> cfetsBondDealDialogueQuotes = cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList();
+        if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")){
+            if(StringUtil.equals(isDzh,"Y")){
+                if(null!=cfetsBondDealDialogueQuotes){
+                    cfetsBondDealDialogueQuotes.stream().forEach(item -> {
+                        CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto2 = new CfetsBondDealDialogueQuoteDto();
+                        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto2,cfetsBondDealDialogueQuoteDto);
+                        cfetsBondDealDialogueQuoteDto2.setEntrustId(item.getEntrustId());
+                        cfetsBondDealDialogueQuoteDto2.setAvaNum(item.getAvaNum());
+                        cfetsBondDealQuotedPrice002Service.checkEntrustAvaNum(cfetsBondDealDialogueQuoteDto2, null, sb, false);
+                        if (sb.length() > 0){
+                            return;
+                        }
+                    });
+                }
+            }else{
+                cfetsBondDealQuotedPrice002Service.checkEntrustAvaNum(cfetsBondDealDialogueQuoteDto, null, sb, false);
+            }
+        }
+
+        // 偏离度
+        if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_dealDeviation"), "02")
+                && StringUtil.isNotEmpty(CacheUtil.getSysParam("ibuVar_dealDeviationVal"))){
+            cfetsBondDealQuotedPrice002Service.checkDealDeviation(cfetsBondDealDialogueQuoteDto, null, sb, false);
+        }
+
+        // 限价
+        if (StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustPrice"), "02")) {
+            if (StringUtil.equals(isDzh, "Y")) {
+                if (null != cfetsBondDealDialogueQuotes) {
+                    cfetsBondDealDialogueQuotes.stream().forEach(item -> {
+                        CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto2 = new CfetsBondDealDialogueQuoteDto();
+                        BeanUtil.copyPropertiesIgnoreNull(cfetsBondDealDialogueQuoteDto2, cfetsBondDealDialogueQuoteDto);
+                        cfetsBondDealDialogueQuoteDto2.setEntrustId(item.getEntrustId());
+                        cfetsBondDealDialogueQuoteDto2.setPrice(item.getPrice());
+                        cfetsBondDealQuotedPrice002Service.checkCalcFieldEntrust(cfetsBondDealDialogueQuoteDto2, null, sb, false);
+                    });
+                }
+            }
+            else {
+                cfetsBondDealQuotedPrice002Service.checkCalcFieldEntrust(cfetsBondDealDialogueQuoteDto, null, sb, false);
+            }
+        }
+        if(CollectionUtils.isEmpty(ar.getErrorList())){
+            ar= cfetsQuotedCommonServiceVue.reclasCheck(cfetsBondDealQuoteCommonDto);
+        }
+        /*if (sb.length() > 0){
+            sb.append("请确认是否继续？");
+            ar.setData(sb);
+        }
+        else{
+            String msg = this.getMessage("SysCommon.save");
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "submit")) {
+                msg = this.getMessage("SysCommon.submit");
+            }
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "done")) {
+                msg = "成交";
+            }
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "refuse")) {
+                msg = "拒绝";
+            }
+
+            ar.setData(this.getMessage("COMMON_C_0001", msg));
+        }*/
+        return ar;
+    }
 
     @ApiOperation(value = "对话报价拒绝", notes = "对话报价拒绝")
     @ResponseBody
@@ -468,9 +566,9 @@ public class IbuQuoteBond002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public Message<AjaxResult> save(@RequestBody CfetsBondDealQuoteCommonDto cfetsBondDealQuoteCommonDto, BindingResult br) throws WorkFlowException {
-        if (br.hasErrors()) {
+      /*  if (br.hasErrors()) {
             return new Message<AjaxResult>().success().setData(new AjaxResult(br));
-        }
+        }*/
         CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = cfetsQuotedCommonServiceVue.createDialogue(cfetsBondDealQuoteCommonDto);
         if(CollectionUtils.isNotEmpty(cfetsBondDealQuoteCommonDto.getPtlAllocatios())){
             cfetsBondDealDialogueQuoteDto.setCfetsBondDealDialogueQuoteDtoList(cfetsQuotedCommonServiceVue.createCfetsBondDealDialogueQuoteDtoList(cfetsBondDealQuoteCommonDto.getPtlAllocatios()));
@@ -517,14 +615,23 @@ public class IbuQuoteBond002Controller extends BaseController {
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "marketResponse")) {
             quoteOperatorType = "回复";
         }
-        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "dialogueResponse")&&StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "done")) {
-            quoteOperatorType = "成交";
+        if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "dialogueResponse")) {
+            // 对话回应
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "done")) {
+                quoteOperatorType = "成交";
+                cfetsBondDealDialogueQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_成交中.getValue());
+            } else if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "refuse")) {
+                cfetsBondDealDialogueQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_终止中.getValue());
+            }
         }
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "new")) {
             quoteOperatorType = "发起";
         }
         if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "edit")) {
             quoteOperatorType = "修改";
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getOperatorType(), "submit")) {
+                cfetsBondDealDialogueQuoteDto.setTradeStatus(BussinessDictCodeList.银行间上行报价状态_修改中.getValue());
+            }
         }
         cfetsBondDealDialogueQuoteDto.setQuoteOperatorType(quoteOperatorType);
         DecimalFormat  df = new DecimalFormat("###,###.00");

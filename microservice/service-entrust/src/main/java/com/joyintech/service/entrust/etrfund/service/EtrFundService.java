@@ -21,8 +21,10 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.etrboutrepo.dto.EtrBoutRepoDto;
+import com.joyintech.service.entrust.etrcommanddispatcher.service.EtrCommandDispatcherService;
 import com.joyintech.service.entrust.etrfund.dao.EtrFundMapper;
 import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
+import com.joyintech.tams.business.common.service.JoyinbusinessCommonService;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
@@ -113,6 +115,10 @@ public class EtrFundService extends BaseService<EtrFundDto> {
      */
     @Autowired(required=false)
     private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+
+    @Autowired(required = false)
+    private EtrCommandDispatcherService etrCommandDispatcherService;
+
     /**
      * 使用给定的检索分页数据。返回类型是Service的泛型。
      * 
@@ -387,6 +393,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
         BaseEtrInvestInfoDto baseEtrInvestInfoDto = new BaseEtrInvestInfoDto();
         EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
         String type = entity.getOperateType();
+        String isPushMsg = DictCodeList.是否_否.getValue();
         if (StringUtil.equals(type, "NEW")) {
             // 委托指令Entity
             EtrEntrust etrEntrust = new EtrEntrust();
@@ -412,7 +419,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
 
             // List<委托指令分发Entity>
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
-            List<String> traderList = StringUtil.splitToList(GlobalConstant.COMMA,entity.getBussEtrInvestPersonInfoDto().getTrader());
+            /*List<String> traderList = StringUtil.splitToList(GlobalConstant.COMMA,entity.getBussEtrInvestPersonInfoDto().getTrader());
             for(String trader:traderList){
                 EtrDistribute etrDistribute = new EtrDistribute();
                 //设置接收状态
@@ -423,7 +430,7 @@ public class EtrFundService extends BaseService<EtrFundDto> {
                 etrDistribute.setEntrustId(entity.getEntrustId());
                 //
                 etrDistributeList.add(etrDistribute);
-            }
+            }*/
             // List<委托完成状况表Entity>
             List<EtrFinishStatus> etrFinishStatusList = new ArrayList<>();
            /* EtrFinishStatus etrFinishStatus = new EtrFinishStatus();
@@ -437,12 +444,14 @@ public class EtrFundService extends BaseService<EtrFundDto> {
                 if(!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)){
                     //跳出自动分发
                     baseEtrInvestInfoDto.setEtrDistributeList(etrDistributeList);
+                    isPushMsg = DictCodeList.是否_是.getValue();
                 }
                 else{
                     //查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
                     if(busiAutoEtrDispService.checkEntrustTime(etrEntrust)){
                         //自动分发
                         baseEtrInvestInfoDto.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+                        isPushMsg = DictCodeList.是否_是.getValue();
                     }
                 }
             }
@@ -510,12 +519,14 @@ public class EtrFundService extends BaseService<EtrFundDto> {
                 if(!busiAutoEtrDispService.checkHaveTrader(etrDistributeList)){
                     //跳出自动分发
                     baseEtrInvestInfoDto.setEtrDistributeList(etrDistributeList);
+                    isPushMsg = DictCodeList.是否_是.getValue();
                 }
                 else{
                     //查询委托指令下达日期，如果在自动分发区间内则改指令需自动分发
                     if(busiAutoEtrDispService.checkEntrustTime(etrEntrust)){
                         //自动分发
                         baseEtrInvestInfoDto.setEtrDistributeList(busiAutoEtrDispService.selectTrader(etrEntrust, etrEntrustAdd));
+                        isPushMsg = DictCodeList.是否_是.getValue();
                     }
                 }
             }
@@ -535,6 +546,11 @@ public class EtrFundService extends BaseService<EtrFundDto> {
             }
             entrustCommonDto.setEtrEntrust(etrEntrust);
             entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
+        }
+        if (DictCodeList.是否_是.getValue().equals(isPushMsg)) {
+            Map<String, Object> param = new HashMap<>();
+            param.put("entrustId", entity.getEntrustId());
+            etrCommandDispatcherService.pushCommandMsg(param);
         }
 
 //        if(baseEtrCashPositionCommService!=null){

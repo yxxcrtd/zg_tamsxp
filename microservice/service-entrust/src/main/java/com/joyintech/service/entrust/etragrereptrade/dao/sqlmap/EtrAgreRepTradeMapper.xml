@@ -487,6 +487,8 @@
         on fin_trade_product.finprod_id = trd_product_deal_2.Finprod_Id
         and fin_trade_product.branch = trd_product_deal_2.branch
         and trd_product_deal_2.ps in ('T01')
+        and trd_product_deal_2.is_cancel = 'N'
+        and trd_product_deal_2.trade_status = '01'
         LEFT JOIN trd_product_deal_add /** 金融产品临时交易附属表 **/
         on trd_product_deal_2.trade_id = trd_product_deal_add.trade_id
         left join fin_deal_pledge /** 回购质押品 **/
@@ -499,7 +501,7 @@
         LEFT JOIN trd_fin_product_deal_total trd_fin_product_deal_total /** 金融产品临时交易1 **/
         on fin_trade_product.finprod_id = trd_fin_product_deal_total.finprod_id
         AND fin_trade_product.branch = trd_fin_product_deal_total.branch
-        AND trd_fin_product_deal_total.ps in ('T96', 'T95', 'T93', 'T56')
+        AND trd_fin_product_deal_total.ps in ('T54', 'T07', 'T93', 'T56')
         LEFT JOIN PTL_PORTFOLIO_AUTHORITY /** 组合权限表 **/
         ON PTL_PORTFOLIO.Portfolio_Id = PTL_PORTFOLIO_AUTHORITY.Portfolio_Id
         where fin_trade_product.branch = '0'

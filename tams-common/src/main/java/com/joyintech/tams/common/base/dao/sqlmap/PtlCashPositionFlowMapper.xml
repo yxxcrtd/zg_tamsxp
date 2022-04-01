@@ -21,13 +21,14 @@
         <result column="OFFSET_ID" property="offsetId" jdbcType="VARCHAR" />
         <result column="OFFSET_FLAG" property="offsetFlag" jdbcType="VARCHAR" />
         <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="IS_EXIST_NEW" property="isExistNew" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, PORTFOLIO_ID PORTFOLIO_ID, ACCT_ID ACCT_ID, HODING_TYPE HODING_TYPE, 
         CDATE CDATE, CCY CCY, AMOUNT AMOUNT, ORDER_ID ORDER_ID, CHL_FINPROD_ID CHL_FINPROD_ID, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
         UPDATE_TIME UPDATE_TIME, SPLIT_TYPE SPLIT_TYPE, REMARK REMARK, OFFSET_ID OFFSET_ID, 
-        OFFSET_FLAG OFFSET_FLAG, ENTRUST_ID ENTRUST_ID
+        OFFSET_FLAG OFFSET_FLAG, ENTRUST_ID ENTRUST_ID, IS_EXIST_NEW IS_EXIST_NEW
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -56,14 +57,14 @@
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             UPDATE_USER, UPDATE_TIME, SPLIT_TYPE, 
             REMARK, OFFSET_ID, OFFSET_FLAG, 
-            ENTRUST_ID)
+            ENTRUST_ID,IS_EXIST_NEW)
         values (#{seqno,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, 
             #{hodingType,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
             #{amount,jdbcType=DECIMAL}, #{orderId,jdbcType=VARCHAR}, #{chlFinprodId,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{splitType,jdbcType=VARCHAR}, 
             #{remark,jdbcType=VARCHAR}, #{offsetId,jdbcType=VARCHAR}, #{offsetFlag,jdbcType=VARCHAR}, 
-            #{entrustId,jdbcType=VARCHAR})
+            #{entrustId,jdbcType=VARCHAR},#{isExistNew,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlCashPositionFlow" >
         insert into PTL_CASH_POSITION_FLOW
@@ -125,6 +126,9 @@
             <if test="entrustId != null" >
                 ENTRUST_ID,
             </if>
+            <if test="isExistNew != null" >
+                IS_EXIST_NEW,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -183,6 +187,9 @@
             </if>
             <if test="entrustId != null" >
                 #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="isExistNew != null" >
+                #{isExistNew,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -244,6 +251,9 @@
             <if test="entrustId != null" >
                 ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
             </if>
+            <if test="isExistNew != null" >
+                IS_EXIST_NEW = #{isExistNew,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -263,7 +273,8 @@
             REMARK = #{remark,jdbcType=VARCHAR},
             OFFSET_ID = #{offsetId,jdbcType=VARCHAR},
             OFFSET_FLAG = #{offsetFlag,jdbcType=VARCHAR},
-            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            IS_EXIST_NEW = #{isExistNew,jdbcType=VARCHAR}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

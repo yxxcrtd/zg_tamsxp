@@ -1,0 +1,2 @@
+update cfg_datatable_show set extendcfg='{"colAlign": "left","dataType":"amount","precision":"2","supportSearch":"精确"}' where pagecode='IbuQuoteBond' and dtcode='QUOTAINFOS' and colcode='shareAmtHun';
+update cfg_datatable_show set extendcfg='{"colAlign": "left","dataType":"amount","precision":"2","supportSearch":"精确"}' where pagecode='IbuQuoteBond' and dtcode='QUOTAINFOS' and colcode='shareAmt';

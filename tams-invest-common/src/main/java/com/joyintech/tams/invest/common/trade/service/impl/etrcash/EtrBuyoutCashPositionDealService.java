@@ -530,8 +530,10 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
                 }
                 ptlSecValutionKey.setSecAcctId(secAcctId);
                 BigDecimal 应计利息 = EtrCommonCashPositionDealService.get应计利息FromValution(ptlSecValutionKey) ;
-//                BigDecimal 首次回购最大净价 = EtrCommonCashPositionDealService.get首次回购最大净价(etrEntrust.getEntrustId()) ;
-                BigDecimal 首次回购最大净价 = entrustCommonDto.getEtrEntrustAdd().getFirstUnitCprice2();
+                BigDecimal 首次回购最大净价 = EtrCommonCashPositionDealService.get首次回购最大净价(etrEntrust.getEntrustId()) ;
+                if(首次回购最大净价==null){
+                    首次回购最大净价 = entrustCommonDto.getEtrEntrustAdd().getFirstUnitCprice2();
+                }
                 // "减少委托券面总额*委托首次全价/100 其中：委托首次全价用委托首次净价最大值和委托结束日计算"
                 BigDecimal amount = ArithmeticUtil.multiply(etrEntrust.getEntrustNum(),ArithmeticUtil.doAdd(应计利息,首次回购最大净价));
                 // 委托生成的现金流水
@@ -589,6 +591,9 @@ public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService
                 ptlSecValutionKey.setSecAcctId(secAcctId);
                 BigDecimal 应计利息 = EtrCommonCashPositionDealService.get应计利息FromValution(ptlSecValutionKey) ;
                 BigDecimal 首次回购最大净价 = EtrCommonCashPositionDealService.get首次回购最大净价(etrEntrust.getEntrustId()) ;
+                if(首次回购最大净价==null){
+                    首次回购最大净价 = entrustCommonDto.getEtrEntrustAdd().getFirstUnitCprice2();
+                }
                 // 委托券面总额*委托首次全价/100 其中：委托首次全价用委托首次净价最大值和委托结束日计算
                 BigDecimal amount = ArithmeticUtil.multiply(etrEntrust.getEntrustNum(),ArithmeticUtil.doAdd(应计利息,首次回购最大净价));
                 // 委托生成的现金流水

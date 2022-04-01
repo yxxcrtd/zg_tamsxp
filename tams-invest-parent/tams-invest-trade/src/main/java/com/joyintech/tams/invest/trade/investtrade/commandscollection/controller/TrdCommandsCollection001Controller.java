@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.system.base.entity.SysPageDictlist;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -89,7 +90,6 @@ public class TrdCommandsCollection001Controller extends BaseController{
         model.addAttribute("PINAN_ASSET_TYPE_F09_PS",pinanAssetType);
         pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F11");
         model.addAttribute("PINAN_ASSET_TYPE_F11_PS",pinanAssetType);
-
 
         return super.init(model);
     }

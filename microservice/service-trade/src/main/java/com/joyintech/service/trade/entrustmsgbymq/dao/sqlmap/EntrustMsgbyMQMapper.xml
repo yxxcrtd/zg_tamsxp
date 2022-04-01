@@ -60,11 +60,20 @@
 	        A.ENTRUST_ID as entrustId,   /*委托代码*/
 	        A.FINPROD_ID as finprodId,   /*金融产品代码*/
 	        A.INV_AIM as invAim,   /*投资目的*/
+			A.BUSINESS_MODEL as businessModel,   /*业务模式*/
 	        A.COUNTER_ID as counterId,   /*交易对手*/
 	        A.ENTRUST_NUM * 100  entrustNum   /*券面总额*/
 	    FROM  ETR_ENTRUST A
 	    WHERE A.ENTRUST_ID = #{entrustId}
    </select>
+
+	<select id="queryEtrEntrustAdd" resultType="com.joyintech.tams.common.base.entity.EtrEntrustAdd">
+		select
+		<include refid="com.joyintech.tams.common.base.dao.EtrEntrustAddMapper.Base_Column_List" />
+		from ETR_ENTRUST_ADD
+		WHERE ENTRUST_ID = #{entrustId}
+	</select>
+
      <select id="queryTargetType" resultType="java.lang.String">
 		select eea.target_type as targetType /*目标类型*/
           from ETR_ENTRUST_ADD eea
@@ -177,5 +186,16 @@
 		WHERE
 			FINPROD_ID = #{finprodId,jdbcType=VARCHAR} AND
 			OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectPledgeId" resultType="string">
+		select FINPROD_ID from INF_CONTRACT_DETAILFILE where DEAL_NO=#{getvTradeId}
+	</select>
+
+	<select id="getTrdProductDealByFTradeId" resultType="com.joyintech.tams.common.base.entity.TrdProductDeal">
+		select
+		<include refid="com.joyintech.tams.common.base.dao.TrdProductDealMapper.Base_Column_List" />
+		from TRD_PRODUCT_DEAL
+		where F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR}
 	</select>
 </mapper>

@@ -207,6 +207,7 @@
         etrData.repSecNum = etrData.origRepSecNum;
         etrData.printAmt = etrData.origPrintAmt;
         etrData.conRatio = etrData.origConRatio;
+        etrData.tradeId = param.tradeId;
         setPageItem(etrData);
         pageShowEdit(false);
 

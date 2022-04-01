@@ -46,6 +46,11 @@ public class SettleTransDataPledge extends BaseEntity {
     private BigDecimal pledgeAmt;
 
     /**
+     * 置换方向，中途换券、解除质押时登录
+     */
+    private String displaceDirection;
+
+    /**
      * 取得 成交编号
      * @return 成交编号
      */
@@ -155,5 +160,21 @@ public class SettleTransDataPledge extends BaseEntity {
      */
     public void setPledgeAmt(BigDecimal pledgeAmt) {
         this.pledgeAmt = pledgeAmt;
+    }
+
+    /**
+     * 取得 置换方向，中途换券、解除质押时登录
+     * @return 置换方向，中途换券、解除质押时登录
+     */
+    public String getDisplaceDirection() {
+        return displaceDirection;
+    }
+
+    /**
+     * 设置 置换方向，中途换券、解除质押时登录
+     * @param displaceDirection 置换方向，中途换券、解除质押时登录
+     */
+    public void setDisplaceDirection(String displaceDirection) {
+        this.displaceDirection = displaceDirection == null ? null : displaceDirection.trim();
     }
 }

@@ -1,3 +1,5 @@
+alter table wfl_etr_entrust add (BUSINESS_MODEL varchar2(50));
+COMMENT ON COLUMN wfl_etr_entrust.BUSINESS_MODEL IS '业务模式';
 
 DROP TABLE ETR_ENTRUST_DETAIL;
 CREATE TABLE ETR_ENTRUST_DETAIL (

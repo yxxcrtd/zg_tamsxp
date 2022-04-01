@@ -20,15 +20,16 @@ import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.WflEtrEntrust;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.exchange.entrust.common.validator.EtrExchangeCommonValidator;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradePortfolioRequest;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.EtrExchangeTradeSaveRequest;
+import com.joyintech.tams.exchange.entrust.etrexchange.common.dto.SubEqutityDto;
 import com.joyintech.tams.exchange.entrust.etrexchange.common.service.EtrExchangeTradeCommon001Service;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.MinTrdUnitLimitDto;
-import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.SubEqutityDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -46,11 +47,14 @@ import java.util.Map;
  * @since 1.0
  */
 @Service
-public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValidator {
+public class EtrExchangeBlockTrade001ValidatorService implements EtrExchangeCommonValidator {
 
 	@Autowired
 	EtrExchangeTradeCommon001Service etrExchangeTrade001Service;
-	
+
+	@Autowired
+	EtrExchangeBlockTrade001Service etrExchangeBlockTrade001Service;
+
 	 /**
      * 委托指令Mapper
      */
@@ -67,11 +71,15 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 		List<ValidMessage> errorList = new ArrayList<>();
 		EtrExchangeTradeSaveRequest dto = (EtrExchangeTradeSaveRequest) value;
 		if (dto.getOperateType().equals("save") || dto.getOperateType().equals("submit")) {
-			Boolean isNonTradingTime = etrExchangeTrade001Service.isNonTradingTime(dto);
-			if (isNonTradingTime) {
-				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
-				return errorList;
-			}
+//			String isNonTradingTime = etrExchangeBlockTrade001Service.isNonTradingTime(dto);
+//			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"01")) {
+//				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_00561")));
+//				return errorList;
+//			}
+//			if (StringUtil.isNotEmpty(isNonTradingTime) && StringUtil.equals(isNonTradingTime,"02")) {
+//				errorList.add(new ValidMessage(this.getMessage("ETR_ERROR_0056")));
+//				return errorList;
+//			}
 			if (!StringUtil.isNotEmpty(dto.getPortfolioId())) {
 				errorList.add(new ValidMessage("portfolioId", this.getMessage("ETR_ERROR_0015")));
 			}
@@ -168,45 +176,48 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 					if (null != minTrdUnitLimitDto) {
 						boolean flag1 = false;
 						boolean flag2 = false;
-						if (null == minTrdUnitLimitDto.getMinAmt() || (minTrdUnitLimitDto.getMinAmt() != null
-								&& minTrdUnitLimitDto.getMinAmt().compareTo(BigDecimal.ZERO) > 0
-								&& dto.getEntrustAmt().compareTo(minTrdUnitLimitDto.getMinAmt()) < 0)) {
-							flag1 = true;
-						}
-						if (null == minTrdUnitLimitDto.getMinNum() || (minTrdUnitLimitDto.getMinNum() != null
-								&& minTrdUnitLimitDto.getMinNum().compareTo(BigDecimal.ZERO) > 0
-								&& dto.getEntrustNum().compareTo(minTrdUnitLimitDto.getMinNum()) < 0)) {
-							flag2 = true;
-							if (StringUtils.equals(dto.getTradePlat(), DictCodeList.交易平台_竞价撮合平台.getValue())
-									&& (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)
-											|| DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)
-											|| DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2))
-									&& StringUtils.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
-									&& etrExchangeTrade001Service.isSalesOfSmallShares(dto.getAvailableNum(),
-											minTrdUnitLimitDto.getMinStep(), dto.getEntrustNum())) {
-								flag2 = false;
+						for (EtrExchangeTradePortfolioRequest request : dto.getPortfolioList()) {
+							if (null == minTrdUnitLimitDto.getMinAmt() || (minTrdUnitLimitDto.getMinAmt() != null
+									&& minTrdUnitLimitDto.getMinAmt().compareTo(BigDecimal.ZERO) > 0
+									&& request.getEntrustAmt().compareTo(minTrdUnitLimitDto.getMinAmt()) < 0)) {
+								flag1 = true;
 							}
-						}
-						if (flag1 && flag2 && !(null == minTrdUnitLimitDto.getMinNum()
-								&& null == minTrdUnitLimitDto.getMinAmt())) {
-							String prompt = "";
-							if (flag1 && null != minTrdUnitLimitDto.getMinNum()) {
-								prompt += "最低交易数量" + etrExchangeTrade001Service.getNumAndUnit(
-										minTrdUnitLimitDto.getMinNum(), minTrdUnitLimitDto.getMinNumUnit());
+							if (null == minTrdUnitLimitDto.getMinNum() || (minTrdUnitLimitDto.getMinNum() != null
+									&& minTrdUnitLimitDto.getMinNum().compareTo(BigDecimal.ZERO) > 0
+									&& request.getEntrustNum().compareTo(minTrdUnitLimitDto.getMinNum()) < 0)) {
+								flag2 = true;
+								if (StringUtils.equals(dto.getTradePlat(), DictCodeList.交易平台_竞价撮合平台.getValue())
+										&& (DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)
+										|| DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)
+										|| DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(finprodType2))
+										&& StringUtils.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
+										&& etrExchangeTrade001Service.isSalesOfSmallShares(dto.getAvailableNum(),
+										minTrdUnitLimitDto.getMinStep(), request.getEntrustNum())) {
+									flag2 = false;
+								}
 							}
-							if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
-									&& null != minTrdUnitLimitDto.getMinAmt()) {
-								prompt += "，";
+							if (flag1 && flag2 && !(null == minTrdUnitLimitDto.getMinNum()
+									&& null == minTrdUnitLimitDto.getMinAmt())) {
+								String prompt = "单个组合，";
+								if (flag1 && null != minTrdUnitLimitDto.getMinNum()) {
+									prompt += "最低交易数量" + etrExchangeTrade001Service.getNumAndUnit(
+											minTrdUnitLimitDto.getMinNum(), minTrdUnitLimitDto.getMinNumUnit());
+								}
+								if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
+										&& null != minTrdUnitLimitDto.getMinAmt()) {
+									prompt += "，";
+								}
+								if (flag2 && null != minTrdUnitLimitDto.getMinAmt()) {
+									prompt += "最低交易金额"
+											+ etrExchangeTrade001Service.getNumAndUnit(minTrdUnitLimitDto.getMinAmt());
+								}
+								if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
+										&& null != minTrdUnitLimitDto.getMinAmt()) {
+									prompt += "，应至少满足一个！";
+								}
+								errorList.add(new ValidMessage(prompt));
+								break;
 							}
-							if (flag2 && null != minTrdUnitLimitDto.getMinAmt()) {
-								prompt += "最低交易金额"
-										+ etrExchangeTrade001Service.getNumAndUnit(minTrdUnitLimitDto.getMinAmt());
-							}
-							if (flag1 && flag2 && flag1 && null != minTrdUnitLimitDto.getMinNum()
-									&& null != minTrdUnitLimitDto.getMinAmt()) {
-								prompt += "，应至少满足一个！";
-							}
-							errorList.add(new ValidMessage(prompt));
 						}
 					}
 				}
@@ -262,11 +273,11 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 				param.put("portfolioId",dto.getPortfolioId());
 				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
 				dto.setAccAvailableCash(etrExchangeTrade001Service.selectAccAvailableCash(param));
-				if (StringUtil.isNotEmpty(dto.getAccAvailableCash()) && StringUtil.isNotEmpty(dto.getEntrustAmt())) {
-					if (dto.getAccAvailableCash().compareTo(dto.getEntrustAmt()) == -1) {
-						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019",dto.getPortfolioId())));
-					}
-				}
+//				if (StringUtil.isNotEmpty(dto.getAccAvailableCash()) && StringUtil.isNotEmpty(dto.getEntrustAmt())) {
+//					if (dto.getAccAvailableCash().compareTo(dto.getEntrustAmt()) == -1) {
+//						errorList.add(new ValidMessage("accAvailableCash", this.getMessage("ETR_ERROR_0019",dto.getPortfolioId())));
+//					}
+//				}
 			}
 
 			// etr_check_pos_switch 01 不提示 02 提示 禁止交易
@@ -281,11 +292,11 @@ public class EtrExchangeBlockTrade001ValidatorService implements EtrCommonValida
 				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
 				param.put("secAcctId",dto.getSecAcctId());
 				dto.setAccAvailablePos(etrExchangeTrade001Service.selectAvailableNum(param));
-				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
-					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
-						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
-					}
-				}
+//				if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
+//					if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
+//						errorList.add(new ValidMessage("accAvailablePos", this.getMessage("ETR_ERROR_0021")));
+//					}
+//				}
 			}
 			
 			//行权回售

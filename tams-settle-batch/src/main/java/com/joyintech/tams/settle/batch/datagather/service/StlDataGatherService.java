@@ -6,15 +6,23 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseFinProductCashInputDto;
+import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonDto;
 import com.joyintech.tams.invest.common.transmatch.dto.ExchangeTransMatchCommonParamDto;
 import com.joyintech.tams.settle.batch.datagather.dto.*;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,25 +31,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.JoyinRestTemplate;
-import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
-import com.joyintech.tams.common.base.dao.EtrFinishStatusMapper;
-import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
-import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.dao.PaTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.PaTrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.PtlTradeMapper;
-import com.joyintech.tams.common.base.dao.SettleTransTgMappingMapper;
-import com.joyintech.tams.common.base.dao.StlPayOrdersMapper;
-import com.joyintech.tams.common.base.dao.TrdDealTotalAddMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductBarterMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductBarterTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
-import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -59,7 +48,10 @@ import com.joyintech.tams.settle.common.service.SettleCommonService;
  */
 @Service
 public class StlDataGatherService {
-
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(StlDataGatherService.class);
     /**
      * 是否单体服务
      */
@@ -138,7 +130,19 @@ public class StlDataGatherService {
     
     @Autowired
     private SettleTransTgMappingMapper settleTransTgMappingMapper;
-	
+
+    @Autowired
+    private PtlSecPositionFlowMapper ptlSecPositionFlowMapper;
+
+    @Autowired
+    private EtrSecPositionFlowMapper etrSecPositionFlowMapper;
+
+    // modify by etliu 20220220 start
+    // 广农商二阶段 GNS-880:【广农商场内清算】上交所配股上市流通前一日清算解析ZQBD文件后，交易和头寸未处理:组合持仓流水和指令持仓流水登录的都是对的，ETR_SEC_POSITION和PTL_SEC_POSITION未更新
+    @Autowired(required = false)
+    private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
+    // modify by etliu 20220220 start
+
 	/**
      * 获取除权交易明细
      * @param paraMap 查询参数
@@ -224,6 +228,9 @@ public class StlDataGatherService {
     }
 
     public void excutePosition(Map<String, Object> param) {
+        // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 start
+        param.put("isNotWorkflow", "true");
+        // GNS-949:增加是否工作流数据标识 modify by fuyongsheng 20220227 end
         // 调用债券交易计算逻辑
         if(isSingle) {
             simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/api/execute", param, Map.class);
@@ -245,6 +252,11 @@ public class StlDataGatherService {
          * 金融产品交易明细
          */
         List<TrdProductDealDto> productDealList = tradeWriteDto.getProductDealList();
+
+        /**
+         * 金融产品交易附属表
+         */
+        List<TrdProductDealAdd> trdProductDealAddList = tradeWriteDto.getTrdProductDealAddList();
 
         /**
          * 组合交易DTO
@@ -296,6 +308,16 @@ public class StlDataGatherService {
          */
         List<EtrFinishStatus> etrFinishStatusList = tradeWriteDto.getEtrFinishStatusList();
 
+        /**
+         *  指令持仓流水
+         */
+        List<EtrSecPositionFlow> etrSecPositionFlowList = tradeWriteDto.getEtrSecPositionFlowList();
+
+        /**
+         * 组合持仓流水
+         */
+        List<PtlSecPositionFlow> ptlSecPositionFlowList = tradeWriteDto.getPtlSecPositionFlowList();
+
         // 全量基金信息获取
         Map<String, FundInfoDto> fundInfoDtoMap = settleCommonService.getAllFundInfoDto();
         //
@@ -331,7 +353,11 @@ public class StlDataGatherService {
                 	paProductDealTotal.setBonusCfmDate(totalTrdProductDealDto.getBonusCfmDate());
                 }
                 // ZGZGST-4220:解决存续期详情画面字段为空问题 fuyongsheng add start
-                if(DictCodeList.共通业务类型_质押式回购存续期.getValue().equals(totalTrdProductDealDto.getBusiType())){
+                // modify by etliu 20220227 start
+                // 广农商二阶段 GNS-901：【广农商场内清算】场内债券存续期-涉及到还本的交易，“利息明细信息”中未登录还本金额
+                if(DictCodeList.共通业务类型_质押式回购存续期.getValue().equals(totalTrdProductDealDto.getBusiType())
+                        || DictCodeList.共通业务类型_债券类资产存续期.getValue().equals(totalTrdProductDealDto.getBusiType())){
+                    // modify by etliu 20220227 end
                     paProductDealTotal.setTheoryInt(totalTrdProductDealDto.getTheoryInt());
                     paProductDealTotal.setTheoryPrin(totalTrdProductDealDto.getTheoryprinAmt());
                 }
@@ -339,16 +365,24 @@ public class StlDataGatherService {
                 paTrdFinProductDealTotalMapper.insertSelective(paProductDealTotal);
             }
         }
-
+        Map<String, TrdProductDealAdd> trdProductDealAddMap = new HashMap<>();
+        if(CollectionUtils.isNotEmpty(trdProductDealAddList)) {
+            for(TrdProductDealAdd trdProductDealAdd : trdProductDealAddList){
+                trdProductDealAddMap.put(trdProductDealAdd.getTradeId(), trdProductDealAdd);
+            }
+        }
         Map<String, List<TrdProductDealDto>> dealMap = new HashMap<String, List<TrdProductDealDto>>();
         if(CollectionUtils.isNotEmpty(productDealList)) {
             dealMap = productDealList.stream().collect(Collectors.groupingBy(TrdProductDealDto::getTradeId));
             for (TrdProductDealDto productDealDto : productDealList) {
                 // 金融产品交易表
                 trdProductDealMapper.insertSelective(productDealDto);
-                // 金融产品交易扩展表
-                TrdProductDealAdd trdProductDealAdd = new TrdProductDealAdd();
-                BeanUtil.copyProperties(trdProductDealAdd, productDealDto);
+                TrdProductDealAdd trdProductDealAdd = trdProductDealAddMap.get(productDealDto.getTradeId());
+                if(trdProductDealAdd == null){
+                    // 金融产品交易扩展表
+                    trdProductDealAdd = new TrdProductDealAdd();
+                    BeanUtil.copyProperties(trdProductDealAdd, productDealDto);
+                }
                 // 申购模式
                 if ((DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(productDealDto.getFinprodType2()))
                         && DictCodeList.交易方向_申购确认.getValue().equals(productDealDto.getPs())) {
@@ -359,6 +393,10 @@ public class StlDataGatherService {
                         && DictCodeList.交易方向_现金分红.getValue().equals(productDealDto.getPs())) {
                 	trdProductDealAdd.setRegDate(productDealDto.getRegDate());
                 }
+                if ((DictCodeListExt1.金融产品类型_投管用_基金.getValue().equals(productDealDto.getFinprodType2()))&&productDealDto.getBonusCfmDate()!=null) {
+                    trdProductDealAdd.setBonusCfmDate(productDealDto.getBonusCfmDate());
+                }
+                trdProductDealAdd.setGenType("03");
                 trdProductDealAddMapper.insertSelective(trdProductDealAdd);
                 // 回购时登录PA_TRD_PRODUCT_DEAL表
                 if (StringUtil.equals(productDealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue()) ||
@@ -513,6 +551,42 @@ public class StlDataGatherService {
                 settleTransTgMappingMapper.insert(settleTransTgMapping);
             }
         }
+        // 组合持仓流水
+        if (CollectionUtils.isNotEmpty(ptlSecPositionFlowList)){
+            for (PtlSecPositionFlow ptlSecPositionFlow : ptlSecPositionFlowList){
+                // modify by etliu 20220308 start
+                // 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+                ptlSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+                // modify by etliu 20220308 end
+                // modify by etliu 20220220 start
+                // 广农商二阶段 GNS-880:【广农商场内清算】上交所配股上市流通前一日清算解析ZQBD文件后，交易和头寸未处理:组合持仓流水和指令持仓流水登录的都是对的，ETR_SEC_POSITION和PTL_SEC_POSITION未更新
+//                ptlSecPositionFlowMapper.insert(ptlSecPositionFlow);
+                PtlSecPositionFlowDto newPtlSecPositionFlow = new PtlSecPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(newPtlSecPositionFlow, ptlSecPositionFlow);
+                basePtlSecPositionInfoService.inertSecPositionFlow(newPtlSecPositionFlow);
+                // modify by etliu 20220220 end
+            }
+        }
+        // 指令持仓流水
+        if (CollectionUtils.isNotEmpty(etrSecPositionFlowList)){
+            // modify by etliu 20220220 start
+            // 广农商二阶段 GNS-880:【广农商场内清算】上交所配股上市流通前一日清算解析ZQBD文件后，交易和头寸未处理:组合持仓流水和指令持仓流水登录的都是对的，ETR_SEC_POSITION和PTL_SEC_POSITION未更新
+            List<EtrSecPositionFlowDto> newEtrSecPositionFlowList = new ArrayList<>();
+            for (EtrSecPositionFlow etrSecPositionFlow : etrSecPositionFlowList){
+                // modify by etliu 20220308 start
+                // 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+                etrSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+                // modify by etliu 20220308 end
+                etrSecPositionFlowMapper.insert(etrSecPositionFlow);
+
+                EtrSecPositionFlowDto newEtrSecPositionFlow = new EtrSecPositionFlowDto();
+                BeanUtil.copyPropertiesIgnoreNull(newEtrSecPositionFlow, etrSecPositionFlow);
+                newEtrSecPositionFlowList.add(newEtrSecPositionFlow);
+            }
+
+            EtrCommonCashPositionDealService.dealCommandPositionList(newEtrSecPositionFlowList);
+            // modify by etliu 20220220 end
+        }
     }
 
     private String getPaBussType(TotalTrdProductDealDto totalTrdProductDealDto, String secType,Map<String, FundInfoDto> fundInfoDtoMap) {
@@ -575,6 +649,9 @@ public class StlDataGatherService {
                     else if (StringUtil.equals(ps, DictCodeList.交易方向_红利再投.getValue())) {
                         paBussType = DictCodeListExt1.平安业务类型_货币基金红利再投.getValue();
                     }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_现金分红.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_货币基金现金分红.getValue();
+                    }
                 }
                 else {
                     if (StringUtil.equals(ps, DictCodeList.交易方向_申购.getValue())) {
@@ -598,11 +675,28 @@ public class StlDataGatherService {
                     else if (StringUtil.equals(ps, DictCodeList.交易方向_现金分红.getValue())) {
                         paBussType = DictCodeListExt1.平安业务类型_非货币基金现金分红.getValue();
                     }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_红利再投.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_非货币基金红利再投.getValue();
+                    }
+                    else if (StringUtil.equals(ps, DictCodeList.交易方向_除权登记.getValue())) {
+                        paBussType = DictCodeListExt1.平安业务类型_非货币基金分红除权.getValue();
+                    }
                 }
             }
         }
         else if(StringUtil.equals(DictCodeListExt1.证券品种_股票.getValue(), secType)) {
-            paBussType = DictCodeListExt2.平安业务类型_股票交易.getValue();
+            // modify by etliu 20220219 start
+            // GNS-875: 【广农商场内清算】股票现金分红，权益登记日日终上交所解析JSMX03文件；深交所解析SJSJG文件后，成交数据明细表、各交易表和头寸表数据登录不正确
+            if(StringUtil.equals(totalTrdProductDealDto.getPayType(), DictCodeList.股票分红类型_送转.getValue())) {
+                paBussType = DictCodeListExt2.平安业务类型_送转.getValue();
+            }
+            else if (StringUtil.equals(ps, DictCodeList.交易方向_现金分红.getValue())
+                    || StringUtil.equals(ps, DictCodeList.交易方向_除权登记.getValue())) {
+                paBussType = DictCodeListExt2.平安业务类型_现金分红.getValue();
+            }else {
+                paBussType = DictCodeListExt2.平安业务类型_股票交易.getValue();
+            }
+            // modify by etliu 20220219 end
         }
         return paBussType;
     }
@@ -975,10 +1069,12 @@ public class StlDataGatherService {
         return 回购利息;
     }
 
-    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList) {
+    public void transactionMacthBatch(List<ExchangeTransMatchCommonDto> dtoList,
+                                      List<String> needUpdateStatusEntrustIdList) {
         ExchangeTransMatchCommonParamDto paramDto = new ExchangeTransMatchCommonParamDto();
         paramDto.setParamDataList(dtoList);
-
+        paramDto.setNeedUpdateStatusEntrustIdList(needUpdateStatusEntrustIdList);
+        logger.debug("调用成交匹配:" + JsonUtils.object2Json(paramDto));
         // 调用债券交易计算逻辑
         if(isSingle) {
             simpleRestTemplate.postForObject(tamsSerever + "/invest/trade/exchangetransmatch/ExchangeTransMatchCommon/transactionMacthBatch", paramDto, Map.class);
@@ -995,5 +1091,18 @@ public class StlDataGatherService {
 
     public List<SettleTransDataDto> listRepoSettleTransData(Map<String, Object> paraMap){
         return stlDataGatherMapper.listRepoSettleTransData(paraMap);
+    }
+
+    /**
+     * 查询债券确认列表
+     * @param paraMap
+     * @return
+     */
+    public List<SettleTransDataDto> listBondPurConfirSettleTransData(Map<String, Object> paraMap){
+        return stlDataGatherMapper.listBondPurConfirSettleTransData(paraMap);
+    }
+
+    public List<SettleTransDataDto> listBoundSharesMarketTradeData(Map<String, Object> paraMap) {
+        return stlDataGatherMapper.listBoundSharesMarketTradeData(paraMap);
     }
 }

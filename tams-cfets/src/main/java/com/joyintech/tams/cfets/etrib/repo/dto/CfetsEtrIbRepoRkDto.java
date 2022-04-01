@@ -12,6 +12,7 @@ import com.joyintech.tams.invest.entrust.etribrepo.validator.EtrIbRepoRk002Valid
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -53,10 +54,11 @@ public class CfetsEtrIbRepoRkDto extends EtrSecStock implements ProcessEntity {
      */
     List<PtlSecStock> ptlSecStock;
 
-    List<CfetsEtrSecStockConfig> cfetsEtrSecStockConfig;
-    
-    
-    
+    private List<CfetsEtrSecStockConfig> cfetsEtrSecStockConfig;
+
+    @ApiModelProperty(name="defaultStock",value="默认质押券库" ,example = "999999")
+    private String defaultStock;
+
     public List<EtrSecStockConfig> getEtrSecStockConfig() {
 		return etrSecStockConfig;
 	}
@@ -338,5 +340,13 @@ public class CfetsEtrIbRepoRkDto extends EtrSecStock implements ProcessEntity {
 
     public void setCfetsEtrSecStockConfig(List<CfetsEtrSecStockConfig> cfetsEtrSecStockConfig) {
         this.cfetsEtrSecStockConfig = cfetsEtrSecStockConfig;
+    }
+
+    public String getDefaultStock() {
+        return defaultStock;
+    }
+
+    public void setDefaultStock(String defaultStock) {
+        this.defaultStock = defaultStock;
     }
 }

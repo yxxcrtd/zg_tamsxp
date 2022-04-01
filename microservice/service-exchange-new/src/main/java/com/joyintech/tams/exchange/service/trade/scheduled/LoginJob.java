@@ -122,6 +122,7 @@ public class LoginJob {
                 if (Objects.nonNull(serverExtendInfo)) {
                     account.setAgentType(serverExtendInfo.getAgentType());
                     account.setBrokerName(serverExtendInfo.getBrockerName());
+                    account.setDspUrl(serverExtendInfo.getDspUrl());
                     AccountLoginReqBean accountLoginReqBean = new AccountLoginReqBean(serverExtendInfo, account);
                     logger.info("login defaultTerminal account is {}", account.getId());
                     return agent.reqLoginAccount(accountLoginReqBean);
@@ -140,6 +141,7 @@ public class LoginJob {
             String terminalName = terminalMapping.getTerminalName();
             account.setAgentType(terminalName);
             account.setBrokerName(serverExtendInfo.getBrockerName());
+            account.setDspUrl(serverExtendInfo.getDspUrl());
             AccountLoginReqBean accountLoginReqBean = new AccountLoginReqBean(serverExtendInfo, account);
             TradeAgent agent = tradingAgents.get(terminalName);
             if (Objects.nonNull(agent)) {

@@ -289,6 +289,10 @@
                 AND T.COUNTER_NAME = #{counterIdName,
                 jdbcType=VARCHAR}
             </if>
+            <if test="search != null and search != ''">
+                AND (T.COUNTER_ID like concat('%',concat(#{search,jdbcType=VARCHAR},'%'))
+                OR T.COUNTER_NAME like concat('%',concat(#{search,jdbcType=VARCHAR},'%')))
+            </if>
         </where>
     </select>
     <select id="selectCounterSeatId" resultType="java.util.Map">
@@ -448,6 +452,9 @@
         mci.CUSTOMER_NAME brokerName,
         sbmci.ACCT_NO acctNo,
         sci.ACCT_NAME acctNoStr,
+        <!--// modify by etliu 标准券再折算率涉及头寸调整 20220308 start -->
+        sbmci.FINPROD_ID finprodId,
+        <!--// modify by etliu 标准券再折算率涉及头寸调整 20220308 end -->
         sbmci.MORE_CONVRATE moreConvrate
         from STD_BOND_MORE_CONVRATE_INFO sbmci
         left join mst_customer_info mci on mci.CUSTOMER_ID = sbmci.BROKER_ID
@@ -459,6 +466,11 @@
             <if test="acctNo != null and acctNo != ''">
                 AND sbmci.ACCT_NO =  #{acctNo,jdbcType=VARCHAR}
             </if>
+            <!--// modify by etliu 标准券再折算率涉及头寸调整 20220308 start -->
+            <if test="finprodId != null and finprodId != ''">
+                AND sbmci.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+            </if>
+            <!--// modify by etliu 标准券再折算率涉及头寸调整 20220308 end -->
         </where>
     </select>
 

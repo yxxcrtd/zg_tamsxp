@@ -53,6 +53,16 @@ public class Account implements Serializable, KeyMethodInterface<String> {
 
     private int count;
 
+    /**
+     * 是否融资融券
+     */
+    private String isRzrq;
+
+    /**
+     * 接口平台URL
+     */
+    private String dspUrl;
+
     @Id
     public String getId() {
         return id;
@@ -172,5 +182,21 @@ public class Account implements Serializable, KeyMethodInterface<String> {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getIsRzrq() {
+        return isRzrq;
+    }
+
+    public void setIsRzrq(String isRzrq) {
+        this.isRzrq = isRzrq;
+    }
+
+    public String getDspUrl() {
+        return dspUrl;
+    }
+
+    public void setDspUrl(String dspUrl) {
+        this.dspUrl = dspUrl;
     }
 }

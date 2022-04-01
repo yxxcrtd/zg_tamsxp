@@ -34,6 +34,21 @@
                 </div>
             </div>
         </div>
+
+        <div class="layui-form-item" >
+            <div class="layui-inline layui-col-md12">
+                <label class="layui-form-label form-lable">所属银保监局</label>
+                <div class="layui-input-inline input-inline">
+
+                    <select id="SysInstRegBankCode002_belogCodeCBRC" class="layui-input form-input input-select"
+                            data-th-data-result='${SVR_BANK_REGU_BURE}' placeholder="请选择"
+                            data-th-initvalue="${entity?.belogCodeCBRC}"
+                            data-th-placeholder="#{SysCommon.selectplaceholder}"
+                            allowClear="true">
+                    </select>
+                </div>
+            </div>
+        </div>
         <div class="layui-form-item">
             <div class="layui-inline layui-col-md12">
 		        <label class="layui-form-label form-lable">是否理财子公司</label>

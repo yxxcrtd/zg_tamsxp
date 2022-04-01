@@ -7,6 +7,8 @@ import com.greenpineyu.fel.common.NumberUtil;
 import com.greenpineyu.fel.context.MapContext;
 import com.greenpineyu.fel.function.CommonFunction;
 import com.joyintech.framework.util.SpringContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +25,11 @@ import java.util.UUID;
  * @time 2016年6月21日 下午1:13:36
  */
 public class ExpressionUtil {
-	
+	/**
+	 * 日志
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(ExpressionUtil.class);
+
 	protected final static FelEngine FEL = new FelEngineImpl();
 	
 	protected ExpressionUtil(){}
@@ -39,6 +45,7 @@ public class ExpressionUtil {
 			if (null==env) return FEL.eval(expression);
 			return FEL.eval(expression, new MapContext(env));
 		} catch (Exception e) {
+			logger.error("expression:" + expression+";" + "env:" + JSON.toJSONString(env));
 			throw e;
 		}
 	}

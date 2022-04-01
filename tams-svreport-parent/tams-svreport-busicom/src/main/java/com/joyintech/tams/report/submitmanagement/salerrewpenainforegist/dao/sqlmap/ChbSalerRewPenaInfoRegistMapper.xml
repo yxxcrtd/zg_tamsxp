@@ -43,8 +43,10 @@
         <if test="sendStatus != null and sendStatus != ''">
             and SEND_STATUS = #{sendStatus}
         </if>
-        <if test="status != null and status != ''">
-            and STATUS = #{status}
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
         </if>
         <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
             and CHB_SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
@@ -277,6 +279,15 @@
             </if>
         </where> ) maxtime
         on his.CREATE_TIME=maxtime.CREATE_TIME
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                SALER_REW_PENA_NO
+                IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
     </insert>
 
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
@@ -293,6 +304,13 @@
                 </foreach>
             </if>
         </where> )
+        <if test="registList !=null and registList.size()>0">
+            and SALER_REW_PENA_NO
+            IN
+            <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                #{regist.salerRewPenaNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
     </delete>
 
     <select id="setDataList" resultType="com.joyintech.tams.report.submitmanagement.salerrewpenainforegist.dto.SalerRewPenaInfoRegistDto">
@@ -336,8 +354,10 @@
         <if test="sendStatus != null and sendStatus != ''">
             and SEND_STATUS = #{sendStatus}
         </if>
-        <if test="status != null and status != ''">
-            and STATUS = #{status}
+        <if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND STATUS IN (" close=")" separator=",">
+                #{status}
+            </foreach>
         </if>
         <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
             and SUBMIT_DEADLINE between to_date(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'yyyy-mm-dd') and to_date(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'yyyy-mm-dd')

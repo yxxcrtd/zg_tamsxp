@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.interf.fromjkpt.recon.dao;
 
+import com.joyintech.tams.common.base.entity.InterfFundBonusFjy;
 import com.joyintech.tams.common.base.entity.StlSecRecon;
 import com.joyintech.tams.common.base.entity.StlSecReconPara;
 import com.joyintech.tams.invest.interf.fromjkpt.recon.dto.StlCashReconDto;
@@ -64,10 +65,24 @@ public interface ReconInterfMapper {
      * @return
      */
     List<StlSecReconDealDto> listStlSecReconDealTotalByEntrustId(Map<String,Object> param);
-
     /**
      * 对账结果
      * @return
      */
     List<StlSecRecon> listStlSecRecon(Map<String,Object> param);
+    /**
+     * 协议回购委托代码汇总
+     * @param param
+     * @return
+     */
+    List<StlSecReconDealDto> listStlSecReconDealIntegratedRepTotal(Map<String,Object> param);
+    /**
+     * 协议回购明细
+     * @param param
+     * @return
+     */
+    List<StlSecReconDealDto> listStlSecReconDealIntegratedRepDetaile(Map<String,Object> param);
+
+
+
 }

@@ -85,6 +85,22 @@ public class StandardCouponReConversionRateService extends CommonExportService<S
 
 
     /**
+     * 双击查看详细信息查询 修改页面信息查询
+     *
+     * @param
+     *
+     * @return MstSaleDepartmentDto
+     * @see
+     * @since 1.0
+     */
+    public List<StandardCouponReConversionRateDto> getList(StandardCouponReConversionRateDto dto) {
+        return restTemplate.postForList(
+                ServiceApplication.BASICDATA_SERVICE_NAME + "/StandardCouponReConversionRate/getList", dto,
+                StandardCouponReConversionRateDto.class);
+    }
+
+
+    /**
      * 导出查询
      */
     @Override
@@ -180,10 +196,10 @@ public class StandardCouponReConversionRateService extends CommonExportService<S
         param.put("userName", CommonUtil.getUserName());
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
-        restTemplate.postForList(
-                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstBondQuotationInfo/importData",
-                param,
-                ExcelValidDto.class);
+//        restTemplate.postForList(
+//                ServiceApplication.BASICDATA_SERVICE_NAME + "/MstBondQuotationInfo/importData",
+//                param,
+//                ExcelValidDto.class);
         return restTemplate.postForList(
                 ServiceApplication.BASICDATA_SERVICE_NAME + "/StandardCouponReConversionRate/importData",
                 param,

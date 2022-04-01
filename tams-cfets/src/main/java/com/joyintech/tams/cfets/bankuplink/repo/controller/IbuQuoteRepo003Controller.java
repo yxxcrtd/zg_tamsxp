@@ -29,6 +29,7 @@ import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 现券买卖(对话)
@@ -68,7 +66,7 @@ public class IbuQuoteRepo003Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度, DictCode.回购方式, DictCode.价格模式,
-                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种, DictCode.期限品种_回购);
+                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种, DictCode.期限品种_回购,  DictCode.分配方式);
         model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
         model.addAttribute("ACCOUNT_SPEED_2", BussinessDictCodeList.清算速度_T加2.getValue());
@@ -98,6 +96,16 @@ public class IbuQuoteRepo003Controller extends BaseController {
         model.addAttribute("ps", cfetsRepoDealQuotedPrice001Dto.getPs());
         //分配方式
         model.addAttribute("distribution", cfetsRepoDealQuotedPrice001Dto.getDistribution());
+        // 对手方是否可编辑
+        String isEdit = DictCodeList.是否_是.getValue();
+        List<String> entrustIdList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(cfetsRepoDealQuotedPrice001Dto.getPtlAllocationList())) {
+            cfetsRepoDealQuotedPrice001Dto.getPtlAllocationList().forEach(item -> entrustIdList.add(item.getEntrustId()));
+        }
+        if (cfetsRepoQuotedPrice004Service.getIsExistCounterId(entrustIdList) > 0) {
+            isEdit = DictCodeList.是否_否.getValue();
+        }
+        model.addAttribute("isEdit", isEdit);
         return super.init(model);
     }
 
@@ -135,6 +143,24 @@ public class IbuQuoteRepo003Controller extends BaseController {
             logger.error("报价提交检查异常", e);
             return new Message<AjaxResult>().fail().setMessage("报价提交检查异常");
         }
+    }
+
+    /**
+     * 代办页面提交校验
+     *
+     * @param cfetsRepoDealQuoteCommonDto
+     * @return com.joyintech.framework.ajax.AjaxResult
+     * @author jiangpeng
+     * @date 2022/3/4 14:03
+     */
+    @PostMapping("/checkByHome")
+    @ResponseBody
+    public AjaxResult checkByHome(@RequestBody CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto) {
+
+        CfetsRepoDealQuoteCommonDto cfetsRepoDealQuoteCommonDto = cfetsRepoDealQuotedPrice002Service.back2PageDto(cfetsRepoDealQuotedPrice001Dto);
+        //check必填项
+        AjaxResult ajaxResult = cfetsRepoDealQuotedPrice002Service.checkSave(cfetsRepoDealQuoteCommonDto);
+        return ajaxResult;
     }
 
     @ApiOperation(value = "报价成交提交检查", notes = "报价成交提交检查")

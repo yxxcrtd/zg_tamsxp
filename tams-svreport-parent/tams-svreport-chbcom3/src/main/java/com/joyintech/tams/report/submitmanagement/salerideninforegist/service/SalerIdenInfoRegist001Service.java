@@ -8,6 +8,7 @@ import com.joyintech.framework.util.ExportUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.common.listener.UploadListener;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.util.SysDataUtil;
@@ -77,6 +78,7 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
             return pageList;
         }else{
             Page<SalerIdenInfoRegistDto> page = queryForPage(ChbSalerIdenInfoRegistMapper.class,"queryForRegistPage",param);
+            this.formatByType(page.getRoot());
             return page;
         }
     }
@@ -192,6 +194,8 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
             // 反馈状态
             String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
 
+            String status = (String) pageParam.get("status");
+
             // 将姓名当做多选下拉框处理
             if (StringUtil.isNotBlank(salerName)) {
                 pageParam.put("salerNameList", StringUtil.splitToList(GlobalConstant.COMMA, salerName));
@@ -212,6 +216,10 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
             if (StringUtil.isNotBlank(submitFeedbackStatus)) {
                 pageParam.put("submitFeedbackStatusList",
                         StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+            }
+            // 将数据状态当做多选下拉框处理
+            if (StringUtil.isNotBlank(status)) {
+                pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             }
         }
     }
@@ -247,6 +255,8 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
         SalerIdenInfoRegistDto nullDate = new SalerIdenInfoRegistDto();
         if(datas == null){
             dealSearchParam(selectParam);
+            String status = selectParam.get("status").toString();
+            selectParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
             tempList = chbSalerIdenInfoRegistMapper.setDataList(selectParam);
             this.formatByType(tempList);
         }else{
@@ -282,6 +292,22 @@ public class SalerIdenInfoRegist001Service extends CommonExportService<SalerIden
                 item.setSalerStatus(getDictCodeAndName(DictCode.销售人员当前状态, item.getSalerStatus()));
                 item.setSalerDegree(getDictCodeAndName(DictCode.销售人员学位, item.getSalerDegree()));
                 item.setSalerLevle(getDictCodeAndName(DictCode.销售人员专业技术职称, item.getSalerLevle()));
+                if(item.getSalerCertificateType()!=null){
+                    List<String> salerCertificateTypes=StringUtil.splitToList(GlobalConstant.COMMA, item.getSalerCertificateType());
+                    item.setSalerCertificateType("");
+                    for(String salerCertificateType : salerCertificateTypes){
+                        item.setSalerCertificateType(item.getSalerCertificateType()+","+salerCertificateType+" "+ SvrDataUtil.getNameFromDataDict(DictCode.销售人员理财专业证书, salerCertificateType));
+                    }
+                    item.setSalerCertificateType(item.getSalerCertificateType().substring(1));
+                }
+                if(item.getSalerRiskLevel()!=null){
+                    List<String> salerRiskLevels=StringUtil.splitToList(GlobalConstant.COMMA, item.getSalerRiskLevel());
+                    item.setSalerRiskLevel("");
+                    for(String salerRiskLevel : salerRiskLevels){
+                        item.setSalerRiskLevel(item.getSalerRiskLevel()+","+salerRiskLevel+" "+SvrDataUtil.getNameFromDataDict(DictCode.可销售产品风险等级, salerRiskLevel));
+                    }
+                    item.setSalerRiskLevel(item.getSalerRiskLevel().substring(1));
+                }
             });
         }
         return dataList;

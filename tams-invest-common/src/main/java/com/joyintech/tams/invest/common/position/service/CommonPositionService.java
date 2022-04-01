@@ -8,6 +8,8 @@ import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
@@ -19,6 +21,7 @@ import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCash
 import com.joyintech.tams.invest.common.util.ExpressionUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +59,8 @@ public class CommonPositionService {
 	private PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
 	@Autowired
 	private EtrEntrustMapper etrEntrustMapper;
+	@Autowired
+	private EtrEntrustAddMapper etrEntrustAddMapper;
 	
 	/**
 	 * 头寸处理入口
@@ -328,7 +333,7 @@ public class CommonPositionService {
 			// 重新插入一条反向流水
 			etrSecPositionFlow.setAmount(etrSecPositionFlow.getAmount().negate());
 			etrSecPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
-			etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
+//			etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
 			etrSecPositionFlow.setSeqno(IDGenerator.generate());
 			insertEtrSecPositionFlow(etrSecPositionFlow);
 		});
@@ -377,7 +382,7 @@ public class CommonPositionService {
 				// 重新插入一条反向流水
 				etrSecPositionFlow.setAmount(etrSecPositionFlow.getAmount().negate());
 				etrSecPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
-				etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
+//				etrSecPositionFlow.setInvAim(String.valueOf(param.get("invAim")));
 				etrSecPositionFlow.setSeqno(IDGenerator.generate());
 				insertEtrSecPositionFlow(etrSecPositionFlow);
 			});
@@ -420,11 +425,99 @@ public class CommonPositionService {
 		return true;
 	}
 
+	// add by etliu 20220116 start
+	// GZYHTZJY-1145: 【场内对账清结算1231】深交所协议回购首期交易，日终头寸更新有误【解决日期：2022-01-14】】
+	/**
+	 * 指令撤回、关闭，交易冲销（指令可用现金冲销）
+	 * @param param
+	 * @return
+	 */
+	public boolean revokeEtrCashPositionFlow(Map<String,Object> param){
+		//已完成额度
+		// modify by etliu 20220227 start
+		// 广农商二阶段 GNS-953:【广农商场内清算】深交所协议回购 正/逆回购首期，手工交收-日终清结算后，头寸更新有误
+		// 协议回购未进行手工交收，应查FINISH_AMT字段
+		BigDecimal finishAmt = commonPtlPositionMapper.getDayEndEtrFinishAmt(param);
+
+		if (finishAmt == null || finishAmt.compareTo(BigDecimal.ZERO) <= 0) {
+			finishAmt = commonPtlPositionMapper.getEtrFinishAmt(param);
+		}
+		// modify by etliu 20220227 end
+		// 委托
+		EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(String.valueOf(param.get("entrustId")));
+		// 委托附属表
+		EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(String.valueOf(param.get("entrustId")));
+
+		//委托额度
+		BigDecimal entrustAmt = BigDecimal.ZERO;
+		if (StringUtil.isNotEmpty(etrEntrust)) {
+			entrustAmt = etrEntrust.getEntrustAmt();
+			if (etrEntrustAdd != null && StringUtil.equals(DictCodeListExt3.目标类型_数量.getValue(), etrEntrustAdd.getTargetType())) {
+				entrustAmt = etrEntrust.getEntrustNum();
+			}
+		}
+		// 指令关闭 or 委托完成，冲销指令可用持仓，根据交易持仓重新生成指令可用持仓
+		if (StringUtil.equals(DictCodeList.是否_是.getValue(),param.get("closeFlag")) || entrustAmt.compareTo(finishAmt) <= 0){
+			//查询原指令现金流水，冲销指令可用现金
+			List<EtrCashPositionFlow> etrCashPositionFlows = commonPtlPositionMapper.selectEtrCashPositionFlowByEntrustId(param);
+			etrCashPositionFlows.forEach(etrCashPositionFlow -> {
+				// 原指令冲正标识更新
+				etrCashPositionFlow.setOffsetFlag("02");
+				etrCashPositionFlowMapper.updateByPrimaryKeySelective(etrCashPositionFlow);
+				// 重新插入一条反向流水
+				etrCashPositionFlow.setAmount(etrCashPositionFlow.getAmount().negate());
+				etrCashPositionFlow.setOffsetId(String.valueOf(param.get("entrustId")));
+				etrCashPositionFlow.setSeqno(IDGenerator.generate());
+				insertEtrCashPositionFlow(etrCashPositionFlow);
+			});
+			// 根据交易现金流水重新生成指令可用现金
+			List<PtlCashPositionFlow> ptlCashPositionFlows = commonPtlPositionMapper.selectPtlCashPositionFlowByEntrustId(param);
+			ptlCashPositionFlows.forEach(ptlCashPositionFlow -> {
+				EtrCashPositionFlow etrCashPositionFlow = new EtrCashPositionFlow();
+				BeanUtil.copyPropertiesIgnoreNull(etrCashPositionFlow,ptlCashPositionFlow);
+				etrCashPositionFlow.setSeqno(IDGenerator.generate());
+				etrCashPositionFlow.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+				insertEtrCashPositionFlow(etrCashPositionFlow);
+			});
+		}
+
+		return true;
+	}
+
+	/**
+	 * 查询组合持有资产的投资目的
+	 * @param portfolioId 组合代码
+	 * @param finprodId 金融产品代码
+	 * @return 投资目的
+	 */
+	public String selectHoldInvAim(String portfolioId, String finprodId) {
+		if (StringUtil.isBlank(portfolioId) || StringUtil.isBlank(finprodId)) {
+			return null;
+		}
+
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("portfolioId", portfolioId);
+		paramMap.put("finprodId", finprodId);
+
+		String invAim = commonPtlPositionMapper.selectHoldInvAim(paramMap);
+		if (StringUtil.isBlank(invAim)) {
+			invAim = "999999";
+		}
+
+		return invAim;
+	}
+	// add by etliu 20220116 end
+
 	/**
 	 * 入库委托现金流水信息
 	 * @param etrCashPositionFlow
 	 */
 	public void insertEtrCashPositionFlow (EtrCashPositionFlow etrCashPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		etrCashPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		etrCashPositionFlowMapper.insertSelective(etrCashPositionFlow);
 		if(getSysDate().compareTo(etrCashPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;
@@ -446,6 +539,11 @@ public class CommonPositionService {
 	 * @param etrSecPositionFlow
 	 */
 	public void insertEtrSecPositionFlow (EtrSecPositionFlow etrSecPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		etrSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		etrSecPositionFlowMapper.insertSelective(etrSecPositionFlow);
 		if(getSysDate().compareTo(etrSecPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;
@@ -466,6 +564,11 @@ public class CommonPositionService {
 	 * @param ptlCashPositionFlow
 	 */
 	public void insertPtlCashPositionFlow (PtlCashPositionFlow ptlCashPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		ptlCashPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		ptlCashPositionFlowMapper.insertSelective(ptlCashPositionFlow);
 		if(getSysDate().compareTo(ptlCashPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;
@@ -487,6 +590,11 @@ public class CommonPositionService {
 	 * @param ptlSecPositionFlow
 	 */
 	public void insertPtlSecPositionFlow (PtlSecPositionFlow ptlSecPositionFlow){
+		// modify by etliu 20220308 start
+		// 场内的头寸处理，全部已经对接了头寸引擎，需要标记下
+		ptlSecPositionFlow.setIsExistNew(DictCodeList.是否_是.getValue());
+		// modify by etliu 20220308 end
+
 		ptlSecPositionFlowMapper.insertSelective(ptlSecPositionFlow);
 		if(getSysDate().compareTo(ptlSecPositionFlow.getCdate()) != 0){//非T+0流水不需要更新余额
 			return;
@@ -542,5 +650,91 @@ public class CommonPositionService {
 
 	public String getFinTradeProduct(String tradeId) {
 		return commonPtlPositionMapper.getFinTradeProduct(tradeId);
+	}
+
+	public FinProductOthCode selectFinProductOthCode(Map<String, Object> map){
+		List<FinProductOthCode> finProductOthCodes =  commonPtlPositionMapper.selectFinProductOthCodes(map);
+		if(CollectionUtils.isNotEmpty(finProductOthCodes)){
+			return finProductOthCodes.get(0);
+		}
+		return null;
+	}
+
+	public FinProductQuto selectFinProductQuto(Map<String, Object> map){
+		return commonPtlPositionMapper.selectFinProductQuto(map);
+	}
+
+	/**
+	 * 金融产品汇总交易查询
+	 */
+	public List<TrdProductDeal> selectTrdProductDeals(String totalTradeId) {
+		List<TrdProductDeal> trdProductDealList = new ArrayList<TrdProductDeal>();
+		trdProductDealList = commonPtlPositionMapper.selectTrdProductDeals(totalTradeId);
+		return trdProductDealList;
+	}
+
+	/**
+	 * 金融产品汇总交易查询
+	 */
+	public List<SettleTransData> selectSettleTransData(String totalTradeId) {
+		return commonPtlPositionMapper.selectSettleTransData(totalTradeId);
+	}
+
+	/**
+	 * 查询上一个工作日
+	 * @param cdate
+	 * @param calendarId
+	 * @return
+	 */
+	public Date getLastWorkDate(Date cdate,String calendarId){
+		return commonPtlPositionMapper.getLastWorkDate(cdate,"0", calendarId);
+	}
+
+	/**
+	 * 获取申报代码
+	 * @param finprodId
+	 * @param ps
+	 * @return
+	 */
+	public String getStockId(String finprodId, String finprodType2, String ps){
+		// 查询申报信息
+		Map<String, Object> map = new HashMap<>();
+		map.put("finprodId", finprodId);
+		if((DictCodeList.交易方向_申购.getValue().equals(ps) || DictCodeList.交易方向_申购确认.getValue().equals(ps)
+				|| DictCodeList.交易方向_上市流通.getValue().equals(ps))
+				&& DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_可转债信用申购代码.getValue());
+		}
+		else if((DictCodeList.交易方向_申购.getValue().equals(ps) || DictCodeList.交易方向_申购确认.getValue().equals(ps)
+				|| DictCodeList.交易方向_上市流通.getValue().equals(ps))
+				&& DictCodeListExt1.金融产品类型_投管用_股票.getValue().equals(finprodType2)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
+		}
+		else if(DictCodeListExt3.交易方向_配债.getValue().equals(ps)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_配债代码.getValue());
+		}
+		else if(DictCodeListExt2.交易方向_配股.getValue().equals(ps)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_配股代码.getValue());
+		}
+		else if(DictCodeList.交易方向_上市流通.getValue().equals(ps)){
+			map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+		}
+		FinProductOthCode finProductOthCode = this.selectFinProductOthCode(map);
+		return finProductOthCode != null ? finProductOthCode.getOthCode() : StringUtil.EMPTY;
+	}
+
+	/**
+	 * 获取申报代码
+	 * @param finprodId
+	 * @param ps
+	 * @return
+	 */
+	public String getSsltStockId(String finprodId, String finprodType2, String ps){
+		// 查询申报信息
+		Map<String, Object> map = new HashMap<>();
+		map.put("finprodId", finprodId);
+		map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_上市流通代码.getValue());
+		FinProductOthCode finProductOthCode = this.selectFinProductOthCode(map);
+		return finProductOthCode != null ? finProductOthCode.getOthCode() : StringUtil.EMPTY;
 	}
 }

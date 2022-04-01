@@ -82,6 +82,8 @@
         <result column="DELIVERY_METHOD" property="deliveryMethod" jdbcType="VARCHAR"/>
         <result column="ENTRUST_CLASS" property="entrustClass" jdbcType="VARCHAR"/>
         <result column="BUSI_TYPE_TG" property="busiTypeTg" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.exchange.common.db.domain.Instruction"
                extends="BaseResultMap">
@@ -148,7 +150,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    ENTRUST_ID, PORTFOLIO_ID, PORTFOLIO_NAME, FINPROD_ID, FINPROD_ABBR, FINPROD_NAME,
+        ENTRUST_ID, PORTFOLIO_ID, PORTFOLIO_NAME, FINPROD_ID, FINPROD_ABBR, FINPROD_NAME,
     FINPROD_TYPE2, ACCT_NO, CCY, BUSI_ACCT_NO, ACCT_NAME, SEC_ACCT_ID, SEC_ACCT_NAME,
     STOCK_HOLDER_NO, TRADE_MARKET, TRADE_PLAT, FINPROD_MARKET_ID, PS, DEAL_MODE, COUNTER_ID, COUNTER_NAME,
     COUNTER_SEAT, COUNTER_TRADER, COUNTER_INFO, COUNTER_DEALER_ID, APPOINTMENT_NUMBER,
@@ -159,11 +161,12 @@
     TAR_FINPROD_ID, TARINPROD_ABBR, TARINPROD_MARKET_ID, TRADE_ID, TRADER_NAME, INV_MANAGER_ID,
     ASSET_TYPE, ASSET_TYPE1, ASSET_TYPE10, ASSET_TYPE11, INV_AIM, APPROVER_FLAGE, OUR_TRADER,
     IS_AUTO_RECEIVE, V_PAY_DATE, M_PAY_DATE, CAP_DAYS, M_INT_AMT, M_TRADE_AMT, FIRST_REPO_PS, REMARK,
-    DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, ENTRUST_BUSS_TYPE, DELIVERY_METHOD
-  </sql>
+    DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, ENTRUST_BUSS_TYPE, DELIVERY_METHOD,ENTRUST_CLASS,BUSI_TYPE_TG,
+    CREATE_TIME,UPDATE_TIME
+    </sql>
     <sql id="Blob_Column_List">
-    TRADERS_INFO
-  </sql>
+        TRADERS_INFO
+    </sql>
     <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
             parameterType="com.joyintech.tams.exchange.common.db.domain.InstructionExample">
         select
@@ -207,9 +210,10 @@
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from T_INSTRUCTION
-    where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
-  </delete>
+        delete
+        from T_INSTRUCTION
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </delete>
 
     <delete id="deleteBatchByPrimaryKey" parameterType="java.lang.String">
         delete from T_INSTRUCTION
@@ -226,61 +230,63 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.exchange.common.db.domain.Instruction">
-    insert into T_INSTRUCTION (ENTRUST_ID, PORTFOLIO_ID, PORTFOLIO_NAME,
-      FINPROD_ID, FINPROD_ABBR, FINPROD_NAME,
-      FINPROD_TYPE2, ACCT_NO, CCY,
-      BUSI_ACCT_NO, ACCT_NAME, SEC_ACCT_ID,
-      SEC_ACCT_NAME, STOCK_HOLDER_NO, TRADE_MARKET,
-      TRADE_PLAT, FINPROD_MARKET_ID, PS,
-      DEAL_MODE, COUNTER_ID, COUNTER_NAME, COUNTER_SEAT,
-      COUNTER_TRADER, COUNTER_INFO, COUNTER_DEALER_ID,
-      APPOINTMENT_NUMBER, DEAL_NO, TRD_MATCH_ID,
-      QUOTEREF_ID, CON_SHARE_ID, CON_PRICE,
-      CON_NUM, TRADE_DATE, VDATE,
-      MDATE, ENTRUST_AMT, ENTRUST_NUM,
-      ENTRUST_STATUS, ENTRUST_PRICE, FULL_PRICE,
-      PRICE_MODE, ENTRUST_LEFT_AMT, FROZEN_QUANTITY,
-      SETTLE_SPEED, VALUE_DATE, VALUE_DATE2,
-      MATURITY_DATE, MATURITY_DATE2, TERM_DAYS,
-      TERM_DAYS2, PURCH_TYPE, SALE_CODE,
-      MIN_AMT, TAR_FINPROD_ID, TARINPROD_ABBR,
-      TARINPROD_MARKET_ID, TRADE_ID, TRADER_NAME,
-      INV_MANAGER_ID, ASSET_TYPE, ASSET_TYPE1,
-      ASSET_TYPE10, ASSET_TYPE11, INV_AIM,
-      APPROVER_FLAGE, OUR_TRADER, IS_AUTO_RECEIVE,
-      V_PAY_DATE, M_PAY_DATE, CAP_DAYS,
-      M_INT_AMT, M_TRADE_AMT, FIRST_REPO_PS, TRADERS_INFO,
-      REMARK, DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG,
-      ENTRUST_BUSS_TYPE, DELIVERY_METHOD, ENTRUST_CLASS, BUSI_TYPE_TG
-      )
-    values (#{entrustId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{portfolioName,jdbcType=VARCHAR},
-      #{finprodId,jdbcType=VARCHAR}, #{finprodAbbr,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR},
-      #{finprodType2,jdbcType=VARCHAR}, #{acctNo,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
-      #{busiAcctNo,jdbcType=VARCHAR}, #{acctName,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR},
-      #{secAcctName,jdbcType=VARCHAR}, #{stockHolderNo,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR},
-      #{tradePlat,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR},
-      #{dealMode,jdbcType=VARCHAR}, #{counterId,jdbcType=VARCHAR}, #{counterName,jdbcType=VARCHAR},#{counterSeat,jdbcType=VARCHAR},
-      #{counterTrader,jdbcType=VARCHAR}, #{counterInfo,jdbcType=VARCHAR}, #{counterDealerId,jdbcType=VARCHAR},
-      #{appointmentNumber,jdbcType=VARCHAR}, #{dealNo,jdbcType=VARCHAR}, #{trdMatchId,jdbcType=VARCHAR},
-      #{quoterefId,jdbcType=VARCHAR}, #{conShareId,jdbcType=VARCHAR}, #{conPrice,jdbcType=NUMERIC},
-      #{conNum,jdbcType=NUMERIC}, #{tradeDate,jdbcType=TIMESTAMP}, #{vdate,jdbcType=TIMESTAMP},
-      #{mdate,jdbcType=TIMESTAMP}, #{entrustAmt,jdbcType=NUMERIC}, #{entrustNum,jdbcType=NUMERIC},
-      #{entrustStatus,jdbcType=VARCHAR}, #{entrustPrice,jdbcType=NUMERIC}, #{fullPrice,jdbcType=NUMERIC},
-      #{priceMode,jdbcType=VARCHAR}, #{entrustLeftAmt,jdbcType=NUMERIC}, #{frozenQuantity,jdbcType=NUMERIC},
-      #{settleSpeed,jdbcType=NUMERIC}, #{valueDate,jdbcType=TIMESTAMP}, #{valueDate2,jdbcType=TIMESTAMP},
-      #{maturityDate,jdbcType=TIMESTAMP}, #{maturityDate2,jdbcType=TIMESTAMP}, #{termDays,jdbcType=NUMERIC},
-      #{termDays2,jdbcType=NUMERIC}, #{purchType,jdbcType=VARCHAR}, #{saleCode,jdbcType=VARCHAR},
-      #{minAmt,jdbcType=NUMERIC}, #{tarFinprodId,jdbcType=VARCHAR}, #{tarinprodAbbr,jdbcType=VARCHAR},
-      #{tarinprodMarketId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{traderName,jdbcType=VARCHAR},
-      #{invManagerId,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, #{assetType1,jdbcType=VARCHAR},
-      #{assetType10,jdbcType=VARCHAR}, #{assetType11,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR},
-      #{approverFlage,jdbcType=VARCHAR}, #{ourTrader,jdbcType=VARCHAR}, #{isAutoReceive,jdbcType=VARCHAR},
-      #{vPayDate,jdbcType=TIMESTAMP}, #{mPayDate,jdbcType=TIMESTAMP}, #{capDays,jdbcType=NUMERIC},
-      #{mIntAmt,jdbcType=NUMERIC}, #{mTradeAmt,jdbcType=NUMERIC}, #{firstRepoPs,jdbcType=VARCHAR},
-      #{remark,jdbcType=VARCHAR}, #{tradersInfo,jdbcType=CLOB}, #{derivativeBsDir,jdbcType=VARCHAR},
-      #{derivativeOcFlag,jdbcType=VARCHAR}, #{entrustBussType,jdbcType=VARCHAR}, #{deliveryMethod,jdbcType=VARCHAR}, #{entrustClass,jdbcType=VARCHAR}, #{busiTypeTg,jdbcType=VARCHAR}
-      )
-  </insert>
+        insert into T_INSTRUCTION (ENTRUST_ID, PORTFOLIO_ID, PORTFOLIO_NAME,
+                                   FINPROD_ID, FINPROD_ABBR, FINPROD_NAME,
+                                   FINPROD_TYPE2, ACCT_NO, CCY,
+                                   BUSI_ACCT_NO, ACCT_NAME, SEC_ACCT_ID,
+                                   SEC_ACCT_NAME, STOCK_HOLDER_NO, TRADE_MARKET,
+                                   TRADE_PLAT, FINPROD_MARKET_ID, PS,
+                                   DEAL_MODE, COUNTER_ID, COUNTER_NAME, COUNTER_SEAT,
+                                   COUNTER_TRADER, COUNTER_INFO, COUNTER_DEALER_ID,
+                                   APPOINTMENT_NUMBER, DEAL_NO, TRD_MATCH_ID,
+                                   QUOTEREF_ID, CON_SHARE_ID, CON_PRICE,
+                                   CON_NUM, TRADE_DATE, VDATE,
+                                   MDATE, ENTRUST_AMT, ENTRUST_NUM,
+                                   ENTRUST_STATUS, ENTRUST_PRICE, FULL_PRICE,
+                                   PRICE_MODE, ENTRUST_LEFT_AMT, FROZEN_QUANTITY,
+                                   SETTLE_SPEED, VALUE_DATE, VALUE_DATE2,
+                                   MATURITY_DATE, MATURITY_DATE2, TERM_DAYS,
+                                   TERM_DAYS2, PURCH_TYPE, SALE_CODE,
+                                   MIN_AMT, TAR_FINPROD_ID, TARINPROD_ABBR,
+                                   TARINPROD_MARKET_ID, TRADE_ID, TRADER_NAME,
+                                   INV_MANAGER_ID, ASSET_TYPE, ASSET_TYPE1,
+                                   ASSET_TYPE10, ASSET_TYPE11, INV_AIM,
+                                   APPROVER_FLAGE, OUR_TRADER, IS_AUTO_RECEIVE,
+                                   V_PAY_DATE, M_PAY_DATE, CAP_DAYS,
+                                   M_INT_AMT, M_TRADE_AMT, FIRST_REPO_PS, TRADERS_INFO,
+                                   REMARK, DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG,
+                                   ENTRUST_BUSS_TYPE, DELIVERY_METHOD, ENTRUST_CLASS, BUSI_TYPE_TG,
+                                   CREATE_TIME, UPDATE_TIME)
+        values (#{entrustId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{portfolioName,jdbcType=VARCHAR},
+                #{finprodId,jdbcType=VARCHAR}, #{finprodAbbr,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR},
+                #{finprodType2,jdbcType=VARCHAR}, #{acctNo,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+                #{busiAcctNo,jdbcType=VARCHAR}, #{acctName,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR},
+                #{secAcctName,jdbcType=VARCHAR}, #{stockHolderNo,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR},
+                #{tradePlat,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR},
+                #{dealMode,jdbcType=VARCHAR}, #{counterId,jdbcType=VARCHAR}, #{counterName,jdbcType=VARCHAR},
+                #{counterSeat,jdbcType=VARCHAR},
+                #{counterTrader,jdbcType=VARCHAR}, #{counterInfo,jdbcType=VARCHAR}, #{counterDealerId,jdbcType=VARCHAR},
+                #{appointmentNumber,jdbcType=VARCHAR}, #{dealNo,jdbcType=VARCHAR}, #{trdMatchId,jdbcType=VARCHAR},
+                #{quoterefId,jdbcType=VARCHAR}, #{conShareId,jdbcType=VARCHAR}, #{conPrice,jdbcType=NUMERIC},
+                #{conNum,jdbcType=NUMERIC}, #{tradeDate,jdbcType=TIMESTAMP}, #{vdate,jdbcType=TIMESTAMP},
+                #{mdate,jdbcType=TIMESTAMP}, #{entrustAmt,jdbcType=NUMERIC}, #{entrustNum,jdbcType=NUMERIC},
+                #{entrustStatus,jdbcType=VARCHAR}, #{entrustPrice,jdbcType=NUMERIC}, #{fullPrice,jdbcType=NUMERIC},
+                #{priceMode,jdbcType=VARCHAR}, #{entrustLeftAmt,jdbcType=NUMERIC}, #{frozenQuantity,jdbcType=NUMERIC},
+                #{settleSpeed,jdbcType=NUMERIC}, #{valueDate,jdbcType=TIMESTAMP}, #{valueDate2,jdbcType=TIMESTAMP},
+                #{maturityDate,jdbcType=TIMESTAMP}, #{maturityDate2,jdbcType=TIMESTAMP}, #{termDays,jdbcType=NUMERIC},
+                #{termDays2,jdbcType=NUMERIC}, #{purchType,jdbcType=VARCHAR}, #{saleCode,jdbcType=VARCHAR},
+                #{minAmt,jdbcType=NUMERIC}, #{tarFinprodId,jdbcType=VARCHAR}, #{tarinprodAbbr,jdbcType=VARCHAR},
+                #{tarinprodMarketId,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{traderName,jdbcType=VARCHAR},
+                #{invManagerId,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, #{assetType1,jdbcType=VARCHAR},
+                #{assetType10,jdbcType=VARCHAR}, #{assetType11,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR},
+                #{approverFlage,jdbcType=VARCHAR}, #{ourTrader,jdbcType=VARCHAR}, #{isAutoReceive,jdbcType=VARCHAR},
+                #{vPayDate,jdbcType=TIMESTAMP}, #{mPayDate,jdbcType=TIMESTAMP}, #{capDays,jdbcType=NUMERIC},
+                #{mIntAmt,jdbcType=NUMERIC}, #{mTradeAmt,jdbcType=NUMERIC}, #{firstRepoPs,jdbcType=VARCHAR},
+                #{remark,jdbcType=VARCHAR}, #{tradersInfo,jdbcType=CLOB}, #{derivativeBsDir,jdbcType=VARCHAR},
+                #{derivativeOcFlag,jdbcType=VARCHAR}, #{entrustBussType,jdbcType=VARCHAR},
+                #{deliveryMethod,jdbcType=VARCHAR}, #{entrustClass,jdbcType=VARCHAR}, #{busiTypeTg,jdbcType=VARCHAR},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
 
     <sql id="insertSql">
         insert into T_INSTRUCTION
@@ -528,6 +534,12 @@
             <if test="busiTypeTg != null">
                 BUSI_TYPE_TG,
             </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="entrustId != null">
@@ -773,6 +785,12 @@
             <if test="busiTypeTg != null">
                 #{busiTypeTg,jdbcType=VARCHAR},
             </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
         </trim>
     </sql>
 
@@ -787,184 +805,184 @@
             </if>
             <if test="finprodId != null">
                 FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
-      </if>
-      <if test="finprodAbbr != null">
-        FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
-      </if>
-      <if test="finprodName != null">
-        FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
-      </if>
-      <if test="finprodType2 != null">
-        FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
-      </if>
-      <if test="acctNo != null">
-        ACCT_NO = #{acctNo,jdbcType=VARCHAR},
-      </if>
-      <if test="ccy != null">
-        CCY = #{ccy,jdbcType=VARCHAR},
-      </if>
-      <if test="busiAcctNo != null">
-        BUSI_ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR},
-      </if>
-      <if test="acctName != null">
-        ACCT_NAME = #{acctName,jdbcType=VARCHAR},
-      </if>
-      <if test="secAcctId != null">
-        SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
-      </if>
-      <if test="secAcctName != null">
-        SEC_ACCT_NAME = #{secAcctName,jdbcType=VARCHAR},
-      </if>
-      <if test="stockHolderNo != null">
-        STOCK_HOLDER_NO = #{stockHolderNo,jdbcType=VARCHAR},
-      </if>
-      <if test="tradeMarket != null">
-        TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
-      </if>
-      <if test="tradePlat != null">
-        TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
-      </if>
-      <if test="finprodMarketId != null">
-        FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
-      </if>
-      <if test="ps != null">
-        PS = #{ps,jdbcType=VARCHAR},
-      </if>
-      <if test="dealMode != null">
-        DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
-      </if>
-      <if test="counterId != null">
-        COUNTER_ID = #{counterId,jdbcType=VARCHAR},
-      </if>
-      <if test="counterName != null">
-        COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
-      </if>
-      <if test="counterSeat != null">
-        COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
-      </if>
-      <if test="counterTrader != null">
-        COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
-      </if>
-      <if test="counterInfo != null">
-        COUNTER_INFO = #{counterInfo,jdbcType=VARCHAR},
-      </if>
-      <if test="counterDealerId != null">
-        COUNTER_DEALER_ID = #{counterDealerId,jdbcType=VARCHAR},
-      </if>
-      <if test="appointmentNumber != null">
-        APPOINTMENT_NUMBER = #{appointmentNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="dealNo != null">
-        DEAL_NO = #{dealNo,jdbcType=VARCHAR},
-      </if>
-      <if test="trdMatchId != null">
-        TRD_MATCH_ID = #{trdMatchId,jdbcType=VARCHAR},
-      </if>
-      <if test="quoterefId != null">
-        QUOTEREF_ID = #{quoterefId,jdbcType=VARCHAR},
-      </if>
-      <if test="conShareId != null">
-        CON_SHARE_ID = #{conShareId,jdbcType=VARCHAR},
-      </if>
-      <if test="conPrice != null">
-        CON_PRICE = #{conPrice,jdbcType=NUMERIC},
-      </if>
-      <if test="conNum != null">
-        CON_NUM = #{conNum,jdbcType=NUMERIC},
-      </if>
-      <if test="tradeDate != null">
-        TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="vdate != null">
-        VDATE = #{vdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="mdate != null">
-        MDATE = #{mdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="entrustAmt != null">
-        ENTRUST_AMT = #{entrustAmt,jdbcType=NUMERIC},
-      </if>
-      <if test="entrustNum != null">
-        ENTRUST_NUM = #{entrustNum,jdbcType=NUMERIC},
-      </if>
-      <if test="entrustStatus != null">
-        ENTRUST_STATUS = #{entrustStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="entrustPrice != null">
-        ENTRUST_PRICE = #{entrustPrice,jdbcType=NUMERIC},
-      </if>
-      <if test="fullPrice != null">
-        FULL_PRICE = #{fullPrice,jdbcType=NUMERIC},
-      </if>
-      <if test="priceMode != null">
-        PRICE_MODE = #{priceMode,jdbcType=VARCHAR},
-      </if>
-      <if test="entrustLeftAmt != null">
-        ENTRUST_LEFT_AMT = #{entrustLeftAmt,jdbcType=NUMERIC},
-      </if>
-      <if test="frozenQuantity != null">
-        FROZEN_QUANTITY = #{frozenQuantity,jdbcType=NUMERIC},
-      </if>
-      <if test="settleSpeed != null">
-        SETTLE_SPEED = #{settleSpeed,jdbcType=NUMERIC},
-      </if>
-      <if test="valueDate != null">
-        VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="valueDate2 != null">
-        VALUE_DATE2 = #{valueDate2,jdbcType=TIMESTAMP},
-      </if>
-      <if test="maturityDate != null">
-        MATURITY_DATE = #{maturityDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="maturityDate2 != null">
-        MATURITY_DATE2 = #{maturityDate2,jdbcType=TIMESTAMP},
-      </if>
-      <if test="termDays != null">
-        TERM_DAYS = #{termDays,jdbcType=NUMERIC},
-      </if>
-      <if test="termDays2 != null">
-        TERM_DAYS2 = #{termDays2,jdbcType=NUMERIC},
-      </if>
-      <if test="purchType != null">
-        PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
-      </if>
-      <if test="saleCode != null">
-        SALE_CODE = #{saleCode,jdbcType=VARCHAR},
-      </if>
-      <if test="minAmt != null">
-        MIN_AMT = #{minAmt,jdbcType=NUMERIC},
-      </if>
-      <if test="tarFinprodId != null">
-        TAR_FINPROD_ID = #{tarFinprodId,jdbcType=VARCHAR},
-      </if>
-      <if test="tarinprodAbbr != null">
-        TARINPROD_ABBR = #{tarinprodAbbr,jdbcType=VARCHAR},
-      </if>
-      <if test="tarinprodMarketId != null">
-        TARINPROD_MARKET_ID = #{tarinprodMarketId,jdbcType=VARCHAR},
-      </if>
-      <if test="tradeId != null">
-        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
-      </if>
-      <if test="traderName != null">
-        TRADER_NAME = #{traderName,jdbcType=VARCHAR},
-      </if>
-      <if test="invManagerId != null">
-        INV_MANAGER_ID = #{invManagerId,jdbcType=VARCHAR},
-      </if>
-      <if test="assetType != null">
-        ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
-      </if>
-      <if test="assetType1 != null">
-        ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
-      </if>
-      <if test="assetType10 != null">
-        ASSET_TYPE10 = #{assetType10,jdbcType=VARCHAR},
-      </if>
-      <if test="assetType11 != null">
-          ASSET_TYPE11 = #{assetType11,jdbcType=VARCHAR},
-      </if>
+            </if>
+            <if test="finprodAbbr != null">
+                FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null">
+                FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null">
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="acctNo != null">
+                ACCT_NO = #{acctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null">
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="busiAcctNo != null">
+                BUSI_ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="acctName != null">
+                ACCT_NAME = #{acctName,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null">
+                SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctName != null">
+                SEC_ACCT_NAME = #{secAcctName,jdbcType=VARCHAR},
+            </if>
+            <if test="stockHolderNo != null">
+                STOCK_HOLDER_NO = #{stockHolderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null">
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePlat != null">
+                TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null">
+                FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null">
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMode != null">
+                DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="counterId != null">
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterName != null">
+                COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
+            </if>
+            <if test="counterSeat != null">
+                COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
+            </if>
+            <if test="counterTrader != null">
+                COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
+            </if>
+            <if test="counterInfo != null">
+                COUNTER_INFO = #{counterInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="counterDealerId != null">
+                COUNTER_DEALER_ID = #{counterDealerId,jdbcType=VARCHAR},
+            </if>
+            <if test="appointmentNumber != null">
+                APPOINTMENT_NUMBER = #{appointmentNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="dealNo != null">
+                DEAL_NO = #{dealNo,jdbcType=VARCHAR},
+            </if>
+            <if test="trdMatchId != null">
+                TRD_MATCH_ID = #{trdMatchId,jdbcType=VARCHAR},
+            </if>
+            <if test="quoterefId != null">
+                QUOTEREF_ID = #{quoterefId,jdbcType=VARCHAR},
+            </if>
+            <if test="conShareId != null">
+                CON_SHARE_ID = #{conShareId,jdbcType=VARCHAR},
+            </if>
+            <if test="conPrice != null">
+                CON_PRICE = #{conPrice,jdbcType=NUMERIC},
+            </if>
+            <if test="conNum != null">
+                CON_NUM = #{conNum,jdbcType=NUMERIC},
+            </if>
+            <if test="tradeDate != null">
+                TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="vdate != null">
+                VDATE = #{vdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mdate != null">
+                MDATE = #{mdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="entrustAmt != null">
+                ENTRUST_AMT = #{entrustAmt,jdbcType=NUMERIC},
+            </if>
+            <if test="entrustNum != null">
+                ENTRUST_NUM = #{entrustNum,jdbcType=NUMERIC},
+            </if>
+            <if test="entrustStatus != null">
+                ENTRUST_STATUS = #{entrustStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustPrice != null">
+                ENTRUST_PRICE = #{entrustPrice,jdbcType=NUMERIC},
+            </if>
+            <if test="fullPrice != null">
+                FULL_PRICE = #{fullPrice,jdbcType=NUMERIC},
+            </if>
+            <if test="priceMode != null">
+                PRICE_MODE = #{priceMode,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustLeftAmt != null">
+                ENTRUST_LEFT_AMT = #{entrustLeftAmt,jdbcType=NUMERIC},
+            </if>
+            <if test="frozenQuantity != null">
+                FROZEN_QUANTITY = #{frozenQuantity,jdbcType=NUMERIC},
+            </if>
+            <if test="settleSpeed != null">
+                SETTLE_SPEED = #{settleSpeed,jdbcType=NUMERIC},
+            </if>
+            <if test="valueDate != null">
+                VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="valueDate2 != null">
+                VALUE_DATE2 = #{valueDate2,jdbcType=TIMESTAMP},
+            </if>
+            <if test="maturityDate != null">
+                MATURITY_DATE = #{maturityDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="maturityDate2 != null">
+                MATURITY_DATE2 = #{maturityDate2,jdbcType=TIMESTAMP},
+            </if>
+            <if test="termDays != null">
+                TERM_DAYS = #{termDays,jdbcType=NUMERIC},
+            </if>
+            <if test="termDays2 != null">
+                TERM_DAYS2 = #{termDays2,jdbcType=NUMERIC},
+            </if>
+            <if test="purchType != null">
+                PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
+            </if>
+            <if test="saleCode != null">
+                SALE_CODE = #{saleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="minAmt != null">
+                MIN_AMT = #{minAmt,jdbcType=NUMERIC},
+            </if>
+            <if test="tarFinprodId != null">
+                TAR_FINPROD_ID = #{tarFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="tarinprodAbbr != null">
+                TARINPROD_ABBR = #{tarinprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="tarinprodMarketId != null">
+                TARINPROD_MARKET_ID = #{tarinprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null">
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="traderName != null">
+                TRADER_NAME = #{traderName,jdbcType=VARCHAR},
+            </if>
+            <if test="invManagerId != null">
+                INV_MANAGER_ID = #{invManagerId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null">
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType1 != null">
+                ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType10 != null">
+                ASSET_TYPE10 = #{assetType10,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType11 != null">
+                ASSET_TYPE11 = #{assetType11,jdbcType=VARCHAR},
+            </if>
             <if test="invAim != null">
                 INV_AIM = #{invAim,jdbcType=VARCHAR},
             </if>
@@ -1018,6 +1036,12 @@
             </if>
             <if test="busiTypeTg != null">
                 BUSI_TYPE_TG = #{busiTypeTg,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
         where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
@@ -1291,6 +1315,12 @@
             <if test="record.busiTypeTg != null">
                 BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
             </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
         </set>
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -1377,7 +1407,9 @@
         ENTRUST_BUSS_TYPE = #{record.entrustBussType,jdbcType=VARCHAR},
         DELIVERY_METHOD = #{record.deliveryMethod,jdbcType=VARCHAR},
         ENTRUST_CLASS = #{record.entrustClass,jdbcType=VARCHAR},
-        BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR}
+        BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -1462,7 +1494,9 @@
         ENTRUST_BUSS_TYPE = #{record.entrustBussType,jdbcType=VARCHAR},
         DELIVERY_METHOD = #{record.deliveryMethod,jdbcType=VARCHAR},
         ENTRUST_CLASS = #{record.entrustClass,jdbcType=VARCHAR},
-        BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR}
+        BUSI_TYPE_TG = #{record.busiTypeTg,jdbcType=VARCHAR},
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -1473,170 +1507,174 @@
     </update>
 
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.exchange.common.db.domain.Instruction">
-    update T_INSTRUCTION
-    set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
-      PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR},
-      FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
-      FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
-      FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
-      FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
-      ACCT_NO = #{acctNo,jdbcType=VARCHAR},
-      CCY = #{ccy,jdbcType=VARCHAR},
-      BUSI_ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR},
-      ACCT_NAME = #{acctName,jdbcType=VARCHAR},
-      SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
-      SEC_ACCT_NAME = #{secAcctName,jdbcType=VARCHAR},
-      STOCK_HOLDER_NO = #{stockHolderNo,jdbcType=VARCHAR},
-      TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
-      TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
-      FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
-      PS = #{ps,jdbcType=VARCHAR},
-      DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
-      COUNTER_ID = #{counterId,jdbcType=VARCHAR},
-      COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
-      COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
-      COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
-      COUNTER_INFO = #{counterInfo,jdbcType=VARCHAR},
-      COUNTER_DEALER_ID = #{counterDealerId,jdbcType=VARCHAR},
-      APPOINTMENT_NUMBER = #{appointmentNumber,jdbcType=VARCHAR},
-      DEAL_NO = #{dealNo,jdbcType=VARCHAR},
-      TRD_MATCH_ID = #{trdMatchId,jdbcType=VARCHAR},
-      QUOTEREF_ID = #{quoterefId,jdbcType=VARCHAR},
-      CON_SHARE_ID = #{conShareId,jdbcType=VARCHAR},
-      CON_PRICE = #{conPrice,jdbcType=NUMERIC},
-      CON_NUM = #{conNum,jdbcType=NUMERIC},
-      TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP},
-      VDATE = #{vdate,jdbcType=TIMESTAMP},
-      MDATE = #{mdate,jdbcType=TIMESTAMP},
-      ENTRUST_AMT = #{entrustAmt,jdbcType=NUMERIC},
-      ENTRUST_NUM = #{entrustNum,jdbcType=NUMERIC},
-      ENTRUST_STATUS = #{entrustStatus,jdbcType=VARCHAR},
-      ENTRUST_PRICE = #{entrustPrice,jdbcType=NUMERIC},
-      FULL_PRICE = #{fullPrice,jdbcType=NUMERIC},
-      PRICE_MODE = #{priceMode,jdbcType=VARCHAR},
-      ENTRUST_LEFT_AMT = #{entrustLeftAmt,jdbcType=NUMERIC},
-      FROZEN_QUANTITY = #{frozenQuantity,jdbcType=NUMERIC},
-      SETTLE_SPEED = #{settleSpeed,jdbcType=NUMERIC},
-      VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
-      VALUE_DATE2 = #{valueDate2,jdbcType=TIMESTAMP},
-      MATURITY_DATE = #{maturityDate,jdbcType=TIMESTAMP},
-      MATURITY_DATE2 = #{maturityDate2,jdbcType=TIMESTAMP},
-      TERM_DAYS = #{termDays,jdbcType=NUMERIC},
-      TERM_DAYS2 = #{termDays2,jdbcType=NUMERIC},
-      PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
-      SALE_CODE = #{saleCode,jdbcType=VARCHAR},
-      MIN_AMT = #{minAmt,jdbcType=NUMERIC},
-      TAR_FINPROD_ID = #{tarFinprodId,jdbcType=VARCHAR},
-      TARINPROD_ABBR = #{tarinprodAbbr,jdbcType=VARCHAR},
-      TARINPROD_MARKET_ID = #{tarinprodMarketId,jdbcType=VARCHAR},
-      TRADE_ID = #{tradeId,jdbcType=VARCHAR},
-      TRADER_NAME = #{traderName,jdbcType=VARCHAR},
-      INV_MANAGER_ID = #{invManagerId,jdbcType=VARCHAR},
-      ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
-      ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
-      ASSET_TYPE10 = #{assetType10,jdbcType=VARCHAR},
-      ASSET_TYPE11 = #{assetType11,jdbcType=VARCHAR},
-      INV_AIM = #{invAim,jdbcType=VARCHAR},
-      APPROVER_FLAGE = #{approverFlage,jdbcType=VARCHAR},
-      OUR_TRADER = #{ourTrader,jdbcType=VARCHAR},
-      IS_AUTO_RECEIVE = #{isAutoReceive,jdbcType=VARCHAR},
-      V_PAY_DATE = #{vPayDate,jdbcType=TIMESTAMP},
-      M_PAY_DATE = #{mPayDate,jdbcType=TIMESTAMP},
-      CAP_DAYS = #{capDays,jdbcType=NUMERIC},
-      M_INT_AMT = #{mIntAmt,jdbcType=NUMERIC},
-      M_TRADE_AMT = #{mTradeAmt,jdbcType=NUMERIC},
-      FIRST_REPO_PS = #{firstRepoPs,jdbcType=VARCHAR},
-      REMARK = #{remark,jdbcType=VARCHAR},
-      TRADERS_INFO = #{tradersInfo,jdbcType=CLOB},
-      DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
-      DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
-      ENTRUST_BUSS_TYPE = #{entrustBussType,jdbcType=VARCHAR},
-      DELIVERY_METHOD = #{deliveryMethod,jdbcType=VARCHAR},
-      ENTRUST_CLASS = #{entrustClass,jdbcType=VARCHAR},
-      BUSI_TYPE_TG = #{busiTypeTg,jdbcType=VARCHAR}
-    where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
-  </update>
+        update T_INSTRUCTION
+        set PORTFOLIO_ID        = #{portfolioId,jdbcType=VARCHAR},
+            PORTFOLIO_NAME      = #{portfolioName,jdbcType=VARCHAR},
+            FINPROD_ID          = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_ABBR        = #{finprodAbbr,jdbcType=VARCHAR},
+            FINPROD_NAME        = #{finprodName,jdbcType=VARCHAR},
+            FINPROD_TYPE2       = #{finprodType2,jdbcType=VARCHAR},
+            ACCT_NO             = #{acctNo,jdbcType=VARCHAR},
+            CCY                 = #{ccy,jdbcType=VARCHAR},
+            BUSI_ACCT_NO        = #{busiAcctNo,jdbcType=VARCHAR},
+            ACCT_NAME           = #{acctName,jdbcType=VARCHAR},
+            SEC_ACCT_ID         = #{secAcctId,jdbcType=VARCHAR},
+            SEC_ACCT_NAME       = #{secAcctName,jdbcType=VARCHAR},
+            STOCK_HOLDER_NO     = #{stockHolderNo,jdbcType=VARCHAR},
+            TRADE_MARKET        = #{tradeMarket,jdbcType=VARCHAR},
+            TRADE_PLAT          = #{tradePlat,jdbcType=VARCHAR},
+            FINPROD_MARKET_ID   = #{finprodMarketId,jdbcType=VARCHAR},
+            PS                  = #{ps,jdbcType=VARCHAR},
+            DEAL_MODE           = #{dealMode,jdbcType=VARCHAR},
+            COUNTER_ID          = #{counterId,jdbcType=VARCHAR},
+            COUNTER_NAME        = #{counterName,jdbcType=VARCHAR},
+            COUNTER_SEAT        = #{counterSeat,jdbcType=VARCHAR},
+            COUNTER_TRADER      = #{counterTrader,jdbcType=VARCHAR},
+            COUNTER_INFO        = #{counterInfo,jdbcType=VARCHAR},
+            COUNTER_DEALER_ID   = #{counterDealerId,jdbcType=VARCHAR},
+            APPOINTMENT_NUMBER  = #{appointmentNumber,jdbcType=VARCHAR},
+            DEAL_NO             = #{dealNo,jdbcType=VARCHAR},
+            TRD_MATCH_ID        = #{trdMatchId,jdbcType=VARCHAR},
+            QUOTEREF_ID         = #{quoterefId,jdbcType=VARCHAR},
+            CON_SHARE_ID        = #{conShareId,jdbcType=VARCHAR},
+            CON_PRICE           = #{conPrice,jdbcType=NUMERIC},
+            CON_NUM             = #{conNum,jdbcType=NUMERIC},
+            TRADE_DATE          = #{tradeDate,jdbcType=TIMESTAMP},
+            VDATE               = #{vdate,jdbcType=TIMESTAMP},
+            MDATE               = #{mdate,jdbcType=TIMESTAMP},
+            ENTRUST_AMT         = #{entrustAmt,jdbcType=NUMERIC},
+            ENTRUST_NUM         = #{entrustNum,jdbcType=NUMERIC},
+            ENTRUST_STATUS      = #{entrustStatus,jdbcType=VARCHAR},
+            ENTRUST_PRICE       = #{entrustPrice,jdbcType=NUMERIC},
+            FULL_PRICE          = #{fullPrice,jdbcType=NUMERIC},
+            PRICE_MODE          = #{priceMode,jdbcType=VARCHAR},
+            ENTRUST_LEFT_AMT    = #{entrustLeftAmt,jdbcType=NUMERIC},
+            FROZEN_QUANTITY     = #{frozenQuantity,jdbcType=NUMERIC},
+            SETTLE_SPEED        = #{settleSpeed,jdbcType=NUMERIC},
+            VALUE_DATE          = #{valueDate,jdbcType=TIMESTAMP},
+            VALUE_DATE2         = #{valueDate2,jdbcType=TIMESTAMP},
+            MATURITY_DATE       = #{maturityDate,jdbcType=TIMESTAMP},
+            MATURITY_DATE2      = #{maturityDate2,jdbcType=TIMESTAMP},
+            TERM_DAYS           = #{termDays,jdbcType=NUMERIC},
+            TERM_DAYS2          = #{termDays2,jdbcType=NUMERIC},
+            PURCH_TYPE          = #{purchType,jdbcType=VARCHAR},
+            SALE_CODE           = #{saleCode,jdbcType=VARCHAR},
+            MIN_AMT             = #{minAmt,jdbcType=NUMERIC},
+            TAR_FINPROD_ID      = #{tarFinprodId,jdbcType=VARCHAR},
+            TARINPROD_ABBR      = #{tarinprodAbbr,jdbcType=VARCHAR},
+            TARINPROD_MARKET_ID = #{tarinprodMarketId,jdbcType=VARCHAR},
+            TRADE_ID            = #{tradeId,jdbcType=VARCHAR},
+            TRADER_NAME         = #{traderName,jdbcType=VARCHAR},
+            INV_MANAGER_ID      = #{invManagerId,jdbcType=VARCHAR},
+            ASSET_TYPE          = #{assetType,jdbcType=VARCHAR},
+            ASSET_TYPE1         = #{assetType1,jdbcType=VARCHAR},
+            ASSET_TYPE10        = #{assetType10,jdbcType=VARCHAR},
+            ASSET_TYPE11        = #{assetType11,jdbcType=VARCHAR},
+            INV_AIM             = #{invAim,jdbcType=VARCHAR},
+            APPROVER_FLAGE      = #{approverFlage,jdbcType=VARCHAR},
+            OUR_TRADER          = #{ourTrader,jdbcType=VARCHAR},
+            IS_AUTO_RECEIVE     = #{isAutoReceive,jdbcType=VARCHAR},
+            V_PAY_DATE          = #{vPayDate,jdbcType=TIMESTAMP},
+            M_PAY_DATE          = #{mPayDate,jdbcType=TIMESTAMP},
+            CAP_DAYS            = #{capDays,jdbcType=NUMERIC},
+            M_INT_AMT           = #{mIntAmt,jdbcType=NUMERIC},
+            M_TRADE_AMT         = #{mTradeAmt,jdbcType=NUMERIC},
+            FIRST_REPO_PS       = #{firstRepoPs,jdbcType=VARCHAR},
+            REMARK              = #{remark,jdbcType=VARCHAR},
+            TRADERS_INFO        = #{tradersInfo,jdbcType=CLOB},
+            DERIVATIVE_BS_DIR   = #{derivativeBsDir,jdbcType=VARCHAR},
+            DERIVATIVE_OC_FLAG  = #{derivativeOcFlag,jdbcType=VARCHAR},
+            ENTRUST_BUSS_TYPE   = #{entrustBussType,jdbcType=VARCHAR},
+            DELIVERY_METHOD     = #{deliveryMethod,jdbcType=VARCHAR},
+            ENTRUST_CLASS       = #{entrustClass,jdbcType=VARCHAR},
+            BUSI_TYPE_TG        = #{busiTypeTg,jdbcType=VARCHAR},
+            CREATE_TIME         = #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_TIME         = #{updateTime,jdbcType=TIMESTAMP}
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.exchange.common.db.domain.Instruction">
-    update T_INSTRUCTION
-    set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
-      PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR},
-      FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
-      FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
-      FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
-      FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
-      ACCT_NO = #{acctNo,jdbcType=VARCHAR},
-      CCY = #{ccy,jdbcType=VARCHAR},
-      BUSI_ACCT_NO = #{busiAcctNo,jdbcType=VARCHAR},
-      ACCT_NAME = #{acctName,jdbcType=VARCHAR},
-      SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
-      SEC_ACCT_NAME = #{secAcctName,jdbcType=VARCHAR},
-      STOCK_HOLDER_NO = #{stockHolderNo,jdbcType=VARCHAR},
-      TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
-      TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
-      FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
-      PS = #{ps,jdbcType=VARCHAR},
-      DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
-      COUNTER_ID = #{counterId,jdbcType=VARCHAR},
-      COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
-      COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
-      COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
-      COUNTER_INFO = #{counterInfo,jdbcType=VARCHAR},
-      COUNTER_DEALER_ID = #{counterDealerId,jdbcType=VARCHAR},
-      APPOINTMENT_NUMBER = #{appointmentNumber,jdbcType=VARCHAR},
-      DEAL_NO = #{dealNo,jdbcType=VARCHAR},
-      TRD_MATCH_ID = #{trdMatchId,jdbcType=VARCHAR},
-      QUOTEREF_ID = #{quoterefId,jdbcType=VARCHAR},
-      CON_SHARE_ID = #{conShareId,jdbcType=VARCHAR},
-      CON_PRICE = #{conPrice,jdbcType=NUMERIC},
-      CON_NUM = #{conNum,jdbcType=NUMERIC},
-      TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP},
-      VDATE = #{vdate,jdbcType=TIMESTAMP},
-      MDATE = #{mdate,jdbcType=TIMESTAMP},
-      ENTRUST_AMT = #{entrustAmt,jdbcType=NUMERIC},
-      ENTRUST_NUM = #{entrustNum,jdbcType=NUMERIC},
-      ENTRUST_STATUS = #{entrustStatus,jdbcType=VARCHAR},
-      ENTRUST_PRICE = #{entrustPrice,jdbcType=NUMERIC},
-      FULL_PRICE = #{fullPrice,jdbcType=NUMERIC},
-      PRICE_MODE = #{priceMode,jdbcType=VARCHAR},
-      ENTRUST_LEFT_AMT = #{entrustLeftAmt,jdbcType=NUMERIC},
-      FROZEN_QUANTITY = #{frozenQuantity,jdbcType=NUMERIC},
-      SETTLE_SPEED = #{settleSpeed,jdbcType=NUMERIC},
-      VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
-      VALUE_DATE2 = #{valueDate2,jdbcType=TIMESTAMP},
-      MATURITY_DATE = #{maturityDate,jdbcType=TIMESTAMP},
-      MATURITY_DATE2 = #{maturityDate2,jdbcType=TIMESTAMP},
-      TERM_DAYS = #{termDays,jdbcType=NUMERIC},
-      TERM_DAYS2 = #{termDays2,jdbcType=NUMERIC},
-      PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
-      SALE_CODE = #{saleCode,jdbcType=VARCHAR},
-      MIN_AMT = #{minAmt,jdbcType=NUMERIC},
-      TAR_FINPROD_ID = #{tarFinprodId,jdbcType=VARCHAR},
-      TARINPROD_ABBR = #{tarinprodAbbr,jdbcType=VARCHAR},
-      TARINPROD_MARKET_ID = #{tarinprodMarketId,jdbcType=VARCHAR},
-      TRADE_ID = #{tradeId,jdbcType=VARCHAR},
-      TRADER_NAME = #{traderName,jdbcType=VARCHAR},
-      INV_MANAGER_ID = #{invManagerId,jdbcType=VARCHAR},
-      ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
-      ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
-      ASSET_TYPE10 = #{assetType10,jdbcType=VARCHAR},
-      ASSET_TYPE11 = #{assetType11,jdbcType=VARCHAR},
-      INV_AIM = #{invAim,jdbcType=VARCHAR},
-      APPROVER_FLAGE = #{approverFlage,jdbcType=VARCHAR},
-      OUR_TRADER = #{ourTrader,jdbcType=VARCHAR},
-      IS_AUTO_RECEIVE = #{isAutoReceive,jdbcType=VARCHAR},
-      V_PAY_DATE = #{vPayDate,jdbcType=TIMESTAMP},
-      M_PAY_DATE = #{mPayDate,jdbcType=TIMESTAMP},
-      CAP_DAYS = #{capDays,jdbcType=NUMERIC},
-      M_INT_AMT = #{mIntAmt,jdbcType=NUMERIC},
-      M_TRADE_AMT = #{mTradeAmt,jdbcType=NUMERIC},
-      FIRST_REPO_PS = #{firstRepoPs,jdbcType=VARCHAR},
-      REMARK = #{remark,jdbcType=VARCHAR},
-      DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
-      DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
-      ENTRUST_BUSS_TYPE = #{entrustBussType,jdbcType=VARCHAR},
-      DELIVERY_METHOD = #{deliveryMethod,jdbcType=VARCHAR},
-      ENTRUST_CLASS = #{entrustClass,jdbcType=VARCHAR},
-      BUSI_TYPE_TG = #{busiTypeTg,jdbcType=VARCHAR}
-    where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
-  </update>
+        update T_INSTRUCTION
+        set PORTFOLIO_ID        = #{portfolioId,jdbcType=VARCHAR},
+            PORTFOLIO_NAME      = #{portfolioName,jdbcType=VARCHAR},
+            FINPROD_ID          = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_ABBR        = #{finprodAbbr,jdbcType=VARCHAR},
+            FINPROD_NAME        = #{finprodName,jdbcType=VARCHAR},
+            FINPROD_TYPE2       = #{finprodType2,jdbcType=VARCHAR},
+            ACCT_NO             = #{acctNo,jdbcType=VARCHAR},
+            CCY                 = #{ccy,jdbcType=VARCHAR},
+            BUSI_ACCT_NO        = #{busiAcctNo,jdbcType=VARCHAR},
+            ACCT_NAME           = #{acctName,jdbcType=VARCHAR},
+            SEC_ACCT_ID         = #{secAcctId,jdbcType=VARCHAR},
+            SEC_ACCT_NAME       = #{secAcctName,jdbcType=VARCHAR},
+            STOCK_HOLDER_NO     = #{stockHolderNo,jdbcType=VARCHAR},
+            TRADE_MARKET        = #{tradeMarket,jdbcType=VARCHAR},
+            TRADE_PLAT          = #{tradePlat,jdbcType=VARCHAR},
+            FINPROD_MARKET_ID   = #{finprodMarketId,jdbcType=VARCHAR},
+            PS                  = #{ps,jdbcType=VARCHAR},
+            DEAL_MODE           = #{dealMode,jdbcType=VARCHAR},
+            COUNTER_ID          = #{counterId,jdbcType=VARCHAR},
+            COUNTER_NAME        = #{counterName,jdbcType=VARCHAR},
+            COUNTER_SEAT        = #{counterSeat,jdbcType=VARCHAR},
+            COUNTER_TRADER      = #{counterTrader,jdbcType=VARCHAR},
+            COUNTER_INFO        = #{counterInfo,jdbcType=VARCHAR},
+            COUNTER_DEALER_ID   = #{counterDealerId,jdbcType=VARCHAR},
+            APPOINTMENT_NUMBER  = #{appointmentNumber,jdbcType=VARCHAR},
+            DEAL_NO             = #{dealNo,jdbcType=VARCHAR},
+            TRD_MATCH_ID        = #{trdMatchId,jdbcType=VARCHAR},
+            QUOTEREF_ID         = #{quoterefId,jdbcType=VARCHAR},
+            CON_SHARE_ID        = #{conShareId,jdbcType=VARCHAR},
+            CON_PRICE           = #{conPrice,jdbcType=NUMERIC},
+            CON_NUM             = #{conNum,jdbcType=NUMERIC},
+            TRADE_DATE          = #{tradeDate,jdbcType=TIMESTAMP},
+            VDATE               = #{vdate,jdbcType=TIMESTAMP},
+            MDATE               = #{mdate,jdbcType=TIMESTAMP},
+            ENTRUST_AMT         = #{entrustAmt,jdbcType=NUMERIC},
+            ENTRUST_NUM         = #{entrustNum,jdbcType=NUMERIC},
+            ENTRUST_STATUS      = #{entrustStatus,jdbcType=VARCHAR},
+            ENTRUST_PRICE       = #{entrustPrice,jdbcType=NUMERIC},
+            FULL_PRICE          = #{fullPrice,jdbcType=NUMERIC},
+            PRICE_MODE          = #{priceMode,jdbcType=VARCHAR},
+            ENTRUST_LEFT_AMT    = #{entrustLeftAmt,jdbcType=NUMERIC},
+            FROZEN_QUANTITY     = #{frozenQuantity,jdbcType=NUMERIC},
+            SETTLE_SPEED        = #{settleSpeed,jdbcType=NUMERIC},
+            VALUE_DATE          = #{valueDate,jdbcType=TIMESTAMP},
+            VALUE_DATE2         = #{valueDate2,jdbcType=TIMESTAMP},
+            MATURITY_DATE       = #{maturityDate,jdbcType=TIMESTAMP},
+            MATURITY_DATE2      = #{maturityDate2,jdbcType=TIMESTAMP},
+            TERM_DAYS           = #{termDays,jdbcType=NUMERIC},
+            TERM_DAYS2          = #{termDays2,jdbcType=NUMERIC},
+            PURCH_TYPE          = #{purchType,jdbcType=VARCHAR},
+            SALE_CODE           = #{saleCode,jdbcType=VARCHAR},
+            MIN_AMT             = #{minAmt,jdbcType=NUMERIC},
+            TAR_FINPROD_ID      = #{tarFinprodId,jdbcType=VARCHAR},
+            TARINPROD_ABBR      = #{tarinprodAbbr,jdbcType=VARCHAR},
+            TARINPROD_MARKET_ID = #{tarinprodMarketId,jdbcType=VARCHAR},
+            TRADE_ID            = #{tradeId,jdbcType=VARCHAR},
+            TRADER_NAME         = #{traderName,jdbcType=VARCHAR},
+            INV_MANAGER_ID      = #{invManagerId,jdbcType=VARCHAR},
+            ASSET_TYPE          = #{assetType,jdbcType=VARCHAR},
+            ASSET_TYPE1         = #{assetType1,jdbcType=VARCHAR},
+            ASSET_TYPE10        = #{assetType10,jdbcType=VARCHAR},
+            ASSET_TYPE11        = #{assetType11,jdbcType=VARCHAR},
+            INV_AIM             = #{invAim,jdbcType=VARCHAR},
+            APPROVER_FLAGE      = #{approverFlage,jdbcType=VARCHAR},
+            OUR_TRADER          = #{ourTrader,jdbcType=VARCHAR},
+            IS_AUTO_RECEIVE     = #{isAutoReceive,jdbcType=VARCHAR},
+            V_PAY_DATE          = #{vPayDate,jdbcType=TIMESTAMP},
+            M_PAY_DATE          = #{mPayDate,jdbcType=TIMESTAMP},
+            CAP_DAYS            = #{capDays,jdbcType=NUMERIC},
+            M_INT_AMT           = #{mIntAmt,jdbcType=NUMERIC},
+            M_TRADE_AMT         = #{mTradeAmt,jdbcType=NUMERIC},
+            FIRST_REPO_PS       = #{firstRepoPs,jdbcType=VARCHAR},
+            REMARK              = #{remark,jdbcType=VARCHAR},
+            DERIVATIVE_BS_DIR   = #{derivativeBsDir,jdbcType=VARCHAR},
+            DERIVATIVE_OC_FLAG  = #{derivativeOcFlag,jdbcType=VARCHAR},
+            ENTRUST_BUSS_TYPE   = #{entrustBussType,jdbcType=VARCHAR},
+            DELIVERY_METHOD     = #{deliveryMethod,jdbcType=VARCHAR},
+            ENTRUST_CLASS       = #{entrustClass,jdbcType=VARCHAR},
+            BUSI_TYPE_TG        = #{busiTypeTg,jdbcType=VARCHAR},
+            CREATE_TIME         = #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_TIME         = #{updateTime,jdbcType=TIMESTAMP}
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </update>
 </mapper>

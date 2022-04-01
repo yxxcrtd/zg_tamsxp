@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.report.dao.PbcReportTemplateMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto" >
+        <id column="TEMPUUID" property="tempuuid" jdbcType="CHAR" />
+        <result column="TEMPLATEID" property="templateid" jdbcType="CHAR" />
+        <result column="PROPERTYID" property="propertyid" jdbcType="CHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="PROPERNAME" property="propername" jdbcType="VARCHAR" />
+        <result column="ORDERNO" property="orderno" jdbcType="DECIMAL" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+        <result column="REPORTCYCLE" property="reportcycle" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    TEMPUUID, TEMPLATEID, PROPERTYID, PROPERTYCODE, PROPERNAME, ORDERNO, REPORTTYPE,
+    GROUPTYPE, REPORTCYCLE, STATUS
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_REPORT_TEMPLATE
+        where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PBC_REPORT_TEMPLATE
+    where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto" >
+    insert into PBC_REPORT_TEMPLATE (TEMPUUID, TEMPLATEID, PROPERTYID,
+      PROPERTYCODE, PROPERNAME, ORDERNO,
+      REPORTTYPE, GROUPTYPE, REPORTCYCLE,
+      STATUS)
+    values (#{tempuuid,jdbcType=CHAR}, #{templateid,jdbcType=CHAR}, #{propertyid,jdbcType=CHAR},
+      #{propertycode,jdbcType=VARCHAR}, #{propername,jdbcType=VARCHAR}, #{orderno,jdbcType=DECIMAL},
+      #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, #{reportcycle,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto" >
+        insert into PBC_REPORT_TEMPLATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tempuuid != null" >
+                TEMPUUID,
+            </if>
+            <if test="templateid != null" >
+                TEMPLATEID,
+            </if>
+            <if test="propertyid != null" >
+                PROPERTYID,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="propername != null" >
+                PROPERNAME,
+            </if>
+            <if test="orderno != null" >
+                ORDERNO,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE,
+            </if>
+            <if test="reportcycle != null" >
+                REPORTCYCLE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tempuuid != null" >
+                #{tempuuid,jdbcType=CHAR},
+            </if>
+            <if test="templateid != null" >
+                #{templateid,jdbcType=CHAR},
+            </if>
+            <if test="propertyid != null" >
+                #{propertyid,jdbcType=CHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="propername != null" >
+                #{propername,jdbcType=VARCHAR},
+            </if>
+            <if test="orderno != null" >
+                #{orderno,jdbcType=DECIMAL},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="reportcycle != null" >
+                #{reportcycle,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto" >
+        update PBC_REPORT_TEMPLATE
+        <set >
+            <if test="templateid != null" >
+                TEMPLATEID = #{templateid,jdbcType=CHAR},
+            </if>
+            <if test="propertyid != null" >
+                PROPERTYID = #{propertyid,jdbcType=CHAR},
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="propername != null" >
+                PROPERNAME = #{propername,jdbcType=VARCHAR},
+            </if>
+            <if test="orderno != null" >
+                ORDERNO = #{orderno,jdbcType=DECIMAL},
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="reportcycle != null" >
+                REPORTCYCLE = #{reportcycle,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto" >
+    update PBC_REPORT_TEMPLATE
+    set TEMPLATEID = #{templateid,jdbcType=CHAR},
+      PROPERTYID = #{propertyid,jdbcType=CHAR},
+      PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      PROPERNAME = #{propername,jdbcType=VARCHAR},
+      ORDERNO = #{orderno,jdbcType=DECIMAL},
+      REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+      REPORTCYCLE = #{reportcycle,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR}
+    where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+  </update>
+
+    <select id="selectByReporttype" resultMap="BaseResultMap" parameterType="map" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_REPORT_TEMPLATE
+        where REPORTTYPE = #{reporttype,jdbcType=VARCHAR} AND STATUS =  #{status,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

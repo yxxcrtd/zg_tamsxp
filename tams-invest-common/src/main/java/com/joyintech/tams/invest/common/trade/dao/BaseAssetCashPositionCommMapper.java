@@ -44,7 +44,11 @@ public interface BaseAssetCashPositionCommMapper {
 
     List<PtlSecPositionFlow> selectAllPosition(String tradeId);
 
+    List<PtlSecPositionFlow> selectAllPositionByOffsetFlag(@Param("tradeId") String tradeId, @Param("offsetFlag") String offsetFlag);
+
     int deletePositionByTradeId(String tradeId);
+
+    int deleteEtrPositionByTradeId(String tradeId);
 
     void updateSecPositionAmt(PtlSecPositionFlow ptlSecPositionFlow);
 
@@ -73,6 +77,13 @@ public interface BaseAssetCashPositionCommMapper {
 
     /**
      * 数量反向
+     * @param tradeId
+     * @return
+     */
+    List<EtrSecPositionFlowDto> selectAllEtrPositionByOffsetFlag(@Param("tradeId") String tradeId, @Param("offsetFlag") String offsetFlag);
+
+    /**
+     * 数量反向
      * @param orderIds
      * @return
      */
@@ -97,5 +108,12 @@ public interface BaseAssetCashPositionCommMapper {
      * @return
      */
     String findPayTypeByProductId(String chlId);
+
+    /**
+     * 查询资金账户
+     * @param secAcctId
+     * @return
+     */
+    String queryAccountNo(@Param("secAcctId") String secAcctId);
 
 }

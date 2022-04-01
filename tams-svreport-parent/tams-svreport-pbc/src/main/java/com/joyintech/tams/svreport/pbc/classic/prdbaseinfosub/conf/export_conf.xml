@@ -49,7 +49,7 @@
 			<Cell order="45" name="分级产品标识">isConstracte</Cell>
 			<Cell order="46" name="收益权转让产品标识">transferType</Cell>
 			<Cell order="47" name="理财产品发起机构标识">identiFlag</Cell>
-			<Cell order="48" name="是否现金管理类">cashManaCate</Cell>
+			<Cell order="48" name="现金管理类产品标识">cashManaCate</Cell>
 			<Cell order="49" name="跨境理财通标识">crossBorderFlag</Cell>
 			<Cell order="50" name="以财产权信托名义开展的资金信托标识">zjxtFlag</Cell>
 		</Row>

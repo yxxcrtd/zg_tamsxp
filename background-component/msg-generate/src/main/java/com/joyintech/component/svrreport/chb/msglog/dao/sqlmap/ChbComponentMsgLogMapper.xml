@@ -48,19 +48,6 @@
             )
     </insert>
 
-    <insert id="insertChbSubmitStatus" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
-        insert into CHB_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
-            SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
-            CREATE_USER, CREATE_TIME, REPORT_NO,
-            SUBMIT_FEEDBACK_MSG, UNIQUE_IDENTI, CREATE_DEPT
-            )
-        values (#{seqno,jdbcType=VARCHAR}, #{submitNum,jdbcType=VARCHAR}, #{submitType,jdbcType=VARCHAR},
-            #{submitFeedbackStatus,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
-            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{reportNo,jdbcType=VARCHAR},
-            #{submitFeedbackMsg,jdbcType=VARCHAR}, #{uniqueIdenti,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}
-            )
-    </insert>
-
     <insert id="insertChbSubmitStatusTwo" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
         insert into CHB_SUBMIT_STATUS_TWO (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
             SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,

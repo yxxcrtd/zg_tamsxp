@@ -1,6 +1,6 @@
 
 --组合持仓公式配置表
---drop table "PTL_POSITION_CFG";
+drop table "PTL_POSITION_CFG";
 CREATE TABLE "PTL_POSITION_CFG"
 (
     "SEQNO" VARCHAR2(100),

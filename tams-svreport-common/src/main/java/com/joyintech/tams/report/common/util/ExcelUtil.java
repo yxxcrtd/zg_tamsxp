@@ -63,7 +63,7 @@ public class ExcelUtil {
      * @param file 文件
      * @param sheetIndex 工作表索引(下标从0开始)
      * @return 读取结果列表
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     @SuppressWarnings("deprecation")
     public static List<List<String>> readToList(File file, int sheetIndex) throws FileNotFoundException{
@@ -82,7 +82,7 @@ public class ExcelUtil {
                 boolean dataFlag = true;
                 for (int c = 0; c < cells; c++ ) {
                     if (row.getCell(c) == null
-                        || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
+                            || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
                         r.add("");
                     }
                     else {
@@ -183,7 +183,7 @@ public class ExcelUtil {
      * @param skipRows 跳过的表头(行数)
      * @param titleRow 表头序号(下标从0开始)
      * @return 读取结果列表
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     @SuppressWarnings("deprecation")
     public static List<List<String>> readToList(String fileName, File file,
@@ -199,7 +199,7 @@ public class ExcelUtil {
             // 列标题为空的话结束
             for (int c = 0; c < cells; c++ ) {
                 if (tRow.getCell(c) == null
-                    || StringUtil.isEmpty(getStringCellValue(tRow.getCell(c)))) {
+                        || StringUtil.isEmpty(getStringCellValue(tRow.getCell(c)))) {
                     cells = c;
                     break;
                 }
@@ -214,7 +214,7 @@ public class ExcelUtil {
                 boolean dataFlag = true;
                 for (int c = 0; c < cells; c++ ) {
                     if (row.getCell(c) == null
-                        || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
+                            || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
                         r.add("");
                     }
                     else {
@@ -247,7 +247,7 @@ public class ExcelUtil {
             case NUMERIC: // 数字
                 if (HSSFDateUtil.isCellDateFormatted(cell)) {
                     value = DateUtil.format(cell.getDateCellValue(),
-                        DateUtil.DEFAULT_ANOTHER_FORMAT);
+                            DateUtil.DEFAULT_ANOTHER_FORMAT);
                     return value;
                 }
                 value = POINT.format(cell.getNumericCellValue());
@@ -282,55 +282,55 @@ public class ExcelUtil {
      * @param file 文件
      * @param inputStream
      * @return wb
-     * @throws FileNotFoundException,BusinessException 
+     * @throws FileNotFoundException,BusinessException
      */
-    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream) 
+    public static Workbook loadWorkbook(String fileName, File file, InputStream inputStream)
             throws FileNotFoundException{
         Workbook wb = null;
-		try {
-			if (null == file && StringUtil.isEmpty(fileName)) {
-			    return null;
-			}
-			if (inputStream == null) {
-			    if (null == file) {
-			        file = new File(fileName);
-			    }
-			    if (StringUtil.isEmpty(fileName)) {
-			        fileName = file.getName();
-			    }
-			    inputStream = new FileInputStream(file);
-			}
+        try {
+            if (null == file && StringUtil.isEmpty(fileName)) {
+                return null;
+            }
+            if (inputStream == null) {
+                if (null == file) {
+                    file = new File(fileName);
+                }
+                if (StringUtil.isEmpty(fileName)) {
+                    fileName = file.getName();
+                }
+                inputStream = new FileInputStream(file);
+            }
 
-			if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
-			    try (POIFSFileSystem fs = new POIFSFileSystem(inputStream)){                
-			        wb = new HSSFWorkbook(fs);
-			    }
-			    catch (Exception e) {
-			        logger.error(e.getMessage(),e);
-			    }
+            if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
+                try (POIFSFileSystem fs = new POIFSFileSystem(inputStream)){
+                    wb = new HSSFWorkbook(fs);
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(),e);
+                }
 
-			}
-			else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
-			    try {
-			        wb = new XSSFWorkbook(inputStream);
-			    }
-			    catch (Exception e) {
-			        logger.error(e.getMessage(),e);
-			    }
-			}
-			else {
-			    throw new BusinessException("不是一个有效的Excel文件");
-			}
-		} finally {
-			try {
-            	if(inputStream !=null)
-            		inputStream.close();
-            	if(wb !=null)
-            		wb.close();
+            }
+            else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
+                try {
+                    wb = new XSSFWorkbook(inputStream);
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            else {
+                throw new BusinessException("不是一个有效的Excel文件");
+            }
+        } finally {
+            try {
+                if(inputStream !=null)
+                    inputStream.close();
+                if(wb !=null)
+                    wb.close();
             } catch (IOException e) {
-            	logger.error(e.getMessage(),e);
-             }
-		}
+                logger.error(e.getMessage(),e);
+            }
+        }
         return wb;
     }
 
@@ -341,7 +341,7 @@ public class ExcelUtil {
      * @param file 文件
      * @param sheetIndex 工作表索引(下标从0开始)
      * @return sheet名称
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     public static String getSheetName(String fileName, File file, InputStream inputStream,
                                       int sheetIndex) throws FileNotFoundException {
@@ -374,7 +374,7 @@ public class ExcelUtil {
         List<List<String>> tempDataList;
         try {
             tempDataList = ExcelUtil.readToList(
-                FileNameUtil.getUploadFilePath(flieName), null, null, 0, 0, 0);
+                    FileNameUtil.getUploadFilePath(flieName), null, null, 0, 0, 0);
         }
         catch (FileNotFoundException e) {
             logger.error(e.getMessage(),e);
@@ -401,7 +401,7 @@ public class ExcelUtil {
 
         return null;
     }
-    
+
     /**
      * 检查Excel模板是否正确
      *
@@ -437,53 +437,53 @@ public class ExcelUtil {
 
         return null;
     }
-    
+
     public static List<List<String>> getDataList(String fileName){
         List<List<String>> dataList = null;
         try {
             dataList = ExcelUtil.readToList(
-                FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 0);
+                    FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 0);
         } catch (FileNotFoundException e1) {
             logger.error(e1.getMessage(),e1);
         }
         return dataList;
     }
-    
+
     public static List<List<String>> getDataList1(String fileName){
         List<List<String>> dataList = null;
         try {
             dataList = ExcelUtil.readToList(
-                fileName, null, null, 0, 1, 0);
+                    fileName, null, null, 0, 1, 0);
         } catch (FileNotFoundException e1) {
             logger.error(e1.getMessage(),e1);
         }
         return dataList;
     }
-    
+
     public static List<List<String>> getTempList(String fileName){
         List<List<String>> dataList = null;
         try {
             dataList = ExcelUtil.readToList(
                     FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
-            
+
         } catch (FileNotFoundException e1) {
             logger.error(e1.getMessage(),e1);
         }
         return dataList;
     }
-    
+
     public static List<List<String>> getTempList1(String fileName){
         List<List<String>> dataList = null;
         try {
             dataList = ExcelUtil.readToList(
                     fileName, null, null, 0, 0, 0);
-            
+
         } catch (FileNotFoundException e1) {
             logger.error(e1.getMessage(),e1);
         }
         return dataList;
     }
-    
+
     public static List<List<String>> getDataList2(String fileName){
         List<List<String>> dataList = null;
         try {
@@ -494,5 +494,5 @@ public class ExcelUtil {
         }
         return dataList;
     }
-    
+
 }

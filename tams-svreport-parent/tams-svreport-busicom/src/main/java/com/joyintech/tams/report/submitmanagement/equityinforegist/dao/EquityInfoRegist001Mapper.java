@@ -157,6 +157,10 @@ public interface EquityInfoRegist001Mapper {
      * @since 1.0
      */
     int deleteSubmitRegist(List<EquityInfoRegist001Dto> list);
+
+ /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+    /*****
     /**
      * 批量插入报送状态表
      * @param list 报送状态
@@ -164,7 +168,20 @@ public interface EquityInfoRegist001Mapper {
      * @see
      * @since 1.0
      */
-    int insertSubmitStatus(List<ChbSubmitStatus> list);
+//    int insertSubmitStatus(List<ChbSubmitStatus> list);
+
+
+   /**
+    * 批量插入报送状态表
+    * @param list 报送状态
+    * @return 插入条数
+    * @see
+    * @since 1.0
+    */
+   int updateChbEquSubSubmitStatus(List<ChbSubmitStatus> list);
+ /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
+   /******/
 
     /**
      * 批量更新报送状态表为中债通过
