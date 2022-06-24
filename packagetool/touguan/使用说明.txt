@@ -1,6 +1,0 @@
-在CMD中执行package命令，语法如下：
-    package.bat maven_setting_xml_path
-
-    示例：package.bat D:\install\development\apache-maven-3.5.4\conf\settings-joyin-new.xml
-	
-生成的jar包: jar目录下

@@ -559,7 +559,7 @@
                 sub.REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
             </foreach>-->
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                sub.TERMID = #{regist.termid,jdbcType=CHAR}
+                sub.TERMID = #{regist.termid,jdbcType=CHAR} and sub.PBC_ACCOUNT_ID is null
             </foreach>
         </where>
     </update>
@@ -678,8 +678,8 @@
         from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open=" and (" close=")" separator=") or (">
-                TERMID = #{regist.termid}
+            <foreach collection="registList" item="regist" open=" and ((" close="))" separator=") or (">
+                TERMID = #{regist.termid}  and PBC_ACCOUNT_ID is null
                 <if test="null!=regist.orgCode and regist.orgCode != ''">
                     and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
                 </if>
@@ -1065,4 +1065,22 @@
         </where>
     </update>
 
+    <update id="cancelMannultRegistForOnePrd" parameterType="java.util.Map">
+        update PBC_REPORT
+        <set>
+            SEND_STATUS = '01',
+            UPDATE_TIME = sysdate,
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                REPORTUUID = #{dto.reportuuid}
+                <if test="null!=dto.orgCode and dto.orgCode != ''">
+                    and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                </if>
+
+            </foreach>
+        </where>
+    </update>
 </mapper>

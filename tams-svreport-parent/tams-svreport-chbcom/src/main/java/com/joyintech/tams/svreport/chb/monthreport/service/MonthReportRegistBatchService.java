@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.joyintech.tams.svreport.chb.subsidiamonthreport.service.SubsidiaMonthReportRegistBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,12 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
     private MonthReportProdService monthReportProdService;
     @Autowired
     private MonthReportAssetService monthReportAssetService;
+
+    @Autowired
+    private SubsidiaMonthReportRegistBatchService subsidiaMonthReportRegistBatchService;
+
+
+
     @Transactional(rollbackFor = Exception.class)
 	public void genReport(Date executeDate,List<String> prodids,boolean ifTrigger){
         // 设置批处理bean
@@ -171,6 +178,12 @@ public class MonthReportRegistBatchService  extends SvrCBBaseService{
         
         //生成资产端月报明细
     	monthReportAssetService.genReport(report,ifTrigger);
+
+
+        /** 中债理财子公司月度统计表-报表生成(从宁银批处理中拆出来放到该逻辑中) modify by yanya on 20210511 start**/
+        subsidiaMonthReportRegistBatchService.genReport(executeDate, prodids, ifTrigger);
+        /** 中债理财子公司月度统计表-报表生成(从宁银批处理中拆出来放到该逻辑中) modify by yanya on 20210511 end**/
+
         // 批处理结束
         logInfoBatchEnd();
 	}

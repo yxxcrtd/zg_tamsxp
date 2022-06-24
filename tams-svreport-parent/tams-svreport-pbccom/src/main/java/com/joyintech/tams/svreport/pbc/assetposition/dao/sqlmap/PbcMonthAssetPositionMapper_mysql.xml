@@ -34,10 +34,12 @@
     <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
     <result column="IS_NEED_REFLECT" property="isNeedReflect" jdbcType="VARCHAR" />
     <result column="PAYDATE" property="payDate" jdbcType="DATE" />
+    <result column="YQ_FLAG" property="yqFlag" jdbcType="VARCHAR" />
+    <result column="RATING" property="rating" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, ORG_CODE, POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2,
-    ASSET_TYPE3, STARTDATE, ENDDATE, BOOKDATE, CCY, AMT, INT_AMT, END_DAYS, BAL_FLAG
+    ASSET_TYPE3, STARTDATE, ENDDATE, BOOKDATE, CCY, AMT, INT_AMT, END_DAYS, BAL_FLAG,RATING
   </sql>
   <resultMap id="BaseResultMapAsset" type="com.joyintech.tams.common.base.entity.ChbAssetInfo">
     <id column="ASSET_UUID" jdbcType="CHAR" property="assetUuid" />
@@ -298,6 +300,9 @@
       <if test="balFlag != null" >
         BAL_FLAG,
       </if>
+      <if test="rating != null" >
+        RATING,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="posuuid != null" >
@@ -350,6 +355,9 @@
       </if>
       <if test="balFlag != null" >
         #{balFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="rating != null" >
+        #{rating,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -404,6 +412,9 @@
       <if test="balFlag != null" >
         BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
       </if>
+      <if test="rating != null" >
+        RATING = #{rating,jdbcType=VARCHAR},
+      </if>
     </set>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
@@ -424,7 +435,8 @@
       AMT = #{amt,jdbcType=DECIMAL},
       INT_AMT = #{intAmt,jdbcType=DECIMAL},
       END_DAYS = #{endDays,jdbcType=DECIMAL},
-      BAL_FLAG = #{balFlag,jdbcType=VARCHAR}
+      BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+    RATING = #{rating,jdbcType=VARCHAR}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
 
@@ -476,7 +488,7 @@
     AND OPENRULE.OPEN_TYPE IN ('01','03')/*防止申赎俩条影响*/
     LEFT JOIN (
     SELECT
-    OPENSCH.OPEN_DATE_STR OPEN_DATE_STR,
+    DISTINCT OPENSCH.OPEN_DATE_STR OPEN_DATE_STR,
     OPENSCH.FINPROD_ID FINPROD_ID
     from (
     /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
@@ -487,7 +499,7 @@
     WHERE OPLAN.BRANCH = 0
     AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
     ) OPENSCH
-    where 1 = 1 limit 1
+    where OPENSCH.ranknum = 1
     ) OPENPLAN/*开放计划*/
     ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
     WHERE 1 =1
@@ -561,7 +573,7 @@
     AND OPENRULE.OPEN_TYPE IN ('01','03')/*防止申赎俩条影响*/
     LEFT JOIN (
     SELECT
-    OPENSCH.OPEN_DATE_STR OPEN_DATE_STR,
+    DISTINCT OPENSCH.OPEN_DATE_STR OPEN_DATE_STR,
     OPENSCH.FINPROD_ID FINPROD_ID
     from (
     /*下一开放起始日取值逻辑：OPEN_START>报表结束日期，按照OPEN_START升序排序并且去重，取第一个日期，若取不到，则取产品到期日*/
@@ -572,7 +584,7 @@
     WHERE OPLAN.BRANCH = 0
     AND DATE_FORMAT(OPLAN.OPEN_DATE_STR,'%Y-%m-%d') &gt; #{reportEndDate,jdbcType=VARCHAR}
     ) OPENSCH
-    where 1 = 1 limit 1
+    where OPENSCH.ranknum = 1
     ) OPENPLAN/*开放计划*/
     ON OPENPLAN.FINPROD_ID = PROD.FINPROD_ID
     WHERE 1 =1
@@ -723,7 +735,30 @@
 
   <select id="selectAssetByStatus" parameterType="java.util.Map" resultMap="BaseResultMapAsset">
     select
-    <include refid="Base_Column_List_Asset" />
+    ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, TRADE_MARKET, VDATE, MDATE,
+    DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT, TARGET_TYPE, TARGET,
+    ASSET_ID, ASSET_NAME, CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE, PARTY_TYPE1, PARTY_TYPE3,
+    PARTY_TYPE2, INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG, REGISTORG_COMMENT, RIVAL_PARTY,
+    TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE, IS_RESALE, TERM_DATE, RATE_FLAG,
+    INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE, FLOAT_FACTOR, SPREAD_RATE, FINANCIE, FIN_ORG_CODE,
+    FCR_GRADE_IN, FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3, FINANCE_PROJ,
+    INDUSTRY1, INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, INDUSTRY_FLAG,
+    MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE, IN_GRADE,
+    OUT_GRADE, CHOSE, CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT, NOTSTAND_SEC_TYPE,
+    NOTSTAND_SEC_NUM, REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE, INDUSTRY_SHARES,
+    INDUSTRY_SHARES2, INVEST_STAGE, SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3, IS_PLEDGE,
+    NOM_CAPI, TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT, SPECIAL_CMT, CONTRACT_NAME,
+    INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1,
+    MAX_YIELD, MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE, TRADE_FEE, PARTY_CODE, CHECK_CODE,
+    MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE, PLAN_EDATE,
+    PRO_PROPERTY, MAX_RATE, MIN_RATE, DEBT_SCALE, BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM,
+    MGR_FEE_RATE, TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE,
+    REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET, IN_ASSET_TYPE, IN_ASSET_TYPE_CMM,
+    REMARK, IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE,
+    STATUS, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DEPT_CODE, ORG_CODE,
+    DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE,
+    CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE, SEC_MAIN_GRADE, BLN_AREA,
+    INDUSTRY_PBC, CUSTOMER_OBJ_TYPE, BUY_PLACE,ORG_ASSET_TYPE1,INSTIT_SIZE
     from CHB_ASSET_INFO
     where 1 =1
     <if test="statusList != null and statusList.size() > 0">
@@ -877,7 +912,7 @@
         and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
         ) de where 1=1 and my_rank= 1
         ) a
-        on assetinfo.FINANCIE=a.ASSET_CODE
+        on assetinfo.CHB_ISSUER_ID=a.ASSET_CODE
         left join  (
         SELECT asset_code,rating FROM (
         select
@@ -904,7 +939,7 @@
         and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
         ) de  where 1=1 and my_rank= 1
         ) b
-        on assetinfo.FINANCIE=b.ASSET_CODE
+        on assetinfo.CHB_ISSUER_ID=b.ASSET_CODE
       </when>
       <otherwise>
         left join (

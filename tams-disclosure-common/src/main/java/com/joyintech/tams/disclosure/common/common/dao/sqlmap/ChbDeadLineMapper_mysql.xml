@@ -2,65 +2,65 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.common.common.dao.ChbDeadLineMapper_mysql">
 	<select id="getChbDeadline" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
-     	select deadline1.*
-     	from(select LIMIT num, deadline.* from(
+     	select deadline1.* from (
 	       SELECT
-		  A.BUSI_DATE busiDate,
-		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
+			  A.BUSI_DATE busiDate,
+			  A.MARKET_CODE marketCode,
+			  A.IS_HOLIDAY isHoliday,
+			  A.STATUS status,
+			  A.DEPT_CODE deptCode,
+			  row_number() over (partition by A.MARKET_CODE
+				<if test="type !=null and type == '01'.toString()">
+					order by A.BUSI_DATE desc
+				</if>
+				<if test="type !=null and type == '02'.toString()">
+					order by A.BUSI_DATE asc
+				</if>
+		  	  ) as num
 		 FROM CHB_MKT_HOLIDAY A
-		 <where>
-		 	<if test="type !=null and type == '01'.toString()">
-	           	A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-	         	<if test="type !=null and type == '02'.toString()">
-	           	A.BUSI_DATE &gt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
-		 	AND A.IS_HOLIDAY = '1'
-		 </where>
-		 	<if test="type !=null and type == '01'.toString()">
-	           	order by A.BUSI_DATE desc
-	        </if>
-	        <if test="type !=null and type == '02'.toString()">
-	           	order by A.BUSI_DATE asc
-	        </if>
-		 )deadline
-		 )deadline1
+			 <where>
+				<if test="type !=null and type == '01'.toString()">
+					A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+					</if>
+					<if test="type !=null and type == '02'.toString()">
+					A.BUSI_DATE &gt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+					</if>
+				AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+				AND A.STATUS = 'E'
+				AND A.IS_HOLIDAY = '1'
+			 </where>
+		 ) deadline1
 		 where deadline1.num = #{days,jdbcType=INTEGER}
     </select>
 	<select id="getChbDeadlineZero" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
-     	select deadline1.*
-     	from(select LIMIT num,deadline.* from(
+     	select deadline1.* from (
 	       SELECT
-		  A.BUSI_DATE busiDate,
-		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
-		 FROM CHB_MKT_HOLIDAY A
-		 <where>
-	        <if test="type !=null and type == '01'.toString()">
-	           	A.BUSI_DATE &lt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-	         	<if test="type !=null and type == '02'.toString()">
-	           	A.BUSI_DATE &gt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
-		 	AND A.IS_HOLIDAY = '1'
-		 </where>
-		 	<if test="type !=null and type == '01'.toString()">
-	           	order by A.BUSI_DATE desc
-	        </if>
-	        <if test="type !=null and type == '02'.toString()">
-	           	order by A.BUSI_DATE asc
-	        </if>
-		 )deadline
-		 )deadline1
+			  A.BUSI_DATE busiDate,
+			  A.MARKET_CODE marketCode,
+			  A.IS_HOLIDAY isHoliday,
+			  A.STATUS status,
+			  A.DEPT_CODE deptCode,
+			  row_number() over (partition by A.MARKET_CODE
+				<if test="type !=null and type == '01'.toString()">
+					order by A.BUSI_DATE desc
+				</if>
+				<if test="type !=null and type == '02'.toString()">
+					order by A.BUSI_DATE asc
+				</if>
+			  ) as num
+		   FROM CHB_MKT_HOLIDAY A
+				 <where>
+					<if test="type !=null and type == '01'.toString()">
+						A.BUSI_DATE &lt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+						</if>
+						<if test="type !=null and type == '02'.toString()">
+						A.BUSI_DATE &gt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+						</if>
+					AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+					AND A.STATUS = 'E'
+					AND A.IS_HOLIDAY = '1'
+				 </where>
+		 ) deadline1
 		 where deadline1.num = 1
     </select>
 	<select id="getJESHLARGESHDATE" resultType="java.util.Date">
@@ -133,65 +133,65 @@
 
   </select>
 	<select id="getInfoDeadline" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
-     	select deadline1.*
-     	from(select LIMIT num, deadline.* from(
+     	select deadline1.* from (
 	       SELECT
-		  A.BUSI_DATE busiDate,
-		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
-		 FROM CHB_MKT_HOLIDAY A
-		 <where>
-		 	<if test="type !=null and type == '01'.toString()">
-	           	A.BUSI_DATE &gt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-	         	<if test="type !=null and type == '02'.toString()">
-	           	A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
-		 	AND A.IS_HOLIDAY = '1'
-		 </where>
-		 	<if test="type !=null and type == '01'.toString()">
-	           	order by A.BUSI_DATE asc
-	        </if>
-	        <if test="type !=null and type == '02'.toString()">
-	           	order by A.BUSI_DATE desc
-	        </if>
-		 )deadline
-		 )deadline1
+			  A.BUSI_DATE busiDate,
+			  A.MARKET_CODE marketCode,
+			  A.IS_HOLIDAY isHoliday,
+			  A.STATUS status,
+			  A.DEPT_CODE deptCode,
+			  row_number() over (partition by A.MARKET_CODE
+			  <if test="type !=null and type == '01'.toString()">
+				order by A.BUSI_DATE asc
+			  </if>
+			  <if test="type !=null and type == '02'.toString()">
+				order by A.BUSI_DATE desc
+			  </if>
+			  ) as num
+		   FROM CHB_MKT_HOLIDAY A
+			 <where>
+				<if test="type !=null and type == '01'.toString()">
+					A.BUSI_DATE &gt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+					</if>
+					<if test="type !=null and type == '02'.toString()">
+					A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+					</if>
+				AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+				AND A.STATUS = 'E'
+				AND A.IS_HOLIDAY = '1'
+			 </where>
+		 ) deadline1
 		 where deadline1.num = #{days,jdbcType=INTEGER}
     </select>
 	<select id="getInfoDeadlineZero" resultType="com.joyintech.tams.disclosure.common.common.dto.ChbDeadLine001Dto" >
-     	select deadline1.*
-     	from(select LIMIT num,deadline.* from(
+     	select deadline1.* from (
 	       SELECT
-		  A.BUSI_DATE busiDate,
-		  A.MARKET_CODE marketCode,
-		  A.IS_HOLIDAY isHoliday,
-		  A.STATUS status,
-		  A.DEPT_CODE deptCode
-		 FROM CHB_MKT_HOLIDAY A
-		 <where>
-	        <if test="type !=null and type == '02'.toString()">
-	           	A.BUSI_DATE &lt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-	         	<if test="type !=null and type == '01'.toString()">
-	           	A.BUSI_DATE &gt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
-	         	</if>
-		 	AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
-		 	AND A.STATUS = 'E'
-		 	AND A.IS_HOLIDAY = '1'
-		 </where>
-		 	<if test="type !=null and type == '02'.toString()">
-	           	order by A.BUSI_DATE desc
-	        </if>
-	        <if test="type !=null and type == '01'.toString()">
-	           	order by A.BUSI_DATE asc
-	        </if>
-		 )deadline
-		 )deadline1
+			  A.BUSI_DATE busiDate,
+			  A.MARKET_CODE marketCode,
+			  A.IS_HOLIDAY isHoliday,
+			  A.STATUS status,
+			  A.DEPT_CODE deptCode,
+			  row_number() over (partition by A.MARKET_CODE
+			  <if test="type !=null and type == '02'.toString()">
+				order by A.BUSI_DATE desc
+			  </if>
+			  <if test="type !=null and type == '01'.toString()">
+				order by A.BUSI_DATE asc
+			  </if>
+			  ) as num
+		   FROM CHB_MKT_HOLIDAY A
+			 <where>
+				<if test="type !=null and type == '02'.toString()">
+					A.BUSI_DATE &lt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+					</if>
+					<if test="type !=null and type == '01'.toString()">
+					A.BUSI_DATE &gt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+					</if>
+				AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
+				AND A.STATUS = 'E'
+				AND A.IS_HOLIDAY = '1'
+			 </where>
+		 ) deadline1
 		 where deadline1.num = 1
     </select>
 </mapper>

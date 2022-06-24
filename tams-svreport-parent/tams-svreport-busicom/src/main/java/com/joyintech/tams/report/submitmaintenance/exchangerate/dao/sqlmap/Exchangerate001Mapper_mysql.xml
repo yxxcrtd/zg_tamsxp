@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitmaintenance.exchangerate.dao.Exchangerate001Mapper_mysql">
-    <!-- 汇率行情列表数据查询 -->
-    <select id="queryForPage" resultType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto">
-        SELECT
-        A.STATUS status,
-        A.STATUS statusName,
-        A.CCY_ORIGINAL ccyOriginal,
-        A.CCY_ORIGINAL ccyOriginalName,
-        A.CCY_CONVERT ccyConvert,
-        A.CCY_CONVERT ccyConvertName,
-        A.PUBLISH_DATE publishDate,
-        A.EXCHANGE_PRICE exchangePrice,
-        A.EXCHANGE_PRICE exchangeRate
-        FROM CHB_MST_EXCHANGE_INFO A
-        <where>
-            <!-- dingzhipeng edit 2017-10-11 start -->
-            <!-- 查询条件变更 -->
-            <!-- 币种 -->
-            <if test="ccyOriginalList != null and ccyOriginalList.size() > 0">
-                <foreach collection="ccyOriginalList" item="ccyOriginal" open=" A.CCY_ORIGINAL IN (" close=")" separator=",">
-                    #{ccyOriginal}
-                </foreach>
-            </if>
-            <!-- 折算币种 -->
-            <if test="ccyConvertList != null and ccyConvertList.size() > 0">
-                <foreach collection="ccyConvertList" item="ccyConvert" open="AND A.CCY_CONVERT IN (" close=")" separator=",">
-                    #{ccyConvert}
-                </foreach>
-            </if>
-            <if test="publishDateStart != null and publishDateStart != ''">
-                AND A.PUBLISH_DATE &gt;= STR_TO_DATE(#{publishDateStart,jdbcType=DATE},'%Y-%m-%d')
-                <!-- /*AND A.PUBLISH_DATE = STR_TO_DATE(#{publishDate},'%Y-%m-%d')*/ -->
-            </if>
-            <if test="publishDateEnd != null and publishDateEnd != ''">
-                AND A.PUBLISH_DATE &lt;= STR_TO_DATE(#{publishDateEnd,jdbcType=DATE},'%Y-%m-%d')
-                <!-- /*AND A.PUBLISH_DATE = STR_TO_DATE(#{publishDate},'%Y-%m-%d')*/ -->
-            </if>
-            <!-- dingzhipeng edit 2017-10-11 end -->
-            <!-- 选中导出使用的参数 -->
-            <if test="keys != null and keys.size() > 0">
-                <foreach collection="keys" item="key" open=" AND concat_ws('',A.CCY_ORIGINAL,  '|', A.CCY_CONVERT, '|', DATE_FORMAT(A.PUBLISH_DATE,'%Y-%m-%d'), '|', A.STATUS) IN (" close=")" separator=",">
-                    #{key,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-        ORDER BY A.PUBLISH_DATE DESC
-    </select>
-    <insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto" >
+	<!-- 汇率行情列表数据查询 -->
+	<select id="queryForPage" resultType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto">
+		SELECT
+		  A.STATUS status,
+		  A.STATUS statusName,
+		  A.CCY_ORIGINAL ccyOriginal,
+		  A.CCY_ORIGINAL ccyOriginalName,
+		  A.CCY_CONVERT ccyConvert,
+		  A.CCY_CONVERT ccyConvertName,
+		  A.PUBLISH_DATE publishDate,
+		  A.EXCHANGE_PRICE exchangePrice,
+		  A.EXCHANGE_PRICE exchangeRate
+		 FROM CHB_MST_EXCHANGE_INFO A
+		 <where>
+		 <!-- dingzhipeng edit 2017-10-11 start -->
+		 <!-- 查询条件变更 -->
+		 <!-- 币种 -->
+			 <if test="ccyOriginalList != null and ccyOriginalList.size() > 0">
+		 		<foreach collection="ccyOriginalList" item="ccyOriginal" open=" A.CCY_ORIGINAL IN (" close=")" separator=",">
+		 	 		#{ccyOriginal}
+		 		</foreach>
+			 </if>
+			 <!-- 折算币种 -->
+			 <if test="ccyConvertList != null and ccyConvertList.size() > 0">
+		 		<foreach collection="ccyConvertList" item="ccyConvert" open="AND A.CCY_CONVERT IN (" close=")" separator=",">
+		 	 		#{ccyConvert}
+		 		</foreach>
+			 </if>
+		 	<if test="publishDateStart != null and publishDateStart != ''">
+	           AND A.PUBLISH_DATE &gt;= STR_TO_DATE(#{publishDateStart,jdbcType=DATE},'%Y-%m-%d')
+	           <!-- /*AND A.PUBLISH_DATE = STR_TO_DATE(#{publishDate},'%Y-%m-%d')*/ -->
+		 	</if>
+		 	<if test="publishDateEnd != null and publishDateEnd != ''">
+	           AND A.PUBLISH_DATE &lt;= STR_TO_DATE(#{publishDateEnd,jdbcType=DATE},'%Y-%m-%d')
+	           <!-- /*AND A.PUBLISH_DATE = STR_TO_DATE(#{publishDate},'%Y-%m-%d')*/ -->
+		 	</if>
+		 	<!-- dingzhipeng edit 2017-10-11 end -->
+             <!-- 选中导出使用的参数 -->
+             <if test="keys != null and keys.size() > 0">
+                 <foreach collection="keys" item="key" open=" AND concat_ws('',A.CCY_ORIGINAL,  '|', A.CCY_CONVERT, '|', DATE_FORMAT(A.PUBLISH_DATE,'%Y-%m-%d'), '|', A.STATUS) IN (" close=")" separator=",">
+                     #{key,jdbcType=VARCHAR}
+                 </foreach>
+             </if>
+		 </where>
+		 ORDER BY A.PUBLISH_DATE DESC
+	</select>			
+	<insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto" >
         insert into CHB_MST_EXCHANGE_INFO
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="status != null" >
@@ -87,18 +87,18 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto" >
         update CHB_MST_EXCHANGE_INFO
         <set >
-            <if test="status != null" >
+        	<if test="status != null" >
                 STATUS = #{status,jdbcType=VARCHAR},
             </if>
-            <if test="exchangePrice != null" >
+        	<if test="exchangePrice != null" >
                 IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
             </if>
         </set>
         where CCY_ORIGINAL = #{ccyOriginal,jdbcType=VARCHAR}
-        and CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
-        and STATUS ='E'
-        <!-- and PUBLISH_DATE= #{publishDate,jdbcType=DATE} -->
-        and DATE_FORMAT(PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{publishDate,jdbcType=DATE}, '%Y-%m-%d')
+        	and CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
+        	and STATUS ='E'
+        	<!-- and PUBLISH_DATE= #{publishDate,jdbcType=DATE} -->
+        	and DATE_FORMAT(PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{publishDate,jdbcType=DATE}, '%Y-%m-%d')
     </update>
     <select id="getInfoDataByPrimaryKey" resultType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate002Dto">
         SELECT
@@ -116,69 +116,69 @@
             <if test="ccyConvert != null and ccyConvert != ''">
                 AND A.CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
             </if>
-            <!-- AND A.PUBLISH_DATE=#{publishDate,jdbcType=DATE} -->
-            AND DATE_FORMAT(A.PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{publishDate,jdbcType=DATE}, '%Y-%m-%d')
-            AND A.STATUS=#{status,jdbcType=VARCHAR}
+               <!-- AND A.PUBLISH_DATE=#{publishDate,jdbcType=DATE} -->
+               AND DATE_FORMAT(A.PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{publishDate,jdbcType=DATE}, '%Y-%m-%d')
+               AND A.STATUS=#{status,jdbcType=VARCHAR}
         </where>
     </select>
     <select id="isExist" resultType="java.lang.Integer" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate002Dto">
-        SELECT
-        count(1)
-        from CHB_MST_EXCHANGE_INFO mei
-        where mei.CCY_ORIGINAL=#{ccyOriginal}
-        and mei.CCY_CONVERT= #{ccyConvert}
-        <!-- and mei.PUBLISH_DATE=STR_TO_DATE(#{publishDate},'%Y-%m-%d') -->
-        and DATE_FORMAT(mei.PUBLISH_DATE, '%Y-%m-%d') = #{publishDate}
-        and mei.STATUS='E'
+    SELECT
+    	count(1)
+    from CHB_MST_EXCHANGE_INFO mei
+    where mei.CCY_ORIGINAL=#{ccyOriginal}
+    and mei.CCY_CONVERT= #{ccyConvert}
+    <!-- and mei.PUBLISH_DATE=STR_TO_DATE(#{publishDate},'%Y-%m-%d') -->
+    and DATE_FORMAT(mei.PUBLISH_DATE, '%Y-%m-%d') = #{publishDate}
+    and mei.STATUS='E'
     </select>
-    <delete id="deleteData" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto">
+   	<delete id="deleteData" parameterType="com.joyintech.tams.report.submitmaintenance.exchangerate.dto.Exchangerate001Dto">
         delete CHB_MST_EXCHANGE_INFO
         where CCY_ORIGINAL = #{ccyOriginal,jdbcType=VARCHAR}
-        and CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
-        and STATUS ='E'
-        <!-- and PUBLISH_DATE= #{publishDate,jdbcType=DATE} -->
-        and DATE_FORMAT(PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{publishDate,jdbcType=DATE}, '%Y-%m-%d')
+        	and CCY_CONVERT = #{ccyConvert,jdbcType=VARCHAR}
+        	and STATUS ='E'
+        	<!-- and PUBLISH_DATE= #{publishDate,jdbcType=DATE} -->
+        	and DATE_FORMAT(PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{publishDate,jdbcType=DATE}, '%Y-%m-%d')
     </delete>
-
+    
     <select id="selectDataCount" resultType="java.lang.Integer" parameterType="java.util.List">
         select
-        count(1)
+            count(1)
         from
-        CHB_MST_EXCHANGE_INFO mei
+            CHB_MST_EXCHANGE_INFO mei
         where
-        mei.STATUS = 'E'
-        <foreach collection="keylist" index="index" item="item" open="and (" separator="or" close=")">
-            (
-            mei.CCY_ORIGINAL = #{item.ccyOriginal,jdbcType=VARCHAR}
-            and mei.CCY_CONVERT = #{item.ccyConvert,jdbcType=VARCHAR}
-            and DATE_FORMAT(mei.PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{item.publishDate,jdbcType=DATE}, '%Y-%m-%d')
-            )
-        </foreach>
+            mei.STATUS = 'E'
+            <foreach collection="keylist" index="index" item="item" open="and (" separator="or" close=")">
+             (
+                mei.CCY_ORIGINAL = #{item.ccyOriginal,jdbcType=VARCHAR}
+                and mei.CCY_CONVERT = #{item.ccyConvert,jdbcType=VARCHAR}
+                and DATE_FORMAT(mei.PUBLISH_DATE, '%Y-%m-%d') = DATE_FORMAT(#{item.publishDate,jdbcType=DATE}, '%Y-%m-%d')
+             )
+            </foreach>
     </select>
     <select id="selectNewRate" resultType="java.math.BigDecimal">
-        select
-        <choose>
-            <when test="pricetype == '01'">
-                cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-            </when>
-            <when test="pricetype == '02'">
-                cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-            </when>
-            <when test="pricetype == '03'">
-                cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-            </when>
-            <when test="pricetype == '04'">
-                cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-            </when>
-            <otherwise >
-                cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-            </otherwise>
-        </choose>
-        from MST_EXCHARGE_QUOTE cmei
-        where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
-        and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
-        and cmei.DATASOURCE_TYPE = 'SAFE'
-        AND cmei.TRADE_DATE=
-        ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
-    </select>
+    select
+		<choose>
+		<when test="pricetype == '01'">
+			cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '02'">
+			cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '03'">
+			cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '04'">
+			cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<otherwise >
+			cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</otherwise>
+		</choose>
+		 from MST_EXCHARGE_QUOTE cmei
+		 		 where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
+			 	 and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
+		 		 and cmei.DATASOURCE_TYPE = 'SAFE'
+		 		 AND cmei.TRADE_DATE=
+		 	     ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
+		 </select>
 </mapper>

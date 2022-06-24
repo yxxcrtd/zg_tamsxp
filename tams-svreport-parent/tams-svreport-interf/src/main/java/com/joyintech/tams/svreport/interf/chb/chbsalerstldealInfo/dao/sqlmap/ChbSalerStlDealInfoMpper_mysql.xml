@@ -99,9 +99,7 @@
         ) de
         ) AS B
         SET
-         A.PRD_REGIST_CODE = B.PRD_REGIST_CODE
-        ,A.ACCOUNT_NO = B.ACCOUNT_NO
-        ,A.REGIST_SEQNO                  = B.REGIST_SEQNO
+         A.REGIST_SEQNO                  = B.REGIST_SEQNO
         ,A.DATA_STATUS                   = B.DATA_STATUS
         ,A.ACCOUNT_NAME                  = B.ACCOUNT_NAME
         ,A.TRADE_PS                      = B.TRADE_PS

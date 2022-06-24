@@ -40,6 +40,12 @@
       <result column="SUNASSETTYPE" property="sunassettype" jdbcType="VARCHAR" />
       <result column="SUNASSETTYPE2" property="sunassettype2" jdbcType="VARCHAR" />
       <result column="OLD_ASSET_CODE" property="oldAssetCode" jdbcType="VARCHAR" />
+      <result column="BANK_CAPITAL" property="bankCapital" jdbcType="VARCHAR" />
+      <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+
+
+
+
 
 
   </resultMap>
@@ -469,9 +475,9 @@
         <choose>
           <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
               left join a
-              on info.FINANCIE=a.ASSET_CODE
+              on info.CHB_ISSUER_ID=a.ASSET_CODE
               left join b
-              on info.FINANCIE=b.ASSET_CODE
+              on info.CHB_ISSUER_ID=b.ASSET_CODE
           </when>
           <otherwise>
               left join a
@@ -545,9 +551,9 @@
         <choose>
           <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
               left join a
-              on info.FINANCIE=a.ASSET_CODE
+              on info.CHB_ISSUER_ID=a.ASSET_CODE
               left join b
-              on info.FINANCIE=b.ASSET_CODE
+              on info.CHB_ISSUER_ID=b.ASSET_CODE
           </when>
           <otherwise>
               left join a
@@ -580,20 +586,22 @@
   </select>
   
     <select id="selectPlanDeal" resultMap="PlanResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
-		select PLAN_ASSET_ID
-        ,TOTAL_NUM
-		,ISSUE_AMT
-		,asset_code
-		,POS_NUM
-		,POS_AMT
-		,POS_DATE
-		,ISFINAPLAN
+		select pos.PLAN_ASSET_ID
+        ,pos.TOTAL_NUM
+		,pos.ISSUE_AMT
+		,pos.asset_code
+		,pos.POS_NUM
+		,pos.POS_AMT
+		,pos.POS_DATE
+		,pos.ISFINAPLAN
 		,#{accuamt} ACCUAMT
-		from CHB_BOT_AST_POS
-    	where PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR}
-    	and POS_DATE=#{posDate,jdbcType=DATE}
-    	and status !='D'
-        and asset_code!='REMAININGCASH'
+		from CHB_BOT_AST_POS pos
+		left join CHB_ASSET_INFO info  on  pos.asset_code=info.asset_code
+    	where pos.PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR}
+    	and  pos.POS_DATE=#{posDate,jdbcType=DATE}
+    	and  pos.status !='D'
+    	and  info.status!='D'
+        and  pos.asset_code!='REMAININGCASH'
     	
   	</select>
   	<select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
@@ -618,9 +626,9 @@
         <choose>
             <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
                 left join a
-                on info.FINANCIE=a.ASSET_CODE
+                on info.CHB_ISSUER_ID=a.ASSET_CODE
                 left join b
-                on info.FINANCIE=b.ASSET_CODE
+                on info.CHB_ISSUER_ID=b.ASSET_CODE
             </when>
             <otherwise>
                 left join a
@@ -758,7 +766,9 @@
         ASSETINFO.IS_FBZB,
         ASSETINFO.BANK_SEC_KZZQ,
         POSITION.IS_FHXGCP,
-        POSITION.OLD_ASSET_CODE
+        POSITION.OLD_ASSET_CODE,
+        ASSETINFO.BANK_CAPITAL,
+        ASSETINFO.SHARES_TYPE
         /*G06改造新加字段*/
         from CHB_MONTH_ASSET_POSITION POSITION
         LEFT JOIN CHB_ASSET_INFO ASSETINFO
@@ -1046,7 +1056,7 @@
             ${getProductRatingOrderSqlByZt}
         </if>
         )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
+        )bestRatingZt on bestRatingZt.OCODE = info.CHB_ISSUER_ID
         where 1=1
         and prd.PROFIT_TYPE='03'
 		/****资产负债表中1.9.5统计错误***/
@@ -1124,7 +1134,7 @@
             ${getProductRatingOrderSqlByZt}
         </if>
         )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
+        )bestRatingZt on bestRatingZt.OCODE = info.CHB_ISSUER_ID
         where 1=1
         and info.status !='D'
         and info.ASSET_CODE=#{assetCode,jdbcType=CHAR}
@@ -1199,7 +1209,7 @@
             ${getProductRatingOrderSqlByZt}
         </if>
         )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
+        )bestRatingZt on bestRatingZt.OCODE = info.CHB_ISSUER_ID
         where 1=1
         and prd.PROFIT_TYPE='03'
         and pos.trade_type in ('01','02') /*直投交易,通道交易,资管计划交易*/
@@ -1265,7 +1275,7 @@
             ${getProductRatingOrderSqlByZt}
         </if>
         )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
+        )bestRatingZt on bestRatingZt.OCODE = info.CHB_ISSUER_ID
         where 1=1
         and info.status !='D'
         group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},

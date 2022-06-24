@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao.ChbBokSubjectDao">
+
+	<insert id="insert" parameterType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
+		MERGE INTO  BOK_SUBJECT a USING (
+		SELECT
+			#{booksetId} BOOKSET_ID,
+			#{subjectNo} SUBJECT_NO,
+			#{subjectName} SUBJECT_NAME,
+			#{fsubjectId} FSUBJECT_ID,
+			#{subjectType} SUBJECT_TYPE,
+			#{subjectLevel} SUBJECT_LEVEL,
+			#{balFlag} BAL_FLAG,
+			#{dataSource} DATA_SOURCE,
+			#{status} STATUS,
+			#{remark} REMARK,
+			#{errMsg} ERR_MSG,
+			#{createUser} CREATE_USER,
+			#{createDept} CREATE_DEPT,
+			#{createTime} CREATE_TIME,
+			#{updateUser} UPDATE_USER,
+			#{updateTime} UPDATE_TIME
+		FROM  DUAL
+		) b
+		    ON (a.BOOKSET_ID = b.BOOKSET_ID AND a.SUBJECT_NO = b.SUBJECT_NO)
+			WHEN MATCHED THEN
+		    UPDATE SET
+		        a.SUBJECT_NAME = b.SUBJECT_NAME,
+		        a.FSUBJECT_ID = b.FSUBJECT_ID,
+		        a.SUBJECT_TYPE = b.SUBJECT_TYPE,
+		        a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+		        a.BAL_FLAG = b.BAL_FLAG,
+		        a.STATUS = b.STATUS,
+				a.REMARK = b.REMARK,
+				a.ERR_MSG = b.ERR_MSG,
+				a.UPDATE_USER = b.UPDATE_USER,
+				a.UPDATE_TIME = b.UPDATE_TIME
+			WHEN NOT MATCHED THEN
+			INSERT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,BAL_FLAG,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+			VALUES(b.BOOKSET_ID,b.SUBJECT_NO,b.SUBJECT_NAME,b.FSUBJECT_ID,b.SUBJECT_TYPE,b.SUBJECT_LEVEL,b.BAL_FLAG,b.DATA_SOURCE,b.STATUS,b.REMARK,b.ERR_MSG,b.CREATE_USER,b.CREATE_DEPT,b.CREATE_TIME,b.UPDATE_USER,b.UPDATE_TIME)
+	</insert>
+	<insert id="batchInsert" parameterType="java.util.List">
+		MERGE INTO  BOK_SUBJECT a USING (
+		<foreach collection="list" item="item" open="select * from("
+				 close=")" separator="union all">
+			SELECT
+			#{item.booksetId} BOOKSET_ID,
+			#{item.subjectNo} SUBJECT_NO,
+			#{item.subjectName} SUBJECT_NAME,
+			#{item.fsubjectId} FSUBJECT_ID,
+			#{item.subjectType} SUBJECT_TYPE,
+			#{item.subjectLevel} SUBJECT_LEVEL,
+			#{item.balFlag} BAL_FLAG,
+			#{item.dataSource} DATA_SOURCE,
+			#{item.status} STATUS,
+			#{item.remark} REMARK,
+			#{item.errMsg} ERR_MSG,
+			#{item.createUser} CREATE_USER,
+			#{item.createDept} CREATE_DEPT,
+			#{item.createTime} CREATE_TIME,
+			#{item.updateUser} UPDATE_USER,
+			#{item.updateTime} UPDATE_TIME
+			FROM  DUAL
+		</foreach>
+			) b
+			ON (a.BOOKSET_ID = b.BOOKSET_ID AND a.SUBJECT_NO = b.SUBJECT_NO)
+			WHEN MATCHED THEN
+		UPDATE SET
+			a.SUBJECT_NAME = b.SUBJECT_NAME,
+			a.FSUBJECT_ID = b.FSUBJECT_ID,
+			a.SUBJECT_TYPE = b.SUBJECT_TYPE,
+			a.SUBJECT_LEVEL = b.SUBJECT_LEVEL,
+			a.BAL_FLAG = b.BAL_FLAG,
+			a.STATUS = b.STATUS,
+			a.REMARK = b.REMARK,
+			a.ERR_MSG = b.ERR_MSG,
+			a.UPDATE_USER = b.UPDATE_USER,
+			a.UPDATE_TIME = b.UPDATE_TIME
+			WHEN NOT MATCHED THEN
+		INSERT(BOOKSET_ID,SUBJECT_NO,SUBJECT_NAME,FSUBJECT_ID,SUBJECT_TYPE,SUBJECT_LEVEL,BAL_FLAG,DATA_SOURCE,STATUS,REMARK,ERR_MSG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+		VALUES(b.BOOKSET_ID,b.SUBJECT_NO,b.SUBJECT_NAME,b.FSUBJECT_ID,b.SUBJECT_TYPE,b.SUBJECT_LEVEL,b.BAL_FLAG,b.DATA_SOURCE,b.STATUS,b.REMARK,b.ERR_MSG,b.CREATE_USER,b.CREATE_DEPT,b.CREATE_TIME,b.UPDATE_USER,b.UPDATE_TIME)
+	</insert>
+	<update id="update">
+		update BOK_SUBJECT
+		<trim prefix="set" suffixOverrides=",">
+			<if test="subjectName !=null and subjectName !=''">
+				SUBJECT_NAME = #{subjectName},
+			</if>
+			<if test="fsubjectId !=null and fsubjectId !=''">
+				FSUBJECT_ID = #{fsubjectId},
+			</if>
+			<if test="subjectType !=null and subjectType !=''">
+				SUBJECT_TYPE = #{subjectType},
+			</if>
+			<if test="subjectLevel !=null and subjectLevel !=''">
+				SUBJECT_LEVEL = #{subjectLevel},
+			</if>
+			<if test="balFlag !=null and balFlag !=''">
+				BAL_FLAG = #{balFlag},
+			</if>
+			<if test="status !=null and status !=''">
+				STATUS = #{status},
+			</if>
+			<if test="remark !=null and remark !=''">
+				REMARK = #{remark},
+			</if>
+			<if test="updateUser !=null and updateUser !=''">
+				UPDATE_USER = #{updateUser},
+			</if>
+			<if test="updateTime !=null">
+				UPDATE_TIME = #{updateTime}
+			</if>
+		</trim>
+		<where>
+			<if test="subjectNo!=null and subjectNo!=''">
+				SUBJECT_NO = #{subjectNo}
+			</if>
+			<if test="booksetId!=null and booksetId!=''">
+				AND BOOKSET_ID = #{booksetId}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectAll" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
+		select
+			BS.BOOKSET_ID as booksetId,
+			BS.SUBJECT_NO as subjectNo,
+			BS.SUBJECT_NAME as subjectName,
+			BS.FSUBJECT_ID as fsubjectId,
+			BS.SUBJECT_TYPE as subjectType,
+			BS.SUBJECT_LEVEL as subjectLevel,
+			BS.BAL_FLAG as balFlag,
+			BS.CREATE_USER as createUser,
+			BS.CREATE_DEPT as createDept,
+			BS.CREATE_TIME as createTime,
+			BS.UPDATE_USER as updateUser,
+			BS.UPDATE_TIME as updateTime,
+			BS.UPDATE_TIME as updateDate,
+		    BS.DATA_SOURCE as dataSource,
+			BS.STATUS as statusValid,
+			BS.REMARK as remark,
+		    BS.ERR_MSG as errMsg
+		from BOK_SUBJECT BS
+		<where>
+			<if test="subjectLevel != null and subjectLevel != ''">
+				BS.SUBJECT_LEVEL = #{subjectLevel}
+			</if>
+			<if test="balFlag != null and balFlag != ''">
+				AND BS.BAL_FLAG = #{balFlag}
+			</if>
+			<if test="fsubjectId != null and fsubjectId != ''">
+				AND BS.FSUBJECT_ID = #{fsubjectId} 
+			</if>
+			<if test="subjectNo != null and subjectNo != ''">
+                AND BS.SUBJECT_NO like #{subjectNo} || '%'
+            </if>
+            <if test="subjectName != null and subjectName != ''">
+                AND BS.SUBJECT_NAME like '%' || #{subjectName} || '%'
+            </if>
+            <if test="subjectType != null and subjectType != ''">
+                AND BS.SUBJECT_TYPE = #{subjectType}
+            </if>
+			<if test="status != null and status != ''">
+				AND BS.STATUS = #{status}
+			</if>
+		</where>
+		order by BS.BOOKSET_ID,BS.SUBJECT_NO,BS.SUBJECT_LEVEL
+	</select>
+
+	
+
+	<select id="getSubjectId" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT SUBJECT_NO code,SUBJECT_NAME name,SUBJECT_NAME shortName,SUBJECT_NO hidCode,SUBJECT_NAME linkValue FROM BOK_SUBJECT
+	</select>
+
+    <select id="getSubjectId2" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT 
+               DISTINCT SUBJECT_NO id,
+               SUBJECT_NAME text
+          FROM BOK_SUBJECT
+          <where>
+              <if test="subjectLevel !=null and  subjectLevel !='' ">
+                  to_number(subject_level) = #{subjectLevel}
+              </if>
+              <if test="search !=null and  search !='' ">
+                AND SUBJECT_NO like '%' || #{search} || '%'
+
+              </if>
+          </where>
+          order by SUBJECT_NO 
+    </select>
+    <select id="getSubjectLevel" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT 
+               DISTINCT SUBJECT_LEVEL id,
+               SUBJECT_LEVEL text
+          FROM BOK_SUBJECT
+          <where>
+              <if test="subjectNo !=null and  subjectNo !='' ">
+                  to_number(subject_level) <![CDATA[ >= ]]> 
+                  (
+	                  select DISTINCT to_number(SUBJECT_LEVEL)  
+	                  from BOK_SUBJECT
+	                  where SUBJECT_NO = #{subjectNo}
+                  )
+              </if>
+              <if test="search !=null and  search !='' ">
+                AND SUBJECT_LEVEL = #{search}
+              </if>
+          </where>
+          order by SUBJECT_LEVEL 
+    </select>
+	<select id="getFSubjectId" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT DISTINCT A.SUBJECT_NO code,A.SUBJECT_NAME name,A.SUBJECT_NAME shortName,A.SUBJECT_NO hidCode,A.SUBJECT_NAME linkValue
+		FROM BOK_SUBJECT A
+		LEFT JOIN BOK_SUBJECT B ON
+			A.SUBJECT_NO = B.FSUBJECT_ID
+		WHERE B.SUBJECT_NO IS NOT NULL
+	</select>
+
+
+	<select id="checkExists" resultType="java.lang.Integer">
+		select count(1) from BOK_SUBJECT where BOOKSET_ID = #{booksetId} and SUBJECT_NO = #{subjectNo}
+	</select>
+    <select id="getSubjectName" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT
+		DISTINCT
+		SUBJECT_NAME id,
+		SUBJECT_NAME text
+		FROM BOK_SUBJECT
+		<where>
+			<if test="subjectLevel !=null and  subjectLevel !='' ">
+				to_number(subject_level) = #{subjectLevel}
+			</if>
+			<if test="search !=null and  search !='' ">
+				AND SUBJECT_NAME like '%' || #{search} || '%'
+			</if>
+		</where>
+		order by SUBJECT_NAME
+	</select>
+    <select id="isExists" resultType="java.lang.Integer">
+		select count(*) from BOK_SUBJECT where BOOKSET_ID = #{booksetId} AND SUBJECT_NO = #{subjectNo} AND STATUS IN ('A','E')
+	</select>
+	<select id="selcetByKey" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
+		select
+		    BS.BOOKSET_ID as booksetId,
+			BS.SUBJECT_NO as subjectNo,
+			BS.SUBJECT_NAME as subjectName,
+			BS.FSUBJECT_ID as fsubjectId,
+
+		    BS.SUBJECT_TYPE as subjectType,
+			BS.SUBJECT_LEVEL as subjectLevel,
+			BS.BAL_FLAG as balFlag,
+			BS.CREATE_USER as createUser,
+			BS.CREATE_DEPT as createDept,
+			BS.CREATE_TIME as createTime,
+			BS.UPDATE_USER as updateUser,
+			BS.UPDATE_TIME as updateTime,
+			BS.UPDATE_TIME as updateDate,
+			BS.DATA_SOURCE as dataSource,
+			BS.STATUS as statusValid,
+			BS.REMARK as remark,
+			BS.ERR_MSG as errMsg
+		from BOK_SUBJECT BS
+		<where>
+			<if test="subjectNo!=null and subjectNo!=''">
+				SUBJECT_NO = #{subjectNo}
+			</if>
+			<if test="booksetId!=null and booksetId!=''">
+				AND BOOKSET_ID = #{booksetId}
+			</if>
+		</where>
+	</select>
+    <select id="selectValidRecords" resultType="java.lang.Integer">
+		select count(*) from  BOK_SUBJECT where
+		(BOOKSET_ID,SUBJECT_NO) in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			(#{item.BOOKSET_ID},#{item.SUBJECT_NO})
+		</foreach>
+		and STATUS in ('A','E')
+	</select>
+</mapper>

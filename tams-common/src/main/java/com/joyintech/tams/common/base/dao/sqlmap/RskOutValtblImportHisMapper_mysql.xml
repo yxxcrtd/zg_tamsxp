@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
+        <id column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+        <id column="PORTFOLIO_NAME" property="portfolioName" jdbcType="VARCHAR" />
+        <id column="VALDATE" property="valdate" jdbcType="DATE" />
+        <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="IMPDATE" property="impdate" jdbcType="DATE" />
+        <result column="IMPORT_TYPE" property="importType" jdbcType="VARCHAR" />
+        <result column="ERROR_CODE" property="errorCode" jdbcType="VARCHAR" />
+        <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="RESULT_INFO" property="resultInfo" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FILE_NAME FILE_NAME, PORTFOLIO_ID PORTFOLIO_ID, VALDATE VALDATE, FILE_PATH FILE_PATH,
+        PORTFOLIO_NAME PORTFOLIO_NAME, IMPDATE IMPDATE, IMPORT_TYPE IMPORT_TYPE, ERROR_CODE ERROR_CODE,
+        START_TIME START_TIME, END_TIME END_TIME, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME,UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper_mysql.Base_Column_List" />
+        from RSK_OUT_VALTBL_IMPORT_HIS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper_mysql.Base_Column_List" />
+        from RSK_OUT_VALTBL_IMPORT_HIS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHisKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper_mysql.Base_Column_List" />
+        from RSK_OUT_VALTBL_IMPORT_HIS
+        where VALDATE = #{valdate,jdbcType=DATE}
+          and PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR}
+          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHisKey" >
+        delete from RSK_OUT_VALTBL_IMPORT_HIS
+        where VALDATE = #{valdate,jdbcType=DATE}
+          and PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR}
+          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
+        insert into RSK_OUT_VALTBL_IMPORT_HIS (FILE_NAME,FILE_PATH,
+            PORTFOLIO_ID, PORTFOLIO_NAME, VALDATE, IMPDATE, IMPORT_TYPE,
+            ERROR_CODE, START_TIME, END_TIME, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,RESULT_INFO
+        )
+        values (#{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR},
+            #{portfolioName,jdbcType=VARCHAR}, #{valdate,jdbcType=DATE}, #{impdate,jdbcType=DATE},
+            #{importType,jdbcType=VARCHAR}, #{errorCode,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
+            #{endTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{resultInfo,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
+        insert into RSK_OUT_VALTBL_IMPORT_HIS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fileName != null" >
+                FILE_NAME,
+            </if>
+            <if test="filePath != null" >
+                FILE_PATH,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="portfolioName != null" >
+                PORTFOLIO_NAME,
+            </if>
+            <if test="valdate != null" >
+                VALDATE,
+            </if>
+            <if test="impdate != null" >
+                IMPDATE,
+            </if>
+            <if test="importType != null" >
+                IMPORT_TYPE,
+            </if>
+            <if test="errorCode != null" >
+                ERROR_CODE,
+            </if>
+            <if test="startTime != null" >
+                START_TIME,
+            </if>
+            <if test="endTime != null" >
+                END_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="resultInfo != null" >
+                RESULT_INFO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fileName != null" >
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="filePath != null" >
+                #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioName != null" >
+                #{portfolioName,jdbcType=VARCHAR},
+            </if>
+            <if test="valdate != null" >
+                #{valdate,jdbcType=DATE},
+            </if>
+            <if test="impdate != null" >
+                #{impdate,jdbcType=DATE},
+            </if>
+            <if test="importType != null" >
+                #{importType,jdbcType=VARCHAR},
+            </if>
+            <if test="errorCode != null" >
+                #{errorCode,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="resultInfo != null" >
+                #{resultInfo,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
+        insert into RSK_OUT_VALTBL_IMPORT_HIS(FILE_NAME,
+             FILE_PATH, PORTFOLIO_ID, PORTFOLIO_NAME, VALDATE,
+             IMPDATE, IMPORT_TYPE, ERROR_CODE, START_TIME, END_TIME,
+             CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select FILE_NAME, FILE_PATH, PORTFOLIO_ID, PORTFOLIO_NAME, VALDATE,
+             IMPDATE, IMPORT_TYPE, ERROR_CODE, START_TIME, END_TIME,CREATE_USER,
+             CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_OUT_VALTBL_IMPORT_HIS
+             where 1 = 1 and FILE_NAME = #{fileName,jdbcType=VARCHAR} and PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR} and VALDATE = #{valdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
+        update RSK_OUT_VALTBL_IMPORT_HIS
+        <set >
+            <if test="filePath != null" >
+                FILE_PATH = #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="impdate != null" >
+                IMPDATE = #{impdate,jdbcType=DATE},
+            </if>
+            <if test="importType != null" >
+                IMPORT_TYPE = #{importType,jdbcType=VARCHAR},
+            </if>
+            <if test="errorCode != null" >
+                ERROR_CODE = #{errorCode,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where VALDATE = #{valdate,jdbcType=DATE}
+          and PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR}
+          and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
+        update RSK_OUT_VALTBL_IMPORT_HIS
+        set FILE_PATH = #{filePath,jdbcType=VARCHAR},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            IMPDATE = #{impdate,jdbcType=DATE},
+            IMPORT_TYPE = #{importType,jdbcType=VARCHAR},
+            ERROR_CODE = #{errorCode,jdbcType=VARCHAR},
+            START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            RESULT_INFO=#{resultInfo,jdbcType=CLOB}
+       where VALDATE = #{valdate,jdbcType=DATE}
+         and PORTFOLIO_NAME = #{portfolioName,jdbcType=VARCHAR}
+         and FILE_NAME = #{fileName,jdbcType=VARCHAR}
+    </update>
+</mapper>

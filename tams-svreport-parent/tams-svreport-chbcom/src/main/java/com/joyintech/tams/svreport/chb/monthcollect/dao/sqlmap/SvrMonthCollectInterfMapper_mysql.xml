@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.monthcollect.dao.SvrMonthCollectInterfMapper_mysql" >
-	<!--	汇总  总、净销售金额-->
-	<select id="selectAmountTotal" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+<!--	汇总  总、净销售金额-->
+    <select id="selectAmountTotal" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
 		PRD_REGIST_CODE  prdRegistCode,
 		INSTITUTION_CODE  institutionCode,
@@ -20,153 +20,71 @@
 		GROUP BY PRD_REGIST_CODE,INSTITUTION_CODE,AREA_CODE,HOLDER_TYPE,CCY
 	</select>
 
-	<!--	查询check表-->
+<!--	查询check表-->
 	<select id="selectHolderNumCheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		indentifyMark, prdRegistCode, institutionCode, areaCode, holderType, ccy, round(sum(qty)*ifnull(V.PROD_VALUE,1),5) balanceAmt, sum(qty) balanceShares, round(sum(qty)*ifnull(V.PROD_VALUE,1),5) cnyAmt
+		indentifyMark, prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
 		(select
 		A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
 		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '01'
-		when HOLDER_TYPE = '04' then '03'
-		when HOLDER_TYPE = '05' then '04'
-		when HOLDER_TYPE ='06' then '05'
-		when HOLDER_TYPE ='07' then '06'
-		when HOLDER_TYPE ='08' then '07'
-		when HOLDER_TYPE ='09' then '08'
-		when HOLDER_TYPE ='10' then '09'
-		when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
-		else '99' END)
-		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '02'
-		when HOLDER_TYPE = '04' then '03'
-		when HOLDER_TYPE = '05' then '04'
-		when HOLDER_TYPE ='06' then '05'
-		when HOLDER_TYPE ='07' then '06'
-		when HOLDER_TYPE ='08' then '07'
-		when HOLDER_TYPE ='09' then '08'
-		when HOLDER_TYPE ='10' then '09'
-		when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
-		else '99' END)
+		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '02'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '01'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
 		FROM CHB_INVESTHOLD_INFO_CHECK A
 		LEFT JOIN CHB_EQU_HOLD_CHECK B
 		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = #{batchDateEnd,jdbcType=VARCHAR}
-		) T
-		<!-- liuzy	华夏银行按最后一天产品净值推算余额	start -->
-		LEFT JOIN (
-		select  PROD_ID,PROD_VALUE from chb_prd_periodyield WHERE  CHANGE_DATE=#{batchDateEnd,jdbcType=VARCHAR}
-		) V on v.PROD_ID=t.PRODID
-		<!-- liuzy	华夏银行按最后一天产品净值推算余额	end -->
-		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy,indentifyMark
+		) T GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy,indentifyMark
 	</select>
 
 	<!--生成持有余额-->
 	<select id="selectHolderNumExcheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode, institutionCode, areaCode, holderType, ccy,round(sum(qty)*ifnull(V.PROD_VALUE,1),5) balanceAmt, sum(qty) balanceShares, round(sum(qty)*ifnull(V.PROD_VALUE,1),5) cnyAmt
+		prdRegistCode, institutionCode, areaCode, holderType, ccy, sum(amount) balanceAmt, sum(qty) balanceShares, sum(cnyAmt) cnyAmt
 		FROM
-		(
-		select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
-		FROM
-		(
-		select A.STATUS,A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
-		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '01'
-		when HOLDER_TYPE = '04' then '03'
-		when HOLDER_TYPE = '05' then '04'
-		when HOLDER_TYPE ='06' then '05'
-		when HOLDER_TYPE ='07' then '06'
-		when HOLDER_TYPE ='08' then '07'
-		when HOLDER_TYPE ='09' then '08'
-		when HOLDER_TYPE ='10' then '09'
-		when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
-		else '99' END)
-		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '02'
-		when HOLDER_TYPE = '04' then '03'
-		when HOLDER_TYPE = '05' then '04'
-		when HOLDER_TYPE ='06' then '05'
-		when HOLDER_TYPE ='07' then '06'
-		when HOLDER_TYPE ='08' then '07'
-		when HOLDER_TYPE ='09' then '08'
-		when HOLDER_TYPE ='10' then '09'
-		when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
-		else '99' END)
-		END  as  holderType,
-		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt,
-		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,B.FUND_ACC_PLACE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) monthMarkNo
-		FROM CHB_INVESTHOLD_INFO_SUB A
-		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
-		left join CHB_INVESTHOLD_INFO_CHECK C
-		ON A.INDENTIFY_MARK = C.INDENTIFY_MARK
-		WHERE A.HOLD_DATE = #{batchDateEnd,jdbcType=VARCHAR}
-		AND C.INDENTIFY_MARK is null
-		) T
-		where monthMarkNo = 1 and STATUS != '03'
-
-		UNION ALL
-
-
-		select A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
-		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '01'
-		when HOLDER_TYPE = '04' then '03'
-		when HOLDER_TYPE = '05' then '04'
-		when HOLDER_TYPE ='06' then '05'
-		when HOLDER_TYPE ='07' then '06'
-		when HOLDER_TYPE ='08' then '07'
-		when HOLDER_TYPE ='09' then '08'
-		when HOLDER_TYPE ='10' then '09'
-		when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
-		else '99' END)
-		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '02'
-		when HOLDER_TYPE = '04' then '03'
-		when HOLDER_TYPE = '05' then '04'
-		when HOLDER_TYPE ='06' then '05'
-		when HOLDER_TYPE ='07' then '06'
-		when HOLDER_TYPE ='08' then '07'
-		when HOLDER_TYPE ='09' then '08'
-		when HOLDER_TYPE ='10' then '09'
-		when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
-		else '99' END)
-		END  as  holderType,
-		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
-		FROM CHB_INVESTHOLD_INFO_CHECK A
-		LEFT JOIN CHB_EQU_HOLD_CHECK B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
-		WHERE
-		A.HOLD_DATE = #{batchDateEnd,jdbcType=VARCHAR}
-		) T
-		<!-- liuzy	华夏银行按最后一天产品净值推算余额	start -->
-		LEFT JOIN (
-		select  PROD_ID,PROD_VALUE from chb_prd_periodyield WHERE  CHANGE_DATE=#{batchDateEnd,jdbcType=VARCHAR}
-		) V on v.PROD_ID=t.PRODID
-		<!-- liuzy	华夏银行按最后一天产品净值推算余额	end -->
+		chb_month_count_tmp
 		GROUP BY prdRegistCode,institutionCode,areaCode,holderType,ccy
 	</select>
-	<!--查询需要删除的reportuuid-->
+<!--查询需要删除的reportuuid-->
 	<select id="selectReportuuid" resultType="string" parameterType="string">
 		select REPORTUUID FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR}
 	</select>
 
-	<!--	删除月报详情表-->
+<!--	删除月报详情表-->
 	<delete id="deleteDetail" parameterType="java.util.List">
 		DELETE FROM CHB_SALE_MONTH_REPORT_DETAIL WHERE
 		REPORTUUID in
 		<if test="list!=null and list.size()>0">
-			<foreach collection="list" item="item" open="(" separator=","
-					 close=")">
-				#{item,jdbcType=VARCHAR}
-			</foreach>
+		<foreach collection="list" item="item" open="(" separator=","
+				 close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
 		</if>
 	</delete>
 
 	<delete id="deleteReport" parameterType="string">
 	DELETE FROM CHB_SALE_MONTH_REPORT WHERE TERMID = #{termid,jdbcType=VARCHAR}
 	</delete>
-
+	
 	<insert id="insertIntoDetail" parameterType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		insert into CHB_SALE_MONTH_REPORT_DETAIL(DETAILUUID,REPORTUUID,REPORTTYPE,PRD_REGIST_CODE,IS_CONSIGN,INSTITUTION_CODE
 		,AREA_CODE,HOLDER_TYPE,HOLDER_NUM,SALE_AMOUNT_TOTAL,VALUE_AMOUNT_TOTAL,BALANCE_AMT,BALANCE_SHARES
@@ -187,7 +105,7 @@
 		)
 	</insert>
 
-	<!--	检查整个月汇总是否有值-->
+<!--	检查整个月汇总是否有值-->
 	<select id="checkAllMonth" resultType="java.lang.Integer">
 		SELECT COUNT(*) from CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE between #{batchDateStart} and #{batchDateEnd}
 	</select>
@@ -196,7 +114,7 @@
 	<select id="checkLastDay" resultType="java.lang.Integer">
 		SELECT COUNT(*) from CHB_SALE_DEAL_SUM WHERE EQUITY_CONF_DATE = #{batchDateEnd}
 	</select>
-	<!--	检查月末日持有-->
+<!--	检查月末日持有-->
 	<select id="checkHold" resultType="java.lang.Integer">
 		SELECT COUNT(*) from CHB_INVESTHOLD_INFO_SUB A left join CHB_EQU_SUB B ON A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = #{batchDateEnd}
 	</select>
@@ -205,7 +123,7 @@
 	<select id="checkSubmission" resultType="java.lang.Integer">
 		SELECT count(*) from CHB_SALE_MONTH_REPORT WHERE  TERMID = #{termid,jdbcType=VARCHAR}  AND SEND_STATUS in ('02','03')
 	</select>
-	<!--	取得银行月报信息-->
+<!--	取得银行月报信息-->
 	<select id="selectChbPrdPosition" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		SELECT
 		A.PRODID prodid, B.REG_CODE prdRegistCode, A.DIRTYAMTSUM dirtyamtsum, A.CLEANAMTSUM cleanamtsum, A.ENDAMTSUM_OTH endamtsumOth
@@ -216,48 +134,48 @@
 		on A.PRODID = B.PRODID
 		WHERE STARTDATE = #{batchDateStart} and  ENDDATE = #{batchDateEnd}
 	</select>
-	<!--	分投资者类型获得投资者数量-->
+<!--	分投资者类型获得投资者数量-->
 	<select id="typeHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
-		prdRegistCode, holderType, count(DISTINCT(indentifyMark)) holderNum
+		T2.prdRegistCode, T2.holderType, count(DISTINCT(T2.indentifyMark)) holderNum
 		FROM
-		(select prdRegistCode,holderType,indentifyMark
+		(select T1.prdRegistCode,T1.holderType,T1.indentifyMark
 		FROM
 		(select
 		A.STATUS,
 		A.PRD_REGIST_CODE prdRegistCode,
 		CASE B.HOLDER_CLASSIFY
-		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '01'
-								when HOLDER_TYPE = '04' then '03'
-								when HOLDER_TYPE = '05' then '04'
-								when HOLDER_TYPE ='06' then '05'
-								when HOLDER_TYPE ='07' then '06'
-								when HOLDER_TYPE ='08' then '07'
-								when HOLDER_TYPE ='09' then '08'
-								when HOLDER_TYPE ='10' then '09'
-								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '02'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
 								else '99' END)
-		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '02'
-								when HOLDER_TYPE = '04' then '03'
-								when HOLDER_TYPE = '05' then '04'
-								when HOLDER_TYPE ='06' then '05'
-								when HOLDER_TYPE ='07' then '06'
-								when HOLDER_TYPE ='08' then '07'
-								when HOLDER_TYPE ='09' then '08'
-								when HOLDER_TYPE ='10' then '09'
-								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '01'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
 								else '99' END)
 		END  as  holderType,
 		A.INDENTIFY_MARK indentifyMark,
-		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) holderMarkNo
+		rank() over( partition by A.PRD_REGIST_CODE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) holderMarkNo
 		FROM CHB_INVESTHOLD_INFO_SUB A
 		LEFT JOIN CHB_EQU_SUB B
-		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = #{batchDateEnd}) T
-		WHERE holderMarkNo = 1 and STATUS != '03') T
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK WHERE A.HOLD_DATE = #{batchDateEnd}) T1
+		WHERE holderMarkNo = 1 and STATUS != '03') T2
 		GROUP BY prdRegistCode,holderType
 	</select>
 
-	<!--	分地区获得投资者数量-->
+<!--	分地区获得投资者数量-->
 	<select id="areaHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
 		prdRegistCode, areaCode, count(DISTINCT(indentifyMark)) holderNum
@@ -292,7 +210,7 @@
 		) t GROUP BY prdRegistCode,areaCode
 	</select>
 
-	<!--	分销售渠道获得投资者数量-->
+<!--	分销售渠道获得投资者数量-->
 	<select id="channelHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		select
 		prdRegistCode, institutionCode, count(DISTINCT(indentifyMark)) holderNum
@@ -329,86 +247,260 @@
 		) t GROUP BY prdRegistCode,institutionCode
 	</select>
 
-	<!--    取得人民币兑SAFE汇率-->
+<!--    取得人民币兑SAFE汇率-->
 	<select id="CNYExchange" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
-		SELECT
+		select
 		EXCHARGE_CODE exchargeCode,
-		OPEN_PRICE openPrice,
-		CLOSE_PRICE closePrice,
-		HIGH_PRICE highPrice,
-		LOW_PRICE lowPrice,
-		MID_PRICE midPrice
+		CHARGE charge
 		FROM
 		(
 		select
 		EXCHARGE_CODE,
-		OPEN_PRICE,
-		CLOSE_PRICE,
-		HIGH_PRICE,
-		LOW_PRICE,
-		MID_PRICE,
+		CHARGE,
 		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		from
+		(
+		select
+		EXCHARGE_CODE,
+		case #{exchangeSource,jdbcType=VARCHAR}
+		when '01' then OPEN_PRICE
+		when '02' then CLOSE_PRICE
+		when '03' then HIGH_PRICE
+		when '04' then LOW_PRICE
+		when '05' then MID_PRICE
+		end as CHARGE,
+		TRADE_DATE
 		FROM
 		MST_EXCHARGE_QUOTE quote
 		WHERE
 		DATASOURCE_TYPE = 'SAFE'
 		AND EXCHARGE_CODE like '%/CNY%'
-		AND TRADE_DATE BETWEEN #{batchDateStart} and #{batchDateEnd}
-		) t WHERE excNo = 1
+		AND TRADE_DATE  <![CDATA[ <= ]]> STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		) A
+		WHERE CHARGE is not null
+		) T
+		WHERE excNo = 1
 	</select>
 
 	<!--   获取美元兑 CFETS:外汇交易中心-->
 	<select id="USDExchange" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
-		SELECT
+		select
 		EXCHARGE_CODE exchargeCode,
-		OPEN_PRICE openPrice,
-		CLOSE_PRICE closePrice,
-		HIGH_PRICE highPrice,
-		LOW_PRICE lowPrice,
-		MID_PRICE midPrice
+		CHARGE charge
 		FROM
 		(
 		select
 		EXCHARGE_CODE,
-		OPEN_PRICE,
-		CLOSE_PRICE,
-		HIGH_PRICE,
-		LOW_PRICE,
-		MID_PRICE,
+		CHARGE,
 		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		from
+		(
+		select
+		EXCHARGE_CODE,
+		case #{exchangeSource,jdbcType=VARCHAR}
+		when '01' then OPEN_PRICE
+		when '02' then CLOSE_PRICE
+		when '03' then HIGH_PRICE
+		when '04' then LOW_PRICE
+		when '05' then MID_PRICE
+		end as CHARGE,
+		TRADE_DATE
 		FROM
 		MST_EXCHARGE_QUOTE quote
 		WHERE
 		DATASOURCE_TYPE = 'CFETS'
 		AND EXCHARGE_CODE like '%/USD%'
-		AND TRADE_DATE BETWEEN #{batchDateStart} and #{batchDateEnd}
-		) t WHERE excNo = 1
+		AND TRADE_DATE  <![CDATA[ <= ]]> STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		) A
+		WHERE CHARGE is not null
+		) T
+		WHERE excNo = 1
 	</select>
 
+	<select id="selectNotChangeEquHold" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+		select prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt
+		FROM
+		(
+		select A.STATUS,A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
+		CASE B.HOLDER_CLASSIFY
+		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '02'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '01'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		END  as  holderType,
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt,
+		ROW_NUMBER() over( partition by A.PRD_REGIST_CODE,B.FUND_ACC_PLACE,A.INDENTIFY_MARK,A.HOLD_DATE order by A.UPDATE_TIME desc ) monthMarkNo
+		FROM CHB_INVESTHOLD_INFO_SUB A
+		LEFT JOIN CHB_EQU_SUB B
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		left join CHB_EQU_HOLD_CHECK C
+		ON A.INDENTIFY_MARK = C.INDENTIFY_MARK
+		WHERE A.HOLD_DATE = STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		AND C.INDENTIFY_MARK is null
+		) T
+		where monthMarkNo = 1 and STATUS != '03'
+
+		UNION ALL
+
+
+		select A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,
+		CASE B.HOLDER_CLASSIFY
+		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '02'
+								when HOLDER_TYPE = '04' then '03'
+								when HOLDER_TYPE = '05' then '04'
+								when HOLDER_TYPE ='06' then '05'
+								when HOLDER_TYPE ='07' then '06'
+								when HOLDER_TYPE ='08' then '07'
+								when HOLDER_TYPE ='09' then '08'
+								when HOLDER_TYPE ='10' then '09'
+								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '01'
+								when HOLDER_TYPE = '04' then '03'
+								when HOLDER_TYPE = '05' then '04'
+								when HOLDER_TYPE ='06' then '05'
+								when HOLDER_TYPE ='07' then '06'
+								when HOLDER_TYPE ='08' then '07'
+								when HOLDER_TYPE ='09' then '08'
+								when HOLDER_TYPE ='10' then '09'
+								when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		END  as  holderType,
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
+		FROM CHB_INVESTHOLD_INFO_CHECK A
+		LEFT JOIN CHB_EQU_HOLD_CHECK B
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		WHERE
+		A.HOLD_DATE = STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+	</select>
+
+	<select id="selectThreeInOneList" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+		select
+		prdRegistCode,institutionCode,areaCode,holderType,indentifyMark,ccy,amount,qty,cnyAmt,holdDate
+		FROM
+		(
+		select
+		A.STATUS,A.PRD_REGIST_CODE prdRegistCode, ifnull(B.THE_BANK_CODE,B.REGIST_BANK_CODE) institutionCode, B.FUND_ACC_PLACE areaCode,A.HOLD_DATE holdDate,
+		CASE B.HOLDER_CLASSIFY
+		when   '01' THEN   (case when B.HOLDER_TYPE in ('01','02','03') then '02'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		when   '02' THEN  (case when B.HOLDER_TYPE in ('01','02','03') then '01'
+								when B.HOLDER_TYPE = '04' then '03'
+								when B.HOLDER_TYPE = '05' then '04'
+								when B.HOLDER_TYPE ='06' then '05'
+								when B.HOLDER_TYPE ='07' then '06'
+								when B.HOLDER_TYPE ='08' then '07'
+								when B.HOLDER_TYPE ='09' then '08'
+								when B.HOLDER_TYPE ='10' then '09'
+								when B.HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
+								else '99' END)
+		END  as  holderType,
+		A.INDENTIFY_MARK indentifyMark, A.CCY ccy, A.AMOUNT amount, A.QTY qty, A.CNY_AMT cnyAmt
+		FROM
+		(select
+		*
+		from
+		CHB_INVESTHOLD_INFO_SUB
+		WHERE
+		HOLD_DATE = STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')) A
+		LEFT JOIN
+		CHB_EQU_SUB B
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+		inner join
+		CHB_EQU_HOLD_CHECK C
+		ON A.INDENTIFY_MARK = C.INDENTIFY_MARK
+		) T
+		where
+		STATUS != '03'
+	</select>
+
+	<select id="selectHolderNumFromCheck" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
+		select
+		PRD_REGIST_CODE prdRegistCode,
+		MERGER_INDENTIFY_MARK indentifyMark,
+		CCY ccy,
+		HOLD_DATE holdDate
+		FROM
+		CHB_INVESTHOLD_INFO_CHECK where HOLD_DATE = STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+	</select>
+	<insert id="insertMonthTemp">
+		insert into chb_month_count_tmp(prdRegistCode,institutionCode,areaCode,holderType,ccy,amount,qty,cnyAmt)
+		(
+		<foreach collection="newList" index="index" item = "item" separator="UNION ALL">
+			select
+			#{item.prdRegistCode,jdbcType=VARCHAR},
+			#{item.institutionCode,jdbcType=VARCHAR},
+			#{item.areaCode,jdbcType=VARCHAR},
+			#{item.holderType,jdbcType=VARCHAR},
+			#{item.ccy,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=DECIMAL},
+			#{item.qty,jdbcType=DECIMAL},
+			#{item.cnyAmt,jdbcType=DECIMAL}
+			from dual
+		</foreach>
+		)
+	</insert>
+
+	<delete id="deleteAllMonthTemp">
+		truncate table chb_month_count_tmp
+	</delete>
+
 	<select id="USDExchangeCNY" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge">
-		SELECT
+		select
 		EXCHARGE_CODE exchargeCode,
-		OPEN_PRICE openPrice,
-		CLOSE_PRICE closePrice,
-		HIGH_PRICE highPrice,
-		LOW_PRICE lowPrice,
-		MID_PRICE midPrice
+		CHARGE charge
 		FROM
 		(
 		select
 		EXCHARGE_CODE,
-		OPEN_PRICE,
-		CLOSE_PRICE,
-		HIGH_PRICE,
-		LOW_PRICE,
-		MID_PRICE,
+		CHARGE,
 		ROW_NUMBER() over( partition by EXCHARGE_CODE order by TRADE_DATE desc ) excNo
+		from
+		(
+		select
+		EXCHARGE_CODE,
+		case #{exchangeSource,jdbcType=VARCHAR}
+		when '01' then OPEN_PRICE
+		when '02' then CLOSE_PRICE
+		when '03' then HIGH_PRICE
+		when '04' then LOW_PRICE
+		when '05' then MID_PRICE
+		end as CHARGE,
+		TRADE_DATE
 		FROM
 		MST_EXCHARGE_QUOTE quote
 		WHERE
 		DATASOURCE_TYPE = 'CFETS'
 		AND EXCHARGE_CODE = 'USD/CNY'
-		AND TRADE_DATE BETWEEN #{batchDateStart} and #{batchDateEnd}
-		) t WHERE excNo = 1
+		AND TRADE_DATE  <![CDATA[ <= ]]> STR_TO_DATE(#{batchDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
+		) A
+		WHERE CHARGE is not null
+		) T
+		WHERE excNo = 1
 	</select>
+
 </mapper>

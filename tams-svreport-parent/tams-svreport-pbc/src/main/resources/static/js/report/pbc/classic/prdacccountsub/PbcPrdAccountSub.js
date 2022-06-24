@@ -131,6 +131,13 @@ $(function(){
 		}else{
 			var param = {};
 			var expArr=table.getAllCheckedRows();
+            for(var i=0;i<expArr.length;i++){
+                if(expArr[i].status =="03"){
+                   //如果包含有删除状态的数据，给出提示并返回
+                   Joyin.error(JoyinUtil.getMessage("REPORT_MANUAL_0010"));
+                   return;
+                 }
+            }
 			var keyList = '';
 			layui.each(expArr,function(index,data){
 				if(index == expArr.length-1){

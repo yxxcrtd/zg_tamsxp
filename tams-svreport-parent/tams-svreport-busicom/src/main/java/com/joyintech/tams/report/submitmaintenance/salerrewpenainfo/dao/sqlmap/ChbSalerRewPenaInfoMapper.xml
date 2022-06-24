@@ -219,6 +219,7 @@
                 and (SALER_INS_NO like concat(concat('%', #{search}),'%')
                     or SALER_NAME like concat(concat('%', #{search}),'%'))
             </if>
+        and STATUS = 'E'
     </select>
 
     <select id="checkSalerInsNoImport" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">

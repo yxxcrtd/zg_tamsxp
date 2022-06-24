@@ -492,6 +492,9 @@
             <if test="operateMode != null" >
                 OPERATE_MODE,
             </if>
+            <if test="prodInsId != null">
+                PROD_INS_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="prodid != null" >
@@ -534,6 +537,9 @@
             </if>
             <if test="operateMode != null" >
                 #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodInsId != null">
+                #{prodInsId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

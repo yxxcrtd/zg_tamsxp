@@ -501,11 +501,14 @@ public class EquityInfoValid {
         else {
             //数据为新建模式
             if (equityRegist == null||DictCodeListExt2.报送数据状态_删除.getValue().equals(equityRegist.getStatus())) {
+               //type1=01,后续判断会认为是一条新接入的数据。
                 map.put("type", "01");
             }
             else {
 //                EquityInfoRegistCommonUtil.formatDto(equityRegist, StringUtil.SPACE);
+                //转换实体类中的数据字典
                 EquityInfoRegistCommonUtil.formatDtoAll(equityRegist);
+                //与已报送数据对比
                 this.getDiffMap(list, equityRegist, map);
             }
         }
@@ -1229,8 +1232,8 @@ public class EquityInfoValid {
             map.put("HOLDER_NAME", list.get(15));
         }
         // 性别
-        else if (!CommonUtil.equalsIgnoreNull(list.get(16).trim(),
-                equityInfoRegist001Dto.getHolderSex())) {
+        else if (list.get(16)!=null&&(!CommonUtil.equalsIgnoreNull(list.get(16).trim(),
+                equityInfoRegist001Dto.getHolderSex()))) {
             map.put("HOLDER_SEX", list.get(16));
         }
         // 备注
@@ -1284,7 +1287,7 @@ public class EquityInfoValid {
         		// 投资者分类 - 仅供四期使用字段
             	if (StringUtil.isNotEmpty(list.get(22))
                         && !list.get(22).equals(
-                        equityInfoRegist001Dto.getHolderClassify())) {
+                        equityInfoRegist001Dto.getHolderClassifyStr())) {
                     map.put("HOLDER_CLASSIFY", list.get(22));
                     type = "05";
                 }
@@ -1295,7 +1298,7 @@ public class EquityInfoValid {
                             equityInfoRegist001Dto.getFundAccPlace())) {
                         map.put("FUND_ACC_PLACE", list.get(26));
                         type = "05";
-                    }  
+                    }
             	}                          	            	
             }
 //            if (!StringUtil.equals(type, "04")) {
@@ -1305,6 +1308,7 @@ public class EquityInfoValid {
 //                }
 //            }
         }
+        //type=01,且flag=01。则认为与已报送数据没有任何变换。不会生成未报送数据。
         if (map.isEmpty()) {
             map.put("flag", "01");
             type = "01";
@@ -2719,7 +2723,12 @@ public class EquityInfoValid {
             // equityInfoRegist001Mapper.queryForEquityInfoRegist(
             // list.get(0), list.get(1));
             try {
+
+                /***核心方法添加备注------------------------------！！！！！！*/
+                //与已经报送的数据进行对比，返回变更的数据
                 this.getEditMap(list, map, bankCodeMarkList);
+                /***核心方法添加备注------------------------------！！！！！！*/
+
 //                this.getEditMap(list, map);
             }
             catch (Exception e) {
@@ -2848,6 +2857,8 @@ public class EquityInfoValid {
             }
 
             // 增加数据类型list
+            /** 添加识别标识 */
+            map.put("indentify_mark", list.get(1));
             listType.add(map);
             if (CollectionUtils.isNotEmpty(message)) {
                 checkResult.add(new ExcelValidDto(list.get(1), String.valueOf(i + 2),

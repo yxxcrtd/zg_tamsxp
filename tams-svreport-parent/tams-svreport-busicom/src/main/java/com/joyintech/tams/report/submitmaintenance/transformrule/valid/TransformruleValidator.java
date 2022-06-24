@@ -2,6 +2,7 @@ package com.joyintech.tams.report.submitmaintenance.transformrule.valid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,7 @@ public class TransformruleValidator implements BeanValidator {
 		if(StringUtil.equals(dto.getOperateType(), "edit")){
 			//判断有没有修改，根据传过来的seqno查原来的值，和传过来的值比较
 			TransformRule001Dto oldDto=transformRule002Service.getDto(dto.getSeqno());
-			if(!dto.getTargetField().equals(oldDto.getTargetField())){
+			if(!Objects.equals(dto.getTargetField(),oldDto.getTargetField())){
 				if (StringUtil.isNotEmpty(dto.getTargetField())) {
 					int count = transformRule002Service.checkData(dto.getOrgField());
 					if (count > 1) {

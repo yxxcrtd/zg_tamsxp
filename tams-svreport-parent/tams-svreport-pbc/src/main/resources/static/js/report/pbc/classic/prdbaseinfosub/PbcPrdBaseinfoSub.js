@@ -75,7 +75,7 @@ $(function(){
 				{ title: "客户赎回权标识", field: 'cusRedeemFlag',width:150,sortField:'cusRedeemFlag'},
 				{ title: "产品增信标识", field: 'creditFlag',width:150,sortField:'creditFlag'},
 				{ title: "产品增信机构类型", field: 'creditType',width:150,sortField:'creditType'},
-				{ title: "增信形式", field: 'creditMode',width:150,sortField:'creditMode'},
+				{ title: "产品增信形式", field: 'creditMode',width:150,sortField:'creditMode'},
 				{ title: "境内托管机构名称", field: 'inDepName',width:150,sortField:'inDepName'},
 				{ title: "境内托管机构代码", field: 'inDepCode',width:150,sortField:'inDepCode'},
 				{ title: "境外托管机构国别", field: 'outDepCtry',width:150,sortField:'outDepCtry'},

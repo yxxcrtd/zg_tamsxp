@@ -143,34 +143,57 @@
     <select id="queryPbcPrdBaseInfoEndByDatZipCode" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dto.PbcPrdBaseinfoEndSubDatDiff"
             parameterType="java.lang.String">
         select    @rownum :=  @rownum+1 as rowIndex,PBC_PROD_ID,
-                 PROD_ID,
-                 MDATE,
-                 CUS_YEAR_YIELD,
-                 ccy,
-                 CUSTOM_PROFIT,
-                 CUSTOM_PROFIT_CNY,
-                 pbcProdIdPrd,
-                 mdatePrd,
-                 cusYearYieldPrd,
-                 ccyPrd,
-                 customProfitPrd,
-                 customProfitCnyPrd
-           from (
-           select   dat.PBC_PROD_ID,
-            dat.PROD_ID,
-            dat.MDATE,
-            dat.CUS_YEAR_YIELD,
-            dat.ccy,
-            dat.CUSTOM_PROFIT,
-            dat.CUSTOM_PROFIT_CNY,
-            prd.PBC_PROD_ID as pbcProdIdPrd,
-            prd.MDATE as mdatePrd,
-            prd.CUS_YEAR_YIELD as cusYearYieldPrd,
-            prd.ccy as ccyPrd,
-            prd.CUSTOM_PROFIT as customProfitPrd,
-            prd.CUSTOM_PROFIT_CNY as customProfitCnyPrd
+        PROD_ID,
+        MDATE,
+        CUS_YEAR_YIELD,
+        ccy,
+        CUSTOM_PROFIT,
+        CUSTOM_PROFIT_CNY,
+        pbcProdIdPrd,
+        mdatePrd,
+        cusYearYieldPrd,
+        ccyPrd,
+        customProfitPrd,
+        customProfitCnyPrd
+        from (
+        select   dat.PBC_PROD_ID,
+        dat.PROD_ID,
+        dat.MDATE,
+        dat.CUS_YEAR_YIELD,
+        dat.ccy,
+        dat.CUSTOM_PROFIT,
+        dat.CUSTOM_PROFIT_CNY,
+        prd.PBC_PROD_ID as pbcProdIdPrd,
+        prd.MDATE as mdatePrd,
+        prd.CUS_YEAR_YIELD as cusYearYieldPrd,
+        prd.ccy as ccyPrd,
+        prd.CUSTOM_PROFIT as customProfitPrd,
+        prd.CUSTOM_PROFIT_CNY as customProfitCnyPrd
         from PBC_PRD_BASEINFO_END_SUB_DAT dat
-            left join PBC_PRD_BASEINFO_END_SUB_NEW  prd on dat.prod_id=prd.prod_id and prd.status = '01'
+        left join (
+        SELECT
+        ifnull(t2.pbc_code,temp1.PBC_PROD_ID) as PBC_PROD_ID,
+        temp1.prod_id as prod_id,
+        temp1.status as status,
+        temp1.MDATE as MDATE,
+        temp1.CUS_YEAR_YIELD as CUS_YEAR_YIELD,
+        temp1.ccy as ccy,
+        temp1.CUSTOM_PROFIT as CUSTOM_PROFIT,
+        temp1.CUSTOM_PROFIT_CNY as CUSTOM_PROFIT_CNY
+        FROM
+        PBC_PRD_BASEINFO_END_SUB_NEW  temp1
+        LEFT JOIN
+        (
+        SELECT
+        inside_prod_id,
+        pbc_code
+        FROM
+        pbc_prod_assetpool_code
+        WHERE
+        status='E'
+        AND code_type='01' )t2
+        ON temp1.prod_id = t2.inside_prod_id
+        )  prd on dat.prod_id=prd.prod_id and prd.status = '01'
         where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
         order  by dat.PROD_ID asc) a,(select @rownum:=0) b
     </select>

@@ -20,6 +20,15 @@
 	and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
  </select>
 
+	<select id="selectPbcPrdBaseInfoNewEndSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto"
+			parameterType="java.util.Date">
+		select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,r.CCY,
+			   ifnull(r.PROFIT,0) prodprofit1,ifnull(r.CUSTOM_PROFIT,0) custprofit1
+		from PBC_PRD_BASEINFO_END_SUB_New r
+		where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
+		  and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
+	</select>
+
 	<select id="selectPbcPrdRaisingSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto"
 			parameterType="java.util.Date">
 	select r.PBC_PROD_ID prodid ,r.REGIST_SEQNO registseqno,f.OPERATE_MODE operateMode,
@@ -34,5 +43,13 @@
 	and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
  </select>
 
+	<select id="selectPbcPrdBaseInfoNewSubCheck" resultType="com.joyintech.tams.svreport.pbc.datacheck.beforesub.dto.PbcBeforeSubCheckDto"
+			parameterType="java.util.Date">
+		select r.PROD_ID prodid ,r.REGIST_SEQNO registseqno,
+		IFNULL(r.HIGH_YIELD_ISSUE,0) prodprofit1,IFNULL(r.LOW_YIELD_ISSUE,0) prodprofit2
+		from pbc_prd_baseinfo_sub_new r
+		where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
+		and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
+	</select>
 
 </mapper>

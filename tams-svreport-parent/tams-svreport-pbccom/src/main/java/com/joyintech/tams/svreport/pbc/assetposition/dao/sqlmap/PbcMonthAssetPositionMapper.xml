@@ -356,6 +356,9 @@
       <if test="balFlag != null" >
         #{balFlag,jdbcType=VARCHAR},
       </if>
+      <if test="rating != null" >
+        #{rating,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
@@ -923,7 +926,7 @@
           ${getProductRatingOrderSqlByZt}
         </if>
         )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = assetinfo.FINANCIE
+        )bestRatingZt on bestRatingZt.OCODE = assetinfo.CHB_ISSUER_ID
         where 1 =1
         and VAL.VALUE_DATE=#{bookdate,jdbcType=DATE}
         and assetinfo.ASSET_UUID is not null /* 去除头寸表中资产代码匹配不到数据的情况 */

@@ -20,7 +20,7 @@
         <result column="GRADE_EXPECTATION" property="gradeExpectation" jdbcType="VARCHAR" />
         <result column="DIRECTION_CHANGE" property="directionChange" jdbcType="VARCHAR" />
     </resultMap>
-  <sql id="Base_Column_List">
+    <sql id="Base_Column_List">
         O_CODE O_CODE, GRADE_ORG_ID GRADE_ORG_ID, GRADE_DATE GRADE_DATE, O_TYPE O_TYPE, SHORT_LONG_TERM SHORT_LONG_TERM,
         GRADE_RESULT GRADE_RESULT, INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_RECOMMAND IS_RECOMMAND,
@@ -28,94 +28,103 @@
         DIRECTION_CHANGE DIRECTION_CHANGE
   </sql>
 
-  <insert id="mergeSecRating"
-	parameterType="com.joyintech.tams.common.base.entity.MstBondCreditRating">
-	MERGE INTO MST_BOND_CREDIT_RATING CII
-	USING (
-	<foreach collection="list" item="item" open="select * from("
-		close=")" separator="union all">
-		SELECT
-		#{item.oCode,jdbcType=VARCHAR} O_CODE,
-		#{item.gradeOrgId,jdbcType=VARCHAR} GRADE_ORG_ID,
-		#{item.gradeDate,jdbcType=DATE} GRADE_DATE,
-		#{item.oType,jdbcType=VARCHAR} O_TYPE,
-		#{item.shortLongTerm,jdbcType=VARCHAR} SHORT_LONG_TERM,
-		#{item.gradeResult,jdbcType=VARCHAR} GRADE_RESULT,
-		#{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
-		#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-		NOW() CREATE_TIME,
-		#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-		NOW() UPDATE_TIME,
-		#{item.isRecommand,jdbcType=VARCHAR} IS_RECOMMAND,
-		#{item.issuerRateType,jdbcType=VARCHAR} ISSUER_RATE_TYPE,
-        #{item.noticeDate,jdbcType=DATE} NOTICE_DATE,
-        #{item.gradeExpectation,jdbcType=VARCHAR} GRADE_EXPECTATION,
-        #{item.directionChange,jdbcType=VARCHAR} DIRECTION_CHANGE
-		FROM
-		DUAL
-	</foreach>
-	) TEMP
-	<!-- 业务主键匹配 -->
-	ON(CII.O_CODE = TEMP.O_CODE
-	and CII.GRADE_ORG_ID = TEMP.GRADE_ORG_ID
-	and CII.GRADE_DATE = TEMP.GRADE_DATE
-	and CII.O_TYPE = TEMP.O_TYPE
-	)
-	<!-- 匹配到则更新 -->
-	WHEN MATCHED THEN UPDATE SET
-	CII.SHORT_LONG_TERM = TEMP.SHORT_LONG_TERM,
-	CII.GRADE_RESULT = TEMP.GRADE_RESULT,
-	CII.INPUT_TYPE = TEMP.INPUT_TYPE,
-	CII.CREATE_USER = TEMP.CREATE_USER,
-	CII.CREATE_DEPT = TEMP.CREATE_DEPT,
-	CII.CREATE_TIME = TEMP.CREATE_TIME,
-	CII.UPDATE_USER = TEMP.UPDATE_USER,
-	CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-	CII.IS_RECOMMAND = TEMP.IS_RECOMMAND,
-	CII.ISSUER_RATE_TYPE = TEMP.ISSUER_RATE_TYPE,
-	CII.NOTICE_DATE = TEMP.NOTICE_DATE,
-	CII.GRADE_EXPECTATION = TEMP.GRADE_EXPECTATION,
-	CII.DIRECTION_CHANGE = TEMP.DIRECTION_CHANGE
-	<!-- 未匹配到这插入 -->
-	WHEN NOT MATCHED THEN INSERT
-      (O_CODE,
-      GRADE_ORG_ID,
-      GRADE_DATE,
-      O_TYPE,
-      SHORT_LONG_TERM,
-      GRADE_RESULT,
-      INPUT_TYPE,
-      CREATE_USER,
-      CREATE_DEPT,
-      CREATE_TIME,
-      UPDATE_USER,
-      UPDATE_TIME,
-      IS_RECOMMAND,
-      ISSUER_RATE_TYPE,
-      NOTICE_DATE,
-      GRADE_EXPECTATION,
-      DIRECTION_CHANGE)
-	values
-      (TEMP.O_CODE,
-      TEMP.GRADE_ORG_ID,
-      TEMP.GRADE_DATE,
-	  TEMP.O_TYPE,
-      TEMP.SHORT_LONG_TERM,
-      TEMP.GRADE_RESULT,
-	  TEMP.INPUT_TYPE,
-      TEMP.CREATE_USER,
-	  TEMP.CREATE_DEPT,
-      TEMP.CREATE_TIME,
-      TEMP.UPDATE_USER,
-	  TEMP.UPDATE_TIME,
-      TEMP.IS_RECOMMAND,
-      TEMP.ISSUER_RATE_TYPE,
-      TEMP.NOTICE_DATE,
-      TEMP.GRADE_EXPECTATION,
-      TEMP.DIRECTION_CHANGE
-      )
-</insert>
+    <insert id="mergeSecRating"
+            parameterType="com.joyintech.tams.common.base.entity.MstBondCreditRating">
+        insert into MST_BOND_CREDIT_RATING(
+        O_CODE,GRADE_ORG_ID,GRADE_DATE,O_TYPE,SHORT_LONG_TERM,
+        GRADE_RESULT,INPUT_TYPE,CREATE_USER,CREATE_DEPT,
+        CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_RECOMMAND,
+        ISSUER_RATE_TYPE,NOTICE_DATE,GRADE_EXPECTATION,DIRECTION_CHANGE)
+        select
+        O_CODE,GRADE_ORG_ID,GRADE_DATE,O_TYPE,SHORT_LONG_TERM,
+        GRADE_RESULT,INPUT_TYPE,CREATE_USER,CREATE_DEPT,
+        CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_RECOMMAND,
+        ISSUER_RATE_TYPE,NOTICE_DATE,GRADE_EXPECTATION,DIRECTION_CHANGE
+        from (
+        select
+        TEMP.*
+        from (
+        <foreach collection="list" item="item" separator="union all">
+            select
+            #{item.oCode,jdbcType=VARCHAR} O_CODE,
+            #{item.gradeOrgId,jdbcType=VARCHAR} GRADE_ORG_ID,
+            #{item.gradeDate,jdbcType=DATE} GRADE_DATE,
+            #{item.oType,jdbcType=VARCHAR} O_TYPE,
+            #{item.shortLongTerm,jdbcType=VARCHAR} SHORT_LONG_TERM,
+            #{item.gradeResult,jdbcType=VARCHAR} GRADE_RESULT,
+            #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            NOW() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            NOW() UPDATE_TIME,
+            #{item.isRecommand,jdbcType=VARCHAR} IS_RECOMMAND,
+            #{item.issuerRateType,jdbcType=VARCHAR} ISSUER_RATE_TYPE,
+            #{item.noticeDate,jdbcType=DATE} NOTICE_DATE,
+            #{item.gradeExpectation,jdbcType=VARCHAR} GRADE_EXPECTATION,
+            #{item.directionChange,jdbcType=VARCHAR} DIRECTION_CHANGE
+            from dual
+        </foreach>
+        ) TEMP where not EXISTS (select 1 from MST_BOND_CREDIT_RATING CII where CII.O_CODE = TEMP.O_CODE
+        and CII.GRADE_ORG_ID = TEMP.GRADE_ORG_ID
+        and CII.GRADE_DATE = TEMP.GRADE_DATE
+        and CII.O_TYPE = TEMP.O_TYPE)
+        ) de ;
+
+        UPDATE  MST_BOND_CREDIT_RATING as A,
+        (
+        select
+        O_CODE,GRADE_ORG_ID,GRADE_DATE,O_TYPE,SHORT_LONG_TERM,
+        GRADE_RESULT,INPUT_TYPE,CREATE_USER,CREATE_DEPT,
+        CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_RECOMMAND,
+        ISSUER_RATE_TYPE,NOTICE_DATE,GRADE_EXPECTATION,DIRECTION_CHANGE
+        from (
+        select
+        TEMP.*
+        from (
+        <foreach collection="list" item="item" separator="union all">
+            select
+            #{item.oCode,jdbcType=VARCHAR} O_CODE,
+            #{item.gradeOrgId,jdbcType=VARCHAR} GRADE_ORG_ID,
+            #{item.gradeDate,jdbcType=DATE} GRADE_DATE,
+            #{item.oType,jdbcType=VARCHAR} O_TYPE,
+            #{item.shortLongTerm,jdbcType=VARCHAR} SHORT_LONG_TERM,
+            #{item.gradeResult,jdbcType=VARCHAR} GRADE_RESULT,
+            #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            NOW() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            NOW() UPDATE_TIME,
+            #{item.isRecommand,jdbcType=VARCHAR} IS_RECOMMAND,
+            #{item.issuerRateType,jdbcType=VARCHAR} ISSUER_RATE_TYPE,
+            #{item.noticeDate,jdbcType=DATE} NOTICE_DATE,
+            #{item.gradeExpectation,jdbcType=VARCHAR} GRADE_EXPECTATION,
+            #{item.directionChange,jdbcType=VARCHAR} DIRECTION_CHANGE
+            from dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        SET
+        A.SHORT_LONG_TERM = B.SHORT_LONG_TERM,
+        A.GRADE_RESULT = B.GRADE_RESULT,
+        A.INPUT_TYPE = B.INPUT_TYPE,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_DEPT = B.CREATE_DEPT,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.IS_RECOMMAND = B.IS_RECOMMAND,
+        A.ISSUER_RATE_TYPE = B.ISSUER_RATE_TYPE,
+        A.NOTICE_DATE = B.NOTICE_DATE,
+        A.GRADE_EXPECTATION = B.GRADE_EXPECTATION,
+        A.DIRECTION_CHANGE = B.DIRECTION_CHANGE
+        where A.O_CODE = B.O_CODE
+        and A.GRADE_ORG_ID = B.GRADE_ORG_ID
+        and A.GRADE_DATE = B.GRADE_DATE
+        and A.O_TYPE = B.O_TYPE ;
+    </insert>
 
     <delete id="deleteTodayData">
      delete from MST_BOND_CREDIT_RATING where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')

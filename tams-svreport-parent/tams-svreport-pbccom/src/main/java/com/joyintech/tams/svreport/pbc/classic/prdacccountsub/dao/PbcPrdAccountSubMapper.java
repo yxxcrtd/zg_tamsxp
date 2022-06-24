@@ -54,5 +54,6 @@ public interface PbcPrdAccountSubMapper {
     List<PbcPrdAccountSub> queryAllPbcAssetBaseInfo(Map<String, Object> param);
     
     List<String> selectRegistSeqnoList(@Param("list")List<PbcPrdAccountSub> registList,@Param("flag")String flag);
-	
+
+    List<Map<String,String>> queryInsideProdId(Map<String, Object> param);
 }

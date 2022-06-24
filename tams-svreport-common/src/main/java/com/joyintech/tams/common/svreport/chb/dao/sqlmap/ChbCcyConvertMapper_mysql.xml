@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.svreport.chb.dao.ChbCcyConvertMapper_mysql">
+    <!-- 获取汇率行情 -->
+    <select id="getExchangerate" resultType="com.joyintech.tams.common.base.entity.ChbMstExchangeInfo">
+        SELECT
+        BASIS_CYY ccyOriginal,
+        QUOT_CYY ccyConvert,
+        TRADE_DATE publishDate,
+        CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) closePrice,
+        OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) openPrice,
+        HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) highPrice,
+        LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) lowPrice,
+        MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end) midPrice
+        FROM MST_EXCHARGE_QUOTE info
+        <where>
+            info.QUOT_CYY = #{ccy,jdbcType=VARCHAR}
+            AND INFO.DATASOURCE_TYPE = 'SAFE'
+            and info.TRADE_DATE = (select max(t.TRADE_DATE)
+            from MST_EXCHARGE_QUOTE t
+            where t.BASIS_CYY = info.BASIS_CYY
+            and t.QUOT_CYY = info.QUOT_CYY
+            AND t.DATASOURCE_TYPE = 'SAFE'
+            and t.TRADE_DATE <![CDATA[<=]]> #{date,jdbcType=DATE})
+        </where>
+    </select>
+</mapper>

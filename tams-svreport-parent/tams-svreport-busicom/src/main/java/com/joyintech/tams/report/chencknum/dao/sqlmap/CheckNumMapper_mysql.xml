@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.report.chencknum.dao.CheckNumMapper_mysql">
 	<select id="getSendCount" resultType="java.lang.Long">
 		select count(1)
-		from CHB_EQU_SUB sub
+  		from CHB_EQU_SUB sub
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		/*left join CHB_SUBMIT_STATUS status
 		on sub.sumit_seq = status.seqno*/
@@ -11,26 +11,25 @@
 			1=1
 			<if test="reportDate != null and reportDate != ''">
 				and DATE_FORMAT(sub.update_time,'%Y%m%d') = #{reportDate,jdbcType=VARCHAR}
-			</if>
+		 	</if>
 			and sub.submit_feedback_status='03'
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		</where>
 	</select>
 	<select id="getSendHoldCount"
-			resultType="java.lang.Long">
+		resultType="java.lang.Long">
 		select count(1)
 		from CHB_INVESTHOLD_INFO_SUB ciis
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		/*left join CHB_SUBMIT_STATUS status
 		on ciis.sumit_seq = status.seqno*/
-		<where>
-			1=1
+    	<where>
+    		1=1
 			<if test="reportDate!=null and reportDate != ''">
 				and DATE_FORMAT(ciis.HOLD_DATE,'%Y%m%d') = #{reportDate,jdbcType=VARCHAR}
 			</if>
 			and ciis.submit_feedback_status='03'
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-
 		</where>
 	</select>
 	<select id="queryTotalAmountInfo"
@@ -65,7 +64,7 @@
 		</where>
 	</select>
 	<update id="updateTotalAmountInfo"
-			parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
+		parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
 		update CHB_TOTALAMOUNT_INFO
 		<set>
 			<if test="fileAmount != null and fileAmount != '' ">
@@ -103,7 +102,7 @@
 	</update>
 	<!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
 	<insert id="insertTotalAmountInfo"
-			parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
+		parameterType="com.joyintech.tams.report.chencknum.dto.TotalAmountInfoDto">
 		insert into
 		CHB_TOTALAMOUNT_INFO (
 			id,

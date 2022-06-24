@@ -535,6 +535,11 @@ $(function () {
                 //var jsonResult = eval('(' + result + ')');
                 var yearStart = jsonResult["YEAR"];
                 var monthStart = jsonResult["MONTH"];
+                var SendStatus = jsonResult["SendStatus"];
+                if (SendStatus != null && SendStatus != '01') {
+                     Joyin.error(yearStart + "年" + monthStart + "月的统计表已报送,请重新选择！");
+                     return;
+                }
                 if (yearStart && monthStart) {
                     var submitDateStart = Date.ofDate($('#submitDate').startDate());
                     Joyin.confirm(yearStart + "年" + monthStart + "月的统计表已经存在，请确认是否重新计算并生成?", function () {

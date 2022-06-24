@@ -45,9 +45,10 @@
         var  sharesTypeChangeType= function(){
              // 股票类型”选择“02 优先股”时必填，否则置灰不可填
             if($("#svrBussRepEquityInfoDto_sharesType").val()!='02'){
-                $("#svrBussRepEquityInfoDto_bankSecPrefer").val('').attr("disabled",true).trigger("change");
+                $('#isBankCap').attr('disabled',true);
+                $("#isBankCap").val('').trigger("change");
             }else{
-                $("#svrBussRepEquityInfoDto_bankSecPrefer").attr("disabled",false)
+                $('#isBankCap').attr('disabled',false);
             }
         }
 

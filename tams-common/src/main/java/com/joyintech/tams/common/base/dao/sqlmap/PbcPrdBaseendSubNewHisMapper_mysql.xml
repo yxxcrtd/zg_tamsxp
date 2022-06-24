@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PbcPrdBaseendSubNewHisMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PbcPrdBaseendSubNewHis" >
+        <result column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="PBC_PROD_ID" property="pbcProdId" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="CCY" property="ccy" jdbcType="CHAR" />
+        <result column="PROFIT" property="profit" jdbcType="DECIMAL" />
+        <result column="PROFIT_CNY" property="profitCny" jdbcType="DECIMAL" />
+        <result column="CUSTOM_PROFIT" property="customProfit" jdbcType="DECIMAL" />
+        <result column="CUSTOM_PROFIT_CNY" property="customProfitCny" jdbcType="DECIMAL" />
+        <result column="CUS_YEAR_YIELD" property="cusYearYield" jdbcType="DECIMAL" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
+        <result column="PBC_SUBMIT_DEADLINE" property="pbcSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcPrdBaseendSubNewHis" >
+        insert into PBC_PRD_BASEEND_SUB_NEW_HIS (REGIST_SEQNO, PBC_PROD_ID, MDATE, 
+            CCY, PROFIT, PROFIT_CNY, 
+            CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, CUS_YEAR_YIELD, 
+            SEND_STATUS, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, 
+            SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, 
+            SUBMIT_DEADLINE, STATUS, CREATE_USER, 
+            ORG_CODE, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{registSeqno,jdbcType=CHAR}, #{pbcProdId,jdbcType=VARCHAR}, #{mdate,jdbcType=DATE}, 
+            #{ccy,jdbcType=CHAR}, #{profit,jdbcType=DECIMAL}, #{profitCny,jdbcType=DECIMAL}, 
+            #{customProfit,jdbcType=DECIMAL}, #{customProfitCny,jdbcType=DECIMAL}, #{cusYearYield,jdbcType=DECIMAL}, 
+            #{sendStatus,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
+            #{sumitSeq,jdbcType=VARCHAR}, #{statusDate,jdbcType=DATE}, #{pbcSubmitDeadline,jdbcType=TIMESTAMP}, 
+            #{submitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{orgCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcPrdBaseendSubNewHis" >
+        insert into PBC_PRD_BASEEND_SUB_NEW_HIS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                REGIST_SEQNO,
+            </if>
+            <if test="pbcProdId != null" >
+                PBC_PROD_ID,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="profit != null" >
+                PROFIT,
+            </if>
+            <if test="profitCny != null" >
+                PROFIT_CNY,
+            </if>
+            <if test="customProfit != null" >
+                CUSTOM_PROFIT,
+            </if>
+            <if test="customProfitCny != null" >
+                CUSTOM_PROFIT_CNY,
+            </if>
+            <if test="cusYearYield != null" >
+                CUS_YEAR_YIELD,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS,
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ,
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE,
+            </if>
+            <if test="pbcSubmitDeadline != null" >
+                PBC_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                #{registSeqno,jdbcType=CHAR},
+            </if>
+            <if test="pbcProdId != null" >
+                #{pbcProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="profit != null" >
+                #{profit,jdbcType=DECIMAL},
+            </if>
+            <if test="profitCny != null" >
+                #{profitCny,jdbcType=DECIMAL},
+            </if>
+            <if test="customProfit != null" >
+                #{customProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="customProfitCny != null" >
+                #{customProfitCny,jdbcType=DECIMAL},
+            </if>
+            <if test="cusYearYield != null" >
+                #{cusYearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                #{statusDate,jdbcType=DATE},
+            </if>
+            <if test="pbcSubmitDeadline != null" >
+                #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcPrdBaseendSubNewHis" >
+        insert into PBC_PRD_BASEEND_SUB_NEW_HIS(REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROFIT, 
+        PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, 
+        SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+        STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select REGIST_SEQNO, PBC_PROD_ID, MDATE, CCY, PROFIT, 
+            PROFIT_CNY, CUSTOM_PROFIT, CUSTOM_PROFIT_CNY, CUS_YEAR_YIELD, SEND_STATUS, SUBMIT_TIME, 
+            SUBMIT_FEEDBACK_STATUS, SUMIT_SEQ, STATUS_DATE, PBC_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+            STATUS, CREATE_USER, ORG_CODE, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from PBC_PRD_BASEEND_SUB_NEW
+             where STATUS = 'E'
+    </insert>
+</mapper>

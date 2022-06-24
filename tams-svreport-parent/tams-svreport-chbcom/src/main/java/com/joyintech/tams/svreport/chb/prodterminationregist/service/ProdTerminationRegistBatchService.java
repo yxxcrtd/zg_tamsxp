@@ -540,6 +540,10 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
     private void initAmtData(ProdTerminationRegist001Dto result) {
 		//兑付客户收益
     	result.setCustomProfit(BigDecimal.ZERO);
+    	//兑付客户收益（原币种）
+        result.setCustomProfitOri(BigDecimal.ZERO);
+        //对付客户总金额（原币种）
+        result.setCustomAmtOri(BigDecimal.ZERO);
     	//兑付客户总金额
     	result.setCustomAmt(BigDecimal.ZERO);
     	//兑付总份额

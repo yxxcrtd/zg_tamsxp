@@ -9,6 +9,7 @@
 			<Cell order="4" name="人行登记机构代码">pbcBankCode</Cell>
 			<Cell order="5" name="是否理财子公司">isFinSubCompany</Cell>
 			<Cell order="6" name="社会信用代码">insitituteCode</Cell>
+			<Cell order="7" name="所属银保监局">belogCodeCBRC</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

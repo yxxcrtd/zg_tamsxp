@@ -9,6 +9,7 @@ import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
 import com.joyintech.tams.svreport.chb.transmonthreport.dao.ChbTransMonthReportSubRegistBatchMapper;
 import com.joyintech.tams.svreport.chb.transmonthreport.dto.ChbTransMonthReportConstants;
@@ -28,7 +29,7 @@ import java.util.*;
 
 /**
  * 理财产品转型情况月度统计表生成资产端报表数据处理类
- * 
+ *
  * @author dubaojun
  ** @version 1.0 2020年6月8日
  */
@@ -52,7 +53,7 @@ public class ChbTransMonthReportAssetBatchService {
 
     /**
      * 生成资产端端报表明细数据
-     * 
+     *
      * @param report 生成参数
      */
     public void genMonthAsset(final ChbTransMonthReportSubDto report) {
@@ -182,7 +183,7 @@ public class ChbTransMonthReportAssetBatchService {
                     //if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
                     //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  start
                     if (pos.getRating() == null || Integer.parseInt(SvrDataUtil.getCodeFromDataDictByName(DictCode.资产评级, pos.getRating())) > 4) {//不判定是否公开发行
-                    //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  end
+                        //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  end
                         calcMonthReportSubDetail(AMT1_1_a_a, pos, true, false, null);
                     }
                 }
@@ -318,7 +319,11 @@ public class ChbTransMonthReportAssetBatchService {
                 calcMonthReportSubDetail(AMT4_2, pos, false, true, null);
             }
             // 5 银行资本补充工具
-            if (pos.getSunassettype() != null && pos.getSunassettype().indexOf("F05") != -1) {
+//            if (pos.getSunassettype() != null && pos.getSunassettype().indexOf("F05") != -1) {
+        if (Objects.equals(pos.getBankCapital(), DictCodeListExt3.银行资本补充工具_永续债_债性.getValue()) ||
+                Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_股性.getValue()) ||
+                Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_二级资本债.getValue()) ||
+                Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_优先股.getValue()) ) {
                 // 5.1 合 计
                 calcMonthReportSubDetail(AMT5_1, pos, true, false, null);
                 // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
@@ -328,33 +333,33 @@ public class ChbTransMonthReportAssetBatchService {
                 }
                 // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 end
                 // 其中 5.1.a 优先股
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0501")  != -1) {
+                if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_优先股.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_a, pos, true, false, null);
                 }
                 // 5.1.b 永续债（债性）
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0502")  != -1) {
+                if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_债性.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_b, pos, true, false, null);
                 }
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0506")  != -1) {
-                    calcMonthReportSubDetail(AMT5_1_b, pos, true, false, null);
-                }
+    //                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0506")  != -1) {
+    //                    calcMonthReportSubDetail(AMT5_1_b, pos, true, false, null);
+    //                }
                 // 5.1.c 永续债（股性）
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0503")  != -1) {
+                if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_股性.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_c, pos, true, false, null);
                 }
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1) {
-                    calcMonthReportSubDetail(AMT5_1_c, pos, true, false, null);
-                }
+    //                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1) {
+    //                    calcMonthReportSubDetail(AMT5_1_c, pos, true, false, null);
+    //                }
                 // 5.1.d 二级资本债
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0504")  != -1) {
+                if (Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_二级资本债.getValue())) {
                     calcMonthReportSubDetail(AMT5_1_d, pos, true, false, null);
                 }
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1) {
-                    calcMonthReportSubDetail(AMT5_1_d, pos, true, false, null);
-                }
-                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0506")  != -1) {
-                    calcMonthReportSubDetail(AMT5_1_d, pos, true, false, null);
-                }
+    //                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1) {
+    //                    calcMonthReportSubDetail(AMT5_1_d, pos, true, false, null);
+    //                }
+    //                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0506")  != -1) {
+    //                    calcMonthReportSubDetail(AMT5_1_d, pos, true, false, null);
+    //                }
                 // 5.2 加权剩余期限
                 calcMonthReportSubDetail(AMT5_2, pos, false, true, null);
             }
@@ -363,7 +368,7 @@ public class ChbTransMonthReportAssetBatchService {
                 // 6.1 合 计
                 calcMonthReportSubDetail(AMT6_1, pos, true, false, null);
                 // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start
-                 if(!BigDecimal.ZERO.equals(pos.getTerms())){
+                if(!BigDecimal.ZERO.equals(pos.getTerms())){
                     // 6.1 除去期限等于零的合计
                     calcMonthReportSubDetail(AMT6_1_ex0, pos, true, false, null);
                 }
@@ -473,7 +478,7 @@ public class ChbTransMonthReportAssetBatchService {
 
     /**
      * 计算合计项
-     * 
+     *
      * @param sumLine 合计行
      * @param detailDtos 明细数据
      */
@@ -488,7 +493,7 @@ public class ChbTransMonthReportAssetBatchService {
 
     /**
      * 计算加权期限.sum(ASSETVALUE_B*TERMS)/(SUM(ASSETVALUE_B)*365)
-     * 
+     *
      * @param totalBalance 金额总计
      * @param totalTerms 金额 *期限总计
      */

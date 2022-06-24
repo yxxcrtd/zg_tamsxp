@@ -119,7 +119,7 @@ public class SvrLoanDetailInfoFileImpService extends FileImpService {
         // modify by convertMapToEntity yangnxianjiu 2022-01-19 start
 //        List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.贷款明细信息接口数据.getCode());
 //        loanDetailInfoList = this.convertMapToEntity(infoList,dataSource,listColumn);
-        loanDetailInfoList = (List<ChbLoanDetailInfo>) convertMapToEntity(infoList,ChbLoanDetailInfo.class);
+        loanDetailInfoList = (List<ChbLoanDetailInfo>) convertMapToEntity(infoList,ChbLoanDetailInfo.class, dataSource);
         loanDetailInfoList.stream().forEach(chbLoanDetailInfo->{
             chbLoanDetailInfo.setAssetUuid(IDGenerator.generate(36));
         });

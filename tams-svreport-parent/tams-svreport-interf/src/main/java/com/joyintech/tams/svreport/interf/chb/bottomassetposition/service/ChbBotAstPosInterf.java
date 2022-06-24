@@ -13,12 +13,15 @@ import com.joyintech.tams.common.BaseInterfService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.InterfConstant;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -65,6 +68,8 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 	private ChbAssetInfoInterfMapper chbAssetInfoInterfMapper;
 	@Autowired
 	private SqlSessionTemplate template;
+	@Autowired
+	private BatchInsertService batchInsertService;
 	//实收资本科目号
 	private static String SUB_CODE_601 = "601";
 	//资产净值科目号
@@ -200,7 +205,7 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 			position.setUpdateUser("system");
 			position.setStatus("E");
 			//数据来源
-			if("D".equals(source)){
+			if("D".equals(sourceNew)){
 				position.setDatasource("16");
 			}
 			if (assetPlanLList.contains(position.getAssetCode())) {
@@ -602,41 +607,53 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 
 
 	private void insertData2(List<ChbBotAstPosition> listChbBotAstPosition) {
-		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 
-		//批量插入mapper
-		ChbBotAstPosInterfMapper batchMapper =  session.getMapper(ChbBotAstPosInterfMapper.class);
+		if (listChbBotAstPosition.size()<=5000) {
+			SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
 
-		Map<Date, List<ChbBotAstPosition>> listChbBotAstPositionMap =
-				listChbBotAstPosition.stream().collect(JoyinCollectors.groupingBy(chbAssetsBasisData -> chbAssetsBasisData.getPosDate()));
-		int count = 0;
-		try {
-			for (Date date : listChbBotAstPositionMap.keySet()) {
+			//批量插入mapper
+			ChbBotAstPosInterfMapper batchMapper =  session.getMapper(ChbBotAstPosInterfMapper.class);
 
-				String dateStr = DateUtil.format(date);
+			Map<Date, List<ChbBotAstPosition>> listChbBotAstPositionMap =
+					listChbBotAstPosition.stream().collect(JoyinCollectors.groupingBy(chbAssetsBasisData -> chbAssetsBasisData.getPosDate()));
+			int count = 0;
+			try {
+				for (Date date : listChbBotAstPositionMap.keySet()) {
 
-				// 先删后插
-				logger.debug("删除" + dateStr + "日的底层资产持仓信息，开始");
-				chbBotAstPosInterfMapper.deleteByPosdate(date);
-				logger.debug("删除" + dateStr + "日的底层资产持仓信息，结束");
-				logger.debug("插入" + dateStr + "日的底层资产持仓信息，开始");
+					String dateStr = DateUtil.format(date);
 
-				for (ChbBotAstPosition data : listChbBotAstPositionMap.get(date)) {
-					batchMapper.insert(data);
-					count++;
-					if (count % 1000 == 0) {
-						logger.debug("已插入" + count + "条" + DateUtil.getCurrentDateTime());
-						session.commit();
-						session.clearCache();
+					// 先删后插
+					logger.debug("删除" + dateStr + "日的底层资产持仓信息，开始");
+					chbBotAstPosInterfMapper.deleteByPosdate(date);
+					logger.debug("删除" + dateStr + "日的底层资产持仓信息，结束");
+					logger.debug("插入" + dateStr + "日的底层资产持仓信息，开始");
+
+					for (ChbBotAstPosition data : listChbBotAstPositionMap.get(date)) {
+						batchMapper.insert(data);
+						count++;
+						if (count % 1000 == 0) {
+							logger.debug("已插入" + count + "条" + DateUtil.getCurrentDateTime());
+							session.commit();
+							session.clearCache();
+						}
 					}
+					logger.info("插入" + dateStr + "日的资产基础指标数据，结束");
 				}
-				logger.info("插入" + dateStr + "日的资产基础指标数据，结束");
+				session.commit();
+				session.clearCache();
+			}finally {
+				session.close();
 			}
-			session.commit();
-			session.clearCache();
-		}finally {
-			session.close();
+		} else {
+			//sqlloader插入
+			ImpTable table = new ImpTable("CHB_BOT_AST_POS");
+			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+			// 临时文件存放目录
+			String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+			batchInsertService.exeBatchldr(tmpPath, listChbBotAstPosition, table);
 		}
+
 	}
 
 }

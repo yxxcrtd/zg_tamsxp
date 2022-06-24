@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -116,7 +117,7 @@ public class SvrChbEmployeeDBInterf extends BaseService{
     	
     	for(ChbEmployeeInfoSub sub : subList){
     		//数据日期
-        	sub.setStatusDate(batchDate);
+        	sub.setStatusDate(new Date());
             //创建人
         	sub.setCreateUser(CommonUtil.getUserName());
             //更新人
@@ -334,32 +335,37 @@ public class SvrChbEmployeeDBInterf extends BaseService{
      * @return
      */
 	private ChbEmployeeInfoSub genEmployeeDto(ChbEmployeeInfoSub dto) {
+		String emptyStr = "";
+		// mysql对空字符串特殊处理
+		if(BaseCommonCheckService.isMYSQLDataBase()){
+			emptyStr = null;
+		}
 		ChbEmployeeInfoSub tmpDto = new ChbEmployeeInfoSub();
 		tmpDto.setCreateTime(null);
 		tmpDto.setUpdateTime(null);
-		tmpDto.setEmployeeType(null==dto.getEmployeeType()?"":dto.getEmployeeType());
-		tmpDto.setEmployeeName(null==dto.getEmployeeName()?"":dto.getEmployeeName());
-		tmpDto.setEmployeeSex(null==dto.getEmployeeSex()?"":dto.getEmployeeSex());
-		tmpDto.setIssuePartyId(null==dto.getIssuePartyId()?"":dto.getIssuePartyId());
-		tmpDto.setIdentifyNumber(null==dto.getIdentifyNumber()?"":dto.getIdentifyNumber());
-		tmpDto.setBelongsBank(null==dto.getBelongsBank()?"":dto.getBelongsBank());
-		tmpDto.setBelongsPlace(null==dto.getBelongsPlace()?"":dto.getBelongsPlace());
-		tmpDto.setCompanyName(null==dto.getCompanyName()?"":dto.getCompanyName());
-		tmpDto.setBelongsDept(null==dto.getBelongsDept()?"":dto.getBelongsDept());
-		tmpDto.setPosition(null==dto.getPosition()?"":dto.getPosition());
-		tmpDto.setEducation(null==dto.getEducation()?"":dto.getEducation());
-		tmpDto.setAcademicDegree(null==dto.getAcademicDegree()?"":dto.getAcademicDegree());
-		tmpDto.setFirsttime2work(null==dto.getFirsttime2work()?"":dto.getFirsttime2work());
-		tmpDto.setFirsttime2finwork(null==dto.getFirsttime2finwork()?"":dto.getFirsttime2finwork());
-		tmpDto.setProfessionalTitle(null==dto.getProfessionalTitle()?"":dto.getProfessionalTitle());
-		tmpDto.setFinProfessionalCrtf(null==dto.getFinProfessionalCrtf()?"":dto.getFinProfessionalCrtf());
-		tmpDto.setFinTrainingNo(null==dto.getFinTrainingNo()?"":dto.getFinTrainingNo());
-		tmpDto.setAwards(null==dto.getAwards()?"":dto.getAwards());
-		tmpDto.setOfficeTel(null==dto.getOfficeTel()?"":dto.getOfficeTel());
-		tmpDto.setMobileTel(null==dto.getMobileTel()?"":dto.getMobileTel());
-		tmpDto.setMail(null==dto.getMail()?"":dto.getMail());
-		tmpDto.setRegBusiType(null==dto.getRegBusiType()?"":dto.getRegBusiType());
-		tmpDto.setRegEmployeeType(null==dto.getRegEmployeeType()?"":dto.getRegEmployeeType());
+		tmpDto.setEmployeeType(null==dto.getEmployeeType()?emptyStr:dto.getEmployeeType());
+		tmpDto.setEmployeeName(null==dto.getEmployeeName()?emptyStr:dto.getEmployeeName());
+		tmpDto.setEmployeeSex(null==dto.getEmployeeSex()?emptyStr:dto.getEmployeeSex());
+		tmpDto.setIssuePartyId(null==dto.getIssuePartyId()?emptyStr:dto.getIssuePartyId());
+		tmpDto.setIdentifyNumber(null==dto.getIdentifyNumber()?emptyStr:dto.getIdentifyNumber());
+		tmpDto.setBelongsBank(null==dto.getBelongsBank()?emptyStr:dto.getBelongsBank());
+		tmpDto.setBelongsPlace(null==dto.getBelongsPlace()?emptyStr:dto.getBelongsPlace());
+		tmpDto.setCompanyName(null==dto.getCompanyName()?emptyStr:dto.getCompanyName());
+		tmpDto.setBelongsDept(null==dto.getBelongsDept()?emptyStr:dto.getBelongsDept());
+		tmpDto.setPosition(null==dto.getPosition()?emptyStr:dto.getPosition());
+		tmpDto.setEducation(null==dto.getEducation()?emptyStr:dto.getEducation());
+		tmpDto.setAcademicDegree(null==dto.getAcademicDegree()?emptyStr:dto.getAcademicDegree());
+		tmpDto.setFirsttime2work(null==dto.getFirsttime2work()?emptyStr:dto.getFirsttime2work());
+		tmpDto.setFirsttime2finwork(null==dto.getFirsttime2finwork()?emptyStr:dto.getFirsttime2finwork());
+		tmpDto.setProfessionalTitle(null==dto.getProfessionalTitle()?emptyStr:dto.getProfessionalTitle());
+		tmpDto.setFinProfessionalCrtf(null==dto.getFinProfessionalCrtf()?emptyStr:dto.getFinProfessionalCrtf());
+		tmpDto.setFinTrainingNo(null==dto.getFinTrainingNo()?emptyStr:dto.getFinTrainingNo());
+		tmpDto.setAwards(null==dto.getAwards()?emptyStr:dto.getAwards());
+		tmpDto.setOfficeTel(null==dto.getOfficeTel()?emptyStr:dto.getOfficeTel());
+		tmpDto.setMobileTel(null==dto.getMobileTel()?emptyStr:dto.getMobileTel());
+		tmpDto.setMail(null==dto.getMail()?emptyStr:dto.getMail());
+		tmpDto.setRegBusiType(null==dto.getRegBusiType()?emptyStr:dto.getRegBusiType());
+		tmpDto.setRegEmployeeType(null==dto.getRegEmployeeType()?emptyStr:dto.getRegEmployeeType());
 		return tmpDto;
 	}
     

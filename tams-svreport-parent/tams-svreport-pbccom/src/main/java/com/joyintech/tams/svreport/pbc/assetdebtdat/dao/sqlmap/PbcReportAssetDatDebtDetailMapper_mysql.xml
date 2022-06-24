@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetDebtDatDetailMapper_mysql" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto" >
+    <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+    <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+    <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+    <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+    <result column="CNY" property="cny" jdbcType="DECIMAL" />
+    <result column="USD_TO_CNY" property="usdToCny" jdbcType="DECIMAL" />
+    <result column="EUR_TO_CNY" property="eurToCny" jdbcType="DECIMAL" />
+    <result column="GBP_TO_CNY" property="gbpToCny" jdbcType="DECIMAL" />
+    <result column="JPY_TO_CNY" property="jpyToCny" jdbcType="DECIMAL" />
+    <result column="OTH_TO_CNY" property="othToCny" jdbcType="DECIMAL" />
+    <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+    <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+    <result column="CCY_AMOUNT" property="ccyAmount" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, CNY, USD_TO_CNY, EUR_TO_CNY, GBP_TO_CNY, 
+    JPY_TO_CNY, OTH_TO_CNY, TOTAL, REPORTUUID,CCY_AMOUNT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PBC_REPORT_BALANCE_DAT
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PBC_REPORT_BALANCE_DAT
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto" >
+    insert into PBC_REPORT_BALANCE_DAT (DETAILUUID, REPORTTYPE, GROUPTYPE, 
+      PROPERTYCODE, CNY, USD_TO_CNY, 
+      EUR_TO_CNY, GBP_TO_CNY, JPY_TO_CNY, 
+      OTH_TO_CNY, TOTAL, REPORTUUID,CCY_AMOUNT
+      )
+    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+      #{propertycode,jdbcType=VARCHAR}, #{cny,jdbcType=DECIMAL}, #{usdToCny,jdbcType=DECIMAL}, 
+      #{eurToCny,jdbcType=DECIMAL}, #{gbpToCny,jdbcType=DECIMAL}, #{jpyToCny,jdbcType=DECIMAL}, 
+      #{othToCny,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR}, 
+      #{ccyAmount,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto" >
+    insert into PBC_REPORT_BALANCE_DAT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        DETAILUUID,
+      </if>
+      <if test="reporttype != null" >
+        REPORTTYPE,
+      </if>
+      <if test="grouptype != null" >
+        GROUPTYPE,
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE,
+      </if>
+      <if test="cny != null" >
+        CNY,
+      </if>
+      <if test="usdToCny != null" >
+        USD_TO_CNY,
+      </if>
+      <if test="eurToCny != null" >
+        EUR_TO_CNY,
+      </if>
+      <if test="gbpToCny != null" >
+        GBP_TO_CNY,
+      </if>
+      <if test="jpyToCny != null" >
+        JPY_TO_CNY,
+      </if>
+      <if test="othToCny != null" >
+        OTH_TO_CNY,
+      </if>
+      <if test="total != null" >
+        TOTAL,
+      </if>
+      <if test="reportuuid != null" >
+        REPORTUUID,
+      </if>
+      <if test="ccyAmount != null" >
+        CCY_AMOUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        #{detailuuid,jdbcType=CHAR},
+      </if>
+      <if test="reporttype != null" >
+        #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="grouptype != null" >
+        #{grouptype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="cny != null" >
+        #{cny,jdbcType=DECIMAL},
+      </if>
+      <if test="usdToCny != null" >
+        #{usdToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="eurToCny != null" >
+        #{eurToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="gbpToCny != null" >
+        #{gbpToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="jpyToCny != null" >
+        #{jpyToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="othToCny != null" >
+        #{othToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="reportuuid != null" >
+        #{reportuuid,jdbcType=CHAR},
+      </if>
+      <if test="ccyAmount != null" >
+        #{ccyAmount,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto" >
+    update PBC_REPORT_BALANCE_DAT
+    <set >
+      <if test="reporttype != null" >
+        REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="grouptype != null" >
+        GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="cny != null" >
+        CNY = #{cny,jdbcType=DECIMAL},
+      </if>
+      <if test="usdToCny != null" >
+        USD_TO_CNY = #{usdToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="eurToCny != null" >
+        EUR_TO_CNY = #{eurToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="gbpToCny != null" >
+        GBP_TO_CNY = #{gbpToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="jpyToCny != null" >
+        JPY_TO_CNY = #{jpyToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="othToCny != null" >
+        OTH_TO_CNY = #{othToCny,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        TOTAL = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="reportuuid != null" >
+        REPORTUUID = #{reportuuid,jdbcType=CHAR},
+      </if>
+      <if test="ccyAmount != null" >
+        CCY_AMOUNT = #{ccyAmount,jdbcType=CHAR},
+      </if>
+    </set>
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto" >
+    update PBC_REPORT_BALANCE_DAT
+    set REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+      PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      CNY = #{cny,jdbcType=DECIMAL},
+      USD_TO_CNY = #{usdToCny,jdbcType=DECIMAL},
+      EUR_TO_CNY = #{eurToCny,jdbcType=DECIMAL},
+      GBP_TO_CNY = #{gbpToCny,jdbcType=DECIMAL},
+      JPY_TO_CNY = #{jpyToCny,jdbcType=DECIMAL},
+      OTH_TO_CNY = #{othToCny,jdbcType=DECIMAL},
+      TOTAL = #{total,jdbcType=DECIMAL},
+      REPORTUUID = #{reportuuid,jdbcType=CHAR},
+      CCY_AMOUNT = #{ccyAmount,jdbcType=CHAR}
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PBC_REPORT_BALANCE_DAT
+    where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByReportDate"  parameterType="map" >
+    delete
+    from PBC_REPORT_BALANCE_DAT prp
+    where prp.REPORTUUID in(
+        select pr.REPORTUUID from PBC_REPORT pr
+       where 1=1 
+       <if test="reportStartDate != null" >
+       and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+       </if>
+       <if test="reportEndDate != null" >
+       and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+       </if>
+       <if test="reporttype != null" >
+         and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+       </if> 
+       <if test="pbcAccountId != null" >
+         and pr.PBC_ACCOUNT_ID = #{pbcAccountId,jdbcType=VARCHAR}
+       </if> 
+       <if test="pbcAccountId == null" >
+         and pr.PBC_ACCOUNT_ID is null
+       </if> 
+       <if test="deptCode != null" >
+	     and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+	  </if>
+      <if test="deptCode == null" >
+        and DEPT_CODE is null
+      </if>
+       and pr.send_status = '01'/*只删除未报送数据*/
+    )
+  </delete>
+  <select id="selectDetailInfoSubByReportUuid"
+          resultType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcLoanDetailInfoSubReportVo">
+    select
+      b.item_value as industryFactorName,
+      IFNULL(c.item_value,d.item_value) as areaCodeName,
+      e.item_value as typeOfBorrowerName,
+      a.BORROWER_ID as borrowerCode,
+      f.item_value as originalCcyName,
+      a.ORIG_CONTRACT_AMOUNT as originalContractAmount,
+      a.ORIG_CONTRACT_AMOUNT_CNY as originalContractAmountRmb,
+      g.item_value as loanCcy,
+      a.CONTRACT_AMOUNT as loanBalance,
+      a.CONTRACT_AMOUNT_CNY as loanBalanceRmb,
+      a.LOAN_TRANSFEROR_NAME as transferorAgency,
+      a.LOAN_CONTRACT_ORG_NAME as originalIssuer,
+      h.item_value as originalIssuerLocation,
+      IFNULL(IFNULL(i.item_value,j.item_value),k.item_value) as economicComponent,
+      l.item_value as enterpriseScale,
+      a.LOAN_BASIS_ID as loanIouCode,
+      m.item_value as loanProductCategory,
+      n.item_value as actualInvestmentLoans,
+      a.LOAN_VDATE as dateLoanIssuance,
+      a.LOAN_MDATE as loanMaturityDate,
+      a.LOAN_EXTENSION_DUE_DATE as maturityDateLoanRollover,
+      o.item_value as isTheInterestRate,
+      a.RATE_LEVEL as interestRates,
+      p.item_value as loanGuaranteeMethod,
+      q.item_value as paymentForGoodsQuality,
+      r.item_value as paymentStatus,
+      a.LOAN_TRANSFEROR_RATE as transferDiscountRate,
+      s.item_value as loanTypeName
+      from
+      PBC_LOAN_DETAIL_INFO_SUB a
+      LEFT JOIN SYS_DATADICT_LIST b ON a.industry_info = b.item_code and b.DICT_CODE = 'SVR_INDUSTRY_DOOR_CODE'
+      LEFT JOIN SYS_DATADICT_LIST c ON a.BORROWER_COUNTY = c.item_code and c.DICT_CODE = 'AREA_TYPE3'
+      LEFT JOIN SYS_DATADICT_LIST d on a.BORROWER_NATIONALITY = d.item_code and d.DICT_CODE = 'SVR_COUNTRY_AREA'
+      LEFT JOIN SYS_DATADICT_LIST e on a.BORROWER_TYPE = e.item_code and e.DICT_CODE = 'SVR_PBC_CUSTTYPE'
+      LEFT JOIN SYS_DATADICT_LIST f on a.ORIG_CCY = f.item_code and f.DICT_CODE = 'CURRENCY_CHB'
+      LEFT JOIN SYS_DATADICT_LIST g on a.AMT_CCY = g.item_code and g.DICT_CODE = 'CURRENCY_CHB'
+      LEFT JOIN SYS_DATADICT_LIST h on a.LOAN_CONTRACT_ORG_COUNTY = h.item_code and h.DICT_CODE = 'AREA_TYPE3'
+      LEFT JOIN SYS_DATADICT_LIST i on a.ENTERPRISE_INVESTOR_TYPE_THIRD = i.item_code and i.dict_code = 'SVR_ECONOMIC_THIRD_LEVEL'
+      LEFT JOIN SYS_DATADICT_LIST j on a.ENTERPRISE_INVESTOR_TYPE_SEC = j.item_code and j.dict_code = 'SVR_ECONOMIC_SECOND_LEVEL'
+      LEFT JOIN SYS_DATADICT_LIST k on a.ENTERPRISE_INVESTOR_TYPE_FIRST = k.item_code and k.dict_code = 'SVR_ECONOMIC_FIRST_LEVEL'
+      LEFT JOIN SYS_DATADICT_LIST l on a.ENTERPRISE_SCALE = l.item_code and l.dict_code = 'SVR_SCALE'
+      LEFT JOIN SYS_DATADICT_LIST m on a.LOAN_PRD_TYPE = m.item_code and m.dict_code = 'SVR_LOAN_PEOD_TYPE'
+      LEFT JOIN SYS_DATADICT_LIST n on a.LOAN_ACTUAL_INVEST = n.item_code and n.dict_code = 'SVR_INDUSTRY_CATE_CODE'
+      LEFT JOIN SYS_DATADICT_LIST o on a.RATE_FIXED = o.item_code and o.dict_code = 'SVR_INTEREST_TYPE'
+      LEFT JOIN SYS_DATADICT_LIST p on a.LOAN_GUARANTEE_MODE = p.item_code and p.dict_code = 'SVR_LOAN_GUA_TYPE'
+      LEFT JOIN SYS_DATADICT_LIST q on a.LOAN_QUALITY = q.item_code and q.dict_code = 'SVR_LOAN_QUALITY'
+      LEFT JOIN SYS_DATADICT_LIST r on a.LOAN_STATE = r.item_code and r.dict_code = 'SVR_LOAN_STATUS'
+      LEFT JOIN SYS_DATADICT_LIST s on a.LOANS_TYPE = s.item_code and s.dict_code = 'SVR_LOAN_TYPE'
+      where a.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+  </select>
+
+  <select id="selectCapitalTrustDetailByReportUuid"
+          resultType="com.joyintech.tams.svreport.pbc.assetdebt.dto.PbcLoanDetailInfoSubReportVo">
+    select
+      t.POBCASSETID as inputProductCode,
+      t.CCY as inputProductCcy,
+      t.PBC_ACCOUNT_ID as pbcAccountId,
+      sum(IFNULL(t.CAPITAL_TRUST_AMOUNT,0)) as inputProductAmount,
+      sum(IFNULL(t.CAPITAL_TRUST_AMOUNT_CNY,0)) as inputProductCcyRmb
+      from
+      PBC_CAPITAL_TRUST_DETAIL_SUB t
+      where t.reportuuid  = #{reportuuid,jdbcType=CHAR}
+      group by t.POBCASSETID,t.PBC_ACCOUNT_ID,t.CCY
+  </select>
+
+
+  <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_BALANCE_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+  <insert id="insertDataBySelect">
+    INSERT INTO PBC_REPORT_BALANCE_DAT (<include refid="Base_Column_List" />)
+    SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_BALANCE
+    WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+  </insert>
+  
+  
+  <!-- 根据主表主键查询贷款明细基本信息 -->
+  <select id="selectDKByReportuuid" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub" parameterType="java.lang.String" >
+    select
+		pldinfo.PBC_ACCOUNT_ID pbcAccountId,/*资产池代码*/
+		pldinfo.LOANS_TYPE loansType,/*贷款种类*/
+		pldinfo.LOAN_TRANSFEROR_ID loanTransferorId,/*贷款转让方机构代码*/
+		pldinfo.LOAN_CONTRACT_ORG_ID loanContractOrgId,/*贷款合同原始发放机构代码*/
+		pldinfo.LOAN_CONTRACT_ORG_COUNTY loanContractOrgCounty,/*贷款合同原始发放机构所在地(县)*/
+		pldinfo.BORROWER_TYPE borrowerType,/*借款人类型*/
+		IFNULL(pldinfo.BORROWER_COUNTY,pldinfo.BORROWER_NATIONALITY) borrowerCounty,/*地区代码*/
+		pldinfo.BORROWER_ID borrowerId,/*借款人代码*/
+		pldinfo.INDUSTRY_INFO industryInfo,/*行业信息*/
+		COALESCE(pldinfo.ENTERPRISE_INVESTOR_TYPE_THIRD,pldinfo.ENTERPRISE_INVESTOR_TYPE_SEC,pldinfo.ENTERPRISE_INVESTOR_TYPE_FIRST) enterpriseInvestorType,/*企业出资人经济成分*/
+		pldinfo.ENTERPRISE_SCALE enterpriseScale,/*企业规模*/
+		pldinfo.LOAN_BASIS_ID loanBasisId,/*贷款借据编码*/
+		pldinfo.LOAN_PRD_TYPE loanPrdType,/*贷款产品类别*/
+		pldinfo.LOAN_ACTUAL_INVEST loanActualInvest,/*贷款实际投向*/
+		pldinfo.LOAN_VDATE loanVdate,/*贷款发放日期*/
+		pldinfo.LOAN_MDATE loanMdate,/*贷款到期日期*/
+		pldinfo.LOAN_EXTENSION_DUE_DATE loanExtensionDueDate,/*贷款展期到期日期*/
+		pldinfo.RATE_FIXED rateFixed,/*利率是否固定*/
+		pldinfo.RATE_LEVEL rateLevel,/*利率水平(%)*/
+		pldinfo.LOAN_GUARANTEE_MODE loanGuaranteeMode,/*贷款担保方式*/
+		pldinfo.LOAN_QUALITY loanQuality,/*贷款质量*/
+		pldinfo.LOAN_STATE loanState,/*贷款状态*/
+		pldinfo.LOAN_TRANSFEROR_RATE loanTransferorRate,/*贷款转让折扣率(%)*/
+		pldinfo.ORIG_CCY origCcy,/*原始合同币种代码*/
+		pldinfo.ORIG_CONTRACT_AMOUNT origContractAmount,/*原始合同金额*/
+		pldinfo.ORIG_CONTRACT_AMOUNT_CNY origContractAmountCny,/*原始合同金额折人民币*/
+		pldinfo.AMT_CCY amtCcy,/*贷款余额币种代码*/
+		pldinfo.CONTRACT_AMOUNT contractAmount,/*贷款余额*/
+		pldinfo.CONTRACT_AMOUNT_CNY contractAmountCny/*贷款余额折人民币*/
+	from PBC_LOAN_DETAIL_INFO_SUB pldinfo
+	where pldinfo.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+  </select>
+  
+  	<!-- 根据主表主键查询资金信托基本信息 -->
+	<select id="selectXTByReportuuid" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub" parameterType="java.lang.String">
+		select
+		    pctds.PBC_ACCOUNT_ID pbcAccountId,/*资产池代码*/
+		    pctds.STOCK_TYPE stockType,/*股权种类*/
+		    pctds.CAPITAL_TRUST_ORG_CODE capitalTrustOrgCode,/*产品发起机构编码*/
+		    pctds.POBCASSETID pobcassetid,/*人行资金信托代码*/
+		    pctds.CCY ccy,/*币种代码*/
+		    sum(pctds.CAPITAL_TRUST_AMOUNT) capitalTrustAmount,/*资金信托产品余额*/
+		    sum(pctds.CAPITAL_TRUST_AMOUNT_CNY) capitalTrustAmountCny/*资金信托产品余额折人民币*/
+		from PBC_CAPITAL_TRUST_DETAIL_SUB pctds
+		where pctds.REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
+		group by 
+            pctds.PBC_ACCOUNT_ID,
+            pctds.POBCASSETID,
+            pctds.CCY,
+            pctds.STOCK_TYPE,
+            pctds.CAPITAL_TRUST_ORG_CODE
+  	</select>
+  
+  <select id="selectByReportuuidForExport" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select 
+		    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, CNY, USD_TO_CNY, TOTAL as TOTAL,
+		    REPORTUUID,SUBSTR(SUBSTR(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,')+4), 0,
+			INSTR(SUBSTR(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,')+4),',')-1) AS CCY_AMOUNT
+	    from PBC_REPORT_BALANCE_DAT
+	    where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+	  </select>
+
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto"
+          parameterType="java.lang.String" >
+    select
+      ppd.*,
+      prp.CNY as cnyPrd,
+      prp.USD_TO_CNY as usdToCnyPrd,
+      prp.EUR_TO_CNY as eurToCnyPrd,
+      prp.GBP_TO_CNY as gbpToCnyPrd,
+      prp.JPY_TO_CNY as jpyToCnyPrd,
+      prp.OTH_TO_CNY as othToCnyPrd,
+      prp.TOTAL as totalPrd
+    from PBC_REPORT_BALANCE_DAT ppd
+           left join PBC_REPORT_BALANCE  prp on ppd.REPORTUUID=prp.REPORTUUID
+      and ppd.REPORTTYPE=prp.REPORTTYPE
+      and ppd.propertyCode=prp.propertyCode
+    where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+      and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+  </select>
+
+  <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+    delete
+    from PBC_REPORT_BALANCE_DAT
+    where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+      AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
+  </delete>
+
+  <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto">
+    select     prp.*
+    from PBC_REPORT_BALANCE_DAT prp
+           left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
+    where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
+      and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+      and prp.PROPERTYCODE is  not  null
+       and (prp.CNY &lt;&gt; 0 or prp.USD_TO_CNY &lt;&gt; 0 or prp.EUR_TO_CNY &lt;&gt; 0 or prp.GBP_TO_CNY &lt;&gt; 0 or prp.JPY_TO_CNY &lt;&gt; 0 or
+             prp.OTH_TO_CNY &lt;&gt; 0 or prp.TOTAL&lt;&gt; 0)
+  </select>
+</mapper>

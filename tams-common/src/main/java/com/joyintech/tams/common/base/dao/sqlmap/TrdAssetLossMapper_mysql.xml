@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdAssetLossMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdAssetLoss" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="SEC_ID" property="secId" jdbcType="VARCHAR" />
+        <result column="STAGE" property="stage" jdbcType="VARCHAR" />
+        <result column="PEROID" property="peroid" jdbcType="DECIMAL" />
+        <result column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <result column="STR_DATE" property="strDate" jdbcType="DATE" />
+        <result column="END_DATE" property="endDate" jdbcType="DATE" />
+        <result column="LOSS_TEST_TYPE" property="lossTestType" jdbcType="VARCHAR" />
+        <result column="LOSS_INPUT_TYPE" property="lossInputType" jdbcType="VARCHAR" />
+        <result column="LOSS_RATIO" property="lossRatio" jdbcType="DECIMAL" />
+        <result column="PD_VAULE" property="pdVaule" jdbcType="DECIMAL" />
+        <result column="LGD_VAULE" property="lgdVaule" jdbcType="DECIMAL" />
+        <result column="ECL_VAULE" property="eclVaule" jdbcType="DECIMAL" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, SEC_ID SEC_ID, STAGE STAGE, PEROID PEROID, VAL_DATE VAL_DATE, 
+        STR_DATE STR_DATE, END_DATE END_DATE, LOSS_TEST_TYPE LOSS_TEST_TYPE, LOSS_INPUT_TYPE LOSS_INPUT_TYPE, 
+        LOSS_RATIO LOSS_RATIO, PD_VAULE PD_VAULE, LGD_VAULE LGD_VAULE, ECL_VAULE ECL_VAULE, 
+        STATUS STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdAssetLossMapper_mysql.Base_Column_List" />
+        from TRD_ASSET_LOSS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdAssetLossMapper_mysql.Base_Column_List" />
+        from TRD_ASSET_LOSS
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdAssetLossMapper_mysql.Base_Column_List" />
+        from TRD_ASSET_LOSS
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_ASSET_LOSS
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdAssetLoss" >
+        insert into TRD_ASSET_LOSS (TRADE_ID, SEC_ID, STAGE, 
+            PEROID, VAL_DATE, STR_DATE, 
+            END_DATE, LOSS_TEST_TYPE, LOSS_INPUT_TYPE, 
+            LOSS_RATIO, PD_VAULE, LGD_VAULE, 
+            ECL_VAULE, STATUS, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{tradeId,jdbcType=VARCHAR}, #{secId,jdbcType=VARCHAR}, #{stage,jdbcType=VARCHAR}, 
+            #{peroid,jdbcType=DECIMAL}, #{valDate,jdbcType=DATE}, #{strDate,jdbcType=DATE}, 
+            #{endDate,jdbcType=DATE}, #{lossTestType,jdbcType=VARCHAR}, #{lossInputType,jdbcType=VARCHAR}, 
+            #{lossRatio,jdbcType=DECIMAL}, #{pdVaule,jdbcType=DECIMAL}, #{lgdVaule,jdbcType=DECIMAL}, 
+            #{eclVaule,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdAssetLoss" >
+        insert into TRD_ASSET_LOSS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="secId != null" >
+                SEC_ID,
+            </if>
+            <if test="stage != null" >
+                STAGE,
+            </if>
+            <if test="peroid != null" >
+                PEROID,
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE,
+            </if>
+            <if test="strDate != null" >
+                STR_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
+            <if test="lossTestType != null" >
+                LOSS_TEST_TYPE,
+            </if>
+            <if test="lossInputType != null" >
+                LOSS_INPUT_TYPE,
+            </if>
+            <if test="lossRatio != null" >
+                LOSS_RATIO,
+            </if>
+            <if test="pdVaule != null" >
+                PD_VAULE,
+            </if>
+            <if test="lgdVaule != null" >
+                LGD_VAULE,
+            </if>
+            <if test="eclVaule != null" >
+                ECL_VAULE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="secId != null" >
+                #{secId,jdbcType=VARCHAR},
+            </if>
+            <if test="stage != null" >
+                #{stage,jdbcType=VARCHAR},
+            </if>
+            <if test="peroid != null" >
+                #{peroid,jdbcType=DECIMAL},
+            </if>
+            <if test="valDate != null" >
+                #{valDate,jdbcType=DATE},
+            </if>
+            <if test="strDate != null" >
+                #{strDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=DATE},
+            </if>
+            <if test="lossTestType != null" >
+                #{lossTestType,jdbcType=VARCHAR},
+            </if>
+            <if test="lossInputType != null" >
+                #{lossInputType,jdbcType=VARCHAR},
+            </if>
+            <if test="lossRatio != null" >
+                #{lossRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="pdVaule != null" >
+                #{pdVaule,jdbcType=DECIMAL},
+            </if>
+            <if test="lgdVaule != null" >
+                #{lgdVaule,jdbcType=DECIMAL},
+            </if>
+            <if test="eclVaule != null" >
+                #{eclVaule,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdAssetLoss" >
+        insert into TRD_ASSET_LOSS(TRADE_ID, SEC_ID, STAGE, PEROID, VAL_DATE, STR_DATE, END_DATE, 
+        LOSS_TEST_TYPE, LOSS_INPUT_TYPE, LOSS_RATIO, PD_VAULE, LGD_VAULE, ECL_VAULE, STATUS, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, SEC_ID, STAGE, PEROID, VAL_DATE, STR_DATE, END_DATE, 
+            LOSS_TEST_TYPE, LOSS_INPUT_TYPE, LOSS_RATIO, PD_VAULE, LGD_VAULE, ECL_VAULE, #{status,jdbcType=VARCHAR} STATUS, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from TRD_ASSET_LOSS
+             where STATUS = 'E' and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdAssetLoss" >
+        update TRD_ASSET_LOSS
+        <set >
+            <if test="secId != null" >
+                SEC_ID = #{secId,jdbcType=VARCHAR},
+            </if>
+            <if test="stage != null" >
+                STAGE = #{stage,jdbcType=VARCHAR},
+            </if>
+            <if test="peroid != null" >
+                PEROID = #{peroid,jdbcType=DECIMAL},
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE = #{valDate,jdbcType=DATE},
+            </if>
+            <if test="strDate != null" >
+                STR_DATE = #{strDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="lossTestType != null" >
+                LOSS_TEST_TYPE = #{lossTestType,jdbcType=VARCHAR},
+            </if>
+            <if test="lossInputType != null" >
+                LOSS_INPUT_TYPE = #{lossInputType,jdbcType=VARCHAR},
+            </if>
+            <if test="lossRatio != null" >
+                LOSS_RATIO = #{lossRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="pdVaule != null" >
+                PD_VAULE = #{pdVaule,jdbcType=DECIMAL},
+            </if>
+            <if test="lgdVaule != null" >
+                LGD_VAULE = #{lgdVaule,jdbcType=DECIMAL},
+            </if>
+            <if test="eclVaule != null" >
+                ECL_VAULE = #{eclVaule,jdbcType=DECIMAL},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdAssetLoss" >
+        update TRD_ASSET_LOSS
+        set SEC_ID = #{secId,jdbcType=VARCHAR},
+            STAGE = #{stage,jdbcType=VARCHAR},
+            PEROID = #{peroid,jdbcType=DECIMAL},
+            VAL_DATE = #{valDate,jdbcType=DATE},
+            STR_DATE = #{strDate,jdbcType=DATE},
+            END_DATE = #{endDate,jdbcType=DATE},
+            LOSS_TEST_TYPE = #{lossTestType,jdbcType=VARCHAR},
+            LOSS_INPUT_TYPE = #{lossInputType,jdbcType=VARCHAR},
+            LOSS_RATIO = #{lossRatio,jdbcType=DECIMAL},
+            PD_VAULE = #{pdVaule,jdbcType=DECIMAL},
+            LGD_VAULE = #{lgdVaule,jdbcType=DECIMAL},
+            ECL_VAULE = #{eclVaule,jdbcType=DECIMAL},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

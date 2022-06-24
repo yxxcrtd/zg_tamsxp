@@ -21,10 +21,10 @@
             AND SUBMIT_FEEDBACK_STATUS = #{feedbackStatus}
         </if>
         <if test="startDate != null and !startDate.equals('') and !startDate.isEmpty()">
-            AND SUBMIT_TIME >= DATE_FORMAT(#{startDate}, '%Y-%m-%d')
+            AND DATE_FORMAT(SUBMIT_TIME, '%Y-%m-%d') >= #{startDate}
         </if>
         <if test="endDate != null and !endDate.equals('') and !endDate.isEmpty()">
-            AND SUBMIT_TIME &lt;= DATE_FORMAT(#{endDate}, '%Y-%m-%d')+1
+            AND DATE_FORMAT(SUBMIT_TIME, '%Y-%m-%d') &lt;= #{endDate}
         </if>
         order by repDate desc
     </select>

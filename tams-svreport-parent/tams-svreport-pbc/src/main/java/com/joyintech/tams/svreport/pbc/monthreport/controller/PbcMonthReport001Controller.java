@@ -151,6 +151,9 @@ public class PbcMonthReport001Controller extends BaseController{
             result.put("YEAR",cal.get(Calendar.YEAR)+"");
             result.put("MONTH",cal.get(Calendar.MONTH)+1+"");
         }
+		if(report.getSendStatus() != null){
+			result.put("SendStatus",report.getSendStatus());
+		}
         return JsonUtils.object2Json(result);
     }
 	/**

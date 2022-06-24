@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.db.struct.dao.SvrTableStructMapper_mysql">
+    <select id="selectTableStruct" parameterType="java.util.Map"
+            resultType="com.joyintech.tams.report.db.struct.dto.TableColumn" useCache="false" flushCache="true">
+            SELECT DISTINCT
+            TB.TABLE_NAME AS tableName,
+            COL.COLUMN_NAME AS columnName,
+            COL.COLUMN_TYPE AS dataType,
+            COL.CHARACTER_MAXIMUM_LENGTH AS dataLength,
+            COL.IS_NULLABLE AS nullable,
+            COL.ORDINAL_POSITION AS  columnId
+            FROM
+            INFORMATION_SCHEMA.TABLES TB,
+            INFORMATION_SCHEMA.COLUMNS COL
+            WHERE
+<!--            TB.TABLE_SCHEMA = 'zoutest'  AND-->
+            TB.TABLE_NAME = '${table}'
+            AND TB.TABLE_NAME = COL.TABLE_NAME
+            AND COL.table_schema=database() ORDER BY COL.ORDINAL_POSITION
+    </select>
+</mapper>

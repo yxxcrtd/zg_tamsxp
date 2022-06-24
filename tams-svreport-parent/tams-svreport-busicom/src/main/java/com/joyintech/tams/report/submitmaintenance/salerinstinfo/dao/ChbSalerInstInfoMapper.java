@@ -69,6 +69,13 @@ public interface ChbSalerInstInfoMapper {
     List<SalerInstInfoDto> selectRewPenaInfo();
 
     /**
+     * 查询总数
+     * @param salerOrgCode
+     * @return
+     */
+    int getSalerInstInfoCount(@Param("salerOrgCode") String salerOrgCode);
+
+    /**
      * 根据主键删除erro表中数据
      * @param workflowId
      * @return

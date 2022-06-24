@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper  namespace="com.joyintech.tams.disclosure.busicommon.common.dao.DisFinProductCommonMapper_mysql">
+    <!-- 核算主体查询 -->
+    <select id="queryAcctSubject" resultType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProduct" parameterType="java.util.Map">
+    SELECT
+	    A.FINPROD_ID,
+	    A.FINPROD_TYPE,
+	    A.FINPROD_ABBR,
+	    A.FINPROD_NAME,
+	    A.PROFIT_TYPE,
+	    A.COUPON_SPECIES,
+	    A.CHL_FINPROD_ID,
+	    A.FINPROD_MARKET_ID,
+	    A.ISSUE_PRICE,
+	    A.ISSUE_AMT,
+	    A.CCY,
+	    A.BLN_AREA,
+	    A.TRADE_MARKET,
+	    A.CALENDAR_ID,
+	    A.ISSUE_TYPE,
+	    A.ISSUER,
+	    A.IDATE,
+	    A.VDATE,
+	    A.MDATE,
+	    A.ACTMDATE,
+	    A.IS_CHL,
+	    A.IS_SUS,
+	    A.IS_RIGHT,
+	    A.P_FINPROD_ID,
+	    A.O_FINPROD_ID,
+	    A.O_FINPROD_TYPE,
+	    A.CAPI_INCOME_FEATURE
+    FROM	    BOK_BOOKSET	B
+	INNER JOIN		FIN_PRODUCT A
+	ON		B.ACCT_SUBJECT_ID = A.FINPROD_ID
+    WHERE
+	    B.BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+	AND B.ACCT_SUBJECT_TYPE = #{acctSubjectType}
+	</select>
+</mapper>

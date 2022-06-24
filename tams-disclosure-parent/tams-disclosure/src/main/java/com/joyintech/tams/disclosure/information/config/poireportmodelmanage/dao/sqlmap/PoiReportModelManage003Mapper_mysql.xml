@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.poireportmodelmanage.dao.PoiReportModelManage003Mapper_mysql">
 	<select id="selectConfirmStatus" resultType="java.lang.Integer">
-		SELECT COUNT(1)
-		FROM REP_REVEAL
-		WHERE 1=1
+    	SELECT COUNT(1)
+    	FROM REP_REVEAL
+    	WHERE 1=1
 		<if test="tabNum !=null and tabNum != ''">
 			AND REP_ID = #{tabNum,jdbcType=VARCHAR}
 		</if>
@@ -22,7 +22,7 @@
 		</if>
 		AND STATUS='E'
 		AND CONFIRM_STATUS='1'
-	</select>
+    </select>
 	<select id="querySameCount" resultType="java.lang.Integer">
         SELECT 
 			count(1) 

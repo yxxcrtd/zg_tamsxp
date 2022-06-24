@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper_mysql">
-    <select id="selectIndexDetail" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
-     select
-      pb.ID as id,
-      pb.PRI_ID as priID,
-      pb.INDEX_NAME as indexName,
-      pb.INDEX_VALUE as indexValue,
-      pb.INDEX_FILE as indexFile,
-      pb.INDEX_TYPE as indexType,
-      pb.INDEX_DATE as indexDate,
-      pb.CREATE_USER as createUser,
+	<select id="selectIndexDetail" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+     select 
+      pb.ID as id,              
+      pb.PRI_ID as priID,   
+      pb.INDEX_NAME as indexName,   
+      pb.INDEX_VALUE as indexValue,  
+      pb.INDEX_FILE as indexFile,  
+      pb.INDEX_TYPE as indexType,   
+      pb.INDEX_DATE as indexDate,    
+      pb.CREATE_USER as createUser, 
       DATE_FORMAT(pb.UPDATE_TIME,'%Y-%m-%d %H:%i:%s') as updateTimeFmt,
-      pb.AUDIT_STATUS  as auditStatus,
-      pb.INDEX_DETAIL as indexDetail
+      pb.AUDIT_STATUS  as auditStatus, 
+      pb.INDEX_DETAIL as indexDetail  
        from REP_INDEX_SUB pb
          inner join  REP_INDEX_PRIMARY  py
-           on pb.PRI_ID=py.ID
-         where 1=1
+           on pb.PRI_ID=py.ID  
+         where 1=1    
          AND py.id = #{indexId}
          ORDER BY pb.CREATE_TIME DESC
    </select>
-    <select id="selectById" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto" parameterType="java.lang.String">
+	<select id="selectById" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto" parameterType="java.lang.String">
        select ris.ID as id,ris.PRI_ID as priId,ris.INDEX_NAME as indexName,ris.INDEX_VALUE as indexValue,ris.INDEX_DATE as indexDate,
               ris.INDEX_TYPE as indexType,DATE_FORMAT(ris.INDEX_DATE,'%Y-%m-%d') as indexDateStr,ris.INDEX_FILE as indexFile,ris.INDEX_DETAIL as indexDetail,
               ris.AUDIT_STATUS as auditStatus
        from REP_INDEX_SUB ris
        where ris.ID =#{id}
    </select>
-    <insert id="insert" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+	<insert id="insert" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
       insert  into  REP_INDEX_SUB(ID,PRI_ID,INDEX_NAME,INDEX_VALUE,
              INDEX_DATE,INDEX_TYPE,INDEX_FILE,
              CREATE_USER,CREATE_TIME,
@@ -40,16 +40,16 @@
             STR_TO_DATE(#{indexDate}, '%Y-%m-%d'),
             #{indexType,jdbcType=VARCHAR},
           	#{indexFile,jdbcType=VARCHAR},
-            #{createUser,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP},
-            #{updateUser,jdbcType=VARCHAR},
+            #{updateUser,jdbcType=VARCHAR},         
             #{updateTime,jdbcType=TIMESTAMP},
             #{createDept,jdbcType=VARCHAR},
             '已审核')
    </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
-        update REP_INDEX_SUB
-        <set >
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+     update REP_INDEX_SUB 
+       <set >
             <if test="indexName != null" >
                 INDEX_NAME = #{indexName,jdbcType=VARCHAR},
             </if>
@@ -62,7 +62,7 @@
             <if test="indexFile != null" >
                 INDEX_FILE = #{indexFile,jdbcType=VARCHAR},
             </if>
-            <if test="indexType != null" >
+             <if test="indexType != null" >
                 INDEX_TYPE = #{indexType,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null" >
@@ -70,5 +70,5 @@
             </if>
         </set>
         where ID=#{id,jdbcType=VARCHAR}
-    </update>
+  </update>
 </mapper>

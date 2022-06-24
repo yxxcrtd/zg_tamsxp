@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.institutiondata.dao.DisAssociatedInstitutionsMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
+        <result column="RELORG_ID" jdbcType="VARCHAR" property="relorgId" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateteUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+       RELORG_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+  </sql>
+
+    <insert id="insertByModel"
+            parameterType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
+        insert into REP_RELORG (RELORG_ID, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME,UPDATE_USER,UPDATE_TIME, ORGAN_NAME)
+        values
+        <foreach collection="list" item="dto" separator=",">
+            (
+            #{dto.relorgId,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR},
+            #{dto.createDept,jdbcType=VARCHAR},
+            #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateteUser,jdbcType=VARCHAR},
+            #{dto.updateTime,jdbcType=TIMESTAMP} , #{dto.organName,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByModel"
+            parameterType="com.joyintech.tams.svreport.interf.dis.institutiondata.dto.DisAssociatedInstitutions">
+        delete from REP_RELORG
+        <where>
+            <foreach collection="list" item="dto" separator="union all"
+                     open="(RELORG_ID) in ("
+                     close=")">
+                select #{dto.relorgId,jdbcType=VARCHAR}
+                from dual
+            </foreach>
+        </where>
+    </delete>
+
+</mapper>

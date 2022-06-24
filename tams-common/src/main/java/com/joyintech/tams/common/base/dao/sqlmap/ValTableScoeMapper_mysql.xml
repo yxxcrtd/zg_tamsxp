@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValTableScoeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValTableScoe" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="ITEM_CODE" property="itemCode" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+        <result column="ITEM_TYPE" property="itemType" jdbcType="VARCHAR" />
+        <result column="ITEM1_AMT" property="item1Amt" jdbcType="DECIMAL" />
+        <result column="ITEM2_AMT" property="item2Amt" jdbcType="DECIMAL" />
+        <result column="ITEM3_AMT" property="item3Amt" jdbcType="DECIMAL" />
+        <result column="ITEM4_AMT" property="item4Amt" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, ITEM_CODE ITEM_CODE, CDATE CDATE, ITEM_NAME ITEM_NAME, ITEM_TYPE ITEM_TYPE, 
+        ITEM1_AMT ITEM1_AMT, ITEM2_AMT ITEM2_AMT, ITEM3_AMT ITEM3_AMT, ITEM4_AMT ITEM4_AMT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValTableScoeMapper_mysql.Base_Column_List" />
+        from VAL_TABLE_SCOE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValTableScoeMapper_mysql.Base_Column_List" />
+        from VAL_TABLE_SCOE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ValTableScoeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValTableScoeMapper_mysql.Base_Column_List" />
+        from VAL_TABLE_SCOE
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValTableScoeKey" >
+        delete from VAL_TABLE_SCOE
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValTableScoe" >
+        insert into VAL_TABLE_SCOE (BOOKSET_ID, ITEM_CODE, CDATE, 
+            ITEM_NAME, ITEM_TYPE, ITEM1_AMT, 
+            ITEM2_AMT, ITEM3_AMT, ITEM4_AMT
+            )
+        values (#{booksetId,jdbcType=VARCHAR}, #{itemCode,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, 
+            #{itemName,jdbcType=VARCHAR}, #{itemType,jdbcType=VARCHAR}, #{item1Amt,jdbcType=DECIMAL}, 
+            #{item2Amt,jdbcType=DECIMAL}, #{item3Amt,jdbcType=DECIMAL}, #{item4Amt,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValTableScoe" >
+        insert into VAL_TABLE_SCOE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="itemCode != null" >
+                ITEM_CODE,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="itemName != null" >
+                ITEM_NAME,
+            </if>
+            <if test="itemType != null" >
+                ITEM_TYPE,
+            </if>
+            <if test="item1Amt != null" >
+                ITEM1_AMT,
+            </if>
+            <if test="item2Amt != null" >
+                ITEM2_AMT,
+            </if>
+            <if test="item3Amt != null" >
+                ITEM3_AMT,
+            </if>
+            <if test="item4Amt != null" >
+                ITEM4_AMT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="itemCode != null" >
+                #{itemCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="itemName != null" >
+                #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="itemType != null" >
+                #{itemType,jdbcType=VARCHAR},
+            </if>
+            <if test="item1Amt != null" >
+                #{item1Amt,jdbcType=DECIMAL},
+            </if>
+            <if test="item2Amt != null" >
+                #{item2Amt,jdbcType=DECIMAL},
+            </if>
+            <if test="item3Amt != null" >
+                #{item3Amt,jdbcType=DECIMAL},
+            </if>
+            <if test="item4Amt != null" >
+                #{item4Amt,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValTableScoe" >
+        insert into VAL_TABLE_SCOE(BOOKSET_ID, ITEM_CODE, CDATE, ITEM_NAME, ITEM_TYPE, ITEM1_AMT, 
+        ITEM2_AMT, ITEM3_AMT, ITEM4_AMT)
+        select BOOKSET_ID, ITEM_CODE, CDATE, ITEM_NAME, ITEM_TYPE, ITEM1_AMT, 
+            ITEM2_AMT, ITEM3_AMT, ITEM4_AMT
+             from VAL_TABLE_SCOE
+             where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and ITEM_CODE = #{itemCode,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValTableScoe" >
+        update VAL_TABLE_SCOE
+        <set >
+            <if test="itemName != null" >
+                ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="itemType != null" >
+                ITEM_TYPE = #{itemType,jdbcType=VARCHAR},
+            </if>
+            <if test="item1Amt != null" >
+                ITEM1_AMT = #{item1Amt,jdbcType=DECIMAL},
+            </if>
+            <if test="item2Amt != null" >
+                ITEM2_AMT = #{item2Amt,jdbcType=DECIMAL},
+            </if>
+            <if test="item3Amt != null" >
+                ITEM3_AMT = #{item3Amt,jdbcType=DECIMAL},
+            </if>
+            <if test="item4Amt != null" >
+                ITEM4_AMT = #{item4Amt,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValTableScoe" >
+        update VAL_TABLE_SCOE
+        set ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            ITEM_TYPE = #{itemType,jdbcType=VARCHAR},
+            ITEM1_AMT = #{item1Amt,jdbcType=DECIMAL},
+            ITEM2_AMT = #{item2Amt,jdbcType=DECIMAL},
+            ITEM3_AMT = #{item3Amt,jdbcType=DECIMAL},
+            ITEM4_AMT = #{item4Amt,jdbcType=DECIMAL}
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

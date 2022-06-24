@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RegFinProductDealTotalAddMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
+        <id column="TOTLE_TRADE_ID" property="totleTradeId" jdbcType="VARCHAR" />
+        <result column="OUR_SHARE_AMT" property="ourShareAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_SHARE_AMT" property="lendinShareAmt" jdbcType="DECIMAL" />
+        <result column="OUR_CPRICE_AMT" property="ourCpriceAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_CPRICE_AMT" property="lendinCpriceAmt" jdbcType="DECIMAL" />
+        <result column="OUR_FPRICE_AMT" property="ourFpriceAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_FPRICE_AMT" property="lendinFpriceAmt" jdbcType="DECIMAL" />
+        <result column="OUR_INT_AMT" property="ourIntAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_INT_AMT" property="lendinIntAmt" jdbcType="DECIMAL" />
+        <result column="ACT_SETTE_DATE" property="actSetteDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CAL_MODE" property="calMode" jdbcType="VARCHAR" />
+        <result column="EXERCISE_PRICE" property="exercisePrice" jdbcType="DECIMAL" />
+        <result column="REDEEM_RATE" property="redeemRate" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TOTLE_TRADE_ID TOTLE_TRADE_ID, OUR_SHARE_AMT OUR_SHARE_AMT, LENDIN_SHARE_AMT LENDIN_SHARE_AMT, 
+        OUR_CPRICE_AMT OUR_CPRICE_AMT, LENDIN_CPRICE_AMT LENDIN_CPRICE_AMT, OUR_FPRICE_AMT OUR_FPRICE_AMT, 
+        LENDIN_FPRICE_AMT LENDIN_FPRICE_AMT, OUR_INT_AMT OUR_INT_AMT, LENDIN_INT_AMT LENDIN_INT_AMT, 
+        ACT_SETTE_DATE ACT_SETTE_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CAL_MODE CAL_MODE, 
+        EXERCISE_PRICE EXERCISE_PRICE, REDEEM_RATE REDEEM_RATE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RegFinProductDealTotalAddMapper_mysql.Base_Column_List" />
+        from REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RegFinProductDealTotalAddMapper_mysql.Base_Column_List" />
+        from REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RegFinProductDealTotalAddMapper_mysql.Base_Column_List" />
+        from REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
+        insert into REG_FIN_PRODUCT_DEAL_TOTAL_ADD (TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
+            OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, 
+            LENDIN_FPRICE_AMT, OUR_INT_AMT, LENDIN_INT_AMT, 
+            ACT_SETTE_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            CAL_MODE, EXERCISE_PRICE, REDEEM_RATE
+            )
+        values (#{totleTradeId,jdbcType=VARCHAR}, #{ourShareAmt,jdbcType=DECIMAL}, #{lendinShareAmt,jdbcType=DECIMAL}, 
+            #{ourCpriceAmt,jdbcType=DECIMAL}, #{lendinCpriceAmt,jdbcType=DECIMAL}, #{ourFpriceAmt,jdbcType=DECIMAL}, 
+            #{lendinFpriceAmt,jdbcType=DECIMAL}, #{ourIntAmt,jdbcType=DECIMAL}, #{lendinIntAmt,jdbcType=DECIMAL}, 
+            #{actSetteDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{calMode,jdbcType=VARCHAR}, #{exercisePrice,jdbcType=DECIMAL}, #{redeemRate,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
+        insert into REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                TOTLE_TRADE_ID,
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT,
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT,
+            </if>
+            <if test="ourCpriceAmt != null" >
+                OUR_CPRICE_AMT,
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                LENDIN_CPRICE_AMT,
+            </if>
+            <if test="ourFpriceAmt != null" >
+                OUR_FPRICE_AMT,
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                LENDIN_FPRICE_AMT,
+            </if>
+            <if test="ourIntAmt != null" >
+                OUR_INT_AMT,
+            </if>
+            <if test="lendinIntAmt != null" >
+                LENDIN_INT_AMT,
+            </if>
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE,
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE,
+            </if>
+            <if test="redeemRate != null" >
+                REDEEM_RATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                #{totleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="ourShareAmt != null" >
+                #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourCpriceAmt != null" >
+                #{ourCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                #{lendinCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourFpriceAmt != null" >
+                #{ourFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                #{lendinFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourIntAmt != null" >
+                #{ourIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinIntAmt != null" >
+                #{lendinIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="actSetteDate != null" >
+                #{actSetteDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="calMode != null" >
+                #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemRate != null" >
+                #{redeemRate,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
+        insert into REG_FIN_PRODUCT_DEAL_TOTAL_ADD(TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
+        OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
+        LENDIN_INT_AMT, ACT_SETTE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE)
+        select TOTLE_TRADE_ID, OUR_SHARE_AMT, LENDIN_SHARE_AMT, 
+            OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
+            LENDIN_INT_AMT, ACT_SETTE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CAL_MODE, EXERCISE_PRICE, REDEEM_RATE
+             from REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+             where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
+        update REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+        <set >
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourCpriceAmt != null" >
+                OUR_CPRICE_AMT = #{ourCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                LENDIN_CPRICE_AMT = #{lendinCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourFpriceAmt != null" >
+                OUR_FPRICE_AMT = #{ourFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourIntAmt != null" >
+                OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinIntAmt != null" >
+                LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="redeemRate != null" >
+                REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RegFinProductDealTotalAdd" >
+        update REG_FIN_PRODUCT_DEAL_TOTAL_ADD
+        set OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            OUR_CPRICE_AMT = #{ourCpriceAmt,jdbcType=DECIMAL},
+            LENDIN_CPRICE_AMT = #{lendinCpriceAmt,jdbcType=DECIMAL},
+            OUR_FPRICE_AMT = #{ourFpriceAmt,jdbcType=DECIMAL},
+            LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
+            OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
+            LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
+            ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            REDEEM_RATE = #{redeemRate,jdbcType=DECIMAL}
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -13,6 +13,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.service.SalesTransactionMaintenanceService;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Objects;
 
 /**
  * 销售结算资金交易信息维护新建
@@ -95,12 +98,12 @@ public class SalesTransactionMaintenance002Controller extends BaseController {
             SalesTransactionMaintenanceService.save(dto);
             return new AjaxResult("保存成功");
         }
-        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && dto.getMaintainStatus().equals("02")){
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && Objects.equals(dto.getMaintainStatus(),"02")){
             SalesTransactionMaintenanceService.update(dto);
             return new AjaxResult("操作成功");
         }
         //来自err表的数据要先删除err表中的数据再保存在info表中
-        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && dto.getMaintainStatus() == ""){
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT) && StringUtils.isBlank(dto.getMaintainStatus())){
             SalesTransactionMaintenanceService.deleteAndSave(dto);
             return new AjaxResult("操作成功");
         }

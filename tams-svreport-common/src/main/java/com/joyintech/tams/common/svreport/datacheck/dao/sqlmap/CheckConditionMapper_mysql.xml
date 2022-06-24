@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.svreport.datacheck.dao.CheckConditionMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition" >
+        <result column="CHECKCONDITIONID" property="checkconditionid" jdbcType="CHAR" />
+        <result column="CHECKRULEID" property="checkruleid" jdbcType="CHAR" />
+        <result column="CHECKMETHOD" property="checkmethod" jdbcType="VARCHAR" />
+        <result column="SRCPROPERTY" property="srcproperty" jdbcType="VARCHAR" />
+        <result column="COMPARETO" property="compareto" jdbcType="VARCHAR" />
+        <result column="OBJVALUE" property="objvalue" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE,
+        REMARK, STATUS
+    </sql>
+    <insert id="insert" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition" >
+        insert into CHB_DATACHECK_CONDITION (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD,
+         SRCPROPERTY, COMPARETO, OBJVALUE,
+        REMARK, STATUS)
+        values (#{checkconditionid,jdbcType=CHAR}, #{checkruleid,jdbcType=CHAR}, #{checkmethod,jdbcType=VARCHAR},
+        #{srcproperty,jdbcType=VARCHAR}, #{compareto,jdbcType=VARCHAR}, #{objvalue,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition" >
+        insert into CHB_DATACHECK_CONDITION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="checkconditionid != null" >
+                CHECKCONDITIONID,
+            </if>
+            <if test="checkruleid != null" >
+                CHECKRULEID,
+            </if>
+            <if test="checkmethod != null" >
+                CHECKMETHOD,
+            </if>
+            <if test="srcproperty != null" >
+                SRCPROPERTY,
+            </if>
+            <if test="compareto != null" >
+                COMPARETO,
+            </if>
+            <if test="objvalue != null" >
+                OBJVALUE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="checkconditionid != null" >
+                #{checkconditionid,jdbcType=CHAR},
+            </if>
+            <if test="checkruleid != null" >
+                #{checkruleid,jdbcType=CHAR},
+            </if>
+            <if test="checkmethod != null" >
+                #{checkmethod,jdbcType=VARCHAR},
+            </if>
+            <if test="srcproperty != null" >
+                #{srcproperty,jdbcType=VARCHAR},
+            </if>
+            <if test="compareto != null" >
+                #{compareto,jdbcType=VARCHAR},
+            </if>
+            <if test="objvalue != null" >
+                #{objvalue,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByRuleid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from CHB_DATACHECK_CONDITION
+        where STATUS='E'
+        <if test="checkruleid != null" >
+            and checkruleid= #{checkruleid,jdbcType=CHAR}
+        </if>
+    </select>
+
+</mapper>

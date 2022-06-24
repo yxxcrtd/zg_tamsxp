@@ -138,7 +138,7 @@ public class ChbMonthPrdPosition {
      * 起息日
      */
     private Date vdate;
-    
+
     /**
      * 开放期限
      */
@@ -260,15 +260,15 @@ public class ChbMonthPrdPosition {
     }
 
     public String getInstitutionCode() {
-		return institutionCode;
-	}
+        return institutionCode;
+    }
 
-	public void setInstitutionCode(String institutionCode) {
-		this.institutionCode = institutionCode;
-	}
-	//add by leipeng 20200606
-    
-    
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
+    //add by leipeng 20200606
+
+
     /**
      * null
      * @return POSUUID null
@@ -668,22 +668,22 @@ public class ChbMonthPrdPosition {
     public void setVdate(Date vdate) {
         this.vdate = vdate;
     }
-    
+
     public String getOpenduration() {
         return openduration;
     }
-    
+
     public void setOpenduration(String openduration) {
         this.openduration = openduration;
     }
-    
-    public String getCashmanacate() {
-		return cashmanacate;
-	}
 
-	public void setCashmanacate(String cashmanacate) {
-		this.cashmanacate = cashmanacate;
-	}
+    public String getCashmanacate() {
+        return cashmanacate;
+    }
+
+    public void setCashmanacate(String cashmanacate) {
+        this.cashmanacate = cashmanacate;
+    }
 
     public BigDecimal getYieldE() {
         return yieldE;
@@ -691,5 +691,81 @@ public class ChbMonthPrdPosition {
 
     public void setYieldE(BigDecimal yieldE) {
         this.yieldE = yieldE;
+    }
+
+    /**
+     * 期限品种2 01 T+0产品/02 7天（含）以内/03 7天-1个月（含）/04 1-3个月（含）/05 3-6 25个月(含)/06 6-12个月（含）/08 1-3年（含）/09 3年以上
+     */
+    private String termtype2;
+
+    public String getTermtype2() {
+        return termtype2;
+    }
+
+    public void setTermtype2(String termtype2) {
+        this.termtype2 = termtype2;
+    }
+
+    /**
+     * 是否完全符合《通知》要求,01是/02否
+     */
+    private String isNotice;
+
+    public String getIsNotice() {
+        return isNotice;
+    }
+
+    public void setIsNotice(String isNotice) {
+        this.isNotice = isNotice;
+    }
+
+    /**
+     * 本位币
+     */
+    private String functionalCurrency;
+
+    /**
+     * 获取 本位币
+     * @return
+     */
+    public String getFunctionalCurrency() {
+        return functionalCurrency;
+    }
+
+    /**
+     * 设置 本位币
+     * @param functionalCurrency
+     */
+    public void setFunctionalCurrency(String functionalCurrency) {
+        this.functionalCurrency = functionalCurrency;
+    }
+
+
+
+    /**
+     * 现金管理类产品-是否完全符合
+     */
+    private String isFullyCompliant;
+
+    /**
+     * 期限(天)
+     */
+    private BigDecimal termday;
+
+    public BigDecimal getTermday() {
+        return termday;
+    }
+
+    public void setTermday(BigDecimal termday) {
+        this.termday = termday;
+    }
+
+
+    public String getIsFullyCompliant() {
+        return isFullyCompliant;
+    }
+
+    public void setIsFullyCompliant(String isFullyCompliant) {
+        this.isFullyCompliant = isFullyCompliant;
     }
 }

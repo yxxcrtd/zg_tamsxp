@@ -30,10 +30,6 @@
 		a.UPDATE_TIME
 		FROM
 		CHB_SALER_STL_DEAL_SUB a
-		LEFT JOIN
-		CHB_SUBMIT_STATUS status
-		ON
-		a.SUMIT_SEQ = status.seqno
 		where 1=1
 			<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
 				and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
@@ -41,8 +37,10 @@
 			<if test="sendStatus != null and sendStatus != ''">
 				and a.SEND_STATUS = #{sendStatus}
 			</if>
-			<if test="dataStatus != null and dataStatus != ''">
-				and a.DATA_STATUS = #{dataStatus}
+			<if test="dataStatusList != null and dataStatusList.size() > 0">
+				<foreach collection="dataStatusList" item="dataStatus" open=" AND a.DATA_STATUS IN (" close=")" separator=",">
+					#{dataStatus}
+				</foreach>
 			</if>
 		    <if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
 			    and a.CHB_SUBMIT_DEADLINE between STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')
@@ -265,13 +263,28 @@
 			</if>
 		</where> ) maxtime
 		on his.CREATE_TIME=maxtime.CREATE_TIME
+		<where>
+			<if test="registList !=null and registList.size()>0">
+				INSTITUTION_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.institutionCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				and TRADE_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
 	</insert>
 
 	<delete id="deleteReportDataHis" parameterType="java.util.Map">
 		delete
-		from CHB_SALER_STL_DEAL_SUB_HIS his
-		where his.CREATE_TIME=(
-		select t1.CREATE_TIME from (
+		from CHB_SALER_STL_DEAL_SUB_HIS
+		where CREATE_TIME=(SELECT T.CREATE_TIME   FROM (
 		SELECT max(CREATE_TIME) CREATE_TIME from CHB_SALER_STL_DEAL_SUB_HIS
 		<where>
 			<if test="registList !=null and registList.size()>0">
@@ -288,10 +301,21 @@
 					#{regist.tradeNo,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-		</where>
-
-		)t1
-		)
+		</where>)T)
+		<if test="registList !=null and registList.size()>0">
+			and INSTITUTION_CODE
+			IN
+			<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+				#{regist.institutionCode,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="registList !=null and registList.size()>0">
+			and TRADE_NO
+			IN
+			<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+				#{regist.tradeNo,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</delete>
 
 	<select id="queryExportListByKeys" resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
@@ -320,10 +344,6 @@
 		sub.UPDATE_TIME
 		FROM
 		CHB_SALER_STL_DEAL_SUB sub
-		LEFT JOIN
-		CHB_SUBMIT_STATUS status
-		ON
-		a.SUMIT_SEQ = status.seqno
     	<where>
 		   	<if test="registList!=null and registList.size()!=0">
 			 	<foreach collection="registList" item="regist" open=" (" close=")" separator=") or (">
@@ -351,7 +371,7 @@
 		</where>
 	</select>
 
-    <update id="updateSubmitStatusToOk" parameterType="java.util.List">
+   <!-- <update id="updateSubmitStatusToOk" parameterType="java.util.List">
         update CHB_SUBMIT_STATUS subStatus
         <set> 
             subStatus.SUBMIT_FEEDBACK_STATUS = '03'
@@ -361,7 +381,7 @@
                 subStatus.SEQNO = #{item,jdbcType=VARCHAR}
             </foreach>
         </where>
-    </update>
+    </update>-->
 
 	<select id= "isNotSubmitP" resultType="java.lang.Integer">
     SELECT count(1)
@@ -399,10 +419,6 @@
 		a.UPDATE_TIME
 		FROM
 		CHB_SALER_STL_DEAL_SUB a
-		LEFT JOIN
-		CHB_SUBMIT_STATUS status
-		ON
-		a.SUMIT_SEQ = status.seqno
 		where 1=1
 		<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
 			and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
@@ -410,8 +426,10 @@
 		<if test="sendStatus != null and sendStatus != ''">
 			and a.SEND_STATUS = #{sendStatus}
 		</if>
-		<if test="dataStatus != null and dataStatus != ''">
-			and a.DATA_STATUS = #{dataStatus}
+		<if test="dataStatusList != null and dataStatusList.size() > 0">
+			<foreach collection="dataStatusList" item="dataStatus" open=" AND a.DATA_STATUS IN (" close=")" separator=",">
+				#{dataStatus}
+			</foreach>
 		</if>
 		<if test="searchSubmitDeadlineStart != null and searchSubmitDeadlineStart != ''">
 			and a.CHB_SUBMIT_DEADLINE between STR_TO_DATE(#{searchSubmitDeadlineStart,jdbcType=VARCHAR},'%Y-%m-%d') and STR_TO_DATE(#{searchSubmitDeadlineEnd,jdbcType=VARCHAR},'%Y-%m-%d')

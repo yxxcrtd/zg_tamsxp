@@ -278,8 +278,8 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
                 param.put("dataStatusList", StringUtil.splitToList(GlobalConstant.COMMA, dataStatus));
             }
             resultList = salesTransactionMaintenanceRegist001Mapper.setDataList(param);
+            dealDataList(resultList);
         }
-        dealDataList(resultList);
         return resultList;
     }
 

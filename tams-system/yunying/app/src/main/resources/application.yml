@@ -15,9 +15,9 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: allinone
+    active: CVR_305_XNYH_DEV_P
   application:
-    name: tamsyy-server
+    name: tamsyy-serverREPORT#0426
     dfstype: 2
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
@@ -41,7 +41,7 @@ spring:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   http:
     multipart:
-      maxFileSize: 10Mb
+      maxFileSize: 200Mb
       maxRequestSize: 100Mb
   #静态资源配置:js和css变更时无需手工清缓存
   resources:
@@ -189,6 +189,7 @@ application:
     isExceptionWhenSendTimeout: 01  #中债报送文件发送超时的时候，是否抛出异常
   cache:
     file: classpath:ehcache_app.xml
+  remindPage: report/system/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -327,8 +328,6 @@ application:
 #交易压力测试性能优化开关
 flag: false
 
-
-
 ---
 spring:
   profiles: allinone
@@ -346,168 +345,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR303INIT_TEST1209
-    password: CVR303INIT_TEST1209
-    reportSqlldrDatabaseName: 192.168.60.142:1521/orcl
-application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
-  driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR303INIT_TEST1209
-  sqldirpassword: CVR303INIT_TEST1209
-valinterf:
-  hostname: localhost
-  port: 28080
-  contextPath: /interf
-shiro:
-  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
-  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
-  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
-    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
-    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
-    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
-    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
-    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
-    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
-    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
-    /TrdExchangeWorkflow/**,/invest/trade/api/**
-
-base:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR303INIT_TEST1209
-    password: CVR303INIT_TEST1209
-interf:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR303INIT_TEST1209
-    password: CVR303INIT_TEST1209
-  hostname: localhost
-  port: 28080
-  contextPath: /interf
-stresstest:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR303INIT_TEST1209
-    password: CVR303INIT_TEST1209
-wind:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR303INIT_TEST1209
-    password: CVR303INIT_TEST1209
-chbsend:
-  datasource:
-    url: jdbc:oracle:thin:@//192.168.60.142:1521/orcl
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR303INIT_TEST1209
-    password: CVR303INIT_TEST1209
-log:
-  path: /home/tams/logs/tams
-  level: debug
-eureka:
-  client:
-    enabled: false
-jixu:
-  user:
-    type: 2
-xinping:
-  properties:
-    urlIP: 127.0.0.1
-    urlPort: 9191
-tx-lcn:
-  client:
-    managerAddress: 192.168.60.110:8070
-
-# 场内交易使用配置
-netty:
-  port: 9190
-  buffer:
-    recv: 4194304
-    send: 4194304
-    write:
-      high: 81960
-      low: 10240
-  idle:
-    read: 20
-    write: 10
-    all: 0
-  thread:
-    num:
-      boss: 1
-      worker: 10
-scheduled:
-  token:
-    enable: false
-    fixedRate: 20000
-    node: trade1
-  history:
-    cron: 0 30 20 ? * MON-FRI
-  instrument:
-    cron: 0 0 8 ? * MON-FRI
-    price: 0 15 9 ? * MON-FRI
-    flushData: 0 0 9 ? * MON-FRI
-  cacheData:
-    fixedRate: 60000
-  login:
-    fixedRate: 20000
-  tradeAgent:
-    fixedRate: 3000
-terminal:
-  default: default
-trade:
-  thread:
-    msg:
-      num: 8
-    risk:
-      alive: 5000
-      capacity: 128
-
-position:
-  flag: false #是否控制账户持仓，true控制，false不控制
-
-# 温州 APP 消息推送接口配置，默认 false
-workflow:
-  isSentMessage: false
-  serviceName: messageService
-
-#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
-url:
-  batch: http://localhost:8084/main/about/refreshCache
-
-
-
----
-spring:
-  profiles: allinoneLY
-  thymeleaf:
-    cache: false
-  redis:
-    database: 1
-    password: joyin!234
-    host: 192.168.60.110
-    port: 6388
-    timeout: 20000
-  #  redis:
-  #    cluster:
-  #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
-  redislock:
-    redissonEnabled: false
-  datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: BS303CVR_DEV_TEST01_LY
-  sqldirpassword: BS303CVR_DEV_TEST01_LY
+  sqldiruserName: CVR30INIT_TEST
+  sqldirpassword: CVR30INIT_TEST
 valinterf:
   hostname: localhost
   port: 28080
@@ -529,14 +376,14 @@ base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
   hostname: localhost
   port: 28080
   contextPath: /interf
@@ -544,20 +391,20 @@ stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
 chbsend:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: BS303CVR_DEV_TEST01_LY
-    password: BS303CVR_DEV_TEST01_LY
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -653,7 +500,7 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: CVR30INIT_TEST
     password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.60.142:1521/orcl
+    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
@@ -802,7 +649,7 @@ spring:
     driverClassName: oracle.jdbc.driver.OracleDriver
     username: CVR30INIT_TEST
     password: CVR30INIT_TEST
-    reportSqlldrDatabaseName: 192.168.60.142:1521/orcl
+    reportSqlldrDatabaseName: 192.168.90.5:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
@@ -875,6 +722,1029 @@ tx-lcn:
   client:
     managerAddress: 192.168.70.216:8070
 
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+---
+spring:
+  profiles: CVR30INIT_TEST_P
+  thymeleaf:
+    cache: false
+  redis:
+    database: 0
+    cluster:
+      nodes: 192.168.90.174:6379,192.168.90.174:6380,192.168.90.174:6381,192.168.90.174:6382,192.168.90.174:6383,192.168.90.174:6384
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
+  redislock:
+    redissonEnabled: false
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  driverClassName: oracle.jdbc.driver.OracleDriver
+  sqldiruserName: CVR30INIT_TEST
+  sqldirpassword: CVR30INIT_TEST
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+shiro:
+  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
+  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
+    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
+
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+stresstest:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
+wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR30INIT_TEST
+    password: CVR30INIT_TEST
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.174:8072
+
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+---
+spring:
+  profiles: BS303CVR_DEV_TEST01_LY_P
+  thymeleaf:
+    cache: false
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.60.110
+    port: 6388
+    timeout: 20000
+    #  redis:
+    #    database: 0
+    #    cluster:
+  #      nodes: 192.168.90.174:6379,192.168.90.174:6380,192.168.90.174:6381,192.168.90.174:6382,192.168.90.174:6383,192.168.90.174:6384
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
+  redislock:
+    redissonEnabled: false
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: BS303CVR_DEV_TEST01_LY
+    password: BS303CVR_DEV_TEST01_LY
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  driverClassName: oracle.jdbc.driver.OracleDriver
+  sqldiruserName: BS303CVR_DEV_TEST01_LY
+  sqldirpassword: BS303CVR_DEV_TEST01_LY
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+shiro:
+  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
+  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
+    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
+
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: BS303CVR_DEV_TEST01_LY
+    password: BS303CVR_DEV_TEST01_LY
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: BS303CVR_DEV_TEST01_LY
+    password: BS303CVR_DEV_TEST01_LY
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+stresstest:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: BS303CVR_DEV_TEST01_LY
+    password: BS303CVR_DEV_TEST01_LY
+wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: BS303CVR_DEV_TEST01_LY
+    password: BS303CVR_DEV_TEST01_LY
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: BS303CVR_DEV_TEST01_LY
+    password: BS303CVR_DEV_TEST01_LY
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.60.110:8070
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+---
+spring:
+  profiles: zgtams218_zztest_LY_P
+  thymeleaf:
+    cache: false
+  redis:
+    database: 0
+    cluster:
+      nodes: 192.168.90.174:6379,192.168.90.174:6380,192.168.90.174:6381,192.168.90.174:6382,192.168.90.174:6383,192.168.90.174:6384
+  #  redis:
+  #    cluster:
+  #      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
+  redislock:
+    redissonEnabled: false
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: zgtams218_zztest_LY
+    password: zgtams218_zztest_LY
+    reportSqlldrDatabaseName: 192.168.90.140:1521/orcl
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+  driverClassName: oracle.jdbc.driver.OracleDriver
+  sqldiruserName: zgtams218_zztest_LY
+  sqldirpassword: zgtams218_zztest_LY
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+shiro:
+  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
+  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
+    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
+
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: zgtams218_zztest_LY
+    password: zgtams218_zztest_LY
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: zgtams218_zztest_LY
+    password: zgtams218_zztest_LY
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+stresstest:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: zgtams218_zztest_LY
+    password: zgtams218_zztest_LY
+wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: zgtams218_zztest_LY
+    password: zgtams218_zztest_LY
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: zgtams218_zztest_LY
+    password: zgtams218_zztest_LY
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.174:8072
+
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+---
+spring:
+  profiles: CVR_305_XNYH_DEV_P
+  thymeleaf:
+    cache: false
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.90.174
+    port: 6379
+    timeout: 20000
+  redislock:
+    redissonEnabled: false
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR_305_XNYH_DEV
+    password: CVR_305_XNYH_DEV
+    reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+application:
+  sqldirurl: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+  driverClassName: oracle.jdbc.driver.OracleDriver
+  sqldiruserName: CVR_305_XNYH_DEV
+  sqldirpassword: CVR_305_XNYH_DEV
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+shiro:
+  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
+  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
+    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
+
+base:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR_305_XNYH_DEV
+    password: CVR_305_XNYH_DEV
+interf:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR_305_XNYH_DEV
+    password: CVR_305_XNYH_DEV
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+stresstest:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR_305_XNYH_DEV
+    password: CVR_305_XNYH_DEV
+wind:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR_305_XNYH_DEV
+    password: CVR_305_XNYH_DEV
+chbsend:
+  datasource:
+    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    driverClassName: oracle.jdbc.driver.OracleDriver
+    username: CVR_305_XNYH_DEV
+    password: CVR_305_XNYH_DEV
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.174:8070
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+---
+spring:
+  profiles: d_test_P
+  thymeleaf:
+    cache: false
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.90.174
+    port: 6379
+    timeout: 20000
+  redislock:
+    redissonEnabled: false
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
+    username: wzc
+    password: wzc
+    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+application:
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
+  driverClassName: com.mysql.jdbc.Driver
+  sqldiruserName: wzc
+  sqldirpassword: wzc
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+shiro:
+  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
+  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
+    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
+
+base:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+interf:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+stresstest:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+wind:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+chbsend:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.90.174:8070
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+---
+spring:
+  profiles: cvr_306_mysql_test_P
+  thymeleaf:
+    cache: false
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.60.188
+    port: 6388
+    timeout: 20000
+  redislock:
+    redissonEnabled: false
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: wzc
+    password: wzc
+    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+application:
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+  driverClassName: com.mysql.jdbc.Driver
+  sqldiruserName: wzc
+  sqldirpassword: wzc
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+shiro:
+  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
+  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
+    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
+
+base:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+interf:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+stresstest:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+wind:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+chbsend:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.60.188:8070
+# 场内交易使用配置
+netty:
+  port: 9190
+  buffer:
+    recv: 4194304
+    send: 4194304
+    write:
+      high: 81960
+      low: 10240
+  idle:
+    read: 20
+    write: 10
+    all: 0
+  thread:
+    num:
+      boss: 1
+      worker: 10
+scheduled:
+  token:
+    enable: false
+    fixedRate: 20000
+    node: trade1
+  history:
+    cron: 0 30 20 ? * MON-FRI
+  instrument:
+    cron: 0 0 8 ? * MON-FRI
+    price: 0 15 9 ? * MON-FRI
+    flushData: 0 0 9 ? * MON-FRI
+  cacheData:
+    fixedRate: 60000
+  login:
+    fixedRate: 20000
+  tradeAgent:
+    fixedRate: 3000
+terminal:
+  default: default
+trade:
+  thread:
+    msg:
+      num: 8
+    risk:
+      alive: 5000
+      capacity: 128
+
+position:
+  flag: false #是否控制账户持仓，true控制，false不控制
+
+# 温州 APP 消息推送接口配置，默认 false
+workflow:
+  isSentMessage: false
+  serviceName: messageService
+
+#清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
+url:
+  batch: http://localhost:8084/main/about/refreshCache
+---
+spring:
+  profiles: cvr_30_dev_P
+  thymeleaf:
+    cache: false
+  redis:
+    database: 1
+    password: joyin!234
+    host: 192.168.60.188
+    port: 6388
+    timeout: 20000
+  redislock:
+    redissonEnabled: false
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
+    username: wzc
+    password: wzc
+    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+application:
+  sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
+  driverClassName: com.mysql.jdbc.Driver
+  sqldiruserName: wzc
+  sqldirpassword: wzc
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+shiro:
+  ssoEnable: false  #是否开启sso验证，可以和joyinsso 统一登录配套使用。如果没有统一登录，但为true的话，就不校验密码
+  #loginUrl: http://192.168.60.111:1667/joyinsso/login.html#/login    ##统一登录页面，当有统一登录时配置成统一登录的访问地址
+  allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
+    /common/trdcommonbase/insertTradeInfo,/TrdFxswapInvestTrade001/doComplete,/TrdBondInvestTrade/**,/BussRepoSec/**,/common/trdcommonbase/selectParam/COM/is_auto_generate_negate_deal,/CstpAutoSelect/**,
+    /TrdBondDuration/findAllData,/TrdDepoDuration/selectAllData,/TrdRepoDuration/selectAllData,/TrdProjectDuration/selectAllData,
+    /TrdRepoDuration/findEffectiveData,/TrdProjectDuration/findEffectiveData,/TrdPlanInterestDuration/findEffectiveData,
+    /TrdDepoDuration/findEffectiveData,/TrdPlanInterestDuration/selectAllData,/TrdLendDuration/getEntityByMap,
+    /TrdLendDuration/selectAllDataList,/TrdBondDuration/findEffectiveData,/TrdExchangeDuration/findAllData,
+    /TrdRepoDuration/findFinCashInfo,/TrdRepoDuration/findRepoInfo,/service/**,/api/sys/refreshPlatDate,/invest/trade/forwex/TrdForwexInvestTrade002/autosave, /mobileApproval/AssetMobileApproval/getAuditDetailConfig,
+    /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
+    /TrdExchangeWorkflow/**,/invest/trade/api/**
+
+base:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+interf:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+stresstest:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+wind:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+chbsend:
+  datasource:
+    url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
+    driverClassName: com.mysql.jdbc.Driver
+    username: wzc
+    password: wzc
+log:
+  path: /home/tams/logs/tams
+  level: debug
+eureka:
+  client:
+    enabled: false
+jixu:
+  user:
+    type: 2
+xinping:
+  properties:
+    urlIP: 127.0.0.1
+    urlPort: 9191
+tx-lcn:
+  client:
+    managerAddress: 192.168.60.188:8070
 # 场内交易使用配置
 netty:
   port: 9190

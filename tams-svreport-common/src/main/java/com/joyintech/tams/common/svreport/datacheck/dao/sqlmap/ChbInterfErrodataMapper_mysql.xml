@@ -1,18 +1,244 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.common.svreport.datacheck.dao.ChbInterfErrodataMapper_mysql">
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodata" >
+		<id column="DATAID" property="dataid" jdbcType="VARCHAR" />
+		<result column="INTERF_TYPE" property="interfType" jdbcType="VARCHAR" />
+		<result column="FIRE_NAME" property="fireName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" extends="BaseResultMap" >
+		<result column="ORG_DATA" property="orgData" jdbcType="CLOB" />
+		<result column="ERR_MSG" property="errMsg" jdbcType="CLOB" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    DATAID, INTERF_TYPE, FIRE_NAME, STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME,
+    WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT
+  </sql>
+	<sql id="Blob_Column_List" >
+    ORG_DATA, ERR_MSG
+  </sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from CHB_INTERF_ERRODATA
+		where DATAID = #{dataid,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_INTERF_ERRODATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </delete>
+	<insert id="insert" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
+    insert into CHB_INTERF_ERRODATA (DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
+      STATUS, UPDATE_USER, CREATE_USER,
+      UPDATE_TIME, CREATE_TIME, WORKFLOW_ID,
+      ORG_CODE, DEPT_CODE, CREATE_DEPT,
+      ORG_DATA, ERR_MSG)
+    values (#{datauuid,jdbcType=VARCHAR},#{dataid,jdbcType=VARCHAR}, #{interfType,jdbcType=VARCHAR}, #{fireName,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR},
+      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+      #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+  </insert>
+	<insert id="insertSelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
+		insert into CHB_INTERF_ERRODATA
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="dataid != null" >
+				DATAID,
+			</if>
+			<if test="interfType != null" >
+				INTERF_TYPE,
+			</if>
+			<if test="fireName != null" >
+				FIRE_NAME,
+			</if>
+			<if test="status != null" >
+				STATUS,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="workflowId != null" >
+				WORKFLOW_ID,
+			</if>
+			<if test="orgCode != null" >
+				ORG_CODE,
+			</if>
+			<if test="deptCode != null" >
+				DEPT_CODE,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="orgData != null" >
+				ORG_DATA,
+			</if>
+			<if test="errMsg != null" >
+				ERR_MSG,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="dataid != null" >
+				#{dataid,jdbcType=VARCHAR},
+			</if>
+			<if test="interfType != null" >
+				#{interfType,jdbcType=VARCHAR},
+			</if>
+			<if test="fireName != null" >
+				#{fireName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="workflowId != null" >
+				#{workflowId,jdbcType=VARCHAR},
+			</if>
+			<if test="orgCode != null" >
+				#{orgCode,jdbcType=VARCHAR},
+			</if>
+			<if test="deptCode != null" >
+				#{deptCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="orgData != null" >
+				#{orgData,jdbcType=CLOB},
+			</if>
+			<if test="errMsg != null" >
+				#{errMsg,jdbcType=CLOB},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
+		update CHB_INTERF_ERRODATA
+		<set >
+			<if test="interfType != null" >
+				INTERF_TYPE = #{interfType,jdbcType=VARCHAR},
+			</if>
+			<if test="fireName != null" >
+				FIRE_NAME = #{fireName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				STATUS = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null" >
+				CREATE_USER = #{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="workflowId != null" >
+				WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+			</if>
+			<if test="orgCode != null" >
+				ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+			</if>
+			<if test="deptCode != null" >
+				DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="orgData != null" >
+				ORG_DATA = #{orgData,jdbcType=CLOB},
+			</if>
+			<if test="errMsg != null" >
+				ERR_MSG = #{errMsg,jdbcType=CLOB},
+			</if>
+		</set>
+		where DATAID = #{dataid,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
+    update CHB_INTERF_ERRODATA
+    set INTERF_TYPE = #{interfType,jdbcType=VARCHAR},
+      FIRE_NAME = #{fireName,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      ORG_DATA = #{orgData,jdbcType=CLOB},
+      ERR_MSG = #{errMsg,jdbcType=CLOB}
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </update>
+	<update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodata" >
+    update CHB_INTERF_ERRODATA
+    set INTERF_TYPE = #{interfType,jdbcType=VARCHAR},
+      FIRE_NAME = #{fireName,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR}
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </update>
 	<insert id="insertChbInterfErrodata" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodata">
-		MERGE INTO CHB_INTERF_ERRODATA CII
-		USING (
+		insert into CHB_INTERF_ERRODATA (DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
+		ORG_DATA,ERR_MSG,
+		STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME,
+		WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT)
+		select DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
+		ORG_DATA,ERR_MSG,
+		STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME,
+		WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT from
+		(
+		select TEMP.* from
+		(
 		<foreach collection="newDataList" item="item" open="select * from("
-			close=")" separator="union all">
+				 close=")" separator="union all">
 			SELECT
 			#{item.datauuid,jdbcType=VARCHAR} DATAUUID,
 			#{item.dataid,jdbcType=VARCHAR} DATAID,
 			#{item.interfType,jdbcType=VARCHAR} INTERF_TYPE,
 			#{item.fireName,jdbcType=VARCHAR} FIRE_NAME,
 			#{item.orgData,jdbcType=CLOB} ORG_DATA,
-            #{item.errMsg,jdbcType=CLOB} ERR_MSG,
+			#{item.errMsg,jdbcType=CLOB} ERR_MSG,
 			#{item.status,jdbcType=VARCHAR} STATUS,
 			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
 			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
@@ -22,28 +248,48 @@
 			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE
-			FROM
-			DUAL
+			FROM DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_INTERF_ERRODATA CII where CII.DATAID = TEMP.DATAID)
+		) de ;
+
+		UPDATE  CHB_INTERF_ERRODATA as A,
+		(
+		select DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
+		ORG_DATA,ERR_MSG,
+		STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME,
+		WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="newDataList" item="item" open="select * from("
+				 close=")" separator="union all">
+			SELECT
+			#{item.datauuid,jdbcType=VARCHAR} DATAUUID,
+			#{item.dataid,jdbcType=VARCHAR} DATAID,
+			#{item.interfType,jdbcType=VARCHAR} INTERF_TYPE,
+			#{item.fireName,jdbcType=VARCHAR} FIRE_NAME,
+			#{item.orgData,jdbcType=CLOB} ORG_DATA,
+			#{item.errMsg,jdbcType=CLOB} ERR_MSG,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE
+			FROM DUAL
 		</foreach>
 		) TEMP
-		
-		ON(CII.DATAID = TEMP.DATAID)
-		
-		WHEN MATCHED THEN UPDATE
-		SET CII.INTERF_TYPE = TEMP.INTERF_TYPE,CII.FIRE_NAME = TEMP.FIRE_NAME,
-		CII.ORG_DATA =TEMP.ORG_DATA,CII.ERR_MSG = TEMP.ERR_MSG,
-		CII.STATUS =TEMP.STATUS,CII.UPDATE_USER = TEMP.UPDATE_USER,
-		CII.CREATE_USER =TEMP.CREATE_USER,CII.ORG_CODE = TEMP.ORG_CODE,
-		CII.DEPT_CODE =TEMP.DEPT_CODE,CII.CREATE_DEPT = TEMP.CREATE_DEPT,
-		CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,CII.UPDATE_TIME = NOW()
-		
-		WHEN NOT MATCHED THEN INSERT (DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
-		ORG_DATA,ERR_MSG,
-		 STATUS, UPDATE_USER, CREATE_USER, UPDATE_TIME, CREATE_TIME, 
-    	WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_DEPT)
-		VALUES(TEMP.DATAUUID,TEMP.DATAID, TEMP.INTERF_TYPE, TEMP.FIRE_NAME,
-		TEMP.ORG_DATA,TEMP.ERR_MSG,
-		 TEMP.STATUS, TEMP.UPDATE_USER, TEMP.CREATE_USER, TEMP.UPDATE_TIME, TEMP.CREATE_TIME, 
-    	TEMP.WORKFLOW_ID, TEMP.ORG_CODE, TEMP.DEPT_CODE, TEMP.CREATE_DEPT)
+		) de
+		) AS B
+		set  A.* = B.* where  exists (select 1 from CHB_INTERF_ERRODATA CII  where CII.DATAID = TEMP.DATAID);
 	</insert>
+	<delete id="deleteByPrimaryKeyType" parameterType="java.util.Map" >
+    delete from CHB_INTERF_ERRODATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+    and  INTERF_TYPE=#{tableName,jdbcType=VARCHAR}
+  </delete>
 </mapper>

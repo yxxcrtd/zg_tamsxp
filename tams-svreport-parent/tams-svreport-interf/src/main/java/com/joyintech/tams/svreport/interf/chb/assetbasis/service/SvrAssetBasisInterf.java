@@ -1,19 +1,20 @@
 package com.joyintech.tams.svreport.interf.chb.assetbasis.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.BaseInterfService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetsBasisData;
 import com.joyintech.tams.common.base.entity.ChbAstValue;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAssetBasisInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAstValInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
@@ -52,7 +53,9 @@ public class SvrAssetBasisInterf extends BaseInterfService {
 	
 	@Autowired
 	private SqlSessionTemplate template;
-	
+
+	@Autowired
+	private BatchInsertService batchInsertService;
 	/**
 	 * 日志
 	 */
@@ -409,39 +412,53 @@ public class SvrAssetBasisInterf extends BaseInterfService {
 	}
 
 	private void insertData2(List<ChbAssetsBasisData> listChbAssetsBasisData) {
-		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-		//批量插入mapper
-		ChbAssetsBasisDataMapper batchMapper =  session.getMapper(ChbAssetsBasisDataMapper.class);
 
-		Map<Date, List<ChbAssetsBasisData>> listChbAssetsBasisDataMap =
-				listChbAssetsBasisData.stream().collect(JoyinCollectors.groupingBy(chbAssetsBasisData -> chbAssetsBasisData.getValueDate()));
-		int count = 0;
-		try {
-			for (Date date : listChbAssetsBasisDataMap.keySet()) {
+		if (listChbAssetsBasisData.size()<=5000) {
+			SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+			//批量插入mapper
+			ChbAssetsBasisDataMapper batchMapper =  session.getMapper(ChbAssetsBasisDataMapper.class);
 
-				String dateStr = DateUtil.format(date);
-				logger.info("删除" + dateStr + "日的资产基础指标数据，开始");
-				ChbAssetsBasisData param = new ChbAssetsBasisData();
-				param.setValueDate(date);
-				chbAssetBasisInterfMapper.deleteData(param);
+			Map<Date, List<ChbAssetsBasisData>> listChbAssetsBasisDataMap =
+					listChbAssetsBasisData.stream().collect(JoyinCollectors.groupingBy(chbAssetsBasisData -> chbAssetsBasisData.getValueDate()));
+			int count = 0;
+			try {
+				for (Date date : listChbAssetsBasisDataMap.keySet()) {
+
+					String dateStr = DateUtil.format(date);
+					logger.info("删除" + dateStr + "日的资产基础指标数据，开始");
+					ChbAssetsBasisData param = new ChbAssetsBasisData();
+					param.setValueDate(date);
+					chbAssetBasisInterfMapper.deleteData(param);
 //	        	chbAssetBasisInterfMapper.deleteDataNoBtm(param);
-				logger.info("删除" + dateStr + "日的资产基础指标数据，结束");
-				logger.info("插入" + dateStr + "日的资产基础指标数据，开始");
-				for (ChbAssetsBasisData data : listChbAssetsBasisDataMap.get(date)) {
-					batchMapper.insert(data);
-					count++;
-					if (count % 1000 == 0) {
-						logger.debug("已插入" + count + "条" + DateUtil.getCurrentDateTime());
-						session.commit();
-						session.clearCache();
+					logger.info("删除" + dateStr + "日的资产基础指标数据，结束");
+					logger.info("插入" + dateStr + "日的资产基础指标数据，开始");
+					for (ChbAssetsBasisData data : listChbAssetsBasisDataMap.get(date)) {
+						batchMapper.insert(data);
+						count++;
+						if (count % 1000 == 0) {
+							logger.debug("已插入" + count + "条" + DateUtil.getCurrentDateTime());
+							session.commit();
+							session.clearCache();
+						}
 					}
+					logger.info("插入" + dateStr + "日的资产基础指标数据，结束");
 				}
-				logger.info("插入" + dateStr + "日的资产基础指标数据，结束");
+				session.commit();
+				session.clearCache();
+			}finally {
+				session.close();
 			}
-			session.commit();
-			session.clearCache();
-		}finally {
-			session.close();
+
+		} else {
+			//sqlloader插入
+			ImpTable table = new ImpTable("CHB_ASSETS_BASIS_DATA");
+			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+			// 临时文件存放目录
+			String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+			batchInsertService.exeBatchldr(tmpPath, listChbAssetsBasisData, table);
 		}
+
+
 	}
 }

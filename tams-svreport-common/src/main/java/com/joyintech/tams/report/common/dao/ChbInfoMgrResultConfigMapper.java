@@ -72,4 +72,6 @@ public interface ChbInfoMgrResultConfigMapper {
 	String getTableNameByTableId(@Param("mgrTableId") String mgrTableId);
 	
 	List<String>getAllColumnByTableId(@Param("mgrTableId") String mgrTableId);
+
+	List<ChbInfoMgrResultConfig> queryCloumnMapping(Map<String, Object> param);
 }

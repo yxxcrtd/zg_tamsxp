@@ -22,7 +22,9 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,6 +150,122 @@ public class DataCheckService {
             }  //循环规则－结束
             if ( legal==false ) {
                 x.put("ERRMSG", sb.toString());
+                x.put("ERRMSG_ROW",String.valueOf(i));
+                listError.add(x);
+                if(removeFlag) {
+                    it.remove();
+                }
+            }
+            i++;
+        } //循环数据结束
+
+        return listError;
+    }
+    /**
+     * 根据指定的检查规则，检查数据列表，对于某条数据有一个规则不满足，继续检查其它规则，即每条数据都进行全部规则检查
+     * @param listData 被检查的数据列表，错误的数据根据参数removeFlag确定是否移除
+     * @param listRules 检查规则
+     * @param removeFlag 校验出错的数据是否移除
+     * @return 返回错误的数据
+     * @see
+     * @since 1.0
+     */
+    public static List<Map<String, String>> checkDataList(List<ExcelValidDto> list,List<Map<String, String>> listData, List<CheckRule> listRules, boolean removeFlag,String dataType) {
+
+        List<Map<String, String>> listError = new ArrayList<Map<String, String>>();
+
+        //定义检查类的方法集合：Map<检查类,Map<方法名称,方法>>
+        Map<String,Map<String,Method>> mapClassMethod = new HashMap<String,Map<String,Method>>();
+
+        Iterator<Map<String, String>> it = listData.iterator();
+
+        int i = 1;
+        while (it.hasNext()) {         //循环检查指定的数据列表
+            boolean legal=true;  //检查结果
+            StringBuilder sb = new StringBuilder();  //记录错误信息
+            Map<String, String> x = it.next();
+
+            for ( CheckRule r : listRules ) {  //循环每个规则
+                Map<String,Method> mapMethod = mapClassMethod.get(r.getCheckclass());
+                if ( mapMethod==null ) {
+                    mapMethod = new HashMap<String,Method>();
+                    try {
+                        Method[] rm = Class.forName(r.getCheckclass()).getDeclaredMethods();
+                        for (Method m1 : rm) {
+                            mapMethod.put(m1.getName(), m1);
+                        }
+                    }
+                    catch (SecurityException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                    catch (ClassNotFoundException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                    mapClassMethod.put(r.getCheckclass(),mapMethod);
+                }
+
+                // 检查逻辑，如果有前置条件，先检查条件是否满足，如果条件满足，执行数据检查，否则不执行数据检查
+                // 如果没有前置条件，检查数据
+                // 如果有多个前置条件，循环每个条件检查，各条件之间是与的关系
+                List<CheckCondition> listConditions = r.getListConditions();
+                if (listConditions != null) { // 有前置条件，则先执行前置条件是否满足
+                    boolean conCheck = true;
+                    StringBuilder sbCon = new StringBuilder();
+                    sbCon.append("条件:");
+                    for (CheckCondition c : listConditions) {
+                        conCheck = conCheck && checkCondition(x, c, mapMethod);
+                        if (StringUtil.isNotEmpty(c.getRemark()) && !StringUtil.equals(c.getRemark(), "null")){
+                            sbCon.append(c.getRemark()+";");
+                        }
+                        if (conCheck == false) { // 条件不满足，不做数据检查
+                            break;
+                        }
+                    }
+                    if (conCheck == true) { // 条件满足，做数据检查
+                        if (!StringUtil.equals(sbCon.toString(), "条件:")){
+                            sbCon.append("-->");
+                        }
+                        boolean b= checkData(x, r, mapMethod);
+                        if (b == false) {
+                            sb.append(sbCon.toString()+r.getRemark() + "[" + r.getSrcproperty() + "="+x.get(r.getSrcproperty())+"];");
+                        }
+                        legal &=b;
+                    }
+                } else { // 无前置条件，做数据检查
+                    boolean b=checkData(x, r, mapMethod);
+                    if (b == false) {
+                        sb.append(r.getRemark() + "[" + r.getSrcproperty() + "="+x.get(r.getSrcproperty())+"];");
+                    }
+                    legal &=b;
+                }
+            }  //循环规则－结束
+            if ( legal==false ) {
+
+                String errmsg = x.get("ERRMSG");
+                if(StringUtils.isEmpty(errmsg)){
+                    x.put("ERRMSG", sb.toString());
+                    if(list!=null){
+                        if(StringUtil.equals(dataType,"CHB_ASSET_INFO")){
+                                list.add(new ExcelValidDto(" 导入成功",String.valueOf(i+2),sb.toString()));
+                        }else  {
+                                list.add(new ExcelValidDto(" 导入成功", String.valueOf(i + 1), sb.toString()));
+                        }
+                    }
+                }else if(errmsg.equals("产品不存在对应的申报信息！")){
+                    errmsg +=sb.toString();
+                    x.put("ERRMSG", errmsg);
+                    if(list !=null){
+                        if(list.size()>0){
+                            for (ExcelValidDto excelValidDto : list) {
+                                if(excelValidDto.getRowNum().equals(String.valueOf(i+1))){
+                                    excelValidDto.setErrorInfo(errmsg);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                }
                 x.put("ERRMSG_ROW",String.valueOf(i));
                 listError.add(x);
                 if(removeFlag) {
@@ -429,7 +547,33 @@ public class DataCheckService {
         return listDup;
         
     }
-    
+
+
+    public static List<Map<String, String>> checkDuplicatedData(List<com.joyintech.tams.systemtools.dto.ExcelValidDto> excelValidDtoList, List<Map<String,String>> list, String... duplicateKey) {
+        List<Map<String, String>> result =  new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = i+1; j < list.size(); j++) {
+                Map var1 = list.get(i);
+                Map var2  =list.get(j);
+                boolean flag = true;
+                for (String s : duplicateKey) {
+                    if(!var1.get(s).equals(var2.get(s))){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
+                    if(StringUtils.isEmpty((String)var1.get("ERRMSG"))){
+                        var1.put("ERRMSG","重复数据;");
+                    }
+                    result.add(var1);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * 根据数据类型，读取检查规则
      * @param datatype 数据类型

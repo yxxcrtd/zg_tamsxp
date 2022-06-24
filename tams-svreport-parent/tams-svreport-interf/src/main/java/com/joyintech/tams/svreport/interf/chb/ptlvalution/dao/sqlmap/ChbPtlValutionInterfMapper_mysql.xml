@@ -35,7 +35,7 @@
   </sql>
 
   <select id="selectByCdate" parameterType="java.util.Date" resultMap="BaseResultMap"
-   resultSetType="FORWARD_ONLY" fetchSize="1000">
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
   select 
      psv.CDATE,psv.PORTFOLIO_ID,info.FINPROD_MARKET_ID FINPROD_ID, psv.INV_AIM, psv.CCY, psv.SHARE_AMT,
      psv.DSC_COST_AMT, psv.DSC_CLEAN_PRICE, psv.BUY_COST_AMT,  psv.BUY_CLEAN_PRICE,psv.MARKET_VALUE,
@@ -94,25 +94,25 @@
   </delete>
 
   <insert id="insertBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPtlValution">
-    insert into CHB_PTL_VALUTION (CDATE, PORTFOLIO_ID, FINPROD_ID, 
-      INV_AIM, CCY, SHARE_AMT, 
-      DSC_COST_AMT, DSC_CLEAN_PRICE, BUY_COST_AMT, 
-      BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE, 
-      TDY_INTINCEXP, TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD, 
-      TDY_DSCLOSS_ADD, TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD, 
-      ACCU_NET_VALUE, CREATE_USER, CREATE_DEPT, 
-      CREATE_TIME, UPDATE_USER, UPDATE_TIME
-      )
-      <foreach collection="listChbPtlValution" item="dto" open=" select * from (select " close="from dual)" separator="from dual union all select ">
-      #{dto.cdate,jdbcType=TIMESTAMP}, #{dto.portfolioId,jdbcType=VARCHAR}, #{dto.finprodId,jdbcType=VARCHAR}, 
-      #{dto.invAim,jdbcType=VARCHAR}, #{dto.ccy,jdbcType=VARCHAR}, #{dto.shareAmt,jdbcType=DECIMAL}, 
-      #{dto.dscCostAmt,jdbcType=DECIMAL}, #{dto.dscCleanPrice,jdbcType=DECIMAL}, #{dto.buyCostAmt,jdbcType=DECIMAL}, 
-      #{dto.buyCleanPrice,jdbcType=DECIMAL}, #{dto.marketValue,jdbcType=DECIMAL}, #{dto.marketCleanPrice,jdbcType=DECIMAL}, 
-      #{dto.tdyIntincexp,jdbcType=DECIMAL}, #{dto.tdyDscincexpAdd,jdbcType=DECIMAL}, #{dto.tdyIntincexpAdd,jdbcType=DECIMAL}, 
-      #{dto.tdyDsclossAdd,jdbcType=DECIMAL}, #{dto.tdyFloatIngplAdd,jdbcType=DECIMAL}, #{dto.tdyFeeAdd,jdbcType=DECIMAL}, 
-      #{dto.accuNetValue,jdbcType=DECIMAL}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, 
+    insert into CHB_PTL_VALUTION (CDATE, PORTFOLIO_ID, FINPROD_ID,
+    INV_AIM, CCY, SHARE_AMT,
+    DSC_COST_AMT, DSC_CLEAN_PRICE, BUY_COST_AMT,
+    BUY_CLEAN_PRICE, MARKET_VALUE, MARKET_CLEAN_PRICE,
+    TDY_INTINCEXP, TDY_DSCINCEXP_ADD, TDY_INTINCEXP_ADD,
+    TDY_DSCLOSS_ADD, TDY_FLOAT_INGPL_ADD, TDY_FEE_ADD,
+    ACCU_NET_VALUE, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+    )
+    <foreach collection="listChbPtlValution" item="dto" open=" select * from (select " close="from dual)" separator="from dual union all select ">
+      #{dto.cdate,jdbcType=TIMESTAMP}, #{dto.portfolioId,jdbcType=VARCHAR}, #{dto.finprodId,jdbcType=VARCHAR},
+      #{dto.invAim,jdbcType=VARCHAR}, #{dto.ccy,jdbcType=VARCHAR}, #{dto.shareAmt,jdbcType=DECIMAL},
+      #{dto.dscCostAmt,jdbcType=DECIMAL}, #{dto.dscCleanPrice,jdbcType=DECIMAL}, #{dto.buyCostAmt,jdbcType=DECIMAL},
+      #{dto.buyCleanPrice,jdbcType=DECIMAL}, #{dto.marketValue,jdbcType=DECIMAL}, #{dto.marketCleanPrice,jdbcType=DECIMAL},
+      #{dto.tdyIntincexp,jdbcType=DECIMAL}, #{dto.tdyDscincexpAdd,jdbcType=DECIMAL}, #{dto.tdyIntincexpAdd,jdbcType=DECIMAL},
+      #{dto.tdyDsclossAdd,jdbcType=DECIMAL}, #{dto.tdyFloatIngplAdd,jdbcType=DECIMAL}, #{dto.tdyFeeAdd,jdbcType=DECIMAL},
+      #{dto.accuNetValue,jdbcType=DECIMAL}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR},
       #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}
-      </foreach>
+    </foreach>
   </insert>
 
   <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPtlValution">

@@ -3,10 +3,10 @@
 	<Worksheet javaBean="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">
 		<Row>
 			<Cell order="1" name="合并状态">operatestatusStr</Cell>
-			<Cell order="2" name="数据日期">dataDate</Cell>
+			<Cell order="2" name="数据日期">dataDateStr</Cell>
 			<Cell order="3" name="合并后识别标识选择">chooseMergerStr</Cell>
 			<Cell order="4" name="合并人">updateUser</Cell>
-			<Cell order="5" name="合并时间">updateTime</Cell>
+			<Cell order="5" name="合并时间">updateTimeStr</Cell>
 			<Cell order="6" name="识别标识">indentifyMark</Cell>
 			<Cell order="7" name="合并后识别标识">mergerindentifymark</Cell>
 			<Cell order="8" name="该投资者是否属于本行">isBelongBankStr</Cell>

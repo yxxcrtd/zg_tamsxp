@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PbcMonthAssetPositiondetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
+        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="DETAILNO" property="detailno" jdbcType="VARCHAR" />
+        <result column="DETAILNO2" property="detailno2" jdbcType="VARCHAR" />
+        <result column="POSITION_TYPE" property="positionType" jdbcType="VARCHAR" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE1" property="assetType1" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="END_DAYS" property="endDays" jdbcType="DECIMAL" />
+        <result column="DELAY_PAY_AMT" property="delayPayAmt" jdbcType="DECIMAL" />
+        <result column="COST_AMT" property="costAmt" jdbcType="DECIMAL" />
+        <result column="FLOAT_INGPL" property="floatIngpl" jdbcType="DECIMAL" />
+        <result column="INTINCEXP" property="intincexp" jdbcType="DECIMAL" />
+        <result column="INTADJEXP_ADD" property="intadjexpAdd" jdbcType="DECIMAL" />
+        <result column="LOSS_AMT" property="lossAmt" jdbcType="DECIMAL" />
+        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="OPENPLAN" property="openplan" jdbcType="DATE" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2" property="industryLevel2" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE1" property="orgAssetType1" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE2" property="orgAssetType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE3" property="orgAssetType3" jdbcType="VARCHAR" />
+        <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+        <result column="BORROWER_TYPE" property="borrowerType" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_INFO" property="industryInfo" jdbcType="VARCHAR" />
+        <result column="ENTERPRISE_SCALE" property="enterpriseScale" jdbcType="VARCHAR" />
+        <result column="BORROWER_CITY" property="borrowerCity" jdbcType="VARCHAR" />
+        <result column="ASSETS_INVEST" property="assetsInvest" jdbcType="VARCHAR" />
+        <result column="EACH_PROPORTION" property="eachProportion" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        POSUUID POSUUID, PRODID PRODID, TERM TERM, DETAILNO DETAILNO, DETAILNO2 DETAILNO2, 
+        POSITION_TYPE POSITION_TYPE, CHL_ID CHL_ID, ASSET_CODE ASSET_CODE, ASSET_TYPE1 ASSET_TYPE1, 
+        ASSET_TYPE2 ASSET_TYPE2, ASSET_TYPE3 ASSET_TYPE3, SUBJECT_NAME SUBJECT_NAME, RIVAL_PARTY RIVAL_PARTY, 
+        RATE RATE, CCY CCY, AMT AMT, INT_AMT INT_AMT, END_DAYS END_DAYS, DELAY_PAY_AMT DELAY_PAY_AMT, 
+        COST_AMT COST_AMT, FLOAT_INGPL FLOAT_INGPL, INTINCEXP INTINCEXP, INTADJEXP_ADD INTADJEXP_ADD, 
+        LOSS_AMT LOSS_AMT, BAL_FLAG BAL_FLAG, VDATE VDATE, MDATE MDATE, OPENPLAN OPENPLAN, 
+        INDUSTRY INDUSTRY, INDUSTRY_LEVEL2 INDUSTRY_LEVEL2, PARTY_TYPE1 PARTY_TYPE1, PARTY_TYPE3 PARTY_TYPE3, 
+        PARTY_TYPE2 PARTY_TYPE2, ORG_ASSET_TYPE1 ORG_ASSET_TYPE1, ORG_ASSET_TYPE2 ORG_ASSET_TYPE2, 
+        ORG_ASSET_TYPE3 ORG_ASSET_TYPE3, BUY_PLACE BUY_PLACE, BORROWER_TYPE BORROWER_TYPE, 
+        INDUSTRY_INFO INDUSTRY_INFO, ENTERPRISE_SCALE ENTERPRISE_SCALE, BORROWER_CITY BORROWER_CITY, 
+        ASSETS_INVEST ASSETS_INVEST, EACH_PROPORTION EACH_PROPORTION
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcMonthAssetPositiondetailMapper_mysql.Base_Column_List" />
+        from PBC_MONTH_ASSET_POSITIONDETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcMonthAssetPositiondetailMapper_mysql.Base_Column_List" />
+        from PBC_MONTH_ASSET_POSITIONDETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PbcMonthAssetPositiondetailMapper_mysql.Base_Column_List" />
+        from PBC_MONTH_ASSET_POSITIONDETAIL
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PBC_MONTH_ASSET_POSITIONDETAIL
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
+        insert into PBC_MONTH_ASSET_POSITIONDETAIL (POSUUID, PRODID, TERM, 
+            DETAILNO, DETAILNO2, POSITION_TYPE, 
+            CHL_ID, ASSET_CODE, ASSET_TYPE1, 
+            ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, 
+            RIVAL_PARTY, RATE, CCY, 
+            AMT, INT_AMT, END_DAYS, 
+            DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, 
+            INTINCEXP, INTADJEXP_ADD, LOSS_AMT, 
+            BAL_FLAG, VDATE, MDATE, 
+            OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
+            PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, 
+            ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
+            BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO, 
+            ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST, 
+            EACH_PROPORTION)
+        values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
+            #{detailno,jdbcType=VARCHAR}, #{detailno2,jdbcType=VARCHAR}, #{positionType,jdbcType=VARCHAR}, 
+            #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType1,jdbcType=VARCHAR}, 
+            #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
+            #{rivalParty,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, 
+            #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL}, 
+            #{delayPayAmt,jdbcType=DECIMAL}, #{costAmt,jdbcType=DECIMAL}, #{floatIngpl,jdbcType=DECIMAL}, 
+            #{intincexp,jdbcType=DECIMAL}, #{intadjexpAdd,jdbcType=DECIMAL}, #{lossAmt,jdbcType=DECIMAL}, 
+            #{balFlag,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, 
+            #{openplan,jdbcType=DATE}, #{industry,jdbcType=VARCHAR}, #{industryLevel2,jdbcType=VARCHAR}, 
+            #{partyType1,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR}, 
+            #{orgAssetType1,jdbcType=VARCHAR}, #{orgAssetType2,jdbcType=VARCHAR}, #{orgAssetType3,jdbcType=VARCHAR}, 
+            #{buyPlace,jdbcType=VARCHAR}, #{borrowerType,jdbcType=VARCHAR}, #{industryInfo,jdbcType=VARCHAR}, 
+            #{enterpriseScale,jdbcType=VARCHAR}, #{borrowerCity,jdbcType=VARCHAR}, #{assetsInvest,jdbcType=VARCHAR}, 
+            #{eachProportion,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
+        insert into PBC_MONTH_ASSET_POSITIONDETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="posuuid != null" >
+                POSUUID,
+            </if>
+            <if test="prodid != null" >
+                PRODID,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="detailno != null" >
+                DETAILNO,
+            </if>
+            <if test="detailno2 != null" >
+                DETAILNO2,
+            </if>
+            <if test="positionType != null" >
+                POSITION_TYPE,
+            </if>
+            <if test="chlId != null" >
+                CHL_ID,
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE,
+            </if>
+            <if test="assetType1 != null" >
+                ASSET_TYPE1,
+            </if>
+            <if test="assetType2 != null" >
+                ASSET_TYPE2,
+            </if>
+            <if test="assetType3 != null" >
+                ASSET_TYPE3,
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME,
+            </if>
+            <if test="rivalParty != null" >
+                RIVAL_PARTY,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="amt != null" >
+                AMT,
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT,
+            </if>
+            <if test="endDays != null" >
+                END_DAYS,
+            </if>
+            <if test="delayPayAmt != null" >
+                DELAY_PAY_AMT,
+            </if>
+            <if test="costAmt != null" >
+                COST_AMT,
+            </if>
+            <if test="floatIngpl != null" >
+                FLOAT_INGPL,
+            </if>
+            <if test="intincexp != null" >
+                INTINCEXP,
+            </if>
+            <if test="intadjexpAdd != null" >
+                INTADJEXP_ADD,
+            </if>
+            <if test="lossAmt != null" >
+                LOSS_AMT,
+            </if>
+            <if test="balFlag != null" >
+                BAL_FLAG,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="openplan != null" >
+                OPENPLAN,
+            </if>
+            <if test="industry != null" >
+                INDUSTRY,
+            </if>
+            <if test="industryLevel2 != null" >
+                INDUSTRY_LEVEL2,
+            </if>
+            <if test="partyType1 != null" >
+                PARTY_TYPE1,
+            </if>
+            <if test="partyType3 != null" >
+                PARTY_TYPE3,
+            </if>
+            <if test="partyType2 != null" >
+                PARTY_TYPE2,
+            </if>
+            <if test="orgAssetType1 != null" >
+                ORG_ASSET_TYPE1,
+            </if>
+            <if test="orgAssetType2 != null" >
+                ORG_ASSET_TYPE2,
+            </if>
+            <if test="orgAssetType3 != null" >
+                ORG_ASSET_TYPE3,
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE,
+            </if>
+            <if test="borrowerType != null" >
+                BORROWER_TYPE,
+            </if>
+            <if test="industryInfo != null" >
+                INDUSTRY_INFO,
+            </if>
+            <if test="enterpriseScale != null" >
+                ENTERPRISE_SCALE,
+            </if>
+            <if test="borrowerCity != null" >
+                BORROWER_CITY,
+            </if>
+            <if test="assetsInvest != null" >
+                ASSETS_INVEST,
+            </if>
+            <if test="eachProportion != null" >
+                EACH_PROPORTION,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="posuuid != null" >
+                #{posuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodid != null" >
+                #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="detailno != null" >
+                #{detailno,jdbcType=VARCHAR},
+            </if>
+            <if test="detailno2 != null" >
+                #{detailno2,jdbcType=VARCHAR},
+            </if>
+            <if test="positionType != null" >
+                #{positionType,jdbcType=VARCHAR},
+            </if>
+            <if test="chlId != null" >
+                #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType1 != null" >
+                #{assetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType2 != null" >
+                #{assetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType3 != null" >
+                #{assetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="rivalParty != null" >
+                #{rivalParty,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null" >
+                #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays != null" >
+                #{endDays,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmt != null" >
+                #{delayPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="costAmt != null" >
+                #{costAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="floatIngpl != null" >
+                #{floatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="intincexp != null" >
+                #{intincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="intadjexpAdd != null" >
+                #{intadjexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="lossAmt != null" >
+                #{lossAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="balFlag != null" >
+                #{balFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="openplan != null" >
+                #{openplan,jdbcType=DATE},
+            </if>
+            <if test="industry != null" >
+                #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industryLevel2 != null" >
+                #{industryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType1 != null" >
+                #{partyType1,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType3 != null" >
+                #{partyType3,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType2 != null" >
+                #{partyType2,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType1 != null" >
+                #{orgAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType2 != null" >
+                #{orgAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType3 != null" >
+                #{orgAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="buyPlace != null" >
+                #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerType != null" >
+                #{borrowerType,jdbcType=VARCHAR},
+            </if>
+            <if test="industryInfo != null" >
+                #{industryInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseScale != null" >
+                #{enterpriseScale,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerCity != null" >
+                #{borrowerCity,jdbcType=VARCHAR},
+            </if>
+            <if test="assetsInvest != null" >
+                #{assetsInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="eachProportion != null" >
+                #{eachProportion,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
+        insert into PBC_MONTH_ASSET_POSITIONDETAIL(POSUUID, PRODID, TERM, DETAILNO, DETAILNO2, 
+        POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, 
+        RIVAL_PARTY, RATE, CCY, AMT, INT_AMT, END_DAYS, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, 
+        INTINCEXP, INTADJEXP_ADD, LOSS_AMT, BAL_FLAG, VDATE, MDATE, OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
+        PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
+        BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO, ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST, 
+        EACH_PROPORTION)
+        select POSUUID, PRODID, TERM, DETAILNO, DETAILNO2, 
+            POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3, SUBJECT_NAME, 
+            RIVAL_PARTY, RATE, CCY, AMT, INT_AMT, END_DAYS, DELAY_PAY_AMT, COST_AMT, FLOAT_INGPL, 
+            INTINCEXP, INTADJEXP_ADD, LOSS_AMT, BAL_FLAG, VDATE, MDATE, OPENPLAN, INDUSTRY, INDUSTRY_LEVEL2, 
+            PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
+            BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO, ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST, 
+            EACH_PROPORTION
+             from PBC_MONTH_ASSET_POSITIONDETAIL
+             where 1 = 1 and POSUUID = #{posuuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
+        update PBC_MONTH_ASSET_POSITIONDETAIL
+        <set >
+            <if test="prodid != null" >
+                PRODID = #{prodid,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="detailno != null" >
+                DETAILNO = #{detailno,jdbcType=VARCHAR},
+            </if>
+            <if test="detailno2 != null" >
+                DETAILNO2 = #{detailno2,jdbcType=VARCHAR},
+            </if>
+            <if test="positionType != null" >
+                POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
+            </if>
+            <if test="chlId != null" >
+                CHL_ID = #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType1 != null" >
+                ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType2 != null" >
+                ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType3 != null" >
+                ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="rivalParty != null" >
+                RIVAL_PARTY = #{rivalParty,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null" >
+                AMT = #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays != null" >
+                END_DAYS = #{endDays,jdbcType=DECIMAL},
+            </if>
+            <if test="delayPayAmt != null" >
+                DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="costAmt != null" >
+                COST_AMT = #{costAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="floatIngpl != null" >
+                FLOAT_INGPL = #{floatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="intincexp != null" >
+                INTINCEXP = #{intincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="intadjexpAdd != null" >
+                INTADJEXP_ADD = #{intadjexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="lossAmt != null" >
+                LOSS_AMT = #{lossAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="balFlag != null" >
+                BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="openplan != null" >
+                OPENPLAN = #{openplan,jdbcType=DATE},
+            </if>
+            <if test="industry != null" >
+                INDUSTRY = #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industryLevel2 != null" >
+                INDUSTRY_LEVEL2 = #{industryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType1 != null" >
+                PARTY_TYPE1 = #{partyType1,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType3 != null" >
+                PARTY_TYPE3 = #{partyType3,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType2 != null" >
+                PARTY_TYPE2 = #{partyType2,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType1 != null" >
+                ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType2 != null" >
+                ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType3 != null" >
+                ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerType != null" >
+                BORROWER_TYPE = #{borrowerType,jdbcType=VARCHAR},
+            </if>
+            <if test="industryInfo != null" >
+                INDUSTRY_INFO = #{industryInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseScale != null" >
+                ENTERPRISE_SCALE = #{enterpriseScale,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowerCity != null" >
+                BORROWER_CITY = #{borrowerCity,jdbcType=VARCHAR},
+            </if>
+            <if test="assetsInvest != null" >
+                ASSETS_INVEST = #{assetsInvest,jdbcType=VARCHAR},
+            </if>
+            <if test="eachProportion != null" >
+                EACH_PROPORTION = #{eachProportion,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PbcMonthAssetPositiondetail" >
+        update PBC_MONTH_ASSET_POSITIONDETAIL
+        set PRODID = #{prodid,jdbcType=VARCHAR},
+            TERM = #{term,jdbcType=VARCHAR},
+            DETAILNO = #{detailno,jdbcType=VARCHAR},
+            DETAILNO2 = #{detailno2,jdbcType=VARCHAR},
+            POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
+            CHL_ID = #{chlId,jdbcType=VARCHAR},
+            ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+            ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+            ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
+            SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            RIVAL_PARTY = #{rivalParty,jdbcType=VARCHAR},
+            RATE = #{rate,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            AMT = #{amt,jdbcType=DECIMAL},
+            INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            END_DAYS = #{endDays,jdbcType=DECIMAL},
+            DELAY_PAY_AMT = #{delayPayAmt,jdbcType=DECIMAL},
+            COST_AMT = #{costAmt,jdbcType=DECIMAL},
+            FLOAT_INGPL = #{floatIngpl,jdbcType=DECIMAL},
+            INTINCEXP = #{intincexp,jdbcType=DECIMAL},
+            INTADJEXP_ADD = #{intadjexpAdd,jdbcType=DECIMAL},
+            LOSS_AMT = #{lossAmt,jdbcType=DECIMAL},
+            BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            OPENPLAN = #{openplan,jdbcType=DATE},
+            INDUSTRY = #{industry,jdbcType=VARCHAR},
+            INDUSTRY_LEVEL2 = #{industryLevel2,jdbcType=VARCHAR},
+            PARTY_TYPE1 = #{partyType1,jdbcType=VARCHAR},
+            PARTY_TYPE3 = #{partyType3,jdbcType=VARCHAR},
+            PARTY_TYPE2 = #{partyType2,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
+            BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            BORROWER_TYPE = #{borrowerType,jdbcType=VARCHAR},
+            INDUSTRY_INFO = #{industryInfo,jdbcType=VARCHAR},
+            ENTERPRISE_SCALE = #{enterpriseScale,jdbcType=VARCHAR},
+            BORROWER_CITY = #{borrowerCity,jdbcType=VARCHAR},
+            ASSETS_INVEST = #{assetsInvest,jdbcType=VARCHAR},
+            EACH_PROPORTION = #{eachProportion,jdbcType=VARCHAR}
+        where POSUUID = #{posuuid,jdbcType=CHAR}
+    </update>
+</mapper>

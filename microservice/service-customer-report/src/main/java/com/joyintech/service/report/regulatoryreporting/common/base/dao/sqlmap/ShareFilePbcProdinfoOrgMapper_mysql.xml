@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.common.base.dao.ShareFilePbcProdinfoOrgMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdinfoOrg" >
+        <result column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="PRODCXCOUNTS" property="prodcxcounts" jdbcType="DECIMAL" />
+        <result column="PRODXFCOUNTS" property="prodxfcounts" jdbcType="DECIMAL" />
+        <result column="PRODDQCOUNTS" property="proddqcounts" jdbcType="DECIMAL" />
+        <result column="DQMJ_BALANCE" property="dqmjBalance" jdbcType="DECIMAL" />
+        <result column="DQMJM_AMT" property="dqmjmAmt" jdbcType="DECIMAL" />
+        <result column="DQMJY_AMT" property="dqmjyAmt" jdbcType="DECIMAL" />
+        <result column="DQMJTB_YILED" property="dqmjtbYiled" jdbcType="DECIMAL" />
+        <result column="DQDF_BALANCE" property="dqdfBalance" jdbcType="DECIMAL" />
+        <result column="DQDFM_AMT" property="dqdfmAmt" jdbcType="DECIMAL" />
+        <result column="DQDFY_AMT" property="dqdfyAmt" jdbcType="DECIMAL" />
+        <result column="DQDFTB_YILED" property="dqdftbYiled" jdbcType="DECIMAL" />
+        <result column="QMZJ_BALANCE" property="qmzjBalance" jdbcType="DECIMAL" />
+        <result column="QMZJM_AMT" property="qmzjmAmt" jdbcType="DECIMAL" />
+        <result column="QMZJY_AMT" property="qmzjyAmt" jdbcType="DECIMAL" />
+        <result column="QMZJTB_YILED" property="qmzjtbYiled" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdinfoOrg" >
+        insert into SHARE_FILE_PBC_PRODINFO_ORG (DETAILUUID, REPORTTYPE, GROUPTYPE, 
+            PROPERTYCODE, REPORTUUID, PRODCXCOUNTS, 
+            PRODXFCOUNTS, PRODDQCOUNTS, DQMJ_BALANCE, 
+            DQMJM_AMT, DQMJY_AMT, DQMJTB_YILED, 
+            DQDF_BALANCE, DQDFM_AMT, DQDFY_AMT, 
+            DQDFTB_YILED, QMZJ_BALANCE, QMZJM_AMT, 
+            QMZJY_AMT, QMZJTB_YILED)
+        values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, #{prodcxcounts,jdbcType=DECIMAL}, 
+            #{prodxfcounts,jdbcType=DECIMAL}, #{proddqcounts,jdbcType=DECIMAL}, #{dqmjBalance,jdbcType=DECIMAL}, 
+            #{dqmjmAmt,jdbcType=DECIMAL}, #{dqmjyAmt,jdbcType=DECIMAL}, #{dqmjtbYiled,jdbcType=DECIMAL}, 
+            #{dqdfBalance,jdbcType=DECIMAL}, #{dqdfmAmt,jdbcType=DECIMAL}, #{dqdfyAmt,jdbcType=DECIMAL}, 
+            #{dqdftbYiled,jdbcType=DECIMAL}, #{qmzjBalance,jdbcType=DECIMAL}, #{qmzjmAmt,jdbcType=DECIMAL}, 
+            #{qmzjyAmt,jdbcType=DECIMAL}, #{qmzjtbYiled,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdinfoOrg" >
+        insert into SHARE_FILE_PBC_PRODINFO_ORG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="prodcxcounts != null" >
+                PRODCXCOUNTS,
+            </if>
+            <if test="prodxfcounts != null" >
+                PRODXFCOUNTS,
+            </if>
+            <if test="proddqcounts != null" >
+                PRODDQCOUNTS,
+            </if>
+            <if test="dqmjBalance != null" >
+                DQMJ_BALANCE,
+            </if>
+            <if test="dqmjmAmt != null" >
+                DQMJM_AMT,
+            </if>
+            <if test="dqmjyAmt != null" >
+                DQMJY_AMT,
+            </if>
+            <if test="dqmjtbYiled != null" >
+                DQMJTB_YILED,
+            </if>
+            <if test="dqdfBalance != null" >
+                DQDF_BALANCE,
+            </if>
+            <if test="dqdfmAmt != null" >
+                DQDFM_AMT,
+            </if>
+            <if test="dqdfyAmt != null" >
+                DQDFY_AMT,
+            </if>
+            <if test="dqdftbYiled != null" >
+                DQDFTB_YILED,
+            </if>
+            <if test="qmzjBalance != null" >
+                QMZJ_BALANCE,
+            </if>
+            <if test="qmzjmAmt != null" >
+                QMZJM_AMT,
+            </if>
+            <if test="qmzjyAmt != null" >
+                QMZJY_AMT,
+            </if>
+            <if test="qmzjtbYiled != null" >
+                QMZJTB_YILED,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodcxcounts != null" >
+                #{prodcxcounts,jdbcType=DECIMAL},
+            </if>
+            <if test="prodxfcounts != null" >
+                #{prodxfcounts,jdbcType=DECIMAL},
+            </if>
+            <if test="proddqcounts != null" >
+                #{proddqcounts,jdbcType=DECIMAL},
+            </if>
+            <if test="dqmjBalance != null" >
+                #{dqmjBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="dqmjmAmt != null" >
+                #{dqmjmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dqmjyAmt != null" >
+                #{dqmjyAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dqmjtbYiled != null" >
+                #{dqmjtbYiled,jdbcType=DECIMAL},
+            </if>
+            <if test="dqdfBalance != null" >
+                #{dqdfBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="dqdfmAmt != null" >
+                #{dqdfmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dqdfyAmt != null" >
+                #{dqdfyAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dqdftbYiled != null" >
+                #{dqdftbYiled,jdbcType=DECIMAL},
+            </if>
+            <if test="qmzjBalance != null" >
+                #{qmzjBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="qmzjmAmt != null" >
+                #{qmzjmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="qmzjyAmt != null" >
+                #{qmzjyAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="qmzjtbYiled != null" >
+                #{qmzjtbYiled,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdinfoOrg" >
+        insert into SHARE_FILE_PBC_PRODINFO_ORG(DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+        REPORTUUID, PRODCXCOUNTS, PRODXFCOUNTS, PRODDQCOUNTS, DQMJ_BALANCE, DQMJM_AMT, DQMJY_AMT, 
+        DQMJTB_YILED, DQDF_BALANCE, DQDFM_AMT, DQDFY_AMT, DQDFTB_YILED, QMZJ_BALANCE, QMZJM_AMT, 
+        QMZJY_AMT, QMZJTB_YILED)
+        select DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+            REPORTUUID, PRODCXCOUNTS, PRODXFCOUNTS, PRODDQCOUNTS, DQMJ_BALANCE, DQMJM_AMT, DQMJY_AMT, 
+            DQMJTB_YILED, DQDF_BALANCE, DQDFM_AMT, DQDFY_AMT, DQDFTB_YILED, QMZJ_BALANCE, QMZJM_AMT, 
+            QMZJY_AMT, QMZJTB_YILED
+             from SHARE_FILE_PBC_PRODINFO_ORG
+             where 1 = 1
+    </insert>
+</mapper>

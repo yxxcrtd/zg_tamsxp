@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.common.dao.TransformRuleMapper_mysql">
+	<select id="check" resultType="java.lang.Integer">
+		select count(*) from CHB_TRANSFORM_RULE where TARGET_FIELD=#{targetField} and STATUS='E'
+	</select>
+	<select id="getTransFieldCount" parameterType="com.joyintech.tams.report.common.dto.TransformRule001Dto" resultType="java.lang.Integer">
+		select count(1) from CHB_TRANSFORM_RULE
+		where TRANS_TYPE=#{transType,jdbcType=CHAR}
+		and ORG_FIELD=#{orgField,jdbcType=VARCHAR}
+		and STATUS !='D'
+	</select>
+	<!-- 查询数据 -->
+	<select id="selectAllData" parameterType="map" resultType="com.joyintech.tams.report.common.dto.TransformRule001Dto"
+			resultSetType="FORWARD_ONLY" fetchSize="1000">
+		select
+		SEQNO seqno,
+		TRANS_TYPE transType,
+		ORG_FIELD orgField,
+		PINGYING pinyin,
+		FIELD_UNICODE fieldUnicode,
+		TARGET_FIELD targetField,
+		STATUS dataStatus,
+		IS_MODIFY isModify,
+		REMARK remark,
+		UPDATE_USER updateUser,
+		CREATE_USER createUser,
+		CREATE_DEPT createDept
+		from CHB_TRANSFORM_RULE
+		<where>
+			<if test="statusList != null and statusList">
+				<foreach collection="statusList" item="item" open="and STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="transType != null  and transType != ''">
+				and TRANS_TYPE = #{transType,jdbcType=VARCHAR}
+			</if>
+			<if test="orgField != null and orgField != ''">
+				and ORG_FIELD = #{orgField,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="getDtoBySeqno" resultType="com.joyintech.tams.report.common.dto.TransformRule001Dto">
+    	select
+			SEQNO seqno,
+			TRANS_TYPE transType,
+			ORG_FIELD orgField,
+			PINGYING pinyin,
+			FIELD_UNICODE fieldUnicode,
+			TARGET_FIELD targetField,
+			STATUS dataStatus,
+			IS_MODIFY isModify,
+			REMARK remark,
+			UPDATE_USER updateUser,
+			CREATE_USER createUser,
+			CREATE_DEPT createDept
+		from CHB_TRANSFORM_RULE
+			where SEQNO=#{seqno}
+    </select>
+	<select id="getObjFiledByTableId" parameterType="string" resultType="string" >
+		select OBJ_TABLE_FILED
+		from CHB_TRANSFORM_RULE_OBJ
+		where OBJ_TABLE_ID=#{tableid,jdbcType=VARCHAR}
+
+	</select>
 	<insert id="insertTransField" parameterType="com.joyintech.tams.report.common.dto.TransformRule001Dto">
 		insert into  CHB_TRANSFORM_RULE(SEQNO,TRANS_TYPE,ORG_FIELD,PINGYING,FIELD_UNICODE,
 			TARGET_FIELD,STATUS,IS_MODIFY,REMARK,UPDATE_USER,UPDATE_TIME,
-			CREATE_USER,CREATE_TIME,CREATE_DEPT) 
-		values (f_guid,
+			CREATE_USER,CREATE_TIME,CREATE_DEPT)
+		values (f_guid(),
         	#{transType,jdbcType=CHAR} ,
         	#{orgField,jdbcType=VARCHAR} ,
         	#{pinyin,jdbcType=VARCHAR} ,
@@ -21,14 +84,26 @@
        		#{createDept,jdbcType=VARCHAR})
 	</insert>
 	<update id="doEditSave" parameterType="com.joyintech.tams.report.common.dto.TransformRule001Dto">
-	update CHB_TRANSFORM_RULE
-        <set>
-        PINGYING=#{pinyin,jdbcType=VARCHAR} ,
-        TARGET_FIELD= #{targetField,jdbcType=VARCHAR} ,
-        REMARK=#{remark,jdbcType=VARCHAR},
-        UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
-        UPDATE_TIME=NOW()
-        </set>
-        where SEQNO=#{seqno}
+		update CHB_TRANSFORM_RULE
+		<set>
+			PINGYING=#{pinyin,jdbcType=VARCHAR} ,
+			TARGET_FIELD= #{targetField,jdbcType=VARCHAR} ,
+			REMARK=#{remark,jdbcType=VARCHAR},
+			UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME=NOW()
+		</set>
+		where SEQNO=#{seqno}
 	</update>
+	<update id="deleteByList" parameterType="java.util.List" >
+		update  CHB_TRANSFORM_RULE
+		<set>
+			STATUS='D'
+		</set>
+		<where>
+			<foreach collection="deleteList" index="index" item="item" open="(" separator=") or (" close=")">
+				SEQNO = #{item.seqno, jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</update>
+
 </mapper>

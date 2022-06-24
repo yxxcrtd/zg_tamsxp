@@ -163,11 +163,11 @@
 
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
         insert into CHB_AGENT_PRD_INFO (AGENT_INSTITUTION_CODE,ISSUE_PARTY_ID,
-            PROD_ID, PROD_NAME, PROD_REGIST_CODE, 
+            PROD_ID, PROD_NAME, PROD_REGIST_CODE,
             STATUS, DATA_DATE, REMARK, CREATE_DEPT,ORG_CODE,
             CREATE_TIME, UPDATE_TIME)
         values (#{agentInstitutionCode,jdbcType=VARCHAR},#{issuePartyId,jdbcType=VARCHAR},
-            #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR}, 
+            #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR},
             #{status,jdbcType=VARCHAR}, sysdate, #{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},sysdate,
             sysdate)
     </insert>
@@ -262,11 +262,11 @@
         AGENT_INSTITUTION_CODE id,
         AGENT_INSTITUTION_CODE text
         from CHB_AGENT_INSTITUTION_INFO
-        <where>
+        where 1=1
             <if test="search != null and search != ''">
                 and AGENT_INSTITUTION_CODE like concat(concat('%', #{search}),'%')
             </if>
-        </where>
+        and STATUS = 'E'
     </select>
 <!--    产品登记编码下拉框(新建)-->
     <select id="selectProdRegistCode" resultType="com.joyintech.framework.select.SelectOptionDto">

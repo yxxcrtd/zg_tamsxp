@@ -2,12 +2,14 @@ package com.joyintech.tams.svreport.interf.chb.assetinfo.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.FileImpService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.MstBondCreditRatingMapper;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -107,15 +109,18 @@ public class SvrSecRatingFileImpService extends FileImpService {
 	@Autowired
 	private SqlSessionTemplate template;
 
+	@Autowired
+	private BatchInsertService batchInsertService;
+
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		// 解析成功或失败的标识
 		boolean success = true;
 		String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		logger.debug("汇率数据转dto---开始-----:" +  df.format(new Date()));
-		List<MstBondCreditRating> listNE = (List<MstBondCreditRating>) convertMapToEntity(listData,MstBondCreditRating.class);
+		List<MstBondCreditRating> listNE = (List<MstBondCreditRating>) convertMapToEntity(listData,MstBondCreditRating.class, dataSource);
 		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
 		if(!CollectionUtils.isEmpty(listNE)) {
 			// 增量模式根据业务主键更新
@@ -129,107 +134,17 @@ public class SvrSecRatingFileImpService extends FileImpService {
 				if (listNE.size() <= 1000) {
 					insertSecRating(listNE);
 				} else {// 大于1000使用sqlloader入库
-					// 创建表
-					ImpTable table = new ImpTable("MST_BOND_CREDIT_RATING");
-					table.setColumns(ImportGenerator.createImpTableColumns("MST_BOND_CREDIT_RATING"));
-					// 创建一个线程池
-					if (interfMaxCorePoolSize < 1) {
-						interfMaxCorePoolSize = 20;
-					}
-					ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-					List<Callable<Boolean>> tasks = new ArrayList<>();
-					if (null != listNE) {
-						int start = 0;
-						int end = 0;
-						int size = listNE.size();
-						int max = (int) Math.ceil((double) size / 1000);
-						for (int i = 0; i < max; i++) {
-							start = end;
-							end = Math.min(size, 1000 * (i + 1));
-							List<MstBondCreditRating> subList = listNE.subList(start, end);
-							logger.debug("生成债券评级qlloader文件" + i);
-							tasks.add(new Callable<Boolean>() {
-								@Override
-								public Boolean call() {
-									createDataFile(tmpPath + "/MST_BOND_CREDIT_RATING/MST_BOND_CREDIT_RATING", subList, table.getColumns());
-									return true;
-								}
-							});
-						}
-					}
-					// 为线程池添加任务
-					List<Future<Boolean>> taskResult;
 					try {
-						taskResult = service.invokeAll(tasks);
-					} catch (InterruptedException e) {
+						//sqlloader插入
+						ImpTable table = new ImpTable("MST_BOND_CREDIT_RATING");
+						table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+						// 临时文件存放目录
+						String path = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+						batchInsertService.exeBatchldr(path, listNE, table);
+					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
 						return "fail";
-					}
-					for (Future<Boolean> res : taskResult) {
-						try {
-							success = success && res.get();
-						} catch (InterruptedException | ExecutionException e) {
-							logger.error(e.getMessage(), e);
-							Thread.currentThread().interrupt();
-							return "fail";
-						}
-					}
-					// 任务结束，停止线程池的所有线程
-					service.shutdown();
-					Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath + "/MST_BOND_CREDIT_RATING/"), new String[]{"tmp"}, false);
-					logger.debug("获取债券评级sqlloder文件个数" + files.size());
-					List<String> content = new ArrayList<>(listNE.size());
-					String result = "";
-					for (File f : files) {
-						if (f.getName().startsWith(InterfDefine.债券评级数据.getCode())) {
-							try {
-								content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-								logger.debug("查找sqlloder文件" + f);
-							} catch (IOException e) {
-								logger.debug("查找sqlloder文件异常");
-								logger.error(e.getMessage(), e);
-								result = "fail";
-							} finally {
-								f.delete();
-							}
-						}
-					}
-					logger.debug("读取债券评级sqlloder文件共" + content.size() + "条");
-					if ("fail".equals(result)) {
-						return result;
-					}
-					// 系统是否使用的db2数据库
-					boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-					if (isDB2DataBase) {
-						// db2数据库处理
-						if (CollectionUtils.isNotEmpty(content)) {
-							try {
-								success = success && ImportGenerator.importToDBByPart(table, tmpPath + "/MST_BOND_CREDIT_RATING/", content,
-										reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-										reportSqlldrDatabaseName);
-							} catch (IOException | InterruptedException e) {
-								logger.error(e.getMessage(), e);
-								Thread.currentThread().interrupt();
-								return "fail";
-							}
-						}
-					} else {
-						// oracle原逻辑
-						if (CollectionUtils.isNotEmpty(content)) {
-							try {
-								logger.debug("sqlloader入库开始");
-								success = success && ImportGenerator.importToDBByPart(table, tmpPath + "/MST_BOND_CREDIT_RATING/", content,
-										reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-										reportSqlldrDatabaseName);
-								logger.debug("sqlloader入库结束");
-							} catch (IOException | InterruptedException e) {
-								logger.debug("sqlloader入库报错");
-								logger.error(e.getMessage(), e);
-								Thread.currentThread().interrupt();
-								return "fail";
-							}
-						}
 					}
 				}
 			}
@@ -369,9 +284,41 @@ public class SvrSecRatingFileImpService extends FileImpService {
 		svrMstBondCreditRatingMapper.deleteTodayData(dateSet);
 	}
 
-	@SuppressWarnings("unused")
-	private void mergeSecRating(List<MstBondCreditRating> list){
-		svrMstBondCreditRatingMapper.mergeSecRating(list);
+
+	public void mergeSecRating(List<MstBondCreditRating> list) {
+		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+		try {
+			int count = 0;
+			logger.debug("债券评级插入开始--------------" + new Date());
+			SvrMstBondCreditRatingMapper batchMapper = session.getMapper(SvrMstBondCreditRatingMapper.class);
+			int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+			int batchLastIndex = batchCount;//每批最后一个的下标
+			for(int index = 0; index < list.size();){
+				if(batchLastIndex > list.size()-1){
+					batchLastIndex = list.size();
+					batchMapper.mergeSecRating(list.subList(index, batchLastIndex));
+					break;//数据插入完毕,退出循环
+				}else{
+					batchMapper.mergeSecRating(list.subList(index, batchLastIndex));
+					index = batchLastIndex;//设置下一批下标
+					batchLastIndex = index + batchCount;
+				}
+				count ++;
+				// 每20次提交
+				if (count % 20 == 0) {
+					session.commit();
+					// 清理缓存，防止溢出
+					session.clearCache();
+				}
+			}
+			logger.debug("债券评级插入结束--------------" + new Date());
+			session.commit();
+			// 清理缓存，防止溢出
+			session.clearCache();
+		}
+		finally {
+			session.close();
+		}
 	}
 
 	/**

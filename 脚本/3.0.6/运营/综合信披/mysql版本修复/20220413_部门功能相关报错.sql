@@ -1,0 +1,2 @@
+delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID = 'SysDepartment002' and ELEMENT_ID = 'SysDepartment001_btn_delete';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG) VALUES ('SysDepartment002', 'SysDepartment001_btn_delete', 'noneApproval', 'system', null, now(), 'system', now(), 'ALL', '02');

@@ -1,0 +1,1249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdProductTempDealTotalMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
+        <id column="TOTLE_TRADE_ID" property="totleTradeId" jdbcType="VARCHAR" />
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="SETTLE_DATE" property="settleDate" jdbcType="DATE" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="UNIT_CPRICE" property="unitCprice" jdbcType="DECIMAL" />
+        <result column="UNIT_INT" property="unitInt" jdbcType="DECIMAL" />
+        <result column="UNIT_FPRICE" property="unitFprice" jdbcType="DECIMAL" />
+        <result column="PAR_VALUE" property="parValue" jdbcType="DECIMAL" />
+        <result column="CPRICE_AMT" property="cpriceAmt" jdbcType="DECIMAL" />
+        <result column="SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="PRIN_AMT" property="prinAmt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="FPRICE_AMT" property="fpriceAmt" jdbcType="DECIMAL" />
+        <result column="FEE_AMT_PAY" property="feeAmtPay" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="FEE_AMT_UNPAY" property="feeAmtUnpay" jdbcType="DECIMAL" />
+        <result column="FEE_AMT" property="feeAmt" jdbcType="DECIMAL" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="EXER_YIELD" property="exerYield" jdbcType="DECIMAL" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
+        <result column="P_TRADE_ID" property="pTradeId" jdbcType="VARCHAR" />
+        <result column="IS_CANCEL" property="isCancel" jdbcType="VARCHAR" />
+        <result column="IS_CLEAN" property="isClean" jdbcType="VARCHAR" />
+        <result column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <result column="SEC_MANAGE_ACCT_ID" property="secManageAcctId" jdbcType="VARCHAR" />
+        <result column="B_TRADE_ID" property="bTradeId" jdbcType="VARCHAR" />
+        <result column="CHL_ID" property="chlId" jdbcType="VARCHAR" />
+        <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="IS_OUT_TRADE" property="isOutTrade" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="TRADE_PLAT" property="tradePlat" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET_MODE" property="tradeMarketMode" jdbcType="VARCHAR" />
+        <result column="TRADER" property="trader" jdbcType="VARCHAR" />
+        <result column="COUNTER_TRADER" property="counterTrader" jdbcType="VARCHAR" />
+        <result column="COUNTER_CONTACT" property="counterContact" jdbcType="VARCHAR" />
+        <result column="F_TRADE_ID" property="fTradeId" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="P_TOTLE_TRADE_ID" property="pTotleTradeId" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CURRENT_SUB" property="currentSub" jdbcType="DECIMAL" />
+        <result column="LAST_AMT" property="lastAmt" jdbcType="DECIMAL" />
+        <result column="LAST_RED" property="lastRed" jdbcType="DECIMAL" />
+        <result column="LAST_AMT_SUB" property="lastAmtSub" jdbcType="DECIMAL" />
+        <result column="ACCOUNTING_AMT" property="accountingAmt" jdbcType="DECIMAL" />
+        <result column="RED_PROFIT" property="redProfit" jdbcType="DECIMAL" />
+        <result column="RED_COST" property="redCost" jdbcType="DECIMAL" />
+        <result column="DQPRIN_AMT" property="dqprinAmt" jdbcType="DECIMAL" />
+        <result column="PAY_DATE" property="payDate" jdbcType="DATE" />
+        <result column="REMAIN_PRIN" property="remainPrin" jdbcType="DECIMAL" />
+        <result column="TG_BUSI_TYPE" property="tgBusiType" jdbcType="VARCHAR" />
+        <result column="IS_OVERDUE_DEAL" property="isOverdueDeal" jdbcType="VARCHAR" />
+        <result column="SETTLE_SPEED" property="settleSpeed" jdbcType="DECIMAL" />
+        <result column="PAY_UNPAIDINT_AMT" property="payUnpaidintAmt" jdbcType="DECIMAL" />
+        <result column="ISPAY_UNPAIDINT" property="ispayUnpaidint" jdbcType="VARCHAR" />
+        <result column="CLEAR_TYPE" property="clearType" jdbcType="VARCHAR" />
+        <result column="EFF_TIME" property="effTime" jdbcType="TIMESTAMP" />
+        <result column="DELIVERY_TYPE" property="deliveryType" jdbcType="VARCHAR" />
+        <result column="M_DELIVERY_TYPE" property="mDeliveryType" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="REPO_TERM" property="repoTerm" jdbcType="DECIMAL" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+        <result column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="REG_DATE_AMT" property="regDateAmt" jdbcType="DECIMAL" />
+        <result column="EX_DEVIDENT_DATE" property="exDevidentDate" jdbcType="DATE" />
+        <result column="RED_SHARE_LISTING_DATE" property="redShareListingDate" jdbcType="DATE" />
+        <result column="DEVIDENT_DATE" property="devidentDate" jdbcType="DATE" />
+        <result column="PER_DEVIDENT_AMT" property="perDevidentAmt" jdbcType="DECIMAL" />
+        <result column="PER_DEVIDENT_CASH" property="perDevidentCash" jdbcType="DECIMAL" />
+        <result column="DEVIDENT_CASH" property="devidentCash" jdbcType="DECIMAL" />
+        <result column="DEVIDENT_AMT" property="devidentAmt" jdbcType="DECIMAL" />
+        <result column="IF_DIVIDEND" property="ifDividend" jdbcType="VARCHAR" />
+        <result column="DIVID_CCY" property="dividCcy" jdbcType="VARCHAR" />
+        <result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="DECIMAL" />
+        <result column="REPLACE_PRICE" property="replacePrice" jdbcType="DECIMAL" />
+        <result column="YESTERDAY_POSITION" property="yesterdayPosition" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT_HK" property="tradeAmtHk" jdbcType="DECIMAL" />
+        <result column="SELL_SETTLE_RATE" property="sellSettleRate" jdbcType="DECIMAL" />
+        <result column="BUSINESS_MODEL" property="businessModel" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TOTLE_TRADE_ID TOTLE_TRADE_ID, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
+        FINPROD_TYPE2 FINPROD_TYPE2, BRANCH BRANCH, TRADE_DATE TRADE_DATE, VDATE VDATE, MDATE MDATE, 
+        SETTLE_DATE SETTLE_DATE, CCY CCY, UNIT_CPRICE UNIT_CPRICE, UNIT_INT UNIT_INT, UNIT_FPRICE UNIT_FPRICE, 
+        PAR_VALUE PAR_VALUE, CPRICE_AMT CPRICE_AMT, SHARE_AMT SHARE_AMT, PRIN_AMT PRIN_AMT, 
+        INT_AMT INT_AMT, FPRICE_AMT FPRICE_AMT, FEE_AMT_PAY FEE_AMT_PAY, TRADE_AMT TRADE_AMT, 
+        FEE_AMT_UNPAY FEE_AMT_UNPAY, FEE_AMT FEE_AMT, PS PS, YIELD YIELD, EXER_YIELD EXER_YIELD, 
+        INV_AIM INV_AIM, TRADE_STATUS TRADE_STATUS, P_TRADE_ID P_TRADE_ID, IS_CANCEL IS_CANCEL, 
+        IS_CLEAN IS_CLEAN, CASH_ID CASH_ID, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, B_TRADE_ID B_TRADE_ID, 
+        CHL_ID CHL_ID, COUNTER_ID COUNTER_ID, IS_OUT_TRADE IS_OUT_TRADE, TRADE_MARKET TRADE_MARKET, 
+        TRADE_PLAT TRADE_PLAT, TRADE_MARKET_MODE TRADE_MARKET_MODE, TRADER TRADER, COUNTER_TRADER COUNTER_TRADER, 
+        COUNTER_CONTACT COUNTER_CONTACT, F_TRADE_ID F_TRADE_ID, PORTFOLIO_ID PORTFOLIO_ID, 
+        PROD_ID PROD_ID, P_TOTLE_TRADE_ID P_TOTLE_TRADE_ID, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        CURRENT_SUB CURRENT_SUB, LAST_AMT LAST_AMT, LAST_RED LAST_RED, LAST_AMT_SUB LAST_AMT_SUB, 
+        ACCOUNTING_AMT ACCOUNTING_AMT, RED_PROFIT RED_PROFIT, RED_COST RED_COST, DQPRIN_AMT DQPRIN_AMT, 
+        PAY_DATE PAY_DATE, REMAIN_PRIN REMAIN_PRIN, TG_BUSI_TYPE TG_BUSI_TYPE, IS_OVERDUE_DEAL IS_OVERDUE_DEAL, 
+        SETTLE_SPEED SETTLE_SPEED, PAY_UNPAIDINT_AMT PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT ISPAY_UNPAIDINT, 
+        CLEAR_TYPE CLEAR_TYPE, EFF_TIME EFF_TIME, DELIVERY_TYPE DELIVERY_TYPE, M_DELIVERY_TYPE M_DELIVERY_TYPE, 
+        RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, INSTITUTION_CODE INSTITUTION_CODE, 
+        REG_DATE REG_DATE,REG_DATE_AMT REG_DATE_AMT, EX_DEVIDENT_DATE EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE RED_SHARE_LISTING_DATE, 
+        DEVIDENT_DATE DEVIDENT_DATE, PER_DEVIDENT_AMT PER_DEVIDENT_AMT, PER_DEVIDENT_CASH PER_DEVIDENT_CASH, 
+        DEVIDENT_CASH DEVIDENT_CASH, DEVIDENT_AMT DEVIDENT_AMT, 
+        IF_DIVIDEND IF_DIVIDEND, DIVID_CCY DIVID_CCY, EXCHANGE_RATE EXCHANGE_RATE, REPLACE_PRICE REPLACE_PRICE, 
+        YESTERDAY_POSITION YESTERDAY_POSITION, TRADE_AMT_HK TRADE_AMT_HK, SELL_SETTLE_RATE SELL_SETTLE_RATE  ,BUSINESS_MODEL BUSINESS_MODEL
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealTotalMapper_mysql.Base_Column_List" />
+        from TRD_PRODUCT_TEMP_DEAL_TOTAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealTotalMapper_mysql.Base_Column_List" />
+        from TRD_PRODUCT_TEMP_DEAL_TOTAL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealTotalMapper_mysql.Base_Column_List" />
+        from TRD_PRODUCT_TEMP_DEAL_TOTAL
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_PRODUCT_TEMP_DEAL_TOTAL
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
+        insert into TRD_PRODUCT_TEMP_DEAL_TOTAL (TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID, 
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH, 
+            TRADE_DATE, VDATE, MDATE, SETTLE_DATE, 
+            CCY, UNIT_CPRICE, UNIT_INT, 
+            UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, 
+            SHARE_AMT, PRIN_AMT, INT_AMT, 
+            FPRICE_AMT, FEE_AMT_PAY, TRADE_AMT, 
+            FEE_AMT_UNPAY, FEE_AMT, PS, 
+            YIELD, EXER_YIELD, INV_AIM, 
+            TRADE_STATUS, P_TRADE_ID, IS_CANCEL, 
+            IS_CLEAN, CASH_ID, SEC_MANAGE_ACCT_ID, 
+            B_TRADE_ID, CHL_ID, COUNTER_ID, 
+            IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT, 
+            TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, 
+            COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, 
+            PROD_ID, P_TOTLE_TRADE_ID, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CURRENT_SUB, 
+            LAST_AMT, LAST_RED, LAST_AMT_SUB, 
+            ACCOUNTING_AMT, RED_PROFIT, RED_COST, 
+            DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
+            TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, 
+            PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, CLEAR_TYPE, 
+            EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, 
+            RATE, REPO_TERM, TERM_TYPE, 
+            INSTITUTION_CODE, REG_DATE, REG_DATE_AMT, EX_DEVIDENT_DATE, 
+            RED_SHARE_LISTING_DATE, DEVIDENT_DATE, PER_DEVIDENT_AMT, 
+            PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT, IF_DIVIDEND, DIVID_CCY, 
+            EXCHANGE_RATE, REPLACE_PRICE, YESTERDAY_POSITION, 
+            TRADE_AMT_HK, SELL_SETTLE_RATE ,BUSINESS_MODEL
+        )
+        values (#{totleTradeId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
+            #{tradeDate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, 
+            #{ccy,jdbcType=VARCHAR}, #{unitCprice,jdbcType=DECIMAL}, #{unitInt,jdbcType=DECIMAL}, 
+            #{unitFprice,jdbcType=DECIMAL}, #{parValue,jdbcType=DECIMAL}, #{cpriceAmt,jdbcType=DECIMAL}, 
+            #{shareAmt,jdbcType=DECIMAL}, #{prinAmt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, 
+            #{fpriceAmt,jdbcType=DECIMAL}, #{feeAmtPay,jdbcType=DECIMAL}, #{tradeAmt,jdbcType=DECIMAL}, 
+            #{feeAmtUnpay,jdbcType=DECIMAL}, #{feeAmt,jdbcType=DECIMAL}, #{ps,jdbcType=VARCHAR}, 
+            #{yield,jdbcType=DECIMAL}, #{exerYield,jdbcType=DECIMAL}, #{invAim,jdbcType=VARCHAR}, 
+            #{tradeStatus,jdbcType=VARCHAR}, #{pTradeId,jdbcType=VARCHAR}, #{isCancel,jdbcType=VARCHAR}, 
+            #{isClean,jdbcType=VARCHAR}, #{cashId,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, 
+            #{bTradeId,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{counterId,jdbcType=VARCHAR}, 
+            #{isOutTrade,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, #{tradePlat,jdbcType=VARCHAR}, 
+            #{tradeMarketMode,jdbcType=VARCHAR}, #{trader,jdbcType=VARCHAR}, #{counterTrader,jdbcType=VARCHAR}, 
+            #{counterContact,jdbcType=VARCHAR}, #{fTradeId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, 
+            #{prodId,jdbcType=VARCHAR}, #{pTotleTradeId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{currentSub,jdbcType=DECIMAL}, 
+            #{lastAmt,jdbcType=DECIMAL}, #{lastRed,jdbcType=DECIMAL}, #{lastAmtSub,jdbcType=DECIMAL}, 
+            #{accountingAmt,jdbcType=DECIMAL}, #{redProfit,jdbcType=DECIMAL}, #{redCost,jdbcType=DECIMAL}, 
+            #{dqprinAmt,jdbcType=DECIMAL}, #{payDate,jdbcType=DATE}, #{remainPrin,jdbcType=DECIMAL}, 
+            #{tgBusiType,jdbcType=VARCHAR}, #{isOverdueDeal,jdbcType=VARCHAR}, #{settleSpeed,jdbcType=DECIMAL}, 
+            #{payUnpaidintAmt,jdbcType=DECIMAL}, #{ispayUnpaidint,jdbcType=VARCHAR}, #{clearType,jdbcType=VARCHAR}, 
+            #{effTime,jdbcType=TIMESTAMP}, #{deliveryType,jdbcType=VARCHAR}, #{mDeliveryType,jdbcType=VARCHAR}, 
+            #{rate,jdbcType=DECIMAL}, #{repoTerm,jdbcType=DECIMAL}, #{termType,jdbcType=VARCHAR}, 
+            #{institutionCode,jdbcType=VARCHAR}, #{regDate,jdbcType=DATE}, #{regDateAmt,jdbcType=DECIMAL}, #{exDevidentDate,jdbcType=DATE}, 
+            #{redShareListingDate,jdbcType=DATE}, #{devidentDate,jdbcType=DATE}, #{perDevidentAmt,jdbcType=DECIMAL}, 
+            #{perDevidentCash,jdbcType=DECIMAL}, #{devidentCash,jdbcType=DECIMAL}, #{devidentAmt,jdbcType=DECIMAL},
+	        #{ifDividend,jdbcType=VARCHAR}, #{dividCcy,jdbcType=VARCHAR},
+            #{exchangeRate,jdbcType=DECIMAL}, #{replacePrice,jdbcType=DECIMAL}, #{yesterdayPosition,jdbcType=DECIMAL}, 
+            #{tradeAmtHk,jdbcType=DECIMAL}, #{sellSettleRate,jdbcType=DECIMAL} , #{businessModel,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
+        insert into TRD_PRODUCT_TEMP_DEAL_TOTAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                TOTLE_TRADE_ID,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="settleDate != null" >
+                SETTLE_DATE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="unitCprice != null" >
+                UNIT_CPRICE,
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT,
+            </if>
+            <if test="unitFprice != null" >
+                UNIT_FPRICE,
+            </if>
+            <if test="parValue != null" >
+                PAR_VALUE,
+            </if>
+            <if test="cpriceAmt != null" >
+                CPRICE_AMT,
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT,
+            </if>
+            <if test="prinAmt != null" >
+                PRIN_AMT,
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT,
+            </if>
+            <if test="fpriceAmt != null" >
+                FPRICE_AMT,
+            </if>
+            <if test="feeAmtPay != null" >
+                FEE_AMT_PAY,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="feeAmtUnpay != null" >
+                FEE_AMT_UNPAY,
+            </if>
+            <if test="feeAmt != null" >
+                FEE_AMT,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS,
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID,
+            </if>
+            <if test="isCancel != null" >
+                IS_CANCEL,
+            </if>
+            <if test="isClean != null" >
+                IS_CLEAN,
+            </if>
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID,
+            </if>
+            <if test="bTradeId != null" >
+                B_TRADE_ID,
+            </if>
+            <if test="chlId != null" >
+                CHL_ID,
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID,
+            </if>
+            <if test="isOutTrade != null" >
+                IS_OUT_TRADE,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="tradePlat != null" >
+                TRADE_PLAT,
+            </if>
+            <if test="tradeMarketMode != null" >
+                TRADE_MARKET_MODE,
+            </if>
+            <if test="trader != null" >
+                TRADER,
+            </if>
+            <if test="counterTrader != null" >
+                COUNTER_TRADER,
+            </if>
+            <if test="counterContact != null" >
+                COUNTER_CONTACT,
+            </if>
+            <if test="fTradeId != null" >
+                F_TRADE_ID,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="pTotleTradeId != null" >
+                P_TOTLE_TRADE_ID,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="currentSub != null" >
+                CURRENT_SUB,
+            </if>
+            <if test="lastAmt != null" >
+                LAST_AMT,
+            </if>
+            <if test="lastRed != null" >
+                LAST_RED,
+            </if>
+            <if test="lastAmtSub != null" >
+                LAST_AMT_SUB,
+            </if>
+            <if test="accountingAmt != null" >
+                ACCOUNTING_AMT,
+            </if>
+            <if test="redProfit != null" >
+                RED_PROFIT,
+            </if>
+            <if test="redCost != null" >
+                RED_COST,
+            </if>
+            <if test="dqprinAmt != null" >
+                DQPRIN_AMT,
+            </if>
+            <if test="payDate != null" >
+                PAY_DATE,
+            </if>
+            <if test="remainPrin != null" >
+                REMAIN_PRIN,
+            </if>
+            <if test="tgBusiType != null" >
+                TG_BUSI_TYPE,
+            </if>
+            <if test="isOverdueDeal != null" >
+                IS_OVERDUE_DEAL,
+            </if>
+            <if test="settleSpeed != null" >
+                SETTLE_SPEED,
+            </if>
+            <if test="payUnpaidintAmt != null" >
+                PAY_UNPAIDINT_AMT,
+            </if>
+            <if test="ispayUnpaidint != null" >
+                ISPAY_UNPAIDINT,
+            </if>
+            <if test="clearType != null" >
+                CLEAR_TYPE,
+            </if>
+            <if test="effTime != null" >
+                EFF_TIME,
+            </if>
+            <if test="deliveryType != null" >
+                DELIVERY_TYPE,
+            </if>
+            <if test="mDeliveryType != null" >
+                M_DELIVERY_TYPE,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="repoTerm != null" >
+                REPO_TERM,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE,
+            </if>
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="regDateAmt != null" >
+                REG_DATE_AMT,
+            </if>
+            <if test="exDevidentDate != null" >
+                EX_DEVIDENT_DATE,
+            </if>
+            <if test="redShareListingDate != null" >
+                RED_SHARE_LISTING_DATE,
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE,
+            </if>
+            <if test="perDevidentAmt != null" >
+                PER_DEVIDENT_AMT,
+            </if>
+            <if test="perDevidentCash != null" >
+                PER_DEVIDENT_CASH,
+            </if>
+            <if test="devidentCash != null" >
+                DEVIDENT_CASH,
+            </if>
+            <if test="devidentAmt != null" >
+                DEVIDENT_AMT,
+            </if>
+            <if test="ifDividend != null" >
+                IF_DIVIDEND,
+            </if>
+            <if test="dividCcy != null" >
+                DIVID_CCY,
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE,
+            </if>
+            <if test="replacePrice != null" >
+                REPLACE_PRICE,
+            </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION,
+            </if>
+            <if test="tradeAmtHk != null" >
+                TRADE_AMT_HK,
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE,
+            </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                #{totleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="settleDate != null" >
+                #{settleDate,jdbcType=DATE},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="unitCprice != null" >
+                #{unitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="unitInt != null" >
+                #{unitInt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitFprice != null" >
+                #{unitFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="parValue != null" >
+                #{parValue,jdbcType=DECIMAL},
+            </if>
+            <if test="cpriceAmt != null" >
+                #{cpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="shareAmt != null" >
+                #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="prinAmt != null" >
+                #{prinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fpriceAmt != null" >
+                #{fpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="feeAmtPay != null" >
+                #{feeAmtPay,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="feeAmtUnpay != null" >
+                #{feeAmtUnpay,jdbcType=DECIMAL},
+            </if>
+            <if test="feeAmt != null" >
+                #{feeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null" >
+                #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isCancel != null" >
+                #{isCancel,jdbcType=VARCHAR},
+            </if>
+            <if test="isClean != null" >
+                #{isClean,jdbcType=VARCHAR},
+            </if>
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="bTradeId != null" >
+                #{bTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="chlId != null" >
+                #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterId != null" >
+                #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="isOutTrade != null" >
+                #{isOutTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePlat != null" >
+                #{tradePlat,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarketMode != null" >
+                #{tradeMarketMode,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="counterTrader != null" >
+                #{counterTrader,jdbcType=VARCHAR},
+            </if>
+            <if test="counterContact != null" >
+                #{counterContact,jdbcType=VARCHAR},
+            </if>
+            <if test="fTradeId != null" >
+                #{fTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pTotleTradeId != null" >
+                #{pTotleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="currentSub != null" >
+                #{currentSub,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmt != null" >
+                #{lastAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lastRed != null" >
+                #{lastRed,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmtSub != null" >
+                #{lastAmtSub,jdbcType=DECIMAL},
+            </if>
+            <if test="accountingAmt != null" >
+                #{accountingAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="redProfit != null" >
+                #{redProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="redCost != null" >
+                #{redCost,jdbcType=DECIMAL},
+            </if>
+            <if test="dqprinAmt != null" >
+                #{dqprinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="payDate != null" >
+                #{payDate,jdbcType=DATE},
+            </if>
+            <if test="remainPrin != null" >
+                #{remainPrin,jdbcType=DECIMAL},
+            </if>
+            <if test="tgBusiType != null" >
+                #{tgBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="isOverdueDeal != null" >
+                #{isOverdueDeal,jdbcType=VARCHAR},
+            </if>
+            <if test="settleSpeed != null" >
+                #{settleSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="payUnpaidintAmt != null" >
+                #{payUnpaidintAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ispayUnpaidint != null" >
+                #{ispayUnpaidint,jdbcType=VARCHAR},
+            </if>
+            <if test="clearType != null" >
+                #{clearType,jdbcType=VARCHAR},
+            </if>
+            <if test="effTime != null" >
+                #{effTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deliveryType != null" >
+                #{deliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="mDeliveryType != null" >
+                #{mDeliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="repoTerm != null" >
+                #{repoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                #{institutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="regDateAmt != null" >
+                #{regDateAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="exDevidentDate != null" >
+                #{exDevidentDate,jdbcType=DATE},
+            </if>
+            <if test="redShareListingDate != null" >
+                #{redShareListingDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="perDevidentAmt != null" >
+                #{perDevidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="perDevidentCash != null" >
+                #{perDevidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentCash != null" >
+                #{devidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentAmt != null" >
+                #{devidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ifDividend != null" >
+                #{ifDividend,jdbcType=VARCHAR},
+            </if>
+            <if test="dividCcy != null" >
+                #{dividCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="replacePrice != null" >
+                #{replacePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayPosition != null" >
+                #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmtHk != null" >
+                #{tradeAmtHk,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=DECIMAL},
+
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
+        insert into TRD_PRODUCT_TEMP_DEAL_TOTAL(TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID, FINPROD_TYPE, 
+        FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, CCY, UNIT_CPRICE, UNIT_INT, 
+        UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, FEE_AMT_PAY, 
+        TRADE_AMT, FEE_AMT_UNPAY, FEE_AMT, PS, YIELD, EXER_YIELD, INV_AIM, TRADE_STATUS, 
+        P_TRADE_ID, IS_CANCEL, IS_CLEAN, CASH_ID, SEC_MANAGE_ACCT_ID, B_TRADE_ID, CHL_ID, 
+        COUNTER_ID, IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT, TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, 
+        COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, REMARK, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CURRENT_SUB, LAST_AMT, LAST_RED, 
+        LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
+        TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, 
+        CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, 
+        INSTITUTION_CODE, REG_DATE, REG_DATE_AMT,EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
+        PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT, IF_DIVIDEND, 
+        DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE,YESTERDAY_POSITION, TRADE_AMT_HK, SELL_SETTLE_RATE)
+        select TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID, FINPROD_TYPE, 
+            FINPROD_TYPE2, BRANCH, TRADE_DATE, VDATE, MDATE, SETTLE_DATE, CCY, UNIT_CPRICE, UNIT_INT, 
+            UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, SHARE_AMT, PRIN_AMT, INT_AMT, FPRICE_AMT, FEE_AMT_PAY, 
+            TRADE_AMT, FEE_AMT_UNPAY, FEE_AMT, PS, YIELD, EXER_YIELD, INV_AIM, TRADE_STATUS, 
+            P_TRADE_ID, IS_CANCEL, IS_CLEAN, CASH_ID, SEC_MANAGE_ACCT_ID, B_TRADE_ID, CHL_ID, 
+            COUNTER_ID, IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT, TRADE_MARKET_MODE, TRADER, COUNTER_TRADER, 
+            COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID, PROD_ID, P_TOTLE_TRADE_ID, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CURRENT_SUB, LAST_AMT, LAST_RED, 
+            LAST_AMT_SUB, ACCOUNTING_AMT, RED_PROFIT, RED_COST, DQPRIN_AMT, PAY_DATE, REMAIN_PRIN, 
+            TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED, PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, 
+            CLEAR_TYPE, EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE, RATE, REPO_TERM, TERM_TYPE, 
+            INSTITUTION_CODE, REG_DATE,REG_DATE_AMT, EX_DEVIDENT_DATE, RED_SHARE_LISTING_DATE, DEVIDENT_DATE, 
+            PER_DEVIDENT_AMT, PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT,IF_DIVIDEND, 
+            DIVID_CCY, EXCHANGE_RATE, REPLACE_PRICE, YESTERDAY_POSITION, TRADE_AMT_HK, SELL_SETTLE_RATE
+             from TRD_PRODUCT_TEMP_DEAL_TOTAL
+             where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </insert>
+
+    <insert id="insertToDealTotal" parameterType="java.lang.String">
+        INSERT INTO TRD_FIN_PRODUCT_DEAL_TOTAL(
+            TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID,
+            FINPROD_TYPE, FINPROD_TYPE2, BRANCH,
+            TRADE_DATE, VDATE, MDATE, SETTLE_DATE,
+            CCY, UNIT_CPRICE, UNIT_INT,
+            UNIT_FPRICE, PAR_VALUE, CPRICE_AMT,
+            SHARE_AMT, PRIN_AMT, INT_AMT,
+            FPRICE_AMT, FEE_AMT_PAY, TRADE_AMT,
+            FEE_AMT_UNPAY, FEE_AMT, PS,
+            YIELD, EXER_YIELD, INV_AIM,
+            TRADE_STATUS, P_TRADE_ID, IS_CANCEL,
+            IS_CLEAN, CASH_ID, SEC_MANAGE_ACCT_ID,
+            B_TRADE_ID, CHL_ID, COUNTER_ID,
+            IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT,
+            TRADE_MARKET_MODE, TRADER, COUNTER_TRADER,
+            COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID,
+            PROD_ID, P_TOTLE_TRADE_ID, REMARK,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, CURRENT_SUB,
+            LAST_AMT, LAST_RED, LAST_AMT_SUB,
+            ACCOUNTING_AMT, RED_PROFIT, RED_COST,
+            DQPRIN_AMT, PAY_DATE, REMAIN_PRIN,
+            TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED,
+            PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, CLEAR_TYPE,
+            EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE,
+            RATE, REPO_TERM, TERM_TYPE,
+            INSTITUTION_CODE, REG_DATE, REG_DATE_AMT, EX_DEVIDENT_DATE,
+            RED_SHARE_LISTING_DATE, DEVIDENT_DATE, PER_DEVIDENT_AMT,
+            PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT, IF_DIVIDEND, DIVID_CCY,
+            EXCHANGE_RATE, REPLACE_PRICE, YESTERDAY_POSITION,
+            TRADE_AMT_HK, SELL_SETTLE_RATE ,BUSINESS_MODEL )
+        SELECT TOTLE_TRADE_ID, BUSI_TYPE, FINPROD_ID,
+               FINPROD_TYPE, FINPROD_TYPE2, BRANCH,
+               TRADE_DATE, VDATE, MDATE, SETTLE_DATE,
+               CCY, UNIT_CPRICE, UNIT_INT,
+               UNIT_FPRICE, PAR_VALUE, CPRICE_AMT,
+               SHARE_AMT, PRIN_AMT, INT_AMT,
+               FPRICE_AMT, FEE_AMT_PAY, TRADE_AMT,
+               FEE_AMT_UNPAY, FEE_AMT, PS,
+               YIELD, EXER_YIELD, INV_AIM,
+               TRADE_STATUS, P_TRADE_ID, IS_CANCEL,
+               IS_CLEAN, CASH_ID, SEC_MANAGE_ACCT_ID,
+               B_TRADE_ID, CHL_ID, COUNTER_ID,
+               IS_OUT_TRADE, TRADE_MARKET, TRADE_PLAT,
+               TRADE_MARKET_MODE, TRADER, COUNTER_TRADER,
+               COUNTER_CONTACT, F_TRADE_ID, PORTFOLIO_ID,
+               PROD_ID, P_TOTLE_TRADE_ID, REMARK,
+               CREATE_USER, CREATE_DEPT, CREATE_TIME,
+               UPDATE_USER, UPDATE_TIME, CURRENT_SUB,
+               LAST_AMT, LAST_RED, LAST_AMT_SUB,
+               ACCOUNTING_AMT, RED_PROFIT, RED_COST,
+               DQPRIN_AMT, PAY_DATE, REMAIN_PRIN,
+               TG_BUSI_TYPE, IS_OVERDUE_DEAL, SETTLE_SPEED,
+               PAY_UNPAIDINT_AMT, ISPAY_UNPAIDINT, CLEAR_TYPE,
+               EFF_TIME, DELIVERY_TYPE, M_DELIVERY_TYPE,
+               RATE, REPO_TERM, TERM_TYPE,
+               INSTITUTION_CODE, REG_DATE, REG_DATE_AMT, EX_DEVIDENT_DATE,
+               RED_SHARE_LISTING_DATE, DEVIDENT_DATE, PER_DEVIDENT_AMT,
+               PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT, IF_DIVIDEND, DIVID_CCY,
+               EXCHANGE_RATE, REPLACE_PRICE, YESTERDAY_POSITION,
+               TRADE_AMT_HK, SELL_SETTLE_RATE ,BUSINESS_MODEL
+        FROM TRD_PRODUCT_TEMP_DEAL_TOTAL where TOTLE_TRADE_ID=#{totalTradeId,jdbcType=VARCHAR}
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
+        update TRD_PRODUCT_TEMP_DEAL_TOTAL
+        <set >
+            <if test="busiType != null" >
+                BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="settleDate != null" >
+                SETTLE_DATE = #{settleDate,jdbcType=DATE},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="unitCprice != null" >
+                UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitFprice != null" >
+                UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="parValue != null" >
+                PAR_VALUE = #{parValue,jdbcType=DECIMAL},
+            </if>
+            <if test="cpriceAmt != null" >
+                CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="prinAmt != null" >
+                PRIN_AMT = #{prinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fpriceAmt != null" >
+                FPRICE_AMT = #{fpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="feeAmtPay != null" >
+                FEE_AMT_PAY = #{feeAmtPay,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="feeAmtUnpay != null" >
+                FEE_AMT_UNPAY = #{feeAmtUnpay,jdbcType=DECIMAL},
+            </if>
+            <if test="feeAmt != null" >
+                FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isCancel != null" >
+                IS_CANCEL = #{isCancel,jdbcType=VARCHAR},
+            </if>
+            <if test="isClean != null" >
+                IS_CLEAN = #{isClean,jdbcType=VARCHAR},
+            </if>
+            <if test="cashId != null" >
+                CASH_ID = #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="bTradeId != null" >
+                B_TRADE_ID = #{bTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="chlId != null" >
+                CHL_ID = #{chlId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="isOutTrade != null" >
+                IS_OUT_TRADE = #{isOutTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradePlat != null" >
+                TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarketMode != null" >
+                TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                TRADER = #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="counterTrader != null" >
+                COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
+            </if>
+            <if test="counterContact != null" >
+                COUNTER_CONTACT = #{counterContact,jdbcType=VARCHAR},
+            </if>
+            <if test="fTradeId != null" >
+                F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pTotleTradeId != null" >
+                P_TOTLE_TRADE_ID = #{pTotleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="currentSub != null" >
+                CURRENT_SUB = #{currentSub,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmt != null" >
+                LAST_AMT = #{lastAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lastRed != null" >
+                LAST_RED = #{lastRed,jdbcType=DECIMAL},
+            </if>
+            <if test="lastAmtSub != null" >
+                LAST_AMT_SUB = #{lastAmtSub,jdbcType=DECIMAL},
+            </if>
+            <if test="accountingAmt != null" >
+                ACCOUNTING_AMT = #{accountingAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="redProfit != null" >
+                RED_PROFIT = #{redProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="redCost != null" >
+                RED_COST = #{redCost,jdbcType=DECIMAL},
+            </if>
+            <if test="dqprinAmt != null" >
+                DQPRIN_AMT = #{dqprinAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="payDate != null" >
+                PAY_DATE = #{payDate,jdbcType=DATE},
+            </if>
+            <if test="remainPrin != null" >
+                REMAIN_PRIN = #{remainPrin,jdbcType=DECIMAL},
+            </if>
+            <if test="tgBusiType != null" >
+                TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="isOverdueDeal != null" >
+                IS_OVERDUE_DEAL = #{isOverdueDeal,jdbcType=VARCHAR},
+            </if>
+            <if test="settleSpeed != null" >
+                SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="payUnpaidintAmt != null" >
+                PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ispayUnpaidint != null" >
+                ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
+            </if>
+            <if test="clearType != null" >
+                CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
+            </if>
+            <if test="effTime != null" >
+                EFF_TIME = #{effTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deliveryType != null" >
+                DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="mDeliveryType != null" >
+                M_DELIVERY_TYPE = #{mDeliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="repoTerm != null" >
+                REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="institutionCode != null" >
+                INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regDate != null" >
+                REG_DATE = #{regDate,jdbcType=DATE},
+            </if>
+            <if test="regDateAmt != null" >
+                REG_DATE_AMT = #{regDateAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="exDevidentDate != null" >
+                EX_DEVIDENT_DATE = #{exDevidentDate,jdbcType=DATE},
+            </if>
+            <if test="redShareListingDate != null" >
+                RED_SHARE_LISTING_DATE = #{redShareListingDate,jdbcType=DATE},
+            </if>
+            <if test="devidentDate != null" >
+                DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            </if>
+            <if test="perDevidentAmt != null" >
+                PER_DEVIDENT_AMT = #{perDevidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="perDevidentCash != null" >
+                PER_DEVIDENT_CASH = #{perDevidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentCash != null" >
+                DEVIDENT_CASH = #{devidentCash,jdbcType=DECIMAL},
+            </if>
+            <if test="devidentAmt != null" >
+                DEVIDENT_AMT = #{devidentAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ifDividend != null" >
+                IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+            </if>
+            <if test="dividCcy != null" >
+                DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null" >
+                EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="replacePrice != null" >
+                REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="yesterdayPosition != null" >
+                YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmtHk != null" >
+                TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+            </if>
+            <if test="sellSettleRate != null" >
+                SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
+        update TRD_PRODUCT_TEMP_DEAL_TOTAL
+        set BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            SETTLE_DATE = #{settleDate,jdbcType=DATE},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+            UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+            PAR_VALUE = #{parValue,jdbcType=DECIMAL},
+            CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
+            SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            PRIN_AMT = #{prinAmt,jdbcType=DECIMAL},
+            INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            FPRICE_AMT = #{fpriceAmt,jdbcType=DECIMAL},
+            FEE_AMT_PAY = #{feeAmtPay,jdbcType=DECIMAL},
+            TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            FEE_AMT_UNPAY = #{feeAmtUnpay,jdbcType=DECIMAL},
+            FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+            PS = #{ps,jdbcType=VARCHAR},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            IS_CANCEL = #{isCancel,jdbcType=VARCHAR},
+            IS_CLEAN = #{isClean,jdbcType=VARCHAR},
+            CASH_ID = #{cashId,jdbcType=VARCHAR},
+            SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            B_TRADE_ID = #{bTradeId,jdbcType=VARCHAR},
+            CHL_ID = #{chlId,jdbcType=VARCHAR},
+            COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            IS_OUT_TRADE = #{isOutTrade,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            TRADE_PLAT = #{tradePlat,jdbcType=VARCHAR},
+            TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+            TRADER = #{trader,jdbcType=VARCHAR},
+            COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
+            COUNTER_CONTACT = #{counterContact,jdbcType=VARCHAR},
+            F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            PROD_ID = #{prodId,jdbcType=VARCHAR},
+            P_TOTLE_TRADE_ID = #{pTotleTradeId,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CURRENT_SUB = #{currentSub,jdbcType=DECIMAL},
+            LAST_AMT = #{lastAmt,jdbcType=DECIMAL},
+            LAST_RED = #{lastRed,jdbcType=DECIMAL},
+            LAST_AMT_SUB = #{lastAmtSub,jdbcType=DECIMAL},
+            ACCOUNTING_AMT = #{accountingAmt,jdbcType=DECIMAL},
+            RED_PROFIT = #{redProfit,jdbcType=DECIMAL},
+            RED_COST = #{redCost,jdbcType=DECIMAL},
+            DQPRIN_AMT = #{dqprinAmt,jdbcType=DECIMAL},
+            PAY_DATE = #{payDate,jdbcType=DATE},
+            REMAIN_PRIN = #{remainPrin,jdbcType=DECIMAL},
+            TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
+            IS_OVERDUE_DEAL = #{isOverdueDeal,jdbcType=VARCHAR},
+            SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
+            PAY_UNPAIDINT_AMT = #{payUnpaidintAmt,jdbcType=DECIMAL},
+            ISPAY_UNPAIDINT = #{ispayUnpaidint,jdbcType=VARCHAR},
+            CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
+            EFF_TIME = #{effTime,jdbcType=TIMESTAMP},
+            DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
+            M_DELIVERY_TYPE = #{mDeliveryType,jdbcType=VARCHAR},
+            RATE = #{rate,jdbcType=DECIMAL},
+            REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            INSTITUTION_CODE = #{institutionCode,jdbcType=VARCHAR},
+            REG_DATE = #{regDate,jdbcType=DATE},
+            REG_DATE_AMT = #{regDateAmt,jdbcType=DECIMAL},
+            EX_DEVIDENT_DATE = #{exDevidentDate,jdbcType=DATE},
+            RED_SHARE_LISTING_DATE = #{redShareListingDate,jdbcType=DATE},
+            DEVIDENT_DATE = #{devidentDate,jdbcType=DATE},
+            PER_DEVIDENT_AMT = #{perDevidentAmt,jdbcType=DECIMAL},
+            PER_DEVIDENT_CASH = #{perDevidentCash,jdbcType=DECIMAL},
+            DEVIDENT_CASH = #{devidentCash,jdbcType=DECIMAL},
+            DEVIDENT_AMT = #{devidentAmt,jdbcType=DECIMAL},
+            IF_DIVIDEND = #{ifDividend,jdbcType=VARCHAR},
+            DIVID_CCY = #{dividCcy,jdbcType=VARCHAR},
+            EXCHANGE_RATE = #{exchangeRate,jdbcType=DECIMAL},
+            REPLACE_PRICE = #{replacePrice,jdbcType=DECIMAL},
+            YESTERDAY_POSITION = #{yesterdayPosition,jdbcType=DECIMAL},
+            TRADE_AMT_HK = #{tradeAmtHk,jdbcType=DECIMAL},
+            SELL_SETTLE_RATE = #{sellSettleRate,jdbcType=DECIMAL}
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+    
+</mapper>

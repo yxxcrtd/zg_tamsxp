@@ -77,9 +77,6 @@
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat_ws('','%',#{registBankCode,jdbcType=VARCHAR},'%')
 			</if>
-			<!-- <if test="prdRegistCode != null  and prdRegistCode != ''">
-				and ciis.PRD_REGIST_CODE like concat_ws('','%',#{prdRegistCode,jdbcType=VARCHAR},'%')
-			</if> -->
 			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
 				<foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
 					#{item,jdbcType=VARCHAR}
@@ -197,35 +194,35 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS)
-		select   _NEXTINDEX('SEQ_INVESTHOLD_SUB'),
-		t1.REGIST_SEQNO, t1.REGIST_BANK_CODE,
-		t1.CHB_SUBMIT_DEADLINE, t1.PRD_REGIST_CODE, t1.INDENTIFY_MARK,
-		t1.CCY, t1.HOLD_DATE, t1.AMOUNT,
-		t1.QTY, t1.CNY_AMT, t1.REMARK,
-		t1.SUBMIT_DEADLINE, t1.WORKFLOW_ID, t1.SEND_STATUS,
-		t1.STATUS_DATE, t1.STATUS, t1.CREATE_USER,
-		t1.CREATE_TIME, t1.UPDATE_USER, t1.UPDATE_TIME,
-		t1.ORG_CODE, t1.DEPT_CODE, t1.SUBMIT_TIME,
-		t1.SUMIT_SEQ,t1.SUBMIT_SEND_STATUS
-		from CHB_INVESTHOLD_INFO_SUB t1 left join chb_submit_status t2 on t1.SUMIT_SEQ = t2.SEQNO
-		<where> t2.SUBMIT_FEEDBACK_STATUS = '03'
-			<foreach collection="dtos" item="dto" open="and (t1.REGIST_BANK_CODE,t1.INDENTIFY_MARK,t1.PRD_REGIST_CODE,t1.HOLD_DATE,t1.CCY)in(" separator="," close=")">
+		select  _NEXTINDEX('SEQ_INVESTHOLD_SUB'),
+		REGIST_SEQNO, REGIST_BANK_CODE,
+		CHB_SUBMIT_DEADLINE, PRD_REGIST_CODE, INDENTIFY_MARK,
+		CCY, HOLD_DATE, AMOUNT,
+		QTY, CNY_AMT, REMARK,
+		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
+		STATUS_DATE, STATUS, CREATE_USER,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
+		SUMIT_SEQ,SUBMIT_SEND_STATUS
+		from CHB_INVESTHOLD_INFO_SUB
+		<where>
+			<foreach collection="dtos" item="dto" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY)in(" separator="," close=")">
 				(#{dto.registBankCode,jdbcType=VARCHAR},#{dto.indentifyMark,jdbcType=VARCHAR},#{dto.prdRegistCode,jdbcType=VARCHAR},#{dto.holdDate,jdbcType=DATE},#{dto.ccy,jdbcType=VARCHAR})
 			</foreach>
-			and t1.SEND_STATUS in ('02','03')
+			and SEND_STATUS in ('02','03')
 		</where>
 	</insert>
 
 	<!-- 再删除已报送的数据 -->
 	<delete	id="deleteSubmitRegistBetter" parameterType="java.util.List" >
-		delete t1 from CHB_INVESTHOLD_INFO_SUB t1  left join chb_submit_status t2 on t1.SUMIT_SEQ = t2.SEQNO
-		<where> t2.SUBMIT_FEEDBACK_STATUS = '03'
-			<foreach collection="dtos" item="dto" open="and (t1.REGIST_BANK_CODE,t1.INDENTIFY_MARK,t1.PRD_REGIST_CODE,t1.HOLD_DATE,t1.CCY)in(" separator="," close=")">
+		delete from CHB_INVESTHOLD_INFO_SUB
+		<where>
+			<foreach collection="dtos" item="dto" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY)in(" separator="," close=")">
 				(#{dto.registBankCode,jdbcType=VARCHAR},#{dto.indentifyMark,jdbcType=VARCHAR},#{dto.prdRegistCode,jdbcType=VARCHAR},#{dto.holdDate,jdbcType=DATE},#{dto.ccy,jdbcType=VARCHAR})
 			</foreach>
-			and t1.SEND_STATUS in ('02','03')
+			and SEND_STATUS in ('02','03')
 		</where>
 	</delete>
 	<!-- add by zcw 优化end -->
@@ -239,7 +236,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS)
 		select  _NEXTINDEX('SEQ_INVESTHOLD_SUB'),
 		REGIST_SEQNO, REGIST_BANK_CODE,
@@ -249,7 +246,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS
 		from CHB_INVESTHOLD_INFO_SUB
 		<where>
@@ -311,7 +308,6 @@
 	</update>
 	<!-- 接口报送更新并且更新 报送流水号-->
 	<update id="updateInterfSubmitAndSeq" parameterType="java.util.Map">
-		begin
 		<foreach collection="investList" item="item" index="index" separator=";" >
 			update CHB_INVESTHOLD_INFO_SUB  sub
 			set
@@ -322,7 +318,7 @@
 			where
 			sub.REGIST_SEQNO = #{item.registSeqno}
 		</foreach>
-		;end;
+		;
 	</update>
 
 	<!-- add by etliu 20180818 start-->
@@ -377,7 +373,6 @@
 
 	<!-- 批量插入报送状态表 -->
 	<insert id="insertSubmitStatus" parameterType="java.util.List" >
-		begin
 		<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
 			update CHB_INVESTHOLD_INFO_SUB
 			<set >
@@ -387,7 +382,6 @@
 			</set>
 			where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
 		</foreach>
-		end;
 	</insert>
 
 	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
@@ -557,7 +551,6 @@
 		ciis.SUMIT_SEQ				sumitSeq,
 		ciis.CHECK_SEQNO			checkSeqno,
 		crc.IS_LOGIC_CHECK			isLogicCheck,
-		/*staciistus.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus*/
 		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
 		from CHB_INVESTHOLD_INFO_SUB ciis
 		left join CHB_REPORT_CHECK crc
@@ -734,7 +727,6 @@
 	</update>
 	<!-- 批量更新投资者身份信息发送状态 -->
 	<update id="updateInvestorsHoldInfoRegistSendStatus" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
-		begin
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update CHB_INVESTHOLD_INFO_SUB  sub
 			set
@@ -742,7 +734,7 @@
 			where
 			sub.SUMIT_SEQ = #{item.sumitSeq}
 		</foreach>
-		;end;
+		;
 	</update>
 	<select id="selectNoendCountByTaskBeanName" parameterType="string" resultType="int">
 		select count(1)
@@ -755,7 +747,6 @@
 	</select>
 	<select id="countExportNum" parameterType="map" resultType="int">
 		select count(*) from CHB_INVESTHOLD_INFO_SUB ciis
-		/*left join CHB_SUBMIT_STATUS status on ciis.sumit_seq = status.seqno*/
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
 				DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
@@ -793,9 +784,6 @@
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat_ws('','%',#{registBankCode,jdbcType=VARCHAR},'%')
 			</if>
-			<!-- <if test="prdRegistCode != null  and prdRegistCode != ''">
-				and ciis.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
-			</if> -->
 			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
 				<foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
 					#{item,jdbcType=VARCHAR}
@@ -805,10 +793,10 @@
 				and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
 			</if>
 			<if test="holdDateStart != null and holdDateStart != ''">
-				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &gt;= #{holdDateStart,jdbcType=VARCHAR}
+				and ciis.HOLD_DATE &gt;= STR_TO_DATE(#{holdDateStart,jdbcType=VARCHAR},'%Y-%m-%d')
 			</if>
 			<if test="holdDateEnd != null and holdDateEnd != ''">
-				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
+				and ciis.HOLD_DATE &lt;= STR_TO_DATE(#{holdDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size()>0">
 				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
@@ -834,52 +822,60 @@
 			</if>
 		</where>
 	</select>
-	<insert id="insertInvestorsHoldInfoRegistHisBatch" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto" >
-		insert into CHB_INVESTHOLD_INFO_SUB_HIS (HIS_NO, REGIST_SEQNO, REGIST_BANK_CODE,
-												 CHB_SUBMIT_DEADLINE, PRD_REGIST_CODE, INDENTIFY_MARK,
-												 CCY, HOLD_DATE, AMOUNT,
-												 QTY, CNY_AMT, REMARK,
-												 SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
-												 STATUS_DATE, STATUS, CREATE_USER,
-												 CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-												 ORG_CODE, DEPT_CODE, SUBMIT_TIME,
-												 SUMIT_SEQ,SUBMIT_SEND_STATUS)
-		select  _NEXTINDEX('SEQ_INVESTHOLD_SUB'),
-				REGIST_SEQNO, REGIST_BANK_CODE,
-				CHB_SUBMIT_DEADLINE, PRD_REGIST_CODE, INDENTIFY_MARK,
-				CCY, HOLD_DATE, AMOUNT,
-				QTY, CNY_AMT, REMARK,
-				SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
-				STATUS_DATE, STATUS, CREATE_USER,
-				CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-				ORG_CODE, DEPT_CODE, SUBMIT_TIME,
-				SUMIT_SEQ,SUBMIT_SEND_STATUS
-		from CHB_INVESTHOLD_INFO_SUB
-		where
-			REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR},
-		INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR},
-			PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR},
-			HOLD_DATE=#{holdDate,jdbcType=DATE},
-			CCY=#{ccy,jdbcType=VARCHAR},
-		  and SEND_STATUS in ('02','03')
-	</insert>
 
 	<!-- 批量插入报送状态表 -->
-	<insert id="insertSubmitStatusDto" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
-		begin
-		<foreach collection="list" item="item" index="index" separator=";" >
+	<update id="insertSubmitStatusDto" parameterType="java.util.List">
 			update CHB_INVESTHOLD_INFO_SUB  sub
 			set
-			sub.SUBMIT_SEND_STATUS = #{item.submitSendStatus}
+			sub.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR}
 			where
-			sub.SUMIT_SEQ = #{item.seqno}
-		</foreach>
-		;end;
-	</insert>
-
-	<update id="updateSubmitStatusToSuccess" parameterType="string">
-	update CHB_INVESTHOLD_INFO_SUB set SUBMIT_FEEDBACK_STATUS ='03'
-	 where seqno = #{seqno,jdbcType=VARCHAR}
+			sub.SUMIT_SEQ = #{seqno,jdbcType=VARCHAR}
 	</update>
 
+	<update id="updateSubmitStatusToSuccess" parameterType="string">
+		update CHB_INVESTHOLD_INFO_SUB set SUBMIT_FEEDBACK_STATUS ='03'
+		where SUMIT_SEQ = #{seqno,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertInvestorsHoldInfoRegistHisBatch" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto" >
+		insert into CHB_INVESTHOLD_INFO_SUB_HIS (HIS_NO, REGIST_SEQNO, REGIST_BANK_CODE,
+		CHB_SUBMIT_DEADLINE, PRD_REGIST_CODE, INDENTIFY_MARK,
+		CCY, HOLD_DATE, AMOUNT,
+		QTY, CNY_AMT, REMARK,
+		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
+		STATUS_DATE, STATUS, CREATE_USER,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
+		SUMIT_SEQ,SUBMIT_SEND_STATUS)
+		select  _NEXTINDEX('SEQ_INVESTHOLD_SUB'),
+		REGIST_SEQNO, REGIST_BANK_CODE,
+		CHB_SUBMIT_DEADLINE, PRD_REGIST_CODE, INDENTIFY_MARK,
+		CCY, HOLD_DATE, AMOUNT,
+		QTY, CNY_AMT, REMARK,
+		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
+		STATUS_DATE, STATUS, CREATE_USER,
+		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
+		SUMIT_SEQ,SUBMIT_SEND_STATUS
+		from CHB_INVESTHOLD_INFO_SUB
+		where
+		REGIST_BANK_CODE=#{registBankCode,jdbcType=VARCHAR},
+		INDENTIFY_MARK=#{indentifyMark,jdbcType=VARCHAR},
+		PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR},
+		HOLD_DATE=#{holdDate,jdbcType=DATE},
+		CCY=#{ccy,jdbcType=VARCHAR},
+		and SEND_STATUS in ('02','03')
+	</insert>
+
+	<select id="selectAllNeedToHisData" parameterType="java.util.List" >
+		select
+		REGIST_BANK_CODE, INDENTIFY_MARK, PRD_REGIST_CODE, HOLD_DATE,CCY
+		from CHB_INVESTHOLD_INFO_SUB
+		<where>
+			<foreach collection="dtos" item="dto" open="and ( REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY )in(" separator="," close=")">
+				(#{dto.registBankCode,jdbcType=VARCHAR},#{dto.indentifyMark,jdbcType=VARCHAR},#{dto.prdRegistCode,jdbcType=VARCHAR},#{dto.holdDate,jdbcType=DATE},#{dto.ccy,jdbcType=VARCHAR})
+			</foreach>
+			and SEND_STATUS in ('02','03')
+		</where>
+	</select>
 </mapper>

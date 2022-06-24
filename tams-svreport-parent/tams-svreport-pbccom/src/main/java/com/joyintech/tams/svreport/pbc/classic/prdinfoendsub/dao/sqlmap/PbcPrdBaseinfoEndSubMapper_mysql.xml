@@ -48,24 +48,11 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
     <sql id="PBC_PRD_BASEINFO_SUB">
-  (select a.* from (
-        SELECT
-        @rownum:=@rownum+1 rownum,
-        PBC_PROD_ID,
-        PROD_ID,
-        OPERATE_MODE,
-        IVSTORIENTATION,
-        VDATE,
-        STATUS,
-        RAISE_ENDDATE,
-        ORG_CODE,
-        IF( @PBC_PROD_ID = a.PBC_PROD_ID, @rank := @rank + 1, @rank := 1 ) AS myrank,
-        @PBC_PROD_ID := a.PBC_PROD_ID
-        FROM
-        ( SELECT * FROM pbc_prd_baseinfo_sub  ORDER BY PBC_PROD_ID,ifnull( UPDATE_TIME, CREATE_TIME ) DESC) a,
-        ( SELECT @rownum := 0, @PBC_PROD_ID := NULL, @rank := 0 )b
-	) a
-	WHERE 1=1 limit 1)
+        (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
+        row_number() OVER (partition BY PBC_PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME)
+        DESC) AS myrank
+        FROM pbc_prd_baseinfo_sub) a
+        WHERE a.myrank=1)
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
@@ -338,47 +325,47 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
-  <!-- 根据条件查询 -->
-  <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" flushCache="true" useCache="false">
-  	select     
-  		a.REGIST_SEQNO registSeqno,
-      <if test="datFlag != null and datFlag != ''">
-          IFNULL(t2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
-      </if>
-      <if test="datFlag == null">
-          a.PBC_PROD_ID PBC_PROD_ID,
-      </if>
-	    a.MDATE mdate,
-	    a.CCY ccy,
-	    a.PROFIT profit,
-	    a.PROFIT_CNY profitCny,
-	    a.CUSTOM_PROFIT customProfit,
-	    a.CUSTOM_PROFIT_CNY customProfitCny,
-	    <if test="nyield  == null">a.CUS_YEAR_YIELD cusYearYield,</if>
-	    a.SEND_STATUS sendStatus,
-	    a.SUBMIT_TIME submitTime,
-	    a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-	    a.SUMIT_SEQ sumitSeq,
-	    a.STATUS_DATE statusDate,
-	    a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
-	    a.SUBMIT_DEADLINE submitDeadline,
-	    a.STATUS status,
-	    a.CREATE_USER createUser,
-	    a.ORG_CODE orgCode,
-	    a.CREATE_DEPT createDept,
-	    a.CREATE_TIME createTime,
-	    a.UPDATE_USER updateUser,
-	    a.UPDATE_TIME updateTime,
-	    b.PROD_ID prodId,
-	    b.OPERATE_MODE operateMode,
-	    b.IVSTORIENTATION ivstorientation,
-	    b.VDATE vdate,
-	    t2.PBC_CODE pbcCode,
-	    a.PBC_PROD_ID pbcProdIdShow
-  	from PBC_PRD_BASEINFO_END_SUB a 
-  	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID 
-  	<!-- and a.ORG_CODE = b.ORG_CODE -->
-  	LEFT JOIN(
+    <!-- 根据条件查询 -->
+    <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dto.PbcPrdBaseinfoEndSub" flushCache="true" useCache="false">
+        select
+        a.REGIST_SEQNO registSeqno,
+        <if test="datFlag != null and datFlag != ''">
+            IFNULL(t2.pbc_code,a.PBC_PROD_ID) PBC_PROD_ID,
+        </if>
+        <if test="datFlag == null">
+            a.PBC_PROD_ID PBC_PROD_ID,
+        </if>
+        a.MDATE mdate,
+        a.CCY ccy,
+        a.PROFIT profit,
+        a.PROFIT_CNY profitCny,
+        a.CUSTOM_PROFIT customProfit,
+        a.CUSTOM_PROFIT_CNY customProfitCny,
+        <if test="nyield  == null">a.CUS_YEAR_YIELD cusYearYield,</if>
+        a.SEND_STATUS sendStatus,
+        a.SUBMIT_TIME submitTime,
+        a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+        a.SUMIT_SEQ sumitSeq,
+        a.STATUS_DATE statusDate,
+        a.PBC_SUBMIT_DEADLINE pbcSubmitDeadline,
+        a.SUBMIT_DEADLINE submitDeadline,
+        a.STATUS status,
+        a.CREATE_USER createUser,
+        SI.INSTITUTION_CODE orgCode,
+        a.CREATE_DEPT createDept,
+        a.CREATE_TIME createTime,
+        a.UPDATE_USER updateUser,
+        a.UPDATE_TIME updateTime,
+        b.PROD_ID prodId,
+        b.OPERATE_MODE operateMode,
+        b.IVSTORIENTATION ivstorientation,
+        b.VDATE vdate,
+        t2.PBC_CODE pbcCode,
+        ifnull(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
+        from PBC_PRD_BASEINFO_END_SUB a
+        left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID
+        <!-- and a.ORG_CODE = b.ORG_CODE -->
+        LEFT JOIN(
         SELECT
         inside_prod_id,
         pbc_code
@@ -388,9 +375,13 @@
         status='E'
         AND code_type='01'
         )t2 ON t2.inside_prod_id=b.PROD_ID
+        LEFT JOIN CHB_ORG_REGIST_BANK_CODE CORBC
+        ON CORBC.PBC_BANK_CODE = b.ISSUE_PARTY_ID
+        LEFT JOIN SYS_INSTITUTION SI
+        ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
         <where>
             <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-                <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+                <foreach collection="pbcProdIdList" item="items" open="and ifnull(t2.pbc_code,a.PBC_PROD_ID) in (" separator="," close =")">
                     #{items,jdbcType=VARCHAR}
                 </foreach>
             </if>
@@ -543,13 +534,13 @@
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.pbcProdId,jdbcType=CHAR}
         </foreach>
-        )
-        where 1 = 1 limit 1
+        ) as t
+        where t.ranknum = 1
     </insert>
     <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
         delete from PBC_PRD_BASEINFO_END_SUB_HIS
         where PBC_PROD_ID in (
-        select  PBC_PROD_ID
+        select  t1.PBC_PROD_ID
         from (
         select PBC_PROD_ID ,
         rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
@@ -559,8 +550,8 @@
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.pbcProdId,jdbcType=CHAR}
         </foreach>
-        )
-        where 1 = 1 limit 1
+        ) t1
+        where t1.ranknum = 1
         )
     </delete>
     <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
@@ -815,7 +806,7 @@
             </if>
             <!-- 手工处理传入查询日期 实际到期日add by gaojian 2019-06-18 end -->
         </where>
-        ) group by
+        ) s group by
         PBC_PROD_ID,MDATE
 
     </select>
@@ -907,4 +898,16 @@
 			and SUBJECT_LEVEL='1'
 			and subject_no = '1002'
       </select>
+
+    <update id="updateByProdIds" parameterType="java.util.List">
+        update PBC_PRD_BASEINFO_END_SUB
+        set SEND_STATUS = '03',
+        SUBMIT_TIME = now(),
+        SUBMIT_FEEDBACK_STATUS = '03'
+        where  SEND_STATUS = '01'
+        and PROD_ID in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </update>
 </mapper>

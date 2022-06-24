@@ -1,2 +1,0 @@
---修改现金账户表里银行字段的长度(50->100)，和joyin银行字段统一
-ALTER TABLE JXB_BK_CASH_ACCT MODIFY BANKID VARCHAR2(100);

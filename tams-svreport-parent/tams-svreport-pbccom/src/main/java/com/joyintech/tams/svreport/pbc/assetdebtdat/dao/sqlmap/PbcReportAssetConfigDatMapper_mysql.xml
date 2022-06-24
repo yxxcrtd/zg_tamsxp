@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetConfigDatMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto" >
+        <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DETAILUUID ,  REPORTTYPE,  PROPERTYCODE,  BALANCE,
+         REPORTUUID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetConfigDatMapper.Base_Column_List" />
+        from PBC_REPORT_ASSET_CONFIG_DAT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetConfigDatMapper.Base_Column_List" />
+        from PBC_REPORT_ASSET_CONFIG_DAT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetConfigDatMapper.Base_Column_List" />
+        from PBC_REPORT_ASSET_CONFIG_DAT
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from PBC_REPORT_ASSET_CONFIG_DAT
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto" >
+        insert into PBC_REPORT_ASSET_CONFIG_DAT (DETAILUUID, REPORTTYPE, PROPERTYCODE, 
+            BALANCE, REPORTUUID)
+        values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{propertycode,jdbcType=VARCHAR}, 
+            #{balance,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto" >
+        insert into PBC_REPORT_ASSET_CONFIG_DAT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="balance != null" >
+                BALANCE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="balance != null" >
+                #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto" >
+        insert into PBC_REPORT_ASSET_CONFIG_DAT(DETAILUUID, REPORTTYPE, PROPERTYCODE, BALANCE, 
+        REPORTUUID)
+        select DETAILUUID, REPORTTYPE, PROPERTYCODE, BALANCE, 
+            REPORTUUID
+             from PBC_REPORT_ASSET_CONFIG_DAT
+             where 1 = 1 and DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto" >
+        update PBC_REPORT_ASSET_CONFIG_DAT
+        <set >
+            <if test="reporttype != null" >
+                REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="balance != null" >
+                BALANCE = #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            </if>
+        </set>
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto" >
+        update PBC_REPORT_ASSET_CONFIG_DAT
+        set REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            BALANCE = #{balance,jdbcType=DECIMAL},
+            REPORTUUID = #{reportuuid,jdbcType=CHAR}
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </update>
+
+    <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_REPORT_ASSET_CONFIG_DAT
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </select>
+
+
+    <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_ASSET_CONFIG_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insertDataBySelect">
+        INSERT INTO PBC_REPORT_ASSET_CONFIG_DAT (<include refid="Base_Column_List" />)
+        SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_ASSET_CONFIGURATION
+        WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+    </insert>
+
+    <delete id="deleteByReportDate"  parameterType="map" >
+        delete
+        from PBC_REPORT_ASSET_CONFIG_DAT prp
+        where prp.REPORTUUID in(
+        select pr.REPORTUUID from PBC_REPORT pr
+        where 1=1
+        <if test="reportStartDate != null" >
+            and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+        </if>
+        <if test="reportEndDate != null" >
+            and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+        </if>
+        <if test="reporttype != null" >
+            and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+        </if>
+        <if test="deptCode != null" >
+            and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+        </if>
+        <if test="deptCode == null" >
+            and DEPT_CODE is null
+        </if>
+        and pr.send_status = '01'/*只删除未报送数据*/
+        )
+    </delete>
+
+    <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+        delete
+        from PBC_REPORT_ASSET_CONFIG_DAT
+        where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+        AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
+    </delete>
+
+    <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto"
+            parameterType="java.lang.String" >
+        select
+        ppd.*,
+        prp.BALANCE as balancePrd
+        from PBC_REPORT_ASSET_CONFIG_DAT ppd
+        left join PBC_REPORT_ASSET_CONFIGURATION  prp on ppd.REPORTUUID=prp.REPORTUUID
+        and ppd.REPORTTYPE=prp.REPORTTYPE
+        and ppd.propertyCode=prp.propertyCode
+        where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+        and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+    </select>
+
+    <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetConfigDatDto">
+        select     prp.*
+        from PBC_REPORT_ASSET_CONFIG_DAT prp
+        left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
+        where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
+        and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+        and prp.PROPERTYCODE is  not  null
+        and (prp.BALANCE &lt;&gt; 0)
+    </select>
+</mapper>

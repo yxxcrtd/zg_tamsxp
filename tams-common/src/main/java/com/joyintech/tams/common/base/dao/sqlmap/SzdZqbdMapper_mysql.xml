@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SzdZqbdMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SzdZqbd" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="IMPORT_DATE" property="importDate" jdbcType="DATE" />
+        <result column="DATA_FILE" property="dataFile" jdbcType="VARCHAR" />
+        <result column="IS_SETTLE_TARGET" property="isSettleTarget" jdbcType="VARCHAR" />
+        <result column="SCDM" property="scdm" jdbcType="VARCHAR" />
+        <result column="QSBH" property="qsbh" jdbcType="VARCHAR" />
+        <result column="ZQZH" property="zqzh" jdbcType="VARCHAR" />
+        <result column="XWH" property="xwh" jdbcType="VARCHAR" />
+        <result column="ZQDM" property="zqdm" jdbcType="VARCHAR" />
+        <result column="ZQLB" property="zqlb" jdbcType="VARCHAR" />
+        <result column="LTLX" property="ltlx" jdbcType="VARCHAR" />
+        <result column="QYLB" property="qylb" jdbcType="VARCHAR" />
+        <result column="GPNF" property="gpnf" jdbcType="VARCHAR" />
+        <result column="BDSL" property="bdsl" jdbcType="VARCHAR" />
+        <result column="BDLX" property="bdlx" jdbcType="VARCHAR" />
+        <result column="BDRQ" property="bdrq" jdbcType="VARCHAR" />
+        <result column="SL" property="sl" jdbcType="VARCHAR" />
+        <result column="BH" property="bh" jdbcType="VARCHAR" />
+        <result column="BY1" property="by1" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, IMPORT_DATE IMPORT_DATE, DATA_FILE DATA_FILE, IS_SETTLE_TARGET IS_SETTLE_TARGET, 
+        SCDM SCDM, QSBH QSBH, ZQZH ZQZH, XWH XWH, ZQDM ZQDM, ZQLB ZQLB, LTLX LTLX, QYLB QYLB, 
+        GPNF GPNF, BDSL BDSL, BDLX BDLX, BDRQ BDRQ, SL SL, BH BH, BY1 BY1, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdZqbdMapper_mysql.Base_Column_List" />
+        from SZD_ZQBD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdZqbdMapper_mysql.Base_Column_List" />
+        from SZD_ZQBD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdZqbdMapper_mysql.Base_Column_List" />
+        from SZD_ZQBD
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SZD_ZQBD
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SzdZqbd" >
+        insert into SZD_ZQBD (SEQNO, IMPORT_DATE, DATA_FILE, 
+            IS_SETTLE_TARGET, SCDM, QSBH, 
+            ZQZH, XWH, ZQDM, 
+            ZQLB, LTLX, QYLB, 
+            GPNF, BDSL, BDLX, 
+            BDRQ, SL, BH, BY1, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{importDate,jdbcType=DATE}, #{dataFile,jdbcType=VARCHAR}, 
+            #{isSettleTarget,jdbcType=VARCHAR}, #{scdm,jdbcType=VARCHAR}, #{qsbh,jdbcType=VARCHAR}, 
+            #{zqzh,jdbcType=VARCHAR}, #{xwh,jdbcType=VARCHAR}, #{zqdm,jdbcType=VARCHAR}, 
+            #{zqlb,jdbcType=VARCHAR}, #{ltlx,jdbcType=VARCHAR}, #{qylb,jdbcType=VARCHAR}, 
+            #{gpnf,jdbcType=VARCHAR}, #{bdsl,jdbcType=VARCHAR}, #{bdlx,jdbcType=VARCHAR}, 
+            #{bdrq,jdbcType=VARCHAR}, #{sl,jdbcType=VARCHAR}, #{bh,jdbcType=VARCHAR}, #{by1,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SzdZqbd" >
+        insert into SZD_ZQBD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="importDate != null" >
+                IMPORT_DATE,
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE,
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET,
+            </if>
+            <if test="scdm != null" >
+                SCDM,
+            </if>
+            <if test="qsbh != null" >
+                QSBH,
+            </if>
+            <if test="zqzh != null" >
+                ZQZH,
+            </if>
+            <if test="xwh != null" >
+                XWH,
+            </if>
+            <if test="zqdm != null" >
+                ZQDM,
+            </if>
+            <if test="zqlb != null" >
+                ZQLB,
+            </if>
+            <if test="ltlx != null" >
+                LTLX,
+            </if>
+            <if test="qylb != null" >
+                QYLB,
+            </if>
+            <if test="gpnf != null" >
+                GPNF,
+            </if>
+            <if test="bdsl != null" >
+                BDSL,
+            </if>
+            <if test="bdlx != null" >
+                BDLX,
+            </if>
+            <if test="bdrq != null" >
+                BDRQ,
+            </if>
+            <if test="sl != null" >
+                SL,
+            </if>
+            <if test="bh != null" >
+                BH,
+            </if>
+            <if test="by1 != null" >
+                BY1,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="importDate != null" >
+                #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="scdm != null" >
+                #{scdm,jdbcType=VARCHAR},
+            </if>
+            <if test="qsbh != null" >
+                #{qsbh,jdbcType=VARCHAR},
+            </if>
+            <if test="zqzh != null" >
+                #{zqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="xwh != null" >
+                #{xwh,jdbcType=VARCHAR},
+            </if>
+            <if test="zqdm != null" >
+                #{zqdm,jdbcType=VARCHAR},
+            </if>
+            <if test="zqlb != null" >
+                #{zqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="ltlx != null" >
+                #{ltlx,jdbcType=VARCHAR},
+            </if>
+            <if test="qylb != null" >
+                #{qylb,jdbcType=VARCHAR},
+            </if>
+            <if test="gpnf != null" >
+                #{gpnf,jdbcType=VARCHAR},
+            </if>
+            <if test="bdsl != null" >
+                #{bdsl,jdbcType=VARCHAR},
+            </if>
+            <if test="bdlx != null" >
+                #{bdlx,jdbcType=VARCHAR},
+            </if>
+            <if test="bdrq != null" >
+                #{bdrq,jdbcType=VARCHAR},
+            </if>
+            <if test="sl != null" >
+                #{sl,jdbcType=VARCHAR},
+            </if>
+            <if test="bh != null" >
+                #{bh,jdbcType=VARCHAR},
+            </if>
+            <if test="by1 != null" >
+                #{by1,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SzdZqbd" >
+        insert into SZD_ZQBD(SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, SCDM, QSBH, 
+        ZQZH, XWH, ZQDM, ZQLB, LTLX, QYLB, GPNF, BDSL, BDLX, BDRQ, SL, BH, BY1, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, SCDM, QSBH, 
+            ZQZH, XWH, ZQDM, ZQLB, LTLX, QYLB, GPNF, BDSL, BDLX, BDRQ, SL, BH, BY1, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from SZD_ZQBD
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SzdZqbd" >
+        update SZD_ZQBD
+        <set >
+            <if test="importDate != null" >
+                IMPORT_DATE = #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="scdm != null" >
+                SCDM = #{scdm,jdbcType=VARCHAR},
+            </if>
+            <if test="qsbh != null" >
+                QSBH = #{qsbh,jdbcType=VARCHAR},
+            </if>
+            <if test="zqzh != null" >
+                ZQZH = #{zqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="xwh != null" >
+                XWH = #{xwh,jdbcType=VARCHAR},
+            </if>
+            <if test="zqdm != null" >
+                ZQDM = #{zqdm,jdbcType=VARCHAR},
+            </if>
+            <if test="zqlb != null" >
+                ZQLB = #{zqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="ltlx != null" >
+                LTLX = #{ltlx,jdbcType=VARCHAR},
+            </if>
+            <if test="qylb != null" >
+                QYLB = #{qylb,jdbcType=VARCHAR},
+            </if>
+            <if test="gpnf != null" >
+                GPNF = #{gpnf,jdbcType=VARCHAR},
+            </if>
+            <if test="bdsl != null" >
+                BDSL = #{bdsl,jdbcType=VARCHAR},
+            </if>
+            <if test="bdlx != null" >
+                BDLX = #{bdlx,jdbcType=VARCHAR},
+            </if>
+            <if test="bdrq != null" >
+                BDRQ = #{bdrq,jdbcType=VARCHAR},
+            </if>
+            <if test="sl != null" >
+                SL = #{sl,jdbcType=VARCHAR},
+            </if>
+            <if test="bh != null" >
+                BH = #{bh,jdbcType=VARCHAR},
+            </if>
+            <if test="by1 != null" >
+                BY1 = #{by1,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SzdZqbd" >
+        update SZD_ZQBD
+        set IMPORT_DATE = #{importDate,jdbcType=DATE},
+            DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            SCDM = #{scdm,jdbcType=VARCHAR},
+            QSBH = #{qsbh,jdbcType=VARCHAR},
+            ZQZH = #{zqzh,jdbcType=VARCHAR},
+            XWH = #{xwh,jdbcType=VARCHAR},
+            ZQDM = #{zqdm,jdbcType=VARCHAR},
+            ZQLB = #{zqlb,jdbcType=VARCHAR},
+            LTLX = #{ltlx,jdbcType=VARCHAR},
+            QYLB = #{qylb,jdbcType=VARCHAR},
+            GPNF = #{gpnf,jdbcType=VARCHAR},
+            BDSL = #{bdsl,jdbcType=VARCHAR},
+            BDLX = #{bdlx,jdbcType=VARCHAR},
+            BDRQ = #{bdrq,jdbcType=VARCHAR},
+            SL = #{sl,jdbcType=VARCHAR},
+            BH = #{bh,jdbcType=VARCHAR},
+            BY1 = #{by1,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

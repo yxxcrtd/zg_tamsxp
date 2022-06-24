@@ -20,7 +20,7 @@
 		) as accessFilenum,
 		(select count(1) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-		and a.FILE_HANDLE_STATUS = '03'/*异常结束*/
+		and a.FILE_HANDLE_STATUS = '03'
 		and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -66,9 +66,8 @@
 			</foreach>
 		</if>
 		) ,0) as datanum
-		from (select '01' reportcode,'CHB_EQU_HOLD' htmlindex from dual
-		union all select '02' reportcode,'CHB_INVESTHOLD_INFO' htmlindex from dual
-		union all select '03' reportcode,'MST_EXCHANGE_QUOTE' htmlindex from dual
+		from (select '01' reportcode,'CHB_PRD_DECLARE' htmlindex from dual
+		union all select '02' reportcode,'CHB_PRD_BONUS_DEAL' htmlindex from dual
 		union all select '04' reportcode,'MST_HOLIDAY' htmlindex from dual
 		union all select '05' reportcode,'CHB_PRD_BASEINFO' htmlindex from dual
 		union all select '06' reportcode,'CHB_PRD_DEAL' htmlindex from dual
@@ -83,8 +82,12 @@
 		union all select '15' reportcode,'CHB_SUBJECT_BALANCE' htmlindex from dual
 		union all select '16' reportcode,'MST_BOND_CREDIT_RATING' htmlindex from dual
 		union all select '17' reportcode,'MST_CUSTOMER_INFO' htmlindex from dual
-
-		union all select '27' reportcode,'CHB_EQUDET' htmlindex from dual) c
+		union all select '18' reportcode,'CHB_CPROD_BALANCE' htmlindex from dual
+		union all select '19' reportcode,'SALE_CUST_SVRREPORT' htmlindex from dual
+		union all select '42' reportcode,'CHB_SALER_INST_INFO' htmlindex from dual
+		union all select '43' reportcode,'CHB_SALER_IDEN_INFO' htmlindex from dual
+		union all select '44' reportcode,'CHB_SALER_REW_PENA_INFO' htmlindex from dual
+		) c
 		left join chb_file_read_monitor_info b
 		on b.HANDLE_FILE_TYPE = c.reportcode
 		and DATE_FORMAT(b.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
@@ -104,54 +107,54 @@
 	</select>
 
 	<select id="selectDateCheckInfo" resultType="com.joyintech.tams.report.home.dto.BusinessHomeDto">
-	select a.INTERF_TYPE interfFileType, count(a.INTERF_TYPE) as datanum,
-	(select count(1) from CHB_INTERF_ERRODATA b
-	where b.INTERF_TYPE=a.INTERF_TYPE
-	and DATE_FORMAT(b.CREATE_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
-	<if test="createDeptList != null and createDeptList.size>0">
-        <foreach collection="createDeptList" item = "item" open="and a.CREATE_DEPT in(" separator="," close=")">
-        #{item,jdbcType=VARCHAR}
-        </foreach>
-    </if>
-    <if test="orgCodeList != null and orgCodeList.size>0">
-        <foreach collection="orgCodeList" item = "item" open=" and a.ORG_CODE in(" separator="," close=")">
-        #{item,jdbcType=VARCHAR}
-        </foreach>
-    </if>
-    <if test="deptCodeList != null and deptCodeList.size>0">
-        <foreach collection="deptCodeList" item = "item" open=" and a.DEPT_CODE in(" separator="," close=")">
-        #{item,jdbcType=VARCHAR}
-        </foreach>
-    </if>
-	<if test="businessinfolist != null and businessinfolist.size>0">
-		<foreach collection="businessinfolist" item = "item" open=" and a.INTERF_TYPE in(" separator="," close=")">
+		select a.INTERF_TYPE interfFileType, count(a.INTERF_TYPE) as datanum,
+		(select count(1) from CHB_INTERF_ERRODATA b
+		where b.INTERF_TYPE=a.INTERF_TYPE
+		and DATE_FORMAT(b.CREATE_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and a.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and a.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and a.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="businessinfolist != null and businessinfolist.size>0">
+			<foreach collection="businessinfolist" item = "item" open=" and a.INTERF_TYPE in(" separator="," close=")">
 				#{item.interfFileType,jdbcType=VARCHAR}
-		</foreach>
-	</if>
-	) as checkfailnum
-	from CHB_INTERF_ERRODATA a
-	where DATE_FORMAT(a.CREATE_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
-	<if test="createDeptList != null and createDeptList.size>0">
-		<foreach collection="createDeptList" item = "item" open="and a.CREATE_DEPT in(" separator="," close=")">
-		#{item,jdbcType=VARCHAR}
-		</foreach>
-	</if>
-    <if test="orgCodeList != null and orgCodeList.size>0">
-        <foreach collection="orgCodeList" item = "item" open=" and a.ORG_CODE in(" separator="," close=")">
-        #{item,jdbcType=VARCHAR}
-        </foreach>
-    </if>
-    <if test="deptCodeList != null and deptCodeList.size>0">
-        <foreach collection="deptCodeList" item = "item" open=" and a.DEPT_CODE in(" separator="," close=")">
-        #{item,jdbcType=VARCHAR}
-        </foreach>
-    </if>
-	<if test="businessinfolist != null and businessinfolist.size>0">
-		<foreach collection="businessinfolist" item = "item" open=" and a.INTERF_TYPE in(" separator="," close=")">
+			</foreach>
+		</if>
+		) as checkfailnum
+		from CHB_INTERF_ERRODATA a
+		where DATE_FORMAT(a.CREATE_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and a.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and a.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and a.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="businessinfolist != null and businessinfolist.size>0">
+			<foreach collection="businessinfolist" item = "item" open=" and a.INTERF_TYPE in(" separator="," close=")">
 				#{item.interfFileType,jdbcType=VARCHAR}
-		</foreach>
-	</if>
-	group by INTERF_TYPE
+			</foreach>
+		</if>
+		group by INTERF_TYPE
 	</select>
 
 	<select id="selectMergenum" resultType="java.lang.Integer">
@@ -182,16 +185,17 @@
 	</select>
 
 	<select id="selectChbInvestTrade" resultType="java.lang.Integer">
-	select count(1) from CHB_INVESTHOLD_INFO
-	where STATUS = 'A'
-	and DATE_FORMAT(HOLD_DATE,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
+		select count(1) from CHB_INVESTHOLD_INFO
+		where STATUS = 'A'
+		and DATE_FORMAT(HOLD_DATE,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 	</select>
 
 	<select id="selectChbEqudet" resultType="java.lang.Integer">
-	select count(1) from CHB_EQUDET
-	where STATUS = 'A'
-	and DATE_FORMAT(EQUITY_CONF_DATE,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
+		select count(1) from CHB_EQUDET
+		where STATUS = 'A'
+		and DATE_FORMAT(EQUITY_CONF_DATE,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 	</select>
+
 	<select id="selectRegistnum" resultType="java.lang.Integer">
 		SELECT
 		count(1) as prodRegistnum
@@ -217,10 +221,12 @@
 			</foreach>
 		</if>
 	</select>
+
 	<select id="selectInterfType" resultType="java.lang.String">
-        select INTERF_ID id from CHB_INTERF_CONFIG
-        where STATUS = 'E'
-  	</select>
+		select INTERF_ID id from CHB_INTERF_CONFIG
+		where STATUS = 'E'
+	</select>
+
 	<select id="selectMenulist" resultType="java.lang.String" parameterType="java.lang.String">
 		select page_id from sys_menu
 		where
@@ -229,25 +235,13 @@
 			#{item,jdbcType=VARCHAR}
 		</foreach>
 	</select>
+
 	<select id="selectChbEquHold" resultType="java.lang.Integer">
-	select count(1) from CHB_EQU_HOLD
-	where STATUS = 'A'
+		select count(1) from CHB_EQU_HOLD
+		where STATUS = 'A'
 	</select>
 
 	<select id="selectBusinessHomeInfoAll" resultType="com.joyintech.tams.report.home.dto.BusinessHomeDto">
-		with htmlreport as (select '01' reportcode,'CHB_EQU_HOLD' htmlindex from dual
-		union all select '02' reportcode,'CHB_INVESTHOLD_INFO' htmlindex from dual
-		union all select '03' reportcode,'CHB_PRD_DECLARE_SUB' htmlindex from dual
-		union all select '04' reportcode,'CHB_PRD_ISSUE_SUB' htmlindex from dual
-		union all select '05' reportcode,'CHB_PRD_DEAL_SUB' htmlindex from dual
-		union all select '06' reportcode,'CHB_PRD_RAISETOT_SUB' htmlindex from dual
-		union all select '07' reportcode,'CHB_PRD_END_SUB' htmlindex from dual
-		union all select '08' reportcode,'CHB_ASSET_INFO_SUB' htmlindex from dual
-		union all select '09' reportcode,'CHB_INVEST_TRADE_SUB' htmlindex from dual
-		union all select '10' reportcode,'CHB_BOT_AST_POS_SUB' htmlindex from dual
-		union all select '11' reportcode,'CHB_AST_VAL_SUB' htmlindex from dual
-		<!-- 添加投资者明细信息 -->
-		union all select '29' reportcode,'CHB_EQUDET' htmlindex from dual)
 		select c.htmlindex as interfFileType,
 		(select count(1) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
@@ -263,10 +257,10 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		) as accessFilenum,/*接入文件*/
+		) as accessFilenum,
 		(select count(1) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-		and a.FILE_HANDLE_STATUS = '03'/*异常结束*/
+		and a.FILE_HANDLE_STATUS = '03'
 		and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -279,10 +273,10 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		) as exceptionnum,/*异常结束个数*/
+		) as exceptionnum,
 		(select count(1) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-		and a.FILE_HANDLE_STATUS = '02'/*正常结束*/
+		and a.FILE_HANDLE_STATUS = '02'
 		and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -295,10 +289,10 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		) as normalnum,/*正常结束个数*/
+		) as normalnum,
 		ifnull((select sum(ifnull(a.FILE_DATA_COUNT,0)) from chb_file_read_monitor_info a
 		where a.HANDLE_FILE_TYPE=b.HANDLE_FILE_TYPE
-		and a.FILE_HANDLE_STATUS = '02'/*正常结束*/
+		and a.FILE_HANDLE_STATUS = '02'
 		and DATE_FORMAT(a.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		and DATE_FORMAT(a.FILE_READ_END_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}
 		<if test="createDeptList != null and createDeptList.size>0">
@@ -311,8 +305,23 @@
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		),0) as datanum /*数据接入总数*/
-		from htmlreport c
+		),0) as datanum
+		from (select '01' reportcode,'CHB_EQU_HOLD' htmlindex from dual
+		union all select '02' reportcode,'CHB_INVESTHOLD_INFO' htmlindex from dual
+		union all select '03' reportcode,'CHB_PRD_DECLARE_SUB' htmlindex from dual
+		union all select '04' reportcode,'CHB_PRD_ISSUE_SUB' htmlindex from dual
+		union all select '05' reportcode,'CHB_PRD_DEAL_SUB' htmlindex from dual
+		union all select '06' reportcode,'CHB_PRD_RAISETOT_SUB' htmlindex from dual
+		union all select '07' reportcode,'CHB_PRD_END_SUB' htmlindex from dual
+		union all select '08' reportcode,'CHB_ASSET_INFO_SUB' htmlindex from dual
+		union all select '09' reportcode,'CHB_INVEST_TRADE_SUB' htmlindex from dual
+		union all select '10' reportcode,'CHB_BOT_AST_POS_SUB' htmlindex from dual
+		union all select '11' reportcode,'CHB_AST_VAL_SUB' htmlindex from dual
+		union all select '42' reportcode,'CHB_SALER_INST_SUB' htmlindex from dual
+		union all select '43' reportcode,'CHB_SALER_IDEN_SUB' htmlindex from dual
+		union all select '44' reportcode,'CHB_SALER_REW_PENA_SUB' htmlindex from dual
+		union all select '29' reportcode,'CHB_EQUDET' htmlindex from dual
+		) c
 		left join chb_file_read_monitor_info b
 		on b.HANDLE_FILE_TYPE = c.reportcode
 		and DATE_FORMAT(b.FILE_READ_START_TIME,'%Y-%m-%d') = #{searchDate,jdbcType=VARCHAR}

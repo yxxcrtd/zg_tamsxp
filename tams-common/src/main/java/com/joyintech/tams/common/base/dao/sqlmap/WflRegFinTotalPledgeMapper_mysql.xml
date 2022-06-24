@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflRegFinTotalPledgeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        <id column="TOTLE_TRADE_ID" property="totleTradeId" jdbcType="VARCHAR" />
+        <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <id column="PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="PLEDGE_FACE_VALUE" property="pledgeFaceValue" jdbcType="DECIMAL" />
+        <result column="PLEDGE_NUMBER" property="pledgeNumber" jdbcType="DECIMAL" />
+        <result column="PLEDGE_RATIO" property="pledgeRatio" jdbcType="DECIMAL" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TOTLE_TRADE_ID TOTLE_TRADE_ID, ENTRUST_ID ENTRUST_ID, PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, 
+        PORTFOLIO_ID PORTFOLIO_ID, PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE, PLEDGE_NUMBER PLEDGE_NUMBER, 
+        PLEDGE_RATIO PLEDGE_RATIO, WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinTotalPledgeMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_TOTAL_PLEDGE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinTotalPledgeMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_TOTAL_PLEDGE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledgeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinTotalPledgeMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_TOTAL_PLEDGE
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+          and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledgeKey" >
+        delete from WFL_REG_FIN_TOTAL_PLEDGE
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+          and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_REG_FIN_TOTAL_PLEDGE
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_REG_FIN_TOTAL_PLEDGE(TOTLE_TRADE_ID, ENTRUST_ID, PLEDGE_FINPROD_ID, 
+        PORTFOLIO_ID, PLEDGE_FACE_VALUE, PLEDGE_NUMBER, PLEDGE_RATIO, WORKFLOW_ID, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TOTLE_TRADE_ID, ENTRUST_ID, PLEDGE_FINPROD_ID, 
+            PORTFOLIO_ID, PLEDGE_FACE_VALUE, PLEDGE_NUMBER, PLEDGE_RATIO, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_REG_FIN_TOTAL_PLEDGE
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        update WFL_REG_FIN_TOTAL_PLEDGE
+        <set >
+            <if test="totleTradeId != null" >
+                TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeRatio != null" >
+                PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        update WFL_REG_FIN_TOTAL_PLEDGE
+        set 
+        TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR},
+        ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+        PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+        PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+        PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+        PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
+        PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        insert into WFL_REG_FIN_TOTAL_PLEDGE (TOTLE_TRADE_ID, ENTRUST_ID, PLEDGE_FINPROD_ID, 
+            PORTFOLIO_ID, PLEDGE_FACE_VALUE, PLEDGE_NUMBER, 
+            PLEDGE_RATIO, WORKFLOW_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{totleTradeId,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, #{pledgeFinprodId,jdbcType=VARCHAR}, 
+            #{portfolioId,jdbcType=VARCHAR}, #{pledgeFaceValue,jdbcType=DECIMAL}, #{pledgeNumber,jdbcType=DECIMAL}, 
+            #{pledgeRatio,jdbcType=DECIMAL}, #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        insert into WFL_REG_FIN_TOTAL_PLEDGE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                TOTLE_TRADE_ID,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE,
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER,
+            </if>
+            <if test="pledgeRatio != null" >
+                PLEDGE_RATIO,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                #{totleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeRatio != null" >
+                #{pledgeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        insert into WFL_REG_FIN_TOTAL_PLEDGE(TOTLE_TRADE_ID, ENTRUST_ID, PLEDGE_FINPROD_ID, 
+        PORTFOLIO_ID, PLEDGE_FACE_VALUE, PLEDGE_NUMBER, PLEDGE_RATIO, WORKFLOW_ID, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TOTLE_TRADE_ID, ENTRUST_ID, PLEDGE_FINPROD_ID, 
+            PORTFOLIO_ID, PLEDGE_FACE_VALUE, PLEDGE_NUMBER, PLEDGE_RATIO, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_REG_FIN_TOTAL_PLEDGE
+             where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR} and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        update WFL_REG_FIN_TOTAL_PLEDGE
+        <set >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeRatio != null" >
+                PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+          and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflRegFinTotalPledge" >
+        update WFL_REG_FIN_TOTAL_PLEDGE
+        set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
+            PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+          and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

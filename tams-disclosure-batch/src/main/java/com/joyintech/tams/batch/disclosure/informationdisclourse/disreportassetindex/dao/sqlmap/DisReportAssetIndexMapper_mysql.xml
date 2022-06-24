@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportassetindex.dao.DisReportAssetIndexMapper_mysql">
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportassetindex.dto.DisReportAssetIndexResult" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+        <result column="BUSI_ABBR" property="busiAbbr" jdbcType="VARCHAR" />
+        <result column="BUSI_NAME" property="busiName" jdbcType="VARCHAR" />
+        <result column="BOND_TYPE" property="bondType" jdbcType="VARCHAR" />
+        <result column="BOND_TYPE_ORDER" property="bondTypeOrder" jdbcType="VARCHAR" />
+        <result column="BOND_TYPE_Z" property="bondTypeZ" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+        <result column="INT_RATE" property="intRate" jdbcType="DECIMAL" />
+        <result column="DAILYDSC_YIELD" property="dailydscYield" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP_ADD" property="tdyIntincexpAdd" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP" property="tdyIntincexp" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
+        <result column="TDY_COST_AMT" property="tdyCostAmt" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL" property="tdyFloatIngpl" jdbcType="DECIMAL" />
+        <result column="END_DAYS_1" property="endDays1" jdbcType="DECIMAL" />
+        <result column="END_DAYS_2" property="endDays2" jdbcType="DECIMAL" />
+        <result column="END_DAYS_COST_AMT" property="endDaysCostAmt" jdbcType="DECIMAL" />
+        <result column="AL_FLAG" property="alFlag" jdbcType="VARCHAR" />
+        <result column="SURPLUS_TERM" property="surplusTerm" jdbcType="DECIMAL" />
+        <result column="DEVIATION_AMT" property="deviationAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+    </resultMap>
+	
+	<!-- 查询reader返回数据 - 指定帐套的核算主体和TA产品   -->
+	<select id="getDisReportAssetIndexVal" resultType="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportassetindex.dto.DisReportAssetIndexResult" parameterType="java.util.Map">
+		SELECT
+		   *
+		FROM REP_ASSET_INDEX 
+		WHERE 1=1
+		<if test="prodid != null and prodid != '' ">
+                AND PROD_ID in (
+		  	<foreach item="item" index="index" collection="prodid"  open="(" separator="," close=")">
+	        	#{item}
+	       	</foreach>
+	       	)
+        </if>
+       	AND VALUE_DATE  <![CDATA[ <=]]> #{endDate,jdbcType=DATE}
+       	AND VALUE_DATE  <![CDATA[ >= ]]> #{startDate,jdbcType=DATE}
+	</select>
+	
+	
+	
+	
+	    
+  <!-- 删除表【REP_PROD_INDEX】数据 -->
+    <update id="updateRepoAssetIndex" parameterType="java.util.Map" >
+    	UPDATE REP_ASSET_INDEX SET END_DAYS_2 = NULL
+    	WHERE 1=1
+    	<if test="prodid != null and prodid != '' ">
+                AND PROD_ID in (
+		  	<foreach item="item" index="index" collection="prodid"  open="(" separator="," close=")">
+	        	#{item}
+	       	</foreach>
+	       	)
+        </if>
+       	AND VALUE_DATE  <![CDATA[ <=]]> #{endDate,jdbcType=DATE}
+       	AND VALUE_DATE  <![CDATA[ >= ]]> #{startDate,jdbcType=DATE}
+    </update>
+    
+     <!-- 删除表【REP_PROD_INDEX】数据 -->
+    <update id="updateRepoAssetIndexAll" parameterType="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportassetindex.dto.DisReportAssetIndexResult" >
+    	UPDATE REP_ASSET_INDEX SET END_DAYS_2 = #{endDays2,jdbcType=DECIMAL}
+    	WHERE prod_ID =#{prodId,jdbcType=VARCHAR}
+       	AND VALUE_DATE  = #{valueDate,jdbcType=DATE}
+    </update>
+    
+    
+    
+   
+	
+
+<insert id="insert" parameterType="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportassetindex.dto.DisReportAssetIndexResult" >
+        insert into REP_ASSET_INDEX (SEQ_NO, BOOKSET_ID, PROD_ID, 
+            VALUE_DATE, BUSI_ID, BUSI_TYPE, 
+            BUSI_ABBR, BUSI_NAME, BOND_TYPE, 
+            BOND_TYPE_ORDER, BOND_TYPE_Z, INV_AIM, 
+            POS_AMT, INT_RATE, DAILYDSC_YIELD, 
+            TDY_INTINCEXP_ADD, TDY_INTINCEXP, VDATE, 
+            MDATE, TDY_POSITION, TDY_COST_AMT, 
+            TDY_FLOAT_INGPL, END_DAYS_1, END_DAYS_2, 
+            END_DAYS_COST_AMT, AL_FLAG, SURPLUS_TERM, 
+            DEVIATION_AMT, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            INPUT_TYPE, INPUT_USER, ADAPTER_ID, 
+            RATE_TYPE)
+        values (#{seqNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
+            #{valueDate,jdbcType=DATE}, #{busiId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, 
+            #{busiAbbr,jdbcType=VARCHAR}, #{busiName,jdbcType=VARCHAR}, #{bondType,jdbcType=VARCHAR}, 
+            #{bondTypeOrder,jdbcType=VARCHAR}, #{bondTypeZ,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, 
+            #{posAmt,jdbcType=DECIMAL}, #{intRate,jdbcType=DECIMAL}, #{dailydscYield,jdbcType=DECIMAL}, 
+            #{tdyIntincexpAdd,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, #{vdate,jdbcType=DATE}, 
+            #{mdate,jdbcType=DATE}, #{tdyPosition,jdbcType=DECIMAL}, #{tdyCostAmt,jdbcType=DECIMAL}, 
+            #{tdyFloatIngpl,jdbcType=DECIMAL}, #{endDays1,jdbcType=DECIMAL}, #{endDays2,jdbcType=DECIMAL}, 
+            #{endDaysCostAmt,jdbcType=DECIMAL}, #{alFlag,jdbcType=VARCHAR}, #{surplusTerm,jdbcType=DECIMAL}, 
+            #{deviationAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{inputType,jdbcType=VARCHAR}, #{inputUser,jdbcType=VARCHAR}, #{adapterId,jdbcType=VARCHAR}, 
+            #{rateType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.batch.disclosure.informationdisclourse.disreportassetindex.dto.DisReportAssetIndexResult" >
+        insert into REP_ASSET_INDEX
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="valueDate != null" >
+                VALUE_DATE,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="busiAbbr != null" >
+                BUSI_ABBR,
+            </if>
+            <if test="busiName != null" >
+                BUSI_NAME,
+            </if>
+            <if test="bondType != null" >
+                BOND_TYPE,
+            </if>
+            <if test="bondTypeOrder != null" >
+                BOND_TYPE_ORDER,
+            </if>
+            <if test="bondTypeZ != null" >
+                BOND_TYPE_Z,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="posAmt != null" >
+                POS_AMT,
+            </if>
+            <if test="intRate != null" >
+                INT_RATE,
+            </if>
+            <if test="dailydscYield != null" >
+                DAILYDSC_YIELD,
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                TDY_INTINCEXP_ADD,
+            </if>
+            <if test="tdyIntincexp != null" >
+                TDY_INTINCEXP,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="tdyPosition != null" >
+                TDY_POSITION,
+            </if>
+            <if test="tdyCostAmt != null" >
+                TDY_COST_AMT,
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                TDY_FLOAT_INGPL,
+            </if>
+            <if test="endDays1 != null" >
+                END_DAYS_1,
+            </if>
+            <if test="endDays2 != null" >
+                END_DAYS_2,
+            </if>
+            <if test="endDaysCostAmt != null" >
+                END_DAYS_COST_AMT,
+            </if>
+            <if test="alFlag != null" >
+                AL_FLAG,
+            </if>
+            <if test="surplusTerm != null" >
+                SURPLUS_TERM,
+            </if>
+            <if test="deviationAmt != null" >
+                DEVIATION_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="inputUser != null" >
+                INPUT_USER,
+            </if>
+            <if test="adapterId != null" >
+                ADAPTER_ID,
+            </if>
+            <if test="rateType != null" >
+                RATE_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="valueDate != null" >
+                #{valueDate,jdbcType=DATE},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=VARCHAR},
+            </if>
+            <if test="busiAbbr != null" >
+                #{busiAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="busiName != null" >
+                #{busiName,jdbcType=VARCHAR},
+            </if>
+            <if test="bondType != null" >
+                #{bondType,jdbcType=VARCHAR},
+            </if>
+            <if test="bondTypeOrder != null" >
+                #{bondTypeOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="bondTypeZ != null" >
+                #{bondTypeZ,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="posAmt != null" >
+                #{posAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intRate != null" >
+                #{intRate,jdbcType=DECIMAL},
+            </if>
+            <if test="dailydscYield != null" >
+                #{dailydscYield,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexpAdd != null" >
+                #{tdyIntincexpAdd,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyIntincexp != null" >
+                #{tdyIntincexp,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="tdyPosition != null" >
+                #{tdyPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyCostAmt != null" >
+                #{tdyCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyFloatIngpl != null" >
+                #{tdyFloatIngpl,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays1 != null" >
+                #{endDays1,jdbcType=DECIMAL},
+            </if>
+            <if test="endDays2 != null" >
+                #{endDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="endDaysCostAmt != null" >
+                #{endDaysCostAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="alFlag != null" >
+                #{alFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="surplusTerm != null" >
+                #{surplusTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="deviationAmt != null" >
+                #{deviationAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUser != null" >
+                #{inputUser,jdbcType=VARCHAR},
+            </if>
+            <if test="adapterId != null" >
+                #{adapterId,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null" >
+                #{rateType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

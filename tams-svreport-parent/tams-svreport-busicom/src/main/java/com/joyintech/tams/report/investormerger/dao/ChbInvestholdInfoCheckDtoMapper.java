@@ -106,7 +106,7 @@ public interface ChbInvestholdInfoCheckDtoMapper {
 	List<InvestorsHoldInfo001Dto> queryRepeatEquityInfoHoldUnSubmit(@Param("keys")List<String> keys);
 	List<InvestorsHoldInfo001Dto>queryNotInHoldButIncheckInfoHold(@Param("keys")List<String> keys);
 	List<InvestorsHoldInfoRegist001Dto> queryInvestorsHoldInfoRegistByPkUnsubmit(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);
-	
+	//
 	int deleteInvestholdInfoBatch(@Param("keys")List<String> keys);
 	int deleteInvestholdInfoSubBatch(@Param("keys")List<String> keys);
 	int updateUnMergeInvestorsHoldInfo(@Param("newKeyList")List<InvestorsHoldInfo001Dto> newKeyList);

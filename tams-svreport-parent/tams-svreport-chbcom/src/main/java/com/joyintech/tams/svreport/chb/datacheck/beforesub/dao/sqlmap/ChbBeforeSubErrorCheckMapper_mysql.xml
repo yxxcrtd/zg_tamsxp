@@ -87,16 +87,13 @@
         select pos.ACCUQTY,info.ASSET_CODE,info.REGIST_SEQNO from CHB_ASSET_INFO_SUB info inner join CHB_ASSET_POSITION pos on pos.ASSET_CODE=info.ASSET_CODE and pos.CDATE=info.MDATE
         where
         info.STATUS in ('01','02') and info.SEND_STATUS = '01'
-        and info.MDATE<![CDATA[<=]]>#{checkdate,jdbcType=DATE}
-        <if test="listAsset!=null and listAsset.size()!=0">
-            <if test=""></if>
-            and ASSET_CODE =
-            <foreach item="assetCode" collection="listAsset" open="(" separator="," close=")">
-                #{assetCode,jdbcType=VARCHAR}
-            </foreach>
-            and CDATE =
-            <foreach item="vdate" collection="listAsset" open="(" separator="," close=")">
-                #{vdate,jdbcType=DATE}
+        <if test="keys!=null and keys.size()!=0">
+            <foreach item="key" collection="keys" index="index" open="and REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+
+                #{key}
             </foreach>
         </if>
     </select>
@@ -289,7 +286,7 @@
 		select
 		count(*)
 		from CHB_EMPLOYEE_INFO_SUB
-		where concat_ws('|',conEMPLOYEE_TYPE,IDENTIFY_NUMBER) = #{key}
+		where concat_ws('|',EMPLOYEE_TYPE,IDENTIFY_NUMBER) = #{key}
 		and SEND_STATUS IN ('02','03')
 	</select>
 </mapper>

@@ -473,6 +473,49 @@ public class BeforeSubCheck extends SvrCBBaseService{
     }
 
     /**
+     * 理财子公司月度报表检查
+     *
+     * @param checkdate 校验日期
+     * @param mapRuleout 校验数据
+     * @return 校验结果
+     * @see
+     * @since 1.0
+     */
+    public List<CheckReport001Dto> checkProdSubsidiaMonthReport(Date checkdate,
+                                                                Map<String, List<ChbCheckRuleout>> mapRuleout) {
+        logger.info("理财子公司月度报表检查开始");
+        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+        // 查找募集登记检查数据
+        // 将日期改到上个月月末
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(checkdate);
+        calendar.set(Calendar.DAY_OF_MONTH, 0);
+        Date lastday = calendar.getTime();
+        List<ChbBeforeSubCheckDto> checklist = chbBeforeSubCheckMapper.selectProdMonthReportCheck(lastday,null);
+        for (ChbBeforeSubCheckDto m : checklist) {
+            // 不合格的数据加入到不合格列表
+            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
+            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
+            chbReportCheck.setRefseqno(m.getRegistseqno());
+            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_理财子公司月度统计表.getValue());
+            chbReportCheck.setRepName(DictCodeListExt2.报表名称_理财子公司月度统计表.getCodeName());
+            chbReportCheck.setValidKey("月报期数:" + m.getTermid());
+            chbReportCheck.setCheckResult(
+                    SysDataUtil.getCodeFromDataDictByName(DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
+            chbReportCheck.setDataTime(checkdate);
+
+            if (m.getBankprofit1().compareTo(m.getBankprofit2()) != 0) {// 不合格
+                chbReportCheck.setWarnInfo("理财子公司月度统计表与存续期登记的银行实现收益的数据不一致!");
+                resultList.add(chbReportCheck);
+            }
+        }
+        logger.info("理财子公司月度报表检查结束");
+        return resultList;
+    }
+
+
+
+    /**
      * 理财产品转型情况月度报表检查
      *
      * @param checkdate 校验日期

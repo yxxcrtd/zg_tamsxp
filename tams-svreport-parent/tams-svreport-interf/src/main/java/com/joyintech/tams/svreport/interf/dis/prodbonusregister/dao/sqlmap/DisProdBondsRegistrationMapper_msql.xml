@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodbonusregister.dao.DisProdBondsRegistrationMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.prodbonusregister.dto.DisProdBondsRegistration">
+        <result column="ID" jdbcType="CHAR" property="id" />
+        <result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
+        <result column="BONUS_REGISTER_DATE" jdbcType="TIMESTAMP" property="bonusRegisterDate" />
+        <result column="BONUS_DEALT_DATE" jdbcType="TIMESTAMP" property="bonusDealtDate" />
+        <result column="UNIT_BONUS_AMT" jdbcType="DECIMAL" property="unitBonusAmt" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+        <result column="STATUS" jdbcType="VARCHAR" property="status" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <update id="mergeRepProdInfo" parameterType="java.util.List">
+        UPDATE  REP_PROD_BONUS_REGISTER as A,
+        (
+        select
+        ID,<!--ID-->
+        PROD_ID,<!--产品代码-->
+        BONUS_REGISTER_DATE,<!--分红登记日-->
+        BONUS_DEALT_DATE,<!--分红下发日-->
+        UNIT_BONUS_AMT,<!--单位分红金额-->
+        INPUT_TYPE,<!--导入方法-->
+        INPUT_USER,<!--导入用户-->
+        ADAPTER_ID,<!--适配器ID-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME<!--更新时间-->
+        ,STATUS<!--状态-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 start-->
+        ,BONUSMODE<!--分红方式-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 end-->
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.id,jdbcType=CHAR} ID,<!--ID-->
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+            #{item.bonusRegisterDate,jdbcType=DATE} BONUS_REGISTER_DATE,<!--分红登记日-->
+            #{item.bonusDealtDate,jdbcType=DATE} BONUS_DEALT_DATE,<!--分红下发日-->
+            #{item.unitBonusAmt,jdbcType=DECIMAL} UNIT_BONUS_AMT,<!--单位分红金额-->
+            #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,<!--导入方法-->
+            #{item.inputUser,jdbcType=VARCHAR} INPUT_USER,<!--导入用户-->
+            #{item.adapterId,jdbcType=VARCHAR} ADAPTER_ID,<!--适配器ID-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME<!--更新时间-->
+            ,#{item.status,jdbcType=TIMESTAMP} STATUS<!--状态-->
+            <!-- modify by yanya on 20220221 增加分红方式字段 start-->
+            ,#{item.bonusmode,jdbcType=VARCHAR} BONUSMODE<!--更新人-->
+            <!-- modify by yanya on 20220221 增加分红方式字段 end-->
+            FROM      dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        set
+        A.ID = B.ID,<!--产品代码-->
+        A.BONUS_DEALT_DATE = B.BONUS_DEALT_DATE,<!--分红下发日-->
+        A.UNIT_BONUS_AMT = B.UNIT_BONUS_AMT,<!--单位分红金额-->
+        A.INPUT_TYPE = B.INPUT_TYPE,<!--导入方法-->
+        A.INPUT_USER = B.INPUT_USER,<!--导入用户-->
+        A.ADAPTER_ID = B.ADAPTER_ID,<!--适配器ID-->
+        A.CREATE_USER = B.CREATE_USER,<!--创建人-->
+        A.CREATE_DEPT = B.CREATE_DEPT,<!--创建部门-->
+        A.CREATE_TIME = B.CREATE_TIME,<!--创建时间-->
+        A.UPDATE_USER = B.UPDATE_USER,<!--更新人-->
+        A.UPDATE_TIME = B.UPDATE_TIME<!--更新时间-->
+        ,A.STATUS = B.STATUS<!--状态-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 start-->
+        ,A.BONUSMODE = B.BONUSMODE <!--分红方式-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 end-->
+        where A.PROD_ID = B.PROD_ID AND A.BONUS_REGISTER_DATE = B.BONUS_REGISTER_DATE;
+        insert into REP_PROD_BONUS_REGISTER(ID,<!--ID-->
+        PROD_ID,<!--产品代码-->
+        BONUS_REGISTER_DATE,<!--分红登记日-->
+        BONUS_DEALT_DATE,<!--分红下发日-->
+        UNIT_BONUS_AMT,<!--单位分红金额-->
+        INPUT_TYPE,<!--导入方法-->
+        INPUT_USER,<!--导入用户-->
+        ADAPTER_ID,<!--适配器ID-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME<!--更新时间-->
+        ,STATUS<!--状态-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 start-->
+        ,BONUSMODE<!--分红方式-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 end-->
+        )
+        select ID,<!--ID-->
+        PROD_ID,<!--产品代码-->
+        BONUS_REGISTER_DATE,<!--分红登记日-->
+        BONUS_DEALT_DATE,<!--分红下发日-->
+        UNIT_BONUS_AMT,<!--单位分红金额-->
+        INPUT_TYPE,<!--导入方法-->
+        INPUT_USER,<!--导入用户-->
+        ADAPTER_ID,<!--适配器ID-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME<!--更新时间-->
+        ,STATUS<!--状态-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 start-->
+        ,BONUSMODE<!--分红方式-->
+        <!-- modify by yanya on 20220221 增加分红方式字段 end-->
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.id,jdbcType=CHAR} ID,<!--ID-->
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+            #{item.bonusRegisterDate,jdbcType=DATE} BONUS_REGISTER_DATE,<!--分红登记日-->
+            #{item.bonusDealtDate,jdbcType=DATE} BONUS_DEALT_DATE,<!--分红下发日-->
+            #{item.unitBonusAmt,jdbcType=DECIMAL} UNIT_BONUS_AMT,<!--单位分红金额-->
+            #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,<!--导入方法-->
+            #{item.inputUser,jdbcType=VARCHAR} INPUT_USER,<!--导入用户-->
+            #{item.adapterId,jdbcType=VARCHAR} ADAPTER_ID,<!--适配器ID-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME<!--更新时间-->
+            ,#{item.status,jdbcType=TIMESTAMP} STATUS<!--状态-->
+            <!-- modify by yanya on 20220221 增加分红方式字段 start-->
+            ,#{item.bonusmode,jdbcType=VARCHAR} BONUSMODE<!--分红方式-->
+            <!-- modify by yanya on 20220221 增加分红方式字段 end-->
+            FROM      dual
+        </foreach>
+        ) TEMP where not exists (select 1 from REP_PROD_BONUS_REGISTER CII
+        where CII.PROD_ID = TEMP.PROD_ID AND CII.BONUS_REGISTER_DATE = TEMP.BONUS_REGISTER_DATE)
+        ) de ;
+    </update>
+</mapper>

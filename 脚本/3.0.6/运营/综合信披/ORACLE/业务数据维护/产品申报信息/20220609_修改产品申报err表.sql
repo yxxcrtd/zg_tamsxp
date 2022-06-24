@@ -1,0 +1,33 @@
+
+DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SvrPerProDeclareInfo003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES ('SvrPerProDeclareInfo003', 'REP', '/basicdata/perprodeclareinfo/SvrPerProDeclareInfo003', 'basicdata/perprodeclareinfo/SvrPerProDeclareInfo003', null, null, null, '02', '02', '产品申报登记信息附件上传', 'system', null, SYSDATE, 'system', SYSDATE);
+
+
+UPDATE SYS_PAGE SET IS_NEED_WORKFLOW = '01' WHERE PAGE_ID = 'SvrPerProDeclareInfo001';
+
+declare
+num1   number;
+num2   number;
+num3   number;
+num4   number;
+
+begin
+SELECT COUNT(*) into num1 FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'CHB_PRD_DECLARE_INFO_ERRODATA' and column_name = 'PROD_INS_ID';
+SELECT COUNT(*) into num2 FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'CHB_PRD_DECLARE_INFO' and column_name = 'FILE_NO';
+SELECT COUNT(*) into num3 FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'CHB_PRD_DECLARE_INFO' and column_name = 'FILE_NUM';
+SELECT COUNT(*) into num4 FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'CHB_PRD_DECLARE_INFO' and column_name = 'TEN_FILE';
+if 	num1 = 0   then execute immediate 'ALTER TABLE CHB_PRD_DECLARE_INFO_ERRODATA ADD PROD_INS_ID VARCHAR2(100)';
+end if;
+if  num2 = 0   then execute immediate 'ALTER TABLE CHB_PRD_DECLARE_INFO ADD FILE_NO VARCHAR2(600)';
+end if;
+if  num3 = 0   then execute immediate 'ALTER TABLE CHB_PRD_DECLARE_INFO ADD FILE_NUM NUMBER(30,4)';
+end if;
+if  num4 = 0   then execute immediate 'ALTER TABLE CHB_PRD_DECLARE_INFO ADD TEN_FILE CLOB';
+end if;
+end;
+/
+COMMENT ON COLUMN CHB_PRD_DECLARE_INFO_ERRODATA.PROD_INS_ID is '行内标识码';
+COMMENT ON COLUMN CHB_PRD_DECLARE_INFO.FILE_NO is '附件编号';
+COMMENT ON COLUMN CHB_PRD_DECLARE_INFO.FILE_NUM is '附件个数';
+COMMENT ON COLUMN CHB_PRD_DECLARE_INFO.TEN_FILE is '十大附件';

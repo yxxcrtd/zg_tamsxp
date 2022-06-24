@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIndividConditionLineMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIndividConditionLine" >
+        <id column="CONDITION_ID" property="conditionId" jdbcType="VARCHAR" />
+        <result column="PRT_BAG_ID" property="prtBagId" jdbcType="VARCHAR" />
+        <result column="IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="CONDITION_ITEM" property="conditionItem" jdbcType="VARCHAR" />
+        <result column="CONTROL_TYPE" property="controlType" jdbcType="VARCHAR" />
+        <result column="VALUE_STR" property="valueStr" jdbcType="DECIMAL" />
+        <result column="VALUE_END" property="valueEnd" jdbcType="DECIMAL" />
+        <result column="WARN_COND" property="warnCond" jdbcType="VARCHAR" />
+        <result column="APPROVE_COND" property="approveCond" jdbcType="VARCHAR" />
+        <result column="FOUL_COND" property="foulCond" jdbcType="VARCHAR" />
+        <result column="IS_BAG_CALC" property="isBagCalc" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CONDITION_ID CONDITION_ID, PRT_BAG_ID PRT_BAG_ID, IND_ID IND_ID, CONDITION_ITEM CONDITION_ITEM, 
+        CONTROL_TYPE CONTROL_TYPE, VALUE_STR VALUE_STR, VALUE_END VALUE_END, WARN_COND WARN_COND, 
+        APPROVE_COND APPROVE_COND, FOUL_COND FOUL_COND, IS_BAG_CALC IS_BAG_CALC, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividConditionLineMapper_mysql.Base_Column_List" />
+        from RSK_INDIVID_CONDITION_LINE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividConditionLineMapper_mysql.Base_Column_List" />
+        from RSK_INDIVID_CONDITION_LINE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividConditionLineMapper_mysql.Base_Column_List" />
+        from RSK_INDIVID_CONDITION_LINE
+        where CONDITION_ID = #{conditionId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_INDIVID_CONDITION_LINE
+        where CONDITION_ID = #{conditionId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIndividConditionLine" >
+        insert into RSK_INDIVID_CONDITION_LINE (CONDITION_ID, PRT_BAG_ID, IND_ID, 
+            CONDITION_ITEM, CONTROL_TYPE, VALUE_STR, 
+            VALUE_END, WARN_COND, APPROVE_COND, 
+            FOUL_COND, IS_BAG_CALC, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{conditionId,jdbcType=VARCHAR}, #{prtBagId,jdbcType=VARCHAR}, #{indId,jdbcType=VARCHAR}, 
+            #{conditionItem,jdbcType=VARCHAR}, #{controlType,jdbcType=VARCHAR}, #{valueStr,jdbcType=DECIMAL}, 
+            #{valueEnd,jdbcType=DECIMAL}, #{warnCond,jdbcType=VARCHAR}, #{approveCond,jdbcType=VARCHAR}, 
+            #{foulCond,jdbcType=VARCHAR}, #{isBagCalc,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIndividConditionLine" >
+        insert into RSK_INDIVID_CONDITION_LINE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="conditionId != null" >
+                CONDITION_ID,
+            </if>
+            <if test="prtBagId != null" >
+                PRT_BAG_ID,
+            </if>
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="conditionItem != null" >
+                CONDITION_ITEM,
+            </if>
+            <if test="controlType != null" >
+                CONTROL_TYPE,
+            </if>
+            <if test="valueStr != null" >
+                VALUE_STR,
+            </if>
+            <if test="valueEnd != null" >
+                VALUE_END,
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND,
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND,
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND,
+            </if>
+            <if test="isBagCalc != null" >
+                IS_BAG_CALC,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="conditionId != null" >
+                #{conditionId,jdbcType=VARCHAR},
+            </if>
+            <if test="prtBagId != null" >
+                #{prtBagId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="conditionItem != null" >
+                #{conditionItem,jdbcType=VARCHAR},
+            </if>
+            <if test="controlType != null" >
+                #{controlType,jdbcType=VARCHAR},
+            </if>
+            <if test="valueStr != null" >
+                #{valueStr,jdbcType=DECIMAL},
+            </if>
+            <if test="valueEnd != null" >
+                #{valueEnd,jdbcType=DECIMAL},
+            </if>
+            <if test="warnCond != null" >
+                #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="isBagCalc != null" >
+                #{isBagCalc,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIndividConditionLine" >
+        insert into RSK_INDIVID_CONDITION_LINE(CONDITION_ID, PRT_BAG_ID, IND_ID, CONDITION_ITEM, 
+        CONTROL_TYPE, VALUE_STR, VALUE_END, WARN_COND, APPROVE_COND, FOUL_COND, IS_BAG_CALC, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CONDITION_ID, PRT_BAG_ID, IND_ID, CONDITION_ITEM, 
+            CONTROL_TYPE, VALUE_STR, VALUE_END, WARN_COND, APPROVE_COND, FOUL_COND, IS_BAG_CALC, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_INDIVID_CONDITION_LINE
+             where 1 = 1 and CONDITION_ID = #{conditionId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIndividConditionLine" >
+        update RSK_INDIVID_CONDITION_LINE
+        <set >
+            <if test="prtBagId != null" >
+                PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                IND_ID = #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="conditionItem != null" >
+                CONDITION_ITEM = #{conditionItem,jdbcType=VARCHAR},
+            </if>
+            <if test="controlType != null" >
+                CONTROL_TYPE = #{controlType,jdbcType=VARCHAR},
+            </if>
+            <if test="valueStr != null" >
+                VALUE_STR = #{valueStr,jdbcType=DECIMAL},
+            </if>
+            <if test="valueEnd != null" >
+                VALUE_END = #{valueEnd,jdbcType=DECIMAL},
+            </if>
+            <if test="warnCond != null" >
+                WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            </if>
+            <if test="approveCond != null" >
+                APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            </if>
+            <if test="foulCond != null" >
+                FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            </if>
+            <if test="isBagCalc != null" >
+                IS_BAG_CALC = #{isBagCalc,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CONDITION_ID = #{conditionId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIndividConditionLine" >
+        update RSK_INDIVID_CONDITION_LINE
+        set PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR},
+            IND_ID = #{indId,jdbcType=VARCHAR},
+            CONDITION_ITEM = #{conditionItem,jdbcType=VARCHAR},
+            CONTROL_TYPE = #{controlType,jdbcType=VARCHAR},
+            VALUE_STR = #{valueStr,jdbcType=DECIMAL},
+            VALUE_END = #{valueEnd,jdbcType=DECIMAL},
+            WARN_COND = #{warnCond,jdbcType=VARCHAR},
+            APPROVE_COND = #{approveCond,jdbcType=VARCHAR},
+            FOUL_COND = #{foulCond,jdbcType=VARCHAR},
+            IS_BAG_CALC = #{isBagCalc,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CONDITION_ID = #{conditionId,jdbcType=VARCHAR}
+    </update>
+</mapper>

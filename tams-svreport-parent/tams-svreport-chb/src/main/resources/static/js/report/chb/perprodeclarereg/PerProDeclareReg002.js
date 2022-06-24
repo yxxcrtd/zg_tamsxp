@@ -14,10 +14,16 @@
     	 * 获取列表参数
     	 */
         var object = $.serializeToObject('#submitForm', false);
-        if (!FileCommon || !FileCommon.getUploadFileInfo() || FileCommon.getUploadFileInfo().length == 0) {
-            Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0054"));
+		//add by zhoubin 20220518 start
+        if (FileCommon.getUploadFileInfo().length == 0) {
+            Joyin.error("请选择文件上传");
             return;
         }
+		if (!FileCommon || !FileCommon.getUploadFileInfo()) {
+			Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0054"));
+			return;
+		}
+		//add by zhoubin 20220518 end
         if(FileCommon) {
     		object.fileArray = FileCommon.getUploadFileInfo();
     		if(object.fileArray && _.isArray(object.fileArray)){

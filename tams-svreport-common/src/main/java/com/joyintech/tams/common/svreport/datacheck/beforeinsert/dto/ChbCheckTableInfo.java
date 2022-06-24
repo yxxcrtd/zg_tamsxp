@@ -41,6 +41,7 @@ public enum ChbCheckTableInfo {
     销售人员奖惩投诉记录信息表INFO("CHB_SALER_REW_PENA_INFO", true, "SALER_REW_PENA_NO", new String[] {"SALER_REW_PENA_NO"}, ""),
 
 
+
     /*杭州TMP*/
     募集总量登记TMP("CHB_PRD_RAISETOT_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}, "CHB_PRD_RAISETOT_SUB"),
     个人发行登记TMP("CHB_PRD_ISSUE_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}, "CHB_PRD_ISSUE_SUB"),
@@ -50,8 +51,10 @@ public enum ChbCheckTableInfo {
     产品存续登记TMP("CHB_PRD_DEAL_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE", "MDATE"}, "CHB_PRD_DEAL_SUB"),
     个人产品申报登记TMP("CHB_PRD_DECLARE_SUB_TMP", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}, "CHB_PRD_DECLARE_SUB"),
     终止登记TMP("CHB_PRD_END_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}, "CHB_PRD_END_SUB"),
-    资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, "CHB_ASSET_INFO_SUB");
-
+    资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, "CHB_ASSET_INFO_SUB"),
+    投资交易信息表("CHB_INVEST_TRADE", true, "TRADE_SEQNO", new String[] {"PROD_ID","ASSET_CODE","TRADE_CODE"}, ""),
+    节假日("MST_HOLIDAY", true, "", new String[] {"CALENDAR_ID","CDATE"}, ""),
+    汇率行情信息("MST_EXCHARGE_QUOTE", true, "", new String[] {"EXCHARGE_CODE","TRADE_DATE","DATASOURCE_TYPE"}, "");
     /**
      * 根据tableName获取枚举对象
      * @param tableName 表名

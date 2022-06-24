@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.common.base.dao.ShareFilePbcBalanceOrgMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcBalanceOrg" >
+        <result column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+        <result column="M_AMT" property="mAmt" jdbcType="DECIMAL" />
+        <result column="Y_AMT" property="yAmt" jdbcType="DECIMAL" />
+        <result column="TB_YILED" property="tbYiled" jdbcType="DECIMAL" />
+        <result column="ASSETTYPE" property="assettype" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcBalanceOrg" >
+        insert into SHARE_FILE_PBC_BALANCE_ORG (DETAILUUID, REPORTTYPE, GROUPTYPE, 
+            PROPERTYCODE, REPORTUUID, BALANCE, 
+            M_AMT, Y_AMT, TB_YILED, 
+            ASSETTYPE)
+        values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, #{balance,jdbcType=DECIMAL}, 
+            #{mAmt,jdbcType=DECIMAL}, #{yAmt,jdbcType=DECIMAL}, #{tbYiled,jdbcType=DECIMAL}, 
+            #{assettype,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcBalanceOrg" >
+        insert into SHARE_FILE_PBC_BALANCE_ORG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="balance != null" >
+                BALANCE,
+            </if>
+            <if test="mAmt != null" >
+                M_AMT,
+            </if>
+            <if test="yAmt != null" >
+                Y_AMT,
+            </if>
+            <if test="tbYiled != null" >
+                TB_YILED,
+            </if>
+            <if test="assettype != null" >
+                ASSETTYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="balance != null" >
+                #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="mAmt != null" >
+                #{mAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="yAmt != null" >
+                #{yAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tbYiled != null" >
+                #{tbYiled,jdbcType=DECIMAL},
+            </if>
+            <if test="assettype != null" >
+                #{assettype,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcBalanceOrg" >
+        insert into SHARE_FILE_PBC_BALANCE_ORG(DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+        REPORTUUID, BALANCE, M_AMT, Y_AMT, TB_YILED, ASSETTYPE)
+        select DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+            REPORTUUID, BALANCE, M_AMT, Y_AMT, TB_YILED, ASSETTYPE
+             from SHARE_FILE_PBC_BALANCE_ORG
+             where 1 = 1
+    </insert>
+</mapper>

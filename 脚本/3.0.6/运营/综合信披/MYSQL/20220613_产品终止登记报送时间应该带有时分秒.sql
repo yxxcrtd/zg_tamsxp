@@ -1,0 +1,1 @@
+alter table chb_prd_end_sub MODIFY SUBMIT_TIME DATETIME COMMENT '报送时间';

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="report/chb/businessdatamaintain/chbboksubject/ChbBokSubject001.xlsx" name="科目定义信息">
+    <Worksheet javaBean="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
+        <Row>
+
+            <Cell order="1" name="科目号">subjectNo</Cell>
+            <Cell order="2" name="科目名称">subjectName</Cell>
+            <Cell order="3" name="上级科目号">fsubjectId</Cell>
+            <Cell order="4" name="科目类型">subjectTypeStr</Cell>
+            <Cell order="5" name="科目级别">subjectLevelStr</Cell>
+            <Cell order="5" name="科目方向">balFlagStr</Cell>
+            <Cell order="6" name="数据来源">dataSourceStr</Cell>
+            <Cell order="7" name="数据状态">statusValidStr</Cell>
+            <Cell order="8" name="备注">remark</Cell>
+            <Cell order="9" name="错误信息">errMsg</Cell>
+            <Cell order="10" name="更新时间">updateTimeStr</Cell>
+            <Cell order="11" name="更新人">updateUser</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

@@ -62,12 +62,12 @@ public class ProdTerminationRegist001Dto extends BaseEntity implements ITableRow
     /**
      * 兑付客户收益(原币种)
      */
-    private String customProfitOri;
+    private BigDecimal customProfitOri;
 
     /**
      * 兑付客户总金额(原币种)
      */
-    private String customAmtOri;
+    private BigDecimal customAmtOri;
 
     /**
      * 兑付客户总金额
@@ -328,7 +328,7 @@ public class ProdTerminationRegist001Dto extends BaseEntity implements ITableRow
      * 兑付客户收益(原币种)
      * @return CUSTOM_PROFIT_ORI 兑付客户收益(原币种)
      */
-    public String getCustomProfitOri() {
+    public BigDecimal getCustomProfitOri() {
         return customProfitOri;
     }
 
@@ -336,15 +336,15 @@ public class ProdTerminationRegist001Dto extends BaseEntity implements ITableRow
      * 兑付客户收益(原币种)
      * @param customProfitOri 兑付客户收益(原币种)
      */
-    public void setCustomProfitOri(String customProfitOri) {
-        this.customProfitOri = customProfitOri == null ? null : customProfitOri.trim();
+    public void setCustomProfitOri(BigDecimal customProfitOri) {
+        this.customProfitOri = customProfitOri == null ? null : customProfitOri;
     }
 
     /**
      * 兑付客户总金额(原币种)
      * @return CUSTOM_AMT_ORI 兑付客户总金额(原币种)
      */
-    public String getCustomAmtOri() {
+    public BigDecimal getCustomAmtOri() {
         return customAmtOri;
     }
 
@@ -352,8 +352,8 @@ public class ProdTerminationRegist001Dto extends BaseEntity implements ITableRow
      * 兑付客户总金额(原币种)
      * @param customAmtOri 兑付客户总金额(原币种)
      */
-    public void setCustomAmtOri(String customAmtOri) {
-        this.customAmtOri = customAmtOri == null ? null : customAmtOri.trim();
+    public void setCustomAmtOri(BigDecimal customAmtOri) {
+        this.customAmtOri = customAmtOri == null ? null : customAmtOri;
     }
 
     /**

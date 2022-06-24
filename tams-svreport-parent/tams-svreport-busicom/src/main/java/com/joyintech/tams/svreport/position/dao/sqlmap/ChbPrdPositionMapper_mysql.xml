@@ -26,6 +26,7 @@
 		<result column="CUSTQTY" property="custqty" jdbcType="DECIMAL" />
 		<result column="RAISEAMT" property="raiseamt" jdbcType="DECIMAL" />
 		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="VDATE" property="vDate" jdbcType="DATE" />
 	</resultMap>
 
 	<insert id="insertBatch" parameterType="java.util.List" >
@@ -35,6 +36,7 @@
 		TDADD_COST, TDADD_INTAMT,BALANCE_QTY, BALANCE_AMT,
 		TOTAL_INTAMT,ORG_CODE,DEPT_CODE,
 		CREATE_USER,CREATE_TIME, REMARK)
+		values (
 		<foreach collection="insertDataList" item="dto" index="index"  separator="union all"  open="("  close=")">
 			select
 			#{dto.cdate,jdbcType=DATE},
@@ -56,43 +58,44 @@
 			#{dto.remark,jdbcType=VARCHAR}
 			from dual
 		</foreach>
+		)
 	</insert>
 
 	<insert id="insertPos" parameterType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition" >
-       insert into CHB_PRD_POSITION 
-	       (CDATE, PROD_ID, INDENTIFY_MARK,CCY,
-	        ISSUE_PARTY_ID, TDADD_QTY, TDADD_AMT, 
-	        TDADD_COST, TDADD_INTAMT,BALANCE_QTY, BALANCE_AMT, 
-	        TOTAL_INTAMT,ORG_CODE,DEPT_CODE,
-	        CREATE_USER,CREATE_TIME, REMARK,CONSIGN_AMT,BUY_PLACE,
-	        CUST_COUNTS,CUSTOMER_TYPE2,CUSTAMT,CUSTQTY,RAISEAMT)
-      values(  
-	        #{cdate,jdbcType=DATE}, 
-	        #{prodId,jdbcType=VARCHAR}, 
-	        #{indentifyMark,jdbcType=VARCHAR}, 
-	        #{ccy,jdbcType=VARCHAR}, 
-            #{issuePartyId,jdbcType=VARCHAR}, 
-            #{tdaddQty,jdbcType=DECIMAL},
-            #{tdaddAmt,jdbcType=DECIMAL}, 
-            #{tdaddCost,jdbcType=DECIMAL}, 
-            #{tdaddIntamt,jdbcType=DECIMAL}, 
-            #{balanceQty,jdbcType=DECIMAL}, 
-            #{balanceAmt,jdbcType=DECIMAL}, 
-            #{totalIntamt,jdbcType=DECIMAL}, 
-            #{orgCode,jdbcType=VARCHAR}, 
-            #{deptCode,jdbcType=VARCHAR}, 
-            #{createUser,jdbcType=VARCHAR}, 
-            NOW(),
-            #{remark,jdbcType=VARCHAR},
-            #{consignamt,jdbcType=DECIMAL},
-            #{buyplace,jdbcType=VARCHAR},
-            #{custCounts,jdbcType=DECIMAL},
-            #{customerType2,jdbcType=VARCHAR},
-            #{custamt,jdbcType=DECIMAL},
-            #{custqty,jdbcType=DECIMAL},
-            #{raiseamt,jdbcType=DECIMAL}
-            )
-  </insert>
+		insert into CHB_PRD_POSITION
+		(CDATE, PROD_ID, INDENTIFY_MARK,CCY,
+		ISSUE_PARTY_ID, TDADD_QTY, TDADD_AMT,
+		TDADD_COST, TDADD_INTAMT,BALANCE_QTY, BALANCE_AMT,
+		TOTAL_INTAMT,ORG_CODE,DEPT_CODE,
+		CREATE_USER,CREATE_TIME, REMARK,CONSIGN_AMT,BUY_PLACE,
+		CUST_COUNTS,CUSTOMER_TYPE2,CUSTAMT,CUSTQTY,RAISEAMT)
+		values(
+		#{cdate,jdbcType=DATE},
+		#{prodId,jdbcType=VARCHAR},
+		#{indentifyMark,jdbcType=VARCHAR},
+		#{ccy,jdbcType=VARCHAR},
+		#{issuePartyId,jdbcType=VARCHAR},
+		#{tdaddQty,jdbcType=DECIMAL},
+		#{tdaddAmt,jdbcType=DECIMAL},
+		#{tdaddCost,jdbcType=DECIMAL},
+		#{tdaddIntamt,jdbcType=DECIMAL},
+		#{balanceQty,jdbcType=DECIMAL},
+		#{balanceAmt,jdbcType=DECIMAL},
+		#{totalIntamt,jdbcType=DECIMAL},
+		#{orgCode,jdbcType=VARCHAR},
+		#{deptCode,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		NOW(),
+		#{remark,jdbcType=VARCHAR},
+		#{consignamt,jdbcType=DECIMAL},
+		#{buyplace,jdbcType=VARCHAR},
+		#{custCounts,jdbcType=DECIMAL},
+		#{customerType2,jdbcType=VARCHAR},
+		#{custamt,jdbcType=DECIMAL},
+		#{custqty,jdbcType=DECIMAL},
+		#{raiseamt,jdbcType=DECIMAL}
+		)
+	</insert>
 
 	<delete id="deletePosition" parameterType="map">
 		delete from
@@ -118,24 +121,27 @@
 		else DEAL.SETTDATE_DATE
 		end)as settdateDate,
 		DEAL.CCY ccy,
-		SUM(ifnull((case DEAL.TRADE_TYPE when '14' then 0 when '15'  then 0 else DEAL.TRADE_PRINCE end),0)) tradePrince,
+		/*SUM(ifnull((case DEAL.TRADE_TYPE when '14' then 0 when '15'  then 0 else DEAL.TRADE_PRINCE end),0)) tradePrince,*/
+		SUM(ifnull(DEAL.TRADE_PRINCE,0)) tradePrince,
 		SUM(ifnull(DEAL.TRADE_QTY,0))  tradeQty,
 		SUM(ifnull(DEAL.INT_AMT,0))  intAmt,
 		INFO.PRODTYPE prodType,
 		DEAL.ORG_CODE orgCode,
 		SUM(ifnull(DEAL.CUST_COUNTS,0)) custCounts,
+		/*SUM(ifnull((case DEAL.TRADE_TYPE when '05' then 0 else DEAL.TRADE_COST end),0)) tradeCost,*/
 		SUM(ifnull(DEAL.TRADE_COST,0)) tradeCost,
 		ifnull(DEAL.ISAGENCY,'02') isagency,
 		DEAL.BUY_PLACE buyPlace,
 		DEAL.CUSTOMER_TYPE1 customerType1,
-		DEAL.CUSTOMER_TYPE2 customerType2
+		DEAL.CUSTOMER_TYPE2 customerType2,
+		INFO.VDATE
 		FROM CHB_PRD_DEAL DEAL
 
 		LEFT JOIN CHB_PRD_BASEINFO INFO
 		ON ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) = INFO.PROD_ID
 		AND INFO.STATUS!='D'
 
-		WHERE DEAL.STATUS != 'D'
+		WHERE DEAL.STATUS != 'D' and INFO.STATUS!='D'
 		and (deal.BUY_PLACE not in('210200','330200','350200','370200','440300') or deal.BUY_PLACE is null)
 		AND (case DEAL.TRADE_TYPE when'04' then DEAL.INTEREST_DATE
 		else DEAL.SETTDATE_DATE end) = #{bookDate,jdbcType = DATE}
@@ -173,7 +179,8 @@
 		ifnull(DEAL.ISAGENCY,'02'),
 		DEAL.BUY_PLACE,
 		DEAL.CUSTOMER_TYPE1,
-		DEAL.CUSTOMER_TYPE2
+		DEAL.CUSTOMER_TYPE2,
+		info.vdate
 		order by ifnull(DEAL.FPROD_ID,DEAL.PROD_ID),ifnull(DEAL.ISAGENCY,'02')
 	</select>
 
@@ -181,7 +188,7 @@
 			resultSetType="FORWARD_ONLY" fetchSize="1000"
 			resultMap="BaseResultMap" parameterType="map">
 		SELECT
-		POS.CDATE+1 CDATE,
+		DATE_ADD(POS.CDATE,INTERVAL 1 DAY) CDATE,
 		POS.PROD_ID,
 		POS.INDENTIFY_MARK,
 		POS.CCY,
@@ -189,16 +196,18 @@
 		POS.BALANCE_QTY,
 		POS.BALANCE_AMT,
 		POS.TOTAL_INTAMT,
-		ORG_CODE,
-		DEPT_CODE,
-		BUY_PLACE,
-		CONSIGN_AMT,
-		CUST_COUNTS,
-		CUSTOMER_TYPE2,
-		CUSTAMT,
-		CUSTQTY,
-		RAISEAMT
+		POS.ORG_CODE,
+		POS.DEPT_CODE,
+		B.VDATE,
+		POS.BUY_PLACE,
+		POS.CONSIGN_AMT,
+		POS.CUST_COUNTS,
+		POS.CUSTOMER_TYPE2,
+		POS.CUSTAMT,
+		POS.CUSTQTY,
+		POS.RAISEAMT
 		FROM CHB_PRD_POSITION POS
+		LEFT JOIN CHB_PRD_BASEINFO B ON POS.PROD_ID=B.PROD_ID
 		WHERE 1 = 1
 		AND POS.CDATE = #{cdate,jdbcType = DATE}
 		<if test="prodIdList!=null and prodIdList.size()!=0">
@@ -270,14 +279,17 @@
 		from chb_prd_deal deal
 		where deal.status != 'D'
 		and (deal.BUY_PLACE not in('210200','330200','350200','370200','440300') or deal.BUY_PLACE is null)
-		<!-- and deal.trade_type in ('01','02','03','04','15','16','17') -->
 		and settdate_date=#{batchDate,jdbcType=DATE}
 		<if test="prodIdList!=null">
 			<foreach collection="prodIdList" item="prodId" open="and ( (" close=" ) )" separator=") or (">
 				ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) = #{prodId,jdbcType = VARCHAR}
-				<!-- and deal.org_code = #{prdEndSub.orgCode,jdbcType = VARCHAR} -->
-				<!-- and deal.settdate_date<![CDATA[<=]]> #{prdEndSub.settDate,jdbcType = DATE} -->
 			</foreach>
 		</if>
+	</select>
+
+	<select id="getVdate"  parameterType="java.lang.String"  resultType="java.util.Date">
+		select  VDATE  FROM CHB_PRD_BASEINFO
+		WHERE  PROD_ID=#{prodId,jdbcType = VARCHAR}
+		AND  status !='D'
 	</select>
 </mapper>

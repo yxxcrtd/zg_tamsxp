@@ -2,7 +2,7 @@
 <Workbook filePath="AssetInfoDetail.xlsx" name="资产要素维护">
 	<Worksheet dataStart="1" javaBean="com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto">
 		<Row>
-			<Cell order="1" name="反馈状态">dataStatusStr</Cell>
+			<Cell order="1" name="数据状态">dataStatusStr</Cell>
 			<Cell order="2" name="资产代码">assetCode</Cell>
 			<Cell order="3" name="资产名称">assetName</Cell>
 			<Cell order="4" name="资产一级类型">orgAssetType1Str</Cell>

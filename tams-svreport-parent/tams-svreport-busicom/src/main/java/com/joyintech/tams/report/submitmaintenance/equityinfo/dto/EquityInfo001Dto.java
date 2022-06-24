@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 
@@ -584,6 +586,11 @@ public class EquityInfo001Dto extends TableRow {
      */
     public String getHolderRiskPrefer() {
         return holderRiskPrefer;
+    }
+
+    public String getHolderRiskPreferStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.投资风险偏好,
+                getHolderRiskPrefer());
     }
 
     /**

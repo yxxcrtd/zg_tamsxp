@@ -130,6 +130,9 @@ public class AgentPrdInfo002Controller extends BaseController {
     public String getIssuePartyId() {
         //获取本行中债机构代码
         String orgCode = CommonUtil.getOrgCode();
-        return agentPrdInfoService.selectIssuePartyId(orgCode);
+        if(!StringUtil.isEmpty(orgCode)) {
+            return agentPrdInfoService.selectIssuePartyId(orgCode);
+        }
+        return null;
     }
 }

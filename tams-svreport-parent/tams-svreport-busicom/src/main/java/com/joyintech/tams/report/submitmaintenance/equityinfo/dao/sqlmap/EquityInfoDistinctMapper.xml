@@ -183,7 +183,7 @@
 	<select id="queryAllEquityInfoMax"
 	        resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
 	        resultSetType="FORWARD_ONLY" fetchSize="1000">
-    	  SELECT 		    
+    	  SELECT 	/*+ use_hash(T1,tmp) */
    	        T1.INDENTIFY_MARK  AS indentifyMark,
 			T1.ORG_INDENTIFY_MARK AS orgIndentifyMark,
 			T1.REGIST_BANK_CODE AS bankCode,
@@ -671,7 +671,7 @@
 			FUND_ACC_PLACE 			  as fundAccPlace
 		 from CHB_EQU_SUB
 		where SUBMIT_STATUS='01'
-		<foreach collection="newKeyList" item="item" open="AND (REGIST_BANK_CODE,INDENTIFY_MARK) in( values" separator="," close=")">
+		<foreach collection="newKeyList" item="item" open="AND (REGIST_BANK_CODE,INDENTIFY_MARK) in(" separator="," close=")">
 			(#{item.registBankCode},#{item.indentifyMark})
 		</foreach>
 	</select>

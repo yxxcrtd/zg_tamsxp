@@ -253,6 +253,16 @@ public interface EquityInfoRegist001Mapper {
      */
     int countIndentifyMark(Map<String, String> temp);
 
+ /**
+  * 统计识别标识
+  * <功能详细描述>
+  * @param temp 参数
+  * @return 数值
+  * @see
+  * @since 1.0
+  */
+ int countIndentifyMarkAll(Map<String, String> temp);
+
     /**
      * 取消手工处理时将履历表中的数据移回登记表
      * @param list

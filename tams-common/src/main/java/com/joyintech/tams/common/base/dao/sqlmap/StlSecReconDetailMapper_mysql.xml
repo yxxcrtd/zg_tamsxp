@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StlSecReconDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StlSecReconDetail" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_dept" property="createDept" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, TRADE_ID TRADE_ID, create_user create_user, create_dept create_dept, 
+        create_time create_time, update_user update_user, update_time update_time
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecReconDetailMapper_mysql.Base_Column_List" />
+        from stl_sec_recon_detail
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecReconDetailMapper_mysql.Base_Column_List" />
+        from stl_sec_recon_detail
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetailKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecReconDetailMapper_mysql.Base_Column_List" />
+        from stl_sec_recon_detail
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetailKey" >
+        delete from stl_sec_recon_detail
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetail" >
+        insert into stl_sec_recon_detail (SEQ_NO, TRADE_ID, create_user, 
+            create_dept, create_time, update_user, 
+            update_time)
+        values (#{seqNo,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetail" >
+        insert into stl_sec_recon_detail
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="createUser != null" >
+                create_user,
+            </if>
+            <if test="createDept != null" >
+                create_dept,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateUser != null" >
+                update_user,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetail" >
+        insert into stl_sec_recon_detail(SEQ_NO, TRADE_ID, create_user, create_dept, create_time, 
+        update_user, update_time)
+        select SEQ_NO, TRADE_ID, create_user, create_dept, create_time, 
+            update_user, update_time
+             from stl_sec_recon_detail
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR} and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetail" >
+        update stl_sec_recon_detail
+        <set >
+            <if test="createUser != null" >
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                create_dept = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlSecReconDetail" >
+        update stl_sec_recon_detail
+        set create_user = #{createUser,jdbcType=VARCHAR},
+            create_dept = #{createDept,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            update_user = #{updateUser,jdbcType=VARCHAR},
+            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

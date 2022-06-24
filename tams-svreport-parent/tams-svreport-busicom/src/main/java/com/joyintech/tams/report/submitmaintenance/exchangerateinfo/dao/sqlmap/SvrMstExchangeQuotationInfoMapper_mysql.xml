@@ -21,65 +21,65 @@
 	</sql>
 	<!-- 汇率行情查询 -->
 	<select id="select" resultType="com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto">
-		select
-		<include refid="BASE_COLUMNS"></include>
+		select 
+			<include refid="BASE_COLUMNS"></include>
 		from MST_EXCHARGE_QUOTE
 		<where>
 			<if test="exchargeCode != null and exchargeCode != ''">
 				EXCHARGE_CODE like concat_ws('','%', #{exchargeCode,jdbcType=VARCHAR},'%')
 			</if>
 			<if test="tradeDateBegin != null and tradeDateBegin != ''" >
-				<![CDATA[ and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') >= #{tradeDateBegin} ]]>
-			</if>
-			<if test="tradeDateEnd != null and tradeDateEnd != ''" >
-				<![CDATA[ and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') <= #{tradeDateEnd} ]]>
-			</if>
-			<if test="tradeDate != null and tradeDate != ''" >
-				and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') = #{tradeDate}
-			</if>
+			 <![CDATA[ and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') >= #{tradeDateBegin} ]]>
+		    </if> 
+		    <if test="tradeDateEnd != null and tradeDateEnd != ''" >
+			 <![CDATA[ and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') <= #{tradeDateEnd} ]]>
+		    </if> 
+		    <if test="tradeDate != null and tradeDate != ''" >
+			 and DATE_FORMAT(TRADE_DATE,'%Y-%m-%d') = #{tradeDate}
+		    </if> 
 		</where>
 		order by  exchargeCode,tradeDate
 	</select>
-
+	
 	<select id="selectForExport"
-			resultType="com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto">
-		select
-		<include refid="BASE_COLUMNS"></include>
-		from MST_EXCHARGE_QUOTE
-		<where>
-			<if test="keylist != null and keylist.size()>0">
-				<foreach collection="keylist" item="item" open="(" close=")"
-						 separator=") or (">
-					EXCHARGE_CODE = #{item.exchargeCode}
-					and TRADE_DATE = #{item.tradeDate}
-				</foreach>
-			</if>
-		</where>
-		order by exchargeCode,tradeDate
-	</select>
-	<select id="selectNewRate" resultType="java.math.BigDecimal">
-		select
+	resultType="com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dto.SvrMstExchangeQuotationInfoDto">
+	select
+	<include refid="BASE_COLUMNS"></include>
+	from MST_EXCHARGE_QUOTE
+	<where>
+		<if test="keylist != null and keylist.size()>0">
+			<foreach collection="keylist" item="item" open="(" close=")"
+				separator=") or (">
+				EXCHARGE_CODE = #{item.exchargeCode}
+				and TRADE_DATE = #{item.tradeDate}
+			</foreach>
+		</if>
+	</where>
+	order by exchargeCode,tradeDate
+</select>
+    <select id="selectNewRate" resultType="java.math.BigDecimal">
+    select
 		<choose>
-			<when test="pricetype == '01'">
-				cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-			</when>
-			<when test="pricetype == '02'">
-				cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-			</when>
-			<when test="pricetype == '03'">
-				cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-			</when>
-			<when test="pricetype == '04'">
-				cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-			</when>
-			<otherwise >
-				cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
-			</otherwise>
+		<when test="pricetype == '01'">
+			cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '02'">
+			cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '03'">
+			cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<when test="pricetype == '04'">
+			cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</when>
+		<otherwise >
+			cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+		</otherwise>
 		</choose>
-		from MST_EXCHARGE_QUOTE cmei
-		where  cmei.BASIS_CYY= #{ccy}
-		and cmei.DATASOURCE_TYPE = 'SAFE'
-		AND cmei.PUBLISH_DATE=
-		( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{ccy} and TRADE_DATE &lt;= #{equityConfDate,jdbcType=DATE})
-	</select>
+		 from MST_EXCHARGE_QUOTE cmei
+		 where  cmei.BASIS_CYY= #{ccy}
+		 and cmei.DATASOURCE_TYPE = 'SAFE'
+		 AND cmei.PUBLISH_DATE=
+		 ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{ccy} and TRADE_DATE &lt;= #{equityConfDate,jdbcType=DATE}) 
+    </select>
 </mapper>

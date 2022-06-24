@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.mstexchangequote.dao.ChbMstExchangeQuoteMapper_mysql">
+    <!--    入库操作 mergeInfoList   -->
+    <insert id="mergeInfoList" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
+        insert into MST_EXCHARGE_QUOTE(EXCHARGE_CODE,
+        TRADE_DATE,
+        DATASOURCE_TYPE,
+        OPEN_PRICE,
+        CLOSE_PRICE,
+        HIGH_PRICE,
+        LOW_PRICE,
+        MID_PRICE,
+        BASIS_CYY,
+        QUOT_CYY,
+        QUOT_UNIT,
+        INPUT_TYPE,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME)
+        select EXCHARGE_CODE,
+        TRADE_DATE,
+        DATASOURCE_TYPE,
+        OPEN_PRICE,
+        CLOSE_PRICE,
+        HIGH_PRICE,
+        LOW_PRICE,
+        MID_PRICE,
+        BASIS_CYY,
+        QUOT_CYY,
+        QUOT_UNIT,
+        INPUT_TYPE,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            select
+            #{item.exchargeCode, jdbcType=VARCHAR } EXCHARGE_CODE,
+            #{item.tradeDate ,jdbcType=DATE } TRADE_DATE,
+            #{item.datasourceType ,jdbcType=VARCHAR } DATASOURCE_TYPE,
+            #{item.openPrice ,jdbcType=DECIMAL } OPEN_PRICE,
+            #{item.closePrice ,jdbcType=DECIMAL } CLOSE_PRICE,
+            #{item.highPrice ,jdbcType=DECIMAL } HIGH_PRICE,
+            #{item.lowPrice ,jdbcType=DECIMAL } LOW_PRICE,
+            #{item.midPrice ,jdbcType=DECIMAL } MID_PRICE,
+            #{item.basisCyy ,jdbcType=VARCHAR } BASIS_CYY,
+            #{item.quotCyy ,jdbcType=VARCHAR } QUOT_CYY,
+            #{item.quotUnit ,jdbcType=DECIMAL } QUOT_UNIT,
+            #{item.inputType ,jdbcType=VARCHAR } INPUT_TYPE,
+            #{item.createUser ,jdbcType=VARCHAR } CREATE_USER,
+            #{item.createDept ,jdbcType=VARCHAR } CREATE_DEPT,
+            #{item.createTime ,jdbcType=TIMESTAMP } CREATE_TIME,
+            #{item.updateUser ,jdbcType=VARCHAR } UPDATE_USER,
+            #{item.updateTime ,jdbcType=TIMESTAMP } UPDATE_TIME
+            from dual
+        </foreach>
+        ) TEMP where not exists (select 1 from MST_EXCHARGE_QUOTE CII where CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE)
+        ) de ;
+
+        UPDATE  MST_EXCHARGE_QUOTE as A,
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            select
+            #{item.exchargeCode, jdbcType=VARCHAR } EXCHARGE_CODE,
+            #{item.tradeDate ,jdbcType=DATE } TRADE_DATE,
+            #{item.datasourceType ,jdbcType=VARCHAR } DATASOURCE_TYPE,
+            #{item.openPrice ,jdbcType=DECIMAL } OPEN_PRICE,
+            #{item.closePrice ,jdbcType=DECIMAL } CLOSE_PRICE,
+            #{item.highPrice ,jdbcType=DECIMAL } HIGH_PRICE,
+            #{item.lowPrice ,jdbcType=DECIMAL } LOW_PRICE,
+            #{item.midPrice ,jdbcType=DECIMAL } MID_PRICE,
+            #{item.basisCyy ,jdbcType=VARCHAR } BASIS_CYY,
+            #{item.quotCyy ,jdbcType=VARCHAR } QUOT_CYY,
+            #{item.quotUnit ,jdbcType=DECIMAL } QUOT_UNIT,
+            #{item.inputType ,jdbcType=VARCHAR } INPUT_TYPE,
+            #{item.createUser ,jdbcType=VARCHAR } CREATE_USER,
+            #{item.createDept ,jdbcType=VARCHAR } CREATE_DEPT,
+            #{item.createTime ,jdbcType=TIMESTAMP } CREATE_TIME,
+            #{item.updateUser ,jdbcType=VARCHAR } UPDATE_USER,
+            #{item.updateTime ,jdbcType=TIMESTAMP } UPDATE_TIME
+            from dual
+        </foreach>
+        ) TEMP
+        ) AS B
+        set
+        A.TRADE_DATE = B.TRADE_DATE,
+        A.DATASOURCE_TYPE = B.DATASOURCE_TYPE,
+        A.OPEN_PRICE = B.OPEN_PRICE,
+        A.CLOSE_PRICE = B.CLOSE_PRICE,
+        A.HIGH_PRICE = B.HIGH_PRICE,
+        A.LOW_PRICE = B.LOW_PRICE,
+        A.MID_PRICE = B.MID_PRICE,
+        A.BASIS_CYY = B.BASIS_CYY,
+        A.QUOT_CYY = B.QUOT_CYY,
+        A.QUOT_UNIT = B.QUOT_UNIT,
+        A.INPUT_TYPE = B.INPUT_TYPE,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_DEPT = B.CREATE_DEPT,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME
+        where A.EXCHARGE_CODE = B.EXCHARGE_CODE;
+    </insert>
+</mapper>

@@ -38,7 +38,6 @@
 		STATUS                    as status,
 		sub.UPDATE_TIME           as updateTime,
 		sub.ORG_CODE orgCode,
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
 		sub.CHECK_SEQNO    		  as checkSeqno
 		from chb_equ_sub sub
@@ -117,32 +116,32 @@
 	<!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
 	<insert id="insertDeleteEquityReg" parameterType="com.joyintech.tams.report.submitmaintenance.equityinfo.dto.EquityInfo001Dto">
 		insert into CHB_EQU_SUB (INDENTIFY_MARK, REGIST_BANK_CODE, SUBMIT_STATUS,
-            ORG_INDENTIFY_MARK, IS_BELONG_BANK, THE_BANK_NAME,
-            THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION,
-            HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
-            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
-            OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
-            HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
-            HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL,
-            TYPE, REMARK, SUBMIT_TIME,
-            CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS,
-            DEPT_CODE, UPDATE_USER, UPDATE_TIME,
-            CREATE_USER, CREATE_TIME, SUMIT_SEQ ,ORG_CODE, CREATE_DEPT
-            )
-        select  INDENTIFY_MARK, REGIST_BANK_CODE, '01',
-            ORG_INDENTIFY_MARK, IS_BELONG_BANK, THE_BANK_NAME,
-            THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION,
-            HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
-            OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
-            OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
-            HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
-            HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL,
-            #{type,jdbcType=VARCHAR}, REMARK, null,
-            #{chbSubmitDeadline,jdbcType=TIMESTAMP},#{submitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},
-            DEPT_CODE, UPDATE_USER, NOW(),
-            CREATE_USER, NOW(), #{sumitSeq,jdbcType=VARCHAR}, ORG_CODE, CREATE_DEPT
-            from chb_equ_hold
-         where INDENTIFY_MARK = #{indentifyMark} and REGIST_BANK_CODE = #{bankCode}
+		ORG_INDENTIFY_MARK, IS_BELONG_BANK, THE_BANK_NAME,
+		THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION,
+		HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
+		OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
+		OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
+		HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
+		HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL,
+		TYPE, REMARK, SUBMIT_TIME,
+		CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, STATUS,
+		DEPT_CODE, UPDATE_USER, UPDATE_TIME,
+		CREATE_USER, CREATE_TIME, SUMIT_SEQ ,ORG_CODE, CREATE_DEPT
+		)
+		select  INDENTIFY_MARK, REGIST_BANK_CODE, '01',
+		ORG_INDENTIFY_MARK, IS_BELONG_BANK, THE_BANK_NAME,
+		THE_BANK_CODE, HOLDER_MARK, HOLDER_REGION,
+		HOLDER_TYPE, PERSONAL_IDENTIFY_TYPE, INSTITUTION_IDENTIFY_TYPE,
+		OTHER_IDENTIFY_NAME, IDENTIFY_NUMBER, SPV_CAP_ACC_BANK,
+		OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
+		HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
+		HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL,
+		#{type,jdbcType=VARCHAR}, REMARK, null,
+		#{chbSubmitDeadline,jdbcType=TIMESTAMP},#{submitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},
+		DEPT_CODE, UPDATE_USER, NOW(),
+		CREATE_USER, NOW(), #{sumitSeq,jdbcType=VARCHAR}, ORG_CODE, CREATE_DEPT
+		from chb_equ_hold
+		where INDENTIFY_MARK = #{indentifyMark} and REGIST_BANK_CODE = #{bankCode}
 	</insert>
 	<!-- 查询权益人登记表中已报送内容(反馈状态不为02，即中债报送失败的内容)-->
 	<select id="queryForEquityInfoRegist" resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
@@ -650,7 +649,7 @@
 		OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
 		HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
 		HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL,
-		REMARK, SUBMIT_STATUS, SUBMIT_TIME,
+		REMARK, SUBMIT_STATUS, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUBMIT_DEADLINE,
 		STATUS, DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME, CREATE_USER,
@@ -667,7 +666,7 @@
 		A.OTHER_CAP_ACC_BANK, A.SPV_REGIST_CODE, A.HOLDER_DATE,
 		A.HOLDER_NAME, A.HOLDER_SEX, A.HOLDER_RISK_PREFER,
 		A.HOLDER_CELLPHONE, A.HOLDER_TELEPHONE, A.HOLDER_EMAIL,
-		A.REMARK, A.SUBMIT_STATUS, A.SUBMIT_TIME,
+		A.REMARK, A.SUBMIT_STATUS, A.SUBMIT_TIME,A.SUBMIT_FEEDBACK_STATUS,
 		A.SUBMIT_DEADLINE,
 		A.STATUS, A.DEPT_CODE,
 		A.UPDATE_USER, A.UPDATE_TIME, A.CREATE_USER,
@@ -741,11 +740,11 @@
 	</select>
 
 	<select id="queryAllRegistSubmitList" resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
-        select INDENTIFY_MARK            as indentifyMark,
-            REGIST_BANK_CODE          as bankCode
-        from chb_equ_sub sub
-        where (sub.SUBMIT_STATUS = '02' or sub.SUBMIT_STATUS = '03')
-    </select>
+		select INDENTIFY_MARK            as indentifyMark,
+		REGIST_BANK_CODE          as bankCode
+		from chb_equ_sub sub
+		where (sub.SUBMIT_STATUS = '02' or sub.SUBMIT_STATUS = '03')
+	</select>
 
 	<!-- 接口报送更新 -->
 	<update id="updateInterfSubmit" parameterType="java.util.Map">
@@ -777,8 +776,8 @@
 				<if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
 					sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
 				</if>
-				sub.SUBMIT_TIME = now(),
-				sub.UPDATE_TIME = now()
+				sub.SUBMIT_TIME = NOW(),
+				sub.UPDATE_TIME = NOW()
 			</set>
 			where sub.REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR}
 			and sub.INDENTIFY_MARK = #{equityRegist.indentifyMark,jdbcType=VARCHAR}
@@ -820,7 +819,6 @@
 	</update>
 
 	<update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
-		begin
 		<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
 			update CHB_EQU_SUB
 			<set >
@@ -830,7 +828,6 @@
 			</set>
 			where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
 		</foreach>
-		end;
 	</update>
 
 	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
@@ -919,21 +916,52 @@
 		</where>
 	</update>
 	<select id= "isNotSubmitP" resultType="java.lang.Integer">
-    SELECT count(1)
-    	from chb_equ_sub
-    where
-    	INDENTIFY_MARK = #{indentifyMark}
-   		and REGIST_BANK_CODE = #{registBankCode}
-    	and SUBMIT_STATUS = #{noSubmit}
-    </select>
+		SELECT count(1)
+		from chb_equ_sub
+		where
+		INDENTIFY_MARK = #{indentifyMark}
+		and REGIST_BANK_CODE = #{registBankCode}
+		and SUBMIT_STATUS = #{noSubmit}
+	</select>
 	<select id= "countIndentifyMark" resultType="java.lang.Integer">
 		SELECT count(1)
 		from CHB_EQU_HOLD
 		where
-		INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
-		and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+		<if test="INDENTIFY_MARK!=null and INDENTIFY_MARK!=''">
+			INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
+		</if>
+		<if test="REGIST_BANK_CODE !=null and REGIST_BANK_CODE!=''">
+			and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+		</if>
 		<!-- 检查识别标识是否存在，删除状态的数据不为已存在的识别标识 -->
 		and status !='D'
+	</select>
+	<select id= "countIndentifyMarkAll" resultType="java.lang.Integer">
+		SELECT SUM(HOLD_INFO)
+		from
+		(
+		select count(1) as HOLD_INFO from CHB_EQU_HOLD
+		where
+		<if test="INDENTIFY_MARK!=null and INDENTIFY_MARK!=''">
+			INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
+		</if>
+		<if test="REGIST_BANK_CODE !=null and REGIST_BANK_CODE!=''">
+			and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+		</if>
+		<!-- 检查识别标识是否存在，删除状态的数据不为已存在的识别标识 -->
+		and status !='D'
+		union all
+		select count(1) as HOLD_INFO from CHB_EQU_HOLD_CHECK
+		where
+		<if test="INDENTIFY_MARK!=null and INDENTIFY_MARK!=''">
+			INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
+		</if>
+		<if test="REGIST_BANK_CODE !=null and REGIST_BANK_CODE!=''">
+			and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+		</if>
+		<!-- 检查识别标识是否存在，删除状态的数据不为已存在的识别标识 -->
+		and status !='D'
+		)A
 	</select>
 	<!-- 将履历表中最大的数据重新插入登记表 -->
 	<insert id="insertEquityRegistFromHis" parameterType="java.util.List" >
@@ -966,7 +994,10 @@
 		STATUS, DEPT_CODE, UPDATE_USER,
 		sub.UPDATE_TIME, sub.CREATE_USER, sub.CREATE_TIME,
 		sub.SUMIT_SEQ, sub.DELETE_RES, sub.ORG_CODE,
-		sub.CREATE_DEPT,sub.CHECK_SEQNO,sub.FUND_ACC_PLACE,sub.HOLDER_CLASSIFY
+		sub.CREATE_DEPT,sub.CHECK_SEQNO,sub.HOLDER_CLASSIFY,sub.FUND_ACC_PLACE,
+		sub.submit_feedback_status,
+		sub.report_no,
+		sub.submit_feedback_msg
 		from (select max(HIS_NO) HIS_NO,INDENTIFY_MARK,REGIST_BANK_CODE
 		from CHB_EQU_SUB_HIS where SUBMIT_STATUS NOT IN('01') GROUP BY INDENTIFY_MARK,REGIST_BANK_CODE) A
 		left join CHB_EQU_SUB_HIS sub
@@ -1017,20 +1048,14 @@
 		FUND_ACC_PLACE            as fundAccPlace,
 		HOLDER_CLASSIFY           as holderClassify,
 		t1.UPDATE_TIME AS updateTime,
-		t1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		t1.SUBMIT_FEEDBACK_STATUS AS submitFeedbackStatus,
 		IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank1,
 		@INDENTIFY_MARK := t1.INDENTIFY_MARK
 		FROM
 		( SELECT @rownum := 0, @CASH_ID := NULL, @rank := 0 ) b,
 		( SELECT * FROM chb_view_equ_sub  ORDER BY INDENTIFY_MARK, update_time desc) t1
-		/*INNER JOIN CHB_SUBMIT_STATUS t2 ON t1.SUMIT_SEQ = t2.SEQNO*/
 		<where>
 			t1.SUBMIT_FEEDBACK_STATUS = '03'
-			<!-- 	and t1.update_time = (
-                 select max(t3.update_time) from chb_view_equ_sub t3
-                 where t1.INDENTIFY_MARK = t3.INDENTIFY_MARK
-                     and t1.REGIST_BANK_CODE = t3.REGIST_BANK_CODE
-             )	 -->
 			<if test="list !=null and list.size()>0">
 				<foreach collection="list" item="item" separator="," open=" AND (t1.REGIST_BANK_CODE, t1.INDENTIFY_MARK) IN (" close=")">
 					(#{item.REGIST_BANK_CODE,jdbcType=VARCHAR}, #{item.INDENTIFY_MARK,jdbcType=VARCHAR})
@@ -1076,13 +1101,12 @@
 		OTHER_IDENTIFY_NAME AS otherIdentifyName,
 		STATUS AS STATUS,
 		t1.UPDATE_TIME AS updateTime,
-		t1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		t1.SUBMIT_FEEDBACK_STATUS AS submitFeedbackStatus,
 		IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank1,
 		@INDENTIFY_MARK := t1.INDENTIFY_MARK
 		FROM
 		( SELECT @rownum := 0, @CASH_ID := NULL, @rank := 0 )b,
 		( SELECT * FROM chb_view_equ_sub  ORDER BY INDENTIFY_MARK, update_time desc) t1
-		/*INNER JOIN CHB_SUBMIT_STATUS t2 ON t1.SUMIT_SEQ = t2.SEQNO*/
 		<where>
 			t1.SUBMIT_FEEDBACK_STATUS = '03'
 			<!--  		and t1.update_time = (
@@ -1143,7 +1167,8 @@
 		HOLDER_CELLPHONE AS holderCellphone,
 		HOLDER_TELEPHONE AS holderTelephone,
 		HOLDER_EMAIL AS holderEmail,
-		TYPE AS type,
+        HOLDER_CLASSIFY as holderClassify,
+        TYPE AS type,
 		REMARK,
 		SUBMIT_STATUS AS submitStatus,
 		SUBMIT_TIME AS submitTime,
@@ -1152,13 +1177,12 @@
 		OTHER_IDENTIFY_NAME AS otherIdentifyName,
 		STATUS AS STATUS,
 		t1.UPDATE_TIME AS updateTime,
-		t1.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		t1.SUBMIT_FEEDBACK_STATUS AS submitFeedbackStatus,
 		IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank1,
 		@INDENTIFY_MARK := t1.INDENTIFY_MARK
 		FROM
 		( SELECT @rownum := 0, @CASH_ID := NULL, @rank := 0 )b,
 		( SELECT * FROM chb_view_equ_sub  ORDER BY INDENTIFY_MARK, update_time desc) t1
-		/*INNER JOIN CHB_SUBMIT_STATUS t2 ON t1.SUMIT_SEQ = t2.SEQNO*/
 		<where>
 			t1.SUBMIT_FEEDBACK_STATUS = '03'
 			<!--  		and t1.update_time = (
@@ -1175,7 +1199,6 @@
 
 	<!-- 批量更新投资者身份信息检查序列号 -->
 	<update id="updateEquityRegistCheckSeqno" parameterType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
-		/* begin*/
 		<foreach collection="list" item="item" index="index" separator=";" >
 			update chb_equ_sub  sub
 			set
@@ -1185,60 +1208,60 @@
 			sub.INDENTIFY_MARK = #{item.indentifyMark,jdbcType=VARCHAR}
 			and sub.SUBMIT_STATUS = '01'
 		</foreach>
-		;/*end;*/
+		;
 	</update>
 
 	<!-- 查询投资身份信息待检查的数据 -->
 	<select id="selectEquityRegistData" parameterType="map" resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto">
 		select INDENTIFY_MARK            as indentifyMark,
-       		ORG_INDENTIFY_MARK        as orgIndentifyMark,
-       		REGIST_BANK_CODE          as bankCode,
-       		IS_BELONG_BANK            as isBelongBank,
-       		THE_BANK_NAME             as theBankName,
-       		THE_BANK_CODE             as theBankCode,
-       		HOLDER_MARK               as holderMark,
-       		HOLDER_REGION             as holderRegion,
-       		HOLDER_TYPE               as holderType,
-       		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) identifyType,
-       		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
-       		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
-       		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as IDENTIFY_TYPE,
-       		OTHER_IDENTIFY_NAME       as otherIdentifyName,
-       		IDENTIFY_NUMBER           as identifyNumber,
-       		SPV_CAP_ACC_BANK          as spvCapAccBank,
-       		OTHER_CAP_ACC_BANK        as otherCapAccBank,
-       		SPV_REGIST_CODE           as spvRegistCode,
-       		HOLDER_DATE               holderDate,
-       		HOLDER_NAME               holderName,
-       		HOLDER_SEX                holderSex,
-       		HOLDER_RISK_PREFER        as holderRiskPrefer,
-       		HOLDER_CELLPHONE          as holderCellphone,
-       		HOLDER_TELEPHONE          as holderTelephone,
-       		HOLDER_EMAIL              as holderEmail,
-       		TYPE                      as type,
-       		REMARK					  as remark,
-       		SUBMIT_STATUS             as submitStatus,
-       		SUBMIT_TIME               as submitTime,
-       		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
-       		SUBMIT_DEADLINE           as submitDeadline,
-      	 	STATUS                    as status,
-       		UPDATE_TIME           	  as updateTime,
-       		SUMIT_SEQ                 as sumitSeq,
-       		ORG_CODE                  as orgCode,
-       		CHECK_SEQNO		  		  as checkSeqno
-  		from chb_equ_sub
-  		where SUBMIT_STATUS =#{sendStatus}
-  		and (STATUS = #{status01} or STATUS = #{status02})
-  		and CHECK_SEQNO = '0'
+		ORG_INDENTIFY_MARK        as orgIndentifyMark,
+		REGIST_BANK_CODE          as bankCode,
+		IS_BELONG_BANK            as isBelongBank,
+		THE_BANK_NAME             as theBankName,
+		THE_BANK_CODE             as theBankCode,
+		HOLDER_MARK               as holderMark,
+		HOLDER_REGION             as holderRegion,
+		HOLDER_TYPE               as holderType,
+		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) identifyType,
+		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
+		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as IDENTIFY_TYPE,
+		OTHER_IDENTIFY_NAME       as otherIdentifyName,
+		IDENTIFY_NUMBER           as identifyNumber,
+		SPV_CAP_ACC_BANK          as spvCapAccBank,
+		OTHER_CAP_ACC_BANK        as otherCapAccBank,
+		SPV_REGIST_CODE           as spvRegistCode,
+		HOLDER_DATE               holderDate,
+		HOLDER_NAME               holderName,
+		HOLDER_SEX                holderSex,
+		HOLDER_RISK_PREFER        as holderRiskPrefer,
+		HOLDER_CELLPHONE          as holderCellphone,
+		HOLDER_TELEPHONE          as holderTelephone,
+		HOLDER_EMAIL              as holderEmail,
+		TYPE                      as type,
+		REMARK					  as remark,
+		SUBMIT_STATUS             as submitStatus,
+		SUBMIT_TIME               as submitTime,
+		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
+		SUBMIT_DEADLINE           as submitDeadline,
+		STATUS                    as status,
+		UPDATE_TIME           	  as updateTime,
+		SUMIT_SEQ                 as sumitSeq,
+		ORG_CODE                  as orgCode,
+		CHECK_SEQNO		  		  as checkSeqno
+		from chb_equ_sub
+		where SUBMIT_STATUS =#{sendStatus}
+		and (STATUS = #{status01} or STATUS = #{status02})
+		and CHECK_SEQNO = '0'
 	</select>
 	<select id="selectNoendCountByTaskBeanName" parameterType="string" resultType="int">
-    	select count(1)
-    	from SYS_BATCHGRP_EXEC_INFO info
-		  left join SYS_BATCH_JOB bj
-		  on info.BATCH_SEQ_NO=bj.BATCH_SEQ_NO
-		  where
-			bj.TASK_ID=#{taskid,jdbcType=VARCHAR}
-			and info.STATUS in ('UNR','RUN')
+		select count(1)
+		from SYS_BATCHGRP_EXEC_INFO info
+		left join SYS_BATCH_JOB bj
+		on info.BATCH_SEQ_NO=bj.BATCH_SEQ_NO
+		where
+		bj.TASK_ID=#{taskid,jdbcType=VARCHAR}
+		and info.STATUS in ('UNR','RUN')
 	</select>
 
 	<!-- 获取所有信息 SUBMIT_FEEDBACK_STATUS = '03'  -->
@@ -1270,6 +1293,7 @@
 		HOLDER_CELLPHONE          AS holderCellphone,
 		HOLDER_TELEPHONE          AS holderTelephone,
 		HOLDER_EMAIL              AS holderEmail,
+        HOLDER_CLASSIFY           AS holderClassify,
 		TYPE                      AS type,
 		REMARK,
 		SUBMIT_STATUS                                               AS submitStatus,
@@ -1280,9 +1304,11 @@
 		STATUS                                                                  AS status,
 		t1.UPDATE_TIME                                                      AS updateTime,
 		t1.SUBMIT_FEEDBACK_STATUS                                       AS submitFeedbackStatus,
-		row_number() OVER(partition BY t1.INDENTIFY_MARK ORDER BY t1.update_time DESC) indMarkNo
+		IF( @INDENTIFY_MARK = t1.INDENTIFY_MARK, @rank := @rank + 1, @rank := 1 ) AS rank1,
+		@INDENTIFY_MARK := t1.INDENTIFY_MARK
 		FROM
-		chb_view_equ_sub t1
+		( SELECT @rownum := 0, @CASH_ID := NULL, @rank := 0 )b,
+		( SELECT * FROM chb_view_equ_sub  ORDER BY INDENTIFY_MARK, update_time desc) t1
 		<where>
 			t1.SUBMIT_FEEDBACK_STATUS = '03'
 			<if test="bankCodeList != null and bankCodeList.size() > 0 ">
@@ -1298,11 +1324,10 @@
 		</where>
 		) t
 		WHERE
-		indMarkNo = 1
+		rank1 = 1
 	</select>
 	<select id="countExportNum" parameterType="map" resultType="int">
 		select count(1) from chb_equ_sub sub
-		/*left join CHB_SUBMIT_STATUS status on sub.sumit_seq = status.seqno*/
 		<where>
 			<if test="bankCode != null and bankCode != ''">
 				sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')

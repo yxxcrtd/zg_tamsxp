@@ -253,9 +253,9 @@
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/check', object, function(result) {
           Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/deleteCheck', object, function(result1) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/delete', object,"AgentInstitution001_btn_delete", "AgentInstitution002", function(result) {
-                                        table.reload();
-                });
+                 Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/delete', object, function() {
+                          $('#AgentInstitution001_btn_search').trigger("click");
+                 });
             });
           });
         });
@@ -323,9 +323,9 @@
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/check', object, function(result) {
               Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/deleteCheck', object, function(result1) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/delete', object,"AgentInstitution001_btn_delete", "AgentInstitution002", function(result) {
-                        table.reload();
-                    });
+                      Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentinstitution/AgentInstitution001/delete', object, function() {
+                                          $('#AgentInstitution001_btn_search').trigger("click");
+                      });
                 });
               });
             });

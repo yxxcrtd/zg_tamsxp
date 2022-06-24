@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.common.base.dao.ShareFilePbcProdOrgYldMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgYld" >
+        <result column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="XHIGH_YIELD" property="xhighYield" jdbcType="DECIMAL" />
+        <result column="XLOW_YIELD" property="xlowYield" jdbcType="DECIMAL" />
+        <result column="XEXP_YIELD" property="xexpYield" jdbcType="DECIMAL" />
+        <result column="CXHIGH_YIELD" property="cxhighYield" jdbcType="DECIMAL" />
+        <result column="CXLOW_YIELD" property="cxlowYield" jdbcType="DECIMAL" />
+        <result column="CXEXP_YIELD" property="cxexpYield" jdbcType="DECIMAL" />
+        <result column="DQ_YIELD" property="dqYield" jdbcType="DECIMAL" />
+        <result column="DQHIGH_YIELD" property="dqhighYield" jdbcType="DECIMAL" />
+        <result column="DQLOW_YIELD" property="dqlowYield" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgYld" >
+        insert into SHARE_FILE_PBC_PROD_ORG_YLD (DETAILUUID, REPORTTYPE, GROUPTYPE, 
+            PROPERTYCODE, REPORTUUID, XHIGH_YIELD, 
+            XLOW_YIELD, XEXP_YIELD, CXHIGH_YIELD, 
+            CXLOW_YIELD, CXEXP_YIELD, DQ_YIELD, 
+            DQHIGH_YIELD, DQLOW_YIELD)
+        values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, #{xhighYield,jdbcType=DECIMAL}, 
+            #{xlowYield,jdbcType=DECIMAL}, #{xexpYield,jdbcType=DECIMAL}, #{cxhighYield,jdbcType=DECIMAL}, 
+            #{cxlowYield,jdbcType=DECIMAL}, #{cxexpYield,jdbcType=DECIMAL}, #{dqYield,jdbcType=DECIMAL}, 
+            #{dqhighYield,jdbcType=DECIMAL}, #{dqlowYield,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgYld" >
+        insert into SHARE_FILE_PBC_PROD_ORG_YLD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="xhighYield != null" >
+                XHIGH_YIELD,
+            </if>
+            <if test="xlowYield != null" >
+                XLOW_YIELD,
+            </if>
+            <if test="xexpYield != null" >
+                XEXP_YIELD,
+            </if>
+            <if test="cxhighYield != null" >
+                CXHIGH_YIELD,
+            </if>
+            <if test="cxlowYield != null" >
+                CXLOW_YIELD,
+            </if>
+            <if test="cxexpYield != null" >
+                CXEXP_YIELD,
+            </if>
+            <if test="dqYield != null" >
+                DQ_YIELD,
+            </if>
+            <if test="dqhighYield != null" >
+                DQHIGH_YIELD,
+            </if>
+            <if test="dqlowYield != null" >
+                DQLOW_YIELD,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="xhighYield != null" >
+                #{xhighYield,jdbcType=DECIMAL},
+            </if>
+            <if test="xlowYield != null" >
+                #{xlowYield,jdbcType=DECIMAL},
+            </if>
+            <if test="xexpYield != null" >
+                #{xexpYield,jdbcType=DECIMAL},
+            </if>
+            <if test="cxhighYield != null" >
+                #{cxhighYield,jdbcType=DECIMAL},
+            </if>
+            <if test="cxlowYield != null" >
+                #{cxlowYield,jdbcType=DECIMAL},
+            </if>
+            <if test="cxexpYield != null" >
+                #{cxexpYield,jdbcType=DECIMAL},
+            </if>
+            <if test="dqYield != null" >
+                #{dqYield,jdbcType=DECIMAL},
+            </if>
+            <if test="dqhighYield != null" >
+                #{dqhighYield,jdbcType=DECIMAL},
+            </if>
+            <if test="dqlowYield != null" >
+                #{dqlowYield,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgYld" >
+        insert into SHARE_FILE_PBC_PROD_ORG_YLD(DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+        REPORTUUID, XHIGH_YIELD, XLOW_YIELD, XEXP_YIELD, CXHIGH_YIELD, CXLOW_YIELD, CXEXP_YIELD, 
+        DQ_YIELD, DQHIGH_YIELD, DQLOW_YIELD)
+        select DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+            REPORTUUID, XHIGH_YIELD, XLOW_YIELD, XEXP_YIELD, CXHIGH_YIELD, CXLOW_YIELD, CXEXP_YIELD, 
+            DQ_YIELD, DQHIGH_YIELD, DQLOW_YIELD
+             from SHARE_FILE_PBC_PROD_ORG_YLD
+             where 1 = 1
+    </insert>
+</mapper>

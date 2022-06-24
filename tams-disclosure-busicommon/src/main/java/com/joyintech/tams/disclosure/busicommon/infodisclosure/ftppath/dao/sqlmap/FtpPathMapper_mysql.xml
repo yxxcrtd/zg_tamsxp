@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftppath.dao.FtpPathMapper_mysql">
+    <select id="getReportCategory" resultType="com.joyintech.tams.common.base.entity.RepFtpPath">
+		SELECT
+		    rfp.ID id,
+		    rfp.NAME name
+		FROM
+		    REP_FTP_PATH rfp
+	</select>
+</mapper>

@@ -99,4 +99,150 @@
 		  A.FPROD_ID
 		  
     </select>
+
+	<update id="mergeProdtrdList">
+		UPDATE REP_PRODTRD as A,
+		(
+			select
+				SEQ_NO,<!--流水号-->
+				PROD_ID,<!--产品代码-->
+				CONFIRM_DATE,<!--确认日-->
+				SUB_AMT,<!--申购份额-->
+				RED_AMT,<!--赎回份额-->
+				BONUS_AMT,<!--红利再投结转份额-->
+				CAPITAL,<!--产品份额-->
+				CREATE_USER,<!--创建人-->
+				CREATE_DEPT,<!--创建部门-->
+				CREATE_TIME,<!--创建时间-->
+				UPDATE_USER,<!--更新人-->
+				UPDATE_TIME,<!--更新时间-->
+				INPUT_TYPE,<!--导入方法-->
+				INPUT_USER,<!--导入用户-->
+				ADAPTER_ID,<!--适配器ID-->
+				FPROD_ID,<!--父产品代码-->
+				SUB_TRADE_PRINCE,<!--申购金额-->
+				RED_TRADE_PRINCE,<!--赎回金额-->
+				RED_INT_AMT<!--赎回利息-->
+			from (
+				select TEMP.* from (
+					<foreach collection="list" item="item" separator="union all">
+						select
+							#{item.seqNo,jdbcType=VARCHAR} SEQ_NO,<!--流水号-->
+							#{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+							#{item.confirmDate,jdbcType=DATE} CONFIRM_DATE,<!--确认日-->
+							#{item.subAmt,jdbcType=DECIMAL} SUB_AMT,<!--申购份额-->
+							#{item.redAmt,jdbcType=DECIMAL} RED_AMT,<!--赎回份额-->
+							#{item.bonusAmt,jdbcType=DECIMAL} BONUS_AMT,<!--红利再投结转份额-->
+							#{item.capital,jdbcType=DECIMAL} CAPITAL,<!--产品份额-->
+							#{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+							#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+							#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+							#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+							#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+							#{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,<!--导入方法-->
+							#{item.inputUser,jdbcType=VARCHAR} INPUT_USER,<!--导入用户-->
+							#{item.adapterId,jdbcType=VARCHAR} ADAPTER_ID,<!--适配器ID-->
+							#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,<!--父产品代码-->
+							#{item.subTradePrince,jdbcType=DECIMAL} SUB_TRADE_PRINCE,<!--申购金额-->
+							#{item.redTradePrince,jdbcType=DECIMAL} RED_TRADE_PRINCE,<!--赎回金额-->
+							#{item.redIntAmt,jdbcType=DECIMAL} RED_INT_AMT<!--赎回利息-->
+						from dual
+					</foreach>
+				) TEMP
+			) de
+		) AS B
+		SET
+			<!--RP.SEQ_NO= TEMP.SEQ_NO,流水号-->
+			<!--RP.PROD_ID= TEMP.PROD_ID,产品代码-->
+			<!--RP.CONFIRM_DATE= TEMP.CONFIRM_DATE,确认日-->
+			A.SUB_AMT = B.SUB_AMT + A.SUB_AMT,<!--申购份额-->
+			A.RED_AMT = B.RED_AMT + A.RED_AMT,<!--赎回份额-->
+			A.BONUS_AMT = B.BONUS_AMT + A.BONUS_AMT,<!--红利再投结转份额-->
+			A.CAPITAL = B.CAPITAL + A.CAPITAL,<!--产品份额-->
+			A.CREATE_USER = B.CREATE_USER,<!--创建人-->
+			A.CREATE_DEPT = B.CREATE_DEPT,<!--创建部门-->
+			A.CREATE_TIME = B.CREATE_TIME,<!--创建时间-->
+			A.UPDATE_USER = B.UPDATE_USER,<!--更新人-->
+			A.UPDATE_TIME = B.UPDATE_TIME,<!--更新时间-->
+			A.INPUT_TYPE = B.INPUT_TYPE,<!--导入方法-->
+			A.INPUT_USER = B.INPUT_USER,<!--导入用户-->
+			A.ADAPTER_ID = B.ADAPTER_ID,<!--适配器ID-->
+			A.SUB_TRADE_PRINCE = B.SUB_TRADE_PRINCE + A.SUB_TRADE_PRINCE,<!--申购金额-->
+			A.RED_TRADE_PRINCE = B.RED_TRADE_PRINCE + A.RED_TRADE_PRINCE,<!--赎回金额-->
+			A.RED_INT_AMT = B.RED_INT_AMT + A.RED_INT_AMT<!--赎回利息-->
+		where A.PROD_ID = B.PROD_ID AND A.CONFIRM_DATE = B.CONFIRM_DATE;
+        insert into REP_PRODTRD (
+            SEQ_NO,<!--流水号-->
+            PROD_ID,<!--产品代码-->
+            CONFIRM_DATE,<!--确认日-->
+            SUB_AMT,<!--申购份额-->
+            RED_AMT,<!--赎回份额-->
+            BONUS_AMT,<!--红利再投结转份额-->
+            CAPITAL,<!--产品份额-->
+            CREATE_USER,<!--创建人-->
+            CREATE_DEPT,<!--创建部门-->
+            CREATE_TIME,<!--创建时间-->
+            UPDATE_USER,<!--更新人-->
+            UPDATE_TIME,<!--更新时间-->
+            INPUT_TYPE,<!--导入方法-->
+            INPUT_USER,<!--导入用户-->
+            ADAPTER_ID,<!--适配器ID-->
+            FPROD_ID,<!--父产品代码-->
+            SUB_TRADE_PRINCE,<!--申购金额-->
+            RED_TRADE_PRINCE,<!--赎回金额-->
+            RED_INT_AMT<!--赎回利息-->
+        )
+        select
+            SEQ_NO,<!--流水号-->
+            PROD_ID,<!--产品代码-->
+            CONFIRM_DATE,<!--确认日-->
+            SUB_AMT,<!--申购份额-->
+            RED_AMT,<!--赎回份额-->
+            BONUS_AMT,<!--红利再投结转份额-->
+            CAPITAL,<!--产品份额-->
+            CREATE_USER,<!--创建人-->
+            CREATE_DEPT,<!--创建部门-->
+            CREATE_TIME,<!--创建时间-->
+            UPDATE_USER,<!--更新人-->
+            UPDATE_TIME,<!--更新时间-->
+            INPUT_TYPE,<!--导入方法-->
+            INPUT_USER,<!--导入用户-->
+            ADAPTER_ID,<!--适配器ID-->
+            FPROD_ID,<!--父产品代码-->
+            SUB_TRADE_PRINCE,<!--申购金额-->
+            RED_TRADE_PRINCE,<!--赎回金额-->
+            RED_INT_AMT<!--赎回利息-->
+        from (
+            select TEMP.* from (
+            <foreach collection="list" item="item" separator="union all">
+                select
+                    #{item.seqNo,jdbcType=VARCHAR} SEQ_NO,<!--流水号-->
+                    #{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+                    #{item.confirmDate,jdbcType=DATE} CONFIRM_DATE,<!--确认日-->
+                    #{item.subAmt,jdbcType=DECIMAL} SUB_AMT,<!--申购份额-->
+                    #{item.redAmt,jdbcType=DECIMAL} RED_AMT,<!--赎回份额-->
+                    #{item.bonusAmt,jdbcType=DECIMAL} BONUS_AMT,<!--红利再投结转份额-->
+                    #{item.capital,jdbcType=DECIMAL} CAPITAL,<!--产品份额-->
+                    #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+                    #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+                    #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+                    #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+                    #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+                    #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,<!--导入方法-->
+                    #{item.inputUser,jdbcType=VARCHAR} INPUT_USER,<!--导入用户-->
+                    #{item.adapterId,jdbcType=VARCHAR} ADAPTER_ID,<!--适配器ID-->
+                    #{item.fprodId,jdbcType=VARCHAR} FPROD_ID,<!--父产品代码-->
+                    #{item.subTradePrince,jdbcType=DECIMAL} SUB_TRADE_PRINCE,<!--申购金额-->
+                    #{item.redTradePrince,jdbcType=DECIMAL} RED_TRADE_PRINCE,<!--赎回金额-->
+                    #{item.redIntAmt,jdbcType=DECIMAL} RED_INT_AMT<!--赎回利息-->
+                from dual
+            </foreach>
+            ) TEMP where not exists (select 1 from REP_PRODTRD CII where CII.PROD_ID = TEMP.PROD_ID AND CII.CONFIRM_DATE = TEMP.CONFIRM_DATE)
+        ) de
+	</update>
+
+    <delete id="deleteRepProdtrdByParams">
+		delete from REP_PRODTRD where DATE_FORMAT(CONFIRM_DATE,'%Y-%m-%d') = #{executeDateStr, jdbcType=VARCHAR}
+	</delete>
+
 </mapper>

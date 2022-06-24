@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.batch.report.generateinvestorsholdregist.dao.GenerateInvestorsHoldInfoRegistAutoSendCBMapper_mysql">
-
     <select id="selectBusiData" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
         SELECT targetObjTable.ORG_CODE orgCode,
         targetObjTable.REGIST_BANK_CODE registBankCode,
@@ -9,7 +8,7 @@
         targetObjTable.INDENTIFY_MARK indentifyMark,
         targetObjTable.CCY ccy,
         h.DEPT_CODE deptCode,
-        IFNULL(s.QTY, IFNULL(e.AVAILABLE_QUANTITY,0)+ IFNULL(e.PLEDGED_QUANTITY,0)+ IFNULL(e.FROZEN_QUANTITY，0))
+        IFNULL(s.QTY, IFNULL(e.AVAILABLE_QUANTITY,0)+ IFNULL(e.PLEDGED_QUANTITY,0)+ IFNULL(e.FROZEN_QUANTITY,0))
         + IFNULL(TEMP.SHARES,0) qty,
         IFNULL(s.AMOUNT, IFNULL(e.AMOUNT,0))+ IFNULL(TEMP.AMOUNT,0) amount
         FROM (
@@ -19,7 +18,7 @@
         AND SHARE_CONF_DATETIME &lt;= #{executeDate,jdbcType=TIMESTAMP}
         UNION ALL
         SELECT DISTINCT ORG_CODE,REGIST_BANK_CODE,PRODID,INDENTIFY_MARK,CCY
-        FROM CHB_EQUPERIOD WHERE STATUS='E'))targetObjTable
+        FROM CHB_EQUPERIOD WHERE STATUS='E') temp )targetObjTable
         LEFT JOIN
         (SELECT e.ORG_CODE,e.REGIST_BANK_CODE,e.ACCOUNT,e.INDENTIFY_MARK,e.CCY,
         SUM(case when e.BUSI_TYPE in('01','02','05','07','09','10','12','14')and e.STATUS='E' then IFNULL(e.SHARES,0)
@@ -90,7 +89,43 @@
         AND s.HOLD_DATE = #{holdDate,jdbcType=DATE}-1
         AND s.STATUS!='03'
     </select>
-
+    <select id="getRateNearByDate" resultType="java.math.BigDecimal">
+        select
+        <choose>
+            <when test="pricetype == '01'">
+                cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '02'">
+                cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '03'">
+                cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '04'">
+                cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <otherwise >
+                cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </otherwise>
+        </choose>
+        from MST_EXCHARGE_QUOTE cmei
+        where  cmei.BASIS_CYY= #{CCY_ORIGINAL}
+        and cmei.QUOT_CYY = #{CCY_CONVERT}
+        and cmei.DATASOURCE_TYPE = 'SAFE'
+        AND cmei.TRADE_DATE=
+        ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL} and QUOT_CYY = #{CCY_CONVERT} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
+    </select>
+    <select id="selectIsExist" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto" resultType="java.util.Map">
+        select AMOUNT amount,QTY qty from CHB_INVESTHOLD_INFO_SUB
+        where REGIST_BANK_CODE = #{dto.registBankCode,jdbcType=VARCHAR}
+        and PRD_REGIST_CODE = #{dto.prdRegistCode,jdbcType=VARCHAR}
+        and INDENTIFY_MARK = #{dto.indentifyMark,jdbcType=VARCHAR}
+        and CCY = #{dto.ccy,jdbcType=VARCHAR}
+        and HOLD_DATE = #{dto.holdDate,jdbcType=DATE}
+        <if test="dto.flag !=null and dto.flag!=''">
+            and SEND_STATUS in('02','03')
+        </if>
+    </select>
     <!-- 批量插入 -->
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
         insert into CHB_INVESTHOLD_INFO_SUB(REGIST_SEQNO, REGIST_BANK_CODE, CHB_SUBMIT_DEADLINE,
@@ -102,10 +137,8 @@
         UPDATE_USER, UPDATE_TIME, ORG_CODE,
         DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ,
         CREATE_DEPT)
-
         values
         <foreach collection="insertDataList" item="dto" separator=",">
-
             #{dto.registSeqno,jdbcType=VARCHAR}, #{dto.registBankCode,jdbcType=VARCHAR}, #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP},
             #{dto.prdRegistCode,jdbcType=VARCHAR}, #{dto.indentifyMark,jdbcType=VARCHAR}, #{dto.ccy,jdbcType=VARCHAR},
             #{dto.holdDate,jdbcType=DATE}, #{dto.amount,jdbcType=DECIMAL}, #{dto.qty,jdbcType=DECIMAL},
@@ -117,4 +150,32 @@
             #{dto.createDept,jdbcType=VARCHAR}
         </foreach>
     </insert>
+    <!-- 批量更新 -->
+    <update id="update" parameterType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
+        <foreach collection="updateDataList" item="dto" index="index" open="" close=""  separator=";">
+            update CHB_INVESTHOLD_INFO_SUB
+            set CHB_SUBMIT_DEADLINE = #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP},
+            AMOUNT = #{dto.amount,jdbcType=DECIMAL},
+            QTY = #{dto.qty,jdbcType=DECIMAL},
+            CNY_AMT = #{dto.cnyAmt,jdbcType=DECIMAL},
+            REMARK = #{dto.remark,jdbcType=VARCHAR},
+            SUBMIT_DEADLINE = #{dto.submitDeadline,jdbcType=TIMESTAMP},
+            WORKFLOW_ID = #{dto.workflowId,jdbcType=VARCHAR},
+            SEND_STATUS = #{dto.sendStatus,jdbcType=VARCHAR},
+            STATUS_DATE = #{dto.statusDate,jdbcType=DATE},
+            STATUS = #{dto.status,jdbcType=VARCHAR},
+            UPDATE_USER = #{dto.updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{dto.updateTime,jdbcType=TIMESTAMP},
+            ORG_CODE = #{dto.orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{dto.deptCode,jdbcType=VARCHAR},
+            SUBMIT_TIME = #{dto.submitTime,jdbcType=TIMESTAMP},
+            SUMIT_SEQ = #{dto.sumitSeq,jdbcType=VARCHAR},
+            CREATE_DEPT = #{dto.createDept,jdbcType=VARCHAR}
+            where REGIST_BANK_CODE = #{dto.registBankCode,jdbcType=VARCHAR}
+            and PRD_REGIST_CODE = #{dto.prdRegistCode,jdbcType=VARCHAR}
+            and INDENTIFY_MARK = #{dto.indentifyMark,jdbcType=VARCHAR}
+            and CCY = #{dto.ccy,jdbcType=VARCHAR}
+            and HOLD_DATE = #{dto.holdDate,jdbcType=DATE}
+        </foreach>
+    </update>
 </mapper>

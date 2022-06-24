@@ -1,0 +1,15 @@
+
+DELIMITER ??
+DROP PROCEDURE IF EXISTS schema_change??
+CREATE PROCEDURE schema_change()
+BEGIN
+IF  EXISTS (SELECT * FROM information_schema.statistics WHERE table_schema= DATABASE() AND table_name = 'MST_EXCHARGE_QUOTE' AND index_name = 'PK_MST_EXCHARGE_QUOTE') THEN
+
+ALTER TABLE MST_EXCHARGE_QUOTE  DROP INDEX PK_MST_EXCHARGE_QUOTE;
+
+END IF;
+
+END??
+DELIMITER ;
+
+CALL schema_change();

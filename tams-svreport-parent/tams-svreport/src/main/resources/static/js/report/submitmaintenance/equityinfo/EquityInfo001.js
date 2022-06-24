@@ -59,32 +59,14 @@ $(function() {
             /*{ title: "SPV登记编码", field: 'spvRegistCode', width: 125},*/
             { title: "投资者名称", field: 'holderName', width: 114},
             { title: "性别", field: 'holderSex', width: 70},
-            { title: "风险偏好", field: 'holderRiskPrefer', width: 100, align:'center'/*界面查询性能优化,
-                render: function (data, type, row, meta) {
-                    if(row.holderRiskPrefer=="01"){
-                        return "<span class='text-Conervative'>保守型</span>";
-                    }
-                    if(row.holderRiskPrefer=="02"){
-                        return "<span class='text-steady'>稳健型</span>";
-                    }
-                    if(row.holderRiskPrefer=="03"){
-                        return "<span class='text-balance'>平衡型</span>";
-                    }
-                    if(row.holderRiskPrefer=="04"){
-                        return "<span class='text-grow'>成长型</span>";
-                    }
-                    if(row.holderRiskPrefer=="05"){
-                        return "<span class='text-progress'>进取型</span>";
-                    }
-                    return row.holderRiskPrefer;
-                }*/
-            },
+            { title: "风险偏好", field: 'holderRiskPreferStr', width: 100, align:'center'},
             { title: "手机号码", field: 'holderCellphone', width: 120},
             { title: "固定电话", field: 'holderTelephone', width: 120},
             { title: "电子邮箱", field: 'holderEmail', width: 150 },
             { title: "经办人", field: 'agent',width:100 },
             { title: "备注", field: 'remark', sortable:false, width: 120},
             {title:"接入检查结果",field: 'interfCheckResult', width: 220},
+            {field: 'holderRiskPrefer',visible: false},
             { field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });

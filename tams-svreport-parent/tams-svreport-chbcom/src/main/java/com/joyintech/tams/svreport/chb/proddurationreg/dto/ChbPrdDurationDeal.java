@@ -69,6 +69,10 @@ public class ChbPrdDurationDeal {
      */
     private String operateMode;
     /**
+     * 变动类型
+     */
+    private String changeType;
+    /**
      * 登记银行代码
      */
     private String registBankCode;
@@ -247,7 +251,14 @@ public class ChbPrdDurationDeal {
         this.operateMode = operateMode;
     }
 
-    
+    public String getChangeType() {
+        return changeType;
+    }
+
+    public void setChangeType(String changeType) {
+        this.changeType = changeType;
+    }
+
     /**
      * 获取 registBankCode
      * @return registBankCode.

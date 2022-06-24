@@ -11,7 +11,7 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="PBC_BANK_CODE" property="pbcBankCode" jdbcType="VARCHAR" />
-        <result column="belogCodeCBRC" property="belogCodeCBRC" jdbcType="VARCHAR" />
+        <result column="BELOGCODECBRC" property="belogCodeCBRC" jdbcType="VARCHAR" />
 
         <result column="IS_FIN_SUB_COMPANY" property="isFinSubCompany" jdbcType="VARCHAR" />
         <result column="INSITITUTE_CODE" property="insitituteCode" jdbcType="VARCHAR" />
@@ -21,7 +21,7 @@
         CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 begin -->
         , PBC_BANK_CODE PBC_BANK_CODE, IS_FIN_SUB_COMPANY IS_FIN_SUB_COMPANY
-        , INSITITUTE_CODE INSITITUTE_CODE,belogCodeCBRC
+        , INSITITUTE_CODE INSITITUTE_CODE,BELOGCODECBRC
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
     </sql>
     <sql id="Sql_All_Data" >

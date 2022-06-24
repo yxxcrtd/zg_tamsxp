@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValtblImportDateTrace" >
+        <id column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="VALDATE" property="valdate" jdbcType="DATE" />
+        <result column="IMPDATE" property="impdate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        UUID UUID, PORTFOLIO_ID PORTFOLIO_ID, VALDATE VALDATE, IMPDATE IMPDATE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper_mysql.Base_Column_List" />
+        from VALTBL_IMPORT_DATE_TRACE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper_mysql.Base_Column_List" />
+        from VALTBL_IMPORT_DATE_TRACE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper_mysql.Base_Column_List" />
+        from VALTBL_IMPORT_DATE_TRACE
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from VALTBL_IMPORT_DATE_TRACE
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValtblImportDateTrace" >
+        insert into VALTBL_IMPORT_DATE_TRACE (UUID, PORTFOLIO_ID, VALDATE, 
+            IMPDATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{uuid,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{valdate,jdbcType=DATE}, 
+            #{impdate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValtblImportDateTrace" >
+        insert into VALTBL_IMPORT_DATE_TRACE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                UUID,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="valdate != null" >
+                VALDATE,
+            </if>
+            <if test="impdate != null" >
+                IMPDATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="valdate != null" >
+                #{valdate,jdbcType=DATE},
+            </if>
+            <if test="impdate != null" >
+                #{impdate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValtblImportDateTrace" >
+        insert into VALTBL_IMPORT_DATE_TRACE(UUID, PORTFOLIO_ID, VALDATE, IMPDATE, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select UUID, PORTFOLIO_ID, VALDATE, IMPDATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from VALTBL_IMPORT_DATE_TRACE
+             where 1 = 1 and UUID = #{uuid,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValtblImportDateTrace" >
+        update VALTBL_IMPORT_DATE_TRACE
+        <set >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="valdate != null" >
+                VALDATE = #{valdate,jdbcType=DATE},
+            </if>
+            <if test="impdate != null" >
+                IMPDATE = #{impdate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValtblImportDateTrace" >
+        update VALTBL_IMPORT_DATE_TRACE
+        set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            VALDATE = #{valdate,jdbcType=DATE},
+            IMPDATE = #{impdate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.queryanalysis.prodsharecount.dao.ProdShareCount001Mapper_mysql">
-    <select id="searchPage" resultType="com.joyintech.tams.report.queryanalysis.prodsharecount.dto.ProdShareCount001Dto">
-        select
-        todayData.PRODID prodId,
-        P.REG_CODE prdRegistCode,
-        P.PRODNAME prodName,
-        todayData.HOLD_DATE holdDate,
-        todayData.CCY ccy,
-        todayData.QTY qty,
-        ifnull(lastDayData.QTY, 0) lastQty,
-        todayData.sumCus,
-        todayData.sumQty,
-        todayData.QTY - ifnull(lastDayData.QTY, 0) changeQty
-        from
-        (
-        SELECT
-        A.REGIST_BANK_CODE,
-        A.PRODID,
-        <!--  A.PRD_REGIST_CODE, -->
-        A.HOLD_DATE,
-        A.CCY,
-        SUM(A.QTY) QTY,
-        SUM(A.CNY_AMT)  sumQty,
-        COUNT(DISTINCT A.INDENTIFY_MARK)  sumCus
-        FROM CHB_INVESTHOLD_INFO A
-        <where>
+	<select id="searchPage" resultType="com.joyintech.tams.report.queryanalysis.prodsharecount.dto.ProdShareCount001Dto">
+		select
+		    todayData.PRODID prodId,
+	        P.REG_CODE prdRegistCode,
+	        P.PRODNAME prodName,
+	        todayData.HOLD_DATE holdDate,
+	        todayData.CCY ccy,
+	        todayData.QTY qty,
+	        ifnull(lastDayData.QTY, 0) lastQty,
+	        todayData.sumCus,
+	        todayData.sumQty,
+	        todayData.QTY - ifnull(lastDayData.QTY, 0) changeQty
+		from
+		  (
+		  SELECT 
+		    A.REGIST_BANK_CODE,
+		    A.PRODID,
+	       <!--  A.PRD_REGIST_CODE, -->
+	        A.HOLD_DATE,
+	        A.CCY,
+	        SUM(A.QTY) QTY,
+	        SUM(A.CNY_AMT)  sumQty,
+           COUNT(DISTINCT A.INDENTIFY_MARK)  sumCus
+	      FROM CHB_INVESTHOLD_INFO A
+		  <where>
             <if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
                 <foreach collection="prdRegistCodeList" item="item" open="and A.PRD_REGIST_CODE in(" separator="," close=")">
-                    #{item,jdbcType=VARCHAR}
+                #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="holdDateStart!=null and holdDateStart!=''">
@@ -38,54 +38,54 @@
                 AND DATE_FORMAT(A.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
             </if>
             <!-- 去除删除状态的持有信息份额统计 -->
-            <if test="1==1">
-                AND A.STATUS &lt;&gt; 'D'
-            </if>
-        </where>
-        <!--modify by wangmin  无需根据产品登记编码过滤-->
-        GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY
-        <!-- GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.PRD_REGIST_CODE,A.HOLD_DATE,A.CCY -->
-        ) todayData
-        left join
-        (
-        SELECT
-        A.REGIST_BANK_CODE,
-        A.PRODID,
-        <!--  A.PRD_REGIST_CODE, -->
-        A.HOLD_DATE,
-        A.CCY,
-        SUM(A.QTY) QTY
-        FROM CHB_INVESTHOLD_INFO A
-        <where>
-            <if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
-                <foreach collection="prdRegistCodeList" item="item" open="and A.PRD_REGIST_CODE in(" separator="," close=")">
+           		<if test="1==1">
+           			AND A.STATUS &lt;&gt; 'D'
+           		</if>
+          </where>
+          <!--modify by wangmin  无需根据产品登记编码过滤--> 
+          GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY
+          <!-- GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.PRD_REGIST_CODE,A.HOLD_DATE,A.CCY -->
+		  ) todayData
+		left join
+         (
+           SELECT 
+                A.REGIST_BANK_CODE,
+                A.PRODID,
+              <!--  A.PRD_REGIST_CODE, --> 
+                A.HOLD_DATE,
+                A.CCY,
+                SUM(A.QTY) QTY
+           FROM CHB_INVESTHOLD_INFO A
+           <where>
+                <if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
+                    <foreach collection="prdRegistCodeList" item="item" open="and A.PRD_REGIST_CODE in(" separator="," close=")">
                     #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="holdDateStartLastDay != null and holdDateStartLastDay !=''">
-                AND DATE_FORMAT(A.HOLD_DATE,'%Y-%m-%d') &gt;= #{holdDateStartLastDay,jdbcType=VARCHAR}
-            </if>
-            <if test="holdDateEndLastDay != null and holdDateEndLastDay != ''">
-                AND DATE_FORMAT(A.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEndLastDay,jdbcType=VARCHAR}
-            </if>
-            <!-- 去除删除状态的持有信息份额统计 -->
-            <if test="1==1">
-                AND A.STATUS &lt;&gt; 'D'
-            </if>
-        </where>
-        <!--modify by wangmin  无需根据产品登记编码过滤-->
-        GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY
-        <!-- GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.PRD_REGIST_CODE,A.HOLD_DATE,A.CCY -->
-        ) lastDayData
-        on todayData.REGIST_BANK_CODE = lastDayData.REGIST_BANK_CODE
-        and todayData.PRODID = lastDayData.PRODID
-        <!--  and todayData.PRD_REGIST_CODE = lastDayData.PRD_REGIST_CODE  -->
-        AND todayData.HOLD_DATE - 1  = lastDayData.HOLD_DATE
-        AND todayData.CCY = lastDayData.CCY
-        <!-- LEFT JOIN SYS_DATADICT_LIST D ON todayData.CCY = D.ITEM_CODE AND D.DICT_CODE = 'CURRENCY_CHB' -->
-        LEFT JOIN CHB_PRDRESIST_CODE P
-        <!-- ON todayData.PRD_REGIST_CODE = P.REG_CODE -->
-        ON todayData.PRODID = P.PRODID
+                    </foreach>
+                </if>
+                <if test="holdDateStartLastDay != null and holdDateStartLastDay !=''">
+                    AND DATE_FORMAT(A.HOLD_DATE,'%Y-%m-%d') &gt;= #{holdDateStartLastDay,jdbcType=VARCHAR}
+                </if>
+                <if test="holdDateEndLastDay != null and holdDateEndLastDay != ''">
+                    AND DATE_FORMAT(A.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEndLastDay,jdbcType=VARCHAR}
+                </if>
+                <!-- 去除删除状态的持有信息份额统计 -->
+           		<if test="1==1">
+           			AND A.STATUS &lt;&gt; 'D'
+           		</if>
+            </where>
+            <!--modify by wangmin  无需根据产品登记编码过滤--> 
+          GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY
+          <!-- GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.PRD_REGIST_CODE,A.HOLD_DATE,A.CCY -->
+         ) lastDayData
+         on todayData.REGIST_BANK_CODE = lastDayData.REGIST_BANK_CODE
+	        and todayData.PRODID = lastDayData.PRODID 
+	       <!--  and todayData.PRD_REGIST_CODE = lastDayData.PRD_REGIST_CODE  -->
+	        AND todayData.HOLD_DATE - 1  = lastDayData.HOLD_DATE 
+	        AND todayData.CCY = lastDayData.CCY
+		<!-- LEFT JOIN SYS_DATADICT_LIST D ON todayData.CCY = D.ITEM_CODE AND D.DICT_CODE = 'CURRENCY_CHB' -->
+        LEFT JOIN CHB_PRDRESIST_CODE P 
+         <!-- ON todayData.PRD_REGIST_CODE = P.REG_CODE -->
+        ON todayData.PRODID = P.PRODID 
         order by todayData.PRODID, todayData.HOLD_DATE, todayData.CCY
-    </select>
+	</select>
 </mapper>

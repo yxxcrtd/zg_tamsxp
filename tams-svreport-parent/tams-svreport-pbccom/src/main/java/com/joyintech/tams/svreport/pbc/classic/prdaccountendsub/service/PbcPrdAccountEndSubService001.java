@@ -135,6 +135,12 @@ public class PbcPrdAccountEndSubService001 extends CommonExportService<PbcPrdAcc
         } else {
             searchParam.put("pbcAccountIdList",null);
         }
+		if (StringUtil.isNotEmpty(searchParam.get("accountId"))){
+			searchParam.put("accountIdList",
+					StringUtil.splitToList(",",(String) searchParam.get("accountId")));
+		} else {
+			searchParam.put("accountIdList",null);
+		}
 	}
 	
 	/**

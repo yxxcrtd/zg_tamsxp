@@ -21,6 +21,7 @@
 		AMT,
 		ORG_CODE,DEPT_CODE,
 		CREATE_USER,CREATE_TIME)
+		values(
 		<foreach collection="insertDataList" item="dto" index="index"  separator="union all"  open="("  close=")">
 			select
 			#{dto.cdate,jdbcType=DATE},
@@ -35,28 +36,29 @@
 			NOW()
 			from dual
 		</foreach>
+		)
 	</insert>
 
 	<insert id="insertPos" parameterType="com.joyintech.tams.svreport.position.dto.ChbPrdPosition" >
- 		insert into CHB_PRD_FEE_POSITION 
-			(CDATE, PROD_ID, CCY,
-			FEE_TYPE, FEE_SECTYPE,
-			AMT,
-			ORG_CODE,DEPT_CODE,
-			CREATE_USER,CREATE_TIME)
-		values(  
-			#{cdate,jdbcType=DATE}, 
-			#{prodId,jdbcType=VARCHAR}, 
-			#{ccy,jdbcType=VARCHAR}, 
-			#{feeType,jdbcType=VARCHAR}, 
-			#{feeSectype,jdbcType=VARCHAR},
-			#{amt,jdbcType=DECIMAL}, 	            
-			#{orgCode,jdbcType=VARCHAR}, 
-			#{deptCode,jdbcType=VARCHAR},
-			#{createUser,jdbcType=VARCHAR},
-			now()
+		insert into CHB_PRD_FEE_POSITION
+		(CDATE, PROD_ID, CCY,
+		FEE_TYPE, FEE_SECTYPE,
+		AMT,
+		ORG_CODE,DEPT_CODE,
+		CREATE_USER,CREATE_TIME)
+		values(
+		#{cdate,jdbcType=DATE},
+		#{prodId,jdbcType=VARCHAR},
+		#{ccy,jdbcType=VARCHAR},
+		#{feeType,jdbcType=VARCHAR},
+		#{feeSectype,jdbcType=VARCHAR},
+		#{amt,jdbcType=DECIMAL},
+		#{orgCode,jdbcType=VARCHAR},
+		#{deptCode,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		now()
 		)
-  </insert>
+	</insert>
 
 	<delete id="deletePosition" parameterType="map">
 		delete from

@@ -28,27 +28,27 @@
         <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
     </resultMap>
     <insert id="insert" parameterType="java.util.List" >
-        insert into REP_ASSET_INDEX (SEQ_NO, BOOKSET_ID, PROD_ID, 
-            VALUE_DATE, BUSI_ID, POS_AMT, 
-            TDY_INTINCEXP, MDATE, 
-            TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL, 
-            END_DAYS_1, END_DAYS_2, AL_FLAG, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME, INPUT_TYPE, 
-            INPUT_USER, ADAPTER_ID, RATE_TYPE
-            )
-              <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-                 close=" from dual)">
-       #{item.seqNo,jdbcType=VARCHAR}, #{item.booksetId,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, 
-            #{item.valueDate,jdbcType=DATE}, #{item.busiId,jdbcType=VARCHAR}, #{item.posAmt,jdbcType=DECIMAL}, 
-            #{item.tdyIntincexp,jdbcType=DECIMAL},  #{item.mdate,jdbcType=DATE}, 
-            #{item.tdyPosition,jdbcType=DECIMAL}, #{item.tdyCostAmt,jdbcType=DECIMAL}, #{item.tdyFloatIngpl,jdbcType=DECIMAL}, 
-            #{item.endDays1,jdbcType=DECIMAL}, #{item.endDays2,jdbcType=DECIMAL}, #{item.alFlag,jdbcType=VARCHAR}, 
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.inputType,jdbcType=VARCHAR}, 
+        insert into REP_ASSET_INDEX (SEQ_NO, BOOKSET_ID, PROD_ID,
+        VALUE_DATE, BUSI_ID, POS_AMT,
+        TDY_INTINCEXP, MDATE,
+        TDY_POSITION, TDY_COST_AMT, TDY_FLOAT_INGPL,
+        END_DAYS_1, END_DAYS_2, AL_FLAG,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, INPUT_TYPE,
+        INPUT_USER, ADAPTER_ID, RATE_TYPE
+        ) values
+        <foreach collection="list" item="item" separator="," open=" " close=" ">
+            (
+            #{item.seqNo,jdbcType=VARCHAR}, #{item.booksetId,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR},
+            #{item.valueDate,jdbcType=DATE}, #{item.busiId,jdbcType=VARCHAR}, #{item.posAmt,jdbcType=DECIMAL},
+            #{item.tdyIntincexp,jdbcType=DECIMAL},  #{item.mdate,jdbcType=DATE},
+            #{item.tdyPosition,jdbcType=DECIMAL}, #{item.tdyCostAmt,jdbcType=DECIMAL}, #{item.tdyFloatIngpl,jdbcType=DECIMAL},
+            #{item.endDays1,jdbcType=DECIMAL}, #{item.endDays2,jdbcType=DECIMAL}, #{item.alFlag,jdbcType=VARCHAR},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.inputType,jdbcType=VARCHAR},
             #{item.inputUser,jdbcType=VARCHAR}, #{item.adapterId,jdbcType=VARCHAR}, #{item.rateType,jdbcType=VARCHAR}
-            
-            </foreach>
+            )
+        </foreach>
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.repassetindexInterf.dto.RepAssetIndex" >
         insert into REP_ASSET_INDEX

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.svreport.datacheck.dao.CheckRuleMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.datacheck.dto.CheckRule" >
+        <id column="CHECKRULEID" property="checkruleid" jdbcType="CHAR" />
+        <result column="DATATYPE" property="datatype" jdbcType="VARCHAR" />
+        <result column="CHECKCLASS" property="checkclass" jdbcType="VARCHAR" />
+        <result column="CHECKMETHOD" property="checkmethod" jdbcType="VARCHAR" />
+        <result column="SRCPROPERTY" property="srcproperty" jdbcType="VARCHAR" />
+        <result column="COMPARETO" property="compareto" jdbcType="VARCHAR" />
+        <result column="OBJVALUE" property="objvalue" jdbcType="VARCHAR" />
+        <result column="NULLABLE" property="nullable" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+      CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE,
+      REMARK, STATUS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from CHB_DATACHECK_RULE
+        where CHECKRULEID = #{checkruleid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+       delete from CHB_DATACHECK_RULE
+       where CHECKRULEID = #{checkruleid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.CheckRule" >
+        insert into CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS,
+        CHECKMETHOD, SRCPROPERTY, COMPARETO, NULLABLE,
+        OBJVALUE, REMARK, STATUS)
+        values (#{checkruleid,jdbcType=CHAR}, #{datatype,jdbcType=VARCHAR}, #{checkclass,jdbcType=VARCHAR},
+         #{checkmethod,jdbcType=VARCHAR}, #{srcproperty,jdbcType=VARCHAR}, #{compareto,jdbcType=VARCHAR},
+        #{nullable,jdbcType=CHAR},
+        #{objvalue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.CheckRule" >
+        insert into CHB_DATACHECK_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="checkruleid != null" >
+                CHECKRULEID,
+            </if>
+            <if test="datatype != null" >
+                DATATYPE,
+            </if>
+            <if test="checkclass != null" >
+                CHECKCLASS,
+            </if>
+            <if test="checkmethod != null" >
+                CHECKMETHOD,
+            </if>
+            <if test="srcproperty != null" >
+                SRCPROPERTY,
+            </if>
+            <if test="compareto != null" >
+                COMPARETO,
+            </if>
+            <if test="objvalue != null" >
+                OBJVALUE,
+            </if>
+            <if test="nullable != null" >
+                NULLABLE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="checkruleid != null" >
+                #{checkruleid,jdbcType=CHAR},
+            </if>
+            <if test="datatype != null" >
+                #{datatype,jdbcType=VARCHAR},
+            </if>
+            <if test="checkclass != null" >
+                #{checkclass,jdbcType=VARCHAR},
+            </if>
+            <if test="checkmethod != null" >
+                #{checkmethod,jdbcType=VARCHAR},
+            </if>
+            <if test="srcproperty != null" >
+                #{srcproperty,jdbcType=VARCHAR},
+            </if>
+            <if test="compareto != null" >
+                #{compareto,jdbcType=VARCHAR},
+            </if>
+            <if test="objvalue != null" >
+                #{objvalue,jdbcType=VARCHAR},
+            </if>
+            <if test="nullable != null" >
+                #{nullable,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.CheckRule" >
+        update CHB_DATACHECK_RULE
+        <set >
+            <if test="datatype != null" >
+                DATATYPE = #{datatype,jdbcType=VARCHAR},
+            </if>
+            <if test="checkclass != null" >
+                CHECKCLASS = #{checkclass,jdbcType=VARCHAR},
+            </if>
+            <if test="checkmethod != null" >
+                CHECKMETHOD = #{checkmethod,jdbcType=VARCHAR},
+            </if>
+            <if test="srcproperty != null" >
+                SRCPROPERTY = #{srcproperty,jdbcType=VARCHAR},
+            </if>
+            <if test="compareto != null" >
+                COMPARETO = #{compareto,jdbcType=VARCHAR},
+            </if>
+            <if test="objvalue != null" >
+                OBJVALUE = #{objvalue,jdbcType=VARCHAR},
+            </if>
+            <if test="nullable != null" >
+                NULLABLE = #{nullable,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where CHECKRULEID = #{checkruleid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.CheckRule" >
+        update CHB_DATACHECK_RULE
+        set DATATYPE = #{datatype,jdbcType=VARCHAR},
+        CHECKCLASS = #{checkclass,jdbcType=VARCHAR},
+        CHECKMETHOD = #{checkmethod,jdbcType=VARCHAR},
+        SRCPROPERTY = #{srcproperty,jdbcType=VARCHAR},
+        COMPARETO = #{compareto,jdbcType=VARCHAR},
+        OBJVALUE = #{objvalue,jdbcType=VARCHAR},
+        NULLABLE = #{nullable,jdbcType=CHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=VARCHAR}
+        where CHECKRULEID = #{checkruleid,jdbcType=CHAR}
+    </update>
+
+    <select id="selectByDatatype" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from CHB_DATACHECK_RULE
+        where STATUS='E'
+        and DATATYPE=#{datatype,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByDatatypeByTypeAndColumns" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_DATACHECK_RULE
+        where STATUS='E'
+        and DATATYPE=#{datatype,jdbcType=VARCHAR}
+        <if test="columnList != null and columnList.size() > 0">
+            <foreach collection="columnList" item="column"
+                     open=" AND SRCPROPERTY IN (" separator="," close=")">
+                #{column,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+</mapper>

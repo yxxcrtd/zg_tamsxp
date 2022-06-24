@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.agentinstitution.dao.SvrAgentInstitutionDBInterfMapper_mysql" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbAgentInstitutionInfo">
+		SELECT
+		AGENT_INSTITUTION_CODE,
+		AGENT_INSTITUTION_NAME,
+		ISSUE_PARTY_ID,
+		STATUS,
+		ENCLOSURE_NUM,
+		ENCLOSURE_ADDRESS,
+		ENCLOSURE_CHANGE_FLAG,
+		FILE_NO,
+		DATA_DATE,
+		CREATE_DEPT,
+		ORG_CODE,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		REMARK
+	    FROM CHB_AGENT_INSTITUTION_INFO
+		WHERE DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+
+	</select>
+	
+	 <select id="selectRegAgentInstitutionData" resultType="com.joyintech.tams.common.base.entity.ChbAgentInstitutionSub">
+		SELECT
+		 REGIST_SEQNO,
+		 AGENT_INSTITUTION_CODE,
+		 AGENT_INSTITUTION_NAME,
+		 ISSUE_PARTY_ID,
+		 STATUS,
+		 SUMIT_SEQ,
+		 FILE_NO,
+		 ENCLOSURE_NUM,
+		 ENCLOSURE_ADDRESS,
+		 CHB_SUBMIT_DEADLINE,
+		 SUBMIT_DEADLINE,
+		 SEND_STATUS,
+		 SUBMIT_TIME,
+		 SUBMIT_FEEDBACK_STATUS,
+		 SUBMIT_FEEDBACK_MSG,
+		 ENCLOSURE_NUM,
+		 ENCLOSURE_ADDRESS,
+		 ENCLOSURE_CHANGE_FLAG,
+		 DATA_DATE,
+		 REMARK,
+		 CREATE_DEPT,
+		 ORG_CODE,
+		 CREATE_USER,
+		 CREATE_TIME,
+		 UPDATE_USER,
+		 UPDATE_TIME
+		FROM CHB_AGENT_INSTITUTION_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+	
+	<delete id="deleteBatchData" parameterType="map">
+		DELETE FROM CHB_AGENT_INSTITUTION_SUB
+		<where>
+  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+				AGENT_INSTITUTION_CODE = #{item.agentInstitutionCode,jdbcType=VARCHAR}
+  				AND SEND_STATUS = '01'
+    		</foreach>
+  		</where>
+	</delete>
+
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbAgentInstitutionSub">
+		insert into CHB_AGENT_INSTITUTION_SUB(
+		REGIST_SEQNO, AGENT_INSTITUTION_CODE, AGENT_INSTITUTION_NAME, ISSUE_PARTY_ID,
+		STATUS,SUMIT_SEQ, CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, SEND_STATUS,FILE_NO,
+		ENCLOSURE_NUM,ENCLOSURE_ADDRESS,DATA_DATE,REMARK,CREATE_DEPT,ORG_CODE,
+		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+		values(
+		#{registSeqno,jdbcType=VARCHAR},#{agentInstitutionCode,jdbcType=VARCHAR},#{agentInstitutionName,jdbcType=VARCHAR},
+		#{issuePartyId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
+		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{fileNo,jdbcType=VARCHAR},#{enclosureNum,jdbcType=VARCHAR},
+		#{enclosureAddress,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
+	</insert>
+
+</mapper>

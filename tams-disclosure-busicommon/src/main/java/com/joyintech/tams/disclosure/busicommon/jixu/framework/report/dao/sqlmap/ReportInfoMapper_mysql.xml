@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.dao.ReportInfoMapper_mysql">
+    <select id="getReportInfoByID" resultType="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo" parameterType="java.lang.String" >
+        select
+        REP_REPORTINFO.*
+        from REP_REPORTINFO
+        where REPORTID = #{reportID,jdbcType=VARCHAR}
+    </select>
+    <select id="getReportInfoByURI" resultType="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo" parameterType="java.lang.String" >
+        select
+        REP_REPORTINFO.*
+        from REP_REPORTINFO
+        where URI = #{uri,jdbcType=VARCHAR}
+    </select>
+    <select id="loadEntityAll" resultType="com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo">
+        select
+        REP_REPORTINFO.*
+        from REP_REPORTINFO
+    </select>
+</mapper>

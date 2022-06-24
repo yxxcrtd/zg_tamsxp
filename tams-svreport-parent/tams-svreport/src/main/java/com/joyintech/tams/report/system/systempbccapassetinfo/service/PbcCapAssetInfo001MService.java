@@ -1,6 +1,7 @@
 package com.joyintech.tams.report.system.systempbccapassetinfo.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -10,6 +11,7 @@ import com.joyintech.tams.report.common.dto.SvrAjaxResult;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -113,10 +115,14 @@ public class PbcCapAssetInfo001MService extends BaseService<PbcCapAssetInfo001Dt
         param.put("dataList", ExcelUtil.getDataList(fileName));
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForObject(
+        SvrAjaxResult svrAjaxResult = restTemplate.postForObject(
                 SvrServiceApplication.COMMON_SERVICE_NAME + "/PbcCapAssetInfo/checkConfirmMsgForImportData",
                 param,
                 SvrAjaxResult.class);
+        if(StringUtils.isNotBlank(svrAjaxResult.getMessage())){
+            svrAjaxResult.setMessageType(MessageType.确认消息);
+        }
+        return svrAjaxResult;
     }
 
     /**

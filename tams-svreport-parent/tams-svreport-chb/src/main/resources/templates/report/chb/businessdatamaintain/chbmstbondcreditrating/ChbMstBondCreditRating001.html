@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="~{layout/default}">
+<meta charset="UTF-8">
+<title data-th-text="#{ChbMstBondCreditRating001}">债券评级信息</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<!-- 画面内容 -->
+		<div class="form-button-area" >
+			<a id="ChbMstBondCreditRating001_btn_add" class="layui-btn layui-btn-sm btn-create"
+			   data-th-text="#{SysCommon.create}">新建</a>
+			<a id="ChbMstBondCreditRating001_btn_delete" class="layui-btn layui-btn-sm btn-delete"
+			   data-th-text="#{SysCommon.delete}">删除</a>
+			<a id="ChbMstBondCreditRating001_btn_import" class="layui-btn layui-btn-sm btn-import btn-default">导入</a>
+		</div>
+		<div class="joyin-form-wrap joyin-filter-form condition-area">
+			<form class="layui-form" id="searchForm">
+
+				<div class="layui-form-item">
+
+
+                    <div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.oType}">评级对象</label>
+						<div class="layui-input-inline input-inline">
+							<input  id="oType" name="oType"
+								class="layui-input form-input input-select" placeholder="请选择"
+								data-th-data-result="${MAIN_GRADE_TYPE}" allowClear="true">
+						</div>
+					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.oName}">债券名称</label>
+						<div class="layui-input-inline input-inline">
+							<select id="oCode" class="input-select"
+									data-th-data-url='@{/chb/businessdatamaintain/chbmstbondcreditrating/chbmstbondcreditrating001/getMutliCode}'
+									initvalue="" placeholder="请选择"
+									data-th-placeholder="#{SysCommon.selectplaceholder}"
+									allowClear="true" multiple="multiple">
+							</select>
+
+						</div>
+					</div>
+					<div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
+						<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.shortLongTerm}">评级类型</label>
+						<div class="layui-input-inline input-inline">
+							<input type="text" id="shortLongTerm" name="shortLongTerm"
+								   class="layui-input form-input input-select" placeholder="请选择"
+								   data-th-data-result="${LONG_SHORT_TERM}" allowClear="true">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+                    <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
+                	<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.gradeDate}">评级日期</label>
+						<div class="layui-input-inline input-inline">
+							<input type="text" id="gradeDate" name="gradeDate"
+								class="layui-input form-input input-dateRangeSelect"  data-th-value = '${gradeDate}'
+								placeholder="请选择、支持区间"  >
+						</div>
+                	</div>
+					<div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
+						<label class="layui-form-label form-lable" data-th-text="#{ChbMstBondCreditRating001.status}">数据状态</label>
+						<div class="layui-input-inline input-inline">
+							<input type="text" id="status" name="status"
+								   class="layui-input form-input input-select" placeholder="请选择"
+								   data-th-data-result="${MAINTAIN_STATUS}" allowClear="true">
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+        <div>
+            <table class="layui-table" id="dataTable"></table>
+        </div>
+	</div>
+
+	<div layout:fragment="script">
+		<script data-th-src="@{/js/report/chb/businessdatamaintain/chbmstbondcreditrating/ChbMstBondCreditRating001.js}"
+				type="text/javascript"></script>
+	</div>
+</body>
+</html>

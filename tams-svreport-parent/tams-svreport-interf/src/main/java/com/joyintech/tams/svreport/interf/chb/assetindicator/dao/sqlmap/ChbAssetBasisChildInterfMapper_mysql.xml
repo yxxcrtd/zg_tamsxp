@@ -26,9 +26,9 @@
 		<result column="MD5PRIMARYKEY" property="md5primarykey" jdbcType="CHAR" />
 	</resultMap>
 	<sql id="Base_Column_List" >
-    VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE, 
-    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, 
-    REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER, 
+    VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+    REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
     UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey
   </sql>
 	<select id="getTableColumnList" resultType="string">
@@ -51,132 +51,19 @@
 		</if>
 	</delete>
 	<insert id="insertChbAssetBasisData" >
-		UPDATE  CHB_ASSETS_BASIS_DATA_CHILD as A,
-		(
-		select VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY
-		from
+		insert into CHB_ASSETS_BASIS_DATA_CHILD(VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+		POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+		REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey)
+		select VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+		POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+		REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey from
 		(
 		select TEMP.* from
 		(
 		<foreach collection="newDataList" item="item"  separator="union all">
-			select
-			#{item.valId,jdbcType=VARCHAR} VAL_ID,
-			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
-			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
-			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
-			#{item.mdate,jdbcType=DATE} MDATE,
-			#{item.posAmt,jdbcType=DECIMAL} POS_AMT,
-			#{item.tdyCostAmt,jdbcType=DECIMAL} TDY_COST_AMT,
-			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
-			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
-			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
-			#{item.remark,jdbcType=VARCHAR} REMARK,
-			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-			#{item.status,jdbcType=VARCHAR} STATUS,
-			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
-			FROM
-			DUAL
-		</foreach>
-		) TEMP
-		) de
-		) AS B
-		set
-		A.VAL_ID = B.VAL_ID,
-		A.MDATE = B.MDATE,
-		A.POS_AMT = B.POS_AMT,
-		A.TDY_COST_AMT = B.TDY_COST_AMT,
-		A.TDY_FLOAT_INGPL = B.TDY_FLOAT_INGPL,
-		A.TDY_INTINCEXP = B.TDY_INTINCEXP,
-		A.DELAY_PAY_AMT = B.DELAY_PAY_AMT,
-		A.REMARK = B.REMARK,
-		A.CREATE_TIME = B.CREATE_TIME,
-		A.UPDATE_TIME = B.UPDATE_TIME,
-		A.CREATE_DEPT = B.CREATE_DEPT,
-		A.ORG_CODE = B.ORG_CODE,
-		A.DEPT_CODE = B.DEPT_CODE,
-		A.CREATE_USER = B.CREATE_USER,
-		A.UPDATE_USER = B.UPDATE_USER,
-		A.STATUS = B.STATUS,
-		A.DATA_SOURCE = B.DATA_SOURCE,
-		A.MD5PRIMARYKEY = B.MD5PRIMARYKEY
-		where A.PROD_ID = B.PROD_ID
-		AND A.ASSET_ID = B.ASSET_ID
-		AND A.VALUE_DATE = B.VALUE_DATE;
-
-		insert into HB_ASSETS_BASIS_DATA_CHILD(VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY)
-		select VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY from
-		(
-		select TEMP.* from
-		(
-		<foreach collection="newDataList" item="item"  separator="union all">
-			select
+			SELECT
 			#{item.valId,jdbcType=VARCHAR} VAL_ID,
 			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
 			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
@@ -204,21 +91,77 @@
 		) TEMP where not exists (select 1 from CHB_ASSETS_BASIS_DATA_CHILD CII where CII.PROD_ID = TEMP.PROD_ID
 		AND CII.ASSET_ID = TEMP.ASSET_ID
 		AND CII.VALUE_DATE = TEMP.VALUE_DATE)
-		) de;
+		) de ;
+
+		UPDATE  CHB_ASSETS_BASIS_DATA_CHILD as A,
+		(
+		select VAL_ID,
+		MDATE,
+		POS_AMT,
+		TDY_COST_AMT,
+		TDY_FLOAT_INGPL,
+		TDY_INTINCEXP,
+		DELAY_PAY_AMT,
+		REMARK,
+		CREATE_TIME,
+		UPDATE_TIME,
+		CREATE_DEPT,
+		ORG_CODE,
+		DEPT_CODE,
+		CREATE_USER,
+		UPDATE_USER,
+		STATUS,
+		DATA_SOURCE,
+		MD5PRIMARYKEY from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="newDataList" item="item"  separator="union all">
+			SELECT
+			#{item.valId,jdbcType=VARCHAR} VAL_ID,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
+			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
+			#{item.mdate,jdbcType=DATE} MDATE,
+			#{item.posAmt,jdbcType=DECIMAL} POS_AMT,
+			#{item.tdyCostAmt,jdbcType=DECIMAL} TDY_COST_AMT,
+			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
+			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
+			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
+			FROM
+			DUAL
+		</foreach>
+		) TEMP
+		) de
+		) AS B
+		set  A.* = B.* where exists (select 1 from CHB_ASSETS_BASIS_DATA_CHILD CII where CII.PROD_ID = TEMP.PROD_ID
+		AND CII.ASSET_ID = TEMP.ASSET_ID
+		AND CII.VALUE_DATE = TEMP.VALUE_DATE );
 	</insert>
 	<delete id="deleteBatchList" >
-		begin
+		/*begin*/
 		<foreach collection="dataList" item="item" index="index" separator=";">
 			delete from CHB_ASSETS_BASIS_DATA_CHILD
 			where ASSET_ID = #{item.assetId,jdbcType=VARCHAR}  and VALUE_DATE = #{item.valueDate,jdbcType=TIMESTAMP}
 			and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+		;/*end;*/
 	</delete>
 
 
 	<select id="isUpdated" parameterType="java.util.Date" resultType="java.util.Date">
-	  select 
+	  select
 	    distinct CDATE cdate
 	  from PTL_SEC_VALUTION
 	  where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}

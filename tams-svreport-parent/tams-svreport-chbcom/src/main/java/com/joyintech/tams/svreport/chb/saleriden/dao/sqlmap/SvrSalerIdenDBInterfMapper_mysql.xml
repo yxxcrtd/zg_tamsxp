@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.saleriden.dao.SvrSalerIdenDBInterfMapper_mysql" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbSalerIdenInfo">
+		SELECT
+		SALER_INS_NO,
+		SALER_REGIST_NO,
+		SALER_INST_CODE,
+		SALER_NAME,
+		SALER_SEX,
+		SALER_BIRTHDAY,
+		SALER_CREDENT_TYPE,
+		SALER_OTHER_CREDENT_NAME,
+		SALER_CREDENT_NO,
+		SALER_AREA_TYPE,
+		SALER_ORG_CODE,
+		SALER_DEPT,
+		SALER_POSITION,
+		SALER_EDU_LEVEL,
+		SALER_DEGREE,
+		SALER_WORK_START_YMD,
+		SALER_FINANCE_START_YMD,
+		SALER_START_YMD,
+		SALER_LEVLE,
+		SALER_CERTIFICATE_TYPE,
+		SALER_CHB_TRAIN_NO,
+		SALER_RISK_LEVEL,
+		SALER_QUALIFICATION,
+		SALER_TEL,
+		SALER_MOBILE,
+		SALER_MAIL,
+		SALER_STATUS,
+		REMARK,
+		STATUS,
+		DATA_DATE,
+		CREATE_DEPT,
+		ORG_CODE,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		REMARK
+	    FROM CHB_SALER_IDEN_INFO
+		WHERE DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+	
+	 <select id="selectRegSalerIdenData" resultType="com.joyintech.tams.common.base.entity.ChbSalerIdenSub">
+		SELECT
+		 REGIST_SEQNO,
+		 SALER_INS_NO,
+		 SALER_REGIST_NO,
+		 SALER_INST_CODE,
+		 SALER_NAME,
+		 SALER_SEX,
+		 SALER_BIRTHDAY,
+		 SALER_CREDENT_TYPE,
+		 SALER_OTHER_CREDENT_NAME,
+		 SALER_CREDENT_NO,
+		 SALER_AREA_TYPE,
+		 SALER_ORG_CODE,
+		 SALER_DEPT,
+		 SALER_POSITION,
+		 SALER_EDU_LEVEL,
+		 SALER_DEGREE,
+		 SALER_WORK_START_YMD,
+		 SALER_FINANCE_START_YMD,
+		 SALER_START_YMD,
+		 SALER_LEVLE,
+		 SALER_CERTIFICATE_TYPE,
+		 SALER_CHB_TRAIN_NO,
+		 SALER_RISK_LEVEL,
+		 SALER_QUALIFICATION,
+		 SALER_TEL,
+		 SALER_MOBILE,
+		 SALER_MAIL,
+		 SALER_STATUS,
+		 REMARK,
+		 STATUS,
+		 SUMIT_SEQ,
+		 CHB_SUBMIT_DEADLINE,
+		 SUBMIT_DEADLINE,
+		 SEND_STATUS,
+		 SUBMIT_TIME,
+		 SUBMIT_FEEDBACK_STATUS,
+		 SUBMIT_FEEDBACK_MSG,
+		 DATA_DATE,
+		 CREATE_DEPT,
+		 ORG_CODE,
+		 CREATE_USER,
+		 CREATE_TIME,
+		 UPDATE_USER,
+		 UPDATE_TIME
+		FROM CHB_SALER_IDEN_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+	
+	<delete id="deleteBatchData" parameterType="map">
+		DELETE FROM CHB_SALER_IDEN_SUB
+		<where>
+  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+				SALER_INS_NO = #{item.salerInsNo,jdbcType=VARCHAR}
+  				AND SEND_STATUS = '01'
+    		</foreach>
+  		</where>
+	</delete>
+
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbSalerIdenSub">
+		insert into CHB_SALER_IDEN_SUB(
+		REGIST_SEQNO,SALER_INS_NO, SALER_REGIST_NO, SALER_INST_CODE,
+		SALER_NAME, SALER_SEX, SALER_BIRTHDAY,
+		SALER_CREDENT_TYPE, SALER_OTHER_CREDENT_NAME,
+		SALER_CREDENT_NO, SALER_AREA_TYPE, SALER_ORG_CODE,
+		SALER_DEPT, SALER_POSITION, SALER_EDU_LEVEL,
+		SALER_DEGREE, SALER_WORK_START_YMD, SALER_FINANCE_START_YMD,
+		SALER_START_YMD, SALER_LEVLE, SALER_CERTIFICATE_TYPE,
+		SALER_CHB_TRAIN_NO, SALER_RISK_LEVEL, SALER_QUALIFICATION,
+		SALER_TEL, SALER_MOBILE, SALER_MAIL,
+		SALER_STATUS, REMARK, STATUS,SUMIT_SEQ, CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, SEND_STATUS,
+		DATA_DATE,CREATE_DEPT,ORG_CODE, CREATE_USER, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME)
+		values(
+		#{registSeqno,jdbcType=VARCHAR},#{salerInsNo,jdbcType=VARCHAR}, #{salerRegistNo,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR},
+		#{salerName,jdbcType=VARCHAR}, #{salerSex,jdbcType=VARCHAR}, #{salerBirthday,jdbcType=DATE},
+		#{salerCredentType,jdbcType=VARCHAR}, #{salerOtherCredentName,jdbcType=VARCHAR},
+		#{salerCredentNo,jdbcType=VARCHAR}, #{salerAreaType,jdbcType=VARCHAR}, #{salerOrgCode,jdbcType=VARCHAR},
+		#{salerDept,jdbcType=VARCHAR}, #{salerPosition,jdbcType=VARCHAR}, #{salerEduLevel,jdbcType=VARCHAR},
+		#{salerDegree,jdbcType=VARCHAR}, #{salerWorkStartYmd,jdbcType=VARCHAR}, #{salerFinanceStartYmd,jdbcType=VARCHAR},
+		#{salerStartYmd,jdbcType=VARCHAR}, #{salerLevle,jdbcType=VARCHAR}, #{salerCertificateType,jdbcType=VARCHAR},
+		#{salerChbTrainNo,jdbcType=VARCHAR}, #{salerRiskLevel,jdbcType=VARCHAR}, #{salerQualification,jdbcType=VARCHAR},
+		#{salerTel,jdbcType=VARCHAR}, #{salerMobile,jdbcType=VARCHAR}, #{salerMail,jdbcType=VARCHAR},
+		#{salerStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
+		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
+	</insert>
+
+</mapper>

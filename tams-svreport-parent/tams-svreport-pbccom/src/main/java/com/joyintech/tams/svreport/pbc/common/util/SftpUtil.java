@@ -82,7 +82,7 @@ public class SftpUtil {
 	            JSch jsch = new JSch();
 	            jsch.getSession(userName, ftpIp, ftpPort);
 	            sshSession = jsch.getSession(userName, ftpIp, ftpPort);
-	            sshSession.setPassword(Base64.decryptData(password));
+	            sshSession.setPassword(password);
 	            Properties sshConfig = new Properties();
 	            sshConfig.put("StrictHostKeyChecking", "no");
 	            sshSession.setConfig(sshConfig);

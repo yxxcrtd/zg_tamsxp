@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -86,8 +88,10 @@ public class ChbProdDeclareFileImpService extends FileImpService{
     
 	@Autowired
 	private SqlSessionTemplate template;
+
+	@Autowired
+	private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
 	
-    
 //    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
@@ -99,7 +103,10 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 //		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) dataMap.get("list");
-		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) convertMapToEntity(posList,ChbPrdDeclareInfoDto.class);
+		List<ChbPrdDeclareInfoDto> list = (List<ChbPrdDeclareInfoDto>) convertMapToEntity(posList,ChbPrdDeclareInfoDto.class, dataSource);
+
+		chbPrdDeclareInfoMapper.deleteChbPrdDeclareInfoByKey(list);
+		chbPrdDeclareInfoMapper.deleteChbPrdDeclareInfoErroDataByKey(list);
 		list.stream().forEach(dto->{
 //			dto.setDatasource(dataSource);
 			dto.setDeclareUuid(IDGenerator.generate(36));
@@ -305,7 +312,37 @@ public class ChbProdDeclareFileImpService extends FileImpService{
 
 	}
 
-
+	/**
+	 * 功能:文件处理方法
+	 * 描述：
+	 *      1.parseFile --将文件转换为Map<String,String>
+	 *      2.checkData --校验数据
+	 *      3.saveData --入库
+	 * @since 1.7.0
+	 * @version 1.7.0
+	 * @author：weiyuqiang 2019年5月5日
+	 * @see com.joyintech.tams.common.FileImpService#importDB(java.util.List)
+	 */
+	@Override
+	public String importDB(List<ExcelValidDto> listExcel, List<Map<String, String>> investTradeList, InterfFile interfFile, String date) {
+		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.产品申报信息接口数据.getCode());
+		if (interfConfig == null){
+			logger.info("CHB_INTERF_CONFIG表中无配置项！");
+			return "fail";
+		}
+		checkImportData(listExcel, investTradeList, interfFile.getFilename(), ChbCheckTableInfo.个人产品申报登记INFO,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
+		if (CollectionUtils.isEmpty(investTradeList)){
+			return "success";
+		}
+		String saveFlag = interfConfig.getContentType();
+		String result= "";
+		if(investTradeList.size()>0){
+			result = saveData(investTradeList, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+		}
+		// 更新系统配置时间
+		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.产品申报信息接口数据.getCode());
+		return result;
+	}
 	
 	
 }

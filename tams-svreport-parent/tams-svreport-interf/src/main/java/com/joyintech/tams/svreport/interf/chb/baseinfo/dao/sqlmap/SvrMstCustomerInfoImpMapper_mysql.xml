@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoImpMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfo">
-    <id column="CUSTOMER_ID" jdbcType="VARCHAR" property="customerId" />
-    <result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName" />
-    <result column="CUSTOMER_ABBR" jdbcType="VARCHAR" property="customerAbbr" />
-    <result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType" />
-    <result column="IS_ISSUER" jdbcType="VARCHAR" property="isIssuer" />
-    <result column="IS_ASSTE_MANAGER" jdbcType="VARCHAR" property="isAssteManager" />
-    <result column="IS_TRUSTER" jdbcType="VARCHAR" property="isTruster" />
-    <result column="IS_SALER" jdbcType="VARCHAR" property="isSaler" />
-    <result column="IS_FINANCIER" jdbcType="VARCHAR" property="isFinancier" />
-    <result column="IS_GUARANTEE" jdbcType="VARCHAR" property="isGuarantee" />
-    <result column="IS_RATING_AGENCIES" jdbcType="VARCHAR" property="isRatingAgencies" />
-    <result column="IS_PLEDGOR" jdbcType="VARCHAR" property="isPledgor" />
-    <result column="IS_DEPOSIT_BANK" jdbcType="VARCHAR" property="isDepositBank" />
-    <result column="IS_INVEST_ADVISER" jdbcType="VARCHAR" property="isInvestAdviser" />
-    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
-    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
-    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
-    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+        <id column="CUSTOMER_ID" jdbcType="VARCHAR" property="customerId" />
+        <result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName" />
+        <result column="CUSTOMER_ABBR" jdbcType="VARCHAR" property="customerAbbr" />
+        <result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType" />
+        <result column="IS_ISSUER" jdbcType="VARCHAR" property="isIssuer" />
+        <result column="IS_ASSTE_MANAGER" jdbcType="VARCHAR" property="isAssteManager" />
+        <result column="IS_TRUSTER" jdbcType="VARCHAR" property="isTruster" />
+        <result column="IS_SALER" jdbcType="VARCHAR" property="isSaler" />
+        <result column="IS_FINANCIER" jdbcType="VARCHAR" property="isFinancier" />
+        <result column="IS_GUARANTEE" jdbcType="VARCHAR" property="isGuarantee" />
+        <result column="IS_RATING_AGENCIES" jdbcType="VARCHAR" property="isRatingAgencies" />
+        <result column="IS_PLEDGOR" jdbcType="VARCHAR" property="isPledgor" />
+        <result column="IS_DEPOSIT_BANK" jdbcType="VARCHAR" property="isDepositBank" />
+        <result column="IS_INVEST_ADVISER" jdbcType="VARCHAR" property="isInvestAdviser" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="IS_BROKER" property="isBroker" jdbcType="VARCHAR" />
+        <result column="IS_COUNTER" property="isCounter" jdbcType="VARCHAR" />
+        <result column="IS_BANK" property="isBank" jdbcType="VARCHAR" />
+        <result column="IS_FUTURE_COM" property="isFutureCom" jdbcType="VARCHAR" />
+    </resultMap>
     <sql id="Base_Column_List">
     CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR, CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
     IS_TRUSTER, IS_SALER, IS_FINANCIER, IS_GUARANTEE, IS_RATING_AGENCIES, IS_PLEDGOR,
@@ -334,15 +338,31 @@
 </delete>
 
     <delete id="deleteTodayData">
-  delete from MST_CUSTOMER_INFO where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyymmdd')=to_char(sysdate,'yyyymmdd')
+  delete from MST_CUSTOMER_INFO where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
   </delete>
 
     <insert id="mergeMstCustomerInfoData"
             parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
-        MERGE INTO MST_CUSTOMER_INFO CII
-        USING (
-        <foreach collection="list" item="item" open="select * from("
-                 close=")" separator="union all">
+        insert into MST_CUSTOMER_INFO(CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
+        CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
+        IS_TRUSTER, IS_SALER, IS_FINANCIER,
+        IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
+        IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
+        IS_BANK, IS_FUTURE_COM)
+        select de.CUSTOMER_ID, de.CUSTOMER_NAME, de.CUSTOMER_ABBR,
+        de.CUSTOMER_TYPE, de.IS_ISSUER, de.IS_ASSTE_MANAGER,
+        de.IS_TRUSTER, de.IS_SALER, de.IS_FINANCIER,
+        de.IS_GUARANTEE, de.IS_RATING_AGENCIES, de.CREATE_USER,
+        de.CREATE_DEPT, de.CREATE_TIME, de.UPDATE_USER,
+        de.UPDATE_TIME, de.IS_PLEDGOR, de.IS_DEPOSIT_BANK,
+        de.IS_INVEST_ADVISER, de.IS_BROKER, de.IS_COUNTER,
+        de.IS_BANK, de.IS_FUTURE_COM from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
             SELECT
             #{item.customerName,jdbcType=VARCHAR} CUSTOMER_NAME,
             #{item.customerAbbr,jdbcType=VARCHAR} CUSTOMER_ABBR,
@@ -359,9 +379,44 @@
             #{item.isInvestAdviser,jdbcType=VARCHAR} IS_INVEST_ADVISER,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
             #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-            sysdate CREATE_TIME,
+            now() CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            sysdate UPDATE_TIME,
+            now() UPDATE_TIME,
+            #{item.isBroker,jdbcType=VARCHAR} IS_BROKER,
+            #{item.isCounter,jdbcType=VARCHAR} IS_COUNTER,
+            #{item.isBank,jdbcType=VARCHAR} IS_BANK,
+            #{item.isFutureCom,jdbcType=VARCHAR} IS_FUTURE_COM,
+            #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID
+            FROM
+            DUAL
+        </foreach>
+        ) TEMP where not exists (select 1 from MST_CUSTOMER_INFO CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID)
+        ) de ;
+
+        UPDATE  MST_CUSTOMER_INFO as A,
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.customerName,jdbcType=VARCHAR} CUSTOMER_NAME,
+            #{item.customerAbbr,jdbcType=VARCHAR} CUSTOMER_ABBR,
+            #{item.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE,
+            #{item.isIssuer,jdbcType=VARCHAR} IS_ISSUER,
+            #{item.isAssteManager,jdbcType=VARCHAR} IS_ASSTE_MANAGER,
+            #{item.isTruster,jdbcType=VARCHAR} IS_TRUSTER,
+            #{item.isSaler,jdbcType=VARCHAR} IS_SALER,
+            #{item.isFinancier,jdbcType=VARCHAR} IS_FINANCIER,
+            #{item.isGuarantee,jdbcType=VARCHAR} IS_GUARANTEE,
+            #{item.isRatingAgencies,jdbcType=VARCHAR} IS_RATING_AGENCIES,
+            #{item.isPledgor,jdbcType=VARCHAR} IS_PLEDGOR,
+            #{item.isDepositBank,jdbcType=VARCHAR} IS_DEPOSIT_BANK,
+            #{item.isInvestAdviser,jdbcType=VARCHAR} IS_INVEST_ADVISER,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            now() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            now() UPDATE_TIME,
             #{item.isBroker,jdbcType=VARCHAR} IS_BROKER,
             #{item.isCounter,jdbcType=VARCHAR} IS_COUNTER,
             #{item.isBank,jdbcType=VARCHAR} IS_BANK,
@@ -371,50 +426,30 @@
             DUAL
         </foreach>
         ) TEMP
-        <!-- 业务主键匹配 -->
-        ON(CII.CUSTOMER_ID = TEMP.CUSTOMER_ID
-        )
-        <!-- 匹配到则更新 -->
-        WHEN MATCHED THEN UPDATE SET
-        CUSTOMER_NAME = TEMP.CUSTOMER_NAME,
-        CUSTOMER_ABBR = TEMP.CUSTOMER_ABBR,
-        CUSTOMER_TYPE = TEMP.CUSTOMER_TYPE,
-        IS_ISSUER = TEMP.IS_ISSUER,
-        IS_ASSTE_MANAGER = TEMP.IS_ASSTE_MANAGER,
-        IS_TRUSTER = TEMP.IS_TRUSTER,
-        IS_SALER = TEMP.IS_SALER,
-        IS_FINANCIER = TEMP.IS_FINANCIER,
-        IS_GUARANTEE = TEMP.IS_GUARANTEE,
-        IS_RATING_AGENCIES = TEMP.IS_RATING_AGENCIES,
-        IS_PLEDGOR = TEMP.IS_PLEDGOR,
-        IS_DEPOSIT_BANK = TEMP.IS_DEPOSIT_BANK,
-        IS_INVEST_ADVISER = TEMP.IS_INVEST_ADVISER,
-        CREATE_USER = TEMP.CREATE_USER,
-        CREATE_DEPT = TEMP.CREATE_DEPT,
-        CREATE_TIME = TEMP.CREATE_TIME,
-        UPDATE_USER = TEMP.UPDATE_USER,
-        UPDATE_TIME = TEMP.UPDATE_TIME,
-        IS_BROKER = TEMP.IS_BROKER,
-        IS_COUNTER = TEMP.IS_COUNTER,
-        IS_BANK = TEMP.IS_BANK,
-        IS_FUTURE_COM = TEMP.IS_FUTURE_COM
-        <!-- 未匹配到这插入 -->
-        WHEN NOT MATCHED THEN INSERT
-        (CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_ABBR,
-        CUSTOMER_TYPE, IS_ISSUER, IS_ASSTE_MANAGER,
-        IS_TRUSTER, IS_SALER, IS_FINANCIER,
-        IS_GUARANTEE, IS_RATING_AGENCIES, CREATE_USER,
-        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME, IS_PLEDGOR, IS_DEPOSIT_BANK,
-        IS_INVEST_ADVISER, IS_BROKER, IS_COUNTER,
-        IS_BANK, IS_FUTURE_COM)
-        values (TEMP.CUSTOMER_ID, TEMP.CUSTOMER_NAME, TEMP.CUSTOMER_ABBR,
-        TEMP.CUSTOMER_TYPE, TEMP.IS_ISSUER, TEMP.IS_ASSTE_MANAGER,
-        TEMP.IS_TRUSTER, TEMP.IS_SALER, TEMP.IS_FINANCIER,
-        TEMP.IS_GUARANTEE, TEMP.IS_RATING_AGENCIES, TEMP.CREATE_USER,
-        TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
-        TEMP.UPDATE_TIME, TEMP.IS_PLEDGOR, TEMP.IS_DEPOSIT_BANK,
-        TEMP.IS_INVEST_ADVISER, TEMP.IS_BROKER, TEMP.IS_COUNTER,
-        TEMP.IS_BANK, TEMP.IS_FUTURE_COM)
+        ) AS B
+        SET
+        A.CUSTOMER_NAME = B.CUSTOMER_NAME,
+        A.CUSTOMER_ABBR = B.CUSTOMER_ABBR,
+        A.CUSTOMER_TYPE = B.CUSTOMER_TYPE,
+        A.IS_ISSUER = B.IS_ISSUER,
+        A.IS_ASSTE_MANAGER = B.IS_ASSTE_MANAGER,
+        A.IS_TRUSTER = B.IS_TRUSTER,
+        A.IS_SALER = B.IS_SALER,
+        A.IS_FINANCIER = B.IS_FINANCIER,
+        A.IS_GUARANTEE = B.IS_GUARANTEE,
+        A.IS_RATING_AGENCIES = B.IS_RATING_AGENCIES,
+        A.IS_PLEDGOR = B.IS_PLEDGOR,
+        A.IS_DEPOSIT_BANK = B.IS_DEPOSIT_BANK,
+        A.IS_INVEST_ADVISER = B.IS_INVEST_ADVISER,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_DEPT = B.CREATE_DEPT,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.IS_BROKER = B.IS_BROKER,
+        A.IS_COUNTER = B.IS_COUNTER,
+        A.IS_BANK = B.IS_BANK,
+        A.IS_FUTURE_COM = B.IS_FUTURE_COM
+        where  A.CUSTOMER_ID = B.CUSTOMER_ID;
     </insert>
 </mapper>

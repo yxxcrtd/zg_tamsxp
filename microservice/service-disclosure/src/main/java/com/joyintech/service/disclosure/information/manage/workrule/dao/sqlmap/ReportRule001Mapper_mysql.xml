@@ -3,27 +3,27 @@
 <mapper namespace="com.joyintech.service.disclosure.information.manage.workrule.dao.ReportRule001Mapper_mysql">
 	<select id="queryPageList" resultType="com.joyintech.service.disclosure.information.manage.workrule.dto.ReportRule001Dto">
 		select * from (
-		SELECT
-		r.id  id,
-		r.RULE_NAME  ruleName,
-		r.REP_NAME  repName,
-		r.DETAIL detail,
-		r.BASIS_DATE_TYPE basisDateType,
-		r.FILE_OUT_TYPE fileOutType,
-		r.REVEAL_CHANNEL revealChannel,
-		r.UPDATE_TIME
-		FROM
-		REP_RULE r
-		WHERE
-		1=1
-		<if test="repName != null and repName != ''">
-			AND r.REP_NAME LIKE CONCAT('%',CONCAT(#{repName,jdbcType=VARCHAR},'%'))
-		</if>
+			SELECT
+			  r.id  id,
+			  r.RULE_NAME  ruleName,
+			  r.REP_NAME  repName,
+			  r.DETAIL detail,
+			  r.BASIS_DATE_TYPE basisDateType,
+			  r.FILE_OUT_TYPE fileOutType,
+			  r.REVEAL_CHANNEL revealChannel,
+			  r.UPDATE_TIME
+			FROM
+			  REP_RULE r
+			WHERE
+			  1=1
+			<if test="repName != null and repName != ''">
+				AND r.REP_NAME LIKE CONCAT('%',CONCAT(#{repName,jdbcType=VARCHAR},'%'))
+			</if>
 
-		<if test="ruleName != null and ruleName != ''">
-			AND r.RULE_NAME LIKE CONCAT('%'，CONCAT(#{ruleName,jdbcType=VARCHAR}，'%'))
-		</if>
-		order by r.UPDATE_TIME desc
-		)where 1=1
-	</select>
+			<if test="ruleName != null and ruleName != ''">
+				AND r.RULE_NAME LIKE CONCAT('%', CONCAT(#{ruleName,jdbcType=VARCHAR},'%'))
+			</if>
+			order by r.UPDATE_TIME desc
+		) tmp where 1=1
+    </select>
 </mapper>

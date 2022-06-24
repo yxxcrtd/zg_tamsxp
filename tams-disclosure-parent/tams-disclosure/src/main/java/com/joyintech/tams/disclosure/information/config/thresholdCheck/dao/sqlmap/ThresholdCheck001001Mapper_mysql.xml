@@ -1,150 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.thresholdCheck.dao.ThresholdCheck001001Mapper_mysql">
-    <select id="selectIndex" resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+	<select id="selectIndex" resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+    	
+    	    select
+#{finprodId,jdbcType=VARCHAR}  as  prodArray,
+#{valDateEnd}  as  endDate,
+#{valDateBegin}  as  startDate,
+t.report_name  as reportName,
+count(t.report_name) as count,
+'01'  as flag
+from(
+select ri.report_name, re.prod_id from REP_CHECK_ERRMSG   re   left join rep_info  ri on re.rep_id=ri.rep_id
+where  1=1   
+<if test="valDateEnd != null and valDateEnd != ''">
+and DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&lt;#{valDateEnd}
+</if>
+<if test="valDateBegin != null and valDateBegin != ''">
+and  DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&gt;#{valDateBegin}
+</if>
 
-        select
-        #{finprodId,jdbcType=VARCHAR}  as  prodArray,
-        #{valDateEnd}  as  endDate,
-        #{valDateBegin}  as  startDate,
-        t.report_name  as reportName,
-        count(t.report_name) as count,
-        '01'  as flag
-        from(
-        select ri.report_name, re.prod_id from REP_CHECK_ERRMSG   re   left join rep_info  ri on re.rep_id=ri.rep_id
-        where  1=1
-        <if test="valDateEnd != null and valDateEnd != ''">
-            and DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&lt;#{valDateEnd}
-        </if>
-        <if test="valDateBegin != null and valDateBegin != ''">
-            and  DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&gt;#{valDateBegin}
-        </if>
-
-        <if test="finprodIdArr != null and finprodIdArr.length > 0">
-            AND re.prod_id IN
-            <foreach item="item" collection="finprodIdArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        )
-        t
-        group by t.report_name
+<if test="finprodIdArr != null and finprodIdArr.length > 0">
+    AND re.prod_id IN
+   <foreach item="item" collection="finprodIdArr" index="index"
+    open="(" separator="," close=")">
+    #{item}
+   </foreach>
+  </if>
+  )
+t 
+group by t.report_name
     </select>
-    <select id="selectIndexByIndex"  resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
-
-        select
-        #{finprodId,jdbcType=VARCHAR}  as  prodArray,
-        #{valDateEnd}  as  endDate,
-        #{valDateBegin}  as  startDate,
-        SUBSTRING(INDEX_ID,0,5)  as reportName,
-        count(INDEX_ID)  as count,
-        '02'  as flag
-        from REP_CHECK_ERRMSG
-        where  1=1
-        <if test="valDateEnd != null and valDateEnd != ''">
-            and  DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&lt;#{valDateEnd}
-        </if>
-        <if test="valDateBegin != null and valDateBegin != ''">
-            and  DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&gt;#{valDateBegin}
-        </if>
-        <if test="finprodIdArr != null and finprodIdArr.length > 0">
-            AND prod_id IN
-            <foreach item="item" collection="finprodIdArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        group by INDEX_ID
-
+	<select id="selectIndexByIndex"  resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+  
+   select
+   #{finprodId,jdbcType=VARCHAR}  as  prodArray,
+#{valDateEnd}  as  endDate,
+#{valDateBegin}  as  startDate,
+SUBSTRING(INDEX_ID,0,5)  as reportName,
+count(INDEX_ID)  as count,
+'02'  as flag
+from REP_CHECK_ERRMSG 
+where  1=1
+ <if test="valDateEnd != null and valDateEnd != ''">
+ and  DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&lt;#{valDateEnd}
+ </if>
+ <if test="valDateBegin != null and valDateBegin != ''">
+and  DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&gt;#{valDateBegin}
+</if>
+<if test="finprodIdArr != null and finprodIdArr.length > 0">
+    AND prod_id IN
+   <foreach item="item" collection="finprodIdArr" index="index"
+    open="(" separator="," close=")">
+    #{item}
+   </foreach>
+  </if>
+group by INDEX_ID
+    
     </select>
-    <select id="selectIndexDetail" resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+	<select id="selectIndexDetail" resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+    
+    select 
+LIMIT as rId, 
+ri.report_name reportName,
+case when re.START_DATE is null
+then  DATE_FORMAT(re.END_DATE,'%Y-%m-%d')
+ELSE CONCAT_WS( '',DATE_FORMAT(re.START_DATE,'%Y-%m-%d'),'-',DATE_FORMAT(re.END_DATE,'%Y-%m-%d'))
+end reportDate,
+re.INDEX_ID indexId,
+re.INDEX_VALUE  indexValue,
+re.PROD_ID  prodId,
+re.PROD_NAME  prodName,
+re.PROD_VALUE  prodValue,
+re.ERRORMSG  errormsg
+from REP_CHECK_ERRMSG   re   left join rep_info  ri on re.rep_id=ri.rep_id 
+where 1=1
+ <if test="reportName != null and reportName !='全部数据'">
+and ri.report_name=#{reportName}  
+</if>
+<if test="endDate != null and endDate != ''">
+and DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&lt;#{endDate}
+</if>
+<if test="startDate != null and startDate != ''">
+and  DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&gt;#{startDate}
+</if>
 
-        select
-        LIMIT as rId,
-        ri.report_name reportName,
-        case when re.START_DATE is null
-        then  DATE_FORMAT(re.END_DATE,'%Y-%m-%d')
-        ELSE CONCAT_WS( '',DATE_FORMAT(re.START_DATE,'%Y-%m-%d'),'-',DATE_FORMAT(re.END_DATE,'%Y-%m-%d'))
-        end reportDate,
-        re.INDEX_ID indexId,
-        re.INDEX_VALUE  indexValue,
-        re.PROD_ID  prodId,
-        re.PROD_NAME  prodName,
-        re.PROD_VALUE  prodValue,
-        re.ERRORMSG  errormsg
-        from REP_CHECK_ERRMSG   re   left join rep_info  ri on re.rep_id=ri.rep_id
-        where 1=1
-        <if test="reportName != null and reportName !='全部数据'">
-            and ri.report_name=#{reportName}
-        </if>
-        <if test="endDate != null and endDate != ''">
-            and DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&lt;#{endDate}
-        </if>
-        <if test="startDate != null and startDate != ''">
-            and  DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&gt;#{startDate}
-        </if>
-
-        <if test="finprodIdArr != null and finprodIdArr.length > 0">
-            AND re.prod_id IN
-            <foreach item="item" collection="finprodIdArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+<if test="finprodIdArr != null and finprodIdArr.length > 0">
+   AND re.prod_id IN
+   <foreach item="item" collection="finprodIdArr" index="index"
+    open="(" separator="," close=")">
+   #{item}
+   </foreach>
+  </if>
     </select>
-    <select id="selectIndexDetailByIndex" resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+	<select id="selectIndexDetailByIndex" resultType="com.joyintech.tams.disclosure.information.config.thresholdCheck.dto.ThresholdCheck001Dto">
+    
+    select 
+LIMIT as rId, 
+ri.report_name reportName,
+case when re.START_DATE is null
+then  DATE_FORMAT(re.END_DATE,'%Y-%m-%d')
+ELSE CONCAT_WS( '',DATE_FORMAT(re.START_DATE,'%Y-%m-%d'),' - ',DATE_FORMAT(re.END_DATE,'%Y-%m-%d'))
+end reportDate,
+re.INDEX_ID indexId,
+re.INDEX_VALUE  indexValue,
+re.PROD_ID  prodId,
+re.PROD_NAME  prodName,
+re.PROD_VALUE  prodValue,
+re.ERRORMSG  errormsg
+from REP_CHECK_ERRMSG   re   left join rep_info  ri on re.rep_id=ri.rep_id 
+where  1=1
+   <if test="reportName != null and reportName !='全部数据'">
+  and re.INDEX_ID=#{reportName}  
+  </if>
 
-        select
-        LIMIT as rId,
-        ri.report_name reportName,
-        case when re.START_DATE is null
-        then  DATE_FORMAT(re.END_DATE,'%Y-%m-%d')
-        ELSE CONCAT_WS( '',DATE_FORMAT(re.START_DATE,'%Y-%m-%d'),' - ',DATE_FORMAT(re.END_DATE,'%Y-%m-%d'))
-        end reportDate,
-        re.INDEX_ID indexId,
-        re.INDEX_VALUE  indexValue,
-        re.PROD_ID  prodId,
-        re.PROD_NAME  prodName,
-        re.PROD_VALUE  prodValue,
-        re.ERRORMSG  errormsg
-        from REP_CHECK_ERRMSG   re   left join rep_info  ri on re.rep_id=ri.rep_id
-        where  1=1
-        <if test="reportName != null and reportName !='全部数据'">
-            and re.INDEX_ID=#{reportName}
-        </if>
+<if test="endDate != null and endDate != ''">
+and DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&lt;#{endDate}
+</if>
+<if test="startDate != null and startDate != ''">
+and  DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&gt;#{startDate}
+</if>
 
-        <if test="endDate != null and endDate != ''">
-            and DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&lt;#{endDate}
-        </if>
-        <if test="startDate != null and startDate != ''">
-            and  DATE_FORMAT(re.CREATE_TIME,'%Y-%m-%d')&gt;#{startDate}
-        </if>
-
-        <if test="finprodIdArr != null and finprodIdArr.length > 0">
-            AND re.prod_id IN
-            <foreach item="item" collection="finprodIdArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+  <if test="finprodIdArr != null and finprodIdArr.length > 0">
+   AND re.prod_id IN
+   <foreach item="item" collection="finprodIdArr" index="index"
+    open="(" separator="," close=")">
+   #{item}
+   </foreach>
+  </if>
     </select>
-    <select id="selectCount"  resultType="java.lang.Integer">
-        select  count(1)  from REP_CHECK_ERRMSG
-        where 1=1
-        <if test="valDateEnd != null and valDateEnd != ''">
-            and DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&lt;#{valDateEnd}
-        </if>
-        <if test="valDateBegin != null and valDateBegin != ''">
-            and  DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&gt;#{valDateBegin}
-        </if>
-
-        <if test="finprodIdArr != null and finprodIdArr.length > 0">
-            AND prod_id IN
-            <foreach item="item" collection="finprodIdArr" index="index"
-                     open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
+	<select id="selectCount"  resultType="java.lang.Integer">
+    select  count(1)  from REP_CHECK_ERRMSG
+    where 1=1
+    <if test="valDateEnd != null and valDateEnd != ''">
+and DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&lt;#{valDateEnd}
+</if>
+<if test="valDateBegin != null and valDateBegin != ''">
+and  DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')&gt;#{valDateBegin}
+    </if>
+    
+    <if test="finprodIdArr != null and finprodIdArr.length > 0">
+    AND prod_id IN
+   <foreach item="item" collection="finprodIdArr" index="index"
+    open="(" separator="," close=")">
+    #{item}
+   </foreach>
+  </if>
     </select>
 </mapper>

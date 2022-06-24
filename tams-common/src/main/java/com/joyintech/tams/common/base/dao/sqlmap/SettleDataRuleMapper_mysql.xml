@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SettleDataRuleMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SettleDataRule" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="TABLE_NAME" property="tableName" jdbcType="VARCHAR" />
+        <result column="DATA_FILE" property="dataFile" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="INTERF_FIELD_CNNAME" property="interfFieldCnname" jdbcType="VARCHAR" />
+        <result column="TABLE_FIELD" property="tableField" jdbcType="VARCHAR" />
+        <result column="FIELD_CODE" property="fieldCode" jdbcType="VARCHAR" />
+        <result column="FIELD_VALUE" property="fieldValue" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, TABLE_NAME TABLE_NAME, DATA_FILE DATA_FILE, FINPROD_TYPE FINPROD_TYPE, 
+        INTERF_FIELD_CNNAME INTERF_FIELD_CNNAME, TABLE_FIELD TABLE_FIELD, FIELD_CODE FIELD_CODE, 
+        FIELD_VALUE FIELD_VALUE, REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleDataRuleMapper_mysql.Base_Column_List" />
+        from SETTLE_DATA_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleDataRuleMapper_mysql.Base_Column_List" />
+        from SETTLE_DATA_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleDataRuleMapper_mysql.Base_Column_List" />
+        from SETTLE_DATA_RULE
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SETTLE_DATA_RULE
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleDataRule" >
+        insert into SETTLE_DATA_RULE (SEQNO, TABLE_NAME, DATA_FILE, 
+            FINPROD_TYPE, INTERF_FIELD_CNNAME, TABLE_FIELD, 
+            FIELD_CODE, FIELD_VALUE, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, #{dataFile,jdbcType=VARCHAR}, 
+            #{finprodType,jdbcType=VARCHAR}, #{interfFieldCnname,jdbcType=VARCHAR}, #{tableField,jdbcType=VARCHAR}, 
+            #{fieldCode,jdbcType=VARCHAR}, #{fieldValue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SettleDataRule" >
+        insert into SETTLE_DATA_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="tableName != null" >
+                TABLE_NAME,
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="interfFieldCnname != null" >
+                INTERF_FIELD_CNNAME,
+            </if>
+            <if test="tableField != null" >
+                TABLE_FIELD,
+            </if>
+            <if test="fieldCode != null" >
+                FIELD_CODE,
+            </if>
+            <if test="fieldValue != null" >
+                FIELD_VALUE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="tableName != null" >
+                #{tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile != null" >
+                #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="interfFieldCnname != null" >
+                #{interfFieldCnname,jdbcType=VARCHAR},
+            </if>
+            <if test="tableField != null" >
+                #{tableField,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldCode != null" >
+                #{fieldCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldValue != null" >
+                #{fieldValue,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleDataRule" >
+        insert into SETTLE_DATA_RULE(SEQNO, TABLE_NAME, DATA_FILE, FINPROD_TYPE, INTERF_FIELD_CNNAME, 
+        TABLE_FIELD, FIELD_CODE, FIELD_VALUE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQNO, TABLE_NAME, DATA_FILE, FINPROD_TYPE, INTERF_FIELD_CNNAME, 
+            TABLE_FIELD, FIELD_CODE, FIELD_VALUE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from SETTLE_DATA_RULE
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleDataRule" >
+        update SETTLE_DATA_RULE
+        <set >
+            <if test="tableName != null" >
+                TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="interfFieldCnname != null" >
+                INTERF_FIELD_CNNAME = #{interfFieldCnname,jdbcType=VARCHAR},
+            </if>
+            <if test="tableField != null" >
+                TABLE_FIELD = #{tableField,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldCode != null" >
+                FIELD_CODE = #{fieldCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fieldValue != null" >
+                FIELD_VALUE = #{fieldValue,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleDataRule" >
+        update SETTLE_DATA_RULE
+        set TABLE_NAME = #{tableName,jdbcType=VARCHAR},
+            DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR},
+            INTERF_FIELD_CNNAME = #{interfFieldCnname,jdbcType=VARCHAR},
+            TABLE_FIELD = #{tableField,jdbcType=VARCHAR},
+            FIELD_CODE = #{fieldCode,jdbcType=VARCHAR},
+            FIELD_VALUE = #{fieldValue,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

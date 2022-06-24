@@ -11,6 +11,7 @@
 package com.joyintech.tams.systemtools.dto;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.joyintech.framework.util.StringUtil;
 
@@ -232,4 +233,11 @@ public class ExcelValidDto {
         this.isLogicCheck = isLogicCheck;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExcelValidDto that = (ExcelValidDto) o;
+        return Objects.equals(rowNum, that.rowNum);
+    }
 }

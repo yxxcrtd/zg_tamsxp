@@ -1,117 +1,117 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthFeePositionMapper_mysql">
-    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
-        <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
-        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
-        <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
-        <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
-        <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
-        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-        <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
-        <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
-        <result column="BANKAMT" property="bankamt" jdbcType="DECIMAL" />
-        <result column="TRUSTFEEAMT" property="trustfeeamt" jdbcType="DECIMAL" />
-        <result column="SALEFEEAMT" property="salefeeamt" jdbcType="DECIMAL" />
-        <result column="OTHERFEEAMT" property="otherfeeamt" jdbcType="DECIMAL" />
-        <result column="MANAFEEAMT" property="manafeeamt" jdbcType="DECIMAL" />
-        <result column="FLOATFEEAMT" property="floatfeeamt" jdbcType="DECIMAL" />
-        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
-        <result column="CON_PRD_TRAGET" property="conPrdTraget" jdbcType="VARCHAR" />
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthFeePosition" >
+    <id column="POSUUID" property="posuuid" jdbcType="CHAR" />
+    <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+    <result column="STARTDATE" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="BOOKDATE" property="bookdate" jdbcType="TIMESTAMP" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="RAISEMODE" property="raisemode" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="BANKAMT" property="bankamt" jdbcType="DECIMAL" />
+    <result column="TRUSTFEEAMT" property="trustfeeamt" jdbcType="DECIMAL" />
+    <result column="SALEFEEAMT" property="salefeeamt" jdbcType="DECIMAL" />
+    <result column="OTHERFEEAMT" property="otherfeeamt" jdbcType="DECIMAL" />
+    <result column="MANAFEEAMT" property="manafeeamt" jdbcType="DECIMAL" />
+    <result column="FLOATFEEAMT" property="floatfeeamt" jdbcType="DECIMAL" />
+    <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+    <result column="CON_PRD_TRAGET" property="conPrdTraget" jdbcType="VARCHAR" />
+  </resultMap>
 
-    <insert id="genPosition" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
-        insert into chb_month_fee_position(
-        POSUUID
-        ,PRODID
-        ,STARTDATE
-        ,ENDDATE
-        ,BOOKDATE
-        ,CCY
-        ,RAISEMODE
-        ,IVSTORIENTATION
-        ,BANKAMT
-        ,TRUSTFEEAMT
-        ,SALEFEEAMT
-        ,OTHERFEEAMT
-        ,MANAFEEAMT
-        ,FLOATFEEAMT
-        ,PROFIT_TYPE
-        ,CON_PRD_TRAGET
-        )
-        /*with fd as费用明细表--按主产品纬度*/
-        /*,fs as 费用统计表--按产品ID，投资性质，募集方式，币种进行汇总*/
-        select
-        F_GUID()
-        ,deal.prodid
-        ,#{startdate,jdbcType=DATE} startdate
-        ,#{enddate,jdbcType=DATE} enddate
-        ,#{statusDate,jdbcType=DATE} bookdate
-        ,deal.ccy
-        ,deal.RAISE_TYPE
-        ,deal.Ivstorientation
-        ,deal.bankamt
-        ,deal.TRUSTFEEAMT
-        ,deal.SALEFEEAMT
-        ,deal.OTHERFEEAMT
-        ,deal.MANAFEEAMT
-        ,deal.FLOATFEEAMT
-        ,prod.PROFIT_TYPE
-        ,null CON_PRD_TRAGET
-        from (
-        select dd.prodid,dd.ccy,dd.raise_type,dd.ivstorientation
-        ,sum(
-        case when dd.FEE_SECTYPE in('01') then amt /*二级类型=本机构托管费*/
-        else 0
-        end ) TRUSTFEEAMT /*本机构托管费*/
-        ,sum(
-        case when dd.FEE_SECTYPE in('02') then amt /*二级类型=本机构固定管理费*/
-        else 0
-        end ) MANAFEEAMT /*本机构固定管理费*/
-        ,sum(
-        case when dd.FEE_SECTYPE in('03') then amt /*二级类型=本机构销售服务费*/
-        else 0
-        end ) SALEFEEAMT /*本机构销售服务费*/
-        ,sum(
-        case when dd.FEE_SECTYPE in('04') then amt /*二级类型=本机构其它费*/
-        else 0
-        end ) OTHERFEEAMT /*本机构其它务费*/
-        ,sum(
-        case when dd.FEE_SECTYPE in('10','11') then amt /*二级类型=本机构浮动中收费*/
-        else 0
-        end ) FLOATFEEAMT /*本机构本期浮动费/中收*/
-        ,sum(
-        case when dd.FEE_TYPE ='01' then amt /*本机构费用*/
-        else 0
-        end ) BANKAMT /*本机构费用和*/
-        from (
-        select ifnull(d.fprod_id,d.prod_id) prodid
-        ,d.FEE_TYPE
-        ,d.FEE_SECTYPE
-        ,d.CCY
-        ,d.amt
-        ,i.raise_type
-        ,i.IVSTORIENTATION
-        from chb_prd_fee_deal d
-        left join chb_prd_baseinfo i
-        on ifnull(d.fprod_id,d.prod_id)=i.prod_id and i.fprod_id is null
-        where d.status!='D' and d.amt>0
-        and d.pay_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
-        ) dd
-        group by dd.prodid,dd.ccy,dd.raise_type,dd.ivstorientation
-        ) deal, CHB_PRD_BASEINFO prod
-        where deal.prodid=prod.prod_id
-        <if test="prodid!=null">
-            and deal.prodid=#{prodid,jdbcType=VARCHAR}
-        </if>
-        <if test="prodids !=null">
-            and deal.prodid in
-            <foreach collection="prodids" item="prodid" open="(" separator=","
-                     close=")">
-                #{prodid}
-            </foreach>
-        </if>
-    </insert>
+  <insert id="genPosition" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport" >
+	insert into chb_month_fee_position(
+		POSUUID
+		,PRODID
+		,STARTDATE
+		,ENDDATE
+		,BOOKDATE
+		,CCY
+		,RAISEMODE
+		,IVSTORIENTATION
+		,BANKAMT
+		,TRUSTFEEAMT
+		,SALEFEEAMT
+		,OTHERFEEAMT
+		,MANAFEEAMT
+		,FLOATFEEAMT
+		,PROFIT_TYPE
+		,CON_PRD_TRAGET
+	)
+	/*with fd as费用明细表--按主产品纬度*/
+    /*,fs as 费用统计表--按产品ID，投资性质，募集方式，币种进行汇总*/
+	select
+    F_GUID()
+	,deal.prodid
+    ,#{startdate,jdbcType=DATE} startdate
+    ,#{enddate,jdbcType=DATE} enddate
+    ,#{statusDate,jdbcType=DATE} bookdate
+	,deal.ccy
+	,deal.RAISE_TYPE
+	,deal.Ivstorientation
+	,deal.bankamt
+	,deal.TRUSTFEEAMT
+	,deal.SALEFEEAMT
+	,deal.OTHERFEEAMT
+	,deal.MANAFEEAMT
+	,deal.FLOATFEEAMT
+	,prod.PROFIT_TYPE
+	,null CON_PRD_TRAGET
+	from (
+      select dd.prodid,dd.ccy,dd.raise_type,dd.ivstorientation
+      ,sum(
+      case when dd.FEE_SECTYPE in('01') then amt /*二级类型=本机构托管费*/
+      else 0
+      end ) TRUSTFEEAMT /*本机构托管费*/
+      ,sum(
+      case when dd.FEE_SECTYPE in('02') then amt /*二级类型=本机构固定管理费*/
+      else 0
+      end ) MANAFEEAMT /*本机构固定管理费*/
+      ,sum(
+      case when dd.FEE_SECTYPE in('03') then amt /*二级类型=本机构销售服务费*/
+      else 0
+      end ) SALEFEEAMT /*本机构销售服务费*/
+      ,sum(
+      case when dd.FEE_SECTYPE in('04') then amt /*二级类型=本机构其它费*/
+      else 0
+      end ) OTHERFEEAMT /*本机构其它务费*/
+      ,sum(
+      case when dd.FEE_SECTYPE in('10','11') then amt /*二级类型=本机构浮动中收费*/
+      else 0
+      end ) FLOATFEEAMT /*本机构本期浮动费/中收*/
+      ,sum(
+      case when dd.FEE_TYPE ='01' then amt /*本机构费用*/
+      else 0
+      end ) BANKAMT /*本机构费用和*/
+      from (
+      select ifnull(d.fprod_id,d.prod_id) prodid
+      ,d.FEE_TYPE
+      ,d.FEE_SECTYPE
+      ,d.CCY
+      ,d.amt
+      ,i.raise_type
+      ,i.IVSTORIENTATION
+      from chb_prd_fee_deal d
+      left join chb_prd_baseinfo i
+      on ifnull(d.fprod_id,d.prod_id)=i.prod_id and i.fprod_id is null
+      where d.status!='D' and d.amt>0
+      and d.pay_DATE between #{startdate,jdbcType=DATE} and #{enddate,jdbcType=DATE}
+      ) dd
+      group by dd.prodid,dd.ccy,dd.raise_type,dd.ivstorientation
+      ) deal, CHB_PRD_BASEINFO prod
+	where deal.prodid=prod.prod_id
+    <if test="prodid!=null">
+    	and deal.prodid=#{prodid,jdbcType=VARCHAR} 
+    </if>
+    <if test="prodids !=null">
+		and deal.prodid in
+		<foreach collection="prodids" item="prodid" open="(" separator=","
+			close=")">
+			#{prodid}
+		</foreach>
+	</if>
+  </insert> 
 
-
+   
 </mapper>

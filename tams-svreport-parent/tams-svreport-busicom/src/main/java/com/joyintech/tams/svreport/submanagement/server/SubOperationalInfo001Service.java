@@ -26,6 +26,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -2638,7 +2639,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								} else if (dateColumnList.contains(column) && !("").equals(columnData)) {
 									// 特殊情况,CREATE_TIME和UPDATE_TIME为DATE类型
 									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-										columnData = "NOW()";
+                                        if(BaseCommonCheckService.isMYSQLDataBase()){
+                                            columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                        }else{
+                                            columnData = "SYSDATE";
+                                        }
+
 									} else {
 										//excel中输入了时间戳数据处理
 										if(columnData.length() > 10){
@@ -2654,14 +2660,18 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									}
 									// 时间类型字段全存入当前时间
 								} else if (timeColumnList.contains(column)) {
-									columnData = "SYSDATE";
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
 									// 创建者和修改者均设置为当前用户
 								} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
 								}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
 									columnData = "'" +columnData.replace("'", "''")+ "'";
 								} else {
-									columnData = "'" + columnData + "'";
+                                    columnData = null==columnData?columnData:"'" + columnData + "'";
 								}
 								insertMap.put(column, columnData);
 							}
@@ -2674,8 +2684,14 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
 								insertMap.put("ASSET_TYPE", "'" + assetType + "'");
 								insertMap.put("STATUS", "'" + "E" + "'");
-								insertMap.put("CREATE_TIME", "now()");
-								insertMap.put("UPDATE_TIME", "now()");
+                                if(BaseCommonCheckService.isMYSQLDataBase()){
+                                    insertMap.put("CREATE_TIME",  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'");
+                                    insertMap.put("UPDATE_TIME",  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'");
+                                }else{
+                                    insertMap.put("CREATE_TIME", "SYSDATE");
+                                    insertMap.put("UPDATE_TIME", "SYSDATE");
+                                }
+
 								insertMap.put("CREATE_USER", "'" + userName + "'");
 								insertMap.put("UPDATE_USER", "'" + userName + "'");
 								String industryShares2 = insertMap.get("INDUSTRY_SHARES2");
@@ -2742,7 +2758,11 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 										(timeColumnList.contains(column) && !("").equals(columnData))) {
 									// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
 									if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-										columnData = "now()";
+                                        if(BaseCommonCheckService.isMYSQLDataBase()){
+                                            columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                        }else{
+                                            columnData =  "SYSDATE";
+                                        }
 										// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
 									}else{
 										String dateStr = formatDateStr(columnData);
@@ -2795,7 +2815,11 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								if (dateColumnList.contains(column) && !("").equals(columnData)) {
 									// 特殊情况,UPDATE_TIME为DATE类型
 									if ("UPDATE_TIME".equals(column)) {
-										columnData = "now()";
+                                        if(BaseCommonCheckService.isMYSQLDataBase()){
+                                            columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                        }else{
+                                            columnData =  "SYSDATE";
+                                        }
 									} else {
 										//excel中输入了时间戳数据处理
 										if(columnData.length() > 10){
@@ -2813,7 +2837,11 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								} else if (timeColumnList.contains(column)) {
 									// 修改时间变动,其余时间不变
 									if(column.indexOf("UPDATE") > -1) {
-										columnData = "now()";
+                                        if(BaseCommonCheckService.isMYSQLDataBase()){
+                                            columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                        }else{
+                                            columnData =  "SYSDATE";
+                                        }
 									} else {
 										continue;
 									}
@@ -2826,7 +2854,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								} else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
 									columnData = "'" +columnData.replace("'", "''")+ "'";
 								} else {
-									columnData = "'" + columnData + "'";
+                                    columnData = null==columnData?columnData:"'" + columnData + "'";
 								}
 								updateMap.put(column, columnData);
 							}
@@ -2839,7 +2867,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
 								updateMap.put("ASSET_TYPE", "'" + assetType + "'");
 								updateMap.put("STATUS", "'" + "M" + "'");
-								updateMap.put("UPDATE_TIME", "now()");
+                                if(BaseCommonCheckService.isMYSQLDataBase()){
+                                    updateMap.put("UPDATE_TIME",  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'");
+                                }else{
+                                    updateMap.put("UPDATE_TIME", "SYSDATE");
+                                }
+
 								updateMap.put("UPDATE_USER", "'" + userName + "'");
 								String industryShares2 = updateMap.get("INDUSTRY_SHARES2");
 								if (StringUtil.isNotEmpty(industryShares2)) {
@@ -3004,7 +3037,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						if (null != dateStr) {
 							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning start
 //							itemMap.put(key, "'" + dateStr +"'");
-							itemMap.put(key, "to_date('" + dateStr +"' , 'yyyy-mm-dd hh24:mi:ss')");
+							if (BaseCommonCheckService.isMYSQLDataBase()){
+								itemMap.put(key, "str_to_date('" + dateStr +"' , '%Y-%m-%d %T')");
+							}else {
+								itemMap.put(key, "to_date('" + dateStr +"' , 'yyyy-mm-dd hh24:mi:ss')");
+							}
+
 							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning end
 						} else {
 							itemMap.put(key, null);

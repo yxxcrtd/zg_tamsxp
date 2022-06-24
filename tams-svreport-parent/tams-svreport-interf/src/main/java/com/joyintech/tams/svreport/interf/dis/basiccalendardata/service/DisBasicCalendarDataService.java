@@ -46,7 +46,7 @@ public  class DisBasicCalendarDataService extends FileImpService {
     @Autowired
 	private DisBasicCalendarDataMapper disBasicCalendarDataMapper;
 
-	public String saveData(List<Map<String, String>> listData,String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> listData,String saveFlag,String dataSource) {
         if (StringUtil.isEmptyList(listData)) {
             logger.info("saveData方法参数listData为空。");
             return null;
@@ -55,7 +55,7 @@ public  class DisBasicCalendarDataService extends FileImpService {
         DisBasicCalendarData dto = null;
         List<DisBasicCalendarData> dtoList = new ArrayList<DisBasicCalendarData>();
         // modify by convertMapToEntity yangxianjiu 2022-01-19 start
-        dtoList = (List<DisBasicCalendarData>) convertMapToEntity(listData,DisBasicCalendarData.class);
+        dtoList = (List<DisBasicCalendarData>) convertMapToEntity(listData,DisBasicCalendarData.class, dataSource);
         // modify by convertMapToEntity yangxianjiu 2022-01-19 end
 //        for(Map<String, String> data : listData){
 //            //将map转换为dto

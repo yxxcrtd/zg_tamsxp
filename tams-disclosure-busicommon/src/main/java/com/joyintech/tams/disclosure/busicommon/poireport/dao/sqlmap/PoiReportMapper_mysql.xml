@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.poireport.dao.PoiReportMapper_mysql">
+    <select id="selectTabInfoByTabNum" resultType="com.joyintech.tams.disclosure.busicommon.poireport.dto.DisPoiTabDto">
+		select
+			TAB_NUM tabNum,
+			TAB_NAME tabName,
+			TEMP_PATH tempPath,
+			TEMP_NAME tempName,
+			TEMP_PRAMS tempPrams
+		from DIS_POI_TAB
+		where 1=1
+		and	STATUS ='E'
+		and TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+	</select>
+    <select id="selectSubListByTabNum" resultType="com.joyintech.tams.disclosure.busicommon.poireport.dto.DisPoiSubDto">
+		select
+			ID id,
+			TAB_NUM tabNum,
+			SUB_NAME subName,
+			SUB_TYPE subType,
+			SUB_FORM_TYPE subFormType,
+			SUB_WIDTH subWidth,
+			SUB_TMP_TYPE subTmpType,
+			SUB_CHART_TYPE subChartType,
+			SUB_DEFUALT subDefualt,
+            SUB_CHART_CONF subChartConf
+		from DIS_POI_SUB
+		where 1=1
+		and	STATUS ='E'
+		and TAB_NUM = #{tabNum,jdbcType=VARCHAR}
+	</select>
+    <select id="selectSqlList" resultType="com.joyintech.tams.disclosure.busicommon.poireport.dto.DisPoiQueryDto">
+		select
+			ID id,
+			POI_ID poiId,
+			POI_TYPE poiType,
+			POI_ORDER poiOrder,
+			POI_SQL poiSql
+		from DIS_POI_QUERY
+		where 1=1
+		and POI_ID = #{poiId,jdbcType=VARCHAR}
+		and POI_TYPE = #{poiType,jdbcType=VARCHAR}
+		order by POI_ORDER asc
+	</select>
+</mapper>

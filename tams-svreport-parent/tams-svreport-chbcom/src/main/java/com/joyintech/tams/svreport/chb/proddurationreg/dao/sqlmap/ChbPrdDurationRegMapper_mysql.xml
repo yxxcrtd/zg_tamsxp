@@ -6,11 +6,13 @@
 			resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ChbPrdDurationDeal">
 		SELECT
 		TEMP.ORG_CODE        as ORGCODE,
-		ifnull(INFO.FPROD_ID,INFO.PROD_ID)         as PRODID,
+		IFNULL(INFO.FPROD_ID,INFO.PROD_ID)         as PRODID,
 		TEMP.OPEN_START      as OPENSTART,
 		TEMP.OPEN_VDATE      as OPENEND,
+		TEMP.PAY_DATE AS openEnd1,
 		INFO.PRD_VDATE       as VDATE,
 		INFO.OPERATE_MODE    as OPERATEMODE,
+		TEMP.CHANG_TYPE AS changeType,
 		TEMP.STATUS,
 		code.REG_CODE        REGCODE
 		FROM (
@@ -18,34 +20,55 @@
 		SELECT DEAL.ORG_CODE,
 		DEAL.PROD_ID,
 		DEAL.FPROD_ID,
-		ifnull(OPEN1.OPEN_START,(case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end)) OPEN_START,
-		ifnull(OPEN1.OPEN_END,(case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end)) OPEN_END,
+		null as CHANG_TYPE,
+		CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+		then IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+		ELSE IFNULL(OPEN1.OPEN_START,IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)) end as OPEN_START,
+		CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+		then IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+		ELSE IFNULL(OPEN1.OPEN_END,IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)) end as  OPEN_END,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) PAY_DATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('02', '03', '17')
-		THEN
-		ifnull(OPEN1.OPEN_END, ifnull(OPEN1.OPEN_VDATE,DEAL.SETTDATE_DATE))
-		ELSE
-		ifnull(OPEN1.OPEN_VDATE,(case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end))
+		THEN IFNULL(OPEN1.OPEN_END, IFNULL(OPEN1.OPEN_VDATE,DEAL.SETTDATE_DATE))
+		WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+		THEN IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+		ELSE IFNULL(OPEN1.OPEN_VDATE,IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE))
 		END OPEN_VDATE,
+		<!--
 		case when
-		DATE_FORMAT(DEAL.UPDATE_TIME, '%Y-%m-%d') != DATE_FORMAT(DEAL.SETTDATE_DATE, '%Y-%m-%d') and DEAL.Status='E'
+		STR_TO_DATE(DEAL.UPDATE_TIME, '%Y-%m-%d') != STR_TO_DATE(DEAL.SETTDATE_DATE, '%Y-%m-%d') and DEAL.Status='E'
 		then 'M'
 		else DEAL.Status
 		end Status
+		 -->
+		DEAL.Status Status
 		FROM CHB_PRD_DEAL DEAL
 		LEFT JOIN CHB_PRD_OPENSCH OPEN1
-		ON ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) = OPEN1.PROD_ID
+		ON IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID) = OPEN1.PROD_ID
 		<!-- AND DEAL.ORG_CODE = OPEN1.ORG_CODE -->
-		AND (case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end) = OPEN1.OPEN_VDATE
+		AND IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE
 		AND OPEN1.STATUS != 'D'
-		AND OPEN1.PLAN_TYPE = '01'
-		WHERE (DATE_FORMAT(DEAL.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
-		DATE_FORMAT((case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end), '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
-		AND DEAL.TRADE_TYPE != '01'
+		/* modify by dubaojun 2020-05-26 青岛银行信息披露与监管报送 start */
+		/*AND OPEN1.PLAN_TYPE = '01'*/
+		AND OPEN1.PLAN_TYPE = IF(DEAL.TRADE_TYPE='03', '02', '01')
+		/* modify by dubaojun 2020-05-26 青岛银行信息披露与监管报送 end */
+		left join chb_prd_baseinfo info1
+		on DEAL.PROD_ID = info1.PROD_ID
+		WHERE (STR_TO_DATE(DEAL.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
+		STR_TO_DATE(IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE), '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
+		<!--modify by wm 起息日当天有强增强减，不需要出存续期登记 start-->
+		AND (DEAL.TRADE_TYPE not in ('01','14','15') or (DEAL.TRADE_TYPE in ('14','15') and deal.SETTDATE_DATE != info1.vdate))
+		<!--modify by wm 起息日当天有强增强减，不需要出存续期登记 end-->
 		<!--  AND DEAL.STATUS  = 'E' -->
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-			AND ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) in
-			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
-				#{accountid}
+			and IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID) in
+			<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID) in (
+				</if>
+				#{item}
 			</foreach>
 		</if>
 		UNION ALL
@@ -53,74 +76,100 @@
 		SELECT YIELD.ORG_CODE,
 		YIELD.PROD_ID,
 		YIELD.FPROD_ID,
-		ifnull(OPEN1.OPEN_START,YIELD.CHANGE_DATE) OPEN_START,
-		ifnull(OPEN1.OPEN_END,YIELD.CHANGE_DATE) OPEN_END,
-		ifnull(OPEN1.OPEN_VDATE,YIELD.CHANGE_DATE) OPEN_VDATE,
-		case when
-		DATE_FORMAT(YIELD.UPDATE_TIME, '%Y-%m-%d') != DATE_FORMAT(YIELD.CHANGE_DATE, '%Y-%m-%d') and YIELD.status='E'
-		then 'M'
-		else YIELD.status
-		end status
+		YIELD.CHANG_TYPE,
+		IFNULL(OPEN1.OPEN_START, YIELD.CHANGE_DATE) OPEN_START,
+		IFNULL(OPEN1.OPEN_END, YIELD.CHANGE_DATE) OPEN_END,
+		YIELD.CHANGE_DATE PAY_DATE,
+		YIELD.CHANGE_DATE OPEN_VDATE,
+		YIELD.status as status
 		FROM CHB_PRD_PERIODYIELD YIELD
+		<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 		LEFT JOIN CHB_PRD_OPENSCH OPEN1
-		ON ifnull(YIELD.FPROD_ID,YIELD.PROD_ID) = OPEN1.PROD_ID
-		<!-- AND YIELD.ORG_CODE = OPEN1.ORG_CODE -->
-		AND YIELD.CHANGE_DATE  = OPEN1.OPEN_VDATE
+		ON IFNULL(YIELD.FPROD_ID,YIELD.PROD_ID) = OPEN1.PROD_ID
+		AND YIELD.CHANGE_DATE = IF('${openProdMdateConf}'='02', OPEN1.OPEN_END, OPEN1.OPEN_VDATE)
 		AND OPEN1.STATUS != 'D'
-		AND OPEN1.PLAN_TYPE = '01'
-		WHERE (DATE_FORMAT(YIELD.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
-		DATE_FORMAT(YIELD.CHANGE_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
+		AND EXISTS (SELECT 1 FROM CHB_PRD_DEAL DEAL
+		WHERE OPEN1.PROD_ID = IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID)
+		AND DEAL.TRADE_TYPE IN ('02', '03')
+		AND OPEN1.PLAN_TYPE = IF(DEAL.TRADE_TYPE='03', '02', '01')
+		AND IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE)
+		<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 end-->
+
+		<!-- left join  chb_prd_baseinfo  cinfo  on cinfo.prod_id=YIELD.prod_id -->
+		WHERE (STR_TO_DATE(YIELD.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
+		STR_TO_DATE(YIELD.CHANGE_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
 		<!--  AND YIELD.STATUS  = 'E' -->
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-			AND ifnull(YIELD.FPROD_ID,YIELD.PROD_ID) in
-			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
-				#{accountid}
+
+			AND IFNULL(YIELD.FPROD_ID,YIELD.PROD_ID) in
+			<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR IFNULL(YIELD.FPROD_ID,YIELD.PROD_ID) in (
+				</if>
+				#{item}
 			</foreach>
+
 		</if>
 		/*起息日当天的不报送*/
-		AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and ifnull(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
-		UNION ALL
+		/* AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and
+		IFNULL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
+		*/ UNION ALL
 		<!--费用 -->
 		SELECT FEEINFO.ORG_CODE,
 		FEEINFO.PROD_ID,
 		FEEINFO.FPROD_ID,
-		ifnull(OPEN1.OPEN_START,FEEINFO.PAY_DATE) OPEN_START,
-		ifnull(OPEN1.OPEN_END,FEEINFO.PAY_DATE) OPEN_END,
-		ifnull(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,
-		case when
-		DATE_FORMAT(FEEINFO.UPDATE_TIME, '%Y-%m-%d') != DATE_FORMAT(FEEINFO.PAY_DATE, '%Y-%m-%d') and FEEINFO.status='E'
-		then 'M'
-		else FEEINFO.status
-		end status
+		null as CHANG_TYPE,
+		<!-- 费用交易无需关联开放计划 -->
+		IFNULL(OPEN1.OPEN_START,FEEINFO.PAY_DATE) OPEN_START,
+		IFNULL(OPEN1.OPEN_END,FEEINFO.PAY_DATE) OPEN_END,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		FEEINFO.PAY_DATE PAY_DATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
+		FEEINFO.PAY_DATE OPEN_VDATE,
+		<!--IFNULL(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,-->
+		FEEINFO.status as status
 		FROM CHB_PRD_FEE_DEAL FEEINFO
+		<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 		LEFT JOIN CHB_PRD_OPENSCH OPEN1
-		ON ifnull(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) = OPEN1.PROD_ID
-		<!-- AND FEEINFO.ORG_CODE = OPEN1.ORG_CODE -->
-		AND FEEINFO.PAY_DATE  = OPEN1.OPEN_VDATE
+		ON IFNULL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) = OPEN1.PROD_ID
+		AND FEEINFO.PAY_DATE  = IF('${openProdMdateConf}'='02', OPEN1.OPEN_END, OPEN1.OPEN_VDATE)
 		AND OPEN1.STATUS != 'D'
-		AND OPEN1.PLAN_TYPE = '01'
-		WHERE (DATE_FORMAT(FEEINFO.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
-		DATE_FORMAT(FEEINFO.PAY_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
+		AND EXISTS (SELECT 1 FROM CHB_PRD_DEAL DEAL
+		WHERE OPEN1.PROD_ID = IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID)
+		AND DEAL.TRADE_TYPE IN ('02', '03')
+		AND OPEN1.PLAN_TYPE = IF(DEAL.TRADE_TYPE='03', '02', '01')
+		AND IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE)
+		<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 end-->
+
+		WHERE (STR_TO_DATE(FEEINFO.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
+		STR_TO_DATE(FEEINFO.PAY_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
 		<!--  AND FEEINFO.STATUS  = 'E' -->
 		AND FEEINFO.FEE_TYPE = '01'
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-			AND ifnull(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in
-			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
-				#{accountid}
+			AND IFNULL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in
+			<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR IFNULL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in (
+				</if>
+				#{item}
 			</foreach>
+
 		</if>
 		) TEMP
 		INNER JOIN CHB_PRD_BASEINFO INFO
-		ON INFO.PROD_ID = ifnull(TEMP.FPROD_ID,TEMP.PROD_ID)
+		ON INFO.PROD_ID = IFNULL(TEMP.FPROD_ID,TEMP.PROD_ID)
 		<!-- AND INFO.ORG_CODE = TEMP.ORG_CODE -->
 		AND INFO.STATUS != 'D'
 		AND INFO.OPERATE_MODE IN ('03', '04')
 		left join CHB_PRDRESIST_CODE code
-		on code.prodid=ifnull(TEMP.FPROD_ID,TEMP.PROD_ID)
+		on code.prodid=IFNULL(TEMP.FPROD_ID,TEMP.PROD_ID)
 		GROUP BY TEMP.ORG_CODE,
-		ifnull(INFO.FPROD_ID,INFO.PROD_ID),
+		IFNULL(INFO.FPROD_ID,INFO.PROD_ID),
 		TEMP.OPEN_START,
 		TEMP.OPEN_VDATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		TEMP.PAY_DATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		INFO.PRD_VDATE,
 		INFO.OPERATE_MODE,
 		TEMP.status,
@@ -132,11 +181,15 @@
 			resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ChbPrdDurationDeal">
 		SELECT
 		TEMP.ORG_CODE AS ORGCODE,
-		ifnull(INFO.FPROD_ID,INFO.PROD_ID) AS PRODID,
+		IFNULL(INFO.FPROD_ID,INFO.PROD_ID) AS PRODID,
 		TEMP.OPEN_START AS OPENSTART,
 		TEMP.OPEN_END AS OPENEND,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		TEMP.PAY_DATE AS openEnd1,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		INFO.VDATE AS VDATE,
 		INFO.OPERATE_MODE AS OPERATEMODE,
+		TEMP.CHANG_TYPE AS changeType,
 		code.REG_CODE REGCODE,
 		TEMP.Status
 		FROM (
@@ -144,22 +197,29 @@
 		SELECT DEAL.ORG_CODE,
 		DEAL.PROD_ID,
 		DEAL.FPROD_ID,
-		(case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end) AS OPEN_START,
-		(case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end) AS OPEN_END,
-		case when
-		DATE_FORMAT(DEAL.UPDATE_TIME, '%Y-%m-%d') != DATE_FORMAT(DEAL.SETTDATE_DATE, '%Y-%m-%d') and DEAL.Status='E'
-		then 'M'
-		else DEAL.Status
-		end Status
+		null as CHANG_TYPE,
+		IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) AS OPEN_START,
+		IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) AS OPEN_END,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) PAY_DATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
+		DEAL.Status AS Status
 		FROM CHB_PRD_DEAL DEAL
-		WHERE ( DATE_FORMAT(DEAL.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
-		DATE_FORMAT((case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end), '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
-		AND DEAL.TRADE_TYPE !='01'
+		left join chb_prd_baseinfo info1
+		on DEAL.PROD_ID = info1.PROD_ID
+		WHERE ( STR_TO_DATE(DEAL.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
+		STR_TO_DATE(IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE), '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
+		<!--modify by wm 起息日当天有强增强减，不需要出存续期登记 start-->
+		AND (DEAL.TRADE_TYPE not in ('01','14','15') or (DEAL.TRADE_TYPE in ('14','15') and deal.SETTDATE_DATE != info1.vdate))
+		<!--modify by wm 起息日当天有强增强减，不需要出存续期登记 end-->
 		<!-- AND DEAL.STATUS = 'E' -->
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-			AND ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) in
-			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
-				#{accountid}
+			AND IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID) in
+			<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID) in (
+				</if>
+				#{item}
 			</foreach>
 		</if>
 		UNION ALL
@@ -167,62 +227,74 @@
 		SELECT YIELD.ORG_CODE,
 		YIELD.PROD_ID,
 		YIELD.FPROD_ID,
+		YIELD.CHANG_TYPE as CHANG_TYPE,
 		YIELD.CHANGE_DATE AS OPEN_START,
 		YIELD.CHANGE_DATE AS OPEN_END,
-		case when
-		DATE_FORMAT(YIELD.UPDATE_TIME, '%Y-%m-%d') != DATE_FORMAT(YIELD.CHANGE_DATE, '%Y-%m-%d') and YIELD.status='E'
-		then 'M'
-		else YIELD.status
-		end status
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		YIELD.CHANGE_DATE PAY_DATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
+		 YIELD.status as status
 		FROM CHB_PRD_PERIODYIELD YIELD
-		WHERE (DATE_FORMAT(YIELD.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
-		DATE_FORMAT(YIELD.CHANGE_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
+		WHERE (STR_TO_DATE(YIELD.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
+		STR_TO_DATE(YIELD.CHANGE_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
 		<!-- AND YIELD.STATUS  = 'E' -->
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-			AND ifnull(YIELD.FPROD_ID,YIELD.PROD_ID) in
-			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
-				#{accountid}
+
+			AND IFNULL(YIELD.FPROD_ID,YIELD.PROD_ID) in
+			<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR IFNULL(YIELD.FPROD_ID,YIELD.PROD_ID) in (
+				</if>
+				#{item}
 			</foreach>
 		</if>
 		/*起息日当天的不报送*/
-		AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and ifnull(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
-		UNION ALL
+		/*		    AND NOT EXISTS (SELECT 1 FROM CHB_PRD_BASEINFO INFO WHERE INFO.VDATE = YIELD.CHANGE_DATE and IFNULL(YIELD.FPROD_ID,YIELD.PROD_ID) = info.prod_id)
+		*/			UNION ALL
 		/**费用**/
 		SELECT FEEINFO.ORG_CODE,
 		FEEINFO.PROD_ID,
 		FEEINFO.FPROD_ID,
+		null as CHANG_TYPE,
 		FEEINFO.PAY_DATE AS OPEN_START,
 		FEEINFO.PAY_DATE AS OPEN_END,
-		case when
-		DATE_FORMAT(FEEINFO.UPDATE_TIME, '%Y-%m-%d') != DATE_FORMAT(FEEINFO.PAY_DATE, '%Y-%m-%d') and FEEINFO.status='E'
-		then 'M'
-		else FEEINFO.status
-		end status
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		FEEINFO.PAY_DATE PAY_DATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
+		 FEEINFO.status as status
 		FROM CHB_PRD_FEE_DEAL FEEINFO
-		WHERE ( DATE_FORMAT(FEEINFO.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
-		DATE_FORMAT(FEEINFO.PAY_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
+		WHERE ( STR_TO_DATE(FEEINFO.UPDATE_TIME, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR} or
+		STR_TO_DATE(FEEINFO.PAY_DATE, '%Y-%m-%d') = #{batchDate,jdbcType = VARCHAR})
 		<!-- AND FEEINFO.STATUS   = 'E' -->
 		AND FEEINFO.FEE_TYPE = '01'
 		<if test="prodIdList!=null and prodIdList.size()!=0">
-			AND ifnull(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in
-			<foreach item="accountid" collection="prodIdList" open="(" separator="," close=")">
-				#{accountid}
+
+			AND IFNULL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in
+			<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR IFNULL(FEEINFO.FPROD_ID,FEEINFO.PROD_ID) in (
+				</if>
+				#{item}
 			</foreach>
+
 		</if>
 
 		) TEMP
 		INNER JOIN CHB_PRD_BASEINFO INFO
-		ON INFO.PROD_ID = ifnull(TEMP.FPROD_ID,TEMP.PROD_ID)
+		ON INFO.PROD_ID = IFNULL(TEMP.FPROD_ID,TEMP.PROD_ID)
 		<!-- AND INFO.ORG_CODE = TEMP.ORG_CODE -->
 		AND INFO.STATUS != 'D'
 		AND INFO.OPERATE_MODE IN ('01', '02')
 		left join CHB_PRDRESIST_CODE code
-		on code.prodid=ifnull(TEMP.FPROD_ID,TEMP.PROD_ID)
+		on code.prodid=IFNULL(TEMP.FPROD_ID,TEMP.PROD_ID)
 		GROUP BY
 		TEMP.ORG_CODE,
-		ifnull(INFO.FPROD_ID,INFO.PROD_ID),
+		IFNULL(INFO.FPROD_ID,INFO.PROD_ID),
 		TEMP.OPEN_START,
 		TEMP.OPEN_END,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
+		TEMP.PAY_DATE,
+		<!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		INFO.VDATE,
 		INFO.OPERATE_MODE,
 		TEMP.Status,
@@ -233,7 +305,7 @@
 	<select id="getProdDealSubList"
 			resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ChbPrdDurationDeal">
 		select
-		ifnull(info.fprod_id,info.prod_id) as prodId,
+		IFNULL(info.fprod_id,info.prod_id) as prodId,
 		info.org_code as orgCode,
 		sub.regist_seqno regSeq,
 		sub1.regist_seqno regSeq1,
@@ -243,12 +315,12 @@
 		from chb_prd_baseinfo info
 
 		left join chb_prd_deal_sub sub
-		on ifnull(info.fprod_id,info.prod_id) = sub.prod_id
+		on IFNULL(info.fprod_id,info.prod_id) = sub.prod_id
 		<!-- and info.org_code = sub.org_code -->
 		and sub.send_status != '01'
 
 		left join chb_prd_deal_sub sub1
-		on ifnull(info.fprod_id,info.prod_id) = sub1.prod_id
+		on IFNULL(info.fprod_id,info.prod_id) = sub1.prod_id
 		<!-- and info.org_code = sub1.org_code -->
 		and sub1.send_status = '01'
 
@@ -281,58 +353,92 @@
 	<!-- 获取所有交易信息 -->
 	<select id="getAllPrdDeal" resultType="com.joyintech.tams.common.base.entity.ChbPrdDeal">
 		select
-		ifnull(deal.fprod_id,deal.prod_id) prodId,
+		IFNULL(deal.fprod_id,deal.prod_id) prodId,
 		deal.org_code orgCode,
 		deal.trade_type tradeType,
-		(case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end) payDate,
-		deal.ccy,
-		sum(ifnull(deal.int_amt,0)) intAmt,
-		max(ifnull(deal.unit_bonus_amount,0)) unitBonusAmount,
-		sum(ifnull(deal.trade_qty,0)) tradeQty,
-		sum(ifnull(deal.trade_prince,0)) tradePrince
-		from chb_prd_deal deal
+		IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) payDate,
 
+
+		CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
+		THEN IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+		WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('02', '03', '17')
+		THEN IFNULL(OPEN1.OPEN_END, IFNULL(OPEN1.OPEN_VDATE,DEAL.SETTDATE_DATE))
+		ELSE IFNULL(OPEN1.OPEN_VDATE,IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE))
+		END settdateDate,
+
+
+		/*CASE
+		WHEN '02' = '02'
+		AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15')
+		AND OPEN1.OPEN_END IS NOT NULL
+		THEN IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
+		ELSE IFNULL(OPEN1.OPEN_END, IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,
+		DEAL.SETTDATE_DATE))
+		END AS settdateDate,*/
+
+		deal.ccy,
+		sum(IFNULL(deal.int_amt,0)) intAmt,
+		max(IFNULL(deal.unit_bonus_amount,0)) unitBonusAmount,
+		sum(IFNULL(deal.trade_qty,0)) tradeQty,
+		sum(IFNULL(deal.trade_prince,0)) tradePrince
+		from chb_prd_deal deal
+		/* add by dubaojun 2020-05-26 青岛银行信息披露与监管报送 start */
+		LEFT JOIN CHB_PRD_OPENSCH OPEN1
+		ON IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID) = OPEN1.PROD_ID
+		AND IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) = OPEN1.OPEN_VDATE
+		AND OPEN1.STATUS != 'D'
+		AND OPEN1.PLAN_TYPE = IF(DEAL.TRADE_TYPE='03', '02', '01')
+		/* add by dubaojun 2020-05-26 青岛银行信息披露与监管报送 end */
+		left join chb_prd_baseinfo info1
+		on DEAL.PROD_ID = info1.PROD_ID
 		where deal.status != 'D'
-		AND DEAL.TRADE_TYPE !='01'
+		<!--modify by wm 起息日当天有强增强减，不需要出存续期登记 start-->
+		AND (DEAL.TRADE_TYPE not in ('01','14','15') or (DEAL.TRADE_TYPE in ('14','15') and deal.SETTDATE_DATE != info1.vdate))
+		<!--modify by wm 起息日当天有强增强减，不需要出存续期登记 end-->
 		and (deal.BUY_PLACE not in('210200','330200','350200','370200','440300') or deal.BUY_PLACE is null)
 		<foreach collection="list" item="prdDealSub" open="and ( (" close=" ) )" separator=") or (">
-			ifnull(deal.fprod_id,deal.prod_id) = #{prdDealSub.prodId,jdbcType = VARCHAR}
+			IFNULL(deal.fprod_id,deal.prod_id) = #{prdDealSub.prodId,jdbcType = VARCHAR}
 			<!-- and deal.org_code = #{prdDealSub.orgCode,jdbcType = VARCHAR} -->
-			and (case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end)
+			and IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
 			<!-- between #{prdDealSub.openStart,jdbcType = DATE} and #{prdDealSub.openEnd,jdbcType = DATE} -->
-			= #{prdDealSub.openEnd,jdbcType = DATE}
+			<!-- = #{prdDealSub.openEnd,jdbcType = DATE}-->
+			between #{prdDealSub.openEnd,jdbcType = DATE} and #{prdDealSub.openEnd1,jdbcType = DATE}
 		</foreach>
 
 		group by
-		ifnull(deal.fprod_id,deal.prod_id),
+		IFNULL(deal.fprod_id,deal.prod_id),
 		deal.org_code,
 		deal.trade_type,
-		(case DEAL.TRADE_TYPE when '04' then DEAL.INTEREST_DATE else DEAL.SETTDATE_DATE end),
-		deal.ccy
+		IF(DEAL.TRADE_TYPE='04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE),
+		deal.ccy,
+		OPEN1.OPEN_END,
+		OPEN1.PROD_ID,
+		OPEN1.OPEN_VDATE,
+		DEAL.SETTDATE_DATE
 	</select>
 
 	<!-- 查询费用列表 -->
 	<select id="getAllPrdFeeList" resultType="com.joyintech.tams.common.base.entity.ChbPrdFeeDeal">
 		SELECT
-		ifnull(FPROD_ID,PROD_ID) prodId,
+		IFNULL(FPROD_ID,PROD_ID) prodId,
 		PROD_NAME prodName,
 		ORG_CODE orgCode,
 		FEE_ID feeId,
 		FEE_NAME feeName,
 		CCY ccy,
-		SUM(ifnull(AMT,0)) amt,
+		SUM(IFNULL(AMT,0)) amt,
 		PAY_DATE payDate
 		FROM CHB_PRD_FEE_DEAL INFO
 		WHERE INFO.STATUS !='D'
 		AND INFO.FEE_TYPE = '01'
 		<foreach collection="list" item="prdDealSub" open="and ( (" close=" ) )" separator=") or (">
-			ifnull(info.fprod_id,info.prod_id) = #{prdDealSub.prodId,jdbcType = VARCHAR}
+			IFNULL(info.fprod_id,info.prod_id) = #{prdDealSub.prodId,jdbcType = VARCHAR}
 			<!-- and info.org_code = #{prdDealSub.orgCode,jdbcType = VARCHAR} -->
 			and info.pay_date
 			<!-- between #{prdDealSub.openStart,jdbcType = DATE} and #{prdDealSub.openEnd,jdbcType = DATE} -->
 			= #{prdDealSub.openEnd,jdbcType = DATE}
 		</foreach>
-		group by ifnull(FPROD_ID,PROD_ID),
+		group by IFNULL(FPROD_ID,PROD_ID),
 		PROD_NAME,
 		ORG_CODE,
 		FEE_ID,
@@ -344,7 +450,8 @@
 	<!-- 获取实现收益率 -->
 	<select id="getReaYield" resultType="com.joyintech.tams.common.base.entity.ChbPrdPeriodYield">
 		select
-		yield.prod_value prodValue,yield.ccy
+		yield.prod_value prodValue,yield.ccy,
+		yield.change_date changeDate
 		from chb_prd_periodyield yield
 		where yield.change_date = (select max(change_date)
 		from chb_prd_periodyield yield1
@@ -372,6 +479,23 @@
 		WHERE POS.CDATE = #{date,jdbcType = DATE}
 		AND POS.PROD_ID = #{prodId, jdbcType = VARCHAR}
 		<!-- AND POS.ORG_CODE = #{orgCode, jdbcType = VARCHAR} -->
+	</select>
+
+	<select id="getBalanceAmt" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(IFNULL(CNY_AMT,0)) as balanceAmt
+		FROM (
+		SELECT
+		CASE WHEN STATUS = '03' THEN 0 ELSE CNY_AMT END CNY_AMT,
+		ROW_NUMBER() over( partition by prodId, HOLD_DATE, INDENTIFY_MARK order by UPDATE_TIME desc ) as holdNo
+		FROM
+		CHB_INVESTHOLD_INFO_SUB
+		WHERE
+		PRODID = #{prodId, jdbcType = VARCHAR}
+		AND TO_DATE(STR_TO_DATE(HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[=]]> TO_DATE(STR_TO_DATE(#{date,jdbcType=DATE}, '%Y-%m-%d'), '%Y-%m-%d')
+		)
+		WHERE
+		holdNo  = 1
 	</select>
 
 	<!-- 获取产品收益-->
@@ -416,8 +540,8 @@
 			#{item.reaYield,jdbcType=DECIMAL},
 			#{item.newExpYield,jdbcType=DECIMAL},
 			#{item.bankImpInt,jdbcType=DECIMAL},
-			STR_TO_DATE(#{item.vdate,jdbcType=VARCHAR},'%Y-%m-%d'),
-			STR_TO_DATE(#{item.mdate,jdbcType=VARCHAR},'%Y-%m-%d'),
+			DATE_FORMAT(#{item.vdate,jdbcType=VARCHAR},'%Y-%m-%d'),
+			DATE_FORMAT(#{item.mdate,jdbcType=VARCHAR},'%Y-%m-%d'),
 			#{item.purchaseQty,jdbcType=DECIMAL},
 			#{item.redeemQty,jdbcType=DECIMAL},
 			#{item.balanceAmt,jdbcType=DECIMAL},
@@ -443,7 +567,7 @@
 	</insert>
 
 	<insert id="insertPrdDealSub" parameterType="com.joyintech.tams.common.base.entity.ChbPrdDealSub">
-	  insert into CHB_PRD_DEAL_SUB
+		insert into CHB_PRD_DEAL_SUB
 		(REGIST_SEQNO,PROD_ID,ISSUE_PARTY_ID,PROD_REGIST_CODE,
 		ORIGINAL_VALUE,PRD_VALUE,TOTAL_VALUE,VALUE_CCY,	CNY_ORL_VALUE,
 		CNY_PRD_VALUE,CNY_TAL_VALUE,REA_YIELD,NEW_EXP_YIELD,
@@ -453,71 +577,76 @@
 		STATUS_DATE,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
 		STATUS,CREATE_USER,ORG_CODE,CREATE_DEPT,
 		CREATE_TIME,UPDATE_USER,UPDATE_TIME,SUBMIT_TIME,REMARK,
-		SHARE_AMT_WAN,CASH_AMT_WAN
-		)  
-		values(    
-		    #{registSeqno,jdbcType=VARCHAR},
-		    #{prodId,jdbcType=VARCHAR},
-		    #{issuePartyId,jdbcType=VARCHAR},
-		    #{prodRegistCode,jdbcType=VARCHAR},
-		    #{originalValue,jdbcType=DECIMAL},
-		    #{prdValue,jdbcType=DECIMAL},
-		    #{totalValue,jdbcType=DECIMAL},
-		    #{valueCcy,jdbcType=VARCHAR},
-		    #{cnyOrlValue,jdbcType=DECIMAL},
-		    #{cnyPrdValue,jdbcType=DECIMAL},
-		    #{cnyTalValue,jdbcType=DECIMAL},
-		    #{reaYield,jdbcType=DECIMAL},
-			#{newExpYield,jdbcType=DECIMAL},
-			#{bankImpInt,jdbcType=DECIMAL},
-		    STR_TO_DATE(#{vdate,jdbcType=VARCHAR},'%Y-%m-%d'),
-		    STR_TO_DATE(#{mdate,jdbcType=VARCHAR},'%Y-%m-%d'),
-		    #{purchaseQty,jdbcType=DECIMAL},
-		    #{redeemQty,jdbcType=DECIMAL},
-		    #{balanceAmt,jdbcType=DECIMAL},
-		    #{prdQty,jdbcType=DECIMAL},
-		    #{ccyPurchase,jdbcType=VARCHAR},
-		    #{sendStatus,jdbcType=VARCHAR},
-		    #{submitFeedbackStatus,jdbcType=VARCHAR},
-		    #{sumitSeq,jdbcType=VARCHAR},
-		    #{statusDate,jdbcType=TIMESTAMP},
-		    #{chbSubmitDeadline,jdbcType=TIMESTAMP},
-		    #{submitDeadline,jdbcType=TIMESTAMP},
-		    #{status,jdbcType=VARCHAR},
-		 	#{createUser,jdbcType=VARCHAR},
-		 	#{orgCode,jdbcType=VARCHAR},
-		 	null,
-		 	NOW(),
-		 	#{updateUser,jdbcType=VARCHAR},
-		 	NOW(),
-		 	#{submitTime,jdbcType=TIMESTAMP},
-		 	#{remark,jdbcType=VARCHAR},
-		 	#{shareAmtWan,jdbcType=DECIMAL},
-		 	#{cashAmtWan,jdbcType=DECIMAL}
-		  ) 
+		SHARE_AMT_WAN,CASH_AMT_WAN,YIELD_DATE
+		)
+		values(
+		#{registSeqno,jdbcType=VARCHAR},
+		#{prodId,jdbcType=VARCHAR},
+		#{issuePartyId,jdbcType=VARCHAR},
+		#{prodRegistCode,jdbcType=VARCHAR},
+		#{originalValue,jdbcType=DECIMAL},
+		#{prdValue,jdbcType=DECIMAL},
+		#{totalValue,jdbcType=DECIMAL},
+		#{valueCcy,jdbcType=VARCHAR},
+		#{cnyOrlValue,jdbcType=DECIMAL},
+		#{cnyPrdValue,jdbcType=DECIMAL},
+		#{cnyTalValue,jdbcType=DECIMAL},
+		#{reaYield,jdbcType=DECIMAL},
+		#{newExpYield,jdbcType=DECIMAL},
+		#{bankImpInt,jdbcType=DECIMAL},
+		DATE_FORMAT(#{vdate,jdbcType=VARCHAR},'%Y-%m-%d'),
+		DATE_FORMAT(#{mdate,jdbcType=VARCHAR},'%Y-%m-%d'),
+		#{purchaseQty,jdbcType=DECIMAL},
+		#{redeemQty,jdbcType=DECIMAL},
+		#{balanceAmt,jdbcType=DECIMAL},
+		#{prdQty,jdbcType=DECIMAL},
+		#{ccyPurchase,jdbcType=VARCHAR},
+		#{sendStatus,jdbcType=VARCHAR},
+		#{submitFeedbackStatus,jdbcType=VARCHAR},
+		#{sumitSeq,jdbcType=VARCHAR},
+		#{statusDate,jdbcType=TIMESTAMP},
+		#{chbSubmitDeadline,jdbcType=TIMESTAMP},
+		#{submitDeadline,jdbcType=TIMESTAMP},
+		#{status,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{orgCode,jdbcType=VARCHAR},
+		null,
+		NOW(),
+		#{updateUser,jdbcType=VARCHAR},
+		NOW(),
+		#{submitTime,jdbcType=TIMESTAMP},
+		#{remark,jdbcType=VARCHAR},
+		#{shareAmtWan,jdbcType=DECIMAL},
+		#{cashAmtWan,jdbcType=DECIMAL},
+		#{yieldDate,jdbcType=DATE}
+		)
 	</insert>
 
 	<delete id="deleteBatch" parameterType="java.util.List">
-		begin
+		/*begin*/
 		<foreach collection="resultList" item="item" index="index" separator=";">
 			delete from CHB_PRD_DEAL_SUB
 			where 1 = 1
-			<if test="item.prodId != null" >
-				and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
-			</if>
-			<if test="item.vdate != null" >
-				and VDATE = STR_TO_DATE(#{item.vdate,jdbcType=VARCHAR},'%Y-%m-%d')
-			</if>
-			<if test="item.mdate != null" >
-				and MDATE = STR_TO_DATE(#{item.item.mdate,jdbcType=VARCHAR},'%Y-%m-%d')
+			<!--  导致主键冲突
+              <if test="item.prodId != null" >
+                and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+              </if>
+              <if test="item.vdate != null" >
+                and VDATE = DATE_FORMAT(#{item.vdate,jdbcType=VARCHAR},'%Y-%m-%d')
+              </if>
+               <if test="item.mdate != null" >
+                and MDATE = DATE_FORMAT(#{item.mdate,jdbcType=VARCHAR},'%Y-%m-%d')
+              </if> -->
+			<if test="item.registSeqno != null" >
+				and regist_seqno = #{item.registSeqno,jdbcType=VARCHAR}
 			</if>
 			and send_status='01'
 		</foreach>
-		;end;
+		/*;end;*/
 	</delete>
 
 	<update id="updateBatch" parameterType="java.util.List">
-		begin
+		/*begin*/
 		<foreach collection="resultList" item="item" index="index" separator=";">
 			update CHB_PRD_DEAL_SUB
 			<set>
@@ -621,7 +750,7 @@
 			</set>
 			where REGIST_SEQNO = #{item.registSeqno,jdbcType=VARCHAR} AND SEND_STATUS = '01'
 		</foreach>
-		;end;
+		/*;end;*/
 	</update>
 
 	<!-- <delete id="deleteBatch" parameterType="java.util.List">
@@ -633,6 +762,19 @@
       </foreach>
       ;end;
     </delete> -->
+	<delete id="deleteBatchByprodId" parameterType="java.util.List">
+		<foreach collection="resultList" item="item" index="index" separator=";">
+			delete from CHB_PRD_DEAL_SUB
+			where 1 = 1
+			<if test="item.prodId != null" >
+				and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+			</if>
+			<if test="item.vdate != null" >
+				and MDATE = #{item.mdate,jdbcType=DATE}
+			</if>
+			and send_status='01'
+		</foreach>
+	</delete>
 	<select id="isLevProd" resultType="java.lang.Integer">
 		SELECT
 		COUNT(1)
@@ -684,27 +826,27 @@
 	</select>
 	<select  id="selectWanAmt"   parameterType="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal"
 			 resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
-	  select
-	  trade_type  tradeType,
-	  cpp.ccy as valueCcy,
-	  (case SUM(ifnull(REG_TRADE_QTY,0)) when 0 then NULL else (SUM(ifnull(TRADE_QTY,0))*10000/SUM(ifnull(REG_TRADE_QTY,0))) end) AS  shareAmtWan,
-	  (case SUM(ifnull(REG_TRADE_QTY,0)) when 0 then NULL else (SUM(ifnull(INT_AMT,0))*10000/SUM(ifnull(REG_TRADE_QTY,0))) end) AS  cashAmtWan
-	  from  CHB_PRD_BONUS_DEAL
-	  left join(
-	  select prod_id prodId,ccy,prod_value prodValue
-	  from (
-	  select rank() over (partition by prod_id order by change_date desc) my_rank,
-	  prod_id, ccy, prod_value
-	  from CHB_PRD_PERIODYIELD
-	  where CHANGE_DATE <![CDATA[<=]]>#{payDate,jdbcType=DATE}
-	  and prod_id = #{prodId, jdbcType = VARCHAR}
-	  and CHANG_TYPE='01'
-	  ) aa
-	  where my_rank = 1
-	  )cpp
-	  on CHB_PRD_BONUS_DEAL.PROD_ID = cpp.prodId
-	  where   ifnull(FPROD_ID,PROD_ID)=#{prodId, jdbcType = VARCHAR}
-	  AND  settdate_DATE=#{payDate, jdbcType = DATE}
-	  GROUP BY ifnull(FPROD_ID,PROD_ID),trade_type
-  </select>
+		select
+		trade_type  tradeType,
+		cpp.ccy as valueCcy,
+		(case SUM(ifnull(REG_TRADE_QTY,0)) when 0 then NULL else (SUM(ifnull(TRADE_QTY,0))*10000/SUM(ifnull(REG_TRADE_QTY,0))) end) AS  shareAmtWan,
+		(case SUM(ifnull(REG_TRADE_QTY,0)) when 0 then NULL else (SUM(ifnull(INT_AMT,0))*10000/SUM(ifnull(REG_TRADE_QTY,0))) end) AS  cashAmtWan
+		from  CHB_PRD_BONUS_DEAL
+		left join(
+		select prod_id prodId,ccy,prod_value prodValue
+		from (
+		select rank() over (partition by prod_id order by change_date desc) my_rank,
+		prod_id, ccy, prod_value
+		from CHB_PRD_PERIODYIELD
+		where CHANGE_DATE <![CDATA[<=]]>#{payDate,jdbcType=DATE}
+		and prod_id = #{prodId, jdbcType = VARCHAR}
+		and CHANG_TYPE='01'
+		) aa
+		where my_rank = 1
+		)cpp
+		on CHB_PRD_BONUS_DEAL.PROD_ID = cpp.prodId
+		where   ifnull(FPROD_ID,PROD_ID)=#{prodId, jdbcType = VARCHAR}
+		AND  settdate_DATE=#{payDate, jdbcType = DATE}
+		GROUP BY ifnull(FPROD_ID,PROD_ID),trade_type
+	</select>
 </mapper>

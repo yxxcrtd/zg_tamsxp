@@ -83,6 +83,7 @@
     <result column="FILE_NUM" jdbcType="DECIMAL" property="fileNum" />
     <result column="SUBMIT_FEEDBACK_STATUS" jdbcType="VARCHAR" property="submitFeedbackStatus" />
     <result column="REG_CODE" jdbcType="VARCHAR" property="regCode" />
+    <result column="IS_FHXGCP" jdbcType="VARCHAR" property="isFhxgcp" />
   </resultMap>
   <sql id="Base_Column_List">
     REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
@@ -97,10 +98,10 @@
     CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE, 
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
     UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
-    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE
+    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, IS_FHXGCP
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from CHB_PRD_DECLARE_SUB_HIS
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
@@ -136,7 +137,7 @@
       CREATE_USER, CREATE_DEPT, CREATE_TIME, 
       UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, 
       SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
-      FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE
+      FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, IS_FHXGCP
       )
     values (#{registSeqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
       #{prodInsId,jdbcType=VARCHAR}, #{prodBrand,jdbcType=VARCHAR}, #{prodStage,jdbcType=DECIMAL}, 
@@ -164,7 +165,7 @@
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, 
       #{submitDeadline,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, 
-      #{fileNum,jdbcType=DECIMAL}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR}
+      #{fileNum,jdbcType=DECIMAL}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR}, #{isFhxgcp,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.ChbPrdDeclareSubHis">
@@ -413,6 +414,9 @@
       <if test="regCode != null">
         REG_CODE,
       </if>
+      <if test="isFhxgcp != null">
+        IS_FHXGCP,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="registSeqno != null">
@@ -657,6 +661,9 @@
       </if>
       <if test="regCode != null">
         #{regCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isFhxgcp != null">
+        #{isFhxgcp,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -903,6 +910,9 @@
       <if test="regCode != null">
         REG_CODE = #{regCode,jdbcType=VARCHAR},
       </if>
+      <if test="isFhxgcp != null">
+        IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+      </if>
     </set>
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
@@ -987,54 +997,55 @@
       ORG_CODE = #{orgCode,jdbcType=VARCHAR},
       FILE_NUM = #{fileNum,jdbcType=DECIMAL},
       SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
-      REG_CODE = #{regCode,jdbcType=VARCHAR}
+      REG_CODE = #{regCode,jdbcType=VARCHAR},
+      IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
-
+  
   <insert id="insertSubHisBatch" parameterType="java.lang.String">
-    insert into CHB_PRD_DECLARE_SUB_HIS (REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID,
-    APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME,
-    LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE,
-    SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE,
-    CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME,
-    INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA,
-    RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE,
-    RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE,
-    OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG,
-    CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE,
-    PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME,
-    UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
-    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR,
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
-    )
-    select
-    REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID,
-    APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME,
-    LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE,
-    SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE,
-    CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME,
-    INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA,
-    RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE,
-    RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE,
-    OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG,
-    CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE,
+  insert into CHB_PRD_DECLARE_SUB_HIS (REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
+    APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME, 
+    LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE, 
+    SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE, 
+    CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME, 
+    INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA, 
+    RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE, 
+    RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE, 
+    OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, 
+    CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE, 
+    PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+    UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE, 
+    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG,PRD_SPEC_PROPERTY
+      )
+      select 
+    REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID, 
+    APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, MANAGER_NAME, 
+    LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE, 
+    SALETARGET, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, BOOK_MODE, 
+    CMMODE, PMMODE, MNAME, PRICED_MODE, INV_ASSET_TYPE, CON_PRD_TRAGET, CONT_MODE, COOPERATION_NAME, 
+    INV_TYPE_RAT, IS_YIELD, HIGH_YIELD, LOW_YIELD, IS_YIELD_MEAS_BASIS, RISK_TYPE, SALE_AREA, 
+    RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, SALE_AMT_STR, RAISE_AMT_PLAN, RAISE_PSTRDATE, 
+    RAISE_PENDDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_FEE_RATE, IN_DEP_NAME, IN_DEP_CODE, 
+    OUT_DEP_CTRY, OUT_DEP_NAME, TRU_FEE_RATE, RISK_LEVEL, TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, 
+    CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, REMARK, NINE_FILE, FILE_NO, PRE_REG_DATE, 
     PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, NOW(),
     UPDATE_USER, NOW(), CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
-    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR,
-    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+    FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR, 
+    IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG,PRD_SPEC_PROPERTY
     from CHB_PRD_DECLARE_SUB
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-    <if test="regList !=null and regList.size()>0">
-      <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
-        #{item,jdbcType=VARCHAR}
-      </foreach>
+  	<if test="regList !=null and regList.size()>0">
+          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+            #{item,jdbcType=VARCHAR}
+          </foreach>
     </if>
   </insert>
-
+  
   <select id="selectByprodId" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
-    select a.REGIST_SEQNO from (
+  select a.REGIST_SEQNO from (
     SELECT
-    @rownum:=@rownum+1 rownum,
+    @rownum:=@rownum+1 `rownum`,
     a.REGIST_SEQNO,
     IF( @prod_id = a.prod_id, @rank := @rank + 1, @rank := 1 ) AS myrank,
     @prod_id := a.prod_id
@@ -1043,18 +1054,18 @@
     ( SELECT @rownum := 0, @prod_id := NULL, @rank := 0 )b
     where
     <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
-      prod_id = #{item.prodId,jdbcType=VARCHAR}
+    prod_id = #{item.prodId,jdbcType=VARCHAR}
     </foreach>
-    )a
-    where 1=1 limit 1
+    ) a
+  where a.myrank = 1
   </select>
-
-  <delete id="deleteBySeqno" parameterType="java.lang.String">
-    delete from CHB_PRD_DECLARE_SUB_HIS
-    where
-    <foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
-             separator="," close=")">
-      #{item,jdbcType=VARCHAR}
-    </foreach>
-  </delete>
+  
+   <delete id="deleteBySeqno" parameterType="java.lang.String">
+	delete from CHB_PRD_DECLARE_SUB_HIS
+	where
+	<foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
+		separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>
+</delete>
 </mapper>

@@ -216,6 +216,57 @@
     <delete id="deleteChbSalerRewErrorDataByTradeNo">
         delete from CHB_SALER_REW_PENA_ERRODATA where SALER_REW_PENA_NO = #{salerRewPenaNo}
     </delete>
+    <delete id="deleteChbInvestTradeErrorData">
+        delete from CHB_INVEST_TRADE_ERRODATA where PROD_ID = #{prodId} and TRADE_CODE = #{tradeCode} and ASSET_CODE = #{assetCode}
+    </delete>
+    <delete id="deleteChbPrdBaseInfoErrorData">
+        delete from CHB_PRD_BASEINFO_ERRODATA where PROD_ID = #{prodId}
+    </delete>
+    <delete id="deleteChbPrdBaseInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfoErrodataWithBLOBs">
+        delete from CHB_PRD_BASEINFO where PROD_ID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.prodId}
+        </foreach>
+    </delete>
+    <delete id="deleteChbInvestTrade" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrodataWithBLOBs">
+        delete from CHB_INVEST_TRADE where (PROD_ID,TRADE_CODE,ASSET_CODE) in
+        <foreach collection="list" item = "item" open="(" close=")" separator=",">
+            (item.#{prodId},#{item.tradeCode},#{item.assetCode})
+        </foreach>
+    </delete>
+    <delete id="deleteChbAssetInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs">
+        delete from CHB_ASSET_INFO where ASSET_CODE in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.assetCode}
+        </foreach>
+    </delete>
+    <delete id="deleteChbPrdDeclareInfoErrorData">
+        delete from CHB_PRD_DECLARE_INFO_ERRODATA where PROD_INS_ID = #{prodInsId}
+    </delete>
+    <delete id="deleteChbPrdDeclareInfo">
+        delete from CHB_PRD_DECLARE_INFO where PROD_INS_ID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.prodInsId}
+        </foreach>
+    </delete>
+    <delete id="deleteMstHolidayErrodata">
+        delete from MST_HOLIDAY_ERRODATA where CALENDAR_ID = #{calendarId} and to_char(CDATE,'yyyy-mm-dd') = #{cdate}
+    </delete>
+    <delete id="deleteMstHoliday">
+        delete from MST_HOLIDAY where (CALENDAR_ID,CDATE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.calendarId},to_date(#{item.cdate},'yyyy-MM-dd'))
+        </foreach>
+    </delete>
+    <delete id="deleteMstExchargeQuoteErrodata">
+        delete  from MST_EXCHARGE_QUOTE_ERRODATA where EXCHARGE_CODE = #{exchargeCode} and TRADE_DATE =to_date(#{tradeDate},'yyyy-MM-dd') and DATASOURCE_TYPE = #{datasourceType}
+    </delete>
+    <delete id="deleteMstExchargeQuote">
+        delete from MST_EXCHARGE_QUOTE  where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
+        <foreach collection="list" item="item" open ="(" close=")" separator=",">
+            (#{item.exchargeCode},to_date(#{item.tradeDate},'yyyy-MM-dd'),#{item.datasourceType})
+        </foreach>
+    </delete>
 
     <select id="checkSalerCredentNo" resultType="integer" parameterType="java.lang.String" >
         select
@@ -259,6 +310,61 @@
     <select id="checkSalerInsNo" resultType="integer">
         select count(SALER_INS_NO) from CHB_SALER_IDEN_INFO
         where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+        and STATUS = 'E'
+    </select>
+
+    <select id="selectChbInvestTradeBusKey" resultType="java.util.Map">
+        select PROD_ID,ASSET_CODE,TRADE_CODE from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.prodId},#{item.assetCode},#{tradeCode})
+        </foreach>
+        and DATA_SOURCE !='D'
+        and STATUS = 'E'
+    </select>
+    <select id="selectChbPrdBaseInfoBusKey" resultType="java.util.Map">
+        select PROD_ID from CHB_PRD_BASEINFO where PROD_ID  in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.prodId}
+        </foreach>
+        and DATA_SOURCE !='D'
+        and STATUS = 'E'
+    </select>
+    <select id="selectChbAssetInfoBusKey" resultType="java.util.Map">
+        select ASSET_CODE from CHB_ASSET_INFO where ASSET_CODE  in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.assetCode}
+        </foreach>
+        and DATA_SOURCE !='D'
+        and STATUS = 'E'
+    </select>
+    <select id="selectChbPrdDeclareInfoBusKey" resultType="java.util.Map">
+        select PROD_INS_ID from CHB_PRD_DECLARE_INFO where PROD_INS_ID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.prodInsId}
+        </foreach>
+        and DATASOURCE !='D'
+        and STATUS = 'E'
+    </select>
+    <select id="checkExistsAssetCode" resultType="java.lang.Integer">
+        select count(1) from CHB_ASSET_INFO where ASSET_CODE = #{assetCode} and STATUS = 'E'
+    </select>
+
+    <select id="checkInvestTradeCodeOther" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE
+        where
+        PROD_ID = #{prodId}
+        and TRADE_CODE = #{tradeCode}
+        and CUR_ASSET_TYPE = #{curAssetType}
+        and STATUS = 'E'
+    </select>
+
+    <select id="checkInvestTradeCode" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE
+        where
+        PROD_ID = #{prodId}
+        and TRADE_CODE = #{tradeCode}
+        and ASSET_CODE = #{assetCode}
+        and CUR_ASSET_TYPE = #{curAssetType}
         and STATUS = 'E'
     </select>
 </mapper>

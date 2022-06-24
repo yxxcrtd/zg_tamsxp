@@ -1,0 +1,6 @@
+ALTER TABLE CHB_ASSET_INFO ADD IS_CONSTRACTE_BUSI varchar2(10);
+ALTER TABLE CHB_ASSET_INFO ADD IS_BANK_CAP varchar2(10);
+comment on column CHB_ASSET_INFO.IS_CONSTRACTE_BUSI
+  is '是否结构化资产';
+comment on column CHB_ASSET_INFO.IS_BANK_CAP
+  is '是否银行资本补充工具';

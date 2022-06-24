@@ -454,7 +454,7 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
             for(PbcPrdBaseinfoEndSub pbcPrdBaseinfoEndSub : list1) {
             	List<PbcPrdBaseinfoEndSub> pbcPrdBaseinfoEndSubList = new ArrayList<PbcPrdBaseinfoEndSub>();
             	if(StringUtils.isNotBlank(pbcPrdBaseinfoEndSub.getPbcProdId())) {
-               	 exportFileName = "PEI-"+pbcPrdBaseinfoEndSub.getPbcProdId();
+               	 exportFileName = "PEI-"+pbcPrdBaseinfoEndSub.getPbcProdIdShow();
             	}
             	pbcPrdBaseinfoEndSubList.add(pbcPrdBaseinfoEndSub);
             	File outFile = makeFile2(
@@ -489,7 +489,7 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
         // 当只有一个人行产品，只有Excel导出
         for(PbcPrdBaseinfoEndSub pbcPrdBaseinfoEndSub : list1) {
         	if(StringUtils.isNotBlank(pbcPrdBaseinfoEndSub.getPbcProdId())) {
-            	 exportFileName = "PEI-"+pbcPrdBaseinfoEndSub.getPbcProdId();
+            	 exportFileName = "PEI-"+pbcPrdBaseinfoEndSub.getPbcProdIdShow();
         	}
           }
 		File outFile = makeFile2(

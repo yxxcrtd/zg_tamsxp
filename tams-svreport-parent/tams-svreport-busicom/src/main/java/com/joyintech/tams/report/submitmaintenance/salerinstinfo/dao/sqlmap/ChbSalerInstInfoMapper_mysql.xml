@@ -34,7 +34,7 @@
     </sql>
 
     <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstInfoDto">
-        SELECT *
+        SELECT A.*
         FROM (
         select
         'erro'                      as erroOrInfo,
@@ -47,7 +47,7 @@
         erro.DATA_DATE            as dataDate,
         erro.WORKFLOW_ID          as workflowId,
         null                      as remark,
-        to_char(erro.ERR_MSG)     as errMsg
+        erro.ERR_MSG              as errMsg
         from CHB_SALER_INST_ERRODATA erro
         where 1=1
         <if test="salerOrgCode != null and salerOrgCode != ''">
@@ -85,7 +85,7 @@
         <if test="status != null and status != ''">
             and info.STATUS = #{status,jdbcType=VARCHAR}
         </if>
-        ) ORDER BY dataStatus DESC
+        ) AS A ORDER BY A.dataStatus DESC
     </select>
 
     <!--    删除检查-->
@@ -159,6 +159,17 @@
         STATUS = 'E'
     </select>
 
+
+    <select id="getSalerInstInfoCount" resultType="int">
+        select
+            COUNT(*)
+        from
+            CHB_SALER_INST_INFO
+        where
+            SALER_ORG_CODE = #{salerOrgCode}
+    </select>
+
+
 <!--    删除erro表-->
     <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
         delete from CHB_SALER_INST_ERRODATA
@@ -201,8 +212,8 @@
             )
         values (#{salerOrgCode,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR}, #{salerInstName,jdbcType=VARCHAR}, 
             #{salerOrgName,jdbcType=VARCHAR}, #{salerOrgLevel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-            sysdate, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-            sysdate, #{updateUser,jdbcType=VARCHAR}, sysdate
+            now(), #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+            now(), #{updateUser,jdbcType=VARCHAR}, now()
             )
     </insert>
 
@@ -214,7 +225,7 @@
             SALER_ORG_LEVEL = #{salerOrgLevel,jdbcType=VARCHAR},
             STATUS = #{status,jdbcType=VARCHAR},
             REMARK = #{remark,jdbcType=VARCHAR},
-            UPDATE_TIME = sysdate
+            UPDATE_TIME = now()
         where SALER_ORG_CODE = #{salerOrgCode,jdbcType=VARCHAR}
     </update>
 
@@ -249,7 +260,7 @@
                 OR SALER_ORG_NAME  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%')))
             </if>
         </where>
-        )
+        ) T
     </select>
 
     <!--	双击查看详细信息查询info-->

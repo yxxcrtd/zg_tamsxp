@@ -70,4 +70,12 @@
 		SELECT COLUMN_ID COLUMNID FROM CHB_INFOMGR_RESULT_CONFIG 
 		WHERE MGRTABLE_ID = #{mgrTableId,jdbcType=VARCHAR}
 	</select>
+	<select id="queryCloumnMapping" resultMap="BaseResultMap"
+			parameterType="java.util.Map">
+		SELECT * FROM CHB_COLUMN_MAPPING_CONFIG WHERE MGRTABLE_ID = #{tableId,jdbcType=VARCHAR}
+		<if test="flag">
+			AND SHOWFLAG = 'Y'
+		</if>
+		ORDER BY ORDER_NO
+	</select>
 </mapper>

@@ -295,7 +295,7 @@ public interface InvestorsHoldInfoRegist001Mapper {
     int insertSubmitStatusDto(ChbSubmitStatus dto);
     
     
-    int updateSubmitStatusToSuccess(String seqno);
+    int updateSubmitStatusToSuccess(@Param("seqno")String seqno);
     
     List<InvestorsHoldInfoRegist001Dto>  selectAllNeedToHisData(List<InvestorsHoldInfoRegist001Dto> subList);
     

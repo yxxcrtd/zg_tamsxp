@@ -3,77 +3,40 @@
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.assetbasis.dao.ChbAstValInterfMapper_mysql">
 
 	<insert id="insertInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAstValue">
-		insert into CHB_AST_VAL ( VAL_ID, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET, UNIT_VAL_TOTAL, REMARK, 
-			    DATASOURCE, STATUS, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, 
-			    UPDATE_TIME
-            ) values (
-	           #{valId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
-		      #{valDate,jdbcType=TIMESTAMP}, #{unitValNet,jdbcType=DECIMAL}, #{unitValTotal,jdbcType=DECIMAL}, 
-		      #{remark,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-		      #{workflowId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
-		      #{createUser,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
-		      NOW()
-            )
+		insert into CHB_AST_VAL ( VAL_ID, ISSUE_PARTY_ID, ASSET_CODE, VAL_DATE, UNIT_VAL_NET, UNIT_VAL_TOTAL, REMARK,
+		DATASOURCE, STATUS, WORKFLOW_ID, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME
+		) values (
+		#{valId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR},
+		#{valDate,jdbcType=TIMESTAMP}, #{unitValNet,jdbcType=DECIMAL}, #{unitValTotal,jdbcType=DECIMAL},
+		#{remark,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+		#{workflowId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR}, now(), #{updateUser,jdbcType=VARCHAR},
+		now()
+		)
 	</insert>
-	
+
 	<delete id="deleteInfo"  parameterType="map">
-		delete from CHB_AST_VAL
+		delete  from CHB_AST_VAL c
 		<where>
 			<if test="valDate != null and valDate != ''">
-				DATE_FORMAT(VAL_DATE,'%Y-%m-%d') = #{valDate,jdbcType=VARCHAR}
+				DATE_FORMAT(c.VAL_DATE,'%Y-%m-%d') = #{valDate,jdbcType=VARCHAR}
 			</if>
 			<if test="status != null and status!= ''">
-				and STATUS  = #{status,jdbcType=VARCHAR}
+				and c.STATUS  = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="InstitutionCode != null and InstitutionCode != '' "  >
+				and  c.val_id  in  (select  d.val_id  from   CHB_AST_VAL d
+				left join chb_asset_info_sub csb on csb.ASSET_CODE=d.ASSET_CODE
+				LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+				where CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+				)
 			</if>
 		</where>
 	</delete>
-	
+
 	<select id="queryAssetValueInfoList" resultType="com.joyintech.tams.common.base.entity.ChbAstValue">
-	select
-		assetCode,
-		valDate,
-		ROUND(unitValNet,4) unitValNet,
-		ROUND(unitValTotal,4) unitValTotal
-			from (select 
-			  assetbasis.assetCode,
-			  assetbasis.valueDate valDate,
-			  ifnull(price.PRICE,1)
-          * (case typex.SRCFIELD1 when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt
-				  when 'MONEYFOUND' then (case info.TRM_FUND_TYPE when '01' then 100 when '05' then 0.01 else 1 end)
-				  when 'STOCK' then (costAmt+floatingpl)/posAmt
-				  when 'DERIVATIVE' then (costAmt+floatingpl)
-				  when 'OPTION' then (costAmt+floatingpl)
-		          else (case assetbasis.valueDate when assetbasis.mdate then 100 else 100*(costAmt+floatingpl)/posAmt end) end) unitValNet,
-        ifnull(price.PRICE,1)
-          *	(case typex.SRCFIELD1 when 'MONEYFOUND' then (costAmt+floatingpl+intincexp)/posAmt
-			when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt
-			when 'STOCK' then (costAmt+floatingpl+intincexp)/posAmt
-			when 'DERIVATIVE' then (costAmt+floatingpl+intincexp)
-			when 'OPTION' then (costAmt+floatingpl+intincexp)
-			else (case assetbasis.valueDate when assetbasis.mdate then 100 else 100*(costAmt+floatingpl+intincexp)/posAmt end) end) unitValTotal
-           from (select 
-				ASSET_ID assetCode,
-				VALUE_DATE valueDate,
-				CCY ccy,
-        		MDATE mdate,
-				sum(ifnull(TDY_COST_AMT,0)) costAmt,
-				sum(ifnull(TDY_INTINCEXP,0)) intincexp,
-				sum(ifnull(POS_AMT,0)) posAmt,
-        sum(ifnull(TDY_FLOAT_INGPL,0)) floatingpl
-        		<if test="isBtm ==null or isBtm=='01' ">
-				FROM CHB_ASSETS_BASIS_DATA basis
-				</if>
-				<if test="isBtm !=null and isBtm=='02' ">
-				FROM CHB_ASSETS_BASIS_DATA_NOBTM  basis
-				</if>
-				where DATE_FORMAT(VALUE_DATE,'%Y-%m-%d') = #{generateDate,jdbcType=VARCHAR}
-				and basis.status !='D'
-				and pos_amt != 0
-                and pos_amt is not null
-				group by ASSET_ID,VALUE_DATE,MDATE,CCY) assetbasis
-				left join CHB_ASSET_INFO info
-				  on info.ASSET_CODE = assetbasis.assetCode 
-				left join (
+		with price as (
 		SELECT BASIS_CYY CCY,
 		<choose>
 			<when test="exchangeSource == '01'">OPEN_PRICE PRICE</when>
@@ -82,61 +45,91 @@
 			<when test="exchangeSource == '04'">LOW_PRICE PRICE</when>
 			<otherwise>MID_PRICE PRICE</otherwise>
 		</choose>
-		FROM ( select bc.EXCHARGE_CODE,
-		bc.TRADE_DATE,
-		bc.DATASOURCE_TYPE,
-		bc.OPEN_PRICE,
-		bc.CLOSE_PRICE,
-		bc.HIGH_PRICE,
-		bc.LOW_PRICE,
-		bc.MID_PRICE,
-		bc.BASIS_CYY,
-		bc.QUOT_CYY,
-		bc.QUOT_UNIT,
-		bc.INPUT_TYPE,
-		bc.CREATE_USER,
-		bc.CREATE_DEPT,
-		bc.CREATE_TIME,
-		bc.UPDATE_USER,
-		bc.UPDATE_TIME,
-		rn
-		from (
-		SELECT result.* FROM (
-		SELECT tmp.*,
-		@rownum := @rownum + 1 row,
-		IF(
-		(
-		@BASIS_CYY = tmp.BASIS_CYY
-		),
-		@rank := @rank + 1,
-		@rank := 1
-		) AS rn,
-		@BASIS_CYY := tmp.BASIS_CYY
-		FROM (
-		SELECT bc.*
-		FROM MST_EXCHARGE_QUOTE bc
-		where DATE_FORMAT(bc.TRADE_DATE,'%Y-%m-%d') &lt;= #{generateDate,jdbcType=VARCHAR}
+		FROM ( select t.*,row_number() over(partition by BASIS_CYY order by TRADE_DATE DESC) myrank
+		from MST_EXCHARGE_QUOTE t
+		where t.TRADE_DATE &lt;= STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')
 		and QUOT_CYY='CNY' and DATASOURCE_TYPE='SAFE'
-		ORDER BY TRADE_DATE DESC
-		) tmp,
-		(SELECT @rownum := 0,
-		@BASIS_CYY := null,
-		@rank := 0) a
-		) result
-		) bc
-		) t2
-		WHERE  rn=1
-		)  price on price.CCY = assetbasis.CCY
-        left join CHB_TYPE_MAPPING_EX typex on typex.OBJFIELD1 =  info.ORG_ASSET_TYPE1 
-                                      	   and ((typex.OBJFIELD2 =  info.ORG_ASSET_TYPE2) or typex.OBJFIELD2 is null)
-                                      	   and ((typex.OBJFIELD3 =  info.TRM_FUND_TYPE) or typex.OBJFIELD3 is null)
-                                    	   and typex.MAPPINGCODE='ASSETBASISTYPE'
-				where 1=1 
-				  and (assetbasis.posAmt &lt;&gt; 0 or assetbasis.valueDate=assetbasis.mdate)
-				  and  assetbasis.assetCode is not null
-				  and typex.MAPPINGCODE is not null
-			) t1 where unitValNet is not null
+		)as t
+		WHERE  myrank=1
+		)
+		select
+		assetCode,
+		valDate,
+		ROUND(unitValNet,4) unitValNet,
+		ROUND(unitValTotal,4) unitValTotal
+		from (select
+		assetbasis.assetCode,
+		assetbasis.valueDate valDate,
+
+		<!-- modify by zhangliang 20201221 资产/负债类别为 “1107 拆放同业”、“1108 买入返售”、“1901 同业拆入”、“1902 卖出回购”  “单位估值（净价）” 写死为 100-->
+		<!-- case when info.ASSET_TYPE2 in ('1107','1108','1901','1902') then 100 else delete by lingxq 此类资产不特殊处理-->
+		(ifnull(price.PRICE,1) *
+		(case typex.SRCFIELD1
+		when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt
+		when 'MONEYFOUND' then (case info.TRM_FUND_TYPE when '01' then 100 when '05' then 0.01 else 1 end)
+		when 'STOCK' then (costAmt+floatingpl)/posAmt
+		when 'DERIVATIVE' then  (costAmt+floatingpl)
+		when 'OPTION' then (costAmt+floatingpl)
+		else
+		if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl)/posAmt)
+		end
+		)) unitValNet,
+		(ifnull(price.PRICE,1) *
+		(case typex.SRCFIELD1
+		when 'MONEYFOUND' then (costAmt+floatingpl+intincexp)/posAmt
+		when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt
+		when 'STOCK' then (costAmt+floatingpl+intincexp)/posAmt
+		when 'DERIVATIVE' then  (costAmt+floatingpl+intincexp)/posAmt
+		when 'OPTION' then (costAmt+floatingpl+intincexp)
+		else
+		if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl+intincexp)/posAmt)
+		end
+		)) unitValTotal
+		from (select
+		ASSET_ID assetCode,
+		VALUE_DATE valueDate,
+		CCY ccy,
+		MDATE mdate,
+		sum(ifnull(TDY_COST_AMT,0)) costAmt,
+		sum(ifnull(TDY_INTINCEXP,0)) intincexp,
+		sum(ifnull(POS_AMT,0)) posAmt,
+		sum(ifnull(TDY_FLOAT_INGPL,0)) floatingpl
+		<if test="isBtm ==null or isBtm=='01' ">
+			FROM CHB_ASSETS_BASIS_DATA basis
+		</if>
+		<if test="isBtm !=null and isBtm=='02' ">
+			FROM CHB_ASSETS_BASIS_DATA_NOBTM  basis
+		</if>
+		where VALUE_DATE = STR_TO_DATE(#{generateDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		and basis.status !='D'
+		and pos_amt != 0
+		and pos_amt is not null
+		group by ASSET_ID,VALUE_DATE,MDATE,CCY) assetbasis
+		left join CHB_ASSET_INFO info
+		on info.ASSET_CODE = assetbasis.assetCode
+		left join price on price.CCY = assetbasis.CCY
+		left join CHB_TYPE_MAPPING_EX typex on typex.OBJFIELD1 =  info.ORG_ASSET_TYPE1
+		and ((typex.OBJFIELD2 =  info.ORG_ASSET_TYPE2) or typex.OBJFIELD2 is null)
+		and ((typex.OBJFIELD3 =  info.TRM_FUND_TYPE) or typex.OBJFIELD3 is null)
+		/***对于债券类资产，需要根据其登记托管机构配置哪些生成估值信息登记 add by leipeng 20210129***/
+		and ((typex.OBJFIELD4 =  info.REGIST_ORG) or typex.OBJFIELD4 is null)
+		/***对于债券类资产，需要根据其登记托管机构配置哪些生成估值信息登记 add by leipeng 20210129***/
+		and typex.MAPPINGCODE='ASSETBASISTYPE'
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			left join chb_asset_info_sub csb on csb.ASSET_CODE=assetbasis.assetCode
+			LEFT JOIN CHB_ASSET_SUB_STATUS CS ON csb.REGIST_SEQNO=CS.REGIST_SEQNO AND CS.ASSET_TYPE='01'
+		</if>
+		where 1=1
+		and (assetbasis.posAmt &lt;&gt; 0 or assetbasis.valueDate=assetbasis.mdate)
+		and  assetbasis.assetCode is not null
+		and typex.MAPPINGCODE is not null
+
+		<if test="InstitutionCode != null and InstitutionCode != '' "  >
+			and CS.INSTITUTION_CODE =#{InstitutionCode,jdbcType=VARCHAR}
+		</if>
+
+		) as t where unitValNet is not null
 	</select>
-	
-	
+
+
 </mapper>

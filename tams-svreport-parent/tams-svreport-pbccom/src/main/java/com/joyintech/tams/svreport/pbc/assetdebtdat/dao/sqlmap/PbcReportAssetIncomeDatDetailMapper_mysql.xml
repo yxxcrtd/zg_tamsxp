@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetIncomeDatDetailMapper_mysql" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail" >
+    <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+    <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+    <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+    <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+    <result column="LOAN_INCOME_RIGHT" property="loanIncomeRight" jdbcType="DECIMAL" />
+    <result column="DEBT_SECURITIES_INCOME_RIGHTS" property="debtSecuritiesIncomeRights" jdbcType="DECIMAL" />
+    <result column="RECEIVABLE_INCOME_RIGHTS" property="receivableIncomeRights" jdbcType="DECIMAL" />
+    <result column="OTHER_CREDITOR_RIGHTS" property="otherCreditorRights" jdbcType="DECIMAL" />
+    <result column="STOCK_INCOME_RIGHT" property="stockIncomeRight" jdbcType="DECIMAL" />
+    <result column="OTHER_EQUITY_INCOME_RIGHTS" property="otherEquityIncomeRights" jdbcType="DECIMAL" />
+    <result column="PROPERTY_RIGHTS" property="propertyRights" jdbcType="DECIMAL" />
+    <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+    <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, LOAN_INCOME_RIGHT, DEBT_SECURITIES_INCOME_RIGHTS, 
+    RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS, STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS, 
+    PROPERTY_RIGHTS, TOTAL, REPORTUUID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PBC_REPORT_ASSET_INCOME_DAT
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PBC_REPORT_ASSET_INCOME_DAT
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail" >
+    insert into PBC_REPORT_ASSET_INCOME_DAT (DETAILUUID, REPORTTYPE, GROUPTYPE,
+      PROPERTYCODE, LOAN_INCOME_RIGHT, DEBT_SECURITIES_INCOME_RIGHTS, 
+      RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS, 
+      STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS, 
+      PROPERTY_RIGHTS, TOTAL, REPORTUUID
+      )
+    values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+      #{propertycode,jdbcType=VARCHAR}, #{loanIncomeRight,jdbcType=DECIMAL}, #{debtSecuritiesIncomeRights,jdbcType=DECIMAL}, 
+      #{receivableIncomeRights,jdbcType=DECIMAL}, #{otherCreditorRights,jdbcType=DECIMAL}, 
+      #{stockIncomeRight,jdbcType=DECIMAL}, #{otherEquityIncomeRights,jdbcType=DECIMAL}, 
+      #{propertyRights,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{reportuuid,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail" >
+    insert into PBC_REPORT_ASSET_INCOME_DAT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        DETAILUUID,
+      </if>
+      <if test="reporttype != null" >
+        REPORTTYPE,
+      </if>
+      <if test="grouptype != null" >
+        GROUPTYPE,
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE,
+      </if>
+      <if test="loanIncomeRight != null" >
+        LOAN_INCOME_RIGHT,
+      </if>
+      <if test="debtSecuritiesIncomeRights != null" >
+        DEBT_SECURITIES_INCOME_RIGHTS,
+      </if>
+      <if test="receivableIncomeRights != null" >
+        RECEIVABLE_INCOME_RIGHTS,
+      </if>
+      <if test="otherCreditorRights != null" >
+        OTHER_CREDITOR_RIGHTS,
+      </if>
+      <if test="stockIncomeRight != null" >
+        STOCK_INCOME_RIGHT,
+      </if>
+      <if test="otherEquityIncomeRights != null" >
+        OTHER_EQUITY_INCOME_RIGHTS,
+      </if>
+      <if test="propertyRights != null" >
+        PROPERTY_RIGHTS,
+      </if>
+      <if test="total != null" >
+        TOTAL,
+      </if>
+      <if test="reportuuid != null" >
+        REPORTUUID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        #{detailuuid,jdbcType=CHAR},
+      </if>
+      <if test="reporttype != null" >
+        #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="grouptype != null" >
+        #{grouptype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="loanIncomeRight != null" >
+        #{loanIncomeRight,jdbcType=DECIMAL},
+      </if>
+      <if test="debtSecuritiesIncomeRights != null" >
+        #{debtSecuritiesIncomeRights,jdbcType=DECIMAL},
+      </if>
+      <if test="receivableIncomeRights != null" >
+        #{receivableIncomeRights,jdbcType=DECIMAL},
+      </if>
+      <if test="otherCreditorRights != null" >
+        #{otherCreditorRights,jdbcType=DECIMAL},
+      </if>
+      <if test="stockIncomeRight != null" >
+        #{stockIncomeRight,jdbcType=DECIMAL},
+      </if>
+      <if test="otherEquityIncomeRights != null" >
+        #{otherEquityIncomeRights,jdbcType=DECIMAL},
+      </if>
+      <if test="propertyRights != null" >
+        #{propertyRights,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="reportuuid != null" >
+        #{reportuuid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail" >
+    update PBC_REPORT_ASSET_INCOME_DAT
+    <set >
+      <if test="reporttype != null" >
+        REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="grouptype != null" >
+        GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="loanIncomeRight != null" >
+        LOAN_INCOME_RIGHT = #{loanIncomeRight,jdbcType=DECIMAL},
+      </if>
+      <if test="debtSecuritiesIncomeRights != null" >
+        DEBT_SECURITIES_INCOME_RIGHTS = #{debtSecuritiesIncomeRights,jdbcType=DECIMAL},
+      </if>
+      <if test="receivableIncomeRights != null" >
+        RECEIVABLE_INCOME_RIGHTS = #{receivableIncomeRights,jdbcType=DECIMAL},
+      </if>
+      <if test="otherCreditorRights != null" >
+        OTHER_CREDITOR_RIGHTS = #{otherCreditorRights,jdbcType=DECIMAL},
+      </if>
+      <if test="stockIncomeRight != null" >
+        STOCK_INCOME_RIGHT = #{stockIncomeRight,jdbcType=DECIMAL},
+      </if>
+      <if test="otherEquityIncomeRights != null" >
+        OTHER_EQUITY_INCOME_RIGHTS = #{otherEquityIncomeRights,jdbcType=DECIMAL},
+      </if>
+      <if test="propertyRights != null" >
+        PROPERTY_RIGHTS = #{propertyRights,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        TOTAL = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="reportuuid != null" >
+        REPORTUUID = #{reportuuid,jdbcType=CHAR},
+      </if>
+    </set>
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail" >
+    update PBC_REPORT_ASSET_INCOME_DAT
+    set REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+      PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      LOAN_INCOME_RIGHT = #{loanIncomeRight,jdbcType=DECIMAL},
+      DEBT_SECURITIES_INCOME_RIGHTS = #{debtSecuritiesIncomeRights,jdbcType=DECIMAL},
+      RECEIVABLE_INCOME_RIGHTS = #{receivableIncomeRights,jdbcType=DECIMAL},
+      OTHER_CREDITOR_RIGHTS = #{otherCreditorRights,jdbcType=DECIMAL},
+      STOCK_INCOME_RIGHT = #{stockIncomeRight,jdbcType=DECIMAL},
+      OTHER_EQUITY_INCOME_RIGHTS = #{otherEquityIncomeRights,jdbcType=DECIMAL},
+      PROPERTY_RIGHTS = #{propertyRights,jdbcType=DECIMAL},
+      TOTAL = #{total,jdbcType=DECIMAL},
+      REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  <select id="selectByReportuuid"
+          resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail" parameterType="java.lang.String">
+	select DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, LOAN_INCOME_RIGHT,
+	DEBT_SECURITIES_INCOME_RIGHTS,
+	RECEIVABLE_INCOME_RIGHTS, OTHER_CREDITOR_RIGHTS, STOCK_INCOME_RIGHT, OTHER_EQUITY_INCOME_RIGHTS,
+	PROPERTY_RIGHTS, TOTAL, REPORTUUID from PBC_REPORT_ASSET_INCOME_DAT
+	where REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
+</select>
+
+  <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_ASSET_INCOME_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+  <insert id="insertDataBySelect">
+    INSERT INTO PBC_REPORT_ASSET_INCOME_DAT (<include refid="Base_Column_List" />)
+    SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_ASSET_INCOME
+    WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+  </insert>
+
+ <delete id="deleteByReportDate"  parameterType="map" >
+    delete
+    from PBC_REPORT_ASSET_INCOME_DAT prp
+    where prp.REPORTUUID in(
+         select pr.REPORTUUID from PBC_REPORT pr
+          where 1=1
+          <if test="reportStartDate != null" >
+          and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+          </if>
+          <if test="reportEndDate != null" >
+          and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+          </if>
+          <if test="reporttype != null" >
+            and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+          </if> 
+          <if test="deptCode != null" >
+	         and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+	       </if>
+           <if test="deptCode == null" >
+             and DEPT_CODE is null
+           </if>
+       and pr.send_status = '01'/*只删除未报送数据*/
+       )
+  </delete>
+
+  <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+    delete
+    from PBC_REPORT_ASSET_INCOME_DAT
+    where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+      AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
+  </delete>
+
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail"
+          parameterType="java.lang.String" >
+    select
+      ppd.*,
+      prp.LOAN_INCOME_RIGHT as loanIncomeRightPrd,
+       prp.DEBT_SECURITIES_INCOME_RIGHTS as debtSecuritiesIncomeRightsPrd,
+      prp.RECEIVABLE_INCOME_RIGHTS as receivableIncomeRightsPrd,
+       prp.OTHER_CREDITOR_RIGHTS as otherCreditorRightsPrd,
+       prp.STOCK_INCOME_RIGHT as stockIncomeRightPrd,
+       prp.OTHER_EQUITY_INCOME_RIGHTS as otherEquityIncomeRightsPrd,
+      prp.PROPERTY_RIGHTS as propertyRightsPrd,
+        prp.TOTAL as totalPrd
+    from PBC_REPORT_ASSET_INCOME_DAT ppd
+           left join PBC_REPORT_ASSET_INCOME  prp on ppd.REPORTUUID=prp.REPORTUUID
+      and ppd.REPORTTYPE=prp.REPORTTYPE
+      and ppd.propertyCode=prp.propertyCode
+    where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+      and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+  </select>
+
+  <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetIncomeDatDetail">
+    select     prp.*
+    from PBC_REPORT_ASSET_INCOME_DAT prp
+           left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
+    where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
+      and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+      and prp.PROPERTYCODE is  not  null
+      and (prp.LOAN_INCOME_RIGHT &lt;&gt; 0 or prp.DEBT_SECURITIES_INCOME_RIGHTS &lt;&gt; 0 or prp.RECEIVABLE_INCOME_RIGHTS &lt;&gt; 0
+       or prp.OTHER_CREDITOR_RIGHTS &lt;&gt; 0 or prp.STOCK_INCOME_RIGHT &lt;&gt; 0 or prp.OTHER_EQUITY_INCOME_RIGHTS &lt;&gt; 0
+       or prp.PROPERTY_RIGHTS &lt;&gt; 0 or prp.TOTAL &lt;&gt; 0)
+  </select>
+</mapper>

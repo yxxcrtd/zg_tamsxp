@@ -1,0 +1,2717 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskAssetInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskAssetInfo" >
+        <id column="ASSET_UUID" property="assetUuid" jdbcType="CHAR" />
+        <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE2" property="assetType2" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="DISCOUNT_YIELD" property="discountYield" jdbcType="DECIMAL" />
+        <result column="ASSET_YIELD" property="assetYield" jdbcType="DECIMAL" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+        <result column="IS_STRUCT" property="isStruct" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="TARGET" property="target" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="CHB_SECTYPE" property="chbSectype" jdbcType="VARCHAR" />
+        <result column="ISSUE_MODE" property="issueMode" jdbcType="VARCHAR" />
+        <result column="PARTY_GRADE" property="partyGrade" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE3" property="partyType3" jdbcType="VARCHAR" />
+        <result column="PARTY_TYPE2" property="partyType2" jdbcType="VARCHAR" />
+        <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2" property="industryLevel2" jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="REGISTORG_COMMENT" property="registorgComment" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY" property="rivalParty" jdbcType="VARCHAR" />
+        <result column="TARGET_TYPE1" property="targetType1" jdbcType="VARCHAR" />
+        <result column="TARGET_AMT" property="targetAmt" jdbcType="DECIMAL" />
+        <result column="COUNTRY_AREA" property="countryArea" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="IS_RESALE" property="isResale" jdbcType="VARCHAR" />
+        <result column="TERM_DATE" property="termDate" jdbcType="DECIMAL" />
+        <result column="RATE_FLAG" property="rateFlag" jdbcType="VARCHAR" />
+        <result column="INTPAY_CYCLE" property="intpayCycle" jdbcType="DECIMAL" />
+        <result column="REPAY_CMT" property="repayCmt" jdbcType="VARCHAR" />
+        <result column="BASIS_TYPE" property="basisType" jdbcType="VARCHAR" />
+        <result column="FLOAT_FACTOR" property="floatFactor" jdbcType="DECIMAL" />
+        <result column="SPREAD_RATE" property="spreadRate" jdbcType="DECIMAL" />
+        <result column="FINANCIE" property="financie" jdbcType="VARCHAR" />
+        <result column="FIN_ORG_CODE" property="finOrgCode" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_IN" property="fcrGradeIn" jdbcType="VARCHAR" />
+        <result column="FCR_GRADE_OUT" property="fcrGradeOut" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE1" property="financierType1" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE2" property="financierType2" jdbcType="VARCHAR" />
+        <result column="FINANCIER_TYPE3" property="financierType3" jdbcType="VARCHAR" />
+        <result column="FINANCE_PROJ" property="financeProj" jdbcType="VARCHAR" />
+        <result column="INDUSTRY1" property="industry1" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_LEVEL2_TYPE" property="industryLevel2Type" jdbcType="VARCHAR" />
+        <result column="PRO_INDUSTRY" property="proIndustry" jdbcType="VARCHAR" />
+        <result column="PRO_INDUSTRY_LEVEL2" property="proIndustryLevel2" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_FLAG" property="industryFlag" jdbcType="VARCHAR" />
+        <result column="MONIT_TYPE" property="monitType" jdbcType="VARCHAR" />
+        <result column="MON_TYPE_COMM" property="monTypeComm" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE" property="guaType" jdbcType="VARCHAR" />
+        <result column="GUA_TYPE_REMARK" property="guaTypeRemark" jdbcType="VARCHAR" />
+        <result column="FINANCIER_GRADE" property="financierGrade" jdbcType="VARCHAR" />
+        <result column="IN_GRADE" property="inGrade" jdbcType="VARCHAR" />
+        <result column="OUT_GRADE" property="outGrade" jdbcType="VARCHAR" />
+        <result column="CHOSE" property="chose" jdbcType="VARCHAR" />
+        <result column="CONDITION_CMM" property="conditionCmm" jdbcType="VARCHAR" />
+        <result column="FIN_AREA" property="finArea" jdbcType="VARCHAR" />
+        <result column="TOTAL_FEE_RATE" property="totalFeeRate" jdbcType="DECIMAL" />
+        <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_TYPE" property="notstandSecType" jdbcType="VARCHAR" />
+        <result column="NOTSTAND_SEC_NUM" property="notstandSecNum" jdbcType="DECIMAL" />
+        <result column="REMAIN_TERM" property="remainTerm" jdbcType="DECIMAL" />
+        <result column="MAX_REMAIN_TERM" property="maxRemainTerm" jdbcType="DECIMAL" />
+        <result column="MIN_REMAIN_TERM" property="minRemainTerm" jdbcType="DECIMAL" />
+        <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_SHARES" property="industryShares" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_SHARES2" property="industryShares2" jdbcType="VARCHAR" />
+        <result column="INVEST_STAGE" property="investStage" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE1" property="sharesType1" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE2" property="sharesType2" jdbcType="VARCHAR" />
+        <result column="SHARES_TYPE3" property="sharesType3" jdbcType="VARCHAR" />
+        <result column="IS_PLEDGE" property="isPledge" jdbcType="VARCHAR" />
+        <result column="NOM_CAPI" property="nomCapi" jdbcType="DECIMAL" />
+        <result column="TARGET_TYPE3" property="targetType3" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="TERM_MONTH" property="termMonth" jdbcType="DECIMAL" />
+        <result column="GUARANTEE_CMT" property="guaranteeCmt" jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT" property="specialCmt" jdbcType="VARCHAR" />
+        <result column="CONTRACT_NAME" property="contractName" jdbcType="VARCHAR" />
+        <result column="INCOME_RATIO" property="incomeRatio" jdbcType="DECIMAL" />
+        <result column="DER_INSTR_RATIO" property="derInstrRatio" jdbcType="DECIMAL" />
+        <result column="DER_INSTR_INV_TYPE" property="derInstrInvType" jdbcType="VARCHAR" />
+        <result column="DER_INSTR_TARGET" property="derInstrTarget" jdbcType="VARCHAR" />
+        <result column="ACCT_MODE" property="acctMode" jdbcType="VARCHAR" />
+        <result column="SPECIAL_CMT1" property="specialCmt1" jdbcType="VARCHAR" />
+        <result column="MAX_YIELD" property="maxYield" jdbcType="DECIMAL" />
+        <result column="MIN_YIELD" property="minYield" jdbcType="DECIMAL" />
+        <result column="BASIC_PRICE" property="basicPrice" jdbcType="DECIMAL" />
+        <result column="REG_DATE_PRICE" property="regDatePrice" jdbcType="DECIMAL" />
+        <result column="TRADE_FEE" property="tradeFee" jdbcType="VARCHAR" />
+        <result column="PARTY_CODE" property="partyCode" jdbcType="VARCHAR" />
+        <result column="CHECK_CODE" property="checkCode" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="TRUSTEE_ID" property="trusteeId" jdbcType="VARCHAR" />
+        <result column="TRU_ACT_TYPE" property="truActType" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="CAP_USE_INDU" property="capUseIndu" jdbcType="VARCHAR" />
+        <result column="PLAN_SDATE" property="planSdate" jdbcType="DATE" />
+        <result column="PLAN_EDATE" property="planEdate" jdbcType="DATE" />
+        <result column="PRO_PROPERTY" property="proProperty" jdbcType="VARCHAR" />
+        <result column="MAX_RATE" property="maxRate" jdbcType="DECIMAL" />
+        <result column="MIN_RATE" property="minRate" jdbcType="DECIMAL" />
+        <result column="DEBT_SCALE" property="debtScale" jdbcType="DECIMAL" />
+        <result column="BUY_STRUCT" property="buyStruct" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE" property="manageType" jdbcType="VARCHAR" />
+        <result column="IS_CTRL_BOTTOM" property="isCtrlBottom" jdbcType="VARCHAR" />
+        <result column="MGR_FEE_RATE" property="mgrFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="TRADE_FEE_RATE" property="tradeFeeRate" jdbcType="DECIMAL" />
+        <result column="AGENCY_FEE_RATE" property="agencyFeeRate" jdbcType="DECIMAL" />
+        <result column="OTHER_FEE_RATE" property="otherFeeRate" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
+        <result column="REGIST_ORG1" property="registOrg1" jdbcType="VARCHAR" />
+        <result column="MNG_ORG_NAME" property="mngOrgName" jdbcType="VARCHAR" />
+        <result column="TRU_ORG_NAME" property="truOrgName" jdbcType="VARCHAR" />
+        <result column="FUND_INVEST_ASSET" property="fundInvestAsset" jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE" property="inAssetType" jdbcType="VARCHAR" />
+        <result column="IN_ASSET_TYPE_CMM" property="inAssetTypeCmm" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="IS_UNDER_ASSET" property="isUnderAsset" jdbcType="VARCHAR" />
+        <result column="IS_GOVERN_FUND" property="isGovernFund" jdbcType="VARCHAR" />
+        <result column="GOVERN_INVEST_FUND" property="governInvestFund" jdbcType="VARCHAR" />
+        <result column="FUND_ENPE_NAME" property="fundEnpeName" jdbcType="VARCHAR" />
+        <result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="PRIVATEFUND_FLAG" property="privatefundFlag" jdbcType="VARCHAR" />
+        <result column="PRIVATEPRD_FLAG" property="privateprdFlag" jdbcType="VARCHAR" />
+        <result column="BONDTOSTOCK_FLAG" property="bondtostockFlag" jdbcType="VARCHAR" />
+        <result column="PPPFLAG" property="pppflag" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
+        <result column="CAP_USE_INDU_LEVEL2" property="capUseInduLevel2" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+        <result column="SEC_CREDIT_GRADE_TYPE" property="secCreditGradeType" jdbcType="VARCHAR" />
+        <result column="SEC_MAIN_GRADE" property="secMainGrade" jdbcType="VARCHAR" />
+        <result column="BLN_AREA" property="blnArea" jdbcType="VARCHAR" />
+        <result column="INDUSTRY_PBC" property="industryPbc" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_OBJ_TYPE" property="customerObjType" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE1" property="orgAssetType1" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE2" property="orgAssetType2" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE3" property="orgAssetType3" jdbcType="VARCHAR" />
+        <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+        <result column="ASSET_CODE_OLD" property="assetCodeOld" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE3" property="assetType3" jdbcType="VARCHAR" />
+        <result column="PBC_ASSET_TYPE1" property="pbcAssetType1" jdbcType="VARCHAR" />
+        <result column="PBC_ASSET_TYPE2" property="pbcAssetType2" jdbcType="VARCHAR" />
+        <result column="PBC_ASSET_TYPE3" property="pbcAssetType3" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE4" property="orgAssetType4" jdbcType="VARCHAR" />
+        <result column="ORG_ASSET_TYPE5" property="orgAssetType5" jdbcType="VARCHAR" />
+        <result column="PRIVATE_FLAG" property="privateFlag" jdbcType="VARCHAR" />
+        <result column="INSTIT_SIZE" property="institSize" jdbcType="VARCHAR" />
+        <result column="TRM_FUND_TYPE" property="trmFundType" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_CAPITAL" property="bankSecCapital" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_PREFER" property="bankSecPrefer" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_PERPETUAL" property="bankSecPerpetual" jdbcType="VARCHAR" />
+        <result column="DEPO_TYPE" property="depoType" jdbcType="VARCHAR" />
+        <result column="RIVAL_PARTY_TYPE" property="rivalPartyType" jdbcType="VARCHAR" />
+        <result column="PRIN_BASEAMT" property="prinBaseamt" jdbcType="DECIMAL" />
+        <result column="FMDATE" property="fmdate" jdbcType="DATE" />
+        <result column="COUPON_SPECIES" property="couponSpecies" jdbcType="VARCHAR" />
+        <result column="INTEREST_RULE_FLAG" property="interestRuleFlag" jdbcType="VARCHAR" />
+        <result column="INTPAY_RULE" property="intpayRule" jdbcType="VARCHAR" />
+        <result column="FLOAT_FACTOR_FLAG" property="floatFactorFlag" jdbcType="VARCHAR" />
+        <result column="STRUCT_GRADE" property="structGrade" jdbcType="VARCHAR" />
+        <result column="REPAYMENT_TYPE" property="repaymentType" jdbcType="VARCHAR" />
+        <result column="PERIOD_REPAYMENT_FLAG" property="periodRepaymentFlag" jdbcType="VARCHAR" />
+        <result column="BASIC_ASSET_TYPE" property="basicAssetType" jdbcType="VARCHAR" />
+        <result column="EXCESS_PROFIT_RATE" property="excessProfitRate" jdbcType="DECIMAL" />
+        <result column="PLEDGE_TYPE" property="pledgeType" jdbcType="VARCHAR" />
+        <result column="PLEDGE_VALUE" property="pledgeValue" jdbcType="DECIMAL" />
+        <result column="NATURE_GUARANTEE" property="natureGuarantee" jdbcType="VARCHAR" />
+        <result column="RELATION_FINAN" property="relationFinan" jdbcType="VARCHAR" />
+        <result column="CONTAIN_TYPE" property="containType" jdbcType="VARCHAR" />
+        <result column="EXERCISE_TYPE" property="exerciseType" jdbcType="VARCHAR" />
+        <result column="EXERCISE_DATE" property="exerciseDate" jdbcType="DATE" />
+        <result column="FIRST_EXERCISE_DATE" property="firstExerciseDate" jdbcType="DATE" />
+        <result column="EXERCISE_PERIOD" property="exercisePeriod" jdbcType="DECIMAL" />
+        <result column="EXERCISE_PRICE" property="exercisePrice" jdbcType="DECIMAL" />
+        <result column="PERPETUAL_CLAUSE_TYPE" property="perpetualClauseType" jdbcType="VARCHAR" />
+        <result column="DEFERRED_INTEREST_TYPE" property="deferredInterestType" jdbcType="VARCHAR" />
+        <result column="DEFERRED_INTEREST_INT" property="deferredInterestInt" jdbcType="VARCHAR" />
+        <result column="FIRST_REPRCE_DATE" property="firstReprceDate" jdbcType="DATE" />
+        <result column="REPRCE_CYCLE" property="reprceCycle" jdbcType="DECIMAL" />
+        <result column="PART_REDEM_FLAG" property="partRedemFlag" jdbcType="VARCHAR" />
+        <result column="PART_REDEM_RATE" property="partRedemRate" jdbcType="DECIMAL" />
+        <result column="CREDIT_ORG_CODE" property="creditOrgCode" jdbcType="VARCHAR" />
+        <result column="CREDIT_ORG_NAME" property="creditOrgName" jdbcType="VARCHAR" />
+        <result column="EQUITY_QUIT" property="equityQuit" jdbcType="DATE" />
+        <result column="DEPT_EQUITY" property="deptEquity" jdbcType="VARCHAR" />
+        <result column="HOLD_PURPOSE" property="holdPurpose" jdbcType="VARCHAR" />
+        <result column="FINANCIAL_COMISSUE" property="financialComissue" jdbcType="VARCHAR" />
+        <result column="IS_CHL" property="isChl" jdbcType="VARCHAR" />
+        <result column="CHB_ISSUER_ID" property="chbIssuerId" jdbcType="VARCHAR" />
+        <result column="CHB_MANAGER_ID" property="chbManagerId" jdbcType="VARCHAR" />
+        <result column="CHB_FINANCIER_ID" property="chbFinancierId" jdbcType="VARCHAR" />
+        <result column="PERPETUAL_FLAG" property="perpetualFlag" jdbcType="VARCHAR" />
+        <result column="OPTION_FLAG" property="optionFlag" jdbcType="VARCHAR" />
+        <result column="IS_BJSZQ" property="isBjszq" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
+        <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
+        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+        <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
+        <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
+        <result column="IS_FBZB" property="isFbzb" jdbcType="VARCHAR" />
+        <result column="INVEST_NATURE" property="investNature" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSET_TYPE ASSET_TYPE, ASSET_TYPE2 ASSET_TYPE2, 
+        CCY CCY, TRADE_MARKET TRADE_MARKET, VDATE VDATE, MDATE MDATE, DISCOUNT_YIELD DISCOUNT_YIELD, 
+        ASSET_YIELD ASSET_YIELD, BASIS BASIS, AMT AMT, BANK_NAME BANK_NAME, IS_STRUCT IS_STRUCT, 
+        TARGET_TYPE TARGET_TYPE, TARGET TARGET, ASSET_ID ASSET_ID, ASSET_NAME ASSET_NAME, 
+        CHB_SECTYPE CHB_SECTYPE, ISSUE_MODE ISSUE_MODE, PARTY_GRADE PARTY_GRADE, PARTY_TYPE1 PARTY_TYPE1, 
+        PARTY_TYPE3 PARTY_TYPE3, PARTY_TYPE2 PARTY_TYPE2, INDUSTRY INDUSTRY, INDUSTRY_LEVEL2 INDUSTRY_LEVEL2, 
+        REGIST_ORG REGIST_ORG, REGISTORG_COMMENT REGISTORG_COMMENT, RIVAL_PARTY RIVAL_PARTY, 
+        TARGET_TYPE1 TARGET_TYPE1, TARGET_AMT TARGET_AMT, COUNTRY_AREA COUNTRY_AREA, PROFIT_TYPE PROFIT_TYPE, 
+        IS_RESALE IS_RESALE, TERM_DATE TERM_DATE, RATE_FLAG RATE_FLAG, INTPAY_CYCLE INTPAY_CYCLE, 
+        REPAY_CMT REPAY_CMT, BASIS_TYPE BASIS_TYPE, FLOAT_FACTOR FLOAT_FACTOR, SPREAD_RATE SPREAD_RATE, 
+        FINANCIE FINANCIE, FIN_ORG_CODE FIN_ORG_CODE, FCR_GRADE_IN FCR_GRADE_IN, FCR_GRADE_OUT FCR_GRADE_OUT, 
+        FINANCIER_TYPE1 FINANCIER_TYPE1, FINANCIER_TYPE2 FINANCIER_TYPE2, FINANCIER_TYPE3 FINANCIER_TYPE3, 
+        FINANCE_PROJ FINANCE_PROJ, INDUSTRY1 INDUSTRY1, INDUSTRY_LEVEL2_TYPE INDUSTRY_LEVEL2_TYPE, 
+        PRO_INDUSTRY PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2 PRO_INDUSTRY_LEVEL2, INDUSTRY_FLAG INDUSTRY_FLAG, 
+        MONIT_TYPE MONIT_TYPE, MON_TYPE_COMM MON_TYPE_COMM, GUA_TYPE GUA_TYPE, GUA_TYPE_REMARK GUA_TYPE_REMARK, 
+        FINANCIER_GRADE FINANCIER_GRADE, IN_GRADE IN_GRADE, OUT_GRADE OUT_GRADE, CHOSE CHOSE, 
+        CONDITION_CMM CONDITION_CMM, FIN_AREA FIN_AREA, TOTAL_FEE_RATE TOTAL_FEE_RATE, IS_RIGHT IS_RIGHT, 
+        NOTSTAND_SEC_TYPE NOTSTAND_SEC_TYPE, NOTSTAND_SEC_NUM NOTSTAND_SEC_NUM, REMAIN_TERM REMAIN_TERM, 
+        MAX_REMAIN_TERM MAX_REMAIN_TERM, MIN_REMAIN_TERM MIN_REMAIN_TERM, SHARES_TYPE SHARES_TYPE, 
+        INDUSTRY_SHARES INDUSTRY_SHARES, INDUSTRY_SHARES2 INDUSTRY_SHARES2, INVEST_STAGE INVEST_STAGE, 
+        SHARES_TYPE1 SHARES_TYPE1, SHARES_TYPE2 SHARES_TYPE2, SHARES_TYPE3 SHARES_TYPE3, 
+        IS_PLEDGE IS_PLEDGE, NOM_CAPI NOM_CAPI, TARGET_TYPE3 TARGET_TYPE3, ISSUE_PARTY_ID ISSUE_PARTY_ID, 
+        TERM_MONTH TERM_MONTH, GUARANTEE_CMT GUARANTEE_CMT, SPECIAL_CMT SPECIAL_CMT, CONTRACT_NAME CONTRACT_NAME, 
+        INCOME_RATIO INCOME_RATIO, DER_INSTR_RATIO DER_INSTR_RATIO, DER_INSTR_INV_TYPE DER_INSTR_INV_TYPE, 
+        DER_INSTR_TARGET DER_INSTR_TARGET, ACCT_MODE ACCT_MODE, SPECIAL_CMT1 SPECIAL_CMT1, 
+        MAX_YIELD MAX_YIELD, MIN_YIELD MIN_YIELD, BASIC_PRICE BASIC_PRICE, REG_DATE_PRICE REG_DATE_PRICE, 
+        TRADE_FEE TRADE_FEE, PARTY_CODE PARTY_CODE, CHECK_CODE CHECK_CODE, MANAGER_ID MANAGER_ID, 
+        TRUSTEE_ID TRUSTEE_ID, TRU_ACT_TYPE TRU_ACT_TYPE, INVEST_TYPE INVEST_TYPE, CAP_USE_INDU CAP_USE_INDU, 
+        PLAN_SDATE PLAN_SDATE, PLAN_EDATE PLAN_EDATE, PRO_PROPERTY PRO_PROPERTY, MAX_RATE MAX_RATE, 
+        MIN_RATE MIN_RATE, DEBT_SCALE DEBT_SCALE, BUY_STRUCT BUY_STRUCT, MANAGE_TYPE MANAGE_TYPE, 
+        IS_CTRL_BOTTOM IS_CTRL_BOTTOM, MGR_FEE_RATE MGR_FEE_RATE, TRU_FEE_RATE TRU_FEE_RATE, 
+        TRADE_FEE_RATE TRADE_FEE_RATE, AGENCY_FEE_RATE AGENCY_FEE_RATE, OTHER_FEE_RATE OTHER_FEE_RATE, 
+        ASSET_VALUE ASSET_VALUE, REGIST_ORG1 REGIST_ORG1, MNG_ORG_NAME MNG_ORG_NAME, TRU_ORG_NAME TRU_ORG_NAME, 
+        FUND_INVEST_ASSET FUND_INVEST_ASSET, IN_ASSET_TYPE IN_ASSET_TYPE, IN_ASSET_TYPE_CMM IN_ASSET_TYPE_CMM, 
+        REMARK REMARK, IS_UNDER_ASSET IS_UNDER_ASSET, IS_GOVERN_FUND IS_GOVERN_FUND, GOVERN_INVEST_FUND GOVERN_INVEST_FUND, 
+        FUND_ENPE_NAME FUND_ENPE_NAME, TRUSTEE TRUSTEE, STATUS STATUS, CREATE_USER CREATE_USER, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, DEPT_CODE DEPT_CODE, 
+        ORG_CODE ORG_CODE, DATA_SOURCE DATA_SOURCE, PRIVATEFUND_FLAG PRIVATEFUND_FLAG, PRIVATEPRD_FLAG PRIVATEPRD_FLAG, 
+        BONDTOSTOCK_FLAG BONDTOSTOCK_FLAG, PPPFLAG PPPFLAG, STATUS_DATE STATUS_DATE, CAP_USE_INDU_LEVEL2 CAP_USE_INDU_LEVEL2, 
+        ISSUE_PARTY_NAME ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE SEC_CREDIT_GRADE_TYPE, SEC_MAIN_GRADE SEC_MAIN_GRADE, 
+        BLN_AREA BLN_AREA, INDUSTRY_PBC INDUSTRY_PBC, CUSTOMER_OBJ_TYPE CUSTOMER_OBJ_TYPE, 
+        ORG_ASSET_TYPE1 ORG_ASSET_TYPE1, ORG_ASSET_TYPE2 ORG_ASSET_TYPE2, ORG_ASSET_TYPE3 ORG_ASSET_TYPE3, 
+        BUY_PLACE BUY_PLACE, ASSET_CODE_OLD ASSET_CODE_OLD, ASSET_TYPE3 ASSET_TYPE3, PBC_ASSET_TYPE1 PBC_ASSET_TYPE1, 
+        PBC_ASSET_TYPE2 PBC_ASSET_TYPE2, PBC_ASSET_TYPE3 PBC_ASSET_TYPE3, ORG_ASSET_TYPE4 ORG_ASSET_TYPE4, 
+        ORG_ASSET_TYPE5 ORG_ASSET_TYPE5, PRIVATE_FLAG PRIVATE_FLAG, INSTIT_SIZE INSTIT_SIZE, 
+        TRM_FUND_TYPE TRM_FUND_TYPE, BANK_SEC_CAPITAL BANK_SEC_CAPITAL, BANK_SEC_PREFER BANK_SEC_PREFER, 
+        BANK_SEC_PERPETUAL BANK_SEC_PERPETUAL, DEPO_TYPE DEPO_TYPE, RIVAL_PARTY_TYPE RIVAL_PARTY_TYPE, 
+        PRIN_BASEAMT PRIN_BASEAMT, FMDATE FMDATE, COUPON_SPECIES COUPON_SPECIES, INTEREST_RULE_FLAG INTEREST_RULE_FLAG, 
+        INTPAY_RULE INTPAY_RULE, FLOAT_FACTOR_FLAG FLOAT_FACTOR_FLAG, STRUCT_GRADE STRUCT_GRADE, 
+        REPAYMENT_TYPE REPAYMENT_TYPE, PERIOD_REPAYMENT_FLAG PERIOD_REPAYMENT_FLAG, BASIC_ASSET_TYPE BASIC_ASSET_TYPE, 
+        EXCESS_PROFIT_RATE EXCESS_PROFIT_RATE, PLEDGE_TYPE PLEDGE_TYPE, PLEDGE_VALUE PLEDGE_VALUE, 
+        NATURE_GUARANTEE NATURE_GUARANTEE, RELATION_FINAN RELATION_FINAN, CONTAIN_TYPE CONTAIN_TYPE, 
+        EXERCISE_TYPE EXERCISE_TYPE, EXERCISE_DATE EXERCISE_DATE, FIRST_EXERCISE_DATE FIRST_EXERCISE_DATE, 
+        EXERCISE_PERIOD EXERCISE_PERIOD, EXERCISE_PRICE EXERCISE_PRICE, PERPETUAL_CLAUSE_TYPE PERPETUAL_CLAUSE_TYPE, 
+        DEFERRED_INTEREST_TYPE DEFERRED_INTEREST_TYPE, DEFERRED_INTEREST_INT DEFERRED_INTEREST_INT, 
+        FIRST_REPRCE_DATE FIRST_REPRCE_DATE, REPRCE_CYCLE REPRCE_CYCLE, PART_REDEM_FLAG PART_REDEM_FLAG, 
+        PART_REDEM_RATE PART_REDEM_RATE, CREDIT_ORG_CODE CREDIT_ORG_CODE, CREDIT_ORG_NAME CREDIT_ORG_NAME, 
+        EQUITY_QUIT EQUITY_QUIT, DEPT_EQUITY DEPT_EQUITY, HOLD_PURPOSE HOLD_PURPOSE, FINANCIAL_COMISSUE FINANCIAL_COMISSUE, 
+        IS_CHL IS_CHL, CHB_ISSUER_ID CHB_ISSUER_ID, CHB_MANAGER_ID CHB_MANAGER_ID, CHB_FINANCIER_ID CHB_FINANCIER_ID, 
+        PERPETUAL_FLAG PERPETUAL_FLAG, OPTION_FLAG OPTION_FLAG, IS_BJSZQ IS_BJSZQ, BANK_SEC_KZZQ BANK_SEC_KZZQ, 
+        BANK_SEC_ZXZQ BANK_SEC_ZXZQ, ISUNLISTED ISUNLISTED, IS_BZHPJ IS_BZHPJ, IS_PERPETUAL IS_PERPETUAL, 
+        IS_FBZB IS_FBZB,INVEST_NATURE INVEST_NATURE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAssetInfoMapper_mysql.Base_Column_List" />
+        from RSK_ASSET_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAssetInfoMapper_mysql.Base_Column_List" />
+        from RSK_ASSET_INFO
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAssetInfoMapper_mysql.Base_Column_List" />
+        from RSK_ASSET_INFO
+        where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_ASSET_INFO
+        where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskAssetInfo" >
+        insert into RSK_ASSET_INFO (ASSET_UUID, ASSET_CODE, ASSET_TYPE, 
+            ASSET_TYPE2, CCY, TRADE_MARKET, 
+            VDATE, MDATE, DISCOUNT_YIELD, 
+            ASSET_YIELD, BASIS, AMT, 
+            BANK_NAME, IS_STRUCT, TARGET_TYPE, 
+            TARGET, ASSET_ID, ASSET_NAME, 
+            CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE, 
+            PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, 
+            INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG, 
+            REGISTORG_COMMENT, RIVAL_PARTY, TARGET_TYPE1, 
+            TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE, 
+            IS_RESALE, TERM_DATE, RATE_FLAG, 
+            INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE, 
+            FLOAT_FACTOR, SPREAD_RATE, FINANCIE, 
+            FIN_ORG_CODE, FCR_GRADE_IN, FCR_GRADE_OUT, 
+            FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3, 
+            FINANCE_PROJ, INDUSTRY1, INDUSTRY_LEVEL2_TYPE, 
+            PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, INDUSTRY_FLAG, 
+            MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE, 
+            GUA_TYPE_REMARK, FINANCIER_GRADE, IN_GRADE, 
+            OUT_GRADE, CHOSE, CONDITION_CMM, 
+            FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT, 
+            NOTSTAND_SEC_TYPE, NOTSTAND_SEC_NUM, REMAIN_TERM, 
+            MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE, 
+            INDUSTRY_SHARES, INDUSTRY_SHARES2, INVEST_STAGE, 
+            SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3, 
+            IS_PLEDGE, NOM_CAPI, TARGET_TYPE3, 
+            ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT, 
+            SPECIAL_CMT, CONTRACT_NAME, INCOME_RATIO, 
+            DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET, 
+            ACCT_MODE, SPECIAL_CMT1, MAX_YIELD, 
+            MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE, 
+            TRADE_FEE, PARTY_CODE, CHECK_CODE, 
+            MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE, 
+            INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE, 
+            PLAN_EDATE, PRO_PROPERTY, MAX_RATE, 
+            MIN_RATE, DEBT_SCALE, BUY_STRUCT, 
+            MANAGE_TYPE, IS_CTRL_BOTTOM, MGR_FEE_RATE, 
+            TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE, 
+            OTHER_FEE_RATE, ASSET_VALUE, REGIST_ORG1, 
+            MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET, 
+            IN_ASSET_TYPE, IN_ASSET_TYPE_CMM, REMARK, 
+            IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND, 
+            FUND_ENPE_NAME, TRUSTEE, STATUS, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, DEPT_CODE, ORG_CODE, 
+            DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, 
+            BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE, 
+            CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE, 
+            SEC_MAIN_GRADE, BLN_AREA, INDUSTRY_PBC, 
+            CUSTOMER_OBJ_TYPE, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, 
+            ORG_ASSET_TYPE3, BUY_PLACE, ASSET_CODE_OLD, 
+            ASSET_TYPE3, PBC_ASSET_TYPE1, PBC_ASSET_TYPE2, 
+            PBC_ASSET_TYPE3, ORG_ASSET_TYPE4, ORG_ASSET_TYPE5, 
+            PRIVATE_FLAG, INSTIT_SIZE, TRM_FUND_TYPE, 
+            BANK_SEC_CAPITAL, BANK_SEC_PREFER, BANK_SEC_PERPETUAL, 
+            DEPO_TYPE, RIVAL_PARTY_TYPE, PRIN_BASEAMT, 
+            FMDATE, COUPON_SPECIES, INTEREST_RULE_FLAG, 
+            INTPAY_RULE, FLOAT_FACTOR_FLAG, STRUCT_GRADE, 
+            REPAYMENT_TYPE, PERIOD_REPAYMENT_FLAG, BASIC_ASSET_TYPE, 
+            EXCESS_PROFIT_RATE, PLEDGE_TYPE, PLEDGE_VALUE, 
+            NATURE_GUARANTEE, RELATION_FINAN, CONTAIN_TYPE, 
+            EXERCISE_TYPE, EXERCISE_DATE, FIRST_EXERCISE_DATE, 
+            EXERCISE_PERIOD, EXERCISE_PRICE, PERPETUAL_CLAUSE_TYPE, 
+            DEFERRED_INTEREST_TYPE, DEFERRED_INTEREST_INT, 
+            FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, 
+            PART_REDEM_RATE, CREDIT_ORG_CODE, CREDIT_ORG_NAME, 
+            EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, 
+            FINANCIAL_COMISSUE, IS_CHL, CHB_ISSUER_ID, 
+            CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, 
+            OPTION_FLAG, IS_BJSZQ, BANK_SEC_KZZQ, 
+            BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, 
+            IS_PERPETUAL, IS_FBZB,
+            INVEST_NATURE)
+        values (#{assetUuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, 
+            #{assetType2,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
+            #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{discountYield,jdbcType=DECIMAL}, 
+            #{assetYield,jdbcType=DECIMAL}, #{basis,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, 
+            #{bankName,jdbcType=VARCHAR}, #{isStruct,jdbcType=VARCHAR}, #{targetType,jdbcType=VARCHAR}, 
+            #{target,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR}, 
+            #{chbSectype,jdbcType=VARCHAR}, #{issueMode,jdbcType=VARCHAR}, #{partyGrade,jdbcType=VARCHAR}, 
+            #{partyType1,jdbcType=VARCHAR}, #{partyType3,jdbcType=VARCHAR}, #{partyType2,jdbcType=VARCHAR}, 
+            #{industry,jdbcType=VARCHAR}, #{industryLevel2,jdbcType=VARCHAR}, #{registOrg,jdbcType=VARCHAR}, 
+            #{registorgComment,jdbcType=VARCHAR}, #{rivalParty,jdbcType=VARCHAR}, #{targetType1,jdbcType=VARCHAR}, 
+            #{targetAmt,jdbcType=DECIMAL}, #{countryArea,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
+            #{isResale,jdbcType=VARCHAR}, #{termDate,jdbcType=DECIMAL}, #{rateFlag,jdbcType=VARCHAR}, 
+            #{intpayCycle,jdbcType=DECIMAL}, #{repayCmt,jdbcType=VARCHAR}, #{basisType,jdbcType=VARCHAR}, 
+            #{floatFactor,jdbcType=DECIMAL}, #{spreadRate,jdbcType=DECIMAL}, #{financie,jdbcType=VARCHAR}, 
+            #{finOrgCode,jdbcType=VARCHAR}, #{fcrGradeIn,jdbcType=VARCHAR}, #{fcrGradeOut,jdbcType=VARCHAR}, 
+            #{financierType1,jdbcType=VARCHAR}, #{financierType2,jdbcType=VARCHAR}, #{financierType3,jdbcType=VARCHAR}, 
+            #{financeProj,jdbcType=VARCHAR}, #{industry1,jdbcType=VARCHAR}, #{industryLevel2Type,jdbcType=VARCHAR}, 
+            #{proIndustry,jdbcType=VARCHAR}, #{proIndustryLevel2,jdbcType=VARCHAR}, #{industryFlag,jdbcType=VARCHAR}, 
+            #{monitType,jdbcType=VARCHAR}, #{monTypeComm,jdbcType=VARCHAR}, #{guaType,jdbcType=VARCHAR}, 
+            #{guaTypeRemark,jdbcType=VARCHAR}, #{financierGrade,jdbcType=VARCHAR}, #{inGrade,jdbcType=VARCHAR}, 
+            #{outGrade,jdbcType=VARCHAR}, #{chose,jdbcType=VARCHAR}, #{conditionCmm,jdbcType=VARCHAR}, 
+            #{finArea,jdbcType=VARCHAR}, #{totalFeeRate,jdbcType=DECIMAL}, #{isRight,jdbcType=VARCHAR}, 
+            #{notstandSecType,jdbcType=VARCHAR}, #{notstandSecNum,jdbcType=DECIMAL}, #{remainTerm,jdbcType=DECIMAL}, 
+            #{maxRemainTerm,jdbcType=DECIMAL}, #{minRemainTerm,jdbcType=DECIMAL}, #{sharesType,jdbcType=VARCHAR}, 
+            #{industryShares,jdbcType=VARCHAR}, #{industryShares2,jdbcType=VARCHAR}, #{investStage,jdbcType=VARCHAR}, 
+            #{sharesType1,jdbcType=VARCHAR}, #{sharesType2,jdbcType=VARCHAR}, #{sharesType3,jdbcType=VARCHAR}, 
+            #{isPledge,jdbcType=VARCHAR}, #{nomCapi,jdbcType=DECIMAL}, #{targetType3,jdbcType=VARCHAR}, 
+            #{issuePartyId,jdbcType=VARCHAR}, #{termMonth,jdbcType=DECIMAL}, #{guaranteeCmt,jdbcType=VARCHAR}, 
+            #{specialCmt,jdbcType=VARCHAR}, #{contractName,jdbcType=VARCHAR}, #{incomeRatio,jdbcType=DECIMAL}, 
+            #{derInstrRatio,jdbcType=DECIMAL}, #{derInstrInvType,jdbcType=VARCHAR}, #{derInstrTarget,jdbcType=VARCHAR}, 
+            #{acctMode,jdbcType=VARCHAR}, #{specialCmt1,jdbcType=VARCHAR}, #{maxYield,jdbcType=DECIMAL}, 
+            #{minYield,jdbcType=DECIMAL}, #{basicPrice,jdbcType=DECIMAL}, #{regDatePrice,jdbcType=DECIMAL}, 
+            #{tradeFee,jdbcType=VARCHAR}, #{partyCode,jdbcType=VARCHAR}, #{checkCode,jdbcType=VARCHAR}, 
+            #{managerId,jdbcType=VARCHAR}, #{trusteeId,jdbcType=VARCHAR}, #{truActType,jdbcType=VARCHAR}, 
+            #{investType,jdbcType=VARCHAR}, #{capUseIndu,jdbcType=VARCHAR}, #{planSdate,jdbcType=DATE}, 
+            #{planEdate,jdbcType=DATE}, #{proProperty,jdbcType=VARCHAR}, #{maxRate,jdbcType=DECIMAL}, 
+            #{minRate,jdbcType=DECIMAL}, #{debtScale,jdbcType=DECIMAL}, #{buyStruct,jdbcType=VARCHAR}, 
+            #{manageType,jdbcType=VARCHAR}, #{isCtrlBottom,jdbcType=VARCHAR}, #{mgrFeeRate,jdbcType=DECIMAL}, 
+            #{truFeeRate,jdbcType=DECIMAL}, #{tradeFeeRate,jdbcType=DECIMAL}, #{agencyFeeRate,jdbcType=DECIMAL}, 
+            #{otherFeeRate,jdbcType=DECIMAL}, #{assetValue,jdbcType=DECIMAL}, #{registOrg1,jdbcType=VARCHAR}, 
+            #{mngOrgName,jdbcType=VARCHAR}, #{truOrgName,jdbcType=VARCHAR}, #{fundInvestAsset,jdbcType=VARCHAR}, 
+            #{inAssetType,jdbcType=VARCHAR}, #{inAssetTypeCmm,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{isUnderAsset,jdbcType=VARCHAR}, #{isGovernFund,jdbcType=VARCHAR}, #{governInvestFund,jdbcType=VARCHAR}, 
+            #{fundEnpeName,jdbcType=VARCHAR}, #{trustee,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{deptCode,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
+            #{dataSource,jdbcType=VARCHAR}, #{privatefundFlag,jdbcType=VARCHAR}, #{privateprdFlag,jdbcType=VARCHAR}, 
+            #{bondtostockFlag,jdbcType=VARCHAR}, #{pppflag,jdbcType=VARCHAR}, #{statusDate,jdbcType=DATE}, 
+            #{capUseInduLevel2,jdbcType=VARCHAR}, #{issuePartyName,jdbcType=VARCHAR}, #{secCreditGradeType,jdbcType=VARCHAR}, 
+            #{secMainGrade,jdbcType=VARCHAR}, #{blnArea,jdbcType=VARCHAR}, #{industryPbc,jdbcType=VARCHAR}, 
+            #{customerObjType,jdbcType=VARCHAR}, #{orgAssetType1,jdbcType=VARCHAR}, #{orgAssetType2,jdbcType=VARCHAR}, 
+            #{orgAssetType3,jdbcType=VARCHAR}, #{buyPlace,jdbcType=VARCHAR}, #{assetCodeOld,jdbcType=VARCHAR}, 
+            #{assetType3,jdbcType=VARCHAR}, #{pbcAssetType1,jdbcType=VARCHAR}, #{pbcAssetType2,jdbcType=VARCHAR}, 
+            #{pbcAssetType3,jdbcType=VARCHAR}, #{orgAssetType4,jdbcType=VARCHAR}, #{orgAssetType5,jdbcType=VARCHAR}, 
+            #{privateFlag,jdbcType=VARCHAR}, #{institSize,jdbcType=VARCHAR}, #{trmFundType,jdbcType=VARCHAR}, 
+            #{bankSecCapital,jdbcType=VARCHAR}, #{bankSecPrefer,jdbcType=VARCHAR}, #{bankSecPerpetual,jdbcType=VARCHAR}, 
+            #{depoType,jdbcType=VARCHAR}, #{rivalPartyType,jdbcType=VARCHAR}, #{prinBaseamt,jdbcType=DECIMAL}, 
+            #{fmdate,jdbcType=DATE}, #{couponSpecies,jdbcType=VARCHAR}, #{interestRuleFlag,jdbcType=VARCHAR}, 
+            #{intpayRule,jdbcType=VARCHAR}, #{floatFactorFlag,jdbcType=VARCHAR}, #{structGrade,jdbcType=VARCHAR}, 
+            #{repaymentType,jdbcType=VARCHAR}, #{periodRepaymentFlag,jdbcType=VARCHAR}, #{basicAssetType,jdbcType=VARCHAR}, 
+            #{excessProfitRate,jdbcType=DECIMAL}, #{pledgeType,jdbcType=VARCHAR}, #{pledgeValue,jdbcType=DECIMAL}, 
+            #{natureGuarantee,jdbcType=VARCHAR}, #{relationFinan,jdbcType=VARCHAR}, #{containType,jdbcType=VARCHAR}, 
+            #{exerciseType,jdbcType=VARCHAR}, #{exerciseDate,jdbcType=DATE}, #{firstExerciseDate,jdbcType=DATE}, 
+            #{exercisePeriod,jdbcType=DECIMAL}, #{exercisePrice,jdbcType=DECIMAL}, #{perpetualClauseType,jdbcType=VARCHAR}, 
+            #{deferredInterestType,jdbcType=VARCHAR}, #{deferredInterestInt,jdbcType=VARCHAR}, 
+            #{firstReprceDate,jdbcType=DATE}, #{reprceCycle,jdbcType=DECIMAL}, #{partRedemFlag,jdbcType=VARCHAR}, 
+            #{partRedemRate,jdbcType=DECIMAL}, #{creditOrgCode,jdbcType=VARCHAR}, #{creditOrgName,jdbcType=VARCHAR}, 
+            #{equityQuit,jdbcType=DATE}, #{deptEquity,jdbcType=VARCHAR}, #{holdPurpose,jdbcType=VARCHAR}, 
+            #{financialComissue,jdbcType=VARCHAR}, #{isChl,jdbcType=VARCHAR}, #{chbIssuerId,jdbcType=VARCHAR}, 
+            #{chbManagerId,jdbcType=VARCHAR}, #{chbFinancierId,jdbcType=VARCHAR}, #{perpetualFlag,jdbcType=VARCHAR}, 
+            #{optionFlag,jdbcType=VARCHAR}, #{isBjszq,jdbcType=VARCHAR}, #{bankSecKzzq,jdbcType=VARCHAR}, 
+            #{bankSecZxzq,jdbcType=VARCHAR}, #{isunlisted,jdbcType=VARCHAR}, #{isBzhpj,jdbcType=VARCHAR}, 
+            #{isPerpetual,jdbcType=VARCHAR}, #{isFbzb,jdbcType=VARCHAR},#{investNature,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskAssetInfo" >
+        insert into RSK_ASSET_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="assetUuid != null" >
+                ASSET_UUID,
+            </if>
+            <if test="assetCode != null" >
+                ASSET_CODE,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="assetType2 != null" >
+                ASSET_TYPE2,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="discountYield != null" >
+                DISCOUNT_YIELD,
+            </if>
+            <if test="assetYield != null" >
+                ASSET_YIELD,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="amt != null" >
+                AMT,
+            </if>
+            <if test="bankName != null" >
+                BANK_NAME,
+            </if>
+            <if test="isStruct != null" >
+                IS_STRUCT,
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE,
+            </if>
+            <if test="target != null" >
+                TARGET,
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID,
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME,
+            </if>
+            <if test="chbSectype != null" >
+                CHB_SECTYPE,
+            </if>
+            <if test="issueMode != null" >
+                ISSUE_MODE,
+            </if>
+            <if test="partyGrade != null" >
+                PARTY_GRADE,
+            </if>
+            <if test="partyType1 != null" >
+                PARTY_TYPE1,
+            </if>
+            <if test="partyType3 != null" >
+                PARTY_TYPE3,
+            </if>
+            <if test="partyType2 != null" >
+                PARTY_TYPE2,
+            </if>
+            <if test="industry != null" >
+                INDUSTRY,
+            </if>
+            <if test="industryLevel2 != null" >
+                INDUSTRY_LEVEL2,
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG,
+            </if>
+            <if test="registorgComment != null" >
+                REGISTORG_COMMENT,
+            </if>
+            <if test="rivalParty != null" >
+                RIVAL_PARTY,
+            </if>
+            <if test="targetType1 != null" >
+                TARGET_TYPE1,
+            </if>
+            <if test="targetAmt != null" >
+                TARGET_AMT,
+            </if>
+            <if test="countryArea != null" >
+                COUNTRY_AREA,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="isResale != null" >
+                IS_RESALE,
+            </if>
+            <if test="termDate != null" >
+                TERM_DATE,
+            </if>
+            <if test="rateFlag != null" >
+                RATE_FLAG,
+            </if>
+            <if test="intpayCycle != null" >
+                INTPAY_CYCLE,
+            </if>
+            <if test="repayCmt != null" >
+                REPAY_CMT,
+            </if>
+            <if test="basisType != null" >
+                BASIS_TYPE,
+            </if>
+            <if test="floatFactor != null" >
+                FLOAT_FACTOR,
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE,
+            </if>
+            <if test="financie != null" >
+                FINANCIE,
+            </if>
+            <if test="finOrgCode != null" >
+                FIN_ORG_CODE,
+            </if>
+            <if test="fcrGradeIn != null" >
+                FCR_GRADE_IN,
+            </if>
+            <if test="fcrGradeOut != null" >
+                FCR_GRADE_OUT,
+            </if>
+            <if test="financierType1 != null" >
+                FINANCIER_TYPE1,
+            </if>
+            <if test="financierType2 != null" >
+                FINANCIER_TYPE2,
+            </if>
+            <if test="financierType3 != null" >
+                FINANCIER_TYPE3,
+            </if>
+            <if test="financeProj != null" >
+                FINANCE_PROJ,
+            </if>
+            <if test="industry1 != null" >
+                INDUSTRY1,
+            </if>
+            <if test="industryLevel2Type != null" >
+                INDUSTRY_LEVEL2_TYPE,
+            </if>
+            <if test="proIndustry != null" >
+                PRO_INDUSTRY,
+            </if>
+            <if test="proIndustryLevel2 != null" >
+                PRO_INDUSTRY_LEVEL2,
+            </if>
+            <if test="industryFlag != null" >
+                INDUSTRY_FLAG,
+            </if>
+            <if test="monitType != null" >
+                MONIT_TYPE,
+            </if>
+            <if test="monTypeComm != null" >
+                MON_TYPE_COMM,
+            </if>
+            <if test="guaType != null" >
+                GUA_TYPE,
+            </if>
+            <if test="guaTypeRemark != null" >
+                GUA_TYPE_REMARK,
+            </if>
+            <if test="financierGrade != null" >
+                FINANCIER_GRADE,
+            </if>
+            <if test="inGrade != null" >
+                IN_GRADE,
+            </if>
+            <if test="outGrade != null" >
+                OUT_GRADE,
+            </if>
+            <if test="chose != null" >
+                CHOSE,
+            </if>
+            <if test="conditionCmm != null" >
+                CONDITION_CMM,
+            </if>
+            <if test="finArea != null" >
+                FIN_AREA,
+            </if>
+            <if test="totalFeeRate != null" >
+                TOTAL_FEE_RATE,
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT,
+            </if>
+            <if test="notstandSecType != null" >
+                NOTSTAND_SEC_TYPE,
+            </if>
+            <if test="notstandSecNum != null" >
+                NOTSTAND_SEC_NUM,
+            </if>
+            <if test="remainTerm != null" >
+                REMAIN_TERM,
+            </if>
+            <if test="maxRemainTerm != null" >
+                MAX_REMAIN_TERM,
+            </if>
+            <if test="minRemainTerm != null" >
+                MIN_REMAIN_TERM,
+            </if>
+            <if test="sharesType != null" >
+                SHARES_TYPE,
+            </if>
+            <if test="industryShares != null" >
+                INDUSTRY_SHARES,
+            </if>
+            <if test="industryShares2 != null" >
+                INDUSTRY_SHARES2,
+            </if>
+            <if test="investStage != null" >
+                INVEST_STAGE,
+            </if>
+            <if test="sharesType1 != null" >
+                SHARES_TYPE1,
+            </if>
+            <if test="sharesType2 != null" >
+                SHARES_TYPE2,
+            </if>
+            <if test="sharesType3 != null" >
+                SHARES_TYPE3,
+            </if>
+            <if test="isPledge != null" >
+                IS_PLEDGE,
+            </if>
+            <if test="nomCapi != null" >
+                NOM_CAPI,
+            </if>
+            <if test="targetType3 != null" >
+                TARGET_TYPE3,
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="termMonth != null" >
+                TERM_MONTH,
+            </if>
+            <if test="guaranteeCmt != null" >
+                GUARANTEE_CMT,
+            </if>
+            <if test="specialCmt != null" >
+                SPECIAL_CMT,
+            </if>
+            <if test="contractName != null" >
+                CONTRACT_NAME,
+            </if>
+            <if test="incomeRatio != null" >
+                INCOME_RATIO,
+            </if>
+            <if test="derInstrRatio != null" >
+                DER_INSTR_RATIO,
+            </if>
+            <if test="derInstrInvType != null" >
+                DER_INSTR_INV_TYPE,
+            </if>
+            <if test="derInstrTarget != null" >
+                DER_INSTR_TARGET,
+            </if>
+            <if test="acctMode != null" >
+                ACCT_MODE,
+            </if>
+            <if test="specialCmt1 != null" >
+                SPECIAL_CMT1,
+            </if>
+            <if test="maxYield != null" >
+                MAX_YIELD,
+            </if>
+            <if test="minYield != null" >
+                MIN_YIELD,
+            </if>
+            <if test="basicPrice != null" >
+                BASIC_PRICE,
+            </if>
+            <if test="regDatePrice != null" >
+                REG_DATE_PRICE,
+            </if>
+            <if test="tradeFee != null" >
+                TRADE_FEE,
+            </if>
+            <if test="partyCode != null" >
+                PARTY_CODE,
+            </if>
+            <if test="checkCode != null" >
+                CHECK_CODE,
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID,
+            </if>
+            <if test="trusteeId != null" >
+                TRUSTEE_ID,
+            </if>
+            <if test="truActType != null" >
+                TRU_ACT_TYPE,
+            </if>
+            <if test="investType != null" >
+                INVEST_TYPE,
+            </if>
+            <if test="capUseIndu != null" >
+                CAP_USE_INDU,
+            </if>
+            <if test="planSdate != null" >
+                PLAN_SDATE,
+            </if>
+            <if test="planEdate != null" >
+                PLAN_EDATE,
+            </if>
+            <if test="proProperty != null" >
+                PRO_PROPERTY,
+            </if>
+            <if test="maxRate != null" >
+                MAX_RATE,
+            </if>
+            <if test="minRate != null" >
+                MIN_RATE,
+            </if>
+            <if test="debtScale != null" >
+                DEBT_SCALE,
+            </if>
+            <if test="buyStruct != null" >
+                BUY_STRUCT,
+            </if>
+            <if test="manageType != null" >
+                MANAGE_TYPE,
+            </if>
+            <if test="isCtrlBottom != null" >
+                IS_CTRL_BOTTOM,
+            </if>
+            <if test="mgrFeeRate != null" >
+                MGR_FEE_RATE,
+            </if>
+            <if test="truFeeRate != null" >
+                TRU_FEE_RATE,
+            </if>
+            <if test="tradeFeeRate != null" >
+                TRADE_FEE_RATE,
+            </if>
+            <if test="agencyFeeRate != null" >
+                AGENCY_FEE_RATE,
+            </if>
+            <if test="otherFeeRate != null" >
+                OTHER_FEE_RATE,
+            </if>
+            <if test="assetValue != null" >
+                ASSET_VALUE,
+            </if>
+            <if test="registOrg1 != null" >
+                REGIST_ORG1,
+            </if>
+            <if test="mngOrgName != null" >
+                MNG_ORG_NAME,
+            </if>
+            <if test="truOrgName != null" >
+                TRU_ORG_NAME,
+            </if>
+            <if test="fundInvestAsset != null" >
+                FUND_INVEST_ASSET,
+            </if>
+            <if test="inAssetType != null" >
+                IN_ASSET_TYPE,
+            </if>
+            <if test="inAssetTypeCmm != null" >
+                IN_ASSET_TYPE_CMM,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="isUnderAsset != null" >
+                IS_UNDER_ASSET,
+            </if>
+            <if test="isGovernFund != null" >
+                IS_GOVERN_FUND,
+            </if>
+            <if test="governInvestFund != null" >
+                GOVERN_INVEST_FUND,
+            </if>
+            <if test="fundEnpeName != null" >
+                FUND_ENPE_NAME,
+            </if>
+            <if test="trustee != null" >
+                TRUSTEE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="privatefundFlag != null" >
+                PRIVATEFUND_FLAG,
+            </if>
+            <if test="privateprdFlag != null" >
+                PRIVATEPRD_FLAG,
+            </if>
+            <if test="bondtostockFlag != null" >
+                BONDTOSTOCK_FLAG,
+            </if>
+            <if test="pppflag != null" >
+                PPPFLAG,
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE,
+            </if>
+            <if test="capUseInduLevel2 != null" >
+                CAP_USE_INDU_LEVEL2,
+            </if>
+            <if test="issuePartyName != null" >
+                ISSUE_PARTY_NAME,
+            </if>
+            <if test="secCreditGradeType != null" >
+                SEC_CREDIT_GRADE_TYPE,
+            </if>
+            <if test="secMainGrade != null" >
+                SEC_MAIN_GRADE,
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA,
+            </if>
+            <if test="industryPbc != null" >
+                INDUSTRY_PBC,
+            </if>
+            <if test="customerObjType != null" >
+                CUSTOMER_OBJ_TYPE,
+            </if>
+            <if test="orgAssetType1 != null" >
+                ORG_ASSET_TYPE1,
+            </if>
+            <if test="orgAssetType2 != null" >
+                ORG_ASSET_TYPE2,
+            </if>
+            <if test="orgAssetType3 != null" >
+                ORG_ASSET_TYPE3,
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE,
+            </if>
+            <if test="assetCodeOld != null" >
+                ASSET_CODE_OLD,
+            </if>
+            <if test="assetType3 != null" >
+                ASSET_TYPE3,
+            </if>
+            <if test="pbcAssetType1 != null" >
+                PBC_ASSET_TYPE1,
+            </if>
+            <if test="pbcAssetType2 != null" >
+                PBC_ASSET_TYPE2,
+            </if>
+            <if test="pbcAssetType3 != null" >
+                PBC_ASSET_TYPE3,
+            </if>
+            <if test="orgAssetType4 != null" >
+                ORG_ASSET_TYPE4,
+            </if>
+            <if test="orgAssetType5 != null" >
+                ORG_ASSET_TYPE5,
+            </if>
+            <if test="privateFlag != null" >
+                PRIVATE_FLAG,
+            </if>
+            <if test="institSize != null" >
+                INSTIT_SIZE,
+            </if>
+            <if test="trmFundType != null" >
+                TRM_FUND_TYPE,
+            </if>
+            <if test="bankSecCapital != null" >
+                BANK_SEC_CAPITAL,
+            </if>
+            <if test="bankSecPrefer != null" >
+                BANK_SEC_PREFER,
+            </if>
+            <if test="bankSecPerpetual != null" >
+                BANK_SEC_PERPETUAL,
+            </if>
+            <if test="depoType != null" >
+                DEPO_TYPE,
+            </if>
+            <if test="rivalPartyType != null" >
+                RIVAL_PARTY_TYPE,
+            </if>
+            <if test="prinBaseamt != null" >
+                PRIN_BASEAMT,
+            </if>
+            <if test="fmdate != null" >
+                FMDATE,
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES,
+            </if>
+            <if test="interestRuleFlag != null" >
+                INTEREST_RULE_FLAG,
+            </if>
+            <if test="intpayRule != null" >
+                INTPAY_RULE,
+            </if>
+            <if test="floatFactorFlag != null" >
+                FLOAT_FACTOR_FLAG,
+            </if>
+            <if test="structGrade != null" >
+                STRUCT_GRADE,
+            </if>
+            <if test="repaymentType != null" >
+                REPAYMENT_TYPE,
+            </if>
+            <if test="periodRepaymentFlag != null" >
+                PERIOD_REPAYMENT_FLAG,
+            </if>
+            <if test="basicAssetType != null" >
+                BASIC_ASSET_TYPE,
+            </if>
+            <if test="excessProfitRate != null" >
+                EXCESS_PROFIT_RATE,
+            </if>
+            <if test="pledgeType != null" >
+                PLEDGE_TYPE,
+            </if>
+            <if test="pledgeValue != null" >
+                PLEDGE_VALUE,
+            </if>
+            <if test="natureGuarantee != null" >
+                NATURE_GUARANTEE,
+            </if>
+            <if test="relationFinan != null" >
+                RELATION_FINAN,
+            </if>
+            <if test="containType != null" >
+                CONTAIN_TYPE,
+            </if>
+            <if test="exerciseType != null" >
+                EXERCISE_TYPE,
+            </if>
+            <if test="exerciseDate != null" >
+                EXERCISE_DATE,
+            </if>
+            <if test="firstExerciseDate != null" >
+                FIRST_EXERCISE_DATE,
+            </if>
+            <if test="exercisePeriod != null" >
+                EXERCISE_PERIOD,
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE,
+            </if>
+            <if test="perpetualClauseType != null" >
+                PERPETUAL_CLAUSE_TYPE,
+            </if>
+            <if test="deferredInterestType != null" >
+                DEFERRED_INTEREST_TYPE,
+            </if>
+            <if test="deferredInterestInt != null" >
+                DEFERRED_INTEREST_INT,
+            </if>
+            <if test="firstReprceDate != null" >
+                FIRST_REPRCE_DATE,
+            </if>
+            <if test="reprceCycle != null" >
+                REPRCE_CYCLE,
+            </if>
+            <if test="partRedemFlag != null" >
+                PART_REDEM_FLAG,
+            </if>
+            <if test="partRedemRate != null" >
+                PART_REDEM_RATE,
+            </if>
+            <if test="creditOrgCode != null" >
+                CREDIT_ORG_CODE,
+            </if>
+            <if test="creditOrgName != null" >
+                CREDIT_ORG_NAME,
+            </if>
+            <if test="equityQuit != null" >
+                EQUITY_QUIT,
+            </if>
+            <if test="deptEquity != null" >
+                DEPT_EQUITY,
+            </if>
+            <if test="holdPurpose != null" >
+                HOLD_PURPOSE,
+            </if>
+            <if test="financialComissue != null" >
+                FINANCIAL_COMISSUE,
+            </if>
+            <if test="isChl != null" >
+                IS_CHL,
+            </if>
+            <if test="chbIssuerId != null" >
+                CHB_ISSUER_ID,
+            </if>
+            <if test="chbManagerId != null" >
+                CHB_MANAGER_ID,
+            </if>
+            <if test="chbFinancierId != null" >
+                CHB_FINANCIER_ID,
+            </if>
+            <if test="perpetualFlag != null" >
+                PERPETUAL_FLAG,
+            </if>
+            <if test="optionFlag != null" >
+                OPTION_FLAG,
+            </if>
+            <if test="isBjszq != null" >
+                IS_BJSZQ,
+            </if>
+            <if test="bankSecKzzq != null" >
+                BANK_SEC_KZZQ,
+            </if>
+            <if test="bankSecZxzq != null" >
+                BANK_SEC_ZXZQ,
+            </if>
+            <if test="isunlisted != null" >
+                ISUNLISTED,
+            </if>
+            <if test="isBzhpj != null" >
+                IS_BZHPJ,
+            </if>
+            <if test="isPerpetual != null" >
+                IS_PERPETUAL,
+            </if>
+            <if test="isFbzb != null" >
+                IS_FBZB,
+            </if>
+            <if test="investNature != null" >
+                INVEST_NATURE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="assetUuid != null" >
+                #{assetUuid,jdbcType=CHAR},
+            </if>
+            <if test="assetCode != null" >
+                #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType2 != null" >
+                #{assetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="discountYield != null" >
+                #{discountYield,jdbcType=DECIMAL},
+            </if>
+            <if test="assetYield != null" >
+                #{assetYield,jdbcType=DECIMAL},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null" >
+                #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="bankName != null" >
+                #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="isStruct != null" >
+                #{isStruct,jdbcType=VARCHAR},
+            </if>
+            <if test="targetType != null" >
+                #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null" >
+                #{target,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="chbSectype != null" >
+                #{chbSectype,jdbcType=VARCHAR},
+            </if>
+            <if test="issueMode != null" >
+                #{issueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="partyGrade != null" >
+                #{partyGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType1 != null" >
+                #{partyType1,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType3 != null" >
+                #{partyType3,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType2 != null" >
+                #{partyType2,jdbcType=VARCHAR},
+            </if>
+            <if test="industry != null" >
+                #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industryLevel2 != null" >
+                #{industryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="registorgComment != null" >
+                #{registorgComment,jdbcType=VARCHAR},
+            </if>
+            <if test="rivalParty != null" >
+                #{rivalParty,jdbcType=VARCHAR},
+            </if>
+            <if test="targetType1 != null" >
+                #{targetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="targetAmt != null" >
+                #{targetAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="countryArea != null" >
+                #{countryArea,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="isResale != null" >
+                #{isResale,jdbcType=VARCHAR},
+            </if>
+            <if test="termDate != null" >
+                #{termDate,jdbcType=DECIMAL},
+            </if>
+            <if test="rateFlag != null" >
+                #{rateFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="intpayCycle != null" >
+                #{intpayCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repayCmt != null" >
+                #{repayCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="basisType != null" >
+                #{basisType,jdbcType=VARCHAR},
+            </if>
+            <if test="floatFactor != null" >
+                #{floatFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="spreadRate != null" >
+                #{spreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="financie != null" >
+                #{financie,jdbcType=VARCHAR},
+            </if>
+            <if test="finOrgCode != null" >
+                #{finOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fcrGradeIn != null" >
+                #{fcrGradeIn,jdbcType=VARCHAR},
+            </if>
+            <if test="fcrGradeOut != null" >
+                #{fcrGradeOut,jdbcType=VARCHAR},
+            </if>
+            <if test="financierType1 != null" >
+                #{financierType1,jdbcType=VARCHAR},
+            </if>
+            <if test="financierType2 != null" >
+                #{financierType2,jdbcType=VARCHAR},
+            </if>
+            <if test="financierType3 != null" >
+                #{financierType3,jdbcType=VARCHAR},
+            </if>
+            <if test="financeProj != null" >
+                #{financeProj,jdbcType=VARCHAR},
+            </if>
+            <if test="industry1 != null" >
+                #{industry1,jdbcType=VARCHAR},
+            </if>
+            <if test="industryLevel2Type != null" >
+                #{industryLevel2Type,jdbcType=VARCHAR},
+            </if>
+            <if test="proIndustry != null" >
+                #{proIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="proIndustryLevel2 != null" >
+                #{proIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="industryFlag != null" >
+                #{industryFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="monitType != null" >
+                #{monitType,jdbcType=VARCHAR},
+            </if>
+            <if test="monTypeComm != null" >
+                #{monTypeComm,jdbcType=VARCHAR},
+            </if>
+            <if test="guaType != null" >
+                #{guaType,jdbcType=VARCHAR},
+            </if>
+            <if test="guaTypeRemark != null" >
+                #{guaTypeRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="financierGrade != null" >
+                #{financierGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="inGrade != null" >
+                #{inGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="outGrade != null" >
+                #{outGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="chose != null" >
+                #{chose,jdbcType=VARCHAR},
+            </if>
+            <if test="conditionCmm != null" >
+                #{conditionCmm,jdbcType=VARCHAR},
+            </if>
+            <if test="finArea != null" >
+                #{finArea,jdbcType=VARCHAR},
+            </if>
+            <if test="totalFeeRate != null" >
+                #{totalFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="isRight != null" >
+                #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="notstandSecType != null" >
+                #{notstandSecType,jdbcType=VARCHAR},
+            </if>
+            <if test="notstandSecNum != null" >
+                #{notstandSecNum,jdbcType=DECIMAL},
+            </if>
+            <if test="remainTerm != null" >
+                #{remainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="maxRemainTerm != null" >
+                #{maxRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="minRemainTerm != null" >
+                #{minRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="sharesType != null" >
+                #{sharesType,jdbcType=VARCHAR},
+            </if>
+            <if test="industryShares != null" >
+                #{industryShares,jdbcType=VARCHAR},
+            </if>
+            <if test="industryShares2 != null" >
+                #{industryShares2,jdbcType=VARCHAR},
+            </if>
+            <if test="investStage != null" >
+                #{investStage,jdbcType=VARCHAR},
+            </if>
+            <if test="sharesType1 != null" >
+                #{sharesType1,jdbcType=VARCHAR},
+            </if>
+            <if test="sharesType2 != null" >
+                #{sharesType2,jdbcType=VARCHAR},
+            </if>
+            <if test="sharesType3 != null" >
+                #{sharesType3,jdbcType=VARCHAR},
+            </if>
+            <if test="isPledge != null" >
+                #{isPledge,jdbcType=VARCHAR},
+            </if>
+            <if test="nomCapi != null" >
+                #{nomCapi,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType3 != null" >
+                #{targetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="termMonth != null" >
+                #{termMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="guaranteeCmt != null" >
+                #{guaranteeCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="specialCmt != null" >
+                #{specialCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="contractName != null" >
+                #{contractName,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeRatio != null" >
+                #{incomeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="derInstrRatio != null" >
+                #{derInstrRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="derInstrInvType != null" >
+                #{derInstrInvType,jdbcType=VARCHAR},
+            </if>
+            <if test="derInstrTarget != null" >
+                #{derInstrTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="acctMode != null" >
+                #{acctMode,jdbcType=VARCHAR},
+            </if>
+            <if test="specialCmt1 != null" >
+                #{specialCmt1,jdbcType=VARCHAR},
+            </if>
+            <if test="maxYield != null" >
+                #{maxYield,jdbcType=DECIMAL},
+            </if>
+            <if test="minYield != null" >
+                #{minYield,jdbcType=DECIMAL},
+            </if>
+            <if test="basicPrice != null" >
+                #{basicPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="regDatePrice != null" >
+                #{regDatePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeFee != null" >
+                #{tradeFee,jdbcType=VARCHAR},
+            </if>
+            <if test="partyCode != null" >
+                #{partyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="checkCode != null" >
+                #{checkCode,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="trusteeId != null" >
+                #{trusteeId,jdbcType=VARCHAR},
+            </if>
+            <if test="truActType != null" >
+                #{truActType,jdbcType=VARCHAR},
+            </if>
+            <if test="investType != null" >
+                #{investType,jdbcType=VARCHAR},
+            </if>
+            <if test="capUseIndu != null" >
+                #{capUseIndu,jdbcType=VARCHAR},
+            </if>
+            <if test="planSdate != null" >
+                #{planSdate,jdbcType=DATE},
+            </if>
+            <if test="planEdate != null" >
+                #{planEdate,jdbcType=DATE},
+            </if>
+            <if test="proProperty != null" >
+                #{proProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="maxRate != null" >
+                #{maxRate,jdbcType=DECIMAL},
+            </if>
+            <if test="minRate != null" >
+                #{minRate,jdbcType=DECIMAL},
+            </if>
+            <if test="debtScale != null" >
+                #{debtScale,jdbcType=DECIMAL},
+            </if>
+            <if test="buyStruct != null" >
+                #{buyStruct,jdbcType=VARCHAR},
+            </if>
+            <if test="manageType != null" >
+                #{manageType,jdbcType=VARCHAR},
+            </if>
+            <if test="isCtrlBottom != null" >
+                #{isCtrlBottom,jdbcType=VARCHAR},
+            </if>
+            <if test="mgrFeeRate != null" >
+                #{mgrFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="truFeeRate != null" >
+                #{truFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeFeeRate != null" >
+                #{tradeFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="agencyFeeRate != null" >
+                #{agencyFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="otherFeeRate != null" >
+                #{otherFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValue != null" >
+                #{assetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="registOrg1 != null" >
+                #{registOrg1,jdbcType=VARCHAR},
+            </if>
+            <if test="mngOrgName != null" >
+                #{mngOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="truOrgName != null" >
+                #{truOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="fundInvestAsset != null" >
+                #{fundInvestAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="inAssetType != null" >
+                #{inAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="inAssetTypeCmm != null" >
+                #{inAssetTypeCmm,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnderAsset != null" >
+                #{isUnderAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="isGovernFund != null" >
+                #{isGovernFund,jdbcType=VARCHAR},
+            </if>
+            <if test="governInvestFund != null" >
+                #{governInvestFund,jdbcType=VARCHAR},
+            </if>
+            <if test="fundEnpeName != null" >
+                #{fundEnpeName,jdbcType=VARCHAR},
+            </if>
+            <if test="trustee != null" >
+                #{trustee,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="privatefundFlag != null" >
+                #{privatefundFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="privateprdFlag != null" >
+                #{privateprdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="bondtostockFlag != null" >
+                #{bondtostockFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="pppflag != null" >
+                #{pppflag,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                #{statusDate,jdbcType=DATE},
+            </if>
+            <if test="capUseInduLevel2 != null" >
+                #{capUseInduLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyName != null" >
+                #{issuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="secCreditGradeType != null" >
+                #{secCreditGradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="secMainGrade != null" >
+                #{secMainGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="industryPbc != null" >
+                #{industryPbc,jdbcType=VARCHAR},
+            </if>
+            <if test="customerObjType != null" >
+                #{customerObjType,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType1 != null" >
+                #{orgAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType2 != null" >
+                #{orgAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType3 != null" >
+                #{orgAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="buyPlace != null" >
+                #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCodeOld != null" >
+                #{assetCodeOld,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType3 != null" >
+                #{assetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAssetType1 != null" >
+                #{pbcAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAssetType2 != null" >
+                #{pbcAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAssetType3 != null" >
+                #{pbcAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType4 != null" >
+                #{orgAssetType4,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType5 != null" >
+                #{orgAssetType5,jdbcType=VARCHAR},
+            </if>
+            <if test="privateFlag != null" >
+                #{privateFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="institSize != null" >
+                #{institSize,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundType != null" >
+                #{trmFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecCapital != null" >
+                #{bankSecCapital,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecPrefer != null" >
+                #{bankSecPrefer,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecPerpetual != null" >
+                #{bankSecPerpetual,jdbcType=VARCHAR},
+            </if>
+            <if test="depoType != null" >
+                #{depoType,jdbcType=VARCHAR},
+            </if>
+            <if test="rivalPartyType != null" >
+                #{rivalPartyType,jdbcType=VARCHAR},
+            </if>
+            <if test="prinBaseamt != null" >
+                #{prinBaseamt,jdbcType=DECIMAL},
+            </if>
+            <if test="fmdate != null" >
+                #{fmdate,jdbcType=DATE},
+            </if>
+            <if test="couponSpecies != null" >
+                #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="interestRuleFlag != null" >
+                #{interestRuleFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="intpayRule != null" >
+                #{intpayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="floatFactorFlag != null" >
+                #{floatFactorFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="structGrade != null" >
+                #{structGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repaymentType != null" >
+                #{repaymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="periodRepaymentFlag != null" >
+                #{periodRepaymentFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="basicAssetType != null" >
+                #{basicAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="excessProfitRate != null" >
+                #{excessProfitRate,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeType != null" >
+                #{pledgeType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeValue != null" >
+                #{pledgeValue,jdbcType=DECIMAL},
+            </if>
+            <if test="natureGuarantee != null" >
+                #{natureGuarantee,jdbcType=VARCHAR},
+            </if>
+            <if test="relationFinan != null" >
+                #{relationFinan,jdbcType=VARCHAR},
+            </if>
+            <if test="containType != null" >
+                #{containType,jdbcType=VARCHAR},
+            </if>
+            <if test="exerciseType != null" >
+                #{exerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="exerciseDate != null" >
+                #{exerciseDate,jdbcType=DATE},
+            </if>
+            <if test="firstExerciseDate != null" >
+                #{firstExerciseDate,jdbcType=DATE},
+            </if>
+            <if test="exercisePeriod != null" >
+                #{exercisePeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="exercisePrice != null" >
+                #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="perpetualClauseType != null" >
+                #{perpetualClauseType,jdbcType=VARCHAR},
+            </if>
+            <if test="deferredInterestType != null" >
+                #{deferredInterestType,jdbcType=VARCHAR},
+            </if>
+            <if test="deferredInterestInt != null" >
+                #{deferredInterestInt,jdbcType=VARCHAR},
+            </if>
+            <if test="firstReprceDate != null" >
+                #{firstReprceDate,jdbcType=DATE},
+            </if>
+            <if test="reprceCycle != null" >
+                #{reprceCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="partRedemFlag != null" >
+                #{partRedemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="partRedemRate != null" >
+                #{partRedemRate,jdbcType=DECIMAL},
+            </if>
+            <if test="creditOrgCode != null" >
+                #{creditOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="creditOrgName != null" >
+                #{creditOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="equityQuit != null" >
+                #{equityQuit,jdbcType=DATE},
+            </if>
+            <if test="deptEquity != null" >
+                #{deptEquity,jdbcType=VARCHAR},
+            </if>
+            <if test="holdPurpose != null" >
+                #{holdPurpose,jdbcType=VARCHAR},
+            </if>
+            <if test="financialComissue != null" >
+                #{financialComissue,jdbcType=VARCHAR},
+            </if>
+            <if test="isChl != null" >
+                #{isChl,jdbcType=VARCHAR},
+            </if>
+            <if test="chbIssuerId != null" >
+                #{chbIssuerId,jdbcType=VARCHAR},
+            </if>
+            <if test="chbManagerId != null" >
+                #{chbManagerId,jdbcType=VARCHAR},
+            </if>
+            <if test="chbFinancierId != null" >
+                #{chbFinancierId,jdbcType=VARCHAR},
+            </if>
+            <if test="perpetualFlag != null" >
+                #{perpetualFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="optionFlag != null" >
+                #{optionFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="isBjszq != null" >
+                #{isBjszq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecKzzq != null" >
+                #{bankSecKzzq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecZxzq != null" >
+                #{bankSecZxzq,jdbcType=VARCHAR},
+            </if>
+            <if test="isunlisted != null" >
+                #{isunlisted,jdbcType=VARCHAR},
+            </if>
+            <if test="isBzhpj != null" >
+                #{isBzhpj,jdbcType=VARCHAR},
+            </if>
+            <if test="isPerpetual != null" >
+                #{isPerpetual,jdbcType=VARCHAR},
+            </if>
+            <if test="isFbzb != null" >
+                #{isFbzb,jdbcType=VARCHAR},
+            </if>
+            <if test="investNature != null" >
+                #{investNature,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskAssetInfo" >
+        insert into RSK_ASSET_INFO(ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, 
+        TRADE_MARKET, VDATE, MDATE, DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT, 
+        TARGET_TYPE, TARGET, ASSET_ID, ASSET_NAME, CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE, 
+        PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG, REGISTORG_COMMENT, 
+        RIVAL_PARTY, TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE, IS_RESALE, TERM_DATE, 
+        RATE_FLAG, INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE, FLOAT_FACTOR, SPREAD_RATE, FINANCIE, 
+        FIN_ORG_CODE, FCR_GRADE_IN, FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3, 
+        FINANCE_PROJ, INDUSTRY1, INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, 
+        INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE, 
+        IN_GRADE, OUT_GRADE, CHOSE, CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT, NOTSTAND_SEC_TYPE, 
+        NOTSTAND_SEC_NUM, REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE, INDUSTRY_SHARES, 
+        INDUSTRY_SHARES2, INVEST_STAGE, SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3, IS_PLEDGE, 
+        NOM_CAPI, TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT, SPECIAL_CMT, CONTRACT_NAME, 
+        INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1, 
+        MAX_YIELD, MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE, TRADE_FEE, PARTY_CODE, CHECK_CODE, 
+        MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE, PLAN_EDATE, 
+        PRO_PROPERTY, MAX_RATE, MIN_RATE, DEBT_SCALE, BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM, 
+        MGR_FEE_RATE, TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE, 
+        REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET, IN_ASSET_TYPE, IN_ASSET_TYPE_CMM, 
+        REMARK, IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE, 
+        STATUS, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DEPT_CODE, ORG_CODE, 
+        DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE, 
+        CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE, SEC_MAIN_GRADE, BLN_AREA, 
+        INDUSTRY_PBC, CUSTOMER_OBJ_TYPE, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
+        BUY_PLACE, ASSET_CODE_OLD, ASSET_TYPE3, PBC_ASSET_TYPE1, PBC_ASSET_TYPE2, PBC_ASSET_TYPE3, 
+        ORG_ASSET_TYPE4, ORG_ASSET_TYPE5, PRIVATE_FLAG, INSTIT_SIZE, TRM_FUND_TYPE, BANK_SEC_CAPITAL, 
+        BANK_SEC_PREFER, BANK_SEC_PERPETUAL, DEPO_TYPE, RIVAL_PARTY_TYPE, PRIN_BASEAMT, FMDATE, 
+        COUPON_SPECIES, INTEREST_RULE_FLAG, INTPAY_RULE, FLOAT_FACTOR_FLAG, STRUCT_GRADE, 
+        REPAYMENT_TYPE, PERIOD_REPAYMENT_FLAG, BASIC_ASSET_TYPE, EXCESS_PROFIT_RATE, PLEDGE_TYPE, 
+        PLEDGE_VALUE, NATURE_GUARANTEE, RELATION_FINAN, CONTAIN_TYPE, EXERCISE_TYPE, EXERCISE_DATE, 
+        FIRST_EXERCISE_DATE, EXERCISE_PERIOD, EXERCISE_PRICE, PERPETUAL_CLAUSE_TYPE, DEFERRED_INTEREST_TYPE, 
+        DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE, 
+        CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE, 
+        IS_CHL, CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, 
+        IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB, INVEST_NATURE)
+        select ASSET_UUID, ASSET_CODE, ASSET_TYPE, ASSET_TYPE2, CCY, 
+            TRADE_MARKET, VDATE, MDATE, DISCOUNT_YIELD, ASSET_YIELD, BASIS, AMT, BANK_NAME, IS_STRUCT, 
+            TARGET_TYPE, TARGET, ASSET_ID, ASSET_NAME, CHB_SECTYPE, ISSUE_MODE, PARTY_GRADE, 
+            PARTY_TYPE1, PARTY_TYPE3, PARTY_TYPE2, INDUSTRY, INDUSTRY_LEVEL2, REGIST_ORG, REGISTORG_COMMENT, 
+            RIVAL_PARTY, TARGET_TYPE1, TARGET_AMT, COUNTRY_AREA, PROFIT_TYPE, IS_RESALE, TERM_DATE, 
+            RATE_FLAG, INTPAY_CYCLE, REPAY_CMT, BASIS_TYPE, FLOAT_FACTOR, SPREAD_RATE, FINANCIE, 
+            FIN_ORG_CODE, FCR_GRADE_IN, FCR_GRADE_OUT, FINANCIER_TYPE1, FINANCIER_TYPE2, FINANCIER_TYPE3, 
+            FINANCE_PROJ, INDUSTRY1, INDUSTRY_LEVEL2_TYPE, PRO_INDUSTRY, PRO_INDUSTRY_LEVEL2, 
+            INDUSTRY_FLAG, MONIT_TYPE, MON_TYPE_COMM, GUA_TYPE, GUA_TYPE_REMARK, FINANCIER_GRADE, 
+            IN_GRADE, OUT_GRADE, CHOSE, CONDITION_CMM, FIN_AREA, TOTAL_FEE_RATE, IS_RIGHT, NOTSTAND_SEC_TYPE, 
+            NOTSTAND_SEC_NUM, REMAIN_TERM, MAX_REMAIN_TERM, MIN_REMAIN_TERM, SHARES_TYPE, INDUSTRY_SHARES, 
+            INDUSTRY_SHARES2, INVEST_STAGE, SHARES_TYPE1, SHARES_TYPE2, SHARES_TYPE3, IS_PLEDGE, 
+            NOM_CAPI, TARGET_TYPE3, ISSUE_PARTY_ID, TERM_MONTH, GUARANTEE_CMT, SPECIAL_CMT, CONTRACT_NAME, 
+            INCOME_RATIO, DER_INSTR_RATIO, DER_INSTR_INV_TYPE, DER_INSTR_TARGET, ACCT_MODE, SPECIAL_CMT1, 
+            MAX_YIELD, MIN_YIELD, BASIC_PRICE, REG_DATE_PRICE, TRADE_FEE, PARTY_CODE, CHECK_CODE, 
+            MANAGER_ID, TRUSTEE_ID, TRU_ACT_TYPE, INVEST_TYPE, CAP_USE_INDU, PLAN_SDATE, PLAN_EDATE, 
+            PRO_PROPERTY, MAX_RATE, MIN_RATE, DEBT_SCALE, BUY_STRUCT, MANAGE_TYPE, IS_CTRL_BOTTOM, 
+            MGR_FEE_RATE, TRU_FEE_RATE, TRADE_FEE_RATE, AGENCY_FEE_RATE, OTHER_FEE_RATE, ASSET_VALUE, 
+            REGIST_ORG1, MNG_ORG_NAME, TRU_ORG_NAME, FUND_INVEST_ASSET, IN_ASSET_TYPE, IN_ASSET_TYPE_CMM, 
+            REMARK, IS_UNDER_ASSET, IS_GOVERN_FUND, GOVERN_INVEST_FUND, FUND_ENPE_NAME, TRUSTEE, 
+            #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DEPT_CODE, ORG_CODE, 
+            DATA_SOURCE, PRIVATEFUND_FLAG, PRIVATEPRD_FLAG, BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE, 
+            CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE, SEC_MAIN_GRADE, BLN_AREA, 
+            INDUSTRY_PBC, CUSTOMER_OBJ_TYPE, ORG_ASSET_TYPE1, ORG_ASSET_TYPE2, ORG_ASSET_TYPE3, 
+            BUY_PLACE, ASSET_CODE_OLD, ASSET_TYPE3, PBC_ASSET_TYPE1, PBC_ASSET_TYPE2, PBC_ASSET_TYPE3, 
+            ORG_ASSET_TYPE4, ORG_ASSET_TYPE5, PRIVATE_FLAG, INSTIT_SIZE, TRM_FUND_TYPE, BANK_SEC_CAPITAL, 
+            BANK_SEC_PREFER, BANK_SEC_PERPETUAL, DEPO_TYPE, RIVAL_PARTY_TYPE, PRIN_BASEAMT, FMDATE, 
+            COUPON_SPECIES, INTEREST_RULE_FLAG, INTPAY_RULE, FLOAT_FACTOR_FLAG, STRUCT_GRADE, 
+            REPAYMENT_TYPE, PERIOD_REPAYMENT_FLAG, BASIC_ASSET_TYPE, EXCESS_PROFIT_RATE, PLEDGE_TYPE, 
+            PLEDGE_VALUE, NATURE_GUARANTEE, RELATION_FINAN, CONTAIN_TYPE, EXERCISE_TYPE, EXERCISE_DATE, 
+            FIRST_EXERCISE_DATE, EXERCISE_PERIOD, EXERCISE_PRICE, PERPETUAL_CLAUSE_TYPE, DEFERRED_INTEREST_TYPE, 
+            DEFERRED_INTEREST_INT, FIRST_REPRCE_DATE, REPRCE_CYCLE, PART_REDEM_FLAG, PART_REDEM_RATE, 
+            CREDIT_ORG_CODE, CREDIT_ORG_NAME, EQUITY_QUIT, DEPT_EQUITY, HOLD_PURPOSE, FINANCIAL_COMISSUE, 
+            IS_CHL, CHB_ISSUER_ID, CHB_MANAGER_ID, CHB_FINANCIER_ID, PERPETUAL_FLAG, OPTION_FLAG, 
+            IS_BJSZQ, BANK_SEC_KZZQ, BANK_SEC_ZXZQ, ISUNLISTED, IS_BZHPJ, IS_PERPETUAL, IS_FBZB, INVEST_NATURE
+             from RSK_ASSET_INFO
+             where STATUS = 'E' and ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskAssetInfo" >
+        update RSK_ASSET_INFO
+        <set >
+            <if test="assetCode != null" >
+                ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType2 != null" >
+                ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="discountYield != null" >
+                DISCOUNT_YIELD = #{discountYield,jdbcType=DECIMAL},
+            </if>
+            <if test="assetYield != null" >
+                ASSET_YIELD = #{assetYield,jdbcType=DECIMAL},
+            </if>
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="amt != null" >
+                AMT = #{amt,jdbcType=DECIMAL},
+            </if>
+            <if test="bankName != null" >
+                BANK_NAME = #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="isStruct != null" >
+                IS_STRUCT = #{isStruct,jdbcType=VARCHAR},
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null" >
+                TARGET = #{target,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="chbSectype != null" >
+                CHB_SECTYPE = #{chbSectype,jdbcType=VARCHAR},
+            </if>
+            <if test="issueMode != null" >
+                ISSUE_MODE = #{issueMode,jdbcType=VARCHAR},
+            </if>
+            <if test="partyGrade != null" >
+                PARTY_GRADE = #{partyGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType1 != null" >
+                PARTY_TYPE1 = #{partyType1,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType3 != null" >
+                PARTY_TYPE3 = #{partyType3,jdbcType=VARCHAR},
+            </if>
+            <if test="partyType2 != null" >
+                PARTY_TYPE2 = #{partyType2,jdbcType=VARCHAR},
+            </if>
+            <if test="industry != null" >
+                INDUSTRY = #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="industryLevel2 != null" >
+                INDUSTRY_LEVEL2 = #{industryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="registorgComment != null" >
+                REGISTORG_COMMENT = #{registorgComment,jdbcType=VARCHAR},
+            </if>
+            <if test="rivalParty != null" >
+                RIVAL_PARTY = #{rivalParty,jdbcType=VARCHAR},
+            </if>
+            <if test="targetType1 != null" >
+                TARGET_TYPE1 = #{targetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="targetAmt != null" >
+                TARGET_AMT = #{targetAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="countryArea != null" >
+                COUNTRY_AREA = #{countryArea,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="isResale != null" >
+                IS_RESALE = #{isResale,jdbcType=VARCHAR},
+            </if>
+            <if test="termDate != null" >
+                TERM_DATE = #{termDate,jdbcType=DECIMAL},
+            </if>
+            <if test="rateFlag != null" >
+                RATE_FLAG = #{rateFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="intpayCycle != null" >
+                INTPAY_CYCLE = #{intpayCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="repayCmt != null" >
+                REPAY_CMT = #{repayCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="basisType != null" >
+                BASIS_TYPE = #{basisType,jdbcType=VARCHAR},
+            </if>
+            <if test="floatFactor != null" >
+                FLOAT_FACTOR = #{floatFactor,jdbcType=DECIMAL},
+            </if>
+            <if test="spreadRate != null" >
+                SPREAD_RATE = #{spreadRate,jdbcType=DECIMAL},
+            </if>
+            <if test="financie != null" >
+                FINANCIE = #{financie,jdbcType=VARCHAR},
+            </if>
+            <if test="finOrgCode != null" >
+                FIN_ORG_CODE = #{finOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fcrGradeIn != null" >
+                FCR_GRADE_IN = #{fcrGradeIn,jdbcType=VARCHAR},
+            </if>
+            <if test="fcrGradeOut != null" >
+                FCR_GRADE_OUT = #{fcrGradeOut,jdbcType=VARCHAR},
+            </if>
+            <if test="financierType1 != null" >
+                FINANCIER_TYPE1 = #{financierType1,jdbcType=VARCHAR},
+            </if>
+            <if test="financierType2 != null" >
+                FINANCIER_TYPE2 = #{financierType2,jdbcType=VARCHAR},
+            </if>
+            <if test="financierType3 != null" >
+                FINANCIER_TYPE3 = #{financierType3,jdbcType=VARCHAR},
+            </if>
+            <if test="financeProj != null" >
+                FINANCE_PROJ = #{financeProj,jdbcType=VARCHAR},
+            </if>
+            <if test="industry1 != null" >
+                INDUSTRY1 = #{industry1,jdbcType=VARCHAR},
+            </if>
+            <if test="industryLevel2Type != null" >
+                INDUSTRY_LEVEL2_TYPE = #{industryLevel2Type,jdbcType=VARCHAR},
+            </if>
+            <if test="proIndustry != null" >
+                PRO_INDUSTRY = #{proIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="proIndustryLevel2 != null" >
+                PRO_INDUSTRY_LEVEL2 = #{proIndustryLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="industryFlag != null" >
+                INDUSTRY_FLAG = #{industryFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="monitType != null" >
+                MONIT_TYPE = #{monitType,jdbcType=VARCHAR},
+            </if>
+            <if test="monTypeComm != null" >
+                MON_TYPE_COMM = #{monTypeComm,jdbcType=VARCHAR},
+            </if>
+            <if test="guaType != null" >
+                GUA_TYPE = #{guaType,jdbcType=VARCHAR},
+            </if>
+            <if test="guaTypeRemark != null" >
+                GUA_TYPE_REMARK = #{guaTypeRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="financierGrade != null" >
+                FINANCIER_GRADE = #{financierGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="inGrade != null" >
+                IN_GRADE = #{inGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="outGrade != null" >
+                OUT_GRADE = #{outGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="chose != null" >
+                CHOSE = #{chose,jdbcType=VARCHAR},
+            </if>
+            <if test="conditionCmm != null" >
+                CONDITION_CMM = #{conditionCmm,jdbcType=VARCHAR},
+            </if>
+            <if test="finArea != null" >
+                FIN_AREA = #{finArea,jdbcType=VARCHAR},
+            </if>
+            <if test="totalFeeRate != null" >
+                TOTAL_FEE_RATE = #{totalFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="notstandSecType != null" >
+                NOTSTAND_SEC_TYPE = #{notstandSecType,jdbcType=VARCHAR},
+            </if>
+            <if test="notstandSecNum != null" >
+                NOTSTAND_SEC_NUM = #{notstandSecNum,jdbcType=DECIMAL},
+            </if>
+            <if test="remainTerm != null" >
+                REMAIN_TERM = #{remainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="maxRemainTerm != null" >
+                MAX_REMAIN_TERM = #{maxRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="minRemainTerm != null" >
+                MIN_REMAIN_TERM = #{minRemainTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="sharesType != null" >
+                SHARES_TYPE = #{sharesType,jdbcType=VARCHAR},
+            </if>
+            <if test="industryShares != null" >
+                INDUSTRY_SHARES = #{industryShares,jdbcType=VARCHAR},
+            </if>
+            <if test="industryShares2 != null" >
+                INDUSTRY_SHARES2 = #{industryShares2,jdbcType=VARCHAR},
+            </if>
+            <if test="investStage != null" >
+                INVEST_STAGE = #{investStage,jdbcType=VARCHAR},
+            </if>
+            <if test="sharesType1 != null" >
+                SHARES_TYPE1 = #{sharesType1,jdbcType=VARCHAR},
+            </if>
+            <if test="sharesType2 != null" >
+                SHARES_TYPE2 = #{sharesType2,jdbcType=VARCHAR},
+            </if>
+            <if test="sharesType3 != null" >
+                SHARES_TYPE3 = #{sharesType3,jdbcType=VARCHAR},
+            </if>
+            <if test="isPledge != null" >
+                IS_PLEDGE = #{isPledge,jdbcType=VARCHAR},
+            </if>
+            <if test="nomCapi != null" >
+                NOM_CAPI = #{nomCapi,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType3 != null" >
+                TARGET_TYPE3 = #{targetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="termMonth != null" >
+                TERM_MONTH = #{termMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="guaranteeCmt != null" >
+                GUARANTEE_CMT = #{guaranteeCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="specialCmt != null" >
+                SPECIAL_CMT = #{specialCmt,jdbcType=VARCHAR},
+            </if>
+            <if test="contractName != null" >
+                CONTRACT_NAME = #{contractName,jdbcType=VARCHAR},
+            </if>
+            <if test="incomeRatio != null" >
+                INCOME_RATIO = #{incomeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="derInstrRatio != null" >
+                DER_INSTR_RATIO = #{derInstrRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="derInstrInvType != null" >
+                DER_INSTR_INV_TYPE = #{derInstrInvType,jdbcType=VARCHAR},
+            </if>
+            <if test="derInstrTarget != null" >
+                DER_INSTR_TARGET = #{derInstrTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="acctMode != null" >
+                ACCT_MODE = #{acctMode,jdbcType=VARCHAR},
+            </if>
+            <if test="specialCmt1 != null" >
+                SPECIAL_CMT1 = #{specialCmt1,jdbcType=VARCHAR},
+            </if>
+            <if test="maxYield != null" >
+                MAX_YIELD = #{maxYield,jdbcType=DECIMAL},
+            </if>
+            <if test="minYield != null" >
+                MIN_YIELD = #{minYield,jdbcType=DECIMAL},
+            </if>
+            <if test="basicPrice != null" >
+                BASIC_PRICE = #{basicPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="regDatePrice != null" >
+                REG_DATE_PRICE = #{regDatePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeFee != null" >
+                TRADE_FEE = #{tradeFee,jdbcType=VARCHAR},
+            </if>
+            <if test="partyCode != null" >
+                PARTY_CODE = #{partyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="checkCode != null" >
+                CHECK_CODE = #{checkCode,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="trusteeId != null" >
+                TRUSTEE_ID = #{trusteeId,jdbcType=VARCHAR},
+            </if>
+            <if test="truActType != null" >
+                TRU_ACT_TYPE = #{truActType,jdbcType=VARCHAR},
+            </if>
+            <if test="investType != null" >
+                INVEST_TYPE = #{investType,jdbcType=VARCHAR},
+            </if>
+            <if test="capUseIndu != null" >
+                CAP_USE_INDU = #{capUseIndu,jdbcType=VARCHAR},
+            </if>
+            <if test="planSdate != null" >
+                PLAN_SDATE = #{planSdate,jdbcType=DATE},
+            </if>
+            <if test="planEdate != null" >
+                PLAN_EDATE = #{planEdate,jdbcType=DATE},
+            </if>
+            <if test="proProperty != null" >
+                PRO_PROPERTY = #{proProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="maxRate != null" >
+                MAX_RATE = #{maxRate,jdbcType=DECIMAL},
+            </if>
+            <if test="minRate != null" >
+                MIN_RATE = #{minRate,jdbcType=DECIMAL},
+            </if>
+            <if test="debtScale != null" >
+                DEBT_SCALE = #{debtScale,jdbcType=DECIMAL},
+            </if>
+            <if test="buyStruct != null" >
+                BUY_STRUCT = #{buyStruct,jdbcType=VARCHAR},
+            </if>
+            <if test="manageType != null" >
+                MANAGE_TYPE = #{manageType,jdbcType=VARCHAR},
+            </if>
+            <if test="isCtrlBottom != null" >
+                IS_CTRL_BOTTOM = #{isCtrlBottom,jdbcType=VARCHAR},
+            </if>
+            <if test="mgrFeeRate != null" >
+                MGR_FEE_RATE = #{mgrFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="truFeeRate != null" >
+                TRU_FEE_RATE = #{truFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeFeeRate != null" >
+                TRADE_FEE_RATE = #{tradeFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="agencyFeeRate != null" >
+                AGENCY_FEE_RATE = #{agencyFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="otherFeeRate != null" >
+                OTHER_FEE_RATE = #{otherFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValue != null" >
+                ASSET_VALUE = #{assetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="registOrg1 != null" >
+                REGIST_ORG1 = #{registOrg1,jdbcType=VARCHAR},
+            </if>
+            <if test="mngOrgName != null" >
+                MNG_ORG_NAME = #{mngOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="truOrgName != null" >
+                TRU_ORG_NAME = #{truOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="fundInvestAsset != null" >
+                FUND_INVEST_ASSET = #{fundInvestAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="inAssetType != null" >
+                IN_ASSET_TYPE = #{inAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="inAssetTypeCmm != null" >
+                IN_ASSET_TYPE_CMM = #{inAssetTypeCmm,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnderAsset != null" >
+                IS_UNDER_ASSET = #{isUnderAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="isGovernFund != null" >
+                IS_GOVERN_FUND = #{isGovernFund,jdbcType=VARCHAR},
+            </if>
+            <if test="governInvestFund != null" >
+                GOVERN_INVEST_FUND = #{governInvestFund,jdbcType=VARCHAR},
+            </if>
+            <if test="fundEnpeName != null" >
+                FUND_ENPE_NAME = #{fundEnpeName,jdbcType=VARCHAR},
+            </if>
+            <if test="trustee != null" >
+                TRUSTEE = #{trustee,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="privatefundFlag != null" >
+                PRIVATEFUND_FLAG = #{privatefundFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="privateprdFlag != null" >
+                PRIVATEPRD_FLAG = #{privateprdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="bondtostockFlag != null" >
+                BONDTOSTOCK_FLAG = #{bondtostockFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="pppflag != null" >
+                PPPFLAG = #{pppflag,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE = #{statusDate,jdbcType=DATE},
+            </if>
+            <if test="capUseInduLevel2 != null" >
+                CAP_USE_INDU_LEVEL2 = #{capUseInduLevel2,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyName != null" >
+                ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="secCreditGradeType != null" >
+                SEC_CREDIT_GRADE_TYPE = #{secCreditGradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="secMainGrade != null" >
+                SEC_MAIN_GRADE = #{secMainGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="industryPbc != null" >
+                INDUSTRY_PBC = #{industryPbc,jdbcType=VARCHAR},
+            </if>
+            <if test="customerObjType != null" >
+                CUSTOMER_OBJ_TYPE = #{customerObjType,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType1 != null" >
+                ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType2 != null" >
+                ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType3 != null" >
+                ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="assetCodeOld != null" >
+                ASSET_CODE_OLD = #{assetCodeOld,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType3 != null" >
+                ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAssetType1 != null" >
+                PBC_ASSET_TYPE1 = #{pbcAssetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAssetType2 != null" >
+                PBC_ASSET_TYPE2 = #{pbcAssetType2,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcAssetType3 != null" >
+                PBC_ASSET_TYPE3 = #{pbcAssetType3,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType4 != null" >
+                ORG_ASSET_TYPE4 = #{orgAssetType4,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAssetType5 != null" >
+                ORG_ASSET_TYPE5 = #{orgAssetType5,jdbcType=VARCHAR},
+            </if>
+            <if test="privateFlag != null" >
+                PRIVATE_FLAG = #{privateFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="institSize != null" >
+                INSTIT_SIZE = #{institSize,jdbcType=VARCHAR},
+            </if>
+            <if test="trmFundType != null" >
+                TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecCapital != null" >
+                BANK_SEC_CAPITAL = #{bankSecCapital,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecPrefer != null" >
+                BANK_SEC_PREFER = #{bankSecPrefer,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecPerpetual != null" >
+                BANK_SEC_PERPETUAL = #{bankSecPerpetual,jdbcType=VARCHAR},
+            </if>
+            <if test="depoType != null" >
+                DEPO_TYPE = #{depoType,jdbcType=VARCHAR},
+            </if>
+            <if test="rivalPartyType != null" >
+                RIVAL_PARTY_TYPE = #{rivalPartyType,jdbcType=VARCHAR},
+            </if>
+            <if test="prinBaseamt != null" >
+                PRIN_BASEAMT = #{prinBaseamt,jdbcType=DECIMAL},
+            </if>
+            <if test="fmdate != null" >
+                FMDATE = #{fmdate,jdbcType=DATE},
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES = #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="interestRuleFlag != null" >
+                INTEREST_RULE_FLAG = #{interestRuleFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="intpayRule != null" >
+                INTPAY_RULE = #{intpayRule,jdbcType=VARCHAR},
+            </if>
+            <if test="floatFactorFlag != null" >
+                FLOAT_FACTOR_FLAG = #{floatFactorFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="structGrade != null" >
+                STRUCT_GRADE = #{structGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="repaymentType != null" >
+                REPAYMENT_TYPE = #{repaymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="periodRepaymentFlag != null" >
+                PERIOD_REPAYMENT_FLAG = #{periodRepaymentFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="basicAssetType != null" >
+                BASIC_ASSET_TYPE = #{basicAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="excessProfitRate != null" >
+                EXCESS_PROFIT_RATE = #{excessProfitRate,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeType != null" >
+                PLEDGE_TYPE = #{pledgeType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeValue != null" >
+                PLEDGE_VALUE = #{pledgeValue,jdbcType=DECIMAL},
+            </if>
+            <if test="natureGuarantee != null" >
+                NATURE_GUARANTEE = #{natureGuarantee,jdbcType=VARCHAR},
+            </if>
+            <if test="relationFinan != null" >
+                RELATION_FINAN = #{relationFinan,jdbcType=VARCHAR},
+            </if>
+            <if test="containType != null" >
+                CONTAIN_TYPE = #{containType,jdbcType=VARCHAR},
+            </if>
+            <if test="exerciseType != null" >
+                EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="exerciseDate != null" >
+                EXERCISE_DATE = #{exerciseDate,jdbcType=DATE},
+            </if>
+            <if test="firstExerciseDate != null" >
+                FIRST_EXERCISE_DATE = #{firstExerciseDate,jdbcType=DATE},
+            </if>
+            <if test="exercisePeriod != null" >
+                EXERCISE_PERIOD = #{exercisePeriod,jdbcType=DECIMAL},
+            </if>
+            <if test="exercisePrice != null" >
+                EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="perpetualClauseType != null" >
+                PERPETUAL_CLAUSE_TYPE = #{perpetualClauseType,jdbcType=VARCHAR},
+            </if>
+            <if test="deferredInterestType != null" >
+                DEFERRED_INTEREST_TYPE = #{deferredInterestType,jdbcType=VARCHAR},
+            </if>
+            <if test="deferredInterestInt != null" >
+                DEFERRED_INTEREST_INT = #{deferredInterestInt,jdbcType=VARCHAR},
+            </if>
+            <if test="firstReprceDate != null" >
+                FIRST_REPRCE_DATE = #{firstReprceDate,jdbcType=DATE},
+            </if>
+            <if test="reprceCycle != null" >
+                REPRCE_CYCLE = #{reprceCycle,jdbcType=DECIMAL},
+            </if>
+            <if test="partRedemFlag != null" >
+                PART_REDEM_FLAG = #{partRedemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="partRedemRate != null" >
+                PART_REDEM_RATE = #{partRedemRate,jdbcType=DECIMAL},
+            </if>
+            <if test="creditOrgCode != null" >
+                CREDIT_ORG_CODE = #{creditOrgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="creditOrgName != null" >
+                CREDIT_ORG_NAME = #{creditOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="equityQuit != null" >
+                EQUITY_QUIT = #{equityQuit,jdbcType=DATE},
+            </if>
+            <if test="deptEquity != null" >
+                DEPT_EQUITY = #{deptEquity,jdbcType=VARCHAR},
+            </if>
+            <if test="holdPurpose != null" >
+                HOLD_PURPOSE = #{holdPurpose,jdbcType=VARCHAR},
+            </if>
+            <if test="financialComissue != null" >
+                FINANCIAL_COMISSUE = #{financialComissue,jdbcType=VARCHAR},
+            </if>
+            <if test="isChl != null" >
+                IS_CHL = #{isChl,jdbcType=VARCHAR},
+            </if>
+            <if test="chbIssuerId != null" >
+                CHB_ISSUER_ID = #{chbIssuerId,jdbcType=VARCHAR},
+            </if>
+            <if test="chbManagerId != null" >
+                CHB_MANAGER_ID = #{chbManagerId,jdbcType=VARCHAR},
+            </if>
+            <if test="chbFinancierId != null" >
+                CHB_FINANCIER_ID = #{chbFinancierId,jdbcType=VARCHAR},
+            </if>
+            <if test="perpetualFlag != null" >
+                PERPETUAL_FLAG = #{perpetualFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="optionFlag != null" >
+                OPTION_FLAG = #{optionFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="isBjszq != null" >
+                IS_BJSZQ = #{isBjszq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecKzzq != null" >
+                BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSecZxzq != null" >
+                BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
+            </if>
+            <if test="isunlisted != null" >
+                ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            </if>
+            <if test="isBzhpj != null" >
+                IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
+            </if>
+            <if test="isPerpetual != null" >
+                IS_PERPETUAL = #{isPerpetual,jdbcType=VARCHAR},
+            </if>
+            <if test="isFbzb != null" >
+                IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
+            </if>
+            <if test="investNature != null" >
+                INVEST_NATURE = #{investNature,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskAssetInfo" >
+        update RSK_ASSET_INFO
+        set ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            DISCOUNT_YIELD = #{discountYield,jdbcType=DECIMAL},
+            ASSET_YIELD = #{assetYield,jdbcType=DECIMAL},
+            BASIS = #{basis,jdbcType=VARCHAR},
+            AMT = #{amt,jdbcType=DECIMAL},
+            BANK_NAME = #{bankName,jdbcType=VARCHAR},
+            IS_STRUCT = #{isStruct,jdbcType=VARCHAR},
+            TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            TARGET = #{target,jdbcType=VARCHAR},
+            ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+            CHB_SECTYPE = #{chbSectype,jdbcType=VARCHAR},
+            ISSUE_MODE = #{issueMode,jdbcType=VARCHAR},
+            PARTY_GRADE = #{partyGrade,jdbcType=VARCHAR},
+            PARTY_TYPE1 = #{partyType1,jdbcType=VARCHAR},
+            PARTY_TYPE3 = #{partyType3,jdbcType=VARCHAR},
+            PARTY_TYPE2 = #{partyType2,jdbcType=VARCHAR},
+            INDUSTRY = #{industry,jdbcType=VARCHAR},
+            INDUSTRY_LEVEL2 = #{industryLevel2,jdbcType=VARCHAR},
+            REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            REGISTORG_COMMENT = #{registorgComment,jdbcType=VARCHAR},
+            RIVAL_PARTY = #{rivalParty,jdbcType=VARCHAR},
+            TARGET_TYPE1 = #{targetType1,jdbcType=VARCHAR},
+            TARGET_AMT = #{targetAmt,jdbcType=DECIMAL},
+            COUNTRY_AREA = #{countryArea,jdbcType=VARCHAR},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            IS_RESALE = #{isResale,jdbcType=VARCHAR},
+            TERM_DATE = #{termDate,jdbcType=DECIMAL},
+            RATE_FLAG = #{rateFlag,jdbcType=VARCHAR},
+            INTPAY_CYCLE = #{intpayCycle,jdbcType=DECIMAL},
+            REPAY_CMT = #{repayCmt,jdbcType=VARCHAR},
+            BASIS_TYPE = #{basisType,jdbcType=VARCHAR},
+            FLOAT_FACTOR = #{floatFactor,jdbcType=DECIMAL},
+            SPREAD_RATE = #{spreadRate,jdbcType=DECIMAL},
+            FINANCIE = #{financie,jdbcType=VARCHAR},
+            FIN_ORG_CODE = #{finOrgCode,jdbcType=VARCHAR},
+            FCR_GRADE_IN = #{fcrGradeIn,jdbcType=VARCHAR},
+            FCR_GRADE_OUT = #{fcrGradeOut,jdbcType=VARCHAR},
+            FINANCIER_TYPE1 = #{financierType1,jdbcType=VARCHAR},
+            FINANCIER_TYPE2 = #{financierType2,jdbcType=VARCHAR},
+            FINANCIER_TYPE3 = #{financierType3,jdbcType=VARCHAR},
+            FINANCE_PROJ = #{financeProj,jdbcType=VARCHAR},
+            INDUSTRY1 = #{industry1,jdbcType=VARCHAR},
+            INDUSTRY_LEVEL2_TYPE = #{industryLevel2Type,jdbcType=VARCHAR},
+            PRO_INDUSTRY = #{proIndustry,jdbcType=VARCHAR},
+            PRO_INDUSTRY_LEVEL2 = #{proIndustryLevel2,jdbcType=VARCHAR},
+            INDUSTRY_FLAG = #{industryFlag,jdbcType=VARCHAR},
+            MONIT_TYPE = #{monitType,jdbcType=VARCHAR},
+            MON_TYPE_COMM = #{monTypeComm,jdbcType=VARCHAR},
+            GUA_TYPE = #{guaType,jdbcType=VARCHAR},
+            GUA_TYPE_REMARK = #{guaTypeRemark,jdbcType=VARCHAR},
+            FINANCIER_GRADE = #{financierGrade,jdbcType=VARCHAR},
+            IN_GRADE = #{inGrade,jdbcType=VARCHAR},
+            OUT_GRADE = #{outGrade,jdbcType=VARCHAR},
+            CHOSE = #{chose,jdbcType=VARCHAR},
+            CONDITION_CMM = #{conditionCmm,jdbcType=VARCHAR},
+            FIN_AREA = #{finArea,jdbcType=VARCHAR},
+            TOTAL_FEE_RATE = #{totalFeeRate,jdbcType=DECIMAL},
+            IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            NOTSTAND_SEC_TYPE = #{notstandSecType,jdbcType=VARCHAR},
+            NOTSTAND_SEC_NUM = #{notstandSecNum,jdbcType=DECIMAL},
+            REMAIN_TERM = #{remainTerm,jdbcType=DECIMAL},
+            MAX_REMAIN_TERM = #{maxRemainTerm,jdbcType=DECIMAL},
+            MIN_REMAIN_TERM = #{minRemainTerm,jdbcType=DECIMAL},
+            SHARES_TYPE = #{sharesType,jdbcType=VARCHAR},
+            INDUSTRY_SHARES = #{industryShares,jdbcType=VARCHAR},
+            INDUSTRY_SHARES2 = #{industryShares2,jdbcType=VARCHAR},
+            INVEST_STAGE = #{investStage,jdbcType=VARCHAR},
+            SHARES_TYPE1 = #{sharesType1,jdbcType=VARCHAR},
+            SHARES_TYPE2 = #{sharesType2,jdbcType=VARCHAR},
+            SHARES_TYPE3 = #{sharesType3,jdbcType=VARCHAR},
+            IS_PLEDGE = #{isPledge,jdbcType=VARCHAR},
+            NOM_CAPI = #{nomCapi,jdbcType=DECIMAL},
+            TARGET_TYPE3 = #{targetType3,jdbcType=VARCHAR},
+            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            TERM_MONTH = #{termMonth,jdbcType=DECIMAL},
+            GUARANTEE_CMT = #{guaranteeCmt,jdbcType=VARCHAR},
+            SPECIAL_CMT = #{specialCmt,jdbcType=VARCHAR},
+            CONTRACT_NAME = #{contractName,jdbcType=VARCHAR},
+            INCOME_RATIO = #{incomeRatio,jdbcType=DECIMAL},
+            DER_INSTR_RATIO = #{derInstrRatio,jdbcType=DECIMAL},
+            DER_INSTR_INV_TYPE = #{derInstrInvType,jdbcType=VARCHAR},
+            DER_INSTR_TARGET = #{derInstrTarget,jdbcType=VARCHAR},
+            ACCT_MODE = #{acctMode,jdbcType=VARCHAR},
+            SPECIAL_CMT1 = #{specialCmt1,jdbcType=VARCHAR},
+            MAX_YIELD = #{maxYield,jdbcType=DECIMAL},
+            MIN_YIELD = #{minYield,jdbcType=DECIMAL},
+            BASIC_PRICE = #{basicPrice,jdbcType=DECIMAL},
+            REG_DATE_PRICE = #{regDatePrice,jdbcType=DECIMAL},
+            TRADE_FEE = #{tradeFee,jdbcType=VARCHAR},
+            PARTY_CODE = #{partyCode,jdbcType=VARCHAR},
+            CHECK_CODE = #{checkCode,jdbcType=VARCHAR},
+            MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            TRUSTEE_ID = #{trusteeId,jdbcType=VARCHAR},
+            TRU_ACT_TYPE = #{truActType,jdbcType=VARCHAR},
+            INVEST_TYPE = #{investType,jdbcType=VARCHAR},
+            CAP_USE_INDU = #{capUseIndu,jdbcType=VARCHAR},
+            PLAN_SDATE = #{planSdate,jdbcType=DATE},
+            PLAN_EDATE = #{planEdate,jdbcType=DATE},
+            PRO_PROPERTY = #{proProperty,jdbcType=VARCHAR},
+            MAX_RATE = #{maxRate,jdbcType=DECIMAL},
+            MIN_RATE = #{minRate,jdbcType=DECIMAL},
+            DEBT_SCALE = #{debtScale,jdbcType=DECIMAL},
+            BUY_STRUCT = #{buyStruct,jdbcType=VARCHAR},
+            MANAGE_TYPE = #{manageType,jdbcType=VARCHAR},
+            IS_CTRL_BOTTOM = #{isCtrlBottom,jdbcType=VARCHAR},
+            MGR_FEE_RATE = #{mgrFeeRate,jdbcType=DECIMAL},
+            TRU_FEE_RATE = #{truFeeRate,jdbcType=DECIMAL},
+            TRADE_FEE_RATE = #{tradeFeeRate,jdbcType=DECIMAL},
+            AGENCY_FEE_RATE = #{agencyFeeRate,jdbcType=DECIMAL},
+            OTHER_FEE_RATE = #{otherFeeRate,jdbcType=DECIMAL},
+            ASSET_VALUE = #{assetValue,jdbcType=DECIMAL},
+            REGIST_ORG1 = #{registOrg1,jdbcType=VARCHAR},
+            MNG_ORG_NAME = #{mngOrgName,jdbcType=VARCHAR},
+            TRU_ORG_NAME = #{truOrgName,jdbcType=VARCHAR},
+            FUND_INVEST_ASSET = #{fundInvestAsset,jdbcType=VARCHAR},
+            IN_ASSET_TYPE = #{inAssetType,jdbcType=VARCHAR},
+            IN_ASSET_TYPE_CMM = #{inAssetTypeCmm,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            IS_UNDER_ASSET = #{isUnderAsset,jdbcType=VARCHAR},
+            IS_GOVERN_FUND = #{isGovernFund,jdbcType=VARCHAR},
+            GOVERN_INVEST_FUND = #{governInvestFund,jdbcType=VARCHAR},
+            FUND_ENPE_NAME = #{fundEnpeName,jdbcType=VARCHAR},
+            TRUSTEE = #{trustee,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            PRIVATEFUND_FLAG = #{privatefundFlag,jdbcType=VARCHAR},
+            PRIVATEPRD_FLAG = #{privateprdFlag,jdbcType=VARCHAR},
+            BONDTOSTOCK_FLAG = #{bondtostockFlag,jdbcType=VARCHAR},
+            PPPFLAG = #{pppflag,jdbcType=VARCHAR},
+            STATUS_DATE = #{statusDate,jdbcType=DATE},
+            CAP_USE_INDU_LEVEL2 = #{capUseInduLevel2,jdbcType=VARCHAR},
+            ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            SEC_CREDIT_GRADE_TYPE = #{secCreditGradeType,jdbcType=VARCHAR},
+            SEC_MAIN_GRADE = #{secMainGrade,jdbcType=VARCHAR},
+            BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            INDUSTRY_PBC = #{industryPbc,jdbcType=VARCHAR},
+            CUSTOMER_OBJ_TYPE = #{customerObjType,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE1 = #{orgAssetType1,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE2 = #{orgAssetType2,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE3 = #{orgAssetType3,jdbcType=VARCHAR},
+            BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            ASSET_CODE_OLD = #{assetCodeOld,jdbcType=VARCHAR},
+            ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
+            PBC_ASSET_TYPE1 = #{pbcAssetType1,jdbcType=VARCHAR},
+            PBC_ASSET_TYPE2 = #{pbcAssetType2,jdbcType=VARCHAR},
+            PBC_ASSET_TYPE3 = #{pbcAssetType3,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE4 = #{orgAssetType4,jdbcType=VARCHAR},
+            ORG_ASSET_TYPE5 = #{orgAssetType5,jdbcType=VARCHAR},
+            PRIVATE_FLAG = #{privateFlag,jdbcType=VARCHAR},
+            INSTIT_SIZE = #{institSize,jdbcType=VARCHAR},
+            TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR},
+            BANK_SEC_CAPITAL = #{bankSecCapital,jdbcType=VARCHAR},
+            BANK_SEC_PREFER = #{bankSecPrefer,jdbcType=VARCHAR},
+            BANK_SEC_PERPETUAL = #{bankSecPerpetual,jdbcType=VARCHAR},
+            DEPO_TYPE = #{depoType,jdbcType=VARCHAR},
+            RIVAL_PARTY_TYPE = #{rivalPartyType,jdbcType=VARCHAR},
+            PRIN_BASEAMT = #{prinBaseamt,jdbcType=DECIMAL},
+            FMDATE = #{fmdate,jdbcType=DATE},
+            COUPON_SPECIES = #{couponSpecies,jdbcType=VARCHAR},
+            INTEREST_RULE_FLAG = #{interestRuleFlag,jdbcType=VARCHAR},
+            INTPAY_RULE = #{intpayRule,jdbcType=VARCHAR},
+            FLOAT_FACTOR_FLAG = #{floatFactorFlag,jdbcType=VARCHAR},
+            STRUCT_GRADE = #{structGrade,jdbcType=VARCHAR},
+            REPAYMENT_TYPE = #{repaymentType,jdbcType=VARCHAR},
+            PERIOD_REPAYMENT_FLAG = #{periodRepaymentFlag,jdbcType=VARCHAR},
+            BASIC_ASSET_TYPE = #{basicAssetType,jdbcType=VARCHAR},
+            EXCESS_PROFIT_RATE = #{excessProfitRate,jdbcType=DECIMAL},
+            PLEDGE_TYPE = #{pledgeType,jdbcType=VARCHAR},
+            PLEDGE_VALUE = #{pledgeValue,jdbcType=DECIMAL},
+            NATURE_GUARANTEE = #{natureGuarantee,jdbcType=VARCHAR},
+            RELATION_FINAN = #{relationFinan,jdbcType=VARCHAR},
+            CONTAIN_TYPE = #{containType,jdbcType=VARCHAR},
+            EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR},
+            EXERCISE_DATE = #{exerciseDate,jdbcType=DATE},
+            FIRST_EXERCISE_DATE = #{firstExerciseDate,jdbcType=DATE},
+            EXERCISE_PERIOD = #{exercisePeriod,jdbcType=DECIMAL},
+            EXERCISE_PRICE = #{exercisePrice,jdbcType=DECIMAL},
+            PERPETUAL_CLAUSE_TYPE = #{perpetualClauseType,jdbcType=VARCHAR},
+            DEFERRED_INTEREST_TYPE = #{deferredInterestType,jdbcType=VARCHAR},
+            DEFERRED_INTEREST_INT = #{deferredInterestInt,jdbcType=VARCHAR},
+            FIRST_REPRCE_DATE = #{firstReprceDate,jdbcType=DATE},
+            REPRCE_CYCLE = #{reprceCycle,jdbcType=DECIMAL},
+            PART_REDEM_FLAG = #{partRedemFlag,jdbcType=VARCHAR},
+            PART_REDEM_RATE = #{partRedemRate,jdbcType=DECIMAL},
+            CREDIT_ORG_CODE = #{creditOrgCode,jdbcType=VARCHAR},
+            CREDIT_ORG_NAME = #{creditOrgName,jdbcType=VARCHAR},
+            EQUITY_QUIT = #{equityQuit,jdbcType=DATE},
+            DEPT_EQUITY = #{deptEquity,jdbcType=VARCHAR},
+            HOLD_PURPOSE = #{holdPurpose,jdbcType=VARCHAR},
+            FINANCIAL_COMISSUE = #{financialComissue,jdbcType=VARCHAR},
+            IS_CHL = #{isChl,jdbcType=VARCHAR},
+            CHB_ISSUER_ID = #{chbIssuerId,jdbcType=VARCHAR},
+            CHB_MANAGER_ID = #{chbManagerId,jdbcType=VARCHAR},
+            CHB_FINANCIER_ID = #{chbFinancierId,jdbcType=VARCHAR},
+            PERPETUAL_FLAG = #{perpetualFlag,jdbcType=VARCHAR},
+            OPTION_FLAG = #{optionFlag,jdbcType=VARCHAR},
+            IS_BJSZQ = #{isBjszq,jdbcType=VARCHAR},
+            BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
+            BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
+            ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
+            IS_PERPETUAL = #{isPerpetual,jdbcType=VARCHAR},
+            IS_FBZB = #{isFbzb,jdbcType=VARCHAR},
+            INVEST_NATURE = #{investNature,jdbcType=VARCHAR}
+        where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
+    </update>
+</mapper>

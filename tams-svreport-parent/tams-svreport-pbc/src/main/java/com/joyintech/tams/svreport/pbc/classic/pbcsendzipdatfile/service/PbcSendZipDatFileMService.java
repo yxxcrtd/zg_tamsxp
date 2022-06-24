@@ -168,7 +168,9 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
                 if(null != errorList1 && errorList1.size()>0){
                     errorListall.addAll(errorList1);
                 }
-            }else if(strName[0].contains(PRODUCT_END_INFO_NAME)){
+            }
+
+            if(strName[0].contains(PRODUCT_END_INFO_NAME)){
                 List<ExcelValidDto> errorList2 =  restTemplate.postForList(
                         SvrServiceApplication.PBC_SERVICE_NAME + "/PbcPrdBaseInfoEndSubDat/importBaseInfoSubDat?fileName="+fileName,param,
                         ExcelValidDto.class);

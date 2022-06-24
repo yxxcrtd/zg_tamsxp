@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.interf.interf.common.dao.InterfCommonMapper_mysql" >
+    <insert id="insertInterfLog" parameterType="com.joyintech.tams.disclosure.interf.interf.common.dto.InterfLog" >
+        insert into CHB_INTERF_LOG (LOG_ID,INTERF_ID,
+						        INTERF_TYPE,
+						        file_NAME,TASK_STATUS,
+								CREATE_TIME,BIZ_DATE,
+								err_message,ISNEEDWARNING,
+								remark1,remark2)
+        values (#{logId,jdbcType=VARCHAR}, #{interfId,jdbcType=VARCHAR},
+               #{interfType,jdbcType=VARCHAR},
+               #{fileName,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR},
+               #{createTime,jdbcType=TIMESTAMP}, #{bizDate,jdbcType=VARCHAR},
+               #{errMessage,jdbcType=VARCHAR}, #{isneedwarning,jdbcType=VARCHAR},
+               #{remark1,jdbcType=VARCHAR}, #{remark2,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertInterfLogList">
+        insert into CHB_INTERF_LOG (LOG_ID,INTERF_ID,
+        INTERF_TYPE,
+        file_NAME,TASK_STATUS,
+        CREATE_TIME,BIZ_DATE,
+        err_message,ISNEEDWARNING,
+        remark1,remark2)
+        <foreach collection="interfLogList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
+            #{item.logId,jdbcType=VARCHAR}, #{item.interfId,jdbcType=VARCHAR},
+            #{item.interfType,jdbcType=VARCHAR},
+            #{item.fileName,jdbcType=VARCHAR}, #{item.taskStatus,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.bizDate,jdbcType=VARCHAR},
+            #{item.errMessage,jdbcType=VARCHAR}, #{item.isneedwarning,jdbcType=VARCHAR},
+            #{item.remark1,jdbcType=VARCHAR}, #{item.remark2,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+    <update id="excuteDb2ImportData">
+    CALL SYSPROC.ADMIN_CMD('import from ${filePath} of del modified by codepage=1208 compound=100 commitcount 10000 INSERT into ${tableName}')
+    </update>
+</mapper>

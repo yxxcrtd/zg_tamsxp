@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="MstPerformanceBenchMark001.xlsx" name="复合基准管理">
-    <Worksheet javaBean="com.joyintech.tams.invest.basicdata.mstperformancebenchmark.dto.MstPerformanceBenchMarkDto">
-        <Row>
-            <Cell order="1" name="基准类型">indexTypeName</Cell>
-            <Cell order="2" name="基准名称">indexName</Cell>
-        </Row>
-    </Worksheet>
-</Workbook>

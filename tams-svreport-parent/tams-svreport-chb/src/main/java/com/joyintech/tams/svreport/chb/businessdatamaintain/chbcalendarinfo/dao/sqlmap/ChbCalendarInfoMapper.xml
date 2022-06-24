@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dao.ChbCalendarInfoMapper">
+
+    <!-- 查询sql -->
+    <select id="selectInfo" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
+        SELECT
+        T1.CALENDAR_ID calendarId ,
+        T1.CDATE cdate ,
+        T1.IS_HOLIDAY isHoliday ,
+        T1.UPDATE_TIME  updateTime,
+        T1.UPDATE_USER updateUser,
+        T2.CALENDAR_NAME calendarName,
+        T1.STATUS status,
+        T1.ERR_MSG errMsg,
+        null orgData
+        from
+        MST_HOLIDAY T1
+        left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+        <where>
+            <if test="calendarTypeList != null">
+                <foreach collection="calendarTypeList" item="item"
+                         open="T1.CALENDAR_ID in(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test='ishDay != null and !ishDay.equals("")'>
+                and T1.IS_HOLIDAY = #{ishDay}
+            </if>
+            <if test="startDate != null and ! startDate.equals('')">
+                and T1.CDATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
+            </if>
+            <if test="endDate != null and ! endDate.equals('')">
+                and T1.CDATE &lt;= to_date(#{endDate},'yyyy-MM-dd')
+            </if>
+            <if test="status != null and ! status.equals('')">
+                and T1.STATUS = #{status}
+            </if>
+        </where>
+
+        union all
+        SELECT
+        T1.CALENDAR_ID calendarId ,
+        T1.CDATE cdate ,
+        T1.IS_HOLIDAY isHoliday ,
+        T1.UPDATE_TIME  updateTime,
+        T1.UPDATE_USER updateUser,
+        T2.CALENDAR_NAME calendarName,
+        T1.STATUS status,
+        T1.ERR_MSG errMsg,
+        T1.ORG_DATA orgData
+        from
+        MST_HOLIDAY_ERRODATA T1
+        left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+        <where>
+            <if test="calendarTypeList != null">
+                <foreach collection="calendarTypeList" item="item"
+                         open="T1.CALENDAR_ID in(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test='ishDay != null and !ishDay.equals("")'>
+                and T1.IS_HOLIDAY = #{ishDay}
+            </if>
+            <if test="startDate != null and ! startDate.equals('')">
+                and T1.CDATE &gt;= to_date(#{startDate},'yyyy-MM-dd')
+            </if>
+            <if test="endDate != null and ! endDate.equals('')">
+                and T1.CDATE &lt;= to_date(#{endDate},'yyyy-MM-dd')
+            </if>
+            <if test="status != null and ! status.equals('')">
+                and T1.STATUS = #{status}
+            </if>
+        </where>
+        ORDER BY calendarId ASC,cdate DESC
+    </select>
+    <!-- 日历类型下拉框信息查询sql -->
+    <select id="selectCalendarInfo"
+            resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfoDto">
+        select
+        calendar_Id calendarId,
+        calendar_Name calendarName
+        from MST_CALENDAR_INFO
+        <where>
+            IS_TRADE_CALENDAR = #{no}
+            <if test="calendarType != null and ! calendarType.equals('')">
+                AND calendar_Id = #{calendarType}
+            </if>
+        </where>
+        ORDER BY calendarId ASC
+    </select>
+
+
+    <!-- 将Excel表格数据加入数据库 -->
+    <insert id="insertBatchMstHoliday" parameterType="list">
+        MERGE INTO MST_HOLIDAY T USING (
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.calendarId,jdbcType=VARCHAR} calendarId,
+            #{item.cdate,jdbcType=DATE} cdate,
+            #{item.dataSource,jdbcType=VARCHAR} dataSource,
+            #{item.status,jdbcType=VARCHAR} status,
+            #{item.isHoliday,jdbcType=INTEGER} isHoliday,
+            #{item.createUser,jdbcType=VARCHAR} createUser,
+            #{item.createDept,jdbcType=VARCHAR} createDept,
+            #{item.createTime,jdbcType=TIMESTAMP} createTime,
+            #{item.updateUser,jdbcType=VARCHAR} updateUser,
+            #{item.updateTime,jdbcType=TIMESTAMP} updateTime,
+            #{item.errMsg,jdbcType=VARCHAR} errMsg
+        </foreach>
+        ) datas ON (T.CALENDAR_ID = datas.calendarId and T.CDATE = datas.cdate)
+        WHEN MATCHED THEN
+        UPDATE SET T.IS_HOLIDAY = datas.isHoliday,T.ERR_MSG = datas.errMsg,
+        T.UPDATE_USER = datas.updateUser,T.STATUS = datas.status,T.UPDATE_TIME = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT (
+        CALENDAR_ID,
+        CDATE,
+        DATA_SOURCE,
+        STATUS,
+        IS_HOLIDAY,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        ERR_MSG)
+        VALUES (
+        datas.calendarId,
+        datas.cdate,
+        datas.dataSource,
+        datas.status,
+        datas.isHoliday,
+        datas.createUser,
+        datas.createDept,
+        datas.createTime,
+        datas.updateUser,
+        datas.updateTime,
+        datas.errMsg
+        )
+    </insert>
+
+    <!-- 将Excel表格数据覆盖数据库 -->
+    <update id="updateBatchCalendarInfo">
+        update MST_HOLIDAY
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_holiday=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.isHoliday!=null">
+                        when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
+                        =
+                        #{item.calendarId,jdbcType=VARCHAR} then
+                        #{item.isHoliday,jdbcType=VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="ERR_MSG=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.errMsg != null and ! item.errMsg.equals('')">
+                        when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
+                        =
+                        #{item.calendarId,jdbcType=VARCHAR} then
+                        #{item.errMsg,jdbcType=VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="status=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.status!=null">
+                        when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
+                        =
+                        #{item.calendarId,jdbcType=VARCHAR} then
+                        #{item.status,jdbcType=VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="UPDATE_USER=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.updateUser!=null">
+                        when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
+                        =
+                        #{item.calendarId,jdbcType=VARCHAR} then
+                        #{item.createUser,jdbcType=VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="UPDATE_TIME=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.updateTime!=null">
+                        when cdate=#{item.cdate,jdbcType=DATE} and calendar_id
+                        =
+                        #{item.calendarId,jdbcType=VARCHAR} then
+                        SYSDATE
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="item" index="index">
+            cdate=#{item.cdate,jdbcType=DATE} and calendar_id =
+            #{item.calendarId,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+
+    <select id="selectMstHoliday" resultType="int">
+        SELECT COUNT(*)
+        FROM MST_HOLIDAY <where>
+            <foreach collection="list" item="items" index="i" separator="or">
+                <trim prefix="(" suffix=")" prefixOverrides="and">
+                    STATUS in ('A','E')
+                <foreach collection="items.entrySet()" item="value"
+                         index="key">
+                    <if test="key == 'CALENDAR_ID'">
+                        and
+                        CALENDAR_ID=#{value,jdbcType=VARCHAR}
+                    </if>
+                    <if test="key == 'CDATE'">
+                        and
+                        CDATE=to_date(#{value},'yyyy-mm-dd')
+                    </if>
+                </foreach>
+                </trim>
+            </foreach>
+    </where>
+    </select>
+    <select id="countDuplicatedData" resultType="java.lang.Integer">
+        select count(1) from MST_HOLIDAY where (CALENDAR_ID,CDATE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.CALENDAR_ID},to_date(#{item.CDATE},'yyyy-MM-dd'))
+        </foreach>
+    </select>
+    <select id="selectByKeys" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
+        SELECT
+        T1.CALENDAR_ID calendarId ,
+        T1.CDATE cdate ,
+        T1.IS_HOLIDAY isHoliday ,
+        T1.UPDATE_TIME  updateTime,
+        T1.UPDATE_USER updateUser,
+        T2.CALENDAR_NAME calendarName,
+        T1.STATUS status,
+        T1.ERR_MSG errMsg,
+        null orgData
+        from
+        MST_HOLIDAY T1
+        left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+        where (CALENDAR_ID,CDATE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.calendarId},to_date(#{item.cdate},'yyyy-MM-dd'))
+        </foreach>
+
+        union all
+        SELECT
+        T1.CALENDAR_ID calendarId ,
+        T1.CDATE cdate ,
+        T1.IS_HOLIDAY isHoliday ,
+        T1.UPDATE_TIME  updateTime,
+        T1.UPDATE_USER updateUser,
+        T2.CALENDAR_NAME calendarName,
+        T1.STATUS status,
+        T1.ERR_MSG errMsg,
+        T1.ORG_DATA orgData
+        from
+        MST_HOLIDAY_ERRODATA T1
+        left join MST_CALENDAR_INFO T2 on T1.CALENDAR_ID = T2.CALENDAR_ID
+        where (CALENDAR_ID,CDATE) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.calendarId},to_date(#{item.cdate},'yyyy-MM-dd'))
+        </foreach>
+        ORDER BY calendarId ASC,cdate DESC
+    </select>
+</mapper>

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dao.ChbAgentPrdInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
+        <id column="AGENT_INSTITUTION_CODE" property="agentInstitutionCode" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="DATA_DATE" property="dataDate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        AGENT_INSTITUTION_CODE AGENT_INSTITUTION_CODE, ISSUE_PARTY_ID ISSUE_PARTY_ID, PROD_ID PROD_ID, 
+        PROD_NAME PROD_NAME, PROD_REGIST_CODE PROD_REGIST_CODE, STATUS STATUS, DATA_DATE DATA_DATE, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dao.ChbAgentPrdInfoMapper.Base_Column_List" />
+        from CHB_AGENT_PRD_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dao.ChbAgentPrdInfoMapper.Base_Column_List" />
+        from CHB_AGENT_PRD_INFO
+        where STATUS = 'E'
+    </sql>
+
+    <!--分页查询-->
+    <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select
+        a.AGENT_INSTITUTION_CODE agentInstitutionCode,
+        b.AGENT_INSTITUTION_NAME agentInstitutionName,
+        a.ISSUE_PARTY_ID issuePartyId,
+        a.STATUS status,
+        a.PROD_ID prodId,
+        a.PROD_NAME prodName,
+        a.PROD_REGIST_CODE prodRegistCode,
+        a.REMARK remark
+        from CHB_AGENT_PRD_INFO a
+        left join CHB_AGENT_INSTITUTION_INFO b
+        on a.AGENT_INSTITUTION_CODE = b.AGENT_INSTITUTION_CODE
+        where 1=1
+        <if test="status != null and status != ''">
+            and a.STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+        <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
+            and a.AGENT_INSTITUTION_CODE like concat(concat('%',#{agentInstitutionCode,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="prodId != null and prodId != ''">
+            and a.PROD_ID like concat(concat('%',#{prodId,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="prodRegistCode != null and prodRegistCode != ''">
+            and a.PROD_REGIST_CODE like concat(concat('%',#{prodRegistCode,jdbcType=VARCHAR}),'%')
+        </if>
+    </select>
+
+    <!--	双击查看详细信息查询info-->
+    <select id="selectDetail" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select
+        a.AGENT_INSTITUTION_CODE agentInstitutionCode,
+        b.AGENT_INSTITUTION_NAME agentInstitutionName,
+        a.ISSUE_PARTY_ID issuePartyId,
+        a.PROD_REGIST_CODE prodRegistCode,
+        a.REMARK remark
+        from CHB_AGENT_PRD_INFO a
+        left join CHB_AGENT_INSTITUTION_INFO b
+        on a.AGENT_INSTITUTION_CODE = b.AGENT_INSTITUTION_CODE
+        where
+          a.AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+          and a.PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--	根据主键逻辑删除info-->
+    <update id="deleteInfo" parameterType="java.lang.String">
+        UPDATE
+          CHB_AGENT_PRD_INFO
+        SET
+          STATUS = 'D'
+        where
+          AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+          and PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    </update>
+
+    <!--	根据主键删除info-->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from
+          CHB_AGENT_PRD_INFO
+        where
+          AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+          and PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    </delete>
+
+    <!--    check表中是否存在相同的逻辑删除数据-->
+    <select id="checkAgentInstitutionCodeD" resultType="integer" parameterType="java.lang.String" >
+        select
+          count(*)
+        from
+          CHB_AGENT_PRD_INFO
+        where
+          STATUS = 'D'
+          and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+          and PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    </select>
+
+    <!--    导入时check表中是否存在相同的逻辑删除数据-->
+    <select id="checkAgentInstitutionCodeDImport" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode,
+        PROD_REGIST_CODE prodRegistCode
+        from
+        CHB_AGENT_PRD_INFO
+        where
+        STATUS = 'D'
+    </select>
+
+    <select id="checkProdRegistCodeImport" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select
+        AGENT_INSTITUTION_CODE agentInstitutionCode,
+        PROD_REGIST_CODE prodRegistCode
+        from
+        CHB_AGENT_PRD_INFO
+        where
+        STATUS = 'E'
+    </select>
+
+<!--    校验代销机构代码相同时,产品登记编码不能相同-->
+    <select id="checkProdRegistCode" resultType="integer" parameterType="java.lang.String" >
+        select
+          count(*)
+        from
+          CHB_AGENT_PRD_INFO
+        where
+          STATUS = 'E'
+          and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+          and PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    </select>
+
+<!--    校验代销机构代码的有效性-->
+    <select id="checkAgentInstitutionCode" resultType="integer" parameterType="java.lang.String" >
+        select
+        count(*)
+        from CHB_AGENT_INSTITUTION_INFO
+        where
+          STATUS = 'E'
+          and AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+    </select>
+
+<!--    查询已维护代销代码的名称-->
+    <select id="selectByPrimaryKey" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" parameterType="java.lang.String" >
+        select
+        AGENT_INSTITUTION_NAME agentInstitutionName
+        from CHB_AGENT_INSTITUTION_INFO
+        where AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
+        insert into CHB_AGENT_PRD_INFO (AGENT_INSTITUTION_CODE,ISSUE_PARTY_ID,
+            PROD_ID, PROD_NAME, PROD_REGIST_CODE,
+            STATUS, DATA_DATE, REMARK, CREATE_DEPT,ORG_CODE,
+            CREATE_TIME, UPDATE_TIME)
+        values (#{agentInstitutionCode,jdbcType=VARCHAR},#{issuePartyId,jdbcType=VARCHAR},
+            #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, now(), #{remark,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},now(),
+            now())
+    </insert>
+    <!--	产品代码及名称-->
+    <select id="selectPrdCodeList" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
+        select
+        a.REG_CODE prodRegistCode,
+        a.PRODID prodId,
+        b.PROD_NAME prodName
+        FROM
+        CHB_PRDRESIST_CODE a
+        LEFT JOIN
+        chb_prd_baseinfo b
+        ON
+        b.prod_id = a.PRODID
+    </select>
+
+    <!--新建获取产品代码及名称-->
+    <select id="getProdIdAndName" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto" >
+        select
+          a.PRODID prodId,
+          b.PROD_NAME prodName
+        FROM
+          CHB_PRDRESIST_CODE a
+        LEFT JOIN
+          chb_prd_baseinfo b
+        ON
+          b.prod_id = a.PRODID
+        where
+          a.REG_CODE = #{prodRegistCode,jdbcType=VARCHAR}
+    </select>
+    <!--	查询中债银行机构代码-->
+    <select id="selectIssuePartyId" parameterType="string" resultType="string">
+        select REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
+        where
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+    <!--	查询已维护的代理销售机构代码-->
+    <select id="selectAgentInstitutionCodeList" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select AGENT_INSTITUTION_CODE agentInstitutionCode from CHB_AGENT_INSTITUTION_INFO where status = 'E'
+    </select>
+    <!--	查询已维护的产品登记编码-->
+    <select id="selectProdRegistCodeList" resultType="com.joyintech.tams.report.submitmaintenance.agentprdinfo.dto.AgentPrdInfoDto">
+        select REG_CODE prodRegistCode from CHB_PRDRESIST_CODE
+    </select>
+    <!--	代理销售机构代码下拉框-->
+    <select id="getAgentInstitutionCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(a.AGENT_INSTITUTION_CODE) code,
+        b.AGENT_INSTITUTION_NAME name,
+        b.AGENT_INSTITUTION_NAME shortName,
+        a.AGENT_INSTITUTION_CODE hidCode
+        from CHB_AGENT_PRD_INFO a
+        left join CHB_AGENT_INSTITUTION_INFO b
+        on a.AGENT_INSTITUTION_CODE = b.AGENT_INSTITUTION_CODE
+        <where>
+            <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
+                AND	(a.AGENT_INSTITUTION_CODE like concat('%',concat(#{agentInstitutionCode,jdbcType=VARCHAR},'%'))
+                or	b.AGENT_INSTITUTION_NAME like concat('%',concat(#{agentInstitutionCode,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+    </select>
+    <!--	产品代码下拉框-->
+    <select id="getProdId" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(PROD_ID) code,
+        PROD_NAME name,
+        PROD_NAME shortName,
+        PROD_ID hidCode
+        FROM CHB_AGENT_PRD_INFO
+        <where>
+            <if test="prodId != null and prodId != ''">
+                AND	(PROD_ID like concat('%',concat(#{prodId,jdbcType=VARCHAR},'%'))
+                or	PROD_NAME like concat('%',concat(#{prodId,jdbcType=VARCHAR},'%')))
+            </if>
+        </where>
+    </select>
+    <!--	产品登记编码下拉框-->
+    <select id="getProdRegistCode" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct(PROD_REGIST_CODE) code
+        FROM CHB_AGENT_PRD_INFO
+        <where>
+            <if test="prodRegistCode != null and prodRegistCode != ''">
+                AND	PROD_REGIST_CODE like concat('%',concat(#{prodRegistCode,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+    </select>
+<!--    代理销售机构代码下拉框（新建）-->
+    <select id="selectAgentInstitutionCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        AGENT_INSTITUTION_CODE id,
+        AGENT_INSTITUTION_CODE text
+        from CHB_AGENT_INSTITUTION_INFO
+        where 1=1
+            <if test="search != null and search != ''">
+                and AGENT_INSTITUTION_CODE like concat(concat('%', #{search}),'%')
+            </if>
+        and STATUS = 'E'
+    </select>
+<!--    产品登记编码下拉框(新建)-->
+    <select id="selectProdRegistCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        a.REG_CODE id,
+        a.REG_CODE text
+        FROM
+        CHB_PRDRESIST_CODE a
+        LEFT JOIN
+        chb_prd_baseinfo b
+        ON
+        b.prod_id = a.PRODID
+        <where>
+            1=1
+            <if test="search != null and search != ''">
+                and a.REG_CODE like concat(concat('%', #{search}),'%')
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.common.dao.RepAssetIndex001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.busicommon.common.dto.RepAssetIndex" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
+        <result column="TDY_INTINCEXP" property="tdyIntincexp" jdbcType="DECIMAL" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
+        <result column="TDY_COST_AMT" property="tdyCostAmt" jdbcType="DECIMAL" />
+        <result column="TDY_FLOAT_INGPL" property="tdyFloatIngpl" jdbcType="DECIMAL" />
+        <result column="END_DAYS_1" property="endDays1" jdbcType="DECIMAL" />
+        <result column="END_DAYS_2" property="endDays2" jdbcType="DECIMAL" />
+        <result column="AL_FLAG" property="alFlag" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO, BOOKSET_ID, PROD_ID,
+            VALUE_DATE, BUSI_ID, POS_AMT,
+            TDY_INTINCEXP, MDATE, TDY_POSITION,
+            TDY_COST_AMT, TDY_FLOAT_INGPL, END_DAYS_1,
+            END_DAYS_2, AL_FLAG, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, INPUT_TYPE, INPUT_USER,
+            ADAPTER_ID, RATE_TYPE
+    </sql>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.RepAssetIndex" >
+        insert into REP_ASSET_INDEX (SEQ_NO, BOOKSET_ID, PROD_ID,
+            VALUE_DATE, BUSI_ID, POS_AMT,
+            TDY_INTINCEXP, MDATE, TDY_POSITION,
+            TDY_COST_AMT, TDY_FLOAT_INGPL, END_DAYS_1,
+            END_DAYS_2, AL_FLAG, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, INPUT_TYPE, INPUT_USER,
+            ADAPTER_ID, RATE_TYPE)
+        values (#{seqNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR},
+            #{valueDate,jdbcType=DATE}, #{busiId,jdbcType=VARCHAR}, #{posAmt,jdbcType=DECIMAL},
+            #{tdyIntincexp,jdbcType=DECIMAL}, #{mdate,jdbcType=DATE}, #{tdyPosition,jdbcType=DECIMAL},
+            #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{endDays1,jdbcType=DECIMAL},
+            #{endDays2,jdbcType=DECIMAL}, #{alFlag,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{inputType,jdbcType=VARCHAR}, #{inputUser,jdbcType=VARCHAR},
+            #{adapterId,jdbcType=VARCHAR}, #{rateType,jdbcType=VARCHAR})
+    </insert>
+</mapper>

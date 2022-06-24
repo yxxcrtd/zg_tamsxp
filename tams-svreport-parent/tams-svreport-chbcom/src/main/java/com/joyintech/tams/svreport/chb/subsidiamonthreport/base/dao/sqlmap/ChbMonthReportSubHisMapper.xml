@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubHisMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubHis" >
+        <id column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="STARTDATE" property="startdate" jdbcType="DATE" />
+        <result column="ENDDATE" property="enddate" jdbcType="DATE" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_NAME" property="issuePartyName" jdbcType="VARCHAR" />
+        <result column="REPORTFREQU" property="reportfrequ" jdbcType="VARCHAR" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="DATE" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="DATE" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="DATE" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REPORTUUID REPORTUUID, TERMID TERMID, REPORTTYPE REPORTTYPE, STARTDATE STARTDATE, 
+        ENDDATE ENDDATE, ISSUE_PARTY_ID ISSUE_PARTY_ID, ISSUE_PARTY_NAME ISSUE_PARTY_NAME, 
+        REPORTFREQU REPORTFREQU, SUBMIT_TIME SUBMIT_TIME, CHB_SUBMIT_DEADLINE CHB_SUBMIT_DEADLINE, 
+        SUBMIT_DEADLINE SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS SUBMIT_FEEDBACK_STATUS, STATUS STATUS, 
+        SEND_STATUS SEND_STATUS, STATUS_DATE STATUS_DATE, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, 
+        CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubHisMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_HIS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubHisMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_HIS
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubHisMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_HIS
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_MONTH_REPORT_SUB_HIS
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubHis" >
+        insert into CHB_MONTH_REPORT_SUB_HIS (REPORTUUID, TERMID, REPORTTYPE, 
+            STARTDATE, ENDDATE, ISSUE_PARTY_ID, 
+            ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, 
+            CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS, 
+            STATUS, SEND_STATUS, STATUS_DATE, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, ORG_CODE, DEPT_CODE, 
+            CREATE_DEPT)
+        values (#{reportuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR}, 
+            #{startdate,jdbcType=DATE}, #{enddate,jdbcType=DATE}, #{issuePartyId,jdbcType=VARCHAR}, 
+            #{issuePartyName,jdbcType=VARCHAR}, #{reportfrequ,jdbcType=VARCHAR}, #{submitTime,jdbcType=DATE}, 
+            #{chbSubmitDeadline,jdbcType=DATE}, #{submitDeadline,jdbcType=DATE}, #{submitFeedbackStatus,jdbcType=VARCHAR}, 
+            #{status,jdbcType=VARCHAR}, #{sendStatus,jdbcType=VARCHAR}, #{statusDate,jdbcType=DATE}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubHis" >
+        insert into CHB_MONTH_REPORT_SUB_HIS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="termid != null" >
+                TERMID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="startdate != null" >
+                STARTDATE,
+            </if>
+            <if test="enddate != null" >
+                ENDDATE,
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="issuePartyName != null" >
+                ISSUE_PARTY_NAME,
+            </if>
+            <if test="reportfrequ != null" >
+                REPORTFREQU,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="termid != null" >
+                #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                #{startdate,jdbcType=DATE},
+            </if>
+            <if test="enddate != null" >
+                #{enddate,jdbcType=DATE},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyName != null" >
+                #{issuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportfrequ != null" >
+                #{reportfrequ,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=DATE},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                #{chbSubmitDeadline,jdbcType=DATE},
+            </if>
+            <if test="submitDeadline != null" >
+                #{submitDeadline,jdbcType=DATE},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                #{statusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubHis" >
+        insert into CHB_MONTH_REPORT_SUB_HIS(REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, 
+        ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
+        SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT)
+        select REPORTUUID, TERMID, REPORTTYPE, STARTDATE, ENDDATE, 
+            ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORTFREQU, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, 
+            SUBMIT_DEADLINE, SUBMIT_FEEDBACK_STATUS, STATUS, SEND_STATUS, STATUS_DATE, CREATE_USER, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ORG_CODE, DEPT_CODE, CREATE_DEPT
+             from CHB_MONTH_REPORT_SUB
+             where STATUS = 'E' and REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubHis" >
+        update CHB_MONTH_REPORT_SUB_HIS
+        <set >
+            <if test="termid != null" >
+                TERMID = #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="startdate != null" >
+                STARTDATE = #{startdate,jdbcType=DATE},
+            </if>
+            <if test="enddate != null" >
+                ENDDATE = #{enddate,jdbcType=DATE},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyName != null" >
+                ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            </if>
+            <if test="reportfrequ != null" >
+                REPORTFREQU = #{reportfrequ,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=DATE},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=DATE},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=DATE},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE = #{statusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubHis" >
+        update CHB_MONTH_REPORT_SUB_HIS
+        set TERMID = #{termid,jdbcType=VARCHAR},
+            REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            STARTDATE = #{startdate,jdbcType=DATE},
+            ENDDATE = #{enddate,jdbcType=DATE},
+            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            REPORTFREQU = #{reportfrequ,jdbcType=VARCHAR},
+            SUBMIT_TIME = #{submitTime,jdbcType=DATE},
+            CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=DATE},
+            SUBMIT_DEADLINE = #{submitDeadline,jdbcType=DATE},
+            SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            STATUS_DATE = #{statusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </update>
+</mapper>

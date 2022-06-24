@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskSpecificAssetTypeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskSpecificAssetType" >
+        <id column="SPECIFIC_ID" property="specificId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="TYPE_1" property="type1" jdbcType="VARCHAR" />
+        <result column="TYPE_2" property="type2" jdbcType="VARCHAR" />
+        <result column="TYPE_3" property="type3" jdbcType="VARCHAR" />
+        <result column="TYPE_4" property="type4" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="IS_BADASSET" property="isBadasset" jdbcType="VARCHAR" />
+        <result column="IS_UNLISTEDEQUITY" property="isUnlistedequity" jdbcType="VARCHAR" />
+        <result column="IS_REGULATION" property="isRegulation" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_CREDIT_ASSET" property="isCreditAsset" jdbcType="VARCHAR" />
+        <result column="IS_FLOW_LIMITED" property="isFlowLimited" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SPECIFIC_ID SPECIFIC_ID, BRANCH BRANCH, TYPE_1 TYPE_1, TYPE_2 TYPE_2, TYPE_3 TYPE_3, 
+        TYPE_4 TYPE_4, FINPROD_ID FINPROD_ID, IS_BADASSET IS_BADASSET, IS_UNLISTEDEQUITY IS_UNLISTEDEQUITY, 
+        IS_REGULATION IS_REGULATION, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, IS_CREDIT_ASSET IS_CREDIT_ASSET, 
+        IS_FLOW_LIMITED IS_FLOW_LIMITED
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskSpecificAssetTypeMapper_mysql.Base_Column_List" />
+        from RSK_SPECIFIC_ASSET_TYPE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskSpecificAssetTypeMapper_mysql.Base_Column_List" />
+        from RSK_SPECIFIC_ASSET_TYPE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskSpecificAssetTypeMapper_mysql.Base_Column_List" />
+        from RSK_SPECIFIC_ASSET_TYPE
+        where SPECIFIC_ID = #{specificId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from RSK_SPECIFIC_ASSET_TYPE
+        where SPECIFIC_ID = #{specificId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskSpecificAssetType" >
+        insert into RSK_SPECIFIC_ASSET_TYPE (SPECIFIC_ID, BRANCH, TYPE_1, 
+            TYPE_2, TYPE_3, TYPE_4, 
+            FINPROD_ID, IS_BADASSET, IS_UNLISTEDEQUITY, 
+            IS_REGULATION, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            IS_CREDIT_ASSET, IS_FLOW_LIMITED)
+        values (#{specificId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{type1,jdbcType=VARCHAR}, 
+            #{type2,jdbcType=VARCHAR}, #{type3,jdbcType=VARCHAR}, #{type4,jdbcType=VARCHAR}, 
+            #{finprodId,jdbcType=VARCHAR}, #{isBadasset,jdbcType=VARCHAR}, #{isUnlistedequity,jdbcType=VARCHAR}, 
+            #{isRegulation,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{isCreditAsset,jdbcType=VARCHAR}, #{isFlowLimited,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskSpecificAssetType" >
+        insert into RSK_SPECIFIC_ASSET_TYPE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="specificId != null" >
+                SPECIFIC_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="type1 != null" >
+                TYPE_1,
+            </if>
+            <if test="type2 != null" >
+                TYPE_2,
+            </if>
+            <if test="type3 != null" >
+                TYPE_3,
+            </if>
+            <if test="type4 != null" >
+                TYPE_4,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="isBadasset != null" >
+                IS_BADASSET,
+            </if>
+            <if test="isUnlistedequity != null" >
+                IS_UNLISTEDEQUITY,
+            </if>
+            <if test="isRegulation != null" >
+                IS_REGULATION,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isCreditAsset != null" >
+                IS_CREDIT_ASSET,
+            </if>
+            <if test="isFlowLimited != null" >
+                IS_FLOW_LIMITED,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="specificId != null" >
+                #{specificId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="type1 != null" >
+                #{type1,jdbcType=VARCHAR},
+            </if>
+            <if test="type2 != null" >
+                #{type2,jdbcType=VARCHAR},
+            </if>
+            <if test="type3 != null" >
+                #{type3,jdbcType=VARCHAR},
+            </if>
+            <if test="type4 != null" >
+                #{type4,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="isBadasset != null" >
+                #{isBadasset,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnlistedequity != null" >
+                #{isUnlistedequity,jdbcType=VARCHAR},
+            </if>
+            <if test="isRegulation != null" >
+                #{isRegulation,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isCreditAsset != null" >
+                #{isCreditAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="isFlowLimited != null" >
+                #{isFlowLimited,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskSpecificAssetType" >
+        insert into RSK_SPECIFIC_ASSET_TYPE(SPECIFIC_ID, BRANCH, TYPE_1, TYPE_2, TYPE_3, 
+        TYPE_4, FINPROD_ID, IS_BADASSET, IS_UNLISTEDEQUITY, IS_REGULATION, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_CREDIT_ASSET, IS_FLOW_LIMITED)
+        select SPECIFIC_ID, BRANCH, TYPE_1, TYPE_2, TYPE_3, 
+            TYPE_4, FINPROD_ID, IS_BADASSET, IS_UNLISTEDEQUITY, IS_REGULATION, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_CREDIT_ASSET, IS_FLOW_LIMITED
+             from RSK_SPECIFIC_ASSET_TYPE
+             where 1 = 1 and SPECIFIC_ID = #{specificId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskSpecificAssetType" >
+        update RSK_SPECIFIC_ASSET_TYPE
+        <set >
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="type1 != null" >
+                TYPE_1 = #{type1,jdbcType=VARCHAR},
+            </if>
+            <if test="type2 != null" >
+                TYPE_2 = #{type2,jdbcType=VARCHAR},
+            </if>
+            <if test="type3 != null" >
+                TYPE_3 = #{type3,jdbcType=VARCHAR},
+            </if>
+            <if test="type4 != null" >
+                TYPE_4 = #{type4,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="isBadasset != null" >
+                IS_BADASSET = #{isBadasset,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnlistedequity != null" >
+                IS_UNLISTEDEQUITY = #{isUnlistedequity,jdbcType=VARCHAR},
+            </if>
+            <if test="isRegulation != null" >
+                IS_REGULATION = #{isRegulation,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isCreditAsset != null" >
+                IS_CREDIT_ASSET = #{isCreditAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="isFlowLimited != null" >
+                IS_FLOW_LIMITED = #{isFlowLimited,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SPECIFIC_ID = #{specificId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskSpecificAssetType" >
+        update RSK_SPECIFIC_ASSET_TYPE
+        set BRANCH = #{branch,jdbcType=DECIMAL},
+            TYPE_1 = #{type1,jdbcType=VARCHAR},
+            TYPE_2 = #{type2,jdbcType=VARCHAR},
+            TYPE_3 = #{type3,jdbcType=VARCHAR},
+            TYPE_4 = #{type4,jdbcType=VARCHAR},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            IS_BADASSET = #{isBadasset,jdbcType=VARCHAR},
+            IS_UNLISTEDEQUITY = #{isUnlistedequity,jdbcType=VARCHAR},
+            IS_REGULATION = #{isRegulation,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            IS_CREDIT_ASSET = #{isCreditAsset,jdbcType=VARCHAR},
+            IS_FLOW_LIMITED = #{isFlowLimited,jdbcType=VARCHAR}
+        where SPECIFIC_ID = #{specificId,jdbcType=VARCHAR}
+    </update>
+</mapper>

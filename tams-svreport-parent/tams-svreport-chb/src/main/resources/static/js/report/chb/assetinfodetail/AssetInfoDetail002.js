@@ -101,6 +101,7 @@ var QueryFunc=function(){
         }
         star();
         layui.form.render();
+        dateVal();
     }
     /**
      * 主画面嵌子页面的联动
@@ -112,7 +113,8 @@ var QueryFunc=function(){
             //本行/他行存款||大额存单
             if(repAssetType=='1004'||repAssetType=='1005'){
                 //存款类型置灰不可修改
-                $("#svrBussRepDepositInfoDto_repDepoType").val('').attr("disabled",true);
+                $("#svrBussRepDepositInfoDto_repDepoType").val('').trigger("change");
+                $("#svrBussRepDepositInfoDto_repDepoType").attr("disabled",true);
             }else{
                 $("#svrBussRepDepositInfoDto_repDepoType").attr("disabled",false);
             }
@@ -129,7 +131,8 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', true);
-                $("#targetAmt").prop('required', true);
+                $("#targetAmt").attr("disabled",false);
+
                 // var parms={assetuuid:$("#assetUuid").val()}
                 // Joyin.ajaxJson(
                 //     basePath + "chb/assetinfodetail/AssetInfoDetail002/getValue",parms,
@@ -143,7 +146,8 @@ var QueryFunc=function(){
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
                 $("#svrBussRepPlacementInfoDto_targetType1").prop('required', false);
-                $("#targetAmt").prop('required', false);
+                $("#targetAmt").val('').trigger("change");
+                $("#targetAmt").attr("disabled",true);
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
@@ -379,10 +383,22 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetMngProdInfoDto_financialComissue").attr("disabled",false);
                 $("#svrBussRepAssetMngProdInfoDto_content_one_div").show();
             }
+
+            if(repAssetType=='1705'){
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").attr("disabled",false);
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").prop("required",true).trigger('change');
+            }else{
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").attr("disabled",true);
+            }
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
         }else if(obj["14"].indexOf(repAssetType)>=0){
             //各类资产的其他项
+            $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_guaType").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").trigger("change");
+            $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").trigger("change");
         }else if(obj["16"].indexOf(repAssetType)>=0){
             //委外投资——协议方式
         }else if(obj["17"].indexOf(repAssetType)>=0){
@@ -393,7 +409,6 @@ var QueryFunc=function(){
             //公募基金/私募基金
             if(repAssetType=='2607'||repAssetType=='2610'||repAssetType=='2613'||
                 repAssetType=='2611'||repAssetType=='2612'||repAssetType=='2617'){
-                $("#svrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
                 $("#svrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
             }else{
                 $("#svrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
@@ -424,7 +439,7 @@ var QueryFunc=function(){
         object.svrBussRepDepositInfoDto.repTargetType = object.svrBussRepDepositInfoDto.repTargetType?object.svrBussRepDepositInfoDto.repTargetType.join(","):'';
         object.svrBussRepDepositInfoDto.repBankName = object.svrBussRepDepositInfoDto.bankName?object.svrBussRepDepositInfoDto.bankName:'';
         object.svrBussRepDepositInfoDto.repBasis = object.svrBussRepDepositInfoDto.basis?object.svrBussRepDepositInfoDto.basis:'';
-        object.svrBussRepAssetCreditNonstdInfoDto.repFinancie = $("#svrBussRepAssetCreditNonstdInfoDto_repFinancie").select2('data')[0].text;
+        //object.svrBussRepAssetCreditNonstdInfoDto.repFinancie = $("#svrBussRepAssetCreditNonstdInfoDto_repFinancie").select2('data')[0].text;
         object.pageModel = pageModel;
 
         Joyin.ajaxJson(basePath + 'chb/assetinfodetail/AssetInfoDetail002/check',object,function(result){
@@ -489,14 +504,185 @@ var QueryFunc=function(){
      * 将当前子页面的数据赋值
      */
     var assetVal = function(){
-        // $("input[id$='_assetId']").val($('#assetCode').val());
-        $("input[id$='_assetName']").val($('#assetName').val());
         var repAssetType = $('#assetType2').val();
-
+        $("input[id$='_assetName']").val($('#assetName').val());
+        $("input[id$='_assetId']").val($('#assetCode').val());
         if (repAssetType == '1503'){
             $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
         }else {
             $("#svrBussRepQDIIStructureInfoDto_contractName").val('');
+        }
+        if(repAssetType=="2202"){
+            if($('#assetCode').val().length == 8){
+                $("input[id$='_repCreditAssetCode']").val($('#assetCode').val());
+            }
+        }
+
+    }
+
+    var dateVal = function(){
+        $("input[id$='_vdate']").val($('#vdate').val());
+        $("input[id$='_mdate']").val($('#mdate').val());
+
+    }
+
+    var poolCode = function(){
+        var assetinfo = JSON.parse(PbcCapAssetInfo) ;
+        $("#pobcassetid").val(assetinfo[$('#assetCode').val()]).trigger("change");
+    }
+
+    var isBankCapVal = function(){
+        var isBankCap = $('#isBankCap').val();
+
+        if(isBankCap == '01'){
+            $('#bankCapital').attr('disabled',false);
+        }else{
+            $('#bankCapital').attr('disabled',true);
+            $("#bankCapital").val('').trigger("change");
+        }
+    }
+
+    var isConstracteBusiVal = function(){
+        var isConstracteBusi = $('#isConstracteBusi').val();
+
+        if(isConstracteBusi == '01'){
+            $('#constracteBusiType').attr('disabled',false);
+            $('#constracteGrade').attr('disabled',false);
+            $('#constracteHeaverTimes').attr('disabled',false);
+        }else{
+            $('#constracteBusiType').attr('disabled',true);
+            $("#constracteBusiType").val('').trigger("change");
+            $('#constracteGrade').attr('disabled',true);
+            $("#constracteGrade").val('').trigger("change");
+            $('#constracteHeaverTimes').attr('disabled',true);
+            $("#constracteHeaverTimes").val('').trigger("change");
+        }
+    }
+
+
+    var assetTypeDetail = function () {
+        var repAssetType = $('#assetType2').val();
+        //是否专项债券
+        if(repAssetType == '1110'){
+            $('#bankSecZxzq').attr('disabled',false);
+        }else{
+            $('#bankSecZxzq').attr('disabled',true);
+            $("#bankSecZxzq").val('').trigger("change");
+        }
+
+
+        if(repAssetType=="2202"){
+            $("input[id$='_repCreditAssetCode']").attr('disabled',false);
+        }else{
+            $("input[id$='_repCreditAssetCode']").attr('disabled',true);
+            $("input[id$='_repCreditAssetCode']").val('').trigger("change");
+        }
+
+        //是否银行资本补充工具
+        if((repAssetType == '1101'||repAssetType == '1110'||repAssetType == '1109'||
+            repAssetType == '1102'||repAssetType == '1111'||repAssetType == '1112'||
+            repAssetType == '1113'||repAssetType == '1114'||repAssetType == '1115'||
+            repAssetType == '1116'||repAssetType == '1117')){
+            $('#isBankCap').attr('disabled',false);
+        }else if(repAssetType == '1301'||repAssetType == '1305'||repAssetType == '1302'){
+            if($('#svrBussRepEquityInfoDto_sharesType').val() == '02'){
+                $('#isBankCap').attr('disabled',false);
+            }
+        }else {
+            $('#isBankCap').attr('disabled',true);
+            $("#isBankCap").val('').trigger("change");
+        }
+
+        //是否投向金融资产投资公司或其附属机构发行的私募股权投资基金
+        if(repAssetType == '2601'||repAssetType == '2602'||repAssetType == '2604'||
+            repAssetType == '2605'||repAssetType == '2606'||repAssetType == '2607'||
+            repAssetType == '2610'||repAssetType == '2611'||repAssetType == '2612'||
+            repAssetType == '2617'||repAssetType == '2613'||repAssetType == '2699'
+            ||repAssetType == '2616'||repAssetType == '2618'||repAssetType == '2619'
+            ||repAssetType == '2620'||repAssetType == '2614'){
+            $('#privatefundFlag').attr('disabled',false);
+        }else{
+            $('#privatefundFlag').attr('disabled',true);
+            $("#privatefundFlag").val('').trigger("change");
+        }
+
+        //是否政府出资产业投资基金
+        if(repAssetType == '2607'||repAssetType == '2610'||repAssetType == '2611'||
+            repAssetType == '2612'||repAssetType == '2613'||repAssetType == '2617'){
+            $('#isunlisted').attr('disabled',false);
+        }else{
+            $('#isunlisted').attr('disabled',true);
+            $("#isunlisted").val('').trigger("change");
+        }
+
+        //是否投向金融资产投资公司发行的私募资产管理产品
+        if(repAssetType == '1701'||repAssetType == '1703'||repAssetType == '1704'||
+            repAssetType == '1705'||repAssetType == '1702'||repAssetType == '1706'){
+             $('#privateprdFlag').attr('disabled',false);
+        }else{
+            $('#privateprdFlag').attr('disabled',true);
+            $("#privateprdFlag").val('').trigger("change");
+        }
+
+        //是否投向地方政府融资平台
+        if(repAssetType == '1201'||repAssetType == '1210'||repAssetType == '1202'||
+            repAssetType == '1203'||repAssetType == '1204'||repAssetType == '1205'||
+            repAssetType == '1206'||repAssetType == '1207'||repAssetType == '1208'||
+        repAssetType == '1211'||repAssetType == '1212'||repAssetType == '1213'||
+        repAssetType == '1209'||repAssetType == '1299'||repAssetType == '2202'){
+            $('#privateFlag').attr('disabled',false);
+        }else{
+            $('#privateFlag').attr('disabled',true);
+            $("#privateFlag").val('').trigger("change");
+        }
+
+        //是否投向地方政府融资平台
+        if(repAssetType == '1116'||repAssetType == '2299'||repAssetType == '1201'||
+            repAssetType == '1203'||repAssetType == '1204'||repAssetType == '1205'||
+            repAssetType == '1206'||repAssetType == '1207'||repAssetType == '1208'||
+            repAssetType == '1211'||repAssetType == '1212'||repAssetType == '1213'||
+            repAssetType == '1209'||repAssetType == '1299'||repAssetType == '2202'||
+            repAssetType == '1202'||repAssetType == '1301'||repAssetType == '1399'||
+            repAssetType == '2101'||repAssetType == '2617'||repAssetType == '1210'){
+            $('#isConstracteBusi').attr('disabled',false);
+        }else{
+            $('#isConstracteBusi').attr('disabled',true);
+            $("#isConstracteBusi").val('').trigger("change");
+        }
+
+        var obj = JSON.parse(AssetTypeListLinkTwo) ;
+        if(obj["002"].indexOf(repAssetType)>=0||
+            obj["004"].indexOf(repAssetType)>=0){
+            $('#chbIssuerId').attr('disabled',false);
+        }else{
+            $('#chbIssuerId').attr('disabled',true);
+            $("#chbIssuerId").val('').trigger("change");
+        }
+
+
+    }
+
+    var  initprofitFlag=function(){
+        var assetTvalueFund=$('#assetType2').val();
+        //公募基金/私募基金
+        if(assetTvalueFund=='1106'||assetTvalueFund=='2401'||assetTvalueFund=='1303'||
+            assetTvalueFund=='2403'||assetTvalueFund=='2402'||assetTvalueFund=='2499'){
+            $("#svrBussRepFundInfoDto_profitFlag").attr("disabled",false);
+        }else{
+            $("#svrBussRepFundInfoDto_profitFlag").val('').trigger("change");
+            $("#svrBussRepFundInfoDto_profitFlag").attr("disabled",true);
+        }
+    }
+
+    var assetTypeValSet = function(){
+        var repAssetType = $('#assetType2').val();
+        //隐藏所有中债报送信息
+        var obj = JSON.parse(AssetTypeListLinkTwo) ;
+        for(var i in obj){
+            if(obj[i].indexOf(repAssetType)>=0){
+                $("#assetType").val(i).trigger('change');
+                break;
+            }
         }
     }
 
@@ -514,8 +700,6 @@ var QueryFunc=function(){
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType1').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType2').val('').trigger('change');
         $('#svrBussRepAssetCreditNonstdInfoDto_repFinancierType3').val('').trigger('change');
-        $('#svrBussRepAssetCreditNonstdInfoDto_repIndustry1').val('0').trigger('change');
-        $('#svrBussRepAssetCreditNonstdInfoDto_industryLevel2Type').val('').trigger('change');
 
         // 管理人2置空
         $('#svrBussRepFundInfoDto_chbManagerId').val('').trigger('change');
@@ -539,6 +723,26 @@ var QueryFunc=function(){
      * 画面加载完成
      *
      */
+
+    //新增的日期及产品名称赋值..延迟10秒以便保证可以赋值到
+    setTimeout(function () {
+        dateVal();
+        poolCode();
+        assetTypeValSet();
+        assetVal();
+
+        if(pageModel!=PAGE_MODEL_REFERENCE){
+
+            assetTypeDetail();
+            isConstracteBusiVal();
+
+            changeReport();
+            isBankCapVal();
+            initprofitFlag();
+        }
+    }, 10000);
+
+
     $(function() {
 
 
@@ -546,6 +750,10 @@ var QueryFunc=function(){
             $("#assetCode").attr('disabled',true);
         }
 
+
+        $('#svrBussRepEquityInfoDto_sharesType').change(function(){
+            assetTypeDetail();
+        });
 
         //隐藏所有中债报送信息
         $(".businessDeptClass").hide();
@@ -560,19 +768,43 @@ var QueryFunc=function(){
         });
 
         $('#assetType2').change(function(){
+            //展示中债资产要素
             showReportInfo();
             //assetType2联动子页面的内容
             changeReport();
             assetVal();
             resetVal();
+            assetTypeValSet();
+            initprofitFlag();
+            //新增中债月报要素信息分类配置
+            assetTypeDetail();
+        });
+
+
+        $('#isBankCap').change(function(){
+            isBankCapVal();
+        });
+
+        $('#isConstracteBusi').change(function(){
+            isConstracteBusiVal();
         });
 
         $('#assetCode').change(function(){
             assetVal();
+            poolCode();
         });
 
         $('#assetName').change(function(){
             assetVal();
+        });
+
+
+        $('#vdate').change(function(){
+            dateVal();
+        });
+
+        $('#mdate').change(function(){
+            dateVal();
         });
     });
 }());

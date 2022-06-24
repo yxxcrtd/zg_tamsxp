@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper_mysql">
 
-	<select id="getInvestorHoldings" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail">
+   <select id="getInvestorHoldings" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.PrdSaletargetDealDetail">
 	select sum(ds.pr*ifnull(pi.prod_value,1)*ifnull(rate.yeid,1)) naturalpersonqty,
         sum(ds.fjr*ifnull(pi.prod_value,1)*ifnull(rate.yeid,1)) nonfinancialinstitution,
         sum(ds.ba*ifnull(pi.prod_value,1)*ifnull(rate.yeid,1)) bisrinqty,

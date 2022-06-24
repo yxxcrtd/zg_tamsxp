@@ -29,6 +29,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
@@ -99,6 +100,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
 	// 资产要素表名
 	private static final List<String> CHB_ASSET_INFO_LIST = Arrays.asList("CHB_ASSET_INFO", "CHB_ASSET_INFO_TMP");
+	//业务数据维护表
+	private static final List<String> CHB_INFO_LIST = Arrays.asList("CHB_PRD_BASEINFO","CHB_INVEST_TRADE");
 
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 282;
@@ -584,9 +587,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
 			list = baseInformationMapper.queryChbLoanDetailInfoByParams(tableName, baseInformationList, flag,assetType);
 		}else{
-			if(StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
+		    //展示删除数据
+		//	if(StringUtil.equals(tableName,"CHB_LOAN_DETAIL_INFO")){
 				flag = false;//删除数据查询无数据
-			}
+			//}
 			list = baseInformationMapper.queryBaseInfoByParams(tableName, baseInformationList, flag,assetType);
 
 			//----------- add by lingxq on 2021-06-25 for 错误数据只允许导出基础数据----->>>>>
@@ -2011,21 +2015,21 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     					String saleArea = strList.get(33) ;
     					//产品销售区域多选校验
     					if(!BaseCheckLib.inDatadict3(saleArea,DictCode.销售区域_中债.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "产品销售区域不在值域范围内并且多选选项不可重复。"
+    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "产品销售区域不在值域范围内并且多选选项不可重复。"
     								+ "[SALE_AREA="+saleArea+"]",
     								"各产品销售区域"));
     					}
     					String rskType = strList.get(47) ;
     					//投资者风险偏好多选校验
     					if(!BaseCheckLib.inDatadict3(rskType,DictCode.投资者风险偏好.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "投资者风险偏好不在值域范围内并且多选选项不可重复。"
+    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "投资者风险偏好不在值域范围内并且多选选项不可重复。"
     								+ "[RISK_TYPE="+rskType+"]",
     								"投资者风险偏好"));
     					}
-    					String creditType = strList.get(59) ;
+    					String creditType = strList.get(60) ;
     					//产品增信机构类型多选校验
     					if(!BaseCheckLib.inDatadict3(creditType,DictCode.产品增信机构类型.getValue(),true,true)){
-    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "产品增信机构类型不在值域范围内并且多选选项不可重复。"
+    						checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "产品增信机构类型不在值域范围内并且多选选项不可重复。"
     								+ "[CREDIT_TYPE="+creditType+"] ",
     								"产品增信机构类型"));
     					}
@@ -2036,7 +2040,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 							String investArae=strList.get(18) ;//资金投向地区
 							if(outDepCitys.size()>1 && StringUtil.equals(investArae,DictCodeListExt2.资金投向地区_境外.getValue()+" "+DictCodeListExt2.资金投向地区_境外.getCodeName())){
 								if(outDepCitys.contains("CHN")){
-									checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "当“资金投向地区”要素选择“02 境外”时,境外托管机构国别不能填写中国。"
+									checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(64), String.valueOf(i + 1), "当“资金投向地区”要素选择“02 境外”时,境外托管机构国别不能填写中国。"
 											+ "[OUT_DEP_CTRY="+"CHN"+"] ",
 											"境外托管机构国别"));
 								}
@@ -2713,7 +2717,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                 	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) ----->>>>>
             		strList.add("admin");//创建人
             		strList.add("admin");//更新人
-            		strList.add(DateUtil.getCurrentDate());//更新时间
+                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                        strList.add(DateUtil.getCurrentDate());//更新时间
+                    }else{
+                        strList.add("SYSDATE");
+                    }
                 	//----add by lxq on 2020-07-15 for 导入后更新人以及时间未更新(QDXPJG-229) -----<<<<<
             		int beginIndex = 0;
             		int endIndex = 0;
@@ -2795,30 +2803,42 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				} else if (dateColumnList.contains(column) && !("").equals(columnData)) {
             					// 特殊情况,CREATE_TIME和UPDATE_TIME为DATE类型
             					if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-            						columnData = "SYSDATE";
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
             					} else {
-            						//excel中输入了时间戳数据处理
-            						if(columnData.length() > 10){
-            							columnData = columnData.substring(0,10);
-            						}
-            						String dateStr = formatDateStr(columnData);
-                					if (null != dateStr) {
-                						columnData = "DATE'" + dateStr + "'";
-                					} else {
-                						columnData = null;
-                					}
+            					    if(columnData==null||("").equals(columnData)){
+                                        columnData = null;
+                                    }else {
+                                        //excel中输入了时间戳数据处理
+                                        if (columnData.length() > 10) {
+                                            columnData = columnData.substring(0, 10);
+                                        }
+                                        String dateStr = formatDateStr(columnData);
+                                        if (null != dateStr) {
+                                            columnData = "DATE'" + dateStr + "'";
+                                        } else {
+                                            columnData = null;
+                                        }
+                                    }
 //            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
             					}
             					// 时间类型字段全存入当前时间
             				} else if (timeColumnList.contains(column)) {
-            					columnData = "SYSDATE";
+                                if(BaseCommonCheckService.isMYSQLDataBase()){
+                                    columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                }else{
+                                    columnData = "SYSDATE";
+                                }
             					// 创建者和修改者均设置为当前用户
             				} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
             					columnData = "'" + userName + "'";
             				}  else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
             					columnData = "'" +columnData.replace("'", "''")+ "'";
             				} else {
-            					columnData = "'" + columnData + "'";
+            					columnData = null==columnData?columnData:"'" + columnData + "'";
             				}
             				insertMap.put(column, columnData);
                 		}
@@ -2832,10 +2852,17 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			}
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+                           String SYSDATE=  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
             				insertMap.put("ASSET_TYPE", "'" + assetType + "'");
             				insertMap.put("STATUS", "'" + "E" + "'");
-            				insertMap.put("CREATE_TIME", "SYSDATE");
-            				insertMap.put("UPDATE_TIME", "SYSDATE");
+                            if(BaseCommonCheckService.isMYSQLDataBase()){
+                                insertMap.put("CREATE_TIME", SYSDATE);
+                                insertMap.put("UPDATE_TIME", SYSDATE);
+                            }else{
+                                insertMap.put("CREATE_TIME", "SYSDATE");
+                                insertMap.put("UPDATE_TIME", "SYSDATE");
+                            }
+
             				insertMap.put("CREATE_USER", "'" + userName + "'");
             				insertMap.put("UPDATE_USER", "'" + userName + "'");
             				String industryShares2 = insertMap.get("INDUSTRY_SHARES2");
@@ -2902,7 +2929,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             						(timeColumnList.contains(column) && !("").equals(columnData))) {
             					// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  start
 								if ("CREATE_TIME".equals(column) || "UPDATE_TIME".equals(column)) {
-									columnData = "SYSDATE";
+
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
 								// add by zhangliang 20201026 删除的数据不需要解析CREATE_TIME和UPDATE_TIME为DATE类型  end
 								}else{
 									String dateStr = formatDateStr(columnData);
@@ -2955,25 +2987,38 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				if (dateColumnList.contains(column) && !("").equals(columnData)) {
             					// 特殊情况,UPDATE_TIME为DATE类型
             					if ("UPDATE_TIME".equals(column)) {
-            						columnData = "SYSDATE";
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
+
             					} else {
-            						//excel中输入了时间戳数据处理
-            						if(columnData.length() > 10){
-            							columnData = columnData.substring(0,10);
-            						}
-            						String dateStr = formatDateStr(columnData);
-                					if (null != dateStr) {
-                						columnData = "DATE'" + dateStr + "'";
-                					} else {
-                						columnData = null;
-                					}
+                                    if (columnData == null || ("").equals(columnData)) {
+                                        columnData= "'" + columnData + "'";
+                                    } else {
+                                        //excel中输入了时间戳数据处理
+                                        if (columnData.length() > 10) {
+                                            columnData = columnData.substring(0, 10);
+                                        }
+                                        String dateStr = formatDateStr(columnData);
+                                        if (null != dateStr) {
+                                            columnData = "DATE'" + dateStr + "'";
+                                        } else {
+                                            columnData = null;
+                                        }
 //            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
-            					}
+                                    }
+                                }
             				// 时间类型字段
             				} else if (timeColumnList.contains(column)) {
             					// 修改时间变动,其余时间不变
             					if(column.indexOf("UPDATE") > -1) {
-            						columnData = "SYSDATE";
+                                    if(BaseCommonCheckService.isMYSQLDataBase()){
+                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
+                                    }else{
+                                        columnData = "SYSDATE";
+                                    }
             					} else {
             						continue;
             					}
@@ -2982,7 +3027,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					columnData = "'" + userName + "'";
             					// 数据状态改为 M
             				} else if ("STATUS".equals(column)){
-            					columnData = "'" + "M" + "'";
+								if (CHB_INFO_LIST.contains(tableName)) {
+									columnData = "'" + "E" + "'";
+								} else {
+									columnData = "'" + "M" + "'";
+								}
+
             				} else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
             					columnData = "'" +columnData.replace("'", "''")+ "'";
             				} else {
@@ -2992,7 +3042,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                 		}
             			
             			//增加状态字段的设置
-            			updateMap.put("STATUS", "'" + "M" + "'");  
+						if (CHB_INFO_LIST.contains(tableName)) {
+							updateMap.put("STATUS", "'" + "E" + "'");
+						} else {
+							updateMap.put("STATUS", "'" + "M" + "'");
+						}
+
             			
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
             			if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
@@ -3001,9 +3056,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			}
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 end
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
+            			    String  SYSDATE="'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
             				updateMap.put("ASSET_TYPE", "'" + assetType + "'");
             				updateMap.put("STATUS", "'" + "M" + "'");
-            				updateMap.put("UPDATE_TIME", "SYSDATE");
+
+                            if(BaseCommonCheckService.isMYSQLDataBase()){
+                                updateMap.put("UPDATE_TIME", SYSDATE);
+                            }else{
+                                updateMap.put("UPDATE_TIME", "SYSDATE");
+                            }
             				updateMap.put("UPDATE_USER", "'" + userName + "'");
             				String industryShares2 = updateMap.get("INDUSTRY_SHARES2");
             				if (StringUtil.isNotEmpty(industryShares2)) {

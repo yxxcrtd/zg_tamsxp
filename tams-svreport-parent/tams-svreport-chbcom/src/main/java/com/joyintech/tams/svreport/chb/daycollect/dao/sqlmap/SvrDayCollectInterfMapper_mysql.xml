@@ -88,7 +88,7 @@
 		SELECT
 		INDENTIFY_MARK, ORG_INDENTIFY_MARK, REGIST_BANK_CODE,
 		CASE HOLDER_CLASSIFY
-		when   '01' THEN   (case when HOLDER_TYPE in ('01','02','03') then '02'
+		when   '01' THEN   (case when HOLDER_TYPE in ('01','02','03') then '01'
 							when HOLDER_TYPE = '04' then '03'
 							when HOLDER_TYPE = '05' then '04'
 							when HOLDER_TYPE ='06' then '05'
@@ -98,7 +98,7 @@
 							when HOLDER_TYPE ='10' then '09'
 							when HOLDER_TYPE in ('17','18','19','20','21','22','23') then '10'
 							else '99' END)
-		when   '02' THEN   (case when HOLDER_TYPE in ('01','02','03') then '01'
+		when   '02' THEN   (case when HOLDER_TYPE in ('01','02','03') then '02'
 								when HOLDER_TYPE = '04' then '03'
 								when HOLDER_TYPE = '05' then '04'
 								when HOLDER_TYPE ='06' then '05'

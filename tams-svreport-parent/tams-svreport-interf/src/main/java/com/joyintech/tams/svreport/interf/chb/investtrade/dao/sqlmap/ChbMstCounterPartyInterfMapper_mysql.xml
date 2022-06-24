@@ -125,7 +125,7 @@
 	</select>
 	<update id="updateBatch"
 			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
-		begin
+		/*begin*/
 		<foreach collection="updateList" item="item" index="index"
 				 separator=";">
 			update CHB_MST_COUNTER_PARTY
@@ -178,7 +178,7 @@
 			</set>
 			where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
 		</foreach>
-		;end;
+		;/*end;*/
 	</update>
 
 	<insert id="insert"
@@ -250,35 +250,23 @@
 
 	<insert id="mergeInto"
 			parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
-		parameterType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
-		UPDATE  CHB_MST_COUNTER_PARTY as a,
-		(
-		select
-		uuid,
-		counterId,
-		counterType,
-		counterName,
-		linkId,
-		managerId,
-		headBank,
-		contact,
-		contactWay,
-		remark,
-		createUser,
-		createDept,
-		createTime,
-		updateUser,
-		updateTime,
-		counterType1,
-		counterType2,
-		isCentralCounter
-		from
+		insert into CHB_MST_COUNTER_PARTY(UUID,COUNTER_ID, COUNTER_TYPE,
+		COUNTER_NAME,
+		LINK_ID, MANAGER_ID, HEAD_BANK,
+		CONTACT, CONTACT_WAY, REMARK,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS)
+		select UUID,COUNTER_ID, COUNTER_TYPE,
+		COUNTER_NAME,
+		LINK_ID, MANAGER_ID, HEAD_BANK,
+		CONTACT, CONTACT_WAY, REMARK,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,STATUS from
 		(
 		select TEMP.* from
 		(
-		<foreach index="index" collection="list" item="item"  separator="union all">
-			select
-			#{item.uuid,jdbcType=VARCHAR} uuid,
+		<foreach collection="list" item="item"  separator="union all">
+			select #{item.uuid,jdbcType=VARCHAR} uuid,
 			#{item.counterId,jdbcType=VARCHAR} counterId,
 			#{item.counterType,jdbcType=VARCHAR} counterType,
 			#{item.counterName,jdbcType=VARCHAR} counterName,
@@ -296,72 +284,23 @@
 			#{item.counterType1,jdbcType=VARCHAR} counterType1,
 			#{item.counterType2,jdbcType=VARCHAR} counterType2,
 			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter
-
-			FROM
-			DUAL
+			from dual
 		</foreach>
-		) TEMP
-		) de
-		) AS b
-		set
-		a.COUNTER_TYPE=b.counterType,
-		a.COUNTER_NAME=b.counterName,
-		a.LINK_ID=b.linkId,
-		a.MANAGER_ID=b.managerId,
-		a.HEAD_BANK=b.headBank,
-		a.CONTACT=b.contact,
-		a.CONTACT_WAY=b.contactWay,
-		a.REMARK=b.remark,
-		a.UPDATE_TIME=NOW(),
-		a.COUNTER_TYPE1=b.counterType1,
-		a.UPDATE_USER=b.updateUser,
-		a.COUNTER_TYPE2=b.counterType2,
-		a.IS_CENTRAL_COUNTER=b.isCentralCounter,
-		a.STATUS = 'M'
-		where a.COUNTER_ID = b.counterId and a.STATUS != 'D';
+		) TEMP where not exists (select 1 from CHB_MST_COUNTER_PARTY CII 过滤条件)
+		) de ;
 
-		insert into CHB_MST_COUNTER_PARTY(UUID,COUNTER_ID,
-		COUNTER_TYPE,
-		COUNTER_NAME,
-		LINK_ID,
-		MANAGER_ID,
-		HEAD_BANK,
-		CONTACT,
-		CONTACT_WAY,
-		REMARK,
-		CREATE_USER,
-		CREATE_DEPT,
-		CREATE_TIME,
-		UPDATE_USER,
-		UPDATE_TIME,
-		COUNTER_TYPE1,
-		COUNTER_TYPE2,
-		IS_CENTRAL_COUNTER,
-		STATUS)
-		select UUID,COUNTER_ID,
-		COUNTER_TYPE,
-		COUNTER_NAME,
-		LINK_ID,
-		MANAGER_ID,
-		HEAD_BANK,
-		CONTACT,
-		CONTACT_WAY,
-		REMARK,
-		CREATE_USER,
-		CREATE_DEPT,
-		CREATE_TIME,
-		UPDATE_USER,
-		UPDATE_TIME,
-		COUNTER_TYPE1,
-		COUNTER_TYPE2,
-		IS_CENTRAL_COUNTER,
+		UPDATE  CHB_MST_COUNTER_PARTY as A,
+		(
+		select COUNTER_TYPE,COUNTER_NAME,LINK_ID,
+		MANAGER_ID,HEAD_BANK,CONTACT,CONTACT_WAY,
+		REMARK,	UPDATE_TIME,a.COUNTER_TYPE1,
+		UPDATE_USER,COUNTER_TYPE2,IS_CENTRAL_COUNTER,
 		STATUS from
 		(
 		select TEMP.* from
 		(
-		<foreach index="index" collection="list" item="item"  separator="union all">
-			select
-			#{item.uuid,jdbcType=VARCHAR} uuid,
+		<foreach collection="list" item="item"  separator="union all">
+			select #{item.uuid,jdbcType=VARCHAR} uuid,
 			#{item.counterId,jdbcType=VARCHAR} counterId,
 			#{item.counterType,jdbcType=VARCHAR} counterType,
 			#{item.counterName,jdbcType=VARCHAR} counterName,
@@ -378,14 +317,13 @@
 			#{item.updateTime,jdbcType=TIMESTAMP} updateTime,
 			#{item.counterType1,jdbcType=VARCHAR} counterType1,
 			#{item.counterType2,jdbcType=VARCHAR} counterType2,
-			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter,
-			'E' status
-			FROM
-			DUAL
+			#{item.isCentralCounter,jdbcType=VARCHAR} isCentralCounter
+			from dual
 		</foreach>
-		) TEMP where not exists (select 1 from CHB_MST_COUNTER_PARTY CII where CII.COUNTER_ID = TEMP.COUNTER_ID
-		AND CII.STATUS != 'D')
-		) de ;
+		) TEMP
+		) de
+		) AS B
+		set  A.* = B.* where exists (select 1 from CHB_MST_COUNTER_PARTY CII where CII.COUNTER_ID = TEMP.counterId and CII.STATUS != 'D');
 	</insert>
 	<!-- 根据数据状态皮量更新，传入的dto数据状态为D则更新为D否则更新为M -->
 	<update id="updateBachByStatus"

@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -37,6 +41,8 @@ import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+
+import javax.annotation.Resource;
 
 /**
  * 功能:交易对手文件解析方式入库
@@ -91,6 +97,11 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
 	 */
 	@Autowired
 	private BaseMapper baseMapper;
+    /**
+     * SqlLoader接入
+     */
+    @Resource
+    private BatchInsertService batchInsertService;
 	
 	/**
 	 * 交易对手表格名称
@@ -249,7 +260,7 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
         // 转换成dto对象
         // modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //        convertMapToEntity(listData, mstCounterPartyList);
-        mstCounterPartyList = (List<ChbMstCounterParty>) convertMapToEntity(listData,ChbMstCounterParty.class);
+        mstCounterPartyList = (List<ChbMstCounterParty>) convertMapToEntity(listData,ChbMstCounterParty.class, dataSource);
         mstCounterPartyList.stream().forEach(dto->{
             // 设置uuid
             dto.setUuid(UUID.randomUUID().toString());
@@ -298,42 +309,56 @@ public class SvrMstCounterPartFileImpService extends FileImpService {
 	    * @param saveFlag F-当日全删全插，I－增量(默认)
 	    */
 	    private String insert(List<ChbMstCounterParty> mstCountPartInfoList, String saveFlag) {
-	         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-	         try {
-	             int count = 0;
-	             logger.debug("交易对手插入开始--------------" + new Date());
-	             ChbMstCounterPartyInterfMapper batchMapper = session.getMapper(ChbMstCounterPartyInterfMapper.class);
-	             int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
-	             int batchLastIndex = batchCount;//每批最后一个的下标
-	             for(int index = 0; index < mstCountPartInfoList.size();){
-	                 if(batchLastIndex > mstCountPartInfoList.size()-1){
-	                     batchLastIndex = mstCountPartInfoList.size();
-	                     batchMapper.insertBatch(mstCountPartInfoList.subList(index, batchLastIndex));
-	                     break;//数据插入完毕,退出循环
-	                 }else{
-	                     batchMapper.insertBatch(mstCountPartInfoList.subList(index, batchLastIndex));
-	                     index = batchLastIndex;//设置下一批下标
-	                     batchLastIndex = index + batchCount;                     
-	                 }
-	                 count ++;
-	                 // 每20次提交
-	                 if (count % 20 == 0) {
-	                     session.commit();
-	                     // 清理缓存，防止溢出
-	                     session.clearCache();
-	                 }
-	             }
-	             logger.debug("交易对手插入结束--------------" + new Date());
-	             session.commit();
-	             // 清理缓存，防止溢出
-	             session.clearCache();
-	         }catch(Exception e){
-	             logger.error("数据插入出错:",e.getMessage(),e);
-	             return "fail";
-	         }
-	         finally {
-	             session.close();
-	         }
+
+
+                 if (mstCountPartInfoList.size()<1000) {
+                     SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+                     try {
+                     int count = 0;
+                     logger.debug("交易对手插入开始--------------" + new Date());
+                     ChbMstCounterPartyInterfMapper batchMapper = session.getMapper(ChbMstCounterPartyInterfMapper.class);
+                     int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+                     int batchLastIndex = batchCount;//每批最后一个的下标
+                     for(int index = 0; index < mstCountPartInfoList.size();){
+                         if(batchLastIndex > mstCountPartInfoList.size()-1){
+                             batchLastIndex = mstCountPartInfoList.size();
+                             batchMapper.insertBatch(mstCountPartInfoList.subList(index, batchLastIndex));
+                             break;//数据插入完毕,退出循环
+                         }else{
+                             batchMapper.insertBatch(mstCountPartInfoList.subList(index, batchLastIndex));
+                             index = batchLastIndex;//设置下一批下标
+                             batchLastIndex = index + batchCount;
+                         }
+                         count ++;
+                         // 每20次提交
+                         if (count % 20 == 0) {
+                             session.commit();
+                             // 清理缓存，防止溢出
+                             session.clearCache();
+                         }
+                     }
+                     logger.debug("交易对手插入结束--------------" + new Date());
+                     session.commit();
+                     // 清理缓存，防止溢出
+                     session.clearCache();
+                 }catch(Exception e){
+                     logger.error("数据插入出错:",e.getMessage(),e);
+                     return "fail";
+                 } finally {
+                     session.close();
+                 }
+
+                 } else {
+                     //sqlloader插入
+                     ImpTable table = new ImpTable("CHB_MST_COUNTER_PARTY");
+                     table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+                     // 临时文件存放目录
+                     String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+                     batchInsertService.exeBatchldr(tmpPath, mstCountPartInfoList, table);
+                 }
+
+
 	         logger.debug("交易对手插入结束--------------" + new Date());
 	         return "success";
 	    }

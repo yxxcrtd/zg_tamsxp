@@ -1,128 +1,126 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdOpenschInterfMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdOpensch" >
-    <id column="SEQNO" property="seqno" jdbcType="CHAR" />
-    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
-    <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
-    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
-    <result column="PLAN_TYPE" property="planType" jdbcType="VARCHAR" />
-    <result column="OPEN_START" property="openStart" jdbcType="TIMESTAMP" />
-    <result column="OPEN_END" property="openEnd" jdbcType="TIMESTAMP" />
-    <result column="OPEN_VDATE" property="openVdate" jdbcType="TIMESTAMP" />
-    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
-    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
-    <result column="STATUS" property="status" jdbcType="VARCHAR" />
-    <result column="REV_DATE" property="revDate" jdbcType="TIMESTAMP" />
-    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    SEQNO, PROD_ID, PROD_NAME, ISSUE_PARTY_ID, PLAN_TYPE, OPEN_START, OPEN_END, OPEN_VDATE, 
-    ORG_CODE, DEPT_CODE, DATA_SOURCE, STATUS, REV_DATE, UPDATE_USER, UPDATE_TIME, CREATE_USER, 
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdOpensch" >
+        <id column="SEQNO" property="seqno" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PLAN_TYPE" property="planType" jdbcType="VARCHAR" />
+        <result column="OPEN_START" property="openStart" jdbcType="TIMESTAMP" />
+        <result column="OPEN_END" property="openEnd" jdbcType="TIMESTAMP" />
+        <result column="OPEN_VDATE" property="openVdate" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REV_DATE" property="revDate" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO, PROD_ID, PROD_NAME, ISSUE_PARTY_ID, PLAN_TYPE, OPEN_START, OPEN_END, OPEN_VDATE,
+    ORG_CODE, DEPT_CODE, DATA_SOURCE, STATUS, REV_DATE, UPDATE_USER, UPDATE_TIME, CREATE_USER,
     CREATE_TIME, REMARK
-  </sql>
-  
-  <insert id="insertBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPrdOpensch" >
-    insert into CHB_PRD_OPENSCH (SEQNO, PROD_ID, PROD_NAME, 
-      ISSUE_PARTY_ID, PLAN_TYPE, OPEN_START, 
-      OPEN_END, OPEN_VDATE, ORG_CODE, 
-      DEPT_CODE, DATA_SOURCE, STATUS, 
-      REV_DATE, UPDATE_USER, UPDATE_TIME, 
-      CREATE_USER, CREATE_TIME, REMARK
-      )
-    <foreach collection="openschlist" item="dto" separator ="union all">
-    select
-      #{dto.seqno,jdbcType=CHAR}, #{dto.prodId,jdbcType=VARCHAR}, #{dto.prodName,jdbcType=VARCHAR},
-      #{dto.issuePartyId,jdbcType=VARCHAR}, #{dto.planType,jdbcType=VARCHAR}, #{dto.openStart,jdbcType=TIMESTAMP}, 
-      #{dto.openEnd,jdbcType=TIMESTAMP}, #{dto.openVdate,jdbcType=TIMESTAMP}, #{dto.orgCode,jdbcType=VARCHAR}, 
-      #{dto.deptCode,jdbcType=VARCHAR}, #{dto.dataSource,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR}, 
-      #{dto.revDate,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, NOW(),
-      #{dto.createUser,jdbcType=VARCHAR}, NOW(), #{dto.remark,jdbcType=VARCHAR}
-      from dual
-    </foreach>
-  </insert>
-  
-  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdOpensch" >
-    insert into CHB_PRD_OPENSCH (SEQNO, PROD_ID, PROD_NAME, 
-      ISSUE_PARTY_ID, PLAN_TYPE, OPEN_START, 
-      OPEN_END, OPEN_VDATE, ORG_CODE, 
-      DEPT_CODE, DATA_SOURCE, STATUS, 
-      REV_DATE, UPDATE_USER, UPDATE_TIME, 
-      CREATE_USER, CREATE_TIME, REMARK
-      )
-    values(
-      #{seqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR},
-      #{issuePartyId,jdbcType=VARCHAR}, #{planType,jdbcType=VARCHAR}, #{openStart,jdbcType=TIMESTAMP}, 
-      #{openEnd,jdbcType=TIMESTAMP}, #{openVdate,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, 
-      #{deptCode,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{revDate,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, NOW(),
-      #{createUser,jdbcType=VARCHAR}, NOW(), #{remark,jdbcType=VARCHAR}
-    )
-  </insert>
-  
-  <select id="selectOpenSchData"  parameterType="map" 
-     resultSetType="FORWARD_ONLY" fetchSize="1000"
-     resultType="com.joyintech.tams.common.base.entity.ChbPrdOpensch">
-    SELECT info.FINPROD_MARKET_ID prodid,
-	  info.FINPROD_NAME prodname,
-	  plan.OPEN_DATE_STR openstart,
-	  plan.OPEN_DATE_END openend,
-	  plan.OPEN_VDATE openvdate,
-	  plan.OPEN_TYPE plantype,
-	  ifnull(plan.UPDATE_TIME,plan.CREATE_TIME) updatetime
-	FROM FIN_PRODUCT info,FIN_OPEN_PLAN plan
-	WHERE info.FINPROD_ID = plan.FINPROD_ID
-	and info.FINPROD_TYPE2 = 'F16'
-	<if test="prodidlist != null and prodidlist.size()>0">
-	<foreach collection="prodidlist" item="prodid" open="and info.FINPROD_MARKET_ID in (" separator="," close=")">
-	#{prodid,jdbcType=VARCHAR}
-	</foreach>
-	</if>
-	<if test="plantype == null">
-	and plan.OPEN_TYPE in ('01','02')
-	</if>
-	<if test="plantype != null">
-	and plan.OPEN_TYPE = #{plantype,jdbcType=VARCHAR}
-	</if>
-  </select>
-  
-  <select id="selectOpenSchProdid" resultSetType="FORWARD_ONLY" fetchSize="1000"
-          resultType="java.lang.String" parameterType="map">
-	select distinct info.FINPROD_MARKET_ID prodid
-	FROM FIN_PRODUCT info,FIN_OPEN_PLAN plan
-	WHERE
-	info.FINPROD_ID = plan.FINPROD_ID
-	and info.FINPROD_TYPE2 = 'F16'
-	and
-	ifnull(plan.UPDATE_TIME,plan.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
-	<if test="prodidList!=null and prodidList.size>0">
-	and info.FINPROD_MARKET_ID in
-	<foreach collection="prodidList" item="prodid" open="("
-		separator="," close=")">
-		#{prodid,jdbcType=VARCHAR}
-	</foreach>
-	</if>
-</select>
-  
-  <delete id="deletePrdOpensch" parameterType="java.lang.String">
-	 begin
-     <foreach collection="prodidlist" item="prodid" index="index" separator=";">
-	     delete from CHB_PRD_OPENSCH
-	     where PROD_ID = #{prodid,jdbcType=VARCHAR} 
-     </foreach>
-    ;end;
-  </delete>
-  
-  <delete id="deleteAllData">
-      truncate table CHB_PRD_OPENSCH
+    </sql>
+
+    <insert id="insertBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbPrdOpensch" >
+        insert into CHB_PRD_OPENSCH (SEQNO, PROD_ID, PROD_NAME,
+        ISSUE_PARTY_ID, PLAN_TYPE, OPEN_START,
+        OPEN_END, OPEN_VDATE, ORG_CODE,
+        DEPT_CODE, DATA_SOURCE, STATUS,
+        REV_DATE, UPDATE_USER, UPDATE_TIME,
+        CREATE_USER, CREATE_TIME, REMARK
+        )
+        <foreach collection="openschlist" item="dto" separator ="union all">
+            select
+            #{dto.seqno,jdbcType=CHAR}, #{dto.prodId,jdbcType=VARCHAR}, #{dto.prodName,jdbcType=VARCHAR},
+            #{dto.issuePartyId,jdbcType=VARCHAR}, #{dto.planType,jdbcType=VARCHAR}, #{dto.openStart,jdbcType=TIMESTAMP},
+            #{dto.openEnd,jdbcType=TIMESTAMP}, #{dto.openVdate,jdbcType=TIMESTAMP}, #{dto.orgCode,jdbcType=VARCHAR},
+            #{dto.deptCode,jdbcType=VARCHAR}, #{dto.dataSource,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR},
+            #{dto.revDate,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, now(),
+            #{dto.createUser,jdbcType=VARCHAR}, now(), #{dto.remark,jdbcType=VARCHAR}
+            from dual
+        </foreach>
+    </insert>
+
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdOpensch" >
+        insert into CHB_PRD_OPENSCH (SEQNO, PROD_ID, PROD_NAME,
+                                     ISSUE_PARTY_ID, PLAN_TYPE, OPEN_START,
+                                     OPEN_END, OPEN_VDATE, ORG_CODE,
+                                     DEPT_CODE, DATA_SOURCE, STATUS,
+                                     REV_DATE, UPDATE_USER, UPDATE_TIME,
+                                     CREATE_USER, CREATE_TIME, REMARK
+        )
+        values(
+                  #{seqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR},
+                  #{issuePartyId,jdbcType=VARCHAR}, #{planType,jdbcType=VARCHAR}, #{openStart,jdbcType=TIMESTAMP},
+                  #{openEnd,jdbcType=TIMESTAMP}, #{openVdate,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR},
+                  #{deptCode,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+                  #{revDate,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, now(),
+                  #{createUser,jdbcType=VARCHAR}, now(), #{remark,jdbcType=VARCHAR}
+              )
+    </insert>
+
+    <select id="selectOpenSchData"  parameterType="map"
+            resultSetType="FORWARD_ONLY" fetchSize="1000"
+            resultType="com.joyintech.tams.common.base.entity.ChbPrdOpensch">
+        SELECT info.FINPROD_MARKET_ID prodid,
+        info.FINPROD_NAME prodname,
+        plan.OPEN_DATE_STR openstart,
+        plan.OPEN_DATE_END openend,
+        plan.OPEN_VDATE openvdate,
+        plan.OPEN_TYPE plantype,
+        ifnull(plan.UPDATE_TIME,plan.CREATE_TIME) updatetime
+        FROM FIN_PRODUCT info,FIN_OPEN_PLAN plan
+        WHERE info.FINPROD_ID = plan.FINPROD_ID
+        and info.FINPROD_TYPE2 = 'F16'
+        <if test="prodidlist != null and prodidlist.size()>0">
+            <foreach collection="prodidlist" item="prodid" open="and info.FINPROD_MARKET_ID in (" separator="," close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="plantype == null">
+            and plan.OPEN_TYPE in ('01','02')
+        </if>
+        <if test="plantype != null">
+            and plan.OPEN_TYPE = #{plantype,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectOpenSchProdid" resultSetType="FORWARD_ONLY" fetchSize="1000"
+            resultType="java.lang.String" parameterType="map">
+        select distinct info.FINPROD_MARKET_ID prodid
+        FROM FIN_PRODUCT info,FIN_OPEN_PLAN plan
+        WHERE
+        info.FINPROD_ID = plan.FINPROD_ID
+        and info.FINPROD_TYPE2 = 'F16'
+        and
+        ifnull(plan.UPDATE_TIME,plan.CREATE_TIME) > #{updatetime,jdbcType=TIMESTAMP}
+        <if test="prodidList!=null and prodidList.size>0">
+            and info.FINPROD_MARKET_ID in
+            <foreach collection="prodidList" item="prodid" open="("
+                     separator="," close=")">
+                #{prodid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <delete id="deletePrdOpensch" parameterType="java.lang.String">
+        <foreach collection="prodidlist" item="prodid" index="index" separator=";">
+            delete from CHB_PRD_OPENSCH
+            where PROD_ID = #{prodid,jdbcType=VARCHAR}
+        </foreach>
     </delete>
-    
+
+    <delete id="deleteAllData">
+        truncate table CHB_PRD_OPENSCH
+    </delete>
+
     <delete id="deleteTodayData">
-  delete from CHB_PRD_OPENSCH where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
-  </delete>
+        delete from CHB_PRD_OPENSCH where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
+    </delete>
 </mapper>

@@ -18,6 +18,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBasei
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
 import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -353,7 +354,10 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
             if(first.isPresent()){
                 pbcPrdBaseinfoSubDat.setPbcProdIdExternal(first.get().getPbcCode());
             }else{
-                String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(pbcPrdBaseinfoSubDat.getIssuePartyId(), pbcPrdBaseinfoSubDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, pbcPrdBaseinfoSubDat.getVdate());
+                //add by zhoubin 20220424 start
+                String issuePartyId = pbcPrdBaseinfoSubDat.getIssuePartyId();
+                String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(StringUtils.isBlank(issuePartyId)?null:issuePartyId.substring(0,6), pbcPrdBaseinfoSubDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, pbcPrdBaseinfoSubDat.getVdate());
+                //add by zhoubin 20220424 start
                 pbcPrdBaseinfoSubDat.setPbcProdIdExternal(pbcProdIdExternal);
                 innerProdIdMapping.put(prodId,pbcProdIdExternal);
             }

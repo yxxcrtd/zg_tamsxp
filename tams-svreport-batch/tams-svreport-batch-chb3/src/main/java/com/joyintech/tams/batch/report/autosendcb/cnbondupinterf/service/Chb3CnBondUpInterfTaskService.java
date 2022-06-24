@@ -79,7 +79,7 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
 //            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	        Date bdate=new Date();
 	        Long bt=bdate.getTime();
-	        logger.info("上游解析投资者身份文件开始---------:"+ DateUtil.format(batchDate));
+	        logger.info("上游解析三期文件开始---------:"+ DateUtil.format(batchDate));
             // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  end
             try {
                 // 获取消息（读取前一日文件夹信息）
@@ -99,7 +99,7 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
             Date edate=new Date();
 		    Long et=edate.getTime();
 		    Long time=(et-bt)/1000;
-			logger.info("上游解析投资者身份文件结束----------:"+DateUtil.format(batchDate)+"耗时"+time+"秒");
+			logger.info("上游解析三期文件结束----------:"+DateUtil.format(batchDate)+"耗时"+time+"秒");
             // 合并中债mysql早期改造代码  add by zoujiamin  2021/04/20  end
         }
         catch (FileNotFoundException e) {

@@ -20,9 +20,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.h2.mvstore.DataUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -76,15 +79,16 @@ public final class ImportGenerator {
 
         for (TableColumn col : dbCols) {
             ImpColumn column = new ImpColumn(StringUtil.upperCase(col.getColumnName()));
+
             // CHAR
             if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.CHAR.name())) {
                 column.setType(JDBCType.CHAR);
                 column.setLength(col.getDataLength());
             }
             if(StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.VARCHAR.name())||
-            		col.getDataLength()>255){
-            	column.setType(JDBCType.CHAR);
-            	column.setLength(col.getDataLength());
+                    col.getDataLength()>255){
+                column.setType(JDBCType.CHAR);
+                column.setLength(col.getDataLength());
             }
             // DATE
             else if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.DATE.name())) {
@@ -92,29 +96,35 @@ public final class ImportGenerator {
             }
             // TIMESTAMP
             else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                JDBCType.TIMESTAMP.name())) {
+                    JDBCType.TIMESTAMP.name())) {
                 column.setType(JDBCType.TIMESTAMP);
+            }
+
+            if(BaseCommonCheckService.isMYSQLDataBase()){
+                if (StringUtil.equalsIgnoreCase(col.getDataType(), "datetime")) {
+                    column.setType(JDBCType.TIMESTAMP);
+                }
             }
 
             if (isDB2DataBase) {
                 // DECIMAL
                 if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.DECIMAL.name())) {
+                        JDBCType.DECIMAL.name())) {
                     column.setType(JDBCType.DECIMAL);
                 }
                 // SMALLINT
                 else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.SMALLINT.name())) {
+                        JDBCType.SMALLINT.name())) {
                     column.setType(JDBCType.SMALLINT);
                 }
                 // INTEGER
                 else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.INTEGER.name())) {
+                        JDBCType.INTEGER.name())) {
                     column.setType(JDBCType.INTEGER);
                 }
                 // NUMERIC
                 else if (StringUtil.startsWithIgnoreCase(col.getDataType(),
-                    JDBCType.NUMERIC.name())) {
+                        JDBCType.NUMERIC.name())) {
                     column.setType(JDBCType.NUMERIC);
                 }
             }
@@ -161,10 +171,18 @@ public final class ImportGenerator {
                 }
                 if (null != value && value instanceof Date) {
                     if (type.equals(JDBCType.DATE)) {
-                        value = InterfUtil.formatDateWithQuotation((Date)value);
+                        if(BaseCommonCheckService.isMYSQLDataBase()){
+                            value = DateUtil.format((Date)value, DateUtil.DEFAULT_DATE_FORMAT_EN);
+                        }else{
+                            value = InterfUtil.formatDateWithQuotation((Date)value);
+                        }
                     }
                     else if (type.equals(JDBCType.TIMESTAMP)) {
-                        value = InterfUtil.formatDateTimeWithQuotation((Date)value);
+                        if(BaseCommonCheckService.isMYSQLDataBase()){
+                            value = DateUtil.format((Date)value, DateUtil.DEFAULT_DATETIME_FORMAT);
+                        }else {
+                            value = InterfUtil.formatDateTimeWithQuotation((Date) value);
+                        }
                     }
                 }
                 // 如果值为空，则判断该字段是否需要设置默认值

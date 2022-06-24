@@ -66,7 +66,10 @@
             // add by zhoubin 20220326 start
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportDataByDB', {fileName: fileName}, function() {
+                    Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportDataByExcel', {fileName: fileName}, function(result) {
+                        if ($.isArray(result.errorList) && result.errorList.length > 0) {
+                            return Joyin.error(result.errorList);
+                        }
                         Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
                             Joyin.ajax(basePath + 'svreport/system/systempbccapassetinfo/PbcCapAssetInfo001/importFile', {fileName: fileName});
                         });

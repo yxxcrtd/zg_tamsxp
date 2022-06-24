@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.svreport.base.dao.BaseCheckOracleMapper">
+
+    <!-- 查询sql -->
+    <select id="selectTabColumns" resultType="com.joyintech.tams.common.svreport.base.dto.BaseCheckOracleDto">
+        select TABLE_NAME  tableName,
+               COLUMN_NAME columnName,
+               DATA_TYPE   dataType,
+               CHAR_LENGTH length,
+               DATA_PRECISION numberLength,
+               NULLABLE    nullAble,
+               DATA_SCALE dataScale
+        from USER_TAB_COLUMNS
+        where TABLE_NAME = #{tableName}
+    </select>
+
+    <select id="selectUniqueConstraint" resultType="string">
+        select COLUMN_NAME from user_cons_columns where TABLE_NAME=#{tableName}
+        AND POSITION is not null order by POSITION
+    </select>
+</mapper>

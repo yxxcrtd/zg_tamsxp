@@ -11,7 +11,7 @@ import com.joyintech.framework.base.BaseEntity;
  * @author:  Administrator
  * @创建时间: 2019-02-18
  */
-public class ChbInvestTrade extends BaseEntity implements Cloneable{
+public class ChbInvestTrade extends BaseChbEntity implements Cloneable{
     /**
      * 交易UUID
      */

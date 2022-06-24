@@ -455,6 +455,9 @@
            and to_char(t1.VDATE,'yyyy-MM-dd') &lt;= #{endDate}
         </if>
         <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
+        <if test="insideProdId !=null and insideProdId!=''">
+            and t2.INSIDE_PROD_ID = #{insideProdId}
+        </if>
   	</where>
   	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
   	 ORDER BY PBC_SUBMIT_DEADLINE ASC, t1.UPDATE_TIME DESC
@@ -584,4 +587,17 @@
       PBC_ACCOUNT_ID = #{item.pbcAccountId,jdbcType=VARCHAR}
       </foreach>
    </select>
+    <select id="queryInsideProdId" resultType="map">
+        select INSIDE_PROD_ID
+        from (
+        select INSIDE_PROD_ID,
+        rank() over (partition by INSIDE_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+        from PBC_PROD_ASSETPOOL_CODE
+        where STATUS != 'D'
+        <if test="search != null and search !='' ">
+            AND INSIDE_PROD_ID LIKE concat(concat('%', #{search}),'%')
+        </if>
+        ) tmp
+        where ranknum = 1
+    </select>
 </mapper>

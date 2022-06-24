@@ -97,7 +97,7 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
   <sql id="PBC_PRD_BASEINFO_SUB">
-  select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
+  select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,SEND_STATUS,RAISE_ENDDATE,ORG_CODE,
 	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
 	DESC) AS myrank
 	FROM pbc_prd_baseinfo_sub
@@ -953,7 +953,7 @@
 	    a.INIT_RAISING_AMTSUM initRaisingAmtsum,
 	    a.INIT_RAISING_AMTSUMCNY initRaisingAmtsumcny,
 	    a.INIT_RAISING_QTY initRaisingQty,
-	    a.SEND_STATUS sendStatus,
+	    b.SEND_STATUS sendStatus,
 	    a.SUBMIT_TIME submitTime,
 	    a.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 	    a.SUMIT_SEQ sumitSeq,

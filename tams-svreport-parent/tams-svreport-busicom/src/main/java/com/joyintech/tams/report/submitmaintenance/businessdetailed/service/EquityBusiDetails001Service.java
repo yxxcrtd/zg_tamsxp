@@ -33,10 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +41,8 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -224,7 +223,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     @Autowired
     FileAttachmentProcess fileAttachmentProcess;
 
-
+    @Autowired
+    private BatchInsertService batchInsertService;
     /**
      * 日志
      */
@@ -829,6 +829,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             }
             catch (Exception e) {
                 // 防止在进行导入前check时进行了两次的弹框
+                logger.error(e.getMessage(), e);
                 webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
             }
         
@@ -1003,11 +1004,13 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
+                // modify by NullPoint yangxianjiu 20220413 start
+                String cell = action.get(i) == null ? null : action.get(i).trim();
                 String name=fieldName[i];
                 if(dictMap.containsKey(name)){
                     //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
+                    if (cell != null && cell.contains(StringUtil.SPACE)) {
+                        // modify by NullPoint yangxianjiu 20220413 end
                         String[] value = StringUtil.split(cell, StringUtil.SPACE);
                         cell = value[0];
                     }
@@ -1045,11 +1048,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
-                String name=fieldName[i];
-                if(dictMap.containsKey(name)){
+                String cell = action.get(i) == null ? null : action.get(i).trim();
+                String name = fieldName[i];
+                if (dictMap.containsKey(name)) {
                     //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
+                    if (cell!=null && cell.contains(StringUtil.SPACE)) {
                         String[] value = StringUtil.split(cell, StringUtil.SPACE);
                         cell = value[0];
                     }
@@ -1323,19 +1326,19 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
-                String name=fieldName[i];
-                if(dictMap.containsKey(name)){
-                    //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
-                        String[] value = StringUtil.split(cell, StringUtil.SPACE);
-                        cell = value[0];
+                    String cell = action.get(i) == null ? null : action.get(i).trim();
+                    String name=fieldName[i];
+                    if(dictMap.containsKey(name)){
+                        //是枚举值
+                        if (cell != null && cell.contains(StringUtil.SPACE)) {
+                            String[] value = StringUtil.split(cell, StringUtil.SPACE);
+                            cell = value[0];
+                        }
                     }
-                }
-                temp.put(fieldName[i], cell);
-                if (fieldName[i].equals("regCode")) {
-                    temp.put("operateMode", allRegCodeMap.get(cell));
-                }
+                    temp.put(fieldName[i], cell);
+                    if (fieldName[i].equals("regCode")) {
+                        temp.put("operateMode", allRegCodeMap.get(cell));
+                    }
             }
             /** modify by yanya on 20210525 增加是否代销导入模板判定**/
             temp.put("dxTplFlag", DictCodeList.是否_是.getValue());
@@ -1386,11 +1389,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         dataList.forEach(action -> {
             Map<String, String> temp = new HashMap<>();
             for (int i = 0; i < fieldName.length; i++ ) {
-                String cell = action.get(i).trim();
+                String cell = action.get(i) == null ? null : action.get(i).trim();
                 String name=fieldName[i];
                 if(dictMap.containsKey(name)){
                     //是枚举值
-                    if (cell.contains(StringUtil.SPACE)) {
+                    if (cell!= null && cell.contains(StringUtil.SPACE)) {
                         String[] value = StringUtil.split(cell, StringUtil.SPACE);
                         cell = value[0];
                     }
@@ -2109,23 +2112,33 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             // 错误文件流水号存入monitor表
             monitorInfoDto.setErrorFileSeqNo(StringUtil.joinString(seqNoList,GlobalConstant.COMMA));
 
-
             if (equityList.size() <= 1000) {
-            	//edit by zhengxiaolian 2019-12-24 start
-                success = excuteQuityBusiDetailsByStep(equityList, type,  null, null, null,
+                List<EquityBusiInfoRegist001Dto> listNASave = new ArrayList<EquityBusiInfoRegist001Dto>();
+                List<EquityBusiInfoRegist001Dto> listNESave = new ArrayList<EquityBusiInfoRegist001Dto>();
+                List<EquityBusiInfoRegist001Dto> listNESUBSave = new ArrayList<EquityBusiInfoRegist001Dto>();
+
+                success = excuteQuityBusiDetailsByStep(equityList, type,  listNASave, listNESave, listNESUBSave,
                         equityInfocheckMap,regList,listRules);
+                if(listNASave != null && listNASave.size() > 0){
+                    insertChbEqudetDataByPartRegist(listNASave);                // 插入维护信息表
+                }
+                if(listNESave != null && listNESave.size() > 0){
+                    insertChbEqudetDataByPartRegist(listNESave);                // 插入维护信息表
+                }
+                if(listNESUBSave != null && listNESUBSave.size() > 0){
+                    insertChbEqudetSubDataByPart(listNESUBSave);                // 插入登记表
+                }
                 //update zhangjinyang 2020-12-21 防止内存溢出
                 equityInfocheckMap.clear();
                 //update zhangjinyang 2020-12-21 防止内存溢出
                 //edit by zhengxiaolian 2019-12-24 end
             }
             else {
-                // 创建表
-                ImpTable table = new ImpTable(CHB_EQUDET_NAME);
-                table.setColumns(ImportGenerator.createImpTableColumns(CHB_EQUDET_NAME));
-                ImpTable subtable = new ImpTable(CHB_EQUDET_SUB_NAME);
-                subtable.setColumns(ImportGenerator.createImpTableColumns(CHB_EQUDET_SUB_NAME));
-                subtable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
+
+                List<EquityBusiInfoRegist001Dto> listNASave = new CopyOnWriteArrayList<EquityBusiInfoRegist001Dto>();
+                List<EquityBusiInfoRegist001Dto> listNESave = new CopyOnWriteArrayList<EquityBusiInfoRegist001Dto>();
+                List<EquityBusiInfoRegist001Dto> listNESUBSave = new CopyOnWriteArrayList<EquityBusiInfoRegist001Dto>();
+
                 // 创建一个线程池
                 if (interfMaxCorePoolSize < 1) {
                     interfMaxCorePoolSize = 20;
@@ -2146,8 +2159,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
                             @Override
                             public Boolean call() {
-                                return excuteQuityBusiDetailsByStep(subList, type, tmpPath,
-                                        table, subtable,equityInfocheckMap,regList,listRules);
+                                return excuteQuityBusiDetailsByStep(subList, type, listNASave,
+                                        listNESave,listNESUBSave,equityInfocheckMap,regList,listRules);
                             }
                         });
                     }
@@ -2178,49 +2191,22 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 //update zhangjinyang 2020-12-21 防止内存溢出
                 equityInfocheckMap.clear();
                 //update zhangjinyang 2020-12-21 防止内存溢出
-                Collection<File> files = FileUtils.listFiles(new File(tmpPath),
-                        new String[] {"tmp"}, false);
+                // 创建表
+                ImpTable table = new ImpTable(CHB_EQUDET_NAME);
+                table.setColumns(ImportGenerator.createImpTableColumns(CHB_EQUDET_NAME));
+                ImpTable subtable = new ImpTable(CHB_EQUDET_SUB_NAME);
+                subtable.setColumns(ImportGenerator.createImpTableColumns(CHB_EQUDET_SUB_NAME));
+                subtable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
 
-                List<String> content = new ArrayList<>();
-                List<String> subContent = new ArrayList<>(equityList.size());
-                for (File f : files) {
-                    if (f.getName().startsWith("CHB_EQUDET_SUB")) {
-                        try {
-                            subContent.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-                            if (subContent.size() >= reportInterfOneTimeSqlLdrDataCount) {
-                                imptDB(subContent, subtable, tmpPath);
-                                subContent = null;
-                                subContent = new ArrayList<>();
-                            }
-
-                        }
-                        catch (IOException e) {
-                        	logger.error(e.getMessage(),e);
-                            Thread.currentThread().interrupt();
-                            return "fail";
-                        }
-                    }
-                    else if (f.getName().startsWith("CHB_EQUDET")) {
-                        try {
-                            content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-                            if (content.size() >= reportInterfOneTimeSqlLdrDataCount) {
-                                imptDB(content, table, tmpPath);
-                                content = null;
-                                content = new ArrayList<>();
-                            }
-                        }
-                        catch (IOException e) {
-                        	logger.error(e.getMessage(),e);
-                            Thread.currentThread().interrupt();
-                            return "fail";
-                        }
-                    }
-
-                    f.delete();
+                if(listNASave != null && listNASave.size() > 0){
+                    batchInsertService.exeBatchldr(tmpPath, listNASave, table);
                 }
-
-                imptDB(content, table, tmpPath);
-                imptDB(subContent, subtable, tmpPath);
+                if(listNESave != null && listNESave.size() > 0){
+                    batchInsertService.exeBatchldr(tmpPath, listNESave, table);
+                }
+                if(listNESUBSave != null && listNESUBSave.size() > 0){
+                    batchInsertService.exeBatchldr(tmpPath, listNESUBSave, subtable);
+                }
 
             }
         }
@@ -2248,8 +2234,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      * @return 此次是否成功插入
      */
     private boolean excuteQuityBusiDetailsByStep(List<Map<String, String>> fileEquityList, String type,
-                                                 String tmpPath, ImpTable table,
-                                                 ImpTable subTable,
+                                                 List<EquityBusiInfoRegist001Dto> listNASave, List<EquityBusiInfoRegist001Dto> listNESave,
+                                                 List<EquityBusiInfoRegist001Dto> listNESUBSave,
                                                  Map<String, ChbEquHoldCheckDto> equityInfocheckMap,
                                                  List<Map<String, String>> regList,List<CheckRule> listRules
     ) {
@@ -2267,6 +2253,7 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             List<EquityBusiInfoRegist001Dto> listNA = new ArrayList<>();
             // 定义新增数据list-验证通过数据
             List<EquityBusiInfoRegist001Dto> listNE = new ArrayList<>();
+            List<EquityBusiInfoRegist001Dto> listNESub = new ArrayList<>();
             // 定义已存在数据list-原数据“待处理”，新接入数据是“待处理”
             List<EquityBusiInfoRegist001Dto> listAA = new ArrayList<>();
             // 定义已存在数据list-原数据“待处理”，新接入数据是“有效”
@@ -2473,12 +2460,10 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                     listNA.add(ibd);
                 } // 原数据没有，新接入数据是“有效”的处理
                 else if (chbEqudet == null && "E".equals(ibd.getStatus())) {
-                    if (tmpPath == null) {
-                        ibd.setSumitSeq(
-                        		//CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
-                        		CommonUtil.getSequenceStr(sequenceList,index)
-                            );
-                    }
+                    ibd.setSumitSeq(
+                            //CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+                            CommonUtil.getSequenceStr(sequenceList,index)
+                    );
                     listNE.add(ibd);
                 } // 原数据“待处理”，新接入数据是“待处理”的处理
                 else if ("A".equals(chbEqudet.getStatus()) && "A".equals(ibd.getStatus())) {
@@ -2505,30 +2490,18 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             }
             // 原数据为空时,并且数据状态为待维护，先插入维护表
             if (listNA != null && listNA.size() > 0) {
-                // 插入维护信息表
-                if (tmpPath == null) {
-                    insertChbEqudetDataByPartRegist(listNA);
-                }
-                else {
-                    createDataFile(tmpPath + "/CHB_EQUDET", listNA, table.getColumns());
-                }
+                listNASave.addAll(listNA);
             }
             // 原数据为空时,并且数据状态为有效，先插入维护表，再插入登记表
             if (listNE != null && listNE.size() > 0) {
-                if (tmpPath == null) {
-                    // 插入维护信息表
-                    insertChbEqudetDataByPartRegist(listNE);
-                    // 插入登记表
-                    changeStatusValue(listNE, false, null, equityInfo001Map);
-                    insertChbEqudetSubDataByPart(listNE);
-                }
-                else {
-                    logger.info("createDataFile处理开始 " + DateUtil.getCurrentDateTime());
-                    createDataFile(tmpPath + "/CHB_EQUDET", listNE, table.getColumns());
-                    changeStatusValue(listNE, false, null, equityInfo001Map);
-                    createDataFile(tmpPath + "/CHB_EQUDET_SUB", listNE, subTable.getColumns());
-                    logger.info("createDataFile处理结束 " + DateUtil.getCurrentDateTime());
-                }
+                listNESave.addAll(listNE);
+                listNE.stream().forEach(i->{
+                    EquityBusiInfoRegist001Dto copy = new EquityBusiInfoRegist001Dto();
+                    BeanUtil.copyPropertiesIgnoreNull(copy,i);
+                    listNESub.add(copy);
+                });
+                changeStatusValue(listNESub, false, null, equityInfo001Map);
+                listNESUBSave.addAll(listNESub);
             }
             // 原数据为待处理,并且新数据状态为待处理，直接更新维护表
             if (listAA != null && listAA.size() > 0) {
@@ -3364,28 +3337,6 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
     }
 
     /**
-     * 创建数据文件
-     *
-     * @param path 文件路径
-     * @param equityList 对象列表
-     * @param columns 数据库表对应的列
-     */
-    private void createDataFile(String path, List<EquityBusiInfoRegist001Dto> equityList,
-                                List<ImpColumn> columns) {
-        // 生成txt文件
-        List<String> lines = new ArrayList<>(equityList.size());
-        equityList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
-        try {
-            FileUtils.writeLines(
-                    new File(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
-                    "UTF-8", lines, true);
-        }
-        catch (IOException e) {
-            e.getMessage();
-        }
-    }
-
-    /**
      * 批量插入投资者明细数据
      *
      * @param dataList 业务明细数据
@@ -3532,52 +3483,6 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     public void deleteImportTmpData() {
         equityBusiDetails001Mapper.deleteTmpTable();
-    }
-
-    public String imptDB(List<String> content, ImpTable table, String tmpPath) {
-        // 系统是否使用的db2数据库
-        boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-        boolean success = true;
-        if (isDB2DataBase) {
-            // db2数据库处理
-            if (CollectionUtils.isNotEmpty(content)) {
-                // success = success && ImportGenerator.importToDB(table, tmpPath,
-                // table.getName() + FileNameUtil.createFileName("del"), content);
-                try {
-                    success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
-                            "del", reportSqlldrDatabaseName);
-                }
-                catch (IOException | InterruptedException e) {
-                    logger.error(e.getMessage(), e);
-                    return "fail";
-                }
-            }
-        }
-        else {
-            // oracle原逻辑
-            if (CollectionUtils.isNotEmpty(content)) {
-                // success = success && ImportGenerator.importToDB(table, tmpPath,
-                // table.getName() + FileNameUtil.createFileName("txt"), content);
-                try {
-                    success = success && ImportGenerator.importToDBByPart(table, tmpPath, content,
-                            reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount,
-                            "txt", reportSqlldrDatabaseName);
-                }
-                catch (IOException | InterruptedException e) {
-                    logger.error(e.getMessage(), e);
-                    return "fail";
-                }
-            }
-
-        }
-
-        if (success == true) {
-            return "success";
-        }
-        else {
-            return "fail";
-        }
     }
 
     /**

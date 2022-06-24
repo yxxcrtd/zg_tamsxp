@@ -104,7 +104,7 @@ public class SalesTransactionMaintenanceValid implements BeanValidator {
                 excelValidDto.setCreateDept(salesTransactionMaintenanceRegist001Dto.getCreateDept());
                 checkResult.add(excelValidDto);
             }
-            else if (ReportGlobalConstant.IS_NUMBER_FLAG.equals(flag)) {
+            else if (StringUtil.equals(ReportGlobalConstant.IS_NUMBER_FLAG,flag)) {
                 ExcelValidDto excelValidDto = new ExcelValidDto(salesTransactionMaintenanceRegist001Dto.getTradeNo(),String.valueOf(i), null);
                 excelValidDto.setDataTime(salesTransactionMaintenanceRegist001Dto.getUpdateTime());
                 excelValidDto.setOrgCode(salesTransactionMaintenanceRegist001Dto.getOrgCode());

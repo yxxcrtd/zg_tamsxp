@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SettleBatchResultMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SettleBatchResult" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="DEAL_DATE" property="dealDate" jdbcType="DATE" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="SEC_TYPE" property="secType" jdbcType="VARCHAR" />
+        <result column="TASK_RESULT" property="taskResult" jdbcType="VARCHAR" />
+        <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.SettleBatchResultWithBLOBs" extends="BaseResultMap" >
+        <result column="SUCCESS_MSG" property="successMsg" jdbcType="CLOB" />
+        <result column="FAILURE_MSG" property="failureMsg" jdbcType="CLOB" />
+        <result column="WARNING_MSG" property="warningMsg" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, DEAL_DATE DEAL_DATE, PORTFOLIO_ID PORTFOLIO_ID, SEC_TYPE SEC_TYPE, TASK_RESULT TASK_RESULT, 
+        START_TIME START_TIME, END_TIME END_TIME, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        SUCCESS_MSG, FAILURE_MSG, WARNING_MSG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleBatchResultMapper_mysql.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.SettleBatchResultMapper_mysql.Blob_Column_List" />
+        from SETTLE_BATCH_RESULT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleBatchResultMapper_mysql.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.SettleBatchResultMapper_mysql.Blob_Column_List" />
+        from SETTLE_BATCH_RESULT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleBatchResultMapper_mysql.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.SettleBatchResultMapper_mysql.Blob_Column_List" />
+        from SETTLE_BATCH_RESULT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SETTLE_BATCH_RESULT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleBatchResultWithBLOBs" >
+        insert into SETTLE_BATCH_RESULT (SEQNO, DEAL_DATE, PORTFOLIO_ID, 
+            SEC_TYPE, TASK_RESULT, START_TIME, 
+            END_TIME, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            SUCCESS_MSG, FAILURE_MSG, WARNING_MSG
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{dealDate,jdbcType=DATE}, #{portfolioId,jdbcType=VARCHAR}, 
+            #{secType,jdbcType=VARCHAR}, #{taskResult,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+            #{endTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{successMsg,jdbcType=CLOB}, #{failureMsg,jdbcType=CLOB}, #{warningMsg,jdbcType=CLOB}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SettleBatchResultWithBLOBs" >
+        insert into SETTLE_BATCH_RESULT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="dealDate != null" >
+                DEAL_DATE,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="secType != null" >
+                SEC_TYPE,
+            </if>
+            <if test="taskResult != null" >
+                TASK_RESULT,
+            </if>
+            <if test="startTime != null" >
+                START_TIME,
+            </if>
+            <if test="endTime != null" >
+                END_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="successMsg != null" >
+                SUCCESS_MSG,
+            </if>
+            <if test="failureMsg != null" >
+                FAILURE_MSG,
+            </if>
+            <if test="warningMsg != null" >
+                WARNING_MSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="dealDate != null" >
+                #{dealDate,jdbcType=DATE},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="secType != null" >
+                #{secType,jdbcType=VARCHAR},
+            </if>
+            <if test="taskResult != null" >
+                #{taskResult,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="successMsg != null" >
+                #{successMsg,jdbcType=CLOB},
+            </if>
+            <if test="failureMsg != null" >
+                #{failureMsg,jdbcType=CLOB},
+            </if>
+            <if test="warningMsg != null" >
+                #{warningMsg,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleBatchResultWithBLOBs" >
+        insert into SETTLE_BATCH_RESULT(SEQNO, DEAL_DATE, PORTFOLIO_ID, SEC_TYPE, TASK_RESULT, 
+        START_TIME, END_TIME, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        SUCCESS_MSG, FAILURE_MSG, WARNING_MSG)
+        select SEQNO, DEAL_DATE, PORTFOLIO_ID, SEC_TYPE, TASK_RESULT, 
+            START_TIME, END_TIME, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            SUCCESS_MSG, FAILURE_MSG, WARNING_MSG
+             from SETTLE_BATCH_RESULT
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleBatchResultWithBLOBs" >
+        update SETTLE_BATCH_RESULT
+        <set >
+            <if test="dealDate != null" >
+                DEAL_DATE = #{dealDate,jdbcType=DATE},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="secType != null" >
+                SEC_TYPE = #{secType,jdbcType=VARCHAR},
+            </if>
+            <if test="taskResult != null" >
+                TASK_RESULT = #{taskResult,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null" >
+                START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="successMsg != null" >
+                SUCCESS_MSG = #{successMsg,jdbcType=CLOB},
+            </if>
+            <if test="failureMsg != null" >
+                FAILURE_MSG = #{failureMsg,jdbcType=CLOB},
+            </if>
+            <if test="warningMsg != null" >
+                WARNING_MSG = #{warningMsg,jdbcType=CLOB},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.SettleBatchResultWithBLOBs" >
+        update SETTLE_BATCH_RESULT
+        set DEAL_DATE = #{dealDate,jdbcType=DATE},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            SEC_TYPE = #{secType,jdbcType=VARCHAR},
+            TASK_RESULT = #{taskResult,jdbcType=VARCHAR},
+            START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SUCCESS_MSG = #{successMsg,jdbcType=CLOB},
+            FAILURE_MSG = #{failureMsg,jdbcType=CLOB},
+            WARNING_MSG = #{warningMsg,jdbcType=CLOB}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleBatchResult" >
+        update SETTLE_BATCH_RESULT
+        set DEAL_DATE = #{dealDate,jdbcType=DATE},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            SEC_TYPE = #{secType,jdbcType=VARCHAR},
+            TASK_RESULT = #{taskResult,jdbcType=VARCHAR},
+            START_TIME = #{startTime,jdbcType=TIMESTAMP},
+            END_TIME = #{endTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

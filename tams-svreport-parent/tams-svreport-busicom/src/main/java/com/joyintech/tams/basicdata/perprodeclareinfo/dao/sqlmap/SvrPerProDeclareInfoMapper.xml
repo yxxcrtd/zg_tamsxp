@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfo001Dao" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        <id column="DECLARE_UUID" property="declareUuid" jdbcType="CHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
+        <result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+        <result column="APPROVER_ID" property="approverId" jdbcType="VARCHAR" />
+        <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+        <result column="DESIGNER_ID" property="designerId" jdbcType="VARCHAR" />
+        <result column="DESIGNER_NAME" property="designerName" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR" />
+        <result column="LIAISON_NAME" property="liaisonName" jdbcType="VARCHAR" />
+        <result column="LIAISON_TEL" property="liaisonTel" jdbcType="VARCHAR" />
+        <result column="LIAISON_MOBILE" property="liaisonMobile" jdbcType="VARCHAR" />
+        <result column="LIAISON_EMAIL" property="liaisonEmail" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+        <result column="EXC_FIN_SECTOR" property="excFinSector" jdbcType="VARCHAR" />
+        <result column="INVEST_ARAE" property="investArae" jdbcType="VARCHAR" />
+        <result column="INVEST_COUNTRY" property="investCountry" jdbcType="VARCHAR" />
+        <result column="FINAN_SER_MODEL" property="finanSerModel" jdbcType="VARCHAR" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="CMMODE" property="cmmode" jdbcType="VARCHAR" />
+        <result column="PMMODE" property="pmmode" jdbcType="VARCHAR" />
+        <result column="MNAME" property="mname" jdbcType="VARCHAR" />
+        <result column="PRICED_MODE" property="pricedMode" jdbcType="VARCHAR" />
+        <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="IS_SHORT_TERM" property="isShortTerm" jdbcType="VARCHAR" />
+        <result column="SHORT_TERM" property="shortTerm" jdbcType="DECIMAL" />
+        <result column="IS_FREE_REDEM" property="isFreeRedem" jdbcType="VARCHAR" />
+        <result column="CASH_MANA_CATE" property="cashManaCate" jdbcType="VARCHAR" />
+        <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PRIN_CCY" property="cashPrinCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PROF_CCY" property="cashProfCcy" jdbcType="VARCHAR" />
+        <result column="SALE_FEE_RATE" property="saleFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="RAISE_PSTRDATE" property="raisePstrdate" jdbcType="DATE" />
+        <result column="RAISE_PENDDATE" property="raisePenddate" jdbcType="DATE" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+        <result column="IN_DEP_NAME" property="inDepName" jdbcType="VARCHAR" />
+        <result column="IN_DEP_CODE" property="inDepCode" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_NAME" property="outDepName" jdbcType="VARCHAR" />
+        <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="TERM_RIGHT_FLAG" property="termRightFlag" jdbcType="VARCHAR" />
+        <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" jdbcType="VARCHAR" />
+        <result column="INVEST_FEE_RATE" property="investFeeRate" jdbcType="DECIMAL" />
+        <result column="CONT_MODE" property="contMode" jdbcType="VARCHAR" />
+        <result column="COOPERATION_NAME" property="cooperationName" jdbcType="VARCHAR" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="CREDIT_MODE" property="creditMode" jdbcType="VARCHAR" />
+        <result column="INV_TYPE_RAT" property="invTypeRat" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+        <result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" jdbcType="VARCHAR" />
+        <result column="ERR_MSG" property="errMsg" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DECLARE_UUID DECLARE_UUID, PROD_INS_ID PROD_INS_ID, PROD_NAME PROD_NAME, ISSUE_PARTY_ID ISSUE_PARTY_ID, 
+        PROD_BRAND PROD_BRAND, PROD_STAGE PROD_STAGE, APPROVER_ID APPROVER_ID, APPROVER_NAME APPROVER_NAME, 
+        DESIGNER_ID DESIGNER_ID, DESIGNER_NAME DESIGNER_NAME, MANAGER_ID MANAGER_ID, MANAGER_NAME MANAGER_NAME, 
+        LIAISON_NAME LIAISON_NAME, LIAISON_TEL LIAISON_TEL, LIAISON_MOBILE LIAISON_MOBILE, 
+        LIAISON_EMAIL LIAISON_EMAIL, PROFIT_TYPE PROFIT_TYPE, TERMTYPE TERMTYPE, EXC_FIN_SECTOR EXC_FIN_SECTOR, 
+        INVEST_ARAE INVEST_ARAE, INVEST_COUNTRY INVEST_COUNTRY, FINAN_SER_MODEL FINAN_SER_MODEL, 
+        OPERATE_MODE OPERATE_MODE, RAISE_TYPE RAISE_TYPE, CMMODE CMMODE, PMMODE PMMODE, MNAME MNAME, 
+        PRICED_MODE PRICED_MODE, IVSTORIENTATION IVSTORIENTATION, YIELD YIELD, IS_SHORT_TERM IS_SHORT_TERM, 
+        SHORT_TERM SHORT_TERM, IS_FREE_REDEM IS_FREE_REDEM, CASH_MANA_CATE CASH_MANA_CATE, 
+        SALE_AREA SALE_AREA, SALE_AMT_STR SALE_AMT_STR, RAISE_CCY RAISE_CCY, CASH_PRIN_CCY CASH_PRIN_CCY, 
+        CASH_PROF_CCY CASH_PROF_CCY, SALE_FEE_RATE SALE_FEE_RATE, TRU_FEE_RATE TRU_FEE_RATE, 
+        RAISE_PSTRDATE RAISE_PSTRDATE, RAISE_PENDDATE RAISE_PENDDATE, RAISE_AMT_PLAN RAISE_AMT_PLAN, 
+        IN_DEP_NAME IN_DEP_NAME, IN_DEP_CODE IN_DEP_CODE, OUT_DEP_CTRY OUT_DEP_CTRY, OUT_DEP_NAME OUT_DEP_NAME, 
+        RISK_TYPE RISK_TYPE, RISK_LEVEL RISK_LEVEL, TERM_RIGHT_FLAG TERM_RIGHT_FLAG, CUS_REDEEM_FLAG CUS_REDEEM_FLAG, 
+        INVEST_FEE_RATE INVEST_FEE_RATE, CONT_MODE CONT_MODE, COOPERATION_NAME COOPERATION_NAME, 
+        INVEST_PRIN_DATE INVEST_PRIN_DATE, INVEST_PROF_DATE INVEST_PROF_DATE, CREDIT_FLAG CREDIT_FLAG, 
+        CREDIT_TYPE CREDIT_TYPE, CREDIT_MODE CREDIT_MODE, INV_TYPE_RAT INV_TYPE_RAT, REMARK REMARK, 
+        STATUS STATUS, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, WORKFLOW_ID WORKFLOW_ID, 
+        DATASOURCE DATASOURCE, IS_FHXGCP IS_FHXGCP, PRD_SPEC_PROPERTY PRD_SPEC_PROPERTY,ERR_MSG ERR_MSG
+    </sql>
+    <insert id="insert">
+        merge into CHB_PRD_DECLARE_INFO a using (
+            select
+                #{declareUuid,jdbcType=CHAR}	DECLARE_UUID,
+                #{prodInsId,jdbcType=VARCHAR}	PROD_INS_ID,
+                #{prodName,jdbcType=VARCHAR}	PROD_NAME,
+                #{issuePartyId,jdbcType=VARCHAR}	ISSUE_PARTY_ID,
+                #{prodBrand,jdbcType=VARCHAR}	PROD_BRAND,
+                #{prodStage,jdbcType=DECIMAL}	PROD_STAGE,
+                #{approverId,jdbcType=VARCHAR}	APPROVER_ID,
+                #{approverName,jdbcType=VARCHAR}	APPROVER_NAME,
+                #{designerId,jdbcType=VARCHAR}	DESIGNER_ID,
+                #{designerName,jdbcType=VARCHAR}	DESIGNER_NAME,
+                #{managerId,jdbcType=VARCHAR}	MANAGER_ID,
+                #{managerName,jdbcType=VARCHAR}	MANAGER_NAME,
+                #{liaisonName,jdbcType=VARCHAR}	LIAISON_NAME,
+                #{liaisonTel,jdbcType=VARCHAR}	LIAISON_TEL,
+                #{liaisonMobile,jdbcType=VARCHAR}	LIAISON_MOBILE,
+                #{liaisonEmail,jdbcType=VARCHAR}	LIAISON_EMAIL,
+                #{profitType,jdbcType=VARCHAR}	PROFIT_TYPE,
+                #{termtype,jdbcType=VARCHAR}	TERMTYPE,
+                #{excFinSector,jdbcType=VARCHAR}	EXC_FIN_SECTOR,
+                #{investArae,jdbcType=VARCHAR}	INVEST_ARAE,
+                #{investCountry,jdbcType=VARCHAR}	INVEST_COUNTRY,
+                #{finanSerModel,jdbcType=VARCHAR}	FINAN_SER_MODEL,
+                #{operateMode,jdbcType=VARCHAR}	OPERATE_MODE,
+                #{raiseType,jdbcType=VARCHAR}	RAISE_TYPE,
+                #{cmmode,jdbcType=VARCHAR}	CMMODE,
+                #{pmmode,jdbcType=VARCHAR}	PMMODE,
+                #{mname,jdbcType=VARCHAR}	MNAME,
+                #{pricedMode,jdbcType=VARCHAR}	PRICED_MODE,
+                #{ivstorientation,jdbcType=VARCHAR}	IVSTORIENTATION,
+                #{yield,jdbcType=DECIMAL}	YIELD,
+                #{isShortTerm,jdbcType=VARCHAR}	IS_SHORT_TERM,
+                #{shortTerm,jdbcType=DECIMAL}	SHORT_TERM,
+                #{isFreeRedem,jdbcType=VARCHAR}	IS_FREE_REDEM,
+                #{cashManaCate,jdbcType=VARCHAR}	CASH_MANA_CATE,
+                #{saleArea,jdbcType=VARCHAR}	SALE_AREA,
+                #{saleAmtStr,jdbcType=DECIMAL}	SALE_AMT_STR,
+                #{raiseCcy,jdbcType=VARCHAR}	RAISE_CCY,
+                #{cashPrinCcy,jdbcType=VARCHAR}	CASH_PRIN_CCY,
+                #{cashProfCcy,jdbcType=VARCHAR}	CASH_PROF_CCY,
+                #{saleFeeRate,jdbcType=DECIMAL}	SALE_FEE_RATE,
+                #{truFeeRate,jdbcType=DECIMAL}	TRU_FEE_RATE,
+                #{raisePstrdate,jdbcType=DATE}	RAISE_PSTRDATE,
+                #{raisePenddate,jdbcType=DATE}	RAISE_PENDDATE,
+                #{raiseAmtPlan,jdbcType=DECIMAL}	RAISE_AMT_PLAN,
+                #{inDepName,jdbcType=VARCHAR}	IN_DEP_NAME,
+                #{inDepCode,jdbcType=VARCHAR}	IN_DEP_CODE,
+                #{outDepCtry,jdbcType=VARCHAR} OUT_DEP_CTRY,
+                #{outDepName,jdbcType=VARCHAR}	OUT_DEP_NAME,
+                #{riskType,jdbcType=VARCHAR}	RISK_TYPE,
+                #{riskLevel,jdbcType=VARCHAR}	RISK_LEVEL,
+                #{termRightFlag,jdbcType=VARCHAR}	TERM_RIGHT_FLAG,
+                #{cusRedeemFlag,jdbcType=VARCHAR}	CUS_REDEEM_FLAG,
+                #{investFeeRate,jdbcType=DECIMAL}	INVEST_FEE_RATE,
+                #{contMode,jdbcType=VARCHAR}	CONT_MODE,
+                #{cooperationName,jdbcType=VARCHAR}	COOPERATION_NAME,
+                #{investPrinDate,jdbcType=VARCHAR} INVEST_PRIN_DATE,
+                #{investProfDate,jdbcType=VARCHAR}	INVEST_PROF_DATE,
+                #{creditFlag,jdbcType=VARCHAR}	CREDIT_FLAG,
+                #{creditType,jdbcType=VARCHAR}	CREDIT_TYPE,
+                #{creditMode,jdbcType=VARCHAR}	CREDIT_MODE,
+                #{invTypeRat,jdbcType=VARCHAR}	INV_TYPE_RAT,
+                #{remark,jdbcType=VARCHAR}	REMARK,
+                #{status,jdbcType=VARCHAR}	STATUS,
+                #{createUser,jdbcType=VARCHAR}	CREATE_USER,
+                #{createTime,jdbcType=TIMESTAMP}	CREATE_TIME,
+                #{updateUser,jdbcType=VARCHAR}	UPDATE_USER,
+                #{updateTime,jdbcType=TIMESTAMP}	UPDATE_TIME,
+                #{orgCode,jdbcType=VARCHAR}	ORG_CODE,
+                #{deptCode,jdbcType=VARCHAR}	DEPT_CODE,
+                #{workflowId,jdbcType=VARCHAR}	WORKFLOW_ID,
+                #{datasource,jdbcType=VARCHAR}	DATASOURCE,
+                #{isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP,
+                #{prdSpecProperty,jdbcType=VARCHAR}	PRD_SPEC_PROPERTY,
+                #{errMsg,jdbcType=VARCHAR}	ERR_MSG
+            from dual
+        )b on (a.PROD_INS_ID = b.PROD_INS_ID)
+            WHEN MATCHED THEN
+                update set
+                    a.PROD_NAME	 =	b.PROD_NAME,
+                    a.ISSUE_PARTY_ID	 =	b.ISSUE_PARTY_ID,
+                    a.PROD_BRAND	 =	b.PROD_BRAND,
+                    a.PROD_STAGE	 =	b.PROD_STAGE,
+                    a.APPROVER_ID	 =	b.APPROVER_ID,
+                    a.APPROVER_NAME	 =	b.APPROVER_NAME,
+                    a.DESIGNER_ID	 =	b.DESIGNER_ID,
+                    a.DESIGNER_NAME	 =	b.DESIGNER_NAME,
+                    a.MANAGER_ID	 =	b.MANAGER_ID,
+                    a.MANAGER_NAME	 =	b.MANAGER_NAME,
+                    a.LIAISON_NAME	 =	b.LIAISON_NAME,
+                    a.LIAISON_TEL	 =	b.LIAISON_TEL,
+                    a.LIAISON_MOBILE	 =	b.LIAISON_MOBILE,
+                    a.LIAISON_EMAIL	 =	b.LIAISON_EMAIL,
+                    a.PROFIT_TYPE	 =	b.PROFIT_TYPE,
+                    a.TERMTYPE	 =	b.TERMTYPE,
+                    a.EXC_FIN_SECTOR	 =	b.EXC_FIN_SECTOR,
+                    a.INVEST_ARAE	 =	b.INVEST_ARAE,
+                    a.INVEST_COUNTRY	 =	b.INVEST_COUNTRY,
+                    a.FINAN_SER_MODEL	 =	b.FINAN_SER_MODEL,
+                    a.OPERATE_MODE	 =	b.OPERATE_MODE,
+                    a.RAISE_TYPE	 =	b.RAISE_TYPE,
+                    a.CMMODE	 =	b.CMMODE,
+                    a.PMMODE	 =	b.PMMODE,
+                    a.MNAME	 =	b.MNAME,
+                    a.PRICED_MODE	 =	b.PRICED_MODE,
+                    a.IVSTORIENTATION	 =	b.IVSTORIENTATION,
+                    a.YIELD	 =	b.YIELD,
+                    a.IS_SHORT_TERM	 =	b.IS_SHORT_TERM,
+                    a.SHORT_TERM	 =	b.SHORT_TERM,
+                    a.IS_FREE_REDEM	 =	b.IS_FREE_REDEM,
+                    a.CASH_MANA_CATE	 =	b.CASH_MANA_CATE,
+                    a.SALE_AREA	 =	b.SALE_AREA,
+                    a.SALE_AMT_STR	 =	b.SALE_AMT_STR,
+                    a.RAISE_CCY	 =	b.RAISE_CCY,
+                    a.CASH_PRIN_CCY	 =	b.CASH_PRIN_CCY,
+                    a.CASH_PROF_CCY	 =	b.CASH_PROF_CCY,
+                    a.SALE_FEE_RATE	 =	b.SALE_FEE_RATE,
+                    a.TRU_FEE_RATE	 =	b.TRU_FEE_RATE,
+                    a.RAISE_PSTRDATE	 =	b.RAISE_PSTRDATE,
+                    a.RAISE_PENDDATE	 =	b.RAISE_PENDDATE,
+                    a.RAISE_AMT_PLAN	 =	b.RAISE_AMT_PLAN,
+                    a.IN_DEP_NAME	 =	b.IN_DEP_NAME,
+                    a.IN_DEP_CODE	 =	b.IN_DEP_CODE,
+                    a.OUT_DEP_CTRY	 =	b.OUT_DEP_CTRY,
+                    a.OUT_DEP_NAME	 =	b.OUT_DEP_NAME,
+                    a.RISK_TYPE	 =	b.RISK_TYPE,
+                    a.RISK_LEVEL	 =	b.RISK_LEVEL,
+                    a.TERM_RIGHT_FLAG	 =	b.TERM_RIGHT_FLAG,
+                    a.CUS_REDEEM_FLAG	 =	b.CUS_REDEEM_FLAG,
+                    a.INVEST_FEE_RATE	 =	b.INVEST_FEE_RATE,
+                    a.CONT_MODE	 =	b.CONT_MODE,
+                    a.COOPERATION_NAME	 =	b.COOPERATION_NAME,
+                    a.INVEST_PRIN_DATE	 =	b.INVEST_PRIN_DATE,
+                    a.INVEST_PROF_DATE	 =	b.INVEST_PROF_DATE,
+                    a.CREDIT_FLAG	 =	b.CREDIT_FLAG,
+                    a.CREDIT_TYPE	 =	b.CREDIT_TYPE,
+                    a.CREDIT_MODE	 =	b.CREDIT_MODE,
+                    a.INV_TYPE_RAT	 =	b.INV_TYPE_RAT,
+                    a.REMARK	 =	b.REMARK,
+                    a.STATUS	 =	b.STATUS,
+                    a.UPDATE_USER	 =	b.UPDATE_USER,
+                    a.UPDATE_TIME	 =	b.UPDATE_TIME,
+                    a.ORG_CODE	 =	b.ORG_CODE,
+                    a.DEPT_CODE	 =	b.DEPT_CODE,
+                    a.IS_FHXGCP	 =	b.IS_FHXGCP,
+                    a.PRD_SPEC_PROPERTY	 =	b.PRD_SPEC_PROPERTY,
+                    a.ERR_MSG	 =	b.ERR_MSG
+            WHEN NOT MATCHED THEN
+                insert (
+                        DECLARE_UUID
+                    ,PROD_INS_ID
+                    ,PROD_NAME
+                    ,ISSUE_PARTY_ID
+                    ,PROD_BRAND
+                    ,PROD_STAGE
+                    ,APPROVER_ID
+                    ,APPROVER_NAME
+                    ,DESIGNER_ID
+                    ,DESIGNER_NAME
+                    ,MANAGER_ID
+                    ,MANAGER_NAME
+                    ,LIAISON_NAME
+                    ,LIAISON_TEL
+                    ,LIAISON_MOBILE
+                    ,LIAISON_EMAIL
+                    ,PROFIT_TYPE
+                    ,TERMTYPE
+                    ,EXC_FIN_SECTOR
+                    ,INVEST_ARAE
+                    ,INVEST_COUNTRY
+                    ,FINAN_SER_MODEL
+                    ,OPERATE_MODE
+                    ,RAISE_TYPE
+                    ,CMMODE
+                    ,PMMODE
+                    ,MNAME
+                    ,PRICED_MODE
+                    ,IVSTORIENTATION
+                    ,YIELD
+                    ,IS_SHORT_TERM
+                    ,SHORT_TERM
+                    ,IS_FREE_REDEM
+                    ,CASH_MANA_CATE
+                    ,SALE_AREA
+                    ,SALE_AMT_STR
+                    ,RAISE_CCY
+                    ,CASH_PRIN_CCY
+                    ,CASH_PROF_CCY
+                    ,SALE_FEE_RATE
+                    ,TRU_FEE_RATE
+                    ,RAISE_PSTRDATE
+                    ,RAISE_PENDDATE
+                    ,RAISE_AMT_PLAN
+                    ,IN_DEP_NAME
+                    ,IN_DEP_CODE
+                    ,OUT_DEP_CTRY
+                    ,OUT_DEP_NAME
+                    ,RISK_TYPE
+                    ,RISK_LEVEL
+                    ,TERM_RIGHT_FLAG
+                    ,CUS_REDEEM_FLAG
+                    ,INVEST_FEE_RATE
+                    ,CONT_MODE
+                    ,COOPERATION_NAME
+                    ,INVEST_PRIN_DATE
+                    ,INVEST_PROF_DATE
+                    ,CREDIT_FLAG
+                    ,CREDIT_TYPE
+                    ,CREDIT_MODE
+                    ,INV_TYPE_RAT
+                    ,REMARK
+                    ,STATUS
+                    ,CREATE_USER
+                    ,CREATE_TIME
+                    ,UPDATE_USER
+                    ,UPDATE_TIME
+                    ,ORG_CODE
+                    ,DEPT_CODE
+                    ,DATASOURCE
+                    ,IS_FHXGCP
+                    ,PRD_SPEC_PROPERTY
+                    ,ERR_MSG
+                    ) values(
+                                b.DECLARE_UUID
+                            ,b.PROD_INS_ID
+                            ,b.PROD_NAME
+                            ,b.ISSUE_PARTY_ID
+                            ,b.PROD_BRAND
+                            ,b.PROD_STAGE
+                            ,b.APPROVER_ID
+                            ,b.APPROVER_NAME
+                            ,b.DESIGNER_ID
+                            ,b.DESIGNER_NAME
+                            ,b.MANAGER_ID
+                            ,b.MANAGER_NAME
+                            ,b.LIAISON_NAME
+                            ,b.LIAISON_TEL
+                            ,b.LIAISON_MOBILE
+                            ,b.LIAISON_EMAIL
+                            ,b.PROFIT_TYPE
+                            ,b.TERMTYPE
+                            ,b.EXC_FIN_SECTOR
+                            ,b.INVEST_ARAE
+                            ,b.INVEST_COUNTRY
+                            ,b.FINAN_SER_MODEL
+                            ,b.OPERATE_MODE
+                            ,b.RAISE_TYPE
+                            ,b.CMMODE
+                            ,b.PMMODE
+                            ,b.MNAME
+                            ,b.PRICED_MODE
+                            ,b.IVSTORIENTATION
+                            ,b.YIELD
+                            ,b.IS_SHORT_TERM
+                            ,b.SHORT_TERM
+                            ,b.IS_FREE_REDEM
+                            ,b.CASH_MANA_CATE
+                            ,b.SALE_AREA
+                            ,b.SALE_AMT_STR
+                            ,b.RAISE_CCY
+                            ,b.CASH_PRIN_CCY
+                            ,b.CASH_PROF_CCY
+                            ,b.SALE_FEE_RATE
+                            ,b.TRU_FEE_RATE
+                            ,b.RAISE_PSTRDATE
+                            ,b.RAISE_PENDDATE
+                            ,b.RAISE_AMT_PLAN
+                            ,b.IN_DEP_NAME
+                            ,b.IN_DEP_CODE
+                            ,b.OUT_DEP_CTRY
+                            ,b.OUT_DEP_NAME
+                            ,b.RISK_TYPE
+                            ,b.RISK_LEVEL
+                            ,b.TERM_RIGHT_FLAG
+                            ,b.CUS_REDEEM_FLAG
+                            ,b.INVEST_FEE_RATE
+                            ,b.CONT_MODE
+                            ,b.COOPERATION_NAME
+                            ,b.INVEST_PRIN_DATE
+                            ,b.INVEST_PROF_DATE
+                            ,b.CREDIT_FLAG
+                            ,b.CREDIT_TYPE
+                            ,b.CREDIT_MODE
+                            ,b.INV_TYPE_RAT
+                            ,b.REMARK
+                            ,b.STATUS
+                            ,b.CREATE_USER
+                            ,b.CREATE_TIME
+                            ,b.UPDATE_USER
+                            ,b.UPDATE_TIME
+                            ,b.ORG_CODE
+                            ,b.DEPT_CODE
+                            ,b.DATASOURCE
+                            ,b.IS_FHXGCP
+                            ,b.PRD_SPEC_PROPERTY
+                            ,b.ERR_MSG
+                            )
+
+    </insert>
+
+    <delete id="delete" >
+        update CHB_PRD_DECLARE_INFO set STATUS = #{status},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime} where DECLARE_UUID = #{declareUuid}
+    </delete>
+    <select id="countDuplicatedData" resultType="java.lang.Integer">
+        select count(1) from CHB_PRD_DECLARE_INFO where PROD_INS_ID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.PROD_INS_ID}
+        </foreach>
+    </select>
+    <select id="selectFileInfo" resultType="java.lang.String">
+        select path from sys_upload_file_info a where exists (
+        select 1 from CHB_PRD_DECLARE_INFO b where
+        a.seq_no = b.file_no
+        <if test="prodInsId != null and prodInsId != ''">
+            and b.PROD_INS_ID = #{prodInsId}
+        </if>
+        ) and rownum = 1
+    </select>
+    <select id="selectChbPrdDeclareByProdInsId" resultType="java.lang.Integer">
+        select count(1) from CHB_PRD_DECLARE_INFO where PROD_INS_ID = #{prodInsId}
+    </select>
+    <select id="selectChbPrdDeclareByProdStageAndProdName" resultType="java.lang.Integer">
+        select count(1) from CHB_PRD_DECLARE_INFO where PROD_STAGE = #{prodStage} and PROD_NAME = #{prodName}
+    </select>
+    <select id="selectByKeys" resultType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto">
+        SELECT
+        T1.DECLARE_UUID      AS declareUuid,
+        T1.STATUS            AS statusValid,
+        T1.PROD_NAME         AS prodName,
+        T1.PROD_INS_ID       AS prodInsId,
+        T1.PROD_BRAND        AS prodBrand,
+        T1.PRD_SPEC_PROPERTY AS prdSpecProperty,
+        T1.PROD_STAGE        AS prodStage,
+        T1.ISSUE_PARTY_ID    AS issuePartyId,
+        T1.APPROVER_NAME     AS approverName,
+        T1.APPROVER_ID       AS approverId,
+        T1.DESIGNER_NAME     AS designerName,
+        T1.DESIGNER_ID       AS designerId,
+        T1.MANAGER_NAME      AS managerName,
+        T1.MANAGER_ID        AS managerId,
+        T1.LIAISON_NAME      AS liaisonName,
+        T1.LIAISON_TEL       AS liaisonTel,
+        T1.LIAISON_MOBILE    AS liaisonMobile,
+        T1.LIAISON_EMAIL     AS liaisonEmail,
+        T1.RAISE_TYPE        AS raiseType,
+        T1.PROFIT_TYPE       AS profitType,
+        T1.IS_FHXGCP         AS isFhxgcp,
+        T1.TERMTYPE          AS termtype,
+        T1.EXC_FIN_SECTOR    AS excFinSector,
+        T1.INVEST_ARAE       AS investArae,
+        T1.INVEST_COUNTRY    AS investCountry,
+        T1.FINAN_SER_MODEL   AS finanSerModel,
+        T1.OPERATE_MODE      AS operateMode,
+        T1.IS_SHORT_TERM     AS isShortTerm,
+        T1.SHORT_TERM        AS shortTerm,
+        T1.IS_FREE_REDEM     AS isFreeRedem,
+        T1.CASH_MANA_CATE    AS cashManaCate,
+        T1.CMMODE            AS cmmode ,
+        T1.PMMODE            AS pmmode,
+        T1.MNAME             AS mname ,
+        T1.PRICED_MODE       AS pricedMode,
+        T1.IVSTORIENTATION   AS ivstorientation,
+        T1.CONT_MODE         AS contMode,
+        T1.COOPERATION_NAME  AS cooperationName,
+        T1.SALE_AREA         AS saleArea,
+        T1.RAISE_CCY         AS raiseCcy,
+        T1.CASH_PRIN_CCY     AS cashPrinCcy,
+        T1.CASH_PROF_CCY     AS cashProfCcy,
+        T1.SALE_AMT_STR      AS saleAmtStr,
+        T1.RAISE_AMT_PLAN    AS raiseAmtPlan,
+        T1.RAISE_PSTRDATE    AS raisePstrdate,
+        T1.RAISE_PENDDATE    AS raisePenddate,
+        T1.INVEST_PRIN_DATE  AS investPrinDate,
+        T1.INVEST_PROF_DATE  AS investProfDate,
+        T1.SALE_FEE_RATE     AS saleFeeRate,
+        T1.INVEST_FEE_RATE   AS investFeeRate,
+        T1.IN_DEP_NAME       AS inDepName,
+        T1.IN_DEP_CODE       AS inDepCode,
+        T1.OUT_DEP_CTRY      AS outDepCtry,
+        T1.OUT_DEP_NAME      AS outDepName,
+        T1.TRU_FEE_RATE      AS truFeeRate,
+        T1.RISK_LEVEL        AS riskLevel,
+        T1.RISK_TYPE         AS riskType,
+        T1.TERM_RIGHT_FLAG   AS termRightFlag,
+        T1.CUS_REDEEM_FLAG   AS cusRedeemFlag,
+        T1.CREDIT_FLAG       AS creditFlag,
+        T1.CREDIT_TYPE       AS creditType,
+        T1.CREDIT_MODE       AS creditMode,
+        T1.INV_TYPE_RAT      AS invTypeRat,
+        T1.YIELD             AS yield,
+        T1.REMARK            AS remark,
+        T1.UPDATE_TIME       AS updateTime,
+        T1.UPDATE_USER       AS updateUser,
+        T1.ERR_MSG           AS errMsg,
+        T1.FILE_NO           AS fileNo,
+        T1.FILE_NUM          AS fileNum,
+        T1.TEN_FILE          AS tenFile,
+               null          AS orgData
+
+        FROM
+        CHB_PRD_DECLARE_INFO T1
+        where DECLARE_UUID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        union all
+        SELECT
+        T1.DATAUUID      AS declareUuid,
+        T1.STATUS            AS statusValid,
+        T1.PROD_NAME         AS prodName,
+        T1.PROD_INS_ID       AS prodInsId,
+        null       AS prodBrand,
+        null AS prdSpecProperty,
+        null        AS prodStage,
+        null    AS issuePartyId,
+        null     AS approverName,
+        null       AS approverId,
+        null     AS designerName,
+        null       AS designerId,
+        null      AS managerName,
+        null        AS managerId,
+        null      AS liaisonName,
+        null      AS liaisonTel,
+        null    AS liaisonMobile,
+        null     AS liaisonEmail,
+        null        AS raiseType,
+        null      AS profitType,
+        null        AS isFhxgcp,
+        T1.TERMTYPE          AS termtype,
+        null    AS excFinSector,
+        null      AS investArae,
+        null    AS investCountry,
+        null   AS finanSerModel,
+        T1.OPERATE_MODE     AS operateMode,
+        null     AS isShortTerm,
+        null        AS shortTerm,
+        null     AS isFreeRedem,
+        null    AS cashManaCate,
+        null            AS cmmode ,
+        null            AS pmmode,
+        null           AS mname ,
+        null       AS pricedMode,
+        null   AS ivstorientation,
+        null         AS contMode,
+        null  AS cooperationName,
+        null         AS saleArea,
+        null         AS raiseCcy,
+        null    AS cashPrinCcy,
+        null    AS cashProfCcy,
+        null    AS saleAmtStr,
+        null    AS raiseAmtPlan,
+        T1.RAISE_PSTRDATE    AS raisePstrdate,
+        null   AS raisePenddate,
+        null  AS investPrinDate,
+        null  AS investProfDate,
+        null    AS saleFeeRate,
+        null  AS investFeeRate,
+        null       AS inDepName,
+        null       AS inDepCode,
+        null      AS outDepCtry,
+        null      AS outDepName,
+        null      AS truFeeRate,
+        null        AS riskLevel,
+        null        AS riskType,
+        null  AS termRightFlag,
+        null   AS cusRedeemFlag,
+        null      AS creditFlag,
+        null     AS creditType,
+        null      AS creditMode,
+        null    AS invTypeRat,
+        null            AS yield,
+        null           AS remark,
+        T1.UPDATE_TIME       AS updateTime,
+        T1.UPDATE_USER       AS updateUser,
+        T1.ERR_MSG           AS errMsg,
+        null           AS fileNo,
+        null        AS fileNum,
+        null          AS tenFile,
+        T1.ORG_DATA  AS orgData
+
+        FROM
+        CHB_PRD_DECLARE_INFO_ERRODATA T1
+       where DATAUUID IN
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        ORDER BY statusValid DESC
+    </select>
+    <update id="updateFileNo">
+        update CHB_PRD_DECLARE_INFO
+        set FILE_NO=#{fileNo},
+        FILE_NUM=#{fileNum},
+        TEN_FILE = #{tenFile}
+        <where>
+            <if test="declareUuid != null and declareUuid != ''">
+                DECLARE_UUID = #{declareUuid}
+            </if>
+            <if test="prodInsId != null and prodInsId != ''">
+                PROD_INS_ID = #{prodInsId}
+            </if>
+        </where>
+    </update>
+
+
+</mapper>

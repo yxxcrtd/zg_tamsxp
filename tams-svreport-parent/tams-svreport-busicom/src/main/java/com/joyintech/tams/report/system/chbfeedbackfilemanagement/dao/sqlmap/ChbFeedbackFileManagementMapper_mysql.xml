@@ -98,7 +98,7 @@
     <!--产品存续期登记表-->
     <select id="queryChbPrdDealSubStatus" resultType="com.joyintech.tams.report.system.chbfeedbackfilemanagement.dto.ChbFeedbackFileMatchDetailDto">
         select SUMIT_SEQ regSeqno, SEND_STATUS regRepStatus, SUBMIT_FEEDBACK_STATUS regFeedbackStatus,
-            STATUS_DATE regDataDate, STATUS regDataStatus, /*PROD_REGIST_CODE||','||TO_CHAR(MDATE, 'yyyy-MM-dd')*/ concat(PROD_REGIST_CODE,',',DATE_FORMAT(MDATE,'%Y-%m-%d')) keyCode
+            STATUS_DATE regDataDate, STATUS regDataStatus, PROD_REGIST_CODE||','||TO_CHAR(MDATE, 'yyyy-MM-dd') keyCode
         from CHB_PRD_DEAL_SUB
         where SUMIT_SEQ in
         <foreach collection="list" item="seqno" open="( " close=" )" separator=",">

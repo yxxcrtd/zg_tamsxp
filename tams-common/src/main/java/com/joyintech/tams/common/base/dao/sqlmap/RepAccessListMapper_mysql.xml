@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepAccessListMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepAccessList" >
+        <id column="LIST_ID" property="listId" jdbcType="VARCHAR" />
+        <result column="LIST_TYPE" property="listType" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="TERM" property="term" jdbcType="VARCHAR" />
+        <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+        <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="SEQ_ID" property="seqId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        LIST_ID LIST_ID, LIST_TYPE LIST_TYPE, CUSTOMER_ID CUSTOMER_ID, TERM TERM, AMOUNT AMOUNT, 
+        EFF_DATE EFF_DATE, STATUS STATUS, SEQ_ID SEQ_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAccessListMapper_mysql.Base_Column_List" />
+        from REP_ACCESS_LIST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAccessListMapper_mysql.Base_Column_List" />
+        from REP_ACCESS_LIST
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepAccessListMapper_mysql.Base_Column_List" />
+        from REP_ACCESS_LIST
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_ACCESS_LIST
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepAccessList" >
+        insert into REP_ACCESS_LIST (LIST_ID, LIST_TYPE, CUSTOMER_ID, 
+            TERM, AMOUNT, EFF_DATE, 
+            STATUS, SEQ_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{listId,jdbcType=VARCHAR}, #{listType,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, 
+            #{term,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{effDate,jdbcType=DATE}, 
+            #{status,jdbcType=VARCHAR}, #{seqId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepAccessList" >
+        insert into REP_ACCESS_LIST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                LIST_ID,
+            </if>
+            <if test="listType != null" >
+                LIST_TYPE,
+            </if>
+            <if test="customerId != null" >
+                CUSTOMER_ID,
+            </if>
+            <if test="term != null" >
+                TERM,
+            </if>
+            <if test="amount != null" >
+                AMOUNT,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="seqId != null" >
+                SEQ_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                #{listId,jdbcType=VARCHAR},
+            </if>
+            <if test="listType != null" >
+                #{listType,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null" >
+                #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null" >
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="seqId != null" >
+                #{seqId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepAccessList" >
+        insert into REP_ACCESS_LIST(LIST_ID, LIST_TYPE, CUSTOMER_ID, TERM, AMOUNT, EFF_DATE, 
+        STATUS, SEQ_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select LIST_ID, LIST_TYPE, CUSTOMER_ID, TERM, AMOUNT, EFF_DATE, 
+            #{status,jdbcType=VARCHAR} STATUS, SEQ_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_ACCESS_LIST
+             where STATUS = 'E' and LIST_ID = #{listId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepAccessList" >
+        update REP_ACCESS_LIST
+        <set >
+            <if test="listType != null" >
+                LIST_TYPE = #{listType,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null" >
+                CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null" >
+                TERM = #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null" >
+                AMOUNT = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE = #{effDate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="seqId != null" >
+                SEQ_ID = #{seqId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepAccessList" >
+        update REP_ACCESS_LIST
+        set LIST_TYPE = #{listType,jdbcType=VARCHAR},
+            CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            TERM = #{term,jdbcType=VARCHAR},
+            AMOUNT = #{amount,jdbcType=DECIMAL},
+            EFF_DATE = #{effDate,jdbcType=DATE},
+            STATUS = #{status,jdbcType=VARCHAR},
+            SEQ_ID = #{seqId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+    </update>
+</mapper>

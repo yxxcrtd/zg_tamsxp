@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<info description="委外(非公募基金）行情">
-	<string name="finprodId" value="FINPRODID" length="32" required="true" description="金融产品代码"/>
-	<string name="finprodType" value="FINPRODTYPE" length="50" required="true" description="金融产品类型"/>
-	<date name="publishDate" value="PUBLISHDATE" length="10" required="true" description="公布日期"/>
-	<date name="valDate" value="VALDATE" length="10" required="true" description="估值日期"/>
-	<decimal name="valuation" value="VALUATION" length="30" scale="14" required="true" description="估值"/>
-	<string name="dataActionSign" value="DATAACTIONSIGN" length="50" required="true" description="数据动作标志"/>
-</info>

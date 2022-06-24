@@ -384,6 +384,9 @@ public interface InvestorsHoldInfo001Mapper {
 	 * @since 1.0
 	 */
 	int handleSubDeleteData(@Param("dataList") List<InvestorsHoldInfo001Dto> dataList);
+
+    int handleSubDeleteDataNew();
+
     /**
      * 更新有效数据切产品登记编码不相同的数据
      *

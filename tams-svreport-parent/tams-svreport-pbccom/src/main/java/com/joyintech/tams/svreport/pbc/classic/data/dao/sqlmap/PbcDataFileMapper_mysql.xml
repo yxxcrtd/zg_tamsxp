@@ -216,6 +216,6 @@
         AND DATE_FORMAT(CDATE,'%Y-%m-%d') &lt;= #{endDate,jdbcType=VARCHAR}
       </if>
     </where>
-    ) ORDER BY FILECODE, HEAD_ORGCODE, CDATE, FILESEQNO
+    ) tmp ORDER BY FILECODE, HEAD_ORGCODE, CDATE, FILESEQNO
   </select>
 </mapper>

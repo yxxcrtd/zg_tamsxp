@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StMeetingProposalInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StMeetingProposalInfo" >
+        <id column="MEETINGSEQ" property="meetingseq" jdbcType="VARCHAR" />
+        <id column="PROPOSALID" property="proposalid" jdbcType="VARCHAR" />
+        <result column="PROPOSAL_GROUP_ID" property="proposalGroupId" jdbcType="VARCHAR" />
+        <result column="PROPOSALNAME" property="proposalname" jdbcType="VARCHAR" />
+        <result column="VTYPE" property="vtype" jdbcType="VARCHAR" />
+        <result column="ELECTIONNUM" property="electionnum" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        MEETINGSEQ MEETINGSEQ, PROPOSALID PROPOSALID, PROPOSAL_GROUP_ID PROPOSAL_GROUP_ID, 
+        PROPOSALNAME PROPOSALNAME, VTYPE VTYPE, ELECTIONNUM ELECTIONNUM, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StMeetingProposalInfoMapper_mysql.Base_Column_List" />
+        from ST_MEETING_PROPOSAL_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StMeetingProposalInfoMapper_mysql.Base_Column_List" />
+        from ST_MEETING_PROPOSAL_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.StMeetingProposalInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StMeetingProposalInfoMapper_mysql.Base_Column_List" />
+        from ST_MEETING_PROPOSAL_INFO
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+          and PROPOSALID = #{proposalid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StMeetingProposalInfoKey" >
+        delete from ST_MEETING_PROPOSAL_INFO
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+          and PROPOSALID = #{proposalid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StMeetingProposalInfo" >
+        insert into ST_MEETING_PROPOSAL_INFO (MEETINGSEQ, PROPOSALID, PROPOSAL_GROUP_ID, 
+            PROPOSALNAME, VTYPE, ELECTIONNUM, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{meetingseq,jdbcType=VARCHAR}, #{proposalid,jdbcType=VARCHAR}, #{proposalGroupId,jdbcType=VARCHAR}, 
+            #{proposalname,jdbcType=VARCHAR}, #{vtype,jdbcType=VARCHAR}, #{electionnum,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StMeetingProposalInfo" >
+        insert into ST_MEETING_PROPOSAL_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="meetingseq != null" >
+                MEETINGSEQ,
+            </if>
+            <if test="proposalid != null" >
+                PROPOSALID,
+            </if>
+            <if test="proposalGroupId != null" >
+                PROPOSAL_GROUP_ID,
+            </if>
+            <if test="proposalname != null" >
+                PROPOSALNAME,
+            </if>
+            <if test="vtype != null" >
+                VTYPE,
+            </if>
+            <if test="electionnum != null" >
+                ELECTIONNUM,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="meetingseq != null" >
+                #{meetingseq,jdbcType=VARCHAR},
+            </if>
+            <if test="proposalid != null" >
+                #{proposalid,jdbcType=VARCHAR},
+            </if>
+            <if test="proposalGroupId != null" >
+                #{proposalGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="proposalname != null" >
+                #{proposalname,jdbcType=VARCHAR},
+            </if>
+            <if test="vtype != null" >
+                #{vtype,jdbcType=VARCHAR},
+            </if>
+            <if test="electionnum != null" >
+                #{electionnum,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StMeetingProposalInfo" >
+        insert into ST_MEETING_PROPOSAL_INFO(MEETINGSEQ, PROPOSALID, PROPOSAL_GROUP_ID, PROPOSALNAME, 
+        VTYPE, ELECTIONNUM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select MEETINGSEQ, PROPOSALID, PROPOSAL_GROUP_ID, PROPOSALNAME, 
+            VTYPE, ELECTIONNUM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from ST_MEETING_PROPOSAL_INFO
+             where 1 = 1 and MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR} and PROPOSALID = #{proposalid,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StMeetingProposalInfo" >
+        update ST_MEETING_PROPOSAL_INFO
+        <set >
+            <if test="proposalGroupId != null" >
+                PROPOSAL_GROUP_ID = #{proposalGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="proposalname != null" >
+                PROPOSALNAME = #{proposalname,jdbcType=VARCHAR},
+            </if>
+            <if test="vtype != null" >
+                VTYPE = #{vtype,jdbcType=VARCHAR},
+            </if>
+            <if test="electionnum != null" >
+                ELECTIONNUM = #{electionnum,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+          and PROPOSALID = #{proposalid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StMeetingProposalInfo" >
+        update ST_MEETING_PROPOSAL_INFO
+        set PROPOSAL_GROUP_ID = #{proposalGroupId,jdbcType=VARCHAR},
+            PROPOSALNAME = #{proposalname,jdbcType=VARCHAR},
+            VTYPE = #{vtype,jdbcType=VARCHAR},
+            ELECTIONNUM = #{electionnum,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+          and PROPOSALID = #{proposalid,jdbcType=VARCHAR}
+    </update>
+</mapper>

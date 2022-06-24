@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.common.dao.FinProduct001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.busicommon.common.dto.FinProduct" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <result column="FINPROD_ABBR" property="finprodAbbr" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="COUPON_SPECIES" property="couponSpecies" jdbcType="VARCHAR" />
+        <result column="CHL_FINPROD_ID" property="chlFinprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_MARKET_ID" property="finprodMarketId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PRICE" property="issuePrice" jdbcType="DECIMAL" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="BLN_AREA" property="blnArea" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+        <result column="ISSUER" property="issuer" jdbcType="VARCHAR" />
+        <result column="IDATE" property="idate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ACTMDATE" property="actmdate" jdbcType="DATE" />
+        <result column="IS_CHL" property="isChl" jdbcType="VARCHAR" />
+        <result column="IS_SUS" property="isSus" jdbcType="VARCHAR" />
+        <result column="IS_RIGHT" property="isRight" jdbcType="VARCHAR" />
+        <result column="P_FINPROD_ID" property="pFinprodId" jdbcType="VARCHAR" />
+        <result column="O_FINPROD_ID" property="oFinprodId" jdbcType="VARCHAR" />
+        <result column="O_FINPROD_TYPE" property="oFinprodType" jdbcType="VARCHAR" />
+        <result column="CAPI_INCOME_FEATURE" property="capiIncomeFeature" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="EXE_DATE" property="exeDate" jdbcType="VARCHAR" />
+        <result column="MATE_PRICE" property="matePrice" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, FINPROD_ABBR FINPROD_ABBR, FINPROD_NAME FINPROD_NAME,
+        PROFIT_TYPE PROFIT_TYPE, COUPON_SPECIES COUPON_SPECIES, CHL_FINPROD_ID CHL_FINPROD_ID,
+        FINPROD_MARKET_ID FINPROD_MARKET_ID, ISSUE_PRICE ISSUE_PRICE, ISSUE_AMT ISSUE_AMT,
+        CCY CCY, BLN_AREA BLN_AREA, TRADE_MARKET TRADE_MARKET, CALENDAR_ID CALENDAR_ID, ISSUE_TYPE ISSUE_TYPE,
+        ISSUER ISSUER, IDATE IDATE, VDATE VDATE, MDATE MDATE, ACTMDATE ACTMDATE, IS_CHL IS_CHL,
+        IS_SUS IS_SUS, IS_RIGHT IS_RIGHT, P_FINPROD_ID P_FINPROD_ID, O_FINPROD_ID O_FINPROD_ID,
+        O_FINPROD_TYPE O_FINPROD_TYPE, CAPI_INCOME_FEATURE CAPI_INCOME_FEATURE, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
+        REGIST_ORG REGIST_ORG, EXE_DATE EXE_DATE, MATE_PRICE MATE_PRICE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.FinProduct001Mapper.Base_Column_List" />
+        from FIN_PRODUCT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.FinProduct001Mapper.Base_Column_List" />
+        from FIN_PRODUCT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProductKey" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.FinProduct001Mapper.Base_Column_List" />
+        from FIN_PRODUCT
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProductKey" >
+        delete from FIN_PRODUCT
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProduct" >
+        insert into FIN_PRODUCT (FINPROD_ID, FINPROD_TYPE, FINPROD_ABBR,
+            FINPROD_NAME, PROFIT_TYPE, COUPON_SPECIES,
+            CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_PRICE,
+            ISSUE_AMT, CCY, BLN_AREA,
+            TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE,
+            ISSUER, IDATE, VDATE, MDATE,
+            ACTMDATE, IS_CHL, IS_SUS,
+            IS_RIGHT, P_FINPROD_ID, O_FINPROD_ID,
+            O_FINPROD_TYPE, CAPI_INCOME_FEATURE, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, REGIST_ORG, EXE_DATE,
+            MATE_PRICE)
+        values (#{finprodId,jdbcType=VARCHAR}, #{finprodType,jdbcType=VARCHAR}, #{finprodAbbr,jdbcType=VARCHAR},
+            #{finprodName,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{couponSpecies,jdbcType=VARCHAR},
+            #{chlFinprodId,jdbcType=VARCHAR}, #{finprodMarketId,jdbcType=VARCHAR}, #{issuePrice,jdbcType=DECIMAL},
+            #{issueAmt,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, #{blnArea,jdbcType=VARCHAR},
+            #{tradeMarket,jdbcType=VARCHAR}, #{calendarId,jdbcType=VARCHAR}, #{issueType,jdbcType=VARCHAR},
+            #{issuer,jdbcType=VARCHAR}, #{idate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE},
+            #{actmdate,jdbcType=DATE}, #{isChl,jdbcType=VARCHAR}, #{isSus,jdbcType=VARCHAR},
+            #{isRight,jdbcType=VARCHAR}, #{pFinprodId,jdbcType=VARCHAR}, #{oFinprodId,jdbcType=VARCHAR},
+            #{oFinprodType,jdbcType=VARCHAR}, #{capiIncomeFeature,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{registOrg,jdbcType=VARCHAR}, #{exeDate,jdbcType=VARCHAR},
+            #{matePrice,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProduct" >
+        insert into FIN_PRODUCT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="finprodAbbr != null" >
+                FINPROD_ABBR,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES,
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID,
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID,
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE,
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID,
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE,
+            </if>
+            <if test="issuer != null" >
+                ISSUER,
+            </if>
+            <if test="idate != null" >
+                IDATE,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="actmdate != null" >
+                ACTMDATE,
+            </if>
+            <if test="isChl != null" >
+                IS_CHL,
+            </if>
+            <if test="isSus != null" >
+                IS_SUS,
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT,
+            </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID,
+            </if>
+            <if test="oFinprodId != null" >
+                O_FINPROD_ID,
+            </if>
+            <if test="oFinprodType != null" >
+                O_FINPROD_TYPE,
+            </if>
+            <if test="capiIncomeFeature != null" >
+                CAPI_INCOME_FEATURE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG,
+            </if>
+            <if test="exeDate != null" >
+                EXE_DATE,
+            </if>
+            <if test="matePrice != null" >
+                MATE_PRICE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodAbbr != null" >
+                #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="couponSpecies != null" >
+                #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="chlFinprodId != null" >
+                #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePrice != null" >
+                #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarId != null" >
+                #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueType != null" >
+                #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuer != null" >
+                #{issuer,jdbcType=VARCHAR},
+            </if>
+            <if test="idate != null" >
+                #{idate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="actmdate != null" >
+                #{actmdate,jdbcType=DATE},
+            </if>
+            <if test="isChl != null" >
+                #{isChl,jdbcType=VARCHAR},
+            </if>
+            <if test="isSus != null" >
+                #{isSus,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null" >
+                #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="pFinprodId != null" >
+                #{pFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="oFinprodId != null" >
+                #{oFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="oFinprodType != null" >
+                #{oFinprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="capiIncomeFeature != null" >
+                #{capiIncomeFeature,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="registOrg != null" >
+                #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="exeDate != null" >
+                #{exeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="matePrice != null" >
+                #{matePrice,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProduct" >
+        insert into FIN_PRODUCT(FINPROD_ID, FINPROD_TYPE, FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE,
+        COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_PRICE, ISSUE_AMT, CCY, BLN_AREA,
+        TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, ISSUER, IDATE, VDATE, MDATE, ACTMDATE, IS_CHL,
+        IS_SUS, IS_RIGHT, P_FINPROD_ID, O_FINPROD_ID, O_FINPROD_TYPE, CAPI_INCOME_FEATURE,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, REGIST_ORG, EXE_DATE,
+        MATE_PRICE)
+        select FINPROD_ID, FINPROD_TYPE, FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE,
+            COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, ISSUE_PRICE, ISSUE_AMT, CCY, BLN_AREA,
+            TRADE_MARKET, CALENDAR_ID, ISSUE_TYPE, ISSUER, IDATE, VDATE, MDATE, ACTMDATE, IS_CHL,
+            IS_SUS, IS_RIGHT, P_FINPROD_ID, O_FINPROD_ID, O_FINPROD_TYPE, CAPI_INCOME_FEATURE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, REGIST_ORG, EXE_DATE,
+            MATE_PRICE
+             from FIN_PRODUCT
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProduct" >
+        update FIN_PRODUCT
+        <set >
+            <if test="finprodAbbr != null" >
+                FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES = #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="chlFinprodId != null" >
+                CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodMarketId != null" >
+                FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE = #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="blnArea != null" >
+                BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="issueType != null" >
+                ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+            </if>
+            <if test="issuer != null" >
+                ISSUER = #{issuer,jdbcType=VARCHAR},
+            </if>
+            <if test="idate != null" >
+                IDATE = #{idate,jdbcType=DATE},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="actmdate != null" >
+                ACTMDATE = #{actmdate,jdbcType=DATE},
+            </if>
+            <if test="isChl != null" >
+                IS_CHL = #{isChl,jdbcType=VARCHAR},
+            </if>
+            <if test="isSus != null" >
+                IS_SUS = #{isSus,jdbcType=VARCHAR},
+            </if>
+            <if test="isRight != null" >
+                IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="oFinprodId != null" >
+                O_FINPROD_ID = #{oFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="oFinprodType != null" >
+                O_FINPROD_TYPE = #{oFinprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="capiIncomeFeature != null" >
+                CAPI_INCOME_FEATURE = #{capiIncomeFeature,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="exeDate != null" >
+                EXE_DATE = #{exeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="matePrice != null" >
+                MATE_PRICE = #{matePrice,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.FinProduct" >
+        update FIN_PRODUCT
+        set FINPROD_ABBR = #{finprodAbbr,jdbcType=VARCHAR},
+            FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            COUPON_SPECIES = #{couponSpecies,jdbcType=VARCHAR},
+            CHL_FINPROD_ID = #{chlFinprodId,jdbcType=VARCHAR},
+            FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR},
+            ISSUE_PRICE = #{issuePrice,jdbcType=DECIMAL},
+            ISSUE_AMT = #{issueAmt,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            BLN_AREA = #{blnArea,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+            ISSUER = #{issuer,jdbcType=VARCHAR},
+            IDATE = #{idate,jdbcType=DATE},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            ACTMDATE = #{actmdate,jdbcType=DATE},
+            IS_CHL = #{isChl,jdbcType=VARCHAR},
+            IS_SUS = #{isSus,jdbcType=VARCHAR},
+            IS_RIGHT = #{isRight,jdbcType=VARCHAR},
+            P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
+            O_FINPROD_ID = #{oFinprodId,jdbcType=VARCHAR},
+            O_FINPROD_TYPE = #{oFinprodType,jdbcType=VARCHAR},
+            CAPI_INCOME_FEATURE = #{capiIncomeFeature,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            EXE_DATE = #{exeDate,jdbcType=VARCHAR},
+            MATE_PRICE = #{matePrice,jdbcType=DECIMAL}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+    </update>
+</mapper>

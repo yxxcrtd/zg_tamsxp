@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValtblImportHisTraceMapper_mysql" >
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskOutValtblImportHis" >
+        insert into VALTBL_IMPORT_HIS_TRACE (FILE_NAME,FILE_PATH,
+            PORTFOLIO_ID, PORTFOLIO_NAME, VALDATE, IMPDATE, IMPORT_TYPE,
+            ERROR_CODE, START_TIME, END_TIME, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        values (#{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR},
+            #{portfolioName,jdbcType=VARCHAR}, #{valdate,jdbcType=DATE}, #{impdate,jdbcType=DATE},
+            #{importType,jdbcType=VARCHAR}, #{errorCode,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
+            #{endTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+</mapper>

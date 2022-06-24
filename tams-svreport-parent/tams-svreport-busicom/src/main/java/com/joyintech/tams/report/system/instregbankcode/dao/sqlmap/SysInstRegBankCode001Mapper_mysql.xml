@@ -12,6 +12,9 @@
         , INSITITUTE_CODE as insitituteCode
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
         ,FREGIST_BANK_CODE as fregistBankCode
+        /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
+        ,belogCodeCBRC
+        /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
         from
         CHB_ORG_REGIST_BANK_CODE
         where
@@ -71,6 +74,5 @@
         from CHB_ORG_REGIST_BANK_CODE
         where status = 'E'
         and pbc_bank_code = #{pbcBankCode,jdbcType=VARCHAR}
-         /*LIMIT  1*/
     </select>
 </mapper>

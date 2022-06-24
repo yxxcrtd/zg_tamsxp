@@ -595,29 +595,32 @@ public class PbcMonthReportDetailAssetUtil {
         pbcMonthReportDetailAssetMapper.deleteDetail(DateUtil.getLastDayOfLayMonth(generateDate,"yyyyMM"));
         //部分数据的统一处理
         prdPositionList = this.insertBefore(prdPositionList,generateDate);
-
-
         //插入list大小
         int dataCount = prdPositionList.size();
-        //若需要插入的数据比最大插入的数据少，则直接全部插入
-        if (dataCount <= maxDataCountOneTime) {
-            dataCount = pbcMonthReportDetailAssetMapper.insertBatch(prdPositionList);
-            return dataCount;
-        }
-
-        List<PbcMonthReportDetailAsset> newDataList = new ArrayList<PbcMonthReportDetailAsset>();
-        newDataList.addAll(prdPositionList);
-
         // 分批存入
         int part = dataCount / maxDataCountOneTime; // 分批数
         int insertCount = 0;
-        for (int i = 0; i < part; i++ ) {
-            insertCount += pbcMonthReportDetailAssetMapper.insertBatch(newDataList.subList(0, maxDataCountOneTime));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-            insertCount += pbcMonthReportDetailAssetMapper.insertBatch(newDataList);
+        if(CollectionUtils.isNotEmpty(prdPositionList)){
+
+            //若需要插入的数据比最大插入的数据少，则直接全部插入
+            if (dataCount <= maxDataCountOneTime) {
+                dataCount = pbcMonthReportDetailAssetMapper.insertBatch(prdPositionList);
+                return dataCount;
+            }
+
+            List<PbcMonthReportDetailAsset> newDataList = new ArrayList<PbcMonthReportDetailAsset>();
+            newDataList.addAll(prdPositionList);
+
+
+
+            for (int i = 0; i < part; i++ ) {
+                insertCount += pbcMonthReportDetailAssetMapper.insertBatch(newDataList.subList(0, maxDataCountOneTime));
+                newDataList.subList(0, maxDataCountOneTime).clear();
+            }
+            // 最后剩下的数据
+            if (CollectionUtils.isNotEmpty(newDataList)) {
+                insertCount += pbcMonthReportDetailAssetMapper.insertBatch(newDataList);
+            }
         }
 
 

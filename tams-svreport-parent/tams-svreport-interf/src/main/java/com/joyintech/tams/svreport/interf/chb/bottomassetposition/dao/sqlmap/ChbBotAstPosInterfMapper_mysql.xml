@@ -1,629 +1,828 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.bottomassetposition.dao.ChbBotAstPosInterfMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition" >
-    <id column="POS_ID" property="posId" jdbcType="CHAR" />
-    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
-    <result column="POS_DATE" property="posDate" jdbcType="TIMESTAMP" />
-    <result column="PLAN_ASSET_ID" property="planAssetId" jdbcType="VARCHAR" />
-    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR" />
-    <result column="TOTAL_NUM" property="totalNum" jdbcType="DECIMAL" />
-    <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
-    <result column="UNINVEST_CASH" property="uninvestCash" jdbcType="DECIMAL" />
-    <result column="POS_NUM" property="posNum" jdbcType="DECIMAL" />
-    <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL" />
-    <result column="ISFINAPLAN" property="isfinaplan" jdbcType="CHAR" />
-    <result column="ISCHL" property="ischl" jdbcType="CHAR" />
-    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
-    <result column="STATUS" property="status" jdbcType="VARCHAR" />
-    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
-    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
+    <id column="POS_ID" property="posId" jdbcType="CHAR"/>
+    <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR"/>
+    <result column="POS_DATE" property="posDate" jdbcType="TIMESTAMP"/>
+    <result column="PLAN_ASSET_ID" property="planAssetId" jdbcType="VARCHAR"/>
+    <result column="ASSET_CODE" property="assetCode" jdbcType="VARCHAR"/>
+    <result column="TOTAL_NUM" property="totalNum" jdbcType="DECIMAL"/>
+    <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL"/>
+    <result column="UNINVEST_CASH" property="uninvestCash" jdbcType="DECIMAL"/>
+    <result column="POS_NUM" property="posNum" jdbcType="DECIMAL"/>
+    <result column="POS_AMT" property="posAmt" jdbcType="DECIMAL"/>
+    <result column="ISFINAPLAN" property="isfinaplan" jdbcType="CHAR"/>
+    <result column="ISCHL" property="ischl" jdbcType="CHAR"/>
+    <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR"/>
+    <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR"/>
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR"/>
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR"/>
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR"/>
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR"/>
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR"/>
+    <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL"/>
+    <result column="CASH_FLAG" property="cashFlag" jdbcType="VARCHAR"/>
   </resultMap>
-  <sql id="Base_Column_List" >
-    POS_ID, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, ISSUE_AMT, 
-    UNINVEST_CASH, POS_NUM, POS_AMT, ISFINAPLAN, ISCHL, WORKFLOW_ID, STATUS, ORG_CODE, 
-    DEPT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DATASOURCE
-  </sql>
+  <sql id="Base_Column_List">
+        POS_ID, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, ISSUE_AMT,
+        UNINVEST_CASH, POS_NUM, POS_AMT, ISFINAPLAN, ISCHL, WORKFLOW_ID, STATUS, ORG_CODE,
+        DEPT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, DATASOURCE
+    </sql>
 
-   <select id="selectByPosdate" parameterType="java.util.Date" resultMap="BaseResultMap"
-  resultSetType="FORWARD_ONLY" fetchSize="1000">
-SELECT asset.* ,
-  ifnull(SUM(sub.SMV),0) UNINVEST_CASH,
-  GREATEST(asset.UPDATE_TIME1,ifnull(asset.UPDATE_TIME2,asset.UPDATE_TIME1)) UPDATE_TIME
-FROM
-  (SELECT sub.VAL_DATE POS_DATE,
-    sub.PTL_ID PLAN_ASSET_ID,
-    info.FINPROD_MARKET_ID ASSET_CODE,
-    info2.REP_CCY CCY,
-    ifnull(SUM(sub.SECURITY_QUANTITY),0)*(case fp.FINPROD_TYPE2 when 'F01' then 100 else 1 end) POS_NUM,
-    ifnull(SUM(sub.SMV),0) POS_AMT,
-    sumsub.TOTAL_NUM TOTAL_NUM,
-    max(ifnull(sub.CREATE_TIME,sub.UPDATE_TIME)) UPDATE_TIME1,
-    sumsub.UPDATE_TIME UPDATE_TIME2
-  FROM RSK_VALTBL_ASSET_SUB sub
-   /*获取底层资产的公开市场代码*/
-  LEFT JOIN REP_ASSET_DEPT info
-  ON info.REP_FINPROD_ID = sub.FINPROD_ID
-   /*判断是否为债券*/
-  LEFT JOIN FIN_PRODUCT fp
-  ON fp.FINPROD_ID = sub.FINPROD_ID
-    /*获取资管计划币种*/
-  LEFT JOIN REP_ASSET_DEPT info2
-  ON info2.FINPROD_MARKET_ID = sub.PTL_ID
-  /*判断资管计划是否存在*/
-  LEFT JOIN FIN_PRODUCT fp2
-  ON fp2.FINPROD_MARKET_ID = sub.PTL_ID
-  LEFT JOIN
-    (SELECT ifnull(SUM(SMV),0) TOTAL_NUM,
-      VAL_DATE,
-      PTL_ID,
-       max(ifnull(CREATE_TIME,UPDATE_TIME)) UPDATE_TIME
-    FROM RSK_VALTBL_SUM_ASSET_SUB
-    WHERE SUB_CODE = '601'
-    GROUP BY VAL_DATE,
-      PTL_ID
-    ) sumsub
-  ON sumsub.VAL_DATE           = sub.VAL_DATE
-  AND sub.PTL_ID               = sumsub.PTL_ID
-  WHERE 1                      =1
-  AND sub.VAL_DATE             = #{batchTime,jdbcType=TIMESTAMP}
-  AND sub.FINPROD_ID          IS NOT NULL
-  --AND info2.FINPROD_MARKET_ID IS NOT NULL
- and fp2.FINPROD_MARKET_ID is not null
-  GROUP BY sub.VAL_DATE,
-    sub.PTL_ID,
-    info.FINPROD_MARKET_ID,
-    sumsub.TOTAL_NUM,
-    info2.REP_CCY,
-    fp.FINPROD_TYPE2,
-    sumsub.UPDATE_TIME
-  ) asset
-LEFT JOIN RSK_VALTBL_ASSET_SUB sub
-ON sub.VAL_DATE   = asset.POS_DATE
-AND sub.PTL_ID    = asset.PLAN_ASSET_ID
-AND sub.SUB_CODE IN ('10020101','1031','1021')
-GROUP BY asset.POS_DATE,
-  asset.PLAN_ASSET_ID,
-  asset.ASSET_CODE,
-  asset.POS_NUM,
-  asset.POS_AMT,
-  asset.TOTAL_NUM,
-  asset.CCY,
-  asset.UPDATE_TIME1,
-  asset.UPDATE_TIME2
-  </select>
+  <select id="selectByPosdate" parameterType="java.util.Date" resultMap="BaseResultMap"
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
+        SELECT asset.* ,
+        ifnull(SUM(sub.SMV),0) UNINVEST_CASH,
+        GREATEST(asset.UPDATE_TIME1,ifnull(asset.UPDATE_TIME2,asset.UPDATE_TIME1)) UPDATE_TIME
+        FROM
+        (SELECT sub.VAL_DATE POS_DATE,
+        sub.PTL_ID PLAN_ASSET_ID,
+        info.FINPROD_MARKET_ID ASSET_CODE,
+        info2.REP_CCY CCY,
+        ifnull(SUM(sub.SECURITY_QUANTITY),0)*(case fp.FINPROD_TYPE2 when 'F01' then 100 else 1 end) POS_NUM,
+        ifnull(SUM(sub.SMV),0) POS_AMT,
+        sumsub.TOTAL_NUM TOTAL_NUM,
+        max(ifnull(sub.CREATE_TIME,sub.UPDATE_TIME)) UPDATE_TIME1,
+        sumsub.UPDATE_TIME UPDATE_TIME2
+        FROM RSK_VALTBL_ASSET_SUB sub
+        /*获取底层资产的公开市场代码*/
+        LEFT JOIN REP_ASSET_DEPT info
+        ON info.REP_FINPROD_ID = sub.FINPROD_ID
+        /*判断是否为债券*/
+        LEFT JOIN FIN_PRODUCT fp
+        ON fp.FINPROD_ID = sub.FINPROD_ID
+        /*获取资管计划币种*/
+        LEFT JOIN REP_ASSET_DEPT info2
+        ON info2.FINPROD_MARKET_ID = sub.PTL_ID
+        /*判断资管计划是否存在*/
+        LEFT JOIN FIN_PRODUCT fp2
+        ON fp2.FINPROD_MARKET_ID = sub.PTL_ID
+        LEFT JOIN
+        (SELECT ifnull(SUM(SMV),0) TOTAL_NUM,
+        VAL_DATE,
+        PTL_ID,
+        max(ifnull(CREATE_TIME,UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_SUM_ASSET_SUB
+        WHERE SUB_CODE = '601'
+        GROUP BY VAL_DATE,
+        PTL_ID
+        ) sumsub
+        ON sumsub.VAL_DATE = sub.VAL_DATE
+        AND sub.PTL_ID = sumsub.PTL_ID
+        WHERE 1 =1
+        AND sub.VAL_DATE = #{batchTime,jdbcType=TIMESTAMP}
+        AND sub.FINPROD_ID IS NOT NULL
+        --AND info2.FINPROD_MARKET_ID IS NOT NULL
+        and fp2.FINPROD_MARKET_ID is not null
+        GROUP BY sub.VAL_DATE,
+        sub.PTL_ID,
+        info.FINPROD_MARKET_ID,
+        sumsub.TOTAL_NUM,
+        info2.REP_CCY,
+        fp.FINPROD_TYPE2,
+        sumsub.UPDATE_TIME
+        ) asset
+        LEFT JOIN RSK_VALTBL_ASSET_SUB sub
+        ON sub.VAL_DATE = asset.POS_DATE
+        AND sub.PTL_ID = asset.PLAN_ASSET_ID
+        AND sub.SUB_CODE IN ('10020101','1031','1021')
+        GROUP BY asset.POS_DATE,
+        asset.PLAN_ASSET_ID,
+        asset.ASSET_CODE,
+        asset.POS_NUM,
+        asset.POS_AMT,
+        asset.TOTAL_NUM,
+        asset.CCY,
+        asset.UPDATE_TIME1,
+        asset.UPDATE_TIME2
+    </select>
   <select id="isUpdated" parameterType="java.util.Date" resultType="java.util.Date">
-   select distinct VAL_DATE from(
-	   select 
-	     	VAL_DATE
-	    from RSK_VALTBL_ASSET_SUB
-	    where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
-	    union all
-	    select 
-     		VAL_DATE
-	    from RSK_VALTBL_SUM_ASSET_SUB
-	    where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
-   ) t1
-   
-  </select>
+        select distinct VAL_DATE from(
+        select
+        VAL_DATE
+        from RSK_VALTBL_ASSET_SUB
+        where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+        union all
+        select
+        VAL_DATE
+        from RSK_VALTBL_SUM_ASSET_SUB
+        where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+        ) t1
+
+    </select>
 
   <delete id="deleteByPosdate" parameterType="java.util.Date">
-    delete from CHB_BOT_AST_POS
-    where POS_DATE = #{batchTime,jdbcType=TIMESTAMP}
-    and DATASOURCE = '16'/*为避免误删除业务数据维护导入的数据，增加此条件*/
-  </delete>
+        delete from CHB_BOT_AST_POS
+        where POS_DATE = #{batchTime,jdbcType=TIMESTAMP}
+        and DATASOURCE = '16'/*为避免误删除业务数据维护导入的数据，增加此条件*/
+    </delete>
 
   <insert id="insertBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
-    insert into CHB_BOT_AST_POS (POS_ID, ISSUE_PARTY_ID, POS_DATE, 
-      PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, 
-      ISSUE_AMT, UNINVEST_CASH, POS_NUM, 
-      POS_AMT, ISFINAPLAN, ISCHL, 
-      WORKFLOW_ID, STATUS, ORG_CODE, 
-      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
-      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-      DATASOURCE
-      )
-      <foreach collection="listChbBotAstPosition" item="dto" open=" select * from (select " close="from dual)" separator="from dual union all select ">
-      #{dto.posId,jdbcType=CHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, #{dto.posDate,jdbcType=TIMESTAMP}, 
-      #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=VARCHAR}, #{dto.totalNum,jdbcType=DECIMAL}, 
-      #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL}, #{dto.posNum,jdbcType=DECIMAL}, 
-      #{dto.posAmt,jdbcType=DECIMAL}, #{dto.isfinaplan,jdbcType=CHAR}, #{dto.ischl,jdbcType=CHAR}, 
-      #{dto.workflowId,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR}, #{dto.orgCode,jdbcType=VARCHAR}, 
-      #{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR}, 
-      #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR}, #{dto.updateTime,jdbcType=TIMESTAMP}, 
+    insert into CHB_BOT_AST_POS (POS_ID, ISSUE_PARTY_ID, POS_DATE,
+    PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
+    ISSUE_AMT, UNINVEST_CASH, POS_NUM,
+    POS_AMT, ISFINAPLAN, ISCHL,
+    WORKFLOW_ID, STATUS, ORG_CODE,
+    DEPT_CODE, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+    DATASOURCE
+    )
+    <foreach collection="listChbBotAstPosition" item="dto" open=" select * from (select " close="from dual)"
+             separator="from dual union all select ">
+      #{dto.posId,jdbcType=CHAR}, #{dto.issuePartyId,jdbcType=VARCHAR}, #{dto.posDate,jdbcType=TIMESTAMP},
+      #{dto.planAssetId,jdbcType=VARCHAR}, #{dto.assetCode,jdbcType=VARCHAR}, #{dto.totalNum,jdbcType=DECIMAL},
+      #{dto.issueAmt,jdbcType=DECIMAL}, #{dto.uninvestCash,jdbcType=DECIMAL}, #{dto.posNum,jdbcType=DECIMAL},
+      #{dto.posAmt,jdbcType=DECIMAL}, #{dto.isfinaplan,jdbcType=CHAR}, #{dto.ischl,jdbcType=CHAR},
+      #{dto.workflowId,jdbcType=VARCHAR}, #{dto.status,jdbcType=VARCHAR}, #{dto.orgCode,jdbcType=VARCHAR},
+      #{dto.deptCode,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR}, #{dto.createDept,jdbcType=VARCHAR},
+      #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR},
+      #{dto.updateTime,jdbcType=TIMESTAMP},
       #{dto.datasource,jdbcType=VARCHAR}
-      </foreach>
+    </foreach>
   </insert>
 
   <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
-    insert into CHB_BOT_AST_POS (POS_ID, ISSUE_PARTY_ID, POS_DATE, 
-      PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, 
-      ISSUE_AMT, UNINVEST_CASH, POS_NUM, 
-      POS_AMT, ISFINAPLAN, ISCHL, 
-      WORKFLOW_ID, STATUS, ORG_CODE, 
-      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
-      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-      DATASOURCE
-      )
-     values(
-      #{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP}, 
-      #{planAssetId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{totalNum,jdbcType=DECIMAL}, 
-      #{issueAmt,jdbcType=DECIMAL}, #{uninvestCash,jdbcType=DECIMAL}, #{posNum,jdbcType=DECIMAL}, 
-      #{posAmt,jdbcType=DECIMAL}, #{isfinaplan,jdbcType=CHAR}, #{ischl,jdbcType=CHAR}, 
-      #{workflowId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
-      #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-      NOW(), #{updateUser,jdbcType=VARCHAR}, NOW(),
-      #{datasource,jdbcType=VARCHAR}
-      )
-  </insert>
+        insert into CHB_BOT_AST_POS (POS_ID, ISSUE_PARTY_ID, POS_DATE,
+        PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
+        ISSUE_AMT, UNINVEST_CASH, POS_NUM,
+        POS_AMT, ISFINAPLAN, ISCHL,
+        WORKFLOW_ID, STATUS, ORG_CODE,
+        DEPT_CODE, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        DATASOURCE,INT_AMT,CASH_FLAG
+        )
+        values(
+        #{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP},
+        #{planAssetId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{totalNum,jdbcType=DECIMAL},
+        #{issueAmt,jdbcType=DECIMAL}, #{uninvestCash,jdbcType=DECIMAL}, #{posNum,jdbcType=DECIMAL},
+        #{posAmt,jdbcType=DECIMAL}, #{isfinaplan,jdbcType=CHAR}, #{ischl,jdbcType=CHAR},
+        #{workflowId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+        #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+        NOW(), #{updateUser,jdbcType=VARCHAR}, NOW(),
+        #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR}
+        )
+    </insert>
 
   <delete id="deleteBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
-      begin
-     <foreach collection="listChbBotAstPosition" item="item" index="index" separator=";">
-	     delete from CHB_BOT_AST_POS
-	     where PLAN_ASSET_ID = #{item.posId,jdbcType=VARCHAR}  and POS_DATE = #{item.posDate,jdbcType=TIMESTAMP}
-	     	and ASSET_CODE = #{item.assetCode,jdbcType=VARCHAR}
-     </foreach>
-    ;end;
-</delete>
+    /*begin*/
+    <foreach collection="listChbBotAstPosition" item="item" index="index" separator=";">
+      delete from CHB_BOT_AST_POS
+      where PLAN_ASSET_ID = #{item.posId,jdbcType=VARCHAR} and POS_DATE = #{item.posDate,jdbcType=TIMESTAMP}
+      and ASSET_CODE = #{item.assetCode,jdbcType=VARCHAR}
+    </foreach>
+    ;/*end;*/
+  </delete>
 
   <delete id="deleteByUpdateTime" parameterType="java.lang.String">
-    delete from CHB_BOT_AST_POS
-    where DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
-  </delete>
-  
+        delete from CHB_BOT_AST_POS
+        where DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+    </delete>
+
   <insert id="mergeData"
-		parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
-		MERGE INTO CHB_BOT_AST_POS CII
-		USING (
-		<foreach collection="newDataList" item="item" open="select * from("
-			close=")" separator="union all">
-	SELECT
-	  #{item.posId,jdbcType=CHAR} POS_ID, 
-	  #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID, 
-	  #{item.posDate,jdbcType=TIMESTAMP} POS_DATE, 
+          parameterType="com.joyintech.tams.common.base.entity.ChbBotAstPosition">
+    insert into CHB_BOT_AST_POS(POS_ID, ISSUE_PARTY_ID, POS_DATE,
+    PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
+    ISSUE_AMT, UNINVEST_CASH, POS_NUM,
+    POS_AMT, ISFINAPLAN, ISCHL,
+    WORKFLOW_ID, STATUS, ORG_CODE,
+    DEPT_CODE, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+    DATASOURCE)
+    select POS_ID, ISSUE_PARTY_ID, POS_DATE,
+    PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
+    ISSUE_AMT, UNINVEST_CASH, POS_NUM,
+    POS_AMT, ISFINAPLAN, ISCHL,
+    WORKFLOW_ID, STATUS, ORG_CODE,
+    DEPT_CODE, CREATE_USER, CREATE_DEPT,
+    CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+    DATASOURCE from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item" separator="union all">
+      SELECT
+      #{item.posId,jdbcType=CHAR} POS_ID,
+      #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+      #{item.posDate,jdbcType=TIMESTAMP} POS_DATE,
       #{item.planAssetId,jdbcType=VARCHAR} PLAN_ASSET_ID,
-      #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE, 
-      #{item.totalNum,jdbcType=DECIMAL} TOTAL_NUM, 
-      #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT, 
-      #{item.uninvestCash,jdbcType=DECIMAL} UNINVEST_CASH, 
-      #{item.posNum,jdbcType=DECIMAL} POS_NUM, 
-      #{item.posAmt,jdbcType=DECIMAL} POS_AMT, 
-      #{item.isfinaplan,jdbcType=CHAR} ISFINAPLAN, 
-      #{item.ischl,jdbcType=CHAR} ISCHL, 
+      #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+      #{item.totalNum,jdbcType=DECIMAL} TOTAL_NUM,
+      #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT,
+      #{item.uninvestCash,jdbcType=DECIMAL} UNINVEST_CASH,
+      #{item.posNum,jdbcType=DECIMAL} POS_NUM,
+      #{item.posAmt,jdbcType=DECIMAL} POS_AMT,
+      #{item.isfinaplan,jdbcType=CHAR} ISFINAPLAN,
+      #{item.ischl,jdbcType=CHAR} ISCHL,
       #{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
-      #{item.status,jdbcType=VARCHAR} STATUS, 
-      #{item.orgCode,jdbcType=VARCHAR} ORG_CODE, 
-      #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE, 
+      #{item.status,jdbcType=VARCHAR} STATUS,
+      #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+      #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
       #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
       #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT ,
       NOW() CREATE_TIME,
-      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
       NOW() UPDATE_TIME,
       #{item.datasource,jdbcType=VARCHAR} DATASOURCE
-	FROM DUAL
-		</foreach>
-		) TEMP
-		<!-- 业务主键匹配 -->
-		ON(CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID 
-		and CII.ASSET_CODE = TEMP.ASSET_CODE
-		and CII.POS_DATE = TEMP.POS_DATE)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE
-		SET  
-		 CII.POS_ID = TEMP.POS_ID,
-		 CII.ISSUE_PARTY_ID = TEMP.ISSUE_PARTY_ID,
-		 CII.TOTAL_NUM = TEMP.TOTAL_NUM,
-		 CII.ISSUE_AMT = TEMP.ISSUE_AMT,
-		 CII.UNINVEST_CASH = TEMP.UNINVEST_CASH,
-		 CII.POS_NUM = TEMP.POS_NUM,
-		 CII.POS_AMT = TEMP.POS_AMT,
-		 CII.ISFINAPLAN = TEMP.ISFINAPLAN,
-		 CII.ISCHL = TEMP.ISCHL,
-		 CII.WORKFLOW_ID = TEMP.WORKFLOW_ID,
-		 CII.STATUS = TEMP.STATUS,
-		 CII.ORG_CODE = TEMP.ORG_CODE,
-		 CII.DEPT_CODE = TEMP.DEPT_CODE,
-		 CII.CREATE_USER = TEMP.CREATE_USER,
-		 CII.CREATE_DEPT = TEMP.CREATE_DEPT,
-		 CII.CREATE_TIME = TEMP.CREATE_TIME,
-		 CII.UPDATE_USER = TEMP.UPDATE_USER,
-		 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-		 CII.DATASOURCE = TEMP.DATASOURCE
-		<!-- 未匹配到这插入 -->
-		WHEN NOT MATCHED THEN INSERT (POS_ID, ISSUE_PARTY_ID, POS_DATE, 
-      PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, 
-      ISSUE_AMT, UNINVEST_CASH, POS_NUM, 
-      POS_AMT, ISFINAPLAN, ISCHL, 
-      WORKFLOW_ID, STATUS, ORG_CODE, 
-      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
-      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-      DATASOURCE)
-		VALUES( TEMP.POS_ID,
-		 TEMP.ISSUE_PARTY_ID,
-		 TEMP.POS_DATE,
-		 TEMP.PLAN_ASSET_ID,
-		 TEMP.ASSET_CODE,
-		 TEMP.TOTAL_NUM,
-		 TEMP.ISSUE_AMT,
-		 TEMP.UNINVEST_CASH,
-		 TEMP.POS_NUM,
-		 TEMP.POS_AMT,
-		 TEMP.ISFINAPLAN,
-		 TEMP.ISCHL,
-		 TEMP.WORKFLOW_ID,
-		 TEMP.STATUS,
-		 TEMP.ORG_CODE,
-		 TEMP.DEPT_CODE,
-		 TEMP.CREATE_USER,
-		 TEMP.CREATE_DEPT,
-		 TEMP.CREATE_TIME,
-		 TEMP.UPDATE_USER,
-		 TEMP.UPDATE_TIME,
-		 TEMP.DATASOURCE
-			)
-	</insert>
-	
-	<select id="selectPtlChlBtmByPosdate" parameterType="java.util.Map" resultMap="BaseResultMap"
-  resultSetType="FORWARD_ONLY" fetchSize="1000">
-        select * from (
-        select val.cdate as POS_DATE,
-        dept.FINPROD_MARKET_ID as PLAN_ASSET_ID,
-        dept1.FINPROD_MARKET_ID as ASSET_CODE,
-        sum(ifnull(bok.O_AMT,0)) as TOTAL_NUM,
-        sum(ifnull(bok.O_AMT,0)*(case ifnull(info.ccy,trd.ccy) when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as ISSUE_AMT,
-        sum(ifnull(pos.UNINVEST_CASH,0)) as UNINVEST_CASH,
-        <!--       sum(ifnull(val.SHARE_AMT,0)) as POS_NUM, -->
-        SUM(ifnull(val.share_amt,0)*(case info1.finprod_type2 when 'F01' then 100 else 1 end))AS POS_NUM,<!-- 如果是债券则需要乘以100 -->
-        sum((ifnull(val.TDY_FLOAT_INGPL,0)+ifnull(val.DSC_COST_AMT,0)+ifnull(val.TDY_INTINCEXP,0)+ifnull(val.DELAY_PAY_AMT,0))*
-        (case info1.ccy when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as POS_AMT,
-        '02' as ISCHL,
-        GREATEST(max(ifnull(val.UPDATE_TIME,val.CREATE_TIME)),max(ifnull(bok.UPDATE_TIME,date'1900-01-01'))) UPDATE_TIME
-        from ptl_sec_valution val
-        left join fin_product fp1
-        on fp1.FINPROD_ID=val.FINPROD_ID
-        left join rep_asset_dept dept
-        on dept.REP_FINPROD_ID=val.SEC_ACCT_ID
-        left join rep_asset_dept dept1
-        on dept1.REP_FINPROD_ID=ifnull(fp1.P_FINPROD_ID,fp1.FINPROD_ID)
-        left join (
-        select re.CHANNEL_ID SEC_ACCT_ID,
-        sum(ifnull(bok.B_AMT,0)) O_AMT,<!-- TOTAL_NUM 总发行数量：由O_AMT改成取B_AMT -->
-        max(ifnull(bok.UPDATE_TIME,bok.CREATE_TIME)) as UPDATE_TIME
-        from  bok_balance bok
-        left join BOK_BOOKSET_RE re
-        on bok.BOOKSET_ID=re.BOOKSET_ID_SON
-        and bok.SUBJECT_NO='4001'
-        and DATE_FORMAT(bok.BALANCE_DATE,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
-        where re.CHANNEL_ID is not null
-        group by re.CHANNEL_ID
-        )
-        bok
-        on bok.SEC_ACCT_ID=val.SEC_ACCT_ID
-        left join (
-        select pos.CHL_FINPROD_ID as SEC_ACCT_ID,sum(ifnull(pos.AMOUNT,0)*(case pos.ccy when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as UNINVEST_CASH
-        from PTL_CASH_POSITION pos
-        left join (
-        SELECT
-        BASIS_CYY ccyOriginal,
-        QUOT_CYY ccyConvert,
-        TRADE_DATE publishDate,
-        case when #{status,jdbcType=VARCHAR} = '02'
-        then
-        CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '01'
-        then
-        OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '03'
-        then
-        HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '04'
-        then
-        LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '05'
-        then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        end yeid
-        FROM MST_EXCHARGE_QUOTE info
-        where
-        info.QUOT_CYY = 'CNY'
-        AND INFO.DATASOURCE_TYPE = 'SAFE'
-        and info.TRADE_DATE = (select max(t.TRADE_DATE)
-        from MST_EXCHARGE_QUOTE t
-        where t.BASIS_CYY = info.BASIS_CYY
-        and t.QUOT_CYY = info.QUOT_CYY
-        AND t.DATASOURCE_TYPE = 'SAFE'
-        and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
-        ) rate1
-        on rate1.ccyOriginal=pos.ccy
-        where DATE_FORMAT(pos.cdate,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
-        and pos.HODING_TYPE='03'
-        and pos.CHL_FINPROD_ID is not null
-        group by  pos.CHL_FINPROD_ID
-        )
-        pos
-        on pos.SEC_ACCT_ID=val.SEC_ACCT_ID
-        left join STL_SEC_ACCT_INFO stl
-        on stl.sec_acct_id=val.sec_acct_id
-        left join fin_product info
-        on info.FINPROD_ID=val.SEC_ACCT_ID
-        left join FIN_TRADE_PRODUCT trd
-        on trd.FINPROD_ID=val.SEC_ACCT_ID
-        left join fin_product info1
-        on info1.FINPROD_ID=val.FINPROD_ID
-        <!--       left join FIN_TRADE_PRODUCT trd1
-              on trd1.FINPROD_ID=val.FINPROD_ID-->
-        left join (
-        SELECT
-        BASIS_CYY ccyOriginal,
-        QUOT_CYY ccyConvert,
-        TRADE_DATE publishDate,
-        case when #{status,jdbcType=VARCHAR} = '02'
-        then
-        CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '01'
-        then
-        OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '03'
-        then
-        HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '04'
-        then
-        LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '05'
-        then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        end yeid
-        FROM MST_EXCHARGE_QUOTE info
-        where
-        info.QUOT_CYY = 'CNY'
-        AND INFO.DATASOURCE_TYPE = 'SAFE'
-        and info.TRADE_DATE = (select max(t.TRADE_DATE)
-        from MST_EXCHARGE_QUOTE t
-        where t.BASIS_CYY = info.BASIS_CYY
-        and t.QUOT_CYY = info.QUOT_CYY
-        AND t.DATASOURCE_TYPE = 'SAFE'
-        and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
-        ) rate
-        on rate.ccyOriginal=ifnull(info.ccy,trd.ccy)
-        left join (
-        SELECT
-        BASIS_CYY ccyOriginal,
-        QUOT_CYY ccyConvert,
-        TRADE_DATE publishDate,
-        case when #{status,jdbcType=VARCHAR} = '02'
-        then
-        CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '01'
-        then
-        OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '03'
-        then
-        HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '04'
-        then
-        LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '05'
-        then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        end yeid
-        FROM MST_EXCHARGE_QUOTE info
-        where
-        info.QUOT_CYY = 'CNY'
-        AND INFO.DATASOURCE_TYPE = 'SAFE'
-        and info.TRADE_DATE = (select max(t.TRADE_DATE)
-        from MST_EXCHARGE_QUOTE t
-        where t.BASIS_CYY = info.BASIS_CYY
-        and t.QUOT_CYY = info.QUOT_CYY
-        AND t.DATASOURCE_TYPE = 'SAFE'
-        and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
-        ) rate1
-        on rate1.ccyOriginal=
-        <!--       	ifnull(info1.ccy,trd1.ccy) -->
-        info1.ccy
-        where val.sec_acct_id!='999999'
-        and stl.sec_acct_id is null
-        and dept1.FINPROD_MARKET_ID is not null
-        and DATE_FORMAT(val.cdate,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
-        and exists(
-        select  1
-        from FIN_PRODUCT_ADD fp3
-        where fp3.PORTFOLIO_ID = val.PORTFOLIO_ID)
-        group by val.cdate,dept.FINPROD_MARKET_ID,dept1.FINPROD_MARKET_ID
-        ) t1
-	</select>
-	
-	<select id="selectPtlChlBtmByPosdateSp" parameterType="java.util.Map" resultMap="BaseResultMap"
-  resultSetType="FORWARD_ONLY" fetchSize="1000">
-        select *
-        from (
-        select val.cdate as POS_DATE,
-        t1.chl_id as PLAN_ASSET_ID,
-        dept1.FINPROD_MARKET_ID as ASSET_CODE,
-        sum(ifnull(bok.O_AMT,0)) as TOTAL_NUM,
-        sum(ifnull(bok.O_AMT,0)*(case ifnull(info.ccy,trd.ccy) when 'CNY' then 1 else ifnull(rate.yeid,0) end)) as ISSUE_AMT,
-        sum(ifnull(pos.UNINVEST_CASH,0)) as UNINVEST_CASH,
+      FROM DUAL
+    </foreach>
+    ) TEMP where not exists (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
+    and CII.ASSET_CODE = TEMP.ASSET_CODE
+    and CII.POS_DATE = TEMP.POS_DATE)
+    ) de ;
 
-        SUM(ifnull(val.share_amt,0)*(case info1.finprod_type2 when 'F01' then 100 else 1 end))AS POS_NUM,-- 如果是债券则需要乘以100 -->
-        sum((ifnull(val.TDY_FLOAT_INGPL,0)+ifnull(val.DSC_COST_AMT,0)+ifnull(val.TDY_INTINCEXP,0)+ifnull(val.DELAY_PAY_AMT,0))*
-        (case info1.ccy when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as POS_AMT,
-        '02' as ISCHL,
-        GREATEST(max(ifnull(val.UPDATE_TIME,val.CREATE_TIME)),max(ifnull(bok.UPDATE_TIME,date'1900-01-01'))) UPDATE_TIME
-        from ptl_sec_valution val
-        left join fin_product fp1
-        on fp1.FINPROD_ID=val.FINPROD_ID
+    UPDATE CHB_BOT_AST_POS as A,
+    (
+    select POS_ID,
+    ISSUE_PARTY_ID,
+    TOTAL_NUM,
+    ISSUE_AMT,
+    UNINVEST_CASH,
+    POS_NUM,
+    POS_AMT,
+    ISFINAPLAN,
+    ISCHL,
+    WORKFLOW_ID,
+    STATUS,
+    ORG_CODE,
+    DEPT_CODE,
+    CREATE_USER,
+    CREATE_DEPT,
+    CREATE_TIME,
+    UPDATE_USER,
+    UPDATE_TIME,
+    DATASOURCE from
+    (
+    select TEMP.* from
+    (
+    <foreach collection="list" item="item" separator="union all">
+      SELECT
+      #{item.posId,jdbcType=CHAR} POS_ID,
+      #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+      #{item.posDate,jdbcType=TIMESTAMP} POS_DATE,
+      #{item.planAssetId,jdbcType=VARCHAR} PLAN_ASSET_ID,
+      #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+      #{item.totalNum,jdbcType=DECIMAL} TOTAL_NUM,
+      #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT,
+      #{item.uninvestCash,jdbcType=DECIMAL} UNINVEST_CASH,
+      #{item.posNum,jdbcType=DECIMAL} POS_NUM,
+      #{item.posAmt,jdbcType=DECIMAL} POS_AMT,
+      #{item.isfinaplan,jdbcType=CHAR} ISFINAPLAN,
+      #{item.ischl,jdbcType=CHAR} ISCHL,
+      #{item.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+      #{item.status,jdbcType=VARCHAR} STATUS,
+      #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+      #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+      #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+      #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT ,
+      NOW() CREATE_TIME,
+      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+      NOW() UPDATE_TIME,
+      #{item.datasource,jdbcType=VARCHAR} DATASOURCE
+      FROM DUAL
+    </foreach>
+    ) TEMP
+    ) de
+    ) AS B
+    set
+    A.POS_ID = B.POS_ID,
+    A.ISSUE_PARTY_ID = B.ISSUE_PARTY_ID,
+    A.TOTAL_NUM = B.TOTAL_NUM,
+    A.ISSUE_AMT = B.ISSUE_AMT,
+    A.UNINVEST_CASH = B.UNINVEST_CASH,
+    A.POS_NUM = B.POS_NUM,
+    A.POS_AMT = B.POS_AMT,
+    A.ISFINAPLAN = B.ISFINAPLAN,
+    A.ISCHL = B.ISCHL,
+    A.WORKFLOW_ID = B.WORKFLOW_ID,
+    A.STATUS = B.STATUS,
+    A.ORG_CODE = B.ORG_CODE,
+    A.DEPT_CODE = B.DEPT_CODE,
+    A.CREATE_USER = B.CREATE_USER,
+    A.CREATE_DEPT = B.CREATE_DEPT,
+    A.CREATE_TIME = B.CREATE_TIME,
+    A.UPDATE_USER = B.UPDATE_USER,
+    A.UPDATE_TIME = B.UPDATE_TIME,
+    A.DATASOURCE = B.DATASOURCE
+    where A.PLAN_ASSET_ID = B.PLAN_ASSET_ID
+    and A.ASSET_CODE = B.ASSET_CODE
+    and A.POS_DATE = B.POS_DATE;
+  </insert>
 
-        left join rep_asset_dept dept1
-        on dept1.REP_FINPROD_ID=ifnull(fp1.P_FINPROD_ID,fp1.FINPROD_ID)
-        inner join
-        (select DISTINCT fp.finprod_market_id asset_id,FP1.FINPROD_ID,fp1.finprod_market_id chl_id
-        from fin_cash_info ca
-        left join fin_product fp
-        on FP.FINPROD_ID=CA.FINPROD_ID
-        left join fin_product fp1
-        on FP1.FINPROD_ID=CA.CHL_FINPROD_ID
-        left join fin_product_type tp
-        on tp.FINPROD_ID=FP.FINPROD_ID
-        where
-        TP.TYPE_8 IN('F06','F03'
-        <if test="isCalLoadRate != null and isCalLoadRate=='02' " >
-            ,'F05'
-        </if>
-        )
-        and CA.CHL_FINPROD_ID is not null) t1
-        on T1.asset_id=dept1.FINPROD_MARKET_ID
-        left join (
-        select re.CHANNEL_ID SEC_ACCT_ID,
-        sum(ifnull(bok.B_AMT,0)) O_AMT,<!-- TOTAL_NUM 总发行数量：由O_AMT改成取B_AMT -->
-        max(ifnull(bok.UPDATE_TIME,bok.CREATE_TIME)) as UPDATE_TIME
-        from  bok_balance bok
-        left join BOK_BOOKSET_RE re
-        on bok.BOOKSET_ID=re.BOOKSET_ID_SON
-        and bok.SUBJECT_NO='4001'
-        and DATE_FORMAT(bok.BALANCE_DATE,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
-        where re.CHANNEL_ID is not null
-        group by re.CHANNEL_ID
-        )
-        bok
-        on bok.SEC_ACCT_ID=t1.FINPROD_ID
-        left join (
-        select pos.CHL_FINPROD_ID as SEC_ACCT_ID,sum(ifnull(pos.AMOUNT,0)*(case pos.ccy when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as UNINVEST_CASH
-        from PTL_CASH_POSITION pos
-        left join (
-        SELECT
-        BASIS_CYY ccyOriginal,
-        QUOT_CYY ccyConvert,
-        TRADE_DATE publishDate,
-        case when #{status,jdbcType=VARCHAR} = '02'
-        then
-        CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '01'
-        then
-        OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '03'
-        then
-        HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '04'
-        then
-        LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '05'
-        then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        end yeid
-        FROM MST_EXCHARGE_QUOTE info
-        where
-        info.QUOT_CYY = 'CNY'
-        AND INFO.DATASOURCE_TYPE = 'SAFE'
-        and info.TRADE_DATE = (select max(t.TRADE_DATE)
-        from MST_EXCHARGE_QUOTE t
-        where t.BASIS_CYY = info.BASIS_CYY
-        and t.QUOT_CYY = info.QUOT_CYY
-        AND t.DATASOURCE_TYPE = 'SAFE'
-        and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
-        )
-        rate1
-        on rate1.ccyOriginal=pos.ccy
-        where DATE_FORMAT(pos.cdate,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
-        and pos.HODING_TYPE='03'
-        and pos.CHL_FINPROD_ID is not null
-        group by  pos.CHL_FINPROD_ID
-        )
-        pos
-        on pos.SEC_ACCT_ID=t1.FINPROD_ID
-        left join STL_SEC_ACCT_INFO stl
-        on stl.sec_acct_id=t1.FINPROD_ID
-        left join fin_product info
-        on info.FINPROD_ID=t1.FINPROD_ID
-        left join FIN_TRADE_PRODUCT trd
-        on trd.FINPROD_ID=t1.FINPROD_ID
-        left join fin_product info1
-        on info1.FINPROD_ID=val.FINPROD_ID
+  <select id="selectPtlChlBtmByPosdate" parameterType="java.util.Map" resultMap="BaseResultMap"
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
+    select * from (
+    select val.cdate as POS_DATE,
+    dept.FINPROD_MARKET_ID as PLAN_ASSET_ID,
+    dept1.FINPROD_MARKET_ID as ASSET_CODE,
+    sum(ifnull(bok.O_AMT,0)) as TOTAL_NUM,
+    sum(ifnull(bok.O_AMT,0)*(case ifnull(info.ccy,trd.ccy) when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as
+    ISSUE_AMT,
+    sum(ifnull(pos.UNINVEST_CASH,0)) as UNINVEST_CASH,
+    <!--       sum(ifnull(val.SHARE_AMT,0)) as POS_NUM, -->
+    SUM(ifnull(val.share_amt,0)*(case info1.finprod_type2 when 'F01' then 100 else 1 end))AS
+    POS_NUM,<!-- 如果是债券则需要乘以100 -->
+    sum((ifnull(val.TDY_FLOAT_INGPL,0)+ifnull(val.DSC_COST_AMT,0)+ifnull(val.TDY_INTINCEXP,0)
+    /*+ifnull(val.DELAY_PAY_AMT,0)*/ )*
+    (case info1.ccy when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as POS_AMT,
+    '02' as ISCHL,
+    GREATEST(max(ifnull(val.UPDATE_TIME,val.CREATE_TIME)),max(ifnull(bok.UPDATE_TIME,date'1900-01-01'))) UPDATE_TIME
+    from ptl_sec_valution val
+    left join fin_product fp1
+    on fp1.FINPROD_ID=val.FINPROD_ID
+    left join rep_asset_dept dept
+    on dept.REP_FINPROD_ID=val.SEC_ACCT_ID
+    left join rep_asset_dept dept1
+    on dept1.REP_FINPROD_ID=ifnull(fp1.P_FINPROD_ID,fp1.FINPROD_ID)
+    left join (
+    select re.CHANNEL_ID SEC_ACCT_ID,
+    sum(ifnull(bok.B_AMT,0)) O_AMT,<!-- TOTAL_NUM 总发行数量：由O_AMT改成取B_AMT -->
+    max(ifnull(bok.UPDATE_TIME,bok.CREATE_TIME)) as UPDATE_TIME
+    from bok_balance bok
+    left join BOK_BOOKSET_RE re
+    on bok.BOOKSET_ID=re.BOOKSET_ID_SON
+    and bok.SUBJECT_NO='4001'
+    and DATE_FORMAT(bok.BALANCE_DATE,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
+    where re.CHANNEL_ID is not null
+    group by re.CHANNEL_ID
+    )
+    bok
+    on bok.SEC_ACCT_ID=val.SEC_ACCT_ID
+    left join (
+    select pos.CHL_FINPROD_ID as SEC_ACCT_ID,sum(ifnull(pos.AMOUNT,0)*(case pos.ccy when 'CNY' then 1 else
+    ifnull(rate1.yeid,0) end)) as UNINVEST_CASH
+    from PTL_CASH_POSITION pos
+    left join (
+    SELECT
+    BASIS_CYY ccyOriginal,
+    QUOT_CYY ccyConvert,
+    TRADE_DATE publishDate,
+    case when #{status,jdbcType=VARCHAR} = '02'
+    then
+    CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '01'
+    then
+    OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '03'
+    then
+    HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '04'
+    then
+    LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '05'
+    then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    end yeid
+    FROM MST_EXCHARGE_QUOTE info
+    where
+    info.QUOT_CYY = 'CNY'
+    AND INFO.DATASOURCE_TYPE = 'SAFE'
+    and info.TRADE_DATE = (select max(t.TRADE_DATE)
+    from MST_EXCHARGE_QUOTE t
+    where t.BASIS_CYY = info.BASIS_CYY
+    and t.QUOT_CYY = info.QUOT_CYY
+    AND t.DATASOURCE_TYPE = 'SAFE'
+    and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
+    ) rate1
+    on rate1.ccyOriginal=pos.ccy
+    where DATE_FORMAT(pos.cdate,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
+    and pos.HODING_TYPE='03'
+    and pos.CHL_FINPROD_ID is not null
+    group by pos.CHL_FINPROD_ID
+    )
+    pos
+    on pos.SEC_ACCT_ID=val.SEC_ACCT_ID
+    left join STL_SEC_ACCT_INFO stl
+    on stl.sec_acct_id=val.sec_acct_id
+    left join fin_product info
+    on info.FINPROD_ID=val.SEC_ACCT_ID
+    left join FIN_TRADE_PRODUCT trd
+    on trd.FINPROD_ID=val.SEC_ACCT_ID
+    left join fin_product info1
+    on info1.FINPROD_ID=val.FINPROD_ID
+    <!--       left join FIN_TRADE_PRODUCT trd1
+          on trd1.FINPROD_ID=val.FINPROD_ID-->
+    left join (
+    SELECT
+    BASIS_CYY ccyOriginal,
+    QUOT_CYY ccyConvert,
+    TRADE_DATE publishDate,
+    case when #{status,jdbcType=VARCHAR} = '02'
+    then
+    CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '01'
+    then
+    OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '03'
+    then
+    HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '04'
+    then
+    LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '05'
+    then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    end yeid
+    FROM MST_EXCHARGE_QUOTE info
+    where
+    info.QUOT_CYY = 'CNY'
+    AND INFO.DATASOURCE_TYPE = 'SAFE'
+    and info.TRADE_DATE = (select max(t.TRADE_DATE)
+    from MST_EXCHARGE_QUOTE t
+    where t.BASIS_CYY = info.BASIS_CYY
+    and t.QUOT_CYY = info.QUOT_CYY
+    AND t.DATASOURCE_TYPE = 'SAFE'
+    and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
+    ) rate
+    on rate.ccyOriginal=ifnull(info.ccy,trd.ccy)
+    left join (
+    SELECT
+    BASIS_CYY ccyOriginal,
+    QUOT_CYY ccyConvert,
+    TRADE_DATE publishDate,
+    case when #{status,jdbcType=VARCHAR} = '02'
+    then
+    CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '01'
+    then
+    OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '03'
+    then
+    HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '04'
+    then
+    LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '05'
+    then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    end yeid
+    FROM MST_EXCHARGE_QUOTE info
+    where
+    info.QUOT_CYY = 'CNY'
+    AND INFO.DATASOURCE_TYPE = 'SAFE'
+    and info.TRADE_DATE = (select max(t.TRADE_DATE)
+    from MST_EXCHARGE_QUOTE t
+    where t.BASIS_CYY = info.BASIS_CYY
+    and t.QUOT_CYY = info.QUOT_CYY
+    AND t.DATASOURCE_TYPE = 'SAFE'
+    and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
+    ) rate1
+    on rate1.ccyOriginal=
+    <!--       	ifnull(info1.ccy,trd1.ccy) -->
+    info1.ccy
+    where val.sec_acct_id!='999999'
+    and stl.sec_acct_id is null
+    and dept1.FINPROD_MARKET_ID is not null
+    and DATE_FORMAT(val.cdate,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
+    and exists(
+    select 1
+    from FIN_PRODUCT_ADD fp3
+    where fp3.PORTFOLIO_ID = val.PORTFOLIO_ID)
+    group by val.cdate,dept.FINPROD_MARKET_ID,dept1.FINPROD_MARKET_ID
+    ) t1
+  </select>
 
-        left join (
+  <select id="selectPtlChlBtmByPosdateSp" parameterType="java.util.Map" resultMap="BaseResultMap"
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
+    select *
+    from (
+    select val.cdate as POS_DATE,
+    t1.chl_id as PLAN_ASSET_ID,
+    dept1.FINPROD_MARKET_ID as ASSET_CODE,
+    sum(ifnull(bok.O_AMT,0)) as TOTAL_NUM,
+    sum(ifnull(bok.O_AMT,0)*(case ifnull(info.ccy,trd.ccy) when 'CNY' then 1 else ifnull(rate.yeid,0) end)) as
+    ISSUE_AMT,
+    sum(ifnull(pos.UNINVEST_CASH,0)) as UNINVEST_CASH,
+
+    SUM(ifnull(val.share_amt,0)*(case info1.finprod_type2 when 'F01' then 100 else 1 end))AS POS_NUM,
+    sum((ifnull(val.TDY_FLOAT_INGPL,0)+ifnull(val.DSC_COST_AMT,0)+ifnull(val.TDY_INTINCEXP,0)
+    /*+ifnull(val.DELAY_PAY_AMT,0)*/ )*
+    (case info1.ccy when 'CNY' then 1 else ifnull(rate1.yeid,0) end)) as POS_AMT,
+    '02' as ISCHL,
+    GREATEST(max(ifnull(val.UPDATE_TIME,val.CREATE_TIME)),max(ifnull(bok.UPDATE_TIME,date'1900-01-01'))) UPDATE_TIME
+    from ptl_sec_valution val
+    left join fin_product fp1
+    on fp1.FINPROD_ID=val.FINPROD_ID
+
+    left join rep_asset_dept dept1
+    on dept1.REP_FINPROD_ID=ifnull(fp1.P_FINPROD_ID,fp1.FINPROD_ID)
+    inner join
+    (select DISTINCT fp.finprod_market_id asset_id,FP1.FINPROD_ID,fp1.finprod_market_id chl_id
+    from fin_cash_info ca
+    left join fin_product fp
+    on FP.FINPROD_ID=CA.FINPROD_ID
+    left join fin_product fp1
+    on FP1.FINPROD_ID=CA.CHL_FINPROD_ID
+    left join fin_product_type tp
+    on tp.FINPROD_ID=FP.FINPROD_ID
+    where
+    TP.TYPE_8 IN('F06','F03'
+    <if test="isCalLoadRate != null and isCalLoadRate=='02' ">
+      ,'F05'
+    </if>
+    )
+    and CA.CHL_FINPROD_ID is not null) t1
+    on T1.asset_id=dept1.FINPROD_MARKET_ID
+    left join (
+    select re.CHANNEL_ID SEC_ACCT_ID,
+    sum(ifnull(bok.B_AMT,0)) O_AMT,<!-- TOTAL_NUM 总发行数量：由O_AMT改成取B_AMT -->
+    max(ifnull(bok.UPDATE_TIME,bok.CREATE_TIME)) as UPDATE_TIME
+    from bok_balance bok
+    left join BOK_BOOKSET_RE re
+    on bok.BOOKSET_ID=re.BOOKSET_ID_SON
+    and bok.SUBJECT_NO='4001'
+    and DATE_FORMAT(bok.BALANCE_DATE,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
+    where re.CHANNEL_ID is not null
+    group by re.CHANNEL_ID
+    )
+    bok
+    on bok.SEC_ACCT_ID=t1.FINPROD_ID
+    left join (
+    select pos.CHL_FINPROD_ID as SEC_ACCT_ID,sum(ifnull(pos.AMOUNT,0)*(case pos.ccy when 'CNY' then 1 else
+    ifnull(rate1.yeid,0) end)) as UNINVEST_CASH
+    from PTL_CASH_POSITION pos
+    left join (
+    SELECT
+    BASIS_CYY ccyOriginal,
+    QUOT_CYY ccyConvert,
+    TRADE_DATE publishDate,
+    case when #{status,jdbcType=VARCHAR} = '02'
+    then
+    CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '01'
+    then
+    OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '03'
+    then
+    HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '04'
+    then
+    LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '05'
+    then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    end yeid
+    FROM MST_EXCHARGE_QUOTE info
+    where
+    info.QUOT_CYY = 'CNY'
+    AND INFO.DATASOURCE_TYPE = 'SAFE'
+    and info.TRADE_DATE = (select max(t.TRADE_DATE)
+    from MST_EXCHARGE_QUOTE t
+    where t.BASIS_CYY = info.BASIS_CYY
+    and t.QUOT_CYY = info.QUOT_CYY
+    AND t.DATASOURCE_TYPE = 'SAFE'
+    and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
+    )
+    rate1
+    on rate1.ccyOriginal=pos.ccy
+    where DATE_FORMAT(pos.cdate,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
+    and pos.HODING_TYPE='03'
+    and pos.CHL_FINPROD_ID is not null
+    group by pos.CHL_FINPROD_ID
+    )
+    pos
+    on pos.SEC_ACCT_ID=t1.FINPROD_ID
+    left join STL_SEC_ACCT_INFO stl
+    on stl.sec_acct_id=t1.FINPROD_ID
+    left join fin_product info
+    on info.FINPROD_ID=t1.FINPROD_ID
+    left join FIN_TRADE_PRODUCT trd
+    on trd.FINPROD_ID=t1.FINPROD_ID
+    left join fin_product info1
+    on info1.FINPROD_ID=val.FINPROD_ID
+
+    left join (
+    SELECT
+    BASIS_CYY ccyOriginal,
+    QUOT_CYY ccyConvert,
+    TRADE_DATE publishDate,
+    case when #{status,jdbcType=VARCHAR} = '02'
+    then
+    CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '01'
+    then
+    OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '03'
+    then
+    HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '04'
+    then
+    LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '05'
+    then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    end yeid
+    FROM MST_EXCHARGE_QUOTE info
+    where
+    info.QUOT_CYY = 'CNY'
+    AND INFO.DATASOURCE_TYPE = 'SAFE'
+    and info.TRADE_DATE = (select max(t.TRADE_DATE)
+    from MST_EXCHARGE_QUOTE t
+    where t.BASIS_CYY = info.BASIS_CYY
+    and t.QUOT_CYY = info.QUOT_CYY
+    AND t.DATASOURCE_TYPE = 'SAFE'
+    and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
+    )
+    rate
+    on rate.ccyOriginal=ifnull(info.ccy,trd.ccy)
+    left join (
+    SELECT
+    BASIS_CYY ccyOriginal,
+    QUOT_CYY ccyConvert,
+    TRADE_DATE publishDate,
+    case when #{status,jdbcType=VARCHAR} = '02'
+    then
+    CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '01'
+    then
+    OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '03'
+    then
+    HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '04'
+    then
+    LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    when #{status,jdbcType=VARCHAR} = '05'
+    then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
+    end yeid
+    FROM MST_EXCHARGE_QUOTE info
+    where
+    info.QUOT_CYY = 'CNY'
+    AND INFO.DATASOURCE_TYPE = 'SAFE'
+    and info.TRADE_DATE = (select max(t.TRADE_DATE)
+    from MST_EXCHARGE_QUOTE t
+    where t.BASIS_CYY = info.BASIS_CYY
+    and t.QUOT_CYY = info.QUOT_CYY
+    AND t.DATASOURCE_TYPE = 'SAFE'
+    and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
+    )
+    rate1
+    on rate1.ccyOriginal=
+    info1.ccy
+    where
+    (val.sec_acct_id='999999'
+    or stl.sec_acct_id is not null)
+    and dept1.FINPROD_MARKET_ID is not null
+    and DATE_FORMAT(val.cdate,'%Y-%m-%d') = #{batchTime,jdbcType=VARCHAR}
+    and exists(
+    select 1
+    from FIN_PRODUCT_ADD fp3
+    where fp3.PORTFOLIO_ID = val.PORTFOLIO_ID)
+    group by val.cdate,t1.chl_id,dept1.FINPROD_MARKET_ID
+    ) t1
+  </select>
+
+  <select id="isUpdatedChl" parameterType="java.util.Date"
+          resultType="java.util.Date">
+        select distinct CDATE from ptl_sec_valution
+        where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+    </select>
+  <select id="getOtherBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap"
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
+    SELECT
+    SUB.VAL_DATE POS_DATE,
+    SUB.PTL_ID PLAN_ASSET_ID,
+    SUB.FINPROD_ID ASSET_CODE,
+    IFNULL(SUM(SUB.SECURITY_QUANTITY), 0) *
+    (CASE WHEN DC.SUB_CLASS = 'ZQ' THEN IFNULL(HB.REPAY_NET, 100) ELSE 1 END) POS_NUM,
+    IFNULL(SUM(SUB.SMV), 0) POS_AMT,
+    IFNULL(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0) INT_AMT,/** 利息**/
+    MAX(IFNULL(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
+    FROM RSK_VALTBL_ASSET_SUB SUB /** 估值表导入后的资产数据**/
+
+    /** 估值表对应的资产科目类型，债券的数量需要乘以面值**/
+    INNER JOIN RSK_VALTBL_PRT_BOTASSET_MAP DC
+    ON SUB.PTL_ID = DC.PTL_ID
+    AND SUB.SUB_CODE = DC.SUB_CODE
+    AND SUB.FINPROD_ID = DC.FINPROD_ID
+
+    /** 取债券还本计划的最近日期**/
+    LEFT JOIN (
+    SELECT T.SEC_ID, REPAY_NET
+    FROM
+    (   SELECT SEC_ID, REPAY_NET, RANK() OVER (PARTITION BY SEC_ID ORDER BY REPAY_DT DESC) MY_RANK
+    FROM CHB_SEC_REPAY_INFO
+    WHERE REPAY_DT &lt;= #{batchTime,jdbcType=DATE}
+    GROUP BY SEC_ID, REPAY_NET
+    ) T
+    WHERE MY_RANK = 1
+    ) HB ON HB.SEC_ID = SUB.FINPROD_ID
+    WHERE 1 = 1
+    AND SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+    AND SUB.FINPROD_ID IS NOT NULL
+    AND DC.SUB_CLASS NOT IN ('ZHG', 'NHG') /** 过滤回购资产通过三级科目来计算**/
+    <!-- ADD BY WM20210817 计算汇总时去除估值增值 start-->
+    and left(DC.SUB_CODE,8) NOT IN ('11030102','11031102','11032102')
+    <!-- ADD BY WM20210817 计算汇总时去除估值增值 start-->
+    GROUP BY SUB.VAL_DATE,
+    SUB.PTL_ID,
+    SUB.VAL_DATE,
+    SUB.FINPROD_ID
+  </select>
+
+  <select id="getUnInvestBotListFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
         SELECT
-        BASIS_CYY ccyOriginal,
-        QUOT_CYY ccyConvert,
-        TRADE_DATE publishDate,
-        case when #{status,jdbcType=VARCHAR} = '02'
-        then
-        CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '01'
-        then
-        OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '03'
-        then
-        HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '04'
-        then
-        LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '05'
-        then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        end yeid
-        FROM MST_EXCHARGE_QUOTE info
-        where
-        info.QUOT_CYY = 'CNY'
-        AND INFO.DATASOURCE_TYPE = 'SAFE'
-        and info.TRADE_DATE = (select max(t.TRADE_DATE)
-        from MST_EXCHARGE_QUOTE t
-        where t.BASIS_CYY = info.BASIS_CYY
-        and t.QUOT_CYY = info.QUOT_CYY
-        AND t.DATASOURCE_TYPE = 'SAFE'
-        and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
-        )
-        rate
-        on rate.ccyOriginal=ifnull(info.ccy,trd.ccy)
-        left join (
+            SUB.VAL_DATE AS POS_DATE,
+            SUB.PTL_ID AS PLAN_ASSET_ID,
+            SUM(IFNULL(SUB.SMV,0))  AS POS_AMT
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 活期存款、清算款、备付金、保证金**/
+        AND SUB.SUB_CODE IN ('1002','1021','1031','3003')
+        GROUP BY SUB.VAL_DATE,SUB.PTL_ID
+    </select>
+
+  <select id="getBotTotalNumFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
         SELECT
-        BASIS_CYY ccyOriginal,
-        QUOT_CYY ccyConvert,
-        TRADE_DATE publishDate,
-        case when #{status,jdbcType=VARCHAR} = '02'
-        then
-        CLOSE_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '01'
-        then
-        OPEN_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '03'
-        then
-        HIGH_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '04'
-        then
-        LOW_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        when #{status,jdbcType=VARCHAR} = '05'
-        then MID_PRICE/(case when info.QUOT_UNIT=0 then 1 else info.QUOT_UNIT end)
-        end yeid
-        FROM MST_EXCHARGE_QUOTE info
-        where
-        info.QUOT_CYY = 'CNY'
-        AND INFO.DATASOURCE_TYPE = 'SAFE'
-        and info.TRADE_DATE = (select max(t.TRADE_DATE)
-        from MST_EXCHARGE_QUOTE t
-        where t.BASIS_CYY = info.BASIS_CYY
-        and t.QUOT_CYY = info.QUOT_CYY
-        AND t.DATASOURCE_TYPE = 'SAFE'
-        and DATE_FORMAT(t.TRADE_DATE,'%Y-%m-%d') <![CDATA[<=]]>#{batchTime,jdbcType=VARCHAR})
-        )
-        rate1
-        on rate1.ccyOriginal=
-        info1.ccy
-        where
-        (val.sec_acct_id='999999'
-        or stl.sec_acct_id is not null)
-        and dept1.FINPROD_MARKET_ID is not null
-        and DATE_FORMAT(val.cdate,'%Y-%m-%d')  = #{batchTime,jdbcType=VARCHAR}
-        and exists(
-        select  1
-        from FIN_PRODUCT_ADD fp3
-        where fp3.PORTFOLIO_ID = val.PORTFOLIO_ID)
-        group by val.cdate,t1.chl_id,dept1.FINPROD_MARKET_ID
-        ) t1
-	</select>
-	
-	<select id="isUpdatedChl" parameterType="java.util.Date"
-	resultType="java.util.Date">
-	select distinct CDATE from ptl_sec_valution
-	where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
-</select>
+            HZ.PTL_ID PLAN_ASSET_ID,
+            HZ.SUB_CODE ASSET_CODE,
+            SUM(IFNULL(SMV,0))  POS_AMT
+        FROM RSK_VALTBL_SUM_ASSET_SUB HZ
+        WHERE HZ.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 实收资本、资产净值**/
+        AND HZ.SUB_CODE IN ('601', '701')
+        GROUP BY HZ.PTL_ID,HZ.SUB_CODE
+    </select>
+
+  <select id="getCashBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+            SUB.VAL_DATE POS_DATE,/** 持仓日期**/
+            SUB.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+            'CASH' ASSET_CODE,/** 行内资产/负债编码**/
+            SUM(CASE WHEN SUB.SUB_CODE IN ('1002', '1021', '1031', '3003') THEN IFNULL(SUB.SMV,0) ELSE 0 END) UNINVEST_CASH,/** 未投资头寸**/
+            SUM(CASE WHEN SUB.SUB_CODE IN ('1002', '1021', '1031', '3003') THEN IFNULL(SUB.SMV,0) ELSE 0 END) POS_NUM,/** 持仓数量**/
+            SUM(IFNULL(SUB.SMV,0)) POS_AMT, /** 底层资产折算人民币币值（元）**/
+            SUM(CASE WHEN SUB.SUB_CODE IN ('120401','120402','120403') THEN IFNULL(SUB.SMV, 0) ELSE 0 END) INT_AMT, /** 利息**/
+            MAX(IFNULL(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 活期存款、清算款、备付金、保证金及其利息**/
+        AND SUB.SUB_CODE IN ('1002', '1021', '1031', '3003','120401','120402','120403')
+        GROUP BY SUB.PTL_ID
+    </select>
+
+  <select id="getNoBotAstCashDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+          SUB.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+          COUNT(1) ASSET_CODE /** 其他科目数量**/
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 除活期存款1002、清算款3003、应收银行活期存款利息120401**/
+        AND SUB.SUB_CODE NOT LIKE '1002%'			/** 排除活期存款1002**/
+        AND SUB.SUB_CODE NOT LIKE '3003%'			/** 排除清算款3003**/
+        AND SUB.SUB_CODE NOT LIKE '120401%'			/** 排除应收银行活期存款利息120401**/
+        AND SUB.SUB_CODE NOT LIKE '2206%'			/** 排除应付管理人报酬2206**/
+        AND SUB.SUB_CODE NOT LIKE '2207%'			/** 排除应付托管费2207**/
+        AND SUB.SUB_CODE NOT LIKE '2209%'			/** 排除应付交易费用2209**/
+        AND SUB.SUB_CODE NOT LIKE '2221%'			/** 排除应付税费2221**/
+        AND SUB.SUB_CODE NOT LIKE '2222%'			/** 排除预估税费2222**/
+        AND SUB.SUB_CODE NOT LIKE '2501%'			/** 排除预提费用2501**/
+        AND SUB.SUB_CODE NOT LIKE '2801%'			/** 排除其他应付款2801**/
+        GROUP BY SUB.PTL_ID
+
+    </select>
+
+  <select id="getFzBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT * FROM (
+            SELECT
+                SUB.VAL_DATE POS_DATE,/** 持仓日期**/
+                SUB.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+                'OD' ASSET_CODE,/** 行内资产/负债编码**/
+                SUM(IFNULL(SUB.SMV, 0)) POS_NUM,/** 持仓数量**/
+                SUM(IFNULL(SUB.SMV, 0)) POS_AMT, /** 底层资产折算人民币币值（元）**/
+                MAX(IFNULL(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB SUB
+            WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+            /** 应付管理人报酬2206+应付托管费2207+应付交易费用2209+应付税费2221+预估税费2222+预提费用2501+其他应付款2801**/
+            AND SUB.SUB_CODE IN ('2206', '2207', '2209', '2221', '2222' ,'2501', '2801')
+            GROUP BY SUB.VAL_DATE, SUB.PTL_ID
+        ) ASSET WHERE POS_AMT > 0
+
+    </select>
+
+  <select id="getRepBotDataFromRsk" parameterType="java.util.Date" resultMap="BaseResultMap">
+        SELECT
+            SUB.VAL_DATE POS_DATE,/** 持仓日期**/
+            SUB.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+            SUB.SUB_CODE ASSET_CODE,
+            SUM(IFNULL(SUB.SMV,0)) POS_AMT,
+            MAX(IFNULL(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB SUB
+        WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
+        /** 上交所买入返售证券、银行间买入返售、深交所买入返售证券、应收买入返售证券利息
+        上交所卖出回购证券款、银行间卖出回购证券款、深交所卖出回购证券款、应付回购利息**/
+        AND SUB.SUB_CODE IN ('120201','120202','120203','120410','220201','220202','220203','223101')
+        GROUP BY SUB.VAL_DATE,SUB.PTL_ID,SUB.SUB_CODE
+    </select>
+
+  <select id="selectRepAstByBatchDate" parameterType="java.util.Date" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+        SELECT
+          ASSET_CODE assetCode,
+          CHECK_CODE checkCode,
+          TARGET_AMT targetAmt,
+          ASSET_TYPE2 assetType2,
+          TRADE_MARKET tradeMarket
+        FROM CHB_ASSET_INFO
+        WHERE  ASSET_TYPE2 IN ('1108','1902')
+        AND STATUS IN ('E','M')
+        AND #{batchTime,jdbcType=DATE} BETWEEN VDATE AND MDATE
+    </select>
 </mapper>

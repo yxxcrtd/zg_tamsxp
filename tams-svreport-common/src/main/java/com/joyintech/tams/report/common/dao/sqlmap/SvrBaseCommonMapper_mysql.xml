@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.common.dao.SvrBaseCommonMapper_mysql">
-
+	<select id="getNowSysDate" resultType="java.util.Date">
+		select NOW() from dual
+	</select>
+	<update id="updateBatchInfoToEnd">
+		update CHB_SYS_BATCH_INFO set TASK_STATUS = 'END', UPDATE_USER = 'batch', update_time = CURRENT_TIMESTAMP where BATCH_ID in
+		<foreach collection="list" item="item" separator=", " open="(" close=")" >#{item}</foreach>
+	</update>
+	<update id="updatePreBatchDataToEnd">
+        UPDATE CHB_SYS_BATCH_INFO SET TASK_STATUS = #{brk} WHERE TASK_STATUS = #{run}
+    </update>
+	<update id="updatePreBatchLogDataToEnd">
+        UPDATE CHB_SYS_BATCH_LOG SET TASK_STATUS = #{brk} WHERE TASK_STATUS = #{run}
+    </update>
+	<select id="selectSubCheckBasicRuleData" resultMap="com.joyintech.tams.common.base.dao.ChbSubCheckBasicRuleMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.ChbSubCheckBasicRuleMapper.Sql_All_Data"></include>
+	</select>
+	<select id="selectSubCheckItemRuleData" resultMap="com.joyintech.tams.common.base.dao.ChbSubCheckItemRuleMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemRuleMapper.Sql_All_Data"></include>
+		where
+		1 = 1
+		<if test="classId != null and classId != ''">
+			and CLASS_ID = #{classId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectSubCheckItemConvertData" resultMap="com.joyintech.tams.common.base.dao.ChbSubCheckItemConvertMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.ChbSubCheckItemConvertMapper.Sql_All_Data"></include>
+		where
+		1 = 1
+		<if test="classId != null and classId != ''">
+			and CLASS_ID = #{classId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="getSysParamString" resultType="string">
+		select PARAM_VALUE
+		from CHB_SYS_PARA para
+		where para.SUBSYSTEM_CODE=#{subsystemCode}
+		and para.STATUS ='E'
+		and para.MODULE_CODE=#{moduleCode}
+		and para.PARA_CODE=#{paraCode}
+	</select>
+	<!-- 查询所有产品维护信息 -有效的数据-->
+	<select id="selectAllPrdBaseInfo" resultMap="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper.BaseResultMap">
+		<include refid="com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper.Sql_All_Effective_Data"></include>
+	</select>
+	<!-- 查询机构下的所有部门代码 -->
+	<select id="selectDeptCode" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT DEPT_CODE FROM SYS_DEPARTMENT WHERE INSTITUTION_CODE = #{institutionCode}
+	</select>
 	<select id="selectAllProdInfoWithNoSameId" resultType="java.lang.String" >
-    	SELECT CONCAT(IFNULL(PROD_ID,''),',',IFNULL(PROD_INS_ID,'')) from CHB_PRD_BASEINFO where FPROD_ID is null
+    	SELECT CONCAT_WS(IFNULL(PROD_ID,''),',',IFNULL(PROD_INS_ID,'')) from CHB_PRD_BASEINFO where FPROD_ID is null
     	and PROD_ID !=PROD_INS_ID
+    </select>
+	<select id="getAllRegCode" resultType="java.lang.String" >
+    	SELECT CONCAT_WS(',',PROD_ID,reg_code)from CHB_PRD_BASEINFO where FPROD_ID is null
     </select>
 </mapper>

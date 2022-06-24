@@ -347,7 +347,7 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 if (srcName.contains("+")) {
                     fileAgentInstitutionCode = srcName.substring(0, srcName.lastIndexOf("+"));
                 } else {
-                    fileCheckMsg1.append("文件名" + srcName + "命名不规范！");
+                    fileCheckMsg1.append("压缩包必须命名为: 代销机构代码+XX.zip");
                     fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
                 }
             }
@@ -366,20 +366,13 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
                 fileCheckMsg1.append("文件名"+srcName+"与所选代销机构代码不匹配！");
                 fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
             }
-            int fileNum=0;
-            try (
-                    ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
-            ){
-                for (Enumeration<? extends ZipEntry> e = zipFile.entries(); e.hasMoreElements();){
-                    ZipEntry entry=e.nextElement();
-                    // 统计文件个数
-                    if(entry.getName().substring(entry.getName().lastIndexOf("/")+1).length()>0){
-                        fileNum++;
-                    }
-                }
+            try
+            {
+                ZipFile zipFile=new ZipFile(new File(targetFileSTR),Charset.forName("GBK"));
 
             } catch (Exception e) {
-                throw new BusinessException(e);
+                fileCheckMsg1.append("文件名"+srcName+"中包含不必要的文件或文件夹");
+                fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
             }
             if(fileCheckMsg1.length() > 0){
                 if(file.exists()){

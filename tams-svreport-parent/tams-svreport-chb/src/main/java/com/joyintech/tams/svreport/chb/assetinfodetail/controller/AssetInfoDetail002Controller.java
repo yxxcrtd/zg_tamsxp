@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.svreport.select.service.SelectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,9 @@ public class AssetInfoDetail002Controller extends BaseController {
     @Autowired
     private AssetInfoDetailMService assetInfoDetailMService;
 
+    @Autowired
+    private SelectorService selectorService;
+
     /**
      * 日志
      */
@@ -75,7 +79,8 @@ public class AssetInfoDetail002Controller extends BaseController {
         super.setSelectOptionToModel(model, DictCode.资产_负债类别, DictCode.资产_负债二级类别, DictCode.报送反馈状态,
                 DictCode.交易流通场所_中债,DictCode.币种_中债,
                 DictCode.中债_上游资产一级分类, DictCode.中债_上游资产二级分类,DictCode.中债_上游资产三级分类,DictCode.中债_上游资产四级分类,
-                DictCode.中债_上游资产五级分类);
+                DictCode.中债_上游资产五级分类,DictCode.是否_中债,DictCode.结构化业务类型,DictCode.结构化层级
+                ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类,DictCode.银行资本补充工具,DictCode.资产负债一级类别);
 
         String assetUuid = this.getParam("assetUuid");
         String dataStatus = this.getParam("dataStatus");
@@ -83,6 +88,10 @@ public class AssetInfoDetail002Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String jsonObject= JSONObject.toJSONString(assetInfoDetailMService.getDataListLink());
         model.addAttribute("AssetTypeListLink", jsonObject);
+
+        model.addAttribute("PbcCapAssetInfo", JSONObject.toJSONString(selectorService.getPbcCapAssetInfo(null)));
+
+        model.addAttribute("AssetTypeListLinkTwo", JSONObject.toJSONString(assetInfoDetailMService.getDataListLink(DictCode.资产负债一级类别.getValue())));
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {// 判断是否存在于工作流中
             AssetInfoDetailDto dto = assetInfoDetailMService.getBussinessEntityByWorkflowId(
                     workflowId);

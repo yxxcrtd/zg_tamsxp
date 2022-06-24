@@ -4907,8 +4907,8 @@
 		assetinfo.TRADE_FEE,
 		assetinfo.PARTY_CODE,
 		assetinfo.CHECK_CODE,
-		assetinfo.MANAGER_ID,
-		assetinfo.TRUSTEE_ID,
+		nvl(m1.CUSTOMER_NAME,assetinfo.MANAGER_ID) MANAGER_ID,
+		nvl(m2.CUSTOMER_NAME,assetinfo.TRUSTEE_ID) TRUSTEE_ID,
 		assetinfo.TRU_ACT_TYPE,
 		assetinfo.INVEST_TYPE,
 		assetinfo.CAP_USE_INDU,
@@ -4928,8 +4928,8 @@
 		assetinfo.OTHER_FEE_RATE,
 		assetinfo.ASSET_VALUE,
 		assetinfo.REGIST_ORG1,
-		assetinfo.MNG_ORG_NAME,
-		assetinfo.TRU_ORG_NAME,
+		nvl(nvl(m1.CUSTOMER_NAME,assetinfo.MANAGER_ID),assetinfo.MNG_ORG_NAME) MNG_ORG_NAME,
+		nvl(nvl(m2.CUSTOMER_NAME,assetinfo.TRUSTEE_ID),assetinfo.TRU_ORG_NAME) TRU_ORG_NAME,
 		assetinfo.FUND_INVEST_ASSET,
 		assetinfo.IN_ASSET_TYPE,
 		assetinfo.IN_ASSET_TYPE_CMM,
@@ -5004,6 +5004,10 @@
 		assetinfo.IS_DEPOSIT_FLAG
 		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 		FROM chb_asset_info assetinfo
+
+		LEFT JOIN MST_CUSTOMER_INFO M1 ON M1.CUSTOMER_ID = assetinfo.MANAGER_ID
+		LEFT JOIN MST_CUSTOMER_INFO M2 ON M2.CUSTOMER_ID = assetinfo.TRUSTEE_ID
+
 		<!-- LEFT JOIN secrating 
 		on secrating.asset_code = assetinfo.asset_code -->
 		<!-- 资产要素撤销需判断报送状态 -->
@@ -6120,6 +6124,7 @@
          </foreach>
       </if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+	  and SUBMIT_FEEDBACK_STATUS = '03'
     </insert>
     <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
       delete from CHB_ASSET_INFO_SUB
@@ -6130,6 +6135,7 @@
          </foreach>
       </if>
       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+		and SUBMIT_FEEDBACK_STATUS = '03'
     </delete>
     <insert id="insertReportDataFromHis" parameterType="java.util.Map">
       insert into CHB_ASSET_INFO_SUB (

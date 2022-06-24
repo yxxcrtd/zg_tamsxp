@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SppiTestMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SppiTest" >
+        <id column="SPPI_TEST_ID" property="sppiTestId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="SPPI_TMP_TYPE" property="sppiTmpType" jdbcType="VARCHAR" />
+        <result column="SPPI_TMP_NO" property="sppiTmpNo" jdbcType="VARCHAR" />
+        <result column="TEST_DATE" property="testDate" jdbcType="DATE" />
+        <result column="TEST_STATUS" property="testStatus" jdbcType="CHAR" />
+        <result column="DEBT_TOOL_DESC" property="debtToolDesc" jdbcType="VARCHAR" />
+        <result column="DEBT_LAYER_DESC" property="debtLayerDesc" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE_DESC" property="investTypeDesc" jdbcType="VARCHAR" />
+        <result column="MANAGE_TYPE_DESC" property="manageTypeDesc" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="HIDE_IDS" property="hideIds" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SPPI_TEST_ID SPPI_TEST_ID, FINPROD_ID FINPROD_ID, SPPI_TMP_TYPE SPPI_TMP_TYPE, SPPI_TMP_NO SPPI_TMP_NO, 
+        TEST_DATE TEST_DATE, TEST_STATUS TEST_STATUS, DEBT_TOOL_DESC DEBT_TOOL_DESC, DEBT_LAYER_DESC DEBT_LAYER_DESC, 
+        INVEST_TYPE_DESC INVEST_TYPE_DESC, MANAGE_TYPE_DESC MANAGE_TYPE_DESC, REMARK REMARK, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, HIDE_IDS HIDE_IDS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SppiTestMapper_mysql.Base_Column_List" />
+        from SPPI_TEST
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SppiTestMapper_mysql.Base_Column_List" />
+        from SPPI_TEST
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SppiTestMapper_mysql.Base_Column_List" />
+        from SPPI_TEST
+        where SPPI_TEST_ID = #{sppiTestId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SPPI_TEST
+        where SPPI_TEST_ID = #{sppiTestId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SppiTest" >
+        insert into SPPI_TEST (SPPI_TEST_ID, FINPROD_ID, SPPI_TMP_TYPE, 
+            SPPI_TMP_NO, TEST_DATE, TEST_STATUS, 
+            DEBT_TOOL_DESC, DEBT_LAYER_DESC, INVEST_TYPE_DESC, 
+            MANAGE_TYPE_DESC, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, HIDE_IDS)
+        values (#{sppiTestId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{sppiTmpType,jdbcType=VARCHAR}, 
+            #{sppiTmpNo,jdbcType=VARCHAR}, #{testDate,jdbcType=DATE}, #{testStatus,jdbcType=CHAR}, 
+            #{debtToolDesc,jdbcType=VARCHAR}, #{debtLayerDesc,jdbcType=VARCHAR}, #{investTypeDesc,jdbcType=VARCHAR}, 
+            #{manageTypeDesc,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{hideIds,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SppiTest" >
+        insert into SPPI_TEST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sppiTestId != null" >
+                SPPI_TEST_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="sppiTmpType != null" >
+                SPPI_TMP_TYPE,
+            </if>
+            <if test="sppiTmpNo != null" >
+                SPPI_TMP_NO,
+            </if>
+            <if test="testDate != null" >
+                TEST_DATE,
+            </if>
+            <if test="testStatus != null" >
+                TEST_STATUS,
+            </if>
+            <if test="debtToolDesc != null" >
+                DEBT_TOOL_DESC,
+            </if>
+            <if test="debtLayerDesc != null" >
+                DEBT_LAYER_DESC,
+            </if>
+            <if test="investTypeDesc != null" >
+                INVEST_TYPE_DESC,
+            </if>
+            <if test="manageTypeDesc != null" >
+                MANAGE_TYPE_DESC,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="hideIds != null" >
+                HIDE_IDS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sppiTestId != null" >
+                #{sppiTestId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="sppiTmpType != null" >
+                #{sppiTmpType,jdbcType=VARCHAR},
+            </if>
+            <if test="sppiTmpNo != null" >
+                #{sppiTmpNo,jdbcType=VARCHAR},
+            </if>
+            <if test="testDate != null" >
+                #{testDate,jdbcType=DATE},
+            </if>
+            <if test="testStatus != null" >
+                #{testStatus,jdbcType=CHAR},
+            </if>
+            <if test="debtToolDesc != null" >
+                #{debtToolDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="debtLayerDesc != null" >
+                #{debtLayerDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="investTypeDesc != null" >
+                #{investTypeDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="manageTypeDesc != null" >
+                #{manageTypeDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="hideIds != null" >
+                #{hideIds,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SppiTest" >
+        insert into SPPI_TEST(SPPI_TEST_ID, FINPROD_ID, SPPI_TMP_TYPE, SPPI_TMP_NO, TEST_DATE, 
+        TEST_STATUS, DEBT_TOOL_DESC, DEBT_LAYER_DESC, INVEST_TYPE_DESC, MANAGE_TYPE_DESC, 
+        REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, HIDE_IDS
+        )
+        select SPPI_TEST_ID, FINPROD_ID, SPPI_TMP_TYPE, SPPI_TMP_NO, TEST_DATE, 
+            TEST_STATUS, DEBT_TOOL_DESC, DEBT_LAYER_DESC, INVEST_TYPE_DESC, MANAGE_TYPE_DESC, 
+            REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, HIDE_IDS
+            
+             from SPPI_TEST
+             where 1 = 1 and SPPI_TEST_ID = #{sppiTestId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SppiTest" >
+        update SPPI_TEST
+        <set >
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="sppiTmpType != null" >
+                SPPI_TMP_TYPE = #{sppiTmpType,jdbcType=VARCHAR},
+            </if>
+            <if test="sppiTmpNo != null" >
+                SPPI_TMP_NO = #{sppiTmpNo,jdbcType=VARCHAR},
+            </if>
+            <if test="testDate != null" >
+                TEST_DATE = #{testDate,jdbcType=DATE},
+            </if>
+            <if test="testStatus != null" >
+                TEST_STATUS = #{testStatus,jdbcType=CHAR},
+            </if>
+            <if test="debtToolDesc != null" >
+                DEBT_TOOL_DESC = #{debtToolDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="debtLayerDesc != null" >
+                DEBT_LAYER_DESC = #{debtLayerDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="investTypeDesc != null" >
+                INVEST_TYPE_DESC = #{investTypeDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="manageTypeDesc != null" >
+                MANAGE_TYPE_DESC = #{manageTypeDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="hideIds != null" >
+                HIDE_IDS = #{hideIds,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SPPI_TEST_ID = #{sppiTestId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SppiTest" >
+        update SPPI_TEST
+        set FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            SPPI_TMP_TYPE = #{sppiTmpType,jdbcType=VARCHAR},
+            SPPI_TMP_NO = #{sppiTmpNo,jdbcType=VARCHAR},
+            TEST_DATE = #{testDate,jdbcType=DATE},
+            TEST_STATUS = #{testStatus,jdbcType=CHAR},
+            DEBT_TOOL_DESC = #{debtToolDesc,jdbcType=VARCHAR},
+            DEBT_LAYER_DESC = #{debtLayerDesc,jdbcType=VARCHAR},
+            INVEST_TYPE_DESC = #{investTypeDesc,jdbcType=VARCHAR},
+            MANAGE_TYPE_DESC = #{manageTypeDesc,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            HIDE_IDS = #{hideIds,jdbcType=VARCHAR}
+        where SPPI_TEST_ID = #{sppiTestId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -143,6 +143,8 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
     @DictFormat(DictCode.产品运作模式)
     private String operateMode;
 
+    private String prodInsId;
+
     /**
      * 获取 prodid
      * @return prodId.
@@ -464,6 +466,12 @@ public class ProRegistCodeManage001Dto extends BaseEntity implements ITableRow {
 	public void setGenerateDate(String generateDate) {
 		this.generateDate = generateDate;
 	}
-    
-    
+
+    public String getProdInsId() {
+        return prodInsId;
+    }
+
+    public void setProdInsId(String prodInsId) {
+        this.prodInsId = prodInsId;
+    }
 }

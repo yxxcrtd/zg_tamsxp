@@ -67,48 +67,31 @@
 		</if>
 	</delete>
 	<insert id="insertChbAssetBasisData" >
-		UPDATE  CHB_ASSETS_BASIS_DATA as A,
-		(
-		select
-		VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		TDY_INTADJEXP_ADD,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY,
-		CCY from
+		insert into CHB_ASSETS_BASIS_DATA(VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+		POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+		REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY,TDY_INTADJEXP_ADD
+		)
+		select VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+		POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+		REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY,TDY_INTADJEXP_ADD
+		from
 		(
 		select TEMP.* from
 		(
 		<foreach collection="newDataList" item="item"  separator="union all">
-			select
+			SELECT
 			#{item.valId,jdbcType=VARCHAR} VAL_ID,
 			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
 			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
 			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
 			#{item.mdate,jdbcType=DATE} MDATE,
-			#{item.posAmt,jdbcType=DECIMAL} POS_AMT,
-			#{item.tdyCostAmt,jdbcType=DECIMAL} TDY_COST_AMT,
-			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
-			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
-			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
-			#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} TDY_INTADJEXP_ADD,
+			CAST(#{item.posAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) )POS_AMT,
+			CAST(#{item.tdyCostAmt,jdbcType=DECIMAL}  AS DECIMAL(30,2) ) TDY_COST_AMT,
+			CAST(#{item.tdyFloatIngpl,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_FLOAT_INGPL,
+			CAST(#{item.tdyIntincexp,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_INTINCEXP,
+			CAST(#{item.delayPayAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) DELAY_PAY_AMT,
 			#{item.remark,jdbcType=VARCHAR} REMARK,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
@@ -121,21 +104,63 @@
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
 			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
 			,#{item.ccy,jdbcType=VARCHAR} CCY
+			,CAST(#{item.tdyIntadjexpAdd,jdbcType=DECIMAL}  AS DECIMAL(30,2) ) TDY_INTADJEXP_ADD
+			FROM
+			DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_ASSETS_BASIS_DATA CII where CII.PROD_ID = TEMP.PROD_ID
+		AND CII.ASSET_ID = TEMP.ASSET_ID
+		AND CII.VALUE_DATE = TEMP.VALUE_DATE)
+		) de ;
+
+		UPDATE  CHB_ASSETS_BASIS_DATA as A,
+		(
+		select VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+		POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+		REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY,TDY_INTADJEXP_ADD
+		 from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="newDataList" item="item"  separator="union all">
+			SELECT
+			#{item.valId,jdbcType=VARCHAR} VAL_ID,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
+			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
+			#{item.mdate,jdbcType=DATE} MDATE,
+			CAST(#{item.posAmt,jdbcType=DECIMAL}   AS DECIMAL(30,2) )POS_AMT,
+			CAST(#{item.tdyCostAmt,jdbcType=DECIMAL}  AS DECIMAL(30,2) ) TDY_COST_AMT,
+			CAST(#{item.tdyFloatIngpl,jdbcType=DECIMAL}  AS DECIMAL(30,2) ) TDY_FLOAT_INGPL,
+			CAST(#{item.tdyIntincexp,jdbcType=DECIMAL}  AS DECIMAL(30,2) ) TDY_INTINCEXP,
+			CAST(#{item.delayPayAmt,jdbcType=DECIMAL}  AS DECIMAL(30,2) ) DELAY_PAY_AMT,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
+			,#{item.ccy,jdbcType=VARCHAR} CCY
+			,CAST(#{item.tdyIntadjexpAdd,jdbcType=DECIMAL}  AS DECIMAL(30,2) ) TDY_INTADJEXP_ADD
 			FROM
 			DUAL
 		</foreach>
 		) TEMP
 		) de
 		) AS B
-		set
-		A.VAL_ID = B.VAL_ID,
+		SET  A.VAL_ID = B.VAL_ID,
 		A.MDATE = B.MDATE,
 		A.POS_AMT = B.POS_AMT,
 		A.TDY_COST_AMT = B.TDY_COST_AMT,
 		A.TDY_FLOAT_INGPL = B.TDY_FLOAT_INGPL,
 		A.TDY_INTINCEXP = B.TDY_INTINCEXP,
 		A.DELAY_PAY_AMT = B.DELAY_PAY_AMT,
-		A.TDY_INTADJEXP_ADD = B.TDY_INTADJEXP_ADD,
 		A.REMARK = B.REMARK,
 		A.CREATE_TIME = B.CREATE_TIME,
 		A.UPDATE_TIME = B.UPDATE_TIME,
@@ -148,135 +173,35 @@
 		A.DATA_SOURCE = B.DATA_SOURCE,
 		A.MD5PRIMARYKEY = B.MD5PRIMARYKEY
 		,A.CCY = B.CCY
-		where A.PROD_ID = B.PROD_ID
+		,A.TDY_INTADJEXP_ADD = B.TDY_INTADJEXP_ADD
+		where  A.PROD_ID = B.PROD_ID
 		AND A.ASSET_ID = B.ASSET_ID
 		AND A.VALUE_DATE = B.VALUE_DATE;
-
-		insert into CHB_ASSETS_BASIS_DATA_NOBTM(VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		TDY_INTADJEXP_ADD,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY,
-		CCY)
-		select VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		TDY_INTADJEXP_ADD,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY,
-		CCY from
-		(
-		select TEMP.* from
-		(
-		<foreach collection="newDataList" item="item"  separator="union all">
-			select
-			#{item.valId,jdbcType=VARCHAR} VAL_ID,
-			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
-			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
-			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
-			#{item.mdate,jdbcType=DATE} MDATE,
-			#{item.posAmt,jdbcType=DECIMAL} POS_AMT,
-			#{item.tdyCostAmt,jdbcType=DECIMAL} TDY_COST_AMT,
-			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
-			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
-			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
-			#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} TDY_INTADJEXP_ADD,
-			#{item.remark,jdbcType=VARCHAR} REMARK,
-			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-			#{item.status,jdbcType=VARCHAR} STATUS,
-			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
-			,#{item.ccy,jdbcType=VARCHAR} CCY
-			FROM
-			DUAL
-		</foreach>
-		) TEMP where not exists (select 1 from CHB_ASSETS_BASIS_DATA CII where CII.PROD_ID = TEMP.PROD_ID
-		AND CII.ASSET_ID = TEMP.ASSET_ID
-		AND CII.VALUE_DATE = TEMP.VALUE_DATE)
-		) de ;
 	</insert>
 	<insert id="insertChbAssetBasisDataNoBtm" >
-		UPDATE  CHB_ASSETS_BASIS_DATA as A,
-		(
-		select
-		VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		TDY_INTADJEXP_ADD,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY,
-		CCY from
+		insert into CHB_ASSETS_BASIS_DATA_NOBTM(VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+		POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+		REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY,TDY_INTADJEXP_ADD)
+		select VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE,
+		POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT,
+		REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY,TDY_INTADJEXP_ADD from
 		(
 		select TEMP.* from
 		(
 		<foreach collection="newDataList" item="item"  separator="union all">
-			select
+			SELECT
 			#{item.valId,jdbcType=VARCHAR} VAL_ID,
 			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
 			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
 			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
 			#{item.mdate,jdbcType=DATE} MDATE,
-			#{item.posAmt,jdbcType=DECIMAL} POS_AMT,
-			#{item.tdyCostAmt,jdbcType=DECIMAL} TDY_COST_AMT,
-			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
-			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
-			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
-			#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} TDY_INTADJEXP_ADD,
+			CAST(#{item.posAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) POS_AMT,
+			CAST(#{item.tdyCostAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_COST_AMT,
+			CAST(#{item.tdyFloatIngpl,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_FLOAT_INGPL,
+			CAST(#{item.tdyIntincexp,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_INTINCEXP,
+			CAST(#{item.delayPayAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) DELAY_PAY_AMT,
 			#{item.remark,jdbcType=VARCHAR} REMARK,
 			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
@@ -289,118 +214,73 @@
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
 			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
 			,#{item.ccy,jdbcType=VARCHAR} CCY
+			,CAST(#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} AS DECIMAL(30,2) )  TDY_INTADJEXP_ADD
+			FROM
+			DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_ASSETS_BASIS_DATA_NOBTM CII where CII.PROD_ID = TEMP.PROD_ID
+		AND CII.ASSET_ID = TEMP.ASSET_ID
+		AND CII.VALUE_DATE = TEMP.VALUE_DATE)
+		) de ;
+
+		UPDATE  CHB_ASSETS_BASIS_DATA_NOBTM as A,
+		(
+		select VAL_ID,
+		MDATE,
+		POS_AMT,
+		TDY_COST_AMT,
+		TDY_FLOAT_INGPL,
+		TDY_INTINCEXP,
+		DELAY_PAY_AMT,
+		REMARK,
+		CREATE_TIME,
+		UPDATE_TIME,
+		CREATE_DEPT,
+		ORG_CODE,
+		DEPT_CODE,
+		CREATE_USER,
+		UPDATE_USER,
+		STATUS,
+		DATA_SOURCE,
+		MD5PRIMARYKEY,
+		CCY,TDY_INTADJEXP_ADD from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
+			SELECT
+			#{item.valId,jdbcType=VARCHAR} VAL_ID,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
+			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
+			#{item.mdate,jdbcType=DATE} MDATE,
+			CAST(#{item.posAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) POS_AMT,
+			CAST(#{item.tdyCostAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_COST_AMT,
+			CAST(#{item.tdyFloatIngpl,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_FLOAT_INGPL,
+			CAST(#{item.tdyIntincexp,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_INTINCEXP,
+			CAST(#{item.delayPayAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) DELAY_PAY_AMT,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
+			,#{item.ccy,jdbcType=VARCHAR} CCY
+			,CAST(#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} AS DECIMAL(30,2) ) TDY_INTADJEXP_ADD
 			FROM
 			DUAL
 		</foreach>
 		) TEMP
 		) de
 		) AS B
-		set
-		A.VAL_ID = B.VAL_ID,
-		A.MDATE = B.MDATE,
-		A.POS_AMT = B.POS_AMT,
-		A.TDY_COST_AMT = B.TDY_COST_AMT,
-		A.TDY_FLOAT_INGPL = B.TDY_FLOAT_INGPL,
-		A.TDY_INTINCEXP = B.TDY_INTINCEXP,
-		A.DELAY_PAY_AMT = B.DELAY_PAY_AMT,
-		A.TDY_INTADJEXP_ADD = B.TDY_INTADJEXP_ADD,
-		A.REMARK = B.REMARK,
-		A.CREATE_TIME = B.CREATE_TIME,
-		A.UPDATE_TIME = B.UPDATE_TIME,
-		A.CREATE_DEPT = B.CREATE_DEPT,
-		A.ORG_CODE = B.ORG_CODE,
-		A.DEPT_CODE = B.DEPT_CODE,
-		A.CREATE_USER = B.CREATE_USER,
-		A.UPDATE_USER = B.UPDATE_USER,
-		A.STATUS = B.STATUS,
-		A.DATA_SOURCE = B.DATA_SOURCE,
-		A.MD5PRIMARYKEY = B.MD5PRIMARYKEY
-		,A.CCY = B.CCY
-		where A.PROD_ID = B.PROD_ID
-		AND A.ASSET_ID = B.ASSET_ID
-		AND A.VALUE_DATE = B.VALUE_DATE;
-
-		insert into CHB_ASSETS_BASIS_DATA_NOBTM(VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		TDY_INTADJEXP_ADD,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY,
-		CCY)
-		select VAL_ID,
-		PROD_ID,
-		ASSET_ID,
-		VALUE_DATE,
-		MDATE,
-		POS_AMT,
-		TDY_COST_AMT,
-		TDY_FLOAT_INGPL,
-		TDY_INTINCEXP,
-		DELAY_PAY_AMT,
-		TDY_INTADJEXP_ADD,
-		REMARK,
-		ORG_CODE,
-		DEPT_CODE,
-		UPDATE_USER,
-		UPDATE_TIME,
-		CREATE_USER,
-		CREATE_TIME,
-		CREATE_DEPT,
-		STATUS,
-		DATA_SOURCE,
-		MD5PRIMARYKEY,
-		CCY from
-		(
-		select TEMP.* from
-		(
-		<foreach collection="newDataList" item="item"  separator="union all">
-			select
-			#{item.valId,jdbcType=VARCHAR} VAL_ID,
-			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
-			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
-			#{item.valueDate,jdbcType=DATE} VALUE_DATE,
-			#{item.mdate,jdbcType=DATE} MDATE,
-			#{item.posAmt,jdbcType=DECIMAL} POS_AMT,
-			#{item.tdyCostAmt,jdbcType=DECIMAL} TDY_COST_AMT,
-			#{item.tdyFloatIngpl,jdbcType=DECIMAL} TDY_FLOAT_INGPL,
-			#{item.tdyIntincexp,jdbcType=DECIMAL} TDY_INTINCEXP,
-			#{item.delayPayAmt,jdbcType=DECIMAL} DELAY_PAY_AMT,
-			#{item.tdyIntadjexpAdd,jdbcType=DECIMAL} TDY_INTADJEXP_ADD,
-			#{item.remark,jdbcType=VARCHAR} REMARK,
-			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-			#{item.status,jdbcType=VARCHAR} STATUS,
-			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
-			,#{item.ccy,jdbcType=VARCHAR} CCY
-			FROM
-			DUAL
-		</foreach>
-		) TEMP where not exists (select 1 from CHB_ASSETS_BASIS_DATA CII where CII.PROD_ID = TEMP.PROD_ID
+		set  A.* = B.* where exists (select 1 from CHB_ASSETS_BASIS_DATA_NOBTM CII where CII.PROD_ID = TEMP.PROD_ID
 		AND CII.ASSET_ID = TEMP.ASSET_ID
-		AND CII.VALUE_DATE = TEMP.VALUE_DATE)
-		) de ;
+		AND CII.VALUE_DATE = TEMP.VALUE_DATE );
 	</insert>
 	<delete id="deleteBatchList" >
 		<foreach collection="dataList" item="item" index="index" separator=";">
@@ -788,5 +668,33 @@ left join FIN_TRADE_PRODUCT fp2 on fp2.FINPROD_ID = psv1.FINPROD_ID and fp2.bran
 		where FINPROD_ID = #{secid,jdbcType=VARCHAR}
 		and EXERCISE_DATE >= #{valueDate,jdbcType=DATE}
 	</select>
+
+	<select id="getPulicAssetId"  resultType="java.lang.String">
+		select fp1.finprod_market_id from fin_product_add fpd
+		inner join fin_product fp on fpd.appear_market_id = fp.finprod_market_id
+		left join fin_product fp1 on fp1.finprod_id = fpd.finprod_id
+		where fpd.appear_market_id = #{assetId,jdbcType=VARCHAR}
+		and fp.finprod_type ='F01'
+	</select>
+
+	<insert id="insertNoBtm" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
+		insert into CHB_ASSETS_BASIS_DATA_NOBTM (VAL_ID, PROD_ID, ASSET_ID,CCY,
+		  VALUE_DATE, MDATE, POS_AMT,
+		  TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, TDY_INTADJEXP_ADD,
+		  DELAY_PAY_AMT, REMARK, CREATE_TIME,
+		  UPDATE_TIME, CREATE_DEPT, ORG_CODE,
+		  DEPT_CODE, CREATE_USER, UPDATE_USER,
+		  STATUS, DATA_SOURCE, MD5PRIMARYKEY
+		  )
+		values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR},
+		  #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, #{posAmt,jdbcType=DECIMAL},
+		  #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, #{tdyIntadjexpAdd,jdbcType=DECIMAL},
+		  #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, sysdate,
+		  sysdate, #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+		  #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR},
+		  #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, #{md5primarykey,jdbcType=CHAR}
+		  )
+  	</insert>
+
 
 </mapper>

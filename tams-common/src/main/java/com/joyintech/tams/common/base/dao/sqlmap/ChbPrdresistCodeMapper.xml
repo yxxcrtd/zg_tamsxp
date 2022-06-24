@@ -6,6 +6,7 @@
         <id column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
         <result column="PRODNAME" property="prodname" jdbcType="VARCHAR" />
         <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
         <result column="VDATE" property="vdate" jdbcType="DATE" />
         <result column="MDATE" property="mdate" jdbcType="DATE" />
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
@@ -18,9 +19,9 @@
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        PRODID PRODID, ORG_CODE ORG_CODE, PRODNAME PRODNAME, REG_CODE REG_CODE, VDATE VDATE, 
+        PRODID PRODID, ORG_CODE ORG_CODE, PRODNAME PRODNAME, REG_CODE REG_CODE, VDATE VDATE, PROD_INS_ID PROD_INS_ID,
         MDATE MDATE, DEPT_CODE DEPT_CODE, INVESTOR INVESTOR, REMARK REMARK, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT,OPERATE_MODE OPERATE_MODE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -41,8 +42,8 @@
         	<if test="reg_code != null  and flag == '1'.toString()" >
                 and REG_CODE = #{reg_code,jdbcType=VARCHAR}
             </if>
-            <if test="prodid != null and flag == '2'.toString()" >
-                and PRODID = #{prodid,jdbcType=VARCHAR}
+            <if test="prodInsId != null and flag == '2'.toString()" >
+                and PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
             </if>
         </where>
         <!-- where REG_CODE = #{reg_code,jdbcType=VARCHAR} -->
@@ -51,7 +52,7 @@
     </select>
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey" >
         delete from CHB_PRDRESIST_CODE
-        where PRODID = #{prodid,jdbcType=VARCHAR}
+        where PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
           and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </delete>
     
@@ -64,114 +65,55 @@
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         insert into CHB_PRDRESIST_CODE (PRODID, ORG_CODE, PRODNAME, 
-            REG_CODE, VDATE, MDATE, 
+            REG_CODE,PROD_INS_ID, VDATE, MDATE,
             DEPT_CODE, INVESTOR, REMARK, 
             UPDATE_USER, UPDATE_TIME, CREATE_USER, 
             CREATE_TIME, CREATE_DEPT)
         values (#{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{prodname,jdbcType=VARCHAR}, 
-            #{regCode,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, 
+            #{regCode,jdbcType=VARCHAR}, #{prodInsId,jdbcType=VARCHAR},#{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE},
             #{deptCode,jdbcType=VARCHAR}, #{investor,jdbcType=CHAR}, #{remark,jdbcType=VARCHAR}, 
             #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
-        insert into CHB_PRDRESIST_CODE
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="prodid != null" >
-                PRODID,
-            </if>
-            <if test="orgCode != null" >
-                ORG_CODE,
-            </if>
-            <if test="prodname != null" >
-                PRODNAME,
-            </if>
-            <if test="regCode != null" >
-                REG_CODE,
-            </if>
-            <if test="vdate != null" >
-                VDATE,
-            </if>
-            <if test="mdate != null" >
-                MDATE,
-            </if>
-            <if test="deptCode != null" >
-                DEPT_CODE,
-            </if>
-            <if test="investor != null" >
-                INVESTOR,
-            </if>
-            <if test="remark != null" >
-                REMARK,
-            </if>
-            <if test="updateUser != null" >
-                UPDATE_USER,
-            </if>
-                UPDATE_TIME,
-            <if test="createUser != null" >
-                CREATE_USER,
-            </if>
-                CREATE_TIME,
-            <if test="createDept != null" >
-                CREATE_DEPT,
-            </if>
-            <if test="operateMode != null" >
-                OPERATE_MODE,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="prodid != null" >
-                #{prodid,jdbcType=VARCHAR},
-            </if>
-            <if test="orgCode != null" >
-                #{orgCode,jdbcType=VARCHAR},
-            </if>
-            <if test="prodname != null" >
-                #{prodname,jdbcType=VARCHAR},
-            </if>
-            <if test="regCode != null" >
-                #{regCode,jdbcType=VARCHAR},
-            </if>
-            <if test="vdate != null" >
-                #{vdate,jdbcType=DATE},
-            </if>
-            <if test="mdate != null" >
-                #{mdate,jdbcType=DATE},
-            </if>
-            <if test="deptCode != null" >
-                #{deptCode,jdbcType=VARCHAR},
-            </if>
-            <if test="investor != null" >
-                #{investor,jdbcType=CHAR},
-            </if>
-            <if test="remark != null" >
-                #{remark,jdbcType=VARCHAR},
-            </if>
-            <if test="updateUser != null" >
-                #{updateUser,jdbcType=VARCHAR},
-            </if>
-                sysdate,
-            <if test="createUser != null" >
-                #{createUser,jdbcType=VARCHAR},
-            </if>
-                sysdate,
-            <if test="createDept != null" >
-                #{createDept,jdbcType=VARCHAR},
-            </if>
-            <if test="operateMode != null" >
-                #{operateMode,jdbcType=VARCHAR},
-            </if>
-        </trim>
+        merge into CHB_PRDRESIST_CODE a using(
+        select
+            #{prodid,jdbcType=VARCHAR} PRODID,
+            #{orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{regCode,jdbcType=VARCHAR} REG_CODE,
+            #{prodInsId,jdbcType=VARCHAR} PROD_INS_ID,
+            #{prodname,jdbcType=VARCHAR} PRODNAME,
+            #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            #{operateMode,jdbcType=VARCHAR} OPERATE_MODE,
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            sysdate UPDATE_TIME,
+            #{createUser,jdbcType=VARCHAR} CREATE_USER,
+            sysdate CREATE_TIME
+            from dual
+        )b on (a.PROD_INS_ID = b.PROD_INS_ID)
+        WHEN MATCHED THEN
+        UPDATE SET
+            a.PRODID = b.PRODID,
+            a.ORG_CODE = b.ORG_CODE,
+            a.REG_CODE = b.REG_CODE,
+            a.PRODNAME = b.PRODNAME
+            a.DEPT_CODE = b.DEPT_CODE,
+            a.OPERATE_MODE = b.OPERATE_MODE,
+            a.UPDATE_USER = b.UPDATE_USER,
+            a.UPDATE_TIME = b.UPDATE_TIME
+        WHEN NOT MATCHED THEN
+            insert (PRODID,ORG_CODE,REG_CODE,PROD_INS_ID,PRODNAME,DEPT_CODE,OPERATE_MODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME)
+            values (b.PRODID,b.ORG_CODE,b.REG_CODE,b.PROD_INS_ID,b.PRODNAME,b.DEPT_CODE,b.UPDATE_USER,b.UPDATE_TIME,b.CREATE_USER,b.CREATE_TIME)
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
-        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE, 
+        insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE,PROD_INS_ID, VDATE, MDATE,
         DEPT_CODE, INVESTOR, REMARK, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
         CREATE_DEPT)
-        select PRODID, ORG_CODE, PRODNAME, REG_CODE, VDATE, MDATE, 
+        select PRODID, ORG_CODE, PRODNAME, REG_CODE, PROD_INS_ID,VDATE, MDATE,
             DEPT_CODE, INVESTOR, REMARK, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER, CREATE_TIME, 
             CREATE_DEPT
              from CHB_PRDRESIST_CODE
-             where STATUS = 'E' and PRODID = #{prodid,jdbcType=VARCHAR} and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+             where STATUS = 'E' and PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR} and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         update CHB_PRDRESIST_CODE
@@ -183,7 +125,9 @@
             <if test="regCode != null" >
                 REG_CODE = #{regCode,jdbcType=VARCHAR},
             </if>
-            
+            <if test="prodid != null" >
+                PRODID = #{prodid,jdbcType=VARCHAR},
+            </if>
              <!-- <if test="newProdId != null" >
                 PRODID = #{newProdId,jdbcType=VARCHAR},
             </if> -->
@@ -210,7 +154,7 @@
                 OPERATE_MODE = #{operateMode,jdbcType=VARCHAR}
             </if>
         </set>
-        where PRODID = #{prodid,jdbcType=VARCHAR}
+        where PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
        <!--  where REG_CODE = #{regCode,jdbcType=VARCHAR} -->
           <!-- and ORG_CODE = #{orgCode,jdbcType=VARCHAR} -->
     </update>
@@ -273,6 +217,7 @@
         update CHB_PRDRESIST_CODE
         set PRODNAME = #{prodname,jdbcType=VARCHAR},
             REG_CODE = #{regCode,jdbcType=VARCHAR},
+            PRODID = #{prodid,jdbcType=VARCHAR},
             VDATE = #{vdate,jdbcType=DATE},
             MDATE = #{mdate,jdbcType=DATE},
             DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
@@ -280,7 +225,7 @@
             REMARK = #{remark,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-        where PRODID = #{prodid,jdbcType=VARCHAR}
+        where PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
           and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </update>
 </mapper>

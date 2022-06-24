@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,14 @@ public class PbcClassicsDataFileHelper {
     public void setSysSeqService(SysSeqService sysSeqLogic) {
     	PbcClassicsDataFileHelper.sysSeqService = sysSeqLogic;
     }
+	//add by zhoubin 20220425 start
+	private static SysSeqService getSysSeqService() {
+		if(PbcClassicsDataFileHelper.sysSeqService == null) {
+			PbcClassicsDataFileHelper.sysSeqService = SpringContextUtil.getBean(SysSeqService.class);
+		}
+		return PbcClassicsDataFileHelper.sysSeqService;
+	}
+	//add by zhoubin 20220425 end
     /**
      * 生成文件
      * @param datas
@@ -250,12 +259,12 @@ public class PbcClassicsDataFileHelper {
     	}else{
     		if(seqMap.get(filePath)==null){
     			List<String> seqList = new ArrayList<String>();
-    			seq = String.format("%03d", sysSeqService.getSysSeq(seqCode, seqDate, null));
+    			seq = String.format("%03d", PbcClassicsDataFileHelper.getSysSeqService().getSysSeq(seqCode, seqDate, null));
     			seqList.add(seq);
     			seqMap.put(filePath, seqList);
     		}else{
     			List<String> seqList = (List<String>)seqMap.get(filePath);
-    			seq = String.format("%03d", sysSeqService.getSysSeq(seqCode, seqDate, null));
+    			seq = String.format("%03d", PbcClassicsDataFileHelper.getSysSeqService().getSysSeq(seqCode, seqDate, null));
     			seqList.add(seq);
     		}
     	}

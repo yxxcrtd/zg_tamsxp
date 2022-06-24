@@ -635,6 +635,7 @@ public class PbcMonthAssetPositionService  extends BaseService{
         qmode.setProdids(prodList);
         String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.PBC_IS_CHL_BTM);
         qmode.setIsChlBtm(isChlBtm);
+        qmode.setEnddate(batchDate);
 
         /*
         // 人行资产头寸:通道穿透报送时，通道剩余现金需作为境内存款资产进行统计，不穿透报送时，不需要  zhangyf 20191023 start

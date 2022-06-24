@@ -93,37 +93,37 @@
     where SEQNO = #{seqno,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
-    insert into CHB_TOTALCHECK_DETAIL (SEQNO, TOTALSEQNO, ASSET_TYPE2, 
-      ASSET_CODE, PRD_ID, PRD_NAME, 
-      PRD_NUM, PRD_AMT, MONTH_PRD_NUM, 
-      MONTH_PRD_AMT, DEVIATION, PRD_NUM_CNY, 
-      PRD_AMT_CNY, MONTH_PRD_NUM_CNY, MONTH_PRD_AMT_CNY, 
-      DEVIATION_CNY, DETAIL_YIELD, OPERATE_MODE, 
-      HOLD_AMT, PRD_ASTHOLD_AMT, PRD_BALHOLD_AMT, 
-      PRD_CASHHOLD_AMT, PRD_HOLDDATE, PRD_INS_ID, 
-      PRD_VDATE, RAISE_STARTDATE, RAISE_ENDDATE, 
-      RAISE_REGDATE, RAISE_IS_DELAY, BOT_ISSUE_NUM, BOT_ISSUE_AMT, 
-      BOT_UNINVEST_CASH, BOT_ASSET_AMT, BOT_DEBT_AMT, 
-      AST_HOLD_NUM, AST_HOLD_IS_COUNT, AST_MIN_UPRICE, 
-      AST_MAX_UPRICE,IS_REG, IS_DEVIATION, CHECK_DATE, 
-      ISSUE_PARTY_ID, ISSUE_PARTY_NAME, ORG_CODE, 
-      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+    insert into CHB_TOTALCHECK_DETAIL (SEQNO, TOTALSEQNO, ASSET_TYPE2,
+      ASSET_CODE, PRD_ID, PRD_NAME,
+      PRD_NUM, PRD_AMT, MONTH_PRD_NUM,
+      MONTH_PRD_AMT, DEVIATION, PRD_NUM_CNY,
+      PRD_AMT_CNY, MONTH_PRD_NUM_CNY, MONTH_PRD_AMT_CNY,
+      DEVIATION_CNY, DETAIL_YIELD, OPERATE_MODE,
+      HOLD_AMT, PRD_ASTHOLD_AMT, PRD_BALHOLD_AMT,
+      PRD_CASHHOLD_AMT, PRD_HOLDDATE, PRD_INS_ID,
+      PRD_VDATE, RAISE_STARTDATE, RAISE_ENDDATE,
+      RAISE_REGDATE, RAISE_IS_DELAY, BOT_ISSUE_NUM, BOT_ISSUE_AMT,
+      BOT_UNINVEST_CASH, BOT_ASSET_AMT, BOT_DEBT_AMT,
+      AST_HOLD_NUM, AST_HOLD_IS_COUNT, AST_MIN_UPRICE,
+      AST_MAX_UPRICE,IS_REG, IS_DEVIATION, CHECK_DATE,
+      ISSUE_PARTY_ID, ISSUE_PARTY_NAME, ORG_CODE,
+      CREATE_USER, CREATE_DEPT, CREATE_TIME,
       UPDATE_USER, UPDATE_TIME)
-    values (#{seqno,jdbcType=VARCHAR}, #{totalseqno,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, 
-      #{assetCode,jdbcType=VARCHAR}, #{prdId,jdbcType=VARCHAR}, #{prdName,jdbcType=VARCHAR}, 
-      #{prdNum,jdbcType=DECIMAL}, #{prdAmt,jdbcType=DECIMAL}, #{monthPrdNum,jdbcType=DECIMAL}, 
-      #{monthPrdAmt,jdbcType=DECIMAL}, #{deviation,jdbcType=DECIMAL}, #{prdNumCny,jdbcType=DECIMAL}, 
-      #{prdAmtCny,jdbcType=DECIMAL}, #{monthPrdNumCny,jdbcType=DECIMAL}, #{monthPrdAmtCny,jdbcType=DECIMAL}, 
-      #{deviationCny,jdbcType=DECIMAL}, #{detailYield,jdbcType=DECIMAL}, #{operateMode,jdbcType=VARCHAR}, 
-      #{holdAmt,jdbcType=DECIMAL}, #{prdAstholdAmt,jdbcType=DECIMAL}, #{prdBalholdAmt,jdbcType=DECIMAL}, 
-      #{prdCashholdAmt,jdbcType=DECIMAL}, #{prdHolddate,jdbcType=TIMESTAMP}, #{prdInsId,jdbcType=VARCHAR}, 
-      #{prdVdate,jdbcType=TIMESTAMP}, #{raiseStartdate,jdbcType=TIMESTAMP}, #{raiseEnddate,jdbcType=TIMESTAMP}, 
-      #{raiseRegdate,jdbcType=TIMESTAMP}, #{raiseIsDelay,jdbcType=VARCHAR}, #{botIssueNum,jdbcType=DECIMAL}, #{botIssueAmt,jdbcType=DECIMAL}, 
-      #{botUninvestCash,jdbcType=DECIMAL}, #{botAssetAmt,jdbcType=DECIMAL}, #{botDebtAmt,jdbcType=DECIMAL}, 
-      #{astHoldNum,jdbcType=DECIMAL}, #{astHoldIsCount,jdbcType=VARCHAR}, #{astMinUprice,jdbcType=DECIMAL}, 
-      #{astMaxUprice,jdbcType=DECIMAL}, #{isReg,jdbcType=VARCHAR}, #{isDeviation,jdbcType=VARCHAR}, #{checkDate,jdbcType=TIMESTAMP}, 
-      #{issuePartyId,jdbcType=VARCHAR}, #{issuePartyName,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
-      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{seqno,jdbcType=VARCHAR}, #{totalseqno,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR},
+      #{assetCode,jdbcType=VARCHAR}, #{prdId,jdbcType=VARCHAR}, #{prdName,jdbcType=VARCHAR},
+      #{prdNum,jdbcType=DECIMAL}, #{prdAmt,jdbcType=DECIMAL}, #{monthPrdNum,jdbcType=DECIMAL},
+      #{monthPrdAmt,jdbcType=DECIMAL}, #{deviation,jdbcType=DECIMAL}, #{prdNumCny,jdbcType=DECIMAL},
+      #{prdAmtCny,jdbcType=DECIMAL}, #{monthPrdNumCny,jdbcType=DECIMAL}, #{monthPrdAmtCny,jdbcType=DECIMAL},
+      #{deviationCny,jdbcType=DECIMAL}, #{detailYield,jdbcType=DECIMAL}, #{operateMode,jdbcType=VARCHAR},
+      #{holdAmt,jdbcType=DECIMAL}, #{prdAstholdAmt,jdbcType=DECIMAL}, #{prdBalholdAmt,jdbcType=DECIMAL},
+      #{prdCashholdAmt,jdbcType=DECIMAL}, #{prdHolddate,jdbcType=TIMESTAMP}, #{prdInsId,jdbcType=VARCHAR},
+      #{prdVdate,jdbcType=TIMESTAMP}, #{raiseStartdate,jdbcType=TIMESTAMP}, #{raiseEnddate,jdbcType=TIMESTAMP},
+      #{raiseRegdate,jdbcType=TIMESTAMP}, #{raiseIsDelay,jdbcType=VARCHAR}, #{botIssueNum,jdbcType=DECIMAL}, #{botIssueAmt,jdbcType=DECIMAL},
+      #{botUninvestCash,jdbcType=DECIMAL}, #{botAssetAmt,jdbcType=DECIMAL}, #{botDebtAmt,jdbcType=DECIMAL},
+      #{astHoldNum,jdbcType=DECIMAL}, #{astHoldIsCount,jdbcType=VARCHAR}, #{astMinUprice,jdbcType=DECIMAL},
+      #{astMaxUprice,jdbcType=DECIMAL}, #{isReg,jdbcType=VARCHAR}, #{isDeviation,jdbcType=VARCHAR}, #{checkDate,jdbcType=TIMESTAMP},
+      #{issuePartyId,jdbcType=VARCHAR}, #{issuePartyName,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDetailDto" >
@@ -633,7 +633,7 @@
   <delete id="deletTotalCheckDeatailByCdate" parameterType="java.util.Map">
 	  delete from CHB_TOTALCHECK_DETAIL
 	  where TOTALSEQNO in (
-	    select seqno 
+	    select seqno
 	    from CHB_TOTALCHECK
 	    where DATE_FORMAT(cdate,'%Y-%m-%d') >= DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
 	  )
@@ -664,7 +664,7 @@
         #{orgCode,jdbcType=VARCHAR}
       </foreach>
     </if>
-    )
+    ) a
     where 1 = 1 limit 1
   </select>
 </mapper>

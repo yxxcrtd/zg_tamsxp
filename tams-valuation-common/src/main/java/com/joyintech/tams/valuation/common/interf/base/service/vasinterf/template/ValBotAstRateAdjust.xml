@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<info description="存款类资产利率调整">
-	<string name="prodId" value="PRODID" length="32" required="true" description="资产代码"/>
-	<date name="effDate" value="EFFDATE" length="10" required="true" description="生效日"/>
-	<decimal name="rate" value="RATE" length="30" scale="14" required="true" description="利率"/>
-	<string name="dataActionSign" value="DATAACTIONSIGN" length="50" required="true" description="数据动作标志"/>
-	<string name="basis" value="BASIS" length="50" required="true" description="计息基础"/>
-	<string name="intType" value="INTTYPE" length="50" required="true" description="利率类型"/>
-</info>

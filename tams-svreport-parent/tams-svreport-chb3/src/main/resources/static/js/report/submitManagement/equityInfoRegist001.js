@@ -110,7 +110,7 @@ $(function(){
             { field: 'status',visible:false},
             { title: "数据日期", field: 'updateTimeStr',width:150,sortField:'updateTime'},
             { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},           
-            { title: "报送日期", field: 'submitTimeStr',width:150,sortField:'submitTime'},
+            { title: "报送日期", field: 'submitTime',type: 'datetime',width:150,sortField:'submitTime'},
             { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date',width:150,sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
@@ -700,6 +700,14 @@ $(function(){
                 param.status='01,02';
                 param.flag = "0";
                 param.submitStatus='01';
+            //add by zhoubin 20220422 start
+            Joyin.ajax('countExportNum',param,function(dataNum){
+                if (dataNum==0) {
+                    Joyin.error("只能导出报送状态为“未报送”的数据，请重新选择");
+                    return;
+                }
+               });
+            //add by zhoubin 20220422 end
             	//没有勾选数据
             	//默认导出满足所选查询条件（包括空查询条件）的所有数据状态为“新建”且报送状态为“未报送”的数据。
             	//导出成功后，系统弹出确认框“导出成功，是否自动标识未报送数据的报送状态为“手工处理”？

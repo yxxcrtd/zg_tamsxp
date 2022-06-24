@@ -527,7 +527,7 @@
    		on ces3.sumit_seq = substatus.seqno
 		WHERE to_char(ces3.SUBMIT_TIME,'yyyy-mm-dd') = to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd')
 		and ces3.SUBMIT_STATUS='02' /*接口报送*/
-		and ces3.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
+		and substatus.SUBMIT_FEEDBACK_STATUS in ('01','03') /*发送成功，中债通过*/
 		<if test="createDeptList != null and createDeptList.size>0">
 			<foreach collection="createDeptList" item = "item" open="and ces3.CREATE_DEPT in(" separator="," close=")">
 			#{item,jdbcType=VARCHAR}

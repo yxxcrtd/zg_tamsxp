@@ -2,87 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.reveal.channelinterface.dao.ChannelInterface001Mapper_mysql">
 	<select id="queryChannelInterfacePageList"
-
-			resultType="com.joyintech.service.disclosure.information.reveal.channelinterface.dto.ChannelInterfaceNew001Dto">
+		
+		resultType="com.joyintech.service.disclosure.information.reveal.channelinterface.dto.ChannelInterfaceNew001Dto">
 		SELECT
-		DATE_FORMAT(a.SEND_DATE,'%Y-%m-%d hh24:mi') sendDateStr,
-		DATE_FORMAT(a.RECEIVE_DATE,'%Y-%m-%d hh24:mi') receiveDateStr,
-
-
-
-
-		a.SEND_STATUS  sendStatus,
-		a.RECEIVE_STATUS  receiveStatus,
-		a.CHANNEL_CODE  channelCode,
-		a.FILE_NAME fileName,
-		f.NAME reportCategoryName,
-		ftp.REPORT_CATEGORY reportCategory,
-		ftp.PROD_ID prodId,
-		reveal.REPORT_NAME reportName,
-		DATE_FORMAT(ftp.STATR_DATE,'%Y-%m-%d')  statrDateStr,
-		DATE_FORMAT(ftp.END_DATE,'%Y-%m-%d')   endDateStr,
-		ftp.ID id,
-		ftp.REVEAL_ID revealId,
-		ftp.REPORT_ID reportId
-
+			DATE_FORMAT(a.SEND_DATE,'%Y-%m-%d hh24:mi') sendDateStr,
+			DATE_FORMAT(a.RECEIVE_DATE,'%Y-%m-%d hh24:mi') receiveDateStr,
+			
+			
+   			
+    		
+    		a.SEND_STATUS  sendStatus,
+    		a.RECEIVE_STATUS  receiveStatus,
+    		a.CHANNEL_CODE  channelCode,
+    		a.FILE_NAME fileName,
+    		f.NAME reportCategoryName,
+    		ftp.REPORT_CATEGORY reportCategory,
+			ftp.PROD_ID prodId,
+    		reveal.REPORT_NAME reportName,
+    		DATE_FORMAT(ftp.STATR_DATE,'%Y-%m-%d')  statrDateStr,
+    		DATE_FORMAT(ftp.END_DATE,'%Y-%m-%d')   endDateStr,
+    		ftp.ID id,
+    		ftp.REVEAL_ID revealId,
+    		ftp.REPORT_ID reportId
+    		
 		FROM
-		REP_FTP_DETAIL ftp
-		left join REP_FTP_DETAIL_MSG a on ftp.ID=a.DETAIL_ID
-		left join REP_FTP_PATH f on ftp.REPORT_CATEGORY=f.ID
-		left join REP_REVEAL reveal on ftp.REVEAL_ID=reveal.ID
-		WHERE 1=1
-		<if test="sendDateBegin !=null and sendDateBegin !='' ">
-			AND DATE_FORMAT(a.SEND_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{sendDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="sendDateEnd !=null and sendDateEnd !='' ">
-			AND DATE_FORMAT(a.SEND_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{sendDateEnd,jdbcType=VARCHAR}
-		</if>
-		<if test="sendStatusArr !=null and sendStatusArr.length > 0">
-			and a.SEND_STATUS in
-			<foreach item="item" collection="sendStatusArr" index="index"
-					 open="(" separator="," close=")">
+    		REP_FTP_DETAIL ftp
+        left join REP_FTP_DETAIL_MSG a on ftp.ID=a.DETAIL_ID
+        left join REP_FTP_PATH f on ftp.REPORT_CATEGORY=f.ID  
+        left join REP_REVEAL reveal on ftp.REVEAL_ID=reveal.ID  
+    	WHERE 1=1
+    	<if test="sendDateBegin !=null and sendDateBegin !='' ">
+            AND DATE_FORMAT(a.SEND_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{sendDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="sendDateEnd !=null and sendDateEnd !='' ">
+            AND DATE_FORMAT(a.SEND_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{sendDateEnd,jdbcType=VARCHAR}
+        </if>
+    	<if test="sendStatusArr !=null and sendStatusArr.length > 0">
+    	    and a.SEND_STATUS in
+    	    <foreach item="item" collection="sendStatusArr" index="index"
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
-		</if>
-		<if test="receiveStatusArr !=null and receiveStatusArr.length > 0">
-			and a.RECEIVE_STATUS in
-			<foreach item="item" collection="receiveStatusArr" index="index"
-					 open="(" separator="," close=")">
+    	</if>
+    	<if test="receiveStatusArr !=null and receiveStatusArr.length > 0">
+    	    and a.RECEIVE_STATUS in
+    	    <foreach item="item" collection="receiveStatusArr" index="index"
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
-		</if>
-		<if test="fileName !=null and fileName !=''">
-			and a.FILE_NAME like concat_ws('', '%',#{fileName,jdbcType=VARCHAR},'%')
-		</if>
-		<if test="channelCodeArr !=null and channelCodeArr.length > 0">
-			and a.CHANNEL_CODE in
-			<foreach item="item" collection="channelCodeArr" index="index"
-					 open="(" separator="," close=")">
+    	</if>
+    	<if test="fileName !=null and fileName !=''">
+    		and a.FILE_NAME like concat_ws('', '%',#{fileName,jdbcType=VARCHAR},'%')
+    	</if>
+    	<if test="channelCodeArr !=null and channelCodeArr.length > 0">
+    		and a.CHANNEL_CODE in
+    		<foreach item="item" collection="channelCodeArr" index="index"
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
-		</if>
-
-		<if test="reportCategoryArr != null and reportCategoryArr.length > 0">
-			and ftp.REPORT_CATEGORY in
+    	</if>
+   		 
+    	<if test="reportCategoryArr != null and reportCategoryArr.length > 0">
+	 		and ftp.REPORT_CATEGORY in
 			<foreach item="item" collection="reportCategoryArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
-		<if test="prodIdArr != null and prodIdArr.length > 0">
-			and (ftp.PROD_ID in
+    	<if test="prodIdArr != null and prodIdArr.length > 0">
+    		and (ftp.PROD_ID in
 			<foreach collection="prodIdArr" item="item" index= "index" open="(" close=")" separator="," >
-				<if test="(index % 998) == 0">
-					null) or ftp.PROD_ID in (
-				</if>
-				#{item}
-			</foreach>
-			)
-		</if>
-		order by ftp.CREATE_TIME DESC
-
-
-
-
+                <if test="(index % 998) == 0">
+                	null) or ftp.PROD_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
+    	</if>
+    	order by ftp.CREATE_TIME DESC
+    	
+    	
+    	
+    	
 	</select>
 </mapper>

@@ -12,7 +12,7 @@
 <body>
 <div class="pro-module-wrap" th:id="|${entityName}_div|">
     <div class="pro-module">
-        <h3 class="pro-module-title"><span class="title-des">QDII拆出/逆回购资产</span>（<span class="star-sign">*</span>必填）<i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
+        <h3 class="pro-module-title"><span class="title-des">中债资产要素信息——QDII拆出/逆回购</span></h3>
         <div class="pro-module-item">
 			<div class="layui-form-item">
 				<div class="form-inline-wrap">
@@ -22,24 +22,55 @@
 						</select>
 					</div>
 				</div>
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap">起息日</label>
+					<div class="layui-input-inline input-inline">
+
+						<input type="text" disabled="true"
+							   th:id="|${entityName}_vdate|"
+							   class="layui-input form-input input-dateSelect" />
+					</div>
+				</div>
+				<div class="form-inline-wrap" >
+					<label class="layui-form-label form-label-wrap ">到期日</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" disabled="true"
+							   th:id="|${entityName}_mdate|"
+							   class="layui-input form-input input-dateSelect" />
+					</div>
+				</div>
+
+
+
+
+			</div>
+			<div class="layui-form-item">
+
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepPlacementInfo.rivalParty}">对手方</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" th:id="|${entityName}_rivalParty|" th:name="|${entityName}.rivalParty|" th:value="${entity?.rivalParty}" class="layui-input form-input" maxlength="32" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required/>
+						<select type="text"
+								th:id="|${entityName}_rivalParty|"
+								th:name="|${entityName}.rivalParty|"
+								th:initValue="${entity?.rivalParty}"
+								class="layui-input form-input input-select"
+								required="required"
+								data-th-data-url="@{/common/select/getTrusterId}">
+						</select>
+
 					</div>
 				</div>
 				<div class="form-inline-wrap" th:id="|${entityName}_rate_div|">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{BussRepQDIIdemolitionInfo.assetYield}">年利率</label>
+					<label class="layui-form-label form-label-wrap">年利率%</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" th:id="|${entityName}_assetYield|" th:name="|${entityName}.assetYield|"   th:value="${entity?.assetYield}"  required
 							   class="layui-input form-input text-number" data-textrange="5"/>
-<!--
-						<span class="input-right-show begin-show">%<a id="FinInterestFactor_btn_calRate" class="layui-btn layui-btn-sm form-input-text" >计算</a></span>
--->
+						<!--
+                                                <span class="input-right-show begin-show">%<a id="FinInterestFactor_btn_calRate" class="layui-btn layui-btn-sm form-input-text" >计算</a></span>
+                        -->
 					</div>
 				</div>
-			</div>
-			<div class="layui-form-item">
 				<div class="form-inline-wrap" th:id="|${entityName}_basis_div|">
 					<label class="layui-form-label form-label-wrap" data-th-text="#{BussRepQDIIdemolitionInfo.basis}" >计息基础</label>
 					<div class="layui-input-inline input-inline">
@@ -49,49 +80,7 @@
 					</div>
 				</div>
 			</div>
-			<!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
-			<div class="layui-form-item">
 
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType1}" >新人行一级分类</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_pbcAssetType1|" th:name="|${entityName}.pbcAssetType1|" th:initValue="${entity?.pbcAssetType1}"
-								th:childrenIds="|${entityName}_pbcAssetType2|" required
-								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_1}">
-						</select>
-					</div>
-				</div>
-
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType2}" >新人行二级分类</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_pbcAssetType2|" th:name="|${entityName}.pbcAssetType2|" th:initValue="${entity?.pbcAssetType2}"
-								th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|" required
-								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_2}">
-						</select>
-					</div>
-				</div>
-
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType3}" >新人行三级分类</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_pbcAssetType3|" th:name="|${entityName}.pbcAssetType3|" th:initValue="${entity?.pbcAssetType3}"
-								th:parentIds="|${entityName}_pbcAssetType2|" required
-								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_3}">
-						</select>
-					</div>
-				</div>
-			</div>
-			<!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段end -->
-            <div class="layui-form-item">
-                <div class="form-inline-wrap" style="width: 100% !important;">
-					<label class="layui-form-label form-label-wrap" data-th-utext="#{BussRepQDIIdemolitionInfo.remark}" style="width: 12.55%;">备注</label>
-					<div class="layui-input-inline input-inline" style="width: 86% !important;">
-						<input th:id="|${entityName}_remark|" th:name="|${entityName}.remark|" placeholder="请输入内容" class="layui-input form-input"data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.remark}" maxlength="128" style="width: 100%!important;">
-						</input>
-					</div>
-				</div>
-            </div>
         </div>
     </div>
 </div>

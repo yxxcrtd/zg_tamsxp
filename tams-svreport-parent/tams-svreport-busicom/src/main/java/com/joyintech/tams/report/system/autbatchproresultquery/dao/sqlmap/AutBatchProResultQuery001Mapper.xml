@@ -10,7 +10,8 @@
 		FROM CHB_AUTOSEND_BATCH_LOG CBL
 <!-- 		INNER JOIN SYS_BATCH_TASK CST -->
 		<!-- on CBL.TASK_ID=CST.TASK_ID -->
-		<where>
+		where
+			CBL.TASK_ID in ('3001','3002','3071')
 			<if test="taskId!=null and taskId!=''">
 				CBL.TASK_ID = #{taskId}
 			</if>
@@ -18,7 +19,6 @@
 				AND to_char(CBL.START_TIME,'yyyy-MM-dd') &lt;= #{date,jdbcType=VARCHAR}
 				AND to_char(CBL.END_TIME,'yyyy-MM-dd') &gt;=#{date,jdbcType=VARCHAR}
 			</if>
-		</where>
 		ORDER BY CBL.START_TIME DESC
 	</select>
 </mapper>

@@ -5,13 +5,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.BaseInterfService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetsBasisData;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.dto.ChbAssetInfoRate;
 import com.joyintech.tams.svreport.interf.chb.investmentsinfo.service.ChbAssetInfoRateInterf;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -31,9 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.tams.common.base.entity.ChbCprodBalanceDto;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
@@ -54,7 +55,8 @@ public class ChbCprodBalanceInterf extends BaseInterfService {
 	private ChbCprodBalanceDtoMapper chbCprodBalanceDtoMapper;
 	@Autowired
 	private SqlSessionTemplate template;
-	
+	@Autowired
+	private BatchInsertService batchInsertService;
 	/**
 	 * 日志
 	 */
@@ -136,39 +138,50 @@ public class ChbCprodBalanceInterf extends BaseInterfService {
 
 
 	private void insertData2(List<ChbCprodBalanceDto> listChbCprodBalanceDto) {
-		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-//    	String source = CacheUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE);
-		//批量插入mapper
-		ChbCprodBalanceDtoMapper batchMapper =  session.getMapper(ChbCprodBalanceDtoMapper.class);
 
-		Map<Date, List<ChbCprodBalanceDto>> listChbCprodBalanceDtoMap =
-				listChbCprodBalanceDto.stream().collect(JoyinCollectors.groupingBy(chbCprodBalanceDto -> chbCprodBalanceDto.getValueDate()));
-		int count = 0;
-		try {
-			for (Date date : listChbCprodBalanceDtoMap.keySet()) {
+		if (listChbCprodBalanceDto.size()<=5000) {
+			SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+			//批量插入mapper
+			ChbCprodBalanceDtoMapper batchMapper =  session.getMapper(ChbCprodBalanceDtoMapper.class);
 
-				//先删后插
-				String dateStr = DateUtil.format(date);
-				logger.debug("删除"+dateStr+"日的周期型产品余额，开始");
-				chbCprodBalanceDtoMapper.deleteByPosdate(date);
-				logger.debug("删除"+dateStr+"日的周期型产品余额，结束");
-				logger.debug("插入"+dateStr+"日的周期型产品余额，开始");
-				for(ChbCprodBalanceDto position : listChbCprodBalanceDtoMap.get(date)){
-					batchMapper.insert(position);
-					count++;
-					if(count%1000==0){
-						logger.debug("已插入"+count+"条"+DateUtil.getCurrentDateTime());
-						session.commit();
-						session.clearCache();
+			Map<Date, List<ChbCprodBalanceDto>> listChbCprodBalanceDtoMap =
+					listChbCprodBalanceDto.stream().collect(JoyinCollectors.groupingBy(chbCprodBalanceDto -> chbCprodBalanceDto.getValueDate()));
+			int count = 0;
+			try {
+				for (Date date : listChbCprodBalanceDtoMap.keySet()) {
+
+					//先删后插
+					String dateStr = DateUtil.format(date);
+					logger.debug("删除"+dateStr+"日的周期型产品余额，开始");
+					chbCprodBalanceDtoMapper.deleteByPosdate(date);
+					logger.debug("删除"+dateStr+"日的周期型产品余额，结束");
+					logger.debug("插入"+dateStr+"日的周期型产品余额，开始");
+					for(ChbCprodBalanceDto position : listChbCprodBalanceDtoMap.get(date)){
+						batchMapper.insert(position);
+						count++;
+						if(count%1000==0){
+							logger.debug("已插入"+count+"条"+DateUtil.getCurrentDateTime());
+							session.commit();
+							session.clearCache();
+						}
+
 					}
-
+					logger.debug("插入"+dateStr+"日的周期型产品余额，结束");
 				}
-				logger.debug("插入"+dateStr+"日的周期型产品余额，结束");
+				session.commit();
+				session.clearCache();
+			}finally {
+				session.close();
 			}
-			session.commit();
-			session.clearCache();
-		}finally {
-			session.close();
+		} else {
+			//sqlloader插入
+			ImpTable table = new ImpTable("CHB_CPROD_BALANCE");
+			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+			// 临时文件存放目录
+			String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+			batchInsertService.exeBatchldr(tmpPath, listChbCprodBalanceDto, table);
 		}
+
 	}
 }

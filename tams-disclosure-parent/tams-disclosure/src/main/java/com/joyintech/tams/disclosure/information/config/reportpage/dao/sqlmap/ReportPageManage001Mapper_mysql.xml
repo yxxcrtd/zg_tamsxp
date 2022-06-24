@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.reportpage.dao.ReportPageManage001Mapper_mysql">
+
+    <select id="getPageName" parameterType="java.lang.String" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT DISTINCT
+        A.REP_ID as code,
+        A.REPORT_NAME as shortName
+        FROM REP_INFO A
+        <where>
+            A.REPORT_NAME like concat_ws(concat_ws('%',#{param, jdbcType=VARCHAR}),'%')
+        </where>
+        order by A.REPORT_NAME
+    </select>
+
+    <select id="findPage" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
+        select
+        A.REP_ID repId,
+        A.TEMPLATE_ID templateId,
+        A.TEMPLATE_NAME templateName,
+        A.TEMPLATE_PATH templatePath,
+        A.REPORT_NAME reportName,
+        A.UPDATE_USER updateUser,
+        A.REPORT_TYPE reportType,
+        A.REPORT_CATEGORY reportCategory,
+        rfp.NAME reportCategoryName
+        from REP_INFO A
+        left join REP_FTP_PATH rfp
+        on A.REPORT_CATEGORY=rfp.ID
+        <where>
+            <if test="reportName!=null and reportName!=''">
+                A.REPORT_NAME like concat_ws(concat_ws('%',#{reportName,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="reportCategoryArr != null and reportCategoryArr.length > 0">
+                AND A.REPORT_CATEGORY IN
+                <foreach item="item" collection="reportCategoryArr" index="index"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by A.UPDATE_TIME DESC
+    </select>
+
+    <select id="getRepScreenList" resultType="com.joyintech.tams.common.base.entity.RepScreen">
+	    select
+	    screen_index screenIndex,
+	    screen_Id    screenId,
+	    rep_Id    repId,
+	    screen_Type    screenType,
+	    screen_Key    screenKey,
+	    screen_Name    screenName,
+	    screen_Value    screenValue,
+	    screen_Status    screenStatus
+	    from Rep_Screen R
+	    where R.rep_Id = #{repId,jdbcType=VARCHAR}
+	</select>
+    <update id="updateReportStatus">
+        update REP_INFO
+        set REPORT_TYPE = #{flag,jdbcType=VARCHAR}
+        <where>
+            <if test="selectData != null  and selectData.size()>0">
+                <foreach collection="selectData" item="item" index="index" open="and REP_ID in(" separator="," close=")">
+                    <if test="(index % 999) == 998">
+                        null) OR REP_ID in (
+                    </if>
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </update>
+    <select id="checkSave" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(report_name)
+        from REP_INFO
+        where REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+        <if test="repId != null  and repId!=''">
+            and REP_ID != #{repId,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <delete id="deleteRepScreen" parameterType="java.util.Map">
+	    delete
+	    from
+	    Rep_Screen
+	    where REP_ID = #{repId,jdbcType=VARCHAR}
+	</delete>
+
+    <delete id="deleteFromRepScreen" parameterType="java.lang.String">
+		delete from REP_SCREEN
+        where REP_ID = #{repId,jdbcType=VARCHAR}
+	</delete>
+    <select id="getReportInfo" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
+		SELECT
+		    ri.REP_ID as repId,
+		    ri.REPORT_NAME as reportName
+		FROM
+		    REP_INFO ri
+		WHERE
+		    ri.REPORT_TYPE='Y'
+    </select>
+    <select id="getReportInputsNew" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.ReportPageManage001Dto">
+	    SELECT
+	    	REPORTPARAMS reportparams
+		FROM rep_reportinfo
+		WHERE 1=1
+		and folder = #{folder,jdbcType=VARCHAR}
+		and uri = #{uri,jdbcType=VARCHAR}
+	</select>
+    <select id="findRulePage" resultType="com.joyintech.tams.disclosure.information.config.reportpage.dto.RepJobRangeDto">
+		select rjr.RULE_TYPE1 as ruleType1,
+		       rjr.RULE_TYPE2 as ruleType2,
+		       rjr.RULE_TYPE3 as ruleType3,
+		       rjr.RULE_TYPE4 as ruleType4
+		from REP_JOB_RANGE rjr
+		where rjr.JOB_ID=#{repId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteRangeInfo" parameterType="java.lang.String" >
+        delete from REP_JOB_RANGE
+        where JOB_ID = #{jobId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

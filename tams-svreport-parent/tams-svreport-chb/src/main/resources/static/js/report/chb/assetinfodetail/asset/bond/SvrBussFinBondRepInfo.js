@@ -88,7 +88,7 @@
             }
             else{
                 var data = {
-                    svrBussFinBondRepInfoDto_chbIssuerId: $('#svrBussFinBondRepInfoDto_chbIssuerId').val()
+                    chbIssuerId: $('#svrBussFinBondRepInfoDto_chbIssuerId').val()
                 }
                 //$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
                 Joyin.ajaxJson(basePath + 'common/select/getIssuerInfo', data,

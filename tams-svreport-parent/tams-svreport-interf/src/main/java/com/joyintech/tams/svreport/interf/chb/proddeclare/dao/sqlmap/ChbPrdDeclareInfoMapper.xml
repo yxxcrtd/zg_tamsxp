@@ -960,7 +960,34 @@
       left join FIN_PRODUCT_ADD AD on D.REP_FINPROD_ID = AD.FINPROD_ID
       where nvl(nvl(D.UPDATE_TIME,D.CREATE_TIME),to_date('1900-01-01','yyyy-MM-dd'))> #{updatetime,jdbcType=TIMESTAMP}
     </select>
-   <insert id="mergeInfoList"
+    <select id="selectByProdInsId" resultMap="BaseResultMap">
+       select <include refid="Base_Column_List"/> from CHB_PRD_DECLARE_INFO where PROD_INS_ID = #{prodInsId}
+    </select>
+  <select id="selectByChbPrdDeclareInfoList" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from CHB_PRD_DECLARE_INFO where PROD_INS_ID in
+    <foreach collection="list" item ="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+    <select id="getProdInsId" resultType="com.joyintech.framework.select.SelectOptionDto">
+      SELECT
+      DISTINCT PROD_INS_ID id,
+      PROD_INS_ID text
+      FROM CHB_PRD_DECLARE_INFO
+      <where>
+        <if test="search !=null and  search !='' ">
+          PROD_INS_ID LIKE '%' || #{search} || '%'
+        </if>
+        <if test="initValue != null and initValue != ''">
+          and PROD_INS_ID = #{initValue}
+        </if>
+      </where>
+    </select>
+  <select id="getProdNameByProdInsId" resultType="java.lang.String">
+    select PROD_NAME from CHB_PRD_DECLARE_INFO  where PROD_INS_ID = #{prodInsId}
+  </select>
+
+  <insert id="mergeInfoList"
 		parameterType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
 		MERGE INTO CHB_PRD_DECLARE_INFO CII
 		USING (
@@ -1222,4 +1249,16 @@
       TEMP.PRD_SPEC_PROPERTY
 		)
 	</insert>
+  <delete id="deleteChbPrdDeclareInfoByKey">
+    delete from CHB_PRD_DECLARE_INFO where PROD_INS_ID in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item.prodInsId}
+    </foreach>
+  </delete>
+  <delete id="deleteChbPrdDeclareInfoErroDataByKey">
+    delete from chb_prd_declare_info_errodata where PROD_INS_ID in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item.prodInsId}
+    </foreach>
+  </delete>
 </mapper>

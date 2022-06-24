@@ -54,47 +54,6 @@
 			<version>1.5.9.RELEASE</version>
 			<scope>runtime</scope>
 		</dependency>
-        <dependency>
-            <groupId>com.joyintech</groupId>
-            <artifactId>tams-valuation-batch</artifactId>
-			<version>3.0.1</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>framework-core</artifactId>
-					<groupId>com.joyintech</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>batch-framework</artifactId>
-					<groupId>com.joyintech</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>framework-security</artifactId>
-					<groupId>com.joyintech</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>framework-web</artifactId>
-					<groupId>com.joyintech</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>framework-data</artifactId>
-					<groupId>com.joyintech</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>pagehelper</artifactId>
-					<groupId>com.github.pagehelper</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>tams-valuation-batch-lossmodel</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>tams-valuation-batch-valmodel</artifactId>
-			<version>3.0.1</version>
-		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-svreport-batch-chb</artifactId>
@@ -185,12 +144,6 @@
 			<groupId>com.joyintech</groupId>
 			<artifactId>framework-data</artifactId>
 			<version>0.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.joyintech</groupId>
-			<artifactId>tams-valuation</artifactId>
-			<version>3.0.1</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

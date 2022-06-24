@@ -66,7 +66,7 @@
         from CHB_DATACHECK_REP_TYPE_INV
         where PAGE_ID = #{pageId,jdbcType=VARCHAR}
         <if test="repType != null and repType != ''">
-            and SRCPROPERTY != NVL((select SRCPROPERTY from CHB_DATACHECK_REP_TYPE_INV where PAGE_ID = #{pageId,jdbcType=VARCHAR} and REP_TYPE = #{repType,jdbcType=VARCHAR}), 'NOSRCPROPERTY')
+            and SRCPROPERTY != ifnull((select SRCPROPERTY from CHB_DATACHECK_REP_TYPE_INV where PAGE_ID = #{pageId,jdbcType=VARCHAR} and REP_TYPE = #{repType,jdbcType=VARCHAR}), 'NOSRCPROPERTY')
         </if>
     </select>
 

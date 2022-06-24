@@ -324,6 +324,7 @@ public class SvrAgentInstitutionDBInterf extends BaseService{
 	private ChbAgentInstitutionSub genAgentInstitutionDto(ChbAgentInstitutionSub dto) {
 		ChbAgentInstitutionSub tmpDto = new ChbAgentInstitutionSub();
 		tmpDto.setAgentInstitutionCode(null==dto.getAgentInstitutionCode()?"":dto.getAgentInstitutionCode());
+		tmpDto.setAgentInstitutionName(null==dto.getAgentInstitutionName()?"":dto.getAgentInstitutionName());
 		tmpDto.setIssuePartyId(null==dto.getIssuePartyId()?"":dto.getIssuePartyId());
 		tmpDto.setRemark(null==dto.getRemark()?"":dto.getRemark());
 		tmpDto.setFileNo(null==dto.getFileNo()?"":dto.getFileNo());

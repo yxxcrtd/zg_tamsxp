@@ -51,7 +51,7 @@
         insert into WFL_BUSINESS_NODE(SEQ_NO, HIS_NO, WORKFLOW_ID, HI_USER, NODE_ID, NODE_NAME, 
         RESULT, OPINIONS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
         )
-        select SEQ_NO, (select nvl(max(HIS_NO), 0) from WFL_BUSINESS_NODE where 1=1 and SEQ_NO = WFL_BUSINESS_NODE.SEQ_NO) + 1 HIS_NO, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, HI_USER, NODE_ID, NODE_NAME, 
+        select SEQ_NO, (select ifnulll(max(HIS_NO), 0) from WFL_BUSINESS_NODE where 1=1 and SEQ_NO = WFL_BUSINESS_NODE.SEQ_NO) + 1 HIS_NO, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, HI_USER, NODE_ID, NODE_NAME, 
             RESULT, OPINIONS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
             
              from WFL_BUSINESS_NODE
@@ -205,7 +205,7 @@
         insert into WFL_BUSINESS_NODE(SEQ_NO, HIS_NO, WORKFLOW_ID, HI_USER, NODE_ID, NODE_NAME, 
         RESULT, OPINIONS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
         )
-        select SEQ_NO, (select nvl(max(HIS_NO), 0) from WFL_BUSINESS_NODE where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}) + 1 HIS_NO, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, HI_USER, NODE_ID, NODE_NAME, 
+        select SEQ_NO, (select ifnulll(max(HIS_NO), 0) from WFL_BUSINESS_NODE where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}) + 1 HIS_NO, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, HI_USER, NODE_ID, NODE_NAME, 
             RESULT, OPINIONS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
             
              from WFL_BUSINESS_NODE

@@ -265,8 +265,27 @@ public class PbcMonthAssetPositionDto extends CommonProductRatingDto implements 
 
 	//  END add by wujian 20200317 多法人改造--单产品报表生成 区分部门
 
-    
-    
+
+    private String bankCapital;
+
+    private String sharesType;
+
+    public String getBankCapital() {
+        return bankCapital;
+    }
+
+    public void setBankCapital(String bankCapital) {
+        this.bankCapital = bankCapital;
+    }
+
+    public String getSharesType() {
+        return sharesType;
+    }
+
+    public void setSharesType(String sharesType) {
+        this.sharesType = sharesType;
+    }
+
     public String getIsChlBtm() {
 		return isChlBtm;
 	}

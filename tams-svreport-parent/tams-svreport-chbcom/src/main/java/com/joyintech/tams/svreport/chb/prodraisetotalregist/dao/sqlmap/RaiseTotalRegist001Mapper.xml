@@ -624,15 +624,17 @@
         <!-- 	deal.prod_id prodid, -->
         NVL(deal.fprod_id,deal.prod_id) prodid,
         deal.buy_place
-        buyplace,deal.trade_type tradetype,deal.ccy ccy,deal.trade_prince
-        tradeprince,deal.trade_qty tradeqty,deal.ISAGENCY,deal.remark,deal.SETTDATE_DATE settdateDate
+        buyplace,deal.trade_type tradetype, deal.ccy ccy,
+        CASE deal.trade_type WHEN '15' then (deal.trade_prince * -1) ELSE  deal.trade_prince END AS tradeprince,
+        CASE deal.trade_type WHEN '15' then (deal.trade_qty * -1) ELSE  deal.trade_qty END AS tradeqty,
+        deal.ISAGENCY,deal.remark,deal.SETTDATE_DATE settdateDate
         /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
         ,deal.customer_type2,deal.cust_counts
         from chb_prd_deal deal
         left join chb_prd_baseinfo info
         on info.prod_id = deal.prod_id
         and info.status in ('E','M')
-        where trade_type='01'
+        where trade_type in ('01','14','15')
         and deal.status in ('E','M')
         <foreach collection="list" item="prod" open="and ( (" close=" ) )"
                  separator=") or (">

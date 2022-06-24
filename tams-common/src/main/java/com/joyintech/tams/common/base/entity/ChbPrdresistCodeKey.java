@@ -23,8 +23,8 @@ public class ChbPrdresistCodeKey extends BaseEntity {
      * 判断是否是产品回灌 flag =1 ：产品回灌
      */
     private String flag;
-    
-    
+
+    private String prodInsId;
     
     
 	public String getFlag() {
@@ -74,6 +74,12 @@ public class ChbPrdresistCodeKey extends BaseEntity {
 	public void setReg_code(String regCode) {
 		this.regCode = regCode == null ? null : regCode.trim();
 	}
-    
-    
+
+    public String getProdInsId() {
+        return prodInsId;
+    }
+
+    public void setProdInsId(String prodInsId) {
+        this.prodInsId = prodInsId;
+    }
 }

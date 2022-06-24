@@ -1138,7 +1138,7 @@
             STATUS, DEPT_CODE, UPDATE_USER, 
             UPDATE_TIME, CREATE_USER, CREATE_TIME, 
             SUMIT_SEQ, DELETE_RES, ORG_CODE, 
-            CREATE_DEPT)
+            CREATE_DEPT, FUND_ACC_PLACE, HOLDER_CLASSIFY)
         values (#{indentifyMark,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, #{submitStatus,jdbcType=CHAR}, 
             #{orgIndentifyMark,jdbcType=VARCHAR}, #{isBelongBank,jdbcType=CHAR}, #{theBankName,jdbcType=VARCHAR}, 
             #{theBankCode,jdbcType=VARCHAR}, #{holderMark,jdbcType=CHAR}, #{holderRegion,jdbcType=VARCHAR}, 
@@ -1152,7 +1152,7 @@
             #{status,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, sysdate, 
             #{sumitSeq,jdbcType=VARCHAR}, #{deleteRes,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
-            #{createDept,jdbcType=VARCHAR})
+            #{createDept,jdbcType=VARCHAR},#{fundAccPlace,jdbcType=VARCHAR}, #{holderClassify,jdbcType=VARCHAR})
     </insert>
     <delete id="deleteCheckDataByPrimarykey"
 	parameterType="com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto">

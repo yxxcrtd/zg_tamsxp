@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdPledgeMatchInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdPledgeMatchInfo" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="CSTP_TRADE_ID" property="cstpTradeId" jdbcType="VARCHAR" />
+        <result column="PRE_TRADE_ID" property="preTradeId" jdbcType="VARCHAR" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR" />
+        <result column="PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
+        <result column="MATCH_NUM" property="matchNum" jdbcType="DECIMAL" />
+        <result column="MATCH_TYPE" property="matchType" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="F_SYS_ID" property="fSysId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, CSTP_TRADE_ID CSTP_TRADE_ID, PRE_TRADE_ID PRE_TRADE_ID, ENTRUST_ID ENTRUST_ID, 
+        SEC_ACCT_ID SEC_ACCT_ID, PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, MATCH_NUM MATCH_NUM, 
+        MATCH_TYPE MATCH_TYPE, TRADE_DATE TRADE_DATE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, F_SYS_ID F_SYS_ID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdPledgeMatchInfoMapper_mysql.Base_Column_List" />
+        from TRD_PLEDGE_MATCH_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdPledgeMatchInfoMapper_mysql.Base_Column_List" />
+        from TRD_PLEDGE_MATCH_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdPledgeMatchInfoMapper_mysql.Base_Column_List" />
+        from TRD_PLEDGE_MATCH_INFO
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_PLEDGE_MATCH_INFO
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdPledgeMatchInfo" >
+        insert into TRD_PLEDGE_MATCH_INFO (SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID, 
+            ENTRUST_ID, SEC_ACCT_ID, PLEDGE_FINPROD_ID, 
+            MATCH_NUM, MATCH_TYPE, TRADE_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, F_SYS_ID
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{cstpTradeId,jdbcType=VARCHAR}, #{preTradeId,jdbcType=VARCHAR}, 
+            #{entrustId,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, #{pledgeFinprodId,jdbcType=VARCHAR}, 
+            #{matchNum,jdbcType=DECIMAL}, #{matchType,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{fSysId,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdPledgeMatchInfo" >
+        insert into TRD_PLEDGE_MATCH_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="cstpTradeId != null" >
+                CSTP_TRADE_ID,
+            </if>
+            <if test="preTradeId != null" >
+                PRE_TRADE_ID,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID,
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID,
+            </if>
+            <if test="matchNum != null" >
+                MATCH_NUM,
+            </if>
+            <if test="matchType != null" >
+                MATCH_TYPE,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="fSysId != null" >
+                F_SYS_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="cstpTradeId != null" >
+                #{cstpTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="preTradeId != null" >
+                #{preTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="matchNum != null" >
+                #{matchNum,jdbcType=DECIMAL},
+            </if>
+            <if test="matchType != null" >
+                #{matchType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fSysId != null" >
+                #{fSysId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdPledgeMatchInfo" >
+        insert into TRD_PLEDGE_MATCH_INFO(SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID, ENTRUST_ID, 
+        SEC_ACCT_ID, PLEDGE_FINPROD_ID, MATCH_NUM, MATCH_TYPE, TRADE_DATE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, F_SYS_ID)
+        select SEQNO, CSTP_TRADE_ID, PRE_TRADE_ID, ENTRUST_ID, 
+            SEC_ACCT_ID, PLEDGE_FINPROD_ID, MATCH_NUM, MATCH_TYPE, TRADE_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, F_SYS_ID
+             from TRD_PLEDGE_MATCH_INFO
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdPledgeMatchInfo" >
+        update TRD_PLEDGE_MATCH_INFO
+        <set >
+            <if test="cstpTradeId != null" >
+                CSTP_TRADE_ID = #{cstpTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="preTradeId != null" >
+                PRE_TRADE_ID = #{preTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="matchNum != null" >
+                MATCH_NUM = #{matchNum,jdbcType=DECIMAL},
+            </if>
+            <if test="matchType != null" >
+                MATCH_TYPE = #{matchType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fSysId != null" >
+                F_SYS_ID = #{fSysId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdPledgeMatchInfo" >
+        update TRD_PLEDGE_MATCH_INFO
+        set CSTP_TRADE_ID = #{cstpTradeId,jdbcType=VARCHAR},
+            PRE_TRADE_ID = #{preTradeId,jdbcType=VARCHAR},
+            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR},
+            MATCH_NUM = #{matchNum,jdbcType=DECIMAL},
+            MATCH_TYPE = #{matchType,jdbcType=VARCHAR},
+            TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            F_SYS_ID = #{fSysId,jdbcType=VARCHAR}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -48,5 +48,23 @@
         WHERE
         basetableid = #{tableName}
     </select>
+    <!-- add by  xuyang 徽商 20201202根据产品代码查询资产要素 start-->
+    <select id="selectChbAssetInfoByAssetCode" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+        select
+        *
+        from CHB_ASSET_INFO
+        where ASSET_CODE = #{assetCode,jdbcType=CHAR}
+        and STATUS in ('E', 'M')
+    </select>
+    <!-- add by  xuyang 徽商 20201202根据产品代码查询资产要素 end-->
 
+    <!-- add by leipeng 产品登记编码查询是否包含 start-->
+    <select id="queryPrdRegisCode" resultType="string">
+        SELECT
+		  A.PRODID prodId
+		 FROM CHB_PRDRESIST_CODE A
+		 WHERE
+		  REG_CODE = #{regCode,jdbcType=CHAR}
+    </select>
+    <!-- add by leipeng 产品登记编码查询是否包含-->
 </mapper>

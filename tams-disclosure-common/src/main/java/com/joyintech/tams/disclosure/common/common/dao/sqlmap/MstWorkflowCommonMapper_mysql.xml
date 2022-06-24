@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.common.common.dao.MstWorkflowCommonMapper_mysql">
+    <resultMap id="ProcessMarkBaseResultMap" type="com.joyintech.framework.base.entity.ProcessMark" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK1" property="businessDataPk1" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK2" property="businessDataPk2" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK3" property="businessDataPk3" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK4" property="businessDataPk4" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK5" property="businessDataPk5" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK6" property="businessDataPk6" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK7" property="businessDataPk7" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK8" property="businessDataPk8" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK9" property="businessDataPk9" jdbcType="VARCHAR" />
+        <result column="BUSINESS_DATA_PK10" property="businessDataPk10" jdbcType="VARCHAR" />
+        <result column="HIS_NO" property="hisNo" jdbcType="DECIMAL" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="CHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ProcessMarkResultMapWithBLOBs" type="com.joyintech.framework.base.entity.ProcessMark" extends="ProcessMarkBaseResultMap" >
+        <result column="BUSINESS_DATA" property="businessData" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="ProcessMark_Base_Column_List" >
+        SEQ_NO SEQ_NO, PAGE_ID PAGE_ID, BUSINESS_DATA_PK1 BUSINESS_DATA_PK1, BUSINESS_DATA_PK2 BUSINESS_DATA_PK2,
+        BUSINESS_DATA_PK3 BUSINESS_DATA_PK3, BUSINESS_DATA_PK4 BUSINESS_DATA_PK4, BUSINESS_DATA_PK5 BUSINESS_DATA_PK5,
+        BUSINESS_DATA_PK6 BUSINESS_DATA_PK6, BUSINESS_DATA_PK7 BUSINESS_DATA_PK7, BUSINESS_DATA_PK8 BUSINESS_DATA_PK8,
+        BUSINESS_DATA_PK9 BUSINESS_DATA_PK9, BUSINESS_DATA_PK10 BUSINESS_DATA_PK10, HIS_NO HIS_NO,
+        WORKFLOW_ID WORKFLOW_ID, STATUS STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="ProcessMark_Blob_Column_List" >
+        BUSINESS_DATA
+    </sql>
+    <sql id="getMaxHisNo">
+        select
+        max(HIS_NO)	       HIS_NO,
+        WORKFLOW_ID
+        from SYS_DATA_PROCESS_MARK
+        <where>
+            <if test="pageId != null and pageId !=''">
+                PAGE_ID = #{pageId}
+            </if>
+            <if test="pageIdList != null and pageIdList.size() > 0">
+                PAGE_ID in
+                <foreach collection="pageIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        group by  WORKFLOW_ID
+    </sql>
+    <select id="getBusinessData" parameterType="com.joyintech.tams.disclosure.common.common.dto.WflValidInputParameter" resultType="java.lang.String">
+        select pm.STATUS status
+        from SYS_DATA_PROCESS_MARK pm
+        inner join (<include refid="getMaxHisNo"/>) tempHis on  pm.HIS_NO = tempHis.HIS_NO and pm.WORKFLOW_ID = tempHis.WORKFLOW_ID
+        <where>
+            <if test="seachMode != null and seachMode !='' and seachMode == '01'.toString()">
+                pm.status in ('A','U','P')
+            </if>
+            <if test="pageId != null and pageId !=''">
+                and pm.PAGE_ID = #{pageId}
+            </if>
+            <if test="pageIdList != null and pageIdList.size() > 0">
+                and pm.PAGE_ID in
+                <foreach collection="pageIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="businessDataPk1 != null">
+                and pm.BUSINESS_DATA_PK1 = #{businessDataPk1}
+            </if>
+            <if test="businessDataPk2 != null">
+                and pm.BUSINESS_DATA_PK2 = #{businessDataPk2}
+            </if>
+            <if test="businessDataPk3 != null">
+                and pm.BUSINESS_DATA_PK3 = #{businessDataPk3}
+            </if>
+            <if test="businessDataPk4 != null">
+                and pm.BUSINESS_DATA_PK4 = #{businessDataPk4}
+            </if>
+            <if test="businessDataPk5 != null">
+                and pm.BUSINESS_DATA_PK5 = #{businessDataPk5}
+            </if>
+            <if test="businessDataPk6 != null">
+                and pm.BUSINESS_DATA_PK6 = #{businessDataPk6}
+            </if>
+            <if test="businessDataPk7 != null">
+                and pm.BUSINESS_DATA_PK7 = #{businessDataPk7}
+            </if>
+            <if test="businessDataPk8 != null">
+                and pm.BUSINESS_DATA_PK8 = #{businessDataPk8}
+            </if>
+            <if test="businessDataPk9 != null">
+                and pm.BUSINESS_DATA_PK9 = #{businessDataPk9}
+            </if>
+            <if test="businessDataPk10 != null">
+                and pm.BUSINESS_DATA_PK10 = #{businessDataPk10}
+            </if>
+            <if test="workflowId != null and workflowId !=''">
+                and pm.WORKFLOW_ID != #{workflowId}
+            </if>
+        </where>
+        <!-- 根据创建时间排序 （降序）-->
+        order by pm.create_time desc
+    </select>
+    <select id="getBusinessInfo" resultMap="ProcessMarkResultMapWithBLOBs" parameterType="java.lang.String" >
+        select
+        <include refid="ProcessMark_Base_Column_List" />
+        ,
+        <include refid="ProcessMark_Blob_Column_List" />
+        from SYS_DATA_PROCESS_MARK
+        where
+        WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+        and HIS_NO = (select Max(HIS_NO) from SYS_DATA_PROCESS_MARK where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR})
+    </select>
+</mapper>

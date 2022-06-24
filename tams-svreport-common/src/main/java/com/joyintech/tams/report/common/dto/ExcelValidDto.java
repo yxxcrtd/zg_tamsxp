@@ -11,8 +11,11 @@
 package com.joyintech.tams.report.common.dto;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs;
 import com.joyintech.tams.constant.DictCodeListExt2;
 
 /**
@@ -232,5 +235,4 @@ public class ExcelValidDto {
     public void setIsLogicCheck(String isLogicCheck) {
         this.isLogicCheck = isLogicCheck;
     }
-
 }

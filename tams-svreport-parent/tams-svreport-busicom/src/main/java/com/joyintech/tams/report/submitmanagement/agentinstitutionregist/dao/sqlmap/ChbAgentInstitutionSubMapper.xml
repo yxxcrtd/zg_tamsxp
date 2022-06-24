@@ -265,7 +265,7 @@
 
     <delete id="deleteReportDataHis" parameterType="java.util.Map">
         delete
-        from CHB_AGENT_INSTITUTION_SUB_HIS  his
+        from CHB_AGENT_INSTITUTION_SUB_HIS his
         where his.CREATE_TIME=(
         SELECT max(CREATE_TIME) CREATE_TIME from CHB_AGENT_INSTITUTION_SUB_HIS
         <where>

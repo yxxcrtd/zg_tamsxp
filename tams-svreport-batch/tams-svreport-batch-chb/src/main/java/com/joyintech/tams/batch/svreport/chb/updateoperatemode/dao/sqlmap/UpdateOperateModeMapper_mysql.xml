@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.svreport.chb.updateoperatemode.dao.UpdateOperateModeMapper_mysql">
+    <update id="updateOperateMode">
+		update CHB_PRDRESIST_CODE cpc
+		set cpc.OPERATE_MODE =
+		(select cpb.OPERATE_MODE from CHB_PRD_BASEINFO cpb where cpb.PROD_ID = cpc.PRODID)
+	</update>
+</mapper>

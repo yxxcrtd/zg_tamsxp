@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.common.dao.BooksetComMapper_mysql" >
+    <select id="selectAllBooksets" resultType="String">
+        select BOOKSET_ID
+        from BOK_BOOKSET
+    </select>
+    <select id="findProductByIds" resultType="com.joyintech.framework.base.dto.Product">
+        select
+        BOOKSET_ID prodId,
+        BOOKSET_NAME prodName
+        from BOK_BOOKSET
+        where
+        1 = 1
+        <if test="prodGroupSeqNos != null">
+            AND BOOKSET_ID IN
+            <foreach collection="prodGroupSeqNos" item="item" open="( " close=" )" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="findProductByName" resultType="com.joyintech.framework.base.dto.Product">
+        select
+        BOOKSET_ID prodId,
+        BOOKSET_NAME prodName
+        from BOK_BOOKSET
+        where
+        1 = 1
+        <if test="notInProductIds != null and notInProductIds.size() > 0">
+            AND BOOKSET_ID NOT IN
+            <foreach collection="notInProductIds" item="item" open="( " close=" )" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodName != null and prodName != ''">
+            AND BOOKSET_NAME like concat_ws(concat_ws('%', #{prodName}),'%')
+        </if>
+    </select>
+</mapper>

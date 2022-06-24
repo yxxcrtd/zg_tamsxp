@@ -20,6 +20,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -96,9 +98,10 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 	
 	@Autowired
 	private ChbCprodBalanceDtoMapper chbCprodBalanceDtoMapper;
-	
 
-    
+	@Autowired
+	private BatchInsertService batchInsertService;
+
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
@@ -110,7 +113,7 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 //		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) dataMap.get("list");
-		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) convertMapToEntity(posList,ChbCprodBalanceDto.class);
+		List<ChbCprodBalanceDto> list = (List<ChbCprodBalanceDto>) convertMapToEntity(posList,ChbCprodBalanceDto.class, dataSource);
 		list.stream().forEach(t->{
 			t.setBalId(IDGenerator.generate(36));
 		});
@@ -277,97 +280,17 @@ public class SvrCprodBalanceFileImpService extends FileImpService{
 			success = excuteProdOpenSchByStep(posList, type, null, null,dataSource,saveFlag);
 		} else {// 大于1000使用sqlloader入库
 			chbCprodBalanceDtoMapper.deleteByPosdate(posdate);
-			// 创建表
-			ImpTable table = new ImpTable(InterfDefine.周期型产品余额接口数据.getCode());
-			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.周期型产品余额接口数据.getCode()));
-			// 创建一个线程池
-			if (interfMaxCorePoolSize < 1) {
-				interfMaxCorePoolSize = 20;
-			}
-			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-			List<Callable<Boolean>> tasks = new ArrayList<>();
-			if (null != posList) {
-				int start = 0;
-				int end = 0;
-				int size = posList.size();
-				int max = (int) Math.ceil((double) size / 100000);
-				for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 1000 * (i + 1));
-					List<Map<String, String>> subList = posList.subList(start, end);
-					tasks.add(new Callable<Boolean>() {
-						@Override
-						public Boolean call() {
-							return excuteProdOpenSchByStep(subList, type, tmpPath, table,dataSource,saveFlag);
-						}
-					});
-				}
-			}
-			// 为线程池添加任务
-			List<Future<Boolean>> taskResult;
-			try {
-				taskResult = service.invokeAll(tasks);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage(), e);
-				return success?"success":"fail";
-			}
-			for (Future<Boolean> res : taskResult) {
 				try {
-					success = success && res.get();
-				} catch (InterruptedException | ExecutionException e) {
+					//sqlloader插入
+					ImpTable table = new ImpTable("CHB_CPROD_BALANCE");
+					table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+					// 临时文件存放目录
+					String path = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+					batchInsertService.exeBatchldr(path, posList, table);
+				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
-					return success?"success":"fail";
+					return "fail";
 				}
-			}
-			// 任务结束，停止线程池的所有线程
-			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_CPROD_BALANCE/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(posList.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(InterfDefine.周期型产品余额接口数据.getCode())) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_CPROD_BALANCE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return success?"success":"fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_CPROD_BALANCE/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return success?"success":"fail";
-					}
-				}
-			}
 		}
 		logger.info("----周期型产品余额信息入库，结束-----");
 

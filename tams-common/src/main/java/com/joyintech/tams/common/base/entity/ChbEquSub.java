@@ -156,6 +156,41 @@ public class ChbEquSub extends ChbEquSubKey {
     private String orgCode;
 
     /**
+     * 检查序列号
+     */
+    private String checkSeqno;
+
+    /**
+     * 发送状态
+     */
+    private String sendStatus;
+
+    /**
+     * 账号开户所在地
+     */
+    private String fundAccPlace;
+
+    /**
+     * 投资者类型:01 不特定社会公众; 02 合格投资者
+     */
+    private String holderClassify;
+
+    /**
+     * 报送反馈状态
+     */
+    private String submitFeedbackStatus;
+
+    /**
+     * 报送编码
+     */
+    private String reportNo;
+
+    /**
+     * 报送反馈消息
+     */
+    private String submitFeedbackMsg;
+
+    /**
      * 取得 原始识别标识
      * @return 原始识别标识
      */
@@ -637,5 +672,117 @@ public class ChbEquSub extends ChbEquSubKey {
      */
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode == null ? null : orgCode.trim();
+    }
+
+    /**
+     * 取得 检查序列号
+     * @return 检查序列号
+     */
+    public String getCheckSeqno() {
+        return checkSeqno;
+    }
+
+    /**
+     * 设置 检查序列号
+     * @param checkSeqno 检查序列号
+     */
+    public void setCheckSeqno(String checkSeqno) {
+        this.checkSeqno = checkSeqno == null ? null : checkSeqno.trim();
+    }
+
+    /**
+     * 取得 发送状态
+     * @return 发送状态
+     */
+    public String getSendStatus() {
+        return sendStatus;
+    }
+
+    /**
+     * 设置 发送状态
+     * @param sendStatus 发送状态
+     */
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus == null ? null : sendStatus.trim();
+    }
+
+    /**
+     * 取得 账号开户所在地
+     * @return 账号开户所在地
+     */
+    public String getFundAccPlace() {
+        return fundAccPlace;
+    }
+
+    /**
+     * 设置 账号开户所在地
+     * @param fundAccPlace 账号开户所在地
+     */
+    public void setFundAccPlace(String fundAccPlace) {
+        this.fundAccPlace = fundAccPlace == null ? null : fundAccPlace.trim();
+    }
+
+    /**
+     * 取得 投资者类型:01 不特定社会公众; 02 合格投资者
+     * @return 投资者类型:01 不特定社会公众; 02 合格投资者
+     */
+    public String getHolderClassify() {
+        return holderClassify;
+    }
+
+    /**
+     * 设置 投资者类型:01 不特定社会公众; 02 合格投资者
+     * @param holderClassify 投资者类型:01 不特定社会公众; 02 合格投资者
+     */
+    public void setHolderClassify(String holderClassify) {
+        this.holderClassify = holderClassify == null ? null : holderClassify.trim();
+    }
+
+    /**
+     * 取得 报送反馈状态
+     * @return 报送反馈状态
+     */
+    public String getSubmitFeedbackStatus() {
+        return submitFeedbackStatus;
+    }
+
+    /**
+     * 设置 报送反馈状态
+     * @param submitFeedbackStatus 报送反馈状态
+     */
+    public void setSubmitFeedbackStatus(String submitFeedbackStatus) {
+        this.submitFeedbackStatus = submitFeedbackStatus == null ? null : submitFeedbackStatus.trim();
+    }
+
+    /**
+     * 取得 报送编码
+     * @return 报送编码
+     */
+    public String getReportNo() {
+        return reportNo;
+    }
+
+    /**
+     * 设置 报送编码
+     * @param reportNo 报送编码
+     */
+    public void setReportNo(String reportNo) {
+        this.reportNo = reportNo == null ? null : reportNo.trim();
+    }
+
+    /**
+     * 取得 报送反馈消息
+     * @return 报送反馈消息
+     */
+    public String getSubmitFeedbackMsg() {
+        return submitFeedbackMsg;
+    }
+
+    /**
+     * 设置 报送反馈消息
+     * @param submitFeedbackMsg 报送反馈消息
+     */
+    public void setSubmitFeedbackMsg(String submitFeedbackMsg) {
+        this.submitFeedbackMsg = submitFeedbackMsg == null ? null : submitFeedbackMsg.trim();
     }
 }

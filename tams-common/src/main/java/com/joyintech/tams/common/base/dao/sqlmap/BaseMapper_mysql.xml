@@ -30,5 +30,6 @@
         select DISTINCT COLUMN_NAME
         from  information_schema.`COLUMNS`
         where Table_Name = #{tableName,jdbcType=VARCHAR}
+        and  table_schema=database()
     </select>
 </mapper>

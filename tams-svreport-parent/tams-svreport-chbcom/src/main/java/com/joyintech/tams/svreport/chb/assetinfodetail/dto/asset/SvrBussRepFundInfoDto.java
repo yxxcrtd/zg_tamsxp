@@ -60,6 +60,18 @@ public class SvrBussRepFundInfoDto extends RepFund {
      */
     private String registOrg1;
 
+
+    /**
+     * 管理人
+     */
+    private String managerId;
+
+    /**
+     * 托管人
+     */
+    private String trusteeId;
+
+
     /**
      * 基金管理机构名称
      */
@@ -367,5 +379,22 @@ public class SvrBussRepFundInfoDto extends RepFund {
 
     public void setProfitFlag(String profitFlag) {
         this.profitFlag = profitFlag;
+    }
+
+
+    public String getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(String managerId) {
+        this.managerId = managerId;
+    }
+
+    public String getTrusteeId() {
+        return trusteeId;
+    }
+
+    public void setTrusteeId(String trusteeId) {
+        this.trusteeId = trusteeId;
     }
 }

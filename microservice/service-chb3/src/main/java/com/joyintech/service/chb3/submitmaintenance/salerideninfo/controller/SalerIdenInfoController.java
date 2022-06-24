@@ -39,7 +39,7 @@ public class SalerIdenInfoController {
      * selectDetail
      */
     @PostMapping("selectDetail")
-    public SalerIdenInfoDto selectDetail(@RequestBody Map<String, Object> param){
+    public SalerIdenInfoDto selectDetail(@RequestBody Map<String, Object> param) throws Exception{
         return  salerIdenInfo002Service.selectDetail(param);
     }
 
@@ -93,7 +93,8 @@ public class SalerIdenInfoController {
     @PostMapping("checkConfirmMsgForImportData")
     public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param)  {
         List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        return salerIdenInfo001Service.checkConfirmMsgForImportData(dataList);
+        String fileName = (String) param.get("fileName");
+        return salerIdenInfo001Service.checkConfirmMsgForImportData(dataList,fileName);
     }
 
     /**
@@ -122,7 +123,8 @@ public class SalerIdenInfoController {
     @PostMapping("checkConfirmMsgForImportCodeData")
     public AjaxResult checkConfirmMsgForImportCodeData(@RequestBody Map<String, Object> param)  {
         List<List<String>> dataList = (List<List<String>>) param.get("dataList");
-        return salerIdenInfo001Service.checkConfirmMsgForImportCodeData(dataList);
+        String fileName = (String) param.get("fileName");
+        return salerIdenInfo001Service.checkConfirmMsgForImportCodeData(dataList,fileName);
     }
 
     /**

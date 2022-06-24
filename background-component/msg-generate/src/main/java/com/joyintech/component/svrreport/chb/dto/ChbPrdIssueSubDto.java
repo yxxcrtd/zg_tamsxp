@@ -62,6 +62,7 @@ public class ChbPrdIssueSubDto {
     /**
      * 分级比例
      */
+    @RateFormat
     private  BigDecimal   gradProportion;
 
     public BigDecimal getGradProportion() {

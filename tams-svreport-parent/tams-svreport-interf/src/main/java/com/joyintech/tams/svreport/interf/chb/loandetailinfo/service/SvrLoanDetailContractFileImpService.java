@@ -248,13 +248,13 @@ public class SvrLoanDetailContractFileImpService extends FileImpService {
 	}
 
 	private boolean excuteSecRatingByStep(String saveFlag, List<Map<String, String>> datalist, String[] result,
-			String tmpPath, ImpTable table, ImpTable subTable, String dateSource) {
+			String tmpPath, ImpTable table, ImpTable subTable, String dataSource) {
 		// 定义新增数据list-验证通过数据
 		List<ChbLoanDetailContractDto> listNE = new ArrayList<ChbLoanDetailContractDto>();
 		logger.debug("评级数据转换dto---开始-----:" +  df.format(new Date()));
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		listNE = convertMapToEntity(datalist,dateSource);
-		listNE = (List<ChbLoanDetailContractDto>) convertMapToEntity(datalist,ChbLoanDetailContractDto.class);
+		listNE = (List<ChbLoanDetailContractDto>) convertMapToEntity(datalist,ChbLoanDetailContractDto.class, dataSource);
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("评级数据转换dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {

@@ -131,7 +131,7 @@ $(function() {
               param = getSearchParams();
               param.flag = flag;
               if(flag=="0"){
-                  param.status="01";
+                 // param.status="01";
                   param.sendStatus="01";
               }
               var isHaveData = true;

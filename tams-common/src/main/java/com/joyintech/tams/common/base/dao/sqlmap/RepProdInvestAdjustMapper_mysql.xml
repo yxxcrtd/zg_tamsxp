@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepProdInvestAdjustMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdInvestAdjust" >
+        <result column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="INVEST_RANGE" property="investRange" jdbcType="VARCHAR" />
+        <result column="INVEST_TYPE" property="investType" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="RAISE_AMT_MAX" property="raiseAmtMax" jdbcType="DECIMAL" />
+        <result column="INVEST_ADJUST_DATE" property="investAdjustDate" jdbcType="DATE" />
+        <result column="ADJUST_DATE" property="adjustDate" jdbcType="DATE" />
+        <result column="RAISE_MAX" property="raiseMax" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdInvestAdjust" >
+        insert into REP_PROD_INVEST_ADJUST (ID, PROD_ID, INVEST_RANGE, 
+            INVEST_TYPE, INPUT_TYPE, INPUT_USER, 
+            ADAPTER_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            STATUS, RAISE_AMT_MAX, INVEST_ADJUST_DATE, 
+            ADJUST_DATE, RAISE_MAX)
+        values (#{id,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{investRange,jdbcType=VARCHAR}, 
+            #{investType,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, #{inputUser,jdbcType=VARCHAR}, 
+            #{adapterId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{status,jdbcType=VARCHAR}, #{raiseAmtMax,jdbcType=DECIMAL}, #{investAdjustDate,jdbcType=DATE}, 
+            #{adjustDate,jdbcType=DATE}, #{raiseMax,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdInvestAdjust" >
+        insert into REP_PROD_INVEST_ADJUST
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="investRange != null" >
+                INVEST_RANGE,
+            </if>
+            <if test="investType != null" >
+                INVEST_TYPE,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="inputUser != null" >
+                INPUT_USER,
+            </if>
+            <if test="adapterId != null" >
+                ADAPTER_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="raiseAmtMax != null" >
+                RAISE_AMT_MAX,
+            </if>
+            <if test="investAdjustDate != null" >
+                INVEST_ADJUST_DATE,
+            </if>
+            <if test="adjustDate != null" >
+                ADJUST_DATE,
+            </if>
+            <if test="raiseMax != null" >
+                RAISE_MAX,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="investRange != null" >
+                #{investRange,jdbcType=VARCHAR},
+            </if>
+            <if test="investType != null" >
+                #{investType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUser != null" >
+                #{inputUser,jdbcType=VARCHAR},
+            </if>
+            <if test="adapterId != null" >
+                #{adapterId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseAmtMax != null" >
+                #{raiseAmtMax,jdbcType=DECIMAL},
+            </if>
+            <if test="investAdjustDate != null" >
+                #{investAdjustDate,jdbcType=DATE},
+            </if>
+            <if test="adjustDate != null" >
+                #{adjustDate,jdbcType=DATE},
+            </if>
+            <if test="raiseMax != null" >
+                #{raiseMax,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepProdInvestAdjust" >
+        insert into REP_PROD_INVEST_ADJUST(ID, PROD_ID, INVEST_RANGE, INVEST_TYPE, INPUT_TYPE, 
+        INPUT_USER, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        STATUS, RAISE_AMT_MAX, INVEST_ADJUST_DATE, ADJUST_DATE, RAISE_MAX)
+        select ID, PROD_ID, INVEST_RANGE, INVEST_TYPE, INPUT_TYPE, 
+            INPUT_USER, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            #{status,jdbcType=VARCHAR} STATUS, RAISE_AMT_MAX, INVEST_ADJUST_DATE, ADJUST_DATE, RAISE_MAX
+             from REP_PROD_INVEST_ADJUST
+             where STATUS = 'E'
+    </insert>
+</mapper>

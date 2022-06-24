@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.feebasis.dao.SvrChbPrdFeeBasisDBInterfMapper_mysql">
-   <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdfeeBasisData" >
-         <result column="POSUUID" property="posuuid" jdbcType="CHAR" />
-        <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
-        <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
-        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
-        <result column="CDATE" property="cdate" jdbcType="DATE" />
-        <result column="PAYDATE" property="paydate" jdbcType="DATE" />
-        <result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
-        <result column="TDY_INTINCEXP_ADD" property="tdyIntincexpAdd" jdbcType="DECIMAL" />
-        <result column="TDY_UNPAID_INTINCEXP" property="tdyUnpaidIntincexp" jdbcType="DECIMAL" />
-        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
-        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
-        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
-        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
-        </resultMap>
- 
- 	
-	
-	
-	
-  <select id="isUpdated" parameterType="java.util.Date" resultType="java.util.Date">
-	  select 
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdfeeBasisData" >
+		<result column="POSUUID" property="posuuid" jdbcType="CHAR" />
+		<result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+		<result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+		<result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+		<result column="CDATE" property="cdate" jdbcType="DATE" />
+		<result column="PAYDATE" property="paydate" jdbcType="DATE" />
+		<result column="TDY_POSITION" property="tdyPosition" jdbcType="DECIMAL" />
+		<result column="TDY_INTINCEXP_ADD" property="tdyIntincexpAdd" jdbcType="DECIMAL" />
+		<result column="TDY_UNPAID_INTINCEXP" property="tdyUnpaidIntincexp" jdbcType="DECIMAL" />
+		<result column="CCY" property="ccy" jdbcType="VARCHAR" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="isUpdated" parameterType="java.util.Date" resultType="java.util.Date">
+	  select
 	    distinct CDATE cdate
 	  from BOK_POSITION_PRDFEE
 	  where ifnull(UPDATE_TIME,CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
 	  order by cdate
   </select>
-  
-  
-  <select id="selectByValuedate"  parameterType="java.lang.String" resultMap="BaseResultMap">
+
+
+	<select id="selectByValuedate"  parameterType="java.lang.String" resultMap="BaseResultMap">
   <![CDATA[
-  select  
+  select
 FP.FINPROD_MARKET_ID  AS PRODID,
 FP1.FINPROD_MARKET_ID  AS FPROD_ID,
 BPP.FEE_TYPE  AS FEE_TYPE,
@@ -49,9 +45,9 @@ FCI.CCY,
 ifnull(BPP.UPDATE_TIME,BPP.CREATE_TIME) UPDATE_TIME,
 ifnull(BPP.CREATE_TIME,BPP.UPDATE_TIME) CREATE_TIME
 
-from 
+from
 BOK_POSITION_PRDFEE  BPP
-LEFT   JOIN  fin_product   FP  ON  BPP.FINPROD_ID=FP.FINPROD_ID  and   FP.P_FINPROD_ID IS NULL  
+LEFT   JOIN  fin_product   FP  ON  BPP.FINPROD_ID=FP.FINPROD_ID  and   FP.P_FINPROD_ID IS NULL
 LEFT   JOIN  fin_product   FP1  ON  BPP.FINPROD_ID=FP1.FINPROD_ID  and  BPP.P_FINPROD_ID is not null
 LEFT   JOIN  FIN_CASH_INFO  FCI   ON   FCI.FINPROD_ID=BPP.FINPROD_ID AND  BPP.FEE_TYPE=FCI.CASH_TYPE_2
 LEFT   JOIN (SELECT  MIN(PAY_DATE) PAY_DATE,CASH_ID FROM   FIN_CASH_PLAN  WHERE  DATE_FORMAT(PAY_DATE,'%Y-%m-%d')>=#{batchTime,jdbcType=VARCHAR}  GROUP BY  CASH_ID) FCP ON  FCP.CASH_ID=FCI.CASH_ID
@@ -59,30 +55,38 @@ WHERE DATE_FORMAT(BPP.CDATE,'%Y-%m-%d')=#{batchTime,jdbcType=VARCHAR}
 and  BPP.FEE_TYPE  in ('C03','C04','C05','C06','C09','C10','C18')
 ]]>
   </select>
- 
-  
-<delete id="deleteData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdfeeBasisData">
-  	delete from CHB_PRDFEE_BASIS_DATA 
-  	where  1=1
-  	and DATA_SOURCE = '16'/*为避免误删除业务数据维护导入的数据，增加此条件*/
-  	  <if test="cdate != null" >
-       and CDATE = #{cdate,jdbcType=DATE}
-      </if>
-  </delete>
 
- <select id="getTableColumnList" resultType="string">
-		select COLUMN_NAME
-		from user_tab_columns
+
+	<delete id="deleteData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdfeeBasisData">
+		delete from CHB_PRDFEE_BASIS_DATA
+		where  1=1
+		and DATA_SOURCE = '16'/*为避免误删除业务数据维护导入的数据，增加此条件*/
+		<if test="cdate != null" >
+			and CDATE = #{cdate,jdbcType=DATE}
+		</if>
+	</delete>
+
+	<select id="getTableColumnList" resultType="string">
+		select DISTINCT COLUMN_NAME
+		from information_schema.`COLUMNS`
 		where Table_Name = #{tableName,jdbcType=VARCHAR}
 	</select>
-	
-	
+
+
 	<insert id="insertChbPrdfeeBasisData" >
-		MERGE INTO CHB_PRDFEE_BASIS_DATA CII
-		USING (
-		<foreach collection="newDataList" item="item" open="select * from("
-			close=")" separator="union all">
-			SELECT 
+		insert into CHB_PRDFEE_BASIS_DATA(POSUUID, PRODID,  FPROD_ID, FEE_TYPE,CDATE, PAYDATE,
+		TDY_POSITION, TDY_INTINCEXP_ADD, TDY_UNPAID_INTINCEXP, CCY, ORG_CODE,
+		CREATE_TIME, UPDATE_TIME, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, DATA_SOURCE)
+		select POSUUID, PRODID,  FPROD_ID, FEE_TYPE,CDATE, PAYDATE,
+		TDY_POSITION, TDY_INTINCEXP_ADD, TDY_UNPAID_INTINCEXP, CCY, ORG_CODE,
+		CREATE_TIME, UPDATE_TIME, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, DATA_SOURCE from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
+			SELECT
 			#{item.posuuid,jdbcType=VARCHAR} POSUUID,
 			#{item.prodId,jdbcType=VARCHAR} PRODID,
 			#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
@@ -100,56 +104,62 @@ and  BPP.FEE_TYPE  in ('C03','C04','C05','C06','C09','C10','C18')
 			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
 			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE
-			FROM
-			DUAL
+			FROM	DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_PRDFEE_BASIS_DATA CII where CII.PROD_ID = TEMP.PRODID
+		AND CII.FPROD_ID = TEMP.FPROD_ID
+		AND CII.FEE_TYPE = TEMP.FEE_TYPE)
+		) de ;
+
+		UPDATE  CHB_PRDFEE_BASIS_DATA as A,
+		(
+		select POSUUID,
+		CDATE,
+		PAYDATE,
+		TDY_POSITION,
+		TDY_INTINCEXP_ADD,
+		TDY_UNPAID_INTINCEXP,
+		CCY,
+		ORG_CODE,
+		CREATE_TIME,
+		UPDATE_TIME,
+		DEPT_CODE,
+		CREATE_USER,
+		UPDATE_USER,
+		DATA_SOURCE from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
+			SELECT
+			#{item.posuuid,jdbcType=VARCHAR} POSUUID,
+			#{item.prodId,jdbcType=VARCHAR} PRODID,
+			#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+			#{item.feeType,jdbcType=VARCHAR} FEE_TYPE,
+			#{item.cdate,jdbcType=DATE} CDATE,
+			#{item.paydate,jdbcType=DATE} PAYDATE,
+			#{item.tdyPosition,jdbcType=DECIMAL} TDY_POSITION,
+			#{item.tdyIntincexpAdd,jdbcType=DECIMAL} TDY_INTINCEXP_ADD,
+			#{item.tdyUnpaidIntincexp,jdbcType=DECIMAL} TDY_UNPAID_INTINCEXP,
+			#{item.ccy,jdbcType=DECIMAL} CCY,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE
+			FROM	DUAL
 		</foreach>
 		) TEMP
-		<!-- 业务主键匹配 -->
-		ON(CII.PROD_ID = TEMP.PRODID
+		) de
+		) AS B
+		set  A.* = B.* where exists (select 1 from CHB_PRDFEE_BASIS_DATA CII where CII.PROD_ID = TEMP.PRODID
 		AND CII.FPROD_ID = TEMP.FPROD_ID
-		AND CII.FEE_TYPE = TEMP.FEE_TYPE 
-		)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE 
-		SET  CII.POSUUID = TEMP.POSUUID,
-			 CII.CDATE = TEMP.CDATE,
-			 CII.PAYDATE = TEMP.PAYDATE,
-			 CII.TDY_POSITION = TEMP.TDY_POSITION,
-			 CII.TDY_INTINCEXP_ADD = TEMP.TDY_INTINCEXP_ADD,
-			 CII.TDY_UNPAID_INTINCEXP = TEMP.TDY_UNPAID_INTINCEXP,
-			 CII.CCY = TEMP.CCY,
-			 CII.ORG_CODE = TEMP.ORG_CODE,
-			 CII.CREATE_TIME = TEMP.CREATE_TIME,
-			 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-			 CII.DEPT_CODE = TEMP.DEPT_CODE,
-			 CII.CREATE_USER = TEMP.CREATE_USER,
-			 CII.UPDATE_USER = TEMP.UPDATE_USER,
-			 CII.DATA_SOURCE = TEMP.DATA_SOURCE
-		<!-- 未匹配到这插入 -->
-		WHEN NOT MATCHED THEN INSERT (POSUUID, PRODID,  FPROD_ID, FEE_TYPE,CDATE, PAYDATE, 
-			    TDY_POSITION, TDY_INTINCEXP_ADD, TDY_UNPAID_INTINCEXP, CCY, ORG_CODE, 
-			    CREATE_TIME, UPDATE_TIME, DEPT_CODE, CREATE_USER, 
-			    UPDATE_USER, DATA_SOURCE)
-		VALUES( TEMP.POSUUID,
-				 TEMP.PRODID,
-				 TEMP.FPROD_ID,
-				 TEMP.FEE_TYPE,
-				 TEMP.CDATE,
-				 TEMP.PAYDATE,
-				 TEMP.TDY_POSITION,
-				 TEMP.TDY_INTINCEXP_ADD,
-				 TEMP.TDY_UNPAID_INTINCEXP,
-				 TEMP.CCY,
-				 TEMP.ORG_CODE,
-				 TEMP.CREATE_TIME,
-				 TEMP.UPDATE_TIME,
-				 TEMP.DEPT_CODE,
-				 TEMP.CREATE_USER,
-				 TEMP.UPDATE_USER,
-				 TEMP.DATA_SOURCE)
+		AND CII.FEE_TYPE = TEMP.FEE_TYPE );
 	</insert>
 
- <delete id="deleteByUpdateTime">
+	<delete id="deleteByUpdateTime">
     delete from CHB_PRDFEE_BASIS_DATA
     where DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
   </delete>

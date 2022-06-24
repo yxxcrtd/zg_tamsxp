@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.config.reportcontentenum.dao.ReportContentEnum001Mapper_mysql">
-    <select id="selectIndex" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
-        select
-        ID as id,
-        INDEX_NAME as indexName,
-        INDEX_DESCRIBE as indexDescribs,
-        PROD_ID AS prodId
+	<select id="selectIndex" resultType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
+     select 
+       ID as id,
+       INDEX_NAME as indexName,
+       INDEX_DESCRIBE as indexDescribs,
+       PROD_ID AS prodId
         from REP_INDEX_PRIMARY
         where  1=1
-        <if test="searchKey != null and !''.equals(searchKey)">
-            AND (INDEX_NAME like CONCAT('%' ,CONCAT( #{searchKey} , '%')))
-        </if>
-        <if test="indexName != null and !''.equals(indexName)">
-            AND INDEX_NAME = #{indexName}
-        </if>
-        ORDER BY CREATE_TIME DESC
-    </select>
-    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
-        update REP_INDEX_PRIMARY
-        <set >
+           <if test="searchKey != null and !''.equals(searchKey)">
+                AND (INDEX_NAME like CONCAT('%' ,CONCAT( #{searchKey} , '%')))
+            </if> 
+             <if test="indexName != null and !''.equals(indexName)">
+                AND INDEX_NAME = #{indexName}
+            </if>
+            ORDER BY CREATE_TIME DESC
+   </select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.disclosure.information.config.reportcontentenum.dto.ReportContentEnum001Dto">
+     update REP_INDEX_PRIMARY 
+       <set >
             <if test="indexName != null" >
                 INDEX_NAME = #{indexName,jdbcType=VARCHAR},
             </if>
@@ -34,5 +34,5 @@
             </if>
         </set>
         where ID=#{id,jdbcType=VARCHAR}
-    </update>
+  </update>
 </mapper>

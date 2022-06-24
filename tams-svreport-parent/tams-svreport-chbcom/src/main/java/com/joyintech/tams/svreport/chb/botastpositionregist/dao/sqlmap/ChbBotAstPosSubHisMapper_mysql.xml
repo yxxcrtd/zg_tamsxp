@@ -36,7 +36,7 @@
     ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
+    select 
     <include refid="Base_Column_List" />
     from CHB_BOT_AST_POS_SUB_HIS
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
@@ -340,51 +340,51 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </update>
-
+  
   <insert id="insertSubHisBatch" parameterType="java.lang.String">
-    insert into CHB_BOT_AST_POS_SUB_HIS (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID,
-    POS_DATE, PLAN_ASSET_ID, ASSET_CODE,
-    TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH,
-    POS_NUM, POS_AMT, SEND_STATUS,
-    CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-    SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS,
-    STATUS, STATUS_DATE, ORG_CODE,
-    DEPT_CODE, CREATE_USER, CREATE_DEPT,
-    CREATE_TIME, UPDATE_USER, UPDATE_TIME
-    )
-    select
-    REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID,
-    POS_DATE, PLAN_ASSET_ID, ASSET_CODE,
-    TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH,
-    POS_NUM, POS_AMT, SEND_STATUS,
-    CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-    SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS,
-    STATUS, STATUS_DATE, ORG_CODE,
-    DEPT_CODE, CREATE_USER, CREATE_DEPT,
-    CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  insert into CHB_BOT_AST_POS_SUB_HIS (REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
+      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
+      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
+      POS_NUM, POS_AMT, SEND_STATUS, 
+      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
+      STATUS, STATUS_DATE, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_FEEDBACK_MSG
+      )
+      select
+      REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, 
+      POS_DATE, PLAN_ASSET_ID, ASSET_CODE, 
+      TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, 
+      POS_NUM, POS_AMT, SEND_STATUS, 
+      CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, 
+      STATUS, STATUS_DATE, ORG_CODE, 
+      DEPT_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_FEEDBACK_MSG
     from CHB_BOT_AST_POS_SUB
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
-    <if test="regList !=null and regList.size()>0">
-      <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
-        #{item,jdbcType=VARCHAR}
-      </foreach>
+  	<if test="regList !=null and regList.size()>0">
+          <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+            #{item,jdbcType=VARCHAR}
+          </foreach>
     </if>
   </insert>
-
+ 
   <select id="selectByprodId" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
-    select a.REGIST_SEQNO from (
+  select a.REGIST_SEQNO from (
     SELECT
     @rownum := @rownum + 1 rownum,
     REGIST_SEQNO,
     IF
     (
-    (
-    @POS_DATE = A.POS_DATE
-    AND @PLAN_ASSET_ID = A.PLAN_ASSET_ID
-    AND @ASSET_CODE = A.ASSET_CODE
-    ),
-    @rank := @rank + 1,
-    @rank := 1
+      (
+      @POS_DATE = A.POS_DATE
+      AND @PLAN_ASSET_ID = A.PLAN_ASSET_ID
+      AND @ASSET_CODE = A.ASSET_CODE
+      ),
+      @rank := @rank + 1,
+      @rank := 1
     ) AS myrank,
     @POS_DATE := A.POS_DATE,
     @PLAN_ASSET_ID := A.PLAN_ASSET_ID,
@@ -399,22 +399,22 @@
     @ASSET_CODE := NULL,
     @rank := 0
     ) B
-    where
-    <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
-      POS_DATE = #{item.posDate}
-      and PLAN_ASSET_ID = #{item.planAssetId}
-      and ASSET_CODE = #{item.assetCode}
-    </foreach>
-    )a
-    where 1 = 1 limit 1
+  where 
+  <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
+   POS_DATE = #{item.posDate}
+	and PLAN_ASSET_ID = #{item.planAssetId}
+	and ASSET_CODE = #{item.assetCode}
+  </foreach>
+  )a
+  where 1 = 1 limit 1
   </select>
-
-  <delete id="deleteBySeqno" parameterType="java.lang.String">
-    delete from CHB_BOT_AST_POS_SUB_HIS
-    where
-    <foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
-             separator="," close=")">
-      #{item,jdbcType=VARCHAR}
-    </foreach>
-  </delete>
+  
+   <delete id="deleteBySeqno" parameterType="java.lang.String">
+	delete from CHB_BOT_AST_POS_SUB_HIS
+	where
+	<foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
+		separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>
+</delete>
 </mapper>

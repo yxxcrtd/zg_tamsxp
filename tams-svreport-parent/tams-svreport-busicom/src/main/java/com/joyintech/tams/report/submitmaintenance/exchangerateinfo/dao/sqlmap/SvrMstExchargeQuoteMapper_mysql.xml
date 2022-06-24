@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.exchangerateinfo.dao.SvrMstExchargeQuoteMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
+        <id column="EXCHARGE_CODE" property="exchargeCode" jdbcType="VARCHAR" />
+        <id column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="DATASOURCE_TYPE" property="datasourceType" jdbcType="VARCHAR" />
+        <result column="OPEN_PRICE" property="openPrice" jdbcType="DECIMAL" />
+        <result column="CLOSE_PRICE" property="closePrice" jdbcType="DECIMAL" />
+        <result column="HIGH_PRICE" property="highPrice" jdbcType="DECIMAL" />
+        <result column="LOW_PRICE" property="lowPrice" jdbcType="DECIMAL" />
+        <result column="MID_PRICE" property="midPrice" jdbcType="DECIMAL" />
+        <result column="BASIS_CYY" property="basisCyy" jdbcType="VARCHAR" />
+        <result column="QUOT_CYY" property="quotCyy" jdbcType="VARCHAR" />
+        <result column="QUOT_UNIT" property="quotUnit" jdbcType="DECIMAL" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        EXCHARGE_CODE EXCHARGE_CODE, TRADE_DATE TRADE_DATE, DATASOURCE_TYPE DATASOURCE_TYPE,
+        OPEN_PRICE OPEN_PRICE, CLOSE_PRICE CLOSE_PRICE, HIGH_PRICE HIGH_PRICE, LOW_PRICE LOW_PRICE,
+        MID_PRICE MID_PRICE, BASIS_CYY BASIS_CYY, QUOT_CYY QUOT_CYY, QUOT_UNIT QUOT_UNIT,
+        INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="Base_Column_List" />
+        from MST_EXCHARGE_QUOTE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="Base_Column_List" />
+        from MST_EXCHARGE_QUOTE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuoteKey" >
+        select
+        <include refid="Base_Column_List" />
+        from MST_EXCHARGE_QUOTE
+        where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
+        and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuoteKey" >
+        delete from MST_EXCHARGE_QUOTE
+        where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
+          and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
+        insert into MST_EXCHARGE_QUOTE (EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE,
+            OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE,
+            LOW_PRICE, MID_PRICE, BASIS_CYY,
+            QUOT_CYY, QUOT_UNIT, INPUT_TYPE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME)
+        values (#{exchargeCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{datasourceType,jdbcType=VARCHAR},
+            #{openPrice,jdbcType=DECIMAL}, #{closePrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL},
+            #{lowPrice,jdbcType=DECIMAL}, #{midPrice,jdbcType=DECIMAL}, #{basisCyy,jdbcType=VARCHAR},
+            #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
+        insert into MST_EXCHARGE_QUOTE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="exchargeCode != null" >
+                EXCHARGE_CODE,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="datasourceType != null" >
+                DATASOURCE_TYPE,
+            </if>
+            <if test="openPrice != null" >
+                OPEN_PRICE,
+            </if>
+            <if test="closePrice != null" >
+                CLOSE_PRICE,
+            </if>
+            <if test="highPrice != null" >
+                HIGH_PRICE,
+            </if>
+            <if test="lowPrice != null" >
+                LOW_PRICE,
+            </if>
+            <if test="midPrice != null" >
+                MID_PRICE,
+            </if>
+            <if test="basisCyy != null" >
+                BASIS_CYY,
+            </if>
+            <if test="quotCyy != null" >
+                QUOT_CYY,
+            </if>
+            <if test="quotUnit != null" >
+                QUOT_UNIT,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="exchargeCode != null" >
+                #{exchargeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="datasourceType != null" >
+                #{datasourceType,jdbcType=VARCHAR},
+            </if>
+            <if test="openPrice != null" >
+                #{openPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="closePrice != null" >
+                #{closePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="highPrice != null" >
+                #{highPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowPrice != null" >
+                #{lowPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="midPrice != null" >
+                #{midPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="basisCyy != null" >
+                #{basisCyy,jdbcType=VARCHAR},
+            </if>
+            <if test="quotCyy != null" >
+                #{quotCyy,jdbcType=VARCHAR},
+            </if>
+            <if test="quotUnit != null" >
+                #{quotUnit,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
+        insert into MST_EXCHARGE_QUOTE(EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, OPEN_PRICE,
+        CLOSE_PRICE, HIGH_PRICE, LOW_PRICE, MID_PRICE, BASIS_CYY, QUOT_CYY, QUOT_UNIT, INPUT_TYPE,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, OPEN_PRICE,
+            CLOSE_PRICE, HIGH_PRICE, LOW_PRICE, MID_PRICE, BASIS_CYY, QUOT_CYY, QUOT_UNIT, INPUT_TYPE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_EXCHARGE_QUOTE
+             where 1 = 1 and EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR} and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
+        update MST_EXCHARGE_QUOTE
+        <set >
+            <if test="datasourceType != null" >
+                DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR},
+            </if>
+            <if test="openPrice != null" >
+                OPEN_PRICE = #{openPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="closePrice != null" >
+                CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="highPrice != null" >
+                HIGH_PRICE = #{highPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowPrice != null" >
+                LOW_PRICE = #{lowPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="midPrice != null" >
+                MID_PRICE = #{midPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="basisCyy != null" >
+                BASIS_CYY = #{basisCyy,jdbcType=VARCHAR},
+            </if>
+            <if test="quotCyy != null" >
+                QUOT_CYY = #{quotCyy,jdbcType=VARCHAR},
+            </if>
+            <if test="quotUnit != null" >
+                QUOT_UNIT = #{quotUnit,jdbcType=DECIMAL},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
+        and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote" >
+        update MST_EXCHARGE_QUOTE
+        set DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR},
+            OPEN_PRICE = #{openPrice,jdbcType=DECIMAL},
+            CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
+            HIGH_PRICE = #{highPrice,jdbcType=DECIMAL},
+            LOW_PRICE = #{lowPrice,jdbcType=DECIMAL},
+            MID_PRICE = #{midPrice,jdbcType=DECIMAL},
+            BASIS_CYY = #{basisCyy,jdbcType=VARCHAR},
+            QUOT_CYY = #{quotCyy,jdbcType=VARCHAR},
+            QUOT_UNIT = #{quotUnit,jdbcType=DECIMAL},
+            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
+          and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+    </update>
+</mapper>

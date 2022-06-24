@@ -9,23 +9,55 @@
 	<!-- 插入数据 -->
 	<insert id="insertTransField" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
 		insert into  CHB_TRANSFORM_RULE(SEQNO,TRANS_TYPE,ORG_FIELD,PINGYING,FIELD_UNICODE,
-			TARGET_FIELD,STATUS,IS_MODIFY,REMARK,UPDATE_USER,UPDATE_TIME,
-			CREATE_USER,CREATE_TIME,CREATE_DEPT) 
-		values (f_guid,
-        	#{transType,jdbcType=CHAR} ,
-        	#{orgField,jdbcType=VARCHAR} ,
-        	#{pinyin,jdbcType=VARCHAR} ,
-        	#{fieldUnicode,jdbcType=VARCHAR} ,
-       	 	#{targetField,jdbcType=VARCHAR} ,
-        	#{dataStatus,jdbcType=VARCHAR} ,
-        	#{isModify,jdbcType=CHAR} ,
-        	#{remark,jdbcType=VARCHAR} ,
-        	#{updateUser,jdbcType=VARCHAR},
-        	NOW(),
-       		#{createUser,jdbcType=VARCHAR},
-        	NOW(),
-       		#{createDept,jdbcType=VARCHAR})
+										TARGET_FIELD,STATUS,IS_MODIFY,REMARK,UPDATE_USER,UPDATE_TIME,
+										CREATE_USER,CREATE_TIME,CREATE_DEPT)
+		values (f_guid(),
+				#{transType,jdbcType=CHAR} ,
+				#{orgField,jdbcType=VARCHAR} ,
+				#{pinyin,jdbcType=VARCHAR} ,
+				#{fieldUnicode,jdbcType=VARCHAR} ,
+				#{targetField,jdbcType=VARCHAR} ,
+				#{dataStatus,jdbcType=VARCHAR} ,
+				#{isModify,jdbcType=CHAR} ,
+				#{remark,jdbcType=VARCHAR} ,
+				#{updateUser,jdbcType=VARCHAR},
+				now(),
+				#{createUser,jdbcType=VARCHAR},
+				now(),
+				#{createDept,jdbcType=VARCHAR})
 	</insert>
+
+	<!-- 查询数据 -->
+	<select id="selectAllData" parameterType="map" resultType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto"
+			resultSetType="FORWARD_ONLY" fetchSize="1000">
+		select
+		SEQNO seqno,
+		TRANS_TYPE transType,
+		ORG_FIELD orgField,
+		PINGYING pinyin,
+		FIELD_UNICODE fieldUnicode,
+		TARGET_FIELD targetField,
+		STATUS dataStatus,
+		IS_MODIFY isModify,
+		REMARK remark,
+		UPDATE_USER updateUser,
+		CREATE_USER createUser,
+		CREATE_DEPT createDept
+		from CHB_TRANSFORM_RULE
+		<where>
+			<if test="statusList != null and statusList">
+				<foreach collection="statusList" item="item" open="and STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="transType != null  and transType != ''">
+				and TRANS_TYPE = #{transType,jdbcType=VARCHAR}
+			</if>
+			<if test="orgField != null and orgField != ''">
+				and ORG_FIELD = #{orgField,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 
 	<!-- 删除数据 -->
 	<update id="deleteByList" parameterType="java.util.List" >
@@ -40,6 +72,25 @@
 		</where>
 	</update>
 
+	<!--根据主键查询 -->
+	<select id="getDtoBySeqno" resultType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
+		select
+			SEQNO seqno,
+			TRANS_TYPE transType,
+			ORG_FIELD orgField,
+			PINGYING pinyin,
+			FIELD_UNICODE fieldUnicode,
+			TARGET_FIELD targetField,
+			STATUS dataStatus,
+			IS_MODIFY isModify,
+			REMARK remark,
+			UPDATE_USER updateUser,
+			CREATE_USER createUser,
+			CREATE_DEPT createDept
+		from CHB_TRANSFORM_RULE
+		where SEQNO=#{seqno}
+	</select>
+
 	<!--修改保存 -->
 	<update id="doEditSave" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto">
 		update CHB_TRANSFORM_RULE
@@ -50,9 +101,20 @@
 			STATUS='E',
 			FIELD_UNICODE= #{fieldUnicode,jdbcType=VARCHAR} ,
 			UPDATE_USER= #{updateUser,jdbcType=VARCHAR},
-			UPDATE_TIME=NOW()
+			UPDATE_TIME=now()
 		</set>
 		where SEQNO=#{seqno}
 	</update>
+	<select id="getObjFiledByTableId" parameterType="string" resultType="string" >
+		select OBJ_TABLE_FILED
+		from CHB_TRANSFORM_RULE_OBJ
+		where OBJ_TABLE_ID=#{tableid,jdbcType=VARCHAR}
 
+	</select>
+	<select id="getTransFieldCount" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto" resultType="java.lang.Integer">
+		select count(1) from CHB_TRANSFORM_RULE
+		where TRANS_TYPE=#{transType,jdbcType=CHAR}
+		  and ORG_FIELD=#{orgField,jdbcType=VARCHAR}
+		  and STATUS !='D'
+	</select>
 </mapper>

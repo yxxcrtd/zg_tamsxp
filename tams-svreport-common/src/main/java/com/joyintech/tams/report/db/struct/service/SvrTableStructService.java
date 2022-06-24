@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +47,7 @@ public class SvrTableStructService {
     public List<TableColumn> selectTableStruct(String tableName) {
 
         if(StringUtil.isNotEmpty(tableName)) {
-//            String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, ReportGlobalConstant.COM_PROP_DATABASE_TYPE);
-            String databaseType = "Oracle";
-            databaseType = StringUtil.defaultString(databaseType, "Oracle");
+            String databaseType = BaseCommonCheckService.isMYSQLDataBase()?"MYSQL":"Oracle";
             Map<String, Object> param = new HashMap<>();
             param.put("databaseType", databaseType);
             param.put("table", tableName);

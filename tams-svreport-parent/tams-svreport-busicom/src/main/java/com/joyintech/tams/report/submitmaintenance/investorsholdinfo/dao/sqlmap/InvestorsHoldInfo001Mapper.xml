@@ -849,6 +849,20 @@ where
             </foreach>
         </where>
     </delete>
+
+	<!-- 删除持有信息登记表中数据状态为删除的数据-->
+	<delete id="handleSubDeleteDataNew" >
+		delete from CHB_INVESTHOLD_INFO_SUB sub
+		where sub.STATUS = '03'
+		AND EXISTS (
+		SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+		sub.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		AND sub.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+		AND sub.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+		AND sub.HOLD_DATE = tmp.HOLD_DATE
+		AND sub.CCY = tmp.CCY
+		)
+	</delete>
     <!-- 产品登记模块刷新有效持有信息维护表 -->
     <update id="updateInfoRegCodeByProdid" >
        update CHB_INVESTHOLD_INFO

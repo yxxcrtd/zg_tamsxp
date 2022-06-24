@@ -15,6 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpColumn;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +59,13 @@ public class InvestorsHoldInfo002Service{
      */
     @Autowired
     private InvestorsHoldInfo001Service investorsHoldInfo001Service;
+
+    @Autowired
+    private InvestorsHoldInfoDistinctService investorsHoldInfoDistinctService;
+
+    @Autowired
+    private BatchInsertService batchInsertService;
+
     /**
      * 根据业务主key获取entity
      * <功能详细描述>
@@ -115,8 +128,42 @@ public class InvestorsHoldInfo002Service{
 
         List<InvestorsHoldInfo001Dto> list = new ArrayList<InvestorsHoldInfo001Dto>();
         list.add(dto);
+        List<InvestorsHoldInfo001Dto> listIn = new ArrayList<>();
+        List<ChbInvestholdInfoSub> subListInsert = new ArrayList<>();
         investorsHoldInfo001Service.afterCheckDeal(list, null,
-            DictCodeListExt2.数据来源_系统新建.getValue(), null, null, null, null);
+            DictCodeListExt2.数据来源_系统新建.getValue(), listIn, subListInsert, null);
+
+        String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+        // 批量插入
+        if (listIn != null && listIn.size() > 0) {
+            if(listIn.size()<1000){
+                investorsHoldInfoDistinctService.insertChbHoldInfoDataByPart(listIn);
+            }else{
+                // 创建表
+                ImpTable table = new ImpTable("CHB_INVESTHOLD_INFO");
+                table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+
+                batchInsertService.exeBatchldr(tmpPath, listIn, table);
+            }
+        }
+
+        if (subListInsert != null && subListInsert.size() > 0) {
+            if(listIn.size()<1000) {
+                investorsHoldInfo001Service.insertChbSubHoldInfoDataByPart(subListInsert);
+            }else{
+                // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+                ImpTable subTable = new ImpTable("CHB_INVESTHOLD_INFO_SUB");
+                subTable.setColumns(ImportGenerator.createImpTableColumns(subTable.getName()));
+                subTable.setSequences(ImportGenerator.createSequence("SUMIT_SEQ", "CHB_SEQUENCE"));
+                // 由于DTO中登记银行代码和数据库字段名不匹配，修改登记银行代码的字段名
+                for (ImpColumn column : subTable.getColumns()) {
+                    if (StringUtil.equals(column.getName(), "STATUS")) {
+                        column.setConstant(DictCodeListExt2.报送数据状态_新建.getValue());
+                    }
+                }
+                batchInsertService.exeBatchldr(tmpPath, subListInsert, subTable);
+            }
+        }
     }
 
     /**

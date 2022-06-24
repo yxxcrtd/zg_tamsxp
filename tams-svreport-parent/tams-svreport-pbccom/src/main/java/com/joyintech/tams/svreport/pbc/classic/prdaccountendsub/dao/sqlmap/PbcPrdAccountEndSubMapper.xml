@@ -262,6 +262,7 @@
 		    A.CREATE_TIME createTime,
 		    A.UPDATE_USER updateUser,
 		    A.UPDATE_TIME updateTime,
+  	        t2.inside_prod_id insideProdId,
 		    t2.PBC_CODE pbcCode,
 		    A.PBC_ACCOUNT_ID pbcAccountIdShow,
 		    B.ACCOUNT_ID accountId
@@ -278,6 +279,11 @@
             AND code_type='02'
     )t2 ON t2.inside_prod_id=B.ACCOUNT_ID
   	<where>
+        <if test="accountIdList != null and accountIdList.size > 0">
+            <foreach collection="accountIdList" item="items" open="and B.ACCOUNT_ID in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
         <if test="pbcAccountIdList != null and pbcAccountIdList.size > 0">
             <foreach collection="pbcAccountIdList" item="items" open="and A.PBC_ACCOUNT_ID in (" separator="," close =")">
             #{items,jdbcType=VARCHAR}

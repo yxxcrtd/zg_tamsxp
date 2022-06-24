@@ -49,7 +49,7 @@
         where 
           REPORT_NO = #{reportNo,jdbcType=VARCHAR}
         <if test="submitNum != null" >
-          AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+          AND SUMIT_SEQ = #{submitNum,jdbcType=VARCHAR}
         </if>
     </update>
     
@@ -125,11 +125,11 @@
     <update id="insertChbSubmitStatusList">
         /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
         begin
-        <foreach collection="updateDataList" item="dto" index="index" separator=";">
-            <if test="flag != null and flag.equals('14')" >
+        <foreach collection="chbSubmitStatusList" item="dto" index="index" separator=";">
+            <if test="SubmitsType != null and SubmitsType.equals('14')" >
                 update CHB_EQU_SUB
             </if>
-            <if test="flag != null and flag.equals('16')" >
+            <if test="SubmitsType != null and SubmitsType.equals('16')" >
                 update CHB_INVESTHOLD_INFO_SUB
             </if>
             <set >
@@ -149,7 +149,7 @@
                     REPORT_NO = #{dto.reportNo,jdbcType=VARCHAR}
                 </if>
             </set>
-            where SUBMIT_NUM = #{dto.submitNum,jdbcType=VARCHAR}
+            where SUMIT_SEQ = #{dto.submitNum,jdbcType=VARCHAR}
         </foreach>
         ;end;
         /***三期CHB_SUBMIT_STATUS去除改造  20220310**/

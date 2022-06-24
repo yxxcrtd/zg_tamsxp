@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dao.ChbExchangeQuotationInfoMapper_mysql">
+	<sql id="BASE_COLUMNS">
+		EXCHARGE_CODE
+		as exchargeCode,
+		DATASOURCE_TYPE as datasourceType,
+		TRADE_DATE as tradeDate,
+		OPEN_PRICE as openPrice,
+		CLOSE_PRICE as closePrice,
+		MID_PRICE as midPrice,
+		HIGH_PRICE as highPrice,
+		LOW_PRICE as lowPrice,
+		BASIS_CYY as basisCyy,
+		QUOT_UNIT as quotUnit,
+        STATUS as statusValid,
+		ERR_MSG as errMsg,
+		INPUT_TYPE as  inputType,
+		CREATE_USER as createUser,
+		CREATE_DEPT as createDept,
+		CREATE_TIME as createTime,
+		UPDATE_USER as updateUser,
+        UPDATE_TIME as updateTime
+	</sql>
+	<!-- 汇率行情查询 -->
+	<select id="select" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto">
+		select
+		<include refid="BASE_COLUMNS"/>
+		,null orgData
+		,null datauuid
+		from MST_EXCHARGE_QUOTE
+		<where>
+			<if test="exchargeCodeList != null and exchargeCodeList.size() > 0">
+				<foreach collection="exchargeCodeList" item="exchargeCode" open=" AND EXCHARGE_CODE IN (" close=")" separator=",">
+					#{exchargeCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="tradeDateBegin != null and tradeDateBegin != ''">
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') >= #{tradeDateBegin} ]]>
+			</if>
+			<if test="tradeDateEnd != null and tradeDateEnd != ''">
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') <= #{tradeDateEnd} ]]>
+			</if>
+			<if test="tradeDate != null and tradeDate != ''">
+				and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') = #{tradeDate}
+			</if>
+			<if test="datasourceType != null and datasourceType != ''">
+				and DATASOURCE_TYPE = #{datasourceType}
+			</if>
+			<if test="status != null and status != ''">
+				and STATUS = #{status}
+			</if>
+		</where>
+		union all
+		select
+		EXCHARGE_CODE
+		as exchargeCode,
+		DATASOURCE_TYPE as datasourceType,
+		TRADE_DATE as tradeDate,
+		null as openPrice,
+		null as closePrice,
+		null as midPrice,
+		null as highPrice,
+		null as lowPrice,
+		null as basisCyy,
+		null as quotUnit,
+		STATUS as statusValid,
+		ERR_MSG as errMsg,
+		null as  inputType,
+		CREATE_USER as createUser,
+		CREATE_DEPT as createDept,
+		CREATE_TIME as createTime,
+		UPDATE_USER as updateUser,
+		UPDATE_TIME as updateTime,
+		ORG_DATA as orgData,
+		DATAUUID as datauuid
+		from MST_EXCHARGE_QUOTE_ERRODATA
+		<where>
+			<if test="exchargeCodeList != null and exchargeCodeList.size() > 0">
+				<foreach collection="exchargeCodeList" item="exchargeCode" open=" AND EXCHARGE_CODE IN (" close=")" separator=",">
+					#{exchargeCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="tradeDateBegin != null and tradeDateBegin != ''">
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') >= #{tradeDateBegin} ]]>
+			</if>
+			<if test="tradeDateEnd != null and tradeDateEnd != ''">
+				<![CDATA[ and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') <= #{tradeDateEnd} ]]>
+			</if>
+			<if test="tradeDate != null and tradeDate != ''">
+				and STR_TO_DATE(TRADE_DATE,'%Y-%m-%d') = #{tradeDate}
+			</if>
+			<if test="datasourceType != null and datasourceType != ''">
+				and DATASOURCE_TYPE = #{datasourceType}
+			</if>
+			<if test="status != null and status != ''">
+				and STATUS = #{status}
+			</if>
+		</where>
+		order by tradeDate desc,exchargeCode asc
+	</select>
+
+
+	<update id="updateStatus">
+		update MST_EXCHARGE_QUOTE
+		set STATUS=#{status}
+		where EXCHARGE_CODE = #{exchargeCode}
+		  AND TRADE_DATE = #{tradeDate}
+		  AND DATASOURCE_TYPE = #{datasourceType}
+	</update>
+
+	<!-- 通过主键验证数据库中是否有值 -->
+	<select id="getChbExchargeQuoteByKey" resultType="int">
+		select count(1)
+		from MST_EXCHARGE_QUOTE
+		where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
+		  and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+		  and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
+		<if test="status != null and status != ''">
+			and STATUS = #{status,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<!-- 将Excel表格数据加入数据库 -->
+	<insert id="insertExchargeQuoteInfo" parameterType="java.util.List">
+		insert into
+		MST_EXCHARGE_QUOTE (EXCHARGE_CODE,TRADE_DATE,
+		DATASOURCE_TYPE,OPEN_PRICE,CLOSE_PRICE,HIGH_PRICE,
+		LOW_PRICE,MID_PRICE,QUOT_UNIT,BASIS_CYY,QUOT_CYY,
+		DATA_SOURCE,STATUS,CREATE_USER,
+		CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ERR_MSG)
+		select A.* from (
+		<foreach collection="list" item="item" index="index"
+				 separator="union all">
+			select
+			#{item.exchargeCode,jdbcType=VARCHAR} EXCHARGE_CODE,
+			#{item.tradeDate,jdbcType=DATE} TRADE_DATE,
+			#{item.datasourceType,jdbcType=VARCHAR} DATASOURCE_TYPE,
+			#{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
+			#{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
+			#{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
+			#{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
+			#{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
+			#{item.quotUnit,jdbcType=INTEGER} QUOT_UNIT,
+			#{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
+			#{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			<if test="item.errMsg != null and ! item.errMsg.equals('')">
+				#{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+			</if>
+			<if test="item.errMsg == null or item.errMsg.equals('')">
+				null ERR_MSG
+			</if>
+			from dual
+		</foreach>
+		) A ON DUPLICATE KEY
+		UPDATE
+         EXCHARGE_CODE=A.EXCHARGE_CODE,
+		TRADE_DATE=A.TRADE_DATE,
+		DATASOURCE_TYPE=A.DATASOURCE_TYPE,
+		OPEN_PRICE=A.OPEN_PRICE,
+		CLOSE_PRICE=A.CLOSE_PRICE,
+		HIGH_PRICE=A.HIGH_PRICE,
+		MID_PRICE=A.MID_PRICE,
+		QUOT_UNIT=A.QUOT_UNIT,
+		BASIS_CYY=A.BASIS_CYY,
+		QUOT_CYY=A.QUOT_CYY,
+		DATA_SOURCE=A.DATA_SOURCE,
+		STATUS=A.STATUS,
+		UPDATE_USER=A.UPDATE_USER,
+		UPDATE_TIME=NOW(),
+		ERR_MSG=A.ERR_MSG
+	</insert>
+	<!-- 将Excel表格数据覆盖数据库 -->
+	<update id="updateExchargeQuoteInfo">
+		update MST_EXCHARGE_QUOTE
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="OPEN_PRICE=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.openPrice!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+						 then
+						#{item.openPrice,jdbcType=DECIMAL}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="CLOSE_PRICE=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.closePrice!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+						 then
+						#{item.closePrice,jdbcType=DECIMAL}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="HIGH_PRICE=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.highPrice!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+					    then
+						#{item.highPrice,jdbcType=DECIMAL}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="LOW_PRICE=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.lowPrice!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+					     then
+						#{item.lowPrice,jdbcType=DECIMAL}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="MID_PRICE=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.midPrice!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+						 then
+						#{item.midPrice,jdbcType=DECIMAL}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="QUOT_UNIT=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.quotUnit!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+						then
+						#{item.quotUnit,jdbcType=INTEGER}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="ERR_MSG=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+					and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+					and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+					 then
+					#{item.errMsg,jdbcType=VARCHAR}
+				</foreach>
+			</trim>
+			<trim prefix="status=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.status!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+						 then
+						#{item.status,jdbcType=VARCHAR}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="UPDATE_USER=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.updateUser!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+						 then
+						#{item.createUser,jdbcType=VARCHAR}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="UPDATE_TIME=case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.updateTime!=null">
+						when EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+						and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+						and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR} then
+						NOW()
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="item" index="index">
+			EXCHARGE_CODE =#{item.exchargeCode,jdbcType=VARCHAR}
+			and TRADE_DATE=#{item.tradeDate,jdbcType=DATE}
+			and DATASOURCE_TYPE =#{item.datasourceType,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+	<!-- 通过主键验证数据库中是否有值 -->
+	<delete id="deleteChbExchargeQuoteByKey">
+		delete
+		from MST_EXCHARGE_QUOTE
+		where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
+		  and TRADE_DATE = #{tradeDate,jdbcType=DATE}
+		  and DATASOURCE_TYPE = #{datasourceType,jdbcType=VARCHAR}
+		<if test="status != null and status != ''">
+			and STATUS = #{status,jdbcType=VARCHAR}
+		</if>
+	</delete>
+
+
+	<select id="selectExchargeQuoteCount" resultType="int">
+		SELECT COUNT(*)
+		FROM MST_EXCHARGE_QUOTE
+		<where>
+				<foreach collection="list" item="items" index="i" separator="or">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						STATUS in ('A','E')
+					<foreach collection="items.entrySet()" item="value"
+							 index="key">
+						<if test="key == 'EXCHARGE_CODE'">
+							and
+							EXCHARGE_CODE=#{value,jdbcType=VARCHAR}
+						</if>
+						<if test="key == 'TRADE_DATE'">
+							and
+							TRADE_DATE=#{value,jdbcType=DATE}
+						</if>
+						<if test="key == 'DATASOURCE_TYPE'">
+							and
+							DATASOURCE_TYPE=#{value,jdbcType=VARCHAR}
+						</if>
+					</foreach>
+					</trim>
+				</foreach>
+	    </where>
+
+	</select>
+	<select id="countDuplicatedData" resultType="java.lang.Integer">
+		select count(1) from MST_EXCHARGE_QUOTE where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
+			(#{item.EXCHARGE_CODE},#{item.TRADE_DATE},#{item.DATASOURCE_TYPE})
+		</foreach>
+	</select>
+	<select id="selectByKeys"
+			resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto">
+		select
+		<include refid="BASE_COLUMNS"/>
+		,NULL orgData
+		from MST_EXCHARGE_QUOTE
+		where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
+		<foreach collection="list" item = "item" open="(" close=")" separator=",">
+			(#{item.exchargeCode},#{item.tradeDate},#{item.datasourceType})
+		</foreach>
+		union all
+		select
+		EXCHARGE_CODE
+		as exchargeCode,
+		DATASOURCE_TYPE as datasourceType,
+		TRADE_DATE as tradeDate,
+		null as openPrice,
+		null as closePrice,
+		null as midPrice,
+		null as highPrice,
+		null as lowPrice,
+		null as basisCyy,
+		null as quotUnit,
+		STATUS as statusValid,
+		ERR_MSG as errMsg,
+		null as  inputType,
+		CREATE_USER as createUser,
+		CREATE_DEPT as createDept,
+		CREATE_TIME as createTime,
+		UPDATE_USER as updateUser,
+		UPDATE_TIME as updateTime,
+		ORG_DATA as orgData
+		from MST_EXCHARGE_QUOTE_ERRODATA
+		where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
+		<foreach collection="list" item = "item" open="(" close=")" separator=",">
+			(#{item.exchargeCode},#{item.tradeDate},#{item.datasourceType})
+		</foreach>
+		order by tradeDate desc,exchargeCode asc
+	</select>
+</mapper>

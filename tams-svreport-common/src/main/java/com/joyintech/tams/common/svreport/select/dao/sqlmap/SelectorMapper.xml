@@ -73,14 +73,30 @@
         ON
             t1.CUSTOMER_ID=t2.CUSTOMER_ID
         <where>
-            <if test="svrBussFinBondRepInfoDto_chbIssuerId != null and svrBussFinBondRepInfoDto_chbIssuerId!=''">
-                t1.CUSTOMER_ID = #{svrBussFinBondRepInfoDto_chbIssuerId}
+            <if test="chbIssuerId != null and chbIssuerId!=''">
+                t1.CUSTOMER_ID = #{chbIssuerId}
             </if>
-            <if test="svrBussRepAssetCreditNonstdInfoDto_chbFinancierId != null and svrBussRepAssetCreditNonstdInfoDto_chbFinancierId!=''">
-                t1.CUSTOMER_ID = #{svrBussRepAssetCreditNonstdInfoDto_chbFinancierId}
+            <if test="chbFinancierId != null and chbFinancierId!=''">
+                t1.CUSTOMER_ID = #{chbFinancierId}
             </if>
-            <if test="svrBussRepFundInfoDto_chbManagerId != null and svrBussRepFundInfoDto_chbManagerId!=''">
-                t1.CUSTOMER_ID = #{svrBussRepFundInfoDto_chbManagerId}
+            <if test="chbManagerId != null and chbManagerId!=''">
+                t1.CUSTOMER_ID = #{chbManagerId}
+            </if>
+        </where>
+
+    </select>
+
+
+
+    <select id="getPbcCapAssetInfo" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        t1.ASSETID id,
+        t1.POBCASSETID text
+        FROM
+        PBC_CAP_ASSET_INFO t1
+        <where>
+            <if test="assetCode != null and assetCode!=''">
+                t1.ASSETID = #{assetCode}
             </if>
         </where>
 

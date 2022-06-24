@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.joyintech.framework.util.EncryptUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +41,6 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidationConstant;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
@@ -275,22 +272,28 @@ public class CommonUtil {
 	 * @see
 	 */
 	public static String getSequenceIndexData(DataIndexSequenceType sequenceType) {
-		Map<String, String> param = new HashMap<>();
-		String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
+		if(isMYSQLDataBase()&&StringUtil.equals("CHB_FILE_READ_MONITOR_SEQNO",sequenceType.getSequenceName())){
+			String sequenceResult = IDGenerator.generate();
+			return sequenceResult;
+		}else{
+			Map<String, String> param = new HashMap<>();
+			String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
 
-		databaseType = StringUtil.defaultString(databaseType, "Oracle");
+			databaseType = StringUtil.defaultString(databaseType, "Oracle");
 
-		param.put("databaseType", databaseType);
-		param.put("sequenceName", sequenceType.getSequenceName());
-		Long result = baseMapper.getSequenceIndexData(param);
+			param.put("databaseType", databaseType);
+			param.put("sequenceName", sequenceType.getSequenceName());
+			Long result = baseMapper.getSequenceIndexData(param);
 
-		String sequenceResult = String.format("%018d", result);
+			String sequenceResult = String.format("%018d", result);
 
-		// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
-		String shortName = sequenceType.getShortName();
-		sequenceResult = shortName + sequenceResult;
+			// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
+			String shortName = sequenceType.getShortName();
+			sequenceResult = shortName + sequenceResult;
 
-		return sequenceResult;
+			return sequenceResult;
+		}
+
 	}
 	
 	/**
@@ -354,22 +357,26 @@ public class CommonUtil {
 	 * @see
 	 */
 	public static String getSequenceIndexData(DataIndexSequenceType sequenceType , String format) {
-		Map<String, String> param = new HashMap<>();
-		String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
+		if(isMYSQLDataBase()){
+			String sequenceResult = IDGenerator.generate();
+			return sequenceResult;
+		}{
+			Map<String, String> param = new HashMap<>();
+			String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
+			databaseType = StringUtil.defaultString(databaseType, "Oracle");
 
-		databaseType = StringUtil.defaultString(databaseType, "Oracle");
+			param.put("databaseType", databaseType);
+			param.put("sequenceName", sequenceType.getSequenceName());
+			Long result = baseMapper.getSequenceIndexData(param);
 
-		param.put("databaseType", databaseType);
-		param.put("sequenceName", sequenceType.getSequenceName());
-		Long result = baseMapper.getSequenceIndexData(param);
+			String sequenceResult = String.format(format, result);
 
-		String sequenceResult = String.format(format, result);
+			// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
+			String shortName = sequenceType.getShortName();
+			sequenceResult = shortName + sequenceResult;
 
-		// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
-		String shortName = sequenceType.getShortName();
-		sequenceResult = shortName + sequenceResult;
-
-		return sequenceResult;
+			return sequenceResult;
+		}
 	}
 
 	/**
@@ -1036,5 +1043,34 @@ public class CommonUtil {
 		if (str.endsWith("."))  //不想调换复杂的正则表达式，对于[3.]这种数据也认为是合法的数字
 			str = str.substring(0,str.length()-1);
 		return str.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
+	}
+
+
+	/**
+	 * 判断系统使用的数据库是否是mysql
+	 *
+	 * @return 系统使用的数据库是否是mysql
+	 * @see
+	 * @since 1.0
+	 */
+	public static boolean isMYSQLDataBase() {
+		try {
+			Map<String, List<DatabaseInfo>> databaseType = DatabaseTypeHelper.getDatabaseType();
+
+			List<DatabaseInfo> dsList = databaseType.get(DataSourceType.MASERT);
+			if (dsList != null && !dsList.isEmpty()) {
+				for (int i = 0; i < dsList.size(); i++) {
+					DatabaseInfo dbInfo = dsList.get(i);
+					if (StringUtil.equalsIgnoreCase(DatabaseType.DATABASE_TYPE_MYSQL.getValue(),
+							dbInfo.getDbType().getValue())) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+		}
+
+		return false;
 	}
 }

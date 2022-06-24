@@ -1,0 +1,2 @@
+delete from chb_infomgr_result_config where MGRTABLE_ID = 'CHB_PRD_DEAL' and COLUMN_ID = 'ISAGENCY';
+insert into chb_infomgr_result_config (RESULT_ID,MGRTABLE_ID,COLUMN_ID,COLUMN_NAME,DICTCODE,ORDER_NO,SHOWFLAG)values('BEC15D27-AC0A-6188-E053-8C5AA8C0ACC6','CHB_PRD_DEAL','ISAGENCY','是否代销','SVR_YES_OR_NO','32','Y');

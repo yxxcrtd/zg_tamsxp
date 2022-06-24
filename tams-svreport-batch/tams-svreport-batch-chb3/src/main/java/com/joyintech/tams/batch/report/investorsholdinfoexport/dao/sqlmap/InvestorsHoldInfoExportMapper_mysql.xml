@@ -10,10 +10,7 @@
 
 	<select id="countExportNum" parameterType="map" resultType="int">
 		select count(*) from CHB_INVESTHOLD_INFO_SUB ciis
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		/*left join CHB_SUBMIT_STATUS status
-		on ciis.sumit_seq = status.seqno*/
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
 				DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
@@ -23,12 +20,12 @@
 			</if>
 			<if test="sendStatusList != null and sendStatusList.size()>0">
 				<foreach collection="sendStatusList" item="item" open="and ciis.SEND_STATUS in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="statusList != null and statusList.size()>0">
 				<foreach collection="statusList" item="item" open="and ciis.STATUS in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="updateTimeStart != null and updateTimeStart != ''">
@@ -44,108 +41,105 @@
 				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
 					#{submitFeedbackStatus,jdbcType=VARCHAR}
 				</foreach>
-				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		 	</if>
+
+			</if>
 			<if test="registBankCode!= null and registBankCode != ''">
-				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
+				and ciis.REGIST_BANK_CODE like concat_ws(concat_ws('%',#{registBankCode,jdbcType=VARCHAR}),'%')
 			</if>
 			<!-- <if test="prdRegistCode != null  and prdRegistCode != ''">
 				and ciis.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
 			</if> -->
-            <if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
-                <foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
-                #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
+			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
+				<foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
 			<if test="indentifyMark != null  and indentifyMark != ''">
-			    and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
-			 </if>
-			 <if test="holdDateStart != null and holdDateStart != ''">
-				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &gt;= #{holdDateStart,jdbcType=VARCHAR}
+				and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="holdDateStart != null and holdDateStart != ''">
+				and ciis.HOLD_DATE &gt;= STR_TO_DATE(#{holdDateStart,jdbcType=VARCHAR},'%Y-%m-%d')
 			</if>
 			<if test="holdDateEnd != null and holdDateEnd != ''">
-				and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
+				and ciis.HOLD_DATE &lt;= STR_TO_DATE(#{holdDateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size()>0">
 				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
+					#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="investList!=null and investList.size()>0">
 				<foreach collection="investList" item="investDto" open=" (" close=")" separator=") or (">
-		 	 		ciis.PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR} 
-			 	 	and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR} 
-		 	 		and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
-		 	 		and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
-		 	 		and DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
-		 	 		<choose>
-			 	 		<when test="checkFlag!=null and checkFlag!=''">
-			 	 			and ciis.SEND_STATUS in('02','03')
-			 	 		</when>
-			 	 		<otherwise>
-			 	 			and ciis.SEND_STATUS = #{investDto.sendStatus,jdbcType=VARCHAR}
-			 	 		</otherwise>
-		 	 		</choose>
-		 		</foreach>
+					ciis.PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR}
+					and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR}
+					and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
+					and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
+					and DATE_FORMAT(ciis.HOLD_DATE,'y%Y-%m-%d') = DATE_FORMAT(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
+					<choose>
+						<when test="checkFlag!=null and checkFlag!=''">
+							and ciis.SEND_STATUS in('02','03')
+						</when>
+						<otherwise>
+							and ciis.SEND_STATUS = #{investDto.sendStatus,jdbcType=VARCHAR}
+						</otherwise>
+					</choose>
+				</foreach>
 			</if>
 		</where>
 	</select>
-	
+
 	<select id="selectAllDataByPage"  resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto"
 			resultSetType="FORWARD_ONLY" fetchSize="10000">
 		SELECT
 		*
-	FROM
-    (
-        SELECT
-            tmp_page.*,
-			@rownum := @rownum + 1  row_id
-        FROM (select @rownum := 0 ) r , (
-				select 
-			        ciis.REGIST_SEQNO           registSeqno,      
-					ciis.REGIST_BANK_CODE       registBankCode,  
-					ciis.CHB_SUBMIT_DEADLINE    chbSubmitDeadline,
-					ciis.PRD_REGIST_CODE        prdRegistCode,    
-					ciis.INDENTIFY_MARK         indentifyMark,    
-					ciis.CCY                    ccy,              
-					ciis.HOLD_DATE              holdDate,         
-					ciis.AMOUNT                 amount,    
-					IF(substr(ciis.AMOUNT,1,1)='.',0||ciis.AMOUNT,ciis.AMOUNT)                 amountExportExcel,
-					ciis.QTY                    qty,  
-					IF(substr(ciis.QTY,1,1)='.',0||ciis.QTY,ciis.QTY)                    qtyExportExcel,
-					ciis.CNY_AMT                cnyAmt,         
-					IF(substr(ciis.CNY_AMT,1,1)='.',0||ciis.CNY_AMT,ciis.CNY_AMT)                cnyAmtExportExcel,
-					ciis.REMARK                 remark,           
-					ciis.SUBMIT_DEADLINE        submitDeadline,   
-					ciis.WORKFLOW_ID            workflowId,       
-					ciis.SEND_STATUS            sendStatus,       
-					ciis.STATUS_DATE            statusDate,      
-					ciis.STATUS                 status,           
-					ciis.CREATE_USER            createUser,       
-					ciis.CREATE_TIME            createTime,       
-					ciis.UPDATE_USER            updateUser,       
-					ciis.UPDATE_TIME            updateTime,         
-					ciis.ORG_CODE               orgCode,          
-					ciis.DEPT_CODE              deptCode,         
-					ciis.SUBMIT_TIME            submitTime,
-					ciis.SUMIT_SEQ				sumitSeq,
-					ciis.CHECK_SEQNO			checkSeqno,
-					crc.IS_LOGIC_CHECK			isLogicCheck,
-					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-					ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-					ciis.SUBMIT_SEND_STATUS    submitSendStatus
-				from CHB_INVESTHOLD_INFO_SUB ciis
-					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-					/*left join CHB_SUBMIT_STATUS status
-					on ciis.sumit_seq = status.seqno*/
-					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-				left join CHB_REPORT_CHECK crc
-				on ciis.CHECK_SEQNO = crc.CHECK_SEQNO
+		FROM
+		(
+		SELECT
+		tmp_page.*,
+		@rownum := @rownum + 1  row_id
+		FROM (select @rownum := 0 ) r , (
+		select
+		ciis.REGIST_SEQNO           registSeqno,
+		ciis.REGIST_BANK_CODE       registBankCode,
+		ciis.CHB_SUBMIT_DEADLINE    chbSubmitDeadline,
+		ciis.PRD_REGIST_CODE        prdRegistCode,
+		ciis.INDENTIFY_MARK         indentifyMark,
+		ciis.CCY                    ccy,
+		ciis.HOLD_DATE              holdDate,
+		ciis.AMOUNT                 amount,
+		IF(substr(ciis.AMOUNT,1,1)='.',0||ciis.AMOUNT,ciis.AMOUNT)                amountExportExcel,
+		ciis.QTY                    qty,
+		IF(substr(ciis.QTY,1,1)='.',0||ciis.QTY,ciis.QTY)                 qtyExportExcel,
+		ciis.CNY_AMT                cnyAmt,
+		IF(substr(ciis.CNY_AMT,1,1)='.',0||ciis.CNY_AMT,ciis.CNY_AMT)               cnyAmtExportExcel,
+		ciis.REMARK                 remark,
+		ciis.SUBMIT_DEADLINE        submitDeadline,
+		ciis.WORKFLOW_ID            workflowId,
+		ciis.SEND_STATUS            sendStatus,
+		ciis.STATUS_DATE            statusDate,
+		ciis.STATUS                 status,
+		ciis.CREATE_USER            createUser,
+		ciis.CREATE_TIME            createTime,
+		ciis.UPDATE_USER            updateUser,
+		ciis.UPDATE_TIME            updateTime,
+		ciis.ORG_CODE               orgCode,
+		ciis.DEPT_CODE              deptCode,
+		ciis.SUBMIT_TIME            submitTime,
+		ciis.SUMIT_SEQ				sumitSeq,
+		ciis.CHECK_SEQNO			checkSeqno,
+		crc.IS_LOGIC_CHECK			isLogicCheck,
+
+		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+
+		ciis.SUBMIT_SEND_STATUS    submitSendStatus
+		from CHB_INVESTHOLD_INFO_SUB ciis
+
+		left join CHB_REPORT_CHECK crc
+		on ciis.CHECK_SEQNO = crc.CHECK_SEQNO
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
 				DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
@@ -187,11 +181,11 @@
 				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
 					#{submitFeedbackStatus,jdbcType=VARCHAR}
 				</foreach>
-				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 			</if>
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
@@ -228,7 +222,7 @@
 			</if>
 		</where>
 		order by ciis.CHB_SUBMIT_DEADLINE,ciis.REGIST_SEQNO desc
-        )tmp_page
+		)tmp_page
 		)a
 		WHERE
 		row_id &lt;= #{end}
@@ -239,10 +233,8 @@
 		SELECT
 		MIN(HOLD_DATE) MINDATE,
 		MAX(HOLD_DATE) MAXDATE
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		/*left join CHB_SUBMIT_STATUS status
-		on ciis.sumit_seq = status.seqno*/
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		from CHB_INVESTHOLD_INFO_SUB ciis
+
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
 				DATE_FORMAT(ciis.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
@@ -273,11 +265,11 @@
 				and DATE_FORMAT(ciis.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND ciis.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
 					#{submitFeedbackStatus,jdbcType=VARCHAR}
 				</foreach>
-				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+
 			</if>
 			<if test="registBankCode!= null and registBankCode != ''">
 				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')

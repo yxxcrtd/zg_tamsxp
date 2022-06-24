@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubTemplateMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubTemplate" >
+        <id column="TEMPUUID" property="tempuuid" jdbcType="CHAR" />
+        <result column="TEMPLATEID" property="templateid" jdbcType="CHAR" />
+        <result column="PROPERTYID" property="propertyid" jdbcType="CHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="PROPERNAME" property="propername" jdbcType="VARCHAR" />
+        <result column="ORDERNO" property="orderno" jdbcType="DECIMAL" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="REPORTCYCLE" property="reportcycle" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TEMPUUID TEMPUUID, TEMPLATEID TEMPLATEID, PROPERTYID PROPERTYID, PROPERTYCODE PROPERTYCODE, 
+        PROPERNAME PROPERNAME, ORDERNO ORDERNO, REPORTTYPE REPORTTYPE, REPORTCYCLE REPORTCYCLE, 
+        STATUS STATUS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubTemplateMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_TEMPLATE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubTemplateMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_TEMPLATE
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubTemplateMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_TEMPLATE
+        where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_MONTH_REPORT_SUB_TEMPLATE
+        where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubTemplate" >
+        insert into CHB_MONTH_REPORT_SUB_TEMPLATE (TEMPUUID, TEMPLATEID, PROPERTYID, 
+            PROPERTYCODE, PROPERNAME, ORDERNO, 
+            REPORTTYPE, REPORTCYCLE, STATUS
+            )
+        values (#{tempuuid,jdbcType=CHAR}, #{templateid,jdbcType=CHAR}, #{propertyid,jdbcType=CHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{propername,jdbcType=VARCHAR}, #{orderno,jdbcType=DECIMAL}, 
+            #{reporttype,jdbcType=VARCHAR}, #{reportcycle,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubTemplate" >
+        insert into CHB_MONTH_REPORT_SUB_TEMPLATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tempuuid != null" >
+                TEMPUUID,
+            </if>
+            <if test="templateid != null" >
+                TEMPLATEID,
+            </if>
+            <if test="propertyid != null" >
+                PROPERTYID,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="propername != null" >
+                PROPERNAME,
+            </if>
+            <if test="orderno != null" >
+                ORDERNO,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="reportcycle != null" >
+                REPORTCYCLE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tempuuid != null" >
+                #{tempuuid,jdbcType=CHAR},
+            </if>
+            <if test="templateid != null" >
+                #{templateid,jdbcType=CHAR},
+            </if>
+            <if test="propertyid != null" >
+                #{propertyid,jdbcType=CHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="propername != null" >
+                #{propername,jdbcType=VARCHAR},
+            </if>
+            <if test="orderno != null" >
+                #{orderno,jdbcType=DECIMAL},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="reportcycle != null" >
+                #{reportcycle,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubTemplate" >
+        insert into CHB_MONTH_REPORT_SUB_TEMPLATE(TEMPUUID, TEMPLATEID, PROPERTYID, PROPERTYCODE, 
+        PROPERNAME, ORDERNO, REPORTTYPE, REPORTCYCLE, STATUS)
+        select TEMPUUID, TEMPLATEID, PROPERTYID, PROPERTYCODE, 
+            PROPERNAME, ORDERNO, REPORTTYPE, REPORTCYCLE, #{status,jdbcType=VARCHAR} STATUS
+             from CHB_MONTH_REPORT_SUB_TEMPLATE
+             where STATUS = 'E' and TEMPUUID = #{tempuuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubTemplate" >
+        update CHB_MONTH_REPORT_SUB_TEMPLATE
+        <set >
+            <if test="templateid != null" >
+                TEMPLATEID = #{templateid,jdbcType=CHAR},
+            </if>
+            <if test="propertyid != null" >
+                PROPERTYID = #{propertyid,jdbcType=CHAR},
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="propername != null" >
+                PROPERNAME = #{propername,jdbcType=VARCHAR},
+            </if>
+            <if test="orderno != null" >
+                ORDERNO = #{orderno,jdbcType=DECIMAL},
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="reportcycle != null" >
+                REPORTCYCLE = #{reportcycle,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubTemplate" >
+        update CHB_MONTH_REPORT_SUB_TEMPLATE
+        set TEMPLATEID = #{templateid,jdbcType=CHAR},
+            PROPERTYID = #{propertyid,jdbcType=CHAR},
+            PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            PROPERNAME = #{propername,jdbcType=VARCHAR},
+            ORDERNO = #{orderno,jdbcType=DECIMAL},
+            REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            REPORTCYCLE = #{reportcycle,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR}
+        where TEMPUUID = #{tempuuid,jdbcType=CHAR}
+    </update>
+</mapper>

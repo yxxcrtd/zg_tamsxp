@@ -1,0 +1,2 @@
+ALTER TABLE chb_asset_info DROP COLUMN ERR_MSG;
+ALTER TABLE chb_asset_info ADD ERR_MSG TEXT COMMENT '错误信息';

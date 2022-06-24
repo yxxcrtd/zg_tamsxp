@@ -106,7 +106,7 @@ public interface PbcCapAssetInfo001DtoMapper {
                                              @Param("statusEffective") String statusEffective);
 
     /*根据资产代码查询资产名称*/
-    PbcCapAssetInfo001Dto selectAssetInofByAssetId(String assetId);
+    List<PbcCapAssetInfo001Dto> selectAssetInofByAssetId(String assetId);
 
     /**
      * 查询所有有效数据便于校验

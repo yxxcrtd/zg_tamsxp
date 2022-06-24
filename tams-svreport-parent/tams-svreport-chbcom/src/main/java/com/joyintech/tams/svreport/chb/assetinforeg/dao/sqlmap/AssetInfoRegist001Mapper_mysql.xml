@@ -840,7 +840,7 @@
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from
-			CHB_ASSET_INFO_SUB
+		CHB_ASSET_INFO_SUB
 		where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
 	</delete>
 	<insert id="insertBatch"
@@ -2787,290 +2787,290 @@
 			parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
 		update CHB_ASSET_INFO_SUB
 		set ASSET_CODE =
-				#{assetCode,jdbcType=VARCHAR},
-			ASSET_TYPE =
-				#{assetType,jdbcType=VARCHAR},
-			ASSET_TYPE2 =
-				#{assetType2,jdbcType=VARCHAR},
-			CCY = #{ccy,jdbcType=VARCHAR},
-			TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
-			VDATE =
-				#{vdate,jdbcType=TIMESTAMP},
-			MDATE = #{mdate,jdbcType=TIMESTAMP},
-			ASSET_YIELD = #{assetYield,jdbcType=DECIMAL},
-			BASIS =
-				#{basis,jdbcType=VARCHAR},
-			AMT = #{amt,jdbcType=DECIMAL},
-			BANK_NAME =
-				#{bankName,jdbcType=VARCHAR},
-			IS_STRUCT = #{isStruct,jdbcType=VARCHAR},
-			TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
-			TARGET =
-				#{target,jdbcType=VARCHAR},
-			ASSET_ID = #{assetId,jdbcType=VARCHAR},
-			ASSET_NAME = #{assetName,jdbcType=VARCHAR},
-			CHB_SECTYPE =
-				#{chbSectype,jdbcType=VARCHAR},
-			ISSUE_MODE =
-				#{issueMode,jdbcType=VARCHAR},
-			PARTY_GRADE =
-				#{partyGrade,jdbcType=VARCHAR},
-			PARTY_TYPE1 =
-				#{partyType1,jdbcType=VARCHAR},
-			PARTY_TYPE3 =
-				#{partyType3,jdbcType=VARCHAR},
-			PARTY_TYPE2 =
-				#{partyType2,jdbcType=VARCHAR},
-			INDUSTRY =
-				#{industry,jdbcType=VARCHAR},
-			INDUSTRY_LEVEL2 =
-				#{industryLevel2,jdbcType=VARCHAR},
-			SEC_MAIN_GRADE =
-				#{secMainGrade,jdbcType=VARCHAR},
-			SEC_CREDIT_GRADE =
-				#{secCreditGrade,jdbcType=VARCHAR},
-			REGIST_ORG =
-				#{registOrg,jdbcType=VARCHAR},
-			REGISTORG_COMMENT =
-				#{registorgComment,jdbcType=VARCHAR},
-			RIVAL_PARTY =
-				#{rivalParty,jdbcType=VARCHAR},
-			TARGET_TYPE1 =
-				#{targetType1,jdbcType=VARCHAR},
-			TARGET_AMT =
-				#{targetAmt,jdbcType=DECIMAL},
-			COUNTRY_AREA =
-				#{countryArea,jdbcType=VARCHAR},
-			PROFIT_TYPE =
-				#{profitType,jdbcType=VARCHAR},
-			IS_RESALE =
-				#{isResale,jdbcType=VARCHAR},
-			TERM_DATE = #{termDate,jdbcType=DECIMAL},
-			RATE_FLAG = #{rateFlag,jdbcType=VARCHAR},
-			INTPAY_CYCLE =
-				#{intpayCycle,jdbcType=DECIMAL},
-			REPAY_CMT =
-				#{repayCmt,jdbcType=VARCHAR},
-			BASIS_TYPE =
-				#{basisType,jdbcType=VARCHAR},
-			FLOAT_FACTOR =
-				#{floatFactor,jdbcType=DECIMAL},
-			SPREAD_RATE =
-				#{spreadRate,jdbcType=DECIMAL},
-			FINANCIE =
-				#{financie,jdbcType=VARCHAR},
-			FIN_ORG_CODE =
-				#{finOrgCode,jdbcType=VARCHAR},
-			FCR_GRADE_IN =
-				#{fcrGradeIn,jdbcType=VARCHAR},
-			FCR_GRADE_OUT =
-				#{fcrGradeOut,jdbcType=VARCHAR},
-			FINANCIER_TYPE1 =
-				#{financierType1,jdbcType=VARCHAR},
-			FINANCIER_TYPE2 =
-				#{financierType2,jdbcType=VARCHAR},
-			FINANCIER_TYPE3 =
-				#{financierType3,jdbcType=VARCHAR},
-			FINANCE_PROJ =
-				#{financeProj,jdbcType=VARCHAR},
-			INDUSTRY1 =
-				#{industry1,jdbcType=VARCHAR},
-			INDUSTRY_LEVEL2_TYPE =
-				#{industryLevel2Type,jdbcType=VARCHAR},
-			PRO_INDUSTRY =
-				#{proIndustry,jdbcType=VARCHAR},
-			PRO_INDUSTRY_LEVEL2 =
-				#{proIndustryLevel2,jdbcType=VARCHAR},
-			INDUSTRY_FLAG =
-				#{industryFlag,jdbcType=VARCHAR},
-			MONIT_TYPE =
-				#{monitType,jdbcType=VARCHAR},
-			MON_TYPE_COMM =
-				#{monTypeComm,jdbcType=VARCHAR},
-			GUA_TYPE =
-				#{guaType,jdbcType=VARCHAR},
-			GUA_TYPE_REMARK =
-				#{guaTypeRemark,jdbcType=VARCHAR},
-			FINANCIER_GRADE =
-				#{financierGrade,jdbcType=VARCHAR},
-			IN_GRADE =
-				#{inGrade,jdbcType=VARCHAR},
-			OUT_GRADE = #{outGrade,jdbcType=VARCHAR},
-			CHOSE = #{chose,jdbcType=VARCHAR},
-			CONDITION_CMM =
-				#{conditionCmm,jdbcType=VARCHAR},
-			FIN_AREA =
-				#{finArea,jdbcType=VARCHAR},
-			TOTAL_FEE_RATE =
-				#{totalFeeRate,jdbcType=DECIMAL},
-			IS_RIGHT =
-				#{isRight,jdbcType=VARCHAR},
-			NOTSTAND_SEC_TYPE =
-				#{notstandSecType,jdbcType=VARCHAR},
-			NOTSTAND_SEC_NUM =
-				#{notstandSecNum,jdbcType=DECIMAL},
-			REMAIN_TERM =
-				#{remainTerm,jdbcType=DECIMAL},
-			MAX_REMAIN_TERM =
-				#{maxRemainTerm,jdbcType=DECIMAL},
-			MIN_REMAIN_TERM =
-				#{minRemainTerm,jdbcType=DECIMAL},
-			SHARES_TYPE =
-				#{sharesType,jdbcType=VARCHAR},
-			INDUSTRY_SHARES =
-				#{industryShares,jdbcType=VARCHAR},
-			INDUSTRY_SHARES2 =
-				#{industryShares2,jdbcType=VARCHAR},
-			INVEST_STAGE =
-				#{investStage,jdbcType=VARCHAR},
-			SHARES_TYPE1 =
-				#{sharesType1,jdbcType=VARCHAR},
-			SHARES_TYPE2 =
-				#{sharesType2,jdbcType=VARCHAR},
-			SHARES_TYPE3 =
-				#{sharesType3,jdbcType=VARCHAR},
-			IS_PLEDGE =
-				#{isPledge,jdbcType=VARCHAR},
-			NOM_CAPI = #{nomCapi,jdbcType=DECIMAL},
-			TARGET_TYPE3 = #{targetType3,jdbcType=VARCHAR},
-			ISSUE_PARTY_ID =
-				#{issuePartyId,jdbcType=VARCHAR},
-			TERM_MONTH =
-				#{termMonth,jdbcType=DECIMAL},
-			GUARANTEE_CMT =
-				#{guaranteeCmt,jdbcType=VARCHAR},
-			SPECIAL_CMT =
-				#{specialCmt,jdbcType=VARCHAR},
-			CONTRACT_NAME =
-				#{contractName,jdbcType=VARCHAR},
-			INCOME_RATIO =
-				#{incomeRatio,jdbcType=DECIMAL},
-			DER_INSTR_RATIO =
-				#{derInstrRatio,jdbcType=DECIMAL},
-			DER_INSTR_INV_TYPE =
-				#{derInstrInvType,jdbcType=VARCHAR},
-			DER_INSTR_TARGET =
-				#{derInstrTarget,jdbcType=VARCHAR},
-			ACCT_MODE =
-				#{acctMode,jdbcType=VARCHAR},
-			SPECIAL_CMT1 =
-				#{specialCmt1,jdbcType=VARCHAR},
-			MAX_YIELD =
-				#{maxYield,jdbcType=DECIMAL},
-			MIN_YIELD = #{minYield,jdbcType=DECIMAL},
-			BASIC_PRICE = #{basicPrice,jdbcType=DECIMAL},
-			REG_DATE_PRICE =
-				#{regDatePrice,jdbcType=DECIMAL},
-			TRADE_FEE =
-				#{tradeFee,jdbcType=VARCHAR},
-			PARTY_CODE =
-				#{partyCode,jdbcType=VARCHAR},
-			CHECK_CODE =
-				#{checkCode,jdbcType=VARCHAR},
-			MANAGER_ID =
-				#{managerId,jdbcType=VARCHAR},
-			TRUSTEE_ID =
-				#{trusteeId,jdbcType=VARCHAR},
-			TRU_ACT_TYPE =
-				#{truActType,jdbcType=VARCHAR},
-			INVEST_TYPE =
-				#{investType,jdbcType=VARCHAR},
-			CAP_USE_INDU =
-				#{capUseIndu,jdbcType=VARCHAR},
-			PLAN_SDATE =
-				#{planSdate,jdbcType=TIMESTAMP},
-			PLAN_EDATE =
-				#{planEdate,jdbcType=TIMESTAMP},
-			PRO_PROPERTY =
-				#{proProperty,jdbcType=VARCHAR},
-			MAX_RATE =
-				#{maxRate,jdbcType=DECIMAL},
-			MIN_RATE = #{minRate,jdbcType=DECIMAL},
-			DEBT_SCALE = #{debtScale,jdbcType=DECIMAL},
-			BUY_STRUCT =
-				#{buyStruct,jdbcType=VARCHAR},
-			MANAGE_TYPE =
-				#{manageType,jdbcType=VARCHAR},
-			IS_CTRL_BOTTOM =
-				#{isCtrlBottom,jdbcType=VARCHAR},
-			MGR_FEE_RATE =
-				#{mgrFeeRate,jdbcType=DECIMAL},
-			TRU_FEE_RATE =
-				#{truFeeRate,jdbcType=DECIMAL},
-			TRADE_FEE_RATE =
-				#{tradeFeeRate,jdbcType=DECIMAL},
-			AGENCY_FEE_RATE =
-				#{agencyFeeRate,jdbcType=DECIMAL},
-			OTHER_FEE_RATE =
-				#{otherFeeRate,jdbcType=DECIMAL},
-			ASSET_VALUE =
-				#{assetValue,jdbcType=DECIMAL},
-			REGIST_ORG1 =
-				#{registOrg1,jdbcType=VARCHAR},
-			MNG_ORG_NAME =
-				#{mngOrgName,jdbcType=VARCHAR},
-			TRU_ORG_NAME =
-				#{truOrgName,jdbcType=VARCHAR},
-			FUND_INVEST_ASSET =
-				#{fundInvestAsset,jdbcType=VARCHAR},
-			IN_ASSET_TYPE =
-				#{inAssetType,jdbcType=VARCHAR},
-			IN_ASSET_TYPE_CMM =
-				#{inAssetTypeCmm,jdbcType=VARCHAR},
-			REMARK =
-				#{remark,jdbcType=VARCHAR},
-			IS_UNDER_ASSET =
-				#{isUnderAsset,jdbcType=VARCHAR},
-			IS_GOVERN_FUND =
-				#{isGovernFund,jdbcType=VARCHAR},
-			GOVERN_INVEST_FUND =
-				#{governInvestFund,jdbcType=VARCHAR},
-			FUND_ENPE_NAME =
-				#{fundEnpeName,jdbcType=VARCHAR},
-			TRUSTEE =
-				#{trustee,jdbcType=VARCHAR},
-			SUBMIT_DEADLINE =
-				#{submitDeadline,jdbcType=TIMESTAMP},
-			CHB_SUBMIT_DEADLINE =
-				#{chbSubmitDeadline,jdbcType=TIMESTAMP},
-			SUBMIT_TIME =
-				#{submitTime,jdbcType=TIMESTAMP},
-			STATUS_DATE =
-				#{statusDate,jdbcType=TIMESTAMP},
-			STATUS = #{status,jdbcType=VARCHAR},
-			CREATE_USER = #{createUser,jdbcType=VARCHAR},
-			CREATE_TIME =
-				#{createTime,jdbcType=TIMESTAMP},
-			UPDATE_USER =
-				#{updateUser,jdbcType=VARCHAR},
-			UPDATE_TIME =
-				#{updateTime,jdbcType=TIMESTAMP},
-			ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-			DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
-			SEND_STATUS =
-				#{sendStatus,jdbcType=VARCHAR},
-			SUBMIT_FEEDBACK_STATUS =
-				#{submitFeedbackStatus,jdbcType=VARCHAR},
-			CREATE_DEPT =
-				#{createDept,jdbcType=VARCHAR},
-			DATA_SOURCE =
-				#{dataSource,jdbcType=VARCHAR},
-			DELETE_RES =
-				#{deleteRes,jdbcType=VARCHAR},
-			sec_credit_grade_type = #{secCreditGradeType,jdbcType=VARCHAR},
-			CAP_USE_INDU_LEVEL2=#{capUseInduLevel2,jdbcType=VARCHAR},
-			ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
-			SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
-			ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
-			CREDIT_ASSET_CODE = #{creditAssetCode,jdbcType=VARCHAR},
-			IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
-			BILL_CODE = #{billCode,jdbcType=VARCHAR},
-			FINANCIAL_PRODUCT_FLAG = #{financialProductFlag,jdbcType=VARCHAR},
-			PROD_REGISTER_CODE = #{prodRegisterCode,jdbcType=VARCHAR},
-			PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
-			IS_DEPOSIT_FLAG = #{isDepositFlag,jdbcType=VARCHAR}
+		#{assetCode,jdbcType=VARCHAR},
+		ASSET_TYPE =
+		#{assetType,jdbcType=VARCHAR},
+		ASSET_TYPE2 =
+		#{assetType2,jdbcType=VARCHAR},
+		CCY = #{ccy,jdbcType=VARCHAR},
+		TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+		VDATE =
+		#{vdate,jdbcType=TIMESTAMP},
+		MDATE = #{mdate,jdbcType=TIMESTAMP},
+		ASSET_YIELD = #{assetYield,jdbcType=DECIMAL},
+		BASIS =
+		#{basis,jdbcType=VARCHAR},
+		AMT = #{amt,jdbcType=DECIMAL},
+		BANK_NAME =
+		#{bankName,jdbcType=VARCHAR},
+		IS_STRUCT = #{isStruct,jdbcType=VARCHAR},
+		TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+		TARGET =
+		#{target,jdbcType=VARCHAR},
+		ASSET_ID = #{assetId,jdbcType=VARCHAR},
+		ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+		CHB_SECTYPE =
+		#{chbSectype,jdbcType=VARCHAR},
+		ISSUE_MODE =
+		#{issueMode,jdbcType=VARCHAR},
+		PARTY_GRADE =
+		#{partyGrade,jdbcType=VARCHAR},
+		PARTY_TYPE1 =
+		#{partyType1,jdbcType=VARCHAR},
+		PARTY_TYPE3 =
+		#{partyType3,jdbcType=VARCHAR},
+		PARTY_TYPE2 =
+		#{partyType2,jdbcType=VARCHAR},
+		INDUSTRY =
+		#{industry,jdbcType=VARCHAR},
+		INDUSTRY_LEVEL2 =
+		#{industryLevel2,jdbcType=VARCHAR},
+		SEC_MAIN_GRADE =
+		#{secMainGrade,jdbcType=VARCHAR},
+		SEC_CREDIT_GRADE =
+		#{secCreditGrade,jdbcType=VARCHAR},
+		REGIST_ORG =
+		#{registOrg,jdbcType=VARCHAR},
+		REGISTORG_COMMENT =
+		#{registorgComment,jdbcType=VARCHAR},
+		RIVAL_PARTY =
+		#{rivalParty,jdbcType=VARCHAR},
+		TARGET_TYPE1 =
+		#{targetType1,jdbcType=VARCHAR},
+		TARGET_AMT =
+		#{targetAmt,jdbcType=DECIMAL},
+		COUNTRY_AREA =
+		#{countryArea,jdbcType=VARCHAR},
+		PROFIT_TYPE =
+		#{profitType,jdbcType=VARCHAR},
+		IS_RESALE =
+		#{isResale,jdbcType=VARCHAR},
+		TERM_DATE = #{termDate,jdbcType=DECIMAL},
+		RATE_FLAG = #{rateFlag,jdbcType=VARCHAR},
+		INTPAY_CYCLE =
+		#{intpayCycle,jdbcType=DECIMAL},
+		REPAY_CMT =
+		#{repayCmt,jdbcType=VARCHAR},
+		BASIS_TYPE =
+		#{basisType,jdbcType=VARCHAR},
+		FLOAT_FACTOR =
+		#{floatFactor,jdbcType=DECIMAL},
+		SPREAD_RATE =
+		#{spreadRate,jdbcType=DECIMAL},
+		FINANCIE =
+		#{financie,jdbcType=VARCHAR},
+		FIN_ORG_CODE =
+		#{finOrgCode,jdbcType=VARCHAR},
+		FCR_GRADE_IN =
+		#{fcrGradeIn,jdbcType=VARCHAR},
+		FCR_GRADE_OUT =
+		#{fcrGradeOut,jdbcType=VARCHAR},
+		FINANCIER_TYPE1 =
+		#{financierType1,jdbcType=VARCHAR},
+		FINANCIER_TYPE2 =
+		#{financierType2,jdbcType=VARCHAR},
+		FINANCIER_TYPE3 =
+		#{financierType3,jdbcType=VARCHAR},
+		FINANCE_PROJ =
+		#{financeProj,jdbcType=VARCHAR},
+		INDUSTRY1 =
+		#{industry1,jdbcType=VARCHAR},
+		INDUSTRY_LEVEL2_TYPE =
+		#{industryLevel2Type,jdbcType=VARCHAR},
+		PRO_INDUSTRY =
+		#{proIndustry,jdbcType=VARCHAR},
+		PRO_INDUSTRY_LEVEL2 =
+		#{proIndustryLevel2,jdbcType=VARCHAR},
+		INDUSTRY_FLAG =
+		#{industryFlag,jdbcType=VARCHAR},
+		MONIT_TYPE =
+		#{monitType,jdbcType=VARCHAR},
+		MON_TYPE_COMM =
+		#{monTypeComm,jdbcType=VARCHAR},
+		GUA_TYPE =
+		#{guaType,jdbcType=VARCHAR},
+		GUA_TYPE_REMARK =
+		#{guaTypeRemark,jdbcType=VARCHAR},
+		FINANCIER_GRADE =
+		#{financierGrade,jdbcType=VARCHAR},
+		IN_GRADE =
+		#{inGrade,jdbcType=VARCHAR},
+		OUT_GRADE = #{outGrade,jdbcType=VARCHAR},
+		CHOSE = #{chose,jdbcType=VARCHAR},
+		CONDITION_CMM =
+		#{conditionCmm,jdbcType=VARCHAR},
+		FIN_AREA =
+		#{finArea,jdbcType=VARCHAR},
+		TOTAL_FEE_RATE =
+		#{totalFeeRate,jdbcType=DECIMAL},
+		IS_RIGHT =
+		#{isRight,jdbcType=VARCHAR},
+		NOTSTAND_SEC_TYPE =
+		#{notstandSecType,jdbcType=VARCHAR},
+		NOTSTAND_SEC_NUM =
+		#{notstandSecNum,jdbcType=DECIMAL},
+		REMAIN_TERM =
+		#{remainTerm,jdbcType=DECIMAL},
+		MAX_REMAIN_TERM =
+		#{maxRemainTerm,jdbcType=DECIMAL},
+		MIN_REMAIN_TERM =
+		#{minRemainTerm,jdbcType=DECIMAL},
+		SHARES_TYPE =
+		#{sharesType,jdbcType=VARCHAR},
+		INDUSTRY_SHARES =
+		#{industryShares,jdbcType=VARCHAR},
+		INDUSTRY_SHARES2 =
+		#{industryShares2,jdbcType=VARCHAR},
+		INVEST_STAGE =
+		#{investStage,jdbcType=VARCHAR},
+		SHARES_TYPE1 =
+		#{sharesType1,jdbcType=VARCHAR},
+		SHARES_TYPE2 =
+		#{sharesType2,jdbcType=VARCHAR},
+		SHARES_TYPE3 =
+		#{sharesType3,jdbcType=VARCHAR},
+		IS_PLEDGE =
+		#{isPledge,jdbcType=VARCHAR},
+		NOM_CAPI = #{nomCapi,jdbcType=DECIMAL},
+		TARGET_TYPE3 = #{targetType3,jdbcType=VARCHAR},
+		ISSUE_PARTY_ID =
+		#{issuePartyId,jdbcType=VARCHAR},
+		TERM_MONTH =
+		#{termMonth,jdbcType=DECIMAL},
+		GUARANTEE_CMT =
+		#{guaranteeCmt,jdbcType=VARCHAR},
+		SPECIAL_CMT =
+		#{specialCmt,jdbcType=VARCHAR},
+		CONTRACT_NAME =
+		#{contractName,jdbcType=VARCHAR},
+		INCOME_RATIO =
+		#{incomeRatio,jdbcType=DECIMAL},
+		DER_INSTR_RATIO =
+		#{derInstrRatio,jdbcType=DECIMAL},
+		DER_INSTR_INV_TYPE =
+		#{derInstrInvType,jdbcType=VARCHAR},
+		DER_INSTR_TARGET =
+		#{derInstrTarget,jdbcType=VARCHAR},
+		ACCT_MODE =
+		#{acctMode,jdbcType=VARCHAR},
+		SPECIAL_CMT1 =
+		#{specialCmt1,jdbcType=VARCHAR},
+		MAX_YIELD =
+		#{maxYield,jdbcType=DECIMAL},
+		MIN_YIELD = #{minYield,jdbcType=DECIMAL},
+		BASIC_PRICE = #{basicPrice,jdbcType=DECIMAL},
+		REG_DATE_PRICE =
+		#{regDatePrice,jdbcType=DECIMAL},
+		TRADE_FEE =
+		#{tradeFee,jdbcType=VARCHAR},
+		PARTY_CODE =
+		#{partyCode,jdbcType=VARCHAR},
+		CHECK_CODE =
+		#{checkCode,jdbcType=VARCHAR},
+		MANAGER_ID =
+		#{managerId,jdbcType=VARCHAR},
+		TRUSTEE_ID =
+		#{trusteeId,jdbcType=VARCHAR},
+		TRU_ACT_TYPE =
+		#{truActType,jdbcType=VARCHAR},
+		INVEST_TYPE =
+		#{investType,jdbcType=VARCHAR},
+		CAP_USE_INDU =
+		#{capUseIndu,jdbcType=VARCHAR},
+		PLAN_SDATE =
+		#{planSdate,jdbcType=TIMESTAMP},
+		PLAN_EDATE =
+		#{planEdate,jdbcType=TIMESTAMP},
+		PRO_PROPERTY =
+		#{proProperty,jdbcType=VARCHAR},
+		MAX_RATE =
+		#{maxRate,jdbcType=DECIMAL},
+		MIN_RATE = #{minRate,jdbcType=DECIMAL},
+		DEBT_SCALE = #{debtScale,jdbcType=DECIMAL},
+		BUY_STRUCT =
+		#{buyStruct,jdbcType=VARCHAR},
+		MANAGE_TYPE =
+		#{manageType,jdbcType=VARCHAR},
+		IS_CTRL_BOTTOM =
+		#{isCtrlBottom,jdbcType=VARCHAR},
+		MGR_FEE_RATE =
+		#{mgrFeeRate,jdbcType=DECIMAL},
+		TRU_FEE_RATE =
+		#{truFeeRate,jdbcType=DECIMAL},
+		TRADE_FEE_RATE =
+		#{tradeFeeRate,jdbcType=DECIMAL},
+		AGENCY_FEE_RATE =
+		#{agencyFeeRate,jdbcType=DECIMAL},
+		OTHER_FEE_RATE =
+		#{otherFeeRate,jdbcType=DECIMAL},
+		ASSET_VALUE =
+		#{assetValue,jdbcType=DECIMAL},
+		REGIST_ORG1 =
+		#{registOrg1,jdbcType=VARCHAR},
+		MNG_ORG_NAME =
+		#{mngOrgName,jdbcType=VARCHAR},
+		TRU_ORG_NAME =
+		#{truOrgName,jdbcType=VARCHAR},
+		FUND_INVEST_ASSET =
+		#{fundInvestAsset,jdbcType=VARCHAR},
+		IN_ASSET_TYPE =
+		#{inAssetType,jdbcType=VARCHAR},
+		IN_ASSET_TYPE_CMM =
+		#{inAssetTypeCmm,jdbcType=VARCHAR},
+		REMARK =
+		#{remark,jdbcType=VARCHAR},
+		IS_UNDER_ASSET =
+		#{isUnderAsset,jdbcType=VARCHAR},
+		IS_GOVERN_FUND =
+		#{isGovernFund,jdbcType=VARCHAR},
+		GOVERN_INVEST_FUND =
+		#{governInvestFund,jdbcType=VARCHAR},
+		FUND_ENPE_NAME =
+		#{fundEnpeName,jdbcType=VARCHAR},
+		TRUSTEE =
+		#{trustee,jdbcType=VARCHAR},
+		SUBMIT_DEADLINE =
+		#{submitDeadline,jdbcType=TIMESTAMP},
+		CHB_SUBMIT_DEADLINE =
+		#{chbSubmitDeadline,jdbcType=TIMESTAMP},
+		SUBMIT_TIME =
+		#{submitTime,jdbcType=TIMESTAMP},
+		STATUS_DATE =
+		#{statusDate,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=VARCHAR},
+		CREATE_USER = #{createUser,jdbcType=VARCHAR},
+		CREATE_TIME =
+		#{createTime,jdbcType=TIMESTAMP},
+		UPDATE_USER =
+		#{updateUser,jdbcType=VARCHAR},
+		UPDATE_TIME =
+		#{updateTime,jdbcType=TIMESTAMP},
+		ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+		DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+		SEND_STATUS =
+		#{sendStatus,jdbcType=VARCHAR},
+		SUBMIT_FEEDBACK_STATUS =
+		#{submitFeedbackStatus,jdbcType=VARCHAR},
+		CREATE_DEPT =
+		#{createDept,jdbcType=VARCHAR},
+		DATA_SOURCE =
+		#{dataSource,jdbcType=VARCHAR},
+		DELETE_RES =
+		#{deleteRes,jdbcType=VARCHAR},
+		sec_credit_grade_type = #{secCreditGradeType,jdbcType=VARCHAR},
+		CAP_USE_INDU_LEVEL2=#{capUseInduLevel2,jdbcType=VARCHAR},
+		ISSUE_PARTY_NAME=#{issuePartyName,jdbcType=VARCHAR},
+		SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+		ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
+		CREDIT_ASSET_CODE = #{creditAssetCode,jdbcType=VARCHAR},
+		IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
+		BILL_CODE = #{billCode,jdbcType=VARCHAR},
+		FINANCIAL_PRODUCT_FLAG = #{financialProductFlag,jdbcType=VARCHAR},
+		PROD_REGISTER_CODE = #{prodRegisterCode,jdbcType=VARCHAR},
+		PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+		IS_DEPOSIT_FLAG = #{isDepositFlag,jdbcType=VARCHAR}
 		where REGIST_SEQNO =
-			  #{registSeqno,jdbcType=CHAR}
+		#{registSeqno,jdbcType=CHAR}
 	</update>
 
 	<!-- 资产要素登记数据查询 -->
@@ -3600,8 +3600,8 @@
 		assetinfo.TRADE_FEE,
 		assetinfo.PARTY_CODE,
 		assetinfo.CHECK_CODE,
-		assetinfo.MANAGER_ID,
-		assetinfo.TRUSTEE_ID,
+		ifnull(m1.CUSTOMER_NAME,assetinfo.MANAGER_ID) MANAGER_ID,
+		ifnull(m2.CUSTOMER_NAME,assetinfo.TRUSTEE_ID) TRUSTEE_ID,
 		assetinfo.TRU_ACT_TYPE,
 		assetinfo.INVEST_TYPE,
 		assetinfo.CAP_USE_INDU,
@@ -3621,8 +3621,8 @@
 		assetinfo.OTHER_FEE_RATE,
 		assetinfo.ASSET_VALUE,
 		assetinfo.REGIST_ORG1,
-		assetinfo.MNG_ORG_NAME,
-		assetinfo.TRU_ORG_NAME,
+		ifnull(ifnull(m1.CUSTOMER_NAME,assetinfo.MANAGER_ID),assetinfo.MNG_ORG_NAME) MNG_ORG_NAME,
+		ifnull(ifnull(m2.CUSTOMER_NAME,assetinfo.TRUSTEE_ID),assetinfo.TRU_ORG_NAME) TRU_ORG_NAME,
 		assetinfo.FUND_INVEST_ASSET,
 		assetinfo.IN_ASSET_TYPE,
 		assetinfo.IN_ASSET_TYPE_CMM,
@@ -3697,6 +3697,9 @@
 		assetinfo.IS_DEPOSIT_FLAG
 		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
 		FROM chb_asset_info assetinfo
+
+		LEFT JOIN MST_CUSTOMER_INFO M1 ON M1.CUSTOMER_ID = assetinfo.MANAGER_ID
+		LEFT JOIN MST_CUSTOMER_INFO M2 ON M2.CUSTOMER_ID = assetinfo.TRUSTEE_ID
 		<!-- LEFT JOIN secrating
 		on secrating.asset_code = assetinfo.asset_code -->
 		<!-- 资产要素撤销需判断报送状态 -->
@@ -3961,21 +3964,20 @@
 		select count(*)
 		from CHB_ASSET_INFO_SUB
 		where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-		  and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
-		  and SEND_STATUS in('02','03')/*去除未报送的内容*/
+		and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+		and SEND_STATUS in('02','03')/*去除未报送的内容*/
 	</select>
 
 	<select id="selectIsExistNotRegist" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto" resultType="java.lang.Integer">
 		select count(*)
 		from CHB_ASSET_INFO_SUB
 		where ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
-		  and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
-		  and SEND_STATUS ='01'/*未报送的内容*/
+		and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+		and SEND_STATUS ='01'/*未报送的内容*/
 	</select>
 
 	<!-- 批量更新 -->
 	<update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto">
-		begin
 		<foreach collection="updateList" item="item" index="index" separator=";">
 			update CHB_ASSET_INFO_SUB
 			<set>
@@ -4468,7 +4470,7 @@
 			and send_status = '01'/*未報送*/
 			and status in ('01','02')/*非刪除*/
 		</foreach>
-		;end;
+		;
 	</update>
 	<delete id="deleteByAssetCode" parameterType="java.util.Map">
 		delete from chb_asset_info_sub
@@ -4773,6 +4775,7 @@
 			</foreach>
 		</if>
 		and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+		and SUBMIT_FEEDBACK_STATUS = '03'
 	</insert>
 	<delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
 		delete from CHB_ASSET_INFO_SUB
@@ -4783,6 +4786,7 @@
 			</foreach>
 		</if>
 		and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+		and SUBMIT_FEEDBACK_STATUS = '03'
 	</delete>
 	<insert id="insertReportDataFromHis" parameterType="java.util.Map">
 		insert into CHB_ASSET_INFO_SUB (
@@ -5136,7 +5140,7 @@
 		PROFIT_FLAG,
 		IS_DEPOSIT_FLAG,
 		<!-- 中债报送资产要素登记升级 add by tuqirong 2021-12-28 end -->
-		rank() over (partition by ASSET_CODE order by nvl(update_time,create_time) desc) ranknum
+		rank() over (partition by ASSET_CODE order by COALESCE(update_time,create_time) desc) ranknum
 		from CHB_ASSET_INFO_SUB_HIS  his
 		<where>
 			<if test="registList !=null and registList.size()>0">

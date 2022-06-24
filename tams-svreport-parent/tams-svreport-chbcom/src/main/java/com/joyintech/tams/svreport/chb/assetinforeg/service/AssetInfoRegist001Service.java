@@ -1078,31 +1078,32 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		
 //		// 处理履历表数据和已报送的数据
 //		dealRegHis(assetList,true);
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
-        if (!StringUtil.isEmptyList(registSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = reportInsertCount;
-            int dataCount = registSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-            	assetInfoRegist001Mapper.updateSubmitStatusToOk(registSeqList,DictCodeListExt2.报送状态_手工处理.getValue());
-            }
-            else {
-                List<String> newDataList = new ArrayList<String>();
-                newDataList.addAll(registSeqList);
 
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                	assetInfoRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime),DictCodeListExt2.报送状态_手工处理.getValue());
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                	assetInfoRegist001Mapper.updateSubmitStatusToOk(newDataList,DictCodeListExt2.报送状态_手工处理.getValue());
-                }
-            }
-        }
 		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,true);
+		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
+		if (!StringUtil.isEmptyList(registSeqList)) {
+			// 分批处理
+			int maxDataCountOneTime = reportInsertCount;
+			int dataCount = registSeqList.size();
+			if (dataCount <= maxDataCountOneTime) {
+				assetInfoRegist001Mapper.updateSubmitStatusToOk(registSeqList,DictCodeListExt2.报送状态_手工处理.getValue());
+			}
+			else {
+				List<String> newDataList = new ArrayList<String>();
+				newDataList.addAll(registSeqList);
+
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+					assetInfoRegist001Mapper.updateSubmitStatusToOk(newDataList.subList(0, maxDataCountOneTime),DictCodeListExt2.报送状态_手工处理.getValue());
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					assetInfoRegist001Mapper.updateSubmitStatusToOk(newDataList,DictCodeListExt2.报送状态_手工处理.getValue());
+				}
+			}
+		}
 	}
 	
 	
@@ -1152,34 +1153,35 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		
 //		// 处理履历表数据和已报送的数据
 //		dealRegHis(assetList,true);
-        // 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
-        if (!StringUtil.isEmptyList(registSeqList)) {
-            // 分批处理
-            int maxDataCountOneTime = reportInsertCount;
-            int dataCount = registSeqList.size();
-            if (dataCount <= maxDataCountOneTime) {
-            	// 
-            	assetInfoRegist001Mapper.mergeSubStatusList(registSeqList);
-            }
-            else {
-                List<ChbAssetSubStatus> newDataList = new ArrayList<ChbAssetSubStatus>();
-                newDataList.addAll(registSeqList);
 
-                // 分批处理
-                int part = dataCount / maxDataCountOneTime; // 分批数
-                for (int i = 0; i < part; i++ ) {
-                	
-                	assetInfoRegist001Mapper.mergeSubStatusList(newDataList.subList(0, maxDataCountOneTime));
-                	
-                    newDataList.subList(0, maxDataCountOneTime).clear();
-                }
-                // 最后剩下的数据
-                if (CollectionUtils.isNotEmpty(newDataList)) {
-                	assetInfoRegist001Mapper.mergeSubStatusList(newDataList);
-                }
-            }
-        }
 		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,false);
+		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 更新反馈状态
+		if (!StringUtil.isEmptyList(registSeqList)) {
+			// 分批处理
+			int maxDataCountOneTime = reportInsertCount;
+			int dataCount = registSeqList.size();
+			if (dataCount <= maxDataCountOneTime) {
+				//
+				assetInfoRegist001Mapper.mergeSubStatusList(registSeqList);
+			}
+			else {
+				List<ChbAssetSubStatus> newDataList = new ArrayList<ChbAssetSubStatus>();
+				newDataList.addAll(registSeqList);
+
+				// 分批处理
+				int part = dataCount / maxDataCountOneTime; // 分批数
+				for (int i = 0; i < part; i++ ) {
+
+					assetInfoRegist001Mapper.mergeSubStatusList(newDataList.subList(0, maxDataCountOneTime));
+
+					newDataList.subList(0, maxDataCountOneTime).clear();
+				}
+				// 最后剩下的数据
+				if (CollectionUtils.isNotEmpty(newDataList)) {
+					assetInfoRegist001Mapper.mergeSubStatusList(newDataList);
+				}
+			}
+		}
 	}
 	
 	

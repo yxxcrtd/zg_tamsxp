@@ -212,8 +212,16 @@
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
-    <include refid="Base_Column_List" />
+    POSUUID, PRODID, ORG_CODE, POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2,
+    ASSET_TYPE3, STARTDATE, ENDDATE, BOOKDATE, CCY, AMT, INT_AMT, END_DAYS, BAL_FLAG,RATING
+    <if test="modelType != null">
+      , INSTITUTION_CODE
+    </if>
     from PBC_MONTH_ASSET_POSITION
+    <if test="modelType != null">
+      left join (select distinct di.business_id　finprod_market_id,di.institution_code
+      from DATA_AUTH_NOTIFY_INST di where di.model_type = '02' and DI.DATA_TYPE='PTL01') di on di.finprod_market_id = PBC_MONTH_ASSET_POSITION.PRODID
+    </if>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -226,13 +234,13 @@
       ASSET_TYPE1, ASSET_TYPE2, ASSET_TYPE3,
       STARTDATE, ENDDATE, BOOKDATE,
       CCY, AMT, INT_AMT, END_DAYS,
-      BAL_FLAG)
+      BAL_FLAG,RATING)
     values (#{posuuid,jdbcType=CHAR}, #{prodid,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
       #{positionType,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR},
       #{assetType1,jdbcType=VARCHAR}, #{assetType2,jdbcType=VARCHAR}, #{assetType3,jdbcType=VARCHAR},
       #{startdate,jdbcType=TIMESTAMP}, #{enddate,jdbcType=TIMESTAMP}, #{bookdate,jdbcType=TIMESTAMP},
       #{ccy,jdbcType=VARCHAR}, #{amt,jdbcType=DECIMAL}, #{intAmt,jdbcType=DECIMAL}, #{endDays,jdbcType=DECIMAL},
-      #{balFlag,jdbcType=VARCHAR})
+      #{balFlag,jdbcType=VARCHAR},#{rating,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
     insert into PBC_MONTH_ASSET_POSITION
@@ -288,6 +296,9 @@
       <if test="balFlag != null" >
         BAL_FLAG,
       </if>
+      <if test="rating != null" >
+        RATING,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="posuuid != null" >
@@ -340,6 +351,9 @@
       </if>
       <if test="balFlag != null" >
         #{balFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="rating != null" >
+        #{rating,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -394,27 +408,31 @@
       <if test="balFlag != null" >
         BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
       </if>
+      <if test="rating != null" >
+        RATING = #{rating,jdbcType=VARCHAR},
+      </if>
     </set>
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
     update PBC_MONTH_ASSET_POSITION
     set PRODID = #{prodid,jdbcType=VARCHAR},
-        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-        POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
-        CHL_ID = #{chlId,jdbcType=VARCHAR},
-        ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
-        ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
-        ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
-        ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
-        STARTDATE = #{startdate,jdbcType=TIMESTAMP},
-        ENDDATE = #{enddate,jdbcType=TIMESTAMP},
-        BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
-        CCY = #{ccy,jdbcType=VARCHAR},
-        AMT = #{amt,jdbcType=DECIMAL},
-        INT_AMT = #{intAmt,jdbcType=DECIMAL},
-        END_DAYS = #{endDays,jdbcType=DECIMAL},
-        BAL_FLAG = #{balFlag,jdbcType=VARCHAR}
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      POSITION_TYPE = #{positionType,jdbcType=VARCHAR},
+      CHL_ID = #{chlId,jdbcType=VARCHAR},
+      ASSET_CODE = #{assetCode,jdbcType=VARCHAR},
+      ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+      ASSET_TYPE2 = #{assetType2,jdbcType=VARCHAR},
+      ASSET_TYPE3 = #{assetType3,jdbcType=VARCHAR},
+      STARTDATE = #{startdate,jdbcType=TIMESTAMP},
+      ENDDATE = #{enddate,jdbcType=TIMESTAMP},
+      BOOKDATE = #{bookdate,jdbcType=TIMESTAMP},
+      CCY = #{ccy,jdbcType=VARCHAR},
+      AMT = #{amt,jdbcType=DECIMAL},
+      INT_AMT = #{intAmt,jdbcType=DECIMAL},
+      END_DAYS = #{endDays,jdbcType=DECIMAL},
+      BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+      RATING = #{rating,jdbcType=VARCHAR}
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </update>
   <select id="selectByDateAndProdid" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -466,6 +484,7 @@
     assetposition.INT_AMT,
     assetposition.END_DAYS,
     assetposition.BAL_FLAG,
+    assetposition.RATING,
     PRDBASEINFO.PBC_ACCOUNT_ID ASSET_POOL_CODE
     from PBC_MONTH_ASSET_POSITION assetposition
     inner JOIN PBC_PRD_ACCOUNT_SUB PRDBASEINFO

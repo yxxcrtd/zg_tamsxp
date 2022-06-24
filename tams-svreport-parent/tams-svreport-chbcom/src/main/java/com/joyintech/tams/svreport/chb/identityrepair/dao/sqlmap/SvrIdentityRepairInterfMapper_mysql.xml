@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.identityrepair.dao.SvrIdentityRepairInterfMapper_mysql" >
+
+	<select id="selectBatchData" resultType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+		SELECT
+		tmp1.equMark,
+		tmp1.indentifyMark,
+		tmp1.registBankCode,
+		IFNULL(tmp1.fundAccPlace,tmp2.fundAccPlace) fundAccPlace,
+		IFNULL(tmp1.theBankCode,tmp2.agencyCode) agencyCode,
+		tmp2.orgIndentifyMark
+		FROM(
+		SELECT
+		'SUB'  equMark,
+		INDENTIFY_MARK indentifyMark,
+		REGIST_BANK_CODE registBankCode,
+		FUND_ACC_PLACE fundAccPlace,
+		THE_BANK_CODE theBankCode
+		FROM CHB_EQU_SUB
+		WHERE FUND_ACC_PLACE is NULL
+		OR THE_BANK_CODE is NULL
+
+		UNION ALL
+
+		SELECT
+		'CHECK'  equMark,
+		INDENTIFY_MARK indentifyMark,
+		REGIST_BANK_CODE registBankCode,
+		FUND_ACC_PLACE fundAccPlace,
+		THE_BANK_CODE theBankCode
+		FROM CHB_EQU_HOLD_CHECK
+		WHERE
+		FUND_ACC_PLACE is NULL
+		OR THE_BANK_CODE is NULL
+		)  tmp1
+		LEFT JOIN (
+		SELECT
+		DISTINCT(ORG_INDENTIFY_MARK) as orgIndentifyMark,
+		INDENTIFY_MARK as indentifyMark,
+		FUND_ACC_PLACE as fundAccPlace,
+		IFNULL(AGENCY_CODE,REGIST_BANK_CODE)  as agencyCode
+		FROM CHB_EQUDET_SUB
+		WHERE IFNULL(DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %H:%i:%s')) <![CDATA[>=]]> #{lastRepairTime,jdbcType=VARCHAR})  tmp2
+		ON tmp1.indentifyMark = tmp2.orgIndentifyMark
+	</select>
+
+	<select id="selectBatchDataForChg" resultType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+		SELECT
+		'SUB'  equMark,
+		indentifyMark,
+		registBankCode,
+		fundAccPlace,
+		agencyCode,
+		orgIndentifyMark
+		FROM
+		（
+		SELECT
+		indentifyMark,
+		registBankCode,
+		fundAccPlace,
+		agencyCode,
+		orgIndentifyMark,
+		ROW_NUMBER() over( partition by tmp.indentifyMark order by tmp.tableNo,tmp.UPDATE_TIME desc ) indMarkNo
+		FROM（
+		SELECT
+		'02'   tableNo,
+		B.INDENTIFY_MARK indentifyMark,
+		B.REGIST_BANK_CODE registBankCode,
+		B.FUND_ACC_PLACE fundAccPlace,
+		B.THE_BANK_CODE agencyCode,
+		B.INDENTIFY_MARK orgIndentifyMark,
+		B.UPDATE_TIME
+		FROM
+		(
+		select * from CHB_EQU_SUB
+		where IFNULL(DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')) =  #{batchDate,jdbcType=VARCHAR}
+		and STATUS = '02'
+		and ORG_INDENTIFY_MARK is null
+		and (FUND_ACC_PLACE is NULL
+		OR THE_BANK_CODE is NULL)
+		) A
+		LEFT JOIN CHB_EQU_SUB B
+		on A.INDENTIFY_MARK = B.INDENTIFY_MARK
+
+		UNION ALL
+
+		SELECT
+		'01'   tableNo,
+		D.INDENTIFY_MARK indentifyMark,
+		D.REGIST_BANK_CODE registBankCode,
+		D.FUND_ACC_PLACE fundAccPlace,
+		D.THE_BANK_CODE agencyCode,
+		D.INDENTIFY_MARK orgIndentifyMark,
+		D.UPDATE_TIME
+		FROM
+		(
+		select * from CHB_EQU_SUB
+		where IFNULL(DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')) =  #{batchDate,jdbcType=VARCHAR}
+		and STATUS = '02'
+		and ORG_INDENTIFY_MARK is null
+		and (FUND_ACC_PLACE is NULL
+		OR THE_BANK_CODE is NULL)
+		) C
+		LEFT JOIN CHB_EQU_HOLD_HIS D
+		on C.INDENTIFY_MARK = D.INDENTIFY_MARK
+		） tmp
+		)
+		WHERE  indMarkNo = '2'
+	</select>
+
+	<select id="selectBatchDataForChgByIde" resultType="com.joyintech.tams.svreport.chb.identityrepair.dto.ChbIdentityRepair">
+		SELECT
+			'SUB'  equMark,
+			indentifyMark,
+			registBankCode,
+			fundAccPlace,
+			agencyCode,
+			orgIndentifyMark
+		FROM
+		(
+			SELECT
+				indentifyMark,
+				registBankCode,
+				fundAccPlace,
+				agencyCode,
+				orgIndentifyMark,
+				ROW_NUMBER() over( partition by tmp.indentifyMark ,tmp.orgMark order by tmp.tableNo desc,tmp.UPDATE_TIME desc ) indMarkNo
+			FROM (
+					----从SUB表查询相关记录
+					SELECT
+						'02'   tableNo,
+						A.INDENTIFY_MARK indentifyMark,
+						A.ORG_INDENTIFY_MARK orgMark,
+						A.REGIST_BANK_CODE registBankCode,
+						B.FUND_ACC_PLACE fundAccPlace,
+						B.THE_BANK_CODE agencyCode,
+						A.INDENTIFY_MARK orgIndentifyMark,
+						B.UPDATE_TIME
+					FROM
+						(
+							select * from CHB_EQU_SUB
+							where IFNULL(DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')) =  #{batchDate,jdbcType=VARCHAR}
+							and TYPE = '02'
+						) A
+					LEFT JOIN CHB_EQU_SUB B
+						on A.ORG_INDENTIFY_MARK = B.INDENTIFY_MARK									
+		
+					UNION ALL
+					
+					------从HIS表查询相关记录
+					SELECT
+						'01'   tableNo,
+						E.INDENTIFY_MARK indentifyMark,
+						E.ORG_INDENTIFY_MARK orgMark,
+						E.REGIST_BANK_CODE registBankCode,
+						F.FUND_ACC_PLACE fundAccPlace,
+						F.THE_BANK_CODE agencyCode,
+						E.INDENTIFY_MARK orgIndentifyMark,
+						F.UPDATE_TIME
+					FROM
+						(
+							select * from CHB_EQU_SUB
+							where 
+								IFNULL(DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d'),DATE_FORMAT(CREATE_TIME,'%Y-%m-%d')) =  #{batchDate,jdbcType=VARCHAR}
+							 and TYPE = '02'						
+						) E
+					LEFT JOIN CHB_EQU_HOLD_HIS F
+						on E.ORG_INDENTIFY_MARK = F.INDENTIFY_MARK
+			) tmp
+		)
+		WHERE  indMarkNo = '2'
+	</select>
+
+
+	<select id="idenCheck" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		from
+		CHB_EQUDET_SUB
+		WHERE IFNULL(DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %H:%i:%s'))  <![CDATA[>=]]>  #{lastRepairTime,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updataSub" parameterType="string">
+		UPDATE CHB_EQU_SUB
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR},
+		THE_BANK_CODE = IFNULL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updataInfo" parameterType="string">
+		UPDATE CHB_EQU_HOLD
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR},
+		THE_BANK_CODE = IFNULL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updataCheck" parameterType="string">
+		update CHB_EQU_HOLD_CHECK
+		SET
+		FUND_ACC_PLACE = #{fundAccPlace,jdbcType=VARCHAR},
+		THE_BANK_CODE = IFNULL(#{agencyCode,jdbcType=VARCHAR},#{registBankCode,jdbcType=VARCHAR})
+		WHERE INDENTIFY_MARK = #{orgIndentifyMark,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updataLastRepairTime" parameterType="string">
+		UPDATE SYS_PARA
+		SET
+		PARAM_VALUE = DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s')
+		WHERE PARA_CODE = 'SVR_LAST_REPAIR_TIME'
+	</update>
+
+	<select id="getLastRepairTime" resultType="string">
+		select
+		  PARAM_VALUE
+		from
+		  SYS_PARA
+		WHERE
+		  PARA_CODE = 'SVR_LAST_REPAIR_TIME'
+	</select>
+</mapper>

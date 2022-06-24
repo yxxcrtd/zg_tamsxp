@@ -43,9 +43,7 @@
         WHEN MATCHED THEN
         UPDATE
         SET
-        L.PRD_REGIST_CODE = TEMP.PRD_REGIST_CODE
-        ,L.ACCOUNT_NO = TEMP.ACCOUNT_NO
-        ,L.REGIST_SEQNO                  = TEMP.REGIST_SEQNO
+         L.REGIST_SEQNO                  = TEMP.REGIST_SEQNO
         ,L.DATA_STATUS                   = TEMP.DATA_STATUS
         ,L.ACCOUNT_NAME                  = TEMP.ACCOUNT_NAME
         ,L.TRADE_PS                      = TEMP.TRADE_PS

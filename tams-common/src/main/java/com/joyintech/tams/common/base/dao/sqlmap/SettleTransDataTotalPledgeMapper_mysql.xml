@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <id column="PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
+        <result column="PLEDGE_FACE_VALUE" property="pledgeFaceValue" jdbcType="DECIMAL" />
+        <result column="PLEDGE_NUMBER" property="pledgeNumber" jdbcType="DECIMAL" />
+        <result column="PLEDGE_RATIO" property="pledgeRatio" jdbcType="DECIMAL" />
+        <result column="PLEDGE_AMT" property="pledgeAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="DISPLACE_DIRECTION" property="displaceDirection" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, BRANCH BRANCH, PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE PLEDGE_FACE_VALUE, 
+        PLEDGE_NUMBER PLEDGE_NUMBER, PLEDGE_RATIO PLEDGE_RATIO, PLEDGE_AMT PLEDGE_AMT, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        DISPLACE_DIRECTION DISPLACE_DIRECTION
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper_mysql.Base_Column_List" />
+        from SETTLE_TRANS_DATA_TOTAL_PLEDGE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper_mysql.Base_Column_List" />
+        from SETTLE_TRANS_DATA_TOTAL_PLEDGE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledgeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleTransDataTotalPledgeMapper_mysql.Base_Column_List" />
+        from SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledgeKey" >
+        delete from SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
+        insert into SETTLE_TRANS_DATA_TOTAL_PLEDGE (TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, 
+            PLEDGE_FACE_VALUE, PLEDGE_NUMBER, PLEDGE_RATIO, 
+            PLEDGE_AMT, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            DISPLACE_DIRECTION)
+        values (#{tradeId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{pledgeFinprodId,jdbcType=VARCHAR}, 
+            #{pledgeFaceValue,jdbcType=DECIMAL}, #{pledgeNumber,jdbcType=DECIMAL}, #{pledgeRatio,jdbcType=DECIMAL}, 
+            #{pledgeAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{displaceDirection,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
+        insert into SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID,
+            </if>
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE,
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER,
+            </if>
+            <if test="pledgeRatio != null" >
+                PLEDGE_RATIO,
+            </if>
+            <if test="pledgeAmt != null" >
+                PLEDGE_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFaceValue != null" >
+                #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeRatio != null" >
+                #{pledgeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeAmt != null" >
+                #{pledgeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="displaceDirection != null" >
+                #{displaceDirection,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
+        insert into SETTLE_TRANS_DATA_TOTAL_PLEDGE(TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE, 
+        PLEDGE_NUMBER, PLEDGE_RATIO, PLEDGE_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, DISPLACE_DIRECTION)
+        select TRADE_ID, BRANCH, PLEDGE_FINPROD_ID, PLEDGE_FACE_VALUE, 
+            PLEDGE_NUMBER, PLEDGE_RATIO, PLEDGE_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, DISPLACE_DIRECTION
+             from SETTLE_TRANS_DATA_TOTAL_PLEDGE
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
+        update SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        <set >
+            <if test="pledgeFaceValue != null" >
+                PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeNumber != null" >
+                PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeRatio != null" >
+                PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="pledgeAmt != null" >
+                PLEDGE_AMT = #{pledgeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleTransDataTotalPledge" >
+        update SETTLE_TRANS_DATA_TOTAL_PLEDGE
+        set PLEDGE_FACE_VALUE = #{pledgeFaceValue,jdbcType=DECIMAL},
+            PLEDGE_NUMBER = #{pledgeNumber,jdbcType=DECIMAL},
+            PLEDGE_RATIO = #{pledgeRatio,jdbcType=DECIMAL},
+            PLEDGE_AMT = #{pledgeAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

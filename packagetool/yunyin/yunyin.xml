@@ -22,7 +22,6 @@
 
     <modules>
 		<!--  公共 -->
-		<module>../../JixuCenter</module>
         <module>../../tams-common</module>
         <module>../../tams-disclosure-busicommon</module>
         <module>../../tams-disclosure-common</module>
@@ -31,8 +30,6 @@
         <module>../../background-component/component-check</module>
         <module>../../background-component/msg-generate</module>
         <module>../../tams-svreport-common</module>
-        <module>../../tams-valuation-common</module>
-        <module>../../tams-common-basicdata</module>
 <!--        <module>../../tams-valuation-batch-valmodel</module>-->
 <!--        <module>../../tams-valuation-batch-lossmodel</module>-->
 		<!-- 后台服务 -->
@@ -42,32 +39,16 @@
         <module>../../microservice/service-disclosure</module>
         <module>../../microservice/service-pbc</module>
         <module>../../microservice/service-svrcom</module>
-        <module>../../microservice/service-valuation</module>
-        <module>../../microservice/service-valuation-basicdata</module>
-		<module>../../microservice/service-common-basicdata</module>
 		<module>../../microservice/tams-service-container-yunying</module>
-        <module>../../microservice/service-valuation-valmodel</module>
-        <module>../../microservice/service-valuation-lossmodel</module>
 
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>
-        <module>../../tams-valuation-api</module>
-        <module>../../tams-valuation-batch</module>
-        <module>../../tams-valuation-batch-lossmodel</module>
-        <module>../../tams-valuation-batch-valmodel</module>
         <module>../../tams-svreport-batch</module>
         <module>../../tams-system/yunying/batch</module>
 
         <!-- 前台应用 -->
 		<module>../../tams-disclosure-parent</module>
         <module>../../tams-svreport-parent</module>
-        <module>../../tams-business-common</module>
-        <module>../../tams-invest-common</module>
-        <module>../../tams-valuation-parent</module>
-        <module>../../tams-valuation-basicdata</module>
         <module>../../tams-system/yunying/app</module>
-
-        <!-- 接口 -->
-        <module>../../tams-valuation-interf</module>
     </modules>
 </project>

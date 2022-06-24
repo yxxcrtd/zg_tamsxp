@@ -254,7 +254,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
         				valueDeal.setStatus("M");
         			}
         		}else{
-        			valueDeal.setStatus("M");
+        			valueDeal.setStatus("E");
         		}
         	}else{
         		realListMap.put(key, single);
@@ -580,6 +580,11 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 						model.getOpenEnd(), rateMap).setScale(5, RoundingMode.HALF_UP));
 
 	        }
+
+			//净值变动
+			if (Objects.equals(DictCodeListExt2.变动类型_净值变动.getValue(),model.getChangeType())) {
+				typeDetail = DictCodeListExt2.变动类型_净值变动.getValue();
+			}
 
 	        // 产品余额份额获取
             List<ChbPrdPosition> list = chbPrdDurationRegMapper.getBalance(model.getProdId(),quotationDate);

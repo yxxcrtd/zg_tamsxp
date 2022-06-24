@@ -12,27 +12,27 @@
         ) values
         <foreach collection="list" item="item" index="index" separator=",">
             (
-                #{item.id,jdbcType=VARCHAR} ID,
-                #{item.jobId,jdbcType=VARCHAR} JOB_ID,
-                #{item.jobSeq,jdbcType=VARCHAR} JOB_SEQ,
-                #{item.prodid,jdbcType=VARCHAR} PRODID,
-                #{item.prodName,jdbcType=VARCHAR} PROD_NAME,
-                #{item.endDate,jdbcType=DATE} END_DATE,
-                #{item.startDate,jdbcType=DATE} START_DATE,
-                #{item.revealChannel,jdbcType=VARCHAR} REVEAL_CHANNEL,
-                #{item.revealEndDate,jdbcType=TIMESTAMP} REVEAL_END_DATE,
-                #{item.repType,jdbcType=VARCHAR} REP_TYPE,
-                #{item.repId,jdbcType=VARCHAR} REP_ID,
-                #{item.repName,jdbcType=VARCHAR} REP_NAME,
-                #{item.fileType,jdbcType=VARCHAR} FILE_TYPE,
-                #{item.isConfirm,jdbcType=VARCHAR} IS_CONFIRM,
-                #{item.isReveal,jdbcType=VARCHAR} IS_REVEAL,
-                #{item.status,jdbcType=VARCHAR} STATUS,
-                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-                #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-                #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-                #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-                #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+                #{item.id,jdbcType=VARCHAR},
+                #{item.jobId,jdbcType=VARCHAR},
+                #{item.jobSeq,jdbcType=VARCHAR},
+                #{item.prodid,jdbcType=VARCHAR},
+                #{item.prodName,jdbcType=VARCHAR},
+                #{item.endDate,jdbcType=DATE},
+                #{item.startDate,jdbcType=DATE},
+                #{item.revealChannel,jdbcType=VARCHAR},
+                #{item.revealEndDate,jdbcType=TIMESTAMP},
+                #{item.repType,jdbcType=VARCHAR},
+                #{item.repId,jdbcType=VARCHAR},
+                #{item.repName,jdbcType=VARCHAR},
+                #{item.fileType,jdbcType=VARCHAR},
+                #{item.isConfirm,jdbcType=VARCHAR},
+                #{item.isReveal,jdbcType=VARCHAR},
+                #{item.status,jdbcType=VARCHAR},
+                #{item.createUser,jdbcType=VARCHAR},
+                #{item.createDept,jdbcType=VARCHAR},
+                #{item.createTime,jdbcType=TIMESTAMP},
+                #{item.updateUser,jdbcType=VARCHAR},
+                #{item.updateTime,jdbcType=TIMESTAMP}
             )
         </foreach>
     </insert>
@@ -46,24 +46,24 @@
         ) values
         <foreach collection="list" item="item" index="index" separator=",">
             (
-                #{item.id,jdbcType=VARCHAR} ID,
-                #{item.jobId,jdbcType=VARCHAR} JOB_ID,
-                #{item.prodid,jdbcType=VARCHAR} PRODID,
-                #{item.prodName,jdbcType=VARCHAR} PROD_NAME,
-                #{item.endDate,jdbcType=DATE} END_DATE,
-                #{item.startDate,jdbcType=DATE} START_DATE,
-                #{item.revealEndDate,jdbcType=TIMESTAMP} REVEAL_END_DATE,
-                #{item.repType,jdbcType=VARCHAR} REP_TYPE,
-                #{item.repId,jdbcType=VARCHAR} REP_ID,
-                #{item.repName,jdbcType=VARCHAR} REP_NAME,
-                #{item.fileType,jdbcType=VARCHAR} FILE_TYPE,
-                #{item.execStatus,jdbcType=VARCHAR} EXEC_STATUS,
-                #{item.status,jdbcType=VARCHAR} STATUS,
-                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-                #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-                #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-                #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-                #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+                #{item.id,jdbcType=VARCHAR},
+                #{item.jobId,jdbcType=VARCHAR},
+                #{item.prodid,jdbcType=VARCHAR},
+                #{item.prodName,jdbcType=VARCHAR},
+                #{item.endDate,jdbcType=DATE},
+                #{item.startDate,jdbcType=DATE},
+                #{item.revealEndDate,jdbcType=TIMESTAMP},
+                #{item.repType,jdbcType=VARCHAR},
+                #{item.repId,jdbcType=VARCHAR},
+                #{item.repName,jdbcType=VARCHAR},
+                #{item.fileType,jdbcType=VARCHAR},
+                #{item.execStatus,jdbcType=VARCHAR},
+                #{item.status,jdbcType=VARCHAR},
+                #{item.createUser,jdbcType=VARCHAR},
+                #{item.createDept,jdbcType=VARCHAR},
+                #{item.createTime,jdbcType=TIMESTAMP},
+                #{item.updateUser,jdbcType=VARCHAR},
+                #{item.updateTime,jdbcType=TIMESTAMP}
             )
         </foreach>
     </insert>

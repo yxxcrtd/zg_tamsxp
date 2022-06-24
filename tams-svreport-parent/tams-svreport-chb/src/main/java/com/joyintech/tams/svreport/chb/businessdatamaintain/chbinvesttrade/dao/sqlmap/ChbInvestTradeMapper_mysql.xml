@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dao.ChbInvestTradeDao_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto">
+        <id property="tradeSeqno" column="TRADE_SEQNO" jdbcType="CHAR"/>
+        <result property="tradeCode" column="TRADE_CODE" jdbcType="VARCHAR"/>
+        <result property="investVariety" column="INVEST_VARIETY" jdbcType="VARCHAR"/>
+        <result property="investType" column="INVEST_TYPE" jdbcType="VARCHAR"/>
+        <result property="prodId" column="PROD_ID" jdbcType="VARCHAR"/>
+        <result property="registBankCode" column="REGIST_BANK_CODE" jdbcType="VARCHAR"/>
+        <result property="assetCode" column="ASSET_CODE" jdbcType="VARCHAR"/>
+        <result property="ccy" column="CCY" jdbcType="VARCHAR"/>
+        <result property="amt" column="AMT" jdbcType="DECIMAL"/>
+        <result property="cnyAmt" column="CNY_AMT" jdbcType="DECIMAL"/>
+        <result property="curAssetType" column="CUR_ASSET_TYPE" jdbcType="VARCHAR"/>
+        <result property="curAssetdetType" column="CUR_ASSETDET_TYPE" jdbcType="VARCHAR"/>
+        <result property="dealdate" column="DEALDATE" jdbcType="TIMESTAMP"/>
+        <result property="tradeCounter" column="TRADE_COUNTER" jdbcType="VARCHAR"/>
+        <result property="unitPriceFull" column="UNIT_PRICE_FULL" jdbcType="DECIMAL"/>
+        <result property="unitPriceNet" column="UNIT_PRICE_NET" jdbcType="DECIMAL"/>
+        <result property="endRate" column="END_RATE" jdbcType="DECIMAL"/>
+        <result property="contractCode" column="CONTRACT_CODE" jdbcType="VARCHAR"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="chlCpctId" column="CHL_CPCT_ID" jdbcType="VARCHAR"/>
+        <result property="tradeType" column="TRADE_TYPE" jdbcType="VARCHAR"/>
+        <result property="chlAgrtName" column="CHL_AGRT_NAME" jdbcType="VARCHAR"/>
+        <result property="isUnderTrade" column="IS_UNDER_TRADE" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="orgCode" column="ORG_CODE" jdbcType="VARCHAR"/>
+        <result property="deptCode" column="DEPT_CODE" jdbcType="VARCHAR"/>
+        <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="statusDate" column="STATUS_DATE" jdbcType="TIMESTAMP"/>
+        <result property="revDate" column="REV_DATE" jdbcType="TIMESTAMP"/>
+        <result property="dataSource" column="DATA_SOURCE" jdbcType="VARCHAR"/>
+        <result property="rate" column="RATE" jdbcType="DECIMAL"/>
+        <result property="basis" column="BASIS" jdbcType="VARCHAR"/>
+        <result property="dealtype" column="DEALTYPE" jdbcType="VARCHAR"/>
+        <result property="facevalue" column="FACEVALUE" jdbcType="DECIMAL"/>
+        <result property="num" column="NUM" jdbcType="DECIMAL"/>
+        <result property="assetMethod" column="ASSET_METHOD" jdbcType="VARCHAR"/>
+        <result property="rivalPartyType" column="RIVAL_PARTY_TYPE" jdbcType="VARCHAR"/>
+        <result property="investApproverId" column="INVEST_APPROVER_ID" jdbcType="VARCHAR"/>
+        <result property="investApproverName" column="INVEST_APPROVER_NAME" jdbcType="VARCHAR"/>
+        <result property="investTraderId" column="INVEST_TRADER_ID" jdbcType="VARCHAR"/>
+        <result property="investTraderName" column="INVEST_TRADER_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert">
+        INSERT INTO  CHB_INVEST_TRADE
+            (
+                TRADE_SEQNO,
+                TRADE_CODE,
+                PROD_ID,
+                REGIST_BANK_CODE,
+                ASSET_CODE,
+                CCY,
+                AMT,
+                CNY_AMT,
+                CUR_ASSET_TYPE,
+                CUR_ASSETDET_TYPE,
+                DEALDATE,
+                TRADE_COUNTER,
+                UNIT_PRICE_FULL,
+                UNIT_PRICE_NET,
+                END_RATE,
+                CONTRACT_CODE,
+                REMARK,
+                STATUS,
+                DEPT_CODE,
+                CREATE_USER,
+                CREATE_TIME,
+                UPDATE_USER,
+                UPDATE_TIME,
+                DATA_SOURCE,
+                NUM,
+                ASSET_METHOD,
+                RIVAL_PARTY_TYPE,
+                INVEST_APPROVER_ID,
+                INVEST_APPROVER_NAME,
+                INVEST_TRADER_ID,
+                INVEST_TRADER_NAME,
+                ERR_MSG
+            ) SELECT * FROM (
+                SELECT TEMP.* FROM (
+                   SELECT
+                       #{tradeSeqno,jdbcType=VARCHAR} TRADE_SEQNO,
+                       #{tradeCode,jdbcType=VARCHAR} TRADE_CODE,
+                       #{prodId,jdbcType=VARCHAR} PROD_ID,
+                       #{registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+                       #{assetCode,jdbcType=VARCHAR} ASSET_CODE,
+                       #{ccy,jdbcType=VARCHAR} CCY,
+                       #{amt,jdbcType=NUMERIC} AMT,
+                       #{cnyAmt,jdbcType=NUMERIC} CNY_AMT,
+                       #{curAssetType,jdbcType=VARCHAR} CUR_ASSET_TYPE,
+                       #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
+                       #{dealdate,jdbcType=DATE} DEALDATE,
+                       #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                       #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
+                       #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
+                       #{endRate,jdbcType=NUMERIC} END_RATE,
+                       #{contractCode,jdbcType=VARCHAR} CONTRACT_CODE,
+                       #{remark,jdbcType=VARCHAR} REMARK,
+                       #{status,jdbcType=VARCHAR} STATUS,
+                       #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+                       #{createUser,jdbcType=VARCHAR} CREATE_USER,
+                       #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+                       #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                       #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+                       #{dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+                       #{num,jdbcType=NUMERIC} NUM,
+                       #{assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
+                       #{rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
+                       #{investApproverId,jdbcType=VARCHAR} INVEST_APPROVER_ID,
+                       #{investApproverName,jdbcType=VARCHAR} INVEST_APPROVER_NAME,
+                       #{investTraderId,jdbcType=VARCHAR} INVEST_TRADER_ID,
+                       #{investTraderName,jdbcType=VARCHAR} INVEST_TRADER_NAME,
+                       #{errMsg,jdbcType=VARCHAR} ERR_MSG
+                   FROM  DUAL
+                )TEMP WHERE NOT EXISTS(
+                    SELECT 1 FROM CHB_INVEST_TRADE a WHERE a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID = TEMP.PROD_ID  AND a.ASSET_CODE = TEMP.ASSET_CODE
+                    )
+            )a;
+
+            UPDATE CHB_INVEST_TRADE a,(
+                SELECT * FROM (
+                SELECT TEMP.* FROM (
+                SELECT
+                #{tradeSeqno,jdbcType=VARCHAR} TRADE_SEQNO,
+                #{tradeCode,jdbcType=VARCHAR} TRADE_CODE,
+                #{prodId,jdbcType=VARCHAR} PROD_ID,
+                #{registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+                #{assetCode,jdbcType=VARCHAR} ASSET_CODE,
+                #{ccy,jdbcType=VARCHAR} CCY,
+                #{amt,jdbcType=NUMERIC} AMT,
+                #{cnyAmt,jdbcType=NUMERIC} CNY_AMT,
+                #{curAssetType,jdbcType=VARCHAR} CUR_ASSET_TYPE,
+                #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
+                #{dealdate,jdbcType=DATE} DEALDATE,
+                #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
+                #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
+                #{endRate,jdbcType=NUMERIC} END_RATE,
+                #{contractCode,jdbcType=VARCHAR} CONTRACT_CODE,
+                #{remark,jdbcType=VARCHAR} REMARK,
+                #{status,jdbcType=VARCHAR} STATUS,
+                #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+                #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+                #{dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+                #{num,jdbcType=NUMERIC} NUM,
+                #{assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
+                #{rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
+                #{investApproverId,jdbcType=VARCHAR} INVEST_APPROVER_ID,
+                #{investApproverName,jdbcType=VARCHAR} INVEST_APPROVER_NAME,
+                #{investTraderId,jdbcType=VARCHAR} INVEST_TRADER_ID,
+                #{investTraderName,jdbcType=VARCHAR} INVEST_TRADER_NAME,
+                #{errMsg,jdbcType=VARCHAR} ERR_MSG
+                FROM  DUAL
+                )TEMP
+                ) a
+            )b
+                     SET
+                    a.REGIST_BANK_CODE = b.REGIST_BANK_CODE,
+                    a.CCY = b.CCY,
+                    a.AMT = b.AMT,
+                    a.CNY_AMT = b.CNY_AMT,
+                    a.CUR_ASSET_TYPE = b.CUR_ASSET_TYPE,
+                    a.CUR_ASSETDET_TYPE = b.CUR_ASSETDET_TYPE,
+                    a.DEALDATE = b.DEALDATE,
+                    a.TRADE_COUNTER = b.TRADE_COUNTER,
+                    a.UNIT_PRICE_FULL = b.UNIT_PRICE_FULL,
+                    a.UNIT_PRICE_NET = b.UNIT_PRICE_NET,
+                    a.END_RATE = b.END_RATE,
+                    a.CONTRACT_CODE = b.CONTRACT_CODE,
+                    a.REMARK = b.REMARK,
+                    a.UPDATE_USER = b.UPDATE_USER,
+                    a.UPDATE_TIME = b.UPDATE_TIME,
+                    a.DATA_SOURCE = b.DATA_SOURCE,
+                    a.NUM = b.NUM,
+                    a.ASSET_METHOD = b.ASSET_METHOD,
+                    a.RIVAL_PARTY_TYPE = b.RIVAL_PARTY_TYPE,
+                    a.INVEST_APPROVER_ID = b.INVEST_APPROVER_ID,
+                    a.INVEST_APPROVER_NAME = b.INVEST_APPROVER_NAME,
+                    a.INVEST_TRADER_ID = b.INVEST_TRADER_ID,
+                    a.INVEST_TRADER_NAME = b.INVEST_TRADER_NAME,
+                    a.ERR_MSG = b.ERR_MSG
+            WHERE a.TRADE_CODE = b.TRADE_CODE AND a.PROD_ID = b.PROD_ID  AND a.ASSET_CODE = b.ASSET_CODE
+
+    </insert>
+    <update id="update">
+        update CHB_INVEST_TRADE set STATUS = #{status},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+        <where>
+            <if test="tradeCode!=null and tradeCode!=''">
+                TRADE_CODE = #{tradeCode}
+            </if>
+            <if test="prodId!=null and prodId!=''">
+                AND PROD_ID = #{prodId}
+            </if>
+            <if test="assetCode!=null and assetCode!=''">
+                AND ASSET_CODE = #{assetCode}
+            </if>
+        </where>
+    </update>
+    <select id="getProdName" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT PROD_NAME id,
+        PROD_NAME text
+        FROM CHB_PRD_BASEINFO
+        <where>
+            <if test="search !=null and  search !='' ">
+                PROD_NAME LIKE concat('%',#{search},'%')
+            </if>
+            <if test="prodName !=null and  prodName !='' ">
+                and PROD_NAME = #{prodName}
+            </if>
+        </where>
+    </select>
+    <select id="getRegCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT REG_CODE id,
+        REG_CODE text
+        FROM CHB_PRDRESIST_CODE
+        <where>
+            <if test="search !=null and  search !='' ">
+                REG_CODE LIKE  CONCAT('%',#{search}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getCustomerName" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT COUNTER_ID id,
+        COUNTER_NAME text
+        FROM CHB_MST_COUNTER_PARTY
+        <where>
+            <if test="search !=null and  search !='' ">
+                COUNTER_NAME LIKE CONCAT('%',#{search},'%')
+            </if>
+            <if test="initValue != null and initValue != ''">
+                and COUNTER_ID = #{initValue}
+            </if>
+        </where>
+    </select>
+    <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        DISTINCT ASSET_CODE id,
+        ASSET_NAME text
+        FROM CHB_ASSET_INFO
+        <where>
+            <if test="search !=null and  search !='' ">
+                AND ASSET_CODE LIKE CONCAT( '%',#{search},'%')
+            </if>
+            <if test="assetCode !=null and  assetCode !='' ">
+                and ASSET_CODE = #{assetCode}
+            </if>
+        </where>
+
+    </select>
+    <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
+        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName} limit 1
+    </select>
+    <select id="selectByKey" resultMap="BaseResultMap">
+        select
+        a.TRADE_SEQNO,
+        a.TRADE_CODE,
+        a.PROD_ID,
+        a.REGIST_BANK_CODE,
+        a.ASSET_CODE,
+        a.CCY,
+        a.AMT,
+        a.CNY_AMT,
+        a.CUR_ASSET_TYPE,
+        a.CUR_ASSETDET_TYPE,
+        a.DEALDATE,
+        a.TRADE_COUNTER,
+        a.UNIT_PRICE_FULL,
+        a.UNIT_PRICE_NET,
+        a.END_RATE,
+        a.CONTRACT_CODE,
+        a.REMARK,
+        a.STATUS statusValid,
+        a.DEPT_CODE,
+        a.CREATE_USER,
+        a.CREATE_TIME,
+        a.UPDATE_USER,
+        a.UPDATE_TIME,
+        a.DATA_SOURCE,
+        a.NUM,
+        a.ASSET_METHOD,
+        a.RIVAL_PARTY_TYPE,
+        a.INVEST_APPROVER_ID,
+        a.INVEST_APPROVER_NAME,
+        a.INVEST_TRADER_ID,
+        a.INVEST_TRADER_NAME,
+        a.ERR_MSG,
+        b.REG_CODE regCode,
+        b.PROD_NAME prodName,
+        c.ASSET_NAME assetName
+        FROM CHB_INVEST_TRADE a
+        LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        <where>
+            <if test="tradeSeqno!=null and tradeSeqno!=''">
+                a.TRADE_SEQNO = #{tradeSeqno}
+            </if>
+        </where>
+    </select>
+    <select id="selectAssetNameByAssetCode" resultType="java.util.Map">
+        SELECT ASSET_NAME FROM CHB_ASSET_INFO where ASSET_CODE = #{assetCode} limit 1
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select * from (
+        select
+        a.TRADE_SEQNO,
+        a.TRADE_CODE,
+        a.PROD_ID,
+        a.REGIST_BANK_CODE,
+        a.ASSET_CODE,
+        a.CCY,
+        a.AMT,
+        a.CNY_AMT,
+        a.CUR_ASSET_TYPE,
+        a.CUR_ASSETDET_TYPE,
+        a.DEALDATE,
+        a.TRADE_COUNTER,
+        a.UNIT_PRICE_FULL,
+        a.UNIT_PRICE_NET,
+        a.END_RATE,
+        a.CONTRACT_CODE,
+        a.REMARK,
+        a.STATUS statusValid,
+        a.DEPT_CODE,
+        a.CREATE_USER,
+        a.CREATE_TIME,
+        a.UPDATE_USER,
+        a.UPDATE_TIME,
+        a.DATA_SOURCE,
+        a.NUM,
+        a.ASSET_METHOD,
+        a.RIVAL_PARTY_TYPE,
+        a.INVEST_APPROVER_ID,
+        a.INVEST_APPROVER_NAME,
+        a.INVEST_TRADER_ID,
+        a.INVEST_TRADER_NAME,
+        a.ERR_MSG errMsg,
+        null as orgData,
+        b.REG_CODE regCode,
+        c.ASSET_NAME assetName
+        FROM CHB_INVEST_TRADE a
+        LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        <where>
+            <if test="prodNames != null and prodNames.length>0">
+                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="regCodes != null and regCodes.length>0">
+                <foreach collection="regCodes" item="item" open=" and b.REG_CODE in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetCodes != null and assetCodes.length>0">
+                <foreach collection="assetCodes" item="item" open=" and c.ASSET_CODE in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeCode!=null and tradeCode!=''">
+                and a.TRADE_CODE like concat ('%',#{tradeCode},'%')
+            </if>
+            <if test="status!=null and status!=''">
+                and a.STATUS = #{status}
+            </if>
+            <if test="tradeCounter!=null and tradeCounter!=''">
+                and a.TRADE_COUNTER = #{tradeCounter}
+            </if>
+            <if test="dealDateStart!=null and dealDateStart!=''">
+                and a.DEALDATE &gt;= #{dealDateStart}
+            </if>
+            <if test="dealDateEnd!=null and dealDateEnd !=''">
+                and a.DEALDATE &lt;= #{dealDateEnd}
+            </if>
+            and not exists (
+            SELECT 1 FROM CHB_INVEST_TRADE_ERRODATA IE WHERE IE.PROD_ID = a.PROD_ID and IE.TRADE_CODE = a.TRADE_CODE and
+            IE.ASSET_CODE = a.ASSET_CODE
+            )
+        </where>
+        union all
+        select
+        a.DATAUUID TRADE_SEQNO,
+        a.TRADE_CODE,
+        a.PROD_ID,
+        null REGIST_BANK_CODE,
+        a.ASSET_CODE,
+        null CCY,
+        null AMT,
+        null CNY_AMT,
+        null CUR_ASSET_TYPE,
+        null CUR_ASSETDET_TYPE,
+        a.DEALDATE,
+        a.TRADE_COUNTER,
+        null UNIT_PRICE_FULL,
+        null UNIT_PRICE_NET,
+        null END_RATE,
+        null CONTRACT_CODE,
+        null REMARK,
+        a.STATUS statusValid,
+        a.DEPT_CODE,
+        a.CREATE_USER,
+        a.CREATE_TIME,
+        a.UPDATE_USER,
+        a.UPDATE_TIME,
+        null DATA_SOURCE,
+        null NUM,
+        null ASSET_METHOD,
+        null RIVAL_PARTY_TYPE,
+        null INVEST_APPROVER_ID,
+        null INVEST_APPROVER_NAME,
+        null INVEST_TRADER_ID,
+        null INVEST_TRADER_NAME,
+        a.ERR_MSG errMsg,
+        a.ORG_DATA orgData,
+        b.REG_CODE regCode,
+        c.ASSET_NAME assetName
+        from chb_invest_trade_errodata a
+        LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        <where>
+            <if test="prodNames != null and prodNames.length>0">
+                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="regCodes != null and regCodes.length>0">
+                <foreach collection="regCodes" item="item" open=" and b.REG_CODE in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetCodes != null and assetCodes.length>0">
+                <foreach collection="assetCodes" item="item" open=" and c.ASSET_CODE in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeCode!=null and tradeCode!=''">
+                and a.TRADE_CODE like concat ('%',#{tradeCode},'%')
+            </if>
+            <if test="status!=null and status!=''">
+                and a.STATUS = #{status}
+            </if>
+            <if test="tradeCounter!=null and tradeCounter!=''">
+                and a.TRADE_COUNTER = #{tradeCounter}
+            </if>
+            <if test="dealDateStart!=null and dealDateStart!=''">
+                and a.DEALDATE &gt;= #{dealDateStart}
+            </if>
+            <if test="dealDateEnd!=null and dealDateEnd !=''">
+                and a.DEALDATE &lt;= #{dealDateEnd}
+            </if>
+        </where>
+        )a
+        order by a.DEALDATE desc,a.PROD_ID asc
+    </select>
+    <select id="selectRivalPartyType" resultType="java.util.Map">
+        select COUNTER_TYPE2 from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
+    </select>
+    <insert id="mergeData">
+        INSERT INTO  CHB_INVEST_TRADE (
+        TRADE_SEQNO,
+        TRADE_CODE,
+        PROD_ID,
+        REGIST_BANK_CODE,
+        ASSET_CODE,
+        CCY,
+        AMT,
+        CNY_AMT,
+        CUR_ASSET_TYPE,
+        CUR_ASSETDET_TYPE,
+        DEALDATE,
+        TRADE_COUNTER,
+        UNIT_PRICE_FULL,
+        UNIT_PRICE_NET,
+        END_RATE,
+        CONTRACT_CODE,
+        REMARK,
+        STATUS,
+        DEPT_CODE,
+        CREATE_USER,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        DATA_SOURCE,
+        NUM,
+        ASSET_METHOD,
+        RIVAL_PARTY_TYPE,
+        INVEST_APPROVER_ID,
+        INVEST_APPROVER_NAME,
+        INVEST_TRADER_ID,
+        INVEST_TRADER_NAME,
+        ERR_MSG
+        )
+        select * from
+        ( select TEMP.* from
+        (
+        <foreach collection="list" item="item" separator="union all">
+
+            SELECT
+            #{item.tradeSeqno,jdbcType=VARCHAR} TRADE_SEQNO,
+            #{item.tradeCode,jdbcType=VARCHAR} TRADE_CODE,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+            #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+            #{item.ccy,jdbcType=VARCHAR} CCY,
+            #{item.amt,jdbcType=NUMERIC} AMT,
+            #{item.cnyAmt,jdbcType=NUMERIC} CNY_AMT,
+            #{item.curAssetType,jdbcType=VARCHAR} CUR_ASSET_TYPE,
+            #{item.curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
+            #{item.dealdate,jdbcType=DATE} DEALDATE,
+            #{item.tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+            #{item.unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
+            #{item.unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
+            #{item.endRate,jdbcType=NUMERIC} END_RATE,
+            #{item.contractCode,jdbcType=VARCHAR} CONTRACT_CODE,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+            #{item.num,jdbcType=NUMERIC} NUM,
+            #{item.assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
+            #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
+            #{item.investApproverId,jdbcType=VARCHAR} INVEST_APPROVER_ID,
+            #{item.investApproverName,jdbcType=VARCHAR} INVEST_APPROVER_NAME,
+            #{item.investTraderId,jdbcType=VARCHAR} INVEST_TRADER_ID,
+            #{item.investTraderName,jdbcType=VARCHAR} INVEST_TRADER_NAME,
+            #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+            FROM  DUAL
+        </foreach>
+        ) TEMP where not exists (SELECT 1 FROM CHB_INVEST_TRADE a where a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID = TEMP.PROD_ID AND a.ASSET_CODE = TEMP.ASSET_CODE )
+        )a;
+
+        UPDATE CHB_INVEST_TRADE a,(
+        select * from
+        ( select TEMP.* from
+        (
+            <foreach collection="list" item="item" separator="union all">
+                SELECT
+                #{item.tradeSeqno,jdbcType=VARCHAR} TRADE_SEQNO,
+                #{item.tradeCode,jdbcType=VARCHAR} TRADE_CODE,
+                #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+                #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+                #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+                #{item.ccy,jdbcType=VARCHAR} CCY,
+                #{item.amt,jdbcType=NUMERIC} AMT,
+                #{item.cnyAmt,jdbcType=NUMERIC} CNY_AMT,
+                #{item.curAssetType,jdbcType=VARCHAR} CUR_ASSET_TYPE,
+                #{item.curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
+                #{item.dealdate,jdbcType=DATE} DEALDATE,
+                #{item.tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                #{item.unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
+                #{item.unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
+                #{item.endRate,jdbcType=NUMERIC} END_RATE,
+                #{item.contractCode,jdbcType=VARCHAR} CONTRACT_CODE,
+                #{item.remark,jdbcType=VARCHAR} REMARK,
+                #{item.status,jdbcType=VARCHAR} STATUS,
+                #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+                #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+                #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+                #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+                #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+                #{item.num,jdbcType=NUMERIC} NUM,
+                #{item.assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
+                #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
+                #{item.investApproverId,jdbcType=VARCHAR} INVEST_APPROVER_ID,
+                #{item.investApproverName,jdbcType=VARCHAR} INVEST_APPROVER_NAME,
+                #{item.investTraderId,jdbcType=VARCHAR} INVEST_TRADER_ID,
+                #{item.investTraderName,jdbcType=VARCHAR} INVEST_TRADER_NAME,
+                #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+                FROM  DUAL
+            </foreach>
+            ）TEMP
+            ）a
+        )b SET
+        a.REGIST_BANK_CODE = b.REGIST_BANK_CODE,
+        a.CCY = b.CCY,
+        a.AMT = b.AMT,
+        a.CNY_AMT = b.CNY_AMT,
+        a.CUR_ASSET_TYPE = b.CUR_ASSET_TYPE,
+        a.CUR_ASSETDET_TYPE = b.CUR_ASSETDET_TYPE,
+        a.DEALDATE = b.DEALDATE,
+        a.TRADE_COUNTER = b.TRADE_COUNTER,
+        a.UNIT_PRICE_FULL = b.UNIT_PRICE_FULL,
+        a.UNIT_PRICE_NET = b.UNIT_PRICE_NET,
+        a.END_RATE = b.END_RATE,
+        a.CONTRACT_CODE = b.CONTRACT_CODE,
+        a.REMARK = b.REMARK,
+        a.UPDATE_USER = b.UPDATE_USER,
+        a.UPDATE_TIME = b.UPDATE_TIME,
+        a.DATA_SOURCE = b.DATA_SOURCE,
+        a.NUM = b.NUM,
+        a.ASSET_METHOD = b.ASSET_METHOD,
+        a.RIVAL_PARTY_TYPE = b.RIVAL_PARTY_TYPE,
+        a.INVEST_APPROVER_ID = b.INVEST_APPROVER_ID,
+        a.INVEST_APPROVER_NAME = b.INVEST_APPROVER_NAME,
+        a.INVEST_TRADER_ID = b.INVEST_TRADER_ID,
+        a.INVEST_TRADER_NAME = b.INVEST_TRADER_NAME,
+        a.ERR_MSG = b.ERR_MSG
+        where a.TRADE_CODE = b.TRADE_CODE AND a.PROD_ID = b.PROD_ID AND a.ASSET_CODE = b.ASSET_CODE
+
+    </insert>
+    <delete id="deleteData" >
+        delete from CHB_INVEST_TRADE
+        where date_format(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = CURRENT_DATE
+    </delete>
+    <select id="countDuplicatedData" resultType="java.lang.Integer">
+        select count(*) from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
+        <foreach collection="list" item ="item" open="(" close=")" separator=",">
+            (#{item.PROD_ID},#{item.ASSET_CODE},#{item.TRADE_CODE})
+        </foreach>
+        and status = 'E'
+    </select>
+    <select id="selectByBusinessKey" resultType="java.lang.Integer">
+        select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
+    </select>
+    <select id="selectByKeys" resultMap="BaseResultMap">
+        select * from (
+        select
+        a.TRADE_SEQNO,
+        a.TRADE_CODE,
+        a.PROD_ID,
+        a.REGIST_BANK_CODE,
+        a.ASSET_CODE,
+        a.CCY,
+        a.AMT,
+        a.CNY_AMT,
+        a.CUR_ASSET_TYPE,
+        a.CUR_ASSETDET_TYPE,
+        a.DEALDATE,
+        a.TRADE_COUNTER,
+        a.UNIT_PRICE_FULL,
+        a.UNIT_PRICE_NET,
+        a.END_RATE,
+        a.CONTRACT_CODE,
+        a.REMARK,
+        a.STATUS statusValid,
+        a.DEPT_CODE,
+        a.CREATE_USER,
+        a.CREATE_TIME,
+        a.UPDATE_USER,
+        a.UPDATE_TIME,
+        a.DATA_SOURCE,
+        a.NUM,
+        a.ASSET_METHOD,
+        a.RIVAL_PARTY_TYPE,
+        a.INVEST_APPROVER_ID,
+        a.INVEST_APPROVER_NAME,
+        a.INVEST_TRADER_ID,
+        a.INVEST_TRADER_NAME,
+        a.ERR_MSG errMsg,
+        null as orgData,
+        b.REG_CODE regCode,
+        c.ASSET_NAME assetName
+        FROM CHB_INVEST_TRADE a
+        LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        where a.TRADE_SEQNO in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        union all
+        select
+        a.DATAUUID TRADE_SEQNO,
+        a.TRADE_CODE,
+        a.PROD_ID,
+        null REGIST_BANK_CODE,
+        a.ASSET_CODE,
+        null CCY,
+        null AMT,
+        null CNY_AMT,
+        null CUR_ASSET_TYPE,
+        null CUR_ASSETDET_TYPE,
+        a.DEALDATE,
+        a.TRADE_COUNTER,
+        null UNIT_PRICE_FULL,
+        null UNIT_PRICE_NET,
+        null END_RATE,
+        null CONTRACT_CODE,
+        null REMARK,
+        a.STATUS statusValid,
+        a.DEPT_CODE,
+        a.CREATE_USER,
+        a.CREATE_TIME,
+        a.UPDATE_USER,
+        a.UPDATE_TIME,
+        null DATA_SOURCE,
+        null NUM,
+        null ASSET_METHOD,
+        null RIVAL_PARTY_TYPE,
+        null INVEST_APPROVER_ID,
+        null INVEST_APPROVER_NAME,
+        null INVEST_TRADER_ID,
+        null INVEST_TRADER_NAME,
+        a.ERR_MSG errMsg,
+        a.ORG_DATA  orgData,
+        b.REG_CODE regCode,
+        c.ASSET_NAME assetName
+        from chb_invest_trade_errodata a
+        LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        where a.DATAUUID in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        )a
+        order by a.DEALDATE desc,a.PROD_ID asc
+    </select>
+</mapper>

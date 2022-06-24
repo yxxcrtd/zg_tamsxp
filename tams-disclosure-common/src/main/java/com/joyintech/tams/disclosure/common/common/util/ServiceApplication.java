@@ -35,6 +35,11 @@ public class ServiceApplication {
      */
     public static String VALUATION_SERVICE_NAME = "http://disclosureService";
 
+	/**
+	 * 报表管理
+	 */
+	public static String REPORT_SERVICE_NAME = "http://reportService";
+
 	@Configuration
 	@ConditionalOnProperty(prefix = "application.micorservice.contextPath", name = "disclosureService")
 	@EnableConfigurationProperties(ContextPathConfiguration.class)
@@ -47,9 +52,12 @@ public class ServiceApplication {
 		private void setConfig() {
 			if(!config.isSingle()) {
 				VALUATION_SERVICE_NAME = VALUATION_SERVICE_NAME + config.getDisclosureService();
+				REPORT_SERVICE_NAME = REPORT_SERVICE_NAME + config.getReportService();
+
 			}
 			else {
 				VALUATION_SERVICE_NAME = config.getDisclosureService();
+				REPORT_SERVICE_NAME = config.getReportService();
 
 			}
 		}
@@ -63,6 +71,8 @@ public class ServiceApplication {
         private boolean single;
 
 		private String disclosureService;
+
+		private String reportService;
 
 		public boolean isSingle() {
 			return single;
@@ -80,6 +90,13 @@ public class ServiceApplication {
 			this.disclosureService = disclosureService;
 		}
 
+		public String getReportService() {
+			return reportService;
+		}
+
+		public void setReportService(String reportService) {
+			this.reportService = reportService;
+		}
     }
 
 }

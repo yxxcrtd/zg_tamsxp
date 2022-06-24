@@ -95,7 +95,7 @@ public class EquityInfoExportCommonService extends CommonExportService<EquityInf
     @Autowired
     private EquityInfoRegistExportDealUtil equityInfoRegistExportDealUtil;
 
-    private static final String CHB_EQU_SUB_NAME = "CHB_EQU_SUB";
+    private static final String CHB_EQU_SUB_NAME = "投资者身份信息登记";
 
     /**
      * 日志

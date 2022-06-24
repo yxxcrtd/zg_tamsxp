@@ -3,9 +3,7 @@
 <body>
 <div th:id="|${entityName}_div|" class="pro-module-wrap">
     <div class="pro-module">
-        <h3 class="pro-module-title"><span class="title-des"
-                                           data-th-text="#{SvrBussRepAssetAstBillInfo}">非标资产(票据或信用)报送信息</span>（<span
-                class="star-sign">*</span>必填）<i class="iconfont icon-arrow-down pro-down-icon"></i></h3>
+        <h3 class="pro-module-title"><span class="title-des">中债资产要素信息——票据/ 信用证类资产</span></h3>
         <div class="pro-module-item">
 
             <div class="layui-form-item" >
@@ -52,6 +50,28 @@
 
             <div class="layui-form-item">
 
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetAstBillInfo.isBzhpj}">是否标准化票据</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_isBzhpj|" th:name="|${entityName}.isBzhpj|"
+                                th:initValue="${entity?.isBzhpj}" class="layui-input form-input input-select"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
+                                data-th-data-result="${SVR_YES_OR_NO}">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetAstBillInfo.billCode}">票据代码</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" th:id="|${entityName}_billCode|"
+                               th:name="|${entityName}.billCode|" data-th-value="${entity?.billCode}"
+                               class="layui-input form-input" placeholder="请输入内容"
+                               data-th-placeholder="#{SysCommon.placeholder}">
+                    </div>
+                </div>
+
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetAstBillInfo.notstandSecNum}">数量</label>
@@ -62,6 +82,15 @@
                                class="layui-input form-input text-number"/>
                     </div>
                 </div>
+
+
+
+            </div>
+
+
+
+
+            <div class="layui-form-item">
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
@@ -85,12 +114,7 @@
                     </div>
                 </div>
 
-            </div>
 
-
-
-
-            <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetAstBillInfo.maxRemainTerm}">最长剩余期限（天）</label>
@@ -101,6 +125,13 @@
                                class="layui-input form-input text-number"/>
                     </div>
                 </div>
+
+
+            </div>
+
+
+
+            <div class="layui-form-item">
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
@@ -113,6 +144,31 @@
                     </div>
                 </div>
 
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap">起息日</label>
+                    <div class="layui-input-inline input-inline">
+
+                        <input type="text" disabled="true"
+                               th:id="|${entityName}_vdate|"
+                               class="layui-input form-input input-dateSelect" />
+                    </div>
+                </div>
+
+
+                <div class="form-inline-wrap" >
+                    <label class="layui-form-label form-label-wrap ">到期日</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" disabled="true"
+                               th:id="|${entityName}_mdate|"
+                               class="layui-input form-input input-dateSelect" />
+                    </div>
+                </div>
+
+            </div>
+
+            <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
+            <div class="layui-form-item">
+
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
@@ -124,17 +180,12 @@
                         <span class="input-right-show">%</span>
                     </div>
                 </div>
-            </div>
-
-
-
-            <div class="layui-form-item">
 
 
                 <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-utext="#{SvrBussRepAssetAstBillInfo.industryShares}">行业一级分类</label>
-                    <div class="layui-input-inline input-inline">
+                    <label class="layui-form-label form-label-wrap">行业</label>
+                    <div class="layui-input-inline input-inline buss-inline-wrap"
+                         style="width: 30%!important;display: inline-block;">
                         <select th:id="|${entityName}_industryShares|" th:name="|${entityName}.industryShares|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
                                 th:initValue="${entity?.industryShares}"
@@ -143,12 +194,8 @@
                                 data-th-placeholder="#{SysCommon.placeholder}" required>
                         </select>
                     </div>
-                </div>
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-utext="#{SvrBussRepAssetAstBillInfo.industryShares2}">行业二级分类</label>
-                    <div class="layui-input-inline input-inline">
+                    <div class="layui-input-inline input-inline buss-inline-wrap"
+                         style="width: 30%!important;display: inline-block;">
                         <select th:id="|${entityName}_industryShares2|" th:name="|${entityName}.industryShares2|"
                                 data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
                                 th:initValue="${entity?.industryShares2}"
@@ -158,119 +205,8 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-text="#{SvrBussRepAssetAstBillInfo.privateFlag}">投向地方政府融资平台的部分</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_privateFlag|" th:name="|${entityName}.privateFlag|"
-                                th:initValue="${entity?.privateFlag}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_YES_OR_NO}">
-                        </select>
-                    </div>
-                </div>
             </div>
 
-            <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
-            <div class="layui-form-item">
-
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repPppflag}">公共PPP</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_pppflag|" th:name="|${entityName}.pppflag|"
-                                th:initValue="${entity?.pppflag}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_YES_OR_NO}">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repBondtostockFlag}">是否投向市场化债转股相关产品的部分</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_bondtostockFlag|" th:name="|${entityName}.bondtostockFlag|"
-                                th:initValue="${entity?.bondtostockFlag}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_YES_OR_NO}">
-                        </select>
-                    </div>
-                </div>
-
-            </div>
-            <!-- 中债新增字段 add by tuqirong 2021-12-30 start -->
-            <div class="layui-form-item" th:id="|${entityName}_content_one_div|">
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetAstBillInfo.isBzhpj}">是否标准化票据</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_isBzhpj|" th:name="|${entityName}.isBzhpj|"
-                                th:initValue="${entity?.isBzhpj}" class="layui-input form-input input-select"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
-                                data-th-data-result="${SVR_YES_OR_NO}">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetAstBillInfo.billCode}">票据代码</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_billCode|"
-                               th:name="|${entityName}.billCode|" data-th-value="${entity?.billCode}"
-                               class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}">
-                    </div>
-                </div>
-
-            </div>
-            <!-- 中债新增字段 add by tuqirong 2021-12-30 end -->
-            <div class="layui-form-item">
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType1}" >新人行一级分类</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_pbcAssetType1|" th:name="|${entityName}.pbcAssetType1|" th:initValue="${entity?.pbcAssetType1}"
-                                th:childrenIds="|${entityName}_pbcAssetType2|" required
-                                class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_1}">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType2}" >新人行二级分类</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_pbcAssetType2|" th:name="|${entityName}.pbcAssetType2|" th:initValue="${entity?.pbcAssetType2}"
-                                th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|" required
-                                class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_2}">
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType3}" >新人行三级分类</label>
-                    <div class="layui-input-inline input-inline">
-                        <select th:id="|${entityName}_pbcAssetType3|" th:name="|${entityName}.pbcAssetType3|" th:initValue="${entity?.pbcAssetType3}"
-                                th:parentIds="|${entityName}_pbcAssetType2|" required
-                                class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_3}">
-                        </select>
-                    </div>
-                </div>
-
-            </div>
-            <!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段end -->
-            <div class="layui-form-item">
-                <div class="form-inline-wrap" style="width:100%;">
-                    <label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetAstBillInfo.remark}"
-                           style=" width: 12.55%;">备注</label>
-                    <div class="layui-input-inline input-inline" style="width:81%!important;">
-                        <input th:id="|${entityName}_remark|" th:name="|${entityName}.remark|"
-                               th:value="${entity?.remark}"
-                               data-th-value="${entity?.remark}"
-                               class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}"></input>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

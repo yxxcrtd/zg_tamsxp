@@ -56,4 +56,13 @@ public class ManuallyGeneratingPbcDataController {
     public List<SelectOptionDto> getPbcAccountId(@RequestBody Map<String, Object> param) {
         return manuallyGeneratingpbcDataService.getPbcAccountId(param);
     }
+	/**
+	 * 内部产品代码
+	 *
+	 * @return 内部产品代码下拉框初始值
+	 */
+	@PostMapping("getInsideProdId")
+	public List<SelectOptionDto> getInsideProdId(@RequestBody Map<String, Object> param) {
+		return manuallyGeneratingpbcDataService.getInsideProdId(param);
+	}
 }

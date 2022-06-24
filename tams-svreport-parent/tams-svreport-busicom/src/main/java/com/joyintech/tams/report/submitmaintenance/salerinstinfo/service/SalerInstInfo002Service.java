@@ -6,6 +6,7 @@ import com.joyintech.tams.report.submitmaintenance.salerinstinfo.dto.SalerInstIn
 import com.joyintech.tams.report.submitmaintenance.salerinstinfo.util.InstiInfoErrdataConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,9 @@ public class SalerInstInfo002Service extends BaseService{
             SalerInstInfoDto infoDto = new SalerInstInfoDto();
             List<SalerInstInfoDto> listSalerErrordata = chbSalerInstInfoMapper.selectErroDetail(param);
             if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-                InstiInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
+                SalerInstInfoDto salerInstInfoDto = listSalerErrordata.get(0);
+                InstiInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, salerInstInfoDto);
+                infoDto.setWorkflowId(salerInstInfoDto.getWorkflowId());
                 infoDto.setErroOrInfo("erro");
             }
             return infoDto;
@@ -43,14 +46,8 @@ public class SalerInstInfo002Service extends BaseService{
      * @param
      */
     public void saveAndSubmit(SalerInstInfoDto dto) {
-        //校验是否已存在逻辑删除的数据
-        List<SalerInstInfoDto> SalerInstInfoDImportList =  chbSalerInstInfoMapper.checkSalerInstInfoDImport();
-        Map<String,SalerInstInfoDto> SalerInstInfoDMap = new HashMap<String,SalerInstInfoDto>();
-        for(SalerInstInfoDto info :SalerInstInfoDImportList){
-            SalerInstInfoDMap.put(info.getSalerOrgCode(),info);
-        }
-        //check表中是否存在已逻辑删除的数据
-        if(SalerInstInfoDMap.get(dto.getSalerOrgCode()) != null){
+        //check表中是否存在的数据
+        if(chbSalerInstInfoMapper.getSalerInstInfoCount(dto.getSalerOrgCode())>0){
             //如果存在就先 删除表中删除状态数据再 新增插入
             chbSalerInstInfoMapper.deleteByPrimaryKey(dto.getSalerOrgCode());
         }
@@ -62,6 +59,7 @@ public class SalerInstInfo002Service extends BaseService{
      * 修改保存
      * @param
      */
+    @Transactional(rollbackFor = Exception.class)
     public void update(SalerInstInfoDto dto) {
         //来自info表的直接更新数据
         if(dto.getErroOrInfo().equals("info")){

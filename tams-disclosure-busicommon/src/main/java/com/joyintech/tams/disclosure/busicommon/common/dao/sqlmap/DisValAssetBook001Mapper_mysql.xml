@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.common.dao.DisValAssetBook001Mapper_mysql">
+    <!-- 下拉查询所属账套 -->
+    <select id="getBooksetId" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT BOOKSET_ID code,BOOKSET_NAME name,BOOKSET_NAME shortName,BOOKSET_ID hidCode FROM BOK_BOOKSET a
+        where 1=1 order by bookset_type,BOOKSET_ID
+    </select>
+    <!-- 下拉查询所属账套 模板-->
+    <select id="getBooksetIdByBooksetType" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT BOOKSET_ID code,BOOKSET_NAME name,BOOKSET_NAME shortName,BOOKSET_ID hidCode FROM BOK_BOOKSET a
+        where 1=1
+        <!--会计分录查询，科目查询，只有账套模板存在这些信息  -->
+        and bookset_type='01'
+        order by bookset_type,BOOKSET_ID
+    </select>
+    <!-- 下拉查询所属账套（可选账套类型，模糊查询） -->
+    <select id="getBooksetId2" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT BOOKSET_ID code,BOOKSET_NAME name,BOOKSET_NAME shortName,BOOKSET_ID hidCode FROM BOK_BOOKSET
+        where 1=1
+        <if test="booksetType !=null and booksetType != ''">
+            AND	BOOKSET_TYPE = #{booksetType}
+        </if>
+        <if test="param !=null and param != ''">
+            AND	(BOOKSET_ID like concat_ws('%',concat_ws(#{param},'%'))
+            OR BOOKSET_NAME like concat_ws('%',concat_ws(#{param},'%')))
+        </if>
+        order by bookset_type,BOOKSET_ID
+    </select>
+    <select id="getBookSet02" resultType="com.joyintech.tams.disclosure.busicommon.common.dto.ValAssetbook001Dto">
+        SELECT
+        A.BOOKSET_ID AS booksetId,
+        A.BOOKSET_NAME AS booksetName,
+        A.BOOKSET_TYPE AS booksetType,
+        A.ACCT_SUBJECT_ID AS acctSubjectId,
+        A.STANDARD_CCY AS standardCcy,
+        A.ACCT_SUBJECT_TYPE AS acctSubjectType,
+        A.BOOKSET_ID_TMPL AS booksetIdTmpl,
+        B.ACCT_STANDARD_NAME AS acctStandard,
+        A.START_DATE AS startDate,
+        A.END_DATE AS endDate
+        FROM
+        BOK_BOOKSET A
+        LEFT JOIN
+        bok_ACCT_STANDARD B
+        ON B.ACCT_STANDARD_ID=A.ACCT_STANDARD
+        WHERE
+        BOOKSET_TYPE=#{booksetType}
+        <if test="booksetName!=null and booksetName != ''">
+            AND BOOKSET_Id=(select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetName,jdbcType=VARCHAR})
+        </if>
+    </select>
+    <select id="getBookSetName"
+            resultType="com.joyintech.tams.disclosure.busicommon.common.dto.ValAssetbook001Dto">
+		SELECT DISTINCT BOOKSET_ID,BOOKSET_NAME
+		FROM BOK_BOOKSET
+		order by BOOKSET_ID
+	</select>
+    <!-- 多级法人改造start add by hxy 20200619 -->
+    <select id="selectBankModeOrgName" resultType="java.lang.String">
+       select sysi.institution_name
+		from  chb_org_regist_bank_code corbc
+		inner join sys_institution sysi
+		on corbc.org_code=sysi.institution_code
+		and corbc.status='E'
+		where   rownum=1
+    </select>
+    <select id="selectAssociationModeOrgName" resultType="java.lang.String">
+       select sysi.institution_name
+		from data_auth_notify_inst dani
+		inner join sys_institution sysi
+		on dani.institution_code=sysi.institution_code
+		where dani.business_id=#{booksetOrg,jdbcType=VARCHAR}
+		and dani.data_type='V08'
+		and dani.model_type='02'
+		and rownum=1
+    </select>
+    <select id="selectAssociationModeOrgGrpName" resultType="java.lang.String">
+        select distinct sysi.institution_name
+	    from  sys_batch_prd_grp sbpg
+	    inner join sys_batch_grp_prdlink sbgpl
+	    on sbpg.seq_no=sbgpl.group_seq
+	    inner join data_auth_notify_inst dani
+	    on sbgpl.product_id=dani.business_id
+	    inner join sys_institution sysi
+	     on dani.institution_code=sysi.institution_code
+	     where seq_no=#{booksetOrg,jdbcType=VARCHAR}
+	     and dani.data_type='V08'
+	     and dani.model_type='02'
+	     and rownum=1
+    </select>
+    <!-- 多级法人改造 end  add by hxy 20200619 -->
+</mapper>

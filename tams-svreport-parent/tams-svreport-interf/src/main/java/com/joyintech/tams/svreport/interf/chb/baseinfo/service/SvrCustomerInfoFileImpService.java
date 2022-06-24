@@ -124,25 +124,25 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	}
     
 	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
 		logger.debug("市场机构数据入add表---开始-----:" +  df.format(new Date()));
-		boolean stepadd = excuteCustomerInfoAddByStep(saveFlag,listData, null, null, null, null, null);
+		boolean stepadd = excuteCustomerInfoAddByStep(saveFlag,listData, null, null, null, null, null, dataSource);
 		logger.debug("市场机构数据入add表---结束-----:" +  df.format(new Date()));
 		logger.debug("市场机构数据入info表---开始-----:" +  df.format(new Date()));
-		boolean stepinfo = excuteCustomerInfoByStep(saveFlag,listData, null, null, null, null, null);
+		boolean stepinfo = excuteCustomerInfoByStep(saveFlag,listData, null, null, null, null, null, dataSource);
 		logger.debug("市场机构数据入info表---结束-----:" +  df.format(new Date()));
 		boolean success = (stepadd&&stepinfo);
 		return success ? "success":"fail";
 	}
 
 	private boolean excuteCustomerInfoAddByStep(String saveFlag,List<Map<String, String>> list, String type, String[] result,
-			String tmpPath, ImpTable table, ImpTable subTable) {
+			String tmpPath, ImpTable table, ImpTable subTable, String dataSource) {
 		// 定义新增数据list-验证通过数据
 		List<MstCustomerInfoAddWithBLOBs> listNE = new ArrayList<MstCustomerInfoAddWithBLOBs >();
 		logger.debug("市场机构数据add表转dto---开始-----:" +  df.format(new Date()));
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		listNE = dataConversionEntity(list);
-		listNE = (List<MstCustomerInfoAddWithBLOBs>) convertMapToEntity(list,MstCustomerInfoAddWithBLOBs.class);
+		listNE = (List<MstCustomerInfoAddWithBLOBs>) convertMapToEntity(list,MstCustomerInfoAddWithBLOBs.class, dataSource);
         // modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("市场机构数据add表转dto---结束-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
@@ -196,12 +196,12 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
 	}
 
 	private boolean excuteCustomerInfoByStep(String saveFlag,List<Map<String, String>> list, String type, String[] result,
-			String tmpPath, ImpTable table, ImpTable subTable) {
+			String tmpPath, ImpTable table, ImpTable subTable, String dataSource) {
 		// 定义新增数据list
 		List<MstCustomerInfo> listInfoE = new ArrayList<MstCustomerInfo>();
 		logger.debug("市场机构数据info表转dto---开始-----:" +  df.format(new Date()));
 //		listInfoE = dataConversionEntityInfo(list);
-        listInfoE = (List<MstCustomerInfo>) convertMapToEntity(list,MstCustomerInfo.class);
+        listInfoE = (List<MstCustomerInfo>) convertMapToEntity(list,MstCustomerInfo.class, dataSource);
         for(MstCustomerInfo mstCustomerInfo:listInfoE){
             // 法人
             mstCustomerInfo.setCustomerType("01");
@@ -225,7 +225,7 @@ public class SvrCustomerInfoFileImpService extends FileImpService {
             int count = 0;
             logger.debug("市场机构info表插入开始--------------" + new Date());
             SvrMstCustomerInfoImpMapper batchMapper = session.getMapper(SvrMstCustomerInfoImpMapper.class);
-            int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
+            int batchCount = reportInsertLongCount==0?500:reportInsertLongCount;//每批commit的个数
             int batchLastIndex = batchCount;//每批最后一个的下标
             for(int index = 0; index < listInfoE.size();){
                 if(batchLastIndex > listInfoE.size()-1){

@@ -2,45 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.system.regtimepoints.dao.RegTimePointsDtoMapper_mysql">
     <select id="searchPage" resultType="com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto">
-        SELECT
-        rtp.SEQNO seqno,
-        rtp.ORG_CODE orgCode,
-        rtp.REPORT_CODE reportCode,
-        rtp.TYPE_DETAIL typeDetail,
-        rtp.SUBMIT_TIMETYPE submitTimetype,
-        rtp.SUBMIT_REQUIRE3 submitRequire3,
-        rtp.SUBMIT_REQUIRE2 submitRequire2,
-        rtp.SUBMIT_REQUIRE submitRequire,
-        rtp.SUBMIT_POINT_BOND submitPointBond,
-        rtp.SUBMIT_POINT_BANK submitPointBank,
-        rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
-        rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
-        rtp.STATUS status,
-        rtp.WORKFLOW_ID workflowId,
-        rtp.UPDATE_USER updateUser,
-        rtp.UPDATE_TIME updateTime,
-        rtp.CREATE_USER createUser,
-        rtp.CREATE_TIME createTime
-        FROM
-        CHB_REG_TIME_POINTS rtp
-        WHERE
-        STATUS = 'E'
-        <if test="reportCodeList != null and reportCodeList.size() > 0">
-            <foreach collection="reportCodeList" item="reportCode" open=" AND REPORT_CODE IN (" close=")" separator=",">
-                #{reportCode}
-            </foreach>
-        </if>
-        <!-- AND ORG_CODE = #{orgCode} -->
-        <!-- <if test="reportCode != null and reportCode != ''" >
-            AND REPORT_CODE LIKE '%'||#{reportCode}||'%'
-        </if> -->
-        <if test="typeDetail != null and typeDetail != ''" >
-            AND TYPE_DETAIL LIKE concat_ws('','%',#{typeDetail},'%')
-        </if>
-        order by rtp.REPORT_CODE desc
+       SELECT
+            rtp.SEQNO seqno,
+            rtp.ORG_CODE orgCode,
+            rtp.REPORT_CODE reportCode,
+            rtp.TYPE_DETAIL typeDetail,
+            rtp.SUBMIT_TIMETYPE submitTimetype,
+            rtp.SUBMIT_REQUIRE3 submitRequire3,
+            rtp.SUBMIT_REQUIRE2 submitRequire2,
+            rtp.SUBMIT_REQUIRE submitRequire,
+            rtp.SUBMIT_POINT_BOND submitPointBond,
+            rtp.SUBMIT_POINT_BANK submitPointBank,
+            rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
+            rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
+            rtp.STATUS status,
+            rtp.WORKFLOW_ID workflowId,
+            rtp.UPDATE_USER updateUser,
+            rtp.UPDATE_TIME updateTime,
+            rtp.CREATE_USER createUser,
+            rtp.CREATE_TIME createTime
+       FROM
+    		CHB_REG_TIME_POINTS rtp
+       WHERE
+    		STATUS = 'E'
+    		<if test="reportCodeList != null and reportCodeList.size() > 0">
+		 	<foreach collection="reportCodeList" item="reportCode" open=" AND REPORT_CODE IN (" close=")" separator=",">
+		 	 #{reportCode}
+		 	</foreach>
+		 	</if>
+    		<!-- AND ORG_CODE = #{orgCode} -->
+    		<!-- <if test="reportCode != null and reportCode != ''" >
+    			AND REPORT_CODE LIKE '%'||#{reportCode}||'%'
+    		</if> -->
+    		<if test="typeDetail != null and typeDetail != ''" >
+    			AND TYPE_DETAIL LIKE concat_ws('','%',#{typeDetail},'%')
+    		</if>
+    		order by rtp.REPORT_CODE desc
     </select>
     <!-- <select id="searchReportCode" resultType="com.joyintech.framework.select.SelectOptionDto">
-		select
+		select 
 			ITEM_CODE id,
 			ITEM_VALUE text
 		from CHB_SYS_DATADICT_LIST
@@ -88,32 +88,32 @@
         rtp.STATUS = 'E'
     </update>
     <select id="findRegTimePointsCount" resultType="java.lang.Integer">
-        select
+        select 
         ifnull(count(1),0)
         from
         (
-        SELECT
-        rtp.REPORT_CODE reportCode,
-        rtp.TYPE_DETAIL typeDetail,
-        rtp.SUBMIT_REQUIRE submitRequire,
-        rtp.SUBMIT_POINT_BOND submitPointBond,
-        rtp.SUBMIT_POINT_BANK submitPointBank,
-        rtp.STATUS status,
-        rtp.WORKFLOW_ID workflowId,
-        rtp.UPDATE_USER updateUser,
-        rtp.UPDATE_TIME updateTime
-        FROM
-        CHB_REG_TIME_POINTS rtp
-        WHERE
-        STATUS = 'E'
-        AND ORG_CODE = #{orgCode}
-        <if test="reportCode != null and reportCode != ''" >
-            AND REPORT_CODE LIKE concat_ws('',concat_ws('','%',#{reportCode}),'%')
-        </if>
+         SELECT
+            rtp.REPORT_CODE reportCode,
+            rtp.TYPE_DETAIL typeDetail,
+            rtp.SUBMIT_REQUIRE submitRequire,
+            rtp.SUBMIT_POINT_BOND submitPointBond,
+            rtp.SUBMIT_POINT_BANK submitPointBank,
+            rtp.STATUS status,
+            rtp.WORKFLOW_ID workflowId,
+            rtp.UPDATE_USER updateUser,
+            rtp.UPDATE_TIME updateTime
+       FROM
+    		CHB_REG_TIME_POINTS rtp
+    	WHERE
+    		STATUS = 'E'
+    		AND ORG_CODE = #{orgCode}
+    		<if test="reportCode != null and reportCode != ''" >
+    			AND REPORT_CODE LIKE concat_ws('',concat_ws('','%',#{reportCode}),'%')
+    		</if>
         )
     </select>
     <select id="findCount" parameterType="java.lang.String"
-            resultType="java.lang.Integer">
+		resultType="java.lang.Integer">
 		select
 		count(*)
 		from CHB_REG_TIME_POINTS A
@@ -122,42 +122,42 @@
 		and A.REPORT_CODE = #{reportCode,jdbcType=VARCHAR}
 			and A.TYPE_DETAIL = #{typeDetail,jdbcType=VARCHAR}
 	</select>
-    <select id="selectPoint" resultType="com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto">
+	    <select id="selectPoint" resultType="com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto">
 		select
 		rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
 		rtp.DELETE_SUBMING_POINT deleteSubmingPoint
-		from
+		from 
 		CHB_REG_TIME_POINTS rtp
 		where
 		rtp.STATUS = 'E'
 	</select>
-    <select id="findByReportCode" parameterType="java.lang.String"
-            resultType="com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto">
-        select
-        rtp.SEQNO seqno,
-        rtp.ORG_CODE orgCode,
-        rtp.REPORT_CODE reportCode,
-        rtp.TYPE_DETAIL typeDetail,
-        rtp.SUBMIT_TIMETYPE submitTimetype,
-        rtp.SUBMIT_REQUIRE3 submitRequire3,
-        rtp.SUBMIT_REQUIRE2 submitRequire2,
-        rtp.SUBMIT_REQUIRE submitRequire,
-        rtp.SUBMIT_POINT_BOND submitPointBond,
-        rtp.SUBMIT_POINT_BANK submitPointBank,
-        rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
-        rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
-        rtp.STATUS status,
-        rtp.WORKFLOW_ID workflowId,
-        rtp.UPDATE_USER updateUser,
-        rtp.UPDATE_TIME updateTime,
-        rtp.CREATE_USER createUser,
-        rtp.CREATE_TIME createTime
-        from CHB_REG_TIME_POINTS rtp
-        where
-        rtp.STATUS = 'E'
-        and rtp.REPORT_CODE = #{reportCode,jdbcType=VARCHAR}
-        <if test="typeDetail != null and typeDetail != ''" >
-            and rtp.TYPE_DETAIL #{typeDetail,jdbcType=VARCHAR}
-        </if>
-    </select>
+	<select id="findByReportCode" parameterType="java.lang.String"
+		resultType="com.joyintech.tams.report.system.regtimepoints.dto.RegTimePoints001Dto">
+		select
+		 	rtp.SEQNO seqno,
+            rtp.ORG_CODE orgCode,
+            rtp.REPORT_CODE reportCode,
+            rtp.TYPE_DETAIL typeDetail,
+            rtp.SUBMIT_TIMETYPE submitTimetype,
+            rtp.SUBMIT_REQUIRE3 submitRequire3,
+            rtp.SUBMIT_REQUIRE2 submitRequire2,
+            rtp.SUBMIT_REQUIRE submitRequire,
+            rtp.SUBMIT_POINT_BOND submitPointBond,
+            rtp.SUBMIT_POINT_BANK submitPointBank,
+            rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
+            rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
+            rtp.STATUS status,
+            rtp.WORKFLOW_ID workflowId,
+            rtp.UPDATE_USER updateUser,
+            rtp.UPDATE_TIME updateTime,
+            rtp.CREATE_USER createUser,
+            rtp.CREATE_TIME createTime
+		from CHB_REG_TIME_POINTS rtp
+		where
+		rtp.STATUS = 'E'
+		and rtp.REPORT_CODE = #{reportCode,jdbcType=VARCHAR}
+		 <if test="typeDetail != null and typeDetail != ''" >
+    			and rtp.TYPE_DETAIL #{typeDetail,jdbcType=VARCHAR}
+    	</if>
+	</select>
 </mapper>

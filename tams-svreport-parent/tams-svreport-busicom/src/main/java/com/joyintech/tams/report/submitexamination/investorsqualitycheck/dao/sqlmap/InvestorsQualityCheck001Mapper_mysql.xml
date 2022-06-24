@@ -343,7 +343,6 @@
 	</select>
 
 	<sql id="slppComm">
-		select   PROD_REGIST_CODE,
 		WITH
 		OBJREC AS
 		(

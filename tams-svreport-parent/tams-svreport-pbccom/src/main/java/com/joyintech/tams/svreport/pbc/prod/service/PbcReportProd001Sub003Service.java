@@ -134,11 +134,11 @@ public class PbcReportProd001Sub003Service extends PbcReportProdTotalService  {
 		 //产品去重 算只数时
 		 Map<String,String> prodMap=new HashMap<String,String>();
 		 for(PbcMonthPrdPostionDto pos :posList){
-		     if(prodMap.containsKey(pos.getProdid())) {
-		         continue;
-		     }else {
-		         prodMap.put(pos.getProdid(), pos.getProdid());  
-		     }
+			 if(prodMap.containsKey(pos.getProdid()+"_"+pos.getCcy())) {
+				 continue;
+			 }else {
+				 prodMap.put(pos.getProdid()+"_"+pos.getCcy(), pos.getProdid()+"_"+pos.getCcy());
+			 }
 		     
 		  // add by leipeng 20200319 获取所有部门对应信息,并列出单独的表结构
 			 if(null!=pos.getInstitutionCode()&&null==deptMap.get(pos.getInstitutionCode())){

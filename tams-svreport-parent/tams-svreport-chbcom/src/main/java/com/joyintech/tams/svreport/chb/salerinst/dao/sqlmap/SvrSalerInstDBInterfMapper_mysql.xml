@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.salerinst.dao.SvrSalerInstDBInterfMapper_mysql" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbSalerInstInfo">
+		SELECT
+		SALER_INST_CODE,
+		SALER_INST_NAME,
+		SALER_ORG_CODE,
+		SALER_ORG_NAME,
+		SALER_ORG_LEVEL,
+		DATA_DATE,
+		STATUS,
+		CREATE_DEPT,
+		ORG_CODE,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME
+	    FROM CHB_SALER_INST_INFO
+		WHERE DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+	
+	 <select id="selectRegSalerInstData" resultType="com.joyintech.tams.common.base.entity.ChbSalerInstSub">
+		SELECT
+		 REGIST_SEQNO,
+		 SALER_INST_CODE,
+		 SALER_INST_NAME,
+		 SALER_ORG_CODE,
+		 SALER_ORG_NAME,
+		 SALER_ORG_LEVEL,
+		 STATUS,
+		 SUMIT_SEQ,
+		 CHB_SUBMIT_DEADLINE,
+		 SUBMIT_DEADLINE,
+		 SEND_STATUS,
+		 SUBMIT_TIME,
+		 SUBMIT_FEEDBACK_STATUS,
+		 SUBMIT_FEEDBACK_MSG,
+		 DATA_DATE,
+		 CREATE_DEPT,
+		 ORG_CODE,
+		 CREATE_USER,
+		 CREATE_TIME,
+		 UPDATE_USER,
+		 UPDATE_TIME
+		FROM CHB_SALER_INST_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+	
+	<delete id="deleteBatchData" parameterType="map">
+		DELETE FROM CHB_SALER_INST_SUB
+		<where>
+  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+				SALER_INST_CODE = #{item.salerInstCode,jdbcType=VARCHAR}
+  				AND SEND_STATUS = '01'
+    		</foreach>
+  		</where>
+	</delete>
+
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbSalerInstSub">
+		insert into CHB_SALER_INST_SUB(
+		REGIST_SEQNO,SALER_INST_CODE,
+		SALER_INST_NAME,SALER_ORG_CODE,SALER_ORG_NAME,SALER_ORG_LEVEL,
+		STATUS,SUMIT_SEQ, CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE, SEND_STATUS,DATA_DATE,CREATE_DEPT,ORG_CODE,
+		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+		values(
+		#{registSeqno,jdbcType=VARCHAR},#{salerInstCode,jdbcType=VARCHAR},#{salerInstName,jdbcType=VARCHAR},
+		#{salerOrgCode,jdbcType=VARCHAR},#{salerOrgName,jdbcType=VARCHAR},#{salerOrgLevel,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
+		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
+	</insert>
+
+</mapper>

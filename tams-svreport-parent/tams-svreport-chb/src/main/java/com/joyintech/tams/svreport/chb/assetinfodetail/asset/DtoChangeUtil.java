@@ -35,8 +35,6 @@ public class DtoChangeUtil {
      * @param flag  true为使用target对转出实体进行处理  flase为处理转入实体类
      */
     public static void SetChbToRep(Object dto , Object obj,String target,Boolean flag) {
-        Class chbclazz = dto.getClass();
-
         Map<String,String> chbNameMap = new HashMap<>();
         //获取当前类及其父类的所有字段
         for(Field field :getAllFields(dto)){

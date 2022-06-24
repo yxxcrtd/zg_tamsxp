@@ -1,6 +1,9 @@
 package com.joyintech.tams.report.submitmaintenance.salerideninfo.service;
 
+import com.google.common.collect.Lists;
+import com.ibm.db2.jcc.t4.e;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
@@ -8,7 +11,9 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.svreport.base.dto.BaseCheckOracleDto;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
@@ -17,12 +22,16 @@ import com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenIn
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.record.DVALRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service("SalerIdenInfo001Service")
@@ -56,7 +65,9 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @throws Exception
      */
     public List<SalerIdenInfoDto> queryAllList(Map<String, Object> params) throws Exception{
-        return chbSalerIdenInfoMapper.selectForPage(params);
+        List<SalerIdenInfoDto> dataList = chbSalerIdenInfoMapper.selectForPage(params);
+        this.formatByType(dataList);
+        return dataList;
     }
 
     /**
@@ -101,16 +112,21 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @see
      * @since 1.0
      */
-    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList,String fileName) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if (!fileName.contains("销售人员身份信息")) {
+            errorList.add( new ValidMessage("导入模板不一致, 请重新选择文件!"));
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(7), dataList.get(j).get(7))){
                     ValidMessage validMessage = new ValidMessage("第"+(i+2)+"内部编号与"+"第"+(j+2)+"内部编号不能重复");
                     errorList.add(validMessage);
                 }
-                if(!(dataList.get(i).get(5).isEmpty()) && !(dataList.get(j).get(5).isEmpty())) {
+                if(dataList.get(i).get(5)!=null&&dataList.get(j).get(5)!=null&&!(dataList.get(i).get(5).isEmpty()) && !(dataList.get(j).get(5).isEmpty())) {
                     if (this.subDictcode(dataList.get(i).get(4), " ").equals("99") && this.subDictcode(dataList.get(j).get(4), " ").equals("99")) {
                         if (StringUtils.equals(dataList.get(i).get(4), dataList.get(j).get(4))) {
                             if (StringUtils.equals(dataList.get(i).get(5), dataList.get(j).get(5))) {
@@ -147,6 +163,7 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * </p>
      * @return 导入结果
      */
+    @Transactional(rollbackFor = Exception.class)
     public List<ExcelValidDto> importData(List<List<String>> dataList, List<List<String>> tempList, String userName, String orgCode, String deptCode) {
         if (!StringUtil.isEmptyList(dataList)) {
             List<String> headList = new ArrayList<String>();
@@ -188,17 +205,18 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 if (checkResult.isEmpty()) {
                     entities = convertToEntity(dataList, orgCode);
                     //校验是否已存在逻辑删除的数据
-                    List<SalerIdenInfoDto> SalerIdenInfoDImportList =  chbSalerIdenInfoMapper.checkSalerIdentInfoDImport();
-                    Map<String,SalerIdenInfoDto> SalerIdenInfoDImportMap = new HashMap<String,SalerIdenInfoDto>();
-                    for(SalerIdenInfoDto info :SalerIdenInfoDImportList){
-                        SalerIdenInfoDImportMap.put(info.getSalerInsNo(),info);
+                   // List<SalerIdenInfoDto> SalerIdenInfoDImportList =  chbSalerIdenInfoMapper.checkSalerIdentInfoDImport();
+                    //Map<String,SalerIdenInfoDto> salerIdenInfoDImportMap = SalerIdenInfoDImportList.stream().collect(Collectors.toMap(SalerIdenInfoDto::getSalerInsNo, Function.identity()));;
+                    //得到主键集合
+                    List<String> list = entities.stream().map(SalerIdenInfoDto::getSalerInsNo).collect(Collectors.toList());
+                    //分页
+                    List<List<String>> partition = Lists.partition(list, 500);
+                   //批量删除
+                    for (List<String> ids:partition) {
+                        chbSalerIdenInfoMapper.deleteBatchByPrimaryKey(ids);
                     }
+                    //落库
                     for(SalerIdenInfoDto dto : entities){
-                        //check表中是否存在已逻辑删除的数据
-                        if(SalerIdenInfoDImportMap.get(dto.getSalerInsNo()) != null){
-                            //如果存在就先 删除表中删除状态数据再 新增插入
-                            chbSalerIdenInfoMapper.deleteByPrimaryKey(dto.getSalerInsNo());
-                        }
                         chbSalerIdenInfoMapper.insert(dto);
                     }
                 }
@@ -325,22 +343,6 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 if(getWordCount(list.get(6)) > 30){
                     flag = false;
                     message.add("证件号码不能超过30字节");
-                }else {
-                    if (this.subDictcode(list.get(4), " ").equals("99")) {
-                        if (list.get(5) != null || !(list.get(5).trim().equals(""))) {
-                            String salerOtherCredentNameFlag = this.subDictcode(list.get(5), " ") + " " + list.get(6);
-                            if (salerOtherCredentNameMap.get(salerOtherCredentNameFlag) != null) {
-                                flag = false;
-                                message.add("其他证件名称相同时，证件号码不能相同");
-                            }
-                        }
-                    } else {
-                        String salerCredentTypeFlag = this.subDictcode(list.get(4), " ") + " " + list.get(6);
-                        if (salerCredentTypeMap.get(salerCredentTypeFlag) != null) {
-                            flag = false;
-                            message.add("证件类别相同时，证件号码不能相同");
-                        }
-                    }
                 }
             }
             //内部编号
@@ -351,11 +353,6 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 if(getWordCount(list.get(7)) > 60){
                     flag = false;
                     message.add("内部编号不能超过60字节");
-                }else {
-                    if (salerInsNoMap.get(list.get(7)) != null) {
-                        flag = false;
-                        message.add("内部编号已存在，不能重复");
-                    }
                 }
             }
             //所属区域
@@ -439,9 +436,21 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 flag = false;
                 message.add("理财专业证书不能为空");
             }else{
-                if(checkSalerCertificateType(this.subDictcodeMultiple(list.get(18), ","))){
+                if(!checkSalerType(list.get(18),DictCode.销售人员理财专业证书)){
                     flag = false;
                     message.add("理财专业证书输入格式错误，请严格按照规则输入！");
+                }else {
+                    //判断是否有重复数据
+                    String value = this.subDictcodeMultiple(list.get(18), ",");
+                    if (StringUtils.isNotBlank(value)) {
+                        List<String> split= Arrays.asList(value.split(","));
+                        long count = split.stream().distinct().count();
+                        if (split.size()>count) {
+                            flag = false;
+                            message.add("理财专业证书输入重复，请重新输入！");
+                        }
+                    }
+
                 }
             }
             //理财登记培训证书编号（LC+12位数字）
@@ -457,9 +466,21 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
                 flag = false;
                 message.add("可销售产品风险等级不能为空");
             }else{
-                if(checksalerRiskLevel(this.subDictcodeMultiple(list.get(20), ","))){
+                if(!checkSalerType(list.get(20),DictCode.可销售产品风险等级)){
                     flag = false;
                     message.add("可销售产品风险等级输入格式错误，请严格按照规则输入！");
+                }else {
+                    //判断是否有重复数据
+                    String value = this.subDictcodeMultiple(list.get(20), ",");
+                    if (StringUtils.isNotBlank(value)) {
+                        List<String> split= Arrays.asList(value.split(","));
+                        long count = split.stream().distinct().count();
+                        if (split.size()>count) {
+                            flag = false;
+                            message.add("可销售产品风险等级输入重复，请重新输入！");
+                        }
+                    }
+
                 }
             }
             //销售资质
@@ -672,32 +693,21 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
         return value;
     }
 
-    public static String subDictcodeMultiple(String value, String sign) {
-        if (!isEmpty(value)) {
-            //value含有sign的个数
-            int i = ciShu(value,sign);
-            if(i == 0){
-                return subDictcode(value, " ");
+    public  String subDictcodeMultiple(String value, String sign) {
+        StringBuffer sb= new StringBuffer();
+        if (StringUtils.isNotBlank(value)) {
+            //分割成数组
+            String[] str = value.split(sign);
+            for (int i = 0; i <str.length; i++) {
+                //按空格截取
+                String s = subDictcode(str[i], " ");
+                sb.append(s).append(",");
+
             }
-            else {
-                String Str = value;
-                String Str1 = "null";
-                int k = Str.indexOf(sign);
-                for (int j = 0; j <= i; j++) {
-                    if (Str1.equals("null")) {
-                        Str1 = subDictcode(value, " ");
-                    } else {
-                        int index = Str.indexOf(",", k + j -1);
-                        if (index > -1) {
-                            value = Str.substring(index+1, index+3);
-                        }
-                        Str1 = Str1 + "," + value;
-                    }
-                }
-                return Str1;
-            }
+            //去掉最后一个字符
+            sb.deleteCharAt(sb.length() - 1);
         }
-        return value;
+        return sb.toString();
     }
 
     public static boolean isEmpty(String value) {
@@ -720,44 +730,29 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
     }
 
     //校验可销售产品风险等级多选导入
-    public static boolean checksalerRiskLevel(String value){
-        boolean status = true;
-        if (!isEmpty(value)) {
-            if(value.equals("01,02,03,04,05") || value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,04,05") || value.equals("01,03,04,05") ||
-                    value.equals("01,02,03") || value.equals("01,02,04") || value.equals("01,02,05") || value.equals("01,03,04") || value.equals("01,03,05") || value.equals("01,04,05") ||
-                    value.equals("01,02") || value.equals("01,03") || value.equals("01,04") || value.equals("01,05") || value.equals("01") ||
-                    value.equals("02,03,04,05") || value.equals("02,03,04") || value.equals("02,03,05") || value.equals("02,04,05") ||
-                    value.equals("02,03") || value.equals("02,04") || value.equals("02,05") || value.equals("02") ||
-                    value.equals("03,04,05") || value.equals("03,04") || value.equals("03,05") || value.equals("03") || value.equals("04,05") || value.equals("04") || value.equals("05")){
-                status = false;
-            }
-        }
-        return status;
-    }
-
     //校验理财专业证书多选导入
-    public static boolean checkSalerCertificateType(String value){
+    public static boolean checkSalerType(String value,DictCode dictCode){
         boolean status = true;
         if (!isEmpty(value)) {
-            if(value.equals("01,02,03,04,05,06,07,99") || value.equals("01,02,03,04,05,06,07") || value.equals("01,02,03,04,05,06,99") || value.equals("01,02,03,04,05,06") || value.equals("01,02,03,04,05,07") ||
-                    value.equals("01,02,03,04,05,99") || value.equals("01,02,03,04,05") || value.equals("01,02,03,04,06") || value.equals("01,02,03,04,07") || value.equals("01,02,03,04,99") ||
-                    value.equals("01,02,03,04") || value.equals("01,02,03,05") || value.equals("01,02,03,06") || value.equals("01,02,03,07") || value.equals("01,02,03,99") ||
-                    value.equals("01,02,03") || value.equals("01,02,04") || value.equals("01,02,05") || value.equals("01,02,06") || value.equals("01,02,07") || value.equals("01,02,99") ||
-                    value.equals("01,02") || value.equals("01,03") || value.equals("01,04") || value.equals("01,05") || value.equals("01,06") || value.equals("01,07") || value.equals("01,99") || value.equals("01") ||
-                    value.equals("02,03,04,05,06,07,99") || value.equals("02,03,04,05,06,07") || value.equals("02,03,04,05,06,99") || value.equals("02,03,04,05,06") || value.equals("02,03,04,05,07") ||
-                    value.equals("02,03,04,05,99") || value.equals("02,03,04,05") || value.equals("02,03,04,06") || value.equals("02,03,04,07") || value.equals("02,03,04,99") ||
-                    value.equals("02,03,04") || value.equals("02,03,05") || value.equals("02,03,06") || value.equals("02,03,07") || value.equals("02,03,99") ||
-                    value.equals("02,03") || value.equals("02,04") || value.equals("02,05") || value.equals("02,06") || value.equals("02,07") ||
-                    value.equals("02,99") || value.equals("02") || value.equals("03,04,05,06,07,99") || value.equals("03,04,05,06,07") || value.equals("03,04,05,06,99") ||
-                    value.equals("03,04,05,06") || value.equals("03,04,05,07") || value.equals("03,04,05,99") || value.equals("03,04,05") || value.equals("03,04,06") ||
-                    value.equals("03,04,07") || value.equals("03,04,99") || value.equals("03,04") || value.equals("03,05") || value.equals("03,06") ||
-                    value.equals("03,07") || value.equals("03,99") || value.equals("03") || value.equals("04,05,06,07,99") || value.equals("04,05,06,07") ||
-                    value.equals("04,05,06,99") || value.equals("04,05,06") || value.equals("04,05,07") || value.equals("04,05,99") || value.equals("04,05") ||
-                    value.equals("04,06") || value.equals("04,07") || value.equals("04,99") || value.equals("04") || value.equals("05,06,07,99") ||
-                    value.equals("05,06,07") || value.equals("05,06,99") || value.equals("05,06") || value.equals("05,07") || value.equals("05,99") ||
-                    value.equals("05") || value.equals("06,07,99") || value.equals("06,07") || value.equals("06,99") || value.equals("06") ||
-                    value.equals("07,99") || value.equals("07") || value.equals("99")){
-                status = false;
+            //逗号分割
+            String[] riskLevels = value.split(",");
+            for (int i=0;i<riskLevels.length;i++) {
+                String[] riskLevel = riskLevels[i].split(" ");
+                if (riskLevel.length<2) {
+                    status = false;
+                    break;
+                }
+                String riskLevel1 = riskLevel[0];
+                String riskLevel2 = riskLevel[1];
+                //得到枚举值
+                DictCodeListExt2 dict = DictCodeListExt2.from(dictCode, riskLevel1);
+                //判断内容是否相等
+                //\s 可以匹配空格、制表符、换页符等空白字符的其中任意一个
+                if (!Objects.equals(dict.getCodeName().replaceAll("\\s*", ""),
+                        riskLevel2.replaceAll("\\s*", ""))){
+                    status = false;
+                    break;
+                }
             }
         }
         return status;
@@ -842,9 +837,15 @@ public class SalerIdenInfo001Service extends CommonExportService<SalerIdenInfoDt
      * @see
      * @since 1.0
      */
-    public AjaxResult checkConfirmMsgForImportCodeData(List<List<String>> dataList) {
+    public AjaxResult checkConfirmMsgForImportCodeData(List<List<String>> dataList,String fileName) {
         AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<>();
+        if (!fileName.contains("销售人员编码信息")) {
+            errorList.add( new ValidMessage("导入模板不一致, 请重新选择文件!"));
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
+
         for (int i = 0; i < dataList.size(); i++ ) {
             for (int j = i+1; j < dataList.size(); j++ ) {
                 if(StringUtils.equals(dataList.get(i).get(0), dataList.get(j).get(0))){

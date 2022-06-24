@@ -4,8 +4,8 @@
 	<!-- 查询传入日期当天是否有上游系统接入的数据-->
 	<select id="queryInvestorInfoCount" resultType="java.lang.Integer">
 		select count(1) from CHB_INVESTHOLD_INFO info where
-		date_format(info.hold_date,'%y-%m-%d')=#{generateDate,jdbcType=VARCHAR}
-		and data_source not in ('01','02')
+		info.hold_date = #{generateDate,jdbcType=VARCHAR}
+		<!--		and data_source not in ('01','02')-->
 	</select>
 	<!-- 查询传入日期当天是否有上游系统接入的数据-->
 	<select id="queryGenerateList" resultType="com.joyintech.tams.common.base.entity.ChbInvestholdInfo">
@@ -26,87 +26,36 @@
     		CREATE_DEPT      createDept,
     		DATA_SOURCE      dataSource
 		FROM CHB_INVESTHOLD_INFO info
-		WHERE info.HOLD_DATE =(
-        	SELECT
-            	MAX(info2.hold_date)
-        	FROM
-            	CHB_INVESTHOLD_INFO info2
-        	WHERE
-            	info2.REGIST_BANK_CODE = info.REGIST_BANK_CODE
-        	AND info2.CCY = info.CCY
-        	AND info2.PRD_REGIST_CODE = info.PRD_REGIST_CODE
-        	AND info2.INDENTIFY_MARK = info.INDENTIFY_MARK
-        	AND date_format(info2.HOLD_DATE,'%y-%m-%d') <![CDATA[<]]> #{generateDate,jdbcType=VARCHAR})
+		WHERE info.HOLD_DATE = #{generateDate,jdbcType=VARCHAR}
 		AND info.STATUS = 'E'
 		AND info.PRODID IN (
         	SELECT
-            	code.PRODID
+            	code.PROD_ID
         	FROM
-            	CHB_PRDRESIST_CODE code
+				chb_prd_baseinfo code
         	WHERE
-            	date_format(code.MDATE,'%y-%m-%d') > #{generateDate,jdbcType=VARCHAR}
-        	AND date_format(code.VDATE,'%y-%m-%d') <![CDATA[<=]]> #{generateDate,jdbcType=VARCHAR})
-		AND NOT EXISTS (
-        	SELECT
-            	info3.PRD_REGIST_CODE
-        	FROM
-            	CHB_INVESTHOLD_INFO info3
-        	WHERE
-            	info3.REGIST_BANK_CODE = info.REGIST_BANK_CODE
-        	AND info3.CCY = info.CCY
-        	AND info3.PRD_REGIST_CODE = info.PRD_REGIST_CODE
-        	AND info3.INDENTIFY_MARK = info.INDENTIFY_MARK
-        	AND date_format(info3.HOLD_DATE,'%y-%m-%d') = #{generateDate,jdbcType=VARCHAR})
+            	code.MDATE > #{generateDate,jdbcType=VARCHAR}
+        	AND code.VDATE <![CDATA[<=]]> #{generateDate,jdbcType=VARCHAR})
 	</select>
 
-	<insert id="insertInvestorsHoldBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfo">
-		insert into CHB_INVESTHOLD_INFO (REGIST_BANK_CODE, INDENTIFY_MARK, PRODID,
-		HOLD_DATE, CCY, STATUS,
-		PRD_REGIST_CODE, AMOUNT, QTY,
-		CNY_AMT, REMARK, DATA_SOURCE,
-		WORKFLOW_ID, ORG_CODE, DEPT_CODE,
-		UPDATE_USER, UPDATE_TIME, CREATE_USER,
-		CREATE_TIME, AGENT, CREATE_DEPT
-		)
-
-		values
-		<foreach collection="investHoldList" item="dto" separator=",">
-
-			#{dto.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE, #{dto.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK, #{dto.prodid,jdbcType=VARCHAR} PRODID,
-			#{dto.holdDate,jdbcType=DATE} HOLD_DATE, #{dto.ccy,jdbcType=VARCHAR} CCY, #{dto.status,jdbcType=VARCHAR} STATUS,
-			#{dto.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE, #{dto.amount,jdbcType=DECIMAL} AMOUNT, #{dto.qty,jdbcType=DECIMAL} QTY,
-			#{dto.cnyAmt,jdbcType=DECIMAL} CNY_AMT, #{dto.remark,jdbcType=VARCHAR} REMARK, #{dto.dataSource,jdbcType=CHAR} DATA_SOURCE,
-			'' WORKFLOW_ID, #{dto.orgCode,jdbcType=VARCHAR} ORG_CODE, #{dto.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-			#{dto.updateUser,jdbcType=VARCHAR} UPDATE_USER, now() UPDATE_TIME, #{dto.createUser,jdbcType=VARCHAR} CREATE_USER,
-			now() CREATE_TIME, #{dto.agent,jdbcType=VARCHAR} AGENT, #{dto.createDept,jdbcType=VARCHAR} CREATE_DEPT
-		</foreach>
-	</insert>
+	<insert id="insertInvestorsHoldBatchList" parameterType="string">
+		INSERT INTO chb_investhold_info
+		SELECT  REGIST_BANK_CODE,  INDENTIFY_MARK,  PRD_REGIST_CODE,  DATE_ADD(HOLD_DATE,INTERVAL 1 DAY),  CCY,  AMOUNT,  QTY,  CNY_AMT, REMARK,  DATA_SOURCE,  STATUS,  WORKFLOW_ID,  ORG_CODE,  DEPT_CODE,  UPDATE_USER,  NOW(),  CREATE_USER,  NOW(),  AGENT,  CREATE_DEPT,  PRODID, INTERF_CHECK_RESULT
+		FROM chb_investhold_info WHERE HOLD_DATE = #{holdDate}
+    </insert>
 
 	<!-- 批量 插入登记表-->
-	<insert id="insertInvestorsHoldRegistBatchList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
-		insert into CHB_INVESTHOLD_INFO_SUB (REGIST_SEQNO, REGIST_BANK_CODE, CHB_SUBMIT_DEADLINE,
-		PRD_REGIST_CODE, INDENTIFY_MARK, CCY,
-		HOLD_DATE, AMOUNT, QTY,
-		CNY_AMT, REMARK, SUBMIT_DEADLINE,
-		WORKFLOW_ID, SEND_STATUS, STATUS_DATE,
-		STATUS, CREATE_USER, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME, ORG_CODE,
-		DEPT_CODE, SUBMIT_TIME, SUMIT_SEQ,
-		CREATE_DEPT, CHECK_SEQNO, PRODID
-		)
+	<insert id="insertInvestorsHoldRegistBatchList" parameterType="string">
+		INSERT INTO chb_investhold_info_sub
+		SELECT
+		CONCAT('F0', DATE_FORMAT(NOW(),'%Y%m%d'),right(REGIST_SEQNO,10)),
+		REGIST_BANK_CODE,  DATE_ADD(CHB_SUBMIT_DEADLINE,INTERVAL 1 DAY),  PRD_REGIST_CODE,  INDENTIFY_MARK,  CCY,  DATE_ADD(HOLD_DATE,INTERVAL 1 DAY),  AMOUNT,  QTY,  CNY_AMT, REMARK,  DATE_ADD(SUBMIT_DEADLINE,INTERVAL 1 DAY),  WORKFLOW_ID,  SEND_STATUS,  NOW(),  STATUS,  CREATE_USER,  NOW(),  UPDATE_USER,  NOW(),  ORG_CODE,  DEPT_CODE ,  NULL,
+		CONCAT('F0', DATE_FORMAT(NOW(),'%Y%m%d'),right(REGIST_SEQNO,10)),
+		CREATE_DEPT,  CHECK_SEQNO,  PRODID,  NULL FROM chb_investhold_info_sub
+		WHERE HOLD_DATE = #{holdDate}
+    </insert>
 
-		values
-		<foreach collection="investHoldRegistList" item="dto" separator=",">
-
-			#{dto.registSeqno,jdbcType=VARCHAR} REGIST_SEQNO, #{dto.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE, #{dto.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
-			#{dto.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE, #{dto.indentifyMark,jdbcType=VARCHAR} INDENTIFY_MARK, #{dto.ccy,jdbcType=VARCHAR} CCY,
-			#{dto.holdDate,jdbcType=DATE} HOLD_DATE, #{dto.amount,jdbcType=DECIMAL} AMOUNT, #{dto.qty,jdbcType=DECIMAL} QTY,
-			#{dto.cnyAmt,jdbcType=DECIMAL} CNY_AMT, #{dto.remark,jdbcType=VARCHAR} REMARK, #{dto.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
-			'' WORKFLOW_ID, #{dto.sendStatus,jdbcType=VARCHAR} SEND_STATUS, #{dto.statusDate,jdbcType=DATE} STATUS_DATE,
-			#{dto.status,jdbcType=VARCHAR} STATUS, #{dto.createUser,jdbcType=VARCHAR} CREATE_USER, now() CREATE_TIME,
-			#{dto.updateUser,jdbcType=VARCHAR} UPDATE_USER, now() UPDATE_TIME, #{dto.orgCode,jdbcType=VARCHAR} ORG_CODE,
-			#{dto.deptCode,jdbcType=VARCHAR} DEPT_CODE, #{dto.submitTime,jdbcType=TIMESTAMP} SUBMIT_TIME, #{dto.sumitSeq,jdbcType=VARCHAR} SUMIT_SEQ,
-			#{dto.createDept,jdbcType=VARCHAR} CREATE_DEPT, #{dto.checkSeqno,jdbcType=VARCHAR} CHECK_SEQNO, #{dto.prodid,jdbcType=VARCHAR} PRODID
-		</foreach>
-	</insert>
+	<select id="isHoliday" resultType="int">
+		SELECT COUNT(1) FROM mst_holiday WHERE calendar_Id = '03' AND is_holiday = '01' and cdate = #{date}
+	</select>
 </mapper>

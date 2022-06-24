@@ -129,7 +129,10 @@
             #{item.prodId,jdbcType=CHAR}
         </foreach>
     </update>
-
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from PBC_PRD_BASEINFO_SUB_DAT
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </delete>
     <insert id="insertBatch" parameterType="java.util.List">
         insert into PBC_PRD_BASEINFO_SUB_DAT
         (SUB_PROD_ID,REGIST_SEQNO, PBC_PROD_ID,
@@ -296,6 +299,593 @@
 		#{updateUser,jdbcType=VARCHAR},
 		now(),#{datZipCode,jdbcType=VARCHAR},#{crossBorderFlag,jdbcType=VARCHAR},#{zjxtFlag,jdbcType=VARCHAR})
 	</insert>
+    <insert id="insertSelective"
+            parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        insert into PBC_PRD_BASEINFO_SUB_DAT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="registSeqno != null">
+                REGIST_SEQNO,
+            </if>
+            <if test="pbcProdId != null">
+                PBC_PROD_ID,
+            </if>
+            <if test="issuePartyId != null">
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="pbcProdType != null">
+                PBC_PROD_TYPE,
+            </if>
+            <if test="prodName != null">
+                PROD_NAME,
+            </if>
+            <if test="prodBrand != null">
+                PROD_BRAND,
+            </if>
+            <if test="prodStage != null">
+                PROD_STAGE,
+            </if>
+            <if test="prodId != null">
+                PROD_ID,
+            </if>
+            <if test="raiseCcy != null">
+                RAISE_CCY,
+            </if>
+            <if test="cashPrinCcy != null">
+                CASH_PRIN_CCY,
+            </if>
+            <if test="cashProfCcy != null">
+                CASH_PROF_CCY,
+            </if>
+            <if test="customerType != null">
+                CUSTOMER_TYPE,
+            </if>
+            <if test="raiseType != null">
+                RAISE_TYPE,
+            </if>
+            <if test="manageType != null">
+                MANAGE_TYPE,
+            </if>
+            <if test="fiduciaryDuty != null">
+                FIDUCIARY_DUTY,
+            </if>
+            <if test="contMode != null">
+                CONT_MODE,
+            </if>
+            <if test="operateMode != null">
+                OPERATE_MODE,
+            </if>
+            <if test="ivstorientation != null">
+                IVSTORIENTATION,
+            </if>
+            <if test="busiModel != null">
+                BUSI_MODEL,
+            </if>
+            <if test="incomeGuaranIdent != null">
+                INCOME_GUARAN_IDENT,
+            </if>
+            <if test="prinGuaranIdent != null">
+                PRIN_GUARAN_IDENT,
+            </if>
+            <if test="highYieldIssue != null">
+                HIGH_YIELD_ISSUE,
+            </if>
+            <if test="lowYieldIssue != null">
+                LOW_YIELD_ISSUE,
+            </if>
+            <if test="raiseVdate != null">
+                RAISE_VDATE,
+            </if>
+            <if test="raiseEnddate != null">
+                RAISE_ENDDATE,
+            </if>
+            <if test="termRightFlag != null">
+                TERM_RIGHT_FLAG,
+            </if>
+            <if test="cusRedeemFlag != null">
+                CUS_REDEEM_FLAG,
+            </if>
+            <if test="creditFlag != null">
+                CREDIT_FLAG,
+            </if>
+            <if test="creditType != null">
+                CREDIT_TYPE,
+            </if>
+            <if test="creditMode != null">
+                CREDIT_MODE,
+            </if>
+            <if test="inDepName != null">
+                IN_DEP_NAME,
+            </if>
+            <if test="inDepCode != null">
+                IN_DEP_CODE,
+            </if>
+            <if test="outDepCtry != null">
+                OUT_DEP_CTRY,
+            </if>
+            <if test="outDepName != null">
+                OUT_DEP_NAME,
+            </if>
+            <if test="vdate != null">
+                VDATE,
+            </if>
+            <if test="mdate != null">
+                MDATE,
+            </if>
+            <if test="accountId != null">
+                ACCOUNT_ID,
+            </if>
+            <if test="isConstracte != null">
+                IS_CONSTRACTE,
+            </if>
+            <if test="transferType != null">
+                TRANSFER_TYPE,
+            </if>
+            <if test="identiFlag != null">
+                IDENTI_FLAG,
+            </if>
+            <if test="sendStatus != null">
+                SEND_STATUS,
+            </if>
+            <if test="isMarketFund != null">
+                IS_MARKET_FUND,
+            </if>
+            <if test="submitTime != null">
+                SUBMIT_TIME,
+            </if>
+            <if test="submitFeedbackStatus != null">
+                SUBMIT_FEEDBACK_STATUS,
+            </if>
+            <if test="sumitSeq != null">
+                SUMIT_SEQ,
+            </if>
+            <if test="statusDate != null">
+                STATUS_DATE,
+            </if>
+            <if test="pbcSubmitDeadline != null">
+                PBC_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null">
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE,
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="crossBorderFlag != null">
+                CROSS_BORDER_FLAG,
+            </if>
+            <if test="zjxtFlag != null">
+                ZJXT_FLAG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="registSeqno != null">
+                #{registSeqno,jdbcType=CHAR},
+            </if>
+            <if test="pbcProdId != null">
+                #{pbcProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null">
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcProdType != null">
+                #{pbcProdType,jdbcType=CHAR},
+            </if>
+            <if test="prodName != null">
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="prodBrand != null">
+                #{prodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="prodStage != null">
+                #{prodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="prodId != null">
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseCcy != null">
+                #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashPrinCcy != null">
+                #{cashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashProfCcy != null">
+                #{cashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="customerType != null">
+                #{customerType,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null">
+                #{raiseType,jdbcType=CHAR},
+            </if>
+            <if test="manageType != null">
+                #{manageType,jdbcType=CHAR},
+            </if>
+            <if test="fiduciaryDuty != null">
+                #{fiduciaryDuty,jdbcType=VARCHAR},
+            </if>
+            <if test="contMode != null">
+                #{contMode,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null">
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null">
+                #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="busiModel != null">
+                #{busiModel,jdbcType=CHAR},
+            </if>
+            <if test="incomeGuaranIdent != null">
+                #{incomeGuaranIdent,jdbcType=CHAR},
+            </if>
+            <if test="prinGuaranIdent != null">
+                #{prinGuaranIdent,jdbcType=CHAR},
+            </if>
+            <if test="highYieldIssue != null">
+                #{highYieldIssue,jdbcType=DECIMAL},
+            </if>
+            <if test="lowYieldIssue != null">
+                #{lowYieldIssue,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseVdate != null">
+                #{raiseVdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="raiseEnddate != null">
+                #{raiseEnddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="termRightFlag != null">
+                #{termRightFlag,jdbcType=CHAR},
+            </if>
+            <if test="cusRedeemFlag != null">
+                #{cusRedeemFlag,jdbcType=CHAR},
+            </if>
+            <if test="creditFlag != null">
+                #{creditFlag,jdbcType=CHAR},
+            </if>
+            <if test="creditType != null">
+                #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMode != null">
+                #{creditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepName != null">
+                #{inDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepCode != null">
+                #{inDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepCtry != null">
+                #{outDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepName != null">
+                #{outDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null">
+                #{vdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mdate != null">
+                #{mdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountId != null">
+                #{accountId,jdbcType=VARCHAR},
+            </if>
+            <if test="isConstracte != null">
+                #{isConstracte,jdbcType=CHAR},
+            </if>
+            <if test="transferType != null">
+                #{transferType,jdbcType=CHAR},
+            </if>
+            <if test="identiFlag != null">
+                #{identiFlag,jdbcType=CHAR},
+            </if>
+            <if test="sendStatus != null">
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isMarketFund != null">
+                #{isMarketFund,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null">
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null">
+                #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null">
+                #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null">
+                #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pbcSubmitDeadline != null">
+                #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null">
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null">
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="crossBorderFlag != null">
+                #{crossBorderFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="zjxtFlag != null">
+                #{zjxtFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        update PBC_PRD_BASEINFO_SUB_DAT
+        <set>
+            <if test="pbcProdId != null">
+                PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null">
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="pbcProdType != null">
+                PBC_PROD_TYPE = #{pbcProdType,jdbcType=CHAR},
+            </if>
+            <if test="prodName != null">
+                PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="prodBrand != null">
+                PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="prodStage != null">
+                PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="prodId != null">
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseCcy != null">
+                RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashPrinCcy != null">
+                CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashProfCcy != null">
+                CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="customerType != null">
+                CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null">
+                RAISE_TYPE = #{raiseType,jdbcType=CHAR},
+            </if>
+            <if test="manageType != null">
+                MANAGE_TYPE = #{manageType,jdbcType=CHAR},
+            </if>
+            <if test="fiduciaryDuty != null">
+                FIDUCIARY_DUTY = #{fiduciaryDuty,jdbcType=VARCHAR},
+            </if>
+            <if test="contMode != null">
+                CONT_MODE = #{contMode,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null">
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null">
+                IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="busiModel != null">
+                BUSI_MODEL = #{busiModel,jdbcType=CHAR},
+            </if>
+            <if test="incomeGuaranIdent != null">
+                INCOME_GUARAN_IDENT = #{incomeGuaranIdent,jdbcType=CHAR},
+            </if>
+            <if test="prinGuaranIdent != null">
+                PRIN_GUARAN_IDENT = #{prinGuaranIdent,jdbcType=CHAR},
+            </if>
+            <if test="highYieldIssue != null">
+                HIGH_YIELD_ISSUE = #{highYieldIssue,jdbcType=DECIMAL},
+            </if>
+            <if test="lowYieldIssue != null">
+                LOW_YIELD_ISSUE = #{lowYieldIssue,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseVdate != null">
+                RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="raiseEnddate != null">
+                RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="termRightFlag != null">
+                TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=CHAR},
+            </if>
+            <if test="cusRedeemFlag != null">
+                CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=CHAR},
+            </if>
+            <if test="creditFlag != null">
+                CREDIT_FLAG = #{creditFlag,jdbcType=CHAR},
+            </if>
+            <if test="creditType != null">
+                CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMode != null">
+                CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepName != null">
+                IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepCode != null">
+                IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepCtry != null">
+                OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepName != null">
+                OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null">
+                VDATE = #{vdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mdate != null">
+                MDATE = #{mdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accountId != null">
+                ACCOUNT_ID = #{accountId,jdbcType=VARCHAR},
+            </if>
+            <if test="isConstracte != null">
+                IS_CONSTRACTE = #{isConstracte,jdbcType=CHAR},
+            </if>
+            <if test="transferType != null">
+                TRANSFER_TYPE = #{transferType,jdbcType=CHAR},
+            </if>
+            <if test="identiFlag != null">
+                IDENTI_FLAG = #{identiFlag,jdbcType=CHAR},
+            </if>
+            <if test="sendStatus != null">
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isMarketFund != null">
+                IS_MARKET_FUND = #{isMarketFund,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null">
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null">
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null">
+                SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null">
+                STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pbcSubmitDeadline != null">
+                PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null">
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="crossBorderFlag != null">
+                CROSS_BORDER_FLAG = #{crossBorderFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="zjxtFlag != null">
+                ZJXT_FLAG = #{zjxtFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        update PBC_PRD_BASEINFO_SUB_DAT
+        set PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+        PBC_PROD_TYPE = #{pbcProdType,jdbcType=CHAR},
+        PROD_NAME = #{prodName,jdbcType=VARCHAR},
+        PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+        PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+        RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+        CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+        CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+        CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+        RAISE_TYPE = #{raiseType,jdbcType=CHAR},
+        MANAGE_TYPE = #{manageType,jdbcType=CHAR},
+        FIDUCIARY_DUTY = #{fiduciaryDuty,jdbcType=VARCHAR},
+        CONT_MODE = #{contMode,jdbcType=VARCHAR},
+        OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+        IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+        BUSI_MODEL = #{busiModel,jdbcType=CHAR},
+        INCOME_GUARAN_IDENT = #{incomeGuaranIdent,jdbcType=CHAR},
+        PRIN_GUARAN_IDENT = #{prinGuaranIdent,jdbcType=CHAR},
+        HIGH_YIELD_ISSUE = #{highYieldIssue,jdbcType=DECIMAL},
+        LOW_YIELD_ISSUE = #{lowYieldIssue,jdbcType=DECIMAL},
+        RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+        RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+        TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=CHAR},
+        CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=CHAR},
+        CREDIT_FLAG = #{creditFlag,jdbcType=CHAR},
+        CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+        CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+        IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+        IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+        OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+        OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+        VDATE = #{vdate,jdbcType=TIMESTAMP},
+        MDATE = #{mdate,jdbcType=TIMESTAMP},
+        ACCOUNT_ID = #{accountId,jdbcType=VARCHAR},
+        IS_CONSTRACTE = #{isConstracte,jdbcType=CHAR},
+        TRANSFER_TYPE = #{transferType,jdbcType=CHAR},
+        IDENTI_FLAG = #{identiFlag,jdbcType=CHAR},
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+        IS_MARKET_FUND = #{isMarketFund,jdbcType=VARCHAR},
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+        PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+        STATUS = #{status,jdbcType=VARCHAR},
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        CROSS_BORDER_FLAG = #{crossBorderFlag,jdbcType=VARCHAR},
+        ZJXT_FLAG = #{zjxtFlag,jdbcType=VARCHAR}
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+
 
     <select id="selectNeedRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
         select info.ISSUE_PARTY_ID,
@@ -316,37 +906,37 @@
         CASH_PRIN_CCY,
         CASH_PROF_CCY,
         CUSTOMER_TYPE,
-        /*decode(RAISE_TYPE,'01','1','2') RAISE_TYPE,*/
+
         (case RAISE_TYPE when '01' then '1' else '2' end ) RAISE_TYPE,
-        /*decode(MANAGE_TYPE,'01','1','2') MANAGE_TYPE,*/
+
         (case MANAGE_TYPE when '01' then '1' else '2' end ) MANAGE_TYPE,
-        /*decode(FIDUCIARY_DUTY,'01','1','2') FIDUCIARY_DUTY,*/
+
         (case FIDUCIARY_DUTY when '01' case '1' else '2' end) FIDUCIARY_DUTY,
-        /*decode(CONT_MODE,'01','11','02','12','03','13','04','14','05','15','07','16','99','17') CONT_MODE,*/
+
         (case CONT_MODE when '01' then '11' when '02' then '12' when '03' then '13' when '04' then '14' when '05' then '15' when '07' then '16' when '99' then '17' end ) CONT_MODE,
-        /*decode(OPERATE_MODE,'01','4','02','5','03','2','04','3') OPERATE_MODE,*/
+
         (case OPERATE_MODE when '01' then '4' when '02' then '5' when '03' then '2' when '04' then '3' end) OPERATE_MODE,
-        /*decode(PROFIT_TYPE,'03',decode(IVSTORIENTATION,'01','007','02','008','03','009','04','010'),'011')*/
+
         (case PROFIT_TYPE when '03' then (case IVSTORIENTATION when '01' then '007' when '02' then '008' when '03' then '009' when '04' then '010' end) else '011' end) IVSTORIENTATION,
         PROFIT_TYPE,
-        /*decode(PROFIT_TYPE,'03','3','1') BUSI_MODEL,*/
+
         (case PROFIT_TYPE when '03' then '3' else '1' end) BUSI_MODEL,
-        /*decode(PROFIT_TYPE,'01','1','2') INCOME_GUARAN_IDENT,*/
+
         (case PROFIT_TYPE when '01' then '1' else '2' end) INCOME_GUARAN_IDENT,
-        /*decode(PROFIT_TYPE,'01','1','2') PRIN_GUARAN_IDENT,*/
+
         (case PROFIT_TYPE when '01' then '1' else '2' end) PRIN_GUARAN_IDENT,
         HIGH_YIELD_ISSUE,
         LOW_YIELD_ISSUE,
         RAISE_VDATE,
         RAISE_ENDDATE,
-        /*decode(TERM_RIGHT_FLAG,'01','1','2') TERM_RIGHT_FLAG,*/
+
         (case TERM_RIGHT_FLAG when '01' then '1' else '2' end) TERM_RIGHT_FLAG,
-        /*decode(CUS_REDEEM_FLAG,'01','1','2') CUS_REDEEM_FLAG,*/
+
         (case CUS_REDEEM_FLAG when '01' then '1' else '2' end) CUS_REDEEM_FLAG,
-        /*decode(CREDIT_FLAG,'01','1','2') CREDIT_FLAG,*/
+
         (case CREDIT_FLAG when '01' then '1' else '2' end) CREDIT_FLAG,
         REPLACE(CREDIT_TYPE, '0','') CREDIT_TYPE,
-        /*decode(CREDIT_MODE,'01','1','02','2','03','1,2') CREDIT_MODE,*/
+
         (case CREDIT_MODE when '01' then '1' when '02' then '2' when '03' then '1,2' end) CREDIT_MODE,
         IN_DEP_NAME,
         IN_DEP_CODE,
@@ -359,14 +949,14 @@
         VDATE,
         MDATE,
         null ACCOUNT_ID,
-        /*decode(IS_CONSTRACTE,'01','1','2')IS_CONSTRACTE,*/
+
         (case IS_CONSTRACTE when '01' then '1' else '2' end ) IS_CONSTRACTE,
-        /*decode(TRANSFER_TYPE,'01','1','99','2')TRANSFER_TYPE,*/
+
         (case TRANSFER_TYPE when '01' then '1' when '99' then '2' end) TRANSFER_TYPE,
-        /*decode(cbc.IS_FIN_SUB_COMPANY,'01','2','1') IDENTI_FLAG,*/
+
         (case cbc.IS_FIN_SUB_COMPANY when '01' then '2' else '1' end) IDENTI_FLAG,
         now() STATUS_DATE,
-        /*DECODE(info.IS_MARKET_FUND,'01',1,2) IS_MARKET_FUND,*/
+
         (case info.IS_MARKET_FUND when '01' then 1 else 2 end) IS_MARKET_FUND,
         info.STATUS,
         info.CREATE_USER,
@@ -388,7 +978,7 @@
         group by IFNULL(DEAL.FPROD_ID,DEAL.PROD_ID)
 
         ) DEAL ON INFO.PROD_ID = deal.PROD_ID
-        where DATE_FORMAT(greatest(nvl(NVL(info.UPDATE_TIME, info.CREATE_TIME),
+        where DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME, info.CREATE_TIME),
         STR_TO_DATE('1900-01-01', '%Y-%m-%d')),
         IFNULL(info.VDATE, STR_TO_DATE('1900-01-01', '%Y-%m-%d')),
         IFNULL(IFNULL(DEAL.UPDATE_TIME, DEAL.CREATE_TIME),
@@ -409,6 +999,33 @@
         </if>
 
     </select>
+    <select id="selectAlReadyRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        select * from PBC_PRD_BASEINFO_SUB_DAT
+        where SEND_STATUS in ('02','03')
+        <if test="reglist!=null and reglist.size()!=0">
+            <foreach collection="reglist" item="item" index="index" open="and trim(PROD_ID) in (" close=")" separator=",">
+                #{item.prodId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectAllRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        select DISTINCT trim(PROD_ID) PROD_ID,trim(PBC_PROD_ID) PBC_PROD_ID from PBC_PRD_BASEINFO_SUB_DAT
+        where 1=1
+        and PBC_PROD_ID is not null
+        <if test="reglist!=null and reglist.size()!=0">
+            <foreach collection="reglist" item="item" index="index" open="and trim(PROD_ID) in (" close=")" separator=",">
+                #{item.prodId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        delete from PBC_PRD_BASEINFO_SUB_DAT
+        where PROD_ID in
+        <foreach collection="deleteList" item="item" index="index" open="(" close=")" separator=",">
+            #{item.prodId,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
     <update id="updatebyZipCode" parameterType="map">
 		update PBC_SEND_ZIP_DAT_FILE
 		set ZIP_SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
@@ -419,6 +1036,18 @@
 		where DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
 		and  DAT_ZIP_DAT_TYPE = #{zipType,jdbcType=VARCHAR}
 	</update>
+    <delete id="deletebyZipCode" parameterType="map">
+        delete FROM PBC_SEND_ZIP_DAT_FILE F
+        where F.ZIP_SEND_STATUS = '01'
+        AND F.DAT_ZIP_TYPE = 'PI'
+        and F.DAT_ZIP_CODE = #{zipCode,jdbcType=VARCHAR}
+        and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        AND NOT EXISTS(
+        SELECT 1 FROM PBC_PRD_BASEINFO_END_SUB_DAT D WHERE D.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND D.SEND_STATUS IN ('02','03')
+        UNION ALL
+        SELECT 1 FROM PBC_PRD_BASEINFO_SUB_DAT D WHERE D.DAT_ZIP_CODE=F.DAT_ZIP_CODE AND D.SEND_STATUS IN ('02','03')
+        )
+    </delete>
 
 
     <!-- 手工处理 -->
@@ -486,7 +1115,7 @@
         CREATE_DEPT, now(), UPDATE_USER, now(),CROSS_BORDER_FLAG,ZJXT_FLAG
         from (
         select <include refid="Base_Column_List2"></include>,
-        rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+        rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
         from PBC_PRD_BASEINFO_SUB_HIS
         where
         PBC_PROD_ID in
@@ -496,6 +1125,78 @@
         )
         where ranknum = 1
     </insert>
+    <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
+        delete from PBC_PRD_BASEINFO_SUB_HIS
+        where PBC_PROD_ID in (
+        select  PBC_PROD_ID
+        from (
+        select PBC_PROD_ID ,
+        rank() over (partition by PBC_PROD_ID order by nvl(update_time,create_time) desc) ranknum
+        from PBC_PRD_BASEINFO_SUB_HIS
+        where
+        PBC_PROD_ID in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item.pbcProdId,jdbcType=CHAR}
+        </foreach>
+        )
+        where ranknum = 1
+        )
+    </delete>
+    <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
+        delete from PBC_PRD_BASEINFO_SUB_DAT
+        where
+        PBC_PROD_ID in <foreach collection="list" item="item" open="(" close=")" separator=",">
+        #{item.pbcProdId,jdbcType=CHAR}
+    </foreach>
+        and SEND_STATUS in ('02','03')
+    </delete>
+    <select id="queryAllPbcPrdBaseInfo" resultMap="BaseResultMap">
+        select PBC_PROD_ID, prod_name,ACCOUNT_ID,PROD_ID
+        from (
+        select PBC_PROD_ID,prod_name,ACCOUNT_ID,PROD_ID,
+        rank() over (partition by PBC_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+        from PBC_PRD_BASEINFO_SUB_DAT
+        where STATUS != 'D'
+        <if test="search != null and search !='' ">
+            AND (PBC_PROD_ID LIKE concat(concat('%', #{search}),'%')
+            or prod_name LIKE concat(concat('%', #{search}),'%'))
+        </if>
+        )
+        where ranknum = 1
+    </select>
+    <select id="selectAllRegisteAccountData" resultType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        select DISTINCT trim(ACCOUNT_ID) accountId,trim(PBC_ACCOUNT_ID) pbcAccountId
+        from PBC_PRD_ACCOUNT_SUB
+        where 1=1
+        <if test="reglist!=null and reglist.size()!=0">
+            <foreach collection="reglist" item="item" index="index" open="and trim(ACCOUNT_ID) in (" close=")" separator=",">
+                #{item.prodId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        select REGIST_SEQNO
+        from PBC_PRD_BASEINFO_SUB_DAT
+        where
+        <if test="flag == '02'">
+            SEND_STATUS in ('02','03')
+        </if>
+        <if test="flag == '01'">
+            SEND_STATUS = '01'
+        </if>
+        <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+            PBC_PROD_ID = #{item.pbcProdId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="queryPbcPrdBaseInfoByprodId" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from PBC_PRD_BASEINFO_SUB_DAT
+        where PROD_ID in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
 
     <select id="queryPbcPrdBaseInfoByDatZipCode" resultType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto"
             parameterType="java.lang.String">
@@ -818,6 +1519,148 @@
         ORDER BY t1.PBC_SUBMIT_DEADLINE ASC, t1.UPDATE_TIME DESC
         <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
     </select>
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update PBC_PRD_BASEINFO_SUB_DAT
+            set PBC_PROD_ID = #{item.pbcProdId,jdbcType=VARCHAR},
+            ISSUE_PARTY_ID = #{item.issuePartyId,jdbcType=VARCHAR},
+            PBC_PROD_TYPE = #{item.pbcProdType,jdbcType=CHAR},
+            PROD_NAME = #{item.prodName,jdbcType=VARCHAR},
+            PROD_BRAND = #{item.prodBrand,jdbcType=VARCHAR},
+            PROD_STAGE = #{item.prodStage,jdbcType=DECIMAL},
+            PROD_ID = #{item.prodId,jdbcType=VARCHAR},
+            RAISE_CCY = #{item.raiseCcy,jdbcType=VARCHAR},
+            CASH_PRIN_CCY = #{item.cashPrinCcy,jdbcType=VARCHAR},
+            CASH_PROF_CCY = #{item.cashProfCcy,jdbcType=VARCHAR},
+            CUSTOMER_TYPE = #{item.customerType,jdbcType=VARCHAR},
+            RAISE_TYPE = #{item.raiseType,jdbcType=CHAR},
+            MANAGE_TYPE = #{item.manageType,jdbcType=CHAR},
+            FIDUCIARY_DUTY = #{item.fiduciaryDuty,jdbcType=VARCHAR},
+            CONT_MODE = #{item.contMode,jdbcType=VARCHAR},
+            OPERATE_MODE = #{item.operateMode,jdbcType=VARCHAR},
+            IVSTORIENTATION = #{item.ivstorientation,jdbcType=VARCHAR},
+            BUSI_MODEL = #{item.busiModel,jdbcType=CHAR},
+            INCOME_GUARAN_IDENT = #{item.incomeGuaranIdent,jdbcType=CHAR},
+            PRIN_GUARAN_IDENT = #{item.prinGuaranIdent,jdbcType=CHAR},
+            HIGH_YIELD_ISSUE = #{item.highYieldIssue,jdbcType=DECIMAL},
+            LOW_YIELD_ISSUE = #{item.lowYieldIssue,jdbcType=DECIMAL},
+            RAISE_VDATE = #{item.raiseVdate,jdbcType=TIMESTAMP},
+            RAISE_ENDDATE = #{item.raiseEnddate,jdbcType=TIMESTAMP},
+            TERM_RIGHT_FLAG = #{item.termRightFlag,jdbcType=CHAR},
+            CUS_REDEEM_FLAG = #{item.cusRedeemFlag,jdbcType=CHAR},
+            CREDIT_FLAG = #{item.creditFlag,jdbcType=CHAR},
+            CREDIT_TYPE = #{item.creditType,jdbcType=VARCHAR},
+            CREDIT_MODE = #{item.creditMode,jdbcType=VARCHAR},
+            IN_DEP_NAME = #{item.inDepName,jdbcType=VARCHAR},
+            IN_DEP_CODE = #{item.inDepCode,jdbcType=VARCHAR},
+            OUT_DEP_CTRY = #{item.outDepCtry,jdbcType=VARCHAR},
+            OUT_DEP_NAME = #{item.outDepName,jdbcType=VARCHAR},
+            VDATE = #{item.vdate,jdbcType=TIMESTAMP},
+            MDATE = #{item.mdate,jdbcType=TIMESTAMP},
+            ACCOUNT_ID = #{item.accountId,jdbcType=VARCHAR},
+            IS_CONSTRACTE = #{item.isConstracte,jdbcType=CHAR},
+            TRANSFER_TYPE = #{item.transferType,jdbcType=CHAR},
+            IDENTI_FLAG = #{item.identiFlag,jdbcType=CHAR},
+            SEND_STATUS = #{item.sendStatus,jdbcType=VARCHAR},
+            IS_MARKET_FUND = #{item.isMarketFund,jdbcType=VARCHAR},
+            SUBMIT_TIME = #{item.submitTime,jdbcType=TIMESTAMP},
+            SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+            SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
+            STATUS_DATE = #{item.statusDate,jdbcType=TIMESTAMP},
+            PBC_SUBMIT_DEADLINE = #{item.pbcSubmitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_DEADLINE = #{item.submitDeadline,jdbcType=TIMESTAMP},
+            STATUS = #{item.status,jdbcType=VARCHAR},
+            CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
+            ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+            CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
+            CREATE_TIME = #{item.createTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{item.updateTime,jdbcType=TIMESTAMP},
+            DAT_ZIP_CODE = #{item.datZipCode,jdbcType=TIMESTAMP},
+            CROSS_BORDER_FLAG = #{crossBorderFlag,jdbcType=VARCHAR},
+            ZJXT_FLAG = #{zjxtFlag,jdbcType=VARCHAR}
+            where REGIST_SEQNO = #{item.registSeqno,jdbcType=CHAR}
+        </foreach>
 
+    </update>
+
+    <select id="selectByDatZipCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from PBC_PRD_BASEINFO_SUB_DAT
+        where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+        /*and SEND_STATUS = '01'
+        and STATUS not in ('02','03')*/
+    </select>
+    <update id="updateByDatZipCode" parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        update PBC_PRD_BASEINFO_SUB_DAT
+        set PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP}
+        where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByDatZipCodeAndProdId"
+            parameterType="com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDat">
+        update PBC_PRD_BASEINFO_SUB_DAT
+        set PBC_PROD_ID = #{pbcProdId,jdbcType=VARCHAR},
+        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+        PBC_PROD_TYPE = #{pbcProdType,jdbcType=CHAR},
+        PROD_NAME = #{prodName,jdbcType=VARCHAR},
+        PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+        PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+        RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+        CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+        CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+        CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+        RAISE_TYPE = #{raiseType,jdbcType=CHAR},
+        MANAGE_TYPE = #{manageType,jdbcType=CHAR},
+        FIDUCIARY_DUTY = #{fiduciaryDuty,jdbcType=VARCHAR},
+        CONT_MODE = #{contMode,jdbcType=VARCHAR},
+        OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+        IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+        BUSI_MODEL = #{busiModel,jdbcType=CHAR},
+        INCOME_GUARAN_IDENT = #{incomeGuaranIdent,jdbcType=CHAR},
+        PRIN_GUARAN_IDENT = #{prinGuaranIdent,jdbcType=CHAR},
+        HIGH_YIELD_ISSUE = #{highYieldIssue,jdbcType=DECIMAL},
+        LOW_YIELD_ISSUE = #{lowYieldIssue,jdbcType=DECIMAL},
+        RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+        RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+        TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=CHAR},
+        CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=CHAR},
+        CREDIT_FLAG = #{creditFlag,jdbcType=CHAR},
+        CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+        CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+        IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+        IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+        OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+        OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+        VDATE = #{vdate,jdbcType=TIMESTAMP},
+        MDATE = #{mdate,jdbcType=TIMESTAMP},
+        ACCOUNT_ID = #{accountId,jdbcType=VARCHAR},
+        IS_CONSTRACTE = #{isConstracte,jdbcType=CHAR},
+        TRANSFER_TYPE = #{transferType,jdbcType=CHAR},
+        IDENTI_FLAG = #{identiFlag,jdbcType=CHAR},
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+        IS_MARKET_FUND = #{isMarketFund,jdbcType=VARCHAR},
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+        SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+        STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+        PBC_SUBMIT_DEADLINE = #{pbcSubmitDeadline,jdbcType=TIMESTAMP},
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+        STATUS = #{status,jdbcType=VARCHAR},
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        CROSS_BORDER_FLAG = #{crossBorderFlag,jdbcType=VARCHAR},
+        ZJXT_FLAG = #{zjxtFlag,jdbcType=VARCHAR}
+        where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
+        and PROD_ID = #{prodId,jdbcType=VARCHAR}
+    </update>
 
 </mapper>

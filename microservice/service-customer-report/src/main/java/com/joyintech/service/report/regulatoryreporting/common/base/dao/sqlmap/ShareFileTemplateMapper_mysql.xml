@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.common.base.dao.ShareFileTemplateMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFileTemplate" >
+        <result column="TEMPUUID" property="tempuuid" jdbcType="CHAR" />
+        <result column="TEMPLATEID" property="templateid" jdbcType="CHAR" />
+        <result column="PROPERTYID" property="propertyid" jdbcType="CHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="PROPERNAME" property="propername" jdbcType="VARCHAR" />
+        <result column="ORDERNO" property="orderno" jdbcType="DECIMAL" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+        <result column="REPORTCYCLE" property="reportcycle" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFileTemplate" >
+        insert into SHARE_FILE_TEMPLATE (TEMPUUID, TEMPLATEID, PROPERTYID, 
+            PROPERTYCODE, PROPERNAME, ORDERNO, 
+            REPORTTYPE, GROUPTYPE, REPORTCYCLE, 
+            STATUS)
+        values (#{tempuuid,jdbcType=CHAR}, #{templateid,jdbcType=CHAR}, #{propertyid,jdbcType=CHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{propername,jdbcType=VARCHAR}, #{orderno,jdbcType=DECIMAL}, 
+            #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, #{reportcycle,jdbcType=VARCHAR}, 
+            #{status,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFileTemplate" >
+        insert into SHARE_FILE_TEMPLATE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tempuuid != null" >
+                TEMPUUID,
+            </if>
+            <if test="templateid != null" >
+                TEMPLATEID,
+            </if>
+            <if test="propertyid != null" >
+                PROPERTYID,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="propername != null" >
+                PROPERNAME,
+            </if>
+            <if test="orderno != null" >
+                ORDERNO,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE,
+            </if>
+            <if test="reportcycle != null" >
+                REPORTCYCLE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tempuuid != null" >
+                #{tempuuid,jdbcType=CHAR},
+            </if>
+            <if test="templateid != null" >
+                #{templateid,jdbcType=CHAR},
+            </if>
+            <if test="propertyid != null" >
+                #{propertyid,jdbcType=CHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="propername != null" >
+                #{propername,jdbcType=VARCHAR},
+            </if>
+            <if test="orderno != null" >
+                #{orderno,jdbcType=DECIMAL},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="reportcycle != null" >
+                #{reportcycle,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFileTemplate" >
+        insert into SHARE_FILE_TEMPLATE(TEMPUUID, TEMPLATEID, PROPERTYID, PROPERTYCODE, PROPERNAME, 
+        ORDERNO, REPORTTYPE, GROUPTYPE, REPORTCYCLE, STATUS)
+        select TEMPUUID, TEMPLATEID, PROPERTYID, PROPERTYCODE, PROPERNAME, 
+            ORDERNO, REPORTTYPE, GROUPTYPE, REPORTCYCLE, #{status,jdbcType=VARCHAR} STATUS
+             from SHARE_FILE_TEMPLATE
+             where STATUS = 'E'
+    </insert>
+</mapper>

@@ -41,13 +41,14 @@
     insert into MST_EXCHARGE_QUOTE (EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, 
       OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE, 
       LOW_PRICE, MID_PRICE, BASIS_CYY, 
-      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
-      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, DATA_SOURCE,
+      STATUS,ERR_MSG,CREATE_USER, CREATE_DEPT, CREATE_TIME,
       UPDATE_USER, UPDATE_TIME)
     values (#{exchargeCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=TIMESTAMP}, #{datasourceType,jdbcType=VARCHAR}, 
       #{openPrice,jdbcType=DECIMAL}, #{closePrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
       #{lowPrice,jdbcType=DECIMAL}, #{midPrice,jdbcType=DECIMAL}, #{basisCyy,jdbcType=VARCHAR}, 
-      #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
+      #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+      #{dataSource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{errMsg,jdbcType=VARCHAR},
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, sysdate, 
       #{updateUser,jdbcType=VARCHAR}, sysdate)
   </insert>
@@ -247,7 +248,7 @@
   </delete>
   
   <insert id="mergeExchangeData"
-	parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
+	parameterType="java.util.List">
 	MERGE INTO MST_EXCHARGE_QUOTE CII
 	USING (
 	<foreach collection="list" item="item" open="select * from("
@@ -265,6 +266,14 @@
        #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
        #{item.quotUnit,jdbcType=DECIMAL} QUOT_UNIT,
        #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
+       #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+       #{item.status,jdbcType=VARCHAR} STATUS,
+      <if test="item.errMsg != null">
+        #{item.errMsg,jdbcType=VARCHAR} ERR_MSG,
+      </if>
+      <if test="item.errMsg == null">
+        null ERR_MSG,
+      </if>
        #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
        #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
        sysdate CREATE_TIME,
@@ -290,6 +299,9 @@
       QUOT_CYY = TEMP.QUOT_CYY,
       QUOT_UNIT = TEMP.QUOT_UNIT,
       INPUT_TYPE = TEMP.INPUT_TYPE,
+      DATA_SOURCE = TEMP.DATA_SOURCE,
+      STATUS = TEMP.STATUS,
+      ERR_MSG = TEMP.ERR_MSG,
       CREATE_USER = TEMP.CREATE_USER,
       CREATE_DEPT = TEMP.CREATE_DEPT,
       CREATE_TIME = TEMP.CREATE_TIME,
@@ -300,13 +312,14 @@
 	(EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, 
       OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE, 
       LOW_PRICE, MID_PRICE, BASIS_CYY, 
-      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
+      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, DATA_SOURCE,STATUS,ERR_MSG,
       CREATE_USER, CREATE_DEPT, CREATE_TIME, 
       UPDATE_USER, UPDATE_TIME)
     values (TEMP.EXCHARGE_CODE, TEMP.TRADE_DATE, TEMP.DATASOURCE_TYPE, 
       TEMP.OPEN_PRICE, TEMP.CLOSE_PRICE, TEMP.HIGH_PRICE, 
       TEMP.LOW_PRICE, TEMP.MID_PRICE, TEMP.BASIS_CYY, 
-      TEMP.QUOT_CYY, TEMP.QUOT_UNIT, TEMP.INPUT_TYPE, 
+      TEMP.QUOT_CYY, TEMP.QUOT_UNIT, TEMP.INPUT_TYPE,
+      TEMP.DATA_SOURCE,TEMP.STATUS,TEMP.ERR_MSG,
       TEMP.CREATE_USER, TEMP.CREATE_DEPT, TEMP.CREATE_TIME, 
       TEMP.UPDATE_USER, TEMP.UPDATE_TIME)
 </insert>

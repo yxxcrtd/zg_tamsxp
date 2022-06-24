@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.common.common.dao.BaseCommonMapper_mysql">
+    <select id="getNowSysDate" resultType="java.util.Date">
+		select CURDATE()
+	</select>
+    <update id="updateBatchInfoToEnd">
+        update CHB_SYS_BATCH_INFO set TASK_STATUS = 'END', UPDATE_USER = 'batch', update_time = CURRENT_TIMESTAMP where BATCH_ID in
+        <foreach collection="list" item="item" separator=", " open="(" close=")" >#{item}</foreach>
+    </update>
+    <update id="updatePreBatchDataToEnd">
+        UPDATE CHB_SYS_BATCH_INFO SET TASK_STATUS = #{brk} WHERE TASK_STATUS = #{run}
+    </update>
+    <update id="updatePreBatchLogDataToEnd">
+        UPDATE CHB_SYS_BATCH_LOG SET TASK_STATUS = #{brk} WHERE TASK_STATUS = #{run}
+    </update>
+
+    <select id="getSysParamString" resultType="string">
+        select PARAM_VALUE
+        from CHB_SYS_PARA para
+        where para.SUBSYSTEM_CODE=#{subsystemCode}
+        and para.STATUS ='E'
+        and para.MODULE_CODE=#{moduleCode}
+        and para.PARA_CODE=#{paraCode}
+    </select>
+    <!-- 查询机构下的所有部门代码 -->
+    <select id="selectDeptCode" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT DEPT_CODE FROM SYS_DEPARTMENT WHERE INSTITUTION_CODE = #{institutionCode}
+    </select>
+</mapper>

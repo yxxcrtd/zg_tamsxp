@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflRegFinProductDealTotalMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        <id column="TOTLE_TRADE_ID" property="totleTradeId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="MARKET_ID" property="marketId" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="OU_PARTY_ID" property="ouPartyId" jdbcType="VARCHAR" />
+        <result column="OU_TRADER_ID" property="ouTraderId" jdbcType="VARCHAR" />
+        <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="COUNTER_TRADER" property="counterTrader" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="SETTLE_SPEED" property="settleSpeed" jdbcType="DECIMAL" />
+        <result column="SETTLE_DATE" property="settleDate" jdbcType="DATE" />
+        <result column="UNIT_CPRICE" property="unitCprice" jdbcType="DECIMAL" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="EXER_YIELD" property="exerYield" jdbcType="DECIMAL" />
+        <result column="UNIT_INT" property="unitInt" jdbcType="DECIMAL" />
+        <result column="UNIT_FPRICE" property="unitFprice" jdbcType="DECIMAL" />
+        <result column="PAR_VALUE" property="parValue" jdbcType="DECIMAL" />
+        <result column="CPRICE_AMT" property="cpriceAmt" jdbcType="DECIMAL" />
+        <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL" />
+        <result column="FPRICE_AMT" property="fpriceAmt" jdbcType="DECIMAL" />
+        <result column="SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="DELIVERY_TYPE" property="deliveryType" jdbcType="VARCHAR" />
+        <result column="M_DELIVERY_TYPE" property="mDeliveryType" jdbcType="VARCHAR" />
+        <result column="SETT_CCY" property="settCcy" jdbcType="VARCHAR" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="CLEAR_TYPE" property="clearType" jdbcType="VARCHAR" />
+        <result column="SEC_MANAGE_ACCT_ID" property="secManageAcctId" jdbcType="VARCHAR" />
+        <result column="ACCT_ID" property="acctId" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="TRADE_MARKET_MODE" property="tradeMarketMode" jdbcType="VARCHAR" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+        <result column="REPO_TERM" property="repoTerm" jdbcType="DECIMAL" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="FACE_VALUE" property="faceValue" jdbcType="DECIMAL" />
+        <result column="DIS_FACE_VALUE" property="disFaceValue" jdbcType="DECIMAL" />
+        <result column="REPO_TYPE" property="repoType" jdbcType="VARCHAR" />
+        <result column="V_SETTLE_DATE" property="vSettleDate" jdbcType="DATE" />
+        <result column="M_SETTLE_DATE" property="mSettleDate" jdbcType="DATE" />
+        <result column="ACT_REPO_TERM" property="actRepoTerm" jdbcType="DECIMAL" />
+        <result column="M_INT_AMT" property="mIntAmt" jdbcType="DECIMAL" />
+        <result column="M_TRADE_AMT" property="mTradeAmt" jdbcType="DECIMAL" />
+        <result column="TG_BUSI_TYPE" property="tgBusiType" jdbcType="VARCHAR" />
+        <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
+        <result column="P_TRADE_ID" property="pTradeId" jdbcType="VARCHAR" />
+        <result column="IS_CANCEL" property="isCancel" jdbcType="VARCHAR" />
+        <result column="IS_OUT_TRADE" property="isOutTrade" jdbcType="VARCHAR" />
+        <result column="F_TRADE_ID" property="fTradeId" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="DIP_TYPE" property="dipType" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TOTLE_TRADE_ID TOTLE_TRADE_ID, FINPROD_ID FINPROD_ID, FINPROD_TYPE2 FINPROD_TYPE2, 
+        BRANCH BRANCH, MARKET_ID MARKET_ID, PS PS, TRADE_DATE TRADE_DATE, OU_PARTY_ID OU_PARTY_ID, 
+        OU_TRADER_ID OU_TRADER_ID, COUNTER_ID COUNTER_ID, COUNTER_TRADER COUNTER_TRADER, 
+        CCY CCY, SETTLE_SPEED SETTLE_SPEED, SETTLE_DATE SETTLE_DATE, UNIT_CPRICE UNIT_CPRICE, 
+        YIELD YIELD, EXER_YIELD EXER_YIELD, UNIT_INT UNIT_INT, UNIT_FPRICE UNIT_FPRICE, PAR_VALUE PAR_VALUE, 
+        CPRICE_AMT CPRICE_AMT, INT_AMT INT_AMT, FPRICE_AMT FPRICE_AMT, SHARE_AMT SHARE_AMT, 
+        DELIVERY_TYPE DELIVERY_TYPE, M_DELIVERY_TYPE M_DELIVERY_TYPE, SETT_CCY SETT_CCY, 
+        TRADE_AMT TRADE_AMT, CLEAR_TYPE CLEAR_TYPE, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, 
+        ACCT_ID ACCT_ID, INV_AIM INV_AIM, TRADE_MARKET TRADE_MARKET, TRADE_MARKET_MODE TRADE_MARKET_MODE, 
+        RATE RATE, REPO_TERM REPO_TERM, TERM_TYPE TERM_TYPE, FACE_VALUE FACE_VALUE, DIS_FACE_VALUE DIS_FACE_VALUE, 
+        REPO_TYPE REPO_TYPE, V_SETTLE_DATE V_SETTLE_DATE, M_SETTLE_DATE M_SETTLE_DATE, ACT_REPO_TERM ACT_REPO_TERM, 
+        M_INT_AMT M_INT_AMT, M_TRADE_AMT M_TRADE_AMT, TG_BUSI_TYPE TG_BUSI_TYPE, TRADE_STATUS TRADE_STATUS, 
+        P_TRADE_ID P_TRADE_ID, IS_CANCEL IS_CANCEL, IS_OUT_TRADE IS_OUT_TRADE, F_TRADE_ID F_TRADE_ID, 
+        REMARK REMARK, DIP_TYPE DIP_TYPE, WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
+        QUOTE_TYPE QUOTE_TYPE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinProductDealTotalMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinProductDealTotalMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinProductDealTotalMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_TOTAL(TOTLE_TRADE_ID, FINPROD_ID, FINPROD_TYPE2, 
+        BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, 
+        CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, 
+        PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, SHARE_AMT, DELIVERY_TYPE, M_DELIVERY_TYPE, 
+        SETT_CCY, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, ACCT_ID, INV_AIM, TRADE_MARKET, 
+        TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
+        V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
+        TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
+        WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, QUOTE_TYPE
+        )
+        select TOTLE_TRADE_ID, FINPROD_ID, FINPROD_TYPE2, 
+            BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, 
+            CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, 
+            PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, SHARE_AMT, DELIVERY_TYPE, M_DELIVERY_TYPE, 
+            SETT_CCY, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, ACCT_ID, INV_AIM, TRADE_MARKET, 
+            TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
+            V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
+            TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
+            #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, QUOTE_TYPE
+            
+             from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        update WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        <set >
+            <if test="totleTradeId != null" >
+                TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="marketId != null" >
+                MARKET_ID = #{marketId,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="ouPartyId != null" >
+                OU_PARTY_ID = #{ouPartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="ouTraderId != null" >
+                OU_TRADER_ID = #{ouTraderId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterTrader != null" >
+                COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleSpeed != null" >
+                SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="settleDate != null" >
+                SETTLE_DATE = #{settleDate,jdbcType=DATE},
+            </if>
+            <if test="unitCprice != null" >
+                UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitFprice != null" >
+                UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="parValue != null" >
+                PAR_VALUE = #{parValue,jdbcType=DECIMAL},
+            </if>
+            <if test="cpriceAmt != null" >
+                CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fpriceAmt != null" >
+                FPRICE_AMT = #{fpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="deliveryType != null" >
+                DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="mDeliveryType != null" >
+                M_DELIVERY_TYPE = #{mDeliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="settCcy != null" >
+                SETT_CCY = #{settCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="clearType != null" >
+                CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="acctId != null" >
+                ACCT_ID = #{acctId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarketMode != null" >
+                TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="repoTerm != null" >
+                REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="faceValue != null" >
+                FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="disFaceValue != null" >
+                DIS_FACE_VALUE = #{disFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="repoType != null" >
+                REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+            </if>
+            <if test="vSettleDate != null" >
+                V_SETTLE_DATE = #{vSettleDate,jdbcType=DATE},
+            </if>
+            <if test="mSettleDate != null" >
+                M_SETTLE_DATE = #{mSettleDate,jdbcType=DATE},
+            </if>
+            <if test="actRepoTerm != null" >
+                ACT_REPO_TERM = #{actRepoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tgBusiType != null" >
+                TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isCancel != null" >
+                IS_CANCEL = #{isCancel,jdbcType=VARCHAR},
+            </if>
+            <if test="isOutTrade != null" >
+                IS_OUT_TRADE = #{isOutTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="fTradeId != null" >
+                F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        update WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        set 
+        TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR},
+        FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+        FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+        BRANCH = #{branch,jdbcType=DECIMAL},
+        MARKET_ID = #{marketId,jdbcType=VARCHAR},
+        PS = #{ps,jdbcType=VARCHAR},
+        TRADE_DATE = #{tradeDate,jdbcType=DATE},
+        OU_PARTY_ID = #{ouPartyId,jdbcType=VARCHAR},
+        OU_TRADER_ID = #{ouTraderId,jdbcType=VARCHAR},
+        COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+        COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
+        CCY = #{ccy,jdbcType=VARCHAR},
+        SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
+        SETTLE_DATE = #{settleDate,jdbcType=DATE},
+        UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+        YIELD = #{yield,jdbcType=DECIMAL},
+        EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+        UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+        UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+        PAR_VALUE = #{parValue,jdbcType=DECIMAL},
+        CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
+        INT_AMT = #{intAmt,jdbcType=DECIMAL},
+        FPRICE_AMT = #{fpriceAmt,jdbcType=DECIMAL},
+        SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+        DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
+        M_DELIVERY_TYPE = #{mDeliveryType,jdbcType=VARCHAR},
+        SETT_CCY = #{settCcy,jdbcType=VARCHAR},
+        TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+        CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
+        SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+        ACCT_ID = #{acctId,jdbcType=VARCHAR},
+        INV_AIM = #{invAim,jdbcType=VARCHAR},
+        TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+        TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+        RATE = #{rate,jdbcType=DECIMAL},
+        REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
+        TERM_TYPE = #{termType,jdbcType=VARCHAR},
+        FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+        DIS_FACE_VALUE = #{disFaceValue,jdbcType=DECIMAL},
+        REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+        V_SETTLE_DATE = #{vSettleDate,jdbcType=DATE},
+        M_SETTLE_DATE = #{mSettleDate,jdbcType=DATE},
+        ACT_REPO_TERM = #{actRepoTerm,jdbcType=DECIMAL},
+        M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+        M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+        TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
+        TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+        P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+        IS_CANCEL = #{isCancel,jdbcType=VARCHAR},
+        IS_OUT_TRADE = #{isOutTrade,jdbcType=VARCHAR},
+        F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_TOTAL (TOTLE_TRADE_ID, FINPROD_ID, FINPROD_TYPE2, 
+            BRANCH, MARKET_ID, PS, 
+            TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, 
+            COUNTER_ID, COUNTER_TRADER, CCY, 
+            SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, 
+            YIELD, EXER_YIELD, UNIT_INT, 
+            UNIT_FPRICE, PAR_VALUE, CPRICE_AMT, 
+            INT_AMT, FPRICE_AMT, SHARE_AMT, 
+            DELIVERY_TYPE, M_DELIVERY_TYPE, SETT_CCY, 
+            TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, 
+            ACCT_ID, INV_AIM, TRADE_MARKET, 
+            TRADE_MARKET_MODE, RATE, REPO_TERM, 
+            TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, 
+            REPO_TYPE, V_SETTLE_DATE, M_SETTLE_DATE, 
+            ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, 
+            TG_BUSI_TYPE, TRADE_STATUS, P_TRADE_ID, 
+            IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, 
+            REMARK, DIP_TYPE, WORKFLOW_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, QUOTE_TYPE
+            )
+        values (#{totleTradeId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, 
+            #{branch,jdbcType=DECIMAL}, #{marketId,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
+            #{tradeDate,jdbcType=DATE}, #{ouPartyId,jdbcType=VARCHAR}, #{ouTraderId,jdbcType=VARCHAR}, 
+            #{counterId,jdbcType=VARCHAR}, #{counterTrader,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+            #{settleSpeed,jdbcType=DECIMAL}, #{settleDate,jdbcType=DATE}, #{unitCprice,jdbcType=DECIMAL}, 
+            #{yield,jdbcType=DECIMAL}, #{exerYield,jdbcType=DECIMAL}, #{unitInt,jdbcType=DECIMAL}, 
+            #{unitFprice,jdbcType=DECIMAL}, #{parValue,jdbcType=DECIMAL}, #{cpriceAmt,jdbcType=DECIMAL}, 
+            #{intAmt,jdbcType=DECIMAL}, #{fpriceAmt,jdbcType=DECIMAL}, #{shareAmt,jdbcType=DECIMAL}, 
+            #{deliveryType,jdbcType=VARCHAR}, #{mDeliveryType,jdbcType=VARCHAR}, #{settCcy,jdbcType=VARCHAR}, 
+            #{tradeAmt,jdbcType=DECIMAL}, #{clearType,jdbcType=VARCHAR}, #{secManageAcctId,jdbcType=VARCHAR}, 
+            #{acctId,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{tradeMarket,jdbcType=VARCHAR}, 
+            #{tradeMarketMode,jdbcType=VARCHAR}, #{rate,jdbcType=DECIMAL}, #{repoTerm,jdbcType=DECIMAL}, 
+            #{termType,jdbcType=VARCHAR}, #{faceValue,jdbcType=DECIMAL}, #{disFaceValue,jdbcType=DECIMAL}, 
+            #{repoType,jdbcType=VARCHAR}, #{vSettleDate,jdbcType=DATE}, #{mSettleDate,jdbcType=DATE}, 
+            #{actRepoTerm,jdbcType=DECIMAL}, #{mIntAmt,jdbcType=DECIMAL}, #{mTradeAmt,jdbcType=DECIMAL}, 
+            #{tgBusiType,jdbcType=VARCHAR}, #{tradeStatus,jdbcType=VARCHAR}, #{pTradeId,jdbcType=VARCHAR}, 
+            #{isCancel,jdbcType=VARCHAR}, #{isOutTrade,jdbcType=VARCHAR}, #{fTradeId,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{dipType,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{quoteType,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                TOTLE_TRADE_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="marketId != null" >
+                MARKET_ID,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="ouPartyId != null" >
+                OU_PARTY_ID,
+            </if>
+            <if test="ouTraderId != null" >
+                OU_TRADER_ID,
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID,
+            </if>
+            <if test="counterTrader != null" >
+                COUNTER_TRADER,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="settleSpeed != null" >
+                SETTLE_SPEED,
+            </if>
+            <if test="settleDate != null" >
+                SETTLE_DATE,
+            </if>
+            <if test="unitCprice != null" >
+                UNIT_CPRICE,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD,
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT,
+            </if>
+            <if test="unitFprice != null" >
+                UNIT_FPRICE,
+            </if>
+            <if test="parValue != null" >
+                PAR_VALUE,
+            </if>
+            <if test="cpriceAmt != null" >
+                CPRICE_AMT,
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT,
+            </if>
+            <if test="fpriceAmt != null" >
+                FPRICE_AMT,
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT,
+            </if>
+            <if test="deliveryType != null" >
+                DELIVERY_TYPE,
+            </if>
+            <if test="mDeliveryType != null" >
+                M_DELIVERY_TYPE,
+            </if>
+            <if test="settCcy != null" >
+                SETT_CCY,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="clearType != null" >
+                CLEAR_TYPE,
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID,
+            </if>
+            <if test="acctId != null" >
+                ACCT_ID,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="tradeMarketMode != null" >
+                TRADE_MARKET_MODE,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+            <if test="repoTerm != null" >
+                REPO_TERM,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="faceValue != null" >
+                FACE_VALUE,
+            </if>
+            <if test="disFaceValue != null" >
+                DIS_FACE_VALUE,
+            </if>
+            <if test="repoType != null" >
+                REPO_TYPE,
+            </if>
+            <if test="vSettleDate != null" >
+                V_SETTLE_DATE,
+            </if>
+            <if test="mSettleDate != null" >
+                M_SETTLE_DATE,
+            </if>
+            <if test="actRepoTerm != null" >
+                ACT_REPO_TERM,
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT,
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT,
+            </if>
+            <if test="tgBusiType != null" >
+                TG_BUSI_TYPE,
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS,
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID,
+            </if>
+            <if test="isCancel != null" >
+                IS_CANCEL,
+            </if>
+            <if test="isOutTrade != null" >
+                IS_OUT_TRADE,
+            </if>
+            <if test="fTradeId != null" >
+                F_TRADE_ID,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="totleTradeId != null" >
+                #{totleTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="marketId != null" >
+                #{marketId,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="ouPartyId != null" >
+                #{ouPartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="ouTraderId != null" >
+                #{ouTraderId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterId != null" >
+                #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterTrader != null" >
+                #{counterTrader,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleSpeed != null" >
+                #{settleSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="settleDate != null" >
+                #{settleDate,jdbcType=DATE},
+            </if>
+            <if test="unitCprice != null" >
+                #{unitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="unitInt != null" >
+                #{unitInt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitFprice != null" >
+                #{unitFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="parValue != null" >
+                #{parValue,jdbcType=DECIMAL},
+            </if>
+            <if test="cpriceAmt != null" >
+                #{cpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fpriceAmt != null" >
+                #{fpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="shareAmt != null" >
+                #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="deliveryType != null" >
+                #{deliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="mDeliveryType != null" >
+                #{mDeliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="settCcy != null" >
+                #{settCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="clearType != null" >
+                #{clearType,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="acctId != null" >
+                #{acctId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarketMode != null" >
+                #{tradeMarketMode,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="repoTerm != null" >
+                #{repoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="faceValue != null" >
+                #{faceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="disFaceValue != null" >
+                #{disFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="repoType != null" >
+                #{repoType,jdbcType=VARCHAR},
+            </if>
+            <if test="vSettleDate != null" >
+                #{vSettleDate,jdbcType=DATE},
+            </if>
+            <if test="mSettleDate != null" >
+                #{mSettleDate,jdbcType=DATE},
+            </if>
+            <if test="actRepoTerm != null" >
+                #{actRepoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="mIntAmt != null" >
+                #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tgBusiType != null" >
+                #{tgBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null" >
+                #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isCancel != null" >
+                #{isCancel,jdbcType=VARCHAR},
+            </if>
+            <if test="isOutTrade != null" >
+                #{isOutTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="fTradeId != null" >
+                #{fTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="dipType != null" >
+                #{dipType,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="quoteType != null" >
+                #{quoteType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_TOTAL(TOTLE_TRADE_ID, FINPROD_ID, FINPROD_TYPE2, 
+        BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, 
+        CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, 
+        PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, SHARE_AMT, DELIVERY_TYPE, M_DELIVERY_TYPE, 
+        SETT_CCY, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, ACCT_ID, INV_AIM, TRADE_MARKET, 
+        TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
+        V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
+        TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
+        WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, QUOTE_TYPE
+        )
+        select TOTLE_TRADE_ID, FINPROD_ID, FINPROD_TYPE2, 
+            BRANCH, MARKET_ID, PS, TRADE_DATE, OU_PARTY_ID, OU_TRADER_ID, COUNTER_ID, COUNTER_TRADER, 
+            CCY, SETTLE_SPEED, SETTLE_DATE, UNIT_CPRICE, YIELD, EXER_YIELD, UNIT_INT, UNIT_FPRICE, 
+            PAR_VALUE, CPRICE_AMT, INT_AMT, FPRICE_AMT, SHARE_AMT, DELIVERY_TYPE, M_DELIVERY_TYPE, 
+            SETT_CCY, TRADE_AMT, CLEAR_TYPE, SEC_MANAGE_ACCT_ID, ACCT_ID, INV_AIM, TRADE_MARKET, 
+            TRADE_MARKET_MODE, RATE, REPO_TERM, TERM_TYPE, FACE_VALUE, DIS_FACE_VALUE, REPO_TYPE, 
+            V_SETTLE_DATE, M_SETTLE_DATE, ACT_REPO_TERM, M_INT_AMT, M_TRADE_AMT, TG_BUSI_TYPE, 
+            TRADE_STATUS, P_TRADE_ID, IS_CANCEL, IS_OUT_TRADE, F_TRADE_ID, REMARK, DIP_TYPE, 
+            #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, QUOTE_TYPE
+            
+             from WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+             where 1 = 1 and TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        update WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        <set >
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodType2 != null" >
+                FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="marketId != null" >
+                MARKET_ID = #{marketId,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="ouPartyId != null" >
+                OU_PARTY_ID = #{ouPartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="ouTraderId != null" >
+                OU_TRADER_ID = #{ouTraderId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterId != null" >
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterTrader != null" >
+                COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleSpeed != null" >
+                SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
+            </if>
+            <if test="settleDate != null" >
+                SETTLE_DATE = #{settleDate,jdbcType=DATE},
+            </if>
+            <if test="unitCprice != null" >
+                UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="unitInt != null" >
+                UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            </if>
+            <if test="unitFprice != null" >
+                UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+            </if>
+            <if test="parValue != null" >
+                PAR_VALUE = #{parValue,jdbcType=DECIMAL},
+            </if>
+            <if test="cpriceAmt != null" >
+                CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="intAmt != null" >
+                INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="fpriceAmt != null" >
+                FPRICE_AMT = #{fpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="deliveryType != null" >
+                DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="mDeliveryType != null" >
+                M_DELIVERY_TYPE = #{mDeliveryType,jdbcType=VARCHAR},
+            </if>
+            <if test="settCcy != null" >
+                SETT_CCY = #{settCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="clearType != null" >
+                CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="acctId != null" >
+                ACCT_ID = #{acctId,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeMarketMode != null" >
+                TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+            </if>
+            <if test="rate != null" >
+                RATE = #{rate,jdbcType=DECIMAL},
+            </if>
+            <if test="repoTerm != null" >
+                REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="faceValue != null" >
+                FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="disFaceValue != null" >
+                DIS_FACE_VALUE = #{disFaceValue,jdbcType=DECIMAL},
+            </if>
+            <if test="repoType != null" >
+                REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+            </if>
+            <if test="vSettleDate != null" >
+                V_SETTLE_DATE = #{vSettleDate,jdbcType=DATE},
+            </if>
+            <if test="mSettleDate != null" >
+                M_SETTLE_DATE = #{mSettleDate,jdbcType=DATE},
+            </if>
+            <if test="actRepoTerm != null" >
+                ACT_REPO_TERM = #{actRepoTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tgBusiType != null" >
+                TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="isCancel != null" >
+                IS_CANCEL = #{isCancel,jdbcType=VARCHAR},
+            </if>
+            <if test="isOutTrade != null" >
+                IS_OUT_TRADE = #{isOutTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="fTradeId != null" >
+                F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="dipType != null" >
+                DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealTotal" >
+        update WFL_REG_FIN_PRODUCT_DEAL_TOTAL
+        set FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            MARKET_ID = #{marketId,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            OU_PARTY_ID = #{ouPartyId,jdbcType=VARCHAR},
+            OU_TRADER_ID = #{ouTraderId,jdbcType=VARCHAR},
+            COUNTER_ID = #{counterId,jdbcType=VARCHAR},
+            COUNTER_TRADER = #{counterTrader,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            SETTLE_SPEED = #{settleSpeed,jdbcType=DECIMAL},
+            SETTLE_DATE = #{settleDate,jdbcType=DATE},
+            UNIT_CPRICE = #{unitCprice,jdbcType=DECIMAL},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            UNIT_INT = #{unitInt,jdbcType=DECIMAL},
+            UNIT_FPRICE = #{unitFprice,jdbcType=DECIMAL},
+            PAR_VALUE = #{parValue,jdbcType=DECIMAL},
+            CPRICE_AMT = #{cpriceAmt,jdbcType=DECIMAL},
+            INT_AMT = #{intAmt,jdbcType=DECIMAL},
+            FPRICE_AMT = #{fpriceAmt,jdbcType=DECIMAL},
+            SHARE_AMT = #{shareAmt,jdbcType=DECIMAL},
+            DELIVERY_TYPE = #{deliveryType,jdbcType=VARCHAR},
+            M_DELIVERY_TYPE = #{mDeliveryType,jdbcType=VARCHAR},
+            SETT_CCY = #{settCcy,jdbcType=VARCHAR},
+            TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            CLEAR_TYPE = #{clearType,jdbcType=VARCHAR},
+            SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            ACCT_ID = #{acctId,jdbcType=VARCHAR},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            TRADE_MARKET_MODE = #{tradeMarketMode,jdbcType=VARCHAR},
+            RATE = #{rate,jdbcType=DECIMAL},
+            REPO_TERM = #{repoTerm,jdbcType=DECIMAL},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            FACE_VALUE = #{faceValue,jdbcType=DECIMAL},
+            DIS_FACE_VALUE = #{disFaceValue,jdbcType=DECIMAL},
+            REPO_TYPE = #{repoType,jdbcType=VARCHAR},
+            V_SETTLE_DATE = #{vSettleDate,jdbcType=DATE},
+            M_SETTLE_DATE = #{mSettleDate,jdbcType=DATE},
+            ACT_REPO_TERM = #{actRepoTerm,jdbcType=DECIMAL},
+            M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            TG_BUSI_TYPE = #{tgBusiType,jdbcType=VARCHAR},
+            TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            IS_CANCEL = #{isCancel,jdbcType=VARCHAR},
+            IS_OUT_TRADE = #{isOutTrade,jdbcType=VARCHAR},
+            F_TRADE_ID = #{fTradeId,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            DIP_TYPE = #{dipType,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR}
+        where TOTLE_TRADE_ID = #{totleTradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

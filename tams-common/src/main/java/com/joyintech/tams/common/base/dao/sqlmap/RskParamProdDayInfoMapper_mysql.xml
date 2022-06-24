@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskParamProdDayInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskParamProdDayInfo" >
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="IS_LARGE_RED" property="isLargeRed" jdbcType="VARCHAR" />
+        <result column="IS_CUM_RED_TRID_UP_TWEN" property="isCumRedTridUpTwen" jdbcType="VARCHAR" />
+        <result column="IS_CUM_RED_FIVED_UP_THIR" property="isCumRedFivedUpThir" jdbcType="VARCHAR" />
+        <result column="TOPTENINV_SHARESUM_PERCENT" property="topteninvSharesumPercent" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PORTFOLIO_ID PORTFOLIO_ID, CDATE CDATE, IS_LARGE_RED IS_LARGE_RED, IS_CUM_RED_TRID_UP_TWEN IS_CUM_RED_TRID_UP_TWEN, 
+        IS_CUM_RED_FIVED_UP_THIR IS_CUM_RED_FIVED_UP_THIR, TOPTENINV_SHARESUM_PERCENT TOPTENINV_SHARESUM_PERCENT, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskParamProdDayInfoMapper_mysql.Base_Column_List" />
+        from RSK_PARAM_PROD_DAY_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskParamProdDayInfoMapper_mysql.Base_Column_List" />
+        from RSK_PARAM_PROD_DAY_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskParamProdDayInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskParamProdDayInfoMapper_mysql.Base_Column_List" />
+        from RSK_PARAM_PROD_DAY_INFO
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskParamProdDayInfoKey" >
+        delete from RSK_PARAM_PROD_DAY_INFO
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskParamProdDayInfo" >
+        insert into RSK_PARAM_PROD_DAY_INFO (PORTFOLIO_ID, CDATE, IS_LARGE_RED, 
+            IS_CUM_RED_TRID_UP_TWEN, IS_CUM_RED_FIVED_UP_THIR, 
+            TOPTENINV_SHARESUM_PERCENT, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{isLargeRed,jdbcType=VARCHAR}, 
+            #{isCumRedTridUpTwen,jdbcType=VARCHAR}, #{isCumRedFivedUpThir,jdbcType=VARCHAR}, 
+            #{topteninvSharesumPercent,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskParamProdDayInfo" >
+        insert into RSK_PARAM_PROD_DAY_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="isLargeRed != null" >
+                IS_LARGE_RED,
+            </if>
+            <if test="isCumRedTridUpTwen != null" >
+                IS_CUM_RED_TRID_UP_TWEN,
+            </if>
+            <if test="isCumRedFivedUpThir != null" >
+                IS_CUM_RED_FIVED_UP_THIR,
+            </if>
+            <if test="topteninvSharesumPercent != null" >
+                TOPTENINV_SHARESUM_PERCENT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="isLargeRed != null" >
+                #{isLargeRed,jdbcType=VARCHAR},
+            </if>
+            <if test="isCumRedTridUpTwen != null" >
+                #{isCumRedTridUpTwen,jdbcType=VARCHAR},
+            </if>
+            <if test="isCumRedFivedUpThir != null" >
+                #{isCumRedFivedUpThir,jdbcType=VARCHAR},
+            </if>
+            <if test="topteninvSharesumPercent != null" >
+                #{topteninvSharesumPercent,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskParamProdDayInfo" >
+        insert into RSK_PARAM_PROD_DAY_INFO(PORTFOLIO_ID, CDATE, IS_LARGE_RED, IS_CUM_RED_TRID_UP_TWEN, 
+        IS_CUM_RED_FIVED_UP_THIR, TOPTENINV_SHARESUM_PERCENT, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select PORTFOLIO_ID, CDATE, IS_LARGE_RED, IS_CUM_RED_TRID_UP_TWEN, 
+            IS_CUM_RED_FIVED_UP_THIR, TOPTENINV_SHARESUM_PERCENT, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_PARAM_PROD_DAY_INFO
+             where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskParamProdDayInfo" >
+        update RSK_PARAM_PROD_DAY_INFO
+        <set >
+            <if test="isLargeRed != null" >
+                IS_LARGE_RED = #{isLargeRed,jdbcType=VARCHAR},
+            </if>
+            <if test="isCumRedTridUpTwen != null" >
+                IS_CUM_RED_TRID_UP_TWEN = #{isCumRedTridUpTwen,jdbcType=VARCHAR},
+            </if>
+            <if test="isCumRedFivedUpThir != null" >
+                IS_CUM_RED_FIVED_UP_THIR = #{isCumRedFivedUpThir,jdbcType=VARCHAR},
+            </if>
+            <if test="topteninvSharesumPercent != null" >
+                TOPTENINV_SHARESUM_PERCENT = #{topteninvSharesumPercent,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskParamProdDayInfo" >
+        update RSK_PARAM_PROD_DAY_INFO
+        set IS_LARGE_RED = #{isLargeRed,jdbcType=VARCHAR},
+            IS_CUM_RED_TRID_UP_TWEN = #{isCumRedTridUpTwen,jdbcType=VARCHAR},
+            IS_CUM_RED_FIVED_UP_THIR = #{isCumRedFivedUpThir,jdbcType=VARCHAR},
+            TOPTENINV_SHARESUM_PERCENT = #{topteninvSharesumPercent,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+    </update>
+</mapper>

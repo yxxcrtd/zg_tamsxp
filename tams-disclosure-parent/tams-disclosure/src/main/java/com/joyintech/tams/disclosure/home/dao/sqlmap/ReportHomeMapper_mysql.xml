@@ -147,6 +147,7 @@
 			(select count(ces3.SUBMIT_STATUS) as sendnum from CHB_EQUTOT_SUB  ces3 WHERE ces3.SUBMIT_DEADLINE &gt; STR_TO_DATE(#{searchDate,jdbcType=VARCHAR}, '%Y-%m-%d %H:%i:%s') and ces3.SUBMIT_STATUS=#{NO_SUBMIT}  <if test="orgCode!='' and orgCode != null ">and ces3.ORG_CODE= #{orgCode}</if>) sendData -->
 		)subinfo
 	</select>
+
 	<select id="queryYpl" resultType="com.joyintech.tams.disclosure.home.dto.RepFtpPathDto">
 		select 
 			EP.id,

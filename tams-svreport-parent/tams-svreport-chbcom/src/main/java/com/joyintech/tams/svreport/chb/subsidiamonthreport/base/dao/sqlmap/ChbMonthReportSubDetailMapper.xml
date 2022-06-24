@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubDetail" >
+        <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+        <result column="TERMS" property="terms" jdbcType="DECIMAL" />
+        <result column="BALANCE_ACC" property="balanceAcc" jdbcType="DECIMAL" />
+        <result column="TERMS_ACC" property="termsAcc" jdbcType="DECIMAL" />
+        <result column="BALANCE_INC" property="balanceInc" jdbcType="DECIMAL" />
+        <result column="TERMS_INC" property="termsInc" jdbcType="DECIMAL" />
+        <result column="BALANCE_BAN" property="balanceBan" jdbcType="DECIMAL" />
+        <result column="PRODCOUNTS_BAN" property="prodcountsBan" jdbcType="DECIMAL" />
+        <result column="TERMS_BAN" property="termsBan" jdbcType="DECIMAL" />
+        <result column="BALANCE_SUB" property="balanceSub" jdbcType="DECIMAL" />
+        <result column="PRODCOUNTS_SUB" property="prodcountsSub" jdbcType="DECIMAL" />
+        <result column="TERMS_SUB" property="termsSub" jdbcType="DECIMAL" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DETAILUUID DETAILUUID, TERMID TERMID, REPORTTYPE REPORTTYPE, PROPERTYCODE PROPERTYCODE, 
+        BALANCE BALANCE, TERMS TERMS, BALANCE_ACC BALANCE_ACC, TERMS_ACC TERMS_ACC, BALANCE_INC BALANCE_INC, 
+        TERMS_INC TERMS_INC, BALANCE_BAN BALANCE_BAN, PRODCOUNTS_BAN PRODCOUNTS_BAN, TERMS_BAN TERMS_BAN, 
+        BALANCE_SUB BALANCE_SUB, PRODCOUNTS_SUB PRODCOUNTS_SUB, TERMS_SUB TERMS_SUB, ORG_CODE ORG_CODE, 
+        DEPT_CODE DEPT_CODE, REPORTUUID REPORTUUID
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubDetailMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubDetailMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubDetailMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_DETAIL
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_MONTH_REPORT_SUB_DETAIL
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubDetail" >
+        insert into CHB_MONTH_REPORT_SUB_DETAIL (DETAILUUID, TERMID, REPORTTYPE, 
+            PROPERTYCODE, BALANCE, TERMS, 
+            BALANCE_ACC, TERMS_ACC, BALANCE_INC, 
+            TERMS_INC, BALANCE_BAN, PRODCOUNTS_BAN, 
+            TERMS_BAN, BALANCE_SUB, PRODCOUNTS_SUB, 
+            TERMS_SUB, ORG_CODE, DEPT_CODE, 
+            REPORTUUID)
+        values (#{detailuuid,jdbcType=CHAR}, #{termid,jdbcType=VARCHAR}, #{reporttype,jdbcType=VARCHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, #{terms,jdbcType=DECIMAL}, 
+            #{balanceAcc,jdbcType=DECIMAL}, #{termsAcc,jdbcType=DECIMAL}, #{balanceInc,jdbcType=DECIMAL}, 
+            #{termsInc,jdbcType=DECIMAL}, #{balanceBan,jdbcType=DECIMAL}, #{prodcountsBan,jdbcType=DECIMAL}, 
+            #{termsBan,jdbcType=DECIMAL}, #{balanceSub,jdbcType=DECIMAL}, #{prodcountsSub,jdbcType=DECIMAL}, 
+            #{termsSub,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
+            #{reportuuid,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubDetail" >
+        insert into CHB_MONTH_REPORT_SUB_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="termid != null" >
+                TERMID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="balance != null" >
+                BALANCE,
+            </if>
+            <if test="terms != null" >
+                TERMS,
+            </if>
+            <if test="balanceAcc != null" >
+                BALANCE_ACC,
+            </if>
+            <if test="termsAcc != null" >
+                TERMS_ACC,
+            </if>
+            <if test="balanceInc != null" >
+                BALANCE_INC,
+            </if>
+            <if test="termsInc != null" >
+                TERMS_INC,
+            </if>
+            <if test="balanceBan != null" >
+                BALANCE_BAN,
+            </if>
+            <if test="prodcountsBan != null" >
+                PRODCOUNTS_BAN,
+            </if>
+            <if test="termsBan != null" >
+                TERMS_BAN,
+            </if>
+            <if test="balanceSub != null" >
+                BALANCE_SUB,
+            </if>
+            <if test="prodcountsSub != null" >
+                PRODCOUNTS_SUB,
+            </if>
+            <if test="termsSub != null" >
+                TERMS_SUB,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="termid != null" >
+                #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="balance != null" >
+                #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="terms != null" >
+                #{terms,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceAcc != null" >
+                #{balanceAcc,jdbcType=DECIMAL},
+            </if>
+            <if test="termsAcc != null" >
+                #{termsAcc,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceInc != null" >
+                #{balanceInc,jdbcType=DECIMAL},
+            </if>
+            <if test="termsInc != null" >
+                #{termsInc,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceBan != null" >
+                #{balanceBan,jdbcType=DECIMAL},
+            </if>
+            <if test="prodcountsBan != null" >
+                #{prodcountsBan,jdbcType=DECIMAL},
+            </if>
+            <if test="termsBan != null" >
+                #{termsBan,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceSub != null" >
+                #{balanceSub,jdbcType=DECIMAL},
+            </if>
+            <if test="prodcountsSub != null" >
+                #{prodcountsSub,jdbcType=DECIMAL},
+            </if>
+            <if test="termsSub != null" >
+                #{termsSub,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubDetail" >
+        insert into CHB_MONTH_REPORT_SUB_DETAIL(DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, 
+        BALANCE, TERMS, BALANCE_ACC, TERMS_ACC, BALANCE_INC, TERMS_INC, BALANCE_BAN, PRODCOUNTS_BAN, 
+        TERMS_BAN, BALANCE_SUB, PRODCOUNTS_SUB, TERMS_SUB, ORG_CODE, DEPT_CODE, REPORTUUID
+        )
+        select DETAILUUID, TERMID, REPORTTYPE, PROPERTYCODE, 
+            BALANCE, TERMS, BALANCE_ACC, TERMS_ACC, BALANCE_INC, TERMS_INC, BALANCE_BAN, PRODCOUNTS_BAN, 
+            TERMS_BAN, BALANCE_SUB, PRODCOUNTS_SUB, TERMS_SUB, ORG_CODE, DEPT_CODE, REPORTUUID
+            
+             from CHB_MONTH_REPORT_SUB_DETAIL
+             where 1 = 1 and DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubDetail" >
+        update CHB_MONTH_REPORT_SUB_DETAIL
+        <set >
+            <if test="termid != null" >
+                TERMID = #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="balance != null" >
+                BALANCE = #{balance,jdbcType=DECIMAL},
+            </if>
+            <if test="terms != null" >
+                TERMS = #{terms,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceAcc != null" >
+                BALANCE_ACC = #{balanceAcc,jdbcType=DECIMAL},
+            </if>
+            <if test="termsAcc != null" >
+                TERMS_ACC = #{termsAcc,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceInc != null" >
+                BALANCE_INC = #{balanceInc,jdbcType=DECIMAL},
+            </if>
+            <if test="termsInc != null" >
+                TERMS_INC = #{termsInc,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceBan != null" >
+                BALANCE_BAN = #{balanceBan,jdbcType=DECIMAL},
+            </if>
+            <if test="prodcountsBan != null" >
+                PRODCOUNTS_BAN = #{prodcountsBan,jdbcType=DECIMAL},
+            </if>
+            <if test="termsBan != null" >
+                TERMS_BAN = #{termsBan,jdbcType=DECIMAL},
+            </if>
+            <if test="balanceSub != null" >
+                BALANCE_SUB = #{balanceSub,jdbcType=DECIMAL},
+            </if>
+            <if test="prodcountsSub != null" >
+                PRODCOUNTS_SUB = #{prodcountsSub,jdbcType=DECIMAL},
+            </if>
+            <if test="termsSub != null" >
+                TERMS_SUB = #{termsSub,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            </if>
+        </set>
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSubDetail" >
+        update CHB_MONTH_REPORT_SUB_DETAIL
+        set TERMID = #{termid,jdbcType=VARCHAR},
+            REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+            PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+            BALANCE = #{balance,jdbcType=DECIMAL},
+            TERMS = #{terms,jdbcType=DECIMAL},
+            BALANCE_ACC = #{balanceAcc,jdbcType=DECIMAL},
+            TERMS_ACC = #{termsAcc,jdbcType=DECIMAL},
+            BALANCE_INC = #{balanceInc,jdbcType=DECIMAL},
+            TERMS_INC = #{termsInc,jdbcType=DECIMAL},
+            BALANCE_BAN = #{balanceBan,jdbcType=DECIMAL},
+            PRODCOUNTS_BAN = #{prodcountsBan,jdbcType=DECIMAL},
+            TERMS_BAN = #{termsBan,jdbcType=DECIMAL},
+            BALANCE_SUB = #{balanceSub,jdbcType=DECIMAL},
+            PRODCOUNTS_SUB = #{prodcountsSub,jdbcType=DECIMAL},
+            TERMS_SUB = #{termsSub,jdbcType=DECIMAL},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            REPORTUUID = #{reportuuid,jdbcType=CHAR}
+        where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+    </update>
+</mapper>

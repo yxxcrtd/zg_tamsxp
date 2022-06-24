@@ -3,91 +3,91 @@
 <mapper namespace="com.joyintech.service.disclosure.information.manage.workmonitor.dao.ReportWorkMonitor001Mapper_mysql">
 	<select id="queryPageList" resultType="com.joyintech.service.disclosure.information.manage.workmonitor.dto.ReportWorkMonitor001Dto">
 		SELECT
-		rm.JOB_ID jobId ,
-		rm.JOB_STATUS jobStatus ,
-		rm.PRO_ID proId ,
-		rm.PRO_NAME proName ,
-		rm.END_DATE endDate ,
-		rm.NEXT_DATE nextDate,
-		rj.JOB_NAME jobName,
-		info.report_name reportName,
-		DATE_FORMAT(rm.END_DATE,'%Y-%m-%d') endDateStr,
-		DATE_FORMAT(rm.NEXT_DATE,'%Y-%m-%d') nextDateStr
+		  rm.JOB_ID jobId ,
+		  rm.JOB_STATUS jobStatus ,
+		  rm.PRO_ID proId ,
+		  rm.PRO_NAME proName ,
+		  rm.END_DATE endDate ,
+		  rm.NEXT_DATE nextDate,
+		  rj.JOB_NAME jobName,
+		  info.report_name reportName,
+		  DATE_FORMAT(rm.END_DATE,'%Y-%m-%d') endDateStr,
+		  DATE_FORMAT(rm.NEXT_DATE,'%Y-%m-%d') nextDateStr
 		FROM
-		rep_monitor rm
+		  rep_monitor rm
 		left join rep_job rj on rj.JOB_ID = rm.JOB_ID
 		LEFT JOIN rep_info info ON info.rep_id = rj.rep_id
 		WHERE 1=1
 		<if test="jobIdArr != null and jobIdArr.length > 0">
-			AND rm.JOB_ID IN
+	 		AND rm.JOB_ID IN
 			<foreach item="item" collection="jobIdArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		<if test="prodIdArr != null and prodIdArr.length > 0">
-			AND rm.PRO_ID IN
+	 		AND rm.PRO_ID IN
 			<foreach item="item" collection="prodIdArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		<if test="valDateBegin !=null and valDateBegin !='' ">
-			AND DATE_FORMAT(rm.END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="valDateEnd !=null and valDateEnd !='' ">
-			AND DATE_FORMAT(rm.END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
-		</if>
-	</select>
+            AND DATE_FORMAT(rm.END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="valDateEnd !=null and valDateEnd !='' ">
+            AND DATE_FORMAT(rm.END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
+        </if>
+    </select>
 	<select id="queryPageListNew" resultType="com.joyintech.service.disclosure.information.manage.workmonitor.dto.ReportWorkMonitorNew001Dto">
-		SELECT
-		ril.JOB_ID        jobId,
-		ril.JOB_NAME      jobName,
-		ril.EXEC_STATUS   execStatus,
-		ril.EXEC_DATE     execDate,
-		DATE_FORMAT(ril.START_DATE,'%Y-%m-%d %H:%i:%s')    startExecDate,
-		DATE_FORMAT(ril.END_DATE,'%Y-%m-%d %H:%i:%s')      endExecDate,
-		ril.JOB_SEQ       jobSeq,
-		ril.EXEC_RESULT   execResult,
-		IFNULL(ril.EXEC_DETAIL,'')   execResultExplain,
-		DATE_FORMAT(ril.LASTEXEC_DATE,'%Y-%m-%d %H:%i:%s')  lastexecDate
-
+    	SELECT
+		    ril.JOB_ID        jobId,
+		    ril.JOB_NAME      jobName,
+		    ril.EXEC_STATUS   execStatus,
+		    ril.EXEC_DATE     execDate,
+		    DATE_FORMAT(ril.START_DATE,'%Y-%m-%d %H:%i:%s')    startExecDate,
+		    DATE_FORMAT(ril.END_DATE,'%Y-%m-%d %H:%i:%s')      endExecDate,
+		    ril.JOB_SEQ       jobSeq,
+		    ril.EXEC_RESULT   execResult,
+		    IFNULL(ril.EXEC_DETAIL,'')   execResultExplain,
+		    DATE_FORMAT(ril.LASTEXEC_DATE,'%Y-%m-%d %H:%i:%s')  lastexecDate
+		
 		FROM
-		REP_INSTALL_LOG ril
+		    REP_INSTALL_LOG ril
 		WHERE
-		ril.STATUS = #{status,jdbcType=VARCHAR}
+		    ril.STATUS = #{status,jdbcType=VARCHAR}
 		<if test="jobIdArr != null and jobIdArr.length > 0">
-			AND ril.JOB_ID IN
+	 		AND ril.JOB_ID IN
 			<foreach item="item" collection="jobIdArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		<if test="execStatusArr != null and execStatusArr.length > 0">
-			AND ril.EXEC_STATUS IN
+	 		AND ril.EXEC_STATUS IN
 			<foreach item="item" collection="execStatusArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		<if test="valDateBegin !=null and valDateBegin !='' ">
-			AND DATE_FORMAT(ril.START_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="valDateEnd !=null and valDateEnd !='' ">
-			AND DATE_FORMAT(ril.START_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
-		</if>
-		<if test="execResultArr != null and execResultArr.length > 0">
-			AND ril.EXEC_RESULT IN
+            AND DATE_FORMAT(ril.START_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="valDateEnd !=null and valDateEnd !='' ">
+            AND DATE_FORMAT(ril.START_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
+        </if>
+   		<if test="execResultArr != null and execResultArr.length > 0">
+	 		AND ril.EXEC_RESULT IN
 			<foreach item="item" collection="execResultArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		order by ril.EXEC_STATUS,ril.UPDATE_TIME desc
-	</select>
+    </select>
 	<update id="updateConfirmStatusById" parameterType="com.joyintech.service.disclosure.information.manage.workmonitor.dto.ReportWorkMonitor001Dto" >
 	      update REP_REVEAL
-	      set
+	      set 
 	      CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
 	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		  ,UPDATE_TIME = NOW()

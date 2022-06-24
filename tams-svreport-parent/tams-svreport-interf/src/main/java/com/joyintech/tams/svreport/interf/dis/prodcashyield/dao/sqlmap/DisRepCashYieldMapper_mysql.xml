@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodcashyield.dao.DisRepCashYieldMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+        <result column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <result column="CASH_NAME" property="cashName" jdbcType="VARCHAR" />
+        <result column="CASH_TYPE" property="cashType" jdbcType="VARCHAR" />
+        <result column="CASH_TYPE2" property="cashType2" jdbcType="VARCHAR" />
+        <result column="START_DATE" property="startDate" jdbcType="DATE" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="RATE" property="rate" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+        insert into REP_CASH_YIELD (BUSI_ID, CASH_ID, CASH_NAME,
+            CASH_TYPE, CASH_TYPE2, START_DATE,
+            REMARK, INPUT_TYPE, INPUT_USER,
+            STATUS, ADAPTER_ID, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, RATE)
+        values (#{busiId,jdbcType=VARCHAR}, #{cashId,jdbcType=VARCHAR}, #{cashName,jdbcType=VARCHAR},
+            #{cashType,jdbcType=VARCHAR}, #{cashType2,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
+            #{remark,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, #{inputUser,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, #{adapterId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{rate,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+        insert into REP_CASH_YIELD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="cashName != null" >
+                CASH_NAME,
+            </if>
+            <if test="cashType != null" >
+                CASH_TYPE,
+            </if>
+            <if test="cashType2 != null" >
+                CASH_TYPE2,
+            </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="inputUser != null" >
+                INPUT_USER,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="adapterId != null" >
+                ADAPTER_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="rate != null" >
+                RATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="cashName != null" >
+                #{cashName,jdbcType=VARCHAR},
+            </if>
+            <if test="cashType != null" >
+                #{cashType,jdbcType=VARCHAR},
+            </if>
+            <if test="cashType2 != null" >
+                #{cashType2,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUser != null" >
+                #{inputUser,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="adapterId != null" >
+                #{adapterId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="rate != null" >
+                #{rate,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield" >
+        insert into REP_CASH_YIELD(BUSI_ID, CASH_ID, CASH_NAME, CASH_TYPE, CASH_TYPE2, START_DATE,
+        REMARK, INPUT_TYPE, INPUT_USER, STATUS, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, RATE)
+        select BUSI_ID, CASH_ID, CASH_NAME, CASH_TYPE, CASH_TYPE2, START_DATE,
+            REMARK, INPUT_TYPE, INPUT_USER, #{status,jdbcType=VARCHAR} STATUS, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, RATE
+             from REP_CASH_YIELD
+             where STATUS = 'E'
+    </insert>
+
+    <delete id="deleteRepCashYieldByStartDateAndCashType">
+    	DELETE FROM REP_CASH_YIELD
+    	WHERE START_DATE = #{startDate,jdbcType=DATE}
+    	AND CASH_TYPE = #{cashType,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="mergeRepCashYield">
+
+        UPDATE  REP_CASH_YIELD as A,
+        (
+        select
+        BUSI_ID,
+        CASH_ID,
+        CASH_NAME,
+        CASH_TYPE,
+        CASH_TYPE2,
+        START_DATE,
+        REMARK,
+        INPUT_TYPE,
+        INPUT_USER,
+        STATUS,
+        ADAPTER_ID,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        RATE,
+        CHARGE_RATIO
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.busiId,jdbcType=VARCHAR}       as BUSI_ID,
+            F_GUID()                              as CASH_ID,
+            #{item.cashName,jdbcType=VARCHAR}     as CASH_NAME,
+            #{item.cashType,jdbcType=VARCHAR}     as CASH_TYPE,
+            #{item.cashType2,jdbcType=VARCHAR}    as CASH_TYPE2,
+            #{item.startDate,jdbcType=DATE}       as START_DATE,
+            #{item.remark,jdbcType=VARCHAR}       as REMARK,
+            #{item.inputType,jdbcType=VARCHAR}    as INPUT_TYPE,
+            #{item.inputUser,jdbcType=VARCHAR}    as INPUT_USER,
+            #{item.status,jdbcType=VARCHAR}       as STATUS,
+            'interf'    as ADAPTER_ID,
+            #{item.createUser,jdbcType=VARCHAR}   as CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR}   as CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR}   as UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME,
+            #{item.rate,jdbcType=DECIMAL}         as RATE,
+            #{item.chargeRatio,jdbcType=DECIMAL}  as CHARGE_RATIO
+            from dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        SET A.CASH_ID    = B.CASH_ID     ,
+        A.CASH_NAME  = B.CASH_NAME   ,
+        A.CASH_TYPE  = B.CASH_TYPE   ,
+        A.REMARK     = B.REMARK      ,
+        A.INPUT_TYPE = B.INPUT_TYPE  ,
+        A.INPUT_USER = B.INPUT_USER  ,
+        A.STATUS     = B.STATUS      ,
+        A.ADAPTER_ID = B.ADAPTER_ID  ,
+        A.CREATE_USER= B.CREATE_USER ,
+        A.CREATE_DEPT= B.CREATE_DEPT ,
+        A.CREATE_TIME= B.CREATE_TIME ,
+        A.UPDATE_USER= B.UPDATE_USER ,
+        A.UPDATE_TIME= B.UPDATE_TIME ,
+        A.RATE       = B.RATE,
+        A.CHARGE_RATIO= B.CHARGE_RATIO
+        where A.BUSI_ID = B.BUSI_ID
+        and A.CASH_TYPE2 = B.CASH_TYPE2
+        and A.START_DATE = B.START_DATE;
+        insert into REP_CASH_YIELD(BUSI_ID,
+        CASH_ID,
+        CASH_NAME,
+        CASH_TYPE,
+        CASH_TYPE2,
+        START_DATE,
+        REMARK,
+        INPUT_TYPE,
+        INPUT_USER,
+        STATUS,
+        ADAPTER_ID,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        RATE,
+        CHARGE_RATIO)
+        select BUSI_ID,
+        CASH_ID,
+        CASH_NAME,
+        CASH_TYPE,
+        CASH_TYPE2,
+        START_DATE,
+        REMARK,
+        INPUT_TYPE,
+        INPUT_USER,
+        STATUS,
+        ADAPTER_ID,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        RATE,
+        CHARGE_RATIO from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.busiId,jdbcType=VARCHAR}       as BUSI_ID,
+            F_GUID()                              as CASH_ID,
+            #{item.cashName,jdbcType=VARCHAR}     as CASH_NAME,
+            #{item.cashType,jdbcType=VARCHAR}     as CASH_TYPE,
+            #{item.cashType2,jdbcType=VARCHAR}    as CASH_TYPE2,
+            #{item.startDate,jdbcType=DATE}       as START_DATE,
+            #{item.remark,jdbcType=VARCHAR}       as REMARK,
+            #{item.inputType,jdbcType=VARCHAR}    as INPUT_TYPE,
+            #{item.inputUser,jdbcType=VARCHAR}    as INPUT_USER,
+            #{item.status,jdbcType=VARCHAR}       as STATUS,
+            'interf'    as ADAPTER_ID,
+            #{item.createUser,jdbcType=VARCHAR}   as CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR}   as CREATE_DEPT,
+            #{item.createTime,jdbcType=TIMESTAMP} as CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR}   as UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME,
+            #{item.rate,jdbcType=DECIMAL}         as RATE,
+            #{item.chargeRatio,jdbcType=DECIMAL}  as CHARGE_RATIO
+            from dual
+        </foreach>
+        ) TEMP where not exists (select 1 from REP_CASH_YIELD CII where CII.BUSI_ID=TEMP.BUSI_ID
+        and CII.CASH_TYPE2 = TEMP.CASH_TYPE2
+        and CII.START_DATE = TEMP.START_DATE)
+        ) de ;
+    </update>
+
+    <insert id="insertRepCashYieldList" parameterType="java.util.List">
+        insert into REP_CASH_YIELD
+        (
+        BUSI_ID, CASH_ID, CASH_NAME, CASH_TYPE, CASH_TYPE2, START_DATE,
+        REMARK, INPUT_TYPE, INPUT_USER, STATUS, ADAPTER_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME, RATE
+        )
+        values
+        <foreach collection="list" item="item" open=" " close=" " separator=",">
+            (
+            #{item.busiId,jdbcType=VARCHAR}, #{item.cashId,jdbcType=VARCHAR}, #{item.cashName,jdbcType=VARCHAR},
+            #{item.cashType,jdbcType=VARCHAR}, #{item.cashType2,jdbcType=VARCHAR}, #{item.startDate,jdbcType=DATE},
+            #{item.remark,jdbcType=VARCHAR}, #{item.inputType,jdbcType=VARCHAR}, #{item.inputUser,jdbcType=VARCHAR},
+            #{item.status,jdbcType=VARCHAR}, #{item.adapterId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+            #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.rate,jdbcType=DECIMAL}
+            )
+        </foreach>
+
+    </insert>
+    <select id="selectFeeYieldList" parameterType="java.util.List" resultType="com.joyintech.tams.svreport.interf.dis.prodcashyield.dto.DisRepCashYield">
+        select
+        BUSI_ID, CASH_TYPE2, START_DATE
+        from REP_CASH_YIELD
+        where
+        status != 'D' and update_user  != 'interf'
+        <if test='feeYildList != null'>
+            <foreach collection="feeYildList" item="item" index="index" open="and  (" close=")" separator="or">
+                (BUSI_ID = #{item.PROD_ID,jdbcType=VARCHAR} and CASH_TYPE2 = #{item.CASH_TYPE_2,jdbcType=VARCHAR}
+                and DATE_FORMAT(START_DATE,'%Y-%m-%d') = #{item.START_DATE,jdbcType=VARCHAR})
+            </foreach>
+        </if>
+    </select>
+</mapper>

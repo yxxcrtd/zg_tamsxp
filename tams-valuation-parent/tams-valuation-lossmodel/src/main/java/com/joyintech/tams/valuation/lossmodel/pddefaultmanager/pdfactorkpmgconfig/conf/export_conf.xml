@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="PdFactorKpmgConfig001.xlsx" name="前端因子维护信息">
-    <Worksheet javaBean="com.joyintech.tams.model.impairment.pddefaultmanager.pdfactorkpmgconfig.dto.PdFactorKpmgConfigDto">
-        <Row>
-            <Cell order="1" name="年份">vouchYear</Cell>
-            <Cell order="2" name="季度">combinedFactor</Cell>
-        </Row>
-    </Worksheet>
-</Workbook>

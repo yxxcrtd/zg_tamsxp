@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.subsidiamonthreport.dao.SubsidiaMonthReportRegistBatchMapper" >
+    <!-- 删除子公司理财报表主表信息 -->
+    <delete id="deleteByModel" parameterType="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.entity.ChbMonthReportSub">
+       delete from CHB_MONTH_REPORT_SUB
+       <where>
+           <if test="termid!=null">
+            and termid = #{termid,jdbcType=VARCHAR}
+           </if>
+           <if test="startdate!=null">
+            and startdate = #{startdate,jdbcType=DATE}
+           </if>
+           <if test="enddate!=null">
+            and enddate = #{enddate,jdbcType=DATE}
+           </if>
+           <if test="reporttype!=null">
+            and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+           </if>
+           <if test="reportfrequ!=null">
+            and REPORTFREQU = #{reportfrequ,jdbcType=VARCHAR}
+           </if>
+           <if test="reportuuid !=null">
+            and REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
+           </if>
+       </where>
+    </delete>
+    <!-- 根据期限代码查询发送过的数据 -->
+    <select id="selectSendDataByTermId" parameterType="java.lang.String"
+        resultMap="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubMapper.BaseResultMap">
+        select 
+            <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB
+        where SEND_STATUS != '01'
+        and TERMID = #{termid,jdbcType=CHAR}
+    </select>
+    <!-- 根据期限代码查询未发送过的数据 -->
+    <select id="selectUnSendDataByTermId" parameterType="java.lang.String"
+        resultMap="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubMapper.BaseResultMap">
+        select 
+            <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB
+        where SEND_STATUS = '01'
+        and TERMID = #{termid,jdbcType=CHAR}
+    </select>
+    <!-- 根据配置的报表类型查询报表模板 -->
+    <select id="selectSubTemplatesByReporttype" parameterType="java.lang.String"
+        resultMap="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubTemplateMapper.BaseResultMap" >
+        select 
+        <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubTemplateMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB_TEMPLATE
+        where STATUS = 'E'
+        and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+        order by ORDERNO
+    </select>
+  
+    <delete id="deleteChbMonthReportSubDetail">
+        delete from CHB_MONTH_REPORT_SUB_DETAIL
+        where TERMID = #{termid,jdbcType=VARCHAR}
+        and REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+        <if test="reportuuid != null and reportuuid != ''">
+            and REPORTUUID = #{reportuuid,jdbcType=VARCHAR}
+        </if>
+    </delete>
+    <!-- 根据报表开始日和结束日 -->
+    <select id="selectAssetPositionsByMonthDate" resultType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition">
+        select
+            position.PROD_ID prodId,
+            position.ASSETVALUE_B assetvalueB,
+            position.TERMS terms,
+            position.SUNASSETTYPE sunassettype,
+            position.SUNASSETTYPE2 sunassettype2,
+            info.IS_TRANSFER isFprod,
+            asset.ISSUE_MODE issueMode
+        from CHB_MONTH_ASSET_POSITION position
+        inner join CHB_PRD_BASEINFO info
+        on info.PROD_ID = position.PROD_ID
+        left join CHB_ASSET_INFO asset on asset.ASSET_CODE = position.ASSET_CODE
+        and info.STATUS in ('M', 'E')
+        and info.PROFIT_TYPE = '03'
+        where position.ENDDATE >= #{firstday, jdbcType=DATE}
+        and position.ENDDATE <![CDATA[<=]]> #{lastday, jdbcType=DATE}
+    </select>
+</mapper>

@@ -3,29 +3,29 @@
 <mapper namespace="com.joyintech.tams.report.system.instregbankcode.dao.SysInstRegBankCode002Mapper_mysql">
     <select id="selectRegistBankCodeDataCount" resultType="java.lang.Integer">
         select
-        count(1)
+            count(1)
         from
-        CHB_ORG_REGIST_BANK_CODE
+            CHB_ORG_REGIST_BANK_CODE
         where
-        STATUS = 'E'
-        and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
-        <if test="orgCode != null and orgCode != ''">
-            and ORG_CODE != #{orgCode,jdbcType=VARCHAR}
-        </if>
+            STATUS = 'E'
+            and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+            <if test="orgCode != null and orgCode != ''">
+                and ORG_CODE != #{orgCode,jdbcType=VARCHAR}
+            </if>
     </select>
 
     <select id="selectPageData" resultType="com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode002Dto">
         select
-        ORG_CODE as orgCode,
-        REGIST_BANK_CODE as registBankCode,
-        PBC_BANK_CODE as pbcBankCode,
-        IS_FIN_SUB_COMPANY as isFinSubCompany,
-        /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
-        belogCodeCBRC ,
-        /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
-        INSITITUTE_CODE  as insitituteCode
+            ORG_CODE as orgCode,
+            REGIST_BANK_CODE as registBankCode,
+            PBC_BANK_CODE as pbcBankCode,
+            IS_FIN_SUB_COMPANY as isFinSubCompany,
+            /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
+            belogCodeCBRC ,
+            /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/
+            INSITITUTE_CODE  as insitituteCode
         from
-        CHB_ORG_REGIST_BANK_CODE
+            CHB_ORG_REGIST_BANK_CODE
         where
         ORG_CODE = #{orgCode,jdbcType=VARCHAR}
         <if test="dataStatus != null and dataStatus != ''">

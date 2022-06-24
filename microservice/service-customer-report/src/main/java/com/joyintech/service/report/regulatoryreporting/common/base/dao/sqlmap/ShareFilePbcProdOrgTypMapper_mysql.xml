@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.common.base.dao.ShareFilePbcProdOrgTypMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgTyp" >
+        <result column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="PRODCOUNTS" property="prodcounts" jdbcType="DECIMAL" />
+        <result column="HIGH_YIELD" property="highYield" jdbcType="DECIMAL" />
+        <result column="LOW_YIELD" property="lowYield" jdbcType="DECIMAL" />
+        <result column="EXP_YIELD" property="expYield" jdbcType="DECIMAL" />
+        <result column="DQ_YIELD" property="dqYield" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgTyp" >
+        insert into SHARE_FILE_PBC_PROD_ORG_TYP (DETAILUUID, REPORTTYPE, GROUPTYPE, 
+            PROPERTYCODE, REPORTUUID, PRODCOUNTS, 
+            HIGH_YIELD, LOW_YIELD, EXP_YIELD, 
+            DQ_YIELD)
+        values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, #{prodcounts,jdbcType=DECIMAL}, 
+            #{highYield,jdbcType=DECIMAL}, #{lowYield,jdbcType=DECIMAL}, #{expYield,jdbcType=DECIMAL}, 
+            #{dqYield,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgTyp" >
+        insert into SHARE_FILE_PBC_PROD_ORG_TYP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="prodcounts != null" >
+                PRODCOUNTS,
+            </if>
+            <if test="highYield != null" >
+                HIGH_YIELD,
+            </if>
+            <if test="lowYield != null" >
+                LOW_YIELD,
+            </if>
+            <if test="expYield != null" >
+                EXP_YIELD,
+            </if>
+            <if test="dqYield != null" >
+                DQ_YIELD,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="prodcounts != null" >
+                #{prodcounts,jdbcType=DECIMAL},
+            </if>
+            <if test="highYield != null" >
+                #{highYield,jdbcType=DECIMAL},
+            </if>
+            <if test="lowYield != null" >
+                #{lowYield,jdbcType=DECIMAL},
+            </if>
+            <if test="expYield != null" >
+                #{expYield,jdbcType=DECIMAL},
+            </if>
+            <if test="dqYield != null" >
+                #{dqYield,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdOrgTyp" >
+        insert into SHARE_FILE_PBC_PROD_ORG_TYP(DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+        REPORTUUID, PRODCOUNTS, HIGH_YIELD, LOW_YIELD, EXP_YIELD, DQ_YIELD)
+        select DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+            REPORTUUID, PRODCOUNTS, HIGH_YIELD, LOW_YIELD, EXP_YIELD, DQ_YIELD
+             from SHARE_FILE_PBC_PROD_ORG_TYP
+             where 1 = 1
+    </insert>
+</mapper>

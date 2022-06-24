@@ -1,0 +1,18 @@
+
+DELIMITER ??
+DROP PROCEDURE IF EXISTS schema_change??
+CREATE PROCEDURE schema_change()
+BEGIN
+IF NOT EXISTS (SELECT * FROM information_schema.columns WHERE table_schema = DATABASE()  AND table_name = 'CHB_PRDRESIST_CODE' AND column_name = 'PROD_INS_ID') THEN
+
+ALTER TABLE CHB_PRDRESIST_CODE ADD PROD_INS_ID VARCHAR(100) COMMENT '行内识别码';
+
+END IF;
+
+END??
+DELIMITER ;
+
+CALL schema_change();
+
+
+update CHB_PRDRESIST_CODE set PROD_INS_ID = PRODID;

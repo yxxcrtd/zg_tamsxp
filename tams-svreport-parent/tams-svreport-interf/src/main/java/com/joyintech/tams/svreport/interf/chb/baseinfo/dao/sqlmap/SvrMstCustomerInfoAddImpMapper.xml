@@ -77,10 +77,34 @@
 
   <select id="getAllMstCustomerInfoInstit" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd" resultType="com.joyintech.tams.common.base.entity.MstCustomerInfoAdd">
     select
-    CUSTOMER_ID,PARTY_TYPE1
-    from MST_CUSTOMER_INFO_ADD
+    A.CUSTOMER_ID,A.PARTY_TYPE1,B.CUSTOMER_NAME  COMPANY_NAME
+    from MST_CUSTOMER_INFO_ADD A
+    LEFT JOIN MST_CUSTOMER_INFO B ON A.CUSTOMER_ID = B.CUSTOMER_ID
     where 1=1
   </select>
+  <select id="getAllCustomerInfo"  resultType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+    SELECT
+    t1.CUSTOMER_ID as customerId,
+    t1.CUSTOMER_NAME as customerName
+    FROM
+    MST_CUSTOMER_INFO t1
+    INNER JOIN
+    MST_CUSTOMER_INFO_ADD t2
+    ON
+    t1.CUSTOMER_ID = t2.CUSTOMER_ID
+  </select>
+
+  <select id="getAllIndustryShares"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
+    SELECT
+    DICT_CODE as dictCode,
+    ITEM_CODE as itemCode,
+    LINKED_DICT_CODE as linkedDictCode,
+    LINKED_ITEM_CODE as linkedItemCode
+    FROM SYS_DATADICT_LIST_LINK
+    WHERE 1=1
+      and LINKED_DICT_CODE = 'INSTITUTION_INDUSTRY_FIRST_LEVEL'
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from MST_CUSTOMER_INFO_ADD
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
@@ -666,11 +690,10 @@
   </delete>
   
   <insert id="mergeMstCustomerInfoData"
-	parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+	parameterType="list">
+    <foreach collection="list" item="item" index="index" open="begin" close="end;">
 	MERGE INTO MST_CUSTOMER_INFO_ADD CII
 	USING (
-	<foreach collection="list" item="item" open="select * from("
-		close=")" separator="union all">
 		SELECT
 		#{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3,
 		#{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
@@ -696,7 +719,7 @@
 		#{item.isCreditRelatedTrd,jdbcType=VARCHAR} IS_CREDIT_RELATED_TRD,
 		#{item.structAdjustType,jdbcType=VARCHAR} STRUCT_ADJUST_TYPE,
 		#{item.indusUpgrateType,jdbcType=VARCHAR} INDUS_UPGRATE_TYPE,
-		#{item.busiScope,jdbcType=VARCHAR} BUSI_SCOPE,
+        empty_clob() BUSI_SCOPE,
 		#{item.mainBusi,jdbcType=VARCHAR} MAIN_BUSI,
 		#{item.sex,jdbcType=VARCHAR} SEX,
 		#{item.personId,jdbcType=VARCHAR} PERSON_ID,
@@ -726,7 +749,6 @@
         #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED
 		FROM
 		DUAL
-	</foreach>
 	) TEMP
 	<!-- 业务主键匹配 -->
 	ON(CII.CUSTOMER_ID = TEMP.CUSTOMER_ID
@@ -811,7 +833,7 @@
 	TEMP.IS_LISTED_COMPANY, TEMP.IS_GROUP_CUSTOMER, TEMP.PARENT_CUSTOMER_ID,
 	TEMP.PARENT_CUSTOMER_NAME, TEMP.IS_PRIVATE, TEMP.IS_ESCAPE_DEPT,
 	TEMP.CREDIT_TYPE, TEMP.IS_CREDIT_RELATED_TRD, TEMP.STRUCT_ADJUST_TYPE,
-	TEMP.INDUS_UPGRATE_TYPE, TEMP.BUSI_SCOPE, TEMP.MAIN_BUSI,
+	TEMP.INDUS_UPGRATE_TYPE,TEMP.BUSI_SCOPE,TEMP.MAIN_BUSI,
 	TEMP.SEX, TEMP.PERSON_ID, TEMP.M_PHONE,
 	TEMP.PHONE, TEMP.POSITION, TEMP.COMPANY_NAME,
 	TEMP.ADDRESS, TEMP.MAIL, TEMP.PROPERTY,
@@ -819,6 +841,10 @@
 	TEMP.LINK_ID3, TEMP.REMARK, TEMP.CREATE_USER,
 	TEMP.CREATE_DEPT, TEMP.CREATE_TIME, TEMP.UPDATE_USER,
 	TEMP.UPDATE_TIME, TEMP.HS_TYPE, TEMP.IS_FIN_LICENCE, TEMP.INDUSTRY3, TEMP.INDUSTRY4,
-	TEMP.ORG_TYPE, TEMP.IS_SHAREHOLDER_RELATED)
+	TEMP.ORG_TYPE, TEMP.IS_SHAREHOLDER_RELATED);
+      <if test="item.busiScope != null">
+        update MST_CUSTOMER_INFO_ADD set BUSI_SCOPE = #{item.busiScope} where CUSTOMER_ID = #{item.customerId};
+      </if>
+    </foreach>
 </insert>
 </mapper>

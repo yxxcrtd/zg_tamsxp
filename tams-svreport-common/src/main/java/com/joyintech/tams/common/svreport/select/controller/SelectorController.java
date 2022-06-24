@@ -64,7 +64,7 @@ public class SelectorController {
     public Page<SelectOptionDto> getManagerId() {
         Map<String,Object> map = RequestUtil.getPageParam();
         map.put("param", map.get("search"));
-        map.put("IS_ASSTE_MANAGER", DictCodeList.是否_是.getValue());
+        //map.put("IS_ASSTE_MANAGER", DictCodeList.是否_是.getValue());
         return selectorService.getCustomerId(map);
     }
 
@@ -77,8 +77,22 @@ public class SelectorController {
     public Page<SelectOptionDto> getTrusterId() {
         Map<String,Object> map = RequestUtil.getPageParam();
         map.put("param", map.get("search"));
-        map.put("IS_TRUSTER", DictCodeList.是否_是.getValue());
+        //map.put("IS_TRUSTER", DictCodeList.是否_是.getValue());
         return selectorService.getCustomerId(map);
+    }
+
+
+    /**
+     * 托管人
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getPbcCapAssetInfo")
+    public List<SelectOptionDto> getPbcCapAssetInfo() {
+        Map<String,Object> map = RequestUtil.getPageParam();
+        map.put("param", map.get("search"));
+        //map.put("IS_TRUSTER", DictCodeList.是否_是.getValue());
+        return null;
     }
 
     /**

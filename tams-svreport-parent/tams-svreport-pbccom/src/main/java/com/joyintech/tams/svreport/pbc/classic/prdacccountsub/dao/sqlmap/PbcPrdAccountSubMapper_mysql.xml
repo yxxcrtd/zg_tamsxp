@@ -272,7 +272,7 @@
         else PROD_NAME
         end ACCOUNT_NAME,
         VDATE,
-        PROD_ID ACCOUNT_ID,
+        INFO.PROD_ID ACCOUNT_ID,
         NOW() STATUS_DATE,
         info.STATUS,
         info.CREATE_USER,
@@ -280,9 +280,22 @@
         info.ORG_CODE,
         info.DEPT_CODE CREATE_DEPT
         from chb_prd_baseinfo info
+        LEFT JOIN (
+        select ifnull(DEAL.FPROD_ID,DEAL.PROD_ID) PROD_ID, max(UPDATE_TIME) UPDATE_TIME,max(CREATE_TIME) CREATE_TIME
+        from
+        CHB_PRD_DEAL deal
+        where  trade_type = '01' and status IN ('E','M')
+        group by ifnull(DEAL.FPROD_ID,DEAL.PROD_ID)
+
+        ) DEAL ON INFO.PROD_ID = deal.PROD_ID
+
         where
-        DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME,info.CREATE_TIME),STR_TO_DATE('1900-01-01','%Y-%m-%d')),ifnull(info.VDATE,STR_TO_DATE('1900-01-01','%Y-%m-%d')))
-        ,'%Y-%m-%d') = DATE_FORMAT(#{statusDate,jdbcType=DATE},'%Y-%m-%d')
+        DATE_FORMAT(greatest(ifnull(ifnull(info.UPDATE_TIME, info.CREATE_TIME),
+        STR_TO_DATE('1900-01-01','%Y-%m-%d')),
+        ifnull(info.VDATE,STR_TO_DATE('1900-01-01','%Y-%m-%d')),
+        ifnull(ifnull(DEAL.UPDATE_TIME, DEAL.CREATE_TIME),
+        STR_TO_DATE('1900-01-01','%Y-%m-%d'))),'%Y-%m-%d') = DATE_FORMAT(#{statusDate,jdbcType=DATE},'%Y-%m-%d')
+        and deal.PROD_ID is not null
         and info.PROFIT_TYPE='03'
         and info.fprod_id is null
         and info.ISSUING_STATUS='01'
@@ -298,6 +311,7 @@
     <select id="selectAlReadyRegisteData" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
         select * from PBC_PRD_ACCOUNT_SUB
         where SEND_STATUS in ('02','03')
+        AND PBC_ACCOUNT_ID IS NOT NULL
         <if test="reglist!=null and reglist.size()!=0">
             <foreach collection="reglist" item="item" index="index" open="and trim(ACCOUNT_ID) in (" close=")" separator=",">
                 #{item.accountId,jdbcType=VARCHAR}
@@ -315,6 +329,7 @@
         select DISTINCT trim(ACCOUNT_ID) ACCOUNT_ID,trim(PBC_ACCOUNT_ID) PBC_ACCOUNT_ID
         from PBC_PRD_ACCOUNT_SUB
         where 1=1
+        AND PBC_ACCOUNT_ID IS NOT NULL
         <if test="reglist!=null and reglist.size()!=0">
             <foreach collection="reglist" item="item" index="index" open="and trim(ACCOUNT_ID) in (" close=")" separator=",">
                 #{item.accountId,jdbcType=VARCHAR}
@@ -345,8 +360,10 @@
         t1.CREATE_TIME createTime,
         t1.UPDATE_USER updateUser,
         t1.UPDATE_TIME updateTime,
-        t2.PBC_CODE pbcCode
+        t2.PBC_CODE pbcCode,
+        CB.PROFIT_TYPE prodProfitType
         from PBC_PRD_ACCOUNT_SUB t1
+        LEFT JOIN CHB_PRD_BASEINFO CB ON T1.ACCOUNT_ID=CB.PROD_ID AND CB.STATUS IN ('E','M')
         LEFT JOIN(
         SELECT
         inside_prod_id,
@@ -365,7 +382,7 @@
                 </foreach>
             </if>
             <if test="issuePartyId != null and issuePartyId !=''">
-                and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+                and t1.ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
             </if>
             <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
             <if test="prodIdList != null and prodIdList.size > 0">
@@ -376,25 +393,25 @@
             </if>
             <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
             <if test="statusList != null and statusList.size > 0">
-                and STATUS in
+                and t1.STATUS in
                 <foreach collection="statusList" open="(" close=")" separator="," item="item">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="keyList != null and keyList.size > 0">
-                and trim(REGIST_SEQNO) in
+                and trim(t1.REGIST_SEQNO) in
                 <foreach collection="keyList" open="(" close=")" separator="," item="item">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="sendStatusList != null and sendStatusList.size > 0">
-                and SEND_STATUS in
+                and t1.SEND_STATUS in
                 <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
             <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
-                and SUBMIT_FEEDBACK_STATUS in
+                and t1.SUBMIT_FEEDBACK_STATUS in
                 <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
@@ -418,25 +435,25 @@
                 and DATE_FORMAT(PBC_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{pbcSubmitDeadlineDateEnd}
             </if>
             <if test="vdateStart != null and vdateStart != ''">
-                and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
+                and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &gt;= #{vdateStart}
             </if>
             <if test="vdateEnd != null and vdateEnd != ''">
-                and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
+                and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &lt;= #{vdateEnd}
             </if>
             <if test="updateTime != null and updateTime != ''">
-                and DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
+                and DATE_FORMAT(t1.UPDATE_TIME,'%Y-%m-%d') = #{updateTime}
             </if>
             <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
             <if test="startDate != null and startDate != ''">
-                and DATE_FORMAT(VDATE,'%Y-%m-%d') &gt;= #{startDate}
+                and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &gt;= #{startDate}
             </if>
             <if test="endDate != null and endDate != ''">
-                and DATE_FORMAT(VDATE,'%Y-%m-%d') &lt;= #{endDate}
+                and DATE_FORMAT(t1.VDATE,'%Y-%m-%d') &lt;= #{endDate}
             </if>
             <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
         </where>
         <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
-        ORDER BY PBC_SUBMIT_DEADLINE ASC, UPDATE_TIME DESC
+        ORDER BY PBC_SUBMIT_DEADLINE ASC, t1.UPDATE_TIME DESC
         <!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
     </select>
     <!-- 手工处理 -->
@@ -502,8 +519,8 @@
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.pbcAccountId,jdbcType=CHAR}
         </foreach>
-        )
-        where 1 = 1 limit 1
+        )AS T
+        where  ranknum = 1
     </insert>
     <delete id="deleteBatchSubFromHisByUpdateTime" parameterType="java.util.List" >
         delete from PBC_PRD_ACCOUNT_SUB_HIS
@@ -518,8 +535,8 @@
         <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item.pbcAccountId,jdbcType=CHAR}
         </foreach>
-        )
-        where 1 = 1 limit 1
+        )AS T
+        where  ranknum = 1
         )
     </delete>
     <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
@@ -546,8 +563,8 @@
         <if test="search != null and search !='' ">
             AND PBC_ACCOUNT_ID LIKE concat_ws('','%', #{search},'%')
         </if>
-        )
-        where 1 = 1 limit 1
+        ) tmp
+        where ranknum = 1
     </select>
     <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub">
         select REGIST_SEQNO
@@ -562,5 +579,18 @@
         <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
             PBC_ACCOUNT_ID = #{item.pbcAccountId,jdbcType=VARCHAR}
         </foreach>
+    </select>
+    <select id="queryInsideProdId" resultType="map">
+        select INSIDE_PROD_ID
+        from (
+        select INSIDE_PROD_ID,
+        rank() over (partition by INSIDE_PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+        from PBC_PROD_ASSETPOOL_CODE
+        where STATUS != 'D'
+        <if test="search != null and search !='' ">
+            AND INSIDE_PROD_ID LIKE concat('%', #{search},'%')
+        </if>
+        )tmp
+        where ranknum = 1
     </select>
 </mapper>

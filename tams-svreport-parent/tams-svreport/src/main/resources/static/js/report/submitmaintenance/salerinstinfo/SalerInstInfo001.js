@@ -87,7 +87,7 @@
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo002/editCheck', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("销售结算资金交易信息维护编辑"),
+            Joyin.dialog(JoyinUtil.getLabel("总部或分支机构信息编辑"),
                 JoyinUtil.getRealPath("report/submitmaintenance/salerinstinfo/SalerInstInfo002/init"),
                 "98%", "95%", data,
            function(){table.reload();});
@@ -106,9 +106,9 @@
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/check', object, function(result) {
           Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/deleteCheck', object, function(result1) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object,"SalerInstInfo001_btn_delete", "SalerInstInfo002", function(result) {
-                                        table.reload();
-                });
+                   Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object, function() {
+                                   $('#SalerInstInfo001_btn_search').trigger("click");
+                   });
             });
           });
         });
@@ -176,8 +176,8 @@
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/check', object, function(result) {
               Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/deleteCheck', object, function(result1) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object,"SalerInstInfo001_btn_delete", "SalerInstInfo002", function(result) {
-                        table.reload();
+                    Joyin.ajaxJson(basePath + 'report/submitmaintenance/salerinstinfo/SalerInstInfo001/delete', object, function() {
+                                     $('#SalerInstInfo001_btn_search').trigger("click");
                     });
                 });
               });

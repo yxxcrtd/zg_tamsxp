@@ -57,7 +57,7 @@
         CHB_INVESTHOLD_INFO_SUB investTable
         WHERE
         investTable.SEND_STATUS = '01'
-        AND investTable.STATUS != '03'
+        AND investTable.STATUS = '01'
         <if test="holdDate != null and holdDate != ''">
             AND investTable.HOLD_DATE = str_to_date(#{holdDate,jdbcType=VARCHAR}, '%Y-%m-%d')
         </if>
@@ -103,29 +103,17 @@
         </if>
     </insert>
     <delete id="deleteAllAlreadySubmitRegistData">
-        DELETE
-        FROM
-        CHB_INVESTHOLD_INFO_SUB
-        WHERE
-        (REGIST_BANK_CODE, PRD_REGIST_CODE, CCY, INDENTIFY_MARK, HOLD_DATE) IN
-        (
-        SELECT
-        REGIST_BANK_CODE,
-        PRD_REGIST_CODE,
-        CCY,
-        INDENTIFY_MARK,
-        HOLD_DATE
-        FROM
-        CHB_INVESTHOLD_INFO_SUB
-        GROUP BY
-        REGIST_BANK_CODE,
-        PRD_REGIST_CODE,
-        CCY,
-        INDENTIFY_MARK,
-        HOLD_DATE
-        HAVING
-        COUNT(1) > 1)
-        and (SEND_STATUS = '02' or SEND_STATUS = '03')
+        DELETE FROM CHB_INVESTHOLD_INFO_SUB
+        WHERE (REGIST_BANK_CODE, PRD_REGIST_CODE, CCY, INDENTIFY_MARK, HOLD_DATE) IN
+        ( SELECT REGIST_BANK_CODE, PRD_REGIST_CODE, CCY, INDENTIFY_MARK, HOLD_DATE
+        FROM(
+        SELECT REGIST_BANK_CODE,PRD_REGIST_CODE,CCY,INDENTIFY_MARK,HOLD_DATE
+        FROM CHB_INVESTHOLD_INFO_SUB
+        GROUP BY REGIST_BANK_CODE, PRD_REGIST_CODE,CCY,INDENTIFY_MARK,HOLD_DATE
+        HAVING COUNT(1) > 1
+        )T
+        )
+        AND (SEND_STATUS = '02' or SEND_STATUS = '03')
         <if test="holdDate != null and holdDate != ''">
             AND HOLD_DATE = str_to_date(#{holdDate,jdbcType=VARCHAR}, '%Y-%m-%d')
         </if>
@@ -137,9 +125,8 @@
         from
         (
         select
-        ciis.REGIST_SEQNO              REGIST_SEQNO,
-        @rn := @rn + 1 as ROWNUM
-        from CHB_INVESTHOLD_INFO_SUB ciis,(SELECT @rn := 0) b
+        ciis.REGIST_SEQNO              REGIST_SEQNO
+        from CHB_INVESTHOLD_INFO_SUB ciis
         where
         ciis.SEND_STATUS = '01'
         and ciis.STATUS != '03'
@@ -163,16 +150,22 @@
         '03')
         AND equTable.REGIST_BANK_CODE = ciis.REGIST_BANK_CODE
         AND equTable.INDENTIFY_MARK = ciis.INDENTIFY_MARK)
-        and ROWNUM &lt;= #{dataCountPerTime,jdbcType=DECIMAL}
+        limit #{dataCountPerTime,jdbcType=DECIMAL}
         ) targetTable
     </insert>
     <update id="updateSubmitStatus">
-        update CHB_INVESTHOLD_INFO_SUB sub
+        <!--update CHB_INVESTHOLD_INFO_SUB sub
         set sub.SEND_STATUS = '02',
         sub.submit_time = now()
         where
         sub.REGIST_SEQNO in (select REGIST_SEQNO from CHB_SEND_CB_TEMP)
-        and sub.SEND_STATUS = '01'
+        and sub.SEND_STATUS = '01'-->
+        update CHB_INVESTHOLD_INFO_SUB sub
+        inner join CHB_SEND_CB_TEMP tp on sub.REGIST_SEQNO = tp.REGIST_SEQNO
+        set sub.SEND_STATUS = '02',
+        sub.submit_time = now()
+        where
+        sub.SEND_STATUS = '01'
         <!-- and exists (select 1 from CHB_SEND_CB_TEMP tempTable where sub.SUMIT_SEQ = tempTable.SUMIT_SEQ) -->
     </update>
     <select id="selectUnregistDataRepeatDataByFiveElem"  parameterType="map" resultType="java.lang.String">

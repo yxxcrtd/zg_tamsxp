@@ -14,6 +14,7 @@ $(function(){
 			pbcSubmitDeadlineDateStart:$('#pbcSubmitDeadline').startDate(),
 			mdateStart:$('#mdate').startDate(),
 			mdateEnd:$('#mdate').endDate(),
+			accountId:$('#accountId').val(),
 		};
 	}
 	// 定义数据表格

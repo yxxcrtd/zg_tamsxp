@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.joyintech.tams.svreport.interf.chb.saleinst.dao.ChbSaleIderInterfMapper_mysql">
+    <insert id="mergeInfoList"  parameterType="com.joyintech.tams.common.base.entity.ChbSalerIdenInfo">
+        update CHB_SALER_IDEN_INFO as CII,(
+        select
+        SALER_INS_NO
+        ,SALER_REGIST_NO
+        ,SALER_INST_CODE
+        ,SALER_NAME
+        ,SALER_SEX
+        ,SALER_BIRTHDAY
+        ,SALER_CREDENT_TYPE
+        ,SALER_OTHER_CREDENT_NAME
+        ,SALER_CREDENT_NO
+        ,SALER_AREA_TYPE
+        ,SALER_ORG_CODE
+        ,SALER_DEPT
+        ,SALER_POSITION
+        ,SALER_EDU_LEVEL
+        ,SALER_DEGREE
+        ,SALER_WORK_START_YMD
+        ,SALER_FINANCE_START_YMD
+        ,SALER_START_YMD
+        ,SALER_LEVLE
+        ,SALER_CERTIFICATE_TYPE
+        ,SALER_CHB_TRAIN_NO
+        ,SALER_RISK_LEVEL
+        ,SALER_QUALIFICATION
+        ,SALER_TEL
+        ,SALER_MOBILE
+        ,SALER_MAIL
+        ,SALER_STATUS
+        ,REMARK
+        ,STATUS
+        ,DATA_DATE
+        ,CREATE_USER
+        ,CREATE_TIME
+        ,UPDATE_USER
+        ,UPDATE_TIME
+        from (
+        select TE.* from (
+        <foreach collection="newDataList" item="item" open="select t.* from("
+                 close=") t" separator="union all">
+            select
+            #{item.salerInsNo,jdbcType=CHAR} SALER_INS_NO,
+            #{item.salerRegistNo,jdbcType=VARCHAR}  SALER_REGIST_NO,
+            #{item.salerInstCode,jdbcType=VARCHAR}  SALER_INST_CODE,
+            #{item.salerName,jdbcType=VARCHAR}  SALER_NAME,
+            #{item.salerSex,jdbcType=VARCHAR}  SALER_SEX,
+            #{item.salerBirthday,jdbcType=DATE}  SALER_BIRTHDAY,
+            #{item.salerCredentType,jdbcType=VARCHAR}  SALER_CREDENT_TYPE,
+            #{item.salerOtherCredentName,jdbcType=VARCHAR}  SALER_OTHER_CREDENT_NAME,
+            #{item.salerCredentNo,jdbcType=VARCHAR}  SALER_CREDENT_NO,
+            #{item.salerAreaType,jdbcType=VARCHAR}  SALER_AREA_TYPE,
+            #{item.salerOrgCode,jdbcType=VARCHAR}  SALER_ORG_CODE,
+            #{item.salerDept,jdbcType=VARCHAR}  SALER_DEPT,
+            #{item.salerPosition,jdbcType=VARCHAR}  SALER_POSITION,
+            #{item.salerEduLevel,jdbcType=VARCHAR}  SALER_EDU_LEVEL,
+            #{item.salerDegree,jdbcType=VARCHAR}    SALER_DEGREE,
+            #{item.salerWorkStartYmd,jdbcType=VARCHAR}   SALER_WORK_START_YMD,
+            #{item.salerFinanceStartYmd,jdbcType=VARCHAR}  SALER_FINANCE_START_YMD,
+            #{item.salerStartYmd,jdbcType=VARCHAR}  SALER_START_YMD,
+            #{item.salerLevle,jdbcType=VARCHAR}  SALER_LEVLE,
+            #{item.salerCertificateType,jdbcType=VARCHAR}  SALER_CERTIFICATE_TYPE,
+            #{item.salerChbTrainNo,jdbcType=VARCHAR}  SALER_CHB_TRAIN_NO,
+            #{item.salerRiskLevel,jdbcType=VARCHAR}  SALER_RISK_LEVEL,
+            #{item.salerQualification,jdbcType=VARCHAR}  SALER_QUALIFICATION,
+            #{item.salerTel,jdbcType=VARCHAR}  SALER_TEL,
+            #{item.salerMobile,jdbcType=VARCHAR}  SALER_MOBILE,
+            #{item.salerMail,jdbcType=VARCHAR}  SALER_MAIL,
+            #{item.salerStatus,jdbcType=VARCHAR}  SALER_STATUS,
+            #{item.remark,jdbcType=VARCHAR}  REMARK,
+            #{item.status,jdbcType=VARCHAR}  STATUS,
+            #{item.dataDate,jdbcType=DATE}  DATA_DATE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            NOW() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            NOW()  UPDATE_TIME
+            from dual
+        </foreach>
+        ) TE
+        ) de
+        ) AS TEMP
+        set
+        CII.SALER_REGIST_NO = TEMP.SALER_REGIST_NO,
+        CII.SALER_INST_CODE = TEMP.SALER_INST_CODE,
+        CII.SALER_NAME = TEMP.SALER_NAME,
+        CII.SALER_SEX = TEMP.SALER_SEX,
+        CII.SALER_BIRTHDAY = TEMP.SALER_BIRTHDAY,
+        CII.SALER_CREDENT_TYPE = TEMP.SALER_CREDENT_TYPE,
+        CII.SALER_OTHER_CREDENT_NAME = TEMP.SALER_OTHER_CREDENT_NAME,
+        CII.SALER_CREDENT_NO = TEMP.SALER_CREDENT_NO,
+        CII.SALER_AREA_TYPE = TEMP.SALER_AREA_TYPE,
+        CII.SALER_ORG_CODE = TEMP.SALER_ORG_CODE,
+        CII.SALER_DEPT = TEMP.SALER_DEPT,
+        CII.SALER_POSITION = TEMP.SALER_POSITION,
+        CII.SALER_EDU_LEVEL = TEMP.SALER_EDU_LEVEL,
+        CII.SALER_DEGREE = TEMP.SALER_DEGREE,
+        CII.SALER_WORK_START_YMD = TEMP.SALER_WORK_START_YMD,
+        CII.SALER_FINANCE_START_YMD = TEMP.SALER_FINANCE_START_YMD,
+        CII.SALER_START_YMD = TEMP.SALER_START_YMD,
+        CII.SALER_LEVLE = TEMP.SALER_LEVLE,
+        CII.SALER_CERTIFICATE_TYPE = TEMP.SALER_CERTIFICATE_TYPE,
+        CII.SALER_CHB_TRAIN_NO = TEMP.SALER_CHB_TRAIN_NO,
+        CII.SALER_RISK_LEVEL = TEMP.SALER_RISK_LEVEL,
+        CII.SALER_QUALIFICATION = TEMP.SALER_QUALIFICATION,
+        CII.SALER_TEL = TEMP.SALER_TEL,
+        CII.SALER_MOBILE = TEMP.SALER_MOBILE,
+        CII.SALER_MAIL = TEMP.SALER_MAIL,
+        CII.SALER_STATUS = TEMP.SALER_STATUS,
+        CII.REMARK = TEMP.REMARK,
+        CII.STATUS = TEMP.STATUS,
+        CII.DATA_DATE = TEMP.DATA_DATE,
+        CII.CREATE_USER = TEMP.CREATE_USER,
+        CII.CREATE_TIME = TEMP.CREATE_TIME,
+        CII.UPDATE_USER = TEMP.UPDATE_USER,
+        CII.UPDATE_TIME = TEMP.UPDATE_TIME
+        where CII.SALER_INS_NO = TEMP.SALER_INS_NO;
+
+        insert into CHB_SALER_IDEN_INFO (
+        SALER_INS_NO
+        ,SALER_REGIST_NO
+        ,SALER_INST_CODE
+        ,SALER_NAME
+        ,SALER_SEX
+        ,SALER_BIRTHDAY
+        ,SALER_CREDENT_TYPE
+        ,SALER_OTHER_CREDENT_NAME
+        ,SALER_CREDENT_NO
+        ,SALER_AREA_TYPE
+        ,SALER_ORG_CODE
+        ,SALER_DEPT
+        ,SALER_POSITION
+        ,SALER_EDU_LEVEL
+        ,SALER_DEGREE
+        ,SALER_WORK_START_YMD
+        ,SALER_FINANCE_START_YMD
+        ,SALER_START_YMD
+        ,SALER_LEVLE
+        ,SALER_CERTIFICATE_TYPE
+        ,SALER_CHB_TRAIN_NO
+        ,SALER_RISK_LEVEL
+        ,SALER_QUALIFICATION
+        ,SALER_TEL
+        ,SALER_MOBILE
+        ,SALER_MAIL
+        ,SALER_STATUS
+        ,REMARK
+        ,STATUS
+        ,DATA_DATE
+        ,CREATE_USER
+        ,CREATE_TIME
+        ,UPDATE_USER
+        ,UPDATE_TIME
+        )
+        select
+        SALER_INS_NO
+        ,SALER_REGIST_NO
+        ,SALER_INST_CODE
+        ,SALER_NAME
+        ,SALER_SEX
+        ,SALER_BIRTHDAY
+        ,SALER_CREDENT_TYPE
+        ,SALER_OTHER_CREDENT_NAME
+        ,SALER_CREDENT_NO
+        ,SALER_AREA_TYPE
+        ,SALER_ORG_CODE
+        ,SALER_DEPT
+        ,SALER_POSITION
+        ,SALER_EDU_LEVEL
+        ,SALER_DEGREE
+        ,SALER_WORK_START_YMD
+        ,SALER_FINANCE_START_YMD
+        ,SALER_START_YMD
+        ,SALER_LEVLE
+        ,SALER_CERTIFICATE_TYPE
+        ,SALER_CHB_TRAIN_NO
+        ,SALER_RISK_LEVEL
+        ,SALER_QUALIFICATION
+        ,SALER_TEL
+        ,SALER_MOBILE
+        ,SALER_MAIL
+        ,SALER_STATUS
+        ,REMARK
+        ,STATUS
+        ,DATA_DATE
+        ,CREATE_USER
+        ,CREATE_TIME
+        ,UPDATE_USER
+        ,UPDATE_TIME
+        from (
+        select TEMP.* from (
+        <foreach collection="newDataList" item="item" open="select t.* from("
+                 close=") t" separator="union all">
+            select
+            #{item.salerInsNo,jdbcType=CHAR} SALER_INS_NO,
+            #{item.salerRegistNo,jdbcType=VARCHAR}  SALER_REGIST_NO,
+            #{item.salerInstCode,jdbcType=VARCHAR}  SALER_INST_CODE,
+            #{item.salerName,jdbcType=VARCHAR}  SALER_NAME,
+            #{item.salerSex,jdbcType=VARCHAR}  SALER_SEX,
+            #{item.salerBirthday,jdbcType=DATE}  SALER_BIRTHDAY,
+            #{item.salerCredentType,jdbcType=VARCHAR}  SALER_CREDENT_TYPE,
+            #{item.salerOtherCredentName,jdbcType=VARCHAR}  SALER_OTHER_CREDENT_NAME,
+            #{item.salerCredentNo,jdbcType=VARCHAR}  SALER_CREDENT_NO,
+            #{item.salerAreaType,jdbcType=VARCHAR}  SALER_AREA_TYPE,
+            #{item.salerOrgCode,jdbcType=VARCHAR}  SALER_ORG_CODE,
+            #{item.salerDept,jdbcType=VARCHAR}  SALER_DEPT,
+            #{item.salerPosition,jdbcType=VARCHAR}  SALER_POSITION,
+            #{item.salerEduLevel,jdbcType=VARCHAR}  SALER_EDU_LEVEL,
+            #{item.salerDegree,jdbcType=VARCHAR}    SALER_DEGREE,
+            #{item.salerWorkStartYmd,jdbcType=VARCHAR}   SALER_WORK_START_YMD,
+            #{item.salerFinanceStartYmd,jdbcType=VARCHAR}  SALER_FINANCE_START_YMD,
+            #{item.salerStartYmd,jdbcType=VARCHAR}  SALER_START_YMD,
+            #{item.salerLevle,jdbcType=VARCHAR}  SALER_LEVLE,
+            #{item.salerCertificateType,jdbcType=VARCHAR}  SALER_CERTIFICATE_TYPE,
+            #{item.salerChbTrainNo,jdbcType=VARCHAR}  SALER_CHB_TRAIN_NO,
+            #{item.salerRiskLevel,jdbcType=VARCHAR}  SALER_RISK_LEVEL,
+            #{item.salerQualification,jdbcType=VARCHAR}  SALER_QUALIFICATION,
+            #{item.salerTel,jdbcType=VARCHAR}  SALER_TEL,
+            #{item.salerMobile,jdbcType=VARCHAR}  SALER_MOBILE,
+            #{item.salerMail,jdbcType=VARCHAR}  SALER_MAIL,
+            #{item.salerStatus,jdbcType=VARCHAR}  SALER_STATUS,
+            #{item.remark,jdbcType=VARCHAR}  REMARK,
+            #{item.status,jdbcType=VARCHAR}  STATUS,
+            #{item.dataDate,jdbcType=DATE}  DATA_DATE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            now() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            now()  UPDATE_TIME
+            from dual
+        </foreach>
+        ) TEMP where not exists (select 1 from CHB_SALER_IDEN_INFO CII where CII.SALER_INS_NO = TEMP.SALER_INS_NO)
+        ) de ;
+    </insert>
+
+</mapper>

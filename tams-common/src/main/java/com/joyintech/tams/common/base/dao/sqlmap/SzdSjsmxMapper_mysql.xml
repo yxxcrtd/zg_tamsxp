@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SzdSjsmxMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SzdSjsmx" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="IMPORT_DATE" property="importDate" jdbcType="DATE" />
+        <result column="DATA_FILE" property="dataFile" jdbcType="VARCHAR" />
+        <result column="IS_SETTLE_TARGET" property="isSettleTarget" jdbcType="VARCHAR" />
+        <result column="MXYWLSH" property="mxywlsh" jdbcType="VARCHAR" />
+        <result column="MXJSZH" property="mxjszh" jdbcType="VARCHAR" />
+        <result column="MXBFZH" property="mxbfzh" jdbcType="VARCHAR" />
+        <result column="MXSJLX" property="mxsjlx" jdbcType="VARCHAR" />
+        <result column="MXYWLB" property="mxywlb" jdbcType="VARCHAR" />
+        <result column="MXZQDM" property="mxzqdm" jdbcType="VARCHAR" />
+        <result column="MXJYDY" property="mxjydy" jdbcType="VARCHAR" />
+        <result column="MXTGDY" property="mxtgdy" jdbcType="VARCHAR" />
+        <result column="MXZQZH" property="mxzqzh" jdbcType="VARCHAR" />
+        <result column="MXDDBH" property="mxddbh" jdbcType="VARCHAR" />
+        <result column="MXYYB" property="mxyyb" jdbcType="VARCHAR" />
+        <result column="MXZXBH" property="mxzxbh" jdbcType="VARCHAR" />
+        <result column="MXCJSL" property="mxcjsl" jdbcType="DECIMAL" />
+        <result column="MXQSSL" property="mxqssl" jdbcType="DECIMAL" />
+        <result column="MXCJJG" property="mxcjjg" jdbcType="DECIMAL" />
+        <result column="MXQSJG" property="mxqsjg" jdbcType="DECIMAL" />
+        <result column="MXXYJY" property="mxxyjy" jdbcType="VARCHAR" />
+        <result column="MXPCBS" property="mxpcbs" jdbcType="VARCHAR" />
+        <result column="MXZQLB" property="mxzqlb" jdbcType="VARCHAR" />
+        <result column="MXZQZL" property="mxzqzl" jdbcType="VARCHAR" />
+        <result column="MXGFXZ" property="mxgfxz" jdbcType="VARCHAR" />
+        <result column="MXJSFS" property="mxjsfs" jdbcType="VARCHAR" />
+        <result column="MXHBDH" property="mxhbdh" jdbcType="VARCHAR" />
+        <result column="MXQSBJ" property="mxqsbj" jdbcType="DECIMAL" />
+        <result column="MXYHS" property="mxyhs" jdbcType="DECIMAL" />
+        <result column="MXJYJSF" property="mxjyjsf" jdbcType="DECIMAL" />
+        <result column="MXJGGF" property="mxjggf" jdbcType="DECIMAL" />
+        <result column="MXGHF" property="mxghf" jdbcType="DECIMAL" />
+        <result column="MXJSF" property="mxjsf" jdbcType="DECIMAL" />
+        <result column="MXSXF" property="mxsxf" jdbcType="DECIMAL" />
+        <result column="MXQSYJ" property="mxqsyj" jdbcType="DECIMAL" />
+        <result column="MXQTFY" property="mxqtfy" jdbcType="DECIMAL" />
+        <result column="MXZJJE" property="mxzjje" jdbcType="DECIMAL" />
+        <result column="MXSFJE" property="mxsfje" jdbcType="DECIMAL" />
+        <result column="MXCJRQ" property="mxcjrq" jdbcType="VARCHAR" />
+        <result column="MXQSRQ" property="mxqsrq" jdbcType="VARCHAR" />
+        <result column="MXJSRQ" property="mxjsrq" jdbcType="VARCHAR" />
+        <result column="MXFSRQ" property="mxfsrq" jdbcType="VARCHAR" />
+        <result column="MXQTRQ" property="mxqtrq" jdbcType="VARCHAR" />
+        <result column="MXSCDM" property="mxscdm" jdbcType="VARCHAR" />
+        <result column="MXJYFS" property="mxjyfs" jdbcType="VARCHAR" />
+        <result column="MXZQDM2" property="mxzqdm2" jdbcType="VARCHAR" />
+        <result column="MXTGDY2" property="mxtgdy2" jdbcType="VARCHAR" />
+        <result column="MXDDBH2" property="mxddbh2" jdbcType="VARCHAR" />
+        <result column="MXCWDH" property="mxcwdh" jdbcType="VARCHAR" />
+        <result column="MXPPHM" property="mxpphm" jdbcType="VARCHAR" />
+        <result column="MXFJSM" property="mxfjsm" jdbcType="VARCHAR" />
+        <result column="MXBYBZ" property="mxbybz" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, IMPORT_DATE IMPORT_DATE, DATA_FILE DATA_FILE, IS_SETTLE_TARGET IS_SETTLE_TARGET, 
+        MXYWLSH MXYWLSH, MXJSZH MXJSZH, MXBFZH MXBFZH, MXSJLX MXSJLX, MXYWLB MXYWLB, MXZQDM MXZQDM, 
+        MXJYDY MXJYDY, MXTGDY MXTGDY, MXZQZH MXZQZH, MXDDBH MXDDBH, MXYYB MXYYB, MXZXBH MXZXBH, 
+        MXCJSL MXCJSL, MXQSSL MXQSSL, MXCJJG MXCJJG, MXQSJG MXQSJG, MXXYJY MXXYJY, MXPCBS MXPCBS, 
+        MXZQLB MXZQLB, MXZQZL MXZQZL, MXGFXZ MXGFXZ, MXJSFS MXJSFS, MXHBDH MXHBDH, MXQSBJ MXQSBJ, 
+        MXYHS MXYHS, MXJYJSF MXJYJSF, MXJGGF MXJGGF, MXGHF MXGHF, MXJSF MXJSF, MXSXF MXSXF, 
+        MXQSYJ MXQSYJ, MXQTFY MXQTFY, MXZJJE MXZJJE, MXSFJE MXSFJE, MXCJRQ MXCJRQ, MXQSRQ MXQSRQ, 
+        MXJSRQ MXJSRQ, MXFSRQ MXFSRQ, MXQTRQ MXQTRQ, MXSCDM MXSCDM, MXJYFS MXJYFS, MXZQDM2 MXZQDM2, 
+        MXTGDY2 MXTGDY2, MXDDBH2 MXDDBH2, MXCWDH MXCWDH, MXPPHM MXPPHM, MXFJSM MXFJSM, MXBYBZ MXBYBZ, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdSjsmxMapper_mysql.Base_Column_List" />
+        from SZD_SJSMX
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdSjsmxMapper_mysql.Base_Column_List" />
+        from SZD_SJSMX
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdSjsmxMapper_mysql.Base_Column_List" />
+        from SZD_SJSMX
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SZD_SJSMX
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SzdSjsmx" >
+        insert into SZD_SJSMX (SEQNO, IMPORT_DATE, DATA_FILE, 
+            IS_SETTLE_TARGET, MXYWLSH, MXJSZH, 
+            MXBFZH, MXSJLX, MXYWLB, 
+            MXZQDM, MXJYDY, MXTGDY, 
+            MXZQZH, MXDDBH, MXYYB, 
+            MXZXBH, MXCJSL, MXQSSL, 
+            MXCJJG, MXQSJG, MXXYJY, 
+            MXPCBS, MXZQLB, MXZQZL, 
+            MXGFXZ, MXJSFS, MXHBDH, 
+            MXQSBJ, MXYHS, MXJYJSF, 
+            MXJGGF, MXGHF, MXJSF, 
+            MXSXF, MXQSYJ, MXQTFY, 
+            MXZJJE, MXSFJE, MXCJRQ, 
+            MXQSRQ, MXJSRQ, MXFSRQ, 
+            MXQTRQ, MXSCDM, MXJYFS, 
+            MXZQDM2, MXTGDY2, MXDDBH2, 
+            MXCWDH, MXPPHM, MXFJSM, 
+            MXBYBZ, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{importDate,jdbcType=DATE}, #{dataFile,jdbcType=VARCHAR}, 
+            #{isSettleTarget,jdbcType=VARCHAR}, #{mxywlsh,jdbcType=VARCHAR}, #{mxjszh,jdbcType=VARCHAR}, 
+            #{mxbfzh,jdbcType=VARCHAR}, #{mxsjlx,jdbcType=VARCHAR}, #{mxywlb,jdbcType=VARCHAR}, 
+            #{mxzqdm,jdbcType=VARCHAR}, #{mxjydy,jdbcType=VARCHAR}, #{mxtgdy,jdbcType=VARCHAR}, 
+            #{mxzqzh,jdbcType=VARCHAR}, #{mxddbh,jdbcType=VARCHAR}, #{mxyyb,jdbcType=VARCHAR}, 
+            #{mxzxbh,jdbcType=VARCHAR}, #{mxcjsl,jdbcType=DECIMAL}, #{mxqssl,jdbcType=DECIMAL}, 
+            #{mxcjjg,jdbcType=DECIMAL}, #{mxqsjg,jdbcType=DECIMAL}, #{mxxyjy,jdbcType=VARCHAR}, 
+            #{mxpcbs,jdbcType=VARCHAR}, #{mxzqlb,jdbcType=VARCHAR}, #{mxzqzl,jdbcType=VARCHAR}, 
+            #{mxgfxz,jdbcType=VARCHAR}, #{mxjsfs,jdbcType=VARCHAR}, #{mxhbdh,jdbcType=VARCHAR}, 
+            #{mxqsbj,jdbcType=DECIMAL}, #{mxyhs,jdbcType=DECIMAL}, #{mxjyjsf,jdbcType=DECIMAL}, 
+            #{mxjggf,jdbcType=DECIMAL}, #{mxghf,jdbcType=DECIMAL}, #{mxjsf,jdbcType=DECIMAL}, 
+            #{mxsxf,jdbcType=DECIMAL}, #{mxqsyj,jdbcType=DECIMAL}, #{mxqtfy,jdbcType=DECIMAL}, 
+            #{mxzjje,jdbcType=DECIMAL}, #{mxsfje,jdbcType=DECIMAL}, #{mxcjrq,jdbcType=VARCHAR}, 
+            #{mxqsrq,jdbcType=VARCHAR}, #{mxjsrq,jdbcType=VARCHAR}, #{mxfsrq,jdbcType=VARCHAR}, 
+            #{mxqtrq,jdbcType=VARCHAR}, #{mxscdm,jdbcType=VARCHAR}, #{mxjyfs,jdbcType=VARCHAR}, 
+            #{mxzqdm2,jdbcType=VARCHAR}, #{mxtgdy2,jdbcType=VARCHAR}, #{mxddbh2,jdbcType=VARCHAR}, 
+            #{mxcwdh,jdbcType=VARCHAR}, #{mxpphm,jdbcType=VARCHAR}, #{mxfjsm,jdbcType=VARCHAR}, 
+            #{mxbybz,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SzdSjsmx" >
+        insert into SZD_SJSMX
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="importDate != null" >
+                IMPORT_DATE,
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE,
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET,
+            </if>
+            <if test="mxywlsh != null" >
+                MXYWLSH,
+            </if>
+            <if test="mxjszh != null" >
+                MXJSZH,
+            </if>
+            <if test="mxbfzh != null" >
+                MXBFZH,
+            </if>
+            <if test="mxsjlx != null" >
+                MXSJLX,
+            </if>
+            <if test="mxywlb != null" >
+                MXYWLB,
+            </if>
+            <if test="mxzqdm != null" >
+                MXZQDM,
+            </if>
+            <if test="mxjydy != null" >
+                MXJYDY,
+            </if>
+            <if test="mxtgdy != null" >
+                MXTGDY,
+            </if>
+            <if test="mxzqzh != null" >
+                MXZQZH,
+            </if>
+            <if test="mxddbh != null" >
+                MXDDBH,
+            </if>
+            <if test="mxyyb != null" >
+                MXYYB,
+            </if>
+            <if test="mxzxbh != null" >
+                MXZXBH,
+            </if>
+            <if test="mxcjsl != null" >
+                MXCJSL,
+            </if>
+            <if test="mxqssl != null" >
+                MXQSSL,
+            </if>
+            <if test="mxcjjg != null" >
+                MXCJJG,
+            </if>
+            <if test="mxqsjg != null" >
+                MXQSJG,
+            </if>
+            <if test="mxxyjy != null" >
+                MXXYJY,
+            </if>
+            <if test="mxpcbs != null" >
+                MXPCBS,
+            </if>
+            <if test="mxzqlb != null" >
+                MXZQLB,
+            </if>
+            <if test="mxzqzl != null" >
+                MXZQZL,
+            </if>
+            <if test="mxgfxz != null" >
+                MXGFXZ,
+            </if>
+            <if test="mxjsfs != null" >
+                MXJSFS,
+            </if>
+            <if test="mxhbdh != null" >
+                MXHBDH,
+            </if>
+            <if test="mxqsbj != null" >
+                MXQSBJ,
+            </if>
+            <if test="mxyhs != null" >
+                MXYHS,
+            </if>
+            <if test="mxjyjsf != null" >
+                MXJYJSF,
+            </if>
+            <if test="mxjggf != null" >
+                MXJGGF,
+            </if>
+            <if test="mxghf != null" >
+                MXGHF,
+            </if>
+            <if test="mxjsf != null" >
+                MXJSF,
+            </if>
+            <if test="mxsxf != null" >
+                MXSXF,
+            </if>
+            <if test="mxqsyj != null" >
+                MXQSYJ,
+            </if>
+            <if test="mxqtfy != null" >
+                MXQTFY,
+            </if>
+            <if test="mxzjje != null" >
+                MXZJJE,
+            </if>
+            <if test="mxsfje != null" >
+                MXSFJE,
+            </if>
+            <if test="mxcjrq != null" >
+                MXCJRQ,
+            </if>
+            <if test="mxqsrq != null" >
+                MXQSRQ,
+            </if>
+            <if test="mxjsrq != null" >
+                MXJSRQ,
+            </if>
+            <if test="mxfsrq != null" >
+                MXFSRQ,
+            </if>
+            <if test="mxqtrq != null" >
+                MXQTRQ,
+            </if>
+            <if test="mxscdm != null" >
+                MXSCDM,
+            </if>
+            <if test="mxjyfs != null" >
+                MXJYFS,
+            </if>
+            <if test="mxzqdm2 != null" >
+                MXZQDM2,
+            </if>
+            <if test="mxtgdy2 != null" >
+                MXTGDY2,
+            </if>
+            <if test="mxddbh2 != null" >
+                MXDDBH2,
+            </if>
+            <if test="mxcwdh != null" >
+                MXCWDH,
+            </if>
+            <if test="mxpphm != null" >
+                MXPPHM,
+            </if>
+            <if test="mxfjsm != null" >
+                MXFJSM,
+            </if>
+            <if test="mxbybz != null" >
+                MXBYBZ,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="importDate != null" >
+                #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="mxywlsh != null" >
+                #{mxywlsh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjszh != null" >
+                #{mxjszh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxbfzh != null" >
+                #{mxbfzh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxsjlx != null" >
+                #{mxsjlx,jdbcType=VARCHAR},
+            </if>
+            <if test="mxywlb != null" >
+                #{mxywlb,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqdm != null" >
+                #{mxzqdm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjydy != null" >
+                #{mxjydy,jdbcType=VARCHAR},
+            </if>
+            <if test="mxtgdy != null" >
+                #{mxtgdy,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqzh != null" >
+                #{mxzqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxddbh != null" >
+                #{mxddbh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxyyb != null" >
+                #{mxyyb,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzxbh != null" >
+                #{mxzxbh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxcjsl != null" >
+                #{mxcjsl,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqssl != null" >
+                #{mxqssl,jdbcType=DECIMAL},
+            </if>
+            <if test="mxcjjg != null" >
+                #{mxcjjg,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqsjg != null" >
+                #{mxqsjg,jdbcType=DECIMAL},
+            </if>
+            <if test="mxxyjy != null" >
+                #{mxxyjy,jdbcType=VARCHAR},
+            </if>
+            <if test="mxpcbs != null" >
+                #{mxpcbs,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqlb != null" >
+                #{mxzqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqzl != null" >
+                #{mxzqzl,jdbcType=VARCHAR},
+            </if>
+            <if test="mxgfxz != null" >
+                #{mxgfxz,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjsfs != null" >
+                #{mxjsfs,jdbcType=VARCHAR},
+            </if>
+            <if test="mxhbdh != null" >
+                #{mxhbdh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxqsbj != null" >
+                #{mxqsbj,jdbcType=DECIMAL},
+            </if>
+            <if test="mxyhs != null" >
+                #{mxyhs,jdbcType=DECIMAL},
+            </if>
+            <if test="mxjyjsf != null" >
+                #{mxjyjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxjggf != null" >
+                #{mxjggf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxghf != null" >
+                #{mxghf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxjsf != null" >
+                #{mxjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxsxf != null" >
+                #{mxsxf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqsyj != null" >
+                #{mxqsyj,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqtfy != null" >
+                #{mxqtfy,jdbcType=DECIMAL},
+            </if>
+            <if test="mxzjje != null" >
+                #{mxzjje,jdbcType=DECIMAL},
+            </if>
+            <if test="mxsfje != null" >
+                #{mxsfje,jdbcType=DECIMAL},
+            </if>
+            <if test="mxcjrq != null" >
+                #{mxcjrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxqsrq != null" >
+                #{mxqsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjsrq != null" >
+                #{mxjsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxfsrq != null" >
+                #{mxfsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxqtrq != null" >
+                #{mxqtrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxscdm != null" >
+                #{mxscdm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjyfs != null" >
+                #{mxjyfs,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqdm2 != null" >
+                #{mxzqdm2,jdbcType=VARCHAR},
+            </if>
+            <if test="mxtgdy2 != null" >
+                #{mxtgdy2,jdbcType=VARCHAR},
+            </if>
+            <if test="mxddbh2 != null" >
+                #{mxddbh2,jdbcType=VARCHAR},
+            </if>
+            <if test="mxcwdh != null" >
+                #{mxcwdh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxpphm != null" >
+                #{mxpphm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxfjsm != null" >
+                #{mxfjsm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxbybz != null" >
+                #{mxbybz,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SzdSjsmx" >
+        insert into SZD_SJSMX(SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, MXYWLSH, MXJSZH, 
+        MXBFZH, MXSJLX, MXYWLB, MXZQDM, MXJYDY, MXTGDY, MXZQZH, MXDDBH, MXYYB, MXZXBH, MXCJSL, 
+        MXQSSL, MXCJJG, MXQSJG, MXXYJY, MXPCBS, MXZQLB, MXZQZL, MXGFXZ, MXJSFS, MXHBDH, MXQSBJ, 
+        MXYHS, MXJYJSF, MXJGGF, MXGHF, MXJSF, MXSXF, MXQSYJ, MXQTFY, MXZJJE, MXSFJE, MXCJRQ, 
+        MXQSRQ, MXJSRQ, MXFSRQ, MXQTRQ, MXSCDM, MXJYFS, MXZQDM2, MXTGDY2, MXDDBH2, MXCWDH, 
+        MXPPHM, MXFJSM, MXBYBZ, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, MXYWLSH, MXJSZH, 
+            MXBFZH, MXSJLX, MXYWLB, MXZQDM, MXJYDY, MXTGDY, MXZQZH, MXDDBH, MXYYB, MXZXBH, MXCJSL, 
+            MXQSSL, MXCJJG, MXQSJG, MXXYJY, MXPCBS, MXZQLB, MXZQZL, MXGFXZ, MXJSFS, MXHBDH, MXQSBJ, 
+            MXYHS, MXJYJSF, MXJGGF, MXGHF, MXJSF, MXSXF, MXQSYJ, MXQTFY, MXZJJE, MXSFJE, MXCJRQ, 
+            MXQSRQ, MXJSRQ, MXFSRQ, MXQTRQ, MXSCDM, MXJYFS, MXZQDM2, MXTGDY2, MXDDBH2, MXCWDH, 
+            MXPPHM, MXFJSM, MXBYBZ, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from SZD_SJSMX
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SzdSjsmx" >
+        update SZD_SJSMX
+        <set >
+            <if test="importDate != null" >
+                IMPORT_DATE = #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="mxywlsh != null" >
+                MXYWLSH = #{mxywlsh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjszh != null" >
+                MXJSZH = #{mxjszh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxbfzh != null" >
+                MXBFZH = #{mxbfzh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxsjlx != null" >
+                MXSJLX = #{mxsjlx,jdbcType=VARCHAR},
+            </if>
+            <if test="mxywlb != null" >
+                MXYWLB = #{mxywlb,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqdm != null" >
+                MXZQDM = #{mxzqdm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjydy != null" >
+                MXJYDY = #{mxjydy,jdbcType=VARCHAR},
+            </if>
+            <if test="mxtgdy != null" >
+                MXTGDY = #{mxtgdy,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqzh != null" >
+                MXZQZH = #{mxzqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxddbh != null" >
+                MXDDBH = #{mxddbh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxyyb != null" >
+                MXYYB = #{mxyyb,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzxbh != null" >
+                MXZXBH = #{mxzxbh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxcjsl != null" >
+                MXCJSL = #{mxcjsl,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqssl != null" >
+                MXQSSL = #{mxqssl,jdbcType=DECIMAL},
+            </if>
+            <if test="mxcjjg != null" >
+                MXCJJG = #{mxcjjg,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqsjg != null" >
+                MXQSJG = #{mxqsjg,jdbcType=DECIMAL},
+            </if>
+            <if test="mxxyjy != null" >
+                MXXYJY = #{mxxyjy,jdbcType=VARCHAR},
+            </if>
+            <if test="mxpcbs != null" >
+                MXPCBS = #{mxpcbs,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqlb != null" >
+                MXZQLB = #{mxzqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqzl != null" >
+                MXZQZL = #{mxzqzl,jdbcType=VARCHAR},
+            </if>
+            <if test="mxgfxz != null" >
+                MXGFXZ = #{mxgfxz,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjsfs != null" >
+                MXJSFS = #{mxjsfs,jdbcType=VARCHAR},
+            </if>
+            <if test="mxhbdh != null" >
+                MXHBDH = #{mxhbdh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxqsbj != null" >
+                MXQSBJ = #{mxqsbj,jdbcType=DECIMAL},
+            </if>
+            <if test="mxyhs != null" >
+                MXYHS = #{mxyhs,jdbcType=DECIMAL},
+            </if>
+            <if test="mxjyjsf != null" >
+                MXJYJSF = #{mxjyjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxjggf != null" >
+                MXJGGF = #{mxjggf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxghf != null" >
+                MXGHF = #{mxghf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxjsf != null" >
+                MXJSF = #{mxjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxsxf != null" >
+                MXSXF = #{mxsxf,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqsyj != null" >
+                MXQSYJ = #{mxqsyj,jdbcType=DECIMAL},
+            </if>
+            <if test="mxqtfy != null" >
+                MXQTFY = #{mxqtfy,jdbcType=DECIMAL},
+            </if>
+            <if test="mxzjje != null" >
+                MXZJJE = #{mxzjje,jdbcType=DECIMAL},
+            </if>
+            <if test="mxsfje != null" >
+                MXSFJE = #{mxsfje,jdbcType=DECIMAL},
+            </if>
+            <if test="mxcjrq != null" >
+                MXCJRQ = #{mxcjrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxqsrq != null" >
+                MXQSRQ = #{mxqsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjsrq != null" >
+                MXJSRQ = #{mxjsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxfsrq != null" >
+                MXFSRQ = #{mxfsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxqtrq != null" >
+                MXQTRQ = #{mxqtrq,jdbcType=VARCHAR},
+            </if>
+            <if test="mxscdm != null" >
+                MXSCDM = #{mxscdm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxjyfs != null" >
+                MXJYFS = #{mxjyfs,jdbcType=VARCHAR},
+            </if>
+            <if test="mxzqdm2 != null" >
+                MXZQDM2 = #{mxzqdm2,jdbcType=VARCHAR},
+            </if>
+            <if test="mxtgdy2 != null" >
+                MXTGDY2 = #{mxtgdy2,jdbcType=VARCHAR},
+            </if>
+            <if test="mxddbh2 != null" >
+                MXDDBH2 = #{mxddbh2,jdbcType=VARCHAR},
+            </if>
+            <if test="mxcwdh != null" >
+                MXCWDH = #{mxcwdh,jdbcType=VARCHAR},
+            </if>
+            <if test="mxpphm != null" >
+                MXPPHM = #{mxpphm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxfjsm != null" >
+                MXFJSM = #{mxfjsm,jdbcType=VARCHAR},
+            </if>
+            <if test="mxbybz != null" >
+                MXBYBZ = #{mxbybz,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SzdSjsmx" >
+        update SZD_SJSMX
+        set IMPORT_DATE = #{importDate,jdbcType=DATE},
+            DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            MXYWLSH = #{mxywlsh,jdbcType=VARCHAR},
+            MXJSZH = #{mxjszh,jdbcType=VARCHAR},
+            MXBFZH = #{mxbfzh,jdbcType=VARCHAR},
+            MXSJLX = #{mxsjlx,jdbcType=VARCHAR},
+            MXYWLB = #{mxywlb,jdbcType=VARCHAR},
+            MXZQDM = #{mxzqdm,jdbcType=VARCHAR},
+            MXJYDY = #{mxjydy,jdbcType=VARCHAR},
+            MXTGDY = #{mxtgdy,jdbcType=VARCHAR},
+            MXZQZH = #{mxzqzh,jdbcType=VARCHAR},
+            MXDDBH = #{mxddbh,jdbcType=VARCHAR},
+            MXYYB = #{mxyyb,jdbcType=VARCHAR},
+            MXZXBH = #{mxzxbh,jdbcType=VARCHAR},
+            MXCJSL = #{mxcjsl,jdbcType=DECIMAL},
+            MXQSSL = #{mxqssl,jdbcType=DECIMAL},
+            MXCJJG = #{mxcjjg,jdbcType=DECIMAL},
+            MXQSJG = #{mxqsjg,jdbcType=DECIMAL},
+            MXXYJY = #{mxxyjy,jdbcType=VARCHAR},
+            MXPCBS = #{mxpcbs,jdbcType=VARCHAR},
+            MXZQLB = #{mxzqlb,jdbcType=VARCHAR},
+            MXZQZL = #{mxzqzl,jdbcType=VARCHAR},
+            MXGFXZ = #{mxgfxz,jdbcType=VARCHAR},
+            MXJSFS = #{mxjsfs,jdbcType=VARCHAR},
+            MXHBDH = #{mxhbdh,jdbcType=VARCHAR},
+            MXQSBJ = #{mxqsbj,jdbcType=DECIMAL},
+            MXYHS = #{mxyhs,jdbcType=DECIMAL},
+            MXJYJSF = #{mxjyjsf,jdbcType=DECIMAL},
+            MXJGGF = #{mxjggf,jdbcType=DECIMAL},
+            MXGHF = #{mxghf,jdbcType=DECIMAL},
+            MXJSF = #{mxjsf,jdbcType=DECIMAL},
+            MXSXF = #{mxsxf,jdbcType=DECIMAL},
+            MXQSYJ = #{mxqsyj,jdbcType=DECIMAL},
+            MXQTFY = #{mxqtfy,jdbcType=DECIMAL},
+            MXZJJE = #{mxzjje,jdbcType=DECIMAL},
+            MXSFJE = #{mxsfje,jdbcType=DECIMAL},
+            MXCJRQ = #{mxcjrq,jdbcType=VARCHAR},
+            MXQSRQ = #{mxqsrq,jdbcType=VARCHAR},
+            MXJSRQ = #{mxjsrq,jdbcType=VARCHAR},
+            MXFSRQ = #{mxfsrq,jdbcType=VARCHAR},
+            MXQTRQ = #{mxqtrq,jdbcType=VARCHAR},
+            MXSCDM = #{mxscdm,jdbcType=VARCHAR},
+            MXJYFS = #{mxjyfs,jdbcType=VARCHAR},
+            MXZQDM2 = #{mxzqdm2,jdbcType=VARCHAR},
+            MXTGDY2 = #{mxtgdy2,jdbcType=VARCHAR},
+            MXDDBH2 = #{mxddbh2,jdbcType=VARCHAR},
+            MXCWDH = #{mxcwdh,jdbcType=VARCHAR},
+            MXPPHM = #{mxpphm,jdbcType=VARCHAR},
+            MXFJSM = #{mxfjsm,jdbcType=VARCHAR},
+            MXBYBZ = #{mxbybz,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

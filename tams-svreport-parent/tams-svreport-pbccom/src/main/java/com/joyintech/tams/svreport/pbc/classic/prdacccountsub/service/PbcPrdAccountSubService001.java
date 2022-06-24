@@ -395,7 +395,7 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
             String exportFilePath = SvrDataUtil.getSysParam(
                     GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //                String zipFileName = FileNameUtil.createFileName("zip");
-                String zipFileName = "PbocAssetPoolinfo("+DateUtil.format(new Date())+").zip";
+                String zipFileName = "PPB1资产池基本信息("+DateUtil.format(new Date())+").zip";
                 outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
                 // 导出路径不存在则重新生成
                 if (!outFile.getParentFile().exists()) {

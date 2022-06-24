@@ -4,58 +4,73 @@
 	<select id="queryPageList" resultType="com.joyintech.service.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto">
 		select * from (
 		SELECT
-		rj.JOB_ID jobId ,
-		rj.JOB_NAME jobName ,
-		rj.LOOP_DATE_DETAIL loopDateDetail,
-		rj.START_DATE startDate,
-		rj.END_DATE endDate,
-		rj.LOOP_DATE_VALUE as loopDateValue,
-		P.START_DATE as execDate
+		  rj.JOB_ID jobId ,
+		  rj.JOB_NAME jobName ,
+		  rj.LOOP_DATE_DETAIL loopDateDetail,
+		  rj.START_DATE startDate,
+		  rj.END_DATE endDate,
+		  rj.LOOP_DATE_VALUE as loopDateValue,
+		  P.START_DATE as execDate
 		FROM
-		rep_job rj
+		  rep_job rj
 		LEFT JOIN (
-		select
+		select 
 		T.JOB_ID,
 		T.START_DATE,
 		T.Sequence
 		from
-		(
+(
 		select
-		@rownum:=@rownum+1 rownum, a.JOB_ID,a.START_DATE,
+		@rownum:=@rownum+1 'rownum', a.JOB_ID,a.START_DATE,
 		if(@JOB_ID=a.JOB_ID,@rank:=@rank+1,@rank:=1) as Sequence,
 		@JOB_ID:=a.JOB_ID
 		from(SELECT * from (select * from REP_INSTALL_LOG where  START_DATE  is not null)c order by JOB_ID,START_DATE DESC)a,
 		(select @rownum:=0,@JOB_ID:=null,@rank:=0)b
 
 
-		<!--		select  JOB_ID,START_DATE,-->
-		<!--		MYSQL_ROW_NUM-->
-		<!-- (partition by JOB_ID order by START_DATE DESC) as Sequence-->
-		<!--  from(select * from REP_INSTALL_LOG where  START_DATE  is not null)  -->
-		)T where T.Sequence<![CDATA[<=]]>1
+<!--		select  JOB_ID,START_DATE,-->
+<!--		MYSQL_ROW_NUM-->
+<!-- (partition by JOB_ID order by START_DATE DESC) as Sequence-->
+<!--  from(select * from REP_INSTALL_LOG where  START_DATE  is not null)  -->
+)T where T.Sequence<![CDATA[<=]]>1
 		) P ON P.JOB_ID=rj.JOB_ID
 		WHERE
-		1=1
+		  1=1
 		<if test="jobName != null and jobName != ''">
 			AND rj.JOB_NAME LIKE CONCAT('%',CONCAT(#{jobName,jdbcType=VARCHAR},'%'))
 		</if>
 		<if test="jobIdArr != null and jobIdArr.length > 0">
-			AND rj.JOB_ID IN
+	 		AND rj.JOB_ID IN
 			<foreach item="item" collection="jobIdArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		ORDER BY rj.UPDATE_TIME desc
-		) where 1=1
-	</select>
+		) tmp where 1=1
+    </select>
 	<update id="updateConfirmStatusById" parameterType="com.joyintech.service.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto" >
 	      update REP_REVEAL
-	      set
+	      set 
 	      CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR}
 	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		  ,UPDATE_TIME = NOW()
 	      where 1=1
 	      and id = #{id,jdbcType=VARCHAR}
     </update>
+
+	<!-- 查询是否已经执行 -->
+	<select id="isExecByJobIdAndDate" resultType="com.joyintech.tams.common.base.entity.RepInstallLog">
+    	SELECT
+    		log.JOB_ID jobId,
+    		log.JOB_SEQ jobSeq,
+    		log.EXEC_DATE execDate,
+    		log.EXEC_STATUS execStatus
+		FROM REP_INSTALL_LOG log
+		WHERE log.JOB_ID=#{jobId, jdbcType=VARCHAR}
+			AND ( log.EXEC_DATE =#{execDate, jdbcType=DATE}
+    			OR  log.LASTEXEC_DATE=#{execDate, jdbcType=DATE})
+				AND log.STATUS = 'E'
+				limit 1
+    </select>
 </mapper>

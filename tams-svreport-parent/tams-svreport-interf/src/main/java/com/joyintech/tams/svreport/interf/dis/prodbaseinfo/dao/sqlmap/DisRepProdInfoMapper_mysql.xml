@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.prodbaseinfo.dao.DisRepProdInfoMapper_mysql" >
+
+    <update id="mergeRepProdInfo">
+        UPDATE  REP_PROD_INFO as A,
+        (
+        select
+        PROD_ID,<!--产品代码-->
+        PROD_RE,<!--产品登记编码-->
+        PROD_NAME,<!--产品名称-->
+        PROD_ABBR,<!--产品简称-->
+        RAISE_MIN,<!--募集下限-->
+        RAISE_MAX,<!--募集上限-->
+        RAISE_STRDATE,<!--募集开始日-->
+        RAISE_ENDDATE,<!--募集结束日-->
+        RAISE_CCY,<!--募集币种-->
+        SET_DATE,<!--产品成立日-->
+        VDATE,<!--产品起息日-->
+        FIRST_OPEN_DAY,<!--首次开放日-->
+        MDATE,<!--产品到期日-->
+        ACT_MDATE,<!--实际到期日-->
+        TERM,<!--产品期限-->
+        WINDUP_DATE,<!--产品清盘日-->
+        ISSUE_MODE,<!--发行方式-->
+        PROFIT_TYPE,<!--收益类型-->
+        PROD_TYPE,<!--产品类型-->
+        RAISE_TYPE,<!--募集方式-->
+        RISK_LEVEL,<!--产品风险等级-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        RAISE_AMT,<!--募集金额-->
+        OPEN_MODE,<!--开放模式-->
+        INVEST_PROF_DATE,<!--投资收益到账日-->
+        INVEST_PRIN_DATE,<!--投资本金到账日-->
+        IS_INDEPE_ACC,<!--是否独立开户-->
+        PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+        REVEAL_CHANNEL,<!--披露渠道-->
+        DEAL_CAL,<!--交易日历-->
+        STATUS,<!--数据状态-->
+        FINA_TYPE,<!--理财类型-->
+        TRU_ACCOUNT,<!--托管人账号-->
+        ACCT_CHNNAME,<!--托管人名称-->
+        TRU_FEE_RAGE,<!--托管费率-->
+        TRU_ACCOUNT_NUM,<!--托管账户账号-->
+        TRU_ACCOUNT_NAME,<!--托管账户户名-->
+        PROD_TERM_TYPE,<!--产品期限类型-->
+        BASIS,<!--计息基础-->
+        IS_LAYER,<!--是否分层-->
+        PRO_MANAGER,<!--管理人-->
+        PRO_CUSTODIAN,<!---->
+        HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+        SALE_AMT_STR,<!--起点销售金额-->
+        OPERATE_MODE,<!--产品运作模式-->
+        F_PROD_ID,<!--源系统金融产品代码-->
+        PERFORM_COMPARE,<!--业绩基准-->
+        BONUS_MODE,<!--分红方式-->
+        LOWEST_AMT<!--最少追加金额-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 start-->
+        ,PROD_SERIES<!--产品系列-->
+        ,SALETARGET_DECLARE<!--目标客户类型-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 end-->
+        <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 start-->
+        ,RISK_PREFERENCE<!--投资者风险偏好-->
+        ,SALES_AREA<!--销售地区-->
+        ,OPEN_DAYS<!--开放天数-->
+        ,TRUSTEE_ID<!--托管机构-->
+        <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 end-->
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+            #{item.prodRe,jdbcType=VARCHAR} PROD_RE,<!--产品登记编码-->
+            #{item.prodName,jdbcType=VARCHAR} PROD_NAME,<!--产品名称-->
+            #{item.prodAbbr,jdbcType=VARCHAR} PROD_ABBR,<!--产品简称-->
+            #{item.raiseMin,jdbcType=VARCHAR} RAISE_MIN,<!--募集下限-->
+            #{item.raiseMax,jdbcType=VARCHAR} RAISE_MAX,<!--募集上限-->
+            #{item.raiseStrdate,jdbcType=DATE} RAISE_STRDATE,<!--募集开始日-->
+            #{item.raiseEnddate,jdbcType=DATE} RAISE_ENDDATE,<!--募集结束日-->
+            #{item.raiseCcy,jdbcType=VARCHAR} RAISE_CCY,<!--募集币种-->
+            #{item.setDate,jdbcType=DATE} SET_DATE,<!--产品成立日-->
+            #{item.vdate,jdbcType=DATE} VDATE,<!--产品起息日-->
+            #{item.firstOpenDay,jdbcType=DATE} FIRST_OPEN_DAY,<!--首次开放日-->
+            #{item.mdate,jdbcType=DATE} MDATE,<!--产品到期日-->
+            #{item.actMdate,jdbcType=DATE} ACT_MDATE,<!--实际到期日-->
+            #{item.term,jdbcType=VARCHAR} TERM,<!--产品期限-->
+            #{item.windupDate,jdbcType=DATE} WINDUP_DATE,<!--产品清盘日-->
+            #{item.issueMode,jdbcType=VARCHAR} ISSUE_MODE,<!--发行方式-->
+            #{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,<!--收益类型-->
+            #{item.prodType,jdbcType=VARCHAR} PROD_TYPE,<!--产品类型-->
+            #{item.raiseType,jdbcType=VARCHAR} RAISE_TYPE,<!--募集方式-->
+            #{item.riskLevel,jdbcType=VARCHAR} RISK_LEVEL,<!--产品风险等级-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+            #{item.raiseAmt,jdbcType=DECIMAL} RAISE_AMT,<!--募集金额-->
+            #{item.openMode,jdbcType=VARCHAR} OPEN_MODE,<!--开放模式-->
+            #{item.investProfDate,jdbcType=VARCHAR} INVEST_PROF_DATE,<!--投资收益到账日-->
+            #{item.investPrinDate,jdbcType=VARCHAR} INVEST_PRIN_DATE,<!--投资本金到账日-->
+            #{item.isIndepeAcc,jdbcType=VARCHAR} IS_INDEPE_ACC,<!--是否独立开户-->
+            #{item.prodInvestType,jdbcType=VARCHAR} PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+            #{item.revealChannel,jdbcType=VARCHAR} REVEAL_CHANNEL,<!--披露渠道-->
+            #{item.dealCal,jdbcType=VARCHAR} DEAL_CAL,<!--交易日历-->
+            #{item.status,jdbcType=VARCHAR} STATUS,<!--数据状态-->
+            #{item.finaType,jdbcType=VARCHAR} FINA_TYPE,<!--理财类型-->
+            #{item.truAccount,jdbcType=VARCHAR} TRU_ACCOUNT,<!--托管人账号-->
+            #{item.acctChnname,jdbcType=VARCHAR} ACCT_CHNNAME,<!--托管人名称-->
+            #{item.truFeeRage,jdbcType=DECIMAL} TRU_FEE_RAGE,<!--托管费率-->
+            #{item.truAccountNum,jdbcType=VARCHAR} TRU_ACCOUNT_NUM,<!--托管账户账号-->
+            #{item.truAccountName,jdbcType=VARCHAR} TRU_ACCOUNT_NAME,<!--托管账户户名-->
+            #{item.prodTermType,jdbcType=VARCHAR} PROD_TERM_TYPE,<!--产品期限类型-->
+            #{item.basis,jdbcType=VARCHAR} BASIS,<!--计息基础-->
+            #{item.isLayer,jdbcType=VARCHAR} IS_LAYER,<!--是否分层-->
+            #{item.proManager,jdbcType=VARCHAR} PRO_MANAGER,<!--管理人-->
+            #{item.proCustodian,jdbcType=VARCHAR} PRO_CUSTODIAN,<!---->
+            #{item.hugeRedeemThreshold,jdbcType=DECIMAL} HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+            #{item.saleAmtStr,jdbcType=DECIMAL} SALE_AMT_STR,<!--起点销售金额-->
+            #{item.operateMode,jdbcType=VARCHAR} OPERATE_MODE,<!--产品运作模式-->
+            #{item.fProdId,jdbcType=VARCHAR} F_PROD_ID,<!--源系统金融产品代码-->
+            #{item.performCompare,jdbcType=VARCHAR} PERFORM_COMPARE,<!--业绩基准-->
+            #{item.bonusMode,jdbcType=VARCHAR} BONUS_MODE,<!--分红方式-->
+            #{item.lowestAmt,jdbcType=DECIMAL} LOWEST_AMT<!--最少追加金额-->
+            <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 start-->
+            ,#{item.prodSeries,jdbcType=VARCHAR} PROD_SERIES,<!--产品系列-->
+            #{item.saletargetDeclare,jdbcType=VARCHAR} SALETARGET_DECLARE<!--目标客户类型-->
+            <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 end-->
+            <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 start-->
+            ,#{item.riskPreference,jdbcType=VARCHAR} RISK_PREFERENCE<!--投资者风险偏好-->
+            ,#{item.salesArea,jdbcType=VARCHAR} SALES_AREA<!--销售地区-->
+            ,#{item.openDays,jdbcType=INTEGER} OPEN_DAYS<!--开放天数-->
+            ,#{item.trusteeId,jdbcType=VARCHAR} TRUSTEE_ID<!--托管机构-->
+            <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 end-->
+            FROM     dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        set
+        <!--A.PROD_ID = B.PROD_ID,产品代码-->
+        A.PROD_RE = B.PROD_RE,<!--产品登记编码-->
+        A.PROD_NAME = B.PROD_NAME,<!--产品名称-->
+        A.PROD_ABBR = B.PROD_ABBR,<!--产品简称-->
+        A.RAISE_MIN = B.RAISE_MIN,<!--募集下限-->
+        A.RAISE_MAX = B.RAISE_MAX,<!--募集上限-->
+        A.RAISE_STRDATE = B.RAISE_STRDATE,<!--募集开始日-->
+        A.RAISE_ENDDATE = B.RAISE_ENDDATE,<!--募集结束日-->
+        A.RAISE_CCY = B.RAISE_CCY,<!--募集币种-->
+        A.SET_DATE = B.SET_DATE,<!--产品成立日-->
+        A.VDATE = B.VDATE,<!--产品起息日-->
+        A.FIRST_OPEN_DAY = B.FIRST_OPEN_DAY,<!--首次开放日-->
+        A.MDATE = B.MDATE,<!--产品到期日-->
+        A.ACT_MDATE = B.ACT_MDATE,<!--实际到期日-->
+        A.TERM = B.TERM,<!--产品期限-->
+        A.WINDUP_DATE = B.WINDUP_DATE,<!--产品清盘日-->
+        A.ISSUE_MODE = B.ISSUE_MODE,<!--发行方式-->
+        A.PROFIT_TYPE = B.PROFIT_TYPE,<!--收益类型-->
+        A.PROD_TYPE = B.PROD_TYPE,<!--产品类型-->
+        A.RAISE_TYPE = B.RAISE_TYPE,<!--募集方式-->
+        A.RISK_LEVEL = B.RISK_LEVEL,<!--产品风险等级-->
+        A.CREATE_USER = B.CREATE_USER,<!--创建人-->
+        A.CREATE_DEPT = B.CREATE_DEPT,<!--创建部门-->
+        A.CREATE_TIME = B.CREATE_TIME,<!--创建时间-->
+        A.UPDATE_USER = B.UPDATE_USER,<!--更新人-->
+        A.UPDATE_TIME = B.UPDATE_TIME,<!--更新时间-->
+        A.RAISE_AMT = B.RAISE_AMT,<!--募集金额-->
+        A.OPEN_MODE = B.OPEN_MODE,<!--开放模式-->
+        A.INVEST_PROF_DATE = B.INVEST_PROF_DATE,<!--投资收益到账日-->
+        A.INVEST_PRIN_DATE = B.INVEST_PRIN_DATE,<!--投资本金到账日-->
+        A.IS_INDEPE_ACC = B.IS_INDEPE_ACC,<!--是否独立开户-->
+        A.PROD_INVEST_TYPE = B.PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+        A.REVEAL_CHANNEL = B.REVEAL_CHANNEL,<!--披露渠道-->
+        A.DEAL_CAL = B.DEAL_CAL,<!--交易日历-->
+        A.STATUS = B.STATUS,<!--数据状态-->
+        A.FINA_TYPE = B.FINA_TYPE,<!--理财类型-->
+        A.TRU_ACCOUNT = B.TRU_ACCOUNT,<!--托管人账号-->
+        A.ACCT_CHNNAME = B.ACCT_CHNNAME,<!--托管人名称-->
+        A.TRU_FEE_RAGE = B.TRU_FEE_RAGE,<!--托管费率-->
+        A.TRU_ACCOUNT_NUM = B.TRU_ACCOUNT_NUM,<!--托管账户账号-->
+        A.TRU_ACCOUNT_NAME = B.TRU_ACCOUNT_NAME,<!--托管账户户名-->
+        A.PROD_TERM_TYPE = B.PROD_TERM_TYPE,<!--产品期限类型-->
+        A.BASIS = B.BASIS,<!--计息基础-->
+        A.IS_LAYER = B.IS_LAYER,<!--是否分层-->
+        A.PRO_MANAGER = B.PRO_MANAGER,<!--管理人-->
+        A.PRO_CUSTODIAN = B.PRO_CUSTODIAN,<!---->
+        A.HUGE_REDEEM_THRESHOLD = B.HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+        A.SALE_AMT_STR = B.SALE_AMT_STR,<!--起点销售金额-->
+        A.OPERATE_MODE = B.OPERATE_MODE,<!--产品运作模式-->
+        A.F_PROD_ID = B.F_PROD_ID,<!--源系统金融产品代码-->
+        A.PERFORM_COMPARE=B.PERFORM_COMPARE,<!--业绩基准-->
+        A.BONUS_MODE=B.BONUS_MODE,<!--分红方式-->
+        A.LOWEST_AMT=B.LOWEST_AMT<!--最少追加金额-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 start-->
+        ,A.PROD_SERIES=B.PROD_SERIES,<!--产品系列-->
+        A.SALETARGET_DECLARE=B.SALETARGET_DECLARE<!--目标客户类型-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 end-->
+        <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 start-->
+        ,A.RISK_PREFERENCE = B.RISK_PREFERENCE<!--投资者风险偏好-->
+        ,A.SALES_AREA = B.SALES_AREA<!--销售地区-->
+        ,A.OPEN_DAYS = B.OPEN_DAYS<!--开放天数-->
+        ,A.TRUSTEE_ID = B.TRUSTEE_ID<!--托管机构-->
+        <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 end-->
+        where A.PROD_ID = B.PROD_ID;
+        insert into REP_PROD_INFO( PROD_ID,<!--产品代码-->
+        PROD_RE,<!--产品登记编码-->
+        PROD_NAME,<!--产品名称-->
+        PROD_ABBR,<!--产品简称-->
+        RAISE_MIN,<!--募集下限-->
+        RAISE_MAX,<!--募集上限-->
+        RAISE_STRDATE,<!--募集开始日-->
+        RAISE_ENDDATE,<!--募集结束日-->
+        RAISE_CCY,<!--募集币种-->
+        SET_DATE,<!--产品成立日-->
+        VDATE,<!--产品起息日-->
+        FIRST_OPEN_DAY,<!--首次开放日-->
+        MDATE,<!--产品到期日-->
+        ACT_MDATE,<!--实际到期日-->
+        TERM,<!--产品期限-->
+        WINDUP_DATE,<!--产品清盘日-->
+        ISSUE_MODE,<!--发行方式-->
+        PROFIT_TYPE,<!--收益类型-->
+        PROD_TYPE,<!--产品类型-->
+        RAISE_TYPE,<!--募集方式-->
+        RISK_LEVEL,<!--产品风险等级-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        RAISE_AMT,<!--募集金额-->
+        OPEN_MODE,<!--开放模式-->
+        INVEST_PROF_DATE,<!--投资收益到账日-->
+        INVEST_PRIN_DATE,<!--投资本金到账日-->
+        IS_INDEPE_ACC,<!--是否独立开户-->
+        PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+        REVEAL_CHANNEL,<!--披露渠道-->
+        DEAL_CAL,<!--交易日历-->
+        STATUS,<!--数据状态-->
+        FINA_TYPE,<!--理财类型-->
+        TRU_ACCOUNT,<!--托管人账号-->
+        ACCT_CHNNAME,<!--托管人名称-->
+        TRU_FEE_RAGE,<!--托管费率-->
+        TRU_ACCOUNT_NUM,<!--托管账户账号-->
+        TRU_ACCOUNT_NAME,<!--托管账户户名-->
+        PROD_TERM_TYPE,<!--产品期限类型-->
+        BASIS,<!--计息基础-->
+        IS_LAYER,<!--是否分层-->
+        PRO_MANAGER,<!--管理人-->
+        PRO_CUSTODIAN,<!---->
+        HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+        SALE_AMT_STR,<!--起点销售金额-->
+        OPERATE_MODE,<!--产品运作模式-->
+        F_PROD_ID,<!--源系统金融产品代码-->
+        PERFORM_COMPARE,<!--业绩基准-->
+        BONUS_MODE,<!--分红方式-->
+        LOWEST_AMT<!--最少追加金额-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 start-->
+        ,PROD_SERIES,<!--产品系列-->
+        SALETARGET_DECLARE<!--目标客户类型-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 end-->
+        <!-- modify by baojunjie on 20220309 投资者风险偏好、销售地区、开放天数、托管机构 start-->
+        ,RISK_PREFERENCE<!--投资者风险偏好-->
+        ,SALES_AREA<!--销售地区-->
+        ,OPEN_DAYS<!--开放天数-->
+        ,TRUSTEE_ID<!--托管机构-->
+        <!-- modify by baojunjie on 20220309 投资者风险偏好、销售地区、开放天数、托管机构 end-->
+        )
+        select  PROD_ID,<!--产品代码-->
+        PROD_RE,<!--产品登记编码-->
+        PROD_NAME,<!--产品名称-->
+        PROD_ABBR,<!--产品简称-->
+        RAISE_MIN,<!--募集下限-->
+        RAISE_MAX,<!--募集上限-->
+        RAISE_STRDATE,<!--募集开始日-->
+        RAISE_ENDDATE,<!--募集结束日-->
+        RAISE_CCY,<!--募集币种-->
+        SET_DATE,<!--产品成立日-->
+        VDATE,<!--产品起息日-->
+        FIRST_OPEN_DAY,<!--首次开放日-->
+        MDATE,<!--产品到期日-->
+        ACT_MDATE,<!--实际到期日-->
+        TERM,<!--产品期限-->
+        WINDUP_DATE,<!--产品清盘日-->
+        ISSUE_MODE,<!--发行方式-->
+        PROFIT_TYPE,<!--收益类型-->
+        PROD_TYPE,<!--产品类型-->
+        RAISE_TYPE,<!--募集方式-->
+        RISK_LEVEL,<!--产品风险等级-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        RAISE_AMT,<!--募集金额-->
+        OPEN_MODE,<!--开放模式-->
+        INVEST_PROF_DATE,<!--投资收益到账日-->
+        INVEST_PRIN_DATE,<!--投资本金到账日-->
+        IS_INDEPE_ACC,<!--是否独立开户-->
+        PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+        REVEAL_CHANNEL,<!--披露渠道-->
+        DEAL_CAL,<!--交易日历-->
+        STATUS,<!--数据状态-->
+        FINA_TYPE,<!--理财类型-->
+        TRU_ACCOUNT,<!--托管人账号-->
+        ACCT_CHNNAME,<!--托管人名称-->
+        TRU_FEE_RAGE,<!--托管费率-->
+        TRU_ACCOUNT_NUM,<!--托管账户账号-->
+        TRU_ACCOUNT_NAME,<!--托管账户户名-->
+        PROD_TERM_TYPE,<!--产品期限类型-->
+        BASIS,<!--计息基础-->
+        IS_LAYER,<!--是否分层-->
+        PRO_MANAGER,<!--管理人-->
+        PRO_CUSTODIAN,<!---->
+        HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+        SALE_AMT_STR,<!--起点销售金额-->
+        OPERATE_MODE,<!--产品运作模式-->
+        F_PROD_ID,<!--源系统金融产品代码-->
+        PERFORM_COMPARE,<!--业绩基准-->
+        BONUS_MODE,<!--分红方式-->
+        LOWEST_AMT<!--最少追加金额-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 start-->
+        ,PROD_SERIES,<!--产品系列-->
+        SALETARGET_DECLARE<!--目标客户类型-->
+        <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 end-->
+        <!-- modify by baojunjie on 20220309 投资者风险偏好、销售地区、开放天数、托管机构 start-->
+        ,RISK_PREFERENCE<!--投资者风险偏好-->
+        ,SALES_AREA<!--销售地区-->
+        ,OPEN_DAYS<!--开放天数-->
+        ,TRUSTEE_ID<!--托管机构-->
+        <!-- modify by baojunjie on 20220309 投资者风险偏好、销售地区、开放天数、托管机构 end-->
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+            #{item.prodRe,jdbcType=VARCHAR} PROD_RE,<!--产品登记编码-->
+            #{item.prodName,jdbcType=VARCHAR} PROD_NAME,<!--产品名称-->
+            #{item.prodAbbr,jdbcType=VARCHAR} PROD_ABBR,<!--产品简称-->
+            #{item.raiseMin,jdbcType=VARCHAR} RAISE_MIN,<!--募集下限-->
+            #{item.raiseMax,jdbcType=VARCHAR} RAISE_MAX,<!--募集上限-->
+            #{item.raiseStrdate,jdbcType=DATE} RAISE_STRDATE,<!--募集开始日-->
+            #{item.raiseEnddate,jdbcType=DATE} RAISE_ENDDATE,<!--募集结束日-->
+            #{item.raiseCcy,jdbcType=VARCHAR} RAISE_CCY,<!--募集币种-->
+            #{item.setDate,jdbcType=DATE} SET_DATE,<!--产品成立日-->
+            #{item.vdate,jdbcType=DATE} VDATE,<!--产品起息日-->
+            #{item.firstOpenDay,jdbcType=DATE} FIRST_OPEN_DAY,<!--首次开放日-->
+            #{item.mdate,jdbcType=DATE} MDATE,<!--产品到期日-->
+            #{item.actMdate,jdbcType=DATE} ACT_MDATE,<!--实际到期日-->
+            #{item.term,jdbcType=VARCHAR} TERM,<!--产品期限-->
+            #{item.windupDate,jdbcType=DATE} WINDUP_DATE,<!--产品清盘日-->
+            #{item.issueMode,jdbcType=VARCHAR} ISSUE_MODE,<!--发行方式-->
+            #{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,<!--收益类型-->
+            #{item.prodType,jdbcType=VARCHAR} PROD_TYPE,<!--产品类型-->
+            #{item.raiseType,jdbcType=VARCHAR} RAISE_TYPE,<!--募集方式-->
+            #{item.riskLevel,jdbcType=VARCHAR} RISK_LEVEL,<!--产品风险等级-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+            #{item.raiseAmt,jdbcType=DECIMAL} RAISE_AMT,<!--募集金额-->
+            #{item.openMode,jdbcType=VARCHAR} OPEN_MODE,<!--开放模式-->
+            #{item.investProfDate,jdbcType=VARCHAR} INVEST_PROF_DATE,<!--投资收益到账日-->
+            #{item.investPrinDate,jdbcType=VARCHAR} INVEST_PRIN_DATE,<!--投资本金到账日-->
+            #{item.isIndepeAcc,jdbcType=VARCHAR} IS_INDEPE_ACC,<!--是否独立开户-->
+            #{item.prodInvestType,jdbcType=VARCHAR} PROD_INVEST_TYPE,<!--投资范围/投资性质-->
+            #{item.revealChannel,jdbcType=VARCHAR} REVEAL_CHANNEL,<!--披露渠道-->
+            #{item.dealCal,jdbcType=VARCHAR} DEAL_CAL,<!--交易日历-->
+            #{item.status,jdbcType=VARCHAR} STATUS,<!--数据状态-->
+            #{item.finaType,jdbcType=VARCHAR} FINA_TYPE,<!--理财类型-->
+            #{item.truAccount,jdbcType=VARCHAR} TRU_ACCOUNT,<!--托管人账号-->
+            #{item.acctChnname,jdbcType=VARCHAR} ACCT_CHNNAME,<!--托管人名称-->
+            #{item.truFeeRage,jdbcType=DECIMAL} TRU_FEE_RAGE,<!--托管费率-->
+            #{item.truAccountNum,jdbcType=VARCHAR} TRU_ACCOUNT_NUM,<!--托管账户账号-->
+            #{item.truAccountName,jdbcType=VARCHAR} TRU_ACCOUNT_NAME,<!--托管账户户名-->
+            #{item.prodTermType,jdbcType=VARCHAR} PROD_TERM_TYPE,<!--产品期限类型-->
+            #{item.basis,jdbcType=VARCHAR} BASIS,<!--计息基础-->
+            #{item.isLayer,jdbcType=VARCHAR} IS_LAYER,<!--是否分层-->
+            #{item.proManager,jdbcType=VARCHAR} PRO_MANAGER,<!--管理人-->
+            #{item.proCustodian,jdbcType=VARCHAR} PRO_CUSTODIAN,<!---->
+            #{item.hugeRedeemThreshold,jdbcType=DECIMAL} HUGE_REDEEM_THRESHOLD,<!--巨额赎回阀值-->
+            #{item.saleAmtStr,jdbcType=DECIMAL} SALE_AMT_STR,<!--起点销售金额-->
+            #{item.operateMode,jdbcType=VARCHAR} OPERATE_MODE,<!--产品运作模式-->
+            #{item.fProdId,jdbcType=VARCHAR} F_PROD_ID,<!--源系统金融产品代码-->
+            #{item.performCompare,jdbcType=VARCHAR} PERFORM_COMPARE,<!--业绩基准-->
+            #{item.bonusMode,jdbcType=VARCHAR} BONUS_MODE,<!--分红方式-->
+            #{item.lowestAmt,jdbcType=DECIMAL} LOWEST_AMT<!--最少追加金额-->
+            <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 start-->
+            ,#{item.prodSeries,jdbcType=VARCHAR} PROD_SERIES,<!--产品系列-->
+            #{item.saletargetDeclare,jdbcType=VARCHAR} SALETARGET_DECLARE<!--目标客户类型-->
+            <!-- modify by yanya on 20220221 增加目标客户类型、产品系列 end-->
+            <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 start-->
+            ,#{item.riskPreference,jdbcType=VARCHAR} RISK_PREFERENCE<!--投资者风险偏好-->
+            ,#{item.salesArea,jdbcType=VARCHAR} SALES_AREA<!--销售地区-->
+            ,#{item.openDays,jdbcType=INTEGER} OPEN_DAYS<!--开放天数-->
+            ,#{item.trusteeId,jdbcType=VARCHAR} TRUSTEE_ID<!--托管机构-->
+            <!-- modify by baojunjie on 20220309 增加投资者风险偏好、销售地区、开放天数、托管机构 end-->
+            FROM   dual
+        </foreach>
+        ) TEMP where not exists (select 1 from REP_PROD_INFO CII  where CII.PROD_ID = TEMP.PROD_ID)
+        ) de ;
+    </update>
+</mapper>

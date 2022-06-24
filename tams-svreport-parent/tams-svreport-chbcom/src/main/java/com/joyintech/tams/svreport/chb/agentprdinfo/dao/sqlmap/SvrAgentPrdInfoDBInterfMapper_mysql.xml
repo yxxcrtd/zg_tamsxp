@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.agentprdinfo.dao.SvrAgentPrdInfoDBInterfMapper_mysql" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbAgentPrdInfo">
+		SELECT
+		AGENT_INSTITUTION_CODE,
+		ISSUE_PARTY_ID,
+		PROD_ID,
+		PROD_NAME,
+		PROD_REGIST_CODE,
+		STATUS,
+		DATA_DATE,
+		REMARK,
+		CREATE_DEPT,
+		ORG_CODE,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME
+	    FROM CHB_AGENT_PRD_INFO
+		WHERE DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+	</select>
+	
+	 <select id="selectRegAgentPrdData" resultType="com.joyintech.tams.common.base.entity.ChbAgentPrdSub">
+		SELECT
+		 REGIST_SEQNO,
+		 AGENT_INSTITUTION_CODE,
+		 ISSUE_PARTY_ID,
+		 PROD_ID,
+		 PROD_NAME,
+		 PROD_REGIST_CODE,
+		 STATUS,
+		 CREATE_USER,
+		 CREATE_TIME,
+		 UPDATE_USER,
+		 UPDATE_TIME,
+		 SUMIT_SEQ,
+		 CHB_SUBMIT_DEADLINE,
+		 SUBMIT_DEADLINE,
+		 SUBMIT_FEEDBACK_STATUS,
+		 SUBMIT_FEEDBACK_MSG,
+		 SEND_STATUS,
+		 DATA_DATE,
+		 CREATE_DEPT,
+		 ORG_CODE,
+		 SUBMIT_TIME,
+		 REMARK
+		FROM CHB_AGENT_PRD_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+	
+	<delete id="deleteBatchData" parameterType="map">
+		DELETE FROM CHB_AGENT_PRD_SUB
+		<where>
+  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+				AGENT_INSTITUTION_CODE = #{item.agentInstitutionCode,jdbcType=VARCHAR}
+  				AND PROD_REGIST_CODE = #{item.prodRegistCode,jdbcType=VARCHAR}
+  				AND SEND_STATUS = '01'
+    		</foreach>
+  		</where>
+	</delete>
+
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbAgentPrdSub">
+		insert into CHB_AGENT_PRD_SUB(REGIST_SEQNO, AGENT_INSTITUTION_CODE, ISSUE_PARTY_ID, PROD_ID, PROD_NAME,
+		PROD_REGIST_CODE,STATUS,SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SEND_STATUS,
+		CREATE_DEPT,ORG_CODE,DATA_DATE,REMARK,CREATE_USER,CREATE_TIME,UPDATE_USER, UPDATE_TIME)
+		values(
+		#{registSeqno,jdbcType=VARCHAR},#{agentInstitutionCode,jdbcType=VARCHAR},#{issuePartyId,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR},#{prodName,jdbcType=VARCHAR},
+		#{prodRegistCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{sumitSeq,jdbcType=VARCHAR},#{chbSubmitDeadline,jdbcType=DATE},#{submitDeadline,jdbcType=DATE},#{sendStatus,jdbcType=VARCHAR},
+		#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
+	</insert>
+
+</mapper>

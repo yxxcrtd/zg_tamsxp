@@ -176,21 +176,27 @@ public class EmployeeInfoReg001Service extends SvrCommonExportService<EmployeeIn
 		    if(item.getRegBusiType()!=null){
 		    	List<String> regBusiTypes=StringUtil.splitToList(GlobalConstant.COMMA, item.getRegBusiType());
 				item.setRegBusiType("");
-				for(String regBusiType : regBusiTypes){
-					item.setRegBusiType(item.getRegBusiType() + "," + regBusiType + " "
-												+SvrDataUtil.getNameFromDataDict(DictCode.登记业务分类, regBusiType));
+				//add by zhoubin 20220426 start
+				if (CollectionUtils.isNotEmpty(regBusiTypes)){
+					for(String regBusiType : regBusiTypes){
+						item.setRegBusiType(item.getRegBusiType() + "," + regBusiType + " "
+								+SvrDataUtil.getNameFromDataDict(DictCode.登记业务分类, regBusiType));
+					}
+					item.setRegBusiType(item.getRegBusiType().substring(1));
 				}
-				item.setRegBusiType(item.getRegBusiType().substring(1));
+				//add by zhoubin 20220426 end
 		    }
 			//登记人员类别
 		    if(item.getRegEmployeeType()!=null){
 		    	List<String> regEmployeeTypes=StringUtil.splitToList(GlobalConstant.COMMA, item.getRegEmployeeType());
 				item.setRegEmployeeType("");
-				for(String regEmployeeType : regEmployeeTypes){
-					item.setRegEmployeeType(item.getRegEmployeeType() + "," + regEmployeeType + " "
-												+SvrDataUtil.getNameFromDataDict(DictCode.登记人员类别, regEmployeeType));
+				if (CollectionUtils.isNotEmpty(regEmployeeTypes)) {
+					for (String regEmployeeType : regEmployeeTypes) {
+						item.setRegEmployeeType(item.getRegEmployeeType() + "," + regEmployeeType + " "
+								+ SvrDataUtil.getNameFromDataDict(DictCode.登记人员类别, regEmployeeType));
+					}
+					item.setRegEmployeeType(item.getRegEmployeeType().substring(1));
 				}
-				item.setRegEmployeeType(item.getRegEmployeeType().substring(1));
 		    }
 
 		});

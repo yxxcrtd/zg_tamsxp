@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dao.ProPeoplebankcodeManagement001DtoMapper_mysql" >
+
     <resultMap id="BaseResultMap" type="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
         <id column="INSIDE_PROD_ID" property="insideProdId" jdbcType="VARCHAR" />
         <id column="CODE_TYPE" property="codeType" jdbcType="VARCHAR" />
@@ -14,9 +15,9 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     </resultMap>
     <sql id="Base_Column_List" >
-    INSIDE_PROD_ID, CODE_TYPE, PBC_CODE, STATUS, ORG_CODE, CREATE_USER, CREATE_DEPT,
+        INSIDE_PROD_ID, CODE_TYPE, PBC_CODE, STATUS, ORG_CODE, CREATE_USER, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME
-  </sql>
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
         select
         <include refid="Base_Column_List" />
@@ -26,20 +27,20 @@
         and STATUS = #{status}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001DtoKey" >
-    delete from PBC_PROD_ASSETPOOL_CODE
-    where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
-      and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
-  </delete>
+        delete from PBC_PROD_ASSETPOOL_CODE
+        where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
+          and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+    </delete>
     <insert id="insert" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
-    insert into PBC_PROD_ASSETPOOL_CODE (INSIDE_PROD_ID, CODE_TYPE, PBC_CODE,
-      STATUS, ORG_CODE, CREATE_USER,
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-      UPDATE_TIME)
-    values (#{insideProdId,jdbcType=VARCHAR}, #{codeType,jdbcType=VARCHAR}, #{pbcCode,jdbcType=VARCHAR},
-      #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-      #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=TIMESTAMP})
-  </insert>
+        insert into PBC_PROD_ASSETPOOL_CODE (INSIDE_PROD_ID, CODE_TYPE, PBC_CODE,
+                                             STATUS, ORG_CODE, CREATE_USER,
+                                             CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+                                             UPDATE_TIME)
+        values (#{insideProdId,jdbcType=VARCHAR}, #{codeType,jdbcType=VARCHAR}, #{pbcCode,jdbcType=VARCHAR},
+                #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+                #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+                #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
         insert into PBC_PROD_ASSETPOOL_CODE
         <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -139,23 +140,28 @@
         and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
-    update PBC_PROD_ASSETPOOL_CODE
-    set PBC_CODE = #{pbcCode,jdbcType=VARCHAR},
-      STATUS = #{status,jdbcType=VARCHAR},
-      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
-      CREATE_USER = #{createUser,jdbcType=VARCHAR},
-      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
-    where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
-      and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
-  </update>
+        update PBC_PROD_ASSETPOOL_CODE
+        set PBC_CODE = #{pbcCode,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where INSIDE_PROD_ID = #{insideProdId,jdbcType=VARCHAR}
+          and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
+    </update>
     <select id="queryForPage" resultType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto">
-        select
+        SELECT insideProdId,
+        max(pbcProjectCodeExternal) pbcProjectCodeExternal,
+        max(pbcAssetPoolCodeExternal) pbcAssetPoolCodeExternal,
+        max(pbcProjectCodeSystem) pbcProjectCodeSystem,
+        max(pbcAssetPoolCodeSystem) pbcAssetPoolCodeSystem
+        FROM (select
         t1.INSIDE_PROD_ID as insideProdId,
-        case t1.CODE_TYPE when #{codeTypeProduct} then t1.PBC_CODE  else null  end as pbcProjectCodeExternal,
-        case t1.CODE_TYPE when #{codeTypeAssets} then t1.PBC_CODE  else null  end as pbcAssetPoolCodeExternal,
+        (case t1.CODE_TYPE when #{codeTypeProduct} then t1.PBC_CODE else null end) as pbcProjectCodeExternal,
+        (case t1.CODE_TYPE when #{codeTypeAssets} then t1.PBC_CODE else null end) as pbcAssetPoolCodeExternal,
         t2.PBC_PROD_ID as pbcProjectCodeSystem,
         t3.PBC_ACCOUNT_ID as pbcAssetPoolCodeSystem,
         case t1.CODE_TYPE when #{codeTypeProduct} then '产品'
@@ -182,9 +188,10 @@
         </if>
         <if test="pbcAssetPoolCode !=null and pbcAssetPoolCode !=''">
             and t3.PBC_ACCOUNT_ID=#{pbcAssetPoolCode}
-        </if>
-        order by t1.UPDATE_TIME desc
+        </if>) s
+        group by insideProdId
     </select>
+
     <select id="queryReportList" resultType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto">
         select
         t1.INSIDE_PROD_ID as insideProdId,
@@ -239,7 +246,7 @@
         from PBC_PROD_ASSETPOOL_CODE
         where
         1=1
-        <foreach collection="list" item="bankCode" open="AND concat(INSIDE_PROD_ID,'|',CODE_TYPE) IN (" close=")"  separator=",">
+        <foreach collection="list" item="bankCode" open="AND concat_ws('|', INSIDE_PROD_ID,CODE_TYPE) IN (" close=")" separator=",">
             #{bankCode.insideProdIdAndCodeType}
         </foreach>
     </select>
@@ -253,7 +260,7 @@
 
     <select id="CheckProdExist" resultMap="BaseResultMap" parameterType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto" >
         select
-        PROD_ID INSIDE_PROD_ID
+            PROD_ID INSIDE_PROD_ID
         from CHB_PRD_BASEINFO
         where PROD_ID = #{insideProdId} and status !='D'
     </select>

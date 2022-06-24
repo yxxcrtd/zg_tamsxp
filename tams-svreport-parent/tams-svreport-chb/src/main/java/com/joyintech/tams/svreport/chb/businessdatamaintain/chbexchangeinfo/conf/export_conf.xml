@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbExchangeQuotationInfo002.xlsx" name="汇率行情信息">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.dto.ChbExchangeQuotationInfoDto">
+		<Row>
+			<Cell order="1" name="数据状态">statusValidStr</Cell>
+			<Cell order="2" name="货币对">exchargeCode</Cell>
+			<Cell order="3" name="交易日期">tradeDateStr</Cell>
+			<Cell order="4" name="开盘价（元）">openPrice</Cell>
+			<Cell order="5" name="收盘价（元）">closePrice</Cell>
+			<Cell order="6" name="中间价（元）">midPrice</Cell>
+			<Cell order="7" name="最高价（元）">highPrice</Cell>
+			<Cell order="8" name="最低价（元）">lowPrice</Cell>
+			<Cell order="9" name="错误信息">errMsg</Cell>
+			<Cell order="10" name="更新时间">updateTimeStr</Cell>
+			<Cell order="11" name="更新人">updateUser</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

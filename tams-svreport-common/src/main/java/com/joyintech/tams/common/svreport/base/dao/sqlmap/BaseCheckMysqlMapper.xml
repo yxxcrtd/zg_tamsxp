@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.svreport.base.dao.BaseCheckMysqlMapper">
+
+    <select id="select" resultType="com.joyintech.tams.common.svreport.base.dto.BaseCheckMysqlDto">
+        SELECT
+            column_name as columnName,
+            ordinal_position as ordinalPosition,
+            is_nullable as isNullable,
+            data_type as dataType,
+            character_maximum_length as characterMaximumLength ,
+            column_type as columnType,
+            column_comment as columnComment,
+            numeric_precision as numericPrecision,
+            numeric_scale as numericScale,
+            column_key as columnKey,
+            privileges
+        FROM
+            information_schema.COLUMNS
+        WHERE
+            table_schema = #{schema}
+          AND table_name = #{tableName}
+    </select>
+</mapper>

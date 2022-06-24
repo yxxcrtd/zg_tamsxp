@@ -100,8 +100,8 @@
         TEMP.BUSI_SEQNO= CII.BUSI_SEQNO
         AND TEMP.INDENTIFY_MARK = CII.INDENTIFY_MARK
         AND TEMP.REGIST_BANK_CODE = CII.REGIST_BANK_CODE
-        AND CII.DATA_SOURCE == "02"
-        AND CII.isOpen == "01");
+        AND CII.DATA_SOURCE == '02'
+        AND CII.isOpen == '01');
     </insert>
     <!-- 批量插入接口内容 -->
     <insert id="insertBtachInterfEquityBusi" parameterType="java.util.List">
@@ -239,7 +239,7 @@
         WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
         UPDATE_TIME, CREATE_USER, CREATE_TIME,
         DATA_SOURCE,ACCOUNT_NAME ,ORG_CODE,IS_CONSIGN,AGENT,SHARE_CONF_DATETIME, CREATE_DEPT)
-        select  seq_equity_busi.NEXTVAL,
+        select  _NEXTINDEX('seq_equity_busi'),
         A.BUSI_SEQNO,A.ACCOUNT,A.REGIST_BANK_CODE,
         A.INDENTIFY_MARK,A.EQUITY_CONF_DATE,A.BUY_PLACE,A.BUSI_TYPE,
         A.CCY,A.AMOUNT,A.SHARES,A.CHANNEL,

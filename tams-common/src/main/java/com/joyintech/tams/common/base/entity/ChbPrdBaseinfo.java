@@ -683,6 +683,20 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
      * 以财产权信托名义开展的资金信托标识
      */
     private  String zjxtFlag;
+    // add by wubingbing 20220528 start
+    /**
+     * 现金管理类产品-是否_中债完全符合
+     */
+    private String manaCateFit;
+    /**
+     * 状态备注
+     */
+    private String issueStatusRemark;
+    /**
+     * 定期开放周期(天)
+     */
+    private BigDecimal fitCircleDays;
+    // add by wubingbing 20220528 end
 
     public String getPrdSpecProperty() {
         return prdSpecProperty;
@@ -2753,4 +2767,27 @@ public class ChbPrdBaseinfo extends ChbPrdBaseinfoKey {
         this.zjxtFlag = zjxtFlag;
     }
 
+    public String getManaCateFit() {
+        return manaCateFit;
+    }
+
+    public void setManaCateFit(String manaCateFit) {
+        this.manaCateFit = manaCateFit;
+    }
+
+    public String getIssueStatusRemark() {
+        return issueStatusRemark;
+    }
+
+    public void setIssueStatusRemark(String issueStatusRemark) {
+        this.issueStatusRemark = issueStatusRemark;
+    }
+
+    public BigDecimal getFitCircleDays() {
+        return fitCircleDays;
+    }
+
+    public void setFitCircleDays(BigDecimal fitCircleDays) {
+        this.fitCircleDays = fitCircleDays;
+    }
 }

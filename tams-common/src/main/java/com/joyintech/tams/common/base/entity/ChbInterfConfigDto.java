@@ -55,6 +55,11 @@ public class ChbInterfConfigDto {
     private String status;
 
     /**
+     * 是否覆盖
+     */
+    private String coverFlag;
+
+    /**
      * 接口代码
      * @return INTERF_ID 接口代码
      */
@@ -196,5 +201,13 @@ public class ChbInterfConfigDto {
      */
     public void setStatus(String status) {
         this.status = status == null ? null : status.trim();
+    }
+
+    public String getCoverFlag() {
+        return coverFlag;
+    }
+
+    public void setCoverFlag(String coverFlag) {
+        this.coverFlag = coverFlag;
     }
 }

@@ -500,12 +500,14 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
      * 跨境理财通标识
      *
      */
+    @DictFormat(DictCode.人行是否)
     private  String crossBorderFlag;
 
     /**
      * 以财产权信托名义开展的资金信托标识
      *
      */
+    @DictFormat(DictCode.人行是否)
     private  String zjxtFlag;
     
     /** 人行代码（外部）
@@ -1452,9 +1454,9 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
 		return SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态, this.getStatus());
 	}
 
-	public String getStatusDateStr(){return null!=this.getStatusDate()?DateUtil.format(this.getStatusDate()):null;}
+	public String getStatusDateStr(){return null!=this.getStatusDate()?DateUtil.formatDateTime(this.getStatusDate()):null;}
 
-    public String getSubmitTimeStr(){return null!=this.getSubmitTime()?DateUtil.format(this.getSubmitTime()):null;}
+    public String getSubmitTimeStr(){return null!=this.getSubmitTime()?DateUtil.formatDateTime(this.getSubmitTime()):null;}
 
     public String getPbcSubmitDeadlineStr(){return null!=this.getPbcSubmitDeadline()?DateUtil.format(this.getPbcSubmitDeadline()):null;}
 

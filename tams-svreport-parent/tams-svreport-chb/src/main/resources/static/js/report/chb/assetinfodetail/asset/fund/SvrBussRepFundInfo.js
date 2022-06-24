@@ -53,16 +53,32 @@
 		//公募基金/私募基金
 		if(assetTvalueFund=='2607'||assetTvalueFund=='2610'||assetTvalueFund=='2613'||
 			assetTvalueFund=='2611'||assetTvalueFund=='2612'||assetTvalueFund=='2617'){
-			$("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
-			$("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
+			$("#svrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
+			$("#svrBussRepFundInfoDto_isGovernFund").attr("disabled",false);
 		}else{
-			$("#SvrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
-			$("#SvrBussRepFundInfoDto_isGovernFund").attr("disabled",true);
+			$("#svrBussRepFundInfoDto_isGovernFund").val('').trigger("change");
+			$("#svrBussRepFundInfoDto_isGovernFund").attr("disabled",true);
 		}
 	}
+
+	var  initprofitFlag=function(){
+		var assetTvalueFund=$('#assetType2').val();
+		//公募基金/私募基金
+		if(assetTvalueFund=='1106'||assetTvalueFund=='2401'||assetTvalueFund=='1303'||
+			assetTvalueFund=='2403'||assetTvalueFund=='2402'||assetTvalueFund=='2499'){
+			$("#svrBussRepFundInfoDto_profitFlag").val('').trigger("change");
+			$("#svrBussRepFundInfoDto_profitFlag").attr("disabled",false);
+		}else{
+			$("#svrBussRepFundInfoDto_profitFlag").val('').trigger("change");
+			$("#svrBussRepFundInfoDto_profitFlag").attr("disabled",true);
+		}
+	}
+
+
 	$(function() {
 
 		isGovernFundChangeType();
+		initprofitFlag();
 		initFundAssetType2();
 		starBussRep();
 		getElementById('isGovernFund').change(function(){
@@ -78,7 +94,7 @@
 			}
 			else{
 				var data = {
-					svrBussRepFundInfoDto_chbManagerId: $('#svrBussRepFundInfoDto_chbManagerId').val()
+					chbManagerId: $('#svrBussRepFundInfoDto_chbManagerId').val()
 				}
 				//$('#fundName').val($('#finprodId').select2('data')[0].text).trigger('change');
 				Joyin.ajaxJson(basePath + 'common/select/getManagerInfo', data,
@@ -86,6 +102,7 @@
 						//if (resultObj.fundType) {
 						// $('#fundName').val(resultObj.fundName).trigger('change');
 						// $("#fundType").val(resultObj.fundType).trigger('change');
+
 						//}
 						// console.log($('#svrBussRepFundInfoDto_chbManagerId').val());
 						// console.log(resultObj);

@@ -466,6 +466,7 @@ function getColumns() {
 					multiple: true,
 					data: initData,
 					allowClear:true,
+					language: 'zh-CN'
 				});
 
 				if(isFromMain == '01'){
@@ -940,6 +941,7 @@ $(function() {
 						});
 					});
 				});
+
 
 	// 删除按钮点击事件
 	$('#SvrOperationalInfo001_btn_delete').click(

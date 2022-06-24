@@ -403,36 +403,6 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 					isagencyAmt = isagencyAmt.add(amt);
 				}
 				}
-				/**是否代销和代销金额字段取值改从交易里面取值  start  add by  dongxiangyang 20201224 **/
-
-
-				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
-				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", deal.getCustomerType2());
-
-				//数据判断不能为特殊地级市才进行统计
-				if(!StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)
-						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)
-						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)
-						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)
-						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)) {
-					if (SINGLE_PERSON.equals(customerType)) {
-						//个人
-						singleTotal += deal.getCustCounts().intValue();
-					} else if (LEGAL_PERSON.equals(customerType)) {
-						//法人
-						legalTotal += deal.getCustCounts().intValue();
-					} else if (UNLEGAL_PERSON.equals(customerType)) {
-						//非法人
-						unlegalTotal += deal.getCustCounts().intValue();
-					}
-				}
-				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
-
-//				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
-//				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
-//				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
-
-
 			}
 		}
 		/**青岛银行关于客户数的调整   add by  dongxiangyang  20201112 start*/
@@ -459,18 +429,6 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		}else {
 			if(!CollectionUtils.isEmpty(poslist)) {
 				for (ChbPrdPosition posmodel : poslist) {
-//				BigDecimal chaAmt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getBalanceAmt(), rateMap, exchangeSource);
-//				//实际募集金额
-//				totAmt = totAmt.add(chaAmt);
-//				//募集总份额
-//				totQty = totQty.add(posmodel.getBalanceQty());
-					//是否有其他机构代销,代销总金额
-				/*if(posmodel.getConsignamt()!=null&&posmodel.getConsignamt().compareTo(BigDecimal.ZERO)>0){
-					isagency=true;
-					BigDecimal amt = ChbCcyConvertUtil.exchangeMoney(posmodel.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), dto.getRaiseEnddate(), posmodel.getConsignamt(), rateMap, exchangeSource);
-					isagencyAmt = isagencyAmt.add(amt);
-				}
-				*/
 					String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", posmodel.getCustomerType2());
 					if (SINGLE_PERSON.equals(customerType)) {
 						//个人

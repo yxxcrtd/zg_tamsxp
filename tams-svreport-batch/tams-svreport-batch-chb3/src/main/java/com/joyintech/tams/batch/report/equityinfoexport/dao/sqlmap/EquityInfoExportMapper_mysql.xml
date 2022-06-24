@@ -14,207 +14,208 @@
 		/*left join CHB_SUBMIT_STATUS status
 		on sub.sumit_seq = status.seqno*/
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-    		<where>
+		<where>
 			<if test="bankCode != null and bankCode != ''">
-		 	sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
-		 	</if>
-		 	<if test="orgCodeList != null and orgCodeList.size() > 0">
-			 	<foreach collection="orgCodeList" item="orgCode" open=" AND sub.ORG_CODE IN (" close=")" separator=",">
-			 	 #{orgCode}
-			 	</foreach>
+				sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
 			</if>
-		 	<if test="statusList != null and statusList.size() > 0">
-            	<foreach collection="statusList" item="status" open=" AND sub.STATUS IN (" close=")" separator=",">
-             		#{status}
-            	</foreach>
-		 	</if>
-		 	<if test="indentifyMark != null and indentifyMark != ''">
-		 	AND sub.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
-		 	</if>
-		 	<if test="personalIdentifyTypeList != null and personalIdentifyTypeList.size() > 0">
-		 		<foreach collection="personalIdentifyTypeList" item="personalIdentifyType" open=" AND sub.PERSONAL_IDENTIFY_TYPE IN (" close=")" separator=",">
-             		#{personalIdentifyType}
-            	</foreach>
-		 	</if>
-		 	<if test="institutionIdentifyTypeList != null and institutionIdentifyTypeList.size() > 0">
-		 		<foreach collection="institutionIdentifyTypeList" item="institutionIdentifyType" open=" AND sub.INSTITUTION_IDENTIFY_TYPE IN (" close=")" separator=",">
-             		#{institutionIdentifyType}
-            	</foreach>		 	
-		 	</if>
-		 	<if test="holderName != null and holderName != ''">
-		 	AND sub.HOLDER_NAME LIKE concat(concat('%',#{holderName}),'%')
-		 	</if>
-		 	<if test="identifyNumber != null and identifyNumber != ''">
-		 	AND sub.IDENTIFY_NUMBER LIKE concat(concat('%',#{identifyNumber}),'%')
-		 	</if>
-		 	<if test="orgIndentifyMark != null and orgIndentifyMark != ''">
-		 	AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
-		 	</if>
-				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-				<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-					<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
-						#{submitFeedbackStatus}
-					</foreach>
-					/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-				</if>
-		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
-		 		<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SUBMIT_STATUS IN (" close=")" separator=",">
-             		#{submitStatus}
-            	</foreach>			 	
-		 	</if>
-		 	<if test="holderTypeList != null and holderTypeList.size() > 0">
-            	<foreach collection="holderTypeList" item="holderType" open=" AND sub.HOLDER_TYPE IN (" close=")" separator=",">
-             		#{holderType,jdbcType=VARCHAR}
-           		</foreach>
-		 	</if>
-		 	<if test="submitDate != null and submitDate != ''">
+			<if test="orgCodeList != null and orgCodeList.size() > 0">
+				<foreach collection="orgCodeList" item="orgCode" open=" AND sub.ORG_CODE IN (" close=")" separator=",">
+					#{orgCode}
+				</foreach>
+			</if>
+			<if test="statusList != null and statusList.size() > 0">
+				<foreach collection="statusList" item="status" open=" AND sub.STATUS IN (" close=")" separator=",">
+					#{status}
+				</foreach>
+			</if>
+			<if test="indentifyMark != null and indentifyMark != ''">
+				AND sub.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
+			</if>
+			<if test="personalIdentifyTypeList != null and personalIdentifyTypeList.size() > 0">
+				<foreach collection="personalIdentifyTypeList" item="personalIdentifyType" open=" AND sub.PERSONAL_IDENTIFY_TYPE IN (" close=")" separator=",">
+					#{personalIdentifyType}
+				</foreach>
+			</if>
+			<if test="institutionIdentifyTypeList != null and institutionIdentifyTypeList.size() > 0">
+				<foreach collection="institutionIdentifyTypeList" item="institutionIdentifyType" open=" AND sub.INSTITUTION_IDENTIFY_TYPE IN (" close=")" separator=",">
+					#{institutionIdentifyType}
+				</foreach>
+			</if>
+			<if test="holderName != null and holderName != ''">
+				AND sub.HOLDER_NAME LIKE concat(concat('%',#{holderName}),'%')
+			</if>
+			<if test="identifyNumber != null and identifyNumber != ''">
+				AND sub.IDENTIFY_NUMBER LIKE concat(concat('%',#{identifyNumber}),'%')
+			</if>
+			<if test="orgIndentifyMark != null and orgIndentifyMark != ''">
+				AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
+			</if>
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+					#{submitFeedbackStatus}
+				</foreach>
+			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+			</if>
+			<if test="submitStatusList != null and submitStatusList.size() > 0">
+				<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SUBMIT_STATUS IN (" close=")" separator=",">
+					#{submitStatus}
+				</foreach>
+			</if>
+			<if test="holderTypeList != null and holderTypeList.size() > 0">
+				<foreach collection="holderTypeList" item="holderType" open=" AND sub.HOLDER_TYPE IN (" close=")" separator=",">
+					#{holderType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="submitDate != null and submitDate != ''">
 				AND DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') >= #{submitDate}
 			</if>
 			<if test="submitDateEnd != null and submitDateEnd != ''">
 				AND DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]>#{submitDateEnd}
 			</if>
-		 	<if test="updateTime != null and updateTime != ''">
-		 	AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') >= #{updateTime}
-		 	</if>
-		 	<if test="updateTimeEnd != null and updateTimeEnd != ''">
-		 	AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{updateTimeEnd}
-		 	</if>
-		 	<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
-		 	AND sub.CHB_SUBMIT_DEADLINE &gt;= STR_TO_DATE(#{submitDeadLineStart},'%Y-%m-%d %H:%i:%s')
-		 	</if>
-		 	<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
-		 	AND sub.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{submitDeadLineEnd},'%Y-%m-%d %H:%i:%s')
-		 	</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') >= #{updateTime}
+			</if>
+			<if test="updateTimeEnd != null and updateTimeEnd != ''">
+				AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{updateTimeEnd}
+			</if>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				AND sub.CHB_SUBMIT_DEADLINE &gt;= STR_TO_DATE(#{submitDeadLineStart},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				AND sub.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{submitDeadLineEnd},'%Y-%m-%d %H:%i:%s')
+			</if>
 		</where>
 		ORDER BY sub.UPDATE_TIME DESC, sub.INDENTIFY_MARK ASC
 	</select>
-	
+
 	<select id="selectAllDataByPage"  resultType="com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto"
 			resultSetType="FORWARD_ONLY" fetchSize="10000">
+		set @rownum=0;
 		SELECT
-		t.*
-	FROM
-    (
-        SELECT
-            tmp_page.*,
-            ROWNUM row_id
-        FROM (
-			select INDENTIFY_MARK            as indentifyMark,
-	       		ORG_INDENTIFY_MARK        as orgIndentifyMark,
-	       		REGIST_BANK_CODE          as bankCode,
-	       		IS_BELONG_BANK            as isBelongBank,
-	       		THE_BANK_NAME             as theBankName,
-	       		THE_BANK_CODE             as theBankCode,
-	       		HOLDER_MARK               as holderMark,
-	       		HOLDER_REGION             as holderRegion,
-	       		HOLDER_TYPE               as holderType,
-	       		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) identifyType,
-	       		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
-	       		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
-		        ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as IDENTIFY_TYPE,
-	       		OTHER_IDENTIFY_NAME       as otherIdentifyName,
-	       		IDENTIFY_NUMBER           as identifyNumber,
-	       		SPV_CAP_ACC_BANK          as spvCapAccBank,
-	       		OTHER_CAP_ACC_BANK        as otherCapAccBank,
-	       		SPV_REGIST_CODE           as spvRegistCode,
-	       		HOLDER_DATE               holderDate,
-	       		HOLDER_NAME               holderName,
-	       		HOLDER_SEX                holderSex,
-	       		HOLDER_RISK_PREFER        as holderRiskPrefer,
-	       		HOLDER_CELLPHONE          as holderCellphone,
-	       		HOLDER_TELEPHONE          as holderTelephone,
-	       		HOLDER_EMAIL              as holderEmail,
-	       		TYPE                      as type,
-	       		REMARK,
-	       		SUMIT_SEQ                 sumitSeq,
-	       		SUBMIT_STATUS             as submitStatus,
-	       		SUBMIT_TIME               as submitTime,
-	       		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
-	       		SUBMIT_DEADLINE           as submitDeadline,
-	      	 	STATUS                    as status,
-	       		sub.UPDATE_TIME           as updateTime,
-	       		sub.ORG_CODE orgCode,
-	       		status.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
-	       		sub.CHECK_SEQNO    		  as checkSeqno
-	  		from chb_equ_sub sub
-			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-			/*left join CHB_SUBMIT_STATUS status
-			on sub.sumit_seq = status.seqno*/
-			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		*
+		FROM
+		(
+		SELECT
+		tmp_page.*,
+		@rownum := @rownum+1 row_id
+		FROM (
+		select INDENTIFY_MARK            as indentifyMark,
+		ORG_INDENTIFY_MARK        as orgIndentifyMark,
+		REGIST_BANK_CODE          as bankCode,
+		IS_BELONG_BANK            as isBelongBank,
+		THE_BANK_NAME             as theBankName,
+		THE_BANK_CODE             as theBankCode,
+		HOLDER_MARK               as holderMark,
+		HOLDER_REGION             as holderRegion,
+		HOLDER_TYPE               as holderType,
+		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) identifyType,
+		PERSONAL_IDENTIFY_TYPE    as personalIdentifyType,
+		INSTITUTION_IDENTIFY_TYPE as institutionIdentifyType,
+		ifnull(PERSONAL_IDENTIFY_TYPE,INSTITUTION_IDENTIFY_TYPE) as IDENTIFY_TYPE,
+		OTHER_IDENTIFY_NAME       as otherIdentifyName,
+		IDENTIFY_NUMBER           as identifyNumber,
+		SPV_CAP_ACC_BANK          as spvCapAccBank,
+		OTHER_CAP_ACC_BANK        as otherCapAccBank,
+		SPV_REGIST_CODE           as spvRegistCode,
+		HOLDER_DATE               holderDate,
+		HOLDER_NAME               holderName,
+		HOLDER_SEX                holderSex,
+		HOLDER_RISK_PREFER        as holderRiskPrefer,
+		HOLDER_CELLPHONE          as holderCellphone,
+		HOLDER_TELEPHONE          as holderTelephone,
+		HOLDER_EMAIL              as holderEmail,
+		TYPE                      as type,
+		REMARK,
+		SUMIT_SEQ                 sumitSeq,
+		SUBMIT_STATUS             as submitStatus,
+		SUBMIT_TIME               as submitTime,
+		CHB_SUBMIT_DEADLINE       as chbSubmitDeadline,
+		SUBMIT_DEADLINE           as submitDeadline,
+		STATUS                    as status,
+		sub.UPDATE_TIME           as updateTime,
+		sub.ORG_CODE orgCode,
+		sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		sub.CHECK_SEQNO    		  as checkSeqno
+		from chb_equ_sub sub
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+		/*left join CHB_SUBMIT_STATUS status
+		on sub.sumit_seq = status.seqno*/
+		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		<where>
 			<if test="bankCode != null and bankCode != ''">
-		 	sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
-		 	</if>
-		 	<if test="orgCodeList != null and orgCodeList.size() > 0">
-			 	<foreach collection="orgCodeList" item="orgCode" open=" AND sub.ORG_CODE IN (" close=")" separator=",">
-			 	 #{orgCode}
-			 	</foreach>
+				sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
 			</if>
-		 	<if test="statusList != null and statusList.size() > 0">
-            	<foreach collection="statusList" item="status" open=" AND sub.STATUS IN (" close=")" separator=",">
-             		#{status}
-            	</foreach>
-		 	</if>
-		 	<if test="indentifyMark != null and indentifyMark != ''">
-		 	AND sub.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
-		 	</if>
-		 	<if test="personalIdentifyTypeList != null and personalIdentifyTypeList.size() > 0">
-		 		<foreach collection="personalIdentifyTypeList" item="personalIdentifyType" open=" AND sub.PERSONAL_IDENTIFY_TYPE IN (" close=")" separator=",">
-             		#{personalIdentifyType}
-            	</foreach>
-		 	</if>
-		 	<if test="institutionIdentifyTypeList != null and institutionIdentifyTypeList.size() > 0">
-		 		<foreach collection="institutionIdentifyTypeList" item="institutionIdentifyType" open=" AND sub.INSTITUTION_IDENTIFY_TYPE IN (" close=")" separator=",">
-             		#{institutionIdentifyType}
-            	</foreach>		 	
-		 	</if>
-		 	<if test="holderName != null and holderName != ''">
-		 	AND sub.HOLDER_NAME LIKE concat(concat('%',#{holderName}),'%')
-		 	</if>
-		 	<if test="identifyNumber != null and identifyNumber != ''">
-		 	AND sub.IDENTIFY_NUMBER LIKE concat(concat('%',#{identifyNumber}),'%')
-		 	</if>
-		 	<if test="orgIndentifyMark != null and orgIndentifyMark != ''">
-		 	AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
-		 	</if>
-		 	<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+			<if test="orgCodeList != null and orgCodeList.size() > 0">
+				<foreach collection="orgCodeList" item="orgCode" open=" AND sub.ORG_CODE IN (" close=")" separator=",">
+					#{orgCode}
+				</foreach>
+			</if>
+			<if test="statusList != null and statusList.size() > 0">
+				<foreach collection="statusList" item="status" open=" AND sub.STATUS IN (" close=")" separator=",">
+					#{status}
+				</foreach>
+			</if>
+			<if test="indentifyMark != null and indentifyMark != ''">
+				AND sub.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
+			</if>
+			<if test="personalIdentifyTypeList != null and personalIdentifyTypeList.size() > 0">
+				<foreach collection="personalIdentifyTypeList" item="personalIdentifyType" open=" AND sub.PERSONAL_IDENTIFY_TYPE IN (" close=")" separator=",">
+					#{personalIdentifyType}
+				</foreach>
+			</if>
+			<if test="institutionIdentifyTypeList != null and institutionIdentifyTypeList.size() > 0">
+				<foreach collection="institutionIdentifyTypeList" item="institutionIdentifyType" open=" AND sub.INSTITUTION_IDENTIFY_TYPE IN (" close=")" separator=",">
+					#{institutionIdentifyType}
+				</foreach>
+			</if>
+			<if test="holderName != null and holderName != ''">
+				AND sub.HOLDER_NAME LIKE concat(concat('%',#{holderName}),'%')
+			</if>
+			<if test="identifyNumber != null and identifyNumber != ''">
+				AND sub.IDENTIFY_NUMBER LIKE concat(concat('%',#{identifyNumber}),'%')
+			</if>
+			<if test="orgIndentifyMark != null and orgIndentifyMark != ''">
+				AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
 				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND sub.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
 					#{submitFeedbackStatus}
 				</foreach>
 				/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		 	</if>
-		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
-		 		<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SUBMIT_STATUS IN (" close=")" separator=",">
-             		#{submitStatus}
-            	</foreach>			 	
-		 	</if>
-		 	<if test="holderTypeList != null and holderTypeList.size() > 0">
-            	<foreach collection="holderTypeList" item="holderType" open=" AND sub.HOLDER_TYPE IN (" close=")" separator=",">
-             		#{holderType,jdbcType=VARCHAR}
-           		</foreach>
-		 	</if>
-		 	<if test="submitDate != null and submitDate != ''">
+			</if>
+			<if test="submitStatusList != null and submitStatusList.size() > 0">
+				<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SUBMIT_STATUS IN (" close=")" separator=",">
+					#{submitStatus}
+				</foreach>
+			</if>
+			<if test="holderTypeList != null and holderTypeList.size() > 0">
+				<foreach collection="holderTypeList" item="holderType" open=" AND sub.HOLDER_TYPE IN (" close=")" separator=",">
+					#{holderType,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="submitDate != null and submitDate != ''">
 				AND DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') >= #{submitDate}
 			</if>
 			<if test="submitDateEnd != null and submitDateEnd != ''">
 				AND DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[<=]]>#{submitDateEnd}
 			</if>
-		 	<if test="updateTime != null and updateTime != ''">
-		 	AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') >= #{updateTime}
-		 	</if>
-		 	<if test="updateTimeEnd != null and updateTimeEnd != ''">
-		 	AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{updateTimeEnd}
-		 	</if>
-		 	<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
-		 	AND sub.CHB_SUBMIT_DEADLINE &gt;= STR_TO_DATE(#{submitDeadLineStart},'%Y-%m-%d %H:%i:%s')
-		 	</if>
-		 	<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
-		 	AND sub.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{submitDeadLineEnd},'%Y-%m-%d %H:%i:%s')
-		 	</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') >= #{updateTime}
+			</if>
+			<if test="updateTimeEnd != null and updateTimeEnd != ''">
+				AND DATE_FORMAT(sub.UPDATE_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{updateTimeEnd}
+			</if>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				AND sub.CHB_SUBMIT_DEADLINE &gt;= STR_TO_DATE(#{submitDeadLineStart},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				AND sub.CHB_SUBMIT_DEADLINE &lt;= STR_TO_DATE(#{submitDeadLineEnd},'%Y-%m-%d %H:%i:%s')
+			</if>
 		</where>
 		order by sub.CHB_SUBMIT_DEADLINE,sub.INDENTIFY_MARK,sub.REGIST_BANK_CODE,sub.SUBMIT_STATUS desc
-        )tmp_page
+		)tmp_page
 		)t
 		WHERE
 		t.row_id &lt;= #{end}

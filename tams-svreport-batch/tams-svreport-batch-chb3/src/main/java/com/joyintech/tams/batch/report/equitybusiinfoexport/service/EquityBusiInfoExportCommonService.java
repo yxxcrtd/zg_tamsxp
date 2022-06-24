@@ -66,7 +66,7 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
     @Autowired
     private ChbSubinfoAutoBatchLogMapper chbSubinfoAutoBatchLogMapper;
 
-    private static final String CHB_EQUDET_SUB_NAME = "CHB_EQUDET_SUB";
+    private static final String CHB_EQUDET_SUB_NAME = "投资者明细信息登记";
 
     /**
      * 日志

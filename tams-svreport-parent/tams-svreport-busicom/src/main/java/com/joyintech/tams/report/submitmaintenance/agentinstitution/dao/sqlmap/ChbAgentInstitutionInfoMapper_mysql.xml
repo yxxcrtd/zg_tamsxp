@@ -73,8 +73,8 @@
             ENCLOSURE_ADDRESS,ENCLOSURE_CHANGE_FLAG ,DATA_DATE, REMARK,CREATE_DEPT,ORG_CODE,CREATE_TIME, UPDATE_TIME)
         values (#{agentInstitutionCode,jdbcType=VARCHAR}, #{agentInstitutionName,jdbcType=VARCHAR}, 
             #{issuePartyId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{enclosureNum,jdbcType=VARCHAR}, 
-            #{enclosureAddress,jdbcType=VARCHAR},#{enclosureChangeFlag,jdbcType=VARCHAR}, SYSDATE, #{remark,jdbcType=VARCHAR},
-            #{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},sysdate, sysdate)
+            #{enclosureAddress,jdbcType=VARCHAR},#{enclosureChangeFlag,jdbcType=VARCHAR}, now(), #{remark,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},now(), now())
     </insert>
 
 <!--  修改更新-->
@@ -85,7 +85,7 @@
           AGENT_INSTITUTION_NAME = #{agentInstitutionName,jdbcType=VARCHAR},
           STATUS = #{status,jdbcType=VARCHAR},
           REMARK = #{remark,jdbcType=VARCHAR},
-          UPDATE_TIME = sysdate
+          UPDATE_TIME = now()
         where
           AGENT_INSTITUTION_CODE = #{agentInstitutionCode,jdbcType=VARCHAR}
     </update>
@@ -233,6 +233,6 @@
         <if test="agentInstitutionCode != null and agentInstitutionCode != ''">
             and cpds.AGENT_INSTITUTION_CODE = #{agentInstitutionCode}
         </if>
-        ) and rownum = 1
+        ) limit 1
     </select>
 </mapper>

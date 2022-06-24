@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstHolidayImpMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstHoliday">
-    <id column="CALENDAR_ID" jdbcType="VARCHAR" property="calendarId" />
-    <id column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
-    <result column="IS_HOLIDAY" jdbcType="DECIMAL" property="isHoliday" />
-    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
-    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
-    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
-    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstHoliday">
+        <id column="CALENDAR_ID" jdbcType="VARCHAR" property="calendarId" />
+        <id column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
+        <result column="IS_HOLIDAY" jdbcType="DECIMAL" property="isHoliday" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
     CALENDAR_ID, CDATE, IS_HOLIDAY, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
     UPDATE_TIME
   </sql>
-  <select id="selectByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstHolidayKey" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from MST_HOLIDAY
-    where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
-      and CDATE = #{cdate,jdbcType=TIMESTAMP}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstHolidayKey">
+    <select id="selectByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstHolidayKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from MST_HOLIDAY
+        where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=TIMESTAMP}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstHolidayKey">
     delete from MST_HOLIDAY
     where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
       and CDATE = #{cdate,jdbcType=TIMESTAMP}
   </delete>
-  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
     insert into MST_HOLIDAY (CALENDAR_ID, CDATE, IS_HOLIDAY, 
       CREATE_USER, CREATE_DEPT, CREATE_TIME, 
       UPDATE_USER, UPDATE_TIME)
@@ -35,87 +35,87 @@
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, NOW(),
       #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
-    insert into MST_HOLIDAY
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="calendarId != null">
-        CALENDAR_ID,
-      </if>
-      <if test="cdate != null">
-        CDATE,
-      </if>
-      <if test="isHoliday != null">
-        IS_HOLIDAY,
-      </if>
-      <if test="createUser != null">
-        CREATE_USER,
-      </if>
-      <if test="createDept != null">
-        CREATE_DEPT,
-      </if>
-      <if test="createTime != null">
-        CREATE_TIME,
-      </if>
-      <if test="updateUser != null">
-        UPDATE_USER,
-      </if>
-      <if test="updateTime != null">
-        UPDATE_TIME,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="calendarId != null">
-        #{calendarId,jdbcType=VARCHAR},
-      </if>
-      <if test="cdate != null">
-        #{cdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isHoliday != null">
-        #{isHoliday,jdbcType=DECIMAL},
-      </if>
-      <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createDept != null">
-        #{createDept,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
-    update MST_HOLIDAY
-    <set>
-      <if test="isHoliday != null">
-        IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
-      </if>
-      <if test="createUser != null">
-        CREATE_USER = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createDept != null">
-        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
-      and CDATE = #{cdate,jdbcType=TIMESTAMP}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+        insert into MST_HOLIDAY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="calendarId != null">
+                CALENDAR_ID,
+            </if>
+            <if test="cdate != null">
+                CDATE,
+            </if>
+            <if test="isHoliday != null">
+                IS_HOLIDAY,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="calendarId != null">
+                #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null">
+                #{cdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isHoliday != null">
+                #{isHoliday,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null">
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+        update MST_HOLIDAY
+        <set>
+            <if test="isHoliday != null">
+                IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null">
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
+        and CDATE = #{cdate,jdbcType=TIMESTAMP}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
     update MST_HOLIDAY
     set IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
       CREATE_USER = #{createUser,jdbcType=VARCHAR},
@@ -126,64 +126,85 @@
     where CALENDAR_ID = #{calendarId,jdbcType=VARCHAR}
       and CDATE = #{cdate,jdbcType=TIMESTAMP}
   </update>
-  <delete id="deleteHolidayBatch2"
-	parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
-	delete from MST_HOLIDAY
-	<where>
-		<foreach collection="holidayList" item="dto" separator="union all"
-			open="(CALENDAR_ID,CDATE) in ("
-			close=")">
-			select #{dto.calendarId,jdbcType=DATE},
-			#{dto.cdate,jdbcType=VARCHAR}
-			from dual
-		</foreach>
-	</where>
-</delete>
+    <delete id="deleteHolidayBatch2"
+            parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+        delete from MST_HOLIDAY
+        <where>
+            <foreach collection="holidayList" item="dto" separator="union all"
+                     open="(CALENDAR_ID,CDATE) in ("
+                     close=")">
+                select #{dto.calendarId,jdbcType=DATE},
+                #{dto.cdate,jdbcType=VARCHAR}
+                from dual
+            </foreach>
+        </where>
+    </delete>
 
-<insert id="mergeHolidayData"
-	parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
-	MERGE INTO MST_HOLIDAY CII
-	USING (
-	<foreach collection="list" item="item" open="select * from("
-		close=")" separator="union all">
-		SELECT
-		#{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID, 
-		#{item.cdate,jdbcType=TIMESTAMP} CDATE, 
-		#{item.isHoliday,jdbcType=DECIMAL} IS_HOLIDAY, 
-      #{item.createUser,jdbcType=VARCHAR} CREATE_USER, 
-      #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT, 
-      NOW() CREATE_TIME,
-      #{item.createUser,jdbcType=VARCHAR} UPDATE_USER, 
-      NOW() UPDATE_TIME
-		FROM
-		DUAL
-	</foreach>
-	) TEMP
-	<!-- 业务主键匹配 -->
-	ON(CII.CALENDAR_ID = TEMP.CALENDAR_ID
-	AND DATE_FORMAT(CII.CDATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CDATE,'%Y-%m-%d')
-	)
-	<!-- 匹配到则更新 -->
-	WHEN MATCHED THEN UPDATE SET
-	CII.IS_HOLIDAY = TEMP.IS_HOLIDAY,
-	CII.UPDATE_USER = TEMP.UPDATE_USER,
-	CII.UPDATE_TIME = TEMP.UPDATE_TIME
-	<!-- 未匹配到这插入 -->
-	WHEN NOT MATCHED THEN INSERT 
-	(CALENDAR_ID, CDATE, IS_HOLIDAY, 
-      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-      UPDATE_USER, UPDATE_TIME)
-	VALUES(TEMP.CALENDAR_ID, TEMP.CDATE, TEMP.IS_HOLIDAY, 
-      TEMP.CREATE_USER, TEMP.CREATE_DEPT, TEMP.CREATE_TIME, 
-      TEMP.UPDATE_USER, TEMP.UPDATE_TIME)
-</insert>
+    <insert id="mergeHolidayData"
+            parameterType="com.joyintech.tams.common.base.entity.MstHoliday">
+        insert into MST_HOLIDAY(CALENDAR_ID, CDATE, IS_HOLIDAY,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME)
+        select CALENDAR_ID, CDATE, IS_HOLIDAY,
+        CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,
+            #{item.cdate,jdbcType=TIMESTAMP} CDATE,
+            #{item.isHoliday,jdbcType=DECIMAL} IS_HOLIDAY,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            NOW() CREATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} UPDATE_USER,
+            NOW() UPDATE_TIME
+            FROM   DUAL
+        </foreach>
+        ) TEMP where not exists (select 1 from MST_HOLIDAY CII where CII.CALENDAR_ID = TEMP.CALENDAR_ID
+        AND DATE_FORMAT(CII.CDATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CDATE,'%Y-%m-%d'))
+        ) de ;
 
-<delete id="deleteAllData">
+        UPDATE  MST_HOLIDAY as A,
+        (
+        select
+        CALENDAR_ID, CDATE, IS_HOLIDAY,
+        UPDATE_USER,
+        UPDATE_TIME from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,
+            #{item.cdate,jdbcType=TIMESTAMP} CDATE,
+            #{item.isHoliday,jdbcType=DECIMAL} IS_HOLIDAY,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            NOW() CREATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} UPDATE_USER,
+            NOW() UPDATE_TIME
+            FROM   DUAL
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        SET
+        A.IS_HOLIDAY = B.IS_HOLIDAY,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME
+        where  A.CALENDAR_ID = B.CALENDAR_ID
+        AND DATE_FORMAT(A.CDATE,'%Y-%m-%d') = DATE_FORMAT(B.CDATE,'%Y-%m-%d');
+    </insert>
+
+    <delete id="deleteAllData">
 	truncate table MST_HOLIDAY
 </delete>
 
-<delete id="deleteTodayData">
+    <delete id="deleteTodayData">
   delete from MST_HOLIDAY where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
   </delete>
-  
+
 </mapper>

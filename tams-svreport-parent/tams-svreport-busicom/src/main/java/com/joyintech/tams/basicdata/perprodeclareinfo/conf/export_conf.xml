@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="report/basicdata/perprodeclareinfo/SvrPerProDeclareInfo001.xlsx" name="产品申报信息登记维护">
+    <Worksheet javaBean="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto">
+        <Row>
+            <Cell order="1" name="产品名称">prodName</Cell>
+            <Cell order="2" name="行内识别码">prodInsId</Cell>
+            <Cell order="3" name="发行机构代码">issuePartyId</Cell>
+            <Cell order="4" name="产品审批人姓名">approverName</Cell>
+            <Cell order="5" name="产品审批人身份证号">approverId</Cell>
+            <Cell order="6" name="产品设计人姓名">designerName</Cell>
+            <Cell order="7" name="产品设计人身份证号">designerId</Cell>
+            <Cell order="8" name="投资经理姓名">managerName</Cell>
+            <Cell order="9" name="投资经理身份证号">managerId</Cell>
+            <Cell order="10" name="业务联络人姓名">liaisonName</Cell>
+            <Cell order="11" name="业务联络人座机">liaisonTel</Cell>
+            <Cell order="12" name="业务联络人手机">liaisonMobile</Cell>
+            <Cell order="13" name="业务联络人邮箱">liaisonEmail</Cell>
+            <Cell order="14" name="收益类型">profitTypeStr</Cell>
+            <Cell order="15" name="新老产品标记">isFhxgcpStr</Cell>
+            <Cell order="16" name="产品期限">termtypeStr</Cell>
+            <Cell order="17" name="是否金融同业专属">excFinSectorStr</Cell>
+            <Cell order="18" name="资金投向地区">investAraeStr</Cell>
+            <Cell order="19" name="产品投资国家或地区">investCountryStr</Cell>
+            <Cell order="20" name="理财业务服务模式">finanSerModelStr</Cell>
+            <Cell order="21" name="产品运作模式">operateModeStr</Cell>
+            <Cell order="22" name="募集方式">raiseTypeStr</Cell>
+            <Cell order="23" name="产品资产配置方式">cmmodeStr</Cell>
+            <Cell order="24" name="产品管理模式">pmmodeStr</Cell>
+            <Cell order="25" name="实际管理人名称">mname</Cell>
+            <Cell order="26" name="产品定价方式">pricedModeStr</Cell>
+            <Cell order="27" name="产品投资性质">ivstorientationStr</Cell>
+            <Cell order="28" name="业绩比较基准">yield</Cell>
+            <Cell order="29" name="是否设置最短持有期限">isShortTermStr</Cell>
+            <Cell order="30" name="最短持有期限（天）">shortTerm</Cell>
+            <Cell order="31" name="最短持有期后是否自由赎回">isFreeRedemStr</Cell>
+            <Cell order="32" name="是否现金管理类">cashManaCateStr</Cell>
+            <Cell order="33" name="产品销售区域">saleAreaStr</Cell>
+            <Cell order="34" name="起点销售金额">saleAmtStr</Cell>
+            <Cell order="35" name="募集币种">raiseCcyStr</Cell>
+            <Cell order="36" name="兑付本金币种">cashPrinCcyStr</Cell>
+            <Cell order="37" name="兑付收益币种">cashProfCcyStr</Cell>
+            <Cell order="38" name="销售手续费率%">saleFeeRate</Cell>
+            <Cell order="39" name="托管费率%">truFeeRate</Cell>
+            <Cell order="40" name="募集起始日(从)">raisePstrdateStr</Cell>
+            <Cell order="41" name="募集起始日(到)">raisePenddateStr</Cell>
+            <Cell order="42" name="计划募集金额">raiseAmtPlan</Cell>
+            <Cell order="43" name="境内托管机构名称">inDepNameStr</Cell>
+            <Cell order="44" name="境内托管机构代码">inDepCode</Cell>
+            <Cell order="45" name="境外托管机构国别">outDepCtryStr</Cell>
+            <Cell order="46" name="境外托管机构名称">outDepName</Cell>
+            <Cell order="47" name="投资者风险偏好">riskTypeStr</Cell>
+            <Cell order="48" name="产品风险等级">riskLevelStr</Cell>
+            <Cell order="49" name="发行机构提前终止权标识">termRightFlagStr</Cell>
+            <Cell order="50" name="投资者赎回权标识">cusRedeemFlagStr</Cell>
+            <Cell order="51" name="产品品牌">prodBrand</Cell>
+            <Cell order="52" name="产品期次">prodStage</Cell>
+            <Cell order="53" name="产品特殊属性">prdSpecPropertyStr</Cell>
+            <Cell order="54" name="投资管理费率%">investFeeRate</Cell>
+            <Cell order="55" name="合作模式">contModeStr</Cell>
+            <Cell order="56" name="合作机构名称">cooperationName</Cell>
+            <Cell order="57" name="投资本金到账日">investPrinDateStr</Cell>
+            <Cell order="58" name="投资收益到账日">investProfDateStr</Cell>
+            <Cell order="59" name="产品增信标识">creditFlagStr</Cell>
+            <Cell order="60" name="产品增信机构类型">creditTypeStr</Cell>
+            <Cell order="61" name="产品增信形式">creditModeStr</Cell>
+            <Cell order="62" name="投资资产种类及比例">invTypeRat</Cell>
+            <Cell order="63" name="备注">remark</Cell>
+            <Cell order="64" name="数据状态">statusValidStr</Cell>
+            <Cell order="65" name="错误消息">errMsg</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.taskDetail.dao.RepTaskDeatilMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.busicommon.infodisclosure.taskDetail.dto.RepTaskDeatil" >
+        <result column="TASKDATE" property="taskdate" jdbcType="VARCHAR" />
+        <result column="TASKFLAG" property="taskflag" jdbcType="VARCHAR" />
+        <result column="FLAG" property="flag" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.taskDetail.dto.RepTaskDeatil" >
+        insert into REP_TASK_DEATIL (TASKDATE, TASKFLAG, FLAG
+            )
+        values (#{taskdate,jdbcType=VARCHAR}, #{taskflag,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR}
+            )
+    </insert>
+    <select id="RepTaskDeatil" resultType="int" >
+        select
+        	count(1)
+        from REP_TASK_DEATIL
+        where FLAG = #{flag,jdbcType=VARCHAR}
+    </select>
+    <select id="RepTaskDeatilin" resultType="int" >
+        select
+        	count(1)
+        from REP_TASK_DEATIL
+        where FLAG in ('A','E')
+    </select>
+    <update id="initRepTaskDetail" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.taskDetail.dto.RepTaskDeatil" >
+        update
+        REP_TASK_DEATIL
+        set FLAG = 'D'
+        WHERE FLAG != 'D'
+    </update>
+    <update id="updateRepTaskDeatil" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.taskDetail.dto.RepTaskDeatil" >
+        update
+        REP_TASK_DEATIL
+        set FLAG = #{upflag,jdbcType=VARCHAR}
+        WHERE FLAG = #{flag,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,3 @@
+delete from SYS_PAGE_ELEMENT where PAGE_ID='AssetTypeSetting001' and ELEMENT_ID='AssetTypeSetting001_btn_delete' and REMARK='删除';
+insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)
+values ('AssetTypeSetting001','AssetTypeSetting001_btn_delete','01','01',null,'删除','system',null,CURRENT_DATE,'system',CURRENT_DATE,'C');

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportDebtTermDatDetailMapper_mysql" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail" >
+    <id column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+    <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+    <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+    <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+    <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+    <result column="DEBT_INSTRUMENT" property="debtInstrument" jdbcType="DECIMAL" />
+    <result column="STOCK_RIGHT" property="stockRight" jdbcType="DECIMAL" />
+    <result column="SPECIAL_SHARE" property="specialShare" jdbcType="DECIMAL" />
+    <result column="ACTUAL_AMT" property="actualAmt" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DETAILUUID, REPORTUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, DEBT_INSTRUMENT, STOCK_RIGHT, 
+    SPECIAL_SHARE, ACTUAL_AMT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PBC_REPORT_BALANCETERM_DAT
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PBC_REPORT_BALANCETERM_DAT
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail" >
+    insert into PBC_REPORT_BALANCETERM_DAT (DETAILUUID, REPORTUUID, REPORTTYPE, 
+      GROUPTYPE, PROPERTYCODE, DEBT_INSTRUMENT, 
+      STOCK_RIGHT, SPECIAL_SHARE, ACTUAL_AMT
+      )
+    values (#{detailuuid,jdbcType=CHAR}, #{reportuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, 
+      #{grouptype,jdbcType=VARCHAR}, #{propertycode,jdbcType=VARCHAR}, #{debtInstrument,jdbcType=DECIMAL}, 
+      #{stockRight,jdbcType=DECIMAL}, #{specialShare,jdbcType=DECIMAL}, #{actualAmt,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail" >
+    insert into PBC_REPORT_BALANCETERM_DAT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        DETAILUUID,
+      </if>
+      <if test="reportuuid != null" >
+        REPORTUUID,
+      </if>
+      <if test="reporttype != null" >
+        REPORTTYPE,
+      </if>
+      <if test="grouptype != null" >
+        GROUPTYPE,
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE,
+      </if>
+      <if test="debtInstrument != null" >
+        DEBT_INSTRUMENT,
+      </if>
+      <if test="stockRight != null" >
+        STOCK_RIGHT,
+      </if>
+      <if test="specialShare != null" >
+        SPECIAL_SHARE,
+      </if>
+      <if test="actualAmt != null" >
+        ACTUAL_AMT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="detailuuid != null" >
+        #{detailuuid,jdbcType=CHAR},
+      </if>
+      <if test="reportuuid != null" >
+        #{reportuuid,jdbcType=CHAR},
+      </if>
+      <if test="reporttype != null" >
+        #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="grouptype != null" >
+        #{grouptype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="debtInstrument != null" >
+        #{debtInstrument,jdbcType=DECIMAL},
+      </if>
+      <if test="stockRight != null" >
+        #{stockRight,jdbcType=DECIMAL},
+      </if>
+      <if test="specialShare != null" >
+        #{specialShare,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmt != null" >
+        #{actualAmt,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail" >
+    update PBC_REPORT_BALANCETERM_DAT
+    <set >
+      <if test="reportuuid != null" >
+        REPORTUUID = #{reportuuid,jdbcType=CHAR},
+      </if>
+      <if test="reporttype != null" >
+        REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      </if>
+      <if test="grouptype != null" >
+        GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+      </if>
+      <if test="propertycode != null" >
+        PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      </if>
+      <if test="debtInstrument != null" >
+        DEBT_INSTRUMENT = #{debtInstrument,jdbcType=DECIMAL},
+      </if>
+      <if test="stockRight != null" >
+        STOCK_RIGHT = #{stockRight,jdbcType=DECIMAL},
+      </if>
+      <if test="specialShare != null" >
+        SPECIAL_SHARE = #{specialShare,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmt != null" >
+        ACTUAL_AMT = #{actualAmt,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail" >
+    update PBC_REPORT_BALANCETERM_DAT
+    set REPORTUUID = #{reportuuid,jdbcType=CHAR},
+      REPORTTYPE = #{reporttype,jdbcType=VARCHAR},
+      GROUPTYPE = #{grouptype,jdbcType=VARCHAR},
+      PROPERTYCODE = #{propertycode,jdbcType=VARCHAR},
+      DEBT_INSTRUMENT = #{debtInstrument,jdbcType=DECIMAL},
+      STOCK_RIGHT = #{stockRight,jdbcType=DECIMAL},
+      SPECIAL_SHARE = #{specialShare,jdbcType=DECIMAL},
+      ACTUAL_AMT = #{actualAmt,jdbcType=DECIMAL}
+    where DETAILUUID = #{detailuuid,jdbcType=CHAR}
+  </update>
+  
+  <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PBC_REPORT_BALANCETERM_DAT
+    where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+  </select>
+
+  <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_BALANCETERM_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+  <insert id="insertDataBySelect">
+    INSERT INTO PBC_REPORT_BALANCETERM_DAT (<include refid="Base_Column_List" />)
+    SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_BALANCETERM
+    WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+  </insert>
+
+  <delete id="deleteByReportDate"  parameterType="map" >
+    delete
+    from PBC_REPORT_BALANCETERM_DAT prp
+    where prp.REPORTUUID in(
+         select pr.REPORTUUID from PBC_REPORT pr
+          where 1=1 
+          <if test="reportStartDate != null" >
+          and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+          </if>
+          <if test="reportEndDate != null" >
+          and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+          </if>
+          <if test="reporttype != null" >
+            and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+          </if> 
+          <if test="deptCode != null" >
+	         and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+	       </if>
+          <if test="deptCode == null" >
+            and DEPT_CODE is null
+          </if>
+       and pr.send_status = '01'/*只删除未报送数据*/)
+  </delete>
+
+  <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+    delete
+    from PBC_REPORT_BALANCETERM_DAT
+    where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+      AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
+  </delete>
+
+  <select id="selectDatDiffByReport" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail"
+          parameterType="java.lang.String" >
+    select
+      ppd.*,
+      prp.DEBT_INSTRUMENT as debtInstrumentPrd,
+           prp.STOCK_RIGHT as stockRightPrd,
+      prp.SPECIAL_SHARE as specialSharePrd,
+      prp.ACTUAL_AMT as actualAmtPrd
+    from PBC_REPORT_BALANCETERM_DAT ppd
+           left join PBC_REPORT_BALANCETERM  prp on ppd.REPORTUUID=prp.REPORTUUID
+      and ppd.REPORTTYPE=prp.REPORTTYPE
+      and ppd.propertyCode=prp.propertyCode
+    where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+      and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+  </select>
+
+  <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportDebtTermDatDetail">
+    select     prp.*,psz.STATUS_VDATE as termid
+    from PBC_REPORT_BALANCETERM_DAT prp
+           left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
+    where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
+      and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+      and prp.PROPERTYCODE is  not  null
+      and (prp.DEBT_INSTRUMENT &lt;&gt; 0 or  prp.STOCK_RIGHT &lt;&gt; 0 or prp.SPECIAL_SHARE&lt;&gt; 0  or prp.ACTUAL_AMT&lt;&gt; 0)
+  </select>
+</mapper>

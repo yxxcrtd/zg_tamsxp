@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -2745,5 +2746,621 @@ public class AssetInfoDetailUtil {
         headList.add("*新人行一级分类");
         headList.add("*新人行二级分类");
         headList.add("*新人行三级分类");
+    }
+    public void processAssetInfoDetailDtos(List<AssetInfoDetailDto> list){
+        if(list !=null && list.size()>0){
+            list.forEach(e->{
+                if(!StringUtil.isEmpty(e.getAssetType())){
+                    switch (e.getAssetType()){
+                        case "01":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getAmt())) {
+                                    e.setAmt01(e.getAmt().toString());
+                                }
+                                e.setVdate01(DateUtil.format(e.getVdate()));
+                                e.setMdate01(DateUtil.format(e.getMdate()));
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield01("0.00000");
+                                    }else{
+                                        e.setAssetYield01(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getBasis())) {
+                                    e.setBasis01(e.getBasis() + " " +SysDataUtil.getNameFromDataDict(DictCode.计息基础_中债, e.getBasis()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "02":
+                            try {
+                                e.setVdate02(DateUtil.format(e.getVdate()));
+                                e.setMdate02(DateUtil.format(e.getMdate()));
+                                e.setRivalParty02(e.getRivalParty());
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield02("0.00000");
+                                    }else{
+                                        e.setAssetYield02(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getBasis())) {
+                                    e.setBasis02(e.getBasis() + " " + SysDataUtil.getNameFromDataDict(DictCode.计息基础_中债, e.getBasis()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "03":
+                            try {
+                                e.setAssetId03(e.getAssetId());
+                                e.setAssetName03(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getIndustryLevel2())) {
+                                    e.setIndustryLevel203(e.getIndustryLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryLevel2()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "04":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getIsResale())) {
+                                    e.setIsResale04(e.getIsResale() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getIsResale()));
+                                }
+                                e.setAssetName04(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getAmt())) {
+                                    e.setAmt04(e.getAmt().toString());
+                                }
+                                e.setVdate04(DateUtil.format(e.getVdate()));
+                                e.setMdate04(DateUtil.format(e.getMdate()));
+                                if(StringUtil.isNotEmpty(e.getRateFlag())) {
+                                    e.setRateFlag04(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield04("0.00000");
+                                    }else{
+                                        e.setAssetYield04(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getIntpayCycle())) {
+                                    e.setIntpayCycle04(e.getIntpayCycle().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getBasis())) {
+                                    e.setBasis04(e.getBasis() + " " + SysDataUtil.getNameFromDataDict(DictCode.计息基础_中债, e.getBasis()));
+                                }
+                                e.setFinancie04(e.getFinancie());
+                                e.setFcrGradeOut04(e.getFcrGradeOut());
+                                if(StringUtil.isNotEmpty(e.getFinancierType1())) {
+                                    e.setFinancierType104(e.getFinancierType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getFinancierType1()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getFinancierType2())) {
+                                    e.setFinancierType204(e.getFinancierType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getFinancierType2()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getFinancierType3())) {
+                                    e.setFinancierType304(e.getFinancierType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, e.getFinancierType3()));
+                                }
+                                e.setFinanceProj04(e.getFinanceProj());
+                                if(StringUtil.isNotEmpty(e.getIndustryLevel2Type())) {
+                                    e.setIndustryLevel2Type04(e.getIndustryLevel2Type() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryLevel2Type()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getIndustryFlag())) {
+                                    e.setIndustryFlag04(e.getIndustryFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getIndustryFlag()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getMonitType())) {
+                                    e.setMonitType04(e.getMonitType() + " " + SysDataUtil.getNameFromDataDict(DictCode.重点监控行业和领域类别, e.getMonitType()));
+                                }
+                                e.setMonTypeComm04(e.getMonTypeComm());
+                                if(StringUtil.isNotEmpty(e.getGuaType())) {
+                                    e.setGuaType04(e.getGuaType() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保方式, e.getGuaType()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getPledgeType())) {
+                                    e.setPledgeType04(e.getPledgeType() + " " + SysDataUtil.getNameFromDataDict(DictCode.抵质押物类型, e.getPledgeType()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getPledgeValue())) {
+                                    e.setPledgeValue04(e.getPledgeValue().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getNatureGuarantee())) {
+                                    e.setNatureGuarantee04(e.getNatureGuarantee() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保性质, e.getNatureGuarantee()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getRelationFinan())) {
+                                    e.setRelationFinan04(e.getRelationFinan() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保人与融资人关系, e.getRelationFinan()));
+                                }
+                                e.setGuaTypeRemark04(e.getGuaTypeRemark());
+                                if(StringUtil.isNotEmpty(e.getOutGrade())) {
+                                    e.setOutGrade04(e.getOutGrade() + " " +SysDataUtil.getNameFromDataDict(DictCode.资产评级, e.getOutGrade()));
+                                }
+                                e.setFinOrgCode04(e.getFinOrgCode());
+                                if(StringUtil.isNotEmpty(e.getProIndustryLevel2())) {
+                                    e.setProIndustryLevel204(e.getProIndustryLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getProIndustryLevel2()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "05":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getIsResale())) {
+                                    e.setIsResale05(e.getIsResale() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getIsResale()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getAmt())) {
+                                    e.setAmt05(e.getAmt().toString());
+                                }
+                                e.setVdate05(DateUtil.format(e.getVdate()));
+                                e.setMdate05(DateUtil.format(e.getMdate()));
+                                if(StringUtil.isNotEmpty(e.getIndustryShares2())) {
+                                    e.setIndustryShares205(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield05("0.00000");
+                                    }else{
+                                        e.setAssetYield05(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "06":
+                            try {
+                                e.setAssetName06(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getIndustryShares2())) {
+                                    e.setIndustryShares206(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getInvestStage())) {
+                                    e.setInvestStage06(e.getInvestStage() + " " + SysDataUtil.getNameFromDataDict(DictCode.投资阶段, e.getInvestStage()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getSharesType1())) {
+                                    e.setSharesType106(e.getSharesType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getSharesType1()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getSharesType3())) {
+                                    e.setSharesType306(e.getSharesType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, e.getSharesType3()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getSharesType2())) {
+                                    e.setSharesType206(e.getSharesType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getSharesType2()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getDeptEquity())) {
+                                    e.setDeptEquity06(e.getDeptEquity() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getDeptEquity()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "07":
+                            try {
+                                e.setAssetName07(e.getAssetName());
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "08":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea08(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                e.setAssetName08(e.getAssetName());
+                                e.setAssetId08(e.getAssetId());
+                                e.setIssuePartyName08(e.getIssuePartyName());
+                                if(StringUtil.isNotEmpty(e.getIndustryLevel2())) {
+                                    e.setIndustryLevel208(e.getIndustryLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryLevel2()));
+                                }
+                                e.setVdate08(DateUtil.format(e.getVdate()));
+                                e.setMdate08(DateUtil.format(e.getMdate()));
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield08("0.00000");
+                                    }else{
+                                        e.setAssetYield08(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getIntpayCycle())) {
+                                    e.setIntpayCycle08(e.getIntpayCycle().toString());
+                                }
+                                e.setGuaTypeRemark08(e.getGuaTypeRemark());
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "09":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea09(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                e.setVdate09(DateUtil.format(e.getVdate()));
+                                e.setMdate09(DateUtil.format(e.getMdate()));
+                                e.setRivalParty09(e.getRivalParty09());
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield09("0.00000");
+                                    }else{
+                                        e.setAssetYield09(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getBasis())) {
+                                    e.setBasis09(e.getBasis() + " " + SysDataUtil.getNameFromDataDict(DictCode.计息基础_中债, e.getBasis()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "10":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea10(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                e.setAssetId10(e.getAssetId());
+                                e.setAssetName10(e.getAssetName());
+                                e.setIssuePartyName10(e.getIssuePartyName());
+                                if(StringUtil.isNotEmpty(e.getIndustryShares2())) {
+                                    e.setIndustryShares210(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "11":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea11(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                e.setVdate11(DateUtil.format(e.getVdate()));
+                                e.setMdate11(DateUtil.format(e.getMdate()));
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield11("0.00000");
+                                    }else{
+                                        e.setAssetYield11(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getIntpayCycle())) {
+                                    e.setIntpayCycle11(e.getIntpayCycle().toString());
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "12":
+                            try {
+                                e.setAssetName12(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getFinancialComissue())) {
+                                    e.setFinancialComissue12(e.getFinancialComissue() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getFinancialComissue()));
+                                }
+                                e.setManagerId12(e.getManagerId());
+                                e.setTrusteeId12(e.getTrusteeId());
+                                if(StringUtil.isNotEmpty(e.getAmt())) {
+                                    e.setAmt12(e.getAmt().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getTruActType())) {
+                                    e.setTruActType12(e.getTruActType() + " " + SysDataUtil.getNameFromDataDict(DictCode.资金实际投向, e.getTruActType()));
+                                }
+                                e.setInvestType12(e.getInvestType());
+                                if(StringUtil.isNotEmpty(e.getCapUseInduLevel2())) {
+                                    e.setCapUseInduLevel212(e.getCapUseInduLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getCapUseInduLevel2()));
+                                }
+                                e.setPlanSdate12(DateUtil.format(e.getPlanSdate()));
+                                e.setPlanEdate12(DateUtil.format(e.getPlanEdate()));
+                                if(StringUtil.isNotEmpty(e.getProProperty())) {
+                                    e.setProProperty12(e.getProProperty() + " " + SysDataUtil.getNameFromDataDict(DictCode.资管计划属性, e.getProProperty()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getRateFlag())) {
+                                    e.setRateFlag12(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getMaxRate())) {
+                                    e.setMaxRate12(e.getMaxRate().toString());
+                                }
+                                e.setMinRate12(e.getMinRate12());
+                                if(StringUtil.isNotEmpty(e.getMgrFeeRate())) {
+                                    e.setMgrFeeRate12(e.getMgrFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getTruFeeRate())) {
+                                    e.setTruFeeRate12(e.getTruFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getTradeFeeRate())) {
+                                    e.setTradeFeeRate12(e.getTradeFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getAgencyFeeRate())) {
+                                    e.setAgencyFeeRate12(e.getAgencyFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getOtherFeeRate())) {
+                                    e.setOtherFeeRate12(e.getOtherFeeRate().toString());
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "13":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea13(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                e.setAssetName13(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getTermDate())) {
+                                    e.setTermDate13(e.getTermDate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getAssetValue())) {
+                                    if(e.getAssetValue().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetValue().toString(),"0E-14")) {
+                                        e.setAssetValue13("0.00000");
+                                    }else{
+                                        e.setAssetValue13(e.getAssetValue().toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield13("0.00000");
+                                    }else{
+                                        e.setAssetYield13(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "14":
+                            try {
+                                e.setAssetName14(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getAmt())) {
+                                    e.setAmt14(e.getAmt().toString());
+                                }
+                                e.setVdate14(DateUtil.format(e.getVdate()));
+                                e.setMdate14(DateUtil.format(e.getMdate()));
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea14(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getRateFlag())) {
+                                    e.setRateFlag14(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield14("0.00000");
+                                    }else{
+                                        e.setAssetYield14(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getIntpayCycle())) {
+                                    e.setIntpayCycle14(e.getIntpayCycle().toString());
+                                }
+                                e.setFinancie14(e.getFinancie());
+                                e.setFinOrgCode14(e.getFinOrgCode());
+                                e.setFcrGradeOut14(e.getFcrGradeOut());
+                                if(StringUtil.isNotEmpty(e.getFinancierType1())) {
+                                    e.setFinancierType114(e.getFinancierType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getFinancierType1()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getFinancierType2())) {
+                                    e.setFinancierType214(e.getFinancierType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, e.getFinancierType2()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getFinancierType3())) {
+                                    e.setFinancierType314(e.getFinancierType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getFinancierType3()));
+                                }
+                                e.setFinanceProj14(e.getFinanceProj());
+                                if(StringUtil.isNotEmpty(e.getIndustryLevel2Type())) {
+                                    e.setIndustryLevel2Type14(e.getIndustryLevel2Type() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryLevel2Type()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getProIndustryLevel2())) {
+                                    e.setProIndustryLevel214(e.getProIndustryLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getProIndustryLevel2()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getIndustryFlag())) {
+                                    e.setIndustryFlag14(e.getIndustryFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getIndustryFlag()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getMonitType())) {
+                                    e.setMonitType14(e.getMonitType() + " " + SysDataUtil.getNameFromDataDict(DictCode.重点监控行业和领域类别, e.getMonitType()));
+                                }
+                                e.setMonTypeComm14(e.getMonTypeComm());
+                                if(StringUtil.isNotEmpty(e.getOutGrade())) {
+                                    e.setOutGrade14(e.getOutGrade() + " " + SysDataUtil.getNameFromDataDict(DictCode.资产评级, e.getOutGrade()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getGuaType())) {
+                                    e.setGuaType14(e.getGuaType() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保方式, e.getGuaType()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getPledgeType())) {
+                                    e.setPledgeType14(e.getPledgeType() + " " + SysDataUtil.getNameFromDataDict(DictCode.抵质押物类型, e.getPledgeType()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getPledgeValue())) {
+                                    e.setPledgeValue14((e.getPledgeValue().toString()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getNatureGuarantee())) {
+                                    e.setNatureGuarantee14(e.getNatureGuarantee() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保性质, e.getNatureGuarantee()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getRelationFinan())) {
+                                    e.setRelationFinan14(e.getRelationFinan() + " " + SysDataUtil.getNameFromDataDict(DictCode.担保人与融资人关系, e.getRelationFinan()));
+                                }
+                                e.setGuaTypeRemark14(e.getGuaTypeRemark());
+                                if(StringUtil.isNotEmpty(e.getDeptEquity())) {
+                                    e.setDeptEquity14(e.getDeptEquity() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getDeptEquity()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "15":
+                           try {
+                            e.setAssetIdL01(e.getAssetId());
+                            e.setAssetNameL01(e.getAssetName());
+                            if(StringUtil.isNotEmpty(e.getIndustryShares2())) {
+                                e.setIndustryShares2L01(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getFinancialComissue())) {
+                                e.setFinancialComissueL01(e.getFinancialComissue() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getFinancialComissue()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getInvestStage())) {
+                                e.setInvestStageL01(e.getInvestStage() + " " + SysDataUtil.getNameFromDataDict(DictCode.投资阶段, e.getInvestStage()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getSharesType1())) {
+                                e.setSharesType1L01(e.getSharesType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getSharesType1()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getSharesType3())) {
+                                e.setSharesType3L01(e.getSharesType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getSharesType3()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getSharesType2())) {
+                                e.setSharesType2L01(e.getSharesType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getSharesType2()));
+                            }
+                         } catch (Exception exception) {
+                            exception.printStackTrace();
+                         }
+                            break;
+
+                        case "16":
+                            try {
+                                e.setAssetName16(e.getAssetName());
+                                e.setAssetId16(e.getAssetId());
+                                e.setManagerId16(e.getManagerId());
+                                e.setTrusteeId16(e.getTrusteeId());
+                                if(StringUtil.isNotEmpty(e.getAmt())) {
+                                    e.setAmt16(e.getAmt().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getTruActType())) {
+                                    e.setTruActType16(e.getTruActType() + " " + SysDataUtil.getNameFromDataDict(DictCode.资金实际投向, e.getTruActType()));
+                                }
+                                e.setInvestType16(e.getInvestType());
+                                if(StringUtil.isNotEmpty(e.getCapUseInduLevel2())) {
+                                    e.setCapUseInduLevel216(e.getCapUseInduLevel2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getCapUseInduLevel2()));
+                                }
+                                e.setPlanSdate16(DateUtil.format(e.getPlanSdate()));
+                                e.setPlanEdate16(DateUtil.format(e.getPlanEdate()));
+                                if(StringUtil.isNotEmpty(e.getProProperty())) {
+                                    e.setProProperty16(e.getProProperty() + " " + SysDataUtil.getNameFromDataDict(DictCode.资管计划属性, e.getProProperty()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getRateFlag())) {
+                                    e.setRateFlag16(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getMaxRate())) {
+                                    e.setMaxRate16(e.getMaxRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getMinRate())) {
+                                    e.setMinRate16(e.getMinRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getMgrFeeRate())) {
+                                    e.setMgrFeeRate16(e.getMgrFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getTruFeeRate())) {
+                                    e.setTruFeeRate16(e.getTruFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getTradeFeeRate())) {
+                                    e.setTradeFeeRate16(e.getTradeFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getAgencyFeeRate())) {
+                                    e.setAgencyFeeRate16(e.getAgencyFeeRate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getOtherFeeRate())) {
+                                    e.setOtherFeeRate16(e.getOtherFeeRate().toString());
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        case "17":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea17(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                e.setAssetName17(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getTermDate())) {
+                                    e.setTermDate17(e.getTermDate().toString());
+                                }
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield17("0.00000");
+                                    }else{
+                                        e.setAssetYield17(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "18":
+                            try {
+                                if(StringUtil.isNotEmpty(e.getCountryArea())) {
+                                    e.setCountryArea18(e.getCountryArea() + " " + SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区, e.getCountryArea()));
+                                }
+                                e.setAssetName18(e.getAssetName());
+                                e.setVdate18(DateUtil.format(e.getVdate()));
+                                e.setMdate18(DateUtil.format(e.getMdate()));
+                                if(StringUtil.isNotEmpty(e.getAssetValue())) {
+                                    if(e.getAssetValue().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetValue().toString(),"0E-14")) {
+                                        e.setAssetValue18("0.00000");
+                                    }else{
+                                        e.setAssetValue18(e.getAssetValue().toString());
+                                    }
+                                }
+                                if(StringUtil.isNotEmpty(e.getAssetYield())) {
+                                    if(e.getAssetYield().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAssetYield().toString(),"0E-14")) {
+                                        e.setAssetYield18("0.00000");
+                                    }else{
+                                        e.setAssetYield18(e.getAssetYield().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+
+                        case "19":
+                            try {
+                            e.setAssetIdL01(e.getAssetId());
+                            e.setAssetNameL01(e.getAssetName());
+                            if(StringUtil.isNotEmpty(e.getIndustryShares2())) {
+                                e.setIndustryShares2L01(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getFinancialComissue())) {
+                                e.setFinancialComissueL01(e.getFinancialComissue() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getFinancialComissue()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getInvestStage())) {
+                                e.setInvestStageL01(e.getInvestStage() + " " + SysDataUtil.getNameFromDataDict(DictCode.投资阶段, e.getInvestStage()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getSharesType1())) {
+                                e.setSharesType1L01(e.getSharesType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getSharesType1()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getSharesType3())) {
+                                e.setSharesType3L01(e.getSharesType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getSharesType3()));
+                            }
+                            if(StringUtil.isNotEmpty(e.getSharesType2())) {
+                                e.setSharesType2L01(e.getSharesType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getSharesType2()));
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                            break;
+
+                        case "L01":
+                            try {
+                                e.setAssetIdL01(e.getAssetId());
+                                e.setAssetNameL01(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getIndustryShares2())) {
+                                    e.setIndustryShares2L01(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getFinancialComissue())) {
+                                    e.setFinancialComissueL01(e.getFinancialComissue() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getFinancialComissue()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getInvestStage())) {
+                                    e.setInvestStageL01(e.getInvestStage() + " " + SysDataUtil.getNameFromDataDict(DictCode.投资阶段, e.getInvestStage()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getSharesType1())) {
+                                    e.setSharesType1L01(e.getSharesType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getSharesType1()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getSharesType3())) {
+                                    e.setSharesType3L01(e.getSharesType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getSharesType3()));
+                                }
+                                if(StringUtil.isNotEmpty(e.getSharesType2())) {
+                                    e.setSharesType2L01(e.getSharesType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getSharesType2()));
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            }
+                            break;
+                        default:
+                    }
+                }
+            });
+        }
     }
 }

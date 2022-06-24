@@ -152,7 +152,6 @@
 		a.UPDATE_TIME
 		FROM
 		CHB_SALER_STL_DEAL_SUB a
-		CHB_SALER_STL_DEAL_SUB a
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 
 		/*LEFT JOIN
@@ -160,7 +159,6 @@
 		ON
 		a.SUMIT_SEQ = status.seqno*/
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-
 		where 1=1
 		<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
 			and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}

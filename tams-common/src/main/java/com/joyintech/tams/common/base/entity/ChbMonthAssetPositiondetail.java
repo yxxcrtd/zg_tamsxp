@@ -1077,7 +1077,7 @@ public class ChbMonthAssetPositiondetail extends BaseEntity {
     }
 
     public String getDetailCode(){
-        return this.getProdId()+"_"+this.getAssetCode()+"_"+this.getDetailno();
+        return this.getProdId()+"_"+this.getAssetCode()+"_"+this.getDetailno()+"_"+this.getOldAssetCode();
     }
 
 }

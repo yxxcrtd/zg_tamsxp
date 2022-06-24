@@ -9,33 +9,33 @@
 			<Cell order="5" name="产品品种">pbcProdType</Cell>
 			<Cell order="6" name="产品类型">ivstorientation</Cell>
 			<Cell order="7" name="产品品牌">prodBrand</Cell>
-			<Cell order="7" name="产品期次">prodStage</Cell>
-			<Cell order="8" name="发起机构内部产品代码">prodId</Cell>
-			<Cell order="9" name="募集方式">raiseType</Cell>
-			<Cell order="10" name="管理方式">manageType</Cell>
-			<Cell order="11" name="运行方式">operateMode</Cell>
-			<Cell order="12" name="募集起始日期">raiseVdate02</Cell>
-			<Cell order="13" name="募集结束日期">raiseEnddate02</Cell>
-			<Cell order="14" name="发行机构提前终止权标识">termRightFlag</Cell>
-			<Cell order="15" name="客户赎回权标识">cusRedeemFlag</Cell>
-			<Cell order="16" name="产品增信标识">creditFlag</Cell>
-			<Cell order="17" name="境内托管机构代码">inDepCode</Cell>
-			<Cell order="18" name="境外托管机构国别">outDepCtry</Cell>
-			<Cell order="19" name="境外托管机构名称">outDepName</Cell>
-			<Cell order="20" name="产品起始日期">vdate02</Cell>
-			<Cell order="21" name="产品预计终止日期">mdate02</Cell>
-			<Cell order="22" name="受托职责">fiduciaryDuty</Cell>
-			<Cell order="23" name="分级产品标识">isConstracte</Cell>
-			<Cell order="24" name="收益权转让产品标识">transferType</Cell>
-			<Cell order="25" name="货币市场基金或现金管理类产品">isMarketFund</Cell>
-			<Cell order="26" name="跨境理财通">crossBorderFlag</Cell>
-			<Cell order="27" name="以财产权信托名义开展的资金信托标识">zjxtFlag</Cell>
-			<Cell order="28" name="其他产品标识3"></Cell>
-			<Cell order="29" name="募集币种">raiseCcy</Cell>
-			<Cell order="30" name="兑付本金币种">cashPrinCcy</Cell>
-			<Cell order="31" name="兑付收益币种">cashProfCcy</Cell>
-			<Cell order="32" name="产品增信机构类型">creditType</Cell>
-			<Cell order="33" name="增信形式">creditMode</Cell>
+			<Cell order="8" name="产品期次">prodStage</Cell>
+			<Cell order="9" name="发起机构内部产品代码">prodId</Cell>
+			<Cell order="10" name="募集方式">raiseType</Cell>
+			<Cell order="11" name="管理方式">manageType</Cell>
+			<Cell order="12" name="运行方式">operateMode</Cell>
+			<Cell order="13" name="募集起始日期">raiseVdate02</Cell>
+			<Cell order="14" name="募集结束日期">raiseEnddate02</Cell>
+			<Cell order="15" name="发行机构提前终止权标识">termRightFlag</Cell>
+			<Cell order="16" name="客户赎回权标识">cusRedeemFlag</Cell>
+			<Cell order="17" name="产品增信标识">creditFlag</Cell>
+			<Cell order="18" name="境内托管机构代码">inDepCode</Cell>
+			<Cell order="19" name="境外托管机构国别">outDepCtry</Cell>
+			<Cell order="20" name="境外托管机构名称">outDepName</Cell>
+			<Cell order="21" name="产品起始日期">vdate02</Cell>
+			<Cell order="22" name="产品预计终止日期">mdate02</Cell>
+			<Cell order="23" name="受托职责">fiduciaryDuty</Cell>
+			<Cell order="24" name="分级产品标识">isConstracte</Cell>
+			<Cell order="25" name="收益权转让产品标识">transferType</Cell>
+			<Cell order="26" name="货币市场基金或现金管理类产品">isMarketFund</Cell>
+			<Cell order="27" name="跨境理财通">crossBorderFlag</Cell>
+			<Cell order="28" name="以财产权信托名义开展的资金信托标识">zjxtFlag</Cell>
+			<Cell order="29" name="其他产品标识3"></Cell>
+			<Cell order="30" name="募集币种">raiseCcy</Cell>
+			<Cell order="31" name="兑付本金币种">cashPrinCcy</Cell>
+			<Cell order="32" name="兑付收益币种">cashProfCcy</Cell>
+			<Cell order="33" name="产品增信机构类型">creditType</Cell>
+			<Cell order="34" name="增信形式">creditMode</Cell>
 
 		</Row>
 	</Worksheet>

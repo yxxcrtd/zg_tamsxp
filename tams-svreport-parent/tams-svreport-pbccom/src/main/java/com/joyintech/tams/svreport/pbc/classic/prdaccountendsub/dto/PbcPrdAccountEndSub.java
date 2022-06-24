@@ -500,4 +500,13 @@ public class PbcPrdAccountEndSub extends BaseEntity {
     public String getMdateStr2(){
         return DateUtil.format(getMdate(), "yyyy/M/d");
     }
+    public String getStatusDateStr(){
+        return null !=statusDate?DateUtil.formatDateTime(statusDate):null;
+    }
+    public String getSubmitTimeStr(){
+        return null !=submitTime?DateUtil.formatDateTime(submitTime):null;
+    }
+    public String getPbcSubmitDeadlineStr(){
+        return null !=pbcSubmitDeadline?DateUtil.format(pbcSubmitDeadline):null;
+    }
 }

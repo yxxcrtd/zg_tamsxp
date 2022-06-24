@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SppiImportDataMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SppiImportData" >
+        <id column="BOND_ID" property="bondId" jdbcType="VARCHAR" />
+        <result column="BOND_ABBR" property="bondAbbr" jdbcType="VARCHAR" />
+        <result column="IS_SPPI_PASS" property="isSppiPass" jdbcType="VARCHAR" />
+        <result column="REASON" property="reason" jdbcType="VARCHAR" />
+        <result column="BID_PRICE_CON" property="bidPriceCon" jdbcType="VARCHAR" />
+        <result column="COST_VALUE" property="costValue" jdbcType="VARCHAR" />
+        <result column="OTHER_CONDITION" property="otherCondition" jdbcType="VARCHAR" />
+        <result column="IMPORT_DATE" property="importDate" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOND_ID BOND_ID, BOND_ABBR BOND_ABBR, IS_SPPI_PASS IS_SPPI_PASS, REASON REASON, BID_PRICE_CON BID_PRICE_CON, 
+        COST_VALUE COST_VALUE, OTHER_CONDITION OTHER_CONDITION, IMPORT_DATE IMPORT_DATE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SppiImportDataMapper_mysql.Base_Column_List" />
+        from SPPI_IMPORT_DATA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SppiImportDataMapper_mysql.Base_Column_List" />
+        from SPPI_IMPORT_DATA
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SppiImportDataMapper_mysql.Base_Column_List" />
+        from SPPI_IMPORT_DATA
+        where BOND_ID = #{bondId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SPPI_IMPORT_DATA
+        where BOND_ID = #{bondId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SppiImportData" >
+        insert into SPPI_IMPORT_DATA (BOND_ID, BOND_ABBR, IS_SPPI_PASS, 
+            REASON, BID_PRICE_CON, COST_VALUE, 
+            OTHER_CONDITION, IMPORT_DATE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{bondId,jdbcType=VARCHAR}, #{bondAbbr,jdbcType=VARCHAR}, #{isSppiPass,jdbcType=VARCHAR}, 
+            #{reason,jdbcType=VARCHAR}, #{bidPriceCon,jdbcType=VARCHAR}, #{costValue,jdbcType=VARCHAR}, 
+            #{otherCondition,jdbcType=VARCHAR}, #{importDate,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SppiImportData" >
+        insert into SPPI_IMPORT_DATA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="bondId != null" >
+                BOND_ID,
+            </if>
+            <if test="bondAbbr != null" >
+                BOND_ABBR,
+            </if>
+            <if test="isSppiPass != null" >
+                IS_SPPI_PASS,
+            </if>
+            <if test="reason != null" >
+                REASON,
+            </if>
+            <if test="bidPriceCon != null" >
+                BID_PRICE_CON,
+            </if>
+            <if test="costValue != null" >
+                COST_VALUE,
+            </if>
+            <if test="otherCondition != null" >
+                OTHER_CONDITION,
+            </if>
+            <if test="importDate != null" >
+                IMPORT_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="bondId != null" >
+                #{bondId,jdbcType=VARCHAR},
+            </if>
+            <if test="bondAbbr != null" >
+                #{bondAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="isSppiPass != null" >
+                #{isSppiPass,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null" >
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="bidPriceCon != null" >
+                #{bidPriceCon,jdbcType=VARCHAR},
+            </if>
+            <if test="costValue != null" >
+                #{costValue,jdbcType=VARCHAR},
+            </if>
+            <if test="otherCondition != null" >
+                #{otherCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="importDate != null" >
+                #{importDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SppiImportData" >
+        insert into SPPI_IMPORT_DATA(BOND_ID, BOND_ABBR, IS_SPPI_PASS, REASON, BID_PRICE_CON, 
+        COST_VALUE, OTHER_CONDITION, IMPORT_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select BOND_ID, BOND_ABBR, IS_SPPI_PASS, REASON, BID_PRICE_CON, 
+            COST_VALUE, OTHER_CONDITION, IMPORT_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from SPPI_IMPORT_DATA
+             where 1 = 1 and BOND_ID = #{bondId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SppiImportData" >
+        update SPPI_IMPORT_DATA
+        <set >
+            <if test="bondAbbr != null" >
+                BOND_ABBR = #{bondAbbr,jdbcType=VARCHAR},
+            </if>
+            <if test="isSppiPass != null" >
+                IS_SPPI_PASS = #{isSppiPass,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null" >
+                REASON = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="bidPriceCon != null" >
+                BID_PRICE_CON = #{bidPriceCon,jdbcType=VARCHAR},
+            </if>
+            <if test="costValue != null" >
+                COST_VALUE = #{costValue,jdbcType=VARCHAR},
+            </if>
+            <if test="otherCondition != null" >
+                OTHER_CONDITION = #{otherCondition,jdbcType=VARCHAR},
+            </if>
+            <if test="importDate != null" >
+                IMPORT_DATE = #{importDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BOND_ID = #{bondId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SppiImportData" >
+        update SPPI_IMPORT_DATA
+        set BOND_ABBR = #{bondAbbr,jdbcType=VARCHAR},
+            IS_SPPI_PASS = #{isSppiPass,jdbcType=VARCHAR},
+            REASON = #{reason,jdbcType=VARCHAR},
+            BID_PRICE_CON = #{bidPriceCon,jdbcType=VARCHAR},
+            COST_VALUE = #{costValue,jdbcType=VARCHAR},
+            OTHER_CONDITION = #{otherCondition,jdbcType=VARCHAR},
+            IMPORT_DATE = #{importDate,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BOND_ID = #{bondId,jdbcType=VARCHAR}
+    </update>
+</mapper>

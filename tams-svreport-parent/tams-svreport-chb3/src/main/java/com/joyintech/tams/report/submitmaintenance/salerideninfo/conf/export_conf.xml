@@ -2,25 +2,25 @@
 <Workbook filePath="SalerIdenInfo_export.xlsx" name="销售人员奖惩投诉记录信息">
 	<Worksheet javaBean="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
 		<Row>
-			<Cell order="1" name="数据状态">statusStr</Cell>
+			<Cell order="1" name="数据状态">dataStatusStr</Cell>
 			<Cell order="2" name="销售机构代码">salerInstCode</Cell>
 			<Cell order="3" name="姓名">salerName</Cell>
-			<Cell order="4" name="性别">salerSexStr</Cell>
+			<Cell order="4" name="性别">salerSex</Cell>
 			<Cell order="5" name="出生日期">salerBirthdayStr</Cell>
-			<Cell order="6" name="证件类别">salerCredentTypeStr</Cell>
+			<Cell order="6" name="证件类别">salerCredentType</Cell>
 			<Cell order="7" name="其他证件名称">salerOtherCredentName</Cell>
 			<Cell order="8" name="证件号码">salerCredentNo</Cell>
 			<Cell order="9" name="内部编号">salerInsNo</Cell>
-			<Cell order="10" name="所属区域">salerAreaTypeStr</Cell>
+			<Cell order="10" name="所属区域">salerAreaType</Cell>
 			<Cell order="11" name="所属总部或分支机构编码">salerOrgCode</Cell>
 			<Cell order="12" name="所属部门">salerDept</Cell>
 			<Cell order="13" name="职位">salerPosition</Cell>
-			<Cell order="14" name="学历">salerEduLevelStr</Cell>
-			<Cell order="15" name="学位">salerDegreeStr</Cell>
+			<Cell order="14" name="学历">salerEduLevel</Cell>
+			<Cell order="15" name="学位">salerDegree</Cell>
 			<Cell order="16" name="首次参加工作时间">salerWorkStartYmd</Cell>
 			<Cell order="17" name="首次从事金融工作时间">salerFinanceStartYmd</Cell>
 			<Cell order="18" name="首次从事理财销售时间">salerStartYmd</Cell>
-			<Cell order="19" name="专业技术职称">salerLevleStr</Cell>
+			<Cell order="19" name="专业技术职称">salerLevle</Cell>
 			<Cell order="20" name="理财专业证书">salerCertificateTypeStr</Cell>
 			<Cell order="21" name="理财登记培训证书编号">salerChbTrainNo</Cell>
 			<Cell order="22" name="可销售产品风险等级">salerRiskLevelStr</Cell>
@@ -28,7 +28,7 @@
 			<Cell order="24" name="办公电话">salerTel</Cell>
 			<Cell order="25" name="移动电话">salerMobile</Cell>
 			<Cell order="26" name="电子邮箱">salerMail</Cell>
-			<Cell order="27" name="当前状态">salerStatusStr</Cell>
+			<Cell order="27" name="当前状态">salerStatus</Cell>
 			<Cell order="28" name="备注">remark</Cell>
 			<Cell order="29" name="错误信息">errMsg</Cell>
 		</Row>

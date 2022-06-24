@@ -1,0 +1,2237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.chb.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        <id column="DECLARE_UUID" property="declareUuid" jdbcType="CHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PROD_BRAND" property="prodBrand" jdbcType="VARCHAR" />
+        <result column="PROD_STAGE" property="prodStage" jdbcType="DECIMAL" />
+        <result column="APPROVER_ID" property="approverId" jdbcType="VARCHAR" />
+        <result column="APPROVER_NAME" property="approverName" jdbcType="VARCHAR" />
+        <result column="DESIGNER_ID" property="designerId" jdbcType="VARCHAR" />
+        <result column="DESIGNER_NAME" property="designerName" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="MANAGER_NAME" property="managerName" jdbcType="VARCHAR" />
+        <result column="LIAISON_NAME" property="liaisonName" jdbcType="VARCHAR" />
+        <result column="LIAISON_TEL" property="liaisonTel" jdbcType="VARCHAR" />
+        <result column="LIAISON_MOBILE" property="liaisonMobile" jdbcType="VARCHAR" />
+        <result column="LIAISON_EMAIL" property="liaisonEmail" jdbcType="VARCHAR" />
+        <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+        <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+        <result column="EXC_FIN_SECTOR" property="excFinSector" jdbcType="VARCHAR" />
+        <result column="INVEST_ARAE" property="investArae" jdbcType="VARCHAR" />
+        <result column="INVEST_COUNTRY" property="investCountry" jdbcType="VARCHAR" />
+        <result column="FINAN_SER_MODEL" property="finanSerModel" jdbcType="VARCHAR" />
+        <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+        <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+        <result column="CMMODE" property="cmmode" jdbcType="VARCHAR" />
+        <result column="PMMODE" property="pmmode" jdbcType="VARCHAR" />
+        <result column="MNAME" property="mname" jdbcType="VARCHAR" />
+        <result column="PRICED_MODE" property="pricedMode" jdbcType="VARCHAR" />
+        <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="IS_SHORT_TERM" property="isShortTerm" jdbcType="VARCHAR" />
+        <result column="SHORT_TERM" property="shortTerm" jdbcType="DECIMAL" />
+        <result column="IS_FREE_REDEM" property="isFreeRedem" jdbcType="VARCHAR" />
+        <result column="CASH_MANA_CATE" property="cashManaCate" jdbcType="VARCHAR" />
+        <result column="SALE_AREA" property="saleArea" jdbcType="VARCHAR" />
+        <result column="SALE_AMT_STR" property="saleAmtStr" jdbcType="DECIMAL" />
+        <result column="RAISE_CCY" property="raiseCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PRIN_CCY" property="cashPrinCcy" jdbcType="VARCHAR" />
+        <result column="CASH_PROF_CCY" property="cashProfCcy" jdbcType="VARCHAR" />
+        <result column="SALE_FEE_RATE" property="saleFeeRate" jdbcType="DECIMAL" />
+        <result column="TRU_FEE_RATE" property="truFeeRate" jdbcType="DECIMAL" />
+        <result column="RAISE_PSTRDATE" property="raisePstrdate" jdbcType="DATE" />
+        <result column="RAISE_PENDDATE" property="raisePenddate" jdbcType="DATE" />
+        <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+        <result column="IN_DEP_NAME" property="inDepName" jdbcType="VARCHAR" />
+        <result column="IN_DEP_CODE" property="inDepCode" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_CTRY" property="outDepCtry" jdbcType="VARCHAR" />
+        <result column="OUT_DEP_NAME" property="outDepName" jdbcType="VARCHAR" />
+        <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+        <result column="TERM_RIGHT_FLAG" property="termRightFlag" jdbcType="VARCHAR" />
+        <result column="CUS_REDEEM_FLAG" property="cusRedeemFlag" jdbcType="VARCHAR" />
+        <result column="INVEST_FEE_RATE" property="investFeeRate" jdbcType="DECIMAL" />
+        <result column="CONT_MODE" property="contMode" jdbcType="VARCHAR" />
+        <result column="COOPERATION_NAME" property="cooperationName" jdbcType="VARCHAR" />
+        <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+        <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+        <result column="CREDIT_FLAG" property="creditFlag" jdbcType="VARCHAR" />
+        <result column="CREDIT_TYPE" property="creditType" jdbcType="VARCHAR" />
+        <result column="CREDIT_MODE" property="creditMode" jdbcType="VARCHAR" />
+        <result column="INV_TYPE_RAT" property="invTypeRat" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
+        <result column="IS_FHXGCP" property="isFhxgcp" jdbcType="VARCHAR" />
+        <result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DECLARE_UUID DECLARE_UUID, PROD_INS_ID PROD_INS_ID, PROD_NAME PROD_NAME, ISSUE_PARTY_ID ISSUE_PARTY_ID, 
+        PROD_BRAND PROD_BRAND, PROD_STAGE PROD_STAGE, APPROVER_ID APPROVER_ID, APPROVER_NAME APPROVER_NAME, 
+        DESIGNER_ID DESIGNER_ID, DESIGNER_NAME DESIGNER_NAME, MANAGER_ID MANAGER_ID, MANAGER_NAME MANAGER_NAME, 
+        LIAISON_NAME LIAISON_NAME, LIAISON_TEL LIAISON_TEL, LIAISON_MOBILE LIAISON_MOBILE, 
+        LIAISON_EMAIL LIAISON_EMAIL, PROFIT_TYPE PROFIT_TYPE, TERMTYPE TERMTYPE, EXC_FIN_SECTOR EXC_FIN_SECTOR, 
+        INVEST_ARAE INVEST_ARAE, INVEST_COUNTRY INVEST_COUNTRY, FINAN_SER_MODEL FINAN_SER_MODEL, 
+        OPERATE_MODE OPERATE_MODE, RAISE_TYPE RAISE_TYPE, CMMODE CMMODE, PMMODE PMMODE, MNAME MNAME, 
+        PRICED_MODE PRICED_MODE, IVSTORIENTATION IVSTORIENTATION, YIELD YIELD, IS_SHORT_TERM IS_SHORT_TERM, 
+        SHORT_TERM SHORT_TERM, IS_FREE_REDEM IS_FREE_REDEM, CASH_MANA_CATE CASH_MANA_CATE, 
+        SALE_AREA SALE_AREA, SALE_AMT_STR SALE_AMT_STR, RAISE_CCY RAISE_CCY, CASH_PRIN_CCY CASH_PRIN_CCY, 
+        CASH_PROF_CCY CASH_PROF_CCY, SALE_FEE_RATE SALE_FEE_RATE, TRU_FEE_RATE TRU_FEE_RATE, 
+        RAISE_PSTRDATE RAISE_PSTRDATE, RAISE_PENDDATE RAISE_PENDDATE, RAISE_AMT_PLAN RAISE_AMT_PLAN, 
+        IN_DEP_NAME IN_DEP_NAME, IN_DEP_CODE IN_DEP_CODE, OUT_DEP_CTRY OUT_DEP_CTRY, OUT_DEP_NAME OUT_DEP_NAME, 
+        RISK_TYPE RISK_TYPE, RISK_LEVEL RISK_LEVEL, TERM_RIGHT_FLAG TERM_RIGHT_FLAG, CUS_REDEEM_FLAG CUS_REDEEM_FLAG, 
+        INVEST_FEE_RATE INVEST_FEE_RATE, CONT_MODE CONT_MODE, COOPERATION_NAME COOPERATION_NAME, 
+        INVEST_PRIN_DATE INVEST_PRIN_DATE, INVEST_PROF_DATE INVEST_PROF_DATE, CREDIT_FLAG CREDIT_FLAG, 
+        CREDIT_TYPE CREDIT_TYPE, CREDIT_MODE CREDIT_MODE, INV_TYPE_RAT INV_TYPE_RAT, REMARK REMARK, 
+        STATUS STATUS, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, WORKFLOW_ID WORKFLOW_ID, 
+        DATASOURCE DATASOURCE, IS_FHXGCP IS_FHXGCP, PRD_SPEC_PROPERTY PRD_SPEC_PROPERTY
+    </sql>
+    
+    
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.service.chb.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfoMapper.Base_Column_List" />
+        from CHB_PRD_DECLARE_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.service.chb.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfoMapper.Base_Column_List" />
+        from CHB_PRD_DECLARE_INFO
+        where STATUS = 'E'
+    </sql>
+
+    
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.service.chb.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfoMapper.Base_Column_List" />
+        from CHB_PRD_DECLARE_INFO
+        where DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+    </select>
+    <!--delete id="deleteByPrimaryKey" parameterType="java.lang.String" -->
+        <!--delete from CHB_PRD_DECLARE_INFO
+        where DECLARE_UUID = #{declareUuid,jdbcType=CHAR}-->
+    <!-- /delete-->
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_PRD_DECLARE_INFO
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into CHB_PRD_DECLARE_INFO(DECLARE_UUID, PROD_INS_ID, PROD_NAME, ISSUE_PARTY_ID, 
+        PROD_BRAND, PROD_STAGE, APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, 
+        MANAGER_NAME, LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, 
+        TERMTYPE, EXC_FIN_SECTOR, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, 
+        RAISE_TYPE, CMMODE, PMMODE, MNAME, PRICED_MODE, IVSTORIENTATION, YIELD, IS_SHORT_TERM, 
+        SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, SALE_AREA, SALE_AMT_STR, RAISE_CCY, CASH_PRIN_CCY, 
+        CASH_PROF_CCY, SALE_FEE_RATE, TRU_FEE_RATE, RAISE_PSTRDATE, RAISE_PENDDATE, RAISE_AMT_PLAN, 
+        IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, RISK_TYPE, RISK_LEVEL, TERM_RIGHT_FLAG, 
+        CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, COOPERATION_NAME, INVEST_PRIN_DATE, 
+        INVEST_PROF_DATE, CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, INV_TYPE_RAT, REMARK, STATUS, 
+        CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, WORKFLOW_ID, 
+        DATASOURCE, IS_FHXGCP, PRD_SPEC_PROPERTY)
+        select DECLARE_UUID, PROD_INS_ID, PROD_NAME, ISSUE_PARTY_ID, 
+            PROD_BRAND, PROD_STAGE, APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, 
+            MANAGER_NAME, LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, 
+            TERMTYPE, EXC_FIN_SECTOR, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, 
+            RAISE_TYPE, CMMODE, PMMODE, MNAME, PRICED_MODE, IVSTORIENTATION, YIELD, IS_SHORT_TERM, 
+            SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, SALE_AREA, SALE_AMT_STR, RAISE_CCY, CASH_PRIN_CCY, 
+            CASH_PROF_CCY, SALE_FEE_RATE, TRU_FEE_RATE, RAISE_PSTRDATE, RAISE_PENDDATE, RAISE_AMT_PLAN, 
+            IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, RISK_TYPE, RISK_LEVEL, TERM_RIGHT_FLAG, 
+            CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, COOPERATION_NAME, INVEST_PRIN_DATE, 
+            INVEST_PROF_DATE, CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, INV_TYPE_RAT, REMARK, #{status,jdbcType=VARCHAR} STATUS, 
+            CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ORG_CODE, DEPT_CODE, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
+            DATASOURCE, IS_FHXGCP, PRD_SPEC_PROPERTY
+             from CHB_PRD_DECLARE_INFO
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        update CHB_PRD_DECLARE_INFO
+        <set >
+            <if test="declareUuid != null" >
+                DECLARE_UUID = #{declareUuid,jdbcType=CHAR},
+            </if>
+            <if test="prodInsId != null" >
+                PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodBrand != null" >
+                PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="prodStage != null" >
+                PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="approverId != null" >
+                APPROVER_ID = #{approverId,jdbcType=VARCHAR},
+            </if>
+            <if test="approverName != null" >
+                APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+            </if>
+            <if test="designerId != null" >
+                DESIGNER_ID = #{designerId,jdbcType=VARCHAR},
+            </if>
+            <if test="designerName != null" >
+                DESIGNER_NAME = #{designerName,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerName != null" >
+                MANAGER_NAME = #{managerName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonName != null" >
+                LIAISON_NAME = #{liaisonName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonTel != null" >
+                LIAISON_TEL = #{liaisonTel,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonMobile != null" >
+                LIAISON_MOBILE = #{liaisonMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonEmail != null" >
+                LIAISON_EMAIL = #{liaisonEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="termtype != null" >
+                TERMTYPE = #{termtype,jdbcType=VARCHAR},
+            </if>
+            <if test="excFinSector != null" >
+                EXC_FIN_SECTOR = #{excFinSector,jdbcType=VARCHAR},
+            </if>
+            <if test="investArae != null" >
+                INVEST_ARAE = #{investArae,jdbcType=VARCHAR},
+            </if>
+            <if test="investCountry != null" >
+                INVEST_COUNTRY = #{investCountry,jdbcType=VARCHAR},
+            </if>
+            <if test="finanSerModel != null" >
+                FINAN_SER_MODEL = #{finanSerModel,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null" >
+                RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="cmmode != null" >
+                CMMODE = #{cmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="pmmode != null" >
+                PMMODE = #{pmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="mname != null" >
+                MNAME = #{mname,jdbcType=VARCHAR},
+            </if>
+            <if test="pricedMode != null" >
+                PRICED_MODE = #{pricedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null" >
+                IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="isShortTerm != null" >
+                IS_SHORT_TERM = #{isShortTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="shortTerm != null" >
+                SHORT_TERM = #{shortTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="isFreeRedem != null" >
+                IS_FREE_REDEM = #{isFreeRedem,jdbcType=VARCHAR},
+            </if>
+            <if test="cashManaCate != null" >
+                CASH_MANA_CATE = #{cashManaCate,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="saleAmtStr != null" >
+                SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseCcy != null" >
+                RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashPrinCcy != null" >
+                CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashProfCcy != null" >
+                CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="saleFeeRate != null" >
+                SALE_FEE_RATE = #{saleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="truFeeRate != null" >
+                TRU_FEE_RATE = #{truFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="raisePstrdate != null" >
+                RAISE_PSTRDATE = #{raisePstrdate,jdbcType=DATE},
+            </if>
+            <if test="raisePenddate != null" >
+                RAISE_PENDDATE = #{raisePenddate,jdbcType=DATE},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="inDepName != null" >
+                IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepCode != null" >
+                IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepCtry != null" >
+                OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepName != null" >
+                OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="riskType != null" >
+                RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="termRightFlag != null" >
+                TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="cusRedeemFlag != null" >
+                CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="investFeeRate != null" >
+                INVEST_FEE_RATE = #{investFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contMode != null" >
+                CONT_MODE = #{contMode,jdbcType=VARCHAR},
+            </if>
+            <if test="cooperationName != null" >
+                COOPERATION_NAME = #{cooperationName,jdbcType=VARCHAR},
+            </if>
+            <if test="investPrinDate != null" >
+                INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="investProfDate != null" >
+                INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMode != null" >
+                CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="invTypeRat != null" >
+                INV_TYPE_RAT = #{invTypeRat,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="datasource != null" >
+                DATASOURCE = #{datasource,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+                IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="prdSpecProperty != null" >
+                PRD_SPEC_PROPERTY = #{prdSpecProperty,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        update CHB_PRD_DECLARE_INFO
+        set 
+        DECLARE_UUID = #{declareUuid,jdbcType=CHAR},
+        PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR},
+        PROD_NAME = #{prodName,jdbcType=VARCHAR},
+        ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+        PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+        PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+        APPROVER_ID = #{approverId,jdbcType=VARCHAR},
+        APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+        DESIGNER_ID = #{designerId,jdbcType=VARCHAR},
+        DESIGNER_NAME = #{designerName,jdbcType=VARCHAR},
+        MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+        MANAGER_NAME = #{managerName,jdbcType=VARCHAR},
+        LIAISON_NAME = #{liaisonName,jdbcType=VARCHAR},
+        LIAISON_TEL = #{liaisonTel,jdbcType=VARCHAR},
+        LIAISON_MOBILE = #{liaisonMobile,jdbcType=VARCHAR},
+        LIAISON_EMAIL = #{liaisonEmail,jdbcType=VARCHAR},
+        PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+        TERMTYPE = #{termtype,jdbcType=VARCHAR},
+        EXC_FIN_SECTOR = #{excFinSector,jdbcType=VARCHAR},
+        INVEST_ARAE = #{investArae,jdbcType=VARCHAR},
+        INVEST_COUNTRY = #{investCountry,jdbcType=VARCHAR},
+        FINAN_SER_MODEL = #{finanSerModel,jdbcType=VARCHAR},
+        OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+        RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+        CMMODE = #{cmmode,jdbcType=VARCHAR},
+        PMMODE = #{pmmode,jdbcType=VARCHAR},
+        MNAME = #{mname,jdbcType=VARCHAR},
+        PRICED_MODE = #{pricedMode,jdbcType=VARCHAR},
+        IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+        YIELD = #{yield,jdbcType=DECIMAL},
+        IS_SHORT_TERM = #{isShortTerm,jdbcType=VARCHAR},
+        SHORT_TERM = #{shortTerm,jdbcType=DECIMAL},
+        IS_FREE_REDEM = #{isFreeRedem,jdbcType=VARCHAR},
+        CASH_MANA_CATE = #{cashManaCate,jdbcType=VARCHAR},
+        SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+        SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
+        RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+        CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+        CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+        SALE_FEE_RATE = #{saleFeeRate,jdbcType=DECIMAL},
+        TRU_FEE_RATE = #{truFeeRate,jdbcType=DECIMAL},
+        RAISE_PSTRDATE = #{raisePstrdate,jdbcType=DATE},
+        RAISE_PENDDATE = #{raisePenddate,jdbcType=DATE},
+        RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+        IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+        IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+        OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+        OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+        RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+        RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+        TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=VARCHAR},
+        CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=VARCHAR},
+        INVEST_FEE_RATE = #{investFeeRate,jdbcType=DECIMAL},
+        CONT_MODE = #{contMode,jdbcType=VARCHAR},
+        COOPERATION_NAME = #{cooperationName,jdbcType=VARCHAR},
+        INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+        INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+        CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
+        CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+        CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+        INV_TYPE_RAT = #{invTypeRat,jdbcType=VARCHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        DATASOURCE = #{datasource,jdbcType=VARCHAR},
+        IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+        PRD_SPEC_PROPERTY = #{prdSpecProperty,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        insert into CHB_PRD_DECLARE_INFO (DECLARE_UUID, PROD_INS_ID, PROD_NAME, 
+            ISSUE_PARTY_ID, PROD_BRAND, PROD_STAGE, 
+            APPROVER_ID, APPROVER_NAME, DESIGNER_ID, 
+            DESIGNER_NAME, MANAGER_ID, MANAGER_NAME, 
+            LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, 
+            LIAISON_EMAIL, PROFIT_TYPE, TERMTYPE, 
+            EXC_FIN_SECTOR, INVEST_ARAE, INVEST_COUNTRY, 
+            FINAN_SER_MODEL, OPERATE_MODE, RAISE_TYPE, 
+            CMMODE, PMMODE, MNAME, 
+            PRICED_MODE, IVSTORIENTATION, YIELD, 
+            IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, 
+            CASH_MANA_CATE, SALE_AREA, SALE_AMT_STR, 
+            RAISE_CCY, CASH_PRIN_CCY, CASH_PROF_CCY, 
+            SALE_FEE_RATE, TRU_FEE_RATE, RAISE_PSTRDATE, 
+            RAISE_PENDDATE, RAISE_AMT_PLAN, IN_DEP_NAME, 
+            IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, 
+            RISK_TYPE, RISK_LEVEL, TERM_RIGHT_FLAG, 
+            CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, 
+            COOPERATION_NAME, INVEST_PRIN_DATE, INVEST_PROF_DATE, 
+            CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, 
+            INV_TYPE_RAT, REMARK, STATUS, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, ORG_CODE, DEPT_CODE, 
+            WORKFLOW_ID, DATASOURCE, IS_FHXGCP, 
+            PRD_SPEC_PROPERTY)
+        values (#{declareUuid,jdbcType=CHAR}, #{prodInsId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
+            #{issuePartyId,jdbcType=VARCHAR}, #{prodBrand,jdbcType=VARCHAR}, #{prodStage,jdbcType=DECIMAL}, 
+            #{approverId,jdbcType=VARCHAR}, #{approverName,jdbcType=VARCHAR}, #{designerId,jdbcType=VARCHAR}, 
+            #{designerName,jdbcType=VARCHAR}, #{managerId,jdbcType=VARCHAR}, #{managerName,jdbcType=VARCHAR}, 
+            #{liaisonName,jdbcType=VARCHAR}, #{liaisonTel,jdbcType=VARCHAR}, #{liaisonMobile,jdbcType=VARCHAR}, 
+            #{liaisonEmail,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, #{termtype,jdbcType=VARCHAR}, 
+            #{excFinSector,jdbcType=VARCHAR}, #{investArae,jdbcType=VARCHAR}, #{investCountry,jdbcType=VARCHAR}, 
+            #{finanSerModel,jdbcType=VARCHAR}, #{operateMode,jdbcType=VARCHAR}, #{raiseType,jdbcType=VARCHAR}, 
+            #{cmmode,jdbcType=VARCHAR}, #{pmmode,jdbcType=VARCHAR}, #{mname,jdbcType=VARCHAR}, 
+            #{pricedMode,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{yield,jdbcType=DECIMAL}, 
+            #{isShortTerm,jdbcType=VARCHAR}, #{shortTerm,jdbcType=DECIMAL}, #{isFreeRedem,jdbcType=VARCHAR}, 
+            #{cashManaCate,jdbcType=VARCHAR}, #{saleArea,jdbcType=VARCHAR}, #{saleAmtStr,jdbcType=DECIMAL}, 
+            #{raiseCcy,jdbcType=VARCHAR}, #{cashPrinCcy,jdbcType=VARCHAR}, #{cashProfCcy,jdbcType=VARCHAR}, 
+            #{saleFeeRate,jdbcType=DECIMAL}, #{truFeeRate,jdbcType=DECIMAL}, #{raisePstrdate,jdbcType=DATE}, 
+            #{raisePenddate,jdbcType=DATE}, #{raiseAmtPlan,jdbcType=DECIMAL}, #{inDepName,jdbcType=VARCHAR}, 
+            #{inDepCode,jdbcType=VARCHAR}, #{outDepCtry,jdbcType=VARCHAR}, #{outDepName,jdbcType=VARCHAR}, 
+            #{riskType,jdbcType=VARCHAR}, #{riskLevel,jdbcType=VARCHAR}, #{termRightFlag,jdbcType=VARCHAR}, 
+            #{cusRedeemFlag,jdbcType=VARCHAR}, #{investFeeRate,jdbcType=DECIMAL}, #{contMode,jdbcType=VARCHAR}, 
+            #{cooperationName,jdbcType=VARCHAR}, #{investPrinDate,jdbcType=VARCHAR}, #{investProfDate,jdbcType=VARCHAR}, 
+            #{creditFlag,jdbcType=VARCHAR}, #{creditType,jdbcType=VARCHAR}, #{creditMode,jdbcType=VARCHAR}, 
+            #{invTypeRat,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
+            #{workflowId,jdbcType=VARCHAR}, #{datasource,jdbcType=VARCHAR}, #{isFhxgcp,jdbcType=VARCHAR}, 
+            #{prdSpecProperty,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        insert into CHB_PRD_DECLARE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="declareUuid != null" >
+                DECLARE_UUID,
+            </if>
+            <if test="prodInsId != null" >
+                PROD_INS_ID,
+            </if>
+            <if test="prodName != null" >
+                PROD_NAME,
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="prodBrand != null" >
+                PROD_BRAND,
+            </if>
+            <if test="prodStage != null" >
+                PROD_STAGE,
+            </if>
+            <if test="approverId != null" >
+                APPROVER_ID,
+            </if>
+            <if test="approverName != null" >
+                APPROVER_NAME,
+            </if>
+            <if test="designerId != null" >
+                DESIGNER_ID,
+            </if>
+            <if test="designerName != null" >
+                DESIGNER_NAME,
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID,
+            </if>
+            <if test="managerName != null" >
+                MANAGER_NAME,
+            </if>
+            <if test="liaisonName != null" >
+                LIAISON_NAME,
+            </if>
+            <if test="liaisonTel != null" >
+                LIAISON_TEL,
+            </if>
+            <if test="liaisonMobile != null" >
+                LIAISON_MOBILE,
+            </if>
+            <if test="liaisonEmail != null" >
+                LIAISON_EMAIL,
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE,
+            </if>
+            <if test="termtype != null" >
+                TERMTYPE,
+            </if>
+            <if test="excFinSector != null" >
+                EXC_FIN_SECTOR,
+            </if>
+            <if test="investArae != null" >
+                INVEST_ARAE,
+            </if>
+            <if test="investCountry != null" >
+                INVEST_COUNTRY,
+            </if>
+            <if test="finanSerModel != null" >
+                FINAN_SER_MODEL,
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE,
+            </if>
+            <if test="raiseType != null" >
+                RAISE_TYPE,
+            </if>
+            <if test="cmmode != null" >
+                CMMODE,
+            </if>
+            <if test="pmmode != null" >
+                PMMODE,
+            </if>
+            <if test="mname != null" >
+                MNAME,
+            </if>
+            <if test="pricedMode != null" >
+                PRICED_MODE,
+            </if>
+            <if test="ivstorientation != null" >
+                IVSTORIENTATION,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="isShortTerm != null" >
+                IS_SHORT_TERM,
+            </if>
+            <if test="shortTerm != null" >
+                SHORT_TERM,
+            </if>
+            <if test="isFreeRedem != null" >
+                IS_FREE_REDEM,
+            </if>
+            <if test="cashManaCate != null" >
+                CASH_MANA_CATE,
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA,
+            </if>
+            <if test="saleAmtStr != null" >
+                SALE_AMT_STR,
+            </if>
+            <if test="raiseCcy != null" >
+                RAISE_CCY,
+            </if>
+            <if test="cashPrinCcy != null" >
+                CASH_PRIN_CCY,
+            </if>
+            <if test="cashProfCcy != null" >
+                CASH_PROF_CCY,
+            </if>
+            <if test="saleFeeRate != null" >
+                SALE_FEE_RATE,
+            </if>
+            <if test="truFeeRate != null" >
+                TRU_FEE_RATE,
+            </if>
+            <if test="raisePstrdate != null" >
+                RAISE_PSTRDATE,
+            </if>
+            <if test="raisePenddate != null" >
+                RAISE_PENDDATE,
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN,
+            </if>
+            <if test="inDepName != null" >
+                IN_DEP_NAME,
+            </if>
+            <if test="inDepCode != null" >
+                IN_DEP_CODE,
+            </if>
+            <if test="outDepCtry != null" >
+                OUT_DEP_CTRY,
+            </if>
+            <if test="outDepName != null" >
+                OUT_DEP_NAME,
+            </if>
+            <if test="riskType != null" >
+                RISK_TYPE,
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL,
+            </if>
+            <if test="termRightFlag != null" >
+                TERM_RIGHT_FLAG,
+            </if>
+            <if test="cusRedeemFlag != null" >
+                CUS_REDEEM_FLAG,
+            </if>
+            <if test="investFeeRate != null" >
+                INVEST_FEE_RATE,
+            </if>
+            <if test="contMode != null" >
+                CONT_MODE,
+            </if>
+            <if test="cooperationName != null" >
+                COOPERATION_NAME,
+            </if>
+            <if test="investPrinDate != null" >
+                INVEST_PRIN_DATE,
+            </if>
+            <if test="investProfDate != null" >
+                INVEST_PROF_DATE,
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG,
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE,
+            </if>
+            <if test="creditMode != null" >
+                CREDIT_MODE,
+            </if>
+            <if test="invTypeRat != null" >
+                INV_TYPE_RAT,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="datasource != null" >
+                DATASOURCE,
+            </if>
+            <if test="isFhxgcp != null" >
+                IS_FHXGCP,
+            </if>
+            <if test="prdSpecProperty != null" >
+                PRD_SPEC_PROPERTY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="declareUuid != null" >
+                #{declareUuid,jdbcType=CHAR},
+            </if>
+            <if test="prodInsId != null" >
+                #{prodInsId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodBrand != null" >
+                #{prodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="prodStage != null" >
+                #{prodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="approverId != null" >
+                #{approverId,jdbcType=VARCHAR},
+            </if>
+            <if test="approverName != null" >
+                #{approverName,jdbcType=VARCHAR},
+            </if>
+            <if test="designerId != null" >
+                #{designerId,jdbcType=VARCHAR},
+            </if>
+            <if test="designerName != null" >
+                #{designerName,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerName != null" >
+                #{managerName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonName != null" >
+                #{liaisonName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonTel != null" >
+                #{liaisonTel,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonMobile != null" >
+                #{liaisonMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonEmail != null" >
+                #{liaisonEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="termtype != null" >
+                #{termtype,jdbcType=VARCHAR},
+            </if>
+            <if test="excFinSector != null" >
+                #{excFinSector,jdbcType=VARCHAR},
+            </if>
+            <if test="investArae != null" >
+                #{investArae,jdbcType=VARCHAR},
+            </if>
+            <if test="investCountry != null" >
+                #{investCountry,jdbcType=VARCHAR},
+            </if>
+            <if test="finanSerModel != null" >
+                #{finanSerModel,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null" >
+                #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="cmmode != null" >
+                #{cmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="pmmode != null" >
+                #{pmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="mname != null" >
+                #{mname,jdbcType=VARCHAR},
+            </if>
+            <if test="pricedMode != null" >
+                #{pricedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null" >
+                #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="isShortTerm != null" >
+                #{isShortTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="shortTerm != null" >
+                #{shortTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="isFreeRedem != null" >
+                #{isFreeRedem,jdbcType=VARCHAR},
+            </if>
+            <if test="cashManaCate != null" >
+                #{cashManaCate,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="saleAmtStr != null" >
+                #{saleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseCcy != null" >
+                #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashPrinCcy != null" >
+                #{cashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashProfCcy != null" >
+                #{cashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="saleFeeRate != null" >
+                #{saleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="truFeeRate != null" >
+                #{truFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="raisePstrdate != null" >
+                #{raisePstrdate,jdbcType=DATE},
+            </if>
+            <if test="raisePenddate != null" >
+                #{raisePenddate,jdbcType=DATE},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="inDepName != null" >
+                #{inDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepCode != null" >
+                #{inDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepCtry != null" >
+                #{outDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepName != null" >
+                #{outDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="riskType != null" >
+                #{riskType,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="termRightFlag != null" >
+                #{termRightFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="cusRedeemFlag != null" >
+                #{cusRedeemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="investFeeRate != null" >
+                #{investFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contMode != null" >
+                #{contMode,jdbcType=VARCHAR},
+            </if>
+            <if test="cooperationName != null" >
+                #{cooperationName,jdbcType=VARCHAR},
+            </if>
+            <if test="investPrinDate != null" >
+                #{investPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="investProfDate != null" >
+                #{investProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="creditFlag != null" >
+                #{creditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="creditType != null" >
+                #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMode != null" >
+                #{creditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="invTypeRat != null" >
+                #{invTypeRat,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="datasource != null" >
+                #{datasource,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+                #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="prdSpecProperty != null" >
+                #{prdSpecProperty,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        insert into CHB_PRD_DECLARE_INFO(DECLARE_UUID, PROD_INS_ID, PROD_NAME, ISSUE_PARTY_ID, 
+        PROD_BRAND, PROD_STAGE, APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, 
+        MANAGER_NAME, LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, 
+        TERMTYPE, EXC_FIN_SECTOR, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, 
+        RAISE_TYPE, CMMODE, PMMODE, MNAME, PRICED_MODE, IVSTORIENTATION, YIELD, IS_SHORT_TERM, 
+        SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, SALE_AREA, SALE_AMT_STR, RAISE_CCY, CASH_PRIN_CCY, 
+        CASH_PROF_CCY, SALE_FEE_RATE, TRU_FEE_RATE, RAISE_PSTRDATE, RAISE_PENDDATE, RAISE_AMT_PLAN, 
+        IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, RISK_TYPE, RISK_LEVEL, TERM_RIGHT_FLAG, 
+        CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, COOPERATION_NAME, INVEST_PRIN_DATE, 
+        INVEST_PROF_DATE, CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, INV_TYPE_RAT, REMARK, STATUS, 
+        CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ORG_CODE, DEPT_CODE, WORKFLOW_ID, 
+        DATASOURCE, IS_FHXGCP, PRD_SPEC_PROPERTY)
+        select DECLARE_UUID, PROD_INS_ID, PROD_NAME, ISSUE_PARTY_ID, 
+            PROD_BRAND, PROD_STAGE, APPROVER_ID, APPROVER_NAME, DESIGNER_ID, DESIGNER_NAME, MANAGER_ID, 
+            MANAGER_NAME, LIAISON_NAME, LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL, PROFIT_TYPE, 
+            TERMTYPE, EXC_FIN_SECTOR, INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL, OPERATE_MODE, 
+            RAISE_TYPE, CMMODE, PMMODE, MNAME, PRICED_MODE, IVSTORIENTATION, YIELD, IS_SHORT_TERM, 
+            SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, SALE_AREA, SALE_AMT_STR, RAISE_CCY, CASH_PRIN_CCY, 
+            CASH_PROF_CCY, SALE_FEE_RATE, TRU_FEE_RATE, RAISE_PSTRDATE, RAISE_PENDDATE, RAISE_AMT_PLAN, 
+            IN_DEP_NAME, IN_DEP_CODE, OUT_DEP_CTRY, OUT_DEP_NAME, RISK_TYPE, RISK_LEVEL, TERM_RIGHT_FLAG, 
+            CUS_REDEEM_FLAG, INVEST_FEE_RATE, CONT_MODE, COOPERATION_NAME, INVEST_PRIN_DATE, 
+            INVEST_PROF_DATE, CREDIT_FLAG, CREDIT_TYPE, CREDIT_MODE, INV_TYPE_RAT, REMARK, #{status,jdbcType=VARCHAR} STATUS, 
+            CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ORG_CODE, DEPT_CODE, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
+            DATASOURCE, IS_FHXGCP, PRD_SPEC_PROPERTY
+             from CHB_PRD_DECLARE_INFO
+             where STATUS = 'E' and DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        update CHB_PRD_DECLARE_INFO
+        <set >
+<!--            <if test="prodInsId != null" >-->
+<!--                PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR},-->
+<!--            </if>-->
+            <if test="prodName != null" >
+                PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodBrand != null" >
+                PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="prodStage != null" >
+                PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="approverId != null" >
+                APPROVER_ID = #{approverId,jdbcType=VARCHAR},
+            </if>
+            <if test="approverName != null" >
+                APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+            </if>
+            <if test="designerId != null" >
+                DESIGNER_ID = #{designerId,jdbcType=VARCHAR},
+            </if>
+            <if test="designerName != null" >
+                DESIGNER_NAME = #{designerName,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerName != null" >
+                MANAGER_NAME = #{managerName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonName != null" >
+                LIAISON_NAME = #{liaisonName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonTel != null" >
+                LIAISON_TEL = #{liaisonTel,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonMobile != null" >
+                LIAISON_MOBILE = #{liaisonMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonEmail != null" >
+                LIAISON_EMAIL = #{liaisonEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="termtype != null" >
+                TERMTYPE = #{termtype,jdbcType=VARCHAR},
+            </if>
+            <if test="excFinSector != null" >
+                EXC_FIN_SECTOR = #{excFinSector,jdbcType=VARCHAR},
+            </if>
+            <if test="investArae != null" >
+                INVEST_ARAE = #{investArae,jdbcType=VARCHAR},
+            </if>
+            <if test="investCountry != null" >
+                INVEST_COUNTRY = #{investCountry,jdbcType=VARCHAR},
+            </if>
+            <if test="finanSerModel != null" >
+                FINAN_SER_MODEL = #{finanSerModel,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null" >
+                RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="cmmode != null" >
+                CMMODE = #{cmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="pmmode != null" >
+                PMMODE = #{pmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="mname != null" >
+                MNAME = #{mname,jdbcType=VARCHAR},
+            </if>
+            <if test="pricedMode != null" >
+                PRICED_MODE = #{pricedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null" >
+                IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="isShortTerm != null" >
+                IS_SHORT_TERM = #{isShortTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="shortTerm != null" >
+                SHORT_TERM = #{shortTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="isFreeRedem != null" >
+                IS_FREE_REDEM = #{isFreeRedem,jdbcType=VARCHAR},
+            </if>
+            <if test="cashManaCate != null" >
+                CASH_MANA_CATE = #{cashManaCate,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="saleAmtStr != null" >
+                SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseCcy != null" >
+                RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashPrinCcy != null" >
+                CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashProfCcy != null" >
+                CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="saleFeeRate != null" >
+                SALE_FEE_RATE = #{saleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="truFeeRate != null" >
+                TRU_FEE_RATE = #{truFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="raisePstrdate != null" >
+                RAISE_PSTRDATE = #{raisePstrdate,jdbcType=DATE},
+            </if>
+            <if test="raisePenddate != null" >
+                RAISE_PENDDATE = #{raisePenddate,jdbcType=DATE},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="inDepName != null" >
+                IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepCode != null" >
+                IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepCtry != null" >
+                OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepName != null" >
+                OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="riskType != null" >
+                RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="termRightFlag != null" >
+                TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="cusRedeemFlag != null" >
+                CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="investFeeRate != null" >
+                INVEST_FEE_RATE = #{investFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contMode != null" >
+                CONT_MODE = #{contMode,jdbcType=VARCHAR},
+            </if>
+            <if test="cooperationName != null" >
+                COOPERATION_NAME = #{cooperationName,jdbcType=VARCHAR},
+            </if>
+            <if test="investPrinDate != null" >
+                INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="investProfDate != null" >
+                INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMode != null" >
+                CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="invTypeRat != null" >
+                INV_TYPE_RAT = #{invTypeRat,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="datasource != null" >
+                DATASOURCE = #{datasource,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+                IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="prdSpecProperty != null" >
+                PRD_SPEC_PROPERTY = #{prdSpecProperty,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        update CHB_PRD_DECLARE_INFO
+        set PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR},
+            PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+            PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+            APPROVER_ID = #{approverId,jdbcType=VARCHAR},
+            APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+            DESIGNER_ID = #{designerId,jdbcType=VARCHAR},
+            DESIGNER_NAME = #{designerName,jdbcType=VARCHAR},
+            MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            MANAGER_NAME = #{managerName,jdbcType=VARCHAR},
+            LIAISON_NAME = #{liaisonName,jdbcType=VARCHAR},
+            LIAISON_TEL = #{liaisonTel,jdbcType=VARCHAR},
+            LIAISON_MOBILE = #{liaisonMobile,jdbcType=VARCHAR},
+            LIAISON_EMAIL = #{liaisonEmail,jdbcType=VARCHAR},
+            PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            TERMTYPE = #{termtype,jdbcType=VARCHAR},
+            EXC_FIN_SECTOR = #{excFinSector,jdbcType=VARCHAR},
+            INVEST_ARAE = #{investArae,jdbcType=VARCHAR},
+            INVEST_COUNTRY = #{investCountry,jdbcType=VARCHAR},
+            FINAN_SER_MODEL = #{finanSerModel,jdbcType=VARCHAR},
+            OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+            CMMODE = #{cmmode,jdbcType=VARCHAR},
+            PMMODE = #{pmmode,jdbcType=VARCHAR},
+            MNAME = #{mname,jdbcType=VARCHAR},
+            PRICED_MODE = #{pricedMode,jdbcType=VARCHAR},
+            IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+            YIELD = #{yield,jdbcType=DECIMAL},
+            IS_SHORT_TERM = #{isShortTerm,jdbcType=VARCHAR},
+            SHORT_TERM = #{shortTerm,jdbcType=DECIMAL},
+            IS_FREE_REDEM = #{isFreeRedem,jdbcType=VARCHAR},
+            CASH_MANA_CATE = #{cashManaCate,jdbcType=VARCHAR},
+            SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
+            RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+            CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+            CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+            SALE_FEE_RATE = #{saleFeeRate,jdbcType=DECIMAL},
+            TRU_FEE_RATE = #{truFeeRate,jdbcType=DECIMAL},
+            RAISE_PSTRDATE = #{raisePstrdate,jdbcType=DATE},
+            RAISE_PENDDATE = #{raisePenddate,jdbcType=DATE},
+            RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+            IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+            OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+            OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+            RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+            RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=VARCHAR},
+            CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=VARCHAR},
+            INVEST_FEE_RATE = #{investFeeRate,jdbcType=DECIMAL},
+            CONT_MODE = #{contMode,jdbcType=VARCHAR},
+            COOPERATION_NAME = #{cooperationName,jdbcType=VARCHAR},
+            INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+            INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+            CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
+            CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+            INV_TYPE_RAT = #{invTypeRat,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            DATASOURCE = #{datasource,jdbcType=VARCHAR},
+            IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+            PRD_SPEC_PROPERTY = #{prdSpecProperty,jdbcType=VARCHAR}
+        where DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+    </update>
+
+    <!-- 分页查询   -->
+    <select id="selectForPage" resultType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto" >
+        SELECT
+            T1.DECLARE_UUID      AS declareUuid,
+            T1.STATUS            AS statusValid,
+            T1.PROD_NAME         AS prodName,
+            T1.PROD_INS_ID       AS prodInsId,
+            T1.PROD_BRAND        AS prodBrand,
+            T1.PRD_SPEC_PROPERTY AS prdSpecProperty,
+            T1.PROD_STAGE        AS prodStage,
+            T1.ISSUE_PARTY_ID    AS issuePartyId,
+            T1.APPROVER_NAME     AS approverName,
+            T1.APPROVER_ID       AS approverId,
+            T1.DESIGNER_NAME     AS designerName,
+            T1.DESIGNER_ID       AS designerId,
+            T1.MANAGER_NAME      AS managerName,
+            T1.MANAGER_ID        AS managerId,
+            T1.LIAISON_NAME      AS liaisonName,
+            T1.LIAISON_TEL       AS liaisonTel,
+            T1.LIAISON_MOBILE    AS liaisonMobile,
+            T1.LIAISON_EMAIL     AS liaisonEmail,
+            T1.RAISE_TYPE        AS raiseType,
+            T1.PROFIT_TYPE       AS profitType,
+            T1.IS_FHXGCP         AS isFhxgcp,
+            T1.TERMTYPE          AS termtype,
+            T1.EXC_FIN_SECTOR    AS excFinSector,
+            T1.INVEST_ARAE       AS investArae,
+            T1.INVEST_COUNTRY    AS investCountry,
+            T1.FINAN_SER_MODEL   AS finanSerModel,
+            T1.OPERATE_MODE      AS operateMode,
+            T1.IS_SHORT_TERM     AS isShortTerm,
+            T1.SHORT_TERM        AS shortTerm,
+            T1.IS_FREE_REDEM     AS isFreeRedem,
+            T1.CASH_MANA_CATE    AS cashManaCate,
+            T1.CMMODE            AS cmmode ,
+            T1.PMMODE            AS pmmode,
+            T1.MNAME             AS mname ,
+            T1.PRICED_MODE       AS pricedMode,
+            T1.IVSTORIENTATION   AS ivstorientation,
+            T1.CONT_MODE         AS contMode,
+            T1.COOPERATION_NAME  AS cooperationName,
+            T1.SALE_AREA         AS saleArea,
+            T1.RAISE_CCY         AS raiseCcy,
+            T1.CASH_PRIN_CCY     AS cashPrinCcy,
+            T1.CASH_PROF_CCY     AS cashProfCcy,
+            T1.SALE_AMT_STR      AS saleAmtStr,
+            T1.RAISE_AMT_PLAN    AS raiseAmtPlan,
+            T1.RAISE_PSTRDATE    AS raisePstrdate,
+            T1.RAISE_PENDDATE    AS raisePenddate,
+            T1.INVEST_PRIN_DATE  AS investPrinDate,
+            T1.INVEST_PROF_DATE  AS investProfDate,
+            T1.SALE_FEE_RATE     AS saleFeeRate,
+            T1.INVEST_FEE_RATE   AS investFeeRate,
+            T1.IN_DEP_NAME       AS inDepName,
+            T1.IN_DEP_CODE       AS inDepCode,
+            T1.OUT_DEP_CTRY      AS outDepCtry,
+            T1.OUT_DEP_NAME      AS outDepName,
+            T1.TRU_FEE_RATE      AS truFeeRate,
+            T1.RISK_LEVEL        AS riskLevel,
+            T1.RISK_TYPE         AS riskType,
+            T1.TERM_RIGHT_FLAG   AS termRightFlag,
+            T1.CUS_REDEEM_FLAG   AS cusRedeemFlag,
+            T1.CREDIT_FLAG       AS creditFlag,
+            T1.CREDIT_TYPE       AS creditType,
+            T1.CREDIT_MODE       AS creditMode,
+            T1.INV_TYPE_RAT      AS invTypeRat,
+            T1.YIELD             AS yield,
+            T1.REMARK            AS remark,
+            T1.UPDATE_TIME       AS updateTime,
+            T1.UPDATE_USER       AS updateUser,
+            T1.ERR_MSG           AS errMsg,
+            T1.FILE_NO           AS fileNo,
+            T1.FILE_NUM          AS fileNum,
+            T1.TEN_FILE          AS tenFile,
+            null                 AS orgData
+        FROM
+            CHB_PRD_DECLARE_INFO T1
+        <where>
+            1=1
+            <if test="prodName != null and prodName != '' ">
+                AND T1.PROD_NAME LIKE concat(concat('%',#{prodName,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="termtype != null and termtype != ''">
+                AND T1.TERMTYPE = #{termtype}
+            </if>
+            <if test="operateMode != null and operateMode != ''">
+                ANd T1.OPERATE_MODE = #{operateMode}
+            </if>
+            <if test="status != null and status != ''" >
+                AND T1.STATUS = #{status}
+            </if>
+            <if test="raisePstrdateStart != null and raisePstrdateStart != ''">
+                and T1.RAISE_PSTRDATE &gt;= to_date(#{raisePstrdateStart}, 'yyyy-MM-dd')
+            </if>
+            <if test="raisePstrdateEnd != null and raisePstrdateEnd != ''">
+                and T1.RAISE_PSTRDATE &lt;= to_date(#{raisePstrdateEnd}, 'yyyy-MM-dd')
+            </if>
+        </where>
+        union all
+        SELECT
+        T1.DATAUUID      AS declareUuid,
+        T1.STATUS            AS statusValid,
+        T1.PROD_NAME         AS prodName,
+        T1.PROD_INS_ID       AS prodInsId,
+        null       AS prodBrand,
+        null AS prdSpecProperty,
+        null        AS prodStage,
+        null    AS issuePartyId,
+        null     AS approverName,
+        null       AS approverId,
+        null     AS designerName,
+        null       AS designerId,
+        null      AS managerName,
+        null        AS managerId,
+        null      AS liaisonName,
+        null      AS liaisonTel,
+        null    AS liaisonMobile,
+        null     AS liaisonEmail,
+        null        AS raiseType,
+        null      AS profitType,
+        null        AS isFhxgcp,
+        T1.TERMTYPE          AS termtype,
+        null    AS excFinSector,
+        null      AS investArae,
+        null    AS investCountry,
+        null   AS finanSerModel,
+        T1.OPERATE_MODE     AS operateMode,
+        null     AS isShortTerm,
+        null        AS shortTerm,
+        null     AS isFreeRedem,
+        null    AS cashManaCate,
+        null            AS cmmode ,
+        null            AS pmmode,
+        null           AS mname ,
+        null       AS pricedMode,
+        null   AS ivstorientation,
+        null         AS contMode,
+        null  AS cooperationName,
+        null         AS saleArea,
+        null         AS raiseCcy,
+        null    AS cashPrinCcy,
+        null    AS cashProfCcy,
+        null    AS saleAmtStr,
+        null    AS raiseAmtPlan,
+        T1.RAISE_PSTRDATE    AS raisePstrdate,
+        null   AS raisePenddate,
+        null  AS investPrinDate,
+        null  AS investProfDate,
+        null    AS saleFeeRate,
+        null  AS investFeeRate,
+        null       AS inDepName,
+        null       AS inDepCode,
+        null      AS outDepCtry,
+        null      AS outDepName,
+        null      AS truFeeRate,
+        null        AS riskLevel,
+        null        AS riskType,
+        null  AS termRightFlag,
+        null   AS cusRedeemFlag,
+        null      AS creditFlag,
+        null     AS creditType,
+        null      AS creditMode,
+        null    AS invTypeRat,
+        null            AS yield,
+        null           AS remark,
+        T1.UPDATE_TIME       AS updateTime,
+        T1.UPDATE_USER       AS updateUser,
+        T1.ERR_MSG           AS errMsg,
+        null           AS fileNo,
+        null        AS fileNum,
+        null          AS tenFile,
+        T1.ORG_DATA   AS orgData
+        FROM
+        CHB_PRD_DECLARE_INFO_ERRODATA T1
+        <where>
+            1=1
+            <if test="prodName != null and prodName != '' ">
+                AND T1.PROD_NAME LIKE concat(concat('%',#{prodName,jdbcType=VARCHAR}),'%')
+            </if>
+            <if test="termtype != null and termtype != ''">
+                AND T1.TERMTYPE = #{termtype}
+            </if>
+            <if test="operateMode != null and operateMode != ''">
+                ANd T1.OPERATE_MODE = #{operateMode}
+            </if>
+            <if test="status != null and status != ''" >
+                AND T1.STATUS = #{status}
+            </if>
+            <if test="raisePstrdateStart != null and raisePstrdateStart != ''">
+                and T1.RAISE_PSTRDATE &gt;= to_date(#{raisePstrdateStart}, 'yyyy-MM-dd')
+            </if>
+            <if test="raisePstrdateEnd != null and raisePstrdateEnd != ''">
+                and T1.RAISE_PSTRDATE &lt;= to_date(#{raisePstrdateEnd}, 'yyyy-MM-dd')
+            </if>
+        </where>
+        ORDER BY statusValid DESC
+    </select>
+
+    <!-- 新增插入   -->
+    <insert id="insertSvrPerProDeclareInfo" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto">
+        INSERT INTO CHB_PRD_DECLARE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="declareUuid != null" >
+                    DECLARE_UUID,
+                </if>
+                <if test="prodInsId != null" >
+                    PROD_INS_ID,
+                </if>
+                <if test="prodName != null" >
+                    PROD_NAME,
+                </if>
+                <if test="issuePartyId != null" >
+                    ISSUE_PARTY_ID,
+                </if>
+                <if test="prodBrand != null" >
+                    PROD_BRAND,
+                </if>
+                <if test="prodStage != null" >
+                    PROD_STAGE,
+                </if>
+                <if test="approverId != null" >
+                    APPROVER_ID,
+                </if>
+                <if test="approverName != null" >
+                    APPROVER_NAME,
+                </if>
+                <if test="designerId != null" >
+                    DESIGNER_ID,
+                </if>
+                <if test="designerName != null" >
+                    DESIGNER_NAME,
+                </if>
+                <if test="managerId != null" >
+                    MANAGER_ID,
+                </if>
+                <if test="managerName != null" >
+                    MANAGER_NAME,
+                </if>
+                <if test="liaisonName != null" >
+                    LIAISON_NAME,
+                </if>
+                <if test="liaisonTel != null" >
+                    LIAISON_TEL,
+                </if>
+                <if test="liaisonMobile != null" >
+                    LIAISON_MOBILE,
+                </if>
+                <if test="liaisonEmail != null" >
+                    LIAISON_EMAIL,
+                </if>
+                <if test="profitType != null" >
+                    PROFIT_TYPE,
+                </if>
+                <if test="termtype != null" >
+                    TERMTYPE,
+                </if>
+                <if test="excFinSector != null" >
+                    EXC_FIN_SECTOR,
+                </if>
+                <if test="investArae != null" >
+                    INVEST_ARAE,
+                </if>
+                <if test="investCountry != null" >
+                    INVEST_COUNTRY,
+                </if>
+                <if test="finanSerModel != null" >
+                    FINAN_SER_MODEL,
+                </if>
+                <if test="operateMode != null" >
+                    OPERATE_MODE,
+                </if>
+                <if test="raiseType != null" >
+                    RAISE_TYPE,
+                </if>
+                <if test="cmmode != null" >
+                    CMMODE,
+                </if>
+                <if test="pmmode != null" >
+                    PMMODE,
+                </if>
+                <if test="mname != null" >
+                    MNAME,
+                </if>
+                <if test="pricedMode != null" >
+                    PRICED_MODE,
+                </if>
+                <if test="ivstorientation != null" >
+                    IVSTORIENTATION,
+                </if>
+                <if test="yield != null" >
+                    YIELD,
+                </if>
+                <if test="isShortTerm != null" >
+                    IS_SHORT_TERM,
+                </if>
+                <if test="shortTerm != null" >
+                    SHORT_TERM,
+                </if>
+                <if test="isFreeRedem != null" >
+                    IS_FREE_REDEM,
+                </if>
+                <if test="cashManaCate != null" >
+                    CASH_MANA_CATE,
+                </if>
+                <if test="saleArea != null" >
+                    SALE_AREA,
+                </if>
+                <if test="saleAmtStr != null" >
+                    SALE_AMT_STR,
+                </if>
+                <if test="raiseCcy != null" >
+                    RAISE_CCY,
+                </if>
+                <if test="cashPrinCcy != null" >
+                    CASH_PRIN_CCY,
+                </if>
+                <if test="cashProfCcy != null" >
+                    CASH_PROF_CCY,
+                </if>
+                <if test="saleFeeRate != null" >
+                    SALE_FEE_RATE,
+                </if>
+                <if test="truFeeRate != null" >
+                    TRU_FEE_RATE,
+                </if>
+                <if test="raisePstrdate != null" >
+                    RAISE_PSTRDATE,
+                </if>
+                <if test="raisePenddate != null" >
+                    RAISE_PENDDATE,
+                </if>
+                <if test="raiseAmtPlan != null" >
+                    RAISE_AMT_PLAN,
+                </if>
+                <if test="inDepName != null" >
+                    IN_DEP_NAME,
+                </if>
+                <if test="inDepCode != null" >
+                    IN_DEP_CODE,
+                </if>
+                <if test="outDepCtry != null" >
+                    OUT_DEP_CTRY,
+                </if>
+                <if test="outDepName != null" >
+                    OUT_DEP_NAME,
+                </if>
+                <if test="riskType != null" >
+                    RISK_TYPE,
+                </if>
+                <if test="riskLevel != null" >
+                    RISK_LEVEL,
+                </if>
+                <if test="termRightFlag != null" >
+                    TERM_RIGHT_FLAG,
+                </if>
+                <if test="cusRedeemFlag != null" >
+                    CUS_REDEEM_FLAG,
+                </if>
+                <if test="investFeeRate != null" >
+                    INVEST_FEE_RATE,
+                </if>
+                <if test="contMode != null" >
+                    CONT_MODE,
+                </if>
+                <if test="cooperationName != null" >
+                    COOPERATION_NAME,
+                </if>
+                <if test="investPrinDate != null" >
+                    INVEST_PRIN_DATE,
+                </if>
+                <if test="investProfDate != null" >
+                    INVEST_PROF_DATE,
+                </if>
+                <if test="creditFlag != null" >
+                    CREDIT_FLAG,
+                </if>
+                <if test="creditType != null" >
+                    CREDIT_TYPE,
+                </if>
+                <if test="creditMode != null" >
+                    CREDIT_MODE,
+                </if>
+                <if test="invTypeRat != null" >
+                    INV_TYPE_RAT,
+                </if>
+                <if test="remark != null" >
+                    REMARK,
+                </if>
+                <if test="status != null" >
+                    STATUS,
+                </if>
+                <if test="createUser != null" >
+                    CREATE_USER,
+                </if>
+                <if test="createTime != null" >
+                    CREATE_TIME,
+                </if>
+                <if test="updateUser != null" >
+                    UPDATE_USER,
+                </if>
+                <if test="updateTime != null" >
+                    UPDATE_TIME,
+                </if>
+                <if test="orgCode != null" >
+                    ORG_CODE,
+                </if>
+                <if test="deptCode != null" >
+                    DEPT_CODE,
+                </if>
+                <if test="workflowId != null" >
+                    WORKFLOW_ID,
+                </if>
+                <if test="datasource != null" >
+                    DATASOURCE,
+                </if>
+                <if test="isFhxgcp != null" >
+                    IS_FHXGCP,
+                </if>
+                <if test="prdSpecProperty != null" >
+                    PRD_SPEC_PROPERTY,
+                </if>
+            </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+            <if test="declareUuid != null" >
+                #{declareUuid,jdbcType=CHAR},
+            </if>
+            <if test="prodInsId != null" >
+                #{prodInsId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodBrand != null" >
+                #{prodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="prodStage != null" >
+                #{prodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="approverId != null" >
+                #{approverId,jdbcType=VARCHAR},
+            </if>
+            <if test="approverName != null" >
+                #{approverName,jdbcType=VARCHAR},
+            </if>
+            <if test="designerId != null" >
+                #{designerId,jdbcType=VARCHAR},
+            </if>
+            <if test="designerName != null" >
+                #{designerName,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerName != null" >
+                #{managerName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonName != null" >
+                #{liaisonName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonTel != null" >
+                #{liaisonTel,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonMobile != null" >
+                #{liaisonMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonEmail != null" >
+                #{liaisonEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="termtype != null" >
+                #{termtype,jdbcType=VARCHAR},
+            </if>
+            <if test="excFinSector != null" >
+                #{excFinSector,jdbcType=VARCHAR},
+            </if>
+            <if test="investArae != null" >
+                #{investArae,jdbcType=VARCHAR},
+            </if>
+            <if test="investCountry != null" >
+                #{investCountry,jdbcType=VARCHAR},
+            </if>
+            <if test="finanSerModel != null" >
+                #{finanSerModel,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null" >
+                #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="cmmode != null" >
+                #{cmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="pmmode != null" >
+                #{pmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="mname != null" >
+                #{mname,jdbcType=VARCHAR},
+            </if>
+            <if test="pricedMode != null" >
+                #{pricedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null" >
+                #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="isShortTerm != null" >
+                #{isShortTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="shortTerm != null" >
+                #{shortTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="isFreeRedem != null" >
+                #{isFreeRedem,jdbcType=VARCHAR},
+            </if>
+            <if test="cashManaCate != null" >
+                #{cashManaCate,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="saleAmtStr != null" >
+                #{saleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseCcy != null" >
+                #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashPrinCcy != null" >
+                #{cashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashProfCcy != null" >
+                #{cashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="saleFeeRate != null" >
+                #{saleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="truFeeRate != null" >
+                #{truFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="raisePstrdate != null" >
+                #{raisePstrdate,jdbcType=DATE},
+            </if>
+            <if test="raisePenddate != null" >
+                #{raisePenddate,jdbcType=DATE},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="inDepName != null" >
+                #{inDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepCode != null" >
+                #{inDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepCtry != null" >
+                #{outDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepName != null" >
+                #{outDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="riskType != null" >
+                #{riskType,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="termRightFlag != null" >
+                #{termRightFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="cusRedeemFlag != null" >
+                #{cusRedeemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="investFeeRate != null" >
+                #{investFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contMode != null" >
+                #{contMode,jdbcType=VARCHAR},
+            </if>
+            <if test="cooperationName != null" >
+                #{cooperationName,jdbcType=VARCHAR},
+            </if>
+            <if test="investPrinDate != null" >
+                #{investPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="investProfDate != null" >
+                #{investProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="creditFlag != null" >
+                #{creditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="creditType != null" >
+                #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMode != null" >
+                #{creditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="invTypeRat != null" >
+                #{invTypeRat,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="datasource != null" >
+                #{datasource,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+                #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="prdSpecProperty != null" >
+                #{prdSpecProperty,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修改   -->
+    <update id="updateSvrPerProDeclareInfo" parameterType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto">
+        update CHB_PRD_DECLARE_INFO
+        <set >
+            <if test="prodInsId != null" >
+                PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodBrand != null" >
+                PROD_BRAND = #{prodBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="prodStage != null" >
+                PROD_STAGE = #{prodStage,jdbcType=DECIMAL},
+            </if>
+            <if test="approverId != null" >
+                APPROVER_ID = #{approverId,jdbcType=VARCHAR},
+            </if>
+            <if test="approverName != null" >
+                APPROVER_NAME = #{approverName,jdbcType=VARCHAR},
+            </if>
+            <if test="designerId != null" >
+                DESIGNER_ID = #{designerId,jdbcType=VARCHAR},
+            </if>
+            <if test="designerName != null" >
+                DESIGNER_NAME = #{designerName,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerName != null" >
+                MANAGER_NAME = #{managerName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonName != null" >
+                LIAISON_NAME = #{liaisonName,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonTel != null" >
+                LIAISON_TEL = #{liaisonTel,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonMobile != null" >
+                LIAISON_MOBILE = #{liaisonMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="liaisonEmail != null" >
+                LIAISON_EMAIL = #{liaisonEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="profitType != null" >
+                PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+            </if>
+            <if test="termtype != null" >
+                TERMTYPE = #{termtype,jdbcType=VARCHAR},
+            </if>
+            <if test="excFinSector != null" >
+                EXC_FIN_SECTOR = #{excFinSector,jdbcType=VARCHAR},
+            </if>
+            <if test="investArae != null" >
+                INVEST_ARAE = #{investArae,jdbcType=VARCHAR},
+            </if>
+            <if test="investCountry != null" >
+                INVEST_COUNTRY = #{investCountry,jdbcType=VARCHAR},
+            </if>
+            <if test="finanSerModel != null" >
+                FINAN_SER_MODEL = #{finanSerModel,jdbcType=VARCHAR},
+            </if>
+            <if test="operateMode != null" >
+                OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="raiseType != null" >
+                RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+            </if>
+            <if test="cmmode != null" >
+                CMMODE = #{cmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="pmmode != null" >
+                PMMODE = #{pmmode,jdbcType=VARCHAR},
+            </if>
+            <if test="mname != null" >
+                MNAME = #{mname,jdbcType=VARCHAR},
+            </if>
+            <if test="pricedMode != null" >
+                PRICED_MODE = #{pricedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="ivstorientation != null" >
+                IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+            </if>
+            <if test="yield != null" >
+                YIELD = #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="isShortTerm != null" >
+                IS_SHORT_TERM = #{isShortTerm,jdbcType=VARCHAR},
+            </if>
+            <if test="shortTerm != null" >
+                SHORT_TERM = #{shortTerm,jdbcType=DECIMAL},
+            </if>
+            <if test="isFreeRedem != null" >
+                IS_FREE_REDEM = #{isFreeRedem,jdbcType=VARCHAR},
+            </if>
+            <if test="cashManaCate != null" >
+                CASH_MANA_CATE = #{cashManaCate,jdbcType=VARCHAR},
+            </if>
+            <if test="saleArea != null" >
+                SALE_AREA = #{saleArea,jdbcType=VARCHAR},
+            </if>
+            <if test="saleAmtStr != null" >
+                SALE_AMT_STR = #{saleAmtStr,jdbcType=DECIMAL},
+            </if>
+            <if test="raiseCcy != null" >
+                RAISE_CCY = #{raiseCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashPrinCcy != null" >
+                CASH_PRIN_CCY = #{cashPrinCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cashProfCcy != null" >
+                CASH_PROF_CCY = #{cashProfCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="saleFeeRate != null" >
+                SALE_FEE_RATE = #{saleFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="truFeeRate != null" >
+                TRU_FEE_RATE = #{truFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="raisePstrdate != null" >
+                RAISE_PSTRDATE = #{raisePstrdate,jdbcType=DATE},
+            </if>
+            <if test="raisePenddate != null" >
+                RAISE_PENDDATE = #{raisePenddate,jdbcType=DATE},
+            </if>
+            <if test="raiseAmtPlan != null" >
+                RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+            </if>
+            <if test="inDepName != null" >
+                IN_DEP_NAME = #{inDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="inDepCode != null" >
+                IN_DEP_CODE = #{inDepCode,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepCtry != null" >
+                OUT_DEP_CTRY = #{outDepCtry,jdbcType=VARCHAR},
+            </if>
+            <if test="outDepName != null" >
+                OUT_DEP_NAME = #{outDepName,jdbcType=VARCHAR},
+            </if>
+            <if test="riskType != null" >
+                RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevel != null" >
+                RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="termRightFlag != null" >
+                TERM_RIGHT_FLAG = #{termRightFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="cusRedeemFlag != null" >
+                CUS_REDEEM_FLAG = #{cusRedeemFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="investFeeRate != null" >
+                INVEST_FEE_RATE = #{investFeeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contMode != null" >
+                CONT_MODE = #{contMode,jdbcType=VARCHAR},
+            </if>
+            <if test="cooperationName != null" >
+                COOPERATION_NAME = #{cooperationName,jdbcType=VARCHAR},
+            </if>
+            <if test="investPrinDate != null" >
+                INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+            </if>
+            <if test="investProfDate != null" >
+                INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+            </if>
+            <if test="creditFlag != null" >
+                CREDIT_FLAG = #{creditFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="creditType != null" >
+                CREDIT_TYPE = #{creditType,jdbcType=VARCHAR},
+            </if>
+            <if test="creditMode != null" >
+                CREDIT_MODE = #{creditMode,jdbcType=VARCHAR},
+            </if>
+            <if test="invTypeRat != null" >
+                INV_TYPE_RAT = #{invTypeRat,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="datasource != null" >
+                DATASOURCE = #{datasource,jdbcType=VARCHAR},
+            </if>
+            <if test="isFhxgcp != null" >
+                IS_FHXGCP = #{isFhxgcp,jdbcType=VARCHAR},
+            </if>
+            <if test="prdSpecProperty != null" >
+                PRD_SPEC_PROPERTY = #{prdSpecProperty,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+    </update>
+
+    <!-- 获取详情   -->
+    <select id="selectDetail" resultType="com.joyintech.tams.basicdata.perprodeclareinfo.dto.SvrPerProDeclareInfo001Dto">
+        SELECT
+            T1.DECLARE_UUID      AS declareUuid,
+            T1.STATUS            AS status,
+            T1.PROD_NAME         AS prodName,
+            T1.PROD_INS_ID       AS prodInsId,
+            T1.PROD_BRAND        AS prodBrand,
+            T1.PRD_SPEC_PROPERTY AS prdSpecProperty,
+            T1.PROD_STAGE        AS prodStage,
+            T1.ISSUE_PARTY_ID    AS issuePartyId,
+            T1.APPROVER_NAME     AS approverName,
+            T1.APPROVER_ID       AS approverId,
+            T1.DESIGNER_NAME     AS designerName,
+            T1.DESIGNER_ID       AS designerId,
+            T1.MANAGER_NAME      AS managerName,
+            T1.MANAGER_ID        AS managerId,
+            T1.LIAISON_NAME      AS liaisonName,
+            T1.LIAISON_TEL       AS liaisonTel,
+            T1.LIAISON_MOBILE    AS liaisonMobile,
+            T1.LIAISON_EMAIL     AS liaisonEmail,
+            T1.RAISE_TYPE        AS raiseType,
+            T1.PROFIT_TYPE       AS profitType,
+            T1.IS_FHXGCP         AS isFhxgcp,
+            T1.TERMTYPE          AS termtype,
+            T1.EXC_FIN_SECTOR    AS excFinSector,
+            T1.INVEST_ARAE       AS investArae,
+            T1.INVEST_COUNTRY    AS investCountry,
+            T1.FINAN_SER_MODEL   AS finanSerModel,
+            T1.OPERATE_MODE      AS operateMode,
+            T1.IS_SHORT_TERM     AS isShortTerm,
+            T1.SHORT_TERM        AS shortTerm,
+            T1.IS_FREE_REDEM     AS isFreeRedem,
+            T1.CASH_MANA_CATE    AS cashManaCate,
+            T1.CMMODE            AS cmmode ,
+            T1.PMMODE            AS pmmode,
+            T1.MNAME             AS mname ,
+            T1.PRICED_MODE       AS pricedMode,
+            T1.IVSTORIENTATION   AS ivstorientation,
+            T1.CONT_MODE         AS contMode,
+            T1.COOPERATION_NAME  AS cooperationName,
+            T1.SALE_AREA         AS saleArea,
+            T1.RAISE_CCY         AS raiseCcy,
+            T1.CASH_PRIN_CCY     AS cashPrinCcy,
+            T1.CASH_PROF_CCY     AS cashProfCcy,
+            T1.SALE_AMT_STR      AS saleAmtStr,
+            T1.RAISE_AMT_PLAN    AS raiseAmtPlan,
+            T1.RAISE_PSTRDATE    AS raisePstrdate,
+            T1.RAISE_PENDDATE    AS raisePenddate,
+            T1.INVEST_PRIN_DATE  AS investPrinDate,
+            T1.INVEST_PROF_DATE  AS investProfDate,
+            T1.SALE_FEE_RATE     AS saleFeeRate,
+            T1.INVEST_FEE_RATE   AS investFeeRate,
+            T1.IN_DEP_NAME       AS inDepName,
+            T1.IN_DEP_CODE       AS inDepCode,
+            T1.OUT_DEP_CTRY      AS outDepCtry,
+            T1.OUT_DEP_NAME      AS outDepName,
+            T1.TRU_FEE_RATE      AS truFeeRate,
+            T1.RISK_LEVEL        AS riskLevel,
+            T1.RISK_TYPE         AS riskType,
+            T1.TERM_RIGHT_FLAG   AS termRightFlag,
+            T1.CUS_REDEEM_FLAG   AS cusRedeemFlag,
+            T1.CREDIT_FLAG       AS creditFlag,
+            T1.CREDIT_TYPE       AS creditType,
+            T1.CREDIT_MODE       AS creditMode,
+            T1.INV_TYPE_RAT      AS invTypeRat,
+            T1.YIELD             AS yield,
+            T1.REMARK            AS remark,
+            T1.UPDATE_TIME       AS updateTime,
+            T1.UPDATE_USER       AS updateUser
+        FROM
+            CHB_PRD_DECLARE_INFO T1
+        WHERE
+            T1.DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+    </select>
+
+    <!-- 获取产品名称 联想下拉框  -->
+    <select id="queryProdInfo" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+            T1.PROD_NAME         AS code,
+            T1.PROD_NAME         AS name,
+            T1.PROD_NAME         AS shortName,
+            T1.PROD_NAME         AS hidCode
+        FROM
+            CHB_PRD_DECLARE_INFO T1
+        <where>
+            <if test="param != null and param != '' ">
+                T1.PROD_NAME LIKE concat(concat('%',#{param,jdbcType=VARCHAR}),'%')
+                OR
+                T1.PROD_INS_ID LIKE concat(concat('%',#{param,jdbcType=VARCHAR}),'%')
+            </if>
+        </where>
+    </select>
+
+    <update id="deleteByPrimaryKey" parameterType="java.lang.String">
+        UPDATE CHB_PRD_DECLARE_INFO
+        SET  STATUS = 'D'
+        WHERE DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+    </update>
+
+    <update id="deleteList" >
+        UPDATE CHB_PRD_DECLARE_INFO
+            SET  STATUS = 'D'
+        WHERE
+            DECLARE_UUID IN
+            <foreach collection="deleteKeys" item="key" open="(" separator="," close=")">
+                #{key}
+            </foreach>
+    </update>
+</mapper>

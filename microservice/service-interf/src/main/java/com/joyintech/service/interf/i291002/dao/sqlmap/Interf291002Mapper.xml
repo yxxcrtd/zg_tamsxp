@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.service.interf.i291002.dao.Interf291002Mapper">
-    <delete id="deleteBonusInfo" parameterType="com.joyintech.tams.common.base.entity.InterfNetProdBuyDraw">
-        DELETE FROM INTERF_NET_PROD_BUY_DRAW
-        WHERE PROD_ID = #{prodId,jdbcType=VARCHAR}
-        AND CDATE = #{cdate,jdbcType=VARCHAR}
-    </delete>
-</mapper>

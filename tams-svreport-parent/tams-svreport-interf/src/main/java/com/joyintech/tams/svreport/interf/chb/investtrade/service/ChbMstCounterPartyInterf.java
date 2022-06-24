@@ -8,6 +8,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.BaseInterfService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
@@ -19,6 +20,8 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.InterfConstant;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.service.ChbAssetInfoInterf;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
@@ -66,6 +69,9 @@ public class ChbMstCounterPartyInterf  extends BaseInterfService {
 	
 	@Autowired
 	private SqlSessionTemplate template;
+
+	@Autowired
+	private BatchInsertService batchInsertService;
 	
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -291,52 +297,42 @@ public class ChbMstCounterPartyInterf  extends BaseInterfService {
 	 * void
 	 */
 	private void dealResultCommitSingle(List<ChbMstCounterParty> investList){
-		if (CollectionUtils.isNotEmpty(investList)) {
-//			logger.debug("上游交易对手先删后插-删除:----开始------" +  df.format(new Date()));
-//			int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"50" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));//每批commit的个数
-//	        int batchLastIndex = batchCount;//每批最后一个的下标
-	        /*for(int index = 0; index < investList.size();){
-	            if(batchLastIndex > investList.size()-1){
-	                batchLastIndex = investList.size();
-	                chbMstCounterPartyInterfMapper.deleteByCounterId(investList.subList(index, batchLastIndex));
-//	                System.out.println("index:"+index+"     batchLastIndex:"+batchLastIndex+"list"+prodinfos.subList(index, batchLastIndex).size());
-	                break;//数据插入完毕,退出循环
-	            }else{
-	            	chbMstCounterPartyInterfMapper.deleteByCounterId(investList.subList(index, batchLastIndex));
-//	                System.out.println("index:"+index+"     batchLastIndex:"+batchLastIndex +"list"+prodinfos.subList(index, batchLastIndex).size());
-	                index = batchLastIndex;//设置下一批下标
-	                batchLastIndex = index + batchCount;                     
-	            }
-	        }*/
-//			logger.debug("上游交易对手先删后插-删除:----结束------" +  df.format(new Date()));
+
 			logger.debug("上游交易对手先删后插-插入:----开始------" +  df.format(new Date()));
-			int count = 0;
-			SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-	    	try{
-	    		ChbMstCounterPartyInterfMapper batchMapper =  session.getMapper(ChbMstCounterPartyInterfMapper.class);
-	    		for(ChbMstCounterParty asset : investList){
-	    			batchMapper.insert(asset);
-	    			count++;
-	    			if(count%1000==0){
-	    				session.commit();
-	    	            // 清理缓存，防止溢出
-	    	            session.clearCache();
-	    				logger.debug("上游交易对手先删后插-插入1000条第"+ count/1000 +"次:----结束------" +  df.format(new Date()));	
-	    			}
-	    		}
-	    		session.commit();
-	            // 清理缓存，防止溢出
-	            session.clearCache();
-	    	}
-//	    	catch(Exception e){
-//	    		session.rollback();
-//	    		throw e;
-//	    	}
-	    	finally {
-	    		session.close();
-	    	}
+			if (investList.size()<=5000) {
+				int count = 0;
+				SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+				try{
+					ChbMstCounterPartyInterfMapper batchMapper =  session.getMapper(ChbMstCounterPartyInterfMapper.class);
+					for(ChbMstCounterParty asset : investList){
+						batchMapper.insert(asset);
+						count++;
+						if(count%1000==0){
+							session.commit();
+							// 清理缓存，防止溢出
+							session.clearCache();
+							logger.debug("上游交易对手先删后插-插入1000条第"+ count/1000 +"次:----结束------" +  df.format(new Date()));
+						}
+					}
+					session.commit();
+					// 清理缓存，防止溢出
+					session.clearCache();
+				}
+				finally {
+					session.close();
+				}
+			} else  {
+				//sqlloader插入
+				ImpTable table = new ImpTable("CHB_MST_COUNTER_PARTY");
+				table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+				// 临时文件存放目录
+				String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+				batchInsertService.exeBatchldr(tmpPath, investList, table);
+			}
+
 			logger.debug("上游交易对手先删后插-插入:----结束------" +  df.format(new Date()));
-		}
+
 	}
 	
 	/**

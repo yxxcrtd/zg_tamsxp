@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ChbCalendarInfo002.xlsx" name="节假日信息导入模板">
+    <Worksheet javaBean="com.joyintech.tams.svreport.chb.businessdatamaintain.chbcalendarinfo.dto.ChbCalendarInfo001Dto">
+        <Row>
+            <Cell order="1" name="数据状态">statusStr</Cell>
+            <Cell order="2" name="日期">cdate</Cell>
+            <Cell order="3" name="日历编号">calendarName</Cell>
+            <Cell order="4" name="是否节假日">isHolidayStr</Cell>
+            <Cell order="5" name="错误信息">errMsg</Cell>
+            <Cell order="6" name="更新时间">updateTimeStr</Cell>
+            <Cell order="7" name="更新人">updateUser</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

@@ -51,6 +51,8 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
     private static Logger logger = LoggerFactory.getLogger(PbcPrdBaseinfoSubDatService.class);
 
     private static final String TIPS_SUFFIX_ERROR = "只支持2003版的excel导入，请修改文件重新导入";
+    private static final String NOTFILE_ERROR = "导入模板不一致，请重新选择文件！";
+
     private static final String PRODUCT_BASE_INFO_NAME = "产品基本信息";
     private static final String PRODUCT_END_INFO_NAME = "产品终止信息";
     @Autowired
@@ -79,16 +81,29 @@ public class PbcPrdBaseinfoEndSubDatService extends BaseService<PbcPrdBaseinfoSu
             return ajaxResult;
         }
         List<List<String>> dataList = null;
+        /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
+        List<List<String>> topList = null;
         if(fileName.contains(PRODUCT_BASE_INFO_NAME)){//有两个sheet页的情况
             try {
                 dataList = ExcelUtil.readToList(
                         fileName, null, null, 1, 1, 0);
+                topList = Arrays.asList(ExcelUtil.readToList(
+                        fileName, null, null, 1, 0, 0).get(0));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }else{
             dataList = ExcelUtil.getDataList1(fileName);
+            topList = ExcelUtil.getDataList1top(fileName);
         }
+        if(StringUtil.isEmptyList(topList)||topList.get(0).size()!=8){
+            ValidMessage message = new ValidMessage();
+            message.setMessage(NOTFILE_ERROR);
+            ajaxResult.setErrorList(Arrays.asList(message));
+            return ajaxResult;
+        }
+        /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
+
         if(CollectionUtil.isNotEmpty(dataList)){
             List<PbcPrdBaseinfoEndSubDto> pbcPrdBaseinfoSubDatDtos = new ArrayList<>();
             //将excel中的行数据转换为实体

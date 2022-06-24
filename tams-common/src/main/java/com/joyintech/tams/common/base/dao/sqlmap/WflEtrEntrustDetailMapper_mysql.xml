@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflEtrEntrustDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="WORKFLOW_STATUS" property="workflowStatus" jdbcType="VARCHAR" />
+        <result column="DIS_RATE" property="disRate" jdbcType="DECIMAL" />
+        <result column="ENTRUST_AMT" property="entrustAmt" jdbcType="DECIMAL" />
+        <result column="ENTRUST_NUM" property="entrustNum" jdbcType="DECIMAL" />
+        <result column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, WORKFLOW_STATUS WORKFLOW_STATUS, 
+        DIS_RATE DIS_RATE, ENTRUST_AMT ENTRUST_AMT, ENTRUST_NUM ENTRUST_NUM, TARGET_TYPE TARGET_TYPE, 
+        WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustDetailMapper_mysql.Base_Column_List" />
+        from WFL_ETR_ENTRUST_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustDetailMapper_mysql.Base_Column_List" />
+        from WFL_ETR_ENTRUST_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetailKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustDetailMapper_mysql.Base_Column_List" />
+        from WFL_ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetailKey" >
+        delete from WFL_ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_ETR_ENTRUST_DETAIL
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_ETR_ENTRUST_DETAIL(ENTRUST_ID, PORTFOLIO_ID, WORKFLOW_STATUS, DIS_RATE, 
+        ENTRUST_AMT, ENTRUST_NUM, TARGET_TYPE, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select ENTRUST_ID, PORTFOLIO_ID, WORKFLOW_STATUS, DIS_RATE, 
+            ENTRUST_AMT, ENTRUST_NUM, TARGET_TYPE, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_ETR_ENTRUST_DETAIL
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        update WFL_ETR_ENTRUST_DETAIL
+        <set >
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="disRate != null" >
+                DIS_RATE = #{disRate,jdbcType=DECIMAL},
+            </if>
+            <if test="entrustAmt != null" >
+                ENTRUST_AMT = #{entrustAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="entrustNum != null" >
+                ENTRUST_NUM = #{entrustNum,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        update WFL_ETR_ENTRUST_DETAIL
+        set 
+        ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+        PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+        WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+        DIS_RATE = #{disRate,jdbcType=DECIMAL},
+        ENTRUST_AMT = #{entrustAmt,jdbcType=DECIMAL},
+        ENTRUST_NUM = #{entrustNum,jdbcType=DECIMAL},
+        TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        insert into WFL_ETR_ENTRUST_DETAIL (ENTRUST_ID, PORTFOLIO_ID, WORKFLOW_STATUS, 
+            DIS_RATE, ENTRUST_AMT, ENTRUST_NUM, 
+            TARGET_TYPE, WORKFLOW_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{entrustId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, 
+            #{disRate,jdbcType=DECIMAL}, #{entrustAmt,jdbcType=DECIMAL}, #{entrustNum,jdbcType=DECIMAL}, 
+            #{targetType,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        insert into WFL_ETR_ENTRUST_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS,
+            </if>
+            <if test="disRate != null" >
+                DIS_RATE,
+            </if>
+            <if test="entrustAmt != null" >
+                ENTRUST_AMT,
+            </if>
+            <if test="entrustNum != null" >
+                ENTRUST_NUM,
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="disRate != null" >
+                #{disRate,jdbcType=DECIMAL},
+            </if>
+            <if test="entrustAmt != null" >
+                #{entrustAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="entrustNum != null" >
+                #{entrustNum,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        insert into WFL_ETR_ENTRUST_DETAIL(ENTRUST_ID, PORTFOLIO_ID, WORKFLOW_STATUS, DIS_RATE, 
+        ENTRUST_AMT, ENTRUST_NUM, TARGET_TYPE, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select ENTRUST_ID, PORTFOLIO_ID, WORKFLOW_STATUS, DIS_RATE, 
+            ENTRUST_AMT, ENTRUST_NUM, TARGET_TYPE, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_ETR_ENTRUST_DETAIL
+             where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        update WFL_ETR_ENTRUST_DETAIL
+        <set >
+            <if test="disRate != null" >
+                DIS_RATE = #{disRate,jdbcType=DECIMAL},
+            </if>
+            <if test="entrustAmt != null" >
+                ENTRUST_AMT = #{entrustAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="entrustNum != null" >
+                ENTRUST_NUM = #{entrustNum,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetail" >
+        update WFL_ETR_ENTRUST_DETAIL
+        set DIS_RATE = #{disRate,jdbcType=DECIMAL},
+            ENTRUST_AMT = #{entrustAmt,jdbcType=DECIMAL},
+            ENTRUST_NUM = #{entrustNum,jdbcType=DECIMAL},
+            TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustDetailKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustDetailMapper.Base_Column_List" />
+        from WFL_ETR_ENTRUST_DETAIL
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+    </select>
+</mapper>

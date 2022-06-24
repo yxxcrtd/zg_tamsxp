@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.reportcontentenum.dao.ReportContentEnum002Mapper_mysql">
-    <select id="selectIndexDetail" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+	<select id="selectIndexDetail" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
      select 
       pb.ID as id,              /** 主键ID **/
       pb.PRI_ID as priID,   
@@ -21,7 +21,7 @@
          AND py.id = #{indexId}
          ORDER BY pb.CREATE_TIME DESC
    </select>
-    <select id="selectById" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto" parameterType="java.lang.String">
+	<select id="selectById" resultType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto" parameterType="java.lang.String">
        select ris.ID as id,ris.PRI_ID as priId,ris.INDEX_NAME as indexName,ris.INDEX_VALUE as indexValue,ris.INDEX_DATE as indexDate,
               ris.INDEX_TYPE as indexType,DATE_FORMAT(ris.INDEX_DATE,'%Y-%m-%d') as indexDateStr,ris.INDEX_FILE as indexFile,
               ris.INDEX_DETAIL as indexDetail,
@@ -29,7 +29,7 @@
        from REP_INDEX_SUB ris
        where ris.ID =#{id}
    </select>
-    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+	<insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
       insert  into  REP_INDEX_SUB(ID,PRI_ID,INDEX_NAME,INDEX_VALUE,
              INDEX_DATE,INDEX_TYPE,INDEX_FILE,
              CREATE_USER,CREATE_TIME,
@@ -48,9 +48,9 @@
             #{createDept,jdbcType=VARCHAR},
             '已审核')
    </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
-        update REP_INDEX_SUB
-        <set >
+	<update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.information.config.reportcontentenum.dto.ReportContentEnum002Dto">
+     update REP_INDEX_SUB 
+       <set >
             <if test="indexName != null" >
                 INDEX_NAME = #{indexName,jdbcType=VARCHAR},
             </if>
@@ -63,7 +63,7 @@
             <if test="indexFile != null" >
                 INDEX_FILE = #{indexFile,jdbcType=VARCHAR},
             </if>
-            <if test="indexType != null" >
+             <if test="indexType != null" >
                 INDEX_TYPE = #{indexType,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null" >
@@ -71,5 +71,5 @@
             </if>
         </set>
         where ID=#{id,jdbcType=VARCHAR}
-    </update>
+  </update>
 </mapper>

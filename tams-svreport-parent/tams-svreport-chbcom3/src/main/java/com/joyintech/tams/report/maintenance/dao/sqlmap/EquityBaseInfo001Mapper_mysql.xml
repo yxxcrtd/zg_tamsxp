@@ -4,55 +4,55 @@
 	<!-- 权益基期列表数据查询 -->
 	<select id="queryForPage" resultType="com.joyintech.tams.report.maintenance.dto.EquiteBaseInfo001Dto">
 		SELECT
-		A.REGIST_BANK_CODE bankCode,
-		A.PRODID prodId,
-		A.INDENTIFY_MARK indentifyMark,
-		B.PRODNAME prdName,
-		A.CCY ccy,
-		A.CCY ccyCode,
-		A.AVAILABLE_QUANTITY availableQuantity,
-		A.FROZEN_QUANTITY frozenQuantity,
-		A.PLEDGED_QUANTITY pledgedQuantity,
-		A.INIT_VAL_DATE initValDate,
-		A.INIT_VAL_REGIST_DATE initValRegistDate,
-		A.STATUS status,
-		A.AMOUNT amount,
-		A.CONVER_CNY_AMOUNT converCnyAmount,
-		A.ORG_CODE orgCode
-		FROM CHB_EQUPERIOD A
-		LEFT JOIN CHB_PRDRESIST_CODE B ON A.PRODID = B.PRODID AND A.ORG_CODE = B.ORG_CODE
-		<where>
-			<if test="bankCode != null and bankCode != ''">
-				A.REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+		  A.REGIST_BANK_CODE bankCode,
+		  A.PRODID prodId,
+		  A.INDENTIFY_MARK indentifyMark,
+		  B.PRODNAME prdName,
+		  A.CCY ccy,
+		  A.CCY ccyCode,
+		  A.AVAILABLE_QUANTITY availableQuantity,
+		  A.FROZEN_QUANTITY frozenQuantity,
+		  A.PLEDGED_QUANTITY pledgedQuantity,
+		  A.INIT_VAL_DATE initValDate,
+		  A.INIT_VAL_REGIST_DATE initValRegistDate,
+		  A.STATUS status,
+		  A.AMOUNT amount,
+		  A.CONVER_CNY_AMOUNT converCnyAmount,
+		  A.ORG_CODE orgCode
+		 FROM CHB_EQUPERIOD A
+		 LEFT JOIN CHB_PRDRESIST_CODE B ON A.PRODID = B.PRODID AND A.ORG_CODE = B.ORG_CODE
+		 <where>
+		 	<if test="bankCode != null and bankCode != ''">
+		 	A.REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+		 	</if>
+		 	<if test="orgCodeList != null and orgCodeList.size() > 0">
+		 	<foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+		 	 #{orgCode,jdbcType=VARCHAR}
+		 	</foreach>
 			</if>
-			<if test="orgCodeList != null and orgCodeList.size() > 0">
-				<foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
-					#{orgCode,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="prdCodeList != null and prdCodeList.size() > 0">
-				<foreach collection="prdCodeList" item="prdCode" open=" AND B.PRODID IN (" close=")" separator=",">
-					#{prdCode,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="statusList != null and statusList.size() > 0">
-				<foreach collection="statusList" item="status" open=" AND A.STATUS IN (" close=")" separator=",">
-					#{status,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="indentifyMark != null and indentifyMark != ''">
-				AND A.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
-			</if>
-			<!-- 选中导出使用的参数 -->
-			<if test="keys != null and keys.size() > 0">
-				<foreach collection="keys" item="key" open=" AND concat_ws('',A.REGIST_BANK_CODE, '|',A.INDENTIFY_MARK) IN (" close=")" separator=",">
-					#{key,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-		</where>
-		ORDER BY A.UPDATE_TIME DESC,A.PRODID ASC
+		 	<if test="prdCodeList != null and prdCodeList.size() > 0">
+		 	<foreach collection="prdCodeList" item="prdCode" open=" AND B.PRODID IN (" close=")" separator=",">
+		 	 #{prdCode,jdbcType=VARCHAR}
+		 	</foreach>
+		 	</if>
+		 	<if test="statusList != null and statusList.size() > 0">
+            <foreach collection="statusList" item="status" open=" AND A.STATUS IN (" close=")" separator=",">
+             #{status,jdbcType=VARCHAR}
+            </foreach>
+		 	</if>
+		 	<if test="indentifyMark != null and indentifyMark != ''">
+		 	AND A.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+		 	</if>
+		 	<!-- 选中导出使用的参数 -->
+		 	<if test="keys != null and keys.size() > 0">
+            <foreach collection="keys" item="key" open=" AND concat_ws('',A.REGIST_BANK_CODE, '|',A.INDENTIFY_MARK) IN (" close=")" separator=",">
+             #{key,jdbcType=VARCHAR}
+            </foreach>
+		 	</if>
+		 </where>
+		 ORDER BY A.UPDATE_TIME DESC,A.PRODID ASC
 	</select>
-
+	
 	<!-- 查询产品登记编码是否有对应的产品 -->
 	<select id="queryProdInfo" parameterType="map" resultType="int">
 		select count(*) from CHB_PRDRESIST_CODE
@@ -60,24 +60,24 @@
 		<!-- and DEPT_CODE = #{deptCode,jdbcType=VARCHAR} -->
 		and ORG_CODE = #{orgCode,jdbcType=VARCHAR}
 	</select>
-
+	
 	<!-- 查询指定识别表示在投资者信息中是否存在   -->
 	<select id="queryIndentifyMark" parameterType="string" resultType="int">
 		select count(*) from CHB_EQU_SUB
 		where INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
 	</select>
-
+	
 	<select id="getEquityBaseList" parameterType="java.util.List"
-			resultType="com.joyintech.tams.report.maintenance.dto.EquiteBaseInfo001Dto">
+	 resultType="com.joyintech.tams.report.maintenance.dto.EquiteBaseInfo001Dto">
 		select A.regist_bank_code bankCode,
-		A.prodid           prodId,
-		A.indentify_mark   indentifyMark,
-		A.ccy
-		from CHB_EQUPERIOD A
-		<where>
-			<foreach collection="list" item="map" open="AND (A.regist_bank_code,A.prodid,A.indentify_mark,A.ccy) in (" close=")" separator=",">
-				(#{map.bankCode,jdbcType=VARCHAR},#{map.prodId,jdbcType=VARCHAR},#{map.indentifyMark,jdbcType=VARCHAR},#{map.ccy,jdbcType=VARCHAR})
-			</foreach>
-		</where>
+       		A.prodid           prodId,
+       		A.indentify_mark   indentifyMark,
+       		A.ccy
+  			from CHB_EQUPERIOD A
+  		<where>
+		 	<foreach collection="list" item="map" open="AND (A.regist_bank_code,A.prodid,A.indentify_mark,A.ccy) in (" close=")" separator=",">
+		 	 		(#{map.bankCode,jdbcType=VARCHAR},#{map.prodId,jdbcType=VARCHAR},#{map.indentifyMark,jdbcType=VARCHAR},#{map.ccy,jdbcType=VARCHAR}) 
+		 	</foreach>
+		 </where>
 	</select>
 </mapper>

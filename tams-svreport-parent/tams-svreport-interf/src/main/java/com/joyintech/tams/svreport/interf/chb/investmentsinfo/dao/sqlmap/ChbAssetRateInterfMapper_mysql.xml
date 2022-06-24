@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao.ChbAssetRateInterfMapper_mysql" >
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+		<id column="SEQNO" property="seqno" jdbcType="CHAR" />
+		<result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+		<result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+		<result column="CHANGE_TYPE" property="changeType" jdbcType="VARCHAR" />
+		<result column="CHANGE_DATE" property="changeDate" jdbcType="DATE" />
+		<result column="ASSET_RATE" property="assetRate" jdbcType="DECIMAL" />
+		<result column="ASSET_BONUSREINVEST_RATE" property="assetBonusreinvestRate" jdbcType="DECIMAL" />
+		<result column="CLOSE_PRICE_FULL" property="closePriceFull" jdbcType="DECIMAL" />
+		<result column="COST_AMT" property="costAmt" jdbcType="DECIMAL" />
+		<result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="REV_DATE" property="revDate" jdbcType="DATE" />
+		<result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CCY" property="ccy" jdbcType="VARCHAR" />
+		<result column="SCINO" property="scino" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+        SEQNO SEQNO, ASSET_ID ASSET_ID, FINPROD_TYPE2 FINPROD_TYPE2, PROFIT_TYPE PROFIT_TYPE,
+        CHANGE_TYPE CHANGE_TYPE, CHANGE_DATE CHANGE_DATE, ASSET_RATE ASSET_RATE, ASSET_BONUSREINVEST_RATE ASSET_BONUSREINVEST_RATE,
+        CLOSE_PRICE_FULL CLOSE_PRICE_FULL, COST_AMT COST_AMT, TRADE_ID TRADE_ID, ORG_CODE ORG_CODE,
+        DEPT_CODE DEPT_CODE, STATUS STATUS, REV_DATE REV_DATE, DATA_SOURCE DATA_SOURCE, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, REMARK REMARK,
+        CCY CCY, SCINO SCINO
+    </sql>
+	<sql id="Sql_All_Data" >
+		select
+		<include refid="com.joyintech.tams.common.base.dao.ChbAssetRateMapper.Base_Column_List" />
+		from CHB_ASSET_RATE
+	</sql>
+	<sql id="Sql_All_Effective_Data" >
+		select
+		<include refid="com.joyintech.tams.common.base.dao.ChbAssetRateMapper.Base_Column_List" />
+		from CHB_ASSET_RATE
+		where STATUS = 'E'
+	</sql>
+
+	<insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbAssetRate" >
+        insert into CHB_ASSET_RATE (SEQNO, ASSET_ID, FINPROD_TYPE2,
+            PROFIT_TYPE, CHANGE_TYPE, CHANGE_DATE,
+            ASSET_RATE, ASSET_BONUSREINVEST_RATE, CLOSE_PRICE_FULL,
+            COST_AMT, TRADE_ID, ORG_CODE,
+            DEPT_CODE, STATUS, REV_DATE,
+            DATA_SOURCE, UPDATE_USER, UPDATE_TIME,
+            CREATE_USER, CREATE_TIME, REMARK,
+            CCY, SCINO)
+        values (#{seqno,jdbcType=CHAR}, #{assetId,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR},
+            #{profitType,jdbcType=VARCHAR}, #{changeType,jdbcType=VARCHAR}, #{changeDate,jdbcType=DATE},
+            #{assetRate,jdbcType=DECIMAL}, #{assetBonusreinvestRate,jdbcType=DECIMAL}, #{closePriceFull,jdbcType=DECIMAL},
+            #{costAmt,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+            #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{revDate,jdbcType=DATE},
+            #{dataSource,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+            #{ccy,jdbcType=VARCHAR}, #{scino,jdbcType=VARCHAR})
+    </insert>
+
+	<insert id="mergeChbAssetRateData"
+			parameterType="com.joyintech.tams.common.base.entity.ChbAssetRate">
+		insert into CHB_ASSET_RATE(SEQNO, ASSET_ID, FINPROD_TYPE2,
+		PROFIT_TYPE, CHANGE_TYPE, CHANGE_DATE,
+		ASSET_RATE, ASSET_BONUSREINVEST_RATE, CLOSE_PRICE_FULL,
+		COST_AMT, TRADE_ID, ORG_CODE,
+		DEPT_CODE, STATUS, REV_DATE,
+		DATA_SOURCE, UPDATE_USER, UPDATE_TIME,
+		CREATE_USER, CREATE_TIME, REMARK,
+		CCY, SCINO)
+		select SEQNO, ASSET_ID, FINPROD_TYPE2,
+		PROFIT_TYPE, CHANGE_TYPE, CHANGE_DATE,
+		ASSET_RATE, ASSET_BONUSREINVEST_RATE, CLOSE_PRICE_FULL,
+		COST_AMT, TRADE_ID, ORG_CODE,
+		DEPT_CODE, STATUS, REV_DATE,
+		DATA_SOURCE, UPDATE_USER, UPDATE_TIME,
+		CREATE_USER, CREATE_TIME, REMARK,
+		CCY, SCINO from
+		(
+		select TEMP.SEQNO, TEMP.ASSET_ID, TEMP.FINPROD_TYPE2,
+		TEMP.PROFIT_TYPE, TEMP.CHANGE_TYPE, TEMP.CHANGE_DATE,
+		TEMP.ASSET_RATE, TEMP.ASSET_BONUSREINVEST_RATE, TEMP.CLOSE_PRICE_FULL,
+		TEMP.COST_AMT, TEMP.TRADE_ID, TEMP.ORG_CODE,
+		TEMP.DEPT_CODE, TEMP.STATUS, TEMP.REV_DATE,
+		TEMP.DATA_SOURCE, TEMP.UPDATE_USER, TEMP.UPDATE_TIME,
+		TEMP.CREATE_USER, TEMP.CREATE_TIME, TEMP.REMARK,
+		TEMP.CCY, TEMP.SCINO from
+		(
+		<foreach collection="list" item="dto"  separator="union all">
+			SELECT
+			#{item.seqno,jdbcType=CHAR} SEQNO,
+			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
+			#{item.finprodType2,jdbcType=VARCHAR} FINPROD_TYPE2,
+			#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+			#{item.changeType,jdbcType=VARCHAR} CHANGE_TYPE,
+			#{item.changeDate,jdbcType=DATE} CHANGE_DATE,
+			#{item.assetRate,jdbcType=DECIMAL} ASSET_RATE,
+			#{item.assetBonusreinvestRate,jdbcType=DECIMAL} ASSET_BONUSREINVEST_RATE,
+			#{item.closePriceFull,jdbcType=DECIMAL} CLOSE_PRICE_FULL,
+			#{item.costAmt,jdbcType=DECIMAL} COST_AMT,
+			#{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.revDate,jdbcType=DATE} REV_DATE,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			now() UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			now() CREATE_TIME,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.scino,jdbcType=VARCHAR} SCINO
+			FROM
+			DUAL
+		</foreach>
+		) TEMP where not EXISTS (select 1 from CHB_ASSET_RATE CII where CII.ASSET_ID = TEMP.ASSET_ID
+		AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
+		AND CII.CHANGE_TYPE = TEMP.CHANGE_TYPE)
+		) de ;
+		UPDATE  CHB_ASSET_RATE as A,
+		(
+		select SEQNO,
+		FINPROD_TYPE2,
+		PROFIT_TYPE,
+		ASSET_RATE,
+		ASSET_BONUSREINVEST_RATE,
+		CLOSE_PRICE_FULL,
+		COST_AMT,
+		TRADE_ID,
+		ORG_CODE,
+		DEPT_CODE,
+		STATUS,
+		REV_DATE,
+		DATA_SOURCE,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CREATE_USER,
+		CREATE_TIME,
+		REMARK,
+		CCY,
+		SCINO from
+		(
+		select TEMP.SEQNO,
+		TEMP.FINPROD_TYPE2,
+		TEMP.PROFIT_TYPE,
+		TEMP.ASSET_RATE,
+		TEMP.ASSET_BONUSREINVEST_RATE,
+		TEMP.CLOSE_PRICE_FULL,
+		TEMP.COST_AMT,
+		TEMP.TRADE_ID,
+		TEMP.ORG_CODE,
+		TEMP.DEPT_CODE,
+		TEMP.STATUS,
+		TEMP.REV_DATE,
+		TEMP.DATA_SOURCE,
+		TEMP.UPDATE_USER,
+		TEMP.UPDATE_TIME,
+		TEMP.CREATE_USER,
+		TEMP.CREATE_TIME,
+		TEMP.REMARK,
+		TEMP.CCY,
+		TEMP.SCINO from
+		(
+		<foreach collection="list" item="dto"  separator="union all">
+			SELECT
+			#{item.seqno,jdbcType=CHAR} SEQNO,
+			#{item.assetId,jdbcType=VARCHAR} ASSET_ID,
+			#{item.finprodType2,jdbcType=VARCHAR} FINPROD_TYPE2,
+			#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+			#{item.changeType,jdbcType=VARCHAR} CHANGE_TYPE,
+			#{item.changeDate,jdbcType=DATE} CHANGE_DATE,
+			#{item.assetRate,jdbcType=DECIMAL} ASSET_RATE,
+			#{item.assetBonusreinvestRate,jdbcType=DECIMAL} ASSET_BONUSREINVEST_RATE,
+			#{item.closePriceFull,jdbcType=DECIMAL} CLOSE_PRICE_FULL,
+			#{item.costAmt,jdbcType=DECIMAL} COST_AMT,
+			#{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.revDate,jdbcType=DATE} REV_DATE,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			now() UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			now() CREATE_TIME,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.scino,jdbcType=VARCHAR} SCINO
+			FROM
+			DUAL
+		</foreach>
+		) TEMP
+		) de
+		) AS B
+		set  A.SEQNO = B.SEQNO,
+		A.FINPROD_TYPE2 = B.FINPROD_TYPE2,
+		A.PROFIT_TYPE = B.PROFIT_TYPE,
+		A.ASSET_RATE = B.ASSET_RATE,
+		A.ASSET_BONUSREINVEST_RATE = B.ASSET_BONUSREINVEST_RATE,
+		A.CLOSE_PRICE_FULL = B.CLOSE_PRICE_FULL,
+		A.COST_AMT = B.COST_AMT,
+		A.TRADE_ID = B.TRADE_ID,
+		A.ORG_CODE = B.ORG_CODE,
+		A.DEPT_CODE = B.DEPT_CODE,
+		A.STATUS = B.STATUS,
+		A.REV_DATE = B.REV_DATE,
+		A.DATA_SOURCE = B.DATA_SOURCE,
+		A.UPDATE_USER= B.UPDATE_USER,
+		A.UPDATE_TIME = B.UPDATE_TIME,
+		A.CREATE_USER = B.CREATE_USER,
+		A.CREATE_TIME = B.CREATE_TIME,
+		A.REMARK = B.REMARK,
+		A.CCY = B.CCY,
+		A.SCINO = B.SCINO where A.ASSET_ID = B.ASSET_ID
+		AND DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(B.CHANGE_DATE,'%Y-%m-%d')
+		AND A.CHANGE_TYPE = B.CHANGE_TYPE ;
+	</insert>
+	<delete id="deleteTodayData">
+  		delete from CHB_ASSET_RATE where DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(now(),'%Y%m%d')
+  	</delete>
+</mapper>

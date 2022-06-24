@@ -47,8 +47,8 @@
 		where pldinfo.REPORTUUID=#{reportuuid,jdbcType=VARCHAR}
   	</select>
 
-    <!-- 资金信托信息预览 -->
-    <select id="searchPageXT" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub">
+	<!-- 资金信托信息预览 -->
+	<select id="searchPageXT" parameterType="map" resultType="com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub">
 		select
 		    pctds.PBC_ACCOUNT_ID pbcAccountId,/*资产池代码*/
 		    pctds.PROD_ID prodId,/*内部产品代码*/

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.manage.workmanage.dao.ReportWorkManage002Mapper_mysql">
-    <select id="findProdPage" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage003Dto">
+	<select id="findProdPage" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage003Dto">
 		SELECT
   		@rownum:=@rownum+1 as id,
 		rjep.PROD_ID AS prodId,

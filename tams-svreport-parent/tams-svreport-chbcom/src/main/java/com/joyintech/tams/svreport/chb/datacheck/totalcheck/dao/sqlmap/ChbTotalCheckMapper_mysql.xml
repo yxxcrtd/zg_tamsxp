@@ -32,12 +32,12 @@
     where SEQNO = #{seqno,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.datacheck.totalcheck.dto.ChbTotalCheckDto" >
-    insert into CHB_TOTALCHECK (SEQNO, CDATE, CHECK_TYPE, 
-      YIELD, ORG_CODE, CREATE_USER, 
-      CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+    insert into CHB_TOTALCHECK (SEQNO, CDATE, CHECK_TYPE,
+      YIELD, ORG_CODE, CREATE_USER,
+      CREATE_DEPT, CREATE_TIME, UPDATE_USER,
       UPDATE_TIME)
-    values (#{seqno,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP}, #{checkType,jdbcType=VARCHAR}, 
-      #{yield,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+    values (#{seqno,jdbcType=VARCHAR}, #{cdate,jdbcType=TIMESTAMP}, #{checkType,jdbcType=VARCHAR},
+      #{yield,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
       #{createDept,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
       NOW())
   </insert>
@@ -181,7 +181,7 @@
         #{orgCode,jdbcType=VARCHAR}
       </foreach>
     </if>
-    )
+    ) a
     where 1 = 1 limit 1
   </select>
 </mapper>

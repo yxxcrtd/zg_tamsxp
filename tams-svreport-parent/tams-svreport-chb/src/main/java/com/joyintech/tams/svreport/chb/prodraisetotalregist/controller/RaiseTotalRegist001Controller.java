@@ -2,14 +2,12 @@ package com.joyintech.tams.svreport.chb.prodraisetotalregist.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdRaisetotSubDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chbsd.prdraisetotsub.service.SdProdRaisetotBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +121,16 @@ public class RaiseTotalRegist001Controller extends BaseController{
              outFile, true);
    	}
    	else{
-        return raiseTotalRegist001Service.export(this.getPageId(), RequestUtil.getPageParam());
+        //add by zhoubin 20220530 start
+           //处理只有删除状态时导出空的excle文件
+        Object status = pageParam.get("status");
+        if (Objects.equals(DictCodeListExt2.报送数据状态_删除.getValue(),status)) {
+            pageParam.put("status","无效");
+        } else{
+            pageParam.put("status",DictCodeListExt2.报送数据状态_新建.getValue());
+        }
+        //add by zhoubin 20220530 end
+        return raiseTotalRegist001Service.export(this.getPageId(), pageParam);
    	}
 
    }

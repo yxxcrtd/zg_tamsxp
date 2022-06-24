@@ -1,0 +1,1 @@
+delete from SYS_MENU where PAGE_ID='ChbBokSubject001';

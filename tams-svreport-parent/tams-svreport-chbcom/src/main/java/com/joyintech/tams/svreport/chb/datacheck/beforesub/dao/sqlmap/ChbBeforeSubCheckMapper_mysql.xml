@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubCheckMapper_mysql">
-
-	<select id="selectProdEndRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto"
-			parameterType="java.util.Date">
+ 
+  <select id="selectProdEndRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto" 
+  parameterType="java.util.Date">
 	/** pe as 终止登记表：全部内容，条件：封闭式产品、未报送*/
 	/** ,pi as 产品投资交易：人民币总额，资产持仓数量*/
 	/** ,pp as 产品存续期交易：银行实际收益之和*/
@@ -55,8 +55,7 @@
 			where (e.SUBMIT_FEEDBACK_STATUS !='03' or e.SUBMIT_FEEDBACK_STATUS is null)
 			AND i.RAISE_CCY='CNY' and i.CASH_PRIN_CCY='CNY' AND i.CASH_PROF_CCY='CNY'
 			and i.operate_mode in ('01','02')
-			AND i.VDATE<![CDATA[>=]]>date'2014-01-01' and e.MDATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
-			and e.STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
+			AND i.VDATE<![CDATA[>=]]>date'2014-01-01'
 			and e.status!='04'
 		) pe
 	    left join (
@@ -95,13 +94,21 @@
 		from chb_prd_deal_sub where status!='04'
 		group by prod_id
 		) pp
-	    on pe.prod_id=pp.prod_id  
-	)
+	    on pe.prod_id=pp.prod_id
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
+		  <foreach item="keys" index="index" collection="checkKeys" open=" and pe.REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or pe.REGIST_SEQNO in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
+	) t
 
   </select>
 
-	<select id="selectRaiseRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto"
-			parameterType="java.util.Date">
+  <select id="selectRaiseRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto" 
+  parameterType="java.util.Date">
 	/** pi as发行登记未报送的数据*/
 	select r.prod_id prodid ,r.REGIST_SEQNO registseqno,ifnull(pi.send_counts,0) regcounts
 	from chb_prd_raisetot_sub r
@@ -114,11 +121,19 @@
 	) pi
 	on r.prod_id=pi.prod_id
 	where (r.SUBMIT_FEEDBACK_STATUS !='03' or  r.SUBMIT_FEEDBACK_STATUS is null)
-	and DATE_FORMAT(r.STATUS_DATE,'%Y-%m-%d')<![CDATA[<=]]>DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y-%m-%d')
-  </select>
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
 
-	<select id="selectInvestRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto"
-			parameterType="java.util.Date">
+		  <foreach item="keys" index="index" collection="checkKeys" open="and r.REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or r.REGIST_SEQNO in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
+  </select>
+    
+  <select id="selectInvestRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto" 
+  parameterType="java.util.Date">
 	/**未登记的资产*/
 	select 
 	ad.asset_code assetcode
@@ -143,8 +158,17 @@
 	    ,round(min(cast(ifnull(CNY_AMT, 0) as float)/( case when num=0 then 1 else ifnull(num,1) end )),2) min_price
 	    from chb_invest_trade_sub
 	    where (SUBMIT_FEEDBACK_STATUS !='03' or  SUBMIT_FEEDBACK_STATUS is null)
-	    and STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
 	    and status!='04'
+	  and CUR_ASSET_TYPE in('01','02','03','04','05','06','07','08')
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
+
+		  <foreach item="keys" index="index" collection="checkKeys" open="and REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or REGIST_SEQNO in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
 	    group by prod_id,asset_code
 	) ad
 	left join (
@@ -156,9 +180,9 @@
 	on ad.asset_code=ai.asset_code
 
   </select>
-
-	<select  id="selectBotAstRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto"
-			 parameterType="java.util.Date">
+    
+  <select  id="selectBotAstRegCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto" 
+  parameterType="java.util.Date">
 	select 
 	ad.asset_code assetcode
 	,ad.regist_seqno registseqno
@@ -191,7 +215,6 @@
 	    on p.asset_code=i.asset_code
 	     and i.SUBMIT_FEEDBACK_STATUS ='03'
 	    where (p.SUBMIT_FEEDBACK_STATUS !='03' or p.SUBMIT_FEEDBACK_STATUS is null)
-	    and p.STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
 
 	) ad
 	left join (
@@ -201,11 +224,20 @@
 	    group by asset_code
 	) ai
 	on ad.asset_code=ai.asset_code
-    
-  </select>
+	  WHERE 1=1
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
 
-	<select id="selectProdMonthReportCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto"
-			parameterType="java.util.Date" >
+		  <foreach item="keys" index="index" collection="checkKeys" open="and REGIST_SEQNO in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or REGIST_SEQNO in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
+  </select>
+    
+  <select id="selectProdMonthReportCheck" resultType="com.joyintech.tams.svreport.chb.datacheck.beforesub.dto.ChbBeforeSubCheckDto" 
+  	parameterType="java.util.Date" >
 	/**产品存续期交易：银行实际收益之和*/
 	select 
 	pm.termid
@@ -213,24 +245,31 @@
 	,ifnull(pp.bank_profit1,0) bankprofit1
 	,ifnull(pm.bank_profit2,0) bankprofit2
 	from (
-	select DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y%m') termid
+	select DATE_FORMAT(#{checkdate,jdbcType=DATE},'%Y%m') termid
 	,sum(ifnull(BANK_IMP_INT,0)) bank_profit1
 	from chb_prd_deal_sub d
 	left join chb_prd_baseinfo i
 	    on d.prod_id=i.prod_id and i.operate_mode in ('01','02')
 	where
 	d.status!='04'
-	and d.STATUS_DATE<![CDATA[<=]]>#{querydate,jdbcType=DATE}
 	) pp,(
 	select d.termid,sum(bankprofit ) bank_profit2,m.reportuuid
 	from chb_month_report_detail d
 	left join chb_month_report m
 	on d.termid = m.termid
-	where d.termid=DATE_FORMAT(#{querydate,jdbcType=DATE},'%Y%m')
-	and d.propertycode in ( 'GMLCCP','SMLCCP')
+	where d.termid=DATE_FORMAT(#{checkdate,jdbcType=DATE},'%Y%m')
+	  and d.propertycode in ( 'GMLCCP','SMLCCP')
 	group by d.termid,m.reportuuid
 	) pm
 	where pp.termid=pm.termid
+	  <if test="checkKeys!=null and checkKeys.size()!=0">
+		  <foreach item="keys" index="index" collection="checkKeys" open="and pm.reportuuid in(" separator="," close=")">
+			  <if test="(index % 998) == 0">
+				  null) or pm.reportuuid in (
+			  </if>
+			  #{keys}
+		  </foreach>
+	  </if>
   </select>
-
+    
 </mapper>

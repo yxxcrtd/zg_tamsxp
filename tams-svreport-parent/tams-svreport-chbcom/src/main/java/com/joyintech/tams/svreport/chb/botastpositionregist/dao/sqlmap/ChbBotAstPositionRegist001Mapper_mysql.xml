@@ -2,37 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.chb.botastpositionregist.dao.ChbBotAstPositionRegist001Mapper_mysql">
 	<sql id="baseInfo">
-		SELECT
-		    POS.ISSUE_PARTY_ID  as issuePartyId,
-		    POS_DATE as posDate,
-		    POS.PLAN_ASSET_ID as planAssetId, 
-		    POS.ASSET_CODE as assetCode,
-		    POS.TOTAL_NUM as totalNum,
-		    POS.ISSUE_AMT as issueAmt,
-		    POS.UNINVEST_CASH as uninvestCash,
-		    POS.POS_NUM as posNum,
-		    POS.POS_AMT as posAmt,	    
-		    POS.ORG_CODE as orgCode,
-		    POS.DEPT_CODE as deptCode,
-		    POS.CREATE_USER as createUser,
-		    POS.CREATE_TIME as createTime,
-		    POS.UPDATE_USER as updateUser,
-		    POS.UPDATE_TIME as updateTime,
-		    POS.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
-		    POS.SUBMIT_DEADLINE as submitDeadline,
-		    POS.SEND_STATUS as sendStatus,
-		    POS.SUBMIT_TIME as submitTime,
-		    POS.REGIST_SEQNO registSeqno,
-		    POS.STATUS_DATE as statusDate,
-		    POS.STATUS as status,
-		    POS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
-		FROM
-		    CHB_BOT_AST_POS_SUB POS
-</sql>
+	    SELECT
+		POS.ISSUE_PARTY_ID  as issuePartyId,
+		POS.POS_DATE as posDate,
+		POS.PLAN_ASSET_ID as planAssetId,
+		POS.ASSET_CODE as assetCode,
+		POS.TOTAL_NUM as totalNum,
+		POS.ISSUE_AMT as issueAmt,
+		POS.UNINVEST_CASH as uninvestCash,
+		POS.POS_NUM as posNum,
+		POS.POS_AMT as posAmt,
+		POS.ORG_CODE as orgCode,
+		POS.DEPT_CODE as deptCode,
+		POS.CREATE_USER as createUser,
+		POS.CREATE_TIME as createTime,
+		POS.UPDATE_USER as updateUser,
+		POS.UPDATE_TIME as updateTime,
+		POS.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+		POS.SUBMIT_DEADLINE as submitDeadline,
+		POS.SEND_STATUS as sendStatus,
+		POS.SUBMIT_TIME as submitTime,
+		POS.REGIST_SEQNO registSeqno,
+		POS.STATUS_DATE as statusDate,
+		POS.STATUS as status,
+		POS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		POS.SUMIT_SEQ as sumitSeq
+		FROM CHB_BOT_AST_POS_SUB POS
+    </sql>
 	<select id="searchPage"  parameterType="map"
 			resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
-		select * from
-		(<include refid="baseInfo"/>
+		select a.* from
+		(
+
+		SELECT
+
+		/***update by leipeng 20200628**/
+
+		<if test="model_type != null">
+			CC.REGIST_BANK_CODE issuePartyId, /*发行机构代码*/
+		</if>
+		<if test="model_type == null">
+			POS.ISSUE_PARTY_ID  as issuePartyId,
+		</if>
+
+		POS_DATE as posDate,
+		POS.PLAN_ASSET_ID as planAssetId,
+		POS.ASSET_CODE as assetCode,
+		POS.TOTAL_NUM as totalNum,
+		POS.ISSUE_AMT as issueAmt,
+		POS.UNINVEST_CASH as uninvestCash,
+		POS.POS_NUM as posNum,
+		POS.POS_AMT as posAmt,
+		POS.ORG_CODE as orgCode,
+		POS.DEPT_CODE as deptCode,
+		POS.CREATE_USER as createUser,
+		POS.CREATE_TIME as createTime,
+		POS.UPDATE_USER as updateUser,
+		POS.UPDATE_TIME as updateTime,
+		POS.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+		POS.SUBMIT_DEADLINE as submitDeadline,
+		POS.SEND_STATUS as sendStatus,
+		POS.SUBMIT_TIME as submitTime,
+		POS.REGIST_SEQNO registSeqno,
+		POS.STATUS_DATE as statusDate,
+		POS.STATUS as status,
+		POS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+		FROM
+		CHB_BOT_AST_POS_SUB POS
+		<if test="model_type != null">
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DI ON (DI.BUSINESS_ID = POS.PLAN_ASSET_ID or (di.BUSINESS_ID = 'F28_' || POS.PLAN_ASSET_ID ))
+			AND DI.MODEL_TYPE = '02' AND DI.DATA_TYPE in ( 'PTL01','FINASSET12')
+			LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON DI.BELONG_INSTITUTION_CODE=cc.org_code
+		</if>
+
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
 				DATE_FORMAT(POS.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
@@ -73,22 +115,22 @@
 					#{submitFeedbackStatus,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-			<if test="sendStatus != null  and sendStatus != ''">
-				and POS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
-			</if>
+			<!-- <if test="sendStatus != null  and sendStatus != ''">
+               and POS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+           </if> -->
 			<if test="assetCodeLike != null and assetCodeLike != ''">
-				and upper(POS.ASSET_CODE) like concat_ws('','%',upper(#{assetCodeLike,jdbcType=VARCHAR}),'%')
+				and upper(POS.ASSET_CODE) like CONCAT(CONCAT('%',upper(#{assetCodeLike,jdbcType=VARCHAR})),'%')
 			</if>
 			<if test="planAssetIdLike != null and planAssetIdLike != ''">
-				and upper(POS.PLAN_ASSET_ID) like concat_ws('','%',upper(#{planAssetIdLike,jdbcType=VARCHAR}),'%')
+				and upper(POS.PLAN_ASSET_ID) like CONCAT(CONCAT('%',upper(#{planAssetIdLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
-		) order by posDate,planAssetId
+		) a order by posDate,planAssetId
 	</select>
 
 
 	<select id="queryExportListByKeys" resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
-		select * from
+		select a.* from
 		(<include refid="baseInfo"/>
 		<where>
 			<if test="registList!=null and registList.size()!=0">
@@ -109,7 +151,71 @@
 				</foreach>
 			</if>
 		</where>
-		)
+		) a
+	</select>
+
+
+	<select id="queryExportListByKeysEx" resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
+		select a.* from
+		(SELECT
+
+		/***update by leipeng 20200628**/
+
+		<if test="model_type != null">
+			CC.REGIST_BANK_CODE issuePartyId, /*发行机构代码*/
+		</if>
+		<if test="model_type == null">
+			POS.ISSUE_PARTY_ID  as issuePartyId,
+		</if>
+
+		POS_DATE as posDate,
+		POS.PLAN_ASSET_ID as planAssetId,
+		POS.ASSET_CODE as assetCode,
+		POS.TOTAL_NUM as totalNum,
+		POS.ISSUE_AMT as issueAmt,
+		POS.UNINVEST_CASH as uninvestCash,
+		POS.POS_NUM as posNum,
+		POS.POS_AMT as posAmt,
+		POS.ORG_CODE as orgCode,
+		POS.DEPT_CODE as deptCode,
+		POS.CREATE_USER as createUser,
+		POS.CREATE_TIME as createTime,
+		POS.UPDATE_USER as updateUser,
+		POS.UPDATE_TIME as updateTime,
+		POS.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+		POS.SUBMIT_DEADLINE as submitDeadline,
+		POS.SEND_STATUS as sendStatus,
+		POS.SUBMIT_TIME as submitTime,
+		POS.REGIST_SEQNO registSeqno,
+		POS.STATUS_DATE as statusDate,
+		POS.STATUS as status,
+		POS.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus
+		FROM
+		CHB_BOT_AST_POS_SUB POS
+		<if test="model_type != null">
+			LEFT JOIN DATA_AUTH_NOTIFY_INST DI ON DI.BUSINESS_ID = POS.PLAN_ASSET_ID AND DI.MODEL_TYPE = '02' AND DATA_TYPE = 'PTL01'
+			LEFT JOIN CHB_ORG_REGIST_BANK_CODE CC ON DI.BELONG_INSTITUTION_CODE=cc.org_code
+		</if>
+		<where>
+			<if test="registList!=null and registList.size()!=0">
+				<foreach collection="registList" item="regist" open=" (" close=")" separator=") or (">
+					1=1
+					<if test="regist.registSeqno!=null and regist.registSeqno!=''">
+						and trim(POS.REGIST_SEQNO) = #{regist.registSeqno}
+					</if>
+					<if test="regist.status!=null and regist.status!=''">
+						and POS.STATUS = #{regist.status}
+					</if>
+					<if test="regist.sendStatus!=null and regist.sendStatus!=''">
+						and POS.SEND_STATUS = #{regist.sendStatus}
+					</if>
+					<if test="regist.registBankCode!=null and regist.registBankCode!=''">
+						and POS.REGIST_BANK_CODE = #{regist.registBankCode}
+					</if>
+				</foreach>
+			</if>
+		</where>
+		)a
 	</select>
 
 	<!-- 接口报送更新并且更新 报送流水号-->
@@ -135,7 +241,7 @@
 		update CHB_BOT_AST_POS_SUB
 		<set>
 			SEND_STATUS = '01',
-			UPDATE_TIME = NOW(),
+			UPDATE_TIME = now(),
 			SUBMIT_TIME = null,
 			SUBMIT_FEEDBACK_STATUS = null
 		</set>
@@ -166,7 +272,7 @@
 		REGIST_SEQNO, REGIST_BANK_CODE, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE,
 		TOTAL_NUM, ISSUE_AMT, UNINVEST_CASH, POS_NUM, POS_AMT, SEND_STATUS, CHB_SUBMIT_DEADLINE,
 		SUBMIT_DEADLINE, SUBMIT_TIME, SUMIT_SEQ, SUBMIT_FEEDBACK_STATUS, STATUS, STATUS_DATE,
-		ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_DEPT, NOW(), UPDATE_USER, NOW()
+		ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_DEPT, now(), UPDATE_USER, now()
 		from CHB_BOT_AST_POS_SUB_HIS
 		where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 		<if test="regList !=null and regList.size()>0">
@@ -187,12 +293,13 @@
 		<if test="flag=='01'">
 			and SEND_STATUS = '01'
 		</if>
-		)
+		)as t
 		<where>
 			<foreach collection="list" item="item" open=" (" close=")" separator=") or (">
-				POS_DATE = #{item.posDate}
-				and PLAN_ASSET_ID = #{item.planAssetId}
-				and ASSET_CODE = #{item.assetCode}
+				t.POS_DATE = #{item.posDate}
+				and t.PLAN_ASSET_ID = #{item.planAssetId}
+				and t.ASSET_CODE = #{item.assetCode}
+				and t.REGIST_SEQNO != #{item.registSeqno}
 			</foreach>
 		</where>
 	</select>
@@ -202,8 +309,11 @@
 		<include refid="baseInfo"/>
 		<where>
 			<if test="registList!=null and registList.size()!=0">
-				<foreach collection="registList" item="items"
+				<foreach collection="registList" item="items" index= "index"
 						 open=" AND TRIM(POS.REGIST_SEQNO) IN (" close=")" separator=",">
+					<if test="(index % 998) == 0">
+						null) OR TRIM(POS.REGIST_SEQNO) IN (
+					</if>
 					#{items,jdbcType=CHAR}
 				</foreach>
 			</if>

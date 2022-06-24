@@ -26,11 +26,11 @@
     CREATE_TIME, UPDATE_USER, UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuoteKey" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from MST_EXCHARGE_QUOTE
     where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
-      and TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP}
+    and TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuoteKey">
     delete from MST_EXCHARGE_QUOTE
@@ -41,13 +41,15 @@
     insert into MST_EXCHARGE_QUOTE (EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, 
       OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE, 
       LOW_PRICE, MID_PRICE, BASIS_CYY, 
-      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
+      QUOT_CYY, QUOT_UNIT, INPUT_TYPE,
+      DATA_SOURCE,STATUS,ERR_MSG,
       CREATE_USER, CREATE_DEPT, CREATE_TIME, 
       UPDATE_USER, UPDATE_TIME)
     values (#{exchargeCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=TIMESTAMP}, #{datasourceType,jdbcType=VARCHAR}, 
       #{openPrice,jdbcType=DECIMAL}, #{closePrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
       #{lowPrice,jdbcType=DECIMAL}, #{midPrice,jdbcType=DECIMAL}, #{basisCyy,jdbcType=VARCHAR}, 
-      #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR}, 
+      #{quotCyy,jdbcType=VARCHAR}, #{quotUnit,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+      #{dataSource,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{errMsg,jdbcType=VARCHAR},
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, NOW(),
       #{updateUser,jdbcType=VARCHAR}, NOW())
   </insert>
@@ -210,7 +212,7 @@
       </if>
     </set>
     where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
-      and TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP}
+    and TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
     update MST_EXCHARGE_QUOTE
@@ -232,91 +234,90 @@
     where EXCHARGE_CODE = #{exchargeCode,jdbcType=VARCHAR}
       and TRADE_DATE = #{tradeDate,jdbcType=TIMESTAMP}
   </update>
-  
+
   <delete id="deleteExchangeBatch" parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
     delete from MST_EXCHARGE_QUOTE
     <where>
-		<foreach collection="exchangeInfoList" item="dto" separator="union all"
-			open="(EXCHARGE_CODE,TRADE_DATE) in ("
-			close=")">
-			select #{dto.exchargeCode,jdbcType=VARCHAR},
-			#{dto.tradeDate,jdbcType=TIMESTAMP}
-			from dual
-		</foreach>
-	</where>
+      <foreach collection="exchangeInfoList" item="dto" separator="union all"
+               open="(EXCHARGE_CODE,TRADE_DATE) in ("
+               close=")">
+        select #{dto.exchargeCode,jdbcType=VARCHAR},
+        #{dto.tradeDate,jdbcType=TIMESTAMP}
+        from dual
+      </foreach>
+    </where>
   </delete>
-  
-  <insert id="mergeExchangeData"
-	parameterType="com.joyintech.tams.common.base.entity.MstExchargeQuote">
-	MERGE INTO MST_EXCHARGE_QUOTE CII
-	USING (
-	<foreach collection="list" item="item" open="select * from("
-		close=")" separator="union all">
-		SELECT
-		#{item.exchargeCode,jdbcType=VARCHAR} EXCHARGE_CODE,
-        #{item.tradeDate,jdbcType=TIMESTAMP} TRADE_DATE,
-		#{item.datasourceType,jdbcType=VARCHAR} DATASOURCE_TYPE,
-       #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
-       #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
-       #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
-       #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
-       #{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
-       #{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
-       #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
-       #{item.quotUnit,jdbcType=DECIMAL} QUOT_UNIT,
-       #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,
-       #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-       #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-       NOW() CREATE_TIME,
-       #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-       NOW() UPDATE_TIME
-		FROM
-		DUAL
-	</foreach>
-	) TEMP
-	<!-- 业务主键匹配 -->
-	ON(CII.EXCHARGE_CODE = TEMP.EXCHARGE_CODE
-	AND CII.TRADE_DATE = TEMP.TRADE_DATE
-	)
-	<!-- 匹配到则更新 -->
-	WHEN MATCHED THEN UPDATE SET
-	DATASOURCE_TYPE = TEMP.DATASOURCE_TYPE,
-      OPEN_PRICE = TEMP.OPEN_PRICE,
-      CLOSE_PRICE = TEMP.CLOSE_PRICE,
-      HIGH_PRICE = TEMP.HIGH_PRICE,
-      LOW_PRICE = TEMP.LOW_PRICE,
-      MID_PRICE = TEMP.MID_PRICE,
-      BASIS_CYY = TEMP.BASIS_CYY,
-      QUOT_CYY = TEMP.QUOT_CYY,
-      QUOT_UNIT = TEMP.QUOT_UNIT,
-      INPUT_TYPE = TEMP.INPUT_TYPE,
-      CREATE_USER = TEMP.CREATE_USER,
-      CREATE_DEPT = TEMP.CREATE_DEPT,
-      CREATE_TIME = TEMP.CREATE_TIME,
-      UPDATE_USER = TEMP.UPDATE_USER,
-      UPDATE_TIME = TEMP.UPDATE_TIME
-	<!-- 未匹配到这插入 -->
-	WHEN NOT MATCHED THEN INSERT 
-	(EXCHARGE_CODE, TRADE_DATE, DATASOURCE_TYPE, 
-      OPEN_PRICE, CLOSE_PRICE, HIGH_PRICE, 
-      LOW_PRICE, MID_PRICE, BASIS_CYY, 
-      QUOT_CYY, QUOT_UNIT, INPUT_TYPE, 
-      CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-      UPDATE_USER, UPDATE_TIME)
-    values (TEMP.EXCHARGE_CODE, TEMP.TRADE_DATE, TEMP.DATASOURCE_TYPE, 
-      TEMP.OPEN_PRICE, TEMP.CLOSE_PRICE, TEMP.HIGH_PRICE, 
-      TEMP.LOW_PRICE, TEMP.MID_PRICE, TEMP.BASIS_CYY, 
-      TEMP.QUOT_CYY, TEMP.QUOT_UNIT, TEMP.INPUT_TYPE, 
-      TEMP.CREATE_USER, TEMP.CREATE_DEPT, TEMP.CREATE_TIME, 
-      TEMP.UPDATE_USER, TEMP.UPDATE_TIME)
-</insert>
 
-<delete id="deleteAllData">
+  <insert id="mergeExchangeData"
+          parameterType="java.util.List">
+    insert into
+    MST_EXCHARGE_QUOTE (EXCHARGE_CODE,TRADE_DATE,
+    DATASOURCE_TYPE,OPEN_PRICE,CLOSE_PRICE,HIGH_PRICE,
+    LOW_PRICE,MID_PRICE,QUOT_UNIT,BASIS_CYY,QUOT_CYY,
+    DATA_SOURCE,STATUS,CREATE_USER,
+    CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ERR_MSG)
+    select A.* from (
+    <foreach collection="list" item="item" index="index"
+             separator="union all">
+      select
+      #{item.exchargeCode,jdbcType=VARCHAR} EXCHARGE_CODE,
+      #{item.tradeDate,jdbcType=DATE} TRADE_DATE,
+      #{item.datasourceType,jdbcType=VARCHAR} DATASOURCE_TYPE,
+      #{item.openPrice,jdbcType=DECIMAL} OPEN_PRICE,
+      #{item.closePrice,jdbcType=DECIMAL} CLOSE_PRICE,
+      #{item.highPrice,jdbcType=DECIMAL} HIGH_PRICE,
+      #{item.lowPrice,jdbcType=DECIMAL} LOW_PRICE,
+      #{item.midPrice,jdbcType=DECIMAL} MID_PRICE,
+      #{item.quotUnit,jdbcType=INTEGER} QUOT_UNIT,
+      #{item.basisCyy,jdbcType=VARCHAR} BASIS_CYY,
+      #{item.quotCyy,jdbcType=VARCHAR} QUOT_CYY,
+      #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+      #{item.status,jdbcType=VARCHAR} STATUS,
+      #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+      #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+      #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+      #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+      #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+      <if test="item.errMsg != null and ! item.errMsg.equals('')">
+        #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+      </if>
+      <if test="item.errMsg == null or item.errMsg.equals('')">
+        null ERR_MSG
+      </if>
+      from dual
+    </foreach>
+    ) A ON DUPLICATE KEY
+    UPDATE
+    EXCHARGE_CODE=A.EXCHARGE_CODE,
+    TRADE_DATE=A.TRADE_DATE,
+    DATASOURCE_TYPE=A.DATASOURCE_TYPE,
+    OPEN_PRICE=A.OPEN_PRICE,
+    CLOSE_PRICE=A.CLOSE_PRICE,
+    HIGH_PRICE=A.HIGH_PRICE,
+    MID_PRICE=A.MID_PRICE,
+    QUOT_UNIT=A.QUOT_UNIT,
+    BASIS_CYY=A.BASIS_CYY,
+    QUOT_CYY=A.QUOT_CYY,
+    DATA_SOURCE=A.DATA_SOURCE,
+    STATUS=A.STATUS,
+    UPDATE_USER=A.UPDATE_USER,
+    UPDATE_TIME=NOW(),
+    ERR_MSG=A.ERR_MSG
+  </insert>
+
+  <delete id="deleteAllData">
 	truncate table MST_EXCHARGE_QUOTE
 </delete>
 
 
-<delete id="deleteTodayData">
-  delete from MST_EXCHARGE_QUOTE where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')
+  <delete id="deleteTodayData">
+    delete from MST_EXCHARGE_QUOTE where  1=1
+    <if test="collection != null and collection.size()>0">
+      AND TRADE_DATE IN(
+      <foreach item="item" index="index" collection="collection" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
   </delete>
 </mapper>

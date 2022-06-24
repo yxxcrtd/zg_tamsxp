@@ -19,5 +19,8 @@ import java.util.Map;
 public interface SelectorMapper {
     List<SelectOptionDto> getCustomerId(Map<String, Object> param);
 
+    List<SelectOptionDto> getPbcCapAssetInfo(Map<String, Object> param);
+
+
     MstCustomerInfoAdd getCustomerInfo(Map<String, Object> param);
 }

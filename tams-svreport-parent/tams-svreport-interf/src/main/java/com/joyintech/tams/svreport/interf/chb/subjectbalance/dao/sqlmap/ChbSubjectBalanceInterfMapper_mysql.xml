@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.subjectbalance.dao.ChbSubjectBalanceInterfMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
-        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
-        <id column="BALANCE_DATE" property="balanceDate" jdbcType="DATE" />
-        <id column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
-        <result column="FSUBJECT_NO" property="fsubjectNo" jdbcType="VARCHAR" />
-        <result column="SUBJECT_LEVEL" property="subjectLevel" jdbcType="DECIMAL" />
-        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
-        <result column="BAL_CO_FLAG" property="balCoFlag" jdbcType="VARCHAR" />
-        <result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
-        <result column="O_AMT" property="oAmt" jdbcType="DECIMAL" />
-        <result column="O_C_AMT" property="oCAmt" jdbcType="DECIMAL" />
-        <result column="O_D_AMT" property="oDAmt" jdbcType="DECIMAL" />
-        <result column="O_CO_AMT" property="oCoAmt" jdbcType="DECIMAL" />
-        <result column="O_CO_C_AMT" property="oCoCAmt" jdbcType="DECIMAL" />
-        <result column="O_CO_D_AMT" property="oCoDAmt" jdbcType="DECIMAL" />
-        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
-        <result column="B_AMT" property="bAmt" jdbcType="DECIMAL" />
-        <result column="B_C_AMT" property="bCAmt" jdbcType="DECIMAL" />
-        <result column="B_CO_AMT" property="bCoAmt" jdbcType="DECIMAL" />
-        <result column="B_CO_C_AMT" property="bCoCAmt" jdbcType="DECIMAL" />
-        <result column="B_CO_D_AMT" property="bCoDAmt" jdbcType="DECIMAL" />
-        <result column="B_D_AMT" property="bDAmt" jdbcType="DECIMAL" />
-        <result column="TDY_O_AMT" property="tdyOAmt" jdbcType="DECIMAL" />
-        <result column="TDY_O_C_AMT" property="tdyOCAmt" jdbcType="DECIMAL" />
-        <result column="TDY_O_D_AMT" property="tdyODAmt" jdbcType="DECIMAL" />
-        <result column="TDY_O_CO_AMT" property="tdyOCoAmt" jdbcType="DECIMAL" />
-        <result column="TDY_O_CO_C_AMT" property="tdyOCoCAmt" jdbcType="DECIMAL" />
-        <result column="TDY_O_CO_D_AMT" property="tdyOCoDAmt" jdbcType="DECIMAL" />
-        <result column="TDY_B_AMT" property="tdyBAmt" jdbcType="DECIMAL" />
-        <result column="TDY_B_C_AMT" property="tdyBCAmt" jdbcType="DECIMAL" />
-        <result column="TDY_B_D_AMT" property="tdyBDAmt" jdbcType="DECIMAL" />
-        <result column="TDY_B_CO_AMT" property="tdyBCoAmt" jdbcType="DECIMAL" />
-        <result column="TDY_B_CO_C_AMT" property="tdyBCoCAmt" jdbcType="DECIMAL" />
-        <result column="TDY_B_CO_D_AMT" property="tdyBCoDAmt" jdbcType="DECIMAL" />
-        <result column="IS_LEAF" property="isLeaf" jdbcType="VARCHAR" />
-        <result column="NUM_AMT" property="numAmt" jdbcType="DECIMAL" />
-        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="TDY_AMT_FLAG" property="tdyAmtFlag" jdbcType="VARCHAR" />
-        <result column="TDY_CO_FLAG" property="tdyCoFlag" jdbcType="VARCHAR" />
-        <result column="TDY_PUR_O_D_ULAMT" property="tdyPurODUlamt" jdbcType="DECIMAL" />
-        <result column="TDY_RED_O_D_ULAMT" property="tdyRedODUlamt" jdbcType="DECIMAL" />
-        <result column="TDY_PUR_O_C_ULAMT" property="tdyPurOCUlamt" jdbcType="DECIMAL" />
-        <result column="TDY_RED_O_C_ULAMT" property="tdyRedOCUlamt" jdbcType="DECIMAL" />
-        <result column="TDY_PUR_B_D_ULAMT" property="tdyPurBDUlamt" jdbcType="DECIMAL" />
-        <result column="TDY_RED_B_D_ULAMT" property="tdyRedBDUlamt" jdbcType="DECIMAL" />
-        <result column="TDY_PUR_B_C_ULAMT" property="tdyPurBCUlamt" jdbcType="DECIMAL" />
-        <result column="TDY_RED_B_C_ULAMT" property="tdyRedBCUlamt" jdbcType="DECIMAL" />
-  
-  </resultMap>
-  <sql id="Base_Column_List" >
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
+		<id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+		<id column="BALANCE_DATE" property="balanceDate" jdbcType="DATE" />
+		<id column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+		<result column="FSUBJECT_NO" property="fsubjectNo" jdbcType="VARCHAR" />
+		<result column="SUBJECT_LEVEL" property="subjectLevel" jdbcType="DECIMAL" />
+		<result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+		<result column="BAL_CO_FLAG" property="balCoFlag" jdbcType="VARCHAR" />
+		<result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
+		<result column="O_AMT" property="oAmt" jdbcType="DECIMAL" />
+		<result column="O_C_AMT" property="oCAmt" jdbcType="DECIMAL" />
+		<result column="O_D_AMT" property="oDAmt" jdbcType="DECIMAL" />
+		<result column="O_CO_AMT" property="oCoAmt" jdbcType="DECIMAL" />
+		<result column="O_CO_C_AMT" property="oCoCAmt" jdbcType="DECIMAL" />
+		<result column="O_CO_D_AMT" property="oCoDAmt" jdbcType="DECIMAL" />
+		<result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+		<result column="B_AMT" property="bAmt" jdbcType="DECIMAL" />
+		<result column="B_C_AMT" property="bCAmt" jdbcType="DECIMAL" />
+		<result column="B_CO_AMT" property="bCoAmt" jdbcType="DECIMAL" />
+		<result column="B_CO_C_AMT" property="bCoCAmt" jdbcType="DECIMAL" />
+		<result column="B_CO_D_AMT" property="bCoDAmt" jdbcType="DECIMAL" />
+		<result column="B_D_AMT" property="bDAmt" jdbcType="DECIMAL" />
+		<result column="TDY_O_AMT" property="tdyOAmt" jdbcType="DECIMAL" />
+		<result column="TDY_O_C_AMT" property="tdyOCAmt" jdbcType="DECIMAL" />
+		<result column="TDY_O_D_AMT" property="tdyODAmt" jdbcType="DECIMAL" />
+		<result column="TDY_O_CO_AMT" property="tdyOCoAmt" jdbcType="DECIMAL" />
+		<result column="TDY_O_CO_C_AMT" property="tdyOCoCAmt" jdbcType="DECIMAL" />
+		<result column="TDY_O_CO_D_AMT" property="tdyOCoDAmt" jdbcType="DECIMAL" />
+		<result column="TDY_B_AMT" property="tdyBAmt" jdbcType="DECIMAL" />
+		<result column="TDY_B_C_AMT" property="tdyBCAmt" jdbcType="DECIMAL" />
+		<result column="TDY_B_D_AMT" property="tdyBDAmt" jdbcType="DECIMAL" />
+		<result column="TDY_B_CO_AMT" property="tdyBCoAmt" jdbcType="DECIMAL" />
+		<result column="TDY_B_CO_C_AMT" property="tdyBCoCAmt" jdbcType="DECIMAL" />
+		<result column="TDY_B_CO_D_AMT" property="tdyBCoDAmt" jdbcType="DECIMAL" />
+		<result column="IS_LEAF" property="isLeaf" jdbcType="VARCHAR" />
+		<result column="NUM_AMT" property="numAmt" jdbcType="DECIMAL" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="TDY_AMT_FLAG" property="tdyAmtFlag" jdbcType="VARCHAR" />
+		<result column="TDY_CO_FLAG" property="tdyCoFlag" jdbcType="VARCHAR" />
+		<result column="TDY_PUR_O_D_ULAMT" property="tdyPurODUlamt" jdbcType="DECIMAL" />
+		<result column="TDY_RED_O_D_ULAMT" property="tdyRedODUlamt" jdbcType="DECIMAL" />
+		<result column="TDY_PUR_O_C_ULAMT" property="tdyPurOCUlamt" jdbcType="DECIMAL" />
+		<result column="TDY_RED_O_C_ULAMT" property="tdyRedOCUlamt" jdbcType="DECIMAL" />
+		<result column="TDY_PUR_B_D_ULAMT" property="tdyPurBDUlamt" jdbcType="DECIMAL" />
+		<result column="TDY_RED_B_D_ULAMT" property="tdyRedBDUlamt" jdbcType="DECIMAL" />
+		<result column="TDY_PUR_B_C_ULAMT" property="tdyPurBCUlamt" jdbcType="DECIMAL" />
+		<result column="TDY_RED_B_C_ULAMT" property="tdyRedBCUlamt" jdbcType="DECIMAL" />
+
+	</resultMap>
+	<sql id="Base_Column_List" >
         BOOKSET_ID BOOKSET_ID, BALANCE_DATE BALANCE_DATE, SUBJECT_NO SUBJECT_NO, FSUBJECT_NO FSUBJECT_NO, 
         SUBJECT_LEVEL SUBJECT_LEVEL, BAL_FLAG BAL_FLAG, BAL_CO_FLAG BAL_CO_FLAG, O_CCY O_CCY, 
         O_AMT O_AMT, O_C_AMT O_C_AMT, O_D_AMT O_D_AMT, O_CO_AMT O_CO_AMT, O_CO_C_AMT O_CO_C_AMT, 
@@ -69,21 +69,55 @@
         TDY_PUR_O_C_ULAMT TDY_PUR_O_C_ULAMT, TDY_RED_O_C_ULAMT TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT TDY_PUR_B_D_ULAMT, 
         TDY_RED_B_D_ULAMT TDY_RED_B_D_ULAMT, TDY_PUR_B_C_ULAMT TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT TDY_RED_B_C_ULAMT
   </sql>
-  <select id="getTableColumnList" resultType="string">
-		select COLUMN_NAME
-		from user_tab_columns
+	<select id="getTableColumnList" resultType="string">
+		select DISTINCT COLUMN_NAME
+		from information_schema.`COLUMNS`
 		where Table_Name = #{tableName,jdbcType=VARCHAR}
 	</select>
-  <delete id="deleteData" parameterType="java.lang.String">
-  	delete from BOK_BALANCE  
+	<delete id="deleteData" parameterType="java.lang.String">
+  	delete from BOK_BALANCE
   	where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
   </delete>
-  <insert id="mergeData" parameterType="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
-		MERGE INTO BOK_BALANCE CII
-		USING (
-		<foreach collection="newDataList" item="item" open="select * from("
-			close=")" separator="union all">
-		SELECT 
+	<insert id="mergeData" parameterType="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
+		insert into BOK_BALANCE(BOOKSET_ID, BALANCE_DATE, SUBJECT_NO,
+		FSUBJECT_NO, SUBJECT_LEVEL, BAL_FLAG,
+		BAL_CO_FLAG, O_CCY, O_AMT,
+		O_C_AMT, O_D_AMT, O_CO_AMT,
+		O_CO_C_AMT, O_CO_D_AMT, B_CCY,
+		B_AMT, B_C_AMT, B_CO_AMT,
+		B_CO_C_AMT, B_CO_D_AMT, B_D_AMT,
+		TDY_O_AMT, TDY_O_C_AMT, TDY_O_D_AMT,
+		TDY_O_CO_AMT, TDY_O_CO_C_AMT, TDY_O_CO_D_AMT,
+		TDY_B_AMT, TDY_B_C_AMT, TDY_B_D_AMT,
+		TDY_B_CO_AMT, TDY_B_CO_C_AMT, TDY_B_CO_D_AMT,
+		IS_LEAF, NUM_AMT, CREATE_USER,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, TDY_AMT_FLAG, TDY_CO_FLAG,
+		TDY_PUR_O_D_ULAMT, TDY_RED_O_D_ULAMT, TDY_PUR_O_C_ULAMT,
+		TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT,
+		TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT)
+		select BOOKSET_ID, BALANCE_DATE, SUBJECT_NO,
+		FSUBJECT_NO, SUBJECT_LEVEL, BAL_FLAG,
+		BAL_CO_FLAG, O_CCY, O_AMT,
+		O_C_AMT, O_D_AMT, O_CO_AMT,
+		O_CO_C_AMT, O_CO_D_AMT, B_CCY,
+		B_AMT, B_C_AMT, B_CO_AMT,
+		B_CO_C_AMT, B_CO_D_AMT, B_D_AMT,
+		TDY_O_AMT, TDY_O_C_AMT, TDY_O_D_AMT,
+		TDY_O_CO_AMT, TDY_O_CO_C_AMT, TDY_O_CO_D_AMT,
+		TDY_B_AMT, TDY_B_C_AMT, TDY_B_D_AMT,
+		TDY_B_CO_AMT, TDY_B_CO_C_AMT, TDY_B_CO_D_AMT,
+		IS_LEAF, NUM_AMT, CREATE_USER,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, TDY_AMT_FLAG, TDY_CO_FLAG,
+		TDY_PUR_O_D_ULAMT, TDY_RED_O_D_ULAMT, TDY_PUR_O_C_ULAMT,
+		TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT,
+		TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="newDataList" item="item"  separator="union all">
+			SELECT
 			#{item.booksetId,jdbcType=VARCHAR} BOOKSET_ID,
 			#{item.balanceDate,jdbcType=DATE} BALANCE_DATE,
 			#{item.subjectNo,jdbcType=VARCHAR} SUBJECT_NO,
@@ -92,31 +126,31 @@
 			#{item.balFlag,jdbcType=VARCHAR} BAL_FLAG,
 			#{item.balCoFlag,jdbcType=VARCHAR} BAL_CO_FLAG,
 			#{item.oCcy,jdbcType=VARCHAR} O_CCY,
-			#{item.oAmt,jdbcType=DECIMAL} O_AMT,
-			#{item.oCAmt,jdbcType=DECIMAL} O_C_AMT,
-			#{item.oDAmt,jdbcType=DECIMAL} O_D_AMT,
-			#{item.oCoAmt,jdbcType=DECIMAL} O_CO_AMT,
-			#{item.oCoCAmt,jdbcType=DECIMAL} O_CO_C_AMT,
-			#{item.oCoDAmt,jdbcType=DECIMAL} O_CO_D_AMT,
+			CAST(#{item.oAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_AMT,
+			CAST(#{item.oCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_C_AMT,
+			CAST(#{item.oDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_D_AMT,
+			CAST(#{item.oCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_CO_AMT,
+			CAST(#{item.oCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_CO_C_AMT,
+			CAST(#{item.oCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_CO_D_AMT,
 			#{item.bCcy,jdbcType=VARCHAR} B_CCY,
-			#{item.bAmt,jdbcType=DECIMAL} B_AMT,
-			#{item.bCAmt,jdbcType=DECIMAL} B_C_AMT,
-			#{item.bCoAmt,jdbcType=DECIMAL} B_CO_AMT,
-			#{item.bCoCAmt,jdbcType=DECIMAL} B_CO_C_AMT,
-			#{item.bCoDAmt,jdbcType=DECIMAL} B_CO_D_AMT,
-			#{item.bDAmt,jdbcType=DECIMAL} B_D_AMT,
-			#{item.tdyOAmt,jdbcType=DECIMAL} TDY_O_AMT,
-			#{item.tdyOCAmt,jdbcType=DECIMAL} TDY_O_C_AMT,
-			#{item.tdyODAmt,jdbcType=DECIMAL} TDY_O_D_AMT,
-			#{item.tdyOCoAmt,jdbcType=DECIMAL} TDY_O_CO_AMT,
-			#{item.tdyOCoCAmt,jdbcType=DECIMAL} TDY_O_CO_C_AMT,
-			#{item.tdyOCoDAmt,jdbcType=DECIMAL} TDY_O_CO_D_AMT,
-			#{item.tdyBAmt,jdbcType=DECIMAL} TDY_B_AMT,
-			#{item.tdyBCAmt,jdbcType=DECIMAL} TDY_B_C_AMT,
-			#{item.tdyBDAmt,jdbcType=DECIMAL} TDY_B_D_AMT,
-			#{item.tdyBCoAmt,jdbcType=DECIMAL} TDY_B_CO_AMT,
-			#{item.tdyBCoCAmt,jdbcType=DECIMAL} TDY_B_CO_C_AMT,
-			#{item.tdyBCoDAmt,jdbcType=DECIMAL} TDY_B_CO_D_AMT,
+			CAST(#{item.bAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_AMT,
+			CAST(#{item.bCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_C_AMT,
+			CAST(#{item.bCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_CO_AMT,
+			CAST(#{item.bCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_CO_C_AMT,
+			CAST(#{item.bCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_CO_D_AMT,
+			CAST(#{item.bDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_D_AMT,
+			CAST(#{item.tdyOAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_AMT,
+			CAST(#{item.tdyOCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_C_AMT,
+			CAST(#{item.tdyODAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_D_AMT,
+			CAST(#{item.tdyOCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_CO_AMT,
+			CAST(#{item.tdyOCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_CO_C_AMT,
+			CAST(#{item.tdyOCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_CO_D_AMT,
+			CAST(#{item.tdyBAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_AMT,
+			CAST(#{item.tdyBCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_C_AMT,
+			CAST(#{item.tdyBDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_D_AMT,
+			CAST(#{item.tdyBCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_CO_AMT,
+			CAST(#{item.tdyBCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_CO_C_AMT,
+			CAST(#{item.tdyBCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_CO_D_AMT,
 			#{item.isLeaf,jdbcType=VARCHAR} IS_LEAF,
 			#{item.numAmt,jdbcType=DECIMAL} NUM_AMT,
 			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
@@ -126,153 +160,199 @@
 			NOW() UPDATE_TIME,
 			#{item.tdyAmtFlag,jdbcType=VARCHAR} TDY_AMT_FLAG,
 			#{item.tdyCoFlag,jdbcType=VARCHAR} TDY_CO_FLAG,
-			#{item.tdyPurODUlamt,jdbcType=DECIMAL} TDY_PUR_O_D_ULAMT,
-			#{item.tdyRedODUlamt,jdbcType=DECIMAL} TDY_RED_O_D_ULAMT,
-			#{item.tdyPurOCUlamt,jdbcType=DECIMAL} TDY_PUR_O_C_ULAMT,
-			#{item.tdyRedOCUlamt,jdbcType=DECIMAL} TDY_RED_O_C_ULAMT,
-			#{item.tdyPurBDUlamt,jdbcType=DECIMAL} TDY_PUR_B_D_ULAMT,
-			#{item.tdyRedBDUlamt,jdbcType=DECIMAL} TDY_RED_B_D_ULAMT,
-			#{item.tdyPurBCUlamt,jdbcType=DECIMAL} TDY_PUR_B_C_ULAMT,
-			#{item.tdyRedBCUlamt,jdbcType=DECIMAL} TDY_RED_B_C_ULAMT
-		  FROM DUAL
+			CAST(#{item.tdyPurODUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_O_D_ULAMT,
+			CAST(#{item.tdyRedODUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_O_D_ULAMT,
+			CAST(#{item.tdyPurOCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_O_C_ULAMT,
+			CAST(#{item.tdyRedOCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_O_C_ULAMT,
+			CAST(#{item.tdyPurBDUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_B_D_ULAMT,
+			CAST(#{item.tdyRedBDUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_B_D_ULAMT,
+			CAST(#{item.tdyPurBCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_B_C_ULAMT,
+			CAST(#{item.tdyRedBCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_B_C_ULAMT
+			FROM DUAL
 		</foreach>
 		) TEMP
-		<!-- 业务主键匹配 -->
-		ON(CII.BOOKSET_ID = TEMP.BOOKSET_ID
+		where not exists (
+		select 1 from BOK_BALANCE CII WHERE CII.BOOKSET_ID = TEMP.BOOKSET_ID
 		AND CII.SUBJECT_NO = TEMP.SUBJECT_NO
-		AND CII.BALANCE_DATE = TEMP.BALANCE_DATE 
-		)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE 
-			SET  CII.FSUBJECT_NO = TEMP.FSUBJECT_NO,
-				 CII.SUBJECT_LEVEL = TEMP.SUBJECT_LEVEL,
-				 CII.BAL_FLAG = TEMP.BAL_FLAG,
-				 CII.BAL_CO_FLAG = TEMP.BAL_CO_FLAG,
-				 CII.O_CCY = TEMP.O_CCY,
-				 CII.O_AMT = TEMP.O_AMT,
-				 CII.O_C_AMT = TEMP.O_C_AMT,
-				 CII.O_D_AMT = TEMP.O_D_AMT,
-				 CII.O_CO_AMT = TEMP.O_CO_AMT,
-				 CII.O_CO_C_AMT = TEMP.O_CO_C_AMT,
-				 CII.O_CO_D_AMT = TEMP.O_CO_D_AMT,
-				 CII.B_CCY = TEMP.B_CCY,
-				 CII.B_AMT = TEMP.B_AMT,
-				 CII.B_C_AMT = TEMP.B_C_AMT,
-				 CII.B_CO_AMT = TEMP.B_CO_AMT,
-				 CII.B_CO_C_AMT = TEMP.B_CO_C_AMT,
-				 CII.B_CO_D_AMT = TEMP.B_CO_D_AMT,
-				 CII.B_D_AMT = TEMP.B_D_AMT,
-				 CII.TDY_O_AMT=TEMP.TDY_O_AMT,
-				 CII.TDY_O_C_AMT= TEMP.TDY_O_C_AMT,
-				 CII.TDY_O_D_AMT =TEMP.TDY_O_D_AMT,
-				 CII.TDY_O_CO_AMT = TEMP.TDY_O_CO_AMT,
-				 CII.TDY_O_CO_C_AMT = TEMP.TDY_O_CO_C_AMT,
-				 CII.TDY_O_CO_D_AMT = TEMP.TDY_O_CO_D_AMT,
-				 CII.TDY_B_AMT = TEMP.TDY_B_AMT,
-				 CII.TDY_B_C_AMT = TEMP.TDY_B_C_AMT,
-				 CII.TDY_B_D_AMT = TEMP.TDY_B_D_AMT,
-				 CII.TDY_B_CO_AMT = TEMP.TDY_B_CO_AMT,
-				 CII.TDY_B_CO_C_AMT = TEMP.TDY_B_CO_C_AMT,
-				 CII.TDY_B_CO_D_AMT = TEMP.TDY_B_CO_D_AMT,
-				 CII.IS_LEAF = TEMP.IS_LEAF,
-				 CII.NUM_AMT = TEMP.NUM_AMT,
-				 CII.CREATE_USER = TEMP.CREATE_USER,
-				 CII.CREATE_DEPT = TEMP.CREATE_DEPT,
-				 CII.CREATE_TIME = TEMP.CREATE_TIME,
-				 CII.UPDATE_USER = TEMP.UPDATE_USER,
-				 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-				 CII.TDY_AMT_FLAG = TEMP.TDY_AMT_FLAG,
-				 CII.TDY_CO_FLAG = TEMP.TDY_CO_FLAG,
-				 CII.TDY_PUR_O_D_ULAMT = TEMP.TDY_PUR_O_D_ULAMT,
-				 CII.TDY_RED_O_D_ULAMT = TEMP.TDY_RED_O_D_ULAMT,
-				 CII.TDY_PUR_O_C_ULAMT = TEMP.TDY_PUR_O_C_ULAMT,
-				 CII.TDY_RED_O_C_ULAMT = TEMP.TDY_RED_O_C_ULAMT,
-				 CII.TDY_PUR_B_D_ULAMT = TEMP.TDY_PUR_B_D_ULAMT,
-				 CII.TDY_RED_B_D_ULAMT = TEMP.TDY_RED_B_D_ULAMT,
-				 CII.TDY_PUR_B_C_ULAMT = TEMP.TDY_PUR_B_C_ULAMT,
-				 CII.TDY_RED_B_C_ULAMT = TEMP.TDY_RED_B_C_ULAMT
-		<!-- 未匹配到这插入 -->
-		WHEN NOT MATCHED THEN INSERT (
-		    BOOKSET_ID, BALANCE_DATE, SUBJECT_NO, 
-            FSUBJECT_NO, SUBJECT_LEVEL, BAL_FLAG, 
-            BAL_CO_FLAG, O_CCY, O_AMT, 
-            O_C_AMT, O_D_AMT, O_CO_AMT, 
-            O_CO_C_AMT, O_CO_D_AMT, B_CCY, 
-            B_AMT, B_C_AMT, B_CO_AMT, 
-            B_CO_C_AMT, B_CO_D_AMT, B_D_AMT, 
-            TDY_O_AMT, TDY_O_C_AMT, TDY_O_D_AMT, 
-            TDY_O_CO_AMT, TDY_O_CO_C_AMT, TDY_O_CO_D_AMT, 
-            TDY_B_AMT, TDY_B_C_AMT, TDY_B_D_AMT, 
-            TDY_B_CO_AMT, TDY_B_CO_C_AMT, TDY_B_CO_D_AMT, 
-            IS_LEAF, NUM_AMT, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME, TDY_AMT_FLAG, TDY_CO_FLAG, 
-            TDY_PUR_O_D_ULAMT, TDY_RED_O_D_ULAMT, TDY_PUR_O_C_ULAMT, 
-            TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT, 
-            TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT)
-		VALUES(  TEMP.BOOKSET_ID,
-				 TEMP.BALANCE_DATE, 
-				 TEMP.SUBJECT_NO,
-				 TEMP.FSUBJECT_NO,
-				 TEMP.SUBJECT_LEVEL,
-				 TEMP.BAL_FLAG,
-				 TEMP.BAL_CO_FLAG,
-				 TEMP.O_CCY,
-				 TEMP.O_AMT,
-				 TEMP.O_C_AMT,
-				 TEMP.O_D_AMT,
-				 TEMP.O_CO_AMT,
-				 TEMP.O_CO_C_AMT,
-				 TEMP.O_CO_D_AMT,
-				 TEMP.B_CCY,
-				 TEMP.B_AMT,
-				 TEMP.B_C_AMT,
-				 TEMP.B_CO_AMT,
-				 TEMP.B_CO_C_AMT,
-				 TEMP.B_CO_D_AMT,
-				 TEMP.B_D_AMT,
-				 TEMP.TDY_O_AMT,
-				 TEMP.TDY_O_C_AMT,
-				 TEMP.TDY_O_D_AMT,
-				 TEMP.TDY_O_CO_AMT,
-				 TEMP.TDY_O_CO_C_AMT,
-				 TEMP.TDY_O_CO_D_AMT,
-				 TEMP.TDY_B_AMT,
-				 TEMP.TDY_B_C_AMT,
-				 TEMP.TDY_B_D_AMT,
-				 TEMP.TDY_B_CO_AMT,
-				 TEMP.TDY_B_CO_C_AMT,
-				 TEMP.TDY_B_CO_D_AMT,
-				 TEMP.IS_LEAF,
-				 TEMP.NUM_AMT,
-				 TEMP.CREATE_USER,
-				 TEMP.CREATE_DEPT,
-				 TEMP.CREATE_TIME,
-				 TEMP.UPDATE_USER,
-				 TEMP.UPDATE_TIME,
-				 TEMP.TDY_AMT_FLAG,
-				 TEMP.TDY_CO_FLAG,
-				 TEMP.TDY_PUR_O_D_ULAMT,
-				 TEMP.TDY_RED_O_D_ULAMT,
-				 TEMP.TDY_PUR_O_C_ULAMT,
-				 TEMP.TDY_RED_O_C_ULAMT,
-				 TEMP.TDY_PUR_B_D_ULAMT,
-				 TEMP.TDY_RED_B_D_ULAMT,
-				 TEMP.TDY_PUR_B_C_ULAMT,
-				 TEMP.TDY_RED_B_C_ULAMT
-				)
+		AND CII.BALANCE_DATE = TEMP.BALANCE_DATE )
+		) de ;
+
+		UPDATE  BOK_BALANCE as A,
+		(
+		select
+		BOOKSET_ID,
+		BALANCE_DATE,
+		SUBJECT_NO,
+		FSUBJECT_NO,
+		SUBJECT_LEVEL,
+		BAL_FLAG,
+		BAL_CO_FLAG,
+		O_CCY,
+		O_AMT,
+		O_C_AMT,
+		O_D_AMT,
+		O_CO_AMT,
+		O_CO_C_AMT,
+		O_CO_D_AMT,
+		B_CCY,
+		B_AMT,
+		B_C_AMT,
+		B_CO_AMT,
+		B_CO_C_AMT,
+		B_CO_D_AMT,
+		B_D_AMT,
+		TDY_O_AMT,
+		TDY_O_C_AMT,
+		TDY_O_D_AMT,
+		TDY_O_CO_AMT,
+		TDY_O_CO_C_AMT,
+		TDY_O_CO_D_AMT,
+		TDY_B_AMT,
+		TDY_B_C_AMT,
+		TDY_B_D_AMT,
+		TDY_B_CO_AMT,
+		TDY_B_CO_C_AMT,
+		TDY_B_CO_D_AMT,
+		IS_LEAF,
+		NUM_AMT,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		TDY_AMT_FLAG,
+		TDY_CO_FLAG,
+		TDY_PUR_O_D_ULAMT,
+		TDY_RED_O_D_ULAMT,
+		TDY_PUR_O_C_ULAMT,
+		TDY_RED_O_C_ULAMT,
+		TDY_PUR_B_D_ULAMT,
+		TDY_RED_B_D_ULAMT,
+		TDY_PUR_B_C_ULAMT,
+		TDY_RED_B_C_ULAMT from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="newDataList" item="item"  separator="union all">
+			SELECT
+			#{item.booksetId,jdbcType=VARCHAR} BOOKSET_ID,
+			#{item.balanceDate,jdbcType=DATE} BALANCE_DATE,
+			#{item.subjectNo,jdbcType=VARCHAR} SUBJECT_NO,
+			#{item.fsubjectNo,jdbcType=VARCHAR} FSUBJECT_NO,
+			#{item.subjectLevel,jdbcType=DECIMAL} SUBJECT_LEVEL,
+			#{item.balFlag,jdbcType=VARCHAR} BAL_FLAG,
+			#{item.balCoFlag,jdbcType=VARCHAR} BAL_CO_FLAG,
+			#{item.oCcy,jdbcType=VARCHAR} O_CCY,
+			CAST(#{item.oAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_AMT,
+			CAST(#{item.oCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_C_AMT,
+			CAST(#{item.oDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_D_AMT,
+			CAST(#{item.oCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_CO_AMT,
+			CAST(#{item.oCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_CO_C_AMT,
+			CAST(#{item.oCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) O_CO_D_AMT,
+			#{item.bCcy,jdbcType=VARCHAR} B_CCY,
+			CAST(#{item.bAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_AMT,
+			CAST(#{item.bCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_C_AMT,
+			CAST(#{item.bCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_CO_AMT,
+			CAST(#{item.bCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_CO_C_AMT,
+			CAST(#{item.bCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_CO_D_AMT,
+			CAST(#{item.bDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) B_D_AMT,
+			CAST(#{item.tdyOAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_AMT,
+			CAST(#{item.tdyOCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_C_AMT,
+			CAST(#{item.tdyODAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_D_AMT,
+			CAST(#{item.tdyOCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_CO_AMT,
+			CAST(#{item.tdyOCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_CO_C_AMT,
+			CAST(#{item.tdyOCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_O_CO_D_AMT,
+			CAST(#{item.tdyBAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_AMT,
+			CAST(#{item.tdyBCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_C_AMT,
+			CAST(#{item.tdyBDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_D_AMT,
+			CAST(#{item.tdyBCoAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_CO_AMT,
+			CAST(#{item.tdyBCoCAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_CO_C_AMT,
+			CAST(#{item.tdyBCoDAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_B_CO_D_AMT,
+			#{item.isLeaf,jdbcType=VARCHAR} IS_LEAF,
+			#{item.numAmt,jdbcType=DECIMAL} NUM_AMT,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			NOW() CREATE_TIME,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			NOW() UPDATE_TIME,
+			#{item.tdyAmtFlag,jdbcType=VARCHAR} TDY_AMT_FLAG,
+			#{item.tdyCoFlag,jdbcType=VARCHAR} TDY_CO_FLAG,
+			CAST(#{item.tdyPurODUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_O_D_ULAMT,
+			CAST(#{item.tdyRedODUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_O_D_ULAMT,
+			CAST(#{item.tdyPurOCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_O_C_ULAMT,
+			CAST(#{item.tdyRedOCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_O_C_ULAMT,
+			CAST(#{item.tdyPurBDUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_B_D_ULAMT,
+			CAST(#{item.tdyRedBDUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_B_D_ULAMT,
+			CAST(#{item.tdyPurBCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_PUR_B_C_ULAMT,
+			CAST(#{item.tdyRedBCUlamt,jdbcType=DECIMAL} AS DECIMAL(30,2)) TDY_RED_B_C_ULAMT
+			FROM DUAL
+		</foreach>
+		) TEMP
+		) de
+		) AS B
+		SET
+		A.FSUBJECT_NO = B.FSUBJECT_NO,
+		A.SUBJECT_LEVEL = B.SUBJECT_LEVEL,
+		A.BAL_FLAG = B.BAL_FLAG,
+		A.BAL_CO_FLAG = B.BAL_CO_FLAG,
+		A.O_CCY = B.O_CCY,
+		A.O_AMT = B.O_AMT,
+		A.O_C_AMT = B.O_C_AMT,
+		A.O_D_AMT = B.O_D_AMT,
+		A.O_CO_AMT = B.O_CO_AMT,
+		A.O_CO_C_AMT = B.O_CO_C_AMT,
+		A.O_CO_D_AMT = B.O_CO_D_AMT,
+		A.B_CCY = B.B_CCY,
+		A.B_AMT = B.B_AMT,
+		A.B_C_AMT = B.B_C_AMT,
+		A.B_CO_AMT = B.B_CO_AMT,
+		A.B_CO_C_AMT = B.B_CO_C_AMT,
+		A.B_CO_D_AMT = B.B_CO_D_AMT,
+		A.B_D_AMT = B.B_D_AMT,
+		A.TDY_O_AMT=B.TDY_O_AMT,
+		A.TDY_O_C_AMT= B.TDY_O_C_AMT,
+		A.TDY_O_D_AMT =B.TDY_O_D_AMT,
+		A.TDY_O_CO_AMT = B.TDY_O_CO_AMT,
+		A.TDY_O_CO_C_AMT = B.TDY_O_CO_C_AMT,
+		A.TDY_O_CO_D_AMT = B.TDY_O_CO_D_AMT,
+		A.TDY_B_AMT = B.TDY_B_AMT,
+		A.TDY_B_C_AMT = B.TDY_B_C_AMT,
+		A.TDY_B_D_AMT = B.TDY_B_D_AMT,
+		A.TDY_B_CO_AMT = B.TDY_B_CO_AMT,
+		A.TDY_B_CO_C_AMT = B.TDY_B_CO_C_AMT,
+		A.TDY_B_CO_D_AMT = B.TDY_B_CO_D_AMT,
+		A.IS_LEAF = B.IS_LEAF,
+		A.NUM_AMT = B.NUM_AMT,
+		A.CREATE_USER = B.CREATE_USER,
+		A.CREATE_DEPT = B.CREATE_DEPT,
+		A.CREATE_TIME = B.CREATE_TIME,
+		A.UPDATE_USER = B.UPDATE_USER,
+		A.UPDATE_TIME = B.UPDATE_TIME,
+		A.TDY_AMT_FLAG = B.TDY_AMT_FLAG,
+		A.TDY_CO_FLAG = B.TDY_CO_FLAG,
+		A.TDY_PUR_O_D_ULAMT = B.TDY_PUR_O_D_ULAMT,
+		A.TDY_RED_O_D_ULAMT = B.TDY_RED_O_D_ULAMT,
+		A.TDY_PUR_O_C_ULAMT = B.TDY_PUR_O_C_ULAMT,
+		A.TDY_RED_O_C_ULAMT = B.TDY_RED_O_C_ULAMT,
+		A.TDY_PUR_B_D_ULAMT = B.TDY_PUR_B_D_ULAMT,
+		A.TDY_RED_B_D_ULAMT = B.TDY_RED_B_D_ULAMT,
+		A.TDY_PUR_B_C_ULAMT = B.TDY_PUR_B_C_ULAMT,
+		A.TDY_RED_B_C_ULAMT = B.TDY_RED_B_C_ULAMT
+		where A.BOOKSET_ID = B.BOOKSET_ID
+		AND A.SUBJECT_NO = B.SUBJECT_NO
+		AND A.BALANCE_DATE = B.BALANCE_DATE;
 	</insert>
 	<delete id="deleteBatchList" >
-		 begin
-     <foreach collection="dataList" item="item" index="index" separator=";">
-	     delete from CHB_SUBJECT_BALANCE
-	     where SUBJECT_NO = #{item.subjectNo,jdbcType=VARCHAR}  and BALANCE_DATE = #{item.balanceDate,jdbcType=TIMESTAMP}
-	     	and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
-     </foreach>
-    	;end;
+		/*begin*/
+		<foreach collection="dataList" item="item" index="index" separator=";">
+			delete from CHB_SUBJECT_BALANCE
+			where SUBJECT_NO = #{item.subjectNo,jdbcType=VARCHAR}  and BALANCE_DATE = #{item.balanceDate,jdbcType=TIMESTAMP}
+			and PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+		</foreach>
+		;/*end;*/
 	</delete>
-	
-	 <insert id="insert"  parameterType="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
+
+	<insert id="insert"  parameterType="com.joyintech.tams.svreport.interf.chb.subjectbalance.dto.BokBalance" >
         insert into BOK_BALANCE (BOOKSET_ID, BALANCE_DATE, SUBJECT_NO, 
             FSUBJECT_NO, SUBJECT_LEVEL, BAL_FLAG, 
             BAL_CO_FLAG, O_CCY, O_AMT, 
@@ -309,5 +389,5 @@
             #{tdyRedOCUlamt,jdbcType=DECIMAL}, #{tdyPurBDUlamt,jdbcType=DECIMAL}, #{tdyRedBDUlamt,jdbcType=DECIMAL}, 
             #{tdyPurBCUlamt,jdbcType=DECIMAL}, #{tdyRedBCUlamt,jdbcType=DECIMAL})
     </insert>
-	
+
 </mapper>

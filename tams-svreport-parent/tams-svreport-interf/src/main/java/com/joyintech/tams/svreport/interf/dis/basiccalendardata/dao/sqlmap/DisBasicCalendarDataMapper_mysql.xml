@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.basiccalendardata.dao.DisBasicCalendarDataMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.basiccalendardata.dto.DisBasicCalendarData">
+        <result column="TRADE_CALENDAR_ID" jdbcType="VARCHAR" property="tradeCalendarId" />
+        <result column="CALENDAR_ID" jdbcType="VARCHAR" property="calendarId" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateteUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+       TRADE_CALENDAR_ID,CALENDAR_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+  </sql>
+
+    <update id="mergeByModel">
+        UPDATE  MST_TRADE_CALENDAR as A,
+        (
+        select
+        TRADE_CALENDAR_ID,<!--交易日历代码-->
+        CALENDAR_ID,<!--日历编码-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME<!--更新时间-->
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.tradeCalendarId,jdbcType=CHAR} TRADE_CALENDAR_ID,<!--交易日历代码-->
+            #{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,<!--日历编码-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME<!--更新时间-->
+            FROM dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        set
+        A.CREATE_USER = B.CREATE_USER,<!--创建人-->
+        A.CREATE_DEPT = B.CREATE_DEPT,<!--创建部门-->
+        A.CREATE_TIME = B.CREATE_TIME,<!--创建时间-->
+        A.UPDATE_USER = B.UPDATE_USER,<!--更新人-->
+        A.UPDATE_TIME = B.UPDATE_TIME<!--更新时间-->
+        where A.TRADE_CALENDAR_ID = B.TRADE_CALENDAR_ID;
+        insert into MST_TRADE_CALENDAR(TRADE_CALENDAR_ID,<!--交易日历代码-->
+        CALENDAR_ID,<!--日历编码-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME<!--更新时间-->)
+        select TRADE_CALENDAR_ID,<!--交易日历代码-->
+        CALENDAR_ID,<!--日历编码-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME<!--更新时间--> from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.tradeCalendarId,jdbcType=CHAR} TRADE_CALENDAR_ID,<!--交易日历代码-->
+            #{item.calendarId,jdbcType=VARCHAR} CALENDAR_ID,<!--日历编码-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME<!--更新时间-->
+            FROM     dual
+        </foreach>
+        ) TEMP where not exists (select 1 from MST_TRADE_CALENDAR CII where CII.TRADE_CALENDAR_ID = TEMP.TRADE_CALENDAR_ID)
+        ) de ;
+    </update>
+
+</mapper>

@@ -281,6 +281,22 @@
 			FROM DUAL
 		</foreach>
 	</insert>
+	<update id="updateChbPrdresistCodes">
+		begin
+		<foreach collection="list" item="item" index="index"
+				 separator=";">
+			update CHB_PRDRESIST_CODE
+			<set>
+				<if test="item.prodId != null">
+					PRODID = #{item.prodId,jdbcType=VARCHAR},
+				</if>
+
+			</set>
+			where PROD_INS_ID = #{item.prodInsId,jdbcType=VARCHAR}
+		</foreach>
+		;end;
+	</update>
+
 	<delete id="deleteByDate" parameterType="java.util.Date">
 		delete from CHB_PRD_BASEINFO
 		where nvl(c.update_time,c.create_time) = #{batchTime,jdbcType=TIMESTAMP}
@@ -419,6 +435,15 @@
 		delete from CHB_PRD_BASEINFO
 		<where>
 			PROD_ID = #{prodId,jdbcType=VARCHAR}
+		</where>
+	</delete>
+	<delete id="deleteChbPrdBaseinfoErroData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+		delete from CHB_PRD_BASEINFO_ERRODATA
+		<where>
+			<foreach collection="list" item="item" index="index"
+					 open="PROD_ID in (" close=")" separator=",">
+				#{item.prodId,jdbcType=VARCHAR}
+			</foreach>
 		</where>
 	</delete>
 	<insert id="mergeInfoList"
@@ -567,6 +592,9 @@
 			,#{dto.gradProportion,jdbcType=DECIMAL} GRAD_PROPORTION
 			,#{dto.prdSpecProperty,jdbcType=VARCHAR} PRD_SPEC_PROPERTY
 			,#{dto.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
+			,#{dto.manaCateFit,jdbcType=VARCHAR} MANA_CATE_FIT
+			,#{dto.issueStatusRemark,jdbcType=VARCHAR} ISSUE_STATUS_REMARK
+			,#{dto.fitCircleDays,jdbcType=DECIMAL} FIT_CIRCLE_DAYS
 			from dual
 		</foreach>
 		) TEMP
@@ -712,6 +740,10 @@
 		,CII.GRAD_PROPORTION = TEMP.GRAD_PROPORTION
 		,CII.PRD_SPEC_PROPERTY = TEMP.PRD_SPEC_PROPERTY
 		,CII.ZJXT_FLAG = TEMP.ZJXT_FLAG
+		,CII.MANA_CATE_FIT = TEMP.MANA_CATE_FIT
+		,CII.ISSUE_STATUS_REMARK = TEMP.ISSUE_STATUS_REMARK
+		,CII.FIT_CIRCLE_DAYS = TEMP.FIT_CIRCLE_DAYS
+
 		<!-- 未匹配到这插入 -->
 		WHEN NOT MATCHED THEN
 		INSERT (PRODUUID, FPROD_ID, PROD_ID,
@@ -757,7 +789,8 @@
 		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,
 		CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,CALENDAR_ID
 		,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME,IS_TRANSFER
-		,IS_FHXGCP,IS_YLLCCP,GRAD_PROPORTION,PRD_SPEC_PROPERTY,ZJXT_FLAG
+		,IS_FHXGCP,IS_YLLCCP,GRAD_PROPORTION,PRD_SPEC_PROPERTY,ZJXT_FLAG,
+		MANA_CATE_FIT,ISSUE_STATUS_REMARK,FIT_CIRCLE_DAYS
 		)
 		values(
 		TEMP.PRODUUID, 
@@ -899,6 +932,9 @@
 		,TEMP.GRAD_PROPORTION
 		,TEMP.PRD_SPEC_PROPERTY
 		,TEMP.ZJXT_FLAG
+		,TEMP.MANA_CATE_FIT
+		,TEMP.ISSUE_STATUS_REMARK
+		,TEMP.FIT_CIRCLE_DAYS
 		)
 	</insert>
 	<select id="getParentCode" parameterType="java.lang.String" resultType="java.lang.String">

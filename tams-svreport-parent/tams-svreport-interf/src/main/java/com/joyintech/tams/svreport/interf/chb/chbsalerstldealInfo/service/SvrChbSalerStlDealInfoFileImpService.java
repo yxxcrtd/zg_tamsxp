@@ -94,7 +94,7 @@ public class SvrChbSalerStlDealInfoFileImpService extends FileImpService {
         List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.销售结算资金交易信息表报送数据接入.getCode());
         //mod by wangyaning 20220122 start
 //        chbSalerStlDealInfoList = this.convertMapToEntity(infoList,dataSource,listColumn);
-        chbSalerStlDealInfoList = (List<ChbSalerStlDealInfo>) convertMapToEntity(infoList,ChbSalerStlDealInfo.class);
+        chbSalerStlDealInfoList = (List<ChbSalerStlDealInfo>) convertMapToEntity(infoList,ChbSalerStlDealInfo.class, dataSource);
         for(ChbSalerStlDealInfo info:chbSalerStlDealInfoList){
             info.setRegistSeqno(IDGenerator.generate(36));
             info.setStatus("E");

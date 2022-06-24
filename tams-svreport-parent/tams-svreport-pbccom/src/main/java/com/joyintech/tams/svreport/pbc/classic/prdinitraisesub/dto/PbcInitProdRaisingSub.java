@@ -688,5 +688,10 @@ public class PbcInitProdRaisingSub extends BaseEntity {
 	public String getSubmitFeedbackStatusStr(){
 		return SvrDataUtil.getNameFromDataDict(DictCode.人行报送反馈状态, this.getSubmitFeedbackStatus());
 	}
-	
+	public String getStatusDateStr(){
+	    return null!=statusDate?DateUtil.formatDateTime(statusDate):null;
+    }
+    public String getSubmitTimeStr(){
+	    return null!=submitTime?DateUtil.formatDateTime(submitTime):null;
+    }
 }

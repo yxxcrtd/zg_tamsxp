@@ -26,6 +26,8 @@
     <result column="IS_PERPETUAL" property="isPerpetual" jdbcType="VARCHAR" />
     <result column="ASSET_POOL_CODE" property="assetPoolCode" jdbcType="VARCHAR" />
     <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
+    <result column="BANK_CAPITAL" property="bankCapital" jdbcType="VARCHAR" />
+    <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, ORG_CODE, POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2,
@@ -352,6 +354,9 @@
       <if test="balFlag != null" >
         #{balFlag,jdbcType=VARCHAR},
       </if>
+      <if test="rating != null" >
+        #{rating,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto" >
@@ -440,7 +445,9 @@
     ASSETINFO.BANK_SEC_CAPITAL,
     ASSETINFO.BANK_SEC_PERPETUAL,
     ASSETINFO.BANK_SEC_PREFER,
-    ASSETINFO.IS_PERPETUAL
+    ASSETINFO.IS_PERPETUAL,
+    ASSETINFO.BANK_CAPITAL,
+    ASSETINFO.SHARES_TYPE
     from PBC_MONTH_ASSET_POSITION PMAP
     left join CHB_ASSET_INFO ASSETINFO
     ON ASSETINFO.ASSET_CODE = PMAP.ASSET_CODE  and  ASSETINFO.status in('E','M')

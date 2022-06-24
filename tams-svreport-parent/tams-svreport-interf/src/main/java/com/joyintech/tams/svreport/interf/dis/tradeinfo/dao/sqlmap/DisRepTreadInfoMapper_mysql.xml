@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.tradeinfo.dao.DisRepTreadInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.tradeinfo.dto.DisRepTreadInfo" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="TRADE_COUNTY" property="tradeCounty" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+        <result column="BUY_PART" property="buyPart" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="IS_RELATION_TRADE" property="isRelationTrade" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SALE_PART" property="salePart" jdbcType="VARCHAR" />
+        <result column="EXPIRE_RATE" property="expireRate" jdbcType="DECIMAL" />
+        <result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PRIN_AMT" property="prinAmt" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, ASSET_ID ASSET_ID, ASSET_NAME ASSET_NAME, TRADE_COUNTY TRADE_COUNTY, TRADE_DATE TRADE_DATE,
+        TRADE_AMT TRADE_AMT, TRADE_TYPE TRADE_TYPE, BUY_PART BUY_PART, PS PS, STATUS STATUS,
+        IS_RELATION_TRADE IS_RELATION_TRADE, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
+        SALE_PART SALE_PART, EXPIRE_RATE EXPIRE_RATE,
+        CONTRACT_NO CONTRACT_NO, PROD_ID PROD_ID, PRIN_AMT PRIN_AMT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.svreport.interf.dis.tradeinfo.dao.DisRepTreadInfoMapper.Base_Column_List" />
+        from REP_TREAD_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.svreport.interf.dis.tradeinfo.dao.DisRepTreadInfoMapper.Base_Column_List" />
+        from REP_TREAD_INFO
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.svreport.interf.dis.tradeinfo.dao.DisRepTreadInfoMapper.Base_Column_List" />
+        from REP_TREAD_INFO
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_TREAD_INFO
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.interf.dis.tradeinfo.dto.DisRepTreadInfo" >
+        insert into REP_TRADE_INFO (ID, ASSET_ID, ASSET_NAME,
+            TRADE_COUNTY, TRADE_DATE, TRADE_AMT,
+            TRADE_TYPE, BUY_PART, PS,
+            STATUS, IS_RELATION_TRADE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, SALE_PART,
+            EXPIRE_RATE,
+            CONTRACT_NO, PROD_ID, PRIN_AMT
+            )
+        values (#{id,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR},
+            #{tradeCounty,jdbcType=VARCHAR}, #{tradeDate,jdbcType=DATE}, #{tradeAmt,jdbcType=DECIMAL},
+            #{tradeType,jdbcType=VARCHAR}, #{buyPart,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, #{isRelationTrade,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{salePart,jdbcType=VARCHAR},
+            #{expireRate,jdbcType=DECIMAL},
+            #{contractNo,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prinAmt,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.tradeinfo.dto.DisRepTreadInfo" >
+        insert into REP_TRADE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID,
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME,
+            </if>
+            <if test="tradeCounty != null" >
+                TRADE_COUNTY,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="tradeType != null" >
+                TRADE_TYPE,
+            </if>
+            <if test="buyPart != null" >
+                BUY_PART,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="isRelationTrade != null" >
+                IS_RELATION_TRADE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="salePart != null" >
+                SALE_PART,
+            </if>
+            <if test="expireRate != null" >
+                EXPIRE_RATE,
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="prinAmt != null" >
+                PRIN_AMT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounty != null" >
+                #{tradeCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeType != null" >
+                #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="buyPart != null" >
+                #{buyPart,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="isRelationTrade != null" >
+                #{isRelationTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="salePart != null" >
+                #{salePart,jdbcType=VARCHAR},
+            </if>
+            <if test="expireRate != null" >
+                #{expireRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contractNo != null" >
+                #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prinAmt != null" >
+                #{prinAmt,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.interf.dis.tradeinfo.dto.DisRepTreadInfo" >
+        insert into REP_TRADE_INFO(ID, ASSET_ID, ASSET_NAME, TRADE_COUNTY, TRADE_DATE, TRADE_AMT,
+        TRADE_TYPE, BUY_PART, PS, STATUS,
+        IS_RELATION_TRADE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, SALE_PART, EXPIRE_RATE, CONTRACT_NO,
+        PROD_ID, PRIN_AMT)
+        select ID, ASSET_ID, ASSET_NAME, TRADE_COUNTY, TRADE_DATE, TRADE_AMT,
+            TRADE_TYPE, BUY_PART, PS, #{status,jdbcType=VARCHAR} STATUS,
+            IS_RELATION_TRADE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, SALE_PART, EXPIRE_RATE, CONTRACT_NO,
+            PROD_ID, PRIN_AMT
+             from REP_TREAD_INFO
+             where STATUS = 'E' and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.interf.dis.tradeinfo.dto.DisRepTreadInfo" >
+        update REP_TRADE_INFO
+        <set >
+            <if test="assetId != null" >
+                ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeCounty != null" >
+                TRADE_COUNTY = #{tradeCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeType != null" >
+                TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+            </if>
+            <if test="buyPart != null" >
+                BUY_PART = #{buyPart,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="isRelationTrade != null" >
+                IS_RELATION_TRADE = #{isRelationTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="salePart != null" >
+                SALE_PART = #{salePart,jdbcType=VARCHAR},
+            </if>
+            <if test="expireRate != null" >
+                EXPIRE_RATE = #{expireRate,jdbcType=DECIMAL},
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prinAmt != null" >
+                PRIN_AMT = #{prinAmt,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.interf.dis.tradeinfo.dto.DisRepTreadInfo" >
+        update REP_TRADE_INFO
+        set ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+            TRADE_COUNTY = #{tradeCounty,jdbcType=VARCHAR},
+            TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            TRADE_AMT = #{tradeAmt,jdbcType=DECIMAL},
+            TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+            BUY_PART = #{buyPart,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            IS_RELATION_TRADE = #{isRelationTrade,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SALE_PART = #{salePart,jdbcType=VARCHAR},
+            EXPIRE_RATE = #{expireRate,jdbcType=DECIMAL},
+            CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PRIN_AMT = #{prinAmt,jdbcType=DECIMAL}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="mergeRepTradeInfo">
+        UPDATE  REP_TRADE_INFO as A,
+        (
+        select ID,<!--id-->
+        ASSET_ID,<!--资产代码-->
+        ASSET_NAME,<!--资产名称-->
+        TRADE_COUNTY,<!--交易对手-->
+        TRADE_DATE,<!--交易日期-->
+        TRADE_AMT,<!--交易金额-->
+        TRADE_TYPE,<!--交易类型-->
+        BUY_PART,<!--买入方-->
+        SALE_PART,<!--卖出方-->
+        PS,<!--交易方向-->
+        STATUS,<!--状态-->
+        IS_RELATION_TRADE,<!--是否关联交易-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        EXPIRE_RATE,<!--到期收益率-->
+        CONTRACT_NO,<!--合同号-->
+        PROD_ID,<!--产品代码-->
+        PRIN_AMT<!--交易本金-->
+        from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.id,jdbcType=VARCHAR} ID,<!--id-->
+            #{item.assetId,jdbcType=VARCHAR} ASSET_ID,<!--资产代码-->
+            #{item.assetName,jdbcType=VARCHAR} ASSET_NAME,<!--资产名称-->
+            #{item.tradeCounty,jdbcType=VARCHAR} TRADE_COUNTY,<!--交易对手-->
+            #{item.tradeDate,jdbcType=DATE} TRADE_DATE,<!--交易日期-->
+            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT,<!--交易金额-->
+            #{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE,<!--交易类型-->
+            #{item.buyPart,jdbcType=VARCHAR} BUY_PART,<!--买入方-->
+            #{item.salePart,jdbcType=VARCHAR} SALE_PART,<!--卖出方-->
+            #{item.ps,jdbcType=VARCHAR} PS,<!--交易方向-->
+            #{item.status,jdbcType=VARCHAR} STATUS,<!--状态-->
+            #{item.isRelationTrade,jdbcType=VARCHAR} IS_RELATION_TRADE,<!--是否关联交易-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+            #{item.expireRate,jdbcType=DECIMAL} EXPIRE_RATE,<!--到期收益率-->
+            #{item.contractNo,jdbcType=VARCHAR} CONTRACT_NO,<!--合同号-->
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+            #{item.prinAmt,jdbcType=DECIMAL} PRIN_AMT<!--交易本金-->
+            FROM
+            dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        set  <!--A.ID = B.ID,id-->
+        A.ASSET_ID = B.ASSET_ID,<!--资产代码-->
+        A.ASSET_NAME = B.ASSET_NAME,<!--资产名称-->
+        A.TRADE_COUNTY = B.TRADE_COUNTY,<!--交易对手-->
+        A.TRADE_DATE = B.TRADE_DATE,<!--交易日期-->
+        A.TRADE_AMT = B.TRADE_AMT,<!--交易金额-->
+        A.TRADE_TYPE = B.TRADE_TYPE,<!--交易类型-->
+        A.BUY_PART = B.BUY_PART,<!--买入方-->
+        A.SALE_PART = B.SALE_PART,<!--卖出方-->
+        A.PS = B.PS,<!--交易方向-->
+        A.STATUS = B.STATUS,<!--状态-->
+        A.IS_RELATION_TRADE = B.IS_RELATION_TRADE,<!--是否关联交易-->
+        A.CREATE_USER = B.CREATE_USER,<!--创建人-->
+        A.CREATE_DEPT = B.CREATE_DEPT,<!--创建部门-->
+        A.CREATE_TIME = B.CREATE_TIME,<!--创建时间-->
+        A.UPDATE_USER = B.UPDATE_USER,<!--更新人-->
+        A.UPDATE_TIME = B.UPDATE_TIME,<!--更新时间-->
+        A.EXPIRE_RATE = B.EXPIRE_RATE,<!--到期收益率-->
+        A.CONTRACT_NO = B.CONTRACT_NO,<!--合同号-->
+        A.PROD_ID = B.PROD_ID,<!--产品代码-->
+        A.PRIN_AMT = B.PRIN_AMT<!--交易本金-->
+        where A.ID = B.ID;
+
+        insert into REP_TRADE_INFO(ID,<!--id-->
+        ASSET_ID,<!--资产代码-->
+        ASSET_NAME,<!--资产名称-->
+        TRADE_COUNTY,<!--交易对手-->
+        TRADE_DATE,<!--交易日期-->
+        TRADE_AMT,<!--交易金额-->
+        TRADE_TYPE,<!--交易类型-->
+        BUY_PART,<!--买入方-->
+        SALE_PART,<!--卖出方-->
+        PS,<!--交易方向-->
+        STATUS,<!--状态-->
+        IS_RELATION_TRADE,<!--是否关联交易-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        EXPIRE_RATE,<!--到期收益率-->
+        CONTRACT_NO,<!--合同号-->
+        PROD_ID,<!--产品代码-->
+        PRIN_AMT<!--交易本金-->)
+        select ID,<!--id-->
+        ASSET_ID,<!--资产代码-->
+        ASSET_NAME,<!--资产名称-->
+        TRADE_COUNTY,<!--交易对手-->
+        TRADE_DATE,<!--交易日期-->
+        TRADE_AMT,<!--交易金额-->
+        TRADE_TYPE,<!--交易类型-->
+        BUY_PART,<!--买入方-->
+        SALE_PART,<!--卖出方-->
+        PS,<!--交易方向-->
+        STATUS,<!--状态-->
+        IS_RELATION_TRADE,<!--是否关联交易-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        EXPIRE_RATE,<!--到期收益率-->
+        CONTRACT_NO,<!--合同号-->
+        PROD_ID,<!--产品代码-->
+        PRIN_AMT<!--交易本金--> from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.id,jdbcType=VARCHAR} ID,<!--id-->
+            #{item.assetId,jdbcType=VARCHAR} ASSET_ID,<!--资产代码-->
+            #{item.assetName,jdbcType=VARCHAR} ASSET_NAME,<!--资产名称-->
+            #{item.tradeCounty,jdbcType=VARCHAR} TRADE_COUNTY,<!--交易对手-->
+            #{item.tradeDate,jdbcType=DATE} TRADE_DATE,<!--交易日期-->
+            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT,<!--交易金额-->
+            #{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE,<!--交易类型-->
+            #{item.buyPart,jdbcType=VARCHAR} BUY_PART,<!--买入方-->
+            #{item.salePart,jdbcType=VARCHAR} SALE_PART,<!--卖出方-->
+            #{item.ps,jdbcType=VARCHAR} PS,<!--交易方向-->
+            #{item.status,jdbcType=VARCHAR} STATUS,<!--状态-->
+            #{item.isRelationTrade,jdbcType=VARCHAR} IS_RELATION_TRADE,<!--是否关联交易-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+            #{item.expireRate,jdbcType=DECIMAL} EXPIRE_RATE,<!--到期收益率-->
+            #{item.contractNo,jdbcType=VARCHAR} CONTRACT_NO,<!--合同号-->
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,<!--产品代码-->
+            #{item.prinAmt,jdbcType=DECIMAL} PRIN_AMT<!--交易本金-->
+            FROM
+            dual
+        </foreach>
+        ) TEMP where not exists (select 1 from REP_TRADE_INFO CII where CII.ID = TEMP.ID)
+        ) de ;
+    </update>
+</mapper>

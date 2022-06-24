@@ -2,141 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.reveal.reportconfirm.dao.ReportConfirmManage001Mapper_mysql">
 	<select id="queryPageList" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
-		select * from (SELECT
-		REVEAL.ID id
-		,REVEAL.REP_ID repId
-		,REVEAL.REPORT_NAME reportName
-		,REVEAL.PROD_NAME prodName
-		,REVEAL.PRODID prodid
-		,case when
-		REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
-		then DATE_FORMAT(REVEAL.END_DATE,'%Y-%m-%d')
-		else concat_ws('', DATE_FORMAT(REVEAL.START_DATE,'%Y-%m-%d'), '--', DATE_FORMAT(REVEAL.END_DATE,'%Y-%m-%d'))
-		end  reportDate
-		,REVEAL.END_DATE endDate
-		,REVEAL.START_DATE startDate
-		,REVEAL.SYS_FILENAME sysFilename
-		,REVEAL.SYS_FILEPATH sysFilepath
-		,REVEAL.REVEAL_DATE revealDate
-		,REVEAL.FILEPATH filepath
-		,REVEAL.FILENAME filename
-		,REVEAL.CONFIRM_STATUS confirmStatus
-
-		,REVEAL.REVEAL_STATUS revealStatus
-
-		,REVEAL.STATUS status
-		,REVEAL.CREATE_USER createUser
-		,REVEAL.CREATE_DEPT createDept
-		,REVEAL.CREATE_TIME createTime
-		,REVEAL.UPDATE_USER updateUser
-		,REVEAL.UPDATE_TIME updateTime
-		,DATE_FORMAT(REVEAL.CREATE_TIME,'%Y-%m-%d') createTimeStr
-		,DATE_FORMAT(REVEAL.CONFIRM_DATE,'%Y-%m-%d') confirmDateStr
-		,REVEAL.SYS_FILEPATH seqno
-
-		,REVEAL.REVEAL_CHANNEL revealChannel
-		,REVEAL.IS_CONFIRM isConfirm
-		,REVEAL.IS_REVEAL isReveal
-
-		,REVEAL.DETAIL detail
-		,DATE_FORMAT(REVEAL.TIME,'%Y-%m-%d') uploadTime
-		,REVEAL.CONFIRM_USER confirmUser
-		,REVEAL.REPORT_CATEGORY reportCategory
-		,rfp.NAME reportCategoryName
-		,DATE_FORMAT(REVEAL.REVEAL_END_DATE,'%Y-%m-%d hh24:mi') revealEndDateStr
-		,REVEAL.ANNEX annex
-		,REVEAL.ANNEX_PATH  annexPath
-		FROM REP_REVEAL REVEAL
-		left join rep_info info on REVEAL.rep_id = info.rep_id
-		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
-		where 1=1
-		and REVEAL.status ='E'
-		<if test="revealStatus!=null and revealStatus != ''">
-			AND if(REVEAL.REVEAL_STATUS=null,'1',REVEAL.REVEAL_STATUS) = #{revealStatus,jdbcType=VARCHAR}
-		</if>
-		<if test="finprodIdArr != null and finprodIdArr.length > 0">
-			AND REVEAL.PRODID IN
-			<foreach item="item" collection="finprodIdArr" index="index"
-					 open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="reportName !=null and reportName !='' ">
-			AND REVEAL.REPORT_NAME like concat_ws('', '%', #{reportName,jdbcType=VARCHAR}, '%')
-		</if>
-		<if test="valDateBegin !=null and valDateBegin !='' ">
-			AND DATE_FORMAT(REVEAL.CREATE_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="valDateEnd !=null and valDateEnd !='' ">
-			AND DATE_FORMAT(REVEAL.CREATE_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
-		</if>
-		<if test="confirmStatus !=null and confirmStatus !='' ">
-			AND if(REVEAL.CONFIRM_STATUS=null,'02',REVEAL.CONFIRM_STATUS) = #{confirmStatus,jdbcType=VARCHAR}
-		</if>
-		<if test="confirmDateBegin !=null and confirmDateBegin !='' ">
-			AND DATE_FORMAT(REVEAL.CONFIRM_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{confirmDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="confirmDateEnd !=null and confirmDateEnd !='' ">
-			AND DATE_FORMAT(REVEAL.CONFIRM_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{confirmDateEnd,jdbcType=VARCHAR}
-		</if>
-		<if test="confirmTypeArr != null and confirmTypeArr.length > 0">
-			AND REVEAL.IS_CONFIRM IN
-			<foreach item="item" collection="confirmTypeArr" index="index"
-					 open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<if test="revealChanelArr != null and revealChanelArr.length > 0">
-			and(
-			<foreach item="item" collection="revealChanelArr" index="index"
-					 separator="OR">
-				REVEAL.REVEAL_CHANNEL like concat_ws('', '%', #{item}, '%')
-
-			</foreach>
-			)
-		</if>
-		<if test="revealDateBegin !=null and revealDateBegin !='' ">
-			AND DATE_FORMAT(REVEAL.REVEAL_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="revealDateEnd !=null and revealDateEnd !='' ">
-			AND DATE_FORMAT(REVEAL.REVEAL_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealDateEnd,jdbcType=VARCHAR}
-		</if>
-
-		<if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
-			AND DATE_FORMAT(REVEAL.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
-			AND DATE_FORMAT(REVEAL.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
-		</if>
-		<if test="repTypeArr != null and repTypeArr.length > 0">
-			AND REVEAL.REPORT_CATEGORY IN
-			<foreach item="item" collection="repTypeArr" index="index"
-					 open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		order by
-		REVEAL.CONFIRM_STATUS ASC,
-		<if test="confrom != null and confrom !='' ">
-			REVEAL.REVEAL_STATUS DESC,
-		</if>
-		REVEAL.CREATE_TIME DESC) where 1=1
-	</select>
-	<select id="getFinprodId" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
-		select prd.finprod_id,IFNULL(prd.finprod_abbr,prd.finprod_name) finprod_abbr from fin_product prd
-		where 1=1
-		<if test="finprodType != null and finprodType != '' ">
-			AND prd.FINPROD_TYPE = #{finprodType}
-		</if>
-	</select>
-	<select id="findNewData" parameterType="java.lang.String" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
-	 	SELECT
+		select * from (SELECT 
 			REVEAL.ID id
 			,REVEAL.REP_ID repId
 			,REVEAL.REPORT_NAME reportName
 			,REVEAL.PROD_NAME prodName
 			,REVEAL.PRODID prodid
-			,case when
+			,case when 
 				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
 			 then DATE_FORMAT(REVEAL.END_DATE,'%Y-%m-%d')
 			 else concat_ws('', DATE_FORMAT(REVEAL.START_DATE,'%Y-%m-%d'), '--', DATE_FORMAT(REVEAL.END_DATE,'%Y-%m-%d'))
@@ -145,13 +17,13 @@
 			,REVEAL.START_DATE startDate
 			,REVEAL.SYS_FILENAME sysFilename
 			,REVEAL.SYS_FILEPATH sysFilepath
-			,REVEAL.REVEAL_DATE revealDate
+			,REVEAL.REVEAL_DATE revealDate  
 			,REVEAL.FILEPATH filepath
 			,REVEAL.FILENAME filename
 			,REVEAL.CONFIRM_STATUS confirmStatus
-
+			
 			,REVEAL.REVEAL_STATUS revealStatus
-
+			
 			,REVEAL.STATUS status
 			,REVEAL.CREATE_USER createUser
 			,REVEAL.CREATE_DEPT createDept
@@ -161,11 +33,198 @@
 			,DATE_FORMAT(REVEAL.CREATE_TIME,'%Y-%m-%d') createTimeStr
 			,DATE_FORMAT(REVEAL.CONFIRM_DATE,'%Y-%m-%d') confirmDateStr
 			,REVEAL.SYS_FILEPATH seqno
-
+			
 			,REVEAL.REVEAL_CHANNEL revealChannel
 			,REVEAL.IS_CONFIRM isConfirm
 			,REVEAL.IS_REVEAL isReveal
-
+			
+			,REVEAL.DETAIL detail
+			,DATE_FORMAT(REVEAL.TIME,'%Y-%m-%d') uploadTime
+			,REVEAL.CONFIRM_USER confirmUser
+			,REVEAL.REPORT_CATEGORY reportCategory
+			,rfp.NAME reportCategoryName
+			,DATE_FORMAT(REVEAL.REVEAL_END_DATE,'%Y-%m-%d %H:%i') revealEndDateStr
+			,REVEAL.ANNEX annex
+			,REVEAL.ANNEX_PATH  annexPath
+		FROM REP_REVEAL REVEAL
+		left join rep_info info on REVEAL.rep_id = info.rep_id
+		left join rep_ftp_path rfp on REVEAL.REPORT_CATEGORY = rfp.ID
+		<!-- modify by yanya on 20220214 增加募集方式、销售对象查询条件 start-->
+		left join rep_prod_info pd on REVEAL.PRODID = pd.PROD_ID
+		<!-- modify by yanya on 20220214 增加募集方式、销售对象查询条件 end-->
+		where 1=1
+		and REVEAL.status ='E'
+		<if test="revealStatus!=null and revealStatus != ''">
+	      AND if(REVEAL.REVEAL_STATUS=null,'1',REVEAL.REVEAL_STATUS) = #{revealStatus,jdbcType=VARCHAR}
+		</if>
+        <if test="finprodIdArr != null and finprodIdArr.length > 0">
+	 		AND REVEAL.PRODID IN
+			<foreach item="item" collection="finprodIdArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="reportName !=null and reportName !='' ">
+            AND REVEAL.REPORT_NAME like concat_ws('', '%', #{reportName,jdbcType=VARCHAR}, '%')
+        </if>
+		<if test="valDateBegin !=null and valDateBegin !='' ">
+            AND DATE_FORMAT(REVEAL.CREATE_TIME,'%Y-%m-%d') <![CDATA[>=]]> #{valDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="valDateEnd !=null and valDateEnd !='' ">
+            AND DATE_FORMAT(REVEAL.CREATE_TIME,'%Y-%m-%d') <![CDATA[<=]]> #{valDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmStatus !=null and confirmStatus !='' ">
+            AND if(REVEAL.CONFIRM_STATUS=null,'02',REVEAL.CONFIRM_STATUS) = #{confirmStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmDateBegin !=null and confirmDateBegin !='' ">
+            AND DATE_FORMAT(REVEAL.CONFIRM_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{confirmDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmDateEnd !=null and confirmDateEnd !='' ">
+            AND DATE_FORMAT(REVEAL.CONFIRM_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{confirmDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="confirmTypeArr != null and confirmTypeArr.length > 0">
+	 		AND REVEAL.IS_CONFIRM IN
+			<foreach item="item" collection="confirmTypeArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="revealChanelArr != null and revealChanelArr.length > 0">
+	 		and(
+			<foreach item="item" collection="revealChanelArr" index="index"
+				separator="OR">
+				 REVEAL.REVEAL_CHANNEL like concat_ws('', '%', #{item}, '%')
+				
+			</foreach>
+			)
+		</if>
+		<if test="revealDateBegin !=null and revealDateBegin !='' ">
+            AND DATE_FORMAT(REVEAL.REVEAL_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealDateEnd !=null and revealDateEnd !='' ">
+            AND DATE_FORMAT(REVEAL.REVEAL_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealDateEnd,jdbcType=VARCHAR}
+        </if>
+        
+        <if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
+            AND DATE_FORMAT(REVEAL.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+            AND DATE_FORMAT(REVEAL.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="repTypeArr != null and repTypeArr.length > 0">
+	 		AND REVEAL.REPORT_CATEGORY IN
+			<foreach item="item" collection="repTypeArr" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<!-- modify by yanya on 20220214 增加募集方式、销售对象查询条件 end-->
+		<if test="raiseType !=null and raiseType !='' ">
+			and pd.RAISE_TYPE = #{raiseType,jdbcType=VARCHAR}
+		</if>
+		<!-- 销售对象为个人时-->
+		<if test="targetSale != null and targetSale == '01'.toString()">
+			and (
+				pd.SALETARGET_DECLARE like '%03%' /** 一般个人客户**/
+				or pd.SALETARGET_DECLARE like '%05%' /** 高资产净值客户**/
+				or pd.SALETARGET_DECLARE like '%01%' /** 私人银行客户专属**/
+			)
+		</if>
+		<!-- 销售对象为公司时-->
+		<if test="targetSale != null and targetSale == '02'.toString()">
+			and pd.SALETARGET_DECLARE like '%02%' /** 机构客户专属**/
+		</if>
+		<!-- 销售对象为同业时-->
+		<if test="targetSale != null and targetSale == '03'.toString()">
+			and pd.SALETARGET_DECLARE like '%04%' /** 金融同业专属**/
+		</if>
+		<!-- 销售对象为个人和公司时-->
+		<if test="targetSale != null and targetSale == '04'.toString()">
+			and (
+				pd.SALETARGET_DECLARE like '%03%' /** 一般个人客户**/
+				or pd.SALETARGET_DECLARE like '%05%' /** 高资产净值客户**/
+				or pd.SALETARGET_DECLARE like '%01%' /** 私人银行客户专属**/
+			)
+			and pd.SALETARGET_DECLARE like '%02%' /** 机构客户专属**/
+		</if>
+		<!-- modify by yanya on 20220225  销售对象增加枚举值：“个人和同业”，“机构和同业”，”个人、机构和同业” start-->
+		<!-- 销售对象为个人和同业时-->
+		<if test="targetSale != null and targetSale == '05'.toString()">
+			and (
+				pd.SALETARGET_DECLARE like '%03%' /** 一般个人客户**/
+				or pd.SALETARGET_DECLARE like '%05%' /** 高资产净值客户**/
+				or pd.SALETARGET_DECLARE like '%01%' /** 私人银行客户专属**/
+			)
+			and pd.SALETARGET_DECLARE like '%04%' /** 金融同业专属**/
+		</if>
+		<!-- 销售对象为机构和同业时-->
+		<if test="targetSale != null and targetSale == '06'.toString()">
+			and pd.SALETARGET_DECLARE like '%02%' /** 机构客户专属**/
+			and pd.SALETARGET_DECLARE like '%04%' /** 金融同业专属**/
+		</if>
+		<!-- 销售对象为个人、机构和同业-->
+		<if test="targetSale != null and targetSale == '07'.toString()">
+			and (
+				pd.SALETARGET_DECLARE like '%03%' /** 一般个人客户**/
+				or pd.SALETARGET_DECLARE like '%05%' /** 高资产净值客户**/
+				or pd.SALETARGET_DECLARE like '%01%' /** 私人银行客户专属**/
+			)
+			and pd.SALETARGET_DECLARE like '%04%' /** 金融同业专属**/
+			and pd.SALETARGET_DECLARE like '%02%' /** 机构客户专属**/
+		</if>
+		<!-- modify by yanya on 20220225  销售对象增加枚举值：“个人和同业”，“机构和同业”，”个人、机构和同业” end-->
+		<!-- modify by yanya on 20220214 增加募集方式、销售对象查询条件 end-->
+        order by 
+		REVEAL.CONFIRM_STATUS ASC,
+		<if test="confrom != null and confrom !='' ">
+			REVEAL.REVEAL_STATUS DESC,
+		</if>
+		REVEAL.CREATE_TIME DESC) tmp where 1=1
+    </select>
+	<select id="getFinprodId" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+    	select prd.finprod_id,IFNULL(prd.finprod_abbr,prd.finprod_name) finprod_abbr from fin_product prd 
+    		where 1=1
+    	<if test="finprodType != null and finprodType != '' ">
+    		AND prd.FINPROD_TYPE = #{finprodType}
+    	</if>
+    </select>
+	<select id="findNewData" parameterType="java.lang.String" resultType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto">
+	 	SELECT 
+			REVEAL.ID id
+			,REVEAL.REP_ID repId
+			,REVEAL.REPORT_NAME reportName
+			,REVEAL.PROD_NAME prodName
+			,REVEAL.PRODID prodid
+			,case when 
+				  REVEAL.START_DATE is null or REVEAL.START_DATE = REVEAL.END_DATE
+			 then DATE_FORMAT(REVEAL.END_DATE,'%Y-%m-%d')
+			 else concat_ws('', DATE_FORMAT(REVEAL.START_DATE,'%Y-%m-%d'), '--', DATE_FORMAT(REVEAL.END_DATE,'%Y-%m-%d'))
+			 end  reportDate
+			,REVEAL.END_DATE endDate
+			,REVEAL.START_DATE startDate
+			,REVEAL.SYS_FILENAME sysFilename
+			,REVEAL.SYS_FILEPATH sysFilepath
+			,REVEAL.REVEAL_DATE revealDate  
+			,REVEAL.FILEPATH filepath
+			,REVEAL.FILENAME filename
+			,REVEAL.CONFIRM_STATUS confirmStatus
+			
+			,REVEAL.REVEAL_STATUS revealStatus
+			
+			,REVEAL.STATUS status
+			,REVEAL.CREATE_USER createUser
+			,REVEAL.CREATE_DEPT createDept
+			,REVEAL.CREATE_TIME createTime
+			,REVEAL.UPDATE_USER updateUser
+			,REVEAL.UPDATE_TIME updateTime
+			,DATE_FORMAT(REVEAL.CREATE_TIME,'%Y-%m-%d') createTimeStr
+			,DATE_FORMAT(REVEAL.CONFIRM_DATE,'%Y-%m-%d') confirmDateStr
+			,REVEAL.SYS_FILEPATH seqno
+			
+			,REVEAL.REVEAL_CHANNEL revealChannel
+			,REVEAL.IS_CONFIRM isConfirm
+			,REVEAL.IS_REVEAL isReveal
+			
 			,REVEAL.DETAIL detail
 			,DATE_FORMAT(REVEAL.TIME,'%Y-%m-%d') uploadTime
 			,REVEAL.CONFIRM_USER confirmUser
@@ -182,33 +241,33 @@
 		and REVEAL.id = #{id, jdbcType=VARCHAR}
 	 </select>
 	<select id="getFileName" resultType="java.lang.String">
-
-        SELECT
+		  
+        SELECT 
        		concat_ws('', r.PROD_NAME, '_', rfp.NAME) as SYS_FILENAME
-        FROM REP_REVEAL r
+        FROM REP_REVEAL r 
         left join  rep_ftp_path  rfp
         ON
             r.REPORT_CATEGORY = rfp.ID
         WHERE r.SYS_FILEPATH=#{sysFilepath, jdbcType=VARCHAR}
         or  r.FILEPATH=#{sysFilepath, jdbcType=VARCHAR}
         or  r.ANNEX_PATH=#{sysFilepath, jdbcType=VARCHAR}
-
+	 	
 	 </select>
 	<delete id="deleteComfirmByPrimaryKey" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
-		update
-		REP_REVEAL
-		set
+	update 
+		REP_REVEAL 
+	set
 		status = 'D'
 		,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		,UPDATE_TIME = NOW()
-		where ID in
-		<foreach collection="id.split(',')" item="item" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-	</delete>
+    where ID in
+       <foreach collection="id.split(',')" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 	<update id="updateRepRevealById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
 	      update REP_REVEAL
-	      set
+	      set 
 	      FILEPATH = #{filepath,jdbcType=VARCHAR}
 	      ,FILENAME = #{filename,jdbcType=VARCHAR}
 	      ,TIME = #{time,jdbcType=TIMESTAMP}
@@ -219,7 +278,7 @@
     </update>
 	<update id="updateRepRevealAnnexById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
 	      update REP_REVEAL
-	      set
+	      set 
 	      ANNEX_PATH = #{annexPath,jdbcType=VARCHAR}
 	      ,ANNEX = #{annex,jdbcType=VARCHAR}
 	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
@@ -228,39 +287,39 @@
 	      and id = #{id,jdbcType=VARCHAR}
     </update>
 	<update id="updateConfirmStatusById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
-		update REP_REVEAL
-		set
-		CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR},
-		CONFIRM_DATE = #{confirmDate,jdbcType=DATE},
-		CONFIRM_USER = #{confirmUser,jdbcType=VARCHAR}
-		,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
-		,UPDATE_TIME = NOW()
-		<if test="isReveal != null and isReveal != ''">
-			,IS_REVEAL=#{isReveal,jdbcType=VARCHAR}
-		</if>
-		<if test="isConfirm != null and isConfirm != ''">
-			,IS_CONFIRM=#{isConfirm,jdbcType=VARCHAR}
-		</if>
-		where 1=1
-		and id = #{id,jdbcType=VARCHAR}
-	</update>
+	      update REP_REVEAL
+	      set 
+	      CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR},
+	      CONFIRM_DATE = #{confirmDate,jdbcType=DATE},
+	      CONFIRM_USER = #{confirmUser,jdbcType=VARCHAR}
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = NOW()
+	      <if test="isReveal != null and isReveal != ''">
+		  	,IS_REVEAL=#{isReveal,jdbcType=VARCHAR}
+	      </if>
+	      <if test="isConfirm != null and isConfirm != ''">
+		  	,IS_CONFIRM=#{isConfirm,jdbcType=VARCHAR}
+	      </if>
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
 	<update id="updateRevealStatusById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
-		update REP_REVEAL
-		set
-		REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR},
-		REVEAL_DATE = #{revealDate,jdbcType=DATE},
-		REVEAL_USER = #{revealUser,jdbcType=VARCHAR}
-		<if test="isReveal != null and isReveal != ''">
-			,IS_REVEAL=#{isReveal,jdbcType=VARCHAR}
-		</if>
-		,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
-		,UPDATE_TIME = NOW()
-		where 1=1
-		and id = #{id,jdbcType=VARCHAR}
-	</update>
+	      update REP_REVEAL
+	      set 
+	      REVEAL_STATUS = #{revealStatus,jdbcType=VARCHAR},
+	      REVEAL_DATE = #{revealDate,jdbcType=DATE},
+	      REVEAL_USER = #{revealUser,jdbcType=VARCHAR}
+	      <if test="isReveal != null and isReveal != ''">
+		  	,IS_REVEAL=#{isReveal,jdbcType=VARCHAR}
+	      </if>
+	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
+		  ,UPDATE_TIME = NOW()
+	      where 1=1
+	      and id = #{id,jdbcType=VARCHAR}
+    </update>
 	<update id="updateStatusById" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
 	      update REP_REVEAL
-	      set
+	      set 
 	      STATUS = #{status,jdbcType=VARCHAR}
 	      ,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		  ,UPDATE_TIME = NOW()
@@ -268,50 +327,50 @@
 	      and id = #{id,jdbcType=VARCHAR}
     </update>
 	<update id="updateConfirmStatus" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
-		update BOK_VALBAL_TABLE_STATUS a
-		set confirm_Status=#{confirmStatusCode,jdbcType=VARCHAR}
-		where 1=1
+	      update BOK_VALBAL_TABLE_STATUS a
+	      set confirm_Status=#{confirmStatusCode,jdbcType=VARCHAR}
+	      where 1=1
 		<if test="finprodId != null and finprodId != ''">
 			and a.finprod_Id=#{finprodId,jdbcType=VARCHAR}
-		</if>
+		</if>  
 		<if test="valDate != null and valDate != ''">
 			and a.val_Date=STR_TO_DATE(#{valDate,jdbcType=VARCHAR},'%Y-%m-%d')
-		</if>
+		</if> 
 		<if test="valBalFlag != null and valBalFlag != ''">
 			and a.val_Bal_Flag=#{valBalFlagCode,jdbcType=VARCHAR}
-		</if>
-	</update>
+		</if>     
+    </update>
 	<update id="updateNoticeStatus" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
-		update BOK_VALBAL_TABLE_STATUS a
-		set NOTICE_STATUS=#{noticeStatusCode,jdbcType=VARCHAR}
-		where 1=1
+	      update BOK_VALBAL_TABLE_STATUS a
+	      set NOTICE_STATUS=#{noticeStatusCode,jdbcType=VARCHAR}
+	      where 1=1
 		<if test="finprodId != null and finprodId != ''">
 			and a.finprod_Id=#{finprodId,jdbcType=VARCHAR}
-		</if>
+		</if>  
 		<if test="valDate != null and valDate != ''">
 			and a.val_Date=STR_TO_DATE(#{valDate,jdbcType=VARCHAR},'%Y-%m-%d')
-		</if>
+		</if> 
 		<if test="valBalFlag != null and valBalFlag != ''">
 			and a.val_Bal_Flag=#{valBalFlagCode,jdbcType=VARCHAR}
-		</if>
-	</update>
+		</if>     
+    </update>
 	<update id="confirmCancle" parameterType="java.lang.String" >
-		UPDATE REP_REVEAL
-
-		set
-		CONFIRM_STATUS= #{confimStatus,jdbcType=VARCHAR},
-		IS_CONFIRM='01',
-		IS_REVEAL='01',
-		CONFIRM_DATE=null,
-		CONFIRM_USER=null,
-		UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
-		UPDATE_TIME=NOW()
-		WHERE 1=1
-		AND ID in
-		<foreach collection="idList" item="item" open="(" separator="," close=")">
-			#{item}
-		</foreach>
-	</update>
+	      UPDATE REP_REVEAL 
+	      
+	      set
+	      CONFIRM_STATUS= #{confimStatus,jdbcType=VARCHAR},
+          IS_CONFIRM='01',
+          IS_REVEAL='01',
+          CONFIRM_DATE=null,
+          CONFIRM_USER=null,
+          UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
+          UPDATE_TIME=NOW()
+	      WHERE 1=1
+	      AND ID in
+       		<foreach collection="idList" item="item" open="(" separator="," close=")">
+            	#{item}
+        	</foreach>
+     </update>
 	<update id="deleteFile">
 		update REP_REVEAL rr
 		<if test="option != null and option != ''">
@@ -323,27 +382,27 @@
 		,UPDATE_USER = #{updateUser,jdbcType=VARCHAR}
 		,UPDATE_TIME = NOW()
 		where rr.ID = #{id, jdbcType=VARCHAR}
-	</update>
+	 </update>
 	<update id="updateRepRevealByInfo" parameterType="com.joyintech.service.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto" >
-		update REP_REVEAL
-		set
-		FILEPATH = #{filepath,jdbcType=VARCHAR}
-		,FILENAME = #{filename,jdbcType=VARCHAR}
-		,TIME = #{time,jdbcType=DATE}
-		,UPDATE_TIME = NOW()
-		where 1=1
-		and STATUS = 'E'
-		<if test="reportName !=null and reportName != ''">
-			and REPORT_NAME = #{reportName,jdbcType=VARCHAR}
-		</if>
-		<if test="prodid !=null and prodid != ''">
-			and PRODID = #{prodid,jdbcType=VARCHAR}
-		</if>
-		<if test="startDate !=null">
-			and ( START_DATE = #{startDate,jdbcType=DATE}
-		</if>
-		<if test="startDate != null">
+	      update REP_REVEAL
+	      set 
+	      FILEPATH = #{filepath,jdbcType=VARCHAR}
+	      ,FILENAME = #{filename,jdbcType=VARCHAR}
+	      ,TIME = #{time,jdbcType=DATE}
+		  ,UPDATE_TIME = NOW()
+	      where 1=1
+	      and STATUS = 'E'
+	      <if test="reportName !=null and reportName != ''">
+	      and REPORT_NAME = #{reportName,jdbcType=VARCHAR}
+	      </if>
+	      <if test="prodid !=null and prodid != ''">
+	      and PRODID = #{prodid,jdbcType=VARCHAR}
+	      </if>
+	      <if test="startDate !=null">
+	      and ( START_DATE = #{startDate,jdbcType=DATE}
+	      </if>
+	      <if test="startDate != null">
 			or END_DATE= #{startDate,jdbcType=DATE} )
 		</if>
-	</update>
+    </update>
 </mapper>

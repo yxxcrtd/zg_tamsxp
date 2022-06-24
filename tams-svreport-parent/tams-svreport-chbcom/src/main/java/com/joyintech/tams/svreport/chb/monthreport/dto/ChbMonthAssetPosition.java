@@ -138,6 +138,10 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
       * 06-产品购买资管计划
       */
      private String tradeType;
+
+     private String bankCapital;
+
+     private String sharesType;
      
      /**
       * 查询类型:01-直投,02-通道,03-资管计划
@@ -256,6 +260,20 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
      * 资管计划科目
      */
     private String subCode;
+
+
+    /**
+     * 是否母行产品
+     */
+    private String isFprod;
+
+    public String getIsFprod() {
+        return isFprod;
+    }
+
+    public void setIsFprod(String isFprod) {
+        this.isFprod = isFprod;
+    }
 
     public String getSubCode() {
         return subCode;
@@ -799,5 +817,21 @@ public class ChbMonthAssetPosition extends CommonProductRatingDto implements Clo
 
     public void setTerms(BigDecimal terms) {
         this.terms = terms;
+    }
+
+    public String getBankCapital() {
+        return bankCapital;
+    }
+
+    public void setBankCapital(String bankCapital) {
+        this.bankCapital = bankCapital;
+    }
+
+    public String getSharesType() {
+        return sharesType;
+    }
+
+    public void setSharesType(String sharesType) {
+        this.sharesType = sharesType;
     }
 }

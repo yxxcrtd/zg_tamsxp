@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.common.svreport.salecustsvrreportfordeal.dao.SaleCustSvrreportVoMapper_mysql">
-
 	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.salecustsvrreportfordeal.dto.SaleCustSvrreportVo" >
 		<result column="SENDDATE" property="senddate" jdbcType="DATE" />
 		<result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
@@ -92,4 +91,16 @@
 		where DATE_FORMAT(SENDDATE,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
 				or DATE_FORMAT(UPDATETIME,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
 	</select>
+	<delete id="deleteSaleCustSvrreportOfFx" parameterType="map" >
+    	delete from SALE_CUST_SVRREPORT
+   	 	where DATE_FORMAT(SENDDATE,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
+				or DATE_FORMAT(UPDATETIME,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
+  	</delete>
+
+	<insert id="insertSaleCustSvrreportHis" parameterType="map">
+  	  insert into SALE_CUST_SVRREPORT_HIS
+  	  	select * from SALE_CUST_SVRREPORT
+  	  	where DATE_FORMAT(SENDDATE,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
+			  or DATE_FORMAT(UPDATETIME,'%Y-%m-%d') = DATE_FORMAT(#{batchTime,jdbcType=DATE},'%Y-%m-%d')
+  	</insert>
 </mapper>

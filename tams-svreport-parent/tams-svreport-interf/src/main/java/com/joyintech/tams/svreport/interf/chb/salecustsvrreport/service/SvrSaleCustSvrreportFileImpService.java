@@ -127,7 +127,7 @@ public class SvrSaleCustSvrreportFileImpService extends FileImpService {
         // modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //        List<String> listColumn = baseMapper.getTableColumnList(InterfDefine.监管区域客户组别接口数据.getCode());
 //        saleCustSvrreportList = this.convertMapToEntity(infoList,dataSource,listColumn);
-        saleCustSvrreportList = (List<SaleCustSvrreport>) convertMapToEntity(infoList,SaleCustSvrreport.class);
+        saleCustSvrreportList = (List<SaleCustSvrreport>) convertMapToEntity(infoList,SaleCustSvrreport.class, dataSource);
         // modify by convertMapToEntity yangxianjiu 2022-01-19 end
         if (saleCustSvrreportList != null && saleCustSvrreportList.size() > 0) {
             insertDataMerge(saleCustSvrreportList, saveFlag);

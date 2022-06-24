@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.background.component.common.check.dao.DataCheckCommonMapper_mysql" >
+
+    <select id="queryChbCheckRepTypeList" resultType="com.joyintech.background.component.common.check.dto.CheckRepType">
+        select distinct
+            SRCPROPERTY srcproperty
+        from CHB_DATACHECK_REP_TYPE_INV
+        where PAGE_ID = #{pageId,jdbcType=VARCHAR}
+        <if test="repType != null and repType != ''">
+            and SRCPROPERTY != IFNULL((select SRCPROPERTY from CHB_DATACHECK_REP_TYPE_INV where PAGE_ID = #{pageId,jdbcType=VARCHAR} and REP_TYPE = #{repType,jdbcType=VARCHAR}), 'NOSRCPROPERTY')
+        </if>
+    </select>
+
+</mapper>

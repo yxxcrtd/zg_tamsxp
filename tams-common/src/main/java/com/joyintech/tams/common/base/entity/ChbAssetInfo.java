@@ -20,19 +20,17 @@ public class ChbAssetInfo extends BaseEntity {
     /**
      * 行内资产负债编码
      */
-	@PrimaryKey(Field.PK_1)
+    @PrimaryKey(Field.PK_1)
     private String assetCode;
 
     /**
      * 资产类型
      */
-	@PrimaryKey(Field.PK_2)
     private String assetType;
 
     /**
      * 资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL
      */
-	@PrimaryKey(Field.PK_3)
     private String assetType2;
 
     /**
@@ -1108,6 +1106,9 @@ public class ChbAssetInfo extends BaseEntity {
      */
     private String isFbzb;
 
+    /****是否结构化资产**/
+    private String isConstracteBusi;
+
     /**
      * 结构化业务类型
      */
@@ -1123,6 +1124,12 @@ public class ChbAssetInfo extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal constracteHeaverTimes;
+
+    /**
+     * 是否银行资本补充工具
+     */
+    private String isBankCap;
+
 
     /**
      * 银行资本补充工具
@@ -1143,8 +1150,8 @@ public class ChbAssetInfo extends BaseEntity {
      * 是否持有金融牌照
      */
     private String isFinLicence;
-	
-	/**
+
+    /**
      * 存款账号
      */
     private String accountNo;
@@ -1218,6 +1225,9 @@ public class ChbAssetInfo extends BaseEntity {
     public String getAssetType() {
         return assetType;
     }
+
+
+
 
     /**
      * 设置 资产类型
@@ -2983,6 +2993,15 @@ public class ChbAssetInfo extends BaseEntity {
         return isCtrlBottom;
     }
 
+
+    public String getIsConstracteBusi() {
+        return isConstracteBusi;
+    }
+
+    public void setIsConstracteBusi(String isConstracteBusi) {
+        this.isConstracteBusi = isConstracteBusi;
+    }
+
     /**
      * 设置 是否掌控计划底层资产详情 01 是/ 02 否
      * @param isCtrlBottom 是否掌控计划底层资产详情 01 是/ 02 否
@@ -4171,6 +4190,15 @@ public class ChbAssetInfo extends BaseEntity {
         return perpetualClauseType;
     }
 
+
+    public String getIsBankCap() {
+        return isBankCap;
+    }
+
+    public void setIsBankCap(String isBankCap) {
+        this.isBankCap = isBankCap;
+    }
+
     /**
      * 设置 永续条款类型
      * @param perpetualClauseType 永续条款类型
@@ -4692,8 +4720,8 @@ public class ChbAssetInfo extends BaseEntity {
     public void setIsFinLicence(String isFinLicence) {
         this.isFinLicence = isFinLicence == null ? null : isFinLicence.trim();
     }
-	
-	public String getAccountNo() {
+
+    public String getAccountNo() {
         return accountNo;
     }
 

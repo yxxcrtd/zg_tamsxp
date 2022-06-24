@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.investmentsinfo.dao.ChbPrdRateInterfMapper_mysql" >
+	<resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+		<id column="SEQNO" property="seqno" jdbcType="CHAR" />
+		<result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+		<result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
+		<result column="IS_LAY" property="isLay" jdbcType="VARCHAR" />
+		<result column="CHANGE_DATE" property="changeDate" jdbcType="DATE" />
+		<result column="CASHMDATE" property="cashmdate" jdbcType="DATE" />
+		<result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+		<result column="CHANGE_TYPE" property="changeType" jdbcType="VARCHAR" />
+		<result column="PROD_YIELD" property="prodYield" jdbcType="DECIMAL" />
+		<result column="PROD_BENCHMARK_RATE" property="prodBenchmarkRate" jdbcType="DECIMAL" />
+		<result column="UNIT_VALUE_TOTAL" property="unitValueTotal" jdbcType="DECIMAL" />
+		<result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+		<result column="SEVEN_DAY_RATE" property="sevenDayRate" jdbcType="DECIMAL" />
+		<result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+		<result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="REV_DATE" property="revDate" jdbcType="DATE" />
+		<result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+		<result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CCY" property="ccy" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+        SEQNO SEQNO, PROD_ID PROD_ID, FPROD_ID FPROD_ID, IS_LAY IS_LAY, CHANGE_DATE CHANGE_DATE,
+        CASHMDATE CASHMDATE, PROFIT_TYPE PROFIT_TYPE, CHANGE_TYPE CHANGE_TYPE, PROD_YIELD PROD_YIELD,
+        PROD_BENCHMARK_RATE PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL UNIT_VALUE_TOTAL, UNIT_VALUE UNIT_VALUE,
+        SEVEN_DAY_RATE SEVEN_DAY_RATE, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, STATUS STATUS,
+        REV_DATE REV_DATE, DATA_SOURCE DATA_SOURCE, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, REMARK REMARK, CCY CCY
+    </sql>
+	<sql id="Sql_All_Data" >
+		select
+		<include refid="com.joyintech.tams.common.base.dao.ChbPrdRateMapper.Base_Column_List" />
+		from CHB_PRD_RATE
+	</sql>
+	<sql id="Sql_All_Effective_Data" >
+		select
+		<include refid="com.joyintech.tams.common.base.dao.ChbPrdRateMapper.Base_Column_List" />
+		from CHB_PRD_RATE
+		where STATUS = 'E'
+	</sql>
+
+
+	<insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdRate" >
+        insert into CHB_PRD_RATE (SEQNO, PROD_ID, FPROD_ID,
+            IS_LAY, CHANGE_DATE, CASHMDATE,
+            PROFIT_TYPE, CHANGE_TYPE, PROD_YIELD,
+            PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL, UNIT_VALUE,
+            SEVEN_DAY_RATE, ORG_CODE, DEPT_CODE,
+            STATUS, REV_DATE, DATA_SOURCE,
+            UPDATE_USER, UPDATE_TIME, CREATE_USER,
+            CREATE_TIME, REMARK, CCY
+            )
+        values (#{seqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{fprodId,jdbcType=VARCHAR},
+            #{isLay,jdbcType=VARCHAR}, #{changeDate,jdbcType=DATE}, #{cashmdate,jdbcType=DATE},
+            #{profitType,jdbcType=VARCHAR}, #{changeType,jdbcType=VARCHAR}, #{prodYield,jdbcType=DECIMAL},
+            #{prodBenchmarkRate,jdbcType=DECIMAL}, #{unitValueTotal,jdbcType=DECIMAL}, #{unitValue,jdbcType=DECIMAL},
+            #{sevenDayRate,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR}, #{revDate,jdbcType=DATE}, #{dataSource,jdbcType=VARCHAR},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}
+            )
+    </insert>
+
+	<insert id="mergeChbPrdRateData"
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdRate">
+		insert into CHB_PRD_RATE(SEQNO, PROD_ID, FPROD_ID,
+		IS_LAY, CHANGE_DATE, CASHMDATE,
+		PROFIT_TYPE, CHANGE_TYPE, PROD_YIELD,
+		PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL, UNIT_VALUE,
+		SEVEN_DAY_RATE, ORG_CODE, DEPT_CODE,
+		STATUS, REV_DATE, DATA_SOURCE,
+		UPDATE_USER, UPDATE_TIME, CREATE_USER,
+		CREATE_TIME, REMARK, CCY)
+		select SEQNO, PROD_ID, FPROD_ID,
+		IS_LAY, CHANGE_DATE, CASHMDATE,
+		PROFIT_TYPE, CHANGE_TYPE, PROD_YIELD,
+		PROD_BENCHMARK_RATE, UNIT_VALUE_TOTAL, UNIT_VALUE,
+		SEVEN_DAY_RATE, ORG_CODE, DEPT_CODE,
+		STATUS, REV_DATE, DATA_SOURCE,
+		UPDATE_USER, UPDATE_TIME, CREATE_USER,
+		CREATE_TIME, REMARK, CCY from
+		(
+		select TEMP.SEQNO, TEMP.PROD_ID, TEMP.FPROD_ID,
+		TEMP.IS_LAY, TEMP.CHANGE_DATE, TEMP.CASHMDATE,
+		TEMP.PROFIT_TYPE, TEMP.CHANGE_TYPE, TEMP.PROD_YIELD,
+		TEMP.PROD_BENCHMARK_RATE, TEMP.UNIT_VALUE_TOTAL, TEMP.UNIT_VALUE,
+		TEMP.SEVEN_DAY_RATE, TEMP.ORG_CODE, TEMP.DEPT_CODE,
+		TEMP.STATUS, TEMP.REV_DATE, TEMP.DATA_SOURCE,
+		TEMP.UPDATE_USER, TEMP.UPDATE_TIME, TEMP.CREATE_USER,
+		TEMP.CREATE_TIME, TEMP.REMARK, TEMP.CCY from
+		(
+		<foreach collection="list" item="dto"  separator="union all">
+			SELECT
+			#{item.seqno,jdbcType=CHAR} SEQNO,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+			#{item.isLay,jdbcType=VARCHAR} IS_LAY,
+			#{item.changeDate,jdbcType=DATE} CHANGE_DATE,
+			#{item.cashmdate,jdbcType=DATE} CASHMDATE,
+			#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+			#{item.changeType,jdbcType=VARCHAR} CHANGE_TYPE,
+			#{item.prodYield,jdbcType=DECIMAL} PROD_YIELD,
+			#{item.prodBenchmarkRate,jdbcType=DECIMAL} PROD_BENCHMARK_RATE,
+			#{item.unitValueTotal,jdbcType=DECIMAL} UNIT_VALUE_TOTAL,
+			#{item.unitValue,jdbcType=DECIMAL} UNIT_VALUE,
+			#{item.sevenDayRate,jdbcType=DECIMAL} SEVEN_DAY_RATE,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.revDate,jdbcType=DATE} REV_DATE,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			now() UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			now() CREATE_TIME,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.ccy,jdbcType=VARCHAR} CCY
+			FROM
+			DUAL
+		</foreach>
+		) TEMP where not EXISTS (select 1 from CHB_PRD_RATE CII where CII.PROD_ID = TEMP.PROD_ID
+		AND DATE_FORMAT(CII.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(TEMP.CHANGE_DATE,'%Y-%m-%d')
+		AND CII.CHANGE_TYPE = TEMP.CHANGE_TYPE)
+		) de ;
+		UPDATE  CHB_PRD_DEAL as A,
+		(
+		select SEQNO,
+		FPROD_IDD,
+		IS_LAY,
+		CASHMDATE,
+		PROFIT_TYPE,
+		PROD_YIELD,
+		PROD_BENCHMARK_RATE,
+		UNIT_VALUE_TOTAL,
+		UNIT_VALUE,
+		SEVEN_DAY_RATE,
+		ORG_CODE,
+		DEPT_CODE,
+		STATUSS,
+		REV_DATEE,
+		DATA_SOURCE,
+		UPDATE_USER,
+		UPDATE_TIME,
+		CREATE_USER,
+		CREATE_TIME,
+		REMARK,
+		CCY from
+		(
+		select TEMP.SEQNO,
+		TEMP.FPROD_IDD,
+		TEMP.IS_LAY,
+		TEMP.CASHMDATE,
+		TEMP.PROFIT_TYPE,
+		TEMP.PROD_YIELD,
+		TEMP.PROD_BENCHMARK_RATE,
+		TEMP.UNIT_VALUE_TOTAL,
+		TEMP.UNIT_VALUE,
+		TEMP.SEVEN_DAY_RATE,
+		TEMP.ORG_CODE,
+		TEMP.DEPT_CODE,
+		TEMP.STATUSS,
+		TEMP.REV_DATEE,
+		TEMP.DATA_SOURCE,
+		TEMP.UPDATE_USER,
+		TEMP.UPDATE_TIME,
+		TEMP.CREATE_USER,
+		TEMP.CREATE_TIME,
+		TEMP.REMARK,
+		TEMP.CCY from
+		(
+		<foreach collection="list" item="dto"  separator="union all">
+			SELECT
+			#{item.seqno,jdbcType=CHAR} SEQNO,
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+			#{item.isLay,jdbcType=VARCHAR} IS_LAY,
+			#{item.changeDate,jdbcType=DATE} CHANGE_DATE,
+			#{item.cashmdate,jdbcType=DATE} CASHMDATE,
+			#{item.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+			#{item.changeType,jdbcType=VARCHAR} CHANGE_TYPE,
+			#{item.prodYield,jdbcType=DECIMAL} PROD_YIELD,
+			#{item.prodBenchmarkRate,jdbcType=DECIMAL} PROD_BENCHMARK_RATE,
+			#{item.unitValueTotal,jdbcType=DECIMAL} UNIT_VALUE_TOTAL,
+			#{item.unitValue,jdbcType=DECIMAL} UNIT_VALUE,
+			#{item.sevenDayRate,jdbcType=DECIMAL} SEVEN_DAY_RATE,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.revDate,jdbcType=DATE} REV_DATE,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			now() UPDATE_TIME,
+			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+			now() CREATE_TIME,
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.ccy,jdbcType=VARCHAR} CCY
+			FROM
+			DUAL
+		</foreach>
+		) TEMP
+		) de
+		) AS B
+		set  A.SEQNO = B.SEQNO,
+		A.FPROD_ID = B.FPROD_ID,
+		A.IS_LAY = B.IS_LAY,
+		A.CASHMDATE = B.CASHMDATE,
+		A.PROFIT_TYPE = B.PROFIT_TYPE,
+		A.PROD_YIELD = B.PROD_YIELD,
+		A.PROD_BENCHMARK_RATE = B.PROD_BENCHMARK_RATE,
+		A.UNIT_VALUE_TOTAL = B.UNIT_VALUE_TOTAL,
+		A.UNIT_VALUE = B.UNIT_VALUE,
+		A.SEVEN_DAY_RATE = B.SEVEN_DAY_RATE,
+		A.ORG_CODE = B.ORG_CODE,
+		A.DEPT_CODE = B.DEPT_CODE,
+		A.STATUS = B.STATUS,
+		A.REV_DATE = B.REV_DATE,
+		A.DATA_SOURCE = B.DATA_SOURCE,
+		A.UPDATE_USER= B.UPDATE_USER,
+		A.UPDATE_TIME = B.UPDATE_TIME,
+		A.CREATE_USER = B.CREATE_USER,
+		A.CREATE_TIME = B.CREATE_TIME,
+		A.REMARK = B.REMARK,
+		A.CCY = B.CCY where A.PROD_ID = B.PROD_ID
+		AND DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d') = DATE_FORMAT(B.CHANGE_DATE,'%Y-%m-%d')
+		AND A.CHANGE_TYPE = B.CHANGE_TYPE ;
+	</insert>
+
+
+
+	<delete id="deleteTodayData">
+  		delete from CHB_PRD_RATE where DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y%m%d')=DATE_FORMAT(now(),'%Y%m%d')
+  	</delete>
+</mapper>

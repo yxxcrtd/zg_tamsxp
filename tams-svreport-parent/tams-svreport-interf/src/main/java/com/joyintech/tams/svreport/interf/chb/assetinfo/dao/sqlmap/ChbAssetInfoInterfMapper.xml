@@ -13154,6 +13154,8 @@
                 #{item.orgAssetType1,jdbcType=VARCHAR} ORG_ASSET_TYPE1,
                 #{item.orgAssetType2,jdbcType=VARCHAR} ORG_ASSET_TYPE2,
                 #{item.orgAssetType3,jdbcType=VARCHAR} ORG_ASSET_TYPE3,
+                #{item.orgAssetType4,jdbcType=VARCHAR} ORG_ASSET_TYPE4,
+                #{item.orgAssetType5,jdbcType=VARCHAR} ORG_ASSET_TYPE5,
                 #{item.buyPlace,jdbcType=VARCHAR} BUY_PLACE,
                 #{item.assetType3,jdbcType=VARCHAR} ASSET_TYPE3,
                 #{item.pbcAssetType1,jdbcType=VARCHAR} PBC_ASSET_TYPE1,
@@ -13218,6 +13220,11 @@
                 ,#{item.constracteBusiType,jdbcType=VARCHAR} CONSTRACTE_BUSI_TYPE
                 ,#{item.constracteGrade,jdbcType=VARCHAR} CONSTRACTE_GRADE
                 ,#{item.constracteHeaverTimes,jdbcType=DECIMAL} CONSTRACTE_HEAVER_TIMES
+                ,#{item.profitFlag,jdbcType=VARCHAR} PROFIT_FLAG
+                ,#{item.accountNo,jdbcType=VARCHAR} ACCOUNT_NO
+                ,#{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE
+                ,#{item.isConstracteBusi,jdbcType=VARCHAR} IS_CONSTRACTE_BUSI
+                ,#{item.billCode,jdbcType=VARCHAR} BILL_CODE
                 from dual
             </foreach>
         ) TEMP
@@ -13381,6 +13388,8 @@
             CII.ORG_ASSET_TYPE1 = TEMP.ORG_ASSET_TYPE1,
             CII.ORG_ASSET_TYPE2 = TEMP.ORG_ASSET_TYPE2,
             CII.ORG_ASSET_TYPE3 = TEMP.ORG_ASSET_TYPE3,
+            CII.ORG_ASSET_TYPE4 = TEMP.ORG_ASSET_TYPE4,
+            CII.ORG_ASSET_TYPE5 = TEMP.ORG_ASSET_TYPE5,
             CII.BUY_PLACE = TEMP.BUY_PLACE,
             CII.ASSET_TYPE3 = TEMP.ASSET_TYPE3,
             CII.PBC_ASSET_TYPE1 = TEMP.PBC_ASSET_TYPE1,
@@ -13445,6 +13454,11 @@
             ,CII.CONSTRACTE_BUSI_TYPE	=	TEMP.CONSTRACTE_BUSI_TYPE
             ,CII.CONSTRACTE_GRADE	=	TEMP.CONSTRACTE_GRADE
             ,CII.CONSTRACTE_HEAVER_TIMES	=	TEMP.CONSTRACTE_HEAVER_TIMES
+            ,CII.PROFIT_FLAG	=	TEMP.PROFIT_FLAG
+            ,CII.ACCOUNT_NO	=	TEMP.ACCOUNT_NO
+            ,CII.CREDIT_ASSET_CODE	=	TEMP.CREDIT_ASSET_CODE
+            ,CII.IS_CONSTRACTE_BUSI = TEMP.IS_CONSTRACTE_BUSI
+            ,CII.BILL_CODE = TEMP.BILL_CODE
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13497,7 +13511,7 @@
         BONDTOSTOCK_FLAG, PPPFLAG, STATUS_DATE,
         CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE,
         SEC_MAIN_GRADE,BLN_AREA,INDUSTRY_PBC,CUSTOMER_OBJ_TYPE,
-        ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,BUY_PLACE,
+        ORG_ASSET_TYPE1,ORG_ASSET_TYPE2,ORG_ASSET_TYPE3,ORG_ASSET_TYPE4,ORG_ASSET_TYPE5,BUY_PLACE,
         ASSET_TYPE3,PBC_ASSET_TYPE1,PBC_ASSET_TYPE2,PBC_ASSET_TYPE3,ASSET_CODE_OLD,TRM_FUND_TYPE,
         DEPO_TYPE,
         RIVAL_PARTY_TYPE,
@@ -13556,6 +13570,11 @@
         ,CONSTRACTE_BUSI_TYPE
         ,CONSTRACTE_GRADE
         ,CONSTRACTE_HEAVER_TIMES
+        ,PROFIT_FLAG
+        ,ACCOUNT_NO
+        ,CREDIT_ASSET_CODE
+        ,IS_CONSTRACTE_BUSI
+        ,BILL_CODE
         )
         values(
             TEMP.ASSET_UUID,
@@ -13713,6 +13732,8 @@
             TEMP.ORG_ASSET_TYPE1,
             TEMP.ORG_ASSET_TYPE2,
             TEMP.ORG_ASSET_TYPE3,
+            TEMP.ORG_ASSET_TYPE4,
+            TEMP.ORG_ASSET_TYPE5,
             TEMP.BUY_PLACE,
             TEMP.ASSET_TYPE3,
             TEMP.PBC_ASSET_TYPE1,
@@ -13777,6 +13798,11 @@
             ,TEMP.CONSTRACTE_BUSI_TYPE
             ,TEMP.CONSTRACTE_GRADE
             ,TEMP.CONSTRACTE_HEAVER_TIMES
+            ,TEMP.PROFIT_FLAG
+            ,TEMP.ACCOUNT_NO
+            ,TEMP.CREDIT_ASSET_CODE
+            ,TEMP.IS_CONSTRACTE_BUSI
+            ,TEMP.BILL_CODE
         )
     </insert>
 
@@ -16102,6 +16128,14 @@
 
     <delete id="deleteAllChbSecRepayInfoData">
       truncate table CHB_SEC_REPAY_INFO
+    </delete>
+    <delete id="deleteChbAssetInfoErroData" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+        delete from CHB_ASSET_INFO_ERRODATA
+        <where>
+            <foreach collection="list" item="item" index="index" open="ASSET_CODE in (" close=")" separator=",">
+                #{item.assetCode,jdbcType=VARCHAR}
+            </foreach>
+        </where>
     </delete>
 
     <insert id="insertChbSecRepayInfoData" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >

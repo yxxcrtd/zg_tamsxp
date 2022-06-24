@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PtlSecStockMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PtlSecStock" >
+        <id column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <id column="PLEDGE_STOCK_ID" property="pledgeStockId" jdbcType="VARCHAR" />
+        <result column="PLEDGE_STOCK_NAME" property="pledgeStockName" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        PORTFOLIO_ID PORTFOLIO_ID, PLEDGE_STOCK_ID PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME PLEDGE_STOCK_NAME, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecStockMapper_mysql.Base_Column_List" />
+        from PTL_SEC_STOCK
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecStockMapper_mysql.Base_Column_List" />
+        from PTL_SEC_STOCK
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PtlSecStockKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlSecStockMapper_mysql.Base_Column_List" />
+        from PTL_SEC_STOCK
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlSecStockKey" >
+        delete from PTL_SEC_STOCK
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PtlSecStock" >
+        insert into PTL_SEC_STOCK (PORTFOLIO_ID, PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{portfolioId,jdbcType=VARCHAR}, #{pledgeStockId,jdbcType=VARCHAR}, #{pledgeStockName,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecStock" >
+        insert into PTL_SEC_STOCK
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="pledgeStockId != null" >
+                PLEDGE_STOCK_ID,
+            </if>
+            <if test="pledgeStockName != null" >
+                PLEDGE_STOCK_NAME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeStockId != null" >
+                #{pledgeStockId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeStockName != null" >
+                #{pledgeStockName,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlSecStock" >
+        insert into PTL_SEC_STOCK(PORTFOLIO_ID, PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select PORTFOLIO_ID, PLEDGE_STOCK_ID, PLEDGE_STOCK_NAME, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PTL_SEC_STOCK
+             where 1 = 1 and PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR} and PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PtlSecStock" >
+        update PTL_SEC_STOCK
+        <set >
+            <if test="pledgeStockName != null" >
+                PLEDGE_STOCK_NAME = #{pledgeStockName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlSecStock" >
+        update PTL_SEC_STOCK
+        set PLEDGE_STOCK_NAME = #{pledgeStockName,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR}
+          and PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR}
+    </update>
+</mapper>

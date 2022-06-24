@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.service.interf.ilc0008.dao.InterfLC0008Mapper">
-    <update id="updateData" parameterType="com.joyintech.service.interf.ilc0008.entity.InterfLc0008InEntity">
-        update INTERF_CMS_TCMS_INFO info
-        set info.MDATE = to_date(#{expirydate,jdbcType=VARCHAR},'yyyy-MM-dd')
-        where info.PUTOUTNO = #{putoutorderno,jdbcType=VARCHAR}
-    </update>
-</mapper>

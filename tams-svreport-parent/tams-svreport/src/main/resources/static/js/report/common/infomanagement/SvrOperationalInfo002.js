@@ -3,6 +3,8 @@ $(function(){
 	$("#SvrOperationalInfo002_btn_filter").hide();
 	// 隐藏导出按钮
 	$("#SvrOperationalInfo002_btn_export").hide();
+
+	$(".btn-select-wrapper").css("display","none")
 	// 更改数据状态重新查下结果
 	function showTable() {
 		SvrOperationalInfo002_table001.load();

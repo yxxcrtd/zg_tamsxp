@@ -93,6 +93,8 @@
 		<result column="CASH_MANA_CATE" property="cashManaCate" />
 		<result column="YIELD" property="yield" />
 		<result column="INVEST_FEE_RATE" property="investFeeRate" />
+		<result column="IS_FHXGCP" property="isFhxgcp" />
+		<result column="PRD_SPEC_PROPERTY" property="prdSpecProperty" />
 	</resultMap>
 	<select id="selectAllData" parameterType="java.util.HashMap" resultType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
 		select
@@ -102,7 +104,16 @@
 		cds.PROD_INS_ID prodInsId,
 		cds.PROD_BRAND prodBrand,
 		cds.PROD_STAGE prodStage,
-		cds.ISSUE_PARTY_ID issuePartyId,
+
+		/***update by leipeng 20200628**/
+
+		<if test="model_type != null">
+			ifnull(info.REG_CODE,cds.ISSUE_PARTY_ID) issuePartyId, /*发行机构代码*/
+		</if>
+		<if test="model_type == null">
+			cds.ISSUE_PARTY_ID issuePartyId,
+		</if>
+
 		cds.APPROVER_ID approverId,
 		cds.APPROVER_NAME approverName,
 		cds.DESIGNER_ID designerId,
@@ -175,7 +186,7 @@
 		cds.ORG_CODE orgCode,
 		cds.FILE_NUM fileNum,
 		cds.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-		cds.REG_CODE regCode,
+		ifnull(cpc.REG_CODE, cds.REG_CODE) regCode,
 		cds.RAISE_TYPE raiseType,
 		cds.IVSTORIENTATION ivstorientation,
 		cds.EXC_FIN_SECTOR excFinSector,
@@ -184,8 +195,15 @@
 		cds.IS_FREE_REDEM isFreeRedem,
 		cds.CASH_MANA_CATE cashManaCate,
 		cds.YIELD yield,
-		cds.INVEST_FEE_RATE investFeeRate
+		cds.INVEST_FEE_RATE investFeeRate,
+		cds.SUMIT_SEQ sumitSeq,
+		cds.IS_FHXGCP isFhxgcp,
+		cds.PRD_SPEC_PROPERTY prdSpecProperty
 		from CHB_PRD_DECLARE_SUB cds
+		left join CHB_PRDRESIST_CODE cpc on cpc.PRODID = cds.PROD_ID
+		<if test="model_type != null">
+			left join CHB_PRD_BASEINFO info on info.PROD_ID=cds.prod_id
+		</if>
 		where 1=1
 		<if test="prodIdList != null and prodIdList.size()>0">
 			<foreach collection="prodIdList" item="item" open="and cds.PROD_ID in(" separator="," close=")">
@@ -254,6 +272,11 @@
 		<if test="theSendStatus != null and theSendStatus != ''">
 			and cds.SEND_STATUS = #{sendStatus}
 		</if>
+		<if test="keyList != null and keyList.size() > 0">
+			<foreach collection="keyList" item="items" open="and cds.REGIST_SEQNO in (" separator="," close=")">
+				#{items,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 
 	<select id="selcteDataByList" resultMap="PerProDeclareRegDtoRM" parameterType="java.util.List">
@@ -318,10 +341,18 @@
 	    select count(1) from CHB_FILE where FILE_ID=#{fileId} and status='E'
 	</select>
 	<update id="updateFileNo" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
-	    update CHB_PRD_DECLARE_SUB 
-	    set FILE_NO=#{fileNo},
-	    FILE_NUM=#{fileNum} 
-	    where REGIST_SEQNO=#{registSeqno}
+		update CHB_PRD_DECLARE_SUB
+		set FILE_NO=#{fileNo},
+		FILE_NUM=#{fileNum},
+		NINE_FILE = #{nineFile}
+		<where>
+			<if test="registSeqno != null and registSeqno != ''">
+				REGIST_SEQNO=#{registSeqno}
+			</if>
+			<if test="prodId != null and prodId != ''">
+				PROD_ID = #{prodId}
+			</if>
+		</where>
 	</update>
 
 
@@ -390,7 +421,8 @@
 		baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
 		baseinfo.YIELD ,/*业绩比较基准%*/
 		baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
-		baseinfo.STATUS STATUS
+		baseinfo.STATUS STATUS,
+		baseinfo.IS_FHXGCP IS_FHXGCP
 		from CHB_PRD_BASEINFO baseinfo
 		where 1 =1
 		and baseinfo.FPROD_ID IS NULL
@@ -414,7 +446,14 @@
 		baseinfo.PROD_INS_ID ,/*行内识别码*/
 		baseinfo.PROD_BRAND,/*产品品牌*/
 		baseinfo.PROD_STAGE ,/*产品期次*/
-		/*baseinfo.ISSUE_PARTY_ID ,发行机构代码*/
+
+		/****add by leipeng 20200628 添加多法人模式查询所属机构**/
+		<if test="model_type != null">
+			ifnull(PRD.REG_CODE,baseinfo.ISSUE_PARTY_ID)  ISSUE_PARTY_ID ,/*发行机构代码*/
+		</if>
+		<if test="model_type == null">
+			baseinfo.ISSUE_PARTY_ID ,/*发行机构代码*/
+		</if>
 		baseinfo.APPROVER_ID,/*产品审批人身份证号*/
 		baseinfo.APPROVER_NAME,/*产品审批人姓名*/
 		baseinfo.DESIGNER_ID,/*产品设计人身份证号*/
@@ -471,15 +510,35 @@
 		baseinfo.CASH_MANA_CATE ,/*是否现金管理类*/
 		baseinfo.YIELD ,/*业绩比较基准%*/
 		baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
-		baseinfo.STATUS STATUS
+		baseinfo.STATUS STATUS,
+		sub.NINE_FILE,
+		sub.FILE_NO,
+		sub.FILE_NUM,
+		baseinfo.IS_FHXGCP,
+		baseinfo.PRD_SPEC_PROPERTY
 		from CHB_PRD_DECLARE_INFO baseinfo
+		<!-- add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 start -->
+		left join CHB_PRD_DECLARE_SUB sub on baseinfo.PROD_INS_ID = sub.PROD_INS_ID and sub.send_status = '01'
+		<!-- add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 end -->
+		/****add by leipeng 20200628 添加多法人模式查询所属机构**/
+		<if test="model_type != null">
+			LEFT JOIN CHB_PRD_BASEINFO PRD on PRD.PROD_ID=baseinfo.PROD_INS_ID
+			LEFT JOIN CHB_ORG_REGIST_BANK_CODE COD ON baseinfo.ISSUE_PARTY_ID=COD.REGIST_BANK_CODE
+		</if>
+
 		where 1 =1
-		<!-- <if test="prodInfos!=null and prodInfos.size()!=0">
-             AND trim(baseinfo.prod_id) in
-            <foreach item="prodId" collection="prodInfos" open="(" separator="," close=")">
-              #{prodId}
-               </foreach>
-        </if> -->
+		<if test="prodInfos!=null and prodInfos.size()!=0">
+			AND trim(baseinfo.PROD_INS_ID) in
+			<foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
+				<if test="(index % 999) == 998">
+					null) OR trim(baseinfo.PROD_INS_ID) in (
+				</if>
+				#{item}
+			</foreach>
+		</if>
+		<if test="model_type != null and InstitutionCode != null and InstitutionCode != '' "  >
+			AND COD.ORG_CODE  =#{InstitutionCode,jdbcType=VARCHAR}
+		</if>
 		<!-- 根据产品的更新时间和创建时间生成报表 -->
 		<if test="generateDate != null">
 			and DATE_FORMAT(ifnull(baseinfo.update_time,baseinfo.create_time),'%Y-%m-%d' )=#{generateDate,jdbcType=VARCHAR}
@@ -578,99 +637,101 @@
 		IS_FREE_REDEM,
 		CASH_MANA_CATE,
 		YIELD,
-		INVEST_FEE_RATE
+		INVEST_FEE_RATE,
+		IS_FHXGCP
 		)
 		<foreach collection="list" item="item" separator="union all">
 			select
-			#{item.registSeqno,jdbcType=VARCHAR},
-			#{item.prodId,jdbcType=VARCHAR} ,
-			#{item.prodName,jdbcType=VARCHAR},
-			#{item.prodInsId,jdbcType=VARCHAR} ,
-			#{item.prodBrand,jdbcType=VARCHAR},
-			#{item.prodStage,jdbcType=NUMERIC} ,
-			#{item.issuePartyId,jdbcType=VARCHAR} ,
-			#{item.approverId,jdbcType=VARCHAR},
-			#{item.approverName,jdbcType=VARCHAR},
-			#{item.designerId,jdbcType=VARCHAR},
-			#{item.designerName,jdbcType=VARCHAR},
-			#{item.managerId,jdbcType=VARCHAR},
-			#{item.managerName,jdbcType=VARCHAR},
-			#{item.liaisonName,jdbcType=VARCHAR},
-			#{item.liaisonTel,jdbcType=VARCHAR},
-			#{item.liaisonMobile,jdbcType=VARCHAR},
-			#{item.liaisonEmail,jdbcType=VARCHAR},
-			#{item.profitType,jdbcType=VARCHAR},
-			#{item.termtype,jdbcType=VARCHAR},
-			#{item.investArae,jdbcType=VARCHAR},
-			#{item.investCountry,jdbcType=VARCHAR},
-			#{item.finanSerModel,jdbcType=VARCHAR},
-			#{item.operateMode,jdbcType=VARCHAR},
-			#{item.bookMode,jdbcType=VARCHAR},
-			#{item.cmmode,jdbcType=VARCHAR},
-			#{item.pmmode,jdbcType=VARCHAR},
-			#{item.mname,jdbcType=VARCHAR} ,
-			#{item.pricedMode,jdbcType=VARCHAR},
-			#{item.invAssetType,jdbcType=VARCHAR},
-			#{item.conPrdTraget,jdbcType=VARCHAR},
-			#{item.contMode,jdbcType=VARCHAR},
-			#{item.cooperationName,jdbcType=VARCHAR} ,
-			#{item.invTypeRat,jdbcType=VARCHAR} ,
-			#{item.isYield,jdbcType=VARCHAR},
-			#{item.highYield,jdbcType=NUMERIC} ,
-			#{item.lowYield,jdbcType=NUMERIC} ,
-			#{item.isYieldMeasBasis,jdbcType=VARCHAR},
-			#{item.riskType,jdbcType=VARCHAR},
-			#{item.saleArea,jdbcType=VARCHAR},
-			#{item.raiseCcy,jdbcType=VARCHAR},
-			#{item.cashPrinCcy,jdbcType=VARCHAR},
-			#{item.cashProfCcy,jdbcType=VARCHAR},
-			#{item.saleAmtStr,jdbcType=NUMERIC} ,
-			#{item.raiseAmtPlan,jdbcType=NUMERIC} ,
-			#{item.raisePstrdate,jdbcType=DATE} ,
-			#{item.raisePenddate,jdbcType=DATE} ,
-			#{item.investPrinDate,jdbcType=VARCHAR},
-			#{item.investProfDate,jdbcType=VARCHAR},
-			#{item.saleFeeRate,jdbcType=NUMERIC} ,
-			#{item.inDepName,jdbcType=VARCHAR},
-			#{item.inDepCode,jdbcType=VARCHAR} ,
-			#{item.outDepCtry,jdbcType=VARCHAR},
-			#{item.outDepName,jdbcType=VARCHAR},
-			#{item.truFeeRate,jdbcType=NUMERIC} ,
-			#{item.riskLevel,jdbcType=VARCHAR},
-			#{item.termRightFlag,jdbcType=VARCHAR},
-			#{item.cusRedeemFlag,jdbcType=VARCHAR},
-			#{item.creditFlag,jdbcType=VARCHAR},
-			#{item.creditType,jdbcType=VARCHAR},
-			#{item.creditMode,jdbcType=VARCHAR},
-			#{item.remark,jdbcType=VARCHAR} ,
-			null ,
-			null ,
-			null ,
-			null ,
-			'01' ,
-			NOW() ,
-			'01' ,
-			#{item.createUser,jdbcType=VARCHAR} ,
-			null ,
-			NOW() ,
-			#{item.updateUser,jdbcType=VARCHAR} ,
-			NOW() ,
-			#{item.chbSubmitDeadline,jdbcType=DATE} ,
-			#{item.submitDeadline,jdbcType=DATE} ,
-			null ,
-			#{item.orgCode,jdbcType=VARCHAR} ,
-			0 ,
-			null,
-			#{item.regCode,jdbcType=VARCHAR},
-			#{item.raiseType,jdbcType=VARCHAR},
-			#{item.ivstorientation,jdbcType=VARCHAR},
-			#{item.excFinSector,jdbcType=VARCHAR},
-			#{item.isShortTerm,jdbcType=VARCHAR},
-			#{item.shortTerm,jdbcType=NUMERIC},
-			#{item.isFreeRedem,jdbcType=VARCHAR},
-			#{item.cashManaCate,jdbcType=VARCHAR},
-			#{item.yield,jdbcType=NUMERIC},
-			#{item.investFeeRate,jdbcType=NUMERIC}
+			#{item.registSeqno,jdbcType=VARCHAR} A1,
+			#{item.prodId,jdbcType=VARCHAR} A2,
+			#{item.prodName,jdbcType=VARCHAR} A3,
+			#{item.prodInsId,jdbcType=VARCHAR} A4,
+			#{item.prodBrand,jdbcType=VARCHAR} A5,
+			#{item.prodStage,jdbcType=NUMERIC} A6,
+			#{item.issuePartyId,jdbcType=VARCHAR} A7,
+			#{item.approverId,jdbcType=VARCHAR} A8,
+			#{item.approverName,jdbcType=VARCHAR} A9,
+			#{item.designerId,jdbcType=VARCHAR} A10,
+			#{item.designerName,jdbcType=VARCHAR} A11,
+			#{item.managerId,jdbcType=VARCHAR} A12,
+			#{item.managerName,jdbcType=VARCHAR} A13,
+			#{item.liaisonName,jdbcType=VARCHAR} A14,
+			#{item.liaisonTel,jdbcType=VARCHAR} A15,
+			#{item.liaisonMobile,jdbcType=VARCHAR} A16,
+			#{item.liaisonEmail,jdbcType=VARCHAR} A17,
+			#{item.profitType,jdbcType=VARCHAR} A18,
+			#{item.termtype,jdbcType=VARCHAR} A19,
+			#{item.investArae,jdbcType=VARCHAR} A20,
+			#{item.investCountry,jdbcType=VARCHAR} A21,
+			#{item.finanSerModel,jdbcType=VARCHAR} A22,
+			#{item.operateMode,jdbcType=VARCHAR} A23,
+			#{item.bookMode,jdbcType=VARCHAR} A24,
+			#{item.cmmode,jdbcType=VARCHAR} A25,
+			#{item.pmmode,jdbcType=VARCHAR} A26,
+			#{item.mname,jdbcType=VARCHAR} A27,
+			#{item.pricedMode,jdbcType=VARCHAR} A28,
+			#{item.invAssetType,jdbcType=VARCHAR} A29,
+			#{item.conPrdTraget,jdbcType=VARCHAR} A30,
+			#{item.contMode,jdbcType=VARCHAR} A31,
+			#{item.cooperationName,jdbcType=VARCHAR} A32,
+			#{item.invTypeRat,jdbcType=VARCHAR} A33,
+			#{item.isYield,jdbcType=VARCHAR} A34,
+			#{item.highYield,jdbcType=NUMERIC} A35,
+			#{item.lowYield,jdbcType=NUMERIC} A36,
+			#{item.isYieldMeasBasis,jdbcType=VARCHAR} A37,
+			#{item.riskType,jdbcType=VARCHAR} A38,
+			#{item.saleArea,jdbcType=VARCHAR} A39,
+			#{item.raiseCcy,jdbcType=VARCHAR} A40,
+			#{item.cashPrinCcy,jdbcType=VARCHAR} A41,
+			#{item.cashProfCcy,jdbcType=VARCHAR} A42,
+			#{item.saleAmtStr,jdbcType=NUMERIC} A43,
+			#{item.raiseAmtPlan,jdbcType=NUMERIC} A44,
+			#{item.raisePstrdate,jdbcType=DATE} A45,
+			#{item.raisePenddate,jdbcType=DATE} A46,
+			#{item.investPrinDate,jdbcType=VARCHAR} A47,
+			#{item.investProfDate,jdbcType=VARCHAR} A48,
+			#{item.saleFeeRate,jdbcType=NUMERIC} A49,
+			#{item.inDepName,jdbcType=VARCHAR} A50,
+			#{item.inDepCode,jdbcType=VARCHAR} A51,
+			#{item.outDepCtry,jdbcType=VARCHAR} A52,
+			#{item.outDepName,jdbcType=VARCHAR} A53,
+			#{item.truFeeRate,jdbcType=NUMERIC} A54,
+			#{item.riskLevel,jdbcType=VARCHAR} A55,
+			#{item.termRightFlag,jdbcType=VARCHAR} A56,
+			#{item.cusRedeemFlag,jdbcType=VARCHAR} A57,
+			#{item.creditFlag,jdbcType=VARCHAR} A58,
+			#{item.creditType,jdbcType=VARCHAR} A59,
+			#{item.creditMode,jdbcType=VARCHAR} A60,
+			#{item.remark,jdbcType=VARCHAR} A61,
+			null A62,
+			null A63,
+			null A64,
+			null A65,
+			'01' A66,
+			NOW() A67,
+			'01' A68,
+			#{item.createUser,jdbcType=VARCHAR} A69,
+			null A70,
+			NOW() A71,
+			#{item.updateUser,jdbcType=VARCHAR} A72,
+			NOW() A73,
+			#{item.chbSubmitDeadline,jdbcType=DATE} A74,
+			#{item.submitDeadline,jdbcType=DATE} A75,
+			null A76,
+			#{item.orgCode,jdbcType=VARCHAR} A77,
+			0 A78,
+			null A79,
+			#{item.regCode,jdbcType=VARCHAR} A80,
+			#{item.raiseType,jdbcType=VARCHAR} A81,
+			#{item.ivstorientation,jdbcType=VARCHAR} A82,
+			#{item.excFinSector,jdbcType=VARCHAR} A83,
+			#{item.isShortTerm,jdbcType=VARCHAR} A84,
+			#{item.shortTerm,jdbcType=NUMERIC} A85,
+			#{item.isFreeRedem,jdbcType=VARCHAR} A86,
+			#{item.cashManaCate,jdbcType=VARCHAR} A87,
+			#{item.yield,jdbcType=NUMERIC} A88,
+			#{item.investFeeRate,jdbcType=NUMERIC} A89,
+			#{item.isFhxgcp,jdbcType=VARCHAR} A90
 			from dual
 
 		</foreach>
@@ -702,7 +763,7 @@
 
 	<insert id="insert" parameterType="com.joyintech.tams.svreport.chb.perprodeclarereg.dto.PerProDeclareRegDto">
         INSERT INTO CHB_PRD_DECLARE_SUB
-	    (
+	    (SUMIT_SEQ,
 	    REGIST_SEQNO,
 	    PROD_ID ,
 	    PROD_NAME,
@@ -791,9 +852,11 @@
 	    IS_FREE_REDEM,
 	    CASH_MANA_CATE,
 	    YIELD,
-	    INVEST_FEE_RATE
+	    INVEST_FEE_RATE,
+	    IS_FHXGCP,
+		 PRD_SPEC_PROPERTY
 	    )
-	    values(
+	    values(#{sumitSeq,jdbcType=VARCHAR},
 	    #{registSeqno,jdbcType=VARCHAR},
 	    #{prodId,jdbcType=VARCHAR} ,
         #{prodName,jdbcType=VARCHAR},
@@ -856,7 +919,7 @@
         #{creditMode,jdbcType=VARCHAR},
         #{remark,jdbcType=VARCHAR} ,
         #{nineFile,jdbcType=VARCHAR} ,
-        #{fileNo,jdbcType=VARCHAR} , 
+        #{fileNo,jdbcType=VARCHAR} ,
         #{preRegDate,jdbcType=DATE}  ,
         #{preAppDate,jdbcType=DATE}  ,
         #{sendStatus,jdbcType=VARCHAR} ,
@@ -882,7 +945,9 @@
         #{isFreeRedem,jdbcType=VARCHAR},
         #{cashManaCate,jdbcType=VARCHAR},
         #{yield,jdbcType=NUMERIC},
-        #{investFeeRate,jdbcType=NUMERIC}
+        #{investFeeRate,jdbcType=NUMERIC},
+        #{isFhxgcp,jdbcType=VARCHAR},
+		#{prdSpecProperty,jdbcType=VARCHAR}
 	    )
     </insert>
 
@@ -962,7 +1027,8 @@
 		sub.CASH_MANA_CATE ,
 		sub.YIELD ,
 		sub.INVEST_FEE_RATE,
-		sub.status status
+		sub.status status,
+		sub.IS_FHXGCP
 		from CHB_PRD_DECLARE_SUB sub
 		where sub.send_status in ('02','03')
 		<if test="list!=null and list.size()!=0">
@@ -994,7 +1060,7 @@
 		PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME,
 		UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
 		FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR,
-		IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+		IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG,PRD_SPEC_PROPERTY
 		)
 		select
 		REGIST_SEQNO, PROD_ID, PROD_NAME, PROD_INS_ID, PROD_BRAND, PROD_STAGE, ISSUE_PARTY_ID,
@@ -1010,7 +1076,7 @@
 		PRE_APP_DATE, SEND_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, NOW(),
 		UPDATE_USER, NOW(), CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, ORG_CODE,
 		FILE_NUM, SUBMIT_FEEDBACK_STATUS, REG_CODE, RAISE_TYPE, IVSTORIENTATION, EXC_FIN_SECTOR,
-		IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE
+		IS_SHORT_TERM, SHORT_TERM, IS_FREE_REDEM, CASH_MANA_CATE, YIELD, INVEST_FEE_RATE, SUMIT_SEQ, IS_FHXGCP, SUBMIT_FEEDBACK_MSG,PRD_SPEC_PROPERTY
 		from CHB_PRD_DECLARE_SUB_HIS
 		where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 		<if test="regList !=null and regList.size()>0">
@@ -1031,7 +1097,26 @@
 			SEND_STATUS = '01'
 		</if>
 		<foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
-			PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+			PROD_ID = #{item.prodId,jdbcType=VARCHAR} and REGIST_SEQNO != #{item.registSeqno,jdbcType=VARCHAR}
 		</foreach>
+	</select>
+
+	<select id="queryProdInsIdList" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select distinct PROD_INS_ID id, PROD_NAME text
+		from CHB_PRD_DECLARE_INFO
+		<if test="search != null and search !='' ">
+			WHERE PROD_INS_ID LIKE concat(concat('%', #{search}),'%')
+		</if>
+	</select>
+	<select id="selectFileInfo" resultType="java.lang.String">
+		select @rownum := @rownum +1 'rownum',path from sys_upload_file_info sufi,
+		(select @rownum := 0) b
+		where exists (
+		select 1 from CHB_PRD_DECLARE_SUB cpds where
+		sufi.seq_no = cpds.file_no
+		<if test="prodId != null and prodId != ''">
+			and cpds.PROD_ID = #{prodId}
+		</if>
+		and cpds.send_status = '01') and 'rownum' = 1
 	</select>
 </mapper>

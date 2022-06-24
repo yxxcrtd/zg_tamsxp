@@ -169,4 +169,6 @@ public interface ChbAssetInfoInterfMapper {
 
 	// 中债资产报送状态更新逻辑
 	void updateRepAssetStatus(RepAssetDept dto);
+
+	void deleteChbAssetInfoErroData(@Param("list") List<ChbAssetInfo> list);
 }

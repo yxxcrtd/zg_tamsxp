@@ -21,20 +21,26 @@
                                                data-th-placeholder="#{SysCommon.placeholder}"
                                                data-th-value="${entity?.batchSeq}" style="display: none" />
                                     </div> -->
-                                     <div class="form-inline-wrap">
+                                    <div class="form-inline-wrap">
                                        <label class="layui-form-label form-label-wrap"
                                        data-th-text="#{ProRegistCodeManage003.finprodMarketId}">产品代码</label>
                                      <div class="layui-input-inline input-inline">
                                    <input id="prodId" name="prodId" class="layui-input form-input input-lenovoselect" 
-                                              data-th-data-parentids="orgCode" data-th-data-code="prdCode" placeholder="请输入"
-                                              data-th-data-url="@{/svreport/system/proregistcodemanage/ProRegistCodeManage003/getProdInfo}"
-                                              data-idfield="code" data-keyfield="code"  data-th-value="${entity?.prodId}" 
-                                               data-effectivefieldsalias='{"code":"产品代码","shortName":"产品名称"}' 
-                                               data-showindex = 'false'
-                                               required="required">
+                                          data-th-placeholder="#{SysCommon.placeholder}"data-th-value="${entity?.prodId}"
+                                         >
                                        </div>
                                        </div>
-                                    
+                                    <div class="form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap"
+                                               data-th-text="#{ProRegistCodeManage003.prodInsId}">行内标识码</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select type="text" id="prodInsId" name="prodInsId" class="layui-input form-input input-select"
+                                                    data-th-data-url='@{/svreport/system/proregistcodemanage/ProRegistCodeManage003/getProdInsId}'
+                                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
+                                                    data-th-initValue="${entity?.prodInsId}" required>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-label-wrap"
 												data-th-text="#{ProRegistCodeManage003.finprodName}">产品名称</label>
@@ -42,7 +48,7 @@
                                             <input type="text" class="layui-input form-input" id="prodName"
                                                 name="prodName" placeholder="请输入内容" 
                                                 data-th-placeholder="#{SysCommon.placeholder}" 
-                                                data-th-value="${entity?.prodName}" maxlength="60">
+                                                data-th-value="${entity?.prodName}" maxlength="60" required disabled>
                                         </div>
                                     </div>                                                                        
                                 </div>
@@ -54,7 +60,7 @@
                                             <input type="text" class="layui-input form-input" id="regCode"
                                                 name="regCode" placeholder="请输入内容"
                                                 data-th-placeholder="#{SysCommon.placeholder}" required="required"
-                                                data-th-value="${entity?.regCode}" maxlength="60">
+                                                data-th-value="${entity?.regCode}" maxlength="60" >
                                         </div>
                                     </div>   
                                      <div class="form-inline-wrap">
@@ -67,22 +73,13 @@
 									   data-th-data-result="${SVR_OPERATEMODE_DECLARE}"
 									   placeholder="请输入内容"
 									   data-th-initValue="${entity?.operateMode}"
-									  data-th-placeholder="#{SysCommon.placeholder}" 
+									  data-th-placeholder="#{SysCommon.placeholder}">
 							     	</select>
 							    </div>                             
                             </div>  
                           </div>                            
                                  <div class="layui-form-item">
-                                  <div class="form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap"
-												data-th-text="#{ProRegistCodeManage003.finprodName}">产品名称</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <input type="text" style="visibility:hidden;" class="layui-input form-input" id="prodName"
-                                                name="prodName" placeholder="请输入内容" 
-                                                data-th-placeholder="#{SysCommon.placeholder}" 
-                                                data-th-value="${entity?.prodName}" maxlength="60">
-                                        </div>
-                                    </div>  
+
                                        <!-- <div class="form-inline-wrap">
 											<label class="layui-form-label form-label-wrap"
 												data-th-text="#{FinProductBuild002.vdate}">起息日</label>

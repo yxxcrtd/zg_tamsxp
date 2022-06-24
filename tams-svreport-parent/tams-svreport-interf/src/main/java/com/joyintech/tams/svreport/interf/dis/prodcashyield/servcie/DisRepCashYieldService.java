@@ -63,7 +63,7 @@ public class DisRepCashYieldService extends FileImpService{
      * {@inheritDoc}
      */
     @Override
-    public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
+    public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
         if (StringUtil.isEmptyList(listData)) {
             logger.info("saveData方法参数listData为空。");
             return "success";
@@ -72,7 +72,7 @@ public class DisRepCashYieldService extends FileImpService{
         List<RepCashYield> listNE = null;
         if(listData!=null&&listData.size()>0){
             // 解析文件数据到dto
-            listNE = (List<RepCashYield>) convertMapToEntity(listData, RepCashYield.class);
+            listNE = (List<RepCashYield>) convertMapToEntity(listData, RepCashYield.class, dataSource);
         }
         int success = 0;
         if (listNE != null && listNE.size() > 0) {

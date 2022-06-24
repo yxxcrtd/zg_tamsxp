@@ -2,23 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.disclosure.information.config.poireportmodelmanage.dao.PoiReportModelManage001Mapper_mysql">
 	<select id="searchReports" parameterType="java.util.Map" resultType="com.joyintech.tams.disclosure.information.config.reportmodelmanage.ReportModelManage001Dto">
-		SELECT
-		Id keyId,
-		DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') updateDate,
-		DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') udate,
-		REPORTDESC description,
-		REPORTDESC name,
-		uri label,
-		uri code,
-		DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') creationDate,
-		DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') cdate,
-		FOLDER uri,
-		FOLDER  as temLoad
-		FROM rep_reportinfo		WHERE 1=1
-		<if test="temName!=null and temName!=''">
+	    SELECT 
+	    	Id keyId,
+	    	DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') updateDate,
+	    	DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') udate,
+			REPORTDESC description,
+			REPORTDESC name,
+			uri label,
+			uri code,
+			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') creationDate,
+			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') cdate,
+			FOLDER uri,
+			FOLDER  as temLoad		
+			FROM rep_reportinfo		WHERE 1=1 
+        <if test="temName!=null and temName!=''">
 			and URI like concat(concat('%',#{temName,jdbcType=VARCHAR}),'%')
 		</if>
-		<if test="temDescription!=null and temDescription!=''">
+        <if test="temDescription!=null and temDescription!=''">
 			and REPORTDESC like concat(concat('%',#{temDescription,jdbcType=VARCHAR}),'%')
 		</if>
 		order by IFNULL(UPDATE_TIME,CREATE_TIME)  desc

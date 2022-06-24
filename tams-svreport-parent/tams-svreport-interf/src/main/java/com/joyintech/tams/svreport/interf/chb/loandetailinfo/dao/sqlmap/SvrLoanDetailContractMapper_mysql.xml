@@ -1,86 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.loandetailinfo.dao.SvrLoanDetailContractMapper_mysql">
-    
-  <insert id="mergeLoanDetailContract"
-	parameterType="com.joyintech.tams.common.base.entity.ChbLoanDetailContractDto">
-	MERGE INTO CHB_LOAN_DETAIL_CONTRACT CII
-	USING (
-	<foreach collection="list" item="item" open="select * from("
-		close=")" separator="union all">
-		SELECT
-		#{item.prodId,jdbcType=VARCHAR} PROD_ID,
-		#{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
-		#{item.origCcy,jdbcType=DATE} ORIG_CCY,
-		#{item.origContractAmount,jdbcType=DECIMAL} ORIG_CONTRACT_AMOUNT,
-		#{item.origContractAmountCny,jdbcType=DECIMAL} ORIG_CONTRACT_AMOUNT_CNY,
-		NOW() CREATE_USER,
-		#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
-		now() CREATE_TIME,
-		NOW() UPDATE_USER,
-		now() UPDATE_TIME,
-		#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-		#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-        #{item.status,jdbcType=VARCHAR} STATUS,
-        #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE
-		FROM
-		DUAL
-	</foreach>
-	) TEMP
-	<!-- 业务主键匹配 -->
-	ON(CII.PROD_ID = TEMP.PROD_ID
-	and CII.ASSET_CODE = TEMP.ASSET_CODE
-	and CII.ORIG_CCY = TEMP.ORIG_CCY
-	)
-	<!-- 匹配到则更新 -->
-	WHEN MATCHED THEN UPDATE SET
-	CII.ORIG_CONTRACT_AMOUNT = TEMP.ORIG_CONTRACT_AMOUNT,
-	CII.ORIG_CONTRACT_AMOUNT_CNY = TEMP.ORIG_CONTRACT_AMOUNT_CNY,
-	CII.CREATE_USER = TEMP.CREATE_USER,
-	CII.CREATE_DEPT = TEMP.CREATE_DEPT,
-	CII.UPDATE_USER = TEMP.UPDATE_USER,
-	CII.UPDATE_TIME = now(),
-	CII.ORG_CODE = TEMP.ORG_CODE,
-	CII.DEPT_CODE = TEMP.DEPT_CODE,
-	CII.STATUS = TEMP.STATUS,
-	CII.DATA_SOURCE = TEMP.DATA_SOURCE
-	<!-- 未匹配到这插入 -->
-	WHEN NOT MATCHED THEN INSERT
-      (PROD_ID,
-      ASSET_CODE,
-      ORIG_CCY,
-      ORIG_CONTRACT_AMOUNT,
-      ORIG_CONTRACT_AMOUNT_CNY,
-      CREATE_USER,
-      CREATE_DEPT,
-      CREATE_TIME,
-      UPDATE_USER,
-      UPDATE_TIME,
-      ORG_CODE,
-      DEPT_CODE,
-      STATUS,
-      DATA_SOURCE)
-	values
-      (TEMP.PROD_ID,
-      TEMP.ASSET_CODE,
-      TEMP.ORIG_CCY,
-	  TEMP.ORIG_CONTRACT_AMOUNT,
-      TEMP.ORIG_CONTRACT_AMOUNT_CNY,
-      TEMP.CREATE_USER,
-	  TEMP.CREATE_DEPT,
-      TEMP.CREATE_TIME,
-      TEMP.UPDATE_USER,
-	  TEMP.UPDATE_TIME,
-      TEMP.ORG_CODE,
-      TEMP.DEPT_CODE,
-      TEMP.STATUS,
-      TEMP.DATA_SOURCE
-      )
+
+	<insert id="mergeLoanDetailContract"
+			parameterType="com.joyintech.tams.common.base.entity.ChbLoanDetailContractDto">
+		insert into CHB_LOAN_DETAIL_CONTRACT(PROD_ID,
+		ASSET_CODE,
+		ORIG_CCY,
+		ORIG_CONTRACT_AMOUNT,
+		ORIG_CONTRACT_AMOUNT_CNY,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		ORG_CODE,
+		DEPT_CODE,
+		STATUS,
+		DATA_SOURCE)
+		select PROD_ID,
+		ASSET_CODE,
+		ORIG_CCY,
+		ORIG_CONTRACT_AMOUNT,
+		ORIG_CONTRACT_AMOUNT_CNY,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		ORG_CODE,
+		DEPT_CODE,
+		STATUS,
+		DATA_SOURCE from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
+			SELECT
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+			#{item.origCcy,jdbcType=DATE} ORIG_CCY,
+			#{item.origContractAmount,jdbcType=DECIMAL} ORIG_CONTRACT_AMOUNT,
+			#{item.origContractAmountCny,jdbcType=DECIMAL} ORIG_CONTRACT_AMOUNT_CNY,
+			NOW() CREATE_USER,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			now() CREATE_TIME,
+			NOW() UPDATE_USER,
+			now() UPDATE_TIME,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE
+			FROM  DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_LOAN_DETAIL_CONTRACT CII  where CII.PROD_ID = TEMP.PROD_ID
+		and CII.ASSET_CODE = TEMP.ASSET_CODE
+		and CII.ORIG_CCY = TEMP.ORIG_CCY)
+		) de ;
+
+		UPDATE  CHB_LOAN_DETAIL_CONTRACT as A,
+		(
+		select ORIG_CONTRACT_AMOUNT,
+		ORIG_CONTRACT_AMOUNT_CNY,
+		CREATE_USER,
+		CREATE_DEPT,
+		UPDATE_USER,
+		UPDATE_TIME,
+		ORG_CODE,
+		DEPT_CODE,
+		STATUS,
+		DATA_SOURCE from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="list" item="item"  separator="union all">
+			SELECT
+			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+			#{item.origCcy,jdbcType=DATE} ORIG_CCY,
+			#{item.origContractAmount,jdbcType=DECIMAL} ORIG_CONTRACT_AMOUNT,
+			#{item.origContractAmountCny,jdbcType=DECIMAL} ORIG_CONTRACT_AMOUNT_CNY,
+			NOW() CREATE_USER,
+			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			now() CREATE_TIME,
+			NOW() UPDATE_USER,
+			now() UPDATE_TIME,
+			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{item.status,jdbcType=VARCHAR} STATUS,
+			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE
+			FROM  DUAL
+		</foreach>
+		) TEMP
+		) de
+		) AS B
+		set  A.* = B.* where exists (select 1 from CHB_LOAN_DETAIL_CONTRACT CII where CII.PROD_ID = TEMP.PROD_ID
+		and CII.ASSET_CODE = TEMP.ASSET_CODE
+		and CII.ORIG_CCY = TEMP.ORIG_CCY);
 	</insert>
-    <delete id="deleteAllData">
+	<delete id="deleteAllData">
      truncate table CHB_LOAN_DETAIL_CONTRACT
     </delete>
-    <select id="selectAllLoanAssetCode"  resultType="string">
+	<select id="selectAllLoanAssetCode"  resultType="string">
     	SELECT ASSET_CODE
     	FROM CHB_ASSET_INFO 
     	WHERE PBC_ASSET_TYPE1='P05'
@@ -88,7 +109,7 @@
     	and PBC_ASSET_TYPE3='R02'
     	and STATUS !='D'
     </select>
-    <select id="selectLoanDetailContractByAssetCodeListNoCny"  resultType="com.joyintech.tams.common.base.entity.ChbLoanDetailContractDto">
+	<select id="selectLoanDetailContractByAssetCodeListNoCny"  resultType="com.joyintech.tams.common.base.entity.ChbLoanDetailContractDto">
 		select sum(ifnull(deal.PRIN_AMT,0)) origContractAmount,
 		deal.CCY origCcy,
 		deal.SETTLE_DATE settleDate,
@@ -98,16 +119,16 @@
 		left join fin_product info on INFO.FINPROD_ID=deal.FINPROD_ID
 		left join trd_product_deal_add ad on ad.TRADE_ID=deal.TRADE_ID
 		left join fin_product_add fad on fad.PORTFOLIO_ID=ad.PORTFOLIO_ID
-    	left join fin_product infop on infop.FINPROD_ID=fad.FINPROD_ID
-    	left join PTL_TRADE ptt on ptt.BUSI_NO=deal.TRADE_ID
+		left join fin_product infop on infop.FINPROD_ID=fad.FINPROD_ID
+		left join PTL_TRADE ptt on ptt.BUSI_NO=deal.TRADE_ID
 		where 1=1
 		and (deal.IS_CANCEL='N' or deal.IS_CANCEL is null)
 		and deal.P_TRADE_ID is null
 		and deal.ps='T01'
 		and deal.CCY !='CNY'
 		and info.finprod_market_id is not null
-    	and infop.FINPROD_TYPE2='F16'
-    	and ptt.BUSI_NO is not null
+		and infop.FINPROD_TYPE2='F16'
+		and ptt.BUSI_NO is not null
 		and (info.finprod_market_id
 		in <foreach collection="assetCodeList" item="assetCode" index="index" open="(" close=")" separator=",">
 		<if test="(index % 998) == 0">
@@ -116,10 +137,10 @@
 		#{assetCode,jdbcType=VARCHAR}
 	</foreach>
 		)
-		 group by deal.CCY,
+		group by deal.CCY,
 		deal.SETTLE_DATE,info.finprod_market_id, infop.finprod_market_id
-    </select>
-    <select id="selectLoanDetailContractByAssetCodeList"  resultType="com.joyintech.tams.common.base.entity.ChbLoanDetailContractDto">
+	</select>
+	<select id="selectLoanDetailContractByAssetCodeList"  resultType="com.joyintech.tams.common.base.entity.ChbLoanDetailContractDto">
 		select sum(ifnull(deal.PRIN_AMT,0)) origContractAmount,
 		sum(ifnull(deal.PRIN_AMT,0)) origContractAmountCny,
 		deal.CCY origCcy,
@@ -129,16 +150,16 @@
 		left join fin_product info on INFO.FINPROD_ID=deal.FINPROD_ID
 		left join trd_product_deal_add ad on ad.TRADE_ID=deal.TRADE_ID
 		left join fin_product_add fad on fad.PORTFOLIO_ID=ad.PORTFOLIO_ID
-    	left join fin_product infop on infop.FINPROD_ID=fad.FINPROD_ID
-    	left join PTL_TRADE ptt on ptt.BUSI_NO=deal.TRADE_ID
+		left join fin_product infop on infop.FINPROD_ID=fad.FINPROD_ID
+		left join PTL_TRADE ptt on ptt.BUSI_NO=deal.TRADE_ID
 		where 1=1
 		and (deal.IS_CANCEL='N' or deal.IS_CANCEL is null)
 		and deal.P_TRADE_ID is null
 		and deal.ps='T01'
 		and deal.CCY='CNY'
 		and info.finprod_market_id is not null
-    	and infop.FINPROD_TYPE2='F16'
-    	and ptt.BUSI_NO is not null
+		and infop.FINPROD_TYPE2='F16'
+		and ptt.BUSI_NO is not null
 		and (info.finprod_market_id in
 		<foreach collection="assetCodeList" item="assetCode" index="index" open="(" close=")" separator=",">
 			<if test="(index % 998) == 0">
@@ -147,7 +168,7 @@
 			#{assetCode,jdbcType=VARCHAR}
 		</foreach>
 		)
-		 group by deal.CCY,
+		group by deal.CCY,
 		info.finprod_market_id, infop.finprod_market_id
-    </select>
+	</select>
 </mapper>

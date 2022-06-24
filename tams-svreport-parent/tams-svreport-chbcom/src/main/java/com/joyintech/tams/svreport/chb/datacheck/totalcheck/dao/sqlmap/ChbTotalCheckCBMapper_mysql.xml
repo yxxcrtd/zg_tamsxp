@@ -558,7 +558,6 @@
         else bottomassetsub.POS_AMT
         end)  BOT_ASSET_AMT,
         bottomassetsub.POS_DATE CHECK_DATE
-        <!--, rank() over (order by bottomassetsub.POS_DATE desc) rowIndex -->
         from chb_asset_info_sub assetinfosub
         left join (
         select investdealsub.asset_code asset_code,sum((case investdealsub.CUR_ASSET_TYPE when '01' then 1 else -1 end)*investdealsub.num) asset_deal_num
@@ -599,7 +598,7 @@
         and assetinfosub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         and DATE_FORMAT(assetinfosub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         and assetdeal.asset_deal_num > 0
-        )
+        ) cc
         <!-- where rowIndex = 1 -->
         group by asset_code,
         IS_REG,
@@ -769,9 +768,9 @@
         from(
         select investdealsub.prod_id prod_id,
         assetinfosub.asset_code asset_code,
-        (case investdealsub.num when 0 then 0 else investdealsub.CNY_AMT/investdealsub.num end) unit_price,
-        rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num desc) rowindexlast,
-        rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by investdealsub.CNY_AMT/investdealsub.num asc) rowindexfirst
+        if( investdealsub.num=0,0,investdealsub.CNY_AMT/investdealsub.num) unit_price,
+        rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by if( investdealsub.num=0,0,investdealsub.CNY_AMT/investdealsub.num) desc) rowindexlast,
+        rank() over (partition by investdealsub.prod_id,assetinfosub.asset_code order by if( investdealsub.num=0,0,investdealsub.CNY_AMT/investdealsub.num) asc) rowindexfirst
         from chb_invest_trade_sub investdealsub
         left join chb_asset_info_sub assetinfosub
         on assetinfosub.asset_code = investdealsub.asset_code
@@ -781,7 +780,7 @@
         and investdealsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         and DATE_FORMAT(investdealsub.dealdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         and DATE_FORMAT(investdealsub.submit_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
-        ) where rowindexlast = 1 or rowindexfirst = 1
+        )as T where rowindexlast = 1 or rowindexfirst = 1
         ) assetdeal
         on assetdeal.prod_id = prdinfo.prod_id
         where 1 =1
@@ -838,7 +837,7 @@
         and bottomassetsub.SUBMIT_FEEDBACK_STATUS = '03'/*反馈状态=中债通过*/
         and DATE_FORMAT(bottomassetsub.SUBMIT_TIME,'%Y-%m-%d') &lt;= DATE_FORMAT(#{queryDate,jdbcType=DATE},'%Y-%m-%d')
         and DATE_FORMAT(bottomassetsub.pos_date,'%Y-%m-%d') = DATE_FORMAT(#{monthEndDate,jdbcType=DATE},'%Y-%m-%d')
-        )
+        )as t
         <!-- where rowIndex = 1 -->
         group by asset_code,
         IS_REG,

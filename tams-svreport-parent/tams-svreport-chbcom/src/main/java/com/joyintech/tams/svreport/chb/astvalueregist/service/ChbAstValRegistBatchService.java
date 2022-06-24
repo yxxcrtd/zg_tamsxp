@@ -142,6 +142,12 @@ public class ChbAstValRegistBatchService extends SvrCBBaseService {
             for(ChbAstValueSub sub : insertDataList) {
 				// 报送流水号
 				sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+				dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产估值信息登记.getValue(),
+						sub.getStatus(), dateMap, posDate);
+				if (CollectionUtils.isNotEmpty(dateList)) {
+					sub.setChbSubmitDeadline(dateList.get(0));
+					sub.setSubmitDeadline(dateList.get(1));
+				}
                 chbAstValCBMapper.insertSub(sub);
             }
 	        // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end

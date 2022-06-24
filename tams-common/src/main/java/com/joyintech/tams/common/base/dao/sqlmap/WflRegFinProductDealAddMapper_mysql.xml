@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflRegFinProductDealAddMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="ACT_SETTE_DATE" property="actSetteDate" jdbcType="DATE" />
+        <result column="OUR_SHARE_AMT" property="ourShareAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_SHARE_AMT" property="lendinShareAmt" jdbcType="DECIMAL" />
+        <result column="OUR_CPRICE_AMT" property="ourCpriceAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_CPRICE_AMT" property="lendinCpriceAmt" jdbcType="DECIMAL" />
+        <result column="OUR_FPRICE_AMT" property="ourFpriceAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_FPRICE_AMT" property="lendinFpriceAmt" jdbcType="DECIMAL" />
+        <result column="OUR_INT_AMT" property="ourIntAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_INT_AMT" property="lendinIntAmt" jdbcType="DECIMAL" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, ACT_SETTE_DATE ACT_SETTE_DATE, OUR_SHARE_AMT OUR_SHARE_AMT, LENDIN_SHARE_AMT LENDIN_SHARE_AMT, 
+        OUR_CPRICE_AMT OUR_CPRICE_AMT, LENDIN_CPRICE_AMT LENDIN_CPRICE_AMT, OUR_FPRICE_AMT OUR_FPRICE_AMT, 
+        LENDIN_FPRICE_AMT LENDIN_FPRICE_AMT, OUR_INT_AMT OUR_INT_AMT, LENDIN_INT_AMT LENDIN_INT_AMT, 
+        WORKFLOW_ID WORKFLOW_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinProductDealAddMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_PRODUCT_DEAL_ADD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinProductDealAddMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_PRODUCT_DEAL_ADD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflRegFinProductDealAddMapper_mysql.Base_Column_List" />
+        from WFL_REG_FIN_PRODUCT_DEAL_ADD
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from WFL_REG_FIN_PRODUCT_DEAL_ADD
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_REG_FIN_PRODUCT_DEAL_ADD
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_ADD(TRADE_ID, ACT_SETTE_DATE, OUR_SHARE_AMT, 
+        LENDIN_SHARE_AMT, OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, 
+        OUR_INT_AMT, LENDIN_INT_AMT, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, ACT_SETTE_DATE, OUR_SHARE_AMT, 
+            LENDIN_SHARE_AMT, OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, 
+            OUR_INT_AMT, LENDIN_INT_AMT, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_REG_FIN_PRODUCT_DEAL_ADD
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        update WFL_REG_FIN_PRODUCT_DEAL_ADD
+        <set >
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourCpriceAmt != null" >
+                OUR_CPRICE_AMT = #{ourCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                LENDIN_CPRICE_AMT = #{lendinCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourFpriceAmt != null" >
+                OUR_FPRICE_AMT = #{ourFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourIntAmt != null" >
+                OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinIntAmt != null" >
+                LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        update WFL_REG_FIN_PRODUCT_DEAL_ADD
+        set 
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+        ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
+        OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+        LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+        OUR_CPRICE_AMT = #{ourCpriceAmt,jdbcType=DECIMAL},
+        LENDIN_CPRICE_AMT = #{lendinCpriceAmt,jdbcType=DECIMAL},
+        OUR_FPRICE_AMT = #{ourFpriceAmt,jdbcType=DECIMAL},
+        LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
+        OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
+        LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_ADD (TRADE_ID, ACT_SETTE_DATE, OUR_SHARE_AMT, 
+            LENDIN_SHARE_AMT, OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, 
+            OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, OUR_INT_AMT, 
+            LENDIN_INT_AMT, WORKFLOW_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{tradeId,jdbcType=VARCHAR}, #{actSetteDate,jdbcType=DATE}, #{ourShareAmt,jdbcType=DECIMAL}, 
+            #{lendinShareAmt,jdbcType=DECIMAL}, #{ourCpriceAmt,jdbcType=DECIMAL}, #{lendinCpriceAmt,jdbcType=DECIMAL}, 
+            #{ourFpriceAmt,jdbcType=DECIMAL}, #{lendinFpriceAmt,jdbcType=DECIMAL}, #{ourIntAmt,jdbcType=DECIMAL}, 
+            #{lendinIntAmt,jdbcType=DECIMAL}, #{workflowId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_ADD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE,
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT,
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT,
+            </if>
+            <if test="ourCpriceAmt != null" >
+                OUR_CPRICE_AMT,
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                LENDIN_CPRICE_AMT,
+            </if>
+            <if test="ourFpriceAmt != null" >
+                OUR_FPRICE_AMT,
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                LENDIN_FPRICE_AMT,
+            </if>
+            <if test="ourIntAmt != null" >
+                OUR_INT_AMT,
+            </if>
+            <if test="lendinIntAmt != null" >
+                LENDIN_INT_AMT,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="actSetteDate != null" >
+                #{actSetteDate,jdbcType=DATE},
+            </if>
+            <if test="ourShareAmt != null" >
+                #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourCpriceAmt != null" >
+                #{ourCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                #{lendinCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourFpriceAmt != null" >
+                #{ourFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                #{lendinFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourIntAmt != null" >
+                #{ourIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinIntAmt != null" >
+                #{lendinIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        insert into WFL_REG_FIN_PRODUCT_DEAL_ADD(TRADE_ID, ACT_SETTE_DATE, OUR_SHARE_AMT, 
+        LENDIN_SHARE_AMT, OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, 
+        OUR_INT_AMT, LENDIN_INT_AMT, WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, ACT_SETTE_DATE, OUR_SHARE_AMT, 
+            LENDIN_SHARE_AMT, OUR_CPRICE_AMT, LENDIN_CPRICE_AMT, OUR_FPRICE_AMT, LENDIN_FPRICE_AMT, 
+            OUR_INT_AMT, LENDIN_INT_AMT, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from WFL_REG_FIN_PRODUCT_DEAL_ADD
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        update WFL_REG_FIN_PRODUCT_DEAL_ADD
+        <set >
+            <if test="actSetteDate != null" >
+                ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourCpriceAmt != null" >
+                OUR_CPRICE_AMT = #{ourCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinCpriceAmt != null" >
+                LENDIN_CPRICE_AMT = #{lendinCpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourFpriceAmt != null" >
+                OUR_FPRICE_AMT = #{ourFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinFpriceAmt != null" >
+                LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourIntAmt != null" >
+                OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinIntAmt != null" >
+                LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflRegFinProductDealAdd" >
+        update WFL_REG_FIN_PRODUCT_DEAL_ADD
+        set ACT_SETTE_DATE = #{actSetteDate,jdbcType=DATE},
+            OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            OUR_CPRICE_AMT = #{ourCpriceAmt,jdbcType=DECIMAL},
+            LENDIN_CPRICE_AMT = #{lendinCpriceAmt,jdbcType=DECIMAL},
+            OUR_FPRICE_AMT = #{ourFpriceAmt,jdbcType=DECIMAL},
+            LENDIN_FPRICE_AMT = #{lendinFpriceAmt,jdbcType=DECIMAL},
+            OUR_INT_AMT = #{ourIntAmt,jdbcType=DECIMAL},
+            LENDIN_INT_AMT = #{lendinIntAmt,jdbcType=DECIMAL},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

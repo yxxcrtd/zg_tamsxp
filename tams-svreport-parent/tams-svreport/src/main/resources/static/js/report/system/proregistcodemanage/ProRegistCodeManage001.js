@@ -5,11 +5,11 @@
             regCode = null;
         }
         if (regCode) {
-        	regCode = regCode.join();
+            regCode = regCode.join();
         }
         var orgCode = $("#orgCode").val();
         if (orgCode) {
-        	orgCode = orgCode.join();
+            orgCode = orgCode.join();
         }
         return {
             // 产品
@@ -19,20 +19,20 @@
             //产品登记编码
             regCode : regCode,
             //起息日开始
-          //  vdateStart : $('#ProRegistCodeManage001_vdate').startDate(),
+            //  vdateStart : $('#ProRegistCodeManage001_vdate').startDate(),
             //起息日结束
-           // vdateEnd : $('#ProRegistCodeManage001_vdate').endDate(),
+            // vdateEnd : $('#ProRegistCodeManage001_vdate').endDate(),
 //            vdate : $('#ProRegistCodeManage001_vdate').val(),
             //到期日开始
-          //  mdateStart : $('#ProRegistCodeManage001_mdate').startDate(),
+            //  mdateStart : $('#ProRegistCodeManage001_mdate').startDate(),
             //到期日结束
-          //  mdateEnd : $('#ProRegistCodeManage001_mdate').endDate(),
+            //  mdateEnd : $('#ProRegistCodeManage001_mdate').endDate(),
 //            mdate : $('#ProRegistCodeManage001_mdate').val()
             //登记编码是否为空
             isNotNull : $("#ProRegistCodeManage001_isNotNull").prop("checked"),
-           // raisevdateStart : $('#raise_vdate').startDate(),
-           // raisevdateEnd : $('#raise_vdate').endDate(),
-            
+            // raisevdateStart : $('#raise_vdate').startDate(),
+            // raisevdateEnd : $('#raise_vdate').endDate(),
+
             orgCode : orgCode,
             //发送状态
             //sendStatus : $('#ProRegistCodeManage001_sendStatus').val()
@@ -46,8 +46,17 @@
                 return getPageParams();
             }
         },
+        dblclick: function (table, data) {
+            Joyin.dialog("产看产品登记编码",
+                basePath + "svreport/system/proregistcodemanage/ProRegistCodeManage003/init",
+                "99%", "99%", {
+                    pageModel: PAGE_MODEL_REFERENCE,
+                    prodInsId: data.prodInsId
+                });
+        },
         cols: [
             { title: "产品代码", field:'prodId',width:'12%'},
+            { title: "行内标识码", field:'prodInsId',width:'12%',visible:false},
             { title: "产品名称", field:'prodName',width:'15%'},
             { title: "产品登记编码", field:'regCode',width:'10%'},
             { title: "机构代码", field:'orgCode', visible:false,width:'12%'},
@@ -89,7 +98,7 @@
         $('#ProRegistCodeManage001_vdate').val('');
         $('#ProRegistCodeManage001_mdate').val('');
         if(!isSvr){
-        	$("#raiseDiv").hide();
+            $("#raiseDiv").hide();
         }
         if(isFromMain=="01"){
             $("#ProRegistCodeManage001_isNotNull").prop("checked",true);
@@ -144,7 +153,7 @@
         var data={"operateType":"add"};
         Joyin.dialog('产品登记编码新建',basePath+'svreport/system/proregistcodemanage/ProRegistCodeManage003/init', '98%', '95%',data,function(){table.reload();});
     }
-    
+
     $(function() {
         init();
         //新建按钮点击事件
@@ -213,14 +222,14 @@
             }
             Joyin.exportExcel("export",param);
         });
-        
+
         // 导入报送按钮点击事件
         $('#ProRegistCodeManage001_btn_importnew').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
-            	var options = {};
-        		options.pageId = "ProRegistCodeManage001_2";
+                var options = {};
+                options.pageId = "ProRegistCodeManage001_2";
                 Joyin.uploadFile(function(fileName) {
-                	Joyin.ajax('checkConfirmMsgForImportData', {fileName: fileName}, function() {
+                    Joyin.ajax('checkConfirmMsgForImportData', {fileName: fileName}, function() {
                         Joyin.ajax('importFile', {fileName: fileName});
                     },function() {
                         $('iframe').contents().find("#loading").hide();
@@ -230,7 +239,7 @@
                 });
             });
         });
-        
+
         // 发送按钮点击事件
         $('#ProRegistCodeManage001_btn_sendSale').click(function() {
             sendRegistCodeToSale();

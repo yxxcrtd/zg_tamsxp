@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.chb.cprdbalance.dao.ChbCprodBalanceDtoMapper_mysql">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbCprodBalanceDto" >
+    <id column="BAL_ID" property="balId" jdbcType="CHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="P_PROD_ID" property="pProdId" jdbcType="VARCHAR" />
+    <result column="PERIOD_ID" property="periodId" jdbcType="VARCHAR" />
+    <result column="VALUE_DATE" property="valueDate" jdbcType="TIMESTAMP" />
+    <result column="MDATE" property="mdate" jdbcType="TIMESTAMP" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR"/>
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    BAL_ID, PROD_ID, P_PROD_ID, PERIOD_ID, VALUE_DATE, MDATE, BALANCE, CCY
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from CHB_CPROD_BALANCE
+    where BAL_ID = #{balId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CHB_CPROD_BALANCE
+    where BAL_ID = #{balId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbCprodBalanceDto" >
+    insert into CHB_CPROD_BALANCE (BAL_ID, PROD_ID, P_PROD_ID, 
+      PERIOD_ID, VALUE_DATE, MDATE, 
+      BALANCE, CCY,CREATE_USER,CREATE_TIME,UPDATE_TIME,UPDATE_USER)
+    values (#{balId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{pProdId,jdbcType=VARCHAR}, 
+      #{periodId,jdbcType=VARCHAR}, #{valueDate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, 
+      #{balance,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbCprodBalanceDto" >
+    insert into CHB_CPROD_BALANCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="balId != null" >
+        BAL_ID,
+      </if>
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="pProdId != null" >
+        P_PROD_ID,
+      </if>
+      <if test="periodId != null" >
+        PERIOD_ID,
+      </if>
+      <if test="valueDate != null" >
+        VALUE_DATE,
+      </if>
+      <if test="mdate != null" >
+        MDATE,
+      </if>
+      <if test="balance != null" >
+        BALANCE,
+      </if>
+      <if test="ccy != null" >
+        CCY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="balId != null" >
+        #{balId,jdbcType=CHAR},
+      </if>
+      <if test="prodId != null" >
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="pProdId != null" >
+        #{pProdId,jdbcType=VARCHAR},
+      </if>
+      <if test="periodId != null" >
+        #{periodId,jdbcType=VARCHAR},
+      </if>
+      <if test="valueDate != null" >
+        #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mdate != null" >
+        #{mdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="ccy != null" >
+        #{ccy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbCprodBalanceDto" >
+    update CHB_CPROD_BALANCE
+    <set >
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="pProdId != null" >
+        P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
+      </if>
+      <if test="periodId != null" >
+        PERIOD_ID = #{periodId,jdbcType=VARCHAR},
+      </if>
+      <if test="valueDate != null" >
+        VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mdate != null" >
+        MDATE = #{mdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="balance != null" >
+        BALANCE = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="ccy != null" >
+        CCY = #{ccy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where BAL_ID = #{balId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbCprodBalanceDto" >
+    update CHB_CPROD_BALANCE
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      P_PROD_ID = #{pProdId,jdbcType=VARCHAR},
+      PERIOD_ID = #{periodId,jdbcType=VARCHAR},
+      VALUE_DATE = #{valueDate,jdbcType=TIMESTAMP},
+      MDATE = #{mdate,jdbcType=TIMESTAMP},
+      BALANCE = #{balance,jdbcType=DECIMAL},
+      CCY = #{ccy,jdbcType=VARCHAR}
+    where BAL_ID = #{balId,jdbcType=CHAR}
+  </update>
+  <delete id="deleteByPosdate" parameterType="java.util.Date">
+    delete from CHB_CPROD_BALANCE
+    where VALUE_DATE = #{batchTime,jdbcType=TIMESTAMP}
+  </delete>
+  <select id="isUpdated" parameterType="java.util.Date" resultType="java.util.Date">
+   select distinct CDATE from(
+	   select 
+	     	ps.CDATE
+	    FROM ptl_sec_position ps
+		left join fin_trade_product ftp
+		on ps.FINPROD_ID=ftp.FINPROD_ID
+		and ps.BRANCH=ftp.BRANCH
+		left join fin_product fp 
+		on fp.FINPROD_ID=ftp.FINPROD_ID
+		left join fin_product_add fpa
+		on fpa.FINPROD_ID=fp.FINPROD_ID
+	    where ftp.FINPROD_TYPE2='F26'
+		and ps.HODING_TYPE='03'
+		and FPA.DEAL_MODE in('10','12')
+	    and ifnull(ps.UPDATE_TIME,ps.CREATE_TIME) > #{batchTime,jdbcType=TIMESTAMP}
+   ) temp
+   
+  </select>
+  <select id="selectByPosdate" parameterType="java.util.Date" resultMap="BaseResultMap"
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
+	SELECT fp.FINPROD_MARKET_ID PROD_ID,
+    fpp.FINPROD_MARKET_ID P_PROD_ID,
+    PS.CCY,PS.AMOUNT BALANCE,
+    PS.CDATE VALUE_DATE,ftp.PERIOD_ID,
+    ftp.MDATE,
+    ifnull(ps.UPDATE_TIME,ps.CREATE_TIME) UPDATE_TIME,
+    ifnull(ps.UPDATE_USER,ps.CREATE_USER) UPDATE_USER,
+    ps.CREATE_TIME,
+    ps.CREATE_USER
+	FROM ptl_sec_position ps
+	left join fin_trade_product ftp
+	on ps.FINPROD_ID=ftp.FINPROD_ID
+	and ps.BRANCH=ftp.BRANCH
+	left join fin_product fp 
+	on fp.FINPROD_ID=ftp.FINPROD_ID
+  	left join fin_product fpp 
+	on fp.P_FINPROD_ID=fpp.FINPROD_ID
+	left join fin_product_add fpa
+	on fpa.FINPROD_ID=fp.FINPROD_ID
+	where ftp.FINPROD_TYPE2='F26'
+	and ps.HODING_TYPE='03'
+	and FPA.DEAL_MODE in('10','12')
+	and ps.CDATE =#{batchTime,jdbcType=DATE}
+  </select>
+  <select id="selectByValuedate" parameterType="java.util.Date" resultMap="BaseResultMap"
+          resultSetType="FORWARD_ONLY" fetchSize="1000">
+	SELECT  
+		ifnull(P_PROD_ID,PROD_ID)PROD_ID,
+		PERIOD_ID,MDATE,VALUE_DATE,
+		BALANCE,CCY
+	FROM CHB_CPROD_BALANCE 
+	where VALUE_DATE =#{valueDate,jdbcType=DATE}
+  </select>
+
+</mapper>

@@ -70,9 +70,6 @@
              		#{submitFeedbackStatus,jdbcType=VARCHAR}
             	</foreach>	
 		 	</if>
-		 	<if test="sendStatus != null  and sendStatus != ''">
-				and CAVS.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
-			</if>
 			<if test="status != null  and status != ''">
 				and CAVS.STATUS = #{status,jdbcType=VARCHAR}
 			</if>

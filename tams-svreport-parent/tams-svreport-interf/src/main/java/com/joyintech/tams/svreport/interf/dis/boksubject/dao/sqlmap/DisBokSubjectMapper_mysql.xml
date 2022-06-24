@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.boksubject.dao.DisBokSubjectMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.boksubject.dto.BokSubject" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="FSUBJECT_ID" property="fsubjectId" jdbcType="VARCHAR" />
+        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+        <result column="SUBJECT_TYPE" property="subjectType" jdbcType="VARCHAR" />
+        <result column="SUBJECT_LEVEL" property="subjectLevel" jdbcType="DECIMAL" />
+        <result column="ACC_QUA_FLAG" property="accQuaFlag" jdbcType="VARCHAR" />
+        <result column="ACC_INT_FLAG" property="accIntFlag" jdbcType="VARCHAR" />
+        <result column="OVERDRAWN_FLAG" property="overdrawnFlag" jdbcType="VARCHAR" />
+        <result column="GEN_DETSUB_FLAG" property="genDetsubFlag" jdbcType="VARCHAR" />
+        <result column="BASE_SUBJECT_NATURE" property="baseSubjectNature" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="SEC_MANAGE_ACCT_ID" property="secManageAcctId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, SUBJECT_NO SUBJECT_NO, SUBJECT_NAME SUBJECT_NAME, FSUBJECT_ID FSUBJECT_ID,
+        BAL_FLAG BAL_FLAG, SUBJECT_TYPE SUBJECT_TYPE, SUBJECT_LEVEL SUBJECT_LEVEL, ACC_QUA_FLAG ACC_QUA_FLAG,
+        ACC_INT_FLAG ACC_INT_FLAG, OVERDRAWN_FLAG OVERDRAWN_FLAG, GEN_DETSUB_FLAG GEN_DETSUB_FLAG,
+        BASE_SUBJECT_NATURE BASE_SUBJECT_NATURE, INV_AIM INV_AIM, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.svreport.interf.dis.boksubject.dao.DisBokSubjectMapper.Base_Column_List" />
+        from BOK_SUBJECT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.svreport.interf.dis.boksubject.dao.DisBokSubjectMapper.Base_Column_List" />
+        from BOK_SUBJECT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.interf.dis.boksubject.dto.BokSubjectKey" >
+        select
+        <include refid="com.joyintech.tams.svreport.interf.dis.boksubject.dao.DisBokSubjectMapper.Base_Column_List" />
+        from BOK_SUBJECT
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.svreport.interf.dis.boksubject.dto.BokSubjectKey" >
+        delete from BOK_SUBJECT
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="java.util.List"  >
+        insert into BOK_SUBJECT (BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME,
+        FSUBJECT_ID, BAL_FLAG, SUBJECT_TYPE,
+        SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG,
+        OVERDRAWN_FLAG, GEN_DETSUB_FLAG, BASE_SUBJECT_NATURE,
+        INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.booksetId,jdbcType=VARCHAR}, #{item.subjectNo,jdbcType=VARCHAR}, #{item.subjectName,jdbcType=VARCHAR},
+            #{item.fsubjectId,jdbcType=VARCHAR}, #{item.balFlag,jdbcType=VARCHAR}, #{item.subjectType,jdbcType=VARCHAR},
+            #{item.subjectLevel,jdbcType=DECIMAL}, #{item.accQuaFlag,jdbcType=VARCHAR}, #{item.accIntFlag,jdbcType=VARCHAR},
+            #{item.overdrawnFlag,jdbcType=VARCHAR}, #{item.genDetsubFlag,jdbcType=VARCHAR}, #{item.baseSubjectNature,jdbcType=VARCHAR},
+            #{item.invAim,jdbcType=VARCHAR}, #{item.secManageAcctId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+            #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.boksubject.dto.BokSubject" >
+        insert into BOK_SUBJECT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO,
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME,
+            </if>
+            <if test="fsubjectId != null" >
+                FSUBJECT_ID,
+            </if>
+            <if test="balFlag != null" >
+                BAL_FLAG,
+            </if>
+            <if test="subjectType != null" >
+                SUBJECT_TYPE,
+            </if>
+            <if test="subjectLevel != null" >
+                SUBJECT_LEVEL,
+            </if>
+            <if test="accQuaFlag != null" >
+                ACC_QUA_FLAG,
+            </if>
+            <if test="accIntFlag != null" >
+                ACC_INT_FLAG,
+            </if>
+            <if test="overdrawnFlag != null" >
+                OVERDRAWN_FLAG,
+            </if>
+            <if test="genDetsubFlag != null" >
+                GEN_DETSUB_FLAG,
+            </if>
+            <if test="baseSubjectNature != null" >
+                BASE_SUBJECT_NATURE,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectNo != null" >
+                #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="fsubjectId != null" >
+                #{fsubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="balFlag != null" >
+                #{balFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectType != null" >
+                #{subjectType,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectLevel != null" >
+                #{subjectLevel,jdbcType=DECIMAL},
+            </if>
+            <if test="accQuaFlag != null" >
+                #{accQuaFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="accIntFlag != null" >
+                #{accIntFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="overdrawnFlag != null" >
+                #{overdrawnFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="genDetsubFlag != null" >
+                #{genDetsubFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="baseSubjectNature != null" >
+                #{baseSubjectNature,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.interf.dis.boksubject.dto.BokSubject" >
+        insert into BOK_SUBJECT(BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG,
+        SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG,
+        BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+        UPDATE_USER, UPDATE_TIME)
+        select BOOKSET_ID, SUBJECT_NO, SUBJECT_NAME, FSUBJECT_ID, BAL_FLAG,
+            SUBJECT_TYPE, SUBJECT_LEVEL, ACC_QUA_FLAG, ACC_INT_FLAG, OVERDRAWN_FLAG, GEN_DETSUB_FLAG,
+            BASE_SUBJECT_NATURE, INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_SUBJECT
+             where 1 = 1 and BOOKSET_ID = #{booksetId,jdbcType=VARCHAR} and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.interf.dis.boksubject.dto.BokSubject" >
+        update BOK_SUBJECT
+        <set >
+            <if test="subjectName != null" >
+                SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="fsubjectId != null" >
+                FSUBJECT_ID = #{fsubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="balFlag != null" >
+                BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectType != null" >
+                SUBJECT_TYPE = #{subjectType,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectLevel != null" >
+                SUBJECT_LEVEL = #{subjectLevel,jdbcType=DECIMAL},
+            </if>
+            <if test="accQuaFlag != null" >
+                ACC_QUA_FLAG = #{accQuaFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="accIntFlag != null" >
+                ACC_INT_FLAG = #{accIntFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="overdrawnFlag != null" >
+                OVERDRAWN_FLAG = #{overdrawnFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="genDetsubFlag != null" >
+                GEN_DETSUB_FLAG = #{genDetsubFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="baseSubjectNature != null" >
+                BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="secManageAcctId != null" >
+                SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.interf.dis.boksubject.dto.BokSubject" >
+        update BOK_SUBJECT
+        set SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            FSUBJECT_ID = #{fsubjectId,jdbcType=VARCHAR},
+            BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+            SUBJECT_TYPE = #{subjectType,jdbcType=VARCHAR},
+            SUBJECT_LEVEL = #{subjectLevel,jdbcType=DECIMAL},
+            ACC_QUA_FLAG = #{accQuaFlag,jdbcType=VARCHAR},
+            ACC_INT_FLAG = #{accIntFlag,jdbcType=VARCHAR},
+            OVERDRAWN_FLAG = #{overdrawnFlag,jdbcType=VARCHAR},
+            GEN_DETSUB_FLAG = #{genDetsubFlag,jdbcType=VARCHAR},
+            BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            SEC_MANAGE_ACCT_ID = #{secManageAcctId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </update>
+    <delete id = "delete">
+    	delete from BOK_SUBJECT
+    </delete>
+</mapper>

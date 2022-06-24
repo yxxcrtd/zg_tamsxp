@@ -2,22 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.reveal.detailshow.dao.RepDetailsShow001Mapper_mysql">
 	<select id="querySameCount" resultType="java.lang.Integer">
-		SELECT
-		count(*)
-		FROM
-		REP_REVEAL
+        SELECT 
+			count(*) 
+		FROM 
+			REP_REVEAL
 		WHERE
-		REP_ID = #{repId,jdbcType=VARCHAR}
+			REP_ID = #{repId,jdbcType=VARCHAR}
 		<if test="portnum != null and portnum.size() > 0">
-			AND IF(!ISNULL(PRODID),PRODID,'0') in
-			<foreach collection="portnum" item="item" open="(" close=")" separator=",">
-				#{item}
-			</foreach>
+					AND IF(!ISNULL(PRODID),PRODID,'0') in
+					<foreach collection="portnum" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
 		</if>
 		AND IF(!ISNULL(DATE_FORMAT(START_DATE,'%Y-%m-%d')),DATE_FORMAT(START_DATE,'%Y-%m-%d'),'0') = #{startDate,jdbcType=VARCHAR}
 		AND IF(!ISNULL(DATE_FORMAT(END_DATE,'%Y-%m-%d')),DATE_FORMAT(END_DATE,'%Y-%m-%d'),'0') = #{endDate,jdbcType=VARCHAR}
 		AND STATUS='E'
-	</select>
+    </select>
 	<update id="updateDataStatus">
     	UPDATE
    			REP_REVEAL

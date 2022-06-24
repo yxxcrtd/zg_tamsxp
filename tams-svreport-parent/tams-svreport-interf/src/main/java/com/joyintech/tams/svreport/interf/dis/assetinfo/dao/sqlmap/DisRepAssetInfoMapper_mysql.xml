@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.interf.dis.assetinfo.dao.DisRepAssetInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.interf.dis.assetinfo.dto.DisRepAssetInfo" >
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="MARKET_ID" property="marketId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="ISSUER" property="issuer" jdbcType="VARCHAR" />
+        <result column="IDATE" property="idate" jdbcType="DATE" />
+        <result column="ISSUE_PRICE" property="issuePrice" jdbcType="DECIMAL" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="ACTMDATE" property="actmdate" jdbcType="DATE" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="INPUT_USER" property="inputUser" jdbcType="VARCHAR" />
+        <result column="ADAPTER_ID" property="adapterId" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="FIX_ANCIER" property="fixAncier" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_ONE" property="assetTypeOne" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_TWO" property="assetTypeTwo" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_THREE" property="assetTypeThree" jdbcType="VARCHAR" />
+        <result column="ASSET_BUSI_TYPE" property="assetBusiType" jdbcType="VARCHAR" />
+        <result column="IS_STAND_ASSET" property="isStandAsset" jdbcType="VARCHAR" />
+        <result column="RATE_TYPE" property="rateType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_DIS" property="assetTypeDis" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.interf.dis.assetinfo.dto.DisRepAssetInfo" >
+        insert into REP_ASSET_INFO (ASSET_ID, MARKET_ID, ASSET_NAME,
+            ISSUER, IDATE, ISSUE_PRICE,
+            ISSUE_AMT, CCY, VDATE,
+            MDATE, ACTMDATE, TRADE_MARKET,
+            REGIST_ORG, INPUT_TYPE, INPUT_USER,
+            ADAPTER_ID, STATUS, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, ASSET_TYPE, FIX_ANCIER,
+            ASSET_TYPE_ONE, ASSET_TYPE_TWO, ASSET_TYPE_THREE,
+            ASSET_BUSI_TYPE, IS_STAND_ASSET, RATE_TYPE,
+            ASSET_TYPE_DIS)
+        values (#{assetId,jdbcType=VARCHAR}, #{marketId,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR},
+            #{issuer,jdbcType=VARCHAR}, #{idate,jdbcType=DATE}, #{issuePrice,jdbcType=DECIMAL},
+            #{issueAmt,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE},
+            #{mdate,jdbcType=DATE}, #{actmdate,jdbcType=DATE}, #{tradeMarket,jdbcType=VARCHAR},
+            #{registOrg,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, #{inputUser,jdbcType=VARCHAR},
+            #{adapterId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{assetType,jdbcType=VARCHAR}, #{fixAncier,jdbcType=VARCHAR},
+            #{assetTypeOne,jdbcType=VARCHAR}, #{assetTypeTwo,jdbcType=VARCHAR}, #{assetTypeThree,jdbcType=VARCHAR},
+            #{assetBusiType,jdbcType=VARCHAR}, #{isStandAsset,jdbcType=VARCHAR}, #{rateType,jdbcType=VARCHAR},
+            #{assetTypeDis,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.interf.dis.assetinfo.dto.DisRepAssetInfo" >
+        insert into REP_ASSET_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="assetId != null" >
+                ASSET_ID,
+            </if>
+            <if test="marketId != null" >
+                MARKET_ID,
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME,
+            </if>
+            <if test="issuer != null" >
+                ISSUER,
+            </if>
+            <if test="idate != null" >
+                IDATE,
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE,
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="actmdate != null" >
+                ACTMDATE,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="inputUser != null" >
+                INPUT_USER,
+            </if>
+            <if test="adapterId != null" >
+                ADAPTER_ID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="fixAncier != null" >
+                FIX_ANCIER,
+            </if>
+            <if test="assetTypeOne != null" >
+                ASSET_TYPE_ONE,
+            </if>
+            <if test="assetTypeTwo != null" >
+                ASSET_TYPE_TWO,
+            </if>
+            <if test="assetTypeThree != null" >
+                ASSET_TYPE_THREE,
+            </if>
+            <if test="assetBusiType != null" >
+                ASSET_BUSI_TYPE,
+            </if>
+            <if test="isStandAsset != null" >
+                IS_STAND_ASSET,
+            </if>
+            <if test="rateType != null" >
+                RATE_TYPE,
+            </if>
+            <if test="assetTypeDis != null" >
+                ASSET_TYPE_DIS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="assetId != null" >
+                #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="marketId != null" >
+                #{marketId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="issuer != null" >
+                #{issuer,jdbcType=VARCHAR},
+            </if>
+            <if test="idate != null" >
+                #{idate,jdbcType=DATE},
+            </if>
+            <if test="issuePrice != null" >
+                #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="issueAmt != null" >
+                #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="actmdate != null" >
+                #{actmdate,jdbcType=DATE},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUser != null" >
+                #{inputUser,jdbcType=VARCHAR},
+            </if>
+            <if test="adapterId != null" >
+                #{adapterId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="fixAncier != null" >
+                #{fixAncier,jdbcType=VARCHAR},
+            </if>
+            <if test="assetTypeOne != null" >
+                #{assetTypeOne,jdbcType=VARCHAR},
+            </if>
+            <if test="assetTypeTwo != null" >
+                #{assetTypeTwo,jdbcType=VARCHAR},
+            </if>
+            <if test="assetTypeThree != null" >
+                #{assetTypeThree,jdbcType=VARCHAR},
+            </if>
+            <if test="assetBusiType != null" >
+                #{assetBusiType,jdbcType=VARCHAR},
+            </if>
+            <if test="isStandAsset != null" >
+                #{isStandAsset,jdbcType=VARCHAR},
+            </if>
+            <if test="rateType != null" >
+                #{rateType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetTypeDis != null" >
+                #{assetTypeDis,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.interf.dis.assetinfo.dto.DisRepAssetInfo" >
+        insert into REP_ASSET_INFO(ASSET_ID, MARKET_ID, ASSET_NAME, ISSUER, IDATE, ISSUE_PRICE,
+        ISSUE_AMT, CCY, VDATE, MDATE, ACTMDATE, TRADE_MARKET, REGIST_ORG, INPUT_TYPE, INPUT_USER,
+        ADAPTER_ID, STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        ASSET_TYPE, FIX_ANCIER, ASSET_TYPE_ONE, ASSET_TYPE_TWO, ASSET_TYPE_THREE, ASSET_BUSI_TYPE,
+        IS_STAND_ASSET, RATE_TYPE, ASSET_TYPE_DIS)
+        select ASSET_ID, MARKET_ID, ASSET_NAME, ISSUER, IDATE, ISSUE_PRICE,
+            ISSUE_AMT, CCY, VDATE, MDATE, ACTMDATE, TRADE_MARKET, REGIST_ORG, INPUT_TYPE, INPUT_USER,
+            ADAPTER_ID, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            ASSET_TYPE, FIX_ANCIER, ASSET_TYPE_ONE, ASSET_TYPE_TWO, ASSET_TYPE_THREE, ASSET_BUSI_TYPE,
+            IS_STAND_ASSET, RATE_TYPE, ASSET_TYPE_DIS
+             from REP_ASSET_INFO
+             where STATUS = 'E'
+    </insert>
+    <update id="mergeRepAssetInfo">
+
+        UPDATE  REP_ASSET_INFO as A,
+        (
+        select
+        ASSET_ID,<!--资产代码-->
+        MARKET_ID,<!--市场代码-->
+        ASSET_NAME,<!--资产名称-->
+        ISSUER,<!--发行人-->
+        IDATE,<!--发行日-->
+        ISSUE_PRICE,<!--发行价-->
+        ISSUE_AMT,<!--发行规模-->
+        CCY,<!--币种-->
+        VDATE,<!--起息日-->
+        MDATE,<!--到期日-->
+        ACTMDATE,<!--实际到期日-->
+        TRADE_MARKET,<!--交易场所-->
+        REGIST_ORG,<!--登记托管机构-->
+        INPUT_TYPE,<!--导入方法-->
+        INPUT_USER,<!--导入用户-->
+        ADAPTER_ID,<!--适配器ID-->
+        STATUS,<!--状态-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        FIX_ANCIER,<!--融资人-->
+        ASSET_TYPE_ONE,<!--资产一级分类-->
+        ASSET_TYPE_TWO,<!--资产二级分类-->
+        ASSET_TYPE_THREE,<!--资产三级分类-->
+        ASSET_TYPE_DIS<!--信披报表一级类型-->
+        ,DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+        ,DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+        ,DIS_ASSET_TYPETHREE<!--信披资产三级类型--> from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.assetId,jdbcType=VARCHAR} ASSET_ID,<!--资产代码-->
+            #{item.marketId,jdbcType=VARCHAR} MARKET_ID,<!--市场代码-->
+            #{item.assetName,jdbcType=VARCHAR} ASSET_NAME,<!--资产名称-->
+            #{item.issuer,jdbcType=VARCHAR} ISSUER,<!--发行人-->
+            #{item.idate,jdbcType=DATE} IDATE,<!--发行日-->
+            #{item.issuePrice,jdbcType=DECIMAL} ISSUE_PRICE,<!--发行价-->
+            #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT,<!--发行规模-->
+            #{item.ccy,jdbcType=VARCHAR} CCY,<!--币种-->
+            #{item.vdate,jdbcType=DATE} VDATE,<!--起息日-->
+            #{item.mdate,jdbcType=DATE} MDATE,<!--到期日-->
+            #{item.actmdate,jdbcType=DATE} ACTMDATE,<!--实际到期日-->
+            #{item.tradeMarket,jdbcType=VARCHAR} TRADE_MARKET,<!--交易场所-->
+            #{item.registOrg,jdbcType=VARCHAR} REGIST_ORG,<!--登记托管机构-->
+            #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,<!--导入方法-->
+            #{item.inputUser,jdbcType=VARCHAR} INPUT_USER,<!--导入用户-->
+            #{item.adapterId,jdbcType=VARCHAR} ADAPTER_ID,<!--适配器ID-->
+            #{item.status,jdbcType=VARCHAR} STATUS,<!--状态-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+            #{item.fixAncier,jdbcType=VARCHAR} FIX_ANCIER,<!--融资人-->
+            #{item.assetTypeOne,jdbcType=VARCHAR} ASSET_TYPE_ONE,<!--资产一级分类-->
+            #{item.assetTypeTwo,jdbcType=VARCHAR} ASSET_TYPE_TWO,<!--资产二级分类-->
+            #{item.assetTypeThree,jdbcType=VARCHAR} ASSET_TYPE_THREE,<!--资产三级分类-->
+            #{item.assetTypeDis,jdbcType=VARCHAR} ASSET_TYPE_DIS<!--信披报表一级类型-->
+            ,#{item.disAssetTypeone,jdbcType=VARCHAR} DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+            ,#{item.disAssetTypeytwo,jdbcType=VARCHAR} DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+            ,#{item.disAssetTypethree,jdbcType=VARCHAR} DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
+            FROM    dual
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        set
+            <!--A.ASSET_ID = B.ASSET_ID,资产代码-->
+            A.MARKET_ID = B.MARKET_ID,<!--市场代码-->
+            A.ASSET_NAME = B.ASSET_NAME,<!--资产名称-->
+            A.ISSUER = B.ISSUER,<!--发行人-->
+            A.IDATE = B.IDATE,<!--发行日-->
+            A.ISSUE_PRICE = B.ISSUE_PRICE,<!--发行价-->
+            A.ISSUE_AMT = B.ISSUE_AMT,<!--发行规模-->
+            A.CCY = B.CCY,<!--币种-->
+            A.VDATE = B.VDATE,<!--起息日-->
+            A.MDATE = B.MDATE,<!--到期日-->
+            A.ACTMDATE = B.ACTMDATE,<!--实际到期日-->
+            A.TRADE_MARKET = B.TRADE_MARKET,<!--交易场所-->
+            A.REGIST_ORG = B.REGIST_ORG,<!--登记托管机构-->
+            A.INPUT_TYPE = B.INPUT_TYPE,<!--导入方法-->
+            A.INPUT_USER = B.INPUT_USER,<!--导入用户-->
+            A.ADAPTER_ID = B.ADAPTER_ID,<!--适配器ID-->
+            A.STATUS = B.STATUS,<!--状态-->
+            A.CREATE_USER = B.CREATE_USER,<!--创建人-->
+            A.CREATE_DEPT = B.CREATE_DEPT,<!--创建部门-->
+            A.CREATE_TIME = B.CREATE_TIME,<!--创建时间-->
+            A.UPDATE_USER = B.UPDATE_USER,<!--更新人-->
+            A.UPDATE_TIME = B.UPDATE_TIME,<!--更新时间-->
+            A.FIX_ANCIER = B.FIX_ANCIER,<!--融资人-->
+            A.ASSET_TYPE_ONE = B.ASSET_TYPE_ONE,<!--资产一级分类-->
+            A.ASSET_TYPE_TWO = B.ASSET_TYPE_TWO,<!--资产二级分类-->
+            A.ASSET_TYPE_THREE = B.ASSET_TYPE_THREE,<!--资产三级分类-->
+            A.ASSET_TYPE_DIS = B.ASSET_TYPE_DIS<!--信披报表一级类型-->
+            ,A.DIS_ASSET_TYPEONE = B.DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+            ,A.DIS_ASSET_TYPETWO = B.DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+            ,A.DIS_ASSET_TYPETHREE = B.DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
+        where A.ASSET_ID = B.ASSET_ID;
+        <!--
+        where exists (select 1 from REP_ASSET_INFO CII where CII.ASSET_ID = TEMP.ASSET_ID);-->
+        insert into REP_ASSET_INFO(ASSET_ID,<!--资产代码-->
+        MARKET_ID,<!--市场代码-->
+        ASSET_NAME,<!--资产名称-->
+        ISSUER,<!--发行人-->
+        IDATE,<!--发行日-->
+        ISSUE_PRICE,<!--发行价-->
+        ISSUE_AMT,<!--发行规模-->
+        CCY,<!--币种-->
+        VDATE,<!--起息日-->
+        MDATE,<!--到期日-->
+        ACTMDATE,<!--实际到期日-->
+        TRADE_MARKET,<!--交易场所-->
+        REGIST_ORG,<!--登记托管机构-->
+        INPUT_TYPE,<!--导入方法-->
+        INPUT_USER,<!--导入用户-->
+        ADAPTER_ID,<!--适配器ID-->
+        STATUS,<!--状态-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        FIX_ANCIER,<!--融资人-->
+        ASSET_TYPE_ONE,<!--资产一级分类-->
+        ASSET_TYPE_TWO,<!--资产二级分类-->
+        ASSET_TYPE_THREE,<!--资产三级分类-->
+        ASSET_TYPE_DIS<!--信披报表一级类型-->
+        ,DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+        ,DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+        ,DIS_ASSET_TYPETHREE<!--信披资产三级类型-->)
+        select ASSET_ID,<!--资产代码-->
+        MARKET_ID,<!--市场代码-->
+        ASSET_NAME,<!--资产名称-->
+        ISSUER,<!--发行人-->
+        IDATE,<!--发行日-->
+        ISSUE_PRICE,<!--发行价-->
+        ISSUE_AMT,<!--发行规模-->
+        CCY,<!--币种-->
+        VDATE,<!--起息日-->
+        MDATE,<!--到期日-->
+        ACTMDATE,<!--实际到期日-->
+        TRADE_MARKET,<!--交易场所-->
+        REGIST_ORG,<!--登记托管机构-->
+        INPUT_TYPE,<!--导入方法-->
+        INPUT_USER,<!--导入用户-->
+        ADAPTER_ID,<!--适配器ID-->
+        STATUS,<!--状态-->
+        CREATE_USER,<!--创建人-->
+        CREATE_DEPT,<!--创建部门-->
+        CREATE_TIME,<!--创建时间-->
+        UPDATE_USER,<!--更新人-->
+        UPDATE_TIME,<!--更新时间-->
+        FIX_ANCIER,<!--融资人-->
+        ASSET_TYPE_ONE,<!--资产一级分类-->
+        ASSET_TYPE_TWO,<!--资产二级分类-->
+        ASSET_TYPE_THREE,<!--资产三级分类-->
+        ASSET_TYPE_DIS<!--信披报表一级类型-->
+        ,DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+        ,DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+        ,DIS_ASSET_TYPETHREE<!--信披资产三级类型--> from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item"  separator="union all">
+            SELECT
+            #{item.assetId,jdbcType=VARCHAR} ASSET_ID,<!--资产代码-->
+            #{item.marketId,jdbcType=VARCHAR} MARKET_ID,<!--市场代码-->
+            #{item.assetName,jdbcType=VARCHAR} ASSET_NAME,<!--资产名称-->
+            #{item.issuer,jdbcType=VARCHAR} ISSUER,<!--发行人-->
+            #{item.idate,jdbcType=DATE} IDATE,<!--发行日-->
+            #{item.issuePrice,jdbcType=DECIMAL} ISSUE_PRICE,<!--发行价-->
+            #{item.issueAmt,jdbcType=DECIMAL} ISSUE_AMT,<!--发行规模-->
+            #{item.ccy,jdbcType=VARCHAR} CCY,<!--币种-->
+            #{item.vdate,jdbcType=DATE} VDATE,<!--起息日-->
+            #{item.mdate,jdbcType=DATE} MDATE,<!--到期日-->
+            #{item.actmdate,jdbcType=DATE} ACTMDATE,<!--实际到期日-->
+            #{item.tradeMarket,jdbcType=VARCHAR} TRADE_MARKET,<!--交易场所-->
+            #{item.registOrg,jdbcType=VARCHAR} REGIST_ORG,<!--登记托管机构-->
+            #{item.inputType,jdbcType=VARCHAR} INPUT_TYPE,<!--导入方法-->
+            #{item.inputUser,jdbcType=VARCHAR} INPUT_USER,<!--导入用户-->
+            #{item.adapterId,jdbcType=VARCHAR} ADAPTER_ID,<!--适配器ID-->
+            #{item.status,jdbcType=VARCHAR} STATUS,<!--状态-->
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,<!--创建人-->
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,<!--创建部门-->
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,<!--创建时间-->
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,<!--更新人-->
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,<!--更新时间-->
+            #{item.fixAncier,jdbcType=VARCHAR} FIX_ANCIER,<!--融资人-->
+            #{item.assetTypeOne,jdbcType=VARCHAR} ASSET_TYPE_ONE,<!--资产一级分类-->
+            #{item.assetTypeTwo,jdbcType=VARCHAR} ASSET_TYPE_TWO,<!--资产二级分类-->
+            #{item.assetTypeThree,jdbcType=VARCHAR} ASSET_TYPE_THREE,<!--资产三级分类-->
+            #{item.assetTypeDis,jdbcType=VARCHAR} ASSET_TYPE_DIS<!--信披报表一级类型-->
+            ,#{item.disAssetTypeone,jdbcType=VARCHAR} DIS_ASSET_TYPEONE<!--信披资产一级类型-->
+            ,#{item.disAssetTypeytwo,jdbcType=VARCHAR} DIS_ASSET_TYPETWO<!--信披资产二级类型-->
+            ,#{item.disAssetTypethree,jdbcType=VARCHAR} DIS_ASSET_TYPETHREE<!--信披资产三级类型-->
+            FROM    dual
+        </foreach>
+        ) TEMP where not exists (select 1 from REP_ASSET_INFO CII where CII.ASSET_ID = TEMP.ASSET_ID)
+        ) de ;
+    </update>
+</mapper>

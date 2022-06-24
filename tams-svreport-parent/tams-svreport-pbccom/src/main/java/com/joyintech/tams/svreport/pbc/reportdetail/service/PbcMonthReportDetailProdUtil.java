@@ -152,8 +152,9 @@ public class PbcMonthReportDetailProdUtil {
             prodDetailList.add(buildProdDetail(dto,prodMap.get(dto.getProdid()),termid));
         }
 
-
-        insertBatch(prodDetailList,termid);
+        if(CollectionUtils.isNotEmpty(prodDetailList)){
+            insertBatch(prodDetailList,termid);
+        }
     }
 
 

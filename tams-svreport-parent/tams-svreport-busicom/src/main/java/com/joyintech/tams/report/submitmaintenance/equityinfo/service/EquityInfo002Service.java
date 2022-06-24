@@ -142,7 +142,7 @@ public class EquityInfo002Service extends BaseService{
             temp.put("REGIST_BANK_CODE",dto.getBankCode());
             temp.put("INDENTIFY_MARK",dto.getIndentifyMark());
             try {
-                if(equityInfoRegist001Mapper.countIndentifyMark(temp)>0){
+                if(equityInfoRegist001Mapper.countIndentifyMarkAll(temp)>0){
                     message.add(this.getMessage("REPORT_E_0016"));
                 }
             }

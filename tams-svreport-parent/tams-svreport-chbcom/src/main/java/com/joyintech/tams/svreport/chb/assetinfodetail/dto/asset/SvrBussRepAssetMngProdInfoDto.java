@@ -169,11 +169,6 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
     private String prodRegisterCode;
 
     /**
-     * 是否为财产权信托产品，01 是/02 否
-     */
-    private String isPropertyTrust;
-
-    /**
      * 公共PPP
      */
     private String pppflag;
@@ -197,14 +192,6 @@ public class SvrBussRepAssetMngProdInfoDto extends BaseEntity {
 
     public void setBondtostockFlag(String bondtostockFlag) {
         this.bondtostockFlag = bondtostockFlag;
-    }
-
-    public String getIsPropertyTrust() {
-        return isPropertyTrust;
-    }
-
-    public void setIsPropertyTrust(String isPropertyTrust) {
-        this.isPropertyTrust = isPropertyTrust;
     }
 
     public static long getSerialVersionUID() {

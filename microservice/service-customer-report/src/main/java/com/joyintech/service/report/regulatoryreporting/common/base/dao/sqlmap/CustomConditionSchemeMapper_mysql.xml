@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.common.base.dao.CustomConditionSchemeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.regulatoryreporting.common.base.entity.CustomConditionScheme" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="SCHEME_NAME" property="schemeName" jdbcType="VARCHAR" />
+        <result column="MODULE_ID" property="moduleId" jdbcType="VARCHAR" />
+        <result column="QUERY_DATE" property="queryDate" jdbcType="VARCHAR" />
+        <result column="QUERY_RANGE" property="queryRange" jdbcType="VARCHAR" />
+        <result column="REPORT_DIMENSION" property="reportDimension" jdbcType="VARCHAR" />
+        <result column="PENETRATE_DIMENSION" property="penetrateDimension" jdbcType="VARCHAR" />
+        <result column="COMBINATION_DIMENSION" property="combinationDimension" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, SCHEME_NAME SCHEME_NAME, MODULE_ID MODULE_ID, QUERY_DATE QUERY_DATE, 
+        QUERY_RANGE QUERY_RANGE, REPORT_DIMENSION REPORT_DIMENSION, PENETRATE_DIMENSION PENETRATE_DIMENSION, 
+        COMBINATION_DIMENSION COMBINATION_DIMENSION, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.service.report.regulatoryreporting.common.base.dao.CustomConditionSchemeMapper.Base_Column_List" />
+        from CUSTOM_CONDITION_SCHEME
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.service.report.regulatoryreporting.common.base.dao.CustomConditionSchemeMapper.Base_Column_List" />
+        from CUSTOM_CONDITION_SCHEME
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.service.report.regulatoryreporting.common.base.dao.CustomConditionSchemeMapper.Base_Column_List" />
+        from CUSTOM_CONDITION_SCHEME
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CUSTOM_CONDITION_SCHEME
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.CustomConditionScheme" >
+        insert into CUSTOM_CONDITION_SCHEME (SEQNO, SCHEME_NAME, MODULE_ID, 
+            QUERY_DATE, QUERY_RANGE, REPORT_DIMENSION, 
+            PENETRATE_DIMENSION, COMBINATION_DIMENSION, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{schemeName,jdbcType=VARCHAR}, #{moduleId,jdbcType=VARCHAR}, 
+            #{queryDate,jdbcType=VARCHAR}, #{queryRange,jdbcType=VARCHAR}, #{reportDimension,jdbcType=VARCHAR}, 
+            #{penetrateDimension,jdbcType=VARCHAR}, #{combinationDimension,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.CustomConditionScheme" >
+        insert into CUSTOM_CONDITION_SCHEME
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="schemeName != null" >
+                SCHEME_NAME,
+            </if>
+            <if test="moduleId != null" >
+                MODULE_ID,
+            </if>
+            <if test="queryDate != null" >
+                QUERY_DATE,
+            </if>
+            <if test="queryRange != null" >
+                QUERY_RANGE,
+            </if>
+            <if test="reportDimension != null" >
+                REPORT_DIMENSION,
+            </if>
+            <if test="penetrateDimension != null" >
+                PENETRATE_DIMENSION,
+            </if>
+            <if test="combinationDimension != null" >
+                COMBINATION_DIMENSION,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="schemeName != null" >
+                #{schemeName,jdbcType=VARCHAR},
+            </if>
+            <if test="moduleId != null" >
+                #{moduleId,jdbcType=VARCHAR},
+            </if>
+            <if test="queryDate != null" >
+                #{queryDate,jdbcType=VARCHAR},
+            </if>
+            <if test="queryRange != null" >
+                #{queryRange,jdbcType=VARCHAR},
+            </if>
+            <if test="reportDimension != null" >
+                #{reportDimension,jdbcType=VARCHAR},
+            </if>
+            <if test="penetrateDimension != null" >
+                #{penetrateDimension,jdbcType=VARCHAR},
+            </if>
+            <if test="combinationDimension != null" >
+                #{combinationDimension,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.CustomConditionScheme" >
+        insert into CUSTOM_CONDITION_SCHEME(SEQNO, SCHEME_NAME, MODULE_ID, QUERY_DATE, QUERY_RANGE, 
+        REPORT_DIMENSION, PENETRATE_DIMENSION, COMBINATION_DIMENSION, REMARK, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQNO, SCHEME_NAME, MODULE_ID, QUERY_DATE, QUERY_RANGE, 
+            REPORT_DIMENSION, PENETRATE_DIMENSION, COMBINATION_DIMENSION, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from CUSTOM_CONDITION_SCHEME
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.CustomConditionScheme" >
+        update CUSTOM_CONDITION_SCHEME
+        <set >
+            <if test="schemeName != null" >
+                SCHEME_NAME = #{schemeName,jdbcType=VARCHAR},
+            </if>
+            <if test="moduleId != null" >
+                MODULE_ID = #{moduleId,jdbcType=VARCHAR},
+            </if>
+            <if test="queryDate != null" >
+                QUERY_DATE = #{queryDate,jdbcType=VARCHAR},
+            </if>
+            <if test="queryRange != null" >
+                QUERY_RANGE = #{queryRange,jdbcType=VARCHAR},
+            </if>
+            <if test="reportDimension != null" >
+                REPORT_DIMENSION = #{reportDimension,jdbcType=VARCHAR},
+            </if>
+            <if test="penetrateDimension != null" >
+                PENETRATE_DIMENSION = #{penetrateDimension,jdbcType=VARCHAR},
+            </if>
+            <if test="combinationDimension != null" >
+                COMBINATION_DIMENSION = #{combinationDimension,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.CustomConditionScheme" >
+        update CUSTOM_CONDITION_SCHEME
+        set SCHEME_NAME = #{schemeName,jdbcType=VARCHAR},
+            MODULE_ID = #{moduleId,jdbcType=VARCHAR},
+            QUERY_DATE = #{queryDate,jdbcType=VARCHAR},
+            QUERY_RANGE = #{queryRange,jdbcType=VARCHAR},
+            REPORT_DIMENSION = #{reportDimension,jdbcType=VARCHAR},
+            PENETRATE_DIMENSION = #{penetrateDimension,jdbcType=VARCHAR},
+            COMBINATION_DIMENSION = #{combinationDimension,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

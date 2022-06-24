@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SzdSjsjgMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SzdSjsjg" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="IMPORT_DATE" property="importDate" jdbcType="DATE" />
+        <result column="DATA_FILE" property="dataFile" jdbcType="VARCHAR" />
+        <result column="IS_SETTLE_TARGET" property="isSettleTarget" jdbcType="VARCHAR" />
+        <result column="JGJSZH" property="jgjszh" jdbcType="VARCHAR" />
+        <result column="JGBFZH" property="jgbfzh" jdbcType="VARCHAR" />
+        <result column="JGSJLX" property="jgsjlx" jdbcType="VARCHAR" />
+        <result column="JGYWLB" property="jgywlb" jdbcType="VARCHAR" />
+        <result column="JGZQDM" property="jgzqdm" jdbcType="VARCHAR" />
+        <result column="JGJYDY" property="jgjydy" jdbcType="VARCHAR" />
+        <result column="JGTGDY" property="jgtgdy" jdbcType="VARCHAR" />
+        <result column="JGZQZH" property="jgzqzh" jdbcType="VARCHAR" />
+        <result column="JGDDBH" property="jgddbh" jdbcType="VARCHAR" />
+        <result column="JGYYB" property="jgyyb" jdbcType="VARCHAR" />
+        <result column="JGZXBH" property="jgzxbh" jdbcType="VARCHAR" />
+        <result column="JGYWLSH" property="jgywlsh" jdbcType="VARCHAR" />
+        <result column="JGCJSL" property="jgcjsl" jdbcType="DECIMAL" />
+        <result column="JGQSSL" property="jgqssl" jdbcType="DECIMAL" />
+        <result column="JGJSSL" property="jgjssl" jdbcType="DECIMAL" />
+        <result column="JGCJJG" property="jgcjjg" jdbcType="DECIMAL" />
+        <result column="JGQSJG" property="jgqsjg" jdbcType="DECIMAL" />
+        <result column="JGXYJY" property="jgxyjy" jdbcType="VARCHAR" />
+        <result column="JGPCBS" property="jgpcbs" jdbcType="VARCHAR" />
+        <result column="JGZQLB" property="jgzqlb" jdbcType="VARCHAR" />
+        <result column="JGZQZL" property="jgzqzl" jdbcType="VARCHAR" />
+        <result column="JGGFXZ" property="jggfxz" jdbcType="VARCHAR" />
+        <result column="JGLTLX" property="jgltlx" jdbcType="VARCHAR" />
+        <result column="JGJSFS" property="jgjsfs" jdbcType="VARCHAR" />
+        <result column="JGHBDH" property="jghbdh" jdbcType="VARCHAR" />
+        <result column="JGQSBJ" property="jgqsbj" jdbcType="DECIMAL" />
+        <result column="JGYHS" property="jgyhs" jdbcType="DECIMAL" />
+        <result column="JGJYJSF" property="jgjyjsf" jdbcType="DECIMAL" />
+        <result column="JGJGGF" property="jgjggf" jdbcType="DECIMAL" />
+        <result column="JGGHF" property="jgghf" jdbcType="DECIMAL" />
+        <result column="JGJSF" property="jgjsf" jdbcType="DECIMAL" />
+        <result column="JGSXF" property="jgsxf" jdbcType="DECIMAL" />
+        <result column="JGQSYJ" property="jgqsyj" jdbcType="DECIMAL" />
+        <result column="JGQTFY" property="jgqtfy" jdbcType="DECIMAL" />
+        <result column="JGZJJE" property="jgzjje" jdbcType="DECIMAL" />
+        <result column="JGSFJE" property="jgsfje" jdbcType="DECIMAL" />
+        <result column="JGJSBZ" property="jgjsbz" jdbcType="VARCHAR" />
+        <result column="JGZYDH" property="jgzydh" jdbcType="VARCHAR" />
+        <result column="JGCJRQ" property="jgcjrq" jdbcType="VARCHAR" />
+        <result column="JGQSRQ" property="jgqsrq" jdbcType="VARCHAR" />
+        <result column="JGJSRQ" property="jgjsrq" jdbcType="VARCHAR" />
+        <result column="JGFSRQ" property="jgfsrq" jdbcType="VARCHAR" />
+        <result column="JGQTRQ" property="jgqtrq" jdbcType="VARCHAR" />
+        <result column="JGSCDM" property="jgscdm" jdbcType="VARCHAR" />
+        <result column="JGJYFS" property="jgjyfs" jdbcType="VARCHAR" />
+        <result column="JGZQDM2" property="jgzqdm2" jdbcType="VARCHAR" />
+        <result column="JGTGDY2" property="jgtgdy2" jdbcType="VARCHAR" />
+        <result column="JGDDBH2" property="jgddbh2" jdbcType="VARCHAR" />
+        <result column="JGFJSM" property="jgfjsm" jdbcType="VARCHAR" />
+        <result column="JGBYBZ" property="jgbybz" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, IMPORT_DATE IMPORT_DATE, DATA_FILE DATA_FILE, IS_SETTLE_TARGET IS_SETTLE_TARGET, 
+        JGJSZH JGJSZH, JGBFZH JGBFZH, JGSJLX JGSJLX, JGYWLB JGYWLB, JGZQDM JGZQDM, JGJYDY JGJYDY, 
+        JGTGDY JGTGDY, JGZQZH JGZQZH, JGDDBH JGDDBH, JGYYB JGYYB, JGZXBH JGZXBH, JGYWLSH JGYWLSH, 
+        JGCJSL JGCJSL, JGQSSL JGQSSL, JGJSSL JGJSSL, JGCJJG JGCJJG, JGQSJG JGQSJG, JGXYJY JGXYJY, 
+        JGPCBS JGPCBS, JGZQLB JGZQLB, JGZQZL JGZQZL, JGGFXZ JGGFXZ, JGLTLX JGLTLX, JGJSFS JGJSFS, 
+        JGHBDH JGHBDH, JGQSBJ JGQSBJ, JGYHS JGYHS, JGJYJSF JGJYJSF, JGJGGF JGJGGF, JGGHF JGGHF, 
+        JGJSF JGJSF, JGSXF JGSXF, JGQSYJ JGQSYJ, JGQTFY JGQTFY, JGZJJE JGZJJE, JGSFJE JGSFJE, 
+        JGJSBZ JGJSBZ, JGZYDH JGZYDH, JGCJRQ JGCJRQ, JGQSRQ JGQSRQ, JGJSRQ JGJSRQ, JGFSRQ JGFSRQ, 
+        JGQTRQ JGQTRQ, JGSCDM JGSCDM, JGJYFS JGJYFS, JGZQDM2 JGZQDM2, JGTGDY2 JGTGDY2, JGDDBH2 JGDDBH2, 
+        JGFJSM JGFJSM, JGBYBZ JGBYBZ, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdSjsjgMapper_mysql.Base_Column_List" />
+        from SZD_SJSJG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdSjsjgMapper_mysql.Base_Column_List" />
+        from SZD_SJSJG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdSjsjgMapper_mysql.Base_Column_List" />
+        from SZD_SJSJG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SZD_SJSJG
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SzdSjsjg" >
+        insert into SZD_SJSJG (SEQNO, IMPORT_DATE, DATA_FILE, 
+            IS_SETTLE_TARGET, JGJSZH, JGBFZH, 
+            JGSJLX, JGYWLB, JGZQDM, 
+            JGJYDY, JGTGDY, JGZQZH, 
+            JGDDBH, JGYYB, JGZXBH, 
+            JGYWLSH, JGCJSL, JGQSSL, 
+            JGJSSL, JGCJJG, JGQSJG, 
+            JGXYJY, JGPCBS, JGZQLB, 
+            JGZQZL, JGGFXZ, JGLTLX, 
+            JGJSFS, JGHBDH, JGQSBJ, 
+            JGYHS, JGJYJSF, JGJGGF, 
+            JGGHF, JGJSF, JGSXF, 
+            JGQSYJ, JGQTFY, JGZJJE, 
+            JGSFJE, JGJSBZ, JGZYDH, 
+            JGCJRQ, JGQSRQ, JGJSRQ, 
+            JGFSRQ, JGQTRQ, JGSCDM, 
+            JGJYFS, JGZQDM2, JGTGDY2, 
+            JGDDBH2, JGFJSM, JGBYBZ, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{importDate,jdbcType=DATE}, #{dataFile,jdbcType=VARCHAR}, 
+            #{isSettleTarget,jdbcType=VARCHAR}, #{jgjszh,jdbcType=VARCHAR}, #{jgbfzh,jdbcType=VARCHAR}, 
+            #{jgsjlx,jdbcType=VARCHAR}, #{jgywlb,jdbcType=VARCHAR}, #{jgzqdm,jdbcType=VARCHAR}, 
+            #{jgjydy,jdbcType=VARCHAR}, #{jgtgdy,jdbcType=VARCHAR}, #{jgzqzh,jdbcType=VARCHAR}, 
+            #{jgddbh,jdbcType=VARCHAR}, #{jgyyb,jdbcType=VARCHAR}, #{jgzxbh,jdbcType=VARCHAR}, 
+            #{jgywlsh,jdbcType=VARCHAR}, #{jgcjsl,jdbcType=DECIMAL}, #{jgqssl,jdbcType=DECIMAL}, 
+            #{jgjssl,jdbcType=DECIMAL}, #{jgcjjg,jdbcType=DECIMAL}, #{jgqsjg,jdbcType=DECIMAL}, 
+            #{jgxyjy,jdbcType=VARCHAR}, #{jgpcbs,jdbcType=VARCHAR}, #{jgzqlb,jdbcType=VARCHAR}, 
+            #{jgzqzl,jdbcType=VARCHAR}, #{jggfxz,jdbcType=VARCHAR}, #{jgltlx,jdbcType=VARCHAR}, 
+            #{jgjsfs,jdbcType=VARCHAR}, #{jghbdh,jdbcType=VARCHAR}, #{jgqsbj,jdbcType=DECIMAL}, 
+            #{jgyhs,jdbcType=DECIMAL}, #{jgjyjsf,jdbcType=DECIMAL}, #{jgjggf,jdbcType=DECIMAL}, 
+            #{jgghf,jdbcType=DECIMAL}, #{jgjsf,jdbcType=DECIMAL}, #{jgsxf,jdbcType=DECIMAL}, 
+            #{jgqsyj,jdbcType=DECIMAL}, #{jgqtfy,jdbcType=DECIMAL}, #{jgzjje,jdbcType=DECIMAL}, 
+            #{jgsfje,jdbcType=DECIMAL}, #{jgjsbz,jdbcType=VARCHAR}, #{jgzydh,jdbcType=VARCHAR}, 
+            #{jgcjrq,jdbcType=VARCHAR}, #{jgqsrq,jdbcType=VARCHAR}, #{jgjsrq,jdbcType=VARCHAR}, 
+            #{jgfsrq,jdbcType=VARCHAR}, #{jgqtrq,jdbcType=VARCHAR}, #{jgscdm,jdbcType=VARCHAR}, 
+            #{jgjyfs,jdbcType=VARCHAR}, #{jgzqdm2,jdbcType=VARCHAR}, #{jgtgdy2,jdbcType=VARCHAR}, 
+            #{jgddbh2,jdbcType=VARCHAR}, #{jgfjsm,jdbcType=VARCHAR}, #{jgbybz,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SzdSjsjg" >
+        insert into SZD_SJSJG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="importDate != null" >
+                IMPORT_DATE,
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE,
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET,
+            </if>
+            <if test="jgjszh != null" >
+                JGJSZH,
+            </if>
+            <if test="jgbfzh != null" >
+                JGBFZH,
+            </if>
+            <if test="jgsjlx != null" >
+                JGSJLX,
+            </if>
+            <if test="jgywlb != null" >
+                JGYWLB,
+            </if>
+            <if test="jgzqdm != null" >
+                JGZQDM,
+            </if>
+            <if test="jgjydy != null" >
+                JGJYDY,
+            </if>
+            <if test="jgtgdy != null" >
+                JGTGDY,
+            </if>
+            <if test="jgzqzh != null" >
+                JGZQZH,
+            </if>
+            <if test="jgddbh != null" >
+                JGDDBH,
+            </if>
+            <if test="jgyyb != null" >
+                JGYYB,
+            </if>
+            <if test="jgzxbh != null" >
+                JGZXBH,
+            </if>
+            <if test="jgywlsh != null" >
+                JGYWLSH,
+            </if>
+            <if test="jgcjsl != null" >
+                JGCJSL,
+            </if>
+            <if test="jgqssl != null" >
+                JGQSSL,
+            </if>
+            <if test="jgjssl != null" >
+                JGJSSL,
+            </if>
+            <if test="jgcjjg != null" >
+                JGCJJG,
+            </if>
+            <if test="jgqsjg != null" >
+                JGQSJG,
+            </if>
+            <if test="jgxyjy != null" >
+                JGXYJY,
+            </if>
+            <if test="jgpcbs != null" >
+                JGPCBS,
+            </if>
+            <if test="jgzqlb != null" >
+                JGZQLB,
+            </if>
+            <if test="jgzqzl != null" >
+                JGZQZL,
+            </if>
+            <if test="jggfxz != null" >
+                JGGFXZ,
+            </if>
+            <if test="jgltlx != null" >
+                JGLTLX,
+            </if>
+            <if test="jgjsfs != null" >
+                JGJSFS,
+            </if>
+            <if test="jghbdh != null" >
+                JGHBDH,
+            </if>
+            <if test="jgqsbj != null" >
+                JGQSBJ,
+            </if>
+            <if test="jgyhs != null" >
+                JGYHS,
+            </if>
+            <if test="jgjyjsf != null" >
+                JGJYJSF,
+            </if>
+            <if test="jgjggf != null" >
+                JGJGGF,
+            </if>
+            <if test="jgghf != null" >
+                JGGHF,
+            </if>
+            <if test="jgjsf != null" >
+                JGJSF,
+            </if>
+            <if test="jgsxf != null" >
+                JGSXF,
+            </if>
+            <if test="jgqsyj != null" >
+                JGQSYJ,
+            </if>
+            <if test="jgqtfy != null" >
+                JGQTFY,
+            </if>
+            <if test="jgzjje != null" >
+                JGZJJE,
+            </if>
+            <if test="jgsfje != null" >
+                JGSFJE,
+            </if>
+            <if test="jgjsbz != null" >
+                JGJSBZ,
+            </if>
+            <if test="jgzydh != null" >
+                JGZYDH,
+            </if>
+            <if test="jgcjrq != null" >
+                JGCJRQ,
+            </if>
+            <if test="jgqsrq != null" >
+                JGQSRQ,
+            </if>
+            <if test="jgjsrq != null" >
+                JGJSRQ,
+            </if>
+            <if test="jgfsrq != null" >
+                JGFSRQ,
+            </if>
+            <if test="jgqtrq != null" >
+                JGQTRQ,
+            </if>
+            <if test="jgscdm != null" >
+                JGSCDM,
+            </if>
+            <if test="jgjyfs != null" >
+                JGJYFS,
+            </if>
+            <if test="jgzqdm2 != null" >
+                JGZQDM2,
+            </if>
+            <if test="jgtgdy2 != null" >
+                JGTGDY2,
+            </if>
+            <if test="jgddbh2 != null" >
+                JGDDBH2,
+            </if>
+            <if test="jgfjsm != null" >
+                JGFJSM,
+            </if>
+            <if test="jgbybz != null" >
+                JGBYBZ,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="importDate != null" >
+                #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjszh != null" >
+                #{jgjszh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgbfzh != null" >
+                #{jgbfzh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgsjlx != null" >
+                #{jgsjlx,jdbcType=VARCHAR},
+            </if>
+            <if test="jgywlb != null" >
+                #{jgywlb,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqdm != null" >
+                #{jgzqdm,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjydy != null" >
+                #{jgjydy,jdbcType=VARCHAR},
+            </if>
+            <if test="jgtgdy != null" >
+                #{jgtgdy,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqzh != null" >
+                #{jgzqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgddbh != null" >
+                #{jgddbh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgyyb != null" >
+                #{jgyyb,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzxbh != null" >
+                #{jgzxbh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgywlsh != null" >
+                #{jgywlsh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgcjsl != null" >
+                #{jgcjsl,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqssl != null" >
+                #{jgqssl,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjssl != null" >
+                #{jgjssl,jdbcType=DECIMAL},
+            </if>
+            <if test="jgcjjg != null" >
+                #{jgcjjg,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqsjg != null" >
+                #{jgqsjg,jdbcType=DECIMAL},
+            </if>
+            <if test="jgxyjy != null" >
+                #{jgxyjy,jdbcType=VARCHAR},
+            </if>
+            <if test="jgpcbs != null" >
+                #{jgpcbs,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqlb != null" >
+                #{jgzqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqzl != null" >
+                #{jgzqzl,jdbcType=VARCHAR},
+            </if>
+            <if test="jggfxz != null" >
+                #{jggfxz,jdbcType=VARCHAR},
+            </if>
+            <if test="jgltlx != null" >
+                #{jgltlx,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjsfs != null" >
+                #{jgjsfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jghbdh != null" >
+                #{jghbdh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgqsbj != null" >
+                #{jgqsbj,jdbcType=DECIMAL},
+            </if>
+            <if test="jgyhs != null" >
+                #{jgyhs,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjyjsf != null" >
+                #{jgjyjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjggf != null" >
+                #{jgjggf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgghf != null" >
+                #{jgghf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjsf != null" >
+                #{jgjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgsxf != null" >
+                #{jgsxf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqsyj != null" >
+                #{jgqsyj,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqtfy != null" >
+                #{jgqtfy,jdbcType=DECIMAL},
+            </if>
+            <if test="jgzjje != null" >
+                #{jgzjje,jdbcType=DECIMAL},
+            </if>
+            <if test="jgsfje != null" >
+                #{jgsfje,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjsbz != null" >
+                #{jgjsbz,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzydh != null" >
+                #{jgzydh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgcjrq != null" >
+                #{jgcjrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgqsrq != null" >
+                #{jgqsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjsrq != null" >
+                #{jgjsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgfsrq != null" >
+                #{jgfsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgqtrq != null" >
+                #{jgqtrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgscdm != null" >
+                #{jgscdm,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjyfs != null" >
+                #{jgjyfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqdm2 != null" >
+                #{jgzqdm2,jdbcType=VARCHAR},
+            </if>
+            <if test="jgtgdy2 != null" >
+                #{jgtgdy2,jdbcType=VARCHAR},
+            </if>
+            <if test="jgddbh2 != null" >
+                #{jgddbh2,jdbcType=VARCHAR},
+            </if>
+            <if test="jgfjsm != null" >
+                #{jgfjsm,jdbcType=VARCHAR},
+            </if>
+            <if test="jgbybz != null" >
+                #{jgbybz,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SzdSjsjg" >
+        insert into SZD_SJSJG(SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, JGJSZH, JGBFZH, 
+        JGSJLX, JGYWLB, JGZQDM, JGJYDY, JGTGDY, JGZQZH, JGDDBH, JGYYB, JGZXBH, JGYWLSH, JGCJSL, 
+        JGQSSL, JGJSSL, JGCJJG, JGQSJG, JGXYJY, JGPCBS, JGZQLB, JGZQZL, JGGFXZ, JGLTLX, JGJSFS, 
+        JGHBDH, JGQSBJ, JGYHS, JGJYJSF, JGJGGF, JGGHF, JGJSF, JGSXF, JGQSYJ, JGQTFY, JGZJJE, 
+        JGSFJE, JGJSBZ, JGZYDH, JGCJRQ, JGQSRQ, JGJSRQ, JGFSRQ, JGQTRQ, JGSCDM, JGJYFS, JGZQDM2, 
+        JGTGDY2, JGDDBH2, JGFJSM, JGBYBZ, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, JGJSZH, JGBFZH, 
+            JGSJLX, JGYWLB, JGZQDM, JGJYDY, JGTGDY, JGZQZH, JGDDBH, JGYYB, JGZXBH, JGYWLSH, JGCJSL, 
+            JGQSSL, JGJSSL, JGCJJG, JGQSJG, JGXYJY, JGPCBS, JGZQLB, JGZQZL, JGGFXZ, JGLTLX, JGJSFS, 
+            JGHBDH, JGQSBJ, JGYHS, JGJYJSF, JGJGGF, JGGHF, JGJSF, JGSXF, JGQSYJ, JGQTFY, JGZJJE, 
+            JGSFJE, JGJSBZ, JGZYDH, JGCJRQ, JGQSRQ, JGJSRQ, JGFSRQ, JGQTRQ, JGSCDM, JGJYFS, JGZQDM2, 
+            JGTGDY2, JGDDBH2, JGFJSM, JGBYBZ, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from SZD_SJSJG
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SzdSjsjg" >
+        update SZD_SJSJG
+        <set >
+            <if test="importDate != null" >
+                IMPORT_DATE = #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjszh != null" >
+                JGJSZH = #{jgjszh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgbfzh != null" >
+                JGBFZH = #{jgbfzh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgsjlx != null" >
+                JGSJLX = #{jgsjlx,jdbcType=VARCHAR},
+            </if>
+            <if test="jgywlb != null" >
+                JGYWLB = #{jgywlb,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqdm != null" >
+                JGZQDM = #{jgzqdm,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjydy != null" >
+                JGJYDY = #{jgjydy,jdbcType=VARCHAR},
+            </if>
+            <if test="jgtgdy != null" >
+                JGTGDY = #{jgtgdy,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqzh != null" >
+                JGZQZH = #{jgzqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgddbh != null" >
+                JGDDBH = #{jgddbh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgyyb != null" >
+                JGYYB = #{jgyyb,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzxbh != null" >
+                JGZXBH = #{jgzxbh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgywlsh != null" >
+                JGYWLSH = #{jgywlsh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgcjsl != null" >
+                JGCJSL = #{jgcjsl,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqssl != null" >
+                JGQSSL = #{jgqssl,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjssl != null" >
+                JGJSSL = #{jgjssl,jdbcType=DECIMAL},
+            </if>
+            <if test="jgcjjg != null" >
+                JGCJJG = #{jgcjjg,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqsjg != null" >
+                JGQSJG = #{jgqsjg,jdbcType=DECIMAL},
+            </if>
+            <if test="jgxyjy != null" >
+                JGXYJY = #{jgxyjy,jdbcType=VARCHAR},
+            </if>
+            <if test="jgpcbs != null" >
+                JGPCBS = #{jgpcbs,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqlb != null" >
+                JGZQLB = #{jgzqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqzl != null" >
+                JGZQZL = #{jgzqzl,jdbcType=VARCHAR},
+            </if>
+            <if test="jggfxz != null" >
+                JGGFXZ = #{jggfxz,jdbcType=VARCHAR},
+            </if>
+            <if test="jgltlx != null" >
+                JGLTLX = #{jgltlx,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjsfs != null" >
+                JGJSFS = #{jgjsfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jghbdh != null" >
+                JGHBDH = #{jghbdh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgqsbj != null" >
+                JGQSBJ = #{jgqsbj,jdbcType=DECIMAL},
+            </if>
+            <if test="jgyhs != null" >
+                JGYHS = #{jgyhs,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjyjsf != null" >
+                JGJYJSF = #{jgjyjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjggf != null" >
+                JGJGGF = #{jgjggf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgghf != null" >
+                JGGHF = #{jgghf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjsf != null" >
+                JGJSF = #{jgjsf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgsxf != null" >
+                JGSXF = #{jgsxf,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqsyj != null" >
+                JGQSYJ = #{jgqsyj,jdbcType=DECIMAL},
+            </if>
+            <if test="jgqtfy != null" >
+                JGQTFY = #{jgqtfy,jdbcType=DECIMAL},
+            </if>
+            <if test="jgzjje != null" >
+                JGZJJE = #{jgzjje,jdbcType=DECIMAL},
+            </if>
+            <if test="jgsfje != null" >
+                JGSFJE = #{jgsfje,jdbcType=DECIMAL},
+            </if>
+            <if test="jgjsbz != null" >
+                JGJSBZ = #{jgjsbz,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzydh != null" >
+                JGZYDH = #{jgzydh,jdbcType=VARCHAR},
+            </if>
+            <if test="jgcjrq != null" >
+                JGCJRQ = #{jgcjrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgqsrq != null" >
+                JGQSRQ = #{jgqsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjsrq != null" >
+                JGJSRQ = #{jgjsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgfsrq != null" >
+                JGFSRQ = #{jgfsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgqtrq != null" >
+                JGQTRQ = #{jgqtrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jgscdm != null" >
+                JGSCDM = #{jgscdm,jdbcType=VARCHAR},
+            </if>
+            <if test="jgjyfs != null" >
+                JGJYFS = #{jgjyfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jgzqdm2 != null" >
+                JGZQDM2 = #{jgzqdm2,jdbcType=VARCHAR},
+            </if>
+            <if test="jgtgdy2 != null" >
+                JGTGDY2 = #{jgtgdy2,jdbcType=VARCHAR},
+            </if>
+            <if test="jgddbh2 != null" >
+                JGDDBH2 = #{jgddbh2,jdbcType=VARCHAR},
+            </if>
+            <if test="jgfjsm != null" >
+                JGFJSM = #{jgfjsm,jdbcType=VARCHAR},
+            </if>
+            <if test="jgbybz != null" >
+                JGBYBZ = #{jgbybz,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SzdSjsjg" >
+        update SZD_SJSJG
+        set IMPORT_DATE = #{importDate,jdbcType=DATE},
+            DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            JGJSZH = #{jgjszh,jdbcType=VARCHAR},
+            JGBFZH = #{jgbfzh,jdbcType=VARCHAR},
+            JGSJLX = #{jgsjlx,jdbcType=VARCHAR},
+            JGYWLB = #{jgywlb,jdbcType=VARCHAR},
+            JGZQDM = #{jgzqdm,jdbcType=VARCHAR},
+            JGJYDY = #{jgjydy,jdbcType=VARCHAR},
+            JGTGDY = #{jgtgdy,jdbcType=VARCHAR},
+            JGZQZH = #{jgzqzh,jdbcType=VARCHAR},
+            JGDDBH = #{jgddbh,jdbcType=VARCHAR},
+            JGYYB = #{jgyyb,jdbcType=VARCHAR},
+            JGZXBH = #{jgzxbh,jdbcType=VARCHAR},
+            JGYWLSH = #{jgywlsh,jdbcType=VARCHAR},
+            JGCJSL = #{jgcjsl,jdbcType=DECIMAL},
+            JGQSSL = #{jgqssl,jdbcType=DECIMAL},
+            JGJSSL = #{jgjssl,jdbcType=DECIMAL},
+            JGCJJG = #{jgcjjg,jdbcType=DECIMAL},
+            JGQSJG = #{jgqsjg,jdbcType=DECIMAL},
+            JGXYJY = #{jgxyjy,jdbcType=VARCHAR},
+            JGPCBS = #{jgpcbs,jdbcType=VARCHAR},
+            JGZQLB = #{jgzqlb,jdbcType=VARCHAR},
+            JGZQZL = #{jgzqzl,jdbcType=VARCHAR},
+            JGGFXZ = #{jggfxz,jdbcType=VARCHAR},
+            JGLTLX = #{jgltlx,jdbcType=VARCHAR},
+            JGJSFS = #{jgjsfs,jdbcType=VARCHAR},
+            JGHBDH = #{jghbdh,jdbcType=VARCHAR},
+            JGQSBJ = #{jgqsbj,jdbcType=DECIMAL},
+            JGYHS = #{jgyhs,jdbcType=DECIMAL},
+            JGJYJSF = #{jgjyjsf,jdbcType=DECIMAL},
+            JGJGGF = #{jgjggf,jdbcType=DECIMAL},
+            JGGHF = #{jgghf,jdbcType=DECIMAL},
+            JGJSF = #{jgjsf,jdbcType=DECIMAL},
+            JGSXF = #{jgsxf,jdbcType=DECIMAL},
+            JGQSYJ = #{jgqsyj,jdbcType=DECIMAL},
+            JGQTFY = #{jgqtfy,jdbcType=DECIMAL},
+            JGZJJE = #{jgzjje,jdbcType=DECIMAL},
+            JGSFJE = #{jgsfje,jdbcType=DECIMAL},
+            JGJSBZ = #{jgjsbz,jdbcType=VARCHAR},
+            JGZYDH = #{jgzydh,jdbcType=VARCHAR},
+            JGCJRQ = #{jgcjrq,jdbcType=VARCHAR},
+            JGQSRQ = #{jgqsrq,jdbcType=VARCHAR},
+            JGJSRQ = #{jgjsrq,jdbcType=VARCHAR},
+            JGFSRQ = #{jgfsrq,jdbcType=VARCHAR},
+            JGQTRQ = #{jgqtrq,jdbcType=VARCHAR},
+            JGSCDM = #{jgscdm,jdbcType=VARCHAR},
+            JGJYFS = #{jgjyfs,jdbcType=VARCHAR},
+            JGZQDM2 = #{jgzqdm2,jdbcType=VARCHAR},
+            JGTGDY2 = #{jgtgdy2,jdbcType=VARCHAR},
+            JGDDBH2 = #{jgddbh2,jdbcType=VARCHAR},
+            JGFJSM = #{jgfjsm,jdbcType=VARCHAR},
+            JGBYBZ = #{jgbybz,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

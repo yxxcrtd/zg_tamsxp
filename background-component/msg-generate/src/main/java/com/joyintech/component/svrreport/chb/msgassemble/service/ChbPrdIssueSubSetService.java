@@ -202,9 +202,9 @@ public class ChbPrdIssueSubSetService {
 		//分级比例
 		if(StringUtil.isNotEmpty(sub.getGradProportion())){
 			CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
-			cnBondItem3.setValue(String.format("%.5f",sub.getGradProportion()));
+			cnBondItem3.setValue(String.format("%.7f",sub.getGradProportion()));
 			cnBondItem3.setUnitRef(ChbConstant.PURE);
-			cnBondItem3.setDecimals("5");
+			cnBondItem3.setDecimals("7");
 			cnBondItemMap1.put("RatioOfPriority", cnBondItem3);
 		}
 

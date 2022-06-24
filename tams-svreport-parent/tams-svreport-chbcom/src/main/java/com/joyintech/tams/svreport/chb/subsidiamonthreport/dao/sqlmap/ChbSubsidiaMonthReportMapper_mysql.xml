@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.subsidiamonthreport.dao.ChbSubsidiaMonthReportMapper_mysql" >
+    <resultMap id="resultMap_ChbMonthReportSubDto" type="com.joyintech.tams.svreport.chb.subsidiamonthreport.dto.ChbMonthReportSubDto"
+               extends="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubMapper.BaseResultMap">
+    </resultMap>
+    <select id="searchPage" resultMap="resultMap_ChbMonthReportSubDto">
+        select
+            <include refid="com.joyintech.tams.svreport.chb.subsidiamonthreport.base.dao.ChbMonthReportSubMapper.Base_Column_List" />
+        from CHB_MONTH_REPORT_SUB
+        <where>
+            <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+                DATE_FORMAT(CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+            </if>
+            <if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+                and DATE_FORMAT(CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="sendStatusList != null and sendStatusList.size()&gt;0">
+                <foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="keyList != null and keyList.size()&gt;0">
+                <foreach close=")" collection="keyList" item="item" open="and REPORTUUID in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="statusList != null and statusList.size()&gt;0">
+                <foreach close=")" collection="statusList" item="item" open="and STATUS in(" separator=",">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="statusDateStart != null and statusDateStart != ''">
+                and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &gt;= #{statusDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="statusDateEnd != null and statusDateEnd != ''">
+                and DATE_FORMAT(STATUS_DATE,'%Y-%m-%d') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="submitDateStart != null and submitDateStart != ''">
+                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="submitDateEnd != null and submitDateEnd != ''">
+                and DATE_FORMAT(SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="termidDateStart != null and submitDateStart != ''">
+                and TERMID &gt;= #{termidDateStart,jdbcType=VARCHAR}
+            </if>
+            <if test="termidDateEnd != null and submitDateEnd != ''">
+                and TERMID &lt;= #{termidDateEnd,jdbcType=VARCHAR}
+            </if>
+            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() &gt; 0">
+                <foreach close=")" collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" separator=",">
+                    #{submitFeedbackStatus,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sendStatus != null  and sendStatus != ''">
+                and SEND_STATUS = #{sendStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="termid != null and termid != ''">
+                and TERMID = #{termid,jdbcType=VARCHAR}
+            </if>
+            <if test="enddate != null and enddate != ''">
+                and DATE_FORMAT(ENDDATE,'%Y-%m') = #{enddate,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY STATUS_DATE
+    </select>
+
+    <delete id="deleteReportDataHis" parameterType="java.util.Map">
+        delete
+        from CHB_MONTH_REPORT_SUB_HIS  his
+        where his.CREATE_TIME=(select CREATETIME from (
+        SELECT max(CREATE_TIME) as CREATETIME from CHB_MONTH_REPORT_SUB_HIS
+        <where>
+            <if test="registList !=null and registList.size()>0">
+                TERMID IN
+                <foreach collection="registList" item="regist" open="(" separator=","  close=")">
+                    #{regist.termid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where> ) tmp)
+    </delete>
+
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+        update CHB_MONTH_REPORT_SUB sub
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            sub.SUBMIT_FEEDBACK_STATUS = '03',
+            sub.submit_time = now(),
+            sub.UPDATE_TIME = now()
+        </set>
+        <where>
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                sub.REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="cancelMannultRegist" parameterType="java.util.Map">
+        update CHB_MONTH_REPORT_SUB
+        <set>
+            SEND_STATUS = '01',
+            UPDATE_TIME = now(),
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                REPORTUUID = #{dto.reportuuid}
+            </foreach>
+        </where>
+    </update>
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.manage.workrule.dao.ReportRule002Mapper_mysql">
+    <select id="getReportInfo" resultType="com.joyintech.tams.common.base.entity.RepRule">
+		SELECT
+		    ri.REP_ID as repId,
+		    ri.REPORT_NAME as repName
+		FROM
+		    REP_INFO ri
+		WHERE
+		    ri.REPORT_TYPE='Y'
+    </select>
+    <select id="getRepRule" resultType="java.lang.Integer">
+    	SELECT
+    		COUNT(*)
+    	FROM
+    		REP_RULE r
+    	WHERE R.REP_NAME=#{repName}
+    </select>
+    <select id="getRuleName" resultType="java.lang.Integer">
+    	SELECT
+    		COUNT(*)
+    	FROM
+    		REP_RULE r
+    	WHERE R.RULE_NAME=#{ruleName}
+    </select>
+    <select id="selectRepType" resultType="java.lang.Integer">
+		SELECT
+		    count(*)
+		FROM
+		    REP_SCREEN rs
+		WHERE
+		   rs.REP_ID = #{repId}
+		AND rs.SCREEN_TYPE='01'
+		AND rs.SCREEN_STATUS = 'Y'
+    </select>
+</mapper>

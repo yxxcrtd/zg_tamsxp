@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.invest.common.pagemenusplit.dao.PageMenuSplitMapper">
-    <select id="selectDictItemList" resultType="string">
-        SELECT DICT_ITEM_VAL from SYS_PAGE_DICTLIST where PAGE_ID = #{pageId,jdbcType=VARCHAR} and DICT_ID = #{dictId,jdbcType=VARCHAR}
-    </select>
-</mapper>

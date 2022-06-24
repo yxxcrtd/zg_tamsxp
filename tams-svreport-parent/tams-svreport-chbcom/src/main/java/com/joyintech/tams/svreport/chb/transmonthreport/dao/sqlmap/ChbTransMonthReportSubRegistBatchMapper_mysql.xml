@@ -73,6 +73,8 @@
             position.SUNASSETTYPE2 sunassettype2,
             info.IS_TRANSFER isFprod,
             asset.ISSUE_MODE issueMode,
+            asset.BANK_CAPITAL bankCapital,
+            asset.SHARES_TYPE sharesTyp,
             info.IS_FHXGCP isFhxgcp,
             position.ASSETTYPE2 assetType2
         from CHB_MONTH_ASSET_POSITION position

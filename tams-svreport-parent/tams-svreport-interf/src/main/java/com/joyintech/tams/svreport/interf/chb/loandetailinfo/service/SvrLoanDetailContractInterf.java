@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
@@ -59,6 +64,9 @@ public class SvrLoanDetailContractInterf  extends BaseService{
 	
 	@Autowired
 	private SqlSessionTemplate template;
+
+	@Autowired
+	private BatchInsertService batchInsertService;
 	
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
@@ -93,7 +101,10 @@ public class SvrLoanDetailContractInterf  extends BaseService{
 		
 		logger.debug("贷款明细合同信息插入:----开始------" +  df.format(new Date()));	
 		svrLoanDetailContractMapper.deleteAllData();
-		insertLoanDetailContract(listChbInvestTrade);
+		if (CollectionUtils.isNotEmpty(listChbInvestTrade)) {
+			insertLoanDetailContract(listChbInvestTrade);
+		}
+
 //		insertDataMerge(listChbInvestTrade,null);
 		logger.debug("贷款明细合同信息插入:----结束------" +  df.format(new Date()));	
     	if(lastUpdatetime!=null){
@@ -205,25 +216,39 @@ public class SvrLoanDetailContractInterf  extends BaseService{
     }
     private void insertLoanDetailContract(List<ChbLoanDetailContractDto> listNE) {
 		logger.debug("批量插入贷款明细原始合同信息----开始-----:" +  df.format(new Date()));
-		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-		ChbLoanDetailContractDtoMapper mstBondCreditRatingMapper =  session.getMapper(ChbLoanDetailContractDtoMapper.class);
-		try{
-			int count = 0;
-			for(ChbLoanDetailContractDto sch : listNE){
-				sch.setStatus("E");
-				sch.setDataSource("16");
-				mstBondCreditRatingMapper.insert(sch);
-        		count++;
-        		if(count % 1000==0){
-            		session.commit();
-            		session.clearCache();
-        		}
-        	}	
-			session.commit();
-    		session.clearCache();
-		} finally {
-    		session.close();
-    	}
+		if (listNE.size()<=5000) {
+			SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+			ChbLoanDetailContractDtoMapper mstBondCreditRatingMapper =  session.getMapper(ChbLoanDetailContractDtoMapper.class);
+			try{
+				int count = 0;
+				for(ChbLoanDetailContractDto sch : listNE){
+					sch.setStatus("E");
+					sch.setDataSource("16");
+					mstBondCreditRatingMapper.insert(sch);
+					count++;
+					if(count % 1000==0){
+						session.commit();
+						session.clearCache();
+					}
+				}
+				session.commit();
+				session.clearCache();
+			} finally {
+				session.close();
+			}
+		} else {
+			//sqlloader插入
+			ImpTable table = new ImpTable("CHB_LOAN_DETAIL_CONTRACT");
+			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+			// 临时文件存放目录
+			String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+			listNE.forEach(e->{
+				e.setStatus("E");
+				e.setDataSource("16");
+			});
+			batchInsertService.exeBatchldr(tmpPath, listNE, table);
+		}
+
 		logger.debug("批量插入贷款明细原始合同信息----结束-----:" +  df.format(new Date()));	
 	}
 	

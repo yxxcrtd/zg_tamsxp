@@ -25,7 +25,14 @@
     </select>
     <!-- 更新中债报送结果 -->
     <update id="updateChbSubmitStatus" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
-        update CHB_SUBMIT_STATUS
+
+        <if test="flag != null and flag.equals('14')" >
+            update CHB_EQU_SUB
+        </if>
+        <if test="flag != null and flag.equals('16')" >
+            update CHB_INVESTHOLD_INFO_SUB
+        </if>
+
         <set >
             <if test="submitFeedbackStatus != null" >
                 SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
@@ -43,7 +50,7 @@
         where
         REPORT_NO = #{reportNo,jdbcType=VARCHAR}
         <if test="submitNum != null" >
-            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+            AND SUMIT_SEQ = #{submitNum,jdbcType=VARCHAR}
         </if>
     </update>
 
@@ -90,18 +97,34 @@
         </foreach>
     </insert>
 
-    <insert id="insertChbSubmitStatusList">
-        insert into CHB_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
-        SUBMIT_FEEDBACK_STATUS, UPDATE_USER, UPDATE_TIME,
-        CREATE_USER, CREATE_TIME, REPORT_NO,
-        SUBMIT_FEEDBACK_MSG,UNIQUE_IDENTI)
-        <foreach collection="dataList" item="item" separator=" union all select" open="(select " close=")">
-            #{item.seqno} as seqno, #{item.submitNum} as submitNum, #{item.submitType} as submitType ,
-            #{item.submitFeedbackStatus} as submitFeedbackStatus, #{item.updateUser} as updateUser, #{item.updateTime} as updateTime,
-            #{item.createUser} as createUser, #{item.createTime} as createTime, #{item.reportNo} as reportNo,
-            #{item.submitFeedbackMsg} as submitFeedbackMsg,#{item.uniqueIdenti} as uniqueIdenti
+    <update id="insertChbSubmitStatusList">
+        <foreach collection="chbSubmitStatusList" item="dto" index="index" separator=";">
+            <if test="SubmitsType != null and SubmitsType.equals('14')" >
+                update CHB_EQU_SUB
+            </if>
+            <if test="SubmitsType != null and SubmitsType.equals('16')" >
+                update CHB_INVESTHOLD_INFO_SUB
+            </if>
+            <set >
+                <if test="dto.submitFeedbackStatus != null" >
+                    SUBMIT_FEEDBACK_STATUS = #{dto.submitFeedbackStatus,jdbcType=VARCHAR},
+                </if>
+                <if test="dto.submitFeedbackMsg != null" >
+                    SUBMIT_FEEDBACK_MSG = #{dto.submitFeedbackMsg,jdbcType=VARCHAR},
+                </if>
+                <if test="dto.updateUser != null" >
+                    UPDATE_USER = #{dto.updateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="dto.updateTime != null" >
+                    UPDATE_TIME = #{dto.updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="dto.reportNo != null" >
+                    REPORT_NO = #{dto.reportNo,jdbcType=VARCHAR}
+                </if>
+            </set>
+            where SUMIT_SEQ = #{dto.submitNum,jdbcType=VARCHAR}
         </foreach>
-    </insert>
+    </update>
     <insert id="insertChbEquDetSubmitStatusList">
         insert into CHB_EQUDET_SUBMIT_STATUS (SEQNO, SUBMIT_NUM, SUBMIT_TYPE,
         SUBMIT_FEEDBACK_STATUS,EQUITY_CONF_DATE, UPDATE_USER, UPDATE_TIME,
@@ -163,4 +186,11 @@
         where A.REPORT_NO=B.REPORT_NO AND
         A.SUBMIT_NUM = B.SUBMIT_NUM;
     </update>
+
+    <select id="selectReportFile" resultType="java.lang.String">
+        SELECT UPLOAD_RESULT
+        from
+        CHB_INFO_REPORT where CHECK_SUCCESS_COUNT is null and
+        datediff(SEND_TIME , now()) = 0
+    </select>
 </mapper>

@@ -121,7 +121,7 @@ public class ExchangFileImpService extends AbstractFileImpService {
 //			}
 //			// 任务结束，停止线程池的所有线程
 //			taskpool.shutdown();
-			success = svrExchangFileImpService.importDB(dataList,interfFile, currentDate);
+			success = svrExchangFileImpService.importDB(null,dataList,interfFile, currentDate);
 			// 移除文件
 			interfFile.setMoveRemovePath(success);
 			svrExchangFileImpService.clearFile(interfFile);

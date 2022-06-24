@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -93,8 +95,10 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 	
 	@Autowired
 	private SvrChbProdDividentDealDBInterfMapper svrChbProdDividentDealDBInterfMapper;
-	
-	
+
+	@Autowired
+	private BatchInsertService batchInsertService;
+
 	@Autowired
 	private SqlSessionTemplate template;
 
@@ -142,7 +146,7 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 		//转换实体类
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		convertMapToEntity(listData, assetList, dataSource);
-		assetList = (List<ChbPrdBonusDeal>) convertMapToEntity(listData,ChbPrdBonusDeal.class);
+		assetList = (List<ChbPrdBonusDeal>) convertMapToEntity(listData,ChbPrdBonusDeal.class, dataSource);
 		assetList.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));
 		});
@@ -151,7 +155,7 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 		//增量
 			mergeData(assetList); 
 			
-		}else if(listData.size() <= 100000){
+		}else if(listData.size() <= 1000){
 			//增量插入 小于100000正常入库 超过100000条使用sqlldr进行入库
 			try{
 				svrChbProdDividentDealDBInterfMapper.deleteByUpdateTime();
@@ -164,58 +168,18 @@ public class SvrChbProdDividendDealFileImpService extends FileImpService{
 			}
 		}else{
 			svrChbProdDividentDealDBInterfMapper.deleteByUpdateTime();
-			// 创建表
-			ImpTable table = new ImpTable(ASSETBASISDATATABLENAME_2);
-			table.setColumns(ImportGenerator.createImpTableColumns(ASSETBASISDATATABLENAME_2));
-			success = excuteAssetBasisDataByStep(assetList, type, tmpPath, table);
-			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_CASSET_INDEX/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(listData.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(AssetBasisDataTableName)) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件" + f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if ("fail".equals(result)) {
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRDFEE_BASIS_DATA/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return success?"success":"fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRDFEE_BASIS_DATA/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						Thread.currentThread().interrupt();
-						return success?"success":"fail";
-					}
-				}
+			try {
+				//sqlloader插入
+				ImpTable table = new ImpTable("CHB_PRD_BONUS_DEAL");
+				table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+				// 临时文件存放目录
+				String path = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+				batchInsertService.exeBatchldr(path, assetList, table);
+			} catch (Exception e) {
+				logger.debug("查找sqlloder文件异常");
+				logger.error(e.getMessage(), e);
+				return "fail";
 			}
 		}
 		return success?"success":"fail";

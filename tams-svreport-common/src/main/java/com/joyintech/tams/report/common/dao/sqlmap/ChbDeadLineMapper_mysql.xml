@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.common.dao.ChbDeadLineMapper_mysql">
+	<select id="findByReportCode" parameterType="java.lang.String"
+			resultType="com.joyintech.tams.report.common.dto.ChbDeadLineDto">
+		select
+		rtp.SEQNO seqno,
+		rtp.ORG_CODE orgCode,
+		rtp.REPORT_CODE reportCode,
+		rtp.TYPE_DETAIL typeDetail,
+		rtp.SUBMIT_TIMETYPE submitTimetype,
+		rtp.SUBMIT_REQUIRE3 submitRequire3,
+		rtp.SUBMIT_REQUIRE2 submitRequire2,
+		rtp.SUBMIT_REQUIRE submitRequire,
+		rtp.SUBMIT_POINT_BOND submitPointBond,
+		rtp.SUBMIT_POINT_BANK submitPointBank,
+		rtp.UPDATE_SUBMIT_POINT updateSubmitPoint,
+		rtp.DELETE_SUBMING_POINT deleteSubmingPoint,
+		rtp.STATUS status,
+		rtp.WORKFLOW_ID workflowId,
+		rtp.UPDATE_USER updateUser,
+		rtp.UPDATE_TIME updateTime,
+		rtp.CREATE_USER createUser,
+		rtp.CREATE_TIME createTime
+		from CHB_REG_TIME_POINTS rtp
+		where
+		rtp.STATUS = 'E'
+		and rtp.REPORT_CODE = #{reportCode,jdbcType=VARCHAR}
+		<if test="typeDetail != null and typeDetail != ''" >
+			and rtp.TYPE_DETAIL = #{typeDetail,jdbcType=VARCHAR}
+		</if>
+	</select>
 	<select id="getChbDeadline" resultType="com.joyintech.tams.report.common.dto.ChbDeadLine001Dto" >
-     	select deadline1.*
-     	from(select LIMIT num, deadline.* from(
+     	select  deadline.* from(
 	       SELECT
+		 @rownum := @rownum+1 num,
 		  A.CDATE busiDate,
 		  A.CALENDAR_ID marketCode,
 		  A.IS_HOLIDAY isHoliday,
 		  A.CREATE_DEPT deptCode
-		 FROM MST_HOLIDAY A
+		 FROM MST_HOLIDAY A, (select @rownum :=
+		0 ) B
 		 <where>
 		 	<if test="type !=null and type == '01'.toString()">
 	           	A.CDATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
@@ -27,18 +57,18 @@
 	           	order by A.CDATE asc
 	        </if>
 		 )deadline
-		 )deadline1
-		 where deadline1.num = #{days,jdbcType=INTEGER}
+		 where deadline.num = #{days,jdbcType=INTEGER}
     </select>
 	<select id="getChbDeadlineZero" resultType="com.joyintech.tams.report.common.dto.ChbDeadLine001Dto" >
-     	select deadline1.*
-     	from(select LIMIT num,deadline.* from(
+     	select deadline.* from(
 	       SELECT
+		  @rownum := @rownum+1 num,
 		  A.CDATE busiDate,
 		  A.CALENDAR_ID marketCode,
 		  A.IS_HOLIDAY isHoliday,
 		  A.CREATE_DEPT deptCode
-		 FROM MST_HOLIDAY A
+		 FROM MST_HOLIDAY A, (select @rownum :=
+		0 ) B
 		 <where>
 	        <if test="type !=null and type == '01'.toString()">
 	           	A.CDATE &lt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
@@ -56,7 +86,6 @@
 	           	order by A.CDATE asc
 	        </if>
 		 )deadline
-		 )deadline1
-		 where deadline1.num = 1
+		 where deadline.num = 1
     </select>
 </mapper>

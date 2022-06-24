@@ -801,4 +801,15 @@ public class PbcMonthReport extends BaseEntity implements Comparable<PbcMonthRep
             return 0  ;
         }
     }
+
+    public String getStatusDateStr(){
+        return null !=statusDate?DateUtil.formatDateTime(statusDate):null;
+    }
+    public String getSubmitTimeStr(){
+        return null !=submitTime?DateUtil.formatDateTime(submitTime):null;
+    }
+    public String getChbSubmitDeadlineStr(){
+        return null !=chbSubmitDeadline?DateUtil.format(chbSubmitDeadline):null;
+    }
+
 }

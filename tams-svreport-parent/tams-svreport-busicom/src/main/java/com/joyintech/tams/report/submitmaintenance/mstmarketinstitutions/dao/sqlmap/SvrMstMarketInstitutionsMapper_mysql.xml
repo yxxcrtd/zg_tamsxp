@@ -65,6 +65,21 @@
     </sql>
     <!--  模糊查询 -->
     <select id="select" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        TEMP.CUSTOMER_ID, TEMP.CUSTOMER_NAME,
+        TEMP.PARTY_TYPE3, TEMP.PARTY_TYPE2, TEMP.PARTY_TYPE1,
+        TEMP.INDUSTRY, TEMP.INDUSTRY2, TEMP.INSITITUTE_CODE, TEMP.IS_GOV,
+        TEMP.MAIN_CAPITAL, TEMP.REGISTER_CAPITAL, TEMP.PROVINCE,
+        TEMP.CITY, TEMP.COUNTY, TEMP.HOLDING_TYPE, TEMP.CUSTOMER_OBJ_TYPE,
+        TEMP.IS_LISTED_COMPANY, TEMP.IS_GROUP_CUSTOMER, TEMP.PARENT_CUSTOMER_ID,
+        TEMP.PARENT_CUSTOMER_NAME, TEMP.IS_PRIVATE, TEMP.IS_ESCAPE_DEPT,
+        TEMP.CREDIT_TYPE, TEMP.IS_CREDIT_RELATED_TRD, TEMP.STRUCT_ADJUST_TYPE,
+        TEMP.INDUS_UPGRATE_TYPE, TEMP.BUSI_SCOPE, TEMP.MAIN_BUSI,
+        TEMP.SEX, TEMP.PERSON_ID, TEMP.M_PHONE, TEMP.PHONE, TEMP.POSITION, TEMP.COMPANY_NAME,
+        TEMP.ADDRESS, TEMP.MAIL, TEMP.PROPERTY, TEMP.LINK_ID1, TEMP.LINK_ID2,
+        TEMP.LINK_ID3, TEMP.REMARK, TEMP.CREATE_USER, TEMP.CREATE_DEPT,
+        TEMP.CREATE_TIME, TEMP.UPDATE_USER, TEMP.UPDATE_TIME
+        FROM (
         select
         T1.CUSTOMER_ID, T1.CUSTOMER_NAME,
         T2.PARTY_TYPE3, T2.PARTY_TYPE2, T2.PARTY_TYPE1,
@@ -79,20 +94,38 @@
         T2.ADDRESS, T2.MAIL, T2.PROPERTY, T2.LINK_ID1, T2.LINK_ID2,
         T2.LINK_ID3, T2.REMARK, T2.CREATE_USER, T2.CREATE_DEPT,
         T2.CREATE_TIME, T2.UPDATE_USER, T2.UPDATE_TIME
-        from MST_CUSTOMER_INFO T1 full outer join MST_CUSTOMER_INFO_ADD T2
+        from MST_CUSTOMER_INFO T1 left join MST_CUSTOMER_INFO_ADD T2
         on T1.CUSTOMER_ID = T2.CUSTOMER_ID
+        UNION
+        select
+        T1.CUSTOMER_ID, T1.CUSTOMER_NAME,
+        T2.PARTY_TYPE3, T2.PARTY_TYPE2, T2.PARTY_TYPE1,
+        T2.INDUSTRY, T2.INDUSTRY2, T2.INSITITUTE_CODE, T2.IS_GOV,
+        T2.MAIN_CAPITAL, T2.REGISTER_CAPITAL, T2.PROVINCE,
+        T2.CITY, T2.COUNTY, T2.HOLDING_TYPE, T2.CUSTOMER_OBJ_TYPE,
+        T2.IS_LISTED_COMPANY, T2.IS_GROUP_CUSTOMER, T2.PARENT_CUSTOMER_ID,
+        T2.PARENT_CUSTOMER_NAME, T2.IS_PRIVATE, T2.IS_ESCAPE_DEPT,
+        T2.CREDIT_TYPE, T2.IS_CREDIT_RELATED_TRD, T2.STRUCT_ADJUST_TYPE,
+        T2.INDUS_UPGRATE_TYPE, T2.BUSI_SCOPE, MAIN_BUSI,
+        T2.SEX, T2.PERSON_ID, T2.M_PHONE, T2.PHONE, T2.POSITION, T2.COMPANY_NAME,
+        T2.ADDRESS, T2.MAIL, T2.PROPERTY, T2.LINK_ID1, T2.LINK_ID2,
+        T2.LINK_ID3, T2.REMARK, T2.CREATE_USER, T2.CREATE_DEPT,
+        T2.CREATE_TIME, T2.UPDATE_USER, T2.UPDATE_TIME
+        from MST_CUSTOMER_INFO T1 right join MST_CUSTOMER_INFO_ADD T2
+        on T1.CUSTOMER_ID = T2.CUSTOMER_ID
+        ) TEMP
         <where>
             <if test="customerId != null and customerId != ''">
-                AND	T1.CUSTOMER_ID like concat('%',concat(#{customerId,jdbcType=VARCHAR},'%'))
+                AND	TEMP.CUSTOMER_ID like concat('%',concat(#{customerId,jdbcType=VARCHAR},'%'))
             </if>
             <if test="customerName != null and customerName != ''">
-                AND	T1.CUSTOMER_NAME like concat('%',concat(#{customerName,jdbcType=VARCHAR},'%'))
+                AND	TEMP.CUSTOMER_NAME like concat('%',concat(#{customerName,jdbcType=VARCHAR},'%'))
             </if>
             <if test="customerType != null and customerType != ''">
-                AND T1.CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR}
+                AND TEMP.CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR}
             </if>
         </where>
-        order by CUSTOMER_ID desc
+        order by TEMP.CUSTOMER_ID desc
     </select>
     <!-- 客户代码联想查询 -->
     <select id="getCustomerId" parameterType="Map" resultType="com.joyintech.framework.select.SuggestDto">
@@ -156,7 +189,7 @@
 			and T3.CUSTOMER_ID= #{customerId,jdbcType=VARCHAR}
 		union all  select count(*) count from MST_CUSTOMER_INFO T5,FIN_PRODUCT_ADD T6
 		where T5.CUSTOMER_ID = T6.UNDER_WRITER_ID
-			and T5.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR})
+			and T5.CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}) A
 	</select>
     <!-- 删除按钮check -->
     <select id="checkAllCodeIsUse" parameterType="java.util.List" resultMap="BaseResultMap">
@@ -267,6 +300,21 @@
         where BECIF = #{becif}
     </select>
     <select id="selectForExport" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        TEMP.CUSTOMER_ID, TEMP.CUSTOMER_NAME,
+        TEMP.PARTY_TYPE3, TEMP.PARTY_TYPE2, TEMP.PARTY_TYPE1,
+        TEMP.INDUSTRY, TEMP.INDUSTRY2, TEMP.INSITITUTE_CODE, TEMP.IS_GOV,
+        TEMP.MAIN_CAPITAL, TEMP.REGISTER_CAPITAL, TEMP.PROVINCE,
+        TEMP.CITY, TEMP.COUNTY, TEMP.HOLDING_TYPE, TEMP.CUSTOMER_OBJ_TYPE,
+        TEMP.IS_LISTED_COMPANY, TEMP.IS_GROUP_CUSTOMER, TEMP.PARENT_CUSTOMER_ID,
+        TEMP.PARENT_CUSTOMER_NAME, TEMP.IS_PRIVATE, TEMP.IS_ESCAPE_DEPT,
+        TEMP.CREDIT_TYPE, TEMP.IS_CREDIT_RELATED_TRD, TEMP.STRUCT_ADJUST_TYPE,
+        TEMP.INDUS_UPGRATE_TYPE, TEMP.BUSI_SCOPE, TEMP.MAIN_BUSI,
+        TEMP.SEX, TEMP.PERSON_ID, TEMP.M_PHONE, TEMP.PHONE, TEMP.POSITION, TEMP.COMPANY_NAME,
+        TEMP.ADDRESS, TEMP.MAIL, TEMP.PROPERTY, TEMP.LINK_ID1, TEMP.LINK_ID2,
+        TEMP.LINK_ID3, TEMP.REMARK, TEMP.CREATE_USER, TEMP.CREATE_DEPT,
+        TEMP.CREATE_TIME, TEMP.UPDATE_USER, TEMP.UPDATE_TIME
+        FROM (
         select
         T1.CUSTOMER_ID, T1.CUSTOMER_NAME,
         T2.PARTY_TYPE3, T2.PARTY_TYPE2, T2.PARTY_TYPE1,
@@ -281,13 +329,31 @@
         T2.ADDRESS, T2.MAIL, T2.PROPERTY, T2.LINK_ID1, T2.LINK_ID2,
         T2.LINK_ID3, T2.REMARK, T2.CREATE_USER, T2.CREATE_DEPT,
         T2.CREATE_TIME, T2.UPDATE_USER, T2.UPDATE_TIME
-        from MST_CUSTOMER_INFO T1 full outer join MST_CUSTOMER_INFO_ADD T2
+        from MST_CUSTOMER_INFO T1 left join MST_CUSTOMER_INFO_ADD T2
         on T1.CUSTOMER_ID = T2.CUSTOMER_ID
+        UNION
+        select
+        T1.CUSTOMER_ID, T1.CUSTOMER_NAME,
+        T2.PARTY_TYPE3, T2.PARTY_TYPE2, T2.PARTY_TYPE1,
+        T2.INDUSTRY, T2.INDUSTRY2, T2.INSITITUTE_CODE, T2.IS_GOV,
+        T2.MAIN_CAPITAL, T2.REGISTER_CAPITAL, T2.PROVINCE,
+        T2.CITY, T2.COUNTY, T2.HOLDING_TYPE, T2.CUSTOMER_OBJ_TYPE,
+        T2.IS_LISTED_COMPANY, T2.IS_GROUP_CUSTOMER, T2.PARENT_CUSTOMER_ID,
+        T2.PARENT_CUSTOMER_NAME, T2.IS_PRIVATE, T2.IS_ESCAPE_DEPT,
+        T2.CREDIT_TYPE, T2.IS_CREDIT_RELATED_TRD, T2.STRUCT_ADJUST_TYPE,
+        T2.INDUS_UPGRATE_TYPE, T2.BUSI_SCOPE, MAIN_BUSI,
+        T2.SEX, T2.PERSON_ID, T2.M_PHONE, T2.PHONE, T2.POSITION, T2.COMPANY_NAME,
+        T2.ADDRESS, T2.MAIL, T2.PROPERTY, T2.LINK_ID1, T2.LINK_ID2,
+        T2.LINK_ID3, T2.REMARK, T2.CREATE_USER, T2.CREATE_DEPT,
+        T2.CREATE_TIME, T2.UPDATE_USER, T2.UPDATE_TIME
+        from MST_CUSTOMER_INFO T1 right join MST_CUSTOMER_INFO_ADD T2
+        on T1.CUSTOMER_ID = T2.CUSTOMER_ID
+        ) TEMP
         <where>
-            <foreach collection="list" item="dto" open="T1.CUSTOMER_ID in (" close=")" separator=",">
+            <foreach collection="list" item="dto" open="TEMP.CUSTOMER_ID in (" close=")" separator=",">
                 #{dto.customerId}
             </foreach>
         </where>
-        order by CUSTOMER_ID desc
+        order by TEMP.CUSTOMER_ID desc
     </select>
 </mapper>

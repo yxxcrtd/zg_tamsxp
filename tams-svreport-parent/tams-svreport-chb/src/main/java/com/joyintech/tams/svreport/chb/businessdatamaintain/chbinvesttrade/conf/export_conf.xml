@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="report/chb/businessdatamaintain/chbinvesttrade/ChbInvestTrade001.xlsx" name="投资交易信息">
+    <Worksheet javaBean="com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto">
+        <Row>
+            <Cell order="1" name="数据状态">statusValidStr</Cell>
+            <Cell order="2" name="产品代码">prodId</Cell>
+            <Cell order="3" name="产品登记编码">regCode</Cell>
+            <Cell order="4" name="发行机构代码">registBankCode</Cell>
+            <Cell order="5" name="行内资产/负债编码">assetCode</Cell>
+            <Cell order="6" name="资产名称">assetName</Cell>
+            <Cell order="7" name="币种">ccyStr</Cell>
+            <Cell order="8" name="发生金额">amt</Cell>
+            <Cell order="9" name="折算人民币金额">cnyAmt</Cell>
+            <Cell order="9" name="数量">num</Cell>
+            <Cell order="10" name="资产计量方式">assetMethodStr</Cell>
+            <Cell order="11" name="资金流动类型">curAssetTypeStr</Cell>
+            <Cell order="12" name="资金流动类型说明">curAssetdetType</Cell>
+            <Cell order="13" name="交易日">dealdateStr</Cell>
+            <Cell order="14" name="交易对手">tradeCounter</Cell>
+            <Cell order="15" name="交易对手类型">rivalPartyType</Cell>
+            <Cell order="16" name="单位成交价（全价）">unitPriceFull</Cell>
+            <Cell order="17" name="单位成交价（净价）">unitPriceNet</Cell>
+            <Cell order="18" name="到期收益率">endRate</Cell>
+            <Cell order="19" name="成交编号/合同号">contractCode</Cell>
+            <Cell order="20" name="审批交易人身份证号">investApproverId</Cell>
+            <Cell order="21" name="交易审批人姓名">investApproverName</Cell>
+            <Cell order="22" name="交易员身份证号">investTraderId</Cell>
+            <Cell order="23" name="交易员姓名">investTraderName</Cell>
+            <Cell order="24" name="备注">remark</Cell>
+            <Cell order="25" name="错误信息">errMsg</Cell>
+            <Cell order="27" name="更新时间">updateTimeStr</Cell>
+            <Cell order="28" name="更新人">updateUser</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

@@ -27,7 +27,7 @@
 		<form class="layui-form" id="searchForm">
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md4">
-					<label class="layui-form-label form-lable">资产代码</label>
+					<label class="layui-form-label form-lable">资产名称</label>
 					<div class="layui-input-inline input-inline">
 						<select id="assetCode" class="input-select"
 								data-th-data-url='@{/chb/assetinfodetail/AssetInfoDetail001/getAssetCode}'
@@ -43,7 +43,7 @@
 					<div class="layui-input-inline input-inline">
 						<select id="orgAssetType1" class="layui-input form-input input-select"
 								data-th-data-result='${SVR_ORG_ASSET_TYPE1}' placeholder="请选择"
-								data-th-initvalue="${orgAssetType1}"
+								data-th-initvalue="${orgAssetType1}" childrenIds="orgAssetType2"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
 						</select>
@@ -54,7 +54,7 @@
 					<div class="layui-input-inline input-inline">
 						<select id="orgAssetType2" class="layui-input form-input input-select"
 								data-th-data-result='${SVR_ORG_ASSET_TYPE2}' placeholder="请选择"
-								data-th-initvalue="${orgAssetType2}"
+								data-th-initvalue="${orgAssetType2}" parentIds="orgAssetType1"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
 						</select>
@@ -65,10 +65,10 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md4">
-					<label class="layui-form-label form-lable">资产/负债类别</label>
+					<label class="layui-form-label form-lable">资产/负债一级类别</label>
 					<div class="layui-input-inline input-inline">
 						<select id="assetType" class="layui-input form-input input-select"
-								data-th-data-result='${SVR_ASSETDEBT_TYPE}' placeholder="请选择"
+								data-th-data-result='${SVR_ASSET_TYPE_FIRST_LEVEL}' placeholder="请选择"
 								data-th-initvalue="${assetType}"
 								data-th-placeholder="#{SysCommon.selectplaceholder}"
 								allowClear="true" multiple="true">
@@ -87,10 +87,10 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md4">
-					<label class="layui-form-label form-lable">报送信息维护状态</label>
+					<label class="layui-form-label form-lable">数据状态</label>
 					<div class="layui-input-inline input-inline">
 							<select id="dataStatus" class="layui-input form-input input-select"
-									data-th-data-result='${DATA_STATUS}' placeholder="请选择"
+									data-th-data-result='${SVR_STATUS}' placeholder="请选择"
 									data-th-initvalue="${dataStatus}"
 									data-th-placeholder="#{SysCommon.selectplaceholder}"
 									allowClear="true">
@@ -104,6 +104,9 @@
 		   id="dataTable"></table>
 </div>
 <div layout:fragment="script">
+	<script data-th-inline="javascript" type="text/javascript">
+		var file = [[${file}]];
+	</script>
 	<script data-th-inline="javascript" type="text/javascript">
 
 	</script>

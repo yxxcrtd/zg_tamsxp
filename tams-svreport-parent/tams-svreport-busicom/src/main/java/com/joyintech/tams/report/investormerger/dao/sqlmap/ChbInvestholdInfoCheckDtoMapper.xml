@@ -172,14 +172,13 @@
     <update id="updataOperateStatus" parameterType="java.util.List">
         update CHB_INVESTHOLD_INFO_CHECK set OPERATE_STATUS='01'
         where
-        (REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS) in
+        (REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY) in
         <foreach collection="list" index ="index" item="key" open="(" separator=","  close=")">
             (#{key.registBankCode,jdbcType=VARCHAR},
             #{key.indentifyMark,jdbcType=VARCHAR},
             #{key.prodid,jdbcType=VARCHAR},
             #{key.holdDate,jdbcType=DATE},
-            #{key.ccy,jdbcType=VARCHAR},
-            #{key.status,jdbcType=VARCHAR}
+            #{key.ccy,jdbcType=VARCHAR}
             )
         </foreach>
     </update>
@@ -188,9 +187,9 @@
 
         update CHB_INVESTHOLD_INFO_CHECK set OPERATE_STATUS='01'
         where
-        (REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS)
+        (REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY)
         in
-        (select REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY,STATUS from CHB_INVESTHOLD_INFO_TMP)
+        (select REGIST_BANK_CODE,INDENTIFY_MARK,PRODID,HOLD_DATE,CCY from CHB_INVESTHOLD_INFO_TMP)
     </update>
 
   <insert id="insertSelective" parameterType="com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto" >
@@ -1093,7 +1092,7 @@
 	SELECT * from
 	CHB_INVESTHOLD_INFO_sub ciis
 	where SEND_STATUS='01'
-    <foreach collection="newKeyList" item="item" open="AND (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.CCY,ciis.HOLD_DATE,ciis.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="AND (ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.CCY,ciis.HOLD_DATE,ciis.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </select>
@@ -1175,7 +1174,7 @@
 	update CHB_INVESTHOLD_INFO info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
   		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
   	where
-    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </update>
@@ -1183,7 +1182,7 @@
 	update CHB_INVESTHOLD_INFO_SUB info set info.INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
   		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
   	where
-    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </update>
@@ -1191,7 +1190,7 @@
 	update CHB_INVESTHOLD_INFO_CHECK info set info.MERGER_INDENTIFY_MARK=(select MERGER_INDENTIFY_MARK from CHB_EQU_HOLD_CHECK cc
   		where info.INDENTIFY_MARK=cc.INDENTIFY_MARK or info.INDENTIFY_MARK=cc.ORG_INDENTIFY_MARK )
   	where
-    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( values" separator="," close=")">
+    <foreach collection="newKeyList" item="item" open="(info.REGIST_BANK_CODE,info.INDENTIFY_MARK,info.CCY,info.HOLD_DATE,info.PRODID) in( " separator="," close=")">
         (#{item.registBankCode},#{item.indentifyMark},#{item.ccy},#{item.holdDate},#{item.prodid})
     </foreach>
 </update>
@@ -1414,7 +1413,7 @@
                   and sub.SEND_STATUS = '01'
         where not exists(
             select 1 from CHB_INVESTHOLD_INFO_CHECK infocheck
-            where infocheck.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+            where infocheck.MERGER_INDENTIFY_MARK = tmp.MERGER_INDENTIFY_MARK
             and infocheck.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
             and infocheck.CCY = tmp.CCY
             and infocheck.PRODID = tmp.PRODID
@@ -1450,7 +1449,7 @@
         and sub.SEND_STATUS = '01'
         where not exists(
         select 1 from CHB_INVESTHOLD_INFO_CHECK infocheck
-        where infocheck.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+        where infocheck.MERGER_INDENTIFY_MARK = tmp.MERGER_INDENTIFY_MARK
         and infocheck.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
         and infocheck.CCY = tmp.CCY
         and infocheck.PRODID = tmp.PRODID

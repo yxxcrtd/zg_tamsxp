@@ -1,0 +1,1698 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        <id column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <id column="WORKFLOW_STATUS" property="workflowStatus" jdbcType="VARCHAR" />
+        <result column="SETTLE_SPREED" property="settleSpreed" jdbcType="DECIMAL" />
+        <result column="EXER_YIELD" property="exerYield" jdbcType="DECIMAL" />
+        <result column="MATURE_YIELD" property="matureYield" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="TERM_DAYS" property="termDays" jdbcType="DECIMAL" />
+        <result column="TERM_DAYS2" property="termDays2" jdbcType="DECIMAL" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="PAY_FREQ" property="payFreq" jdbcType="VARCHAR" />
+        <result column="FIRST_CAL_DATE" property="firstCalDate" jdbcType="DATE" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE1" property="assetType1" jdbcType="VARCHAR" />
+        <result column="BUSI_PS" property="busiPs" jdbcType="VARCHAR" />
+        <result column="CASH_USEDATE" property="cashUsedate" jdbcType="DATE" />
+        <result column="SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="FIRST_UNIT_CPRICE" property="firstUnitCprice" jdbcType="DECIMAL" />
+        <result column="FIRST_UNIT_CPRICE2" property="firstUnitCprice2" jdbcType="DECIMAL" />
+        <result column="EXCHANGE_PLEDGE" property="exchangePledge" jdbcType="VARCHAR" />
+        <result column="EXC_DEAL_TYPE" property="excDealType" jdbcType="VARCHAR" />
+        <result column="CUR_PAIR" property="curPair" jdbcType="VARCHAR" />
+        <result column="COR_CCY" property="corCcy" jdbcType="VARCHAR" />
+        <result column="EXP_COR_AMT" property="expCorAmt" jdbcType="DECIMAL" />
+        <result column="COR_CUR_POS" property="corCurPos" jdbcType="DECIMAL" />
+        <result column="IS_DIF_SQU" property="isDifSqu" jdbcType="VARCHAR" />
+        <result column="DEAL_CUR_ACCT" property="dealCurAcct" jdbcType="VARCHAR" />
+        <result column="COR_CUR_ACCT" property="corCurAcct" jdbcType="VARCHAR" />
+        <result column="CNY_ACCT" property="cnyAcct" jdbcType="VARCHAR" />
+        <result column="VDATE2" property="vdate2" jdbcType="DATE" />
+        <result column="MDATE2" property="mdate2" jdbcType="DATE" />
+        <result column="EXC_FXS_TERM_TYPE" property="excFxsTermType" jdbcType="VARCHAR" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_10" property="assetType10" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE_11" property="assetType11" jdbcType="VARCHAR" />
+        <result column="DEAL_MODE" property="dealMode" jdbcType="VARCHAR" />
+        <result column="PREB" property="preb" jdbcType="DECIMAL" />
+        <result column="PREC" property="prec" jdbcType="DECIMAL" />
+        <result column="SHARE_PRICE" property="sharePrice" jdbcType="DECIMAL" />
+        <result column="EXP_CON_VALUE" property="expConValue" jdbcType="DECIMAL" />
+        <result column="ACT_NUM" property="actNum" jdbcType="DECIMAL" />
+        <result column="EXP_CON_NUM" property="expConNum" jdbcType="DECIMAL" />
+        <result column="PURCH_MODLE" property="purchModle" jdbcType="VARCHAR" />
+        <result column="PURCH_TYPE" property="purchType" jdbcType="VARCHAR" />
+        <result column="IS_AGREEMENT_END" property="isAgreementEnd" jdbcType="VARCHAR" />
+        <result column="OUR_ENT_NUM" property="ourEntNum" jdbcType="DECIMAL" />
+        <result column="LENDIN_ENT_NUM" property="lendinEntNum" jdbcType="DECIMAL" />
+        <result column="OUR_ABLE_NUM" property="ourAbleNum" jdbcType="DECIMAL" />
+        <result column="LENDIN_ABLE_NUM" property="lendinAbleNum" jdbcType="DECIMAL" />
+        <result column="SELL_ABLE_NUM" property="sellAbleNum" jdbcType="DECIMAL" />
+        <result column="PB_EXPORTSTATUS" property="pbExportstatus" jdbcType="VARCHAR" />
+        <result column="HIGH_HIND_PRICE" property="highHindPrice" jdbcType="DECIMAL" />
+        <result column="LOW_HIND_PRICE" property="lowHindPrice" jdbcType="DECIMAL" />
+        <result column="HIGH_EXERC_PRICE" property="highExercPrice" jdbcType="DECIMAL" />
+        <result column="LOW_EXERC_PRICE" property="lowExercPrice" jdbcType="DECIMAL" />
+        <result column="EXE_PRICE" property="exePrice" jdbcType="DECIMAL" />
+        <result column="KNOCK_PRICE" property="knockPrice" jdbcType="DECIMAL" />
+        <result column="EXERCISE_TYPE" property="exerciseType" jdbcType="VARCHAR" />
+        <result column="EXEC_BASE_DATE" property="execBaseDate" jdbcType="DATE" />
+        <result column="OPT_FEE_PAY_TYPE2" property="optFeePayType2" jdbcType="VARCHAR" />
+        <result column="OPT_FEE_PAY_TYPE" property="optFeePayType" jdbcType="VARCHAR" />
+        <result column="R_FINPROD_ID" property="rFinprodId" jdbcType="VARCHAR" />
+        <result column="CONTRACT_RESULT" property="contractResult" jdbcType="VARCHAR" />
+        <result column="CONTRACT_NO" property="contractNo" jdbcType="VARCHAR" />
+        <result column="PAYMENT_DATE" property="paymentDate" jdbcType="DATE" />
+        <result column="LISTING_DATE" property="listingDate" jdbcType="DATE" />
+        <result column="MAIN_CONSIGNEE" property="mainConsignee" jdbcType="VARCHAR" />
+        <result column="WARRANTOR" property="warrantor" jdbcType="VARCHAR" />
+        <result column="BIDDING_RANGE" property="biddingRange" jdbcType="VARCHAR" />
+        <result column="MIN_AMT" property="minAmt" jdbcType="DECIMAL" />
+        <result column="CAL_MODE" property="calMode" jdbcType="VARCHAR" />
+        <result column="COUNTER_SEAT" property="counterSeat" jdbcType="VARCHAR" />
+        <result column="COUNTER_CON_NO" property="counterConNo" jdbcType="VARCHAR" />
+        <result column="FULL_PRICE" property="fullPrice" jdbcType="DECIMAL" />
+        <result column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="COUNTER_ORG" property="counterOrg" jdbcType="VARCHAR" />
+        <result column="TRADER" property="trader" jdbcType="VARCHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="VPAY_DATE" property="vpayDate" jdbcType="DATE" />
+        <result column="MPAY_DATE" property="mpayDate" jdbcType="DATE" />
+        <result column="M_INT_AMT" property="mIntAmt" jdbcType="DECIMAL" />
+        <result column="M_TRADE_AMT" property="mTradeAmt" jdbcType="DECIMAL" />
+        <result column="CAP_DAYS" property="capDays" jdbcType="DECIMAL" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="REQUEST_ID" property="requestId" jdbcType="VARCHAR" />
+        <result column="REDO_TYPE" property="redoType" jdbcType="VARCHAR" />
+        <result column="DERIVATIVE_BS_DIR" property="derivativeBsDir" jdbcType="VARCHAR" />
+        <result column="DERIVATIVE_OC_FLAG" property="derivativeOcFlag" jdbcType="VARCHAR" />
+        <result column="QUOTE_TYPE" property="quoteType" jdbcType="VARCHAR" />
+        <result column="HK_MARKET" property="hkMarket" jdbcType="VARCHAR" />
+        <result column="ENTRUST_AMT_TARGET" property="entrustAmtTarget" jdbcType="DECIMAL" />
+        <result column="PORTFOLIO_SERIES" property="portfolioSeries" jdbcType="VARCHAR" />
+        <result column="CALCULATE_FIELD" property="calculateField" jdbcType="VARCHAR" />
+        <result column="PLEDGE_STOCK_ID" property="pledgeStockId" jdbcType="VARCHAR" />
+        <result column="ENTRUST_CREATE_SOURCE" property="entrustCreateSource" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ENTRUST_ID ENTRUST_ID, WORKFLOW_STATUS WORKFLOW_STATUS, SETTLE_SPREED SETTLE_SPREED, 
+        EXER_YIELD EXER_YIELD, MATURE_YIELD MATURE_YIELD, VDATE VDATE, MDATE MDATE, TERM_DAYS TERM_DAYS, 
+        TERM_DAYS2 TERM_DAYS2, TERM_TYPE TERM_TYPE, PAY_FREQ PAY_FREQ, FIRST_CAL_DATE FIRST_CAL_DATE, 
+        ASSET_TYPE ASSET_TYPE, ASSET_TYPE1 ASSET_TYPE1, BUSI_PS BUSI_PS, CASH_USEDATE CASH_USEDATE, 
+        SEC_ACCT_ID SEC_ACCT_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, FIRST_UNIT_CPRICE FIRST_UNIT_CPRICE, 
+        FIRST_UNIT_CPRICE2 FIRST_UNIT_CPRICE2, EXCHANGE_PLEDGE EXCHANGE_PLEDGE, EXC_DEAL_TYPE EXC_DEAL_TYPE, 
+        CUR_PAIR CUR_PAIR, COR_CCY COR_CCY, EXP_COR_AMT EXP_COR_AMT, COR_CUR_POS COR_CUR_POS, 
+        IS_DIF_SQU IS_DIF_SQU, DEAL_CUR_ACCT DEAL_CUR_ACCT, COR_CUR_ACCT COR_CUR_ACCT, CNY_ACCT CNY_ACCT, 
+        VDATE2 VDATE2, MDATE2 MDATE2, EXC_FXS_TERM_TYPE EXC_FXS_TERM_TYPE, PAY_TYPE PAY_TYPE, 
+        ASSET_TYPE_10 ASSET_TYPE_10, ASSET_TYPE_11 ASSET_TYPE_11, DEAL_MODE DEAL_MODE, PREB PREB, 
+        PREC PREC, SHARE_PRICE SHARE_PRICE, EXP_CON_VALUE EXP_CON_VALUE, ACT_NUM ACT_NUM, 
+        EXP_CON_NUM EXP_CON_NUM, PURCH_MODLE PURCH_MODLE, PURCH_TYPE PURCH_TYPE, IS_AGREEMENT_END IS_AGREEMENT_END, 
+        OUR_ENT_NUM OUR_ENT_NUM, LENDIN_ENT_NUM LENDIN_ENT_NUM, OUR_ABLE_NUM OUR_ABLE_NUM, 
+        LENDIN_ABLE_NUM LENDIN_ABLE_NUM, SELL_ABLE_NUM SELL_ABLE_NUM, PB_EXPORTSTATUS PB_EXPORTSTATUS, 
+        HIGH_HIND_PRICE HIGH_HIND_PRICE, LOW_HIND_PRICE LOW_HIND_PRICE, HIGH_EXERC_PRICE HIGH_EXERC_PRICE, 
+        LOW_EXERC_PRICE LOW_EXERC_PRICE, EXE_PRICE EXE_PRICE, KNOCK_PRICE KNOCK_PRICE, EXERCISE_TYPE EXERCISE_TYPE, 
+        EXEC_BASE_DATE EXEC_BASE_DATE, OPT_FEE_PAY_TYPE2 OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE OPT_FEE_PAY_TYPE, 
+        R_FINPROD_ID R_FINPROD_ID, CONTRACT_RESULT CONTRACT_RESULT, CONTRACT_NO CONTRACT_NO, 
+        PAYMENT_DATE PAYMENT_DATE, LISTING_DATE LISTING_DATE, MAIN_CONSIGNEE MAIN_CONSIGNEE, 
+        WARRANTOR WARRANTOR, BIDDING_RANGE BIDDING_RANGE, MIN_AMT MIN_AMT, CAL_MODE CAL_MODE, 
+        COUNTER_SEAT COUNTER_SEAT, COUNTER_CON_NO COUNTER_CON_NO, FULL_PRICE FULL_PRICE, 
+        TARGET_TYPE TARGET_TYPE, COUNTER_ORG COUNTER_ORG, TRADER TRADER, WORKFLOW_ID WORKFLOW_ID, 
+        VPAY_DATE VPAY_DATE, MPAY_DATE MPAY_DATE, M_INT_AMT M_INT_AMT, M_TRADE_AMT M_TRADE_AMT, 
+        CAP_DAYS CAP_DAYS, TRADE_ID TRADE_ID, REQUEST_ID REQUEST_ID, REDO_TYPE REDO_TYPE, 
+        DERIVATIVE_BS_DIR DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG DERIVATIVE_OC_FLAG, QUOTE_TYPE QUOTE_TYPE, 
+        HK_MARKET HK_MARKET, ENTRUST_AMT_TARGET ENTRUST_AMT_TARGET, PORTFOLIO_SERIES PORTFOLIO_SERIES, 
+        CALCULATE_FIELD CALCULATE_FIELD, PLEDGE_STOCK_ID PLEDGE_STOCK_ID, ENTRUST_CREATE_SOURCE ENTRUST_CREATE_SOURCE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper_mysql.Base_Column_List" />
+        from WFL_ETR_ENTRUST_ADD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper_mysql.Base_Column_List" />
+        from WFL_ETR_ENTRUST_ADD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAddKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.WflEtrEntrustAddMapper_mysql.Base_Column_List" />
+        from WFL_ETR_ENTRUST_ADD
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAddKey" >
+        delete from WFL_ETR_ENTRUST_ADD
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from WFL_ETR_ENTRUST_ADD
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into WFL_ETR_ENTRUST_ADD(ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
+        MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
+        ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, FIRST_UNIT_CPRICE, FIRST_UNIT_CPRICE2, EXCHANGE_PLEDGE, 
+        EXC_DEAL_TYPE, CUR_PAIR, COR_CCY, EXP_COR_AMT, COR_CUR_POS, IS_DIF_SQU, DEAL_CUR_ACCT, 
+        COR_CUR_ACCT, CNY_ACCT, VDATE2, MDATE2, EXC_FXS_TERM_TYPE, PAY_TYPE, ASSET_TYPE_10, 
+        ASSET_TYPE_11, DEAL_MODE, PREB, PREC, SHARE_PRICE, EXP_CON_VALUE, ACT_NUM, EXP_CON_NUM, 
+        PURCH_MODLE, PURCH_TYPE, IS_AGREEMENT_END, OUR_ENT_NUM, LENDIN_ENT_NUM, OUR_ABLE_NUM, 
+        LENDIN_ABLE_NUM, SELL_ABLE_NUM, PB_EXPORTSTATUS, HIGH_HIND_PRICE, LOW_HIND_PRICE, 
+        HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, EXERCISE_TYPE, EXEC_BASE_DATE, 
+        OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
+        PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
+        COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, WORKFLOW_ID, 
+        VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET, 
+        PORTFOLIO_SERIES, CALCULATE_FIELD, PLEDGE_STOCK_ID, ENTRUST_CREATE_SOURCE)
+        select ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
+            MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
+            ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, FIRST_UNIT_CPRICE, FIRST_UNIT_CPRICE2, EXCHANGE_PLEDGE, 
+            EXC_DEAL_TYPE, CUR_PAIR, COR_CCY, EXP_COR_AMT, COR_CUR_POS, IS_DIF_SQU, DEAL_CUR_ACCT, 
+            COR_CUR_ACCT, CNY_ACCT, VDATE2, MDATE2, EXC_FXS_TERM_TYPE, PAY_TYPE, ASSET_TYPE_10, 
+            ASSET_TYPE_11, DEAL_MODE, PREB, PREC, SHARE_PRICE, EXP_CON_VALUE, ACT_NUM, EXP_CON_NUM, 
+            PURCH_MODLE, PURCH_TYPE, IS_AGREEMENT_END, OUR_ENT_NUM, LENDIN_ENT_NUM, OUR_ABLE_NUM, 
+            LENDIN_ABLE_NUM, SELL_ABLE_NUM, PB_EXPORTSTATUS, HIGH_HIND_PRICE, LOW_HIND_PRICE, 
+            HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, EXERCISE_TYPE, EXEC_BASE_DATE, 
+            OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
+            PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
+            COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
+            VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET, 
+            PORTFOLIO_SERIES, CALCULATE_FIELD, PLEDGE_STOCK_ID, ENTRUST_CREATE_SOURCE
+             from WFL_ETR_ENTRUST_ADD
+             where WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        update WFL_ETR_ENTRUST_ADD
+        <set >
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="settleSpreed != null" >
+                SETTLE_SPREED = #{settleSpreed,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="matureYield != null" >
+                MATURE_YIELD = #{matureYield,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="termDays2 != null" >
+                TERM_DAYS2 = #{termDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="payFreq != null" >
+                PAY_FREQ = #{payFreq,jdbcType=VARCHAR},
+            </if>
+            <if test="firstCalDate != null" >
+                FIRST_CAL_DATE = #{firstCalDate,jdbcType=DATE},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType1 != null" >
+                ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="busiPs != null" >
+                BUSI_PS = #{busiPs,jdbcType=VARCHAR},
+            </if>
+            <if test="cashUsedate != null" >
+                CASH_USEDATE = #{cashUsedate,jdbcType=DATE},
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="firstUnitCprice != null" >
+                FIRST_UNIT_CPRICE = #{firstUnitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="firstUnitCprice2 != null" >
+                FIRST_UNIT_CPRICE2 = #{firstUnitCprice2,jdbcType=DECIMAL},
+            </if>
+            <if test="exchangePledge != null" >
+                EXCHANGE_PLEDGE = #{exchangePledge,jdbcType=VARCHAR},
+            </if>
+            <if test="excDealType != null" >
+                EXC_DEAL_TYPE = #{excDealType,jdbcType=VARCHAR},
+            </if>
+            <if test="curPair != null" >
+                CUR_PAIR = #{curPair,jdbcType=VARCHAR},
+            </if>
+            <if test="corCcy != null" >
+                COR_CCY = #{corCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="expCorAmt != null" >
+                EXP_COR_AMT = #{expCorAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="corCurPos != null" >
+                COR_CUR_POS = #{corCurPos,jdbcType=DECIMAL},
+            </if>
+            <if test="isDifSqu != null" >
+                IS_DIF_SQU = #{isDifSqu,jdbcType=VARCHAR},
+            </if>
+            <if test="dealCurAcct != null" >
+                DEAL_CUR_ACCT = #{dealCurAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="corCurAcct != null" >
+                COR_CUR_ACCT = #{corCurAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="cnyAcct != null" >
+                CNY_ACCT = #{cnyAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate2 != null" >
+                VDATE2 = #{vdate2,jdbcType=DATE},
+            </if>
+            <if test="mdate2 != null" >
+                MDATE2 = #{mdate2,jdbcType=DATE},
+            </if>
+            <if test="excFxsTermType != null" >
+                EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType10 != null" >
+                ASSET_TYPE_10 = #{assetType10,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType11 != null" >
+                ASSET_TYPE_11 = #{assetType11,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="preb != null" >
+                PREB = #{preb,jdbcType=DECIMAL},
+            </if>
+            <if test="prec != null" >
+                PREC = #{prec,jdbcType=DECIMAL},
+            </if>
+            <if test="sharePrice != null" >
+                SHARE_PRICE = #{sharePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="expConValue != null" >
+                EXP_CON_VALUE = #{expConValue,jdbcType=DECIMAL},
+            </if>
+            <if test="actNum != null" >
+                ACT_NUM = #{actNum,jdbcType=DECIMAL},
+            </if>
+            <if test="expConNum != null" >
+                EXP_CON_NUM = #{expConNum,jdbcType=DECIMAL},
+            </if>
+            <if test="purchModle != null" >
+                PURCH_MODLE = #{purchModle,jdbcType=VARCHAR},
+            </if>
+            <if test="purchType != null" >
+                PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
+            </if>
+            <if test="isAgreementEnd != null" >
+                IS_AGREEMENT_END = #{isAgreementEnd,jdbcType=VARCHAR},
+            </if>
+            <if test="ourEntNum != null" >
+                OUR_ENT_NUM = #{ourEntNum,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinEntNum != null" >
+                LENDIN_ENT_NUM = #{lendinEntNum,jdbcType=DECIMAL},
+            </if>
+            <if test="ourAbleNum != null" >
+                OUR_ABLE_NUM = #{ourAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinAbleNum != null" >
+                LENDIN_ABLE_NUM = #{lendinAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="sellAbleNum != null" >
+                SELL_ABLE_NUM = #{sellAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="pbExportstatus != null" >
+                PB_EXPORTSTATUS = #{pbExportstatus,jdbcType=VARCHAR},
+            </if>
+            <if test="highHindPrice != null" >
+                HIGH_HIND_PRICE = #{highHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowHindPrice != null" >
+                LOW_HIND_PRICE = #{lowHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="highExercPrice != null" >
+                HIGH_EXERC_PRICE = #{highExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowExercPrice != null" >
+                LOW_EXERC_PRICE = #{lowExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exePrice != null" >
+                EXE_PRICE = #{exePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="knockPrice != null" >
+                KNOCK_PRICE = #{knockPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exerciseType != null" >
+                EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="execBaseDate != null" >
+                EXEC_BASE_DATE = #{execBaseDate,jdbcType=DATE},
+            </if>
+            <if test="optFeePayType2 != null" >
+                OPT_FEE_PAY_TYPE2 = #{optFeePayType2,jdbcType=VARCHAR},
+            </if>
+            <if test="optFeePayType != null" >
+                OPT_FEE_PAY_TYPE = #{optFeePayType,jdbcType=VARCHAR},
+            </if>
+            <if test="rFinprodId != null" >
+                R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="contractResult != null" >
+                CONTRACT_RESULT = #{contractResult,jdbcType=VARCHAR},
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentDate != null" >
+                PAYMENT_DATE = #{paymentDate,jdbcType=DATE},
+            </if>
+            <if test="listingDate != null" >
+                LISTING_DATE = #{listingDate,jdbcType=DATE},
+            </if>
+            <if test="mainConsignee != null" >
+                MAIN_CONSIGNEE = #{mainConsignee,jdbcType=VARCHAR},
+            </if>
+            <if test="warrantor != null" >
+                WARRANTOR = #{warrantor,jdbcType=VARCHAR},
+            </if>
+            <if test="biddingRange != null" >
+                BIDDING_RANGE = #{biddingRange,jdbcType=VARCHAR},
+            </if>
+            <if test="minAmt != null" >
+                MIN_AMT = #{minAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="counterSeat != null" >
+                COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
+            </if>
+            <if test="counterConNo != null" >
+                COUNTER_CON_NO = #{counterConNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fullPrice != null" >
+                FULL_PRICE = #{fullPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterOrg != null" >
+                COUNTER_ORG = #{counterOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                TRADER = #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="vpayDate != null" >
+                VPAY_DATE = #{vpayDate,jdbcType=DATE},
+            </if>
+            <if test="mpayDate != null" >
+                MPAY_DATE = #{mpayDate,jdbcType=DATE},
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="capDays != null" >
+                CAP_DAYS = #{capDays,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="requestId != null" >
+                REQUEST_ID = #{requestId,jdbcType=VARCHAR},
+            </if>
+            <if test="redoType != null" >
+                REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
+            <if test="hkMarket != null" >
+                HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAmtTarget != null" >
+                ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL},
+            </if>
+            <if test="portfolioSeries != null" >
+                PORTFOLIO_SERIES = #{portfolioSeries,jdbcType=VARCHAR},
+            </if>
+            <if test="calculateField != null" >
+                CALCULATE_FIELD = #{calculateField,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeStockId != null" >
+                PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustCreateSource != null" >
+                ENTRUST_CREATE_SOURCE = #{entrustCreateSource,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        update WFL_ETR_ENTRUST_ADD
+        set 
+        ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+        WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR},
+        SETTLE_SPREED = #{settleSpreed,jdbcType=DECIMAL},
+        EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+        MATURE_YIELD = #{matureYield,jdbcType=DECIMAL},
+        VDATE = #{vdate,jdbcType=DATE},
+        MDATE = #{mdate,jdbcType=DATE},
+        TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+        TERM_DAYS2 = #{termDays2,jdbcType=DECIMAL},
+        TERM_TYPE = #{termType,jdbcType=VARCHAR},
+        PAY_FREQ = #{payFreq,jdbcType=VARCHAR},
+        FIRST_CAL_DATE = #{firstCalDate,jdbcType=DATE},
+        ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+        ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+        BUSI_PS = #{busiPs,jdbcType=VARCHAR},
+        CASH_USEDATE = #{cashUsedate,jdbcType=DATE},
+        SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        FIRST_UNIT_CPRICE = #{firstUnitCprice,jdbcType=DECIMAL},
+        FIRST_UNIT_CPRICE2 = #{firstUnitCprice2,jdbcType=DECIMAL},
+        EXCHANGE_PLEDGE = #{exchangePledge,jdbcType=VARCHAR},
+        EXC_DEAL_TYPE = #{excDealType,jdbcType=VARCHAR},
+        CUR_PAIR = #{curPair,jdbcType=VARCHAR},
+        COR_CCY = #{corCcy,jdbcType=VARCHAR},
+        EXP_COR_AMT = #{expCorAmt,jdbcType=DECIMAL},
+        COR_CUR_POS = #{corCurPos,jdbcType=DECIMAL},
+        IS_DIF_SQU = #{isDifSqu,jdbcType=VARCHAR},
+        DEAL_CUR_ACCT = #{dealCurAcct,jdbcType=VARCHAR},
+        COR_CUR_ACCT = #{corCurAcct,jdbcType=VARCHAR},
+        CNY_ACCT = #{cnyAcct,jdbcType=VARCHAR},
+        VDATE2 = #{vdate2,jdbcType=DATE},
+        MDATE2 = #{mdate2,jdbcType=DATE},
+        EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+        PAY_TYPE = #{payType,jdbcType=VARCHAR},
+        ASSET_TYPE_10 = #{assetType10,jdbcType=VARCHAR},
+        ASSET_TYPE_11 = #{assetType11,jdbcType=VARCHAR},
+        DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+        PREB = #{preb,jdbcType=DECIMAL},
+        PREC = #{prec,jdbcType=DECIMAL},
+        SHARE_PRICE = #{sharePrice,jdbcType=DECIMAL},
+        EXP_CON_VALUE = #{expConValue,jdbcType=DECIMAL},
+        ACT_NUM = #{actNum,jdbcType=DECIMAL},
+        EXP_CON_NUM = #{expConNum,jdbcType=DECIMAL},
+        PURCH_MODLE = #{purchModle,jdbcType=VARCHAR},
+        PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
+        IS_AGREEMENT_END = #{isAgreementEnd,jdbcType=VARCHAR},
+        OUR_ENT_NUM = #{ourEntNum,jdbcType=DECIMAL},
+        LENDIN_ENT_NUM = #{lendinEntNum,jdbcType=DECIMAL},
+        OUR_ABLE_NUM = #{ourAbleNum,jdbcType=DECIMAL},
+        LENDIN_ABLE_NUM = #{lendinAbleNum,jdbcType=DECIMAL},
+        SELL_ABLE_NUM = #{sellAbleNum,jdbcType=DECIMAL},
+        PB_EXPORTSTATUS = #{pbExportstatus,jdbcType=VARCHAR},
+        HIGH_HIND_PRICE = #{highHindPrice,jdbcType=DECIMAL},
+        LOW_HIND_PRICE = #{lowHindPrice,jdbcType=DECIMAL},
+        HIGH_EXERC_PRICE = #{highExercPrice,jdbcType=DECIMAL},
+        LOW_EXERC_PRICE = #{lowExercPrice,jdbcType=DECIMAL},
+        EXE_PRICE = #{exePrice,jdbcType=DECIMAL},
+        KNOCK_PRICE = #{knockPrice,jdbcType=DECIMAL},
+        EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR},
+        EXEC_BASE_DATE = #{execBaseDate,jdbcType=DATE},
+        OPT_FEE_PAY_TYPE2 = #{optFeePayType2,jdbcType=VARCHAR},
+        OPT_FEE_PAY_TYPE = #{optFeePayType,jdbcType=VARCHAR},
+        R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+        CONTRACT_RESULT = #{contractResult,jdbcType=VARCHAR},
+        CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+        PAYMENT_DATE = #{paymentDate,jdbcType=DATE},
+        LISTING_DATE = #{listingDate,jdbcType=DATE},
+        MAIN_CONSIGNEE = #{mainConsignee,jdbcType=VARCHAR},
+        WARRANTOR = #{warrantor,jdbcType=VARCHAR},
+        BIDDING_RANGE = #{biddingRange,jdbcType=VARCHAR},
+        MIN_AMT = #{minAmt,jdbcType=DECIMAL},
+        CAL_MODE = #{calMode,jdbcType=VARCHAR},
+        COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
+        COUNTER_CON_NO = #{counterConNo,jdbcType=VARCHAR},
+        FULL_PRICE = #{fullPrice,jdbcType=DECIMAL},
+        TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+        COUNTER_ORG = #{counterOrg,jdbcType=VARCHAR},
+        TRADER = #{trader,jdbcType=VARCHAR},
+        VPAY_DATE = #{vpayDate,jdbcType=DATE},
+        MPAY_DATE = #{mpayDate,jdbcType=DATE},
+        M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+        M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+        CAP_DAYS = #{capDays,jdbcType=DECIMAL},
+        TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+        REQUEST_ID = #{requestId,jdbcType=VARCHAR},
+        REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+        DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+        DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+        QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+        HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+        ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL},
+        PORTFOLIO_SERIES = #{portfolioSeries,jdbcType=VARCHAR},
+        CALCULATE_FIELD = #{calculateField,jdbcType=VARCHAR},
+        PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR},
+        ENTRUST_CREATE_SOURCE = #{entrustCreateSource,jdbcType=VARCHAR}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        insert into WFL_ETR_ENTRUST_ADD (ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, 
+            EXER_YIELD, MATURE_YIELD, VDATE, 
+            MDATE, TERM_DAYS, TERM_DAYS2, 
+            TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
+            ASSET_TYPE, ASSET_TYPE1, BUSI_PS, 
+            CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, FIRST_UNIT_CPRICE, FIRST_UNIT_CPRICE2, 
+            EXCHANGE_PLEDGE, EXC_DEAL_TYPE, CUR_PAIR, 
+            COR_CCY, EXP_COR_AMT, COR_CUR_POS, 
+            IS_DIF_SQU, DEAL_CUR_ACCT, COR_CUR_ACCT, 
+            CNY_ACCT, VDATE2, MDATE2, 
+            EXC_FXS_TERM_TYPE, PAY_TYPE, ASSET_TYPE_10, 
+            ASSET_TYPE_11, DEAL_MODE, PREB, 
+            PREC, SHARE_PRICE, EXP_CON_VALUE, 
+            ACT_NUM, EXP_CON_NUM, PURCH_MODLE, 
+            PURCH_TYPE, IS_AGREEMENT_END, OUR_ENT_NUM, 
+            LENDIN_ENT_NUM, OUR_ABLE_NUM, LENDIN_ABLE_NUM, 
+            SELL_ABLE_NUM, PB_EXPORTSTATUS, HIGH_HIND_PRICE, 
+            LOW_HIND_PRICE, HIGH_EXERC_PRICE, LOW_EXERC_PRICE, 
+            EXE_PRICE, KNOCK_PRICE, EXERCISE_TYPE, 
+            EXEC_BASE_DATE, OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, 
+            R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
+            PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, 
+            WARRANTOR, BIDDING_RANGE, MIN_AMT, 
+            CAL_MODE, COUNTER_SEAT, COUNTER_CON_NO, 
+            FULL_PRICE, TARGET_TYPE, COUNTER_ORG, 
+            TRADER, WORKFLOW_ID, VPAY_DATE, 
+            MPAY_DATE, M_INT_AMT, M_TRADE_AMT, 
+            CAP_DAYS, TRADE_ID, REQUEST_ID, 
+            REDO_TYPE, DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, 
+            QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET, 
+            PORTFOLIO_SERIES, CALCULATE_FIELD, PLEDGE_STOCK_ID, 
+            ENTRUST_CREATE_SOURCE)
+        values (#{entrustId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{settleSpreed,jdbcType=DECIMAL}, 
+            #{exerYield,jdbcType=DECIMAL}, #{matureYield,jdbcType=DECIMAL}, #{vdate,jdbcType=DATE}, 
+            #{mdate,jdbcType=DATE}, #{termDays,jdbcType=DECIMAL}, #{termDays2,jdbcType=DECIMAL}, 
+            #{termType,jdbcType=VARCHAR}, #{payFreq,jdbcType=VARCHAR}, #{firstCalDate,jdbcType=DATE}, 
+            #{assetType,jdbcType=VARCHAR}, #{assetType1,jdbcType=VARCHAR}, #{busiPs,jdbcType=VARCHAR}, 
+            #{cashUsedate,jdbcType=DATE}, #{secAcctId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{firstUnitCprice,jdbcType=DECIMAL}, #{firstUnitCprice2,jdbcType=DECIMAL}, 
+            #{exchangePledge,jdbcType=VARCHAR}, #{excDealType,jdbcType=VARCHAR}, #{curPair,jdbcType=VARCHAR}, 
+            #{corCcy,jdbcType=VARCHAR}, #{expCorAmt,jdbcType=DECIMAL}, #{corCurPos,jdbcType=DECIMAL}, 
+            #{isDifSqu,jdbcType=VARCHAR}, #{dealCurAcct,jdbcType=VARCHAR}, #{corCurAcct,jdbcType=VARCHAR}, 
+            #{cnyAcct,jdbcType=VARCHAR}, #{vdate2,jdbcType=DATE}, #{mdate2,jdbcType=DATE}, 
+            #{excFxsTermType,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, #{assetType10,jdbcType=VARCHAR}, 
+            #{assetType11,jdbcType=VARCHAR}, #{dealMode,jdbcType=VARCHAR}, #{preb,jdbcType=DECIMAL}, 
+            #{prec,jdbcType=DECIMAL}, #{sharePrice,jdbcType=DECIMAL}, #{expConValue,jdbcType=DECIMAL}, 
+            #{actNum,jdbcType=DECIMAL}, #{expConNum,jdbcType=DECIMAL}, #{purchModle,jdbcType=VARCHAR}, 
+            #{purchType,jdbcType=VARCHAR}, #{isAgreementEnd,jdbcType=VARCHAR}, #{ourEntNum,jdbcType=DECIMAL}, 
+            #{lendinEntNum,jdbcType=DECIMAL}, #{ourAbleNum,jdbcType=DECIMAL}, #{lendinAbleNum,jdbcType=DECIMAL}, 
+            #{sellAbleNum,jdbcType=DECIMAL}, #{pbExportstatus,jdbcType=VARCHAR}, #{highHindPrice,jdbcType=DECIMAL}, 
+            #{lowHindPrice,jdbcType=DECIMAL}, #{highExercPrice,jdbcType=DECIMAL}, #{lowExercPrice,jdbcType=DECIMAL}, 
+            #{exePrice,jdbcType=DECIMAL}, #{knockPrice,jdbcType=DECIMAL}, #{exerciseType,jdbcType=VARCHAR}, 
+            #{execBaseDate,jdbcType=DATE}, #{optFeePayType2,jdbcType=VARCHAR}, #{optFeePayType,jdbcType=VARCHAR}, 
+            #{rFinprodId,jdbcType=VARCHAR}, #{contractResult,jdbcType=VARCHAR}, #{contractNo,jdbcType=VARCHAR}, 
+            #{paymentDate,jdbcType=DATE}, #{listingDate,jdbcType=DATE}, #{mainConsignee,jdbcType=VARCHAR}, 
+            #{warrantor,jdbcType=VARCHAR}, #{biddingRange,jdbcType=VARCHAR}, #{minAmt,jdbcType=DECIMAL}, 
+            #{calMode,jdbcType=VARCHAR}, #{counterSeat,jdbcType=VARCHAR}, #{counterConNo,jdbcType=VARCHAR}, 
+            #{fullPrice,jdbcType=DECIMAL}, #{targetType,jdbcType=VARCHAR}, #{counterOrg,jdbcType=VARCHAR}, 
+            #{trader,jdbcType=VARCHAR}, #{workflowId,jdbcType=VARCHAR}, #{vpayDate,jdbcType=DATE}, 
+            #{mpayDate,jdbcType=DATE}, #{mIntAmt,jdbcType=DECIMAL}, #{mTradeAmt,jdbcType=DECIMAL}, 
+            #{capDays,jdbcType=DECIMAL}, #{tradeId,jdbcType=VARCHAR}, #{requestId,jdbcType=VARCHAR}, 
+            #{redoType,jdbcType=VARCHAR}, #{derivativeBsDir,jdbcType=VARCHAR}, #{derivativeOcFlag,jdbcType=VARCHAR}, 
+            #{quoteType,jdbcType=VARCHAR}, #{hkMarket,jdbcType=VARCHAR}, #{entrustAmtTarget,jdbcType=DECIMAL}, 
+            #{portfolioSeries,jdbcType=VARCHAR}, #{calculateField,jdbcType=VARCHAR}, #{pledgeStockId,jdbcType=VARCHAR}, 
+            #{entrustCreateSource,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        insert into WFL_ETR_ENTRUST_ADD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="workflowStatus != null" >
+                WORKFLOW_STATUS,
+            </if>
+            <if test="settleSpreed != null" >
+                SETTLE_SPREED,
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD,
+            </if>
+            <if test="matureYield != null" >
+                MATURE_YIELD,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS,
+            </if>
+            <if test="termDays2 != null" >
+                TERM_DAYS2,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="payFreq != null" >
+                PAY_FREQ,
+            </if>
+            <if test="firstCalDate != null" >
+                FIRST_CAL_DATE,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="assetType1 != null" >
+                ASSET_TYPE1,
+            </if>
+            <if test="busiPs != null" >
+                BUSI_PS,
+            </if>
+            <if test="cashUsedate != null" >
+                CASH_USEDATE,
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="firstUnitCprice != null" >
+                FIRST_UNIT_CPRICE,
+            </if>
+            <if test="firstUnitCprice2 != null" >
+                FIRST_UNIT_CPRICE2,
+            </if>
+            <if test="exchangePledge != null" >
+                EXCHANGE_PLEDGE,
+            </if>
+            <if test="excDealType != null" >
+                EXC_DEAL_TYPE,
+            </if>
+            <if test="curPair != null" >
+                CUR_PAIR,
+            </if>
+            <if test="corCcy != null" >
+                COR_CCY,
+            </if>
+            <if test="expCorAmt != null" >
+                EXP_COR_AMT,
+            </if>
+            <if test="corCurPos != null" >
+                COR_CUR_POS,
+            </if>
+            <if test="isDifSqu != null" >
+                IS_DIF_SQU,
+            </if>
+            <if test="dealCurAcct != null" >
+                DEAL_CUR_ACCT,
+            </if>
+            <if test="corCurAcct != null" >
+                COR_CUR_ACCT,
+            </if>
+            <if test="cnyAcct != null" >
+                CNY_ACCT,
+            </if>
+            <if test="vdate2 != null" >
+                VDATE2,
+            </if>
+            <if test="mdate2 != null" >
+                MDATE2,
+            </if>
+            <if test="excFxsTermType != null" >
+                EXC_FXS_TERM_TYPE,
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE,
+            </if>
+            <if test="assetType10 != null" >
+                ASSET_TYPE_10,
+            </if>
+            <if test="assetType11 != null" >
+                ASSET_TYPE_11,
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE,
+            </if>
+            <if test="preb != null" >
+                PREB,
+            </if>
+            <if test="prec != null" >
+                PREC,
+            </if>
+            <if test="sharePrice != null" >
+                SHARE_PRICE,
+            </if>
+            <if test="expConValue != null" >
+                EXP_CON_VALUE,
+            </if>
+            <if test="actNum != null" >
+                ACT_NUM,
+            </if>
+            <if test="expConNum != null" >
+                EXP_CON_NUM,
+            </if>
+            <if test="purchModle != null" >
+                PURCH_MODLE,
+            </if>
+            <if test="purchType != null" >
+                PURCH_TYPE,
+            </if>
+            <if test="isAgreementEnd != null" >
+                IS_AGREEMENT_END,
+            </if>
+            <if test="ourEntNum != null" >
+                OUR_ENT_NUM,
+            </if>
+            <if test="lendinEntNum != null" >
+                LENDIN_ENT_NUM,
+            </if>
+            <if test="ourAbleNum != null" >
+                OUR_ABLE_NUM,
+            </if>
+            <if test="lendinAbleNum != null" >
+                LENDIN_ABLE_NUM,
+            </if>
+            <if test="sellAbleNum != null" >
+                SELL_ABLE_NUM,
+            </if>
+            <if test="pbExportstatus != null" >
+                PB_EXPORTSTATUS,
+            </if>
+            <if test="highHindPrice != null" >
+                HIGH_HIND_PRICE,
+            </if>
+            <if test="lowHindPrice != null" >
+                LOW_HIND_PRICE,
+            </if>
+            <if test="highExercPrice != null" >
+                HIGH_EXERC_PRICE,
+            </if>
+            <if test="lowExercPrice != null" >
+                LOW_EXERC_PRICE,
+            </if>
+            <if test="exePrice != null" >
+                EXE_PRICE,
+            </if>
+            <if test="knockPrice != null" >
+                KNOCK_PRICE,
+            </if>
+            <if test="exerciseType != null" >
+                EXERCISE_TYPE,
+            </if>
+            <if test="execBaseDate != null" >
+                EXEC_BASE_DATE,
+            </if>
+            <if test="optFeePayType2 != null" >
+                OPT_FEE_PAY_TYPE2,
+            </if>
+            <if test="optFeePayType != null" >
+                OPT_FEE_PAY_TYPE,
+            </if>
+            <if test="rFinprodId != null" >
+                R_FINPROD_ID,
+            </if>
+            <if test="contractResult != null" >
+                CONTRACT_RESULT,
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO,
+            </if>
+            <if test="paymentDate != null" >
+                PAYMENT_DATE,
+            </if>
+            <if test="listingDate != null" >
+                LISTING_DATE,
+            </if>
+            <if test="mainConsignee != null" >
+                MAIN_CONSIGNEE,
+            </if>
+            <if test="warrantor != null" >
+                WARRANTOR,
+            </if>
+            <if test="biddingRange != null" >
+                BIDDING_RANGE,
+            </if>
+            <if test="minAmt != null" >
+                MIN_AMT,
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE,
+            </if>
+            <if test="counterSeat != null" >
+                COUNTER_SEAT,
+            </if>
+            <if test="counterConNo != null" >
+                COUNTER_CON_NO,
+            </if>
+            <if test="fullPrice != null" >
+                FULL_PRICE,
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE,
+            </if>
+            <if test="counterOrg != null" >
+                COUNTER_ORG,
+            </if>
+            <if test="trader != null" >
+                TRADER,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="vpayDate != null" >
+                VPAY_DATE,
+            </if>
+            <if test="mpayDate != null" >
+                MPAY_DATE,
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT,
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT,
+            </if>
+            <if test="capDays != null" >
+                CAP_DAYS,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="requestId != null" >
+                REQUEST_ID,
+            </if>
+            <if test="redoType != null" >
+                REDO_TYPE,
+            </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR,
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG,
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE,
+            </if>
+            <if test="hkMarket != null" >
+                HK_MARKET,
+            </if>
+            <if test="entrustAmtTarget != null" >
+                ENTRUST_AMT_TARGET,
+            </if>
+            <if test="portfolioSeries != null" >
+                PORTFOLIO_SERIES,
+            </if>
+            <if test="calculateField != null" >
+                CALCULATE_FIELD,
+            </if>
+            <if test="pledgeStockId != null" >
+                PLEDGE_STOCK_ID,
+            </if>
+            <if test="entrustCreateSource != null" >
+                ENTRUST_CREATE_SOURCE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowStatus != null" >
+                #{workflowStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="settleSpreed != null" >
+                #{settleSpreed,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="matureYield != null" >
+                #{matureYield,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="termDays2 != null" >
+                #{termDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="payFreq != null" >
+                #{payFreq,jdbcType=VARCHAR},
+            </if>
+            <if test="firstCalDate != null" >
+                #{firstCalDate,jdbcType=DATE},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType1 != null" >
+                #{assetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="busiPs != null" >
+                #{busiPs,jdbcType=VARCHAR},
+            </if>
+            <if test="cashUsedate != null" >
+                #{cashUsedate,jdbcType=DATE},
+            </if>
+            <if test="secAcctId != null" >
+                #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="firstUnitCprice != null" >
+                #{firstUnitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="firstUnitCprice2 != null" >
+                #{firstUnitCprice2,jdbcType=DECIMAL},
+            </if>
+            <if test="exchangePledge != null" >
+                #{exchangePledge,jdbcType=VARCHAR},
+            </if>
+            <if test="excDealType != null" >
+                #{excDealType,jdbcType=VARCHAR},
+            </if>
+            <if test="curPair != null" >
+                #{curPair,jdbcType=VARCHAR},
+            </if>
+            <if test="corCcy != null" >
+                #{corCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="expCorAmt != null" >
+                #{expCorAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="corCurPos != null" >
+                #{corCurPos,jdbcType=DECIMAL},
+            </if>
+            <if test="isDifSqu != null" >
+                #{isDifSqu,jdbcType=VARCHAR},
+            </if>
+            <if test="dealCurAcct != null" >
+                #{dealCurAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="corCurAcct != null" >
+                #{corCurAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="cnyAcct != null" >
+                #{cnyAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate2 != null" >
+                #{vdate2,jdbcType=DATE},
+            </if>
+            <if test="mdate2 != null" >
+                #{mdate2,jdbcType=DATE},
+            </if>
+            <if test="excFxsTermType != null" >
+                #{excFxsTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null" >
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType10 != null" >
+                #{assetType10,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType11 != null" >
+                #{assetType11,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMode != null" >
+                #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="preb != null" >
+                #{preb,jdbcType=DECIMAL},
+            </if>
+            <if test="prec != null" >
+                #{prec,jdbcType=DECIMAL},
+            </if>
+            <if test="sharePrice != null" >
+                #{sharePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="expConValue != null" >
+                #{expConValue,jdbcType=DECIMAL},
+            </if>
+            <if test="actNum != null" >
+                #{actNum,jdbcType=DECIMAL},
+            </if>
+            <if test="expConNum != null" >
+                #{expConNum,jdbcType=DECIMAL},
+            </if>
+            <if test="purchModle != null" >
+                #{purchModle,jdbcType=VARCHAR},
+            </if>
+            <if test="purchType != null" >
+                #{purchType,jdbcType=VARCHAR},
+            </if>
+            <if test="isAgreementEnd != null" >
+                #{isAgreementEnd,jdbcType=VARCHAR},
+            </if>
+            <if test="ourEntNum != null" >
+                #{ourEntNum,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinEntNum != null" >
+                #{lendinEntNum,jdbcType=DECIMAL},
+            </if>
+            <if test="ourAbleNum != null" >
+                #{ourAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinAbleNum != null" >
+                #{lendinAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="sellAbleNum != null" >
+                #{sellAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="pbExportstatus != null" >
+                #{pbExportstatus,jdbcType=VARCHAR},
+            </if>
+            <if test="highHindPrice != null" >
+                #{highHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowHindPrice != null" >
+                #{lowHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="highExercPrice != null" >
+                #{highExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowExercPrice != null" >
+                #{lowExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exePrice != null" >
+                #{exePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="knockPrice != null" >
+                #{knockPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exerciseType != null" >
+                #{exerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="execBaseDate != null" >
+                #{execBaseDate,jdbcType=DATE},
+            </if>
+            <if test="optFeePayType2 != null" >
+                #{optFeePayType2,jdbcType=VARCHAR},
+            </if>
+            <if test="optFeePayType != null" >
+                #{optFeePayType,jdbcType=VARCHAR},
+            </if>
+            <if test="rFinprodId != null" >
+                #{rFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="contractResult != null" >
+                #{contractResult,jdbcType=VARCHAR},
+            </if>
+            <if test="contractNo != null" >
+                #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentDate != null" >
+                #{paymentDate,jdbcType=DATE},
+            </if>
+            <if test="listingDate != null" >
+                #{listingDate,jdbcType=DATE},
+            </if>
+            <if test="mainConsignee != null" >
+                #{mainConsignee,jdbcType=VARCHAR},
+            </if>
+            <if test="warrantor != null" >
+                #{warrantor,jdbcType=VARCHAR},
+            </if>
+            <if test="biddingRange != null" >
+                #{biddingRange,jdbcType=VARCHAR},
+            </if>
+            <if test="minAmt != null" >
+                #{minAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="calMode != null" >
+                #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="counterSeat != null" >
+                #{counterSeat,jdbcType=VARCHAR},
+            </if>
+            <if test="counterConNo != null" >
+                #{counterConNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fullPrice != null" >
+                #{fullPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterOrg != null" >
+                #{counterOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="vpayDate != null" >
+                #{vpayDate,jdbcType=DATE},
+            </if>
+            <if test="mpayDate != null" >
+                #{mpayDate,jdbcType=DATE},
+            </if>
+            <if test="mIntAmt != null" >
+                #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="capDays != null" >
+                #{capDays,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="requestId != null" >
+                #{requestId,jdbcType=VARCHAR},
+            </if>
+            <if test="redoType != null" >
+                #{redoType,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeBsDir != null" >
+                #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                #{derivativeOcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                #{quoteType,jdbcType=VARCHAR},
+            </if>
+            <if test="hkMarket != null" >
+                #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAmtTarget != null" >
+                #{entrustAmtTarget,jdbcType=DECIMAL},
+            </if>
+            <if test="portfolioSeries != null" >
+                #{portfolioSeries,jdbcType=VARCHAR},
+            </if>
+            <if test="calculateField != null" >
+                #{calculateField,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeStockId != null" >
+                #{pledgeStockId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustCreateSource != null" >
+                #{entrustCreateSource,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        insert into WFL_ETR_ENTRUST_ADD(ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
+        MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
+        ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, FIRST_UNIT_CPRICE, FIRST_UNIT_CPRICE2, EXCHANGE_PLEDGE, 
+        EXC_DEAL_TYPE, CUR_PAIR, COR_CCY, EXP_COR_AMT, COR_CUR_POS, IS_DIF_SQU, DEAL_CUR_ACCT, 
+        COR_CUR_ACCT, CNY_ACCT, VDATE2, MDATE2, EXC_FXS_TERM_TYPE, PAY_TYPE, ASSET_TYPE_10, 
+        ASSET_TYPE_11, DEAL_MODE, PREB, PREC, SHARE_PRICE, EXP_CON_VALUE, ACT_NUM, EXP_CON_NUM, 
+        PURCH_MODLE, PURCH_TYPE, IS_AGREEMENT_END, OUR_ENT_NUM, LENDIN_ENT_NUM, OUR_ABLE_NUM, 
+        LENDIN_ABLE_NUM, SELL_ABLE_NUM, PB_EXPORTSTATUS, HIGH_HIND_PRICE, LOW_HIND_PRICE, 
+        HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, EXERCISE_TYPE, EXEC_BASE_DATE, 
+        OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
+        PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
+        COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, WORKFLOW_ID, 
+        VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+        DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET, 
+        PORTFOLIO_SERIES, CALCULATE_FIELD, PLEDGE_STOCK_ID, ENTRUST_CREATE_SOURCE)
+        select ENTRUST_ID, WORKFLOW_STATUS, SETTLE_SPREED, EXER_YIELD, 
+            MATURE_YIELD, VDATE, MDATE, TERM_DAYS, TERM_DAYS2, TERM_TYPE, PAY_FREQ, FIRST_CAL_DATE, 
+            ASSET_TYPE, ASSET_TYPE1, BUSI_PS, CASH_USEDATE, SEC_ACCT_ID, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, FIRST_UNIT_CPRICE, FIRST_UNIT_CPRICE2, EXCHANGE_PLEDGE, 
+            EXC_DEAL_TYPE, CUR_PAIR, COR_CCY, EXP_COR_AMT, COR_CUR_POS, IS_DIF_SQU, DEAL_CUR_ACCT, 
+            COR_CUR_ACCT, CNY_ACCT, VDATE2, MDATE2, EXC_FXS_TERM_TYPE, PAY_TYPE, ASSET_TYPE_10, 
+            ASSET_TYPE_11, DEAL_MODE, PREB, PREC, SHARE_PRICE, EXP_CON_VALUE, ACT_NUM, EXP_CON_NUM, 
+            PURCH_MODLE, PURCH_TYPE, IS_AGREEMENT_END, OUR_ENT_NUM, LENDIN_ENT_NUM, OUR_ABLE_NUM, 
+            LENDIN_ABLE_NUM, SELL_ABLE_NUM, PB_EXPORTSTATUS, HIGH_HIND_PRICE, LOW_HIND_PRICE, 
+            HIGH_EXERC_PRICE, LOW_EXERC_PRICE, EXE_PRICE, KNOCK_PRICE, EXERCISE_TYPE, EXEC_BASE_DATE, 
+            OPT_FEE_PAY_TYPE2, OPT_FEE_PAY_TYPE, R_FINPROD_ID, CONTRACT_RESULT, CONTRACT_NO, 
+            PAYMENT_DATE, LISTING_DATE, MAIN_CONSIGNEE, WARRANTOR, BIDDING_RANGE, MIN_AMT, CAL_MODE, 
+            COUNTER_SEAT, COUNTER_CON_NO, FULL_PRICE, TARGET_TYPE, COUNTER_ORG, TRADER, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, 
+            VPAY_DATE, MPAY_DATE, M_INT_AMT, M_TRADE_AMT, CAP_DAYS, TRADE_ID, REQUEST_ID, REDO_TYPE, 
+            DERIVATIVE_BS_DIR, DERIVATIVE_OC_FLAG, QUOTE_TYPE, HK_MARKET, ENTRUST_AMT_TARGET, 
+            PORTFOLIO_SERIES, CALCULATE_FIELD, PLEDGE_STOCK_ID, ENTRUST_CREATE_SOURCE
+             from WFL_ETR_ENTRUST_ADD
+             where 1 = 1 and ENTRUST_ID = #{entrustId,jdbcType=VARCHAR} and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        update WFL_ETR_ENTRUST_ADD
+        <set >
+            <if test="settleSpreed != null" >
+                SETTLE_SPREED = #{settleSpreed,jdbcType=DECIMAL},
+            </if>
+            <if test="exerYield != null" >
+                EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            </if>
+            <if test="matureYield != null" >
+                MATURE_YIELD = #{matureYield,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                VDATE = #{vdate,jdbcType=DATE},
+            </if>
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="termDays != null" >
+                TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            </if>
+            <if test="termDays2 != null" >
+                TERM_DAYS2 = #{termDays2,jdbcType=DECIMAL},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="payFreq != null" >
+                PAY_FREQ = #{payFreq,jdbcType=VARCHAR},
+            </if>
+            <if test="firstCalDate != null" >
+                FIRST_CAL_DATE = #{firstCalDate,jdbcType=DATE},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType1 != null" >
+                ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+            </if>
+            <if test="busiPs != null" >
+                BUSI_PS = #{busiPs,jdbcType=VARCHAR},
+            </if>
+            <if test="cashUsedate != null" >
+                CASH_USEDATE = #{cashUsedate,jdbcType=DATE},
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="firstUnitCprice != null" >
+                FIRST_UNIT_CPRICE = #{firstUnitCprice,jdbcType=DECIMAL},
+            </if>
+            <if test="firstUnitCprice2 != null" >
+                FIRST_UNIT_CPRICE2 = #{firstUnitCprice2,jdbcType=DECIMAL},
+            </if>
+            <if test="exchangePledge != null" >
+                EXCHANGE_PLEDGE = #{exchangePledge,jdbcType=VARCHAR},
+            </if>
+            <if test="excDealType != null" >
+                EXC_DEAL_TYPE = #{excDealType,jdbcType=VARCHAR},
+            </if>
+            <if test="curPair != null" >
+                CUR_PAIR = #{curPair,jdbcType=VARCHAR},
+            </if>
+            <if test="corCcy != null" >
+                COR_CCY = #{corCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="expCorAmt != null" >
+                EXP_COR_AMT = #{expCorAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="corCurPos != null" >
+                COR_CUR_POS = #{corCurPos,jdbcType=DECIMAL},
+            </if>
+            <if test="isDifSqu != null" >
+                IS_DIF_SQU = #{isDifSqu,jdbcType=VARCHAR},
+            </if>
+            <if test="dealCurAcct != null" >
+                DEAL_CUR_ACCT = #{dealCurAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="corCurAcct != null" >
+                COR_CUR_ACCT = #{corCurAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="cnyAcct != null" >
+                CNY_ACCT = #{cnyAcct,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate2 != null" >
+                VDATE2 = #{vdate2,jdbcType=DATE},
+            </if>
+            <if test="mdate2 != null" >
+                MDATE2 = #{mdate2,jdbcType=DATE},
+            </if>
+            <if test="excFxsTermType != null" >
+                EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType10 != null" >
+                ASSET_TYPE_10 = #{assetType10,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType11 != null" >
+                ASSET_TYPE_11 = #{assetType11,jdbcType=VARCHAR},
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="preb != null" >
+                PREB = #{preb,jdbcType=DECIMAL},
+            </if>
+            <if test="prec != null" >
+                PREC = #{prec,jdbcType=DECIMAL},
+            </if>
+            <if test="sharePrice != null" >
+                SHARE_PRICE = #{sharePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="expConValue != null" >
+                EXP_CON_VALUE = #{expConValue,jdbcType=DECIMAL},
+            </if>
+            <if test="actNum != null" >
+                ACT_NUM = #{actNum,jdbcType=DECIMAL},
+            </if>
+            <if test="expConNum != null" >
+                EXP_CON_NUM = #{expConNum,jdbcType=DECIMAL},
+            </if>
+            <if test="purchModle != null" >
+                PURCH_MODLE = #{purchModle,jdbcType=VARCHAR},
+            </if>
+            <if test="purchType != null" >
+                PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
+            </if>
+            <if test="isAgreementEnd != null" >
+                IS_AGREEMENT_END = #{isAgreementEnd,jdbcType=VARCHAR},
+            </if>
+            <if test="ourEntNum != null" >
+                OUR_ENT_NUM = #{ourEntNum,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinEntNum != null" >
+                LENDIN_ENT_NUM = #{lendinEntNum,jdbcType=DECIMAL},
+            </if>
+            <if test="ourAbleNum != null" >
+                OUR_ABLE_NUM = #{ourAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinAbleNum != null" >
+                LENDIN_ABLE_NUM = #{lendinAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="sellAbleNum != null" >
+                SELL_ABLE_NUM = #{sellAbleNum,jdbcType=DECIMAL},
+            </if>
+            <if test="pbExportstatus != null" >
+                PB_EXPORTSTATUS = #{pbExportstatus,jdbcType=VARCHAR},
+            </if>
+            <if test="highHindPrice != null" >
+                HIGH_HIND_PRICE = #{highHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowHindPrice != null" >
+                LOW_HIND_PRICE = #{lowHindPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="highExercPrice != null" >
+                HIGH_EXERC_PRICE = #{highExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowExercPrice != null" >
+                LOW_EXERC_PRICE = #{lowExercPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exePrice != null" >
+                EXE_PRICE = #{exePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="knockPrice != null" >
+                KNOCK_PRICE = #{knockPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="exerciseType != null" >
+                EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR},
+            </if>
+            <if test="execBaseDate != null" >
+                EXEC_BASE_DATE = #{execBaseDate,jdbcType=DATE},
+            </if>
+            <if test="optFeePayType2 != null" >
+                OPT_FEE_PAY_TYPE2 = #{optFeePayType2,jdbcType=VARCHAR},
+            </if>
+            <if test="optFeePayType != null" >
+                OPT_FEE_PAY_TYPE = #{optFeePayType,jdbcType=VARCHAR},
+            </if>
+            <if test="rFinprodId != null" >
+                R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="contractResult != null" >
+                CONTRACT_RESULT = #{contractResult,jdbcType=VARCHAR},
+            </if>
+            <if test="contractNo != null" >
+                CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentDate != null" >
+                PAYMENT_DATE = #{paymentDate,jdbcType=DATE},
+            </if>
+            <if test="listingDate != null" >
+                LISTING_DATE = #{listingDate,jdbcType=DATE},
+            </if>
+            <if test="mainConsignee != null" >
+                MAIN_CONSIGNEE = #{mainConsignee,jdbcType=VARCHAR},
+            </if>
+            <if test="warrantor != null" >
+                WARRANTOR = #{warrantor,jdbcType=VARCHAR},
+            </if>
+            <if test="biddingRange != null" >
+                BIDDING_RANGE = #{biddingRange,jdbcType=VARCHAR},
+            </if>
+            <if test="minAmt != null" >
+                MIN_AMT = #{minAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="calMode != null" >
+                CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            </if>
+            <if test="counterSeat != null" >
+                COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
+            </if>
+            <if test="counterConNo != null" >
+                COUNTER_CON_NO = #{counterConNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fullPrice != null" >
+                FULL_PRICE = #{fullPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterOrg != null" >
+                COUNTER_ORG = #{counterOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="trader != null" >
+                TRADER = #{trader,jdbcType=VARCHAR},
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="vpayDate != null" >
+                VPAY_DATE = #{vpayDate,jdbcType=DATE},
+            </if>
+            <if test="mpayDate != null" >
+                MPAY_DATE = #{mpayDate,jdbcType=DATE},
+            </if>
+            <if test="mIntAmt != null" >
+                M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="mTradeAmt != null" >
+                M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="capDays != null" >
+                CAP_DAYS = #{capDays,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="requestId != null" >
+                REQUEST_ID = #{requestId,jdbcType=VARCHAR},
+            </if>
+            <if test="redoType != null" >
+                REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeBsDir != null" >
+                DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            </if>
+            <if test="derivativeOcFlag != null" >
+                DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteType != null" >
+                QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            </if>
+            <if test="hkMarket != null" >
+                HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAmtTarget != null" >
+                ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL},
+            </if>
+            <if test="portfolioSeries != null" >
+                PORTFOLIO_SERIES = #{portfolioSeries,jdbcType=VARCHAR},
+            </if>
+            <if test="calculateField != null" >
+                CALCULATE_FIELD = #{calculateField,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeStockId != null" >
+                PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustCreateSource != null" >
+                ENTRUST_CREATE_SOURCE = #{entrustCreateSource,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.WflEtrEntrustAdd" >
+        update WFL_ETR_ENTRUST_ADD
+        set SETTLE_SPREED = #{settleSpreed,jdbcType=DECIMAL},
+            EXER_YIELD = #{exerYield,jdbcType=DECIMAL},
+            MATURE_YIELD = #{matureYield,jdbcType=DECIMAL},
+            VDATE = #{vdate,jdbcType=DATE},
+            MDATE = #{mdate,jdbcType=DATE},
+            TERM_DAYS = #{termDays,jdbcType=DECIMAL},
+            TERM_DAYS2 = #{termDays2,jdbcType=DECIMAL},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            PAY_FREQ = #{payFreq,jdbcType=VARCHAR},
+            FIRST_CAL_DATE = #{firstCalDate,jdbcType=DATE},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            ASSET_TYPE1 = #{assetType1,jdbcType=VARCHAR},
+            BUSI_PS = #{busiPs,jdbcType=VARCHAR},
+            CASH_USEDATE = #{cashUsedate,jdbcType=DATE},
+            SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            FIRST_UNIT_CPRICE = #{firstUnitCprice,jdbcType=DECIMAL},
+            FIRST_UNIT_CPRICE2 = #{firstUnitCprice2,jdbcType=DECIMAL},
+            EXCHANGE_PLEDGE = #{exchangePledge,jdbcType=VARCHAR},
+            EXC_DEAL_TYPE = #{excDealType,jdbcType=VARCHAR},
+            CUR_PAIR = #{curPair,jdbcType=VARCHAR},
+            COR_CCY = #{corCcy,jdbcType=VARCHAR},
+            EXP_COR_AMT = #{expCorAmt,jdbcType=DECIMAL},
+            COR_CUR_POS = #{corCurPos,jdbcType=DECIMAL},
+            IS_DIF_SQU = #{isDifSqu,jdbcType=VARCHAR},
+            DEAL_CUR_ACCT = #{dealCurAcct,jdbcType=VARCHAR},
+            COR_CUR_ACCT = #{corCurAcct,jdbcType=VARCHAR},
+            CNY_ACCT = #{cnyAcct,jdbcType=VARCHAR},
+            VDATE2 = #{vdate2,jdbcType=DATE},
+            MDATE2 = #{mdate2,jdbcType=DATE},
+            EXC_FXS_TERM_TYPE = #{excFxsTermType,jdbcType=VARCHAR},
+            PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            ASSET_TYPE_10 = #{assetType10,jdbcType=VARCHAR},
+            ASSET_TYPE_11 = #{assetType11,jdbcType=VARCHAR},
+            DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            PREB = #{preb,jdbcType=DECIMAL},
+            PREC = #{prec,jdbcType=DECIMAL},
+            SHARE_PRICE = #{sharePrice,jdbcType=DECIMAL},
+            EXP_CON_VALUE = #{expConValue,jdbcType=DECIMAL},
+            ACT_NUM = #{actNum,jdbcType=DECIMAL},
+            EXP_CON_NUM = #{expConNum,jdbcType=DECIMAL},
+            PURCH_MODLE = #{purchModle,jdbcType=VARCHAR},
+            PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
+            IS_AGREEMENT_END = #{isAgreementEnd,jdbcType=VARCHAR},
+            OUR_ENT_NUM = #{ourEntNum,jdbcType=DECIMAL},
+            LENDIN_ENT_NUM = #{lendinEntNum,jdbcType=DECIMAL},
+            OUR_ABLE_NUM = #{ourAbleNum,jdbcType=DECIMAL},
+            LENDIN_ABLE_NUM = #{lendinAbleNum,jdbcType=DECIMAL},
+            SELL_ABLE_NUM = #{sellAbleNum,jdbcType=DECIMAL},
+            PB_EXPORTSTATUS = #{pbExportstatus,jdbcType=VARCHAR},
+            HIGH_HIND_PRICE = #{highHindPrice,jdbcType=DECIMAL},
+            LOW_HIND_PRICE = #{lowHindPrice,jdbcType=DECIMAL},
+            HIGH_EXERC_PRICE = #{highExercPrice,jdbcType=DECIMAL},
+            LOW_EXERC_PRICE = #{lowExercPrice,jdbcType=DECIMAL},
+            EXE_PRICE = #{exePrice,jdbcType=DECIMAL},
+            KNOCK_PRICE = #{knockPrice,jdbcType=DECIMAL},
+            EXERCISE_TYPE = #{exerciseType,jdbcType=VARCHAR},
+            EXEC_BASE_DATE = #{execBaseDate,jdbcType=DATE},
+            OPT_FEE_PAY_TYPE2 = #{optFeePayType2,jdbcType=VARCHAR},
+            OPT_FEE_PAY_TYPE = #{optFeePayType,jdbcType=VARCHAR},
+            R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+            CONTRACT_RESULT = #{contractResult,jdbcType=VARCHAR},
+            CONTRACT_NO = #{contractNo,jdbcType=VARCHAR},
+            PAYMENT_DATE = #{paymentDate,jdbcType=DATE},
+            LISTING_DATE = #{listingDate,jdbcType=DATE},
+            MAIN_CONSIGNEE = #{mainConsignee,jdbcType=VARCHAR},
+            WARRANTOR = #{warrantor,jdbcType=VARCHAR},
+            BIDDING_RANGE = #{biddingRange,jdbcType=VARCHAR},
+            MIN_AMT = #{minAmt,jdbcType=DECIMAL},
+            CAL_MODE = #{calMode,jdbcType=VARCHAR},
+            COUNTER_SEAT = #{counterSeat,jdbcType=VARCHAR},
+            COUNTER_CON_NO = #{counterConNo,jdbcType=VARCHAR},
+            FULL_PRICE = #{fullPrice,jdbcType=DECIMAL},
+            TARGET_TYPE = #{targetType,jdbcType=VARCHAR},
+            COUNTER_ORG = #{counterOrg,jdbcType=VARCHAR},
+            TRADER = #{trader,jdbcType=VARCHAR},
+            WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            VPAY_DATE = #{vpayDate,jdbcType=DATE},
+            MPAY_DATE = #{mpayDate,jdbcType=DATE},
+            M_INT_AMT = #{mIntAmt,jdbcType=DECIMAL},
+            M_TRADE_AMT = #{mTradeAmt,jdbcType=DECIMAL},
+            CAP_DAYS = #{capDays,jdbcType=DECIMAL},
+            TRADE_ID = #{tradeId,jdbcType=VARCHAR},
+            REQUEST_ID = #{requestId,jdbcType=VARCHAR},
+            REDO_TYPE = #{redoType,jdbcType=VARCHAR},
+            DERIVATIVE_BS_DIR = #{derivativeBsDir,jdbcType=VARCHAR},
+            DERIVATIVE_OC_FLAG = #{derivativeOcFlag,jdbcType=VARCHAR},
+            QUOTE_TYPE = #{quoteType,jdbcType=VARCHAR},
+            HK_MARKET = #{hkMarket,jdbcType=VARCHAR},
+            ENTRUST_AMT_TARGET = #{entrustAmtTarget,jdbcType=DECIMAL},
+            PORTFOLIO_SERIES = #{portfolioSeries,jdbcType=VARCHAR},
+            CALCULATE_FIELD = #{calculateField,jdbcType=VARCHAR},
+            PLEDGE_STOCK_ID = #{pledgeStockId,jdbcType=VARCHAR},
+            ENTRUST_CREATE_SOURCE = #{entrustCreateSource,jdbcType=VARCHAR}
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+          and WORKFLOW_STATUS = #{workflowStatus,jdbcType=VARCHAR}
+    </update>
+</mapper>

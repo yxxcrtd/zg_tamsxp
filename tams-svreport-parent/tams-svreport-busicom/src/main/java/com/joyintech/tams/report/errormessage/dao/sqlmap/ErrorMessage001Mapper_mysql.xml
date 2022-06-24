@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.errormessage.dao.ErrorMessage001Mapper_mysql">
-    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
-        <id column="DATAID" jdbcType="VARCHAR" property="dataid" />
-        <result column="INTERF_TYPE" jdbcType="VARCHAR" property="interfType" />
-        <result column="FIRE_NAME" jdbcType="VARCHAR" property="fireName" />
-        <result column="STATUS" jdbcType="VARCHAR" property="status" />
-        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
-        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
-        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
-        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
-        <result column="WORKFLOW_ID" jdbcType="VARCHAR" property="workflowId" />
-        <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
-        <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
-        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
-        <result column="ORG_DATA" jdbcType="CLOB" property="orgData" />
-        <result column="ERR_MSG" jdbcType="CLOB" property="errMsg" />
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.report.errormessage.dto.ErrorMessage001">
+    <id column="DATAID" jdbcType="VARCHAR" property="dataid" />
+    <result column="INTERF_TYPE" jdbcType="VARCHAR" property="interfType" />
+    <result column="FIRE_NAME" jdbcType="VARCHAR" property="fireName" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="WORKFLOW_ID" jdbcType="VARCHAR" property="workflowId" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+    <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+    <result column="ORG_DATA" jdbcType="CLOB" property="orgData" />
+    <result column="ERR_MSG" jdbcType="CLOB" property="errMsg" />
+  </resultMap>
     <sql id="base_view">
      select DATAID dataid, INTERF_TYPE interfType, FIRE_NAME fireName, STATUS status, UPDATE_USER updateUser,
       CREATE_USER createUser, UPDATE_TIME updateTime,  CREATE_TIME createTime, WORKFLOW_ID workflowId, 
@@ -68,38 +68,38 @@
     from CHB_INTERF_ERRODATA
     </select>
     <select id="queryPage" resultType="com.joyintech.tams.report.errormessage.dto.ErrorMessage001" parameterType="map">
-        select *
-        from (<include refid="base_view"></include>) temp
-        <where>
-            <if test="createTimeStart != null and createTimeStart != ''">
-                DATE_FORMAT(createTime,'%Y-%m-%d') &gt;= #{createTimeStart}
-            </if>
-            <if test="createTimeEnd != null and createTimeEnd != ''">
-                and DATE_FORMAT(createTime,'%Y-%m-%d') &lt;= #{createTimeEnd}
-            </if>
-            <if test="fileName != null and fileName != ''">
-                and fireName like concat_ws('','%',#{fileName},'%')
-            </if>
-            <if test="statusList != null and statusList.size >0">
-                and status in
-                <foreach collection="statusList" open="(" close=")" separator="," item="item">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="orgCodeList != null and orgCodeList.size >0">
-                and orgCode in
-                <foreach collection="orgCodeList" open="(" close=")" separator="," item="item">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="interfTypeList != null and interfTypeList.size >0">
-                and interfType in
-                <foreach collection="interfTypeList" open="(" close=")" separator="," item="item">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-    </select>
+    select *
+    from (<include refid="base_view"></include>) temp
+    <where>
+        <if test="createTimeStart != null and createTimeStart != ''">
+            DATE_FORMAT(createTime,'%Y-%m-%d') &gt;= #{createTimeStart}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''">
+           and DATE_FORMAT(createTime,'%Y-%m-%d') &lt;= #{createTimeEnd}
+        </if>
+        <if test="fileName != null and fileName != ''">
+            and fireName like concat_ws('','%',#{fileName},'%')
+        </if>
+        <if test="statusList != null and statusList.size >0">
+            and status in
+            <foreach collection="statusList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="orgCodeList != null and orgCodeList.size >0">
+            and orgCode in
+            <foreach collection="orgCodeList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="interfTypeList != null and interfTypeList.size >0">
+            and interfType in
+            <foreach collection="interfTypeList" open="(" close=")" separator="," item="item">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </where>
+  </select>
     <select id="selectInterfTypeSelects" parameterType="map" resultType="com.joyintech.framework.select.SelectOptionDto">
         select INTERF_ID id,REMARK text from CHB_INTERF_CONFIG
         <where>

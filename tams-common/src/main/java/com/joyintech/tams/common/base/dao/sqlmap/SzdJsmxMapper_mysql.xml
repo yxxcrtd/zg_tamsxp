@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SzdJsmxMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SzdJsmx" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="IMPORT_DATE" property="importDate" jdbcType="DATE" />
+        <result column="DATA_FILE" property="dataFile" jdbcType="VARCHAR" />
+        <result column="IS_SETTLE_TARGET" property="isSettleTarget" jdbcType="VARCHAR" />
+        <result column="CJBH" property="cjbh" jdbcType="VARCHAR" />
+        <result column="ZQZH" property="zqzh" jdbcType="VARCHAR" />
+        <result column="SCDM" property="scdm" jdbcType="VARCHAR" />
+        <result column="JLLX" property="jllx" jdbcType="VARCHAR" />
+        <result column="JYFS" property="jyfs" jdbcType="VARCHAR" />
+        <result column="JSFS" property="jsfs" jdbcType="VARCHAR" />
+        <result column="YWLX" property="ywlx" jdbcType="VARCHAR" />
+        <result column="QSBZ" property="qsbz" jdbcType="VARCHAR" />
+        <result column="GHLX" property="ghlx" jdbcType="VARCHAR" />
+        <result column="JSBH" property="jsbh" jdbcType="VARCHAR" />
+        <result column="SQBH" property="sqbh" jdbcType="VARCHAR" />
+        <result column="WTBH" property="wtbh" jdbcType="VARCHAR" />
+        <result column="JYRQ" property="jyrq" jdbcType="VARCHAR" />
+        <result column="QSRQ" property="qsrq" jdbcType="VARCHAR" />
+        <result column="JSRQ" property="jsrq" jdbcType="VARCHAR" />
+        <result column="QTRQ" property="qtrq" jdbcType="VARCHAR" />
+        <result column="WTSJ" property="wtsj" jdbcType="VARCHAR" />
+        <result column="CJSJ" property="cjsj" jdbcType="VARCHAR" />
+        <result column="XWH1" property="xwh1" jdbcType="VARCHAR" />
+        <result column="XWH2" property="xwh2" jdbcType="VARCHAR" />
+        <result column="XWHY" property="xwhy" jdbcType="VARCHAR" />
+        <result column="JSHY" property="jshy" jdbcType="VARCHAR" />
+        <result column="TGHY" property="tghy" jdbcType="VARCHAR" />
+        <result column="ZQDM1" property="zqdm1" jdbcType="VARCHAR" />
+        <result column="ZQDM2" property="zqdm2" jdbcType="VARCHAR" />
+        <result column="ZQLB" property="zqlb" jdbcType="VARCHAR" />
+        <result column="LTLX" property="ltlx" jdbcType="VARCHAR" />
+        <result column="QYLB" property="qylb" jdbcType="VARCHAR" />
+        <result column="GPNF" property="gpnf" jdbcType="VARCHAR" />
+        <result column="MMBZ" property="mmbz" jdbcType="VARCHAR" />
+        <result column="SL" property="sl" jdbcType="VARCHAR" />
+        <result column="CJSL" property="cjsl" jdbcType="VARCHAR" />
+        <result column="ZJZH" property="zjzh" jdbcType="VARCHAR" />
+        <result column="BZ" property="bz" jdbcType="VARCHAR" />
+        <result column="JG1" property="jg1" jdbcType="VARCHAR" />
+        <result column="JG2" property="jg2" jdbcType="VARCHAR" />
+        <result column="QSJE" property="qsje" jdbcType="VARCHAR" />
+        <result column="YHS" property="yhs" jdbcType="VARCHAR" />
+        <result column="JSF" property="jsf" jdbcType="VARCHAR" />
+        <result column="GHF" property="ghf" jdbcType="VARCHAR" />
+        <result column="ZGF" property="zgf" jdbcType="VARCHAR" />
+        <result column="SXF" property="sxf" jdbcType="VARCHAR" />
+        <result column="QTJE1" property="qtje1" jdbcType="VARCHAR" />
+        <result column="QTJE2" property="qtje2" jdbcType="VARCHAR" />
+        <result column="QTJE3" property="qtje3" jdbcType="VARCHAR" />
+        <result column="SJSF" property="sjsf" jdbcType="VARCHAR" />
+        <result column="JGDM" property="jgdm" jdbcType="VARCHAR" />
+        <result column="FJSM" property="fjsm" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, IMPORT_DATE IMPORT_DATE, DATA_FILE DATA_FILE, IS_SETTLE_TARGET IS_SETTLE_TARGET, 
+        CJBH CJBH, ZQZH ZQZH, SCDM SCDM, JLLX JLLX, JYFS JYFS, JSFS JSFS, YWLX YWLX, QSBZ QSBZ, 
+        GHLX GHLX, JSBH JSBH, SQBH SQBH, WTBH WTBH, JYRQ JYRQ, QSRQ QSRQ, JSRQ JSRQ, QTRQ QTRQ, 
+        WTSJ WTSJ, CJSJ CJSJ, XWH1 XWH1, XWH2 XWH2, XWHY XWHY, JSHY JSHY, TGHY TGHY, ZQDM1 ZQDM1, 
+        ZQDM2 ZQDM2, ZQLB ZQLB, LTLX LTLX, QYLB QYLB, GPNF GPNF, MMBZ MMBZ, SL SL, CJSL CJSL, 
+        ZJZH ZJZH, BZ BZ, JG1 JG1, JG2 JG2, QSJE QSJE, YHS YHS, JSF JSF, GHF GHF, ZGF ZGF, 
+        SXF SXF, QTJE1 QTJE1, QTJE2 QTJE2, QTJE3 QTJE3, SJSF SJSF, JGDM JGDM, FJSM FJSM, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdJsmxMapper_mysql.Base_Column_List" />
+        from SZD_JSMX
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdJsmxMapper_mysql.Base_Column_List" />
+        from SZD_JSMX
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SzdJsmxMapper_mysql.Base_Column_List" />
+        from SZD_JSMX
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from SZD_JSMX
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SzdJsmx" >
+        insert into SZD_JSMX (SEQNO, IMPORT_DATE, DATA_FILE, 
+            IS_SETTLE_TARGET, CJBH, ZQZH, 
+            SCDM, JLLX, JYFS, 
+            JSFS, YWLX, QSBZ, 
+            GHLX, JSBH, SQBH, 
+            WTBH, JYRQ, QSRQ, 
+            JSRQ, QTRQ, WTSJ, 
+            CJSJ, XWH1, XWH2, 
+            XWHY, JSHY, TGHY, 
+            ZQDM1, ZQDM2, ZQLB, 
+            LTLX, QYLB, GPNF, 
+            MMBZ, SL, CJSL, ZJZH, 
+            BZ, JG1, JG2, QSJE, 
+            YHS, JSF, GHF, ZGF, 
+            SXF, QTJE1, QTJE2, 
+            QTJE3, SJSF, JGDM, 
+            FJSM, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{importDate,jdbcType=DATE}, #{dataFile,jdbcType=VARCHAR}, 
+            #{isSettleTarget,jdbcType=VARCHAR}, #{cjbh,jdbcType=VARCHAR}, #{zqzh,jdbcType=VARCHAR}, 
+            #{scdm,jdbcType=VARCHAR}, #{jllx,jdbcType=VARCHAR}, #{jyfs,jdbcType=VARCHAR}, 
+            #{jsfs,jdbcType=VARCHAR}, #{ywlx,jdbcType=VARCHAR}, #{qsbz,jdbcType=VARCHAR}, 
+            #{ghlx,jdbcType=VARCHAR}, #{jsbh,jdbcType=VARCHAR}, #{sqbh,jdbcType=VARCHAR}, 
+            #{wtbh,jdbcType=VARCHAR}, #{jyrq,jdbcType=VARCHAR}, #{qsrq,jdbcType=VARCHAR}, 
+            #{jsrq,jdbcType=VARCHAR}, #{qtrq,jdbcType=VARCHAR}, #{wtsj,jdbcType=VARCHAR}, 
+            #{cjsj,jdbcType=VARCHAR}, #{xwh1,jdbcType=VARCHAR}, #{xwh2,jdbcType=VARCHAR}, 
+            #{xwhy,jdbcType=VARCHAR}, #{jshy,jdbcType=VARCHAR}, #{tghy,jdbcType=VARCHAR}, 
+            #{zqdm1,jdbcType=VARCHAR}, #{zqdm2,jdbcType=VARCHAR}, #{zqlb,jdbcType=VARCHAR}, 
+            #{ltlx,jdbcType=VARCHAR}, #{qylb,jdbcType=VARCHAR}, #{gpnf,jdbcType=VARCHAR}, 
+            #{mmbz,jdbcType=VARCHAR}, #{sl,jdbcType=VARCHAR}, #{cjsl,jdbcType=VARCHAR}, #{zjzh,jdbcType=VARCHAR}, 
+            #{bz,jdbcType=VARCHAR}, #{jg1,jdbcType=VARCHAR}, #{jg2,jdbcType=VARCHAR}, #{qsje,jdbcType=VARCHAR}, 
+            #{yhs,jdbcType=VARCHAR}, #{jsf,jdbcType=VARCHAR}, #{ghf,jdbcType=VARCHAR}, #{zgf,jdbcType=VARCHAR}, 
+            #{sxf,jdbcType=VARCHAR}, #{qtje1,jdbcType=VARCHAR}, #{qtje2,jdbcType=VARCHAR}, 
+            #{qtje3,jdbcType=VARCHAR}, #{sjsf,jdbcType=VARCHAR}, #{jgdm,jdbcType=VARCHAR}, 
+            #{fjsm,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SzdJsmx" >
+        insert into SZD_JSMX
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="importDate != null" >
+                IMPORT_DATE,
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE,
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET,
+            </if>
+            <if test="cjbh != null" >
+                CJBH,
+            </if>
+            <if test="zqzh != null" >
+                ZQZH,
+            </if>
+            <if test="scdm != null" >
+                SCDM,
+            </if>
+            <if test="jllx != null" >
+                JLLX,
+            </if>
+            <if test="jyfs != null" >
+                JYFS,
+            </if>
+            <if test="jsfs != null" >
+                JSFS,
+            </if>
+            <if test="ywlx != null" >
+                YWLX,
+            </if>
+            <if test="qsbz != null" >
+                QSBZ,
+            </if>
+            <if test="ghlx != null" >
+                GHLX,
+            </if>
+            <if test="jsbh != null" >
+                JSBH,
+            </if>
+            <if test="sqbh != null" >
+                SQBH,
+            </if>
+            <if test="wtbh != null" >
+                WTBH,
+            </if>
+            <if test="jyrq != null" >
+                JYRQ,
+            </if>
+            <if test="qsrq != null" >
+                QSRQ,
+            </if>
+            <if test="jsrq != null" >
+                JSRQ,
+            </if>
+            <if test="qtrq != null" >
+                QTRQ,
+            </if>
+            <if test="wtsj != null" >
+                WTSJ,
+            </if>
+            <if test="cjsj != null" >
+                CJSJ,
+            </if>
+            <if test="xwh1 != null" >
+                XWH1,
+            </if>
+            <if test="xwh2 != null" >
+                XWH2,
+            </if>
+            <if test="xwhy != null" >
+                XWHY,
+            </if>
+            <if test="jshy != null" >
+                JSHY,
+            </if>
+            <if test="tghy != null" >
+                TGHY,
+            </if>
+            <if test="zqdm1 != null" >
+                ZQDM1,
+            </if>
+            <if test="zqdm2 != null" >
+                ZQDM2,
+            </if>
+            <if test="zqlb != null" >
+                ZQLB,
+            </if>
+            <if test="ltlx != null" >
+                LTLX,
+            </if>
+            <if test="qylb != null" >
+                QYLB,
+            </if>
+            <if test="gpnf != null" >
+                GPNF,
+            </if>
+            <if test="mmbz != null" >
+                MMBZ,
+            </if>
+            <if test="sl != null" >
+                SL,
+            </if>
+            <if test="cjsl != null" >
+                CJSL,
+            </if>
+            <if test="zjzh != null" >
+                ZJZH,
+            </if>
+            <if test="bz != null" >
+                BZ,
+            </if>
+            <if test="jg1 != null" >
+                JG1,
+            </if>
+            <if test="jg2 != null" >
+                JG2,
+            </if>
+            <if test="qsje != null" >
+                QSJE,
+            </if>
+            <if test="yhs != null" >
+                YHS,
+            </if>
+            <if test="jsf != null" >
+                JSF,
+            </if>
+            <if test="ghf != null" >
+                GHF,
+            </if>
+            <if test="zgf != null" >
+                ZGF,
+            </if>
+            <if test="sxf != null" >
+                SXF,
+            </if>
+            <if test="qtje1 != null" >
+                QTJE1,
+            </if>
+            <if test="qtje2 != null" >
+                QTJE2,
+            </if>
+            <if test="qtje3 != null" >
+                QTJE3,
+            </if>
+            <if test="sjsf != null" >
+                SJSF,
+            </if>
+            <if test="jgdm != null" >
+                JGDM,
+            </if>
+            <if test="fjsm != null" >
+                FJSM,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="importDate != null" >
+                #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="cjbh != null" >
+                #{cjbh,jdbcType=VARCHAR},
+            </if>
+            <if test="zqzh != null" >
+                #{zqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="scdm != null" >
+                #{scdm,jdbcType=VARCHAR},
+            </if>
+            <if test="jllx != null" >
+                #{jllx,jdbcType=VARCHAR},
+            </if>
+            <if test="jyfs != null" >
+                #{jyfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jsfs != null" >
+                #{jsfs,jdbcType=VARCHAR},
+            </if>
+            <if test="ywlx != null" >
+                #{ywlx,jdbcType=VARCHAR},
+            </if>
+            <if test="qsbz != null" >
+                #{qsbz,jdbcType=VARCHAR},
+            </if>
+            <if test="ghlx != null" >
+                #{ghlx,jdbcType=VARCHAR},
+            </if>
+            <if test="jsbh != null" >
+                #{jsbh,jdbcType=VARCHAR},
+            </if>
+            <if test="sqbh != null" >
+                #{sqbh,jdbcType=VARCHAR},
+            </if>
+            <if test="wtbh != null" >
+                #{wtbh,jdbcType=VARCHAR},
+            </if>
+            <if test="jyrq != null" >
+                #{jyrq,jdbcType=VARCHAR},
+            </if>
+            <if test="qsrq != null" >
+                #{qsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jsrq != null" >
+                #{jsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="qtrq != null" >
+                #{qtrq,jdbcType=VARCHAR},
+            </if>
+            <if test="wtsj != null" >
+                #{wtsj,jdbcType=VARCHAR},
+            </if>
+            <if test="cjsj != null" >
+                #{cjsj,jdbcType=VARCHAR},
+            </if>
+            <if test="xwh1 != null" >
+                #{xwh1,jdbcType=VARCHAR},
+            </if>
+            <if test="xwh2 != null" >
+                #{xwh2,jdbcType=VARCHAR},
+            </if>
+            <if test="xwhy != null" >
+                #{xwhy,jdbcType=VARCHAR},
+            </if>
+            <if test="jshy != null" >
+                #{jshy,jdbcType=VARCHAR},
+            </if>
+            <if test="tghy != null" >
+                #{tghy,jdbcType=VARCHAR},
+            </if>
+            <if test="zqdm1 != null" >
+                #{zqdm1,jdbcType=VARCHAR},
+            </if>
+            <if test="zqdm2 != null" >
+                #{zqdm2,jdbcType=VARCHAR},
+            </if>
+            <if test="zqlb != null" >
+                #{zqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="ltlx != null" >
+                #{ltlx,jdbcType=VARCHAR},
+            </if>
+            <if test="qylb != null" >
+                #{qylb,jdbcType=VARCHAR},
+            </if>
+            <if test="gpnf != null" >
+                #{gpnf,jdbcType=VARCHAR},
+            </if>
+            <if test="mmbz != null" >
+                #{mmbz,jdbcType=VARCHAR},
+            </if>
+            <if test="sl != null" >
+                #{sl,jdbcType=VARCHAR},
+            </if>
+            <if test="cjsl != null" >
+                #{cjsl,jdbcType=VARCHAR},
+            </if>
+            <if test="zjzh != null" >
+                #{zjzh,jdbcType=VARCHAR},
+            </if>
+            <if test="bz != null" >
+                #{bz,jdbcType=VARCHAR},
+            </if>
+            <if test="jg1 != null" >
+                #{jg1,jdbcType=VARCHAR},
+            </if>
+            <if test="jg2 != null" >
+                #{jg2,jdbcType=VARCHAR},
+            </if>
+            <if test="qsje != null" >
+                #{qsje,jdbcType=VARCHAR},
+            </if>
+            <if test="yhs != null" >
+                #{yhs,jdbcType=VARCHAR},
+            </if>
+            <if test="jsf != null" >
+                #{jsf,jdbcType=VARCHAR},
+            </if>
+            <if test="ghf != null" >
+                #{ghf,jdbcType=VARCHAR},
+            </if>
+            <if test="zgf != null" >
+                #{zgf,jdbcType=VARCHAR},
+            </if>
+            <if test="sxf != null" >
+                #{sxf,jdbcType=VARCHAR},
+            </if>
+            <if test="qtje1 != null" >
+                #{qtje1,jdbcType=VARCHAR},
+            </if>
+            <if test="qtje2 != null" >
+                #{qtje2,jdbcType=VARCHAR},
+            </if>
+            <if test="qtje3 != null" >
+                #{qtje3,jdbcType=VARCHAR},
+            </if>
+            <if test="sjsf != null" >
+                #{sjsf,jdbcType=VARCHAR},
+            </if>
+            <if test="jgdm != null" >
+                #{jgdm,jdbcType=VARCHAR},
+            </if>
+            <if test="fjsm != null" >
+                #{fjsm,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SzdJsmx" >
+        insert into SZD_JSMX(SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, CJBH, ZQZH, 
+        SCDM, JLLX, JYFS, JSFS, YWLX, QSBZ, GHLX, JSBH, SQBH, WTBH, JYRQ, QSRQ, JSRQ, QTRQ, 
+        WTSJ, CJSJ, XWH1, XWH2, XWHY, JSHY, TGHY, ZQDM1, ZQDM2, ZQLB, LTLX, QYLB, GPNF, MMBZ, 
+        SL, CJSL, ZJZH, BZ, JG1, JG2, QSJE, YHS, JSF, GHF, ZGF, SXF, QTJE1, QTJE2, QTJE3, 
+        SJSF, JGDM, FJSM, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select SEQNO, IMPORT_DATE, DATA_FILE, IS_SETTLE_TARGET, CJBH, ZQZH, 
+            SCDM, JLLX, JYFS, JSFS, YWLX, QSBZ, GHLX, JSBH, SQBH, WTBH, JYRQ, QSRQ, JSRQ, QTRQ, 
+            WTSJ, CJSJ, XWH1, XWH2, XWHY, JSHY, TGHY, ZQDM1, ZQDM2, ZQLB, LTLX, QYLB, GPNF, MMBZ, 
+            SL, CJSL, ZJZH, BZ, JG1, JG2, QSJE, YHS, JSF, GHF, ZGF, SXF, QTJE1, QTJE2, QTJE3, 
+            SJSF, JGDM, FJSM, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from SZD_JSMX
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SzdJsmx" >
+        update SZD_JSMX
+        <set >
+            <if test="importDate != null" >
+                IMPORT_DATE = #{importDate,jdbcType=DATE},
+            </if>
+            <if test="dataFile != null" >
+                DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            </if>
+            <if test="isSettleTarget != null" >
+                IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            </if>
+            <if test="cjbh != null" >
+                CJBH = #{cjbh,jdbcType=VARCHAR},
+            </if>
+            <if test="zqzh != null" >
+                ZQZH = #{zqzh,jdbcType=VARCHAR},
+            </if>
+            <if test="scdm != null" >
+                SCDM = #{scdm,jdbcType=VARCHAR},
+            </if>
+            <if test="jllx != null" >
+                JLLX = #{jllx,jdbcType=VARCHAR},
+            </if>
+            <if test="jyfs != null" >
+                JYFS = #{jyfs,jdbcType=VARCHAR},
+            </if>
+            <if test="jsfs != null" >
+                JSFS = #{jsfs,jdbcType=VARCHAR},
+            </if>
+            <if test="ywlx != null" >
+                YWLX = #{ywlx,jdbcType=VARCHAR},
+            </if>
+            <if test="qsbz != null" >
+                QSBZ = #{qsbz,jdbcType=VARCHAR},
+            </if>
+            <if test="ghlx != null" >
+                GHLX = #{ghlx,jdbcType=VARCHAR},
+            </if>
+            <if test="jsbh != null" >
+                JSBH = #{jsbh,jdbcType=VARCHAR},
+            </if>
+            <if test="sqbh != null" >
+                SQBH = #{sqbh,jdbcType=VARCHAR},
+            </if>
+            <if test="wtbh != null" >
+                WTBH = #{wtbh,jdbcType=VARCHAR},
+            </if>
+            <if test="jyrq != null" >
+                JYRQ = #{jyrq,jdbcType=VARCHAR},
+            </if>
+            <if test="qsrq != null" >
+                QSRQ = #{qsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="jsrq != null" >
+                JSRQ = #{jsrq,jdbcType=VARCHAR},
+            </if>
+            <if test="qtrq != null" >
+                QTRQ = #{qtrq,jdbcType=VARCHAR},
+            </if>
+            <if test="wtsj != null" >
+                WTSJ = #{wtsj,jdbcType=VARCHAR},
+            </if>
+            <if test="cjsj != null" >
+                CJSJ = #{cjsj,jdbcType=VARCHAR},
+            </if>
+            <if test="xwh1 != null" >
+                XWH1 = #{xwh1,jdbcType=VARCHAR},
+            </if>
+            <if test="xwh2 != null" >
+                XWH2 = #{xwh2,jdbcType=VARCHAR},
+            </if>
+            <if test="xwhy != null" >
+                XWHY = #{xwhy,jdbcType=VARCHAR},
+            </if>
+            <if test="jshy != null" >
+                JSHY = #{jshy,jdbcType=VARCHAR},
+            </if>
+            <if test="tghy != null" >
+                TGHY = #{tghy,jdbcType=VARCHAR},
+            </if>
+            <if test="zqdm1 != null" >
+                ZQDM1 = #{zqdm1,jdbcType=VARCHAR},
+            </if>
+            <if test="zqdm2 != null" >
+                ZQDM2 = #{zqdm2,jdbcType=VARCHAR},
+            </if>
+            <if test="zqlb != null" >
+                ZQLB = #{zqlb,jdbcType=VARCHAR},
+            </if>
+            <if test="ltlx != null" >
+                LTLX = #{ltlx,jdbcType=VARCHAR},
+            </if>
+            <if test="qylb != null" >
+                QYLB = #{qylb,jdbcType=VARCHAR},
+            </if>
+            <if test="gpnf != null" >
+                GPNF = #{gpnf,jdbcType=VARCHAR},
+            </if>
+            <if test="mmbz != null" >
+                MMBZ = #{mmbz,jdbcType=VARCHAR},
+            </if>
+            <if test="sl != null" >
+                SL = #{sl,jdbcType=VARCHAR},
+            </if>
+            <if test="cjsl != null" >
+                CJSL = #{cjsl,jdbcType=VARCHAR},
+            </if>
+            <if test="zjzh != null" >
+                ZJZH = #{zjzh,jdbcType=VARCHAR},
+            </if>
+            <if test="bz != null" >
+                BZ = #{bz,jdbcType=VARCHAR},
+            </if>
+            <if test="jg1 != null" >
+                JG1 = #{jg1,jdbcType=VARCHAR},
+            </if>
+            <if test="jg2 != null" >
+                JG2 = #{jg2,jdbcType=VARCHAR},
+            </if>
+            <if test="qsje != null" >
+                QSJE = #{qsje,jdbcType=VARCHAR},
+            </if>
+            <if test="yhs != null" >
+                YHS = #{yhs,jdbcType=VARCHAR},
+            </if>
+            <if test="jsf != null" >
+                JSF = #{jsf,jdbcType=VARCHAR},
+            </if>
+            <if test="ghf != null" >
+                GHF = #{ghf,jdbcType=VARCHAR},
+            </if>
+            <if test="zgf != null" >
+                ZGF = #{zgf,jdbcType=VARCHAR},
+            </if>
+            <if test="sxf != null" >
+                SXF = #{sxf,jdbcType=VARCHAR},
+            </if>
+            <if test="qtje1 != null" >
+                QTJE1 = #{qtje1,jdbcType=VARCHAR},
+            </if>
+            <if test="qtje2 != null" >
+                QTJE2 = #{qtje2,jdbcType=VARCHAR},
+            </if>
+            <if test="qtje3 != null" >
+                QTJE3 = #{qtje3,jdbcType=VARCHAR},
+            </if>
+            <if test="sjsf != null" >
+                SJSF = #{sjsf,jdbcType=VARCHAR},
+            </if>
+            <if test="jgdm != null" >
+                JGDM = #{jgdm,jdbcType=VARCHAR},
+            </if>
+            <if test="fjsm != null" >
+                FJSM = #{fjsm,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SzdJsmx" >
+        update SZD_JSMX
+        set IMPORT_DATE = #{importDate,jdbcType=DATE},
+            DATA_FILE = #{dataFile,jdbcType=VARCHAR},
+            IS_SETTLE_TARGET = #{isSettleTarget,jdbcType=VARCHAR},
+            CJBH = #{cjbh,jdbcType=VARCHAR},
+            ZQZH = #{zqzh,jdbcType=VARCHAR},
+            SCDM = #{scdm,jdbcType=VARCHAR},
+            JLLX = #{jllx,jdbcType=VARCHAR},
+            JYFS = #{jyfs,jdbcType=VARCHAR},
+            JSFS = #{jsfs,jdbcType=VARCHAR},
+            YWLX = #{ywlx,jdbcType=VARCHAR},
+            QSBZ = #{qsbz,jdbcType=VARCHAR},
+            GHLX = #{ghlx,jdbcType=VARCHAR},
+            JSBH = #{jsbh,jdbcType=VARCHAR},
+            SQBH = #{sqbh,jdbcType=VARCHAR},
+            WTBH = #{wtbh,jdbcType=VARCHAR},
+            JYRQ = #{jyrq,jdbcType=VARCHAR},
+            QSRQ = #{qsrq,jdbcType=VARCHAR},
+            JSRQ = #{jsrq,jdbcType=VARCHAR},
+            QTRQ = #{qtrq,jdbcType=VARCHAR},
+            WTSJ = #{wtsj,jdbcType=VARCHAR},
+            CJSJ = #{cjsj,jdbcType=VARCHAR},
+            XWH1 = #{xwh1,jdbcType=VARCHAR},
+            XWH2 = #{xwh2,jdbcType=VARCHAR},
+            XWHY = #{xwhy,jdbcType=VARCHAR},
+            JSHY = #{jshy,jdbcType=VARCHAR},
+            TGHY = #{tghy,jdbcType=VARCHAR},
+            ZQDM1 = #{zqdm1,jdbcType=VARCHAR},
+            ZQDM2 = #{zqdm2,jdbcType=VARCHAR},
+            ZQLB = #{zqlb,jdbcType=VARCHAR},
+            LTLX = #{ltlx,jdbcType=VARCHAR},
+            QYLB = #{qylb,jdbcType=VARCHAR},
+            GPNF = #{gpnf,jdbcType=VARCHAR},
+            MMBZ = #{mmbz,jdbcType=VARCHAR},
+            SL = #{sl,jdbcType=VARCHAR},
+            CJSL = #{cjsl,jdbcType=VARCHAR},
+            ZJZH = #{zjzh,jdbcType=VARCHAR},
+            BZ = #{bz,jdbcType=VARCHAR},
+            JG1 = #{jg1,jdbcType=VARCHAR},
+            JG2 = #{jg2,jdbcType=VARCHAR},
+            QSJE = #{qsje,jdbcType=VARCHAR},
+            YHS = #{yhs,jdbcType=VARCHAR},
+            JSF = #{jsf,jdbcType=VARCHAR},
+            GHF = #{ghf,jdbcType=VARCHAR},
+            ZGF = #{zgf,jdbcType=VARCHAR},
+            SXF = #{sxf,jdbcType=VARCHAR},
+            QTJE1 = #{qtje1,jdbcType=VARCHAR},
+            QTJE2 = #{qtje2,jdbcType=VARCHAR},
+            QTJE3 = #{qtje3,jdbcType=VARCHAR},
+            SJSF = #{sjsf,jdbcType=VARCHAR},
+            JGDM = #{jgdm,jdbcType=VARCHAR},
+            FJSM = #{fjsm,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

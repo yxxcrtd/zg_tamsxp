@@ -32,7 +32,7 @@
 </sql>								
 <select id="searchPage"  parameterType="map"
 	resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
-		select * from
+		select a.* from
 		(
 		
 		SELECT
@@ -126,12 +126,12 @@
 				and upper(POS.PLAN_ASSET_ID) like CONCAT(CONCAT('%',upper(#{planAssetIdLike,jdbcType=VARCHAR})),'%')
 			</if>
 		</where>
-		) order by posDate,planAssetId
+		) a order by posDate,planAssetId
 	</select>
 
 
     <select id="queryExportListByKeys" resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
-		select * from
+		select a.* from
 		(<include refid="baseInfo"/>
 		<where>
 		   	<if test="registList!=null and registList.size()!=0">
@@ -152,12 +152,12 @@
 			 	</foreach>
 		   	</if>
 		</where>
-		)
+		) a
 	</select>
 	
 	
 	<select id="queryExportListByKeysEx" resultType="com.joyintech.tams.svreport.chb.botastpositionregist.dto.ChbBotAstPositionRegist001Dto">
-		select * from
+		select a.* from
 		(SELECT
 		
 			/***update by leipeng 20200628**/
@@ -216,7 +216,7 @@
 			 	</foreach>
 		   	</if>
 		</where>
-		)
+		) a
 	</select>
 	
 	    <!-- 接口报送更新并且更新 报送流水号-->

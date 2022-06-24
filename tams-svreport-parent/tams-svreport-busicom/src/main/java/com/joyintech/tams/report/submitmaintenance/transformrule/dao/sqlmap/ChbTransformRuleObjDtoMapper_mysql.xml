@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.submitmaintenance.transformrule.dao.ChbTransformRuleObjDtoMapper_mysql">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto">
+        <id column="SEQNO" jdbcType="CHAR" property="seqno" />
+        <result column="OBJ_TABLE_ID" jdbcType="VARCHAR" property="objTableId" />
+        <result column="OBJ_TABLE_FILED" jdbcType="VARCHAR" property="objTableFiled" />
+        <result column="TRANS_TYPE" jdbcType="CHAR" property="transType" />
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser" />
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="CREATE_DEPT" jdbcType="VARCHAR" property="createDept" />
+        <result column="INFO_PROPERTY" jdbcType="VARCHAR" property="infoProperty" />
+        <result column="SUB_PROPERTY" jdbcType="VARCHAR" property="subProperty" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    SEQNO, OBJ_TABLE_ID, OBJ_TABLE_FILED, TRANS_TYPE, UPDATE_USER, UPDATE_TIME, CREATE_USER,
+    CREATE_TIME, CREATE_DEPT, INFO_PROPERTY, SUB_PROPERTY
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_TRANSFORM_RULE_OBJ
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from CHB_TRANSFORM_RULE_OBJ
+    where SEQNO = #{seqno,jdbcType=CHAR}
+  </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto">
+    insert into CHB_TRANSFORM_RULE_OBJ (SEQNO, OBJ_TABLE_ID, OBJ_TABLE_FILED,
+      TRANS_TYPE, UPDATE_USER, UPDATE_TIME,
+      CREATE_USER, CREATE_TIME, CREATE_DEPT,
+      INFO_PROPERTY, SUB_PROPERTY)
+    values (#{seqno,jdbcType=CHAR}, #{objTableId,jdbcType=VARCHAR}, #{objTableFiled,jdbcType=VARCHAR},
+      #{transType,jdbcType=CHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR},
+      #{infoProperty,jdbcType=VARCHAR}, #{subProperty,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto">
+        insert into CHB_TRANSFORM_RULE_OBJ
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seqno != null">
+                SEQNO,
+            </if>
+            <if test="objTableId != null">
+                OBJ_TABLE_ID,
+            </if>
+            <if test="objTableFiled != null">
+                OBJ_TABLE_FILED,
+            </if>
+            <if test="transType != null">
+                TRANS_TYPE,
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null">
+                CREATE_USER,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT,
+            </if>
+            <if test="infoProperty != null">
+                INFO_PROPERTY,
+            </if>
+            <if test="subProperty != null">
+                SUB_PROPERTY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seqno != null">
+                #{seqno,jdbcType=CHAR},
+            </if>
+            <if test="objTableId != null">
+                #{objTableId,jdbcType=VARCHAR},
+            </if>
+            <if test="objTableFiled != null">
+                #{objTableFiled,jdbcType=VARCHAR},
+            </if>
+            <if test="transType != null">
+                #{transType,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null">
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="infoProperty != null">
+                #{infoProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="subProperty != null">
+                #{subProperty,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto">
+        update CHB_TRANSFORM_RULE_OBJ
+        <set>
+            <if test="objTableId != null">
+                OBJ_TABLE_ID = #{objTableId,jdbcType=VARCHAR},
+            </if>
+            <if test="objTableFiled != null">
+                OBJ_TABLE_FILED = #{objTableFiled,jdbcType=VARCHAR},
+            </if>
+            <if test="transType != null">
+                TRANS_TYPE = #{transType,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null">
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                CREATE_USER = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null">
+                CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="infoProperty != null">
+                INFO_PROPERTY = #{infoProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="subProperty != null">
+                SUB_PROPERTY = #{subProperty,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto">
+    update CHB_TRANSFORM_RULE_OBJ
+    set OBJ_TABLE_ID = #{objTableId,jdbcType=VARCHAR},
+      OBJ_TABLE_FILED = #{objTableFiled,jdbcType=VARCHAR},
+      TRANS_TYPE = #{transType,jdbcType=CHAR},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      INFO_PROPERTY = #{infoProperty,jdbcType=VARCHAR},
+      SUB_PROPERTY = #{subProperty,jdbcType=VARCHAR}
+    where SEQNO = #{seqno,jdbcType=CHAR}
+  </update>
+    <select id="selectAllDataByTableId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_TRANSFORM_RULE_OBJ
+        where OBJ_TABLE_ID = #{objTableId,jdbcType=VARCHAR}
+    </select>
+</mapper>

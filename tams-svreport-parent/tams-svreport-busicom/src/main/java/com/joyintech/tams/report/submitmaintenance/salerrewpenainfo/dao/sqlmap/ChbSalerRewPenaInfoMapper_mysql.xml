@@ -47,7 +47,7 @@
 
 <!--    分页查询-->
     <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
-        SELECT *
+        SELECT A.*
         FROM (
         select
         'erro'                    as erroOrInfo,
@@ -65,7 +65,7 @@
         null                     as salerComplainResult,
         SALER_COMPLAIN_DATE       as salerComplainDate,
         'A'                       as dataStatus,
-        to_char(ERR_MSG)          as errMsg
+        ERR_MSG          as errMsg
         from CHB_SALER_REW_PENA_ERRODATA
         where 1=1
         <if test="salerInsNo != null and salerInsNo != ''">
@@ -78,16 +78,16 @@
             and SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
         </if>
 
         UNION ALL
@@ -121,18 +121,18 @@
             and SALER_REW_PENA_INST = #{salerRewPenaInst,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartStart != null and searchSalerRewPenaStartStart != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[>=]]> #{searchSalerRewPenaStartStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerRewPenaStartEnd != null and searchSalerRewPenaStartEnd != ''">
-            and  /*to_char(SALER_REW_PENA_START,'yyyy-MM-dd')*/DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_REW_PENA_START,'%Y-%m-%d') <![CDATA[<=]]> #{searchSalerRewPenaStartEnd,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateStart != null and searchSalerComplainDateStart != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[>=]]> #{searchSalerComplainDateStart,jdbcType=VARCHAR}
         </if>
         <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
-            and  /*to_char(SALER_COMPLAIN_DATE,'yyyy-MM-dd')*/ DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
+            and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
         </if>
-        ) ORDER BY dataStatus DESC
+        ) A ORDER BY A.dataStatus DESC
     </select>
 
     <!--	查询中债银行机构代码-->
@@ -219,6 +219,7 @@
                 and (SALER_INS_NO like concat(concat('%', #{search}),'%')
                     or SALER_NAME like concat(concat('%', #{search}),'%'))
             </if>
+        and STATUS = 'E'
     </select>
 
     <select id="checkSalerInsNoImport" resultType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
@@ -253,9 +254,9 @@
             #{salerRewPenaInst,jdbcType=VARCHAR}, #{salerRewPenaInstName,jdbcType=VARCHAR}, 
             #{salerRewPenaStart,jdbcType=DATE}, #{salerRewPenaEnd,jdbcType=DATE}, #{salerComplainDetail,jdbcType=VARCHAR}, 
             #{salerComplainResult,jdbcType=VARCHAR}, #{salerComplainDate,jdbcType=DATE}, 
-            #{status,jdbcType=VARCHAR}, sysdate,#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-            #{createUser,jdbcType=VARCHAR}, sysdate, #{updateUser,jdbcType=VARCHAR},
-            sysdate)
+            #{status,jdbcType=VARCHAR}, now(),#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, now(), #{updateUser,jdbcType=VARCHAR},
+            now())
     </insert>
 
     <insert id="insertSelective" parameterType="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto" >
@@ -441,8 +442,8 @@
             <if test="status != null" >
                 STATUS = #{status,jdbcType=VARCHAR},
             </if>
-                DATA_DATE = sysdate,
-                UPDATE_TIME = sysdate,
+                DATA_DATE = now(),
+                UPDATE_TIME = now(),
         </set>
         where SALER_REW_PENA_NO = #{salerRewPenaNo,jdbcType=VARCHAR}
     </update>
@@ -496,7 +497,7 @@
                 AND	SALER_INS_NO  like concat('%',concat(#{salerInsNo,jdbcType=VARCHAR},'%'))
             </if>
         </where>
-        )
+        ) T
     </select>
 
     <select id="checkSalerInsNo" resultType="integer">

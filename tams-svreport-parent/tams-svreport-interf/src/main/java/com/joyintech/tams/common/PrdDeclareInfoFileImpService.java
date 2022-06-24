@@ -81,7 +81,7 @@ public class PrdDeclareInfoFileImpService extends AbstractFileImpService{
             }
             @SuppressWarnings("unchecked")
             List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
-            success = chbProdDeclareFileImpService.importDB(dataList,interfFile, currentDate);
+            success = chbProdDeclareFileImpService.importDB(null,dataList,interfFile, currentDate);
             interfFile.setMoveRemovePath(success);
             chbProdDeclareFileImpService.clearFile(interfFile);
         }

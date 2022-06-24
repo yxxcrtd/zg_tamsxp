@@ -46,7 +46,7 @@ public  class DisCalendarManagementService extends FileImpService {
     @Autowired
 	private DisCalendarManagementMapper disCalendarManagementMapper;
 
-	public String saveData(List<Map<String, String>> listData,String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> listData,String saveFlag,String dataSource) {
         if (StringUtil.isEmptyList(listData)) {
             logger.info("saveData方法参数listData为空。");
             return "success";
@@ -55,7 +55,7 @@ public  class DisCalendarManagementService extends FileImpService {
         DisCalendarManagement dto = null;
         List<DisCalendarManagement> dtoList = new ArrayList<DisCalendarManagement>();
         // modify by convertMapToEntity yangxianjiu 2022-01-19 start
-        dtoList = (List<DisCalendarManagement>) convertMapToEntity(listData,DisCalendarManagement.class);
+        dtoList = (List<DisCalendarManagement>) convertMapToEntity(listData,DisCalendarManagement.class, dataSource);
         // modify by convertMapToEntity yangxianjiu 2022-01-19 end
 //        for(Map<String, String> data : listData){
 //            //将map转换为dto

@@ -52,7 +52,7 @@ public class ChbDeadlineUtil {
         }else{
             date = DateUtil.now();
         }
-        String key = DateUtil.format(date)+ "|" + reportCode ;
+        String key = DateUtil.format(date)+ "|" + reportCode +"|"+type;
         if(map!= null&&CollectionUtils.isNotEmpty(map.get(key))){
             return map.get(key);
         }
@@ -86,7 +86,7 @@ public class ChbDeadlineUtil {
         else{
             date = DateUtil.now();
         }
-        String key = DateUtil.format(date)+ "|" + reportCode ;
+        String key = DateUtil.format(date)+ "|" + reportCode +"|"+type;
         if(map!= null&&CollectionUtils.isNotEmpty(map.get(key))){
             return map.get(key);
         }

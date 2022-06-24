@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.common.dao.UserTabColumnsMapper">
+
+    <!-- 查询sql -->
+    <select id="selectTabColumns" resultType="com.joyintech.tams.svreport.chb.common.dto.TabColumnsDto">
+        select TABLE_NAME  tableName,
+               COLUMN_NAME columnName,
+               DATA_TYPE   dataType,
+               CHAR_LENGTH length,
+               NULLABLE    nullAble
+        from USER_TAB_COLUMNS
+        where TABLE_NAME = #{tableName}
+    </select>
+</mapper>

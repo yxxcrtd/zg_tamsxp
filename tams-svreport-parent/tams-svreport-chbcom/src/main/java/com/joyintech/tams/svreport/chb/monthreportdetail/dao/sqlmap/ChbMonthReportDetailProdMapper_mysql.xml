@@ -57,7 +57,8 @@
 			  P.TERMDAYS term,
 			  P.termtype,
 			  b.is_transfer isTransfer,
-			  decode(b.profit_type,'03','02','01') isBreakeven,
+			  case   b.profit_type when '03' then '02' else '01' end
+			  isBreakeven,
 			  ifnull(b.is_fhxgcp,'01') isFhxgcp,
 			  B.exc_fin_sector excFinSector,
 	          case when instr(cpdi.prd_spec_property ,'01')>0 then '01'
@@ -65,7 +66,8 @@
 			  p.dirtyamtsum,
 			  p.cleanamtsum,
 			  CASE WHEN DATE_FORMAT(B.VDATE,'%Y%m') = P.TERM then '01' else '02' end isThisTrem,
-			  DECODE(P.DURATIONFLAG,'02','02','01')  isEndTrem,
+	          case  P.DURATIONFLAG when '02' then '02' else '01' end
+	          isEndTrem,
 			  P.ENDAMTSUM_OTH endamtsumOth,
 			  P.PAYAMTSUM payamtsum,
 			  P.CUSTOMERAMT customeramt,

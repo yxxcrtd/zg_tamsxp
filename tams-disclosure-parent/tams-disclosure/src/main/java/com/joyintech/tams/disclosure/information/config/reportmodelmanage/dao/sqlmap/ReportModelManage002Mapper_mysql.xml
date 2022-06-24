@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.information.config.reportmodelmanage.dao.ReportModelManage002Mapper_mysql">
+
+    <select id="getDataSource"  resultType="java.lang.String">
+	    SELECT DISTINCT DATASOURCE FROM rep_reportinfo
+	</select>
+    <select id="getCreateWay"  resultType="java.lang.String">
+	    SELECT DISTINCT GENERATOR FROM rep_reportinfo
+	</select>
+    <select id="getReportWarehouse"  resultType="java.lang.String">
+	    SELECT DISTINCT REPOSITORY FROM rep_reportinfo
+	</select>
+    <select id="findParamPage"  resultType="java.lang.String">
+	    SELECT REPORTPARAMS FROM rep_reportinfo where Id=#{repId,jdbcType=VARCHAR}
+	</select>
+    <select id="getReportModelManage002Dto" resultType="com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportModelManage002Dto">
+		select Id repId,REPORTDESC reportDesc, FOLDER folder from rep_reportinfo where ID=#{code,jdbcType=VARCHAR}
+	</select>
+    <select id="selectRepIdAndUri" resultType="java.lang.Integer">
+		select count(*) from rep_reportinfo where URI=#{fileName,jdbcType=VARCHAR}
+	</select>
+    <select id="setId" resultType="java.lang.String">
+		select max(Id)+1 from rep_reportinfo
+	</select>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportModelManage002Dto" >
+        insert into rep_reportinfo (ID, REPORTID, URI,
+            FOLDER, REPOSITORY, REPORTDESC,  DATASOURCE,
+            GENERATOR, USERNAME,USERPWD,REPORTPARAMS,
+            CREATE_DEPT,CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{keyId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+            #{folder,jdbcType=VARCHAR}, #{reportWarehouse,jdbcType=VARCHAR}, #{reportDesc,jdbcType=VARCHAR},
+            #{dataSource,jdbcType=VARCHAR}, #{createWay,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+            #{passWord,jdbcType=VARCHAR},#{reportParams,jdbcType=VARCHAR},  #{createDept,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <update id="update" parameterType="com.joyintech.tams.disclosure.information.config.reportmodelmanage.dto.ReportModelManage002Dto" >
+        update rep_reportinfo
+        set
+        <if test="fileName != null and fileName != ''" >
+            REPORTID = #{fileName,jdbcType=VARCHAR},
+            URI = #{fileName,jdbcType=VARCHAR},
+        </if>
+        REPORTDESC = #{reportDesc,jdbcType=VARCHAR},
+        FOLDER = #{folder,jdbcType=VARCHAR},
+        REPORTPARAMS = #{reportParams,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where Id = #{repId,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteModle" parameterType="java.util.Map">
+    	delete from rep_reportinfo where Id=#{keyId,jdbcType=TIMESTAMP}
+    </delete>
+</mapper>

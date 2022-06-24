@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.report.common.dao.ChbBaseCommonMapper_mysql" >
+    <select id="selectAllBooksets" resultType="String">
+        select PROD_ID
+        from CHB_PRD_BASEINFO
+    </select>
+
+    <select id="findProductByIds" resultType="com.joyintech.framework.base.dto.Product">
+        select
+        PROD_ID prodId,
+        PROD_NAME prodName
+        from CHB_PRD_BASEINFO
+        where
+        1 = 1
+        <if test="prodGroupSeqNos != null">
+            AND PROD_ID IN
+            <foreach collection="prodGroupSeqNos" item="item" open="( " close=" )" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findProductByName" resultType="com.joyintech.framework.base.dto.Product">
+        select
+        PROD_ID prodId,
+        PROD_NAME prodName
+        from CHB_PRD_BASEINFO
+        where
+        1 = 1
+        <if test="notInProductIds != null and notInProductIds.size() > 0">
+            AND PROD_ID NOT IN
+            <foreach collection="notInProductIds" item="item" open="( " close=" )" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="prodName != null and prodName != ''">
+            AND ( PROD_NAME like concat('%', #{prodName},'%') or PROD_ID like concat('%', #{prodName},'%'))
+        </if>
+    </select>
+</mapper>

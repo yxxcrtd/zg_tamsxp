@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.errodata.dao.ChbPrdBaseinfoErrodataDao">
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.errodata.dto.ChbPrdBaseinfoErrodataWithBLOBsDto" >
+        <result column="DATAUUID" property="datauuid" jdbcType="CHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="PROD_INS_ID" property="prodInsId" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_TYPE" property="customerType" jdbcType="VARCHAR" />
+        <result column="ISSUING_STATUS" property="issuingStatus" jdbcType="VARCHAR" />
+        <result column="RAISE_VDATE" property="raiseVdate" jdbcType="DATE" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ORG_DATA" property="orgData" jdbcType="CLOB" />
+        <result column="ERR_MSG" property="errMsg" jdbcType="CLOB" />
+    </resultMap>
+
+    <delete id="deleteByPrimaryKey">
+        delete from CHB_PRD_BASEINFO_ERRODATA where DATAUUID = #{produuid}
+    </delete>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select * from CHB_PRD_BASEINFO_ERRODATA where DATAUUID = #{produuid}
+    </select>
+</mapper>

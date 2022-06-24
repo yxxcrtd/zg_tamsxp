@@ -10,6 +10,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 
 /**
  * 描述:PBC_PROD_RAISING_SUB表的实体类
@@ -937,7 +938,15 @@ public class PbcProdRaiseSub extends BaseEntity{
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
-	
+
+    public String getStatusDateStr(){
+        return null !=statusDate? DateUtil.formatDateTime(statusDate):null;
+    }
+    public String getSubmitTimeStr(){
+        return null !=submitTime?DateUtil.formatDateTime(submitTime):null;
+    }
+    public String getPbcSubmitDeadlineStr(){
+        return null !=pbcSubmitDeadline?DateUtil.format(pbcSubmitDeadline):null;
+    }
 	
 }

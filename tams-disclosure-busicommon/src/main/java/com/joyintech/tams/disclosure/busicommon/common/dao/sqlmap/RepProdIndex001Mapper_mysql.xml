@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.common.dao.RepProdIndex001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.busicommon.common.dto.RepProdIndex" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_ABBR" property="prodAbbr" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+        <result column="ISSUE_TYPE_Z" property="issueTypeZ" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="DATE" />
+        <result column="CAPITAL" property="capital" jdbcType="DECIMAL" />
+        <result column="PROFIT_NO" property="profitNo" jdbcType="DECIMAL" />
+        <result column="PROFIT_YES" property="profitYes" jdbcType="DECIMAL" />
+        <result column="ASSET_TOTAL_COST" property="assetTotalCost" jdbcType="DECIMAL" />
+        <result column="ASSET_TOTAL_MARKET" property="assetTotalMarket" jdbcType="DECIMAL" />
+        <result column="DEBT_TOTAL" property="debtTotal" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_COST" property="assetValueCost" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE_MARKET" property="assetValueMarket" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE" property="unitValue" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_T" property="unitValueT" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_Y" property="unitValueY" jdbcType="DECIMAL" />
+        <result column="BOUNUS_VALUE" property="bounusValue" jdbcType="DECIMAL" />
+        <result column="DEVIATION_AMT" property="deviationAmt" jdbcType="DECIMAL" />
+        <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
+        <result column="PROFIT_TDY" property="profitTdy" jdbcType="DECIMAL" />
+        <result column="PROFIT_TOTAL" property="profitTotal" jdbcType="DECIMAL" />
+        <result column="W_YIELD" property="wYield" jdbcType="DECIMAL" />
+        <result column="W_YIELD_YEAR" property="wYieldYear" jdbcType="DECIMAL" />
+        <result column="W_YIELD_TOTAL" property="wYieldTotal" jdbcType="DECIMAL" />
+        <result column="YIELD_TDY" property="yieldTdy" jdbcType="DECIMAL" />
+        <result column="YIELD_7" property="yield7" jdbcType="DECIMAL" />
+        <result column="YIELD_TOTAL" property="yieldTotal" jdbcType="DECIMAL" />
+        <result column="YIELD_E" property="yieldE" jdbcType="DECIMAL" />
+        <result column="AVERAGE_MDATE" property="averageMdate" jdbcType="DECIMAL" />
+        <result column="SURPLUS_TERM" property="surplusTerm" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT_YES" property="profitCurrentYes" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT_NO" property="profitCurrentNo" jdbcType="DECIMAL" />
+        <result column="PROFIT_CURRENT" property="profitCurrent" jdbcType="DECIMAL" />
+        <result column="PROFIT_TDY_ABLE" property="profitTdyAble" jdbcType="DECIMAL" />
+        <result column="PROD_PROFIT_TDY_ABLE" property="prodProfitTdyAble" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TDY_YIELD" property="netvalueTdyYield" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TOTAL_YIELD" property="netvalueTotalYield" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TDY_INCRE" property="netvalueTdyIncre" jdbcType="DECIMAL" />
+        <result column="NETVALUE_TOTAL_INCRE" property="netvalueTotalIncre" jdbcType="DECIMAL" />
+        <result column="AVG_SURPLUS_TIME" property="avgSurplusTime" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, BOOKSET_ID BOOKSET_ID, PROD_ID PROD_ID, PROD_ABBR PROD_ABBR, PROD_NAME PROD_NAME,
+        ISSUE_TYPE ISSUE_TYPE, ISSUE_TYPE_Z ISSUE_TYPE_Z, VALUE_DATE VALUE_DATE, CAPITAL CAPITAL,
+        PROFIT_NO PROFIT_NO, PROFIT_YES PROFIT_YES, ASSET_TOTAL_COST ASSET_TOTAL_COST, ASSET_TOTAL_MARKET ASSET_TOTAL_MARKET,
+        DEBT_TOTAL DEBT_TOTAL, ASSET_VALUE_COST ASSET_VALUE_COST, ASSET_VALUE_MARKET ASSET_VALUE_MARKET,
+        UNIT_VALUE UNIT_VALUE, UNIT_VALUE_T UNIT_VALUE_T, UNIT_VALUE_Y UNIT_VALUE_Y, BOUNUS_VALUE BOUNUS_VALUE,
+        DEVIATION_AMT DEVIATION_AMT, DEVIATION DEVIATION, PROFIT_TDY PROFIT_TDY, PROFIT_TOTAL PROFIT_TOTAL,
+        W_YIELD W_YIELD, W_YIELD_YEAR W_YIELD_YEAR, W_YIELD_TOTAL W_YIELD_TOTAL, YIELD_TDY YIELD_TDY,
+        YIELD_7 YIELD_7, YIELD_TOTAL YIELD_TOTAL, YIELD_E YIELD_E, AVERAGE_MDATE AVERAGE_MDATE,
+        SURPLUS_TERM SURPLUS_TERM, PROFIT_CURRENT_YES PROFIT_CURRENT_YES, PROFIT_CURRENT_NO PROFIT_CURRENT_NO,
+        PROFIT_CURRENT PROFIT_CURRENT, PROFIT_TDY_ABLE PROFIT_TDY_ABLE, PROD_PROFIT_TDY_ABLE PROD_PROFIT_TDY_ABLE,
+        NETVALUE_TDY_YIELD NETVALUE_TDY_YIELD, NETVALUE_TOTAL_YIELD NETVALUE_TOTAL_YIELD,
+        NETVALUE_TDY_INCRE NETVALUE_TDY_INCRE, NETVALUE_TOTAL_INCRE NETVALUE_TOTAL_INCRE,
+        AVG_SURPLUS_TIME AVG_SURPLUS_TIME, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.RepProdIndex" >
+        insert into REP_PROD_INDEX (SEQ_NO, PROD_ID,ADAPTER_ID,
+             VALUE_DATE, CAPITAL,
+            PROFIT_NO, PROFIT_YES, ASSET_TOTAL_COST,
+            ASSET_TOTAL_MARKET, DEBT_TOTAL, ASSET_VALUE_COST,
+            ASSET_VALUE_MARKET, UNIT_VALUE, UNIT_VALUE_T,
+            UNIT_VALUE_Y, BOUNUS_VALUE, DEVIATION_AMT,
+            DEVIATION, PROFIT_TDY, PROFIT_TOTAL,
+            W_YIELD, W_YIELD_YEAR, W_YIELD_TOTAL,
+            YIELD_TDY, YIELD_7, YIELD_TOTAL,
+            YIELD_E, AVERAGE_MDATE, SURPLUS_TERM,
+            PROFIT_CURRENT_YES, PROFIT_CURRENT_NO, PROFIT_CURRENT,
+            PROFIT_TDY_ABLE, PROD_PROFIT_TDY_ABLE, NETVALUE_TDY_YIELD,
+            NETVALUE_TOTAL_YIELD, NETVALUE_TDY_INCRE,
+            NETVALUE_TOTAL_INCRE, AVG_SURPLUS_TIME, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR},  #{prodId,jdbcType=VARCHAR},
+              #{adpaterId,jdbcType=VARCHAR},
+             #{valueDate,jdbcType=DATE}, #{capital,jdbcType=DECIMAL},
+            #{profitNo,jdbcType=DECIMAL}, #{profitYes,jdbcType=DECIMAL}, #{assetTotalCost,jdbcType=DECIMAL},
+            #{assetTotalMarket,jdbcType=DECIMAL}, #{debtTotal,jdbcType=DECIMAL}, #{assetValueCost,jdbcType=DECIMAL},
+            #{assetValueMarket,jdbcType=DECIMAL}, #{unitValue,jdbcType=DECIMAL}, #{unitValueT,jdbcType=DECIMAL},
+            #{unitValueY,jdbcType=DECIMAL}, #{bounusValue,jdbcType=DECIMAL}, #{deviationAmt,jdbcType=DECIMAL},
+            #{deviation,jdbcType=DECIMAL}, #{profitTdy,jdbcType=DECIMAL}, #{profitTotal,jdbcType=DECIMAL},
+            #{wYield,jdbcType=DECIMAL}, #{wYieldYear,jdbcType=DECIMAL}, #{wYieldTotal,jdbcType=DECIMAL},
+            #{yieldTdy,jdbcType=DECIMAL}, #{yield7,jdbcType=DECIMAL}, #{yieldTotal,jdbcType=DECIMAL},
+            #{yieldE,jdbcType=DECIMAL}, #{averageMdate,jdbcType=DECIMAL}, #{surplusTerm,jdbcType=DECIMAL},
+            #{profitCurrentYes,jdbcType=DECIMAL}, #{profitCurrentNo,jdbcType=DECIMAL}, #{profitCurrent,jdbcType=DECIMAL},
+            #{profitTdyAble,jdbcType=DECIMAL}, #{prodProfitTdyAble,jdbcType=DECIMAL}, #{netvalueTdyYield,jdbcType=DECIMAL},
+            #{netvalueTotalYield,jdbcType=DECIMAL}, #{netvalueTdyIncre,jdbcType=DECIMAL},
+            #{netvalueTotalIncre,jdbcType=DECIMAL}, #{avgSurplusTime,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+</mapper>

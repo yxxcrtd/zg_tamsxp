@@ -203,16 +203,18 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		int index = 0;
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
 			File file;
-			if(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI.equals(pbcDataFile.getFilecode())){
-				Map<String,Object> map = new HashMap<>();
-				index ++;
-				//碰到PPI类型文件重新组装
-				map.put("index",String.valueOf(index));
-				pbcClassicsDataFileHelper.setSysSeqService(SpringContextUtil.getBean(SysSeqService.class));
-				file = new SafelyFile(pbcClassicsDataFileNewService.genDataFile(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI,pbcDataFile.getFileid(),new Date(),map));
-			}else{
+			//delete by wangyaning 20220511 GDLCJGBS-561 start
+//			if(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI.equals(pbcDataFile.getFilecode())){
+//				Map<String,Object> map = new HashMap<>();
+//				index ++;
+//				//碰到PPI类型文件重新组装
+//				map.put("index",String.valueOf(index));
+//				pbcClassicsDataFileHelper.setSysSeqService(SpringContextUtil.getBean(SysSeqService.class));
+//				file = new SafelyFile(pbcClassicsDataFileNewService.genDataFile(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI,pbcDataFile.getFileid(),new Date(),map));
+//			}else{
 				file = new SafelyFile(pbcDataFile.getFilepath());
-			}
+//			}
+			//delete by wangyaning 20220511 GDLCJGBS-561 end
 			sourceFiles.add(file);
 		}
 		// 只有一个文件,直接导出,且不能删除源文件

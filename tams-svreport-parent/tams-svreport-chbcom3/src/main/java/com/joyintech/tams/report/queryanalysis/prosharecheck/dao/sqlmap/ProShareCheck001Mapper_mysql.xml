@@ -3,71 +3,71 @@
 <mapper namespace="com.joyintech.tams.report.queryanalysis.prosharecheck.dao.ProShareCheck001Mapper_mysql">
 	<select id="searchPage" resultType="com.joyintech.tams.report.queryanalysis.prosharecheck.dto.ProShareCheck001Dto">
 		select r.* ,
-		case
-		when r.CHECKRESTATUS= '01' then
-		'有偏差'
-		else '无偏差'
-		end CHECKRES/*检查结果*/
+			case
+			when r.CHECKRESTATUS= '01' then
+			'有偏差'
+			else '无偏差'
+			end CHECKRES/*检查结果*/
 		from (
-		select todayData.HOLD_DATE holdDate, /*查询日期*/
-		case
-		when todayData.QTY &lt;&gt;(ifnull(todayDataDetail.shares,0) + ifnull(lastDayData.QTY, 0))
-		then '01'
-		else '02'
-		end CHECKRESTATUS,/*检查结果*/
-		todayData.PRODID prodId, /*产品代码*/
-		P.PRODNAME prodName, /*产品名称*/
-		P.REG_CODE prdRegistCode, /*产品登记编码*/
-		todayData.CCY ccy, /*币种*/
-		todayData.QTY qty, /*当日持有份额*/
-		ifnull(lastDayData.QTY, 0) lastQty, /*前一日持有份额*/
-		todayDataDetail.shares changeQty/*当日明细变动份额*/
-		from (SELECT A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY,SUM(A.QTY) QTY
-		FROM CHB_INVESTHOLD_INFO A
-		where A.STATUS != 'D'
-		<if test="date!=null and date!=''">
-			AND DATE_FORMAT(A.HOLD_DATE,'%Y-%m-%d') =
-			#{date,jdbcType=VARCHAR}
-		</if>
-		<if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
-			<foreach collection="prdRegistCodeList" item="item"
-					 open="and A.PRD_REGIST_CODE in(" separator="," close=")">
-				#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		<if test="prdCodeList != null  and prdCodeList.size()>0">
-			<foreach collection="prdCodeList" item="item" open="and PRODID in("
-					 separator="," close=")">
-				#{item,jdbcType=VARCHAR}
-			</foreach>
-		</if>
-		GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY) todayData
-		left join
-		(SELECT A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY,SUM(A.QTY) QTY
-		FROM CHB_INVESTHOLD_INFO A
-		where A.STATUS != 'D'
-		GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY) lastDayData
-		on todayData.REGIST_BANK_CODE = lastDayData.REGIST_BANK_CODE
-		and todayData.PRODID = lastDayData.PRODID
-		AND todayData.HOLD_DATE - 1 = lastDayData.HOLD_DATE
-		AND todayData.CCY = lastDayData.CCY
-		left join (select t.reg_code,t.account,t.REGIST_BANK_CODE,t.ccy,t.equity_conf_date,
-		sum((
-		case when t.busi_type in('03','11','13','15','16') then -1 * t.shares
-		when t.busi_type in('06','07','08','09')  then null
-		else t.shares
-		end )) shares /*当日变动份额*/
-		from chb_equdet t
-		where t.STATUS != 'D'
-		group by t.REGIST_BANK_CODE,t.account,t.ccy,reg_code,equity_conf_date) todayDataDetail
-		on todayData.REGIST_BANK_CODE = todayDataDetail.REGIST_BANK_CODE
-		and todayData.PRODID = todayDataDetail.account
-		AND todayData.HOLD_DATE = todayDataDetail.equity_conf_date
-		AND todayData.CCY = todayDataDetail.CCY
-		LEFT JOIN CHB_PRDRESIST_CODE P
-		ON todayData.PRODID = P.PRODID
-		order by todayData.PRODID, todayData.HOLD_DATE, todayData.CCY
-		)r
+		    select todayData.HOLD_DATE holdDate, /*查询日期*/
+                    case
+                    when todayData.QTY &lt;&gt;(ifnull(todayDataDetail.shares,0) + ifnull(lastDayData.QTY, 0))
+                    then '01'
+                    else '02'
+                    end CHECKRESTATUS,/*检查结果*/
+		        todayData.PRODID prodId, /*产品代码*/
+		        P.PRODNAME prodName, /*产品名称*/
+		        P.REG_CODE prdRegistCode, /*产品登记编码*/
+		        todayData.CCY ccy, /*币种*/
+		        todayData.QTY qty, /*当日持有份额*/
+		        ifnull(lastDayData.QTY, 0) lastQty, /*前一日持有份额*/
+		        todayDataDetail.shares changeQty/*当日明细变动份额*/
+		    from (SELECT A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY,SUM(A.QTY) QTY
+		          FROM CHB_INVESTHOLD_INFO A
+		          where A.STATUS != 'D'
+		           <if test="date!=null and date!=''">
+						AND DATE_FORMAT(A.HOLD_DATE,'%Y-%m-%d') =
+						#{date,jdbcType=VARCHAR}
+					</if>
+					<if test="prdRegistCodeList != null  and prdRegistCodeList.size()>0">
+						<foreach collection="prdRegistCodeList" item="item"
+							open="and A.PRD_REGIST_CODE in(" separator="," close=")">
+							#{item,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+					<if test="prdCodeList != null  and prdCodeList.size()>0">
+						<foreach collection="prdCodeList" item="item" open="and PRODID in("
+							separator="," close=")">
+							#{item,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+		        GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY) todayData
+		        left join 
+                (SELECT A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY,SUM(A.QTY) QTY
+		        FROM CHB_INVESTHOLD_INFO A
+		        where A.STATUS != 'D'
+		        GROUP BY A.REGIST_BANK_CODE,A.PRODID,A.HOLD_DATE,A.CCY) lastDayData
+		        on todayData.REGIST_BANK_CODE = lastDayData.REGIST_BANK_CODE
+		        and todayData.PRODID = lastDayData.PRODID
+		        AND todayData.HOLD_DATE - 1 = lastDayData.HOLD_DATE
+		        AND todayData.CCY = lastDayData.CCY
+		        left join (select t.reg_code,t.account,t.REGIST_BANK_CODE,t.ccy,t.equity_conf_date,
+							sum((
+							case when t.busi_type in('03','11','13','15','16') then -1 * t.shares
+							when t.busi_type in('06','07','08','09')  then null
+							else t.shares
+							end )) shares /*当日变动份额*/
+		                from chb_equdet t
+		                where t.STATUS != 'D'
+		                group by t.REGIST_BANK_CODE,t.account,t.ccy,reg_code,equity_conf_date) todayDataDetail
+		                on todayData.REGIST_BANK_CODE = todayDataDetail.REGIST_BANK_CODE
+		                and todayData.PRODID = todayDataDetail.account
+		                AND todayData.HOLD_DATE = todayDataDetail.equity_conf_date
+		                AND todayData.CCY = todayDataDetail.CCY
+		                LEFT JOIN CHB_PRDRESIST_CODE P
+		                ON todayData.PRODID = P.PRODID
+		                order by todayData.PRODID, todayData.HOLD_DATE, todayData.CCY
+		)r 		
 		<where>
 			<if test="checkResult != null and checkResult != ''">
 				r.CHECKRESTATUS=#{checkResult,jdbcType=VARCHAR}

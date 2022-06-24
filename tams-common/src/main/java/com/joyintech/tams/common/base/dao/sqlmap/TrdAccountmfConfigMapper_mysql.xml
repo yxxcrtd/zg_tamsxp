@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdAccountmfConfigMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdAccountmfConfig" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="REGIST_ORG" property="registOrg" jdbcType="VARCHAR" />
+        <result column="PAY_CYCLE" property="payCycle" jdbcType="VARCHAR" />
+        <result column="POSITION_START_DATE" property="positionStartDate" jdbcType="DATE" />
+        <result column="POSITION_END_DATE" property="positionEndDate" jdbcType="DATE" />
+        <result column="FEE_AMT_TOTAL" property="feeAmtTotal" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, FEE_TYPE FEE_TYPE, BOOKSET_ID BOOKSET_ID, REGIST_ORG REGIST_ORG, PAY_CYCLE PAY_CYCLE, 
+        POSITION_START_DATE POSITION_START_DATE, POSITION_END_DATE POSITION_END_DATE, FEE_AMT_TOTAL FEE_AMT_TOTAL, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdAccountmfConfigMapper_mysql.Base_Column_List" />
+        from TRD_ACCOUNTMF_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdAccountmfConfigMapper_mysql.Base_Column_List" />
+        from TRD_ACCOUNTMF_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdAccountmfConfigMapper_mysql.Base_Column_List" />
+        from TRD_ACCOUNTMF_CONFIG
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_ACCOUNTMF_CONFIG
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdAccountmfConfig" >
+        insert into TRD_ACCOUNTMF_CONFIG (SEQ_NO, FEE_TYPE, BOOKSET_ID, 
+            REGIST_ORG, PAY_CYCLE, POSITION_START_DATE, 
+            POSITION_END_DATE, FEE_AMT_TOTAL, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, 
+            #{registOrg,jdbcType=VARCHAR}, #{payCycle,jdbcType=VARCHAR}, #{positionStartDate,jdbcType=DATE}, 
+            #{positionEndDate,jdbcType=DATE}, #{feeAmtTotal,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdAccountmfConfig" >
+        insert into TRD_ACCOUNTMF_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG,
+            </if>
+            <if test="payCycle != null" >
+                PAY_CYCLE,
+            </if>
+            <if test="positionStartDate != null" >
+                POSITION_START_DATE,
+            </if>
+            <if test="positionEndDate != null" >
+                POSITION_END_DATE,
+            </if>
+            <if test="feeAmtTotal != null" >
+                FEE_AMT_TOTAL,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="payCycle != null" >
+                #{payCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="positionStartDate != null" >
+                #{positionStartDate,jdbcType=DATE},
+            </if>
+            <if test="positionEndDate != null" >
+                #{positionEndDate,jdbcType=DATE},
+            </if>
+            <if test="feeAmtTotal != null" >
+                #{feeAmtTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdAccountmfConfig" >
+        insert into TRD_ACCOUNTMF_CONFIG(SEQ_NO, FEE_TYPE, BOOKSET_ID, REGIST_ORG, PAY_CYCLE, 
+        POSITION_START_DATE, POSITION_END_DATE, FEE_AMT_TOTAL, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, FEE_TYPE, BOOKSET_ID, REGIST_ORG, PAY_CYCLE, 
+            POSITION_START_DATE, POSITION_END_DATE, FEE_AMT_TOTAL, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from TRD_ACCOUNTMF_CONFIG
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdAccountmfConfig" >
+        update TRD_ACCOUNTMF_CONFIG
+        <set >
+            <if test="feeType != null" >
+                FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="registOrg != null" >
+                REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="payCycle != null" >
+                PAY_CYCLE = #{payCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="positionStartDate != null" >
+                POSITION_START_DATE = #{positionStartDate,jdbcType=DATE},
+            </if>
+            <if test="positionEndDate != null" >
+                POSITION_END_DATE = #{positionEndDate,jdbcType=DATE},
+            </if>
+            <if test="feeAmtTotal != null" >
+                FEE_AMT_TOTAL = #{feeAmtTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdAccountmfConfig" >
+        update TRD_ACCOUNTMF_CONFIG
+        set FEE_TYPE = #{feeType,jdbcType=VARCHAR},
+            BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            REGIST_ORG = #{registOrg,jdbcType=VARCHAR},
+            PAY_CYCLE = #{payCycle,jdbcType=VARCHAR},
+            POSITION_START_DATE = #{positionStartDate,jdbcType=DATE},
+            POSITION_END_DATE = #{positionEndDate,jdbcType=DATE},
+            FEE_AMT_TOTAL = #{feeAmtTotal,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

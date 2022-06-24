@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RegTradeFeeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RegTradeFee" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+        <result column="IS_PAY_WITH_TRADE" property="isPayWithTrade" jdbcType="VARCHAR" />
+        <result column="FEE_AMT" property="feeAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, FEE_TYPE FEE_TYPE, IS_PAY_WITH_TRADE IS_PAY_WITH_TRADE, FEE_AMT FEE_AMT, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RegTradeFeeMapper_mysql.Base_Column_List" />
+        from REG_TRADE_FEE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RegTradeFeeMapper_mysql.Base_Column_List" />
+        from REG_TRADE_FEE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RegTradeFeeKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RegTradeFeeMapper.Base_Column_List" />
+        from REG_TRADE_FEE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RegTradeFeeKey" >
+        delete from REG_TRADE_FEE
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RegTradeFee" >
+        insert into REG_TRADE_FEE (TRADE_ID, FEE_TYPE, IS_PAY_WITH_TRADE, 
+            FEE_AMT, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{tradeId,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{isPayWithTrade,jdbcType=VARCHAR}, 
+            #{feeAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RegTradeFee" >
+        insert into REG_TRADE_FEE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="feeType != null" >
+                FEE_TYPE,
+            </if>
+            <if test="isPayWithTrade != null" >
+                IS_PAY_WITH_TRADE,
+            </if>
+            <if test="feeAmt != null" >
+                FEE_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="feeType != null" >
+                #{feeType,jdbcType=VARCHAR},
+            </if>
+            <if test="isPayWithTrade != null" >
+                #{isPayWithTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="feeAmt != null" >
+                #{feeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RegTradeFee" >
+        insert into REG_TRADE_FEE(TRADE_ID, FEE_TYPE, IS_PAY_WITH_TRADE, FEE_AMT, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select TRADE_ID, FEE_TYPE, IS_PAY_WITH_TRADE, FEE_AMT, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REG_TRADE_FEE
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RegTradeFee" >
+        update REG_TRADE_FEE
+        <set >
+            <if test="isPayWithTrade != null" >
+                IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+            </if>
+            <if test="feeAmt != null" >
+                FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RegTradeFee" >
+        update REG_TRADE_FEE
+        set IS_PAY_WITH_TRADE = #{isPayWithTrade,jdbcType=VARCHAR},
+            FEE_AMT = #{feeAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FEE_TYPE = #{feeType,jdbcType=VARCHAR}
+    </update>
+</mapper>

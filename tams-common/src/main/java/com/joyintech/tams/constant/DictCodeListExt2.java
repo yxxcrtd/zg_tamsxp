@@ -1409,6 +1409,8 @@ public enum DictCodeListExt2 implements BaseDictCodeList {
     数据状态_删除(DictCode.数据状态,"D","删除"),
     数据状态_待处理(DictCode.数据状态,"A","待处理"),
     数据状态_待删除(DictCode.数据状态,"P","待删除"),
+    数据来源_新建导入(DictCode.数据来源,"D","新建导入"),
+    数据来源_接口(DictCode.数据来源,"I","接口"),
     执行标志_首次执行(DictCode.执行标志,"01","首次执行"),
     执行标志_重新执行(DictCode.执行标志,"02","重新执行"),
     执行标志_执行错误(DictCode.执行标志,"03","执行错误"),

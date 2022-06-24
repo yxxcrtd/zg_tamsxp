@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dao.FtpDetailMapper_mysql">
+
+    <select id="selectFtpDetatil" parameterType="com.joyintech.tams.disclosure.busicommon.infodisclosure.ftpDetail.dto.FtpDetailDto"
+            resultType="com.joyintech.tams.common.base.entity.RepFtpDetail">
+        SELECT
+        rfd.*
+        FROM
+        REP_FTP_DETAIL rfd
+        WHERE
+        rfd.PROD_ID = #{prodId, jdbcType=VARCHAR}
+        AND rfd.REPORT_NAME = #{reportName, jdbcType=VARCHAR}
+        <if test="statrDate != null">
+            AND rfd.STATR_DATE = #{statrDate, jdbcType=DATE}
+        </if>
+        <if test="endDate != null">
+            AND rfd.END_DATE = #{endDate, jdbcType=DATE}
+        </if>
+        AND rfd.STATUS = 'E'
+    </select>
+</mapper>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.palopenmarketdealersmonthly.dao.ChbBankMonthReportMapper_mysql">
+  <select id="queryEndingBalance" resultType="com.joyintech.service.report.regulatoryreporting.palopenmarketdealersmonthly.dto.ChbMonthReportViewModelDto" parameterType="java.util.Map" >
+  	WITH TEMP_YIELD AS (
+  		SELECT PROD_ID, (case UNIT_VALUE_TOTAL when NULL then 1 else  UNIT_VALUE_TOTAL end) UNIT_VALUE_TOTAL FROM (
+	 		SELECT ROW_NUMBER() OVER(PARTITION BY YIELD.PROD_ID ORDER BY YIELD.CHANGE_DATE DESC) RN,       
+        	YIELD.PROD_ID,
+        	YIELD.UNIT_VALUE_TOTAL
+        	FROM CHB_PRD_PERIODYIELD YIELD
+		) WHERE RN = 1 
+  	)
+  	/*非零售、对公、同业非保本理财*/
+ 	SELECT PROPERTYCODE AS vcode, 
+ 	IFNULL(BALANCE, 0) AS value
+	FROM CHB_MONTH_REPORT_DETAIL DETAIL 
+	WHERE DETAIL.REPORTUUID = (SELECT REPORTUUID FROM (
+	 SELECT ROW_NUMBER() OVER(PARTITION BY T.TERMID ORDER BY T.UPDATE_TIME DESC) RN,       
+        T.REPORTUUID,
+        T.TERMID
+        FROM CHB_MONTH_REPORT T
+	) WHERE RN = 1 AND TERMID = #{termId, jdbcType=VARCHAR}	)
+	/*零售非保本理财*/
+	UNION ALL
+	SELECT 
+	'amt51A' AS vcode,
+	IFNULL(SUM(AMT51A.ENDAMTSUM_OTH), 0) AS value
+	FROM
+	(
+		SELECT DISTINCT POSUUID, ENDAMTSUM_OTH FROM CHB_MONTH_PRD_POSITION 
+		WHERE  DATE_FORMAT(ENDDATE, '%Y-%m-%d') = #{dateend, jdbcType=VARCHAR}
+		AND PROFIT_TYPE='03'
+		AND ENDAMTSUM_OTH IS NOT NULL
+		AND (SALE_TARGET LIKE '%01%' OR SALE_TARGET LIKE '%03%' OR SALE_TARGET LIKE '%05%')
+	)AMT51A
+	/*对公非保本理财*/
+	UNION ALL
+	SELECT 
+	'amt52A' AS vcode,
+	IFNULL(SUM(AMT52A.ENDAMTSUM_OTH), 0) AS value
+	FROM
+	(
+	SELECT DISTINCT POSUUID, ENDAMTSUM_OTH FROM CHB_MONTH_PRD_POSITION 
+		WHERE  DATE_FORMAT(ENDDATE, '%Y-%m-%d') = #{dateend, jdbcType=VARCHAR}
+		AND PROFIT_TYPE='03'
+		AND ENDAMTSUM_OTH IS NOT NULL
+		AND (SALE_TARGET LIKE '%02%')
+		AND (SALE_TARGET NOT LIKE '%01%' OR SALE_TARGET NOT LIKE '%03%' OR SALE_TARGET NOT LIKE '%05%')
+	)AMT52A
+	/*同业非保本理财*/
+	UNION ALL
+	SELECT 
+	'amt53A' AS vcode,
+	IFNULL(SUM(AMT53A.ENDAMTSUM_OTH), 0) AS value
+	FROM
+	(
+	SELECT DISTINCT POSUUID, ENDAMTSUM_OTH FROM CHB_MONTH_PRD_POSITION 
+		WHERE  DATE_FORMAT(ENDDATE, '%Y-%m-%d') = #{dateend, jdbcType=VARCHAR}
+		AND PROFIT_TYPE='03'
+		AND ENDAMTSUM_OTH IS NOT NULL
+		AND SALE_TARGET = '04'
+	)AMT53A
+  </select>
+					
+					  
+  <select id="queryAssetRemainingMaturity" parameterType="java.util.Date" resultType="com.joyintech.service.report.regulatoryreporting.palopenmarketdealersmonthly.dto.RemainingMaturityDto">
+  SELECT 
+	CASE 
+  		/*次日*/
+  		WHEN TEMP_INFO.EDAYS = 1 THEN 'A'
+  		/*2日-7日*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 2 AND 7 THEN 'B'
+  		/*7日-30日*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 8 AND 30 THEN 'C'
+  		/*31日-90日*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 31 AND 90 THEN 'D'
+  		/*91日-1年*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 91 AND 365 THEN 'E'
+  		/*1年-5年*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 366 AND 1825 THEN 'F'
+  		/*5年-10年*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 1826 AND 3650 THEN 'G'
+  		/*10年以上*/
+ 		 WHEN TEMP_INFO.EDAYS &gt; 3650 THEN 'H'
+ 		 /*逾期限*/
+  		WHEN TEMP_INFO.EDAYS &lt;= 0 THEN 'I' 
+  		/*逾未定期*/
+  		ELSE 'J'
+	END AS eDays,
+	TEMP_INFO.ASSETVALUE_A AS prinamt,
+	TEMP_INFO.ASSET_ID AS attributeId,
+	TEMP_INFO.ASSET_TYPE2 AS attributeType
+	FROM
+	(
+		SELECT BASE.MDATE - #{endDate,jdbcType=DATE} EDAYS, BASE.ASSET_ID, INFO.ASSET_TYPE2, POSITION.ASSETVALUE_A 
+		FROM CHB_MONTH_ASSET_POSITION POSITION 
+    	LEFT JOIN (SELECT DISTINCT ASSET_ID, VALUE_DATE, STATUS, MDATE FROM CHB_ASSETS_BASIS_DATA) BASE
+		ON BASE.ASSET_ID = POSITION.ASSET_CODE
+		LEFT JOIN CHB_ASSET_INFO INFO
+		ON BASE.ASSET_ID = INFO.ASSET_CODE
+		WHERE POSITION.ENDDATE = #{endDate,jdbcType=DATE}
+		AND BASE.VALUE_DATE = #{endDate,jdbcType=DATE}
+		AND BASE.STATUS IN ('E', 'M')
+		AND INFO.STATUS IN ('E', 'M')
+		AND POSITION.ASSETVALUE_A  IS NOT NULL
+	) TEMP_INFO
+  </select>		
+  
+  
+  <select id="queryBusinessRemainingMaturity" parameterType="java.util.Date" resultType="com.joyintech.service.report.regulatoryreporting.palopenmarketdealersmonthly.dto.RemainingMaturityDto">
+   SELECT 
+	CASE 
+  		/*次日*/
+  		WHEN TEMP_INFO.EDAYS = 1 THEN 'A'
+  		/*2日-7日*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 2 AND 7 THEN 'B'
+  		/*7日-30日*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 8 AND 30 THEN 'C'
+  		/*31日-90日*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 31 AND 90 THEN 'D'
+  		/*91日-1年*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 91 AND 365 THEN 'E'
+  		/*1年-5年*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 366 AND 1825 THEN 'F'
+  		/*5年-10年*/
+  		WHEN TEMP_INFO.EDAYS BETWEEN 1826 AND 3650 THEN 'G'
+  		/*10年以上*/
+ 		 WHEN TEMP_INFO.EDAYS &gt; 3650 THEN 'H'
+ 		 /*逾期限*/
+  		WHEN TEMP_INFO.EDAYS &lt;= 0 THEN 'I'
+  		/*未定期限*/
+  		ELSE 'J'
+	END AS eDays,
+  POSITION.ENDAMTSUM_OTH AS prinamt,
+  TEMP_INFO.PROD_ID AS attributeId,
+  TEMP_INFO.OPERATION_TYPE AS attributeType
+  FROM
+	(
+	SELECT 
+		(case T.OPEN_DAYS when NULL then 1 else T.OPEN_DAYS end) EDAYS,
+		B.FINPROD_MARKET_ID PROD_ID,
+		B.OPERATION_TYPE
+	FROM FIN_OPEN_RULE T
+	LEFT JOIN FIN_CASH_INFO A
+		ON T.CASH_ID = A.CASH_ID
+	LEFT JOIN FIN_PRODUCT B
+		ON A.FINPROD_ID = B.FINPROD_ID
+	WHERE A.CASH_TYPE_2 = 'C01'
+	AND T.OPEN_TYPE IN ('01', '03')
+	AND B.P_FINPROD_ID IS NULL
+	AND B.OPERATION_TYPE = '02'
+	UNION ALL
+	SELECT 
+		A.MDATE - #{endDate,jdbcType=DATE} EDAYS, 
+		A.FINPROD_MARKET_ID PROD_ID,
+		A.OPERATION_TYPE
+	FROM FIN_PRODUCT A
+	WHERE A.P_FINPROD_ID IS NULL
+	AND A.OPERATION_TYPE = '01'
+	) TEMP_INFO 
+	LEFT JOIN CHB_MONTH_PRD_POSITION POSITION
+		ON TEMP_INFO.PROD_ID = POSITION.PRODID
+	WHERE POSITION.ENDDATE = #{endDate,jdbcType=DATE}
+	AND POSITION.ENDAMTSUM_OTH IS NOT NULL
+  </select>																						
+</mapper>

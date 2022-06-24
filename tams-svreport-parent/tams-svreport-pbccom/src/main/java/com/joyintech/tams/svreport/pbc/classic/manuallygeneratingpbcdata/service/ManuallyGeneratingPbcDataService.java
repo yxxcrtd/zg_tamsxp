@@ -46,7 +46,7 @@ public class ManuallyGeneratingPbcDataService extends CommonExportService<PbcDat
 	
 	@Autowired
 	private PbcPrdAccountSubMapper pbcPrdAccountSubMapper;
-	
+
 	@Autowired
 	private PbcClassicsDataFileService pbcClassicsDataFileService;
 	/**
@@ -143,5 +143,17 @@ public class ManuallyGeneratingPbcDataService extends CommonExportService<PbcDat
         String beginDateStr = DateUtil.format(beginDate);
         result.setData(beginDateStr + " - " + endDateStr);
         return result;
+    }
+
+    public List<SelectOptionDto> getInsideProdId(Map<String, Object> param) {
+		List<Map<String,String>> list = pbcPrdAccountSubMapper.queryInsideProdId(param);
+		List<SelectOptionDto> resultList = new ArrayList<>();
+		for (Map<String,String> map : list) {
+			SelectOptionDto resultDto = new SelectOptionDto();
+			resultDto.setId(map.get("INSIDE_PROD_ID"));
+			resultDto.setText(map.get("INSIDE_PROD_ID"));
+			resultList.add(resultDto);
+		}
+		return resultList;
     }
 }

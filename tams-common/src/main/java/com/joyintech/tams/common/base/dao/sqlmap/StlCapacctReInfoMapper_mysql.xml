@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StlCapacctReInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StlCapacctReInfo" >
+        <id column="ACCT_NO" property="acctNo" jdbcType="VARCHAR" />
+        <id column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <id column="ACCT_TYPE" property="acctType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ACCT_NO ACCT_NO, CCY CCY, ACCT_TYPE ACCT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlCapacctReInfoMapper_mysql.Base_Column_List" />
+        from STL_CAPACCT_RE_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlCapacctReInfoMapper_mysql.Base_Column_List" />
+        from STL_CAPACCT_RE_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.StlCapacctReInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlCapacctReInfoMapper_mysql.Base_Column_List" />
+        from STL_CAPACCT_RE_INFO
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlCapacctReInfoKey" >
+        delete from STL_CAPACCT_RE_INFO
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StlCapacctReInfo" >
+        insert into STL_CAPACCT_RE_INFO (ACCT_NO, CCY, ACCT_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{acctNo,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{acctType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlCapacctReInfo" >
+        insert into STL_CAPACCT_RE_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="acctNo != null" >
+                ACCT_NO,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="acctType != null" >
+                ACCT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="acctNo != null" >
+                #{acctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="acctType != null" >
+                #{acctType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlCapacctReInfo" >
+        insert into STL_CAPACCT_RE_INFO(ACCT_NO, CCY, ACCT_TYPE, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ACCT_NO, CCY, ACCT_TYPE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from STL_CAPACCT_RE_INFO
+             where 1 = 1 and ACCT_NO = #{acctNo,jdbcType=VARCHAR} and CCY = #{ccy,jdbcType=VARCHAR} and ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StlCapacctReInfo" >
+        update STL_CAPACCT_RE_INFO
+        <set >
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlCapacctReInfo" >
+        update STL_CAPACCT_RE_INFO
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CCY = #{ccy,jdbcType=VARCHAR}
+          and ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
+    </update>
+</mapper>

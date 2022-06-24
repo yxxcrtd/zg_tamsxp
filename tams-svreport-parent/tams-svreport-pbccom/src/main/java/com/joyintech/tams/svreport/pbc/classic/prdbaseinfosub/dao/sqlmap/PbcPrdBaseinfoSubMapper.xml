@@ -833,7 +833,7 @@
 		null ACCOUNT_ID,
 		decode(IS_CONSTRACTE,'01','1','2')IS_CONSTRACTE,
 		decode(TRANSFER_TYPE,'01','1','99','2')TRANSFER_TYPE,
-		decode(cbc.IS_FIN_SUB_COMPANY,'01','2','1') IDENTI_FLAG,
+		decode(cbc.IS_FIN_SUB_COMPANY,'1','2','1') IDENTI_FLAG,
 		sysdate STATUS_DATE,
 		info.STATUS,
 		info.CREATE_USER,

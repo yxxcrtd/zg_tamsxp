@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StlSecpReconMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StlSecpRecon" >
+        <id column="ACCT_NO" property="acctNo" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="DATE" />
+        <id column="JYLB" property="jylb" jdbcType="VARCHAR" />
+        <id column="MARKET_ID" property="marketId" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="AMOUT" property="amout" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="Column_12" property="column12" jdbcType="CHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ACCT_NO ACCT_NO, CDATE CDATE, JYLB JYLB, MARKET_ID MARKET_ID, FINPROD_ID FINPROD_ID, 
+        AMOUT AMOUT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, Column_12 Column_12
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecpReconMapper_mysql.Base_Column_List" />
+        from STL_SECP_RECON
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecpReconMapper_mysql.Base_Column_List" />
+        from STL_SECP_RECON
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.StlSecpReconKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecpReconMapper_mysql.Base_Column_List" />
+        from STL_SECP_RECON
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+          and JYLB = #{jylb,jdbcType=VARCHAR}
+          and MARKET_ID = #{marketId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlSecpReconKey" >
+        delete from STL_SECP_RECON
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+          and JYLB = #{jylb,jdbcType=VARCHAR}
+          and MARKET_ID = #{marketId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StlSecpRecon" >
+        insert into STL_SECP_RECON (ACCT_NO, CDATE, JYLB, 
+            MARKET_ID, FINPROD_ID, AMOUT, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, Column_12
+            )
+        values (#{acctNo,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, #{jylb,jdbcType=VARCHAR}, 
+            #{marketId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{amout,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{column12,jdbcType=CHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlSecpRecon" >
+        insert into STL_SECP_RECON
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="acctNo != null" >
+                ACCT_NO,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="jylb != null" >
+                JYLB,
+            </if>
+            <if test="marketId != null" >
+                MARKET_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="amout != null" >
+                AMOUT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="column12 != null" >
+                Column_12,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="acctNo != null" >
+                #{acctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="jylb != null" >
+                #{jylb,jdbcType=VARCHAR},
+            </if>
+            <if test="marketId != null" >
+                #{marketId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="amout != null" >
+                #{amout,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="column12 != null" >
+                #{column12,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlSecpRecon" >
+        insert into STL_SECP_RECON(ACCT_NO, CDATE, JYLB, MARKET_ID, FINPROD_ID, AMOUT, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, Column_12)
+        select ACCT_NO, CDATE, JYLB, MARKET_ID, FINPROD_ID, AMOUT, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, Column_12
+             from STL_SECP_RECON
+             where 1 = 1 and ACCT_NO = #{acctNo,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=DATE} and JYLB = #{jylb,jdbcType=VARCHAR} and MARKET_ID = #{marketId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StlSecpRecon" >
+        update STL_SECP_RECON
+        <set >
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="amout != null" >
+                AMOUT = #{amout,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="column12 != null" >
+                Column_12 = #{column12,jdbcType=CHAR},
+            </if>
+        </set>
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+          and JYLB = #{jylb,jdbcType=VARCHAR}
+          and MARKET_ID = #{marketId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlSecpRecon" >
+        update STL_SECP_RECON
+        set FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            AMOUT = #{amout,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            Column_12 = #{column12,jdbcType=CHAR}
+        where ACCT_NO = #{acctNo,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=DATE}
+          and JYLB = #{jylb,jdbcType=VARCHAR}
+          and MARKET_ID = #{marketId,jdbcType=VARCHAR}
+    </update>
+</mapper>

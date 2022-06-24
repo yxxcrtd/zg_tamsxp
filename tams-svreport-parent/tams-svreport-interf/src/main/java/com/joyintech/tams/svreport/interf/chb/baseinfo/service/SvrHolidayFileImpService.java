@@ -9,6 +9,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+import com.joyintech.tams.common.base.entity.ChbInvestTrade;
+import com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs;
+import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
+import com.joyintech.tams.report.interf.common.constant.InterfConstants;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -49,6 +57,12 @@ public class SvrHolidayFileImpService extends FileImpService {
      * logger
      */
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 共通校验类
+	 */
+	@Autowired
+	private BaseCommonCheckService baseCommonCheckService;
     /**
 	 * 上游接口文件编码格式
 	 */
@@ -90,25 +104,17 @@ public class SvrHolidayFileImpService extends FileImpService {
     
 	@Autowired
 	private SqlSessionTemplate template;
-    
-    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
     @Autowired
-    private SvrMstHolidayImpMapper svrHolidayImpMapper;
-	
-	@Override
-	public String saveData(List<Map<String, String>> listData, String saveFlag, String dateSource) {
-		boolean success = excuteHolidayByStep(saveFlag,listData, null, null, null, null);
-		return success ? "success" : "fail";
-	}
+    private SvrMstHolidayImpMapper svrMstHolidayImpMapper;
+    @Autowired
+    private CommonCodeCheckBatchService commonCodeCheckBatchService;
 
 	@Override
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
 		String result = "";
-		logger.debug("节假日数据检查---开始-----:" +  df.format(new Date()));
-		@SuppressWarnings("unused")
+		logger.info("节假日数据check---开始-----:" +  DateUtil.format(new Date()));
 		List<Map<String, String>> listError = checkData(listData, interfFile.getFilename(), InterfDefine.节假日数据.getCode(), InterfDefine.节假日数据.getCode(), null,"MARKET_CODE","CDATE");
-		logger.debug("节假日数据检查---结束-----:" +  df.format(new Date()));
+		logger.info("节假日数据check查---结束-----:" +  DateUtil.format(new Date()));
 		if(CollectionUtils.isEmpty(listData)){
 			return "success";
 		}
@@ -118,9 +124,9 @@ public class SvrHolidayFileImpService extends FileImpService {
             return "fail";
         }
         String saveFlag = interfConfig.getContentType();
-        logger.debug("节假日数据入库---开始-----:" +  df.format(new Date()));
+        logger.info("节假日数据save---开始-----:" +  DateUtil.format(new Date()));
 		result = saveData(listData,saveFlag,null);
-		logger.debug("节假日数据入库---结束-----:" +  df.format(new Date()));
+		logger.info("节假日数据save---结束-----:" +  DateUtil.format(new Date()));
 		// 更新系统配置时间
         ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.节假日数据.getCode());
 		if("fail".equals(result)){
@@ -129,29 +135,68 @@ public class SvrHolidayFileImpService extends FileImpService {
 			return "success";
 		}
 	}
+	@Override
+	public String importDB(List<ExcelValidDto> listExcel, List<Map<String, String>> listData, InterfFile interfFile, String date) {
 
-	private boolean excuteHolidayByStep(String saveFlag, List<Map<String, String>> holidayList, String[] result,
-			String tmpPath, ImpTable table, ImpTable subTable) {
-		boolean  isSucess=false;
+		ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.节假日数据.getCode());
+		if (interfConfig == null){
+			logger.info("CHB_INTERF_CONFIG表中无配置项！");
+			return "fail";
+		}
+		checkImportData(listExcel,listData, interfFile.getFilename(), ChbCheckTableInfo.节假日,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
+
+		String saveFlag = interfConfig.getContentType();
+		String result = "";
+		if(listData.size()>0){
+			result=saveData(listData, listExcel == null?saveFlag: InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+		}
+		// 更新系统配置时间
+		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.节假日数据.getCode());
+		return result;
+	}
+	@Override
+	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
+		boolean isSucess=false;
 		// 定义新增数据list-验证通过数据
 		List<MstHoliday> listNE = null;
-		logger.debug("节假日数据转dto---开始-----:" +  df.format(new Date()));
-		if(holidayList!=null&&holidayList.size()>0){
-            listNE = (List<MstHoliday>) convertMapToEntity(holidayList, MstHoliday.class);
+		logger.info("节假日数据map转dto---开始-----:" +  DateUtil.format(new Date()));
+		if(CollectionUtils.isNotEmpty(listData)){
+			listNE = (List<MstHoliday>) convertMapToEntity(listData, MstHoliday.class, dataSource);
 		}
-		logger.debug("节假日数据转dto---结束-----:" +  df.format(new Date()));
+		logger.info("节假日数据map转dto---结束-----:" +  DateUtil.format(new Date()));
+
+		logger.info("节假日数据入库---开始-----:" +  DateUtil.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
-		    isSucess=mergeHoliday(listNE);
+			if(F.equals(saveFlag)){
+				//全量
+			}else{
+				List<MstHolidayErrodataWithBLOBs> errDataList = Lists.newArrayList();
+				listNE.forEach(e->{
+					MstHolidayErrodataWithBLOBs errodataWithBLOBs = new MstHolidayErrodataWithBLOBs();
+					errodataWithBLOBs.setCalendarId(e.getCalendarId());
+					errodataWithBLOBs.setCdate(e.getCdate());
+					errDataList.add(errodataWithBLOBs);
+				});
+				commonCodeCheckBatchService.deleteMstHolidayErrodata(errDataList);
+				//增量
+				isSucess = mergeData(listNE);
+			}
 		}
-		return isSucess;
+		logger.info("节假日数据入库---结束-----:" +  DateUtil.format(new Date()));
+		return isSucess ? "success" : "fail";
 	}
-	
-	private boolean mergeHoliday(List<MstHoliday> listNE) {
+
+	/**
+	 * 增量模式
+	 * @param listNE
+	 * @return
+	 */
+	private boolean mergeData(List<MstHoliday> listNE) {
 		boolean  isSuccess=true;
 		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
-            logger.debug("节假日插入开始--------------" + new Date());
+            logger.info("节假日插入开始--------------" + new Date());
             SvrMstHolidayImpMapper batchMapper = session.getMapper(SvrMstHolidayImpMapper.class);
             int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
             int batchLastIndex = batchCount;//每批最后一个的下标
@@ -173,7 +218,7 @@ public class SvrHolidayFileImpService extends FileImpService {
                     session.clearCache();
                 }
             }
-            logger.debug("节假日插入结束--------------" + new Date());
+            logger.info("节假日插入结束--------------" + new Date());
             session.commit();
             // 清理缓存，防止溢出
             session.clearCache();
@@ -184,168 +229,8 @@ public class SvrHolidayFileImpService extends FileImpService {
         finally {
             session.close();
         }
-        logger.debug("节假日插入结束--------------" + new Date());
+        logger.info("节假日插入结束--------------" + new Date());
         return  isSuccess;
 	}
 
-	@SuppressWarnings("unused")
-	private void deleteHoliday(List<MstHoliday> holidayList){
-		int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
-		int batchLastIndex = batchCount;// 每批最后一个的下标
-		logger.debug("节假日删除开始--------------"+new Date());
-		for (int index = 0; index < holidayList.size();) {
-			if (batchLastIndex > holidayList.size() - 1) {
-				batchLastIndex = holidayList.size();
-				svrHolidayImpMapper.deleteHolidayBatch2(holidayList.subList(index, batchLastIndex));
-				break;// 数据插入完毕,退出循环
-			} else {
-				svrHolidayImpMapper.deleteHolidayBatch2(holidayList.subList(index, batchLastIndex));
-				index = batchLastIndex;// 设置下一批下标
-				batchLastIndex = index + batchCount;
-			}
-		}
-		logger.debug("节假日删除结束--------------"+new Date());
-	}
-	
-	@SuppressWarnings("unused")
-	private void insertHoliday(List<MstHoliday> holidayList) {
-		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-		try {
-			int count = 0;
-			logger.debug("节假日插入开始--------------"+new Date());
-			SvrMstHolidayImpMapper batchMapper = session.getMapper(SvrMstHolidayImpMapper.class);
-			for (MstHoliday holiday : holidayList) {
-				batchMapper.insert(holiday);
-				count++;
-				if (count % 1000 == 0) {
-					session.commit();
-					// 清理缓存，防止溢出
-					session.clearCache();
-					logger.debug("节假日已插入条数-----------"+count+"---------"+df.format(new Date()));
-				}
-			}
-			session.commit();
-			// 清理缓存，防止溢出
-			session.clearCache();
-			logger.debug("节假日已插入条数-----------"+count+"---------"+df.format(new Date()));
-		} finally {
-			session.close();
-		}
-		logger.debug("节假日插入结束--------------"+df.format(new Date()));
-	}
-	
-	private MstHoliday dataConversionEntity(Map<String, String> map) {
-		MstHoliday dto = new MstHoliday();
-		dto.setCalendarId(map.get("MARKET_CODE"));//日历编号
-		if(dto.getCalendarId() == null){
-			dto.setCalendarId(map.get("CALENDAR_ID"));//日历编号
-		}
-		dto.setCdate(DateUtil.parse(map.get("CDATE")));//日期
-		dto.setCreateDept(map.get("CREATE_DEPT"));//创建部门
-		dto.setCreateTime(DateUtil.parse(map.get("CREATE_TIME")));//创建时间
-		dto.setCreateUser("interf");//创建人
-		if(map.get("IS_HOLIDAY")!=null){
-			dto.setIsHoliday(Long.parseLong(map.get("IS_HOLIDAY")));//是否节假日，0：工作日，1：节假日
-		}
-		dto.setUpdateTime(DateUtil.parse(map.get("UPDATE_TIME")));//更新时间
-		dto.setUpdateUser("interf");//更新人
-		return dto;
-	}
-	
-	@SuppressWarnings("unused")
-	private void deleteAllData() {
-		svrHolidayImpMapper.deleteTodayData();
-	}
-	
-	/**
-     * 将map转换为entity格式
-     * @param infoList 传入的listMap
-     * @param entities 转换后的lis
-     * @param listCloumn 表列名
-     * @param interType 数据来源
-     * @see
-     * @since 1.0
-     */
-    @SuppressWarnings("unused")
-	private List<MstHoliday> convertMapToEntity(List<Map<String, String>> dataList) {
-        // 获取产品表的列
-    	List<MstHoliday> rs = new ArrayList<MstHoliday>();
-        for (Map<String, String> map : dataList) {
-        	MstHoliday t = new MstHoliday();
-        	t.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            for (String key : map.keySet()) {
-            	if(key==null||key.equals("ERRMSG")){//待处理的数据
-            		t.setStatus(DictCodeListExt1.维护数据状态_待处理.getValue());
-            		continue;
-            	}
-                String value = map.get(key);
-                Field field = ReflectionUtils.findField(MstHoliday.class,
-                			subBlank(key.toLowerCase()));
-                if(field==null)
-                	continue;
-                field.setAccessible(true);
-                Type type = field.getGenericType();
-                if("java.lang.String".equals(type.getTypeName())){
-                    try {
-                        field.set(t, value);
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                    }
-                }else if ("java.math.BigDecimal".equals(type.getTypeName())) {
-                        try {
-                            field.set(t,(value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(value));
-                        } catch ( IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    }
-                    else if ("java.lang.Integer".equals(type.getTypeName())) {
-                        try {
-                            field.set(t,(value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
-                        } catch (IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    }
-                    else if ("java.lang.Short".equals(type.getTypeName())) {
-                        try {
-                            field.set(t, (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
-                        } catch ( IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    } 
-                    else if ("java.lang.Long".equals(type.getTypeName())) {
-                        try {
-                            field.set(t, (value == null || "".equals(value)) ? 0 : Long.valueOf(value));
-                        } catch ( IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    }
-                    else if ("java.util.Date".equals(type.getTypeName())) {
-                        if (value != null&&""!=value) {
-                            try {
-                                field.set(t, DateUtil.parse(value));
-                            } catch ( IllegalAccessException e) {
-                                logger.error(e.getMessage(),e);
-                            }
-                        }
-                    } else{
-                	try {
-                        field.set(t, value);
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
-                    }
-                }
-            }
-            if(t.getCreateUser()==null){
-            	t.setCreateUser("system");
-            }
-            // 创建人
-            t.setCreateUser(CommonUtil.getUserName());
-            // 创建部门
-            t.setCreateDept(CommonUtil.getDeptCode());
-            // 更新人
-            t.setUpdateUser(CommonUtil.getUserName());
-            rs.add(t);
-        }
-        return rs;
-    }
 }

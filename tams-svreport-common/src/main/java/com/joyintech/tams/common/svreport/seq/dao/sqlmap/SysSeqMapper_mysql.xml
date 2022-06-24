@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.svreport.seq.dao.SysSeqMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+        <id column="SEQDATE" property="seqdate" jdbcType="VARCHAR" />
+        <id column="SEQCODE" property="seqcode" jdbcType="VARCHAR" />
+        <result column="SEQVALUE" property="seqvalue" jdbcType="DECIMAL" />
+        <result column="REMARK" property="remark" jdbcType="OTHER" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    SEQDATE, SEQCODE, SEQVALUE, REMARK
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+        select
+        <include refid="Base_Column_List" />
+        from SYS_SEQ
+        where SEQDATE = #{seqdate,jdbcType=VARCHAR}
+        and SEQCODE = #{seqcode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+    delete from SYS_SEQ
+    where SEQDATE = #{seqdate,jdbcType=VARCHAR}
+      and SEQCODE = #{seqcode,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+    insert into SYS_SEQ (SEQDATE, SEQCODE, SEQVALUE,
+      REMARK)
+    values (#{seqdate,jdbcType=VARCHAR}, #{seqcode,jdbcType=VARCHAR}, #{seqvalue,jdbcType=DECIMAL},
+      #{remark,jdbcType=OTHER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+        insert into SYS_SEQ
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqdate != null" >
+                SEQDATE,
+            </if>
+            <if test="seqcode != null" >
+                SEQCODE,
+            </if>
+            <if test="seqvalue != null" >
+                SEQVALUE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqdate != null" >
+                #{seqdate,jdbcType=VARCHAR},
+            </if>
+            <if test="seqcode != null" >
+                #{seqcode,jdbcType=VARCHAR},
+            </if>
+            <if test="seqvalue != null" >
+                #{seqvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=OTHER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+        update SYS_SEQ
+        <set >
+            <if test="seqvalue != null" >
+                SEQVALUE = #{seqvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=OTHER},
+            </if>
+        </set>
+        where SEQDATE = #{seqdate,jdbcType=VARCHAR}
+        and SEQCODE = #{seqcode,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+    update SYS_SEQ
+    set SEQVALUE = #{seqvalue,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=OTHER}
+    where SEQDATE = #{seqdate,jdbcType=VARCHAR}
+      and SEQCODE = #{seqcode,jdbcType=VARCHAR}
+    </update>
+
+    <update id="mergeInfo" parameterType="com.joyintech.tams.common.svreport.seq.dto.SysSeqModel" >
+    update SYS_SEQ t1
+    using (
+    	select #{seqcode,jdbcType=VARCHAR} seqcode, #{seqdate,jdbcType=VARCHAR} from dual
+    ) t2
+    on (t1.SEQCODE=t2.SEQCODE and t1.SEQDATE=t2.seqdate)
+    when not matched then
+	    insert into SYS_SEQ (
+		    SEQCODE,
+		    SEQDATE,
+		    SEQVALUE,
+		    REMARK )
+	    values (
+	    	#{seqdate,jdbcType=VARCHAR},
+	    	#{seqcode,jdbcType=VARCHAR},
+	    	#{seqvalue,jdbcType=DECIMAL},
+	    	#{remark,jdbcType=VARCHAR})
+	when matched then
+		update SYS_SEQ
+	    	set SEQVALUE = SEQVALUE+1
+	    where
+	    	SEQDATE = #{seqdate,jdbcType=VARCHAR}
+	    	and SEQCODE = #{seqcode,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

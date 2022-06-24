@@ -33,7 +33,6 @@
 	<select id="selectProdInvestAdjRateList"
 		resultType="com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscinvestgroupdetail.entity.InfoDiscInvestGroupDetailEntity">
 		SELECT
-		  LIMIT,
 		  t.*
 		FROM
 		  (
@@ -48,8 +47,8 @@
 			    AND STR_TO_DATE(#{executeDateStr},'%Y-%m-%d') >= INVEST_ADJUST_DATE
 		    ORDER BY
 		      INVEST_ADJUST_DATE DESC
-		  )t
-		WHERE LIMIT = 1
+		  ) t
+		 LIMIT 1
 	</select>
 	<insert id="insertInfoDiscInvestGroupDetail" parameterType="java.util.List" >
         insert into

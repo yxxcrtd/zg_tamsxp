@@ -548,11 +548,8 @@
 		DELETE FROM CHB_EQU_HOLD_CHECK HOLD
 		WHERE 1 = 1
 		<if test="key !=null and key.size()>0">
-			<!--<foreach collection="key" item="item" open="AND (HOLD.REGIST_BANK_CODE, HOLD.IDENTIFY_NUMBER, NVL(HOLD.HOLDER_NAME,'null'), NVL(HOLD.PERSONAL_IDENTIFY_TYPE,'null'), NVL(HOLD.INSTITUTION_IDENTIFY_TYPE,'null'), NVL(HOLD.OTHER_IDENTIFY_NAME,'null')) in(" separator="," close=")">
-				(#{item.bankCode,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.holderName,jdbcType=VARCHAR}, #{item.personalIdentifyType,jdbcType=VARCHAR}, #{item.institutionIdentifyType,jdbcType=VARCHAR}, #{item.otherIdentifyName,jdbcType=VARCHAR})
-			</foreach>-->
-			<foreach collection="key" item="item" open="AND (HOLD.REGIST_BANK_CODE, HOLD.IDENTIFY_NUMBER, HOLD.HOLDER_NAME, ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,' '), ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,' '), ifnull(HOLD.OTHER_IDENTIFY_NAME,' ')) in(" separator="," close=")">
-				(#{item.bankCode,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.holderName,jdbcType=VARCHAR}, ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '), ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR},' '), ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+			<foreach collection="key" item="item" open="AND (HOLD.REGIST_BANK_CODE, HOLD.IDENTIFY_NUMBER, HOLD.HOLDER_NAME, ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,''), ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,''), ifnull(HOLD.OTHER_IDENTIFY_NAME,'')) in(" separator="," close=")">
+				(#{item.bankCode,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, #{item.holderName,jdbcType=VARCHAR}, ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''), ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR},''), ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 	</delete>
@@ -632,26 +629,21 @@
 	<delete id="deleteEquityInfoBatch" parameterType="java.util.List">
 		DELETE FROM CHB_EQU_HOLD HOLD
 		WHERE 1=1
-		<!--<if test="keys !=null and keys.size()>0">
-			AND concat_ws('',HOLD.REGIST_BANK_CODE, '_', HOLD.IDENTIFY_NUMBER, '_',HOLD.HOLDER_NAME, '_', HOLD.PERSONAL_IDENTIFY_TYPE, '_', HOLD.INSTITUTION_IDENTIFY_TYPE, '_', HOLD.OTHER_IDENTIFY_NAME) IN
-			<foreach collection="keys" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
-			</foreach>-->
 		<if test="list !=null and list.size() >0">
 			AND (HOLD.REGIST_BANK_CODE
 			,HOLD.IDENTIFY_NUMBER
 			,HOLD.HOLDER_NAME
-			,ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,' ')
-			,ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,' ')
-			,ifnull(HOLD.OTHER_IDENTIFY_NAME,' ')
+			,ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'')
+			,ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'')
+			,ifnull(HOLD.OTHER_IDENTIFY_NAME,'')
 			)in
 			<foreach collection="list" item="item" open="(" separator="," close=")">
 				(#{item.registBankCode,jdbcType=VARCHAR},
 				#{item.identifyNumber,jdbcType=VARCHAR},
 				#{item.holderName,jdbcType=VARCHAR},
-				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 		AND NOT EXISTS( SELECT 1 FROM CHB_EQU_SUB T
@@ -663,30 +655,21 @@
 	<delete id="deleteEquitySubInfoBatch" parameterType="java.util.List">
 		DELETE FROM CHB_EQU_SUB
 		WHERE SUBMIT_STATUS = '01'
-		<!--<if test="keys !=null and keys.size()>0">
-			AND concat_ws('',
-			REGIST_BANK_CODE, '_', IDENTIFY_NUMBER, '_',HOLDER_NAME, '_',
-			PERSONAL_IDENTIFY_TYPE, '_', INSTITUTION_IDENTIFY_TYPE, '_',
-			OTHER_IDENTIFY_NAME) IN
-			<foreach collection="keys" item="key" open="(" separator=","  close=")">
-				#{key,jdbcType=VARCHAR}
-			</foreach>
-		</if>-->
 		<if test="list !=null and list.size() >0">
 			AND (REGIST_BANK_CODE
 			,IDENTIFY_NUMBER
 			,HOLDER_NAME
-			,ifnull(PERSONAL_IDENTIFY_TYPE,' ')
-			,ifnull(INSTITUTION_IDENTIFY_TYPE,' ')
-			,ifnull(OTHER_IDENTIFY_NAME,' ')
+			,ifnull(PERSONAL_IDENTIFY_TYPE,'')
+			,ifnull(INSTITUTION_IDENTIFY_TYPE,'')
+			,ifnull(OTHER_IDENTIFY_NAME,'')
 			)in
 			<foreach collection="list" item="item" open="(" separator="," close=")">
 				(#{item.registBankCode,jdbcType=VARCHAR},
 				#{item.identifyNumber,jdbcType=VARCHAR},
 				#{item.holderName,jdbcType=VARCHAR},
-				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 
@@ -698,9 +681,9 @@
 				where hold.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 				and hold.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 				and hold.HOLDER_NAME = tmp.HOLDER_NAME
-				and ifnull(hold.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-				and ifnull(hold.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-				and ifnull(hold.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+				and ifnull(hold.PERSONAL_IDENTIFY_TYPE,'') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,'')
+				and ifnull(hold.INSTITUTION_IDENTIFY_TYPE,'') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,'')
+				and ifnull(hold.OTHER_IDENTIFY_NAME,'') = ifnull(tmp.OTHER_IDENTIFY_NAME,'')
 				)
 	</delete>
 
@@ -710,9 +693,9 @@
 				where sub.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 				and sub.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 				and sub.HOLDER_NAME = tmp.HOLDER_NAME
-				and ifnull(sub.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-				and ifnull(sub.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-				and ifnull(sub.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+				and ifnull(sub.PERSONAL_IDENTIFY_TYPE,'') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,'')
+				and ifnull(sub.INSTITUTION_IDENTIFY_TYPE,'') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,'')
+				and ifnull(sub.OTHER_IDENTIFY_NAME,'') = ifnull(tmp.OTHER_IDENTIFY_NAME,'')
 				)
 	</delete>
 
@@ -947,8 +930,8 @@
 			#{item.holderCellphone,jdbcType=VARCHAR}, #{item.holderTelephone,jdbcType=VARCHAR}, #{item.isSubmit,jdbcType=CHAR},
 			#{item.holderEmail,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.status,jdbcType=VARCHAR},
 			#{item.workflowId,jdbcType=VARCHAR}, #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR},
-			sysdate, #{item.createUser,jdbcType=VARCHAR}, sysdate,
-			sysdate,#{item.dataSource,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR},
+			NOW(), #{item.createUser,jdbcType=VARCHAR}, NOW(),
+			NOW(),#{item.dataSource,jdbcType=CHAR}, #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR},
 			#{item.createDept,jdbcType=VARCHAR}, #{item.interfCheckResult,jdbcType=VARCHAR}, #{item.operatestatus,jdbcType=VARCHAR}
 			, #{item.mergerindentifymark,jdbcType=VARCHAR},#{item.holderClassify,jdbcType=VARCHAR},#{item.fundAccPlace,jdbcType=VARCHAR}
 			from dual
@@ -956,14 +939,24 @@
 	</insert>
 
 	<update id="updateMergerIndentifyMarkByBatch" parameterType="java.util.List">
-		MERGE INTO CHB_EQU_HOLD_CHECK CK
-		USING (
-		<foreach collection="keyList" item="item" open="select * from("
-				 close=")" separator="union all">
+		UPDATE  CHB_EQU_HOLD_CHECK as A,
+		(
+		select
+		REGIST_BANK_CODE,
+		IDENTIFY_NUMBER,
+		HOLDER_NAME,
+		PERSONAL_IDENTIFY_TYPE,
+		INSTITUTION_IDENTIFY_TYPE,
+		OTHER_IDENTIFY_NAME,
+		INDENTIFY_MARK
+		from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="keyList" item="item" separator=" union all ">
 			select
 			#{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
 			#{item.identifyNumber,jdbcType=VARCHAR} IDENTIFY_NUMBER,
-			/*NVL(#{item.holderName,jdbcType=VARCHAR},'null') HOLDER_NAME,*/
 			#{item.holderName,jdbcType=VARCHAR} HOLDER_NAME,
 			IFNULL(#{item.personalIdentifyType,jdbcType=VARCHAR},'null') PERSONAL_IDENTIFY_TYPE,
 			IFNULL(#{item.institutionIdentifyType,jdbcType=VARCHAR},'null') INSTITUTION_IDENTIFY_TYPE,
@@ -972,22 +965,18 @@
 			from dual
 		</foreach>
 		) TEMP
-		<!-- 业务主键匹配 -->
-		ON (
-		CK.REGIST_BANK_CODE = TEMP.REGIST_BANK_CODE
-		AND CK.IDENTIFY_NUMBER = TEMP.IDENTIFY_NUMBER
-		/*AND NVL(CK.HOLDER_NAME,'null') = TEMP.HOLDER_NAME*/
-		AND CK.HOLDER_NAME = TEMP.HOLDER_NAME
-		AND IFNULL(CK.PERSONAL_IDENTIFY_TYPE,'null') = TEMP.PERSONAL_IDENTIFY_TYPE
-		AND IFNULL(CK.INSTITUTION_IDENTIFY_TYPE,'null') = TEMP.INSTITUTION_IDENTIFY_TYPE
-		AND IFNULL(CK.OTHER_IDENTIFY_NAME,'null') = TEMP.OTHER_IDENTIFY_NAME
-		)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN
-		UPDATE
-		SET
-		CK.MERGER_INDENTIFY_MARK = TEMP.INDENTIFY_MARK,
-		CK.OPERATE_STATUS =  '02'
+		) de
+		) AS B
+		set
+		A.MERGER_INDENTIFY_MARK = B.INDENTIFY_MARK,
+		A.OPERATE_STATUS =  '02'
+		where
+		A.REGIST_BANK_CODE = B.REGIST_BANK_CODE
+		AND A.IDENTIFY_NUMBER = B.IDENTIFY_NUMBER
+		AND A.HOLDER_NAME= B.HOLDER_NAME
+		AND ifnull(A.PERSONAL_IDENTIFY_TYPE,'null') = B.PERSONAL_IDENTIFY_TYPE
+		AND ifnull(A.INSTITUTION_IDENTIFY_TYPE,'null') = B.INSTITUTION_IDENTIFY_TYPE
+		AND ifnull(A.OTHER_IDENTIFY_NAME,'null') = B.OTHER_IDENTIFY_NAME;
 	</update>
 	<select id="selectChekForRepair" resultMap="BaseResultMap" parameterType="java.util.List">
 		select
@@ -1039,17 +1028,17 @@
 			AND (HOLD.REGIST_BANK_CODE
 			,HOLD.IDENTIFY_NUMBER
 			,HOLD.HOLDER_NAME
-			,ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,' ')
-			,ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,' ')
-			,ifnull(HOLD.OTHER_IDENTIFY_NAME,' ')
+			,ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'')
+			,ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'')
+			,ifnull(HOLD.OTHER_IDENTIFY_NAME,'')
 			)in
 			<foreach collection="list" item="item" open="(" separator="," close=")">
 				(#{item.registBankCode,jdbcType=VARCHAR},
 				#{item.identifyNumber,jdbcType=VARCHAR},
 				#{item.holderName,jdbcType=VARCHAR},
-				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},' '),
-				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ' '),
-				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},' '))
+				ifnull(#{item.personalIdentifyType,jdbcType=VARCHAR},''),
+				ifnull(#{item.institutionIdentifyType,jdbcType=VARCHAR}, ''),
+				ifnull(#{item.otherIdentifyName,jdbcType=VARCHAR},''))
 			</foreach>
 		</if>
 	</select>
@@ -1106,9 +1095,9 @@
 		where HOLD.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
 		and HOLD.IDENTIFY_NUMBER = tmp.IDENTIFY_NUMBER
 		and HOLD.HOLDER_NAME = tmp.HOLDER_NAME
-		and ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,' ') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,' ')
-		and ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,' ') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,' ')
-		and ifnull(HOLD.OTHER_IDENTIFY_NAME,' ') = ifnull(tmp.OTHER_IDENTIFY_NAME,' ')
+		and ifnull(HOLD.PERSONAL_IDENTIFY_TYPE,'') = ifnull(tmp.PERSONAL_IDENTIFY_TYPE,'')
+		and ifnull(HOLD.INSTITUTION_IDENTIFY_TYPE,'') = ifnull(tmp.INSTITUTION_IDENTIFY_TYPE,'')
+		and ifnull(HOLD.OTHER_IDENTIFY_NAME,'') = ifnull(tmp.OTHER_IDENTIFY_NAME,'')
 		)
 		/*** add by zcw 三期性能优化 end **/
    </select>

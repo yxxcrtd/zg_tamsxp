@@ -345,8 +345,8 @@
   <select id="selectByReportuuidForExport" resultMap="BaseResultMap" parameterType="java.lang.String" >
 	    select
 		    DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, CNY, USD_TO_CNY, TOTAL as TOTAL,
-		    REPORTUUID,substring(substring(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,',1,1)+4), 1,
-			INSTR(substring(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,',1,1)+4),',',1,1)-1) AS CCY_AMOUNT
+		    REPORTUUID,substring(substring(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,')+4), 1,
+			INSTR(substring(CCY_AMOUNT, INSTR(CCY_AMOUNT,'USD,')+4),',')-1) AS CCY_AMOUNT
 	    from PBC_REPORT_BALANCE
 	    where REPORTUUID = #{reportuuid,jdbcType=CHAR}
 	  </select>

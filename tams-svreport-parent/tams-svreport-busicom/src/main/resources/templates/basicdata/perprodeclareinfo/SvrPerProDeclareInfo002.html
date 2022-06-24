@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <title data-th-text="#{SvrPerProDeclareInfo002}">产品申报信息登记维护新建</title>
+    <style type="text/css">
+        .layui-form-radio {
+            margin: 0;
+            padding-right: 0;
+        }
+
+        .layui-form-radio>i {
+            font-size: 18px;
+            margin-right: 2px;
+        }
+
+        .form-day-wrap {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="pro-module-container">
+        <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
+            <!-- 隐藏字段 金融产品代码 -->
+            <input type="hidden"  id="statusValid" name="statusValid" class="layui-input form-input" data-th-value="${entity?.statusValid}">
+            <input type="text" name="declareUuid" id="declareUuid" data-th-value='${entity?.declareUuid}' hidden>
+            <input type="text" name="workflowId" id="workflowId" data-th-value='${entity?.workflowId}' hidden>
+            <div class="pro-module-wrap">
+                <div class="pro-module">
+                    <h3 class="pro-module-title">
+                        <span class="title-des">产品申报参数基本信息</span>（<span class="star-sign">*</span>必填）<i
+                            class="iconfont icon-arrow-down pro-down-icon"></i>
+                    </h3>
+                    <div class="pro-module-item">
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prodName}">产品名称</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" name="prodName" id="prodName"
+                                           class="layui-input form-input" maxlength="120"
+                                           data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-value='${entity?.prodName}' required>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prodInsId}">行内标识码</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="prodInsId" th:name="prodInsId"
+                                           class="layui-input form-input"
+                                           data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-value="${entity?.prodInsId}" data-textrange="0" maxlength="60"
+                                           data-th-required="true" />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prodBrand}">产品品牌</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="prodBrand" th:name="prodBrand"
+                                           maxlength="120" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-value="${entity?.prodBrand}" class="layui-input form-input" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prodStage}">产品期次</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="prodStage" th:name="prodStage"
+                                           class="layui-input form-input" onkeypress="return event.keyCode>=48&&event.keyCode<=57"
+                                           data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-value="${entity?.prodStage}" data-textrange="0" maxlength="4"
+                                           data-th-required="true" />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.issuePartyId}">发行机构代码</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="issuePartyId" th:name="issuePartyId"
+                                           class="layui-input form-input"
+                                           data-th-value="${entity?.issuePartyId}?:${SVR_ISSUE_PARTY_ID}"
+                                           data-th-required="true" disabled="disabled"/>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.profitType}">收益类型</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select id="profitType" name="profitType"
+                                            class="layui-input form-input input-select"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-initValue='${entity?.profitType}'
+                                            data-th-data-result="${SVR_PROD_PROFIT_TYPE}" required>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.approverName}">产品审批人</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="approverId" th:name="approverId"
+                                           class="layui-input form-input" style="width:70%;display:inline-block;"
+                                           data-th-value="${entity?.approverId}" maxlength="30"
+                                           placeholder="请输入18位有效证件"  required/>
+                                    <input type="text" th:id="approverName" th:name="approverName"
+                                           class="layui-input form-input" style="width:30%;display:inline-block;"
+                                           data-th-value="${entity?.approverName}" maxlength="200"
+                                           placeholder="请输入姓名" required/>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.designerName}">产品设计人</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="designerId" th:name="designerId"
+                                           class="layui-input form-input" style="width:70%;display:inline-block;" maxlength="30"
+                                           data-th-value="${entity?.designerId}" placeholder="请输入18位有效证件" required/>
+                                    <input type="text" th:id= "designerName" th:name="designerName"
+                                           class="layui-input form-input" style="width:30%;display:inline-block;"
+                                           data-th-value="${entity?.designerName}" maxlength="200"
+                                           placeholder="请输入姓名" required/>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.managerName}">投资经理</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="managerId" th:name="managerId"
+                                           class="layui-input form-input" style="width:70%;display:inline-block;" maxlength="30"
+                                           data-th-value="${entity?.managerId}" placeholder="请输入18位有效证件" required/>
+                                    <input type="text" th:id= "managerName" th:name="managerName"
+                                           class="layui-input form-input" style="width:30%;display:inline-block;"
+                                           data-th-value="${entity?.managerName}" maxlength="200"
+                                           placeholder="请输入姓名" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.liaisonName}">业务联络人姓名</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="liaisonName" th:name="liaisonName"
+                                           maxlength="32" class="layui-input form-input"
+                                           data-th-value="${entity?.liaisonName}" placeholder="请输入内容"  required/>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.liaisonTel}">业务联络人座机</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="liaisonTel" th:name="liaisonTel"
+                                           class="layui-input form-input" maxlength="30"
+                                           data-th-value="${entity?.liaisonTel}" placeholder="请输入内容"  required/>
+                                    <span id="liaisonTel_showRule"
+                                       class="layui-btn layui-btn-sm form-input-text">规则</span>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.liaisonMobile}">业务联络人手机</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="liaisonMobile" th:name="liaisonMobile"
+                                           class="layui-input form-input" maxlength="11"
+                                           data-th-value="${entity?.liaisonMobile}" placeholder="请输入内容"   required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.liaisonEmail}">业务联络人邮箱</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="liaisonEmail" th:name="liaisonEmail"
+                                           class="layui-input form-input" maxlength="50"
+                                           data-th-value="${entity?.liaisonEmail}" placeholder="请输入内容" data-th-required="true" />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.termtype}">产品期限</label>
+                                <div class="layui-input-inline input-inline">
+                                    <div class="layui-input-inline input-inline">
+                                        <select name="termtype" id="termtype"
+                                                class="layui-input form-input input-select"
+                                                data-th-placeholder="#{SysCommon.placeholder}"
+                                                data-th-initValue='${entity?.termtype}'
+                                                data-th-data-result="${SVR_PRODUCT_TERM}" required>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.excFinSector}">是否金融同业专属</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="excFinSector" th:name="excFinSector"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_YES_OR_NO}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.excFinSector}" data-th-placeholder="#{SysCommon.placeholder}" data-th-required="true">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.investArae}">资金投向地区</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="investArae" th:name="investArae"
+                                           data-th-data-result="${SVR_SALEAREA_DECLARE}"
+                                           data-th-initValue="${entity?.investArae}" class="layui-input form-input input-checkbox" data-th-required="true" />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.investCountry}">产品投资国家或地区</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="investCountry" th:name="investCountry"
+                                            class="layui-input form-input input-select" multiple="multiple"
+                                            data-th-data-result="${SVR_COUNTRY_AREA}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.investCountry}" data-th-placeholder="#{SysCommon.placeholder}"
+                                    >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.finanSerModel}">理财业务服务模式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="finanSerModel" th:name="finanSerModel"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_SERVICEMODE}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.finanSerModel}" data-th-placeholder="#{SysCommon.placeholder}"
+                                    >
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.operateMode}">产品运作模式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="operateMode" th:name="operateMode"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_OPERATEMODE_DECLARE}" placeholder="请输入内容" required
+                                            data-th-initValue="${entity?.operateMode}" data-th-placeholder="#{SysCommon.placeholder}">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.raiseType}">募集方式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:name="raiseType" th:id="raiseType"
+                                           class="layui-input form-input input-checkbox" required
+                                           data-th-initValue='${entity?.raiseType}'
+                                           data-th-data-result="${SVR_RAISE_TYPE}" />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cmmode}">产品资产配置方式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="cmmode" name="cmmode" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${SVR_CMMODE}'
+                                           data-th-value="${entity?.cmmode}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.pmmode}">产品管理模式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="pmmode" th:name="pmmode"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_PROD_MANAGE}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.pmmode}" data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-required="true">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.mname}">实际管理人名称</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="mname" th:name="mname"
+                                           data-th-value="${entity?.mname}" maxlength=120
+                                           class="layui-input form-input" placeholder="请输入内容" />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.pricedMode}">产品定价方式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="pricedMode" th:name="pricedMode"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_PRODVALUETYPE}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.pricedMode}"
+                                            data-th-placeholder="#{SysCommon.placeholder}" data-th-required="true">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.ivstorientation}">产品投资性质</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select name="ivstorientation" id="ivstorientation"
+                                            class="layui-input form-input input-select"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-initValue='${entity?.ivstorientation}'
+                                            data-th-data-result="${INVEST_TYPE}" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.yield}">业绩比较基准</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="yield" th:name="yield" maxlength="8" data-textrange='5'
+                                           data-th-value="${entity?.yield}" class="layui-input form-input text-number" required
+                                           data-th-placeholder="#{SysCommon.placeholder}"><span
+                                        class="input-right-show">%</span>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cashManaCate}">是否现金管理类</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="cashManaCate" th:name="cashManaCate"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_YES_OR_NO}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.cashManaCate}" data-th-placeholder="#{SysCommon.placeholder}" >
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.isShortTerm}">是否设置最短持有期限</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="isShortTerm" th:name="isShortTerm"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_YES_OR_NO}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.isShortTerm}" data-th-placeholder="#{SysCommon.placeholder}">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.shortTerm}">最短持有期限(天)</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="shortTerm" th:name="shortTerm"
+                                           class="layui-input form-input text-number"
+                                           data-th-value="${entity?.shortTerm}"
+                                           data-textrange="0" maxlength="5"
+                                           onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                           onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                           placeholder="请输入内容"/>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.isFreeRedem}">最短持有期后是否自由赎回</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="isFreeRedem" th:name="isFreeRedem"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_YN_REDEM}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.isFreeRedem}" data-th-placeholder="#{SysCommon.placeholder}">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.saleArea}">产品销售区域</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="saleArea" th:name="saleArea"
+                                            class="layui-input form-input input-select" multiple="multiple"
+                                            data-th-data-result="${SVR_BUY_PLACE}"
+                                            placeholder="请输入内容"
+                                            data-th-initValue="${entity?.saleArea}"
+                                            data-th-placeholder="#{SysCommon.placeholder}" data-th-required="true">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.saleAmtStr}">起点销售金额</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="saleAmtStr" th:name="saleAmtStr"
+                                           data-th-value="${entity?.saleAmtStr}" maxlength=15
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required/>
+                                    <span class="input-right-show">元</span>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.saleFeeRate}">销售手续费率%</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="saleFeeRate" th:name="saleFeeRate"
+                                           data-textrange="5" maxlength="8"
+                                           data-th-value="${entity?.saleFeeRate}"
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required>
+                                    <span class="input-right-show">%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.raiseCcy}">募集币种</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="raiseCcy" name="raiseCcy" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${CCY}'
+                                           data-th-value = "${entity?.raiseCcy}"
+                                           required />
+
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cashPrinCcy}">兑付本金币种</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="cashPrinCcy" name="cashPrinCcy" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${CCY}'
+                                           data-th-value = "${entity?.cashPrinCcy}"
+                                           required />
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cashProfCcy}">兑付收益币种</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" id="cashProfCcy" name="cashProfCcy" class="layui-input form-input input-select"
+                                           placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                           data-th-data-result='${CCY}'
+                                           data-th-value = "${entity?.cashProfCcy}"
+                                           required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.truFeeRate}">托管费率</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="truFeeRate" th:name="truFeeRate"
+                                           data-textrange="5" maxlength="9"
+                                           data-th-value="${entity?.truFeeRate}"
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required>
+                                    <span class="input-right-show">%</span>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.raisePstrdate}">募集起始日(从)</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:name="raisePstrdate" th:id="raisePstrdate"
+                                           class="layui-input form-input input-dateSelect" required
+                                           data-th-value='${#dates.format(entity?.raisePstrdate,"yyyy-MM-dd")}'>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.raisePenddate}">募集起始日(到)</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:name="raisePenddate" th:id="raisePenddate"
+                                           class="layui-input form-input input-dateSelect" required
+                                           data-th-value='${#dates.format(entity?.raisePenddate,"yyyy-MM-dd")}'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.raiseAmtPlan}">计划募集金额</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="raiseAmtPlan" th:name="raiseAmtPlan"
+                                           data-textrange='2' data-fixtype='2' maxlength="15"
+                                           data-th-value="${entity?.raiseAmtPlan}"
+                                           data-th-required="true" placeholder="请输入内容"
+                                           class="layui-input form-input text-number"> <span
+                                        class="input-right-show">元</span>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.inDepName}">境内托管机构名称</label>
+                                <div class="layui-input-inline input-inline">
+                                    <!-- <input type="text" th:id="repInDepName" th:name="repInDepName"
+                                        data-th-value="${entity?.repInDepName}" maxlength=120 class="layui-input form-input input-select" placeholder="请输入"
+                                        data-th-data-result="${SVR_IN_DEP_NAME}"
+                                        required> -->
+                                    <select th:id="inDepName" th:name="inDepName"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_IN_DEP_NAME}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.inDepName}"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                    >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.inDepCode}">境内托管机构代码</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="inDepCode" th:name="inDepCode"
+                                           data-th-value="${entity?.inDepCode}" maxlength="12"
+                                           class="layui-input form-input" placeholder="请输入内容"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.outDepCtry}">境外托管机构国别</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="outDepCtry" th:name="outDepCtry"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_COUNTRY_AREA}" placeholder="请输入内容" multiple="multiple"
+                                            data-th-initValue="${entity?.outDepCtry}" data-th-placeholder="#{SysCommon.placeholder}"
+                                    >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.outDepName}">境外托管机构名称</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="outDepName" th:name="outDepName"
+                                           data-th-value="${entity?.outDepName}" maxlength="120"
+                                           class="layui-input form-input" placeholder="请输入内容"
+                                    >
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.riskType}">投资者风险偏好</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="riskType" th:name="riskType"
+                                            class="layui-input form-input input-select" data-th-required="true"
+                                            data-th-data-result="${SVR_RISKTYPE}" placeholder="请输入内容"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-initValue="${entity?.riskType}" multiple="multiple">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.riskLevel}">产品风险等级</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="riskLevel" th:name="riskLevel"
+                                            class="layui-input form-input input-select" data-th-required="true"
+                                            data-th-data-result="${RISKLEVEL}" placeholder="请输入内容"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-initValue="${pageModel} eq ${pageModelNew} ? ${defalutRepRiskLevel} : ${entity?.riskLevel}">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.termRightFlag}">发行机构提前终止权标识</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="checkbox" th:id="termRightFlag" th:name="termRightFlag"
+                                           data-th-required="true" lay-skin="switch" lay-text="有|无" data-th-value="${HAS_YES}"
+                                           data-th-checked="${HAS_YES} == ${entity?.termRightFlag}">
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cusRedeemFlag}">投资者赎回权标识</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="checkbox" th:id="cusRedeemFlag" th:name="cusRedeemFlag"
+                                           data-th-required="true" lay-skin="switch" lay-text="有|无" data-th-value="${HAS_YES}"
+                                           data-th-checked="${HAS_YES} ==${entity?.cusRedeemFlag}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.investFeeRate}">投资管理费率</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="investFeeRate" th:name="investFeeRate" data-textrange="5"
+                                           data-th-value="${entity?.investFeeRate}" maxlength="8"
+                                           class="layui-input form-input text-number" placeholder="请输入内容" required>
+                                    <span class="input-right-show">%</span>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.creditType}">产品增信机构类型</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="creditType" th:name="creditType"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_CREDIT_TYPE}" placeholder="请输入内容"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-initValue="${entity?.creditType}" multiple="multiple">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.creditMode}">产品增信形式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="creditMode" th:name="creditMode"
+                                            class="layui-input form-input input-select"
+                                            data-th-data-result="${SVR_CREDIT_MODE}" placeholder="请输入内容"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-initValue="${entity?.creditMode}" >
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.contMode}">合作模式</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="contMode" th:name="contMode"
+                                            class="layui-input form-input input-select" data-th-required="true"
+                                            data-th-data-result="${SVR_CONTMODE}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.contMode}" data-th-placeholder="#{SysCommon.placeholder}">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.cooperationName}">合作机构名称</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="text" th:id="cooperationName" th:name="cooperationName" maxlength=120
+                                           class="layui-input form-input"
+                                           data-th-value="${entity?.cooperationName}" placeholder="请输入内容" >
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.investPrinDate}">投资本金到账日</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="investPrinDate" th:name="investPrinDate"
+                                            class="layui-input form-input input-select" data-th-required="true"
+                                            data-th-data-result="${AMTDATETYPE}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.investPrinDate}" data-th-placeholder="#{SysCommon.placeholder}">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.investProfDate}">投资收益到账日</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:id="investProfDate" th:name="investProfDate"
+                                            class="layui-input form-input input-select" data-th-required="true"
+                                            data-th-data-result="${AMTDATETYPE}" placeholder="请输入内容"
+                                            data-th-initValue="${entity?.investProfDate}" data-th-placeholder="#{SysCommon.placeholder}">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.creditFlag}">产品增信标识</label>
+                                <div class="layui-input-inline input-inline">
+                                    <input type="checkbox" th:id="creditFlag" th:name="creditFlag"
+                                           lay-skin="switch" lay-text="有|无" data-th-value="${HAS_YES}" lay-filter="repCreditFlagFilter"
+                                           data-th-checked="${HAS_YES} ==${entity?.creditFlag}" data-th-required="true">
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.invTypeRat}">投资资产种类及比例</label>
+                                <div class="layui-input-inline input-inline">
+								<textarea th:id="invTypeRat" th:name="invTypeRat" maxlength="300"
+                                          data-th-text="${entity?.invTypeRat}" data-th-required="true"
+                                          class="layui-input form-input layui-textarea" placeholder="请输入内容"></textarea>
+                                    <span id="repInvTypeRat_showRule"
+                                       class="layui-btn layui-btn-sm form-input-text">规则</span>
+                                </div>
+                                <!--						<div class="layui-input-inline input-inline">-->
+                                <!--							<input type="text" th:id="repInvTypeRat" th:name="repInvTypeRat"-->
+                                <!--								data-th-value="${entity?.repInvTypeRat}" maxlength=300 class="layui-input form-input"-->
+                                <!--								data-th-required="true" placeholder="请输入">-->
+                                <!--								<a th:id="repInvTypeRat_showRule" class="layui-btn layui-btn-sm form-input-text">规则</a>-->
+                                <!--						</div>-->
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.isFhxgcp}">新老产品标记</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select th:name="isFhxgcp" th:id="isFhxgcp"
+                                            class="layui-input form-input input-select"
+                                            data-th-initValue= "${entity?.isFhxgcp}"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-data-result="${IS_FHXGCP}">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.prdSpecProperty}">产品特殊属性</label>
+                                <div class="layui-input-inline input-inline">
+                                    <select name="prdSpecProperty" id="prdSpecProperty"
+                                            class="layui-input form-input input-select"
+                                            allowClear="true" formatoption=true multiple="true"
+                                            data-th-initValue= "${entity?.prdSpecProperty}"
+                                            data-th-placeholder="#{SysCommon.placeholder}"
+                                            data-th-data-result="${SVR_SPEC_PROPERTY}"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="form-inline-wrap">
+                                <label class="layui-form-label form-label-wrap" data-th-text="#{SvrPerProDeclareInfo002.remark}">备注</label>
+                                <div class="layui-input-inline input-inline">
+							    <textarea th:id="remark" th:name="remark"
+                                          class="layui-input form-input layui-textarea"
+                                          placeholder="请输入内容" maxlength="256"
+                                          data-th-text="${entity?.remark}"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-cerow text-center">
+                <a id="SvrPerProDeclareInfo002_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+                <a id="SvrPerProDeclareInfo002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div layout:fragment="script">
+    <script data-th-inline="javascript" type="text/javascript">
+        var bussRepFinProductInfo = /*[[${entityName}]]*/'';// 父画面传入中债报备信息对象
+        var saleAreaDeclareIn = /*[[${saleAreaDeclareIn}]]*/;
+        var saleAreaDeclareOut = /*[[${saleAreaDeclareOut}]]*/;
+        var saleAreaDeclareInOut = /*[[${saleAreaDeclareInOut}]]*/;
+        var prodManageModeActM = /*[[${prodManageModeActM}]]*/;
+        var prodManageModeOthO = /*[[${prodManageModeOthO}]]*/;
+        var prodManageModeBank = /*[[${prodManageModeBank}]]*/;
+        var prodManageModeSpv = /*[[${prodManageModeSpv}]]*/;
+        var isShortTerm_yes = /*[[${isShortTerm_yes}]]*/;
+        var isShortTerm_no = /*[[${isShortTerm_no}]]*/;
+        var copModeSigRun = /*[[${copModeSigRun}]]*/;
+        var HAS_YES = /*[[${HAS_YES}]]*/;
+        var HAS_NO = /*[[${HAS_NO}]]*/;
+        var prodRunModeCloN = /*[[${prodRunModeCloN}]]*/;
+        var prodRunModeCloNN = /*[[${prodRunModeCloNN}]]*/;
+        var prodRunModeOpeN = /*[[${prodRunModeOpeN}]]*/;
+        var prodRunModeOpeNN = /*[[${prodRunModeOpeNN}]]*/;
+        var repRaiseCcyCNY = /*[[${repRaiseCcyCNY}]]*/;
+        var YES = /*[[${YES}]]*/'Y'; // 数据字典.是否_是
+        var NO = /*[[${NO}]]*/'N'; // 数据字典.是否_否
+        var svrIsSubsidiary = /*[[${svrIsSubsidiary}]]*/; // 系统参数_是否子公司
+    </script>
+    <script
+            data-th-src="@{/js/basicdata/perprodeclareinfo/SvrPerProDeclareInfo002.js}"
+            type="text/javascript"></script>
+</div>
+</body>
+</html>

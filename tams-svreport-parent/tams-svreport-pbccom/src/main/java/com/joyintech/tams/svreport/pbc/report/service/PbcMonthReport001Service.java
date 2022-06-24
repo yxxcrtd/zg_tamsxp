@@ -251,6 +251,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             if (repos.getStartdate().compareTo(report.getStartdate()) > 0){
                 repos.setStartdate(report.getStartdate());
             }
+			repos.setSendStatus(report.getSendStatus());
         }
         return repos;
     }

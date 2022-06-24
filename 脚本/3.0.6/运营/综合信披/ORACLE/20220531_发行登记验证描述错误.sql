@@ -1,0 +1,1 @@
+UPDATE chb_datacheck_condition SET REMARK = '规律开放周期选择“99 其他规律开放周期”以外的要素时' WHERE CHECKCONDITIONID = '873E4A49-6810-5A9E-F060-007F01006A31';

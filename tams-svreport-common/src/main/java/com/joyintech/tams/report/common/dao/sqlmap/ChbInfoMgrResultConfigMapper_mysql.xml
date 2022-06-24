@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper_mysql">
+    <resultMap id="BaseResultMap"
+               type="com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig">
+        <id column="RESULT_ID" property="resultId" jdbcType="VARCHAR" />
+        <result column="MGRTABLE_ID" property="mgrTableName"
+                jdbcType="VARCHAR" />
+        <result column="COLUMN_ID" property="columnId"
+                jdbcType="VARCHAR" />
+        <result column="COLUMN_NAME" property="columnName"
+                jdbcType="VARCHAR" />
+        <result column="DICTCODE" property="resultdictCode"
+                jdbcType="VARCHAR" />
+        <result column="ORDER_NO" property="orderNo" jdbcType="DOUBLE" />
+        <result column="SHOWFLAG" property="showFlag" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="queryAllchbMgrTableInfo" resultMap="BaseResultMap"
+            parameterType="java.util.Map">
+        SELECT * FROM CHB_INFOMGR_RESULT_CONFIG WHERE MGRTABLE_ID = #{tableId,jdbcType=VARCHAR}
+        <if test="flag">
+            AND SHOWFLAG = 'Y'
+        </if>
+        ORDER BY ORDER_NO
+    </select>
+    <select id="queryAllchbMgrTableInfoEx" resultMap="BaseResultMap"
+            parameterType="java.util.Map">
+		SELECT * FROM CHB_INFOMGR_RESULT_CONFIG WHERE MGRTABLE_ID = #{tableId,jdbcType=VARCHAR}
+		ORDER BY ORDER_NO
+	</select>
+    <select id="getTableNameByTableId" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT MGRTABLE_NAME MGRTABLENAME FROM CHB_MGRTABLE_INFO
+		WHERE MGRTABLE_ID = #{mgrTableId,jdbcType=VARCHAR}
+	</select>
+    <select id="getAllColumnByTableId" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT COLUMN_ID COLUMNID FROM CHB_INFOMGR_RESULT_CONFIG
+		WHERE MGRTABLE_ID = #{mgrTableId,jdbcType=VARCHAR}
+	</select>
+    <insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig">
+        INSERT INTO CHB_INFOMGR_RESULT_CONFIG
+        (
+        RESULT_ID,
+        MGRTABLE_ID,
+        COLUMN_ID,
+        COLUMN_NAME,
+        DICTCODE,
+        ORDER_NO,
+        SHOWFLAG
+        ) VALUES
+        <foreach collection="insertList" item="item" separator=",">
+            (
+            #{item.resultId, jdbcType=VARCHAR},
+            #{item.mgrTableName, jdbcType=VARCHAR},
+            #{item.columnId, jdbcType=VARCHAR},
+            #{item.columnName, jdbcType=VARCHAR},
+            #{item.resultdictCode, jdbcType=VARCHAR},
+            #{item.orderNo, jdbcType=DOUBLE},
+            #{item.showFlag, jdbcType=VARCHAR}
+            )
+        </foreach>
+
+    </insert>
+    <delete id="deleteQueryResult" parameterType="java.util.Map">
+		DELETE FROM CHB_INFOMGR_RESULT_CONFIG WHERE MGRTABLE_ID = #{mgrTableId, jdbcType=VARCHAR}
+	</delete>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.salerrewpena.dao.SvrSalerRewPenaDBInterfMapper_mysql" >
+   
+    <select id="selectBatchData" resultType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaInfo">
+		SELECT
+		SALER_REW_PENA_NO,
+		SALER_INST_CODE,
+		SALER_INS_NO,
+		SALER_REW_PENA_TYEP,
+		SALER_REW_PENA_NAME,
+		SALER_REW_PENA_COMMENTS,
+		SALER_REW_PENA_INST,
+		SALER_REW_PENA_INST_NAME,
+		SALER_REW_PENA_START,
+		SALER_REW_PENA_END,
+		SALER_COMPLAIN_DETAIL,
+		SALER_COMPLAIN_RESULT,
+		SALER_COMPLAIN_DATE,
+		STATUS,
+		CREATE_DEPT,
+		ORG_CODE,
+		DATA_DATE,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME
+	    FROM CHB_SALER_REW_PENA_INFO
+		WHERE DATE_FORMAT(IFNULL(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
+
+	</select>
+	
+	 <select id="selectRegSalerRewPenaData" resultType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaSub">
+		SELECT
+		 REGIST_SEQNO,
+		 SALER_REW_PENA_NO,
+		 SALER_INST_CODE,
+		 SALER_INS_NO,
+		 SALER_REW_PENA_TYEP,
+		 SALER_REW_PENA_NAME,
+		 SALER_REW_PENA_COMMENTS,
+		 SALER_REW_PENA_INST,
+		 SALER_REW_PENA_INST_NAME,
+		 SALER_REW_PENA_START,
+		 SALER_REW_PENA_END,
+		 SALER_COMPLAIN_DETAIL,
+		 SALER_COMPLAIN_RESULT,
+		 SALER_COMPLAIN_DATE,
+		 STATUS,
+		 SUMIT_SEQ,
+		 CHB_SUBMIT_DEADLINE,
+		 SUBMIT_DEADLINE,
+		 SEND_STATUS,
+		 SUBMIT_TIME,
+		 SUBMIT_FEEDBACK_STATUS,
+		 SUBMIT_FEEDBACK_MSG,
+		 CREATE_DEPT,
+		 ORG_CODE,
+		 DATA_DATE,
+		 CREATE_USER,
+		 CREATE_TIME,
+		 UPDATE_USER,
+		 UPDATE_TIME
+		FROM CHB_SALER_REW_PENA_SUB
+		WHERE  1=1
+        AND  SEND_STATUS  in ('02','03')
+	</select>
+	
+	<delete id="deleteBatchData" parameterType="map">
+		DELETE FROM CHB_SALER_REW_PENA_SUB
+		<where>
+  			<foreach collection="deleleList" index="index" item="item" open="(" separator=")or(" close=")">
+				SALER_REW_PENA_NO = #{item.salerRewPenaNo,jdbcType=VARCHAR}
+  				AND SEND_STATUS = '01'
+    		</foreach>
+  		</where>
+	</delete>
+
+	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbSalerRewPenaSub">
+		insert into CHB_SALER_REW_PENA_SUB(
+		REGIST_SEQNO, SALER_REW_PENA_NO, SALER_INS_NO, SALER_INST_CODE,
+		SALER_REW_PENA_TYEP, SALER_REW_PENA_NAME, SALER_REW_PENA_COMMENTS,
+		SALER_REW_PENA_INST, SALER_REW_PENA_INST_NAME,
+		SALER_REW_PENA_START, SALER_REW_PENA_END, SALER_COMPLAIN_DETAIL,
+		SALER_COMPLAIN_RESULT, SALER_COMPLAIN_DATE,STATUS,CREATE_DEPT,ORG_CODE,
+		SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SEND_STATUS,DATA_DATE,
+		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+		values(
+		#{registSeqno,jdbcType=VARCHAR},#{salerRewPenaNo,jdbcType=VARCHAR}, #{salerInsNo,jdbcType=VARCHAR}, #{salerInstCode,jdbcType=VARCHAR},
+		#{salerRewPenaTyep,jdbcType=VARCHAR}, #{salerRewPenaName,jdbcType=VARCHAR}, #{salerRewPenaComments,jdbcType=VARCHAR},
+		#{salerRewPenaInst,jdbcType=VARCHAR}, #{salerRewPenaInstName,jdbcType=VARCHAR},
+		#{salerRewPenaStart,jdbcType=DATE}, #{salerRewPenaEnd,jdbcType=DATE}, #{salerComplainDetail,jdbcType=VARCHAR},
+		#{salerComplainResult,jdbcType=VARCHAR}, #{salerComplainDate,jdbcType=DATE},#{status,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
+		#{sumitSeq,jdbcType=VARCHAR}, #{chbSubmitDeadline,jdbcType=DATE},
+		#{submitDeadline,jdbcType=DATE}, #{sendStatus,jdbcType=VARCHAR},#{dataDate,jdbcType=DATE},
+		#{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=DATE})
+	</insert>
+
+</mapper>

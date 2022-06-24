@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.invest.bankuplink.rocketmq.dao.UserMapper">
-    <select id="selectAdminUserList" resultType="com.joyintech.system.user.dto.User">
-        select a.* from SYS_USER a where a.admin_flag = '01'
-    </select>
-</mapper>

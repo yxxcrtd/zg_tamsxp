@@ -182,7 +182,7 @@
             UPDATE_USER, CREATE_USER, UPDATE_TIME,
             CREATE_TIME, WORKFLOW_ID, ORG_CODE,
             DEPT_CODE, CREATE_DEPT, ASSET_NAME,
-            ORG_DATA, ERR_MSG,TRADE_MARKET)
+            ORG_DATA, ERR_MSG)
         values (#{datauuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR},
             #{assetType2,jdbcType=VARCHAR}, #{vdate,jdbcType=VARCHAR}, #{mdate,jdbcType=VARCHAR},
             #{orgAssetType1,jdbcType=VARCHAR}, #{orgAssetType2,jdbcType=VARCHAR}, #{orgAssetType3,jdbcType=VARCHAR},
@@ -190,7 +190,7 @@
             #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
             #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
             #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR},
-            #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB}, #{tradeMarket,jdbcType=CLOB})
+            #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs" >
         insert into CHB_ASSET_INFO_ERRODATA

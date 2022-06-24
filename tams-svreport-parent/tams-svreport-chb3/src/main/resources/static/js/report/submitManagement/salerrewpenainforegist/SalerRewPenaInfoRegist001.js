@@ -54,7 +54,8 @@ $(function(){
             ,{field: 'statusStr', title: "数据状态",width:100,sortField:'status'}
             ,{field: 'sendStatus', title: "报送状态",visible:false,sortField:'sendStatus'}
             ,{field: 'sendStatusStr', title: "报送状态", width:100 ,sortField:'sendStatus'}
-            ,{field: 'submitTimeStr', title: "报送日期", width:150,sortField:'submitTime'}
+            ,{field: 'submitTime', title: "报送日期", type: 'datetime',width:150,sortField:'submitTime'}
+            ,{field: 'submitTimeStr', title: "报送日期", visible:false}
             ,{field: 'chbSubmitDeadline', title: "报送截止日", type:'date', width:100,sortField:'chbSubmitDeadline'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field: 'salerInstCode', title: '销售机构代码', width:120,sortField:'salerInstCode'}

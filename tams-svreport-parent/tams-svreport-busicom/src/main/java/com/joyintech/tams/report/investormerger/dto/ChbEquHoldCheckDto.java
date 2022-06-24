@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -926,5 +927,13 @@ public class ChbEquHoldCheckDto extends BaseEntity implements ITableRow {
     /****ZGBSSE-842 【中债三期】识别标识合并导出数据数据中合并后识别标识选择值错误***/
     public String getChooseMergerStr(){
         return !getIndentifyMark().equals(getMergerindentifymark())?"OFF":"ON";
+    }
+
+    public String getUpdateTimeStr() {
+        return DateUtil.formatDateTime(this.getUpdateTime());
+    }
+
+    public String getDataDateStr() {
+        return DateUtil.formatDateTime(this.getDataDate());
     }
 }

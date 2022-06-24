@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstHolidayErrodataMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstHolidayErrodata" >
+        <id column="DATAUUID" property="datauuid" jdbcType="CHAR" />
+        <result column="WORKFLOW_ID" property="workflowId" jdbcType="VARCHAR" />
+        <result column="CALENDAR_ID" property="calendarId" jdbcType="VARCHAR" />
+        <result column="IS_HOLIDAY" property="isHoliday" jdbcType="DECIMAL" />
+        <result column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" extends="BaseResultMap" >
+        <result column="ORG_DATA" property="orgData" jdbcType="CLOB" />
+        <result column="ERR_MSG" property="errMsg" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DATAUUID DATAUUID, WORKFLOW_ID WORKFLOW_ID, CALENDAR_ID CALENDAR_ID, IS_HOLIDAY IS_HOLIDAY, 
+        CDATE CDATE, STATUS STATUS, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, CREATE_USER CREATE_USER, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        ORG_DATA, ERR_MSG
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstHolidayErrodataMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.MstHolidayErrodataMapper.Blob_Column_List" />
+        from MST_HOLIDAY_ERRODATA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstHolidayErrodataMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.MstHolidayErrodataMapper.Blob_Column_List" />
+        from MST_HOLIDAY_ERRODATA
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstHolidayErrodataMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.MstHolidayErrodataMapper.Blob_Column_List" />
+        from MST_HOLIDAY_ERRODATA
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MST_HOLIDAY_ERRODATA
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from MST_HOLIDAY_ERRODATA
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertBasicByWorkflowId" parameterType="java.util.Map" >
+        insert into MST_HOLIDAY_ERRODATA(DATAUUID, WORKFLOW_ID, CALENDAR_ID, IS_HOLIDAY, 
+        CDATE, STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        ORG_DATA, ERR_MSG)
+        select DATAUUID, #{newWorkflowId,jdbcType=VARCHAR} WORKFLOW_ID, CALENDAR_ID, IS_HOLIDAY, 
+            CDATE, #{status,jdbcType=VARCHAR} STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            ORG_DATA, ERR_MSG
+             from MST_HOLIDAY_ERRODATA
+             where STATUS = 'E' and WORKFLOW_ID = #{oldWorkflowId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" >
+        update MST_HOLIDAY_ERRODATA
+        <set >
+            <if test="datauuid != null" >
+                DATAUUID = #{datauuid,jdbcType=CHAR},
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="isHoliday != null" >
+                IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgData != null" >
+                ORG_DATA = #{orgData,jdbcType=CLOB},
+            </if>
+            <if test="errMsg != null" >
+                ERR_MSG = #{errMsg,jdbcType=CLOB},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" >
+        update MST_HOLIDAY_ERRODATA
+        set 
+        DATAUUID = #{datauuid,jdbcType=CHAR},
+        CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+        IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
+        CDATE = #{cdate,jdbcType=DATE},
+        STATUS = #{status,jdbcType=VARCHAR},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        ORG_DATA = #{orgData,jdbcType=CLOB},
+        ERR_MSG = #{errMsg,jdbcType=CLOB}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" >
+        insert into MST_HOLIDAY_ERRODATA (DATAUUID, WORKFLOW_ID, CALENDAR_ID, 
+            IS_HOLIDAY, CDATE, STATUS, 
+            ORG_CODE, DEPT_CODE, CREATE_USER, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            ORG_DATA, ERR_MSG)
+        values (#{datauuid,jdbcType=CHAR}, #{workflowId,jdbcType=VARCHAR}, #{calendarId,jdbcType=VARCHAR}, 
+            #{isHoliday,jdbcType=DECIMAL}, #{cdate,jdbcType=DATE}, #{status,jdbcType=VARCHAR}, 
+            #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" >
+        insert into MST_HOLIDAY_ERRODATA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="datauuid != null" >
+                DATAUUID,
+            </if>
+            <if test="workflowId != null" >
+                WORKFLOW_ID,
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID,
+            </if>
+            <if test="isHoliday != null" >
+                IS_HOLIDAY,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="orgData != null" >
+                ORG_DATA,
+            </if>
+            <if test="errMsg != null" >
+                ERR_MSG,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="datauuid != null" >
+                #{datauuid,jdbcType=CHAR},
+            </if>
+            <if test="workflowId != null" >
+                #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarId != null" >
+                #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="isHoliday != null" >
+                #{isHoliday,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgData != null" >
+                #{orgData,jdbcType=CLOB},
+            </if>
+            <if test="errMsg != null" >
+                #{errMsg,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" >
+        insert into MST_HOLIDAY_ERRODATA(DATAUUID, WORKFLOW_ID, CALENDAR_ID, IS_HOLIDAY, 
+        CDATE, STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        ORG_DATA, ERR_MSG)
+        select DATAUUID, #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID, CALENDAR_ID, IS_HOLIDAY, 
+            CDATE, #{status,jdbcType=VARCHAR} STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            ORG_DATA, ERR_MSG
+             from MST_HOLIDAY_ERRODATA
+             where STATUS = 'E' and DATAUUID = #{datauuid,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" >
+        update MST_HOLIDAY_ERRODATA
+        <set >
+            <if test="workflowId != null" >
+                WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            </if>
+            <if test="calendarId != null" >
+                CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            </if>
+            <if test="isHoliday != null" >
+                IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=DATE},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgData != null" >
+                ORG_DATA = #{orgData,jdbcType=CLOB},
+            </if>
+            <if test="errMsg != null" >
+                ERR_MSG = #{errMsg,jdbcType=CLOB},
+            </if>
+        </set>
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodataWithBLOBs" >
+        update MST_HOLIDAY_ERRODATA
+        set WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
+            CDATE = #{cdate,jdbcType=DATE},
+            STATUS = #{status,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ORG_DATA = #{orgData,jdbcType=CLOB},
+            ERR_MSG = #{errMsg,jdbcType=CLOB}
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstHolidayErrodata" >
+        update MST_HOLIDAY_ERRODATA
+        set WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR},
+            CALENDAR_ID = #{calendarId,jdbcType=VARCHAR},
+            IS_HOLIDAY = #{isHoliday,jdbcType=DECIMAL},
+            CDATE = #{cdate,jdbcType=DATE},
+            STATUS = #{status,jdbcType=VARCHAR},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where DATAUUID = #{datauuid,jdbcType=CHAR}
+    </update>
+</mapper>

@@ -1,8 +1,0 @@
-[{
-	"label": "删除结转",
-	"type": "button",
-	"class": "danger",
-	"category": "delete",
-	"url": "deleteCash",
-	"value": ""
-}]

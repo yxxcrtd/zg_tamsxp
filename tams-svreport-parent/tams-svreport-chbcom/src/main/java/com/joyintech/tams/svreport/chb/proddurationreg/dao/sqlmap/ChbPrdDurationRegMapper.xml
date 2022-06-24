@@ -14,6 +14,7 @@
                 <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 		       INFO.PRD_VDATE       as VDATE,
 		       INFO.OPERATE_MODE    as OPERATEMODE,
+		       TEMP.CHANG_TYPE AS changeType,
 		       TEMP.STATUS,
 		       code.REG_CODE        REGCODE
 		  FROM (
@@ -21,6 +22,7 @@
 		        SELECT DEAL.ORG_CODE,
 		                DEAL.PROD_ID,
     				    DEAL.FPROD_ID,
+		                null as CHANG_TYPE,
     				    CASE WHEN #{openProdMdateConf,jdbcType=VARCHAR} = '02' AND DEAL.TRADE_TYPE IN ('04', '05', '14', '15') and OPEN1.PROD_ID is not null
 		                then DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE)
 		                else 
@@ -40,11 +42,13 @@
 		               	ELSE
 		               		NVL(OPEN1.OPEN_VDATE,DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE))
 		               	END OPEN_VDATE,
+		               <!--
 		                case when 
 		                to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') != to_char(DEAL.SETTDATE_DATE, 'yyyy-MM-dd') and DEAL.Status='E'
 		                then 'M'
 		                else DEAL.Status
-		                end Status
+		                end Status -->
+		               DEAL.Status Status
 		          FROM CHB_PRD_DEAL DEAL
 		          LEFT JOIN CHB_PRD_OPENSCH OPEN1
 		          ON NVL(DEAL.FPROD_ID,DEAL.PROD_ID) = OPEN1.PROD_ID
@@ -73,11 +77,12 @@
 		        SELECT YIELD.ORG_CODE,
 		                YIELD.PROD_ID,
     					YIELD.FPROD_ID,
+		                YIELD.CHANG_TYPE,
     					NVL(OPEN1.OPEN_START, YIELD.CHANGE_DATE) OPEN_START,
 						NVL(OPEN1.OPEN_END, YIELD.CHANGE_DATE) OPEN_END,
                         YIELD.CHANGE_DATE PAY_DATE,
 						YIELD.CHANGE_DATE OPEN_VDATE,
-		                case when to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E' then 'M' else YIELD.status end status
+		                 YIELD.status as status
 		          FROM CHB_PRD_PERIODYIELD YIELD
 		        	<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 					LEFT JOIN CHB_PRD_OPENSCH OPEN1
@@ -114,6 +119,7 @@
 		        SELECT FEEINFO.ORG_CODE,
 		                FEEINFO.PROD_ID,
     					FEEINFO.FPROD_ID,
+		                null as CHANG_TYPE,
     					<!-- 费用交易无需关联开放计划 -->
 		                NVL(OPEN1.OPEN_START,FEEINFO.PAY_DATE) OPEN_START,
 		                NVL(OPEN1.OPEN_END,FEEINFO.PAY_DATE) OPEN_END,
@@ -122,11 +128,7 @@
                         <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 						FEEINFO.PAY_DATE OPEN_VDATE,
 		                <!--NVL(OPEN1.OPEN_VDATE,FEEINFO.PAY_DATE) OPEN_VDATE,-->
-		                case when 
-		                to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') != to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') and FEEINFO.status='E'
-		                then 'M'
-		                else FEEINFO.status
-		                end status
+		                FEEINFO.status as status
 		          FROM CHB_PRD_FEE_DEAL FEEINFO
 					<!-- 此处关联开放计划是为了防止倒起息交易的支付日当天有申赎交易，业务开始日需要取开放计划的开始日 start-->
 				 	LEFT JOIN CHB_PRD_OPENSCH OPEN1
@@ -188,6 +190,7 @@
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
 			INFO.VDATE AS VDATE,
 			INFO.OPERATE_MODE AS OPERATEMODE,
+		    TEMP.CHANG_TYPE AS changeType,
 			code.REG_CODE REGCODE,
 			TEMP.Status
 		FROM ( 
@@ -195,16 +198,13 @@
 			SELECT DEAL.ORG_CODE,
 			DEAL.PROD_ID,
             DEAL.FPROD_ID,
+			null as CHANG_TYPE,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) AS OPEN_START,
 			DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) AS OPEN_END,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
             DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE) PAY_DATE,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		    case when 
-            to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') != to_char(DEAL.SETTDATE_DATE, 'yyyy-MM-dd') and DEAL.Status='E'
-            then 'M'
-            else DEAL.Status
-            end Status
+             DEAL.Status AS Status
 			FROM CHB_PRD_DEAL DEAL
 			WHERE ( to_char(DEAL.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(DECODE(DEAL.TRADE_TYPE,'04',DEAL.INTEREST_DATE,DEAL.SETTDATE_DATE), 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
@@ -224,16 +224,13 @@
 			SELECT YIELD.ORG_CODE,
 			YIELD.PROD_ID,
             YIELD.FPROD_ID,
+		    YIELD.CHANG_TYPE as CHANG_TYPE,
 			YIELD.CHANGE_DATE AS OPEN_START,
 			YIELD.CHANGE_DATE AS OPEN_END,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
             YIELD.CHANGE_DATE PAY_DATE,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		    case when 
-            to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') != to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') and YIELD.status='E'
-            then 'M'
-            else YIELD.status
-            end status
+		    YIELD.status as status
 			FROM CHB_PRD_PERIODYIELD YIELD
 		    WHERE (to_char(YIELD.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(YIELD.CHANGE_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})
@@ -255,16 +252,13 @@
 			SELECT FEEINFO.ORG_CODE,
 			FEEINFO.PROD_ID,
             FEEINFO.FPROD_ID,
+		    null as CHANG_TYPE,
 			FEEINFO.PAY_DATE AS OPEN_START,
 			FEEINFO.PAY_DATE AS OPEN_END,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 start -->
             FEEINFO.PAY_DATE PAY_DATE,
             <!-- add by dubaojun 2020-06-13 需要查询业务确认日 end -->
-		    case when 
-             to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') != to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') and FEEINFO.status='E'
-             then 'M'
-             else FEEINFO.status
-             end status
+		    FEEINFO.status as status
 			FROM CHB_PRD_FEE_DEAL FEEINFO
 			WHERE ( to_char(FEEINFO.UPDATE_TIME, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR} or
 			to_char(FEEINFO.PAY_DATE, 'yyyy-MM-dd') = #{batchDate,jdbcType = VARCHAR})

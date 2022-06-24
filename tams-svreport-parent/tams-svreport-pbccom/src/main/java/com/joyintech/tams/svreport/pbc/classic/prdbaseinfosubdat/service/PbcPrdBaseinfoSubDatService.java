@@ -53,6 +53,10 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
 
     private static final String TIPS_SUFFIX_ERROR = "只支持2003版(文件后缀为.xls)的excel导入，请修改文件重新导入";
 
+
+    private static final String NOTFILE_ERROR = "导入模板不一致，请重新选择文件！";
+
+
     @Autowired
     private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 
@@ -75,6 +79,17 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
             ajaxResult.setErrorList(Arrays.asList(message));
             return ajaxResult;
         }
+        /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
+
+        List<List<String>> topList = ExcelUtil.getDataList1top(fileName);
+        if(StringUtil.isEmptyList(topList)||topList.get(0).size()!=34){
+            ValidMessage message = new ValidMessage();
+            message.setMessage(NOTFILE_ERROR);
+            ajaxResult.setErrorList(Arrays.asList(message));
+            return ajaxResult;
+        }
+        /***TISHKS-1010 CLONE - 【产品问题】人行报送文件管理（资产管理 ），点击导入资管产品信息，导入模板不一致，也可导入并弹出相关校验*/
+
         List<List<String>> dataList = ExcelUtil.getDataList1(fileName);
         if(CollectionUtil.isNotEmpty(dataList)){
             List<PbcPrdBaseinfoSubDatDto> pbcPrdBaseinfoSubDatDtos = new ArrayList<>();
@@ -506,12 +521,17 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                 if(checkIsNotEmpty(transferType1,rowNumber,"货币市场基金标识",errorMessage)){
                     dto.setTransferType1(PbcDictCodeEnums.getCodeByName(transferType1));
                 }
-                //其他产品标识1
-//                String transferType2 = rowsData.get(row++);
-//                dto.setTransferType2(StrUtil.isEmpty(transferType2) ? null : transferType2);
-                //其他产品标识2
-//                String transferType3 = rowsData.get(row++);
-//                dto.setTransferType3(StrUtil.isEmpty(transferType3) ? null : transferType3);
+                //跨境理财通标识
+                String crossBorderFlag = rowsData.get(row++);
+                if(checkIsNotEmpty(crossBorderFlag,rowNumber,"跨境理财通标识",errorMessage)){
+                    dto.setCrossBorderFlag(PbcDictCodeEnums.getCodeByName(crossBorderFlag));
+                }
+
+                //以财产权信托名义开展的资金信托标识
+                String zjxtFlag = rowsData.get(row++);
+                if(checkIsNotEmpty(zjxtFlag,rowNumber,"以财产权信托名义开展的资金信托标识",errorMessage)){
+                    dto.setZjxtFlag(PbcDictCodeEnums.getCodeByName(zjxtFlag));
+                }
                 //其他产品标识3
                 String transferType4 = rowsData.get(row++);
 //                dto.setTransferType1(StrUtil.isEmpty(transferType4) ? null : transferType4);
@@ -556,17 +576,6 @@ public class PbcPrdBaseinfoSubDatService extends BaseService<PbcPrdBaseinfoSubDa
                     if(checkIsNotEmpty(creditMode,rowNumber,"增信形式",errorMessage)){
                         dto.setCreditMode(PbcDictCodeEnums.getCodeByName(creditMode));
                     }
-                }
-                //跨境理财通标识
-                String crossBorderFlag = rowsData.get(row++);
-                if(checkIsNotEmpty(crossBorderFlag,rowNumber,"跨境理财通标识",errorMessage)){
-                    dto.setCrossBorderFlag(PbcDictCodeEnums.getCodeByName(crossBorderFlag));
-                }
-
-                //以财产权信托名义开展的资金信托标识
-                String zjxtFlag = rowsData.get(row++);
-                if(checkIsNotEmpty(zjxtFlag,rowNumber,"以财产权信托名义开展的资金信托标识",errorMessage)){
-                    dto.setZjxtFlag(PbcDictCodeEnums.getCodeByName(zjxtFlag));
                 }
 
                 if(CollectionUtil.isNotEmpty(errorMessage)){

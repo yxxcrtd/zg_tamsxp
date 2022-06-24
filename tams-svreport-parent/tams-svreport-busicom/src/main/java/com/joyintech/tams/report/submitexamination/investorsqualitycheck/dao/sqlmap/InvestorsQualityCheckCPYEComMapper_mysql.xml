@@ -55,7 +55,48 @@
         SELECT
         COUNT(DISTINCT(PROD_ID))
         FROM
-        (<include refid="objRec"></include>) ZZ
+        (SELECT
+        PROD_ID,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY
+        FROM(
+        SELECT
+        PROD_ID,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY,
+        ROW_NUMBER() over( partition by PROD_ID ORDER BY MDATE DESC )  AS durMDateNo
+        FROM(
+        SELECT
+        A.PROD_ID,
+        B.MDATE,
+        B.BALANCE_AMT,
+        B.PRD_QTY,
+        ROW_NUMBER() over( partition by A.PROD_ID , B.MDATE ORDER BY B.UPDATE_TIME DESC)  AS durStatusNo
+        FROM  CHB_PRD_BASEINFO A
+        INNER JOIN CHB_PRD_DEAL_SUB B
+        ON A.PROD_ID = B.PROD_ID
+        WHERE
+        A.STATUS  != 'D'
+        <if test="orgCodeList != null and orgCodeList.size() > 0">
+            <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+                #{orgCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prdTypeList != null and prdTypeList.size() > 0">
+            <foreach collection="prdTypeList" item="operateMode" open=" AND A.OPERATE_MODE IN (" close=")" separator=",">
+                #{operateMode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        AND A.FPROD_ID is null
+        AND STR_TO_DATE(DATE_FORMAT(B.MDATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[<=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+        ) as t1
+        WHERE 	durStatusNo = 1
+        ) as t2
+        WHERE
+        durMDateNo = 1
+        OR  durMDateNo = 2) ZZ
     </select>
 
     <!-- 余额、份额共通-错误记录取得 -->
@@ -112,7 +153,48 @@
         @PROD_ID := A.PROD_ID,
         @MDATE := A.MDATE
         FROM
-        (SELECT * FROM (<include refid="objRec"></include>) FF ORDER BY PROD_ID,MDATE ) A
+        (SELECT * FROM (SELECT
+        PROD_ID,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY
+        FROM(
+        SELECT
+        PROD_ID,
+        MDATE,
+        BALANCE_AMT,
+        PRD_QTY,
+        ROW_NUMBER() over( partition by PROD_ID ORDER BY MDATE DESC )  AS durMDateNo
+        FROM(
+        SELECT
+        A.PROD_ID,
+        B.MDATE,
+        B.BALANCE_AMT,
+        B.PRD_QTY,
+        ROW_NUMBER() over( partition by A.PROD_ID , B.MDATE ORDER BY B.UPDATE_TIME DESC)  AS durStatusNo
+        FROM  CHB_PRD_BASEINFO A
+        INNER JOIN CHB_PRD_DEAL_SUB B
+        ON A.PROD_ID = B.PROD_ID
+        WHERE
+        A.STATUS  != 'D'
+        <if test="orgCodeList != null and orgCodeList.size() > 0">
+            <foreach collection="orgCodeList" item="orgCode" open=" AND A.ORG_CODE IN (" close=")" separator=",">
+                #{orgCode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="prdTypeList != null and prdTypeList.size() > 0">
+            <foreach collection="prdTypeList" item="operateMode" open=" AND A.OPERATE_MODE IN (" close=")" separator=",">
+                #{operateMode,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        AND A.FPROD_ID is null
+        AND STR_TO_DATE(DATE_FORMAT(B.MDATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[<=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
+        ) as t1
+        WHERE 	durStatusNo = 1
+        ) as t2
+        WHERE
+        durMDateNo = 1
+        OR  durMDateNo = 2) FF ORDER BY PROD_ID,MDATE ) A
         INNER JOIN CHB_PRD_RAISETOT_SUB B
         ON A.PROD_ID = B.PROD_ID left join
         (SELECT @rownum :=0, @PROD_ID := NULL,@MDATE := NULL, @rank := 0) tmp on 1=1

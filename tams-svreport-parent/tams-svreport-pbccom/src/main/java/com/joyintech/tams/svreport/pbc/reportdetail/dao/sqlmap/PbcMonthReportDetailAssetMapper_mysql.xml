@@ -158,7 +158,7 @@
             LEFT JOIN CHB_MST_COUNTER_PARTY MP1 ON MP1.COUNTER_ID = P.SUBJECT_NAME
             LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = P.RIVAL_PARTY
             /*LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = DECODE(P.TERM,NULL,TO_DATE('19000101','yyyyMMdd'),ADD_MONTHS(TO_DATE(P.TERM||'01','yyyyMMdd'),1)-1)*/
-            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = (case P.TERM when NULL then STR_TO_DATE('19000101','%Y-%m-%d') when  adddate(STR_TO_DATE(concat(P.TERM,'01')),'%Y-%m-%d'),interval 1 month) then -1 end)
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PRODID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE = (case P.TERM when NULL then STR_TO_DATE('19000101','%Y%m%d') else adddate(STR_TO_DATE(concat(P.TERM,'01'),'%Y%m%d'),interval 1 month)-1 end)
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P6 ON P6.PROPERTYCODE = P.DETAILNO AND P6.PROPLEVEL = '6' AND P6.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P5 ON (P5.PROPERTYCODE = P6.CODEPARENT or (p.detailno2 is not null and p5.propertycode = p.detailno2)) AND P5.PROPLEVEL = '5' AND P5.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P4 ON P4.PROPERTYCODE = P5.CODEPARENT AND P4.PROPLEVEL = '4' AND P4.STATUS='E'
@@ -166,11 +166,11 @@
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P2 ON P2.PROPERTYCODE = P3.CODEPARENT AND P2.PROPLEVEL = '2' AND P2.STATUS='E'
             LEFT JOIN PBC_REPORT_TEMPLATEDETAIL P1 ON P1.PROPERTYCODE = P2.CODEPARENT AND P1.PROPLEVEL = '1' AND P1.STATUS='E'
             LEFT JOIN CHB_TYPE_MAPPING_EX EX ON EX.SRCFIELD1 = P.ASSET_CODE AND EX.MAPPINGCODE = 'MAPPINGCODE_SUBJECTNO' AND EX.OBJFIELD3 = 'C01'
-            LEFT JOIN (SELECT ASSET_ID,IFNULL(ASSET_RATE,0)*100 ASSET_RATE,change_date,
-            row_number() over(partition by ASSET_ID order by change_date desc) row_number
+            LEFT JOIN (SELECT ASSET_ID,ifnull(ASSET_RATE,0) * 100 ASSET_RATE,CHANGE_DATE,
+            ROW_NUMBER() OVER (PARTITION BY ASSET_ID ORDER BY CHANGE_DATE DESC ) monthMarkNo
             FROM CHB_ASSET_RATE
-            WHERE asset_rate is not null
-            AND CHANGE_DATE &lt;= #{enddateDate,jdbcType=DATE}) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
+            WHERE ASSET_RATE is not null
+            AND CHANGE_DATE &lt;= #{enddateDate,jdbcType=DATE}) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.monthMarkNo = 1
 
             WHERE P.AMT IS NOT NULL AND P.AMT !=0
 
@@ -188,7 +188,7 @@
 
                 <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
                     <if test="(index % 999) == 998">
-                        null) OR P.POSUUID in (
+                        null) TEMP OR P.POSUUID in (
                     </if>
                     #{item}
                 </foreach>
@@ -200,7 +200,7 @@
                 #{item}
             </foreach>
         </if>
-        ORDER BY A.DETAILNO)
+        ORDER BY A.DETAILNO) t
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -242,23 +242,31 @@
                     BUY_PLACE, BORROWER_TYPE, INDUSTRY_INFO,
                     ENTERPRISE_SCALE, BORROWER_CITY, ASSETS_INVEST,
                     EACH_PROPORTION)
-        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-                 close="from dual)">
-            sys_guid(), #{item.prodid,jdbcType=VARCHAR}, #{item.term,jdbcType=VARCHAR},
-            #{item.detailno,jdbcType=VARCHAR}, #{item.detailno2,jdbcType=VARCHAR}, #{item.positionType,jdbcType=VARCHAR},
-            #{item.chlId,jdbcType=VARCHAR}, #{item.assetCode,jdbcType=VARCHAR}, #{item.assetType1,jdbcType=VARCHAR},
-            #{item.assetType2,jdbcType=VARCHAR}, #{item.assetType3,jdbcType=VARCHAR}, #{item.subjectName,jdbcType=VARCHAR},
-            #{item.rivalParty,jdbcType=VARCHAR}, #{item.rate,jdbcType=DECIMAL}, #{item.ccy,jdbcType=VARCHAR},
-            #{item.amt,jdbcType=DECIMAL}, #{item.intAmt,jdbcType=DECIMAL}, #{item.endDays,jdbcType=DECIMAL},
-            #{item.delayPayAmt,jdbcType=DECIMAL}, #{item.costAmt,jdbcType=DECIMAL}, #{item.floatIngpl,jdbcType=DECIMAL},
-            #{item.intincexp,jdbcType=DECIMAL}, #{item.intadjexpAdd,jdbcType=DECIMAL}, #{item.lossAmt,jdbcType=DECIMAL},
-            #{item.balFlag,jdbcType=VARCHAR}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE},
-            #{item.openplan,jdbcType=DATE}, #{item.industry,jdbcType=VARCHAR}, #{item.industryLevel2,jdbcType=VARCHAR},
-            #{item.partyType1,jdbcType=VARCHAR}, #{item.partyType3,jdbcType=VARCHAR}, #{item.partyType2,jdbcType=VARCHAR},
-            #{item.orgAssetType1,jdbcType=VARCHAR}, #{item.orgAssetType2,jdbcType=VARCHAR}, #{item.orgAssetType3,jdbcType=VARCHAR},
-            #{item.buyPlace,jdbcType=VARCHAR}, #{item.borrowerType,jdbcType=VARCHAR}, #{item.industryInfo,jdbcType=VARCHAR},
-            #{item.enterpriseScale,jdbcType=VARCHAR}, #{item.borrowerCity,jdbcType=VARCHAR}, #{item.assetsInvest,jdbcType=VARCHAR},
-            #{item.eachProportion,jdbcType=VARCHAR}
+        <foreach collection="list" item="item" separator="from dual union all select" open="select t.* from (select "
+                 close="from dual) t">
+            F_GUID(), #{item.prodid,jdbcType=VARCHAR} PRODID, #{item.term,jdbcType=VARCHAR} TERM,
+            #{item.detailno,jdbcType=VARCHAR} DETAILNO, #{item.detailno2,jdbcType=VARCHAR} DETAILNO2,
+            #{item.positionType,jdbcType=VARCHAR} POSITION_TYPE,
+            #{item.chlId,jdbcType=VARCHAR} CHL_ID, #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+            #{item.assetType1,jdbcType=VARCHAR} ASSET_TYPE1,
+            #{item.assetType2,jdbcType=VARCHAR} ASSET_TYPE2, #{item.assetType3,jdbcType=VARCHAR} ASSET_TYPE3,
+            #{item.subjectName,jdbcType=VARCHAR} SUBJECT_NAME,
+            #{item.rivalParty,jdbcType=VARCHAR} RIVAL_PARTY, CAST(#{item.rate,jdbcType=DECIMAL} AS DECIMAL(28,6) )RATE,
+            #{item.ccy,jdbcType=VARCHAR} CCY,
+            CAST(#{item.amt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) AMT, CAST(#{item.intAmt,jdbcType=DECIMAL} AS DECIMAL(30,4) ) INT_AMT,
+            CAST(#{item.endDays,jdbcType=DECIMAL} AS DECIMAL(30,4) )  END_DAYS,
+            CAST(#{item.delayPayAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) DELAY_PAY_AMT, CAST(#{item.costAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) ) COST_AMT,
+            CAST(#{item.floatIngpl,jdbcType=DECIMAL} AS DECIMAL(30,2) )  FLOAT_INGPL,
+            CAST(#{item.intincexp,jdbcType=DECIMAL} AS DECIMAL(30,2) )  INTINCEXP,
+            CAST(#{item.intadjexpAdd,jdbcType=DECIMAL} AS DECIMAL(30,2) )  INTADJEXP_ADD,
+            CAST(#{item.lossAmt,jdbcType=DECIMAL} AS DECIMAL(30,2) )  LOSS_AMT,
+            #{item.balFlag,jdbcType=VARCHAR} BAL_FLAG, #{item.vdate,jdbcType=DATE} VDATE, #{item.mdate,jdbcType=DATE} MDATE,
+            #{item.openplan,jdbcType=DATE} OPENPLAN, #{item.industry,jdbcType=VARCHAR} INDUSTRY, #{item.industryLevel2,jdbcType=VARCHAR} INDUSTRY_LEVEL2,
+            #{item.partyType1,jdbcType=VARCHAR} PARTY_TYPE1, #{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3, #{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
+            #{item.orgAssetType1,jdbcType=VARCHAR} ORG_ASSET_TYPE1, #{item.orgAssetType2,jdbcType=VARCHAR} ORG_ASSET_TYPE2, #{item.orgAssetType3,jdbcType=VARCHAR} ORG_ASSET_TYPE3,
+            #{item.buyPlace,jdbcType=VARCHAR} BUY_PLACE, #{item.borrowerType,jdbcType=VARCHAR} BORROWER_TYPE, #{item.industryInfo,jdbcType=VARCHAR} INDUSTRY_INFO,
+            #{item.enterpriseScale,jdbcType=VARCHAR} ENTERPRISE_SCALE, #{item.borrowerCity,jdbcType=VARCHAR} BORROWER_CITY, #{item.assetsInvest,jdbcType=VARCHAR} ASSETS_INVEST,
+            #{item.eachProportion,jdbcType=VARCHAR} EACH_PROPORTION
         </foreach>
 
     </insert>
@@ -287,12 +295,11 @@
 
     <select id="getCounterList" resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT  A.CODE id,A.TRADE_COUNTER text,A.COUNTER_ID col,A.LINK_ID parentId from(
-        SELECT /*T.PROD_ID||'_'||T.ASSET_CODE CODE,*/
-        concat(concat(T.PROD_ID,'_'),T.ASSET_CODE CODE),
-        /*DECODE(MP.COUNTER_NAME,NULL,DECODE(MC.CUSTOMER_NAME,NULL,T.TRADE_COUNTER,MC.CUSTOMER_NAME),MP.COUNTER_NAME) TRADE_COUNTER,*/
+        SELECT
+        concat(concat(T.PROD_ID,'_'),ifnull(T.ASSET_CODE,'') ) CODE,
         (case MP.COUNTER_NAME when NULL then (case MC.CUSTOMER_NAME when NULL then T.TRADE_COUNTER else MC.CUSTOMER_NAME end) else MP.COUNTER_NAME end ) TRADE_COUNTER,
         MP.COUNTER_ID,MP.LINK_ID,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) row_number
+        rank() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) rk
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
@@ -300,13 +307,13 @@
         <if test="keysList != null and keysList.size()>0 ">
             <foreach item="item" index="index" collection="keysList" separator="," open=" AND T.PROD_ID||'_'||T.ASSET_CODE IN (" close=")">
                 <if test="(index % 999) == 998">
-                    null) OR /*T.PROD_ID||'_'||T.ASSET_CODE*/ concat(concat(T.PROD_ID,'_'),T.ASSET_CODE) IN (
+                    null) OR  concat(concat(T.PROD_ID,'_'),ifnull(T.ASSET_CODE,'')) IN (
                 </if>
                 #{item}
             </foreach>
         </if>
         ) a
-        WHERE A.row_number = 1
+        WHERE A.rk = 1
     </select>
 
 

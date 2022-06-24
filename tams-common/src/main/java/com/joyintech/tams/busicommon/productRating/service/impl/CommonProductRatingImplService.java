@@ -283,7 +283,7 @@ public class CommonProductRatingImplService extends BaseService<CommonProductRat
 			//排序规则
 			sqlBuild.append(" order by ");
 			for(int i=0;i<sortRules.length;i++) {
-				sqlBuild.append(" CAST(").append(" mro").append(i).append(".ATTR_ORDER AS INTEGER) DESC,");
+				sqlBuild.append(" CAST(").append(" mro").append(i).append(".ATTR_ORDER AS DECIMAL) DESC,");
 			}
 			sqlSortString = sqlBuild.toString().substring(0, sqlBuild.toString().length()-1);
 		}

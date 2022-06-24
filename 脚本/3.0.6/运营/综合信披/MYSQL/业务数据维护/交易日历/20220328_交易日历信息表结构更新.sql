@@ -1,0 +1,25 @@
+
+DELIMITER ??
+DROP PROCEDURE IF EXISTS schema_change??
+CREATE PROCEDURE schema_change()
+BEGIN
+IF NOT EXISTS (SELECT * FROM information_schema.columns WHERE table_schema = DATABASE()  AND table_name = 'MST_HOLIDAY' AND column_name = 'ERR_MSG') THEN
+
+ALTER TABLE MST_HOLIDAY ADD ERR_MSG TEXT COMMENT '错误信息';
+
+END IF;
+IF NOT EXISTS (SELECT * FROM information_schema.columns WHERE table_schema = DATABASE()  AND table_name = 'MST_HOLIDAY' AND column_name = 'DATA_SOURCE') THEN
+
+ALTER TABLE MST_HOLIDAY ADD DATA_SOURCE VARCHAR(50) COMMENT '数据来源';
+
+END IF;
+IF NOT EXISTS (SELECT * FROM information_schema.columns WHERE table_schema = DATABASE()  AND table_name = 'MST_HOLIDAY' AND column_name = 'STATUS') THEN
+
+ALTER TABLE MST_HOLIDAY ADD STATUS VARCHAR(20) COMMENT '数据状态';
+
+END IF;
+
+END??
+DELIMITER ;
+
+CALL schema_change();

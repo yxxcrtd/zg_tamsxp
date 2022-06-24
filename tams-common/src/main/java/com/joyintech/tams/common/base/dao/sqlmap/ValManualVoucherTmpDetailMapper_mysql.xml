@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ValManualVoucherTmpDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ValManualVoucherTmpDetail" >
+        <id column="UUID" property="uuid" jdbcType="VARCHAR" />
+        <result column="TMP_CODE" property="tmpCode" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="CD_FLAG" property="cdFlag" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="O_HAPPEN_AMT" property="oHappenAmt" jdbcType="DECIMAL" />
+        <result column="HAPPEN_NUMBER" property="happenNumber" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        UUID UUID, TMP_CODE TMP_CODE, SUBJECT_NO SUBJECT_NO, SUBJECT_NAME SUBJECT_NAME, CD_FLAG CD_FLAG, 
+        CCY CCY, O_HAPPEN_AMT O_HAPPEN_AMT, HAPPEN_NUMBER HAPPEN_NUMBER, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValManualVoucherTmpDetailMapper_mysql.Base_Column_List" />
+        from VAL_MANUAL_VOUCHER_TMP_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValManualVoucherTmpDetailMapper_mysql.Base_Column_List" />
+        from VAL_MANUAL_VOUCHER_TMP_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ValManualVoucherTmpDetailMapper_mysql.Base_Column_List" />
+        from VAL_MANUAL_VOUCHER_TMP_DETAIL
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from VAL_MANUAL_VOUCHER_TMP_DETAIL
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ValManualVoucherTmpDetail" >
+        insert into VAL_MANUAL_VOUCHER_TMP_DETAIL (UUID, TMP_CODE, SUBJECT_NO, 
+            SUBJECT_NAME, CD_FLAG, CCY, 
+            O_HAPPEN_AMT, HAPPEN_NUMBER, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{uuid,jdbcType=VARCHAR}, #{tmpCode,jdbcType=VARCHAR}, #{subjectNo,jdbcType=VARCHAR}, 
+            #{subjectName,jdbcType=VARCHAR}, #{cdFlag,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+            #{oHappenAmt,jdbcType=DECIMAL}, #{happenNumber,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ValManualVoucherTmpDetail" >
+        insert into VAL_MANUAL_VOUCHER_TMP_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                UUID,
+            </if>
+            <if test="tmpCode != null" >
+                TMP_CODE,
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO,
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME,
+            </if>
+            <if test="cdFlag != null" >
+                CD_FLAG,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="oHappenAmt != null" >
+                O_HAPPEN_AMT,
+            </if>
+            <if test="happenNumber != null" >
+                HAPPEN_NUMBER,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uuid != null" >
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="tmpCode != null" >
+                #{tmpCode,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectNo != null" >
+                #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="cdFlag != null" >
+                #{cdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="oHappenAmt != null" >
+                #{oHappenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="happenNumber != null" >
+                #{happenNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ValManualVoucherTmpDetail" >
+        insert into VAL_MANUAL_VOUCHER_TMP_DETAIL(UUID, TMP_CODE, SUBJECT_NO, SUBJECT_NAME, 
+        CD_FLAG, CCY, O_HAPPEN_AMT, HAPPEN_NUMBER, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select UUID, TMP_CODE, SUBJECT_NO, SUBJECT_NAME, 
+            CD_FLAG, CCY, O_HAPPEN_AMT, HAPPEN_NUMBER, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from VAL_MANUAL_VOUCHER_TMP_DETAIL
+             where 1 = 1 and UUID = #{uuid,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ValManualVoucherTmpDetail" >
+        update VAL_MANUAL_VOUCHER_TMP_DETAIL
+        <set >
+            <if test="tmpCode != null" >
+                TMP_CODE = #{tmpCode,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectName != null" >
+                SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="cdFlag != null" >
+                CD_FLAG = #{cdFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="oHappenAmt != null" >
+                O_HAPPEN_AMT = #{oHappenAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="happenNumber != null" >
+                HAPPEN_NUMBER = #{happenNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ValManualVoucherTmpDetail" >
+        update VAL_MANUAL_VOUCHER_TMP_DETAIL
+        set TMP_CODE = #{tmpCode,jdbcType=VARCHAR},
+            SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR},
+            SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+            CD_FLAG = #{cdFlag,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            O_HAPPEN_AMT = #{oHappenAmt,jdbcType=DECIMAL},
+            HAPPEN_NUMBER = #{happenNumber,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where UUID = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

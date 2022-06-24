@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StlSecReconParaMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StlSecReconPara" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+        <result column="CONFIG_DATE" property="configDate" jdbcType="DATE" />
+        <result column="PARA_CODE" property="paraCode" jdbcType="VARCHAR" />
+        <result column="PARA_VALUE" property="paraValue" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, CUSTOMER_ID CUSTOMER_ID, CONFIG_DATE CONFIG_DATE, PARA_CODE PARA_CODE, 
+        PARA_VALUE PARA_VALUE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecReconParaMapper_mysql.Base_Column_List" />
+        from STL_SEC_RECON_PARA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecReconParaMapper_mysql.Base_Column_List" />
+        from STL_SEC_RECON_PARA
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlSecReconParaMapper_mysql.Base_Column_List" />
+        from STL_SEC_RECON_PARA
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STL_SEC_RECON_PARA
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StlSecReconPara" >
+        insert into STL_SEC_RECON_PARA (SEQ_NO, CUSTOMER_ID, CONFIG_DATE, 
+            PARA_CODE, PARA_VALUE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{configDate,jdbcType=DATE}, 
+            #{paraCode,jdbcType=VARCHAR}, #{paraValue,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlSecReconPara" >
+        insert into STL_SEC_RECON_PARA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="customerId != null" >
+                CUSTOMER_ID,
+            </if>
+            <if test="configDate != null" >
+                CONFIG_DATE,
+            </if>
+            <if test="paraCode != null" >
+                PARA_CODE,
+            </if>
+            <if test="paraValue != null" >
+                PARA_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null" >
+                #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="configDate != null" >
+                #{configDate,jdbcType=DATE},
+            </if>
+            <if test="paraCode != null" >
+                #{paraCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paraValue != null" >
+                #{paraValue,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlSecReconPara" >
+        insert into STL_SEC_RECON_PARA(SEQ_NO, CUSTOMER_ID, CONFIG_DATE, PARA_CODE, PARA_VALUE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, CUSTOMER_ID, CONFIG_DATE, PARA_CODE, PARA_VALUE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from STL_SEC_RECON_PARA
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StlSecReconPara" >
+        update STL_SEC_RECON_PARA
+        <set >
+            <if test="customerId != null" >
+                CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            </if>
+            <if test="configDate != null" >
+                CONFIG_DATE = #{configDate,jdbcType=DATE},
+            </if>
+            <if test="paraCode != null" >
+                PARA_CODE = #{paraCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paraValue != null" >
+                PARA_VALUE = #{paraValue,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=DATE},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlSecReconPara" >
+        update STL_SEC_RECON_PARA
+        set CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+            CONFIG_DATE = #{configDate,jdbcType=DATE},
+            PARA_CODE = #{paraCode,jdbcType=VARCHAR},
+            PARA_VALUE = #{paraValue,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=DATE}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

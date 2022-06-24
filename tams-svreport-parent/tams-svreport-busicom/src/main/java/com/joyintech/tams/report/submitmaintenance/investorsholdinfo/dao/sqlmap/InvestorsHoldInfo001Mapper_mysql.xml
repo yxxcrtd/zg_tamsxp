@@ -561,51 +561,15 @@
 		cii.STATUS status
 		from
 		CHB_INVESTHOLD_INFO cii
-		<!-- 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 start -->
-<!--		<where>-->
-			<!-- 	<foreach collection="newKeyList" item="item" open="(cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in(" separator="," close=")">
-                    (#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
-                </foreach>	 -->
-		<!--	<foreach collection="newKeyList" item="item" open="(" separator="or" close=")">
-				(cii.REGIST_BANK_CODE =#{item.registBankCode}
-				and cii.INDENTIFY_MARK=#{item.indentifyMark}
-				and cii.PRD_REGIST_CODE=#{item.prdRegistCode}
-				and cii.HOLD_DATE = STR_TO_DATE(#{item.holdDate},'%Y-%m-%d')
-				and cii.CCY =#{item.ccy})
-			</foreach>
-		</where>
-		&lt;!&ndash; 修复持有信息导入代销数据，导入模板内数据检查全不通过时，前台报错问题 add by weiyuqiang 2019-04-17 end &ndash;&gt;
-	</select>-->
 		WHERE 1=1
 		<if test="newKeyList !=null and newKeyList.size()>0">
 			AND (cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in
-			<foreach collection="newKeyList" item="item" open="and (" separator="," close=")">
-				(#{item.registBankCode},{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+			<foreach collection="newKeyList" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
 			</foreach>
 		</if>
 	</select>
 
-	<!--<select id="selectAllSubHoldInfoData" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
-		select
-		ciis.REGIST_SEQNO registSeqno,
-		ciis.REGIST_BANK_CODE registBankCode,
-		ciis.INDENTIFY_MARK indentifyMark,
-		ciis.PRD_REGIST_CODE prdRegistCode,
-		ciis.HOLD_DATE holdDate,
-		ciis.CCY ccy,
-		ciis.AMOUNT amount,
-		ciis.QTY qty,
-		ciis.CNY_AMT cnyAmt,
-		ciis.STATUS status,
-		ciis.SEND_STATUS,
-		ciis.CHECK_SEQNO checkSeqno
-		from
-		CHB_INVESTHOLD_INFO_SUB ciis
-		where
-		<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,DATE_FORMAT(ciis.HOLD_DATE,'%Y-%m-%d'),ciis.CCY) in(" separator="," close=")">
-			(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
-		</foreach>
-	</select>-->
 	<select id="selectAllHoldInfoDataNew" resultType = "com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto">
 		select
 		cii.REGIST_BANK_CODE registBankCode,
@@ -628,6 +592,28 @@
 		AND cii.HOLD_DATE = tmp.HOLD_DATE
 		AND cii.CCY = tmp.CCY
 		)
+	</select>
+
+	<select id="selectAllSubHoldInfoData" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
+		select
+		ciis.REGIST_SEQNO registSeqno,
+		ciis.REGIST_BANK_CODE registBankCode,
+		ciis.INDENTIFY_MARK indentifyMark,
+		ciis.PRD_REGIST_CODE prdRegistCode,
+		ciis.HOLD_DATE holdDate,
+		ciis.CCY ccy,
+		ciis.AMOUNT amount,
+		ciis.QTY qty,
+		ciis.CNY_AMT cnyAmt,
+		ciis.STATUS status,
+		ciis.SEND_STATUS,
+		ciis.CHECK_SEQNO checkSeqno
+		from
+		CHB_INVESTHOLD_INFO_SUB ciis
+		where
+		<foreach collection="newKeyList" item="item" open="(ciis.REGIST_BANK_CODE,ciis.INDENTIFY_MARK,ciis.PRD_REGIST_CODE,ciis.HOLD_DATE,ciis.CCY) in(" separator="," close=")">
+			(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
+		</foreach>
 	</select>
 
 	<select id="selectAllSubHoldInfoDataNew" resultType = "com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub">
@@ -908,29 +894,6 @@
 	</select>
 
 	<select id="getSubmitFeedbackStatusList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub" resultType="com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto">
-		<!--select distinct
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
-		ciis.CCY ccy,
-		ciis.HOLD_DATE holdDate,
-		ciis.INDENTIFY_MARK indentifyMark,
-		ciis.PRODID prodid,
-		ciis.REGIST_BANK_CODE registBankCode,
-		ciis.AMOUNT amount,
-		ciis.QTY qty,
-		ciis.CNY_AMT cnyAmt
-		from CHB_INVESTHOLD_INFO_SUB ciis
-		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-		<where>
-			<foreach collection="list" item="investDto" open=" (" close=")" separator=") or (">
-				ciis.PRODID = #{investDto.prodid,jdbcType=VARCHAR}
-				and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR}
-				and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
-				and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
-				and ciis.HOLD_DATE = STR_TO_DATE(#{investDto.holdDate,jdbcType=DATE},'%Y-%m-%d')
-				and ciis.SEND_STATUS = '02'
-			</foreach>
-		</where>-->
 		select distinct
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		ciis.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
@@ -947,8 +910,8 @@
 		where  ciis.SEND_STATUS in('02','03')
 		<if test="list !=null and list.size()>0">
 			AND (ciis.INDENTIFY_MARK,ciis.HOLD_DATE,ciis.CCY,ciis.PRODID,ciis.REGIST_BANK_CODE) in
-			<foreach collection="list" item="item" open="and (" separator="," close=")">
-				(#{item.indentifyMark},{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
+			<foreach collection="list" item="item" open=" (" separator="," close=")">
+				(#{item.indentifyMark},#{item.holdDate},#{item.ccy},#{item.prodid},#{item.registBankCode})
 			</foreach>
 		</if>
 	</select>
@@ -1000,8 +963,6 @@
 		<where>
 			<if test="FEEDBACKSTATUS!=null and FEEDBACKSTATUS !=''" >
 			T.SUBMIT_FEEDBACK_STATUS = #{FEEDBACKSTATUS,jdbcType=VARCHAR}
-
-
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			</if>
 			<if test="SEQNO !=null and SEQNO.size()>0 ">
@@ -1126,13 +1087,27 @@
 		set cii.STATUS = 'E'
 		where
 		STATUS = 'D'
-		<foreach collection="dataList" item="item" open="and (" separator="or" close=")">
-			(cii.REGIST_BANK_CODE =#{item.registBankCode}
-			and cii.INDENTIFY_MARK=#{item.indentifyMark}
-			and cii.PRODID=#{item.prodid}
-			and DATE_FORMAT(cii.HOLD_DATE,'%Y-%m-%d') =DATE_FORMAT(#{item.holdDate},'%Y-%m-%d')
-			and cii.CCY =#{item.ccy})
-		</foreach>
+		<if test="dataList !=null and dataList.size()>0">
+			AND (cii.REGIST_BANK_CODE,cii.INDENTIFY_MARK,cii.PRODID,cii.HOLD_DATE,cii.CCY) in
+			<foreach collection="dataList" item="item" open="(" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prodid},#{item.holdDate},#{item.ccy})
+			</foreach>
+		</if>
+	</update>
+
+	<update id="handleInfoDeleteDataNew" parameterType="com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto" >
+		update CHB_INVESTHOLD_INFO info
+		set info.STATUS = 'E'
+		where
+		info.STATUS = 'D'
+       AND EXISTS (
+       SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+        info.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+        AND info.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+        AND info.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+        AND info.HOLD_DATE = tmp.HOLD_DATE
+        AND info.CCY = tmp.CCY
+       )
 	</update>
 
 	<!-- 删除持有信息登记表中数据状态为删除的数据-->
@@ -1140,10 +1115,24 @@
 		delete from CHB_INVESTHOLD_INFO_SUB
 		<where>
 			STATUS = '03'
-			<foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,DATE_FORMAT(HOLD_DATE,'%Y-%m-%d'),CCY) in(" separator="," close=")">
-				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},DATE_FORMAT(#{item.holdDate},'%Y-%m-%d'),#{item.ccy})
+			<foreach collection="dataList" item="item" open="and (REGIST_BANK_CODE,INDENTIFY_MARK,PRD_REGIST_CODE,HOLD_DATE,CCY) in(" separator="," close=")">
+				(#{item.registBankCode},#{item.indentifyMark},#{item.prdRegistCode},#{item.holdDate},#{item.ccy})
 			</foreach>
 		</where>
+	</delete>
+
+	<!-- 删除持有信息登记表中数据状态为删除的数据-->
+	<delete id="handleSubDeleteDataNew" >
+		delete from CHB_INVESTHOLD_INFO_SUB sub
+		where sub.STATUS = '03'
+		AND EXISTS (
+		SELECT 1 FROM CHB_INVESTHOLD_INFO_TMP tmp WHERE
+		sub.REGIST_BANK_CODE = tmp.REGIST_BANK_CODE
+		AND sub.INDENTIFY_MARK = tmp.INDENTIFY_MARK
+		AND sub.PRD_REGIST_CODE = tmp.PRD_REGIST_CODE
+		AND sub.HOLD_DATE = tmp.HOLD_DATE
+		AND sub.CCY = tmp.CCY
+		)
 	</delete>
 	<!-- 产品登记模块刷新有效持有信息维护表 -->
 	<update id="updateInfoRegCodeByProdid" >

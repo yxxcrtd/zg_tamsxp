@@ -128,15 +128,13 @@
         where 1=1
         and  SEND_STATUS  in ('02','03')
         <if test="keylist != null and keylist.size() > 0">
-            AND /*PROD_ID||'|'||TRADE_CODE||'|'||ASSET_CODE||'|'||CUR_ASSET_TYPE*/
-            concat(PROD_ID,'|',TRADE_CODE,'|',ASSET_CODE,'|',CUR_ASSET_TYPE)
-            IN
-            <trim suffixOverrides=" OR concat(PROD_ID,'|',TRADE_CODE,'|',ASSET_CODE,'|',CUR_ASSET_TYPE) IN ()">
+            AND PROD_ID||'|'||TRADE_CODE||'|'||ASSET_CODE||'|'||CUR_ASSET_TYPE IN
+            <trim suffixOverrides=" OR PROD_ID||'|'||TRADE_CODE||'|'||ASSET_CODE||'|'||CUR_ASSET_TYPE IN ()">
                 <foreach collection='keylist' open='(' close=')' index='index'
                          item='item'>
                     <if test="index != 0">
                         <choose>
-                            <when test="index % 1000 == 999">) OR concat(PROD_ID,'|',TRADE_CODE,'|',ASSET_CODE,'|',CUR_ASSET_TYPE)  IN (</when>
+                            <when test="index % 1000 == 999">) OR PROD_ID||'|'||TRADE_CODE||'|'||ASSET_CODE||'|'||CUR_ASSET_TYPE IN (</when>
                             <otherwise>,</otherwise>
                         </choose>
                     </if>

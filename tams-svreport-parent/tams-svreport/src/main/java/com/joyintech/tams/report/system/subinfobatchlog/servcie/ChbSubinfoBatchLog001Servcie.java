@@ -116,7 +116,9 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 		}
 		// 只有一个文件,直接导出,且不能删除源文件
 		if (sourceFiles.size() == 1) {
-			return ExportUtil.export(sourceFiles.get(0).getName(), sourceFiles.get(0), false);
+			String zipFileName = fileList.get(0).getFileType() + DateUtil.getCurrentDateTime() + ".zip";
+			zipFileName = zipFileName.replaceAll(":", "-");
+			return ExportUtil.export(zipFileName, sourceFiles.get(0), false);
 		}
 		// 如果生成文件数量大于1,需要压缩之后导出
 		File outFile = null;

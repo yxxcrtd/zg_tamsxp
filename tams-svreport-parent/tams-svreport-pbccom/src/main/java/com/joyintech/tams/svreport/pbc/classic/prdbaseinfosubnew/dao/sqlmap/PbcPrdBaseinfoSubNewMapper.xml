@@ -809,14 +809,38 @@
         decode(TERM_RIGHT_FLAG,'01','1','2') TERM_RIGHT_FLAG,
         decode(CUS_REDEEM_FLAG,'01','1','2') CUS_REDEEM_FLAG,
         decode(CREDIT_FLAG,'01','1','2') CREDIT_FLAG,
-        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CREDIT_TYPE,'05','6'),'04','1'),'03','4'),'02','3'),'03','2')
+        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CREDIT_TYPE,'05','6'),'04','1'),'03','4'),'02','3'),'01','2')
         CREDIT_TYPE,
         REPLACE(CREDIT_MODE,'0','') CREDIT_MODE,
         IN_DEP_NAME,
-        <!-- modify by zhangliang 20220319 华夏个性化改造取机构登记银行代码管理 start-->
-        <!-- info.IN_DEP_CODE,-->
-        cbc2.PBC_BANK_CODE IN_DEP_CODE,
-        <!-- modify by zhangliang 20220319 华夏个性化改造取机构登记银行代码管理 end-->
+        (case IN_DEP_NAME when '01' then 'C1010211000012'
+        when '02' then 'C1010311000014'
+        when '03' then 'C1010411000013'
+        when '04' then 'C1010511003703'
+        when '05' then 'C1030131001168'
+        when '06' then 'C1030411000431'
+        when '07' then 'C1030311000455'
+        when '08' then 'C1030844001362'
+        when '09' then 'C1030211000389'
+        when '10' then 'C1030511000483'
+        when '11' then 'C1030935001347'
+        when '12' then 'C1031011000340'
+        when '13' then 'C1080211000028'
+        when '14' then 'C1030744001296'
+        when '15' then 'C1030644003515'
+        when '16' then 'C1040311005293'
+        when '17' then 'C1091231000013'
+        when '18' then 'C1211252000022'
+        when '19' then 'C1092133000016'
+        when '20' then 'C1031633000292'
+        when '21' then 'C1080434000027'
+        when '22' then 'C1131244000017'
+        when '23' then 'C1087615000019'
+        when '24' then 'C1031537000877'
+        when '25' then 'C1092033000015'
+        when '26' then 'C1086932000011'
+        when '27' then 'C1086832000010'
+        else null end) IN_DEP_CODE,
         DECODE(OUT_DEP_CTRY,NULL,'',substrb(OUT_DEP_CTRY,0,3)) OUT_DEP_CTRY,
         case
         when lengthb(OUT_DEP_NAME)>120
@@ -1229,7 +1253,7 @@
         LEFT JOIN SYS_INSTITUTION SI
         ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
         <where>
-            t1.STATUS !='04'
+            t1.STATUS !='04' and SI.INSTITUTION_TYPE='01'
             <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
                 <foreach collection="pbcProdIdList" item="items" open="and PBC_PROD_ID in (" separator="," close=")">
                     #{items,jdbcType=VARCHAR}

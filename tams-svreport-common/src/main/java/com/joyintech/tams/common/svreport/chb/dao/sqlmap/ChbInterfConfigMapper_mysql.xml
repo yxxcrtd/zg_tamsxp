@@ -11,10 +11,11 @@
         <result column="REF_REPORT" jdbcType="VARCHAR" property="refReport" />
         <result column="SYS_SCOPE" jdbcType="VARCHAR" property="sysScope" />
         <result column="STATUS" jdbcType="VARCHAR" property="status" />
+        <result column="COVER_FLAG" jdbcType="VARCHAR" property="coverFlag" />
     </resultMap>
     <sql id="Base_Column_List">
     INTERF_ID, LAST_UPDATETIME, REMARK, INTERF_NAME, CONTENT_TYPE, CONTENT_SRC, REF_REPORT,
-    SYS_SCOPE, STATUS
+    SYS_SCOPE, STATUS,COVER_FLAG
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select

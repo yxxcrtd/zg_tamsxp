@@ -121,14 +121,14 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
    	private  ChbInterfErrodataMapper chbInterfErrodataMapper;
     
 	private boolean excuteProdBaseInfoByStep(List<Map<String, String>> baseinfoList, 
-			String tmpPath, ImpTable table, String saveFlag,String dateSource) {
+			String tmpPath, ImpTable table, String saveFlag,String dataSource) {
 
 		// 定义新增数据list-验证不通过数据
 //		List<ChbPrdFeeDeal> listNA = new ArrayList<ChbPrdFeeDeal>();
 		// 定义新增数据list-验证通过数据
 		List<ChbPrdFeeDeal> listNE = new ArrayList<ChbPrdFeeDeal>();
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
-		listNE = (List<ChbPrdFeeDeal>) convertMapToEntity(baseinfoList,ChbPrdFeeDeal.class);
+		listNE = (List<ChbPrdFeeDeal>) convertMapToEntity(baseinfoList,ChbPrdFeeDeal.class, dataSource);
 		listNE.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));
 		});

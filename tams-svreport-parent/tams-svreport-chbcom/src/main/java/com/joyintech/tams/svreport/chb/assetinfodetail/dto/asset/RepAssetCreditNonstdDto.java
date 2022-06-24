@@ -31,6 +31,9 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
      */
     private Date repVdate;
 
+
+    private String  assetId;
+
     /**
      * 到期日
      */
@@ -1227,5 +1230,14 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
 
     public void setRepCreditAssetCode(String repCreditAssetCode) {
         this.repCreditAssetCode = repCreditAssetCode;
+    }
+
+
+    public String getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 }

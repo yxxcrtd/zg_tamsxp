@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.joyintech.tams.svreport.interf.chb.saleinst.dao.ChbSaleInstInterfMapper_mysql">
+    <insert id="mergeInfoList"  parameterType="com.joyintech.tams.common.base.entity.ChbSalerInstInfo">
+        update CHB_SALER_INST_INFO as CII,(
+        select
+        SALER_INST_CODE, SALER_INST_NAME, SALER_ORG_CODE,
+        SALER_ORG_NAME, SALER_ORG_LEVEL, STATUS,
+        DATA_DATE, REMARK, CREATE_USER,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        from (
+        select TE.* from (
+        <foreach collection="newDataList" item="item"  separator="union all">
+            select
+            #{item.salerInstCode,jdbcType=CHAR} SALER_INST_CODE,
+            #{item.salerInstName,jdbcType=VARCHAR} SALER_INST_NAME,
+            #{item.salerOrgCode,jdbcType=VARCHAR} SALER_ORG_CODE,
+            #{item.salerOrgName,jdbcType=VARCHAR} SALER_ORG_NAME,
+            #{item.salerOrgLevel,jdbcType=VARCHAR} SALER_ORG_LEVEL,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.dataDate,jdbcType=DATE} DATA_DATE,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            now() UPDATE_TIME
+            from dual
+        </foreach>
+        ) TE
+        ) de
+        ) AS TEMP
+        set
+        CII.SALER_INST_NAME = TEMP.SALER_INST_NAME,
+        CII.SALER_INST_CODE = TEMP.SALER_INST_CODE,
+        CII.SALER_ORG_NAME = TEMP.SALER_ORG_NAME,
+        CII.SALER_ORG_LEVEL = TEMP.SALER_ORG_LEVEL,
+        CII.STATUS = TEMP.STATUS,
+        CII.DATA_DATE = TEMP.DATA_DATE,
+        CII.REMARK = TEMP.REMARK,
+        CII.CREATE_USER = TEMP.CREATE_USER,
+        CII.UPDATE_USER = TEMP.UPDATE_USER,
+        CII.UPDATE_TIME = TEMP.UPDATE_TIME
+        where CII.SALER_ORG_CODE = TEMP.SALER_ORG_CODE;
+
+        insert into CHB_SALER_INST_INFO (
+        SALER_INST_CODE, SALER_INST_NAME, SALER_ORG_CODE,
+        SALER_ORG_NAME, SALER_ORG_LEVEL, STATUS,
+        DATA_DATE, REMARK, CREATE_USER,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select
+        SALER_INST_CODE, SALER_INST_NAME, SALER_ORG_CODE,
+        SALER_ORG_NAME, SALER_ORG_LEVEL, STATUS,
+        DATA_DATE, REMARK, CREATE_USER,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        from (
+        select TEMP.* from (
+        <foreach collection="newDataList" item="item"  separator="union all">
+            select
+            #{item.salerInstCode,jdbcType=CHAR} SALER_INST_CODE,
+            #{item.salerInstName,jdbcType=VARCHAR} SALER_INST_NAME,
+            #{item.salerOrgCode,jdbcType=VARCHAR} SALER_ORG_CODE,
+            #{item.salerOrgName,jdbcType=VARCHAR} SALER_ORG_NAME,
+            #{item.salerOrgLevel,jdbcType=VARCHAR} SALER_ORG_LEVEL,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.dataDate,jdbcType=DATE} DATA_DATE,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            now() CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            now() UPDATE_TIME
+            from dual
+        </foreach>
+        ) TEMP where not exists (select 1 from CHB_SALER_INST_INFO CII where CII.SALER_ORG_CODE = TEMP.SALER_ORG_CODE)
+        ) de ;
+    </insert>
+
+</mapper>

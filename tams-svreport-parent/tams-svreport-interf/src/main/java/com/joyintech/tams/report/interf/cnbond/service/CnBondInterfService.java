@@ -413,7 +413,7 @@ public class CnBondInterfService extends InterfService {
      * 添加中债挡板直连标识
      * 02直连，01标识挡板
      */
-    @Value("${application.chb.dangbanFlag:02}")
+    @Value("${application.chb.dangbanFlag:01}")
     private String dangbanFlag;
 
     /**

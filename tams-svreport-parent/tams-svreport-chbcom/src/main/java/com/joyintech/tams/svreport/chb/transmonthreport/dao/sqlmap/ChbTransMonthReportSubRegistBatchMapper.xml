@@ -74,7 +74,9 @@
             info.IS_TRANSFER isFprod,
             asset.ISSUE_MODE issueMode,
             info.IS_FHXGCP isFhxgcp,
-            position.ASSETTYPE2 assetType2
+            position.ASSETTYPE2 assetType2,
+            ASSETINFO.BANK_CAPITAL,
+            ASSETINFO.SHARES_TYPE
         from CHB_MONTH_ASSET_POSITION position
         left join CHB_PRD_BASEINFO info
         on info.PROD_ID = position.PROD_ID

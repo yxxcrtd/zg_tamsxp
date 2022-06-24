@@ -529,6 +529,23 @@ public class ChbBaseCheckLib {
         }
     }
 
+
+    public static boolean inStrValue(Map<String, String> data, CheckElement rule) {
+        String srcValue = data.get(rule.getSrcproperty());
+        if ( StringUtil.isEmpty(srcValue)  && rule.allowNullable() )  //传入数据为空，且允许为空
+            return true;
+        if ( StringUtil.isEmpty(srcValue) )
+            return false;
+
+        String format = rule.getObjvalue();
+        try {
+            return srcValue.indexOf(format)>=0;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * 根据指定的规则，判断数据指定的属性的值是否是否是特殊格式的字符串，格式使用正则表达式规则
      * @param data 被检查的数据

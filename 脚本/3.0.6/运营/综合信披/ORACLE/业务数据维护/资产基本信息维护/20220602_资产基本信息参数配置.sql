@@ -1,0 +1,2 @@
+delete from SYS_PARA where SYSTEM_CODE = 'SVR' and PARA_CODE ='CHB_ASSET_INFO_TEMPLATE_FILE';
+INSERT INTO SYS_PARA VALUES ('SVR','CHB_ASSET_INFO_TEMPLATE_FILE','02','02','01,02','资产基本信息上传下载模板类型：01压缩包02全量','system',NULL,sysdate,'system',sysdate,NULL,'01');

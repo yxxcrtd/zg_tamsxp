@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.svreport.base.dao.BaseCommonCheckMapper">
+
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.svreport.datacheck.dto.CheckCondition" >
+        <result column="CHECKCONDITIONID" property="checkconditionid" jdbcType="CHAR" />
+        <result column="CHECKRULEID" property="checkruleid" jdbcType="CHAR" />
+        <result column="CHECKMETHOD" property="checkmethod" jdbcType="VARCHAR" />
+        <result column="SRCPROPERTY" property="srcproperty" jdbcType="VARCHAR" />
+        <result column="COMPARETO" property="compareto" jdbcType="VARCHAR" />
+        <result column="OBJVALUE" property="objvalue" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE,
+        REMARK, STATUS
+    </sql>
+
+    <resultMap id="BaseResultRuleMap" type="com.joyintech.tams.common.svreport.datacheck.dto.CheckRule" >
+        <id column="CHECKRULEID" property="checkruleid" jdbcType="CHAR" />
+        <result column="DATATYPE" property="datatype" jdbcType="VARCHAR" />
+        <result column="CHECKCLASS" property="checkclass" jdbcType="VARCHAR" />
+        <result column="CHECKMETHOD" property="checkmethod" jdbcType="VARCHAR" />
+        <result column="SRCPROPERTY" property="srcproperty" jdbcType="VARCHAR" />
+        <result column="COMPARETO" property="compareto" jdbcType="VARCHAR" />
+        <result column="OBJVALUE" property="objvalue" jdbcType="VARCHAR" />
+        <result column="NULLABLE" property="nullable" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Rule_Column_List" >
+        CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE,
+        REMARK, STATUS
+    </sql>
+
+
+    <insert id="insertIntoErro" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
+        insert into CHB_INTERF_ERRODATA (DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
+        STATUS, UPDATE_USER, CREATE_USER,
+        UPDATE_TIME, CREATE_TIME, WORKFLOW_ID,
+        ORG_CODE, DEPT_CODE, CREATE_DEPT,
+        ORG_DATA, ERR_MSG)
+        values (#{datauuid,jdbcType=VARCHAR},#{dataid,jdbcType=VARCHAR}, #{interfType,jdbcType=VARCHAR}, #{fireName,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR},
+        #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+        #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+    </insert>
+
+    <select id="selectByRuleid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from CHB_DATACHECK_CONDITION
+        where STATUS='E'
+        <if test="checkruleid != null" >
+            and checkruleid= #{checkruleid,jdbcType=CHAR}
+        </if>
+    </select>
+
+    <select id="selectByDatatype" resultMap="BaseResultRuleMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Rule_Column_List" />
+        from CHB_DATACHECK_RULE
+        where STATUS='E'
+        and DATATYPE=#{datatype,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -151,6 +151,6 @@
 	</select>
 
     <update id="updateSequenceIndexData" >
-		 UPDATE SYS_SEQUENCE SET begin_num = ((cast(#{incrNum,jdbcType=VARCHAR} as SIGNED INTEGER)  * incr) + begin_num) WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+		 UPDATE SYS_SEQUENCE SET begin_num = ((#{incrNum,jdbcType=INTEGER} * incr) + begin_num) WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
 	</update>
 </mapper>

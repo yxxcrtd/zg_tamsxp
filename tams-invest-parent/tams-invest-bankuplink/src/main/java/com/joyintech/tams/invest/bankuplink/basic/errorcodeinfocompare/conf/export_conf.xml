@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="ErrorCodeInfoCompare001.xlsx" name="错误码信息查询">
-    <Worksheet javaBean="com.joyintech.tams.invest.bankuplink.basic.errorcodeinfocompare.dto.ErrorCodeInfoCompare001Dto">
-        <Row>
-            <Cell order="1" name="错误码">errCode</Cell>
-            <Cell order="2" name="错误信息">errMsg</Cell>
-        </Row>
-    </Worksheet>
-</Workbook>

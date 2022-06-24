@@ -582,8 +582,8 @@
         A.UPDATE_TIME updateTime,
         A.SUBMIT_STATUS submitStatus,
         A.SUBMIT_TIME submitTime,
-        to_char(A.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') chbSubmitDeadline,
-        to_char(A.SUBMIT_DEADLINE,'%Y-%m-%d') submitDeadline,
+        DATE_FORMAT(A.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') chbSubmitDeadline,
+        DATE_FORMAT(A.SUBMIT_DEADLINE,'%Y-%m-%d') submitDeadline,
         A.REGIST_BANK_CODE registBankCode,
         A.ACCOUNT account,
         A.ACCOUNT_NAME accountName,
@@ -831,5 +831,25 @@
 		    cequdet.UPDATE_USER updateUser
 		FROM CHB_EQUDET cequdet
 		where cequdet.STATUS='A'
+    </select>
+
+    <!-- 查询已经在INFO表存在的导入数据-->
+    <select id="selectTMPExistInInfo" resultType="com.joyintech.tams.report.submitmaintenance.businessdetailed.dto.EquiteBusiDetails001Dto">
+        SELECT
+        b.BUSI_SEQNO as busiSeqno,
+        b.REGIST_BANK_CODE as registBankCode,
+        b.ACCOUNT as account,
+        b.STATUS as dataStatus,
+        b.EQUITY_CONF_DATE equityConfDate
+        FROM
+        CHB_EQUDET_IMP_TMP  a
+        LEFT JOIN 	CHB_EQUDET b
+        ON (a.BUSI_SEQNO = b.BUSI_SEQNO
+        AND a.REGIST_BANK_CODE = b.REGIST_BANK_CODE
+        )
+        WHERE
+        b.BUSI_SEQNO IS NOT NULL
+        <!-- add by 删除数据后无法导入 yangxianjiu start end 2021-12-29 -->
+        AND b.STATUS != 'D'
     </select>
 </mapper>

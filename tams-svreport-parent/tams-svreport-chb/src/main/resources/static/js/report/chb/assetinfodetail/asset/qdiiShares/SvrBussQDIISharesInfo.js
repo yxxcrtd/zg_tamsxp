@@ -4,14 +4,14 @@
  */
 (function(){
 
-    var getElementById = function(id) {
-        return $('#' + entityName_BussFinBondRepInfo + '_' + id);
-    };
-    if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18){
-        getElementById('repPrivateprdFlag_div').show();
-        getElementById('repBondtostockFlag_div').show();
-        getElementById('project_other_div').show();
-    }
+    // var getElementById = function(id) {
+    //     return $('#' + entityName_BussFinBondRepInfo + '_' + id);
+    // };
+    // if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18){
+    //     getElementById('repPrivateprdFlag_div').show();
+    //     getElementById('repBondtostockFlag_div').show();
+    //     getElementById('project_other_div').show();
+    // }
     $(function() {
         var startQDIIshare= function() {
             // 加红星星

@@ -103,24 +103,27 @@
            var erroOrInfo = $('#erroOrInfo').val();
            if(pageModel==PAGE_MODEL_EDIT){
                      $('#salerInstCode').prop("disabled",true);
-                     $('#salerName').prop("disabled",true);
                      var salerRewPenaTyep = $('#salerRewPenaTyep').val();
-                     if(salerRewPenaTyep === '03'){
-                         $('#salerRewPenaName').prop("disabled",true);
-                         $('#salerRewPenaComments').prop("disabled",true);
-                         $('#salerRewPenaInst').prop("disabled",true);
-                         $('#salerRewPenaInstName').prop("disabled",true);
-                         $('#salerRewPenaStart').prop("disabled",true);
-                         $('#salerRewPenaEnd').prop("disabled",true);
-                     }else{
-                         $('#salerComplainDetail').prop("disabled",true);
-                         $('#salerComplainResult').prop("disabled",true);
-                         $('#salerComplainDate').prop("disabled",true);
-                         var salerRewPenaInst = $('#salerRewPenaInst').val();
-                         if(salerRewPenaInst === '01' || salerRewPenaInst === '02'){
-                            $('#salerRewPenaInstName').prop("disabled",true);
+                     if (erroOrInfo==='info'){
+                         $('#salerName').prop("disabled",true);
+                         if(salerRewPenaTyep === '03'){
+                             $('#salerRewPenaName').prop("disabled",true);
+                             $('#salerRewPenaComments').prop("disabled",true);
+                             $('#salerRewPenaInst').prop("disabled",true);
+                             $('#salerRewPenaInstName').prop("disabled",true);
+                             $('#salerRewPenaStart').prop("disabled",true);
+                             $('#salerRewPenaEnd').prop("disabled",true);
+                         }else{
+                             $('#salerComplainDetail').prop("disabled",true);
+                             $('#salerComplainResult').prop("disabled",true);
+                             $('#salerComplainDate').prop("disabled",true);
+                             var salerRewPenaInst = $('#salerRewPenaInst').val();
+                             if(salerRewPenaInst === '01' || salerRewPenaInst === '02'){
+                                 $('#salerRewPenaInstName').prop("disabled",true);
+                             }
                          }
                      }
+
            }
            else{
                      $('#salerName').prop("disabled",true);

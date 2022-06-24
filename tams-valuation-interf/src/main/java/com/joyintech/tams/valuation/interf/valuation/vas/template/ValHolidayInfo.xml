@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<info description="节假日信息">
-	<string name="tradeMarket" value="TRADEMARKET" length="32" required="true" description="交易场所"/>
-	<date name="cdate" value="CDATE" length="10" required="true" description="日期"/>
-	<string name="isHoliday" value="ISHOLIDAY" length="50" required="true" description="是否为节假日"/>
-	<string name="dataActionSign" value="DATAACTIONSIGN" length="50" required="true" description="数据动作标志"/>
-</info>

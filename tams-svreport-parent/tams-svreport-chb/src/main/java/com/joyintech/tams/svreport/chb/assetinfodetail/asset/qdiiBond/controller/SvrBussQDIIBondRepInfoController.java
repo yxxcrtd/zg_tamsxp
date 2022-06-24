@@ -51,7 +51,7 @@ public class SvrBussQDIIBondRepInfoController extends BaseController {
         String entityName = this.getParam("entityName");
         //1.赋值界面数据字典
         setSelectOptionToModel(model,  new DictCode[] {DictCode.所属国家或地区,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类
-                ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
+                ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类,DictCode.主体评级_中债}
         );
 
         //2、当入参assetType2资产/负债二级类别 为【资产_负债类别_QDII债券资产】进行以下处理

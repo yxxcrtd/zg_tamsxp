@@ -54,4 +54,15 @@ public class ManuallyGeneratingPbcDataMService extends BaseService<PbcDataFile>{
                    SvrServiceApplication.PBC_SERVICE_NAME + "/ManuallyGeneratingPbcData/getPbcAccountId",param,
                    List.class);
     }
+
+	/**
+	 * 内部产品代码
+	 * @param param
+	 * @return
+	 */
+	public List<SelectOptionDto> getInsideProdId(Map<String, Object> param) {
+		return restTemplate.postForObject(
+				SvrServiceApplication.PBC_SERVICE_NAME + "/ManuallyGeneratingPbcData/getInsideProdId",param,
+				List.class);
+	}
 }

@@ -3,23 +3,23 @@
 <mapper namespace="com.joyintech.tams.disclosure.information.manage.workmanage.dao.ReportWorkManage003Mapper_mysql">
 	<select id="findProdPage" resultType="com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage003Dto">
 		SELECT PROD_ID as id,PROD_ID as prodId,IFNULL(PROD_ABBR,PROD_NAME) as prodName
-		FROM REP_PROD_INFO
-		where 1=1
-		and p_prod_id is null
-		<if test="condition != null and condition != ''">
+        FROM REP_PROD_INFO
+        where 1=1
+        and p_prod_id is null
+        <if test="condition != null and condition != ''">
 			<![CDATA[ ${condition}  ]]>
 		</if>
 		<if test="chooseProdId != null and chooseProdId.length > 0">
-			AND PROD_ID NOT IN
+	 		AND PROD_ID NOT IN
 			<foreach item="item" collection="chooseProdId" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		<if test="prodIds != null and prodIds.length > 0">
-			AND PROD_ID NOT IN
+	 		AND PROD_ID NOT IN
 			<foreach item="item" collection="prodIds" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
@@ -31,5 +31,5 @@
 			and IFNULL(PROD_ABBR,PROD_NAME) like concat(concat('%',#{prodName,jdbcType=VARCHAR}),'%')
 		</if>
 		ORDER BY PROD_ID
-	</select>
+    </select>
 </mapper>

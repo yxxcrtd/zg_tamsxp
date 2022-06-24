@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.report.regulatoryreporting.common.base.dao.ShareFilePbcProdamtOrgMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdamtOrg" >
+        <result column="DETAILUUID" property="detailuuid" jdbcType="CHAR" />
+        <result column="REPORTTYPE" property="reporttype" jdbcType="VARCHAR" />
+        <result column="GROUPTYPE" property="grouptype" jdbcType="VARCHAR" />
+        <result column="PROPERTYCODE" property="propertycode" jdbcType="VARCHAR" />
+        <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
+        <result column="DYMJTM_AMT" property="dymjtmAmt" jdbcType="DECIMAL" />
+        <result column="DYMJYM_AMT" property="dymjymAmt" jdbcType="DECIMAL" />
+        <result column="DYMJTB_YILED" property="dymjtbYiled" jdbcType="DECIMAL" />
+        <result column="LJMJTM_AMT" property="ljmjtmAmt" jdbcType="DECIMAL" />
+        <result column="LJMJYM_AMT" property="ljmjymAmt" jdbcType="DECIMAL" />
+        <result column="LJMJTB_YILED" property="ljmjtbYiled" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdamtOrg" >
+        insert into SHARE_FILE_PBC_PRODAMT_ORG (DETAILUUID, REPORTTYPE, GROUPTYPE, 
+            PROPERTYCODE, REPORTUUID, DYMJTM_AMT, 
+            DYMJYM_AMT, DYMJTB_YILED, LJMJTM_AMT, 
+            LJMJYM_AMT, LJMJTB_YILED)
+        values (#{detailuuid,jdbcType=CHAR}, #{reporttype,jdbcType=VARCHAR}, #{grouptype,jdbcType=VARCHAR}, 
+            #{propertycode,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, #{dymjtmAmt,jdbcType=DECIMAL}, 
+            #{dymjymAmt,jdbcType=DECIMAL}, #{dymjtbYiled,jdbcType=DECIMAL}, #{ljmjtmAmt,jdbcType=DECIMAL}, 
+            #{ljmjymAmt,jdbcType=DECIMAL}, #{ljmjtbYiled,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdamtOrg" >
+        insert into SHARE_FILE_PBC_PRODAMT_ORG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                DETAILUUID,
+            </if>
+            <if test="reporttype != null" >
+                REPORTTYPE,
+            </if>
+            <if test="grouptype != null" >
+                GROUPTYPE,
+            </if>
+            <if test="propertycode != null" >
+                PROPERTYCODE,
+            </if>
+            <if test="reportuuid != null" >
+                REPORTUUID,
+            </if>
+            <if test="dymjtmAmt != null" >
+                DYMJTM_AMT,
+            </if>
+            <if test="dymjymAmt != null" >
+                DYMJYM_AMT,
+            </if>
+            <if test="dymjtbYiled != null" >
+                DYMJTB_YILED,
+            </if>
+            <if test="ljmjtmAmt != null" >
+                LJMJTM_AMT,
+            </if>
+            <if test="ljmjymAmt != null" >
+                LJMJYM_AMT,
+            </if>
+            <if test="ljmjtbYiled != null" >
+                LJMJTB_YILED,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailuuid != null" >
+                #{detailuuid,jdbcType=CHAR},
+            </if>
+            <if test="reporttype != null" >
+                #{reporttype,jdbcType=VARCHAR},
+            </if>
+            <if test="grouptype != null" >
+                #{grouptype,jdbcType=VARCHAR},
+            </if>
+            <if test="propertycode != null" >
+                #{propertycode,jdbcType=VARCHAR},
+            </if>
+            <if test="reportuuid != null" >
+                #{reportuuid,jdbcType=CHAR},
+            </if>
+            <if test="dymjtmAmt != null" >
+                #{dymjtmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dymjymAmt != null" >
+                #{dymjymAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="dymjtbYiled != null" >
+                #{dymjtbYiled,jdbcType=DECIMAL},
+            </if>
+            <if test="ljmjtmAmt != null" >
+                #{ljmjtmAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ljmjymAmt != null" >
+                #{ljmjymAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ljmjtbYiled != null" >
+                #{ljmjtbYiled,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.service.report.regulatoryreporting.common.base.entity.ShareFilePbcProdamtOrg" >
+        insert into SHARE_FILE_PBC_PRODAMT_ORG(DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+        REPORTUUID, DYMJTM_AMT, DYMJYM_AMT, DYMJTB_YILED, LJMJTM_AMT, LJMJYM_AMT, LJMJTB_YILED
+        )
+        select DETAILUUID, REPORTTYPE, GROUPTYPE, PROPERTYCODE, 
+            REPORTUUID, DYMJTM_AMT, DYMJYM_AMT, DYMJTB_YILED, LJMJTM_AMT, LJMJYM_AMT, LJMJTB_YILED
+            
+             from SHARE_FILE_PBC_PRODAMT_ORG
+             where 1 = 1
+    </insert>
+</mapper>

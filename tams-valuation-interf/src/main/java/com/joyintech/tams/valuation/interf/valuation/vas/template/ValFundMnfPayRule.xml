@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<info description="货币基金分红规则">
-	<string name="assetId" value="ASSETID" length="32" required="true" description="资产代码"/>
-	<string name="dataActionSign" value="DATAACTIONSIGN" length="50" required="true" description="数据动作标志"/>
-	<date name="effDate" value="EFFDATE" length="10" required="true" description="生效日"/>
-	<string name="payType" value="PAYTYPE" length="50" required="true" description="支付方式"/>
-	<string name="payCycle" value="PAYCYCLE" length="50" required="true" description="付息频率"/>
-	<string name="tdayRule" value="TDAYRULE" length="50" required="true" description="营业日准则"/>
-</info>

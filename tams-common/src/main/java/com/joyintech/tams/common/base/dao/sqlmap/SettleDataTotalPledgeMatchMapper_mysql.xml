@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SettleDataTotalPledgeMatchMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <id column="ENTRUNST_TRADE_ID" property="entrunstTradeId" jdbcType="VARCHAR" />
+        <id column="PLEDGE_FINPROD_ID" property="pledgeFinprodId" jdbcType="VARCHAR" />
+        <id column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <id column="MATCH_CLASS" property="matchClass" jdbcType="VARCHAR" />
+        <result column="MATCH_TYPE" property="matchType" jdbcType="VARCHAR" />
+        <result column="MARCH_QTY" property="marchQty" jdbcType="DECIMAL" />
+        <result column="MARCH_AMT" property="marchAmt" jdbcType="DECIMAL" />
+        <result column="MARCH_QTY_EN" property="marchQtyEn" jdbcType="DECIMAL" />
+        <result column="MARCH_AMT_EN" property="marchAmtEn" jdbcType="DECIMAL" />
+        <result column="DISPLACE_DIRECTION" property="displaceDirection" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, ENTRUNST_TRADE_ID ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID PLEDGE_FINPROD_ID, 
+        BRANCH BRANCH, MATCH_CLASS MATCH_CLASS, MATCH_TYPE MATCH_TYPE, MARCH_QTY MARCH_QTY, 
+        MARCH_AMT MARCH_AMT, MARCH_QTY_EN MARCH_QTY_EN, MARCH_AMT_EN MARCH_AMT_EN, DISPLACE_DIRECTION DISPLACE_DIRECTION,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleDataTotalPledgeMatchMapper_mysql.Base_Column_List" />
+        from SETTLE_DATA_TOTAL_PLEDGE_MATCH
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleDataTotalPledgeMatchMapper_mysql.Base_Column_List" />
+        from SETTLE_DATA_TOTAL_PLEDGE_MATCH
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatchKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SettleDataTotalPledgeMatchMapper_mysql.Base_Column_List" />
+        from SETTLE_DATA_TOTAL_PLEDGE_MATCH
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and ENTRUNST_TRADE_ID = #{entrunstTradeId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and MATCH_CLASS = #{matchClass,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatchKey" >
+        delete from SETTLE_DATA_TOTAL_PLEDGE_MATCH
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and ENTRUNST_TRADE_ID = #{entrunstTradeId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and MATCH_CLASS = #{matchClass,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch" >
+        insert into SETTLE_DATA_TOTAL_PLEDGE_MATCH (SEQ_NO, ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID, 
+            BRANCH, MATCH_CLASS, MATCH_TYPE, 
+            MARCH_QTY, MARCH_AMT, MARCH_QTY_EN, 
+            MARCH_AMT_EN, DISPLACE_DIRECTION, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{entrunstTradeId,jdbcType=VARCHAR}, #{pledgeFinprodId,jdbcType=VARCHAR}, 
+            #{branch,jdbcType=DECIMAL}, #{matchClass,jdbcType=VARCHAR}, #{matchType,jdbcType=VARCHAR}, 
+            #{marchQty,jdbcType=DECIMAL}, #{marchAmt,jdbcType=DECIMAL}, #{marchQtyEn,jdbcType=DECIMAL}, 
+            #{marchAmtEn,jdbcType=DECIMAL}, #{displaceDirection,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch" >
+        insert into SETTLE_DATA_TOTAL_PLEDGE_MATCH
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="entrunstTradeId != null" >
+                ENTRUNST_TRADE_ID,
+            </if>
+            <if test="pledgeFinprodId != null" >
+                PLEDGE_FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="matchClass != null" >
+                MATCH_CLASS,
+            </if>
+            <if test="matchType != null" >
+                MATCH_TYPE,
+            </if>
+            <if test="marchQty != null" >
+                MARCH_QTY,
+            </if>
+            <if test="marchAmt != null" >
+                MARCH_AMT,
+            </if>
+            <if test="marchQtyEn != null" >
+                MARCH_QTY_EN,
+            </if>
+            <if test="marchAmtEn != null" >
+                MARCH_AMT_EN,
+            </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entrunstTradeId != null" >
+                #{entrunstTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeFinprodId != null" >
+                #{pledgeFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="matchClass != null" >
+                #{matchClass,jdbcType=VARCHAR},
+            </if>
+            <if test="matchType != null" >
+                #{matchType,jdbcType=VARCHAR},
+            </if>
+            <if test="marchQty != null" >
+                #{marchQty,jdbcType=DECIMAL},
+            </if>
+            <if test="marchAmt != null" >
+                #{marchAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="marchQtyEn != null" >
+                #{marchQtyEn,jdbcType=DECIMAL},
+            </if>
+            <if test="marchAmtEn != null" >
+                #{marchAmtEn,jdbcType=DECIMAL},
+            </if>
+            <if test="displaceDirection != null" >
+                #{displaceDirection,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch" >
+        insert into SETTLE_DATA_TOTAL_PLEDGE_MATCH(SEQ_NO, ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID, 
+        BRANCH, MATCH_CLASS, MATCH_TYPE, MARCH_QTY, MARCH_AMT, MARCH_QTY_EN, MARCH_AMT_EN, 
+        DISPLACE_DIRECTION, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select SEQ_NO, ENTRUNST_TRADE_ID, PLEDGE_FINPROD_ID, 
+            BRANCH, MATCH_CLASS, MATCH_TYPE, MARCH_QTY, MARCH_AMT, MARCH_QTY_EN, MARCH_AMT_EN, 
+            DISPLACE_DIRECTION, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from SETTLE_DATA_TOTAL_PLEDGE_MATCH
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR} and ENTRUNST_TRADE_ID = #{entrunstTradeId,jdbcType=VARCHAR} and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and MATCH_CLASS = #{matchClass,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch" >
+        update SETTLE_DATA_TOTAL_PLEDGE_MATCH
+        <set >
+            <if test="matchType != null" >
+                MATCH_TYPE = #{matchType,jdbcType=VARCHAR},
+            </if>
+            <if test="marchQty != null" >
+                MARCH_QTY = #{marchQty,jdbcType=DECIMAL},
+            </if>
+            <if test="marchAmt != null" >
+                MARCH_AMT = #{marchAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="marchQtyEn != null" >
+                MARCH_QTY_EN = #{marchQtyEn,jdbcType=DECIMAL},
+            </if>
+            <if test="marchAmtEn != null" >
+                MARCH_AMT_EN = #{marchAmtEn,jdbcType=DECIMAL},
+            </if>
+            <if test="displaceDirection != null" >
+                DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and ENTRUNST_TRADE_ID = #{entrunstTradeId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and MATCH_CLASS = #{matchClass,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SettleDataTotalPledgeMatch" >
+        update SETTLE_DATA_TOTAL_PLEDGE_MATCH
+        set MATCH_TYPE = #{matchType,jdbcType=VARCHAR},
+            MARCH_QTY = #{marchQty,jdbcType=DECIMAL},
+            MARCH_AMT = #{marchAmt,jdbcType=DECIMAL},
+            MARCH_QTY_EN = #{marchQtyEn,jdbcType=DECIMAL},
+            MARCH_AMT_EN = #{marchAmtEn,jdbcType=DECIMAL},
+            DISPLACE_DIRECTION = #{displaceDirection,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+          and ENTRUNST_TRADE_ID = #{entrunstTradeId,jdbcType=VARCHAR}
+          and PLEDGE_FINPROD_ID = #{pledgeFinprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and MATCH_CLASS = #{matchClass,jdbcType=VARCHAR}
+    </update>
+</mapper>

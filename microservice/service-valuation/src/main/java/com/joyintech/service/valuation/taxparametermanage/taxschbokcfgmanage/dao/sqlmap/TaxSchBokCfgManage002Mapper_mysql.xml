@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.service.valuation.taxparametermanage.taxschbokcfgmanage.dao.TaxSchBokCfgManage002Mapper_mysql">
-	<select id="countConfigId" resultType="java.lang.Integer">
-        select IFNULL(MAX(CAST(SUBSTRING(config_id，-3， 3))), 0)
-        from  TAX_BOK_CONFIG
-        where config_id like concat_ws('',#{prefix}, '%')
-    </select>
-</mapper>

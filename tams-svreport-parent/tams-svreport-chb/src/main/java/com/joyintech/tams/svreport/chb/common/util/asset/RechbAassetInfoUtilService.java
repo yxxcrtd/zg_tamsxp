@@ -39,7 +39,7 @@ public class RechbAassetInfoUtilService {
     public   ChbAssetInfo BackChbAssetInfoMethod(String  flag,String assetUUid){
         ChbAssetInfo  infoDto=new  ChbAssetInfo();
         //当 入参【模式】为01的况下 查询CHB_ASSET_INFO_ERRODATA
-        if(StringUtil.equals(DictCodeListExt3.中债_处理状态_待处理.getValue(),flag)){
+        if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),flag)){
             //根据UUID 查询数据库对应记录
             List<ChbAssetInfoErrodataWithBLOBs>  listChbAssetInfoErrordata=assetInfoDetailMapper.getChbAssetInfoErrorDataByUUid(assetUUid);
             //调用共通方法，获取资产要素
@@ -50,7 +50,7 @@ public class RechbAassetInfoUtilService {
 
         }
         //当 入参【模式】为02的况下
-        else if(StringUtil.equals(DictCodeListExt3.中债_处理状态_已处理.getValue(),flag)){
+        else {
             infoDto=assetInfoDetailMapper.getChbAssetInfoByUUid(assetUUid);
         }
          return  infoDto;

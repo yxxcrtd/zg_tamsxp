@@ -12,8 +12,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.List;
 
-@ValidLogic(targetClass = SalerIdenInfoValid.class, groups = {ValidateGroupEdit.class,
-        ValidateGroupDelete.class})
+@ValidLogic(targetClass = SalerIdenInfoValid.class, groups = {ValidateGroupEdit.class})
 public class SalerIdenInfoDto extends ChbSalerIdenInfo implements ProcessEntity {
     private String operateType;//操作类型
     private String elementId;//页面元素

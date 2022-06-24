@@ -8,7 +8,7 @@
 											PRODID,PRODNAME,PRD_REGIST_CODE,INDENTIFY_MARK,
 											CCY,TDYQTY,YSTQTY,CHANGEQTY,UPDATE_USER,
 											UPDATE_TIME,CREATE_USER,CREATE_TIME,CREATE_DEPT)
-		select F_GUID() SEQNO, r.*
+		select UUID() SEQNO, r.*
 		from (
 				 select
 					 todayData.HOLD_DATE EQUITY_CONF_DATE, /*查询日期*/
@@ -60,7 +60,7 @@
 										 a.indentify_mark) lastDayData
 									on todayData.REGIST_BANK_CODE = lastDayData.REGIST_BANK_CODE
 										and todayData.PRODID = lastDayData.PRODID
-										AND todayData.HOLD_DATE - 1 = lastDayData.HOLD_DATE
+										AND adddate(todayData.HOLD_DATE, interval  -1 day) = lastDayData.HOLD_DATE
 										AND todayData.CCY = lastDayData.CCY
 										and todayData.indentify_mark = lastDayData.indentify_mark
 						  left join (select t.reg_code,

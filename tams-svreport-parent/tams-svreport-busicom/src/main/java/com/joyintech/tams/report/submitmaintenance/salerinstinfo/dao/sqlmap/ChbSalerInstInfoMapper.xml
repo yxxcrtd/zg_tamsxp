@@ -159,6 +159,15 @@
         STATUS = 'E'
     </select>
 
+    <select id="getSalerInstInfoCount" resultType="int">
+        select
+            COUNT(*)
+        from
+            CHB_SALER_INST_INFO
+        where
+            SALER_ORG_CODE = #{salerOrgCode}
+    </select>
+
 <!--    删除erro表-->
     <delete id="deleteErroByPrimaryKey" parameterType="java.lang.String" >
         delete from CHB_SALER_INST_ERRODATA

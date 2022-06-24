@@ -81,6 +81,25 @@
     from MST_CUSTOMER_INFO_ADD
     where 1=1
   </select>
+
+  <select id="getAllMstCustomerInfoList" parameterType="com.joyintech.tams.common.base.entity.MstCustomerInfo" resultType="com.joyintech.tams.common.base.entity.MstCustomerInfo">
+    SELECT
+    CUSTOMER_ID customerId,
+    CUSTOMER_NAME customerName
+    FROM MST_CUSTOMER_INFO
+  </select>
+
+  <select id="getAllIndustryShares"  resultType="com.joyintech.system.base.entity.SysDatadictListLink">
+    SELECT
+    DICT_CODE as dictCode,
+    ITEM_CODE as itemCode,
+    LINKED_DICT_CODE as linkedDictCode,
+    LINKED_ITEM_CODE as linkedItemCode
+    FROM SYS_DATADICT_LIST_LINK
+    WHERE 1=1
+    and LINKED_DICT_CODE = 'INSTITUTION_INDUSTRY_FIRST_LEVEL'
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from MST_CUSTOMER_INFO_ADD
     where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
@@ -683,24 +702,26 @@
     COMPANY_NATURE, LINK_ID1, LINK_ID2,
     LINK_ID3, REMARK, CREATE_USER,
     CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4)
-    select CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
-    PARTY_TYPE1, INDUSTRY, INDUSTRY2,
-    INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
-    REGISTER_CAPITAL, PROVINCE, CITY,
-    COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE,
-    IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID,
-    PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT,
-    CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE,
-    INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI,
-    SEX, PERSON_ID, M_PHONE,
-    PHONE, POSITION, COMPANY_NAME,
-    ADDRESS, MAIL, PROPERTY,
-    COMPANY_NATURE, LINK_ID1, LINK_ID2,
-    LINK_ID3, REMARK, CREATE_USER,
-    CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,ORG_TYPE,
-    IS_SHAREHOLDER_RELATED from
+    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4
+    ,ORG_TYPE, IS_SHAREHOLDER_RELATED)
+    select de.CUSTOMER_ID, de.PARTY_TYPE3, de.PARTY_TYPE2,
+    de.PARTY_TYPE1, de.INDUSTRY, de.INDUSTRY2,
+    de.INSITITUTE_CODE, de.IS_GOV, de.MAIN_CAPITAL,
+    de.REGISTER_CAPITAL, de.PROVINCE, de.CITY,
+    de.COUNTY, de.HOLDING_TYPE, de.CUSTOMER_OBJ_TYPE,
+    de.IS_LISTED_COMPANY, de.IS_GROUP_CUSTOMER, de.PARENT_CUSTOMER_ID,
+    de.PARENT_CUSTOMER_NAME, de.IS_PRIVATE, de.IS_ESCAPE_DEPT,
+    de.CREDIT_TYPE, de.IS_CREDIT_RELATED_TRD, de.STRUCT_ADJUST_TYPE,
+    de.INDUS_UPGRATE_TYPE, de.BUSI_SCOPE, de.MAIN_BUSI,
+    de.SEX, de.PERSON_ID, de.M_PHONE,
+    de.PHONE, de.POSITION, de.COMPANY_NAME,
+    de.ADDRESS, de.MAIL, de.PROPERTY,
+    de.COMPANY_NATURE, de.LINK_ID1, de.LINK_ID2,
+    de.LINK_ID3, de.REMARK, de.CREATE_USER,
+    de.CREATE_DEPT, de.CREATE_TIME, de.UPDATE_USER,
+    de.UPDATE_TIME, de.HS_TYPE, de.IS_FIN_LICENCE, de.INDUSTRY3, de.INDUSTRY4
+    ,de.ORG_TYPE, de.IS_SHAREHOLDER_RELATED
+    from
     (
     select TEMP.* from
     (
@@ -713,8 +734,8 @@
       #{item.industry2,jdbcType=VARCHAR} INDUSTRY2,
       #{item.insitituteCode,jdbcType=VARCHAR} INSITITUTE_CODE,
       #{item.isGov,jdbcType=VARCHAR} IS_GOV,
-      #{item.mainCapital,jdbcType=DECIMAL} MAIN_CAPITAL,
-      #{item.registerCapital,jdbcType=DECIMAL} REGISTER_CAPITAL,
+      CAST(#{item.mainCapital,jdbcType=DECIMAL} AS DECIMAL(30,14) ) MAIN_CAPITAL,
+      CAST(#{item.registerCapital,jdbcType=DECIMAL} AS DECIMAL(30,14) )  REGISTER_CAPITAL,
       #{item.province,jdbcType=VARCHAR} PROVINCE,
       #{item.city,jdbcType=VARCHAR} CITY,
       #{item.county,jdbcType=VARCHAR} COUNTY,
@@ -758,37 +779,18 @@
       #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID,
       #{item.orgType,jdbcType=VARCHAR} ORG_TYPE,
       #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED
-      FROM
-      DUAL
+      from  dual
     </foreach>
     ) TEMP where not exists (select 1 from MST_CUSTOMER_INFO_ADD CII where CII.CUSTOMER_ID = TEMP.CUSTOMER_ID)
     ) de ;
 
     UPDATE  MST_CUSTOMER_INFO_ADD as A,
     (
-    select
-    CUSTOMER_ID, PARTY_TYPE3, PARTY_TYPE2,
-    PARTY_TYPE1, INDUSTRY, INDUSTRY2,
-    INSITITUTE_CODE, IS_GOV, MAIN_CAPITAL,
-    REGISTER_CAPITAL, PROVINCE, CITY,
-    COUNTY, HOLDING_TYPE, CUSTOMER_OBJ_TYPE,
-    IS_LISTED_COMPANY, IS_GROUP_CUSTOMER, PARENT_CUSTOMER_ID,
-    PARENT_CUSTOMER_NAME, IS_PRIVATE, IS_ESCAPE_DEPT,
-    CREDIT_TYPE, IS_CREDIT_RELATED_TRD, STRUCT_ADJUST_TYPE,
-    INDUS_UPGRATE_TYPE, BUSI_SCOPE, MAIN_BUSI,
-    SEX, PERSON_ID, M_PHONE,
-    PHONE, POSITION, COMPANY_NAME,
-    ADDRESS, MAIL, PROPERTY,
-    COMPANY_NATURE, LINK_ID1, LINK_ID2,
-    LINK_ID3, REMARK, CREATE_USER,
-    CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-    UPDATE_TIME, HS_TYPE, IS_FIN_LICENCE, INDUSTRY3, INDUSTRY4,
-    ORG_TYPE,IS_SHAREHOLDER_RELATED from
-    (
     select TEMP.* from
     (
     <foreach collection="list" item="item"  separator="union all">
       SELECT
+      #{item.customerId,jdbcType=VARCHAR} CUSTOMER_ID,
       #{item.partyType3,jdbcType=VARCHAR} PARTY_TYPE3,
       #{item.partyType2,jdbcType=VARCHAR} PARTY_TYPE2,
       #{item.partyType1,jdbcType=VARCHAR} PARTY_TYPE1,
@@ -796,8 +798,8 @@
       #{item.industry2,jdbcType=VARCHAR} INDUSTRY2,
       #{item.insitituteCode,jdbcType=VARCHAR} INSITITUTE_CODE,
       #{item.isGov,jdbcType=VARCHAR} IS_GOV,
-      #{item.mainCapital,jdbcType=DECIMAL} MAIN_CAPITAL,
-      #{item.registerCapital,jdbcType=DECIMAL} REGISTER_CAPITAL,
+      CAST(#{item.mainCapital,jdbcType=DECIMAL}  AS DECIMAL(30,14) ) MAIN_CAPITAL,
+      CAST(#{item.registerCapital,jdbcType=DECIMAL}  AS DECIMAL(30,14) ) REGISTER_CAPITAL,
       #{item.province,jdbcType=VARCHAR} PROVINCE,
       #{item.city,jdbcType=VARCHAR} CITY,
       #{item.county,jdbcType=VARCHAR} COUNTY,
@@ -839,12 +841,11 @@
       #{item.industry3,jdbcType=VARCHAR} INDUSTRY3,
       #{item.industry4,jdbcType=VARCHAR} INDUSTRY4,
       #{item.orgType,jdbcType=VARCHAR} ORG_TYPE,
-      #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED,
+      #{item.isShareholderRelated,jdbcType=VARCHAR} IS_SHAREHOLDER_RELATED
       FROM
       DUAL
     </foreach>
     ) TEMP
-    ) de
     ) AS B
     SET
     A.PARTY_TYPE3 = B.PARTY_TYPE3,

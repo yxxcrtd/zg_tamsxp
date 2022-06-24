@@ -7,8 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.joyintech.background.component.common.pack.common.util.BeanUtil;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.ChbPrdresistCodeKey;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -58,6 +63,8 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     @Autowired
     private ChbPrdresistCodeMapper chbPrdresistCodeMapper;
 
+    @Autowired
+    private ChbPrdDeclareInfoMapper chbPrdDeclareInfoMapper;
     /**
      * InvestorsHoldInfo001Service
      */
@@ -80,6 +87,7 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
     	    record.setVdate(entity.getVdate());
     	    record.setMdate(entity.getMdate());
     	    record.setOperateMode(entity.getOperateMode());
+    	    record.setProdInsId(entity.getProdInsId());
     	   /* if(StringUtil.equals(entity.getOperateMode(), "封闭式净值型")) {   	    	
     	    }else if(StringUtil.equals(entity.getOperateMode(), "封闭式非净值型")) {
     	    	record.setOperateMode("02");
@@ -135,10 +143,10 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
        }
     
     
-    public AjaxResult checkInsertData(String prodId,String regCode ) {
+    public AjaxResult checkInsertData(String prodInsId,String regCode ) {
     	AjaxResult webResult = new AjaxResult();    
     	ChbPrdresistCode record = new ChbPrdresistCode();
-    	record.setProdid(prodId);
+    	record.setProdInsId(prodInsId);
     	record.setFlag("2");
 		record.setReg_code(regCode);
 		ChbPrdresistCode dto = chbPrdresistCodeMapper.selectByPrimaryKey(record);
@@ -158,12 +166,12 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
         return webResult;
     }
     
-    public AjaxResult checkInsertData1(String prodId,String regCode ) {
+    public AjaxResult checkInsertData1(String prodInsId,String regCode ) {
     	AjaxResult webResult = new AjaxResult();
         List<ValidMessage> errList = new ArrayList<ValidMessage>();
 
         //从产品申报信息中查询数据
-        ChbPrdDeclareInfoDto dto = proRegistCodeManage001Mapper.selectInfoByProdId(prodId);
+        ChbPrdDeclareInfoDto dto = proRegistCodeManage001Mapper.selectInfoByProdId(prodInsId);
         if(null!=dto){
             if(StringUtil.equals(dto.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())){
                 //公募产品
@@ -187,5 +195,35 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
         webResult.setData(errList);
         return webResult;
     }
-    
+
+    public Page<SelectOptionDto> getProdInsId(Map<String, Object> param) {
+        return queryForPageForSelectReturn(Integer.parseInt(null == param.get("page")?"1":(String) param.get("page")), Integer.parseInt(null == (String) param.get("length")?"1":(String) param.get("length")),()->chbPrdDeclareInfoMapper.getProdInsId(param));
+    }
+
+    public String getProdNameByProdInsId(String prodInsId) {
+        String result ="";
+        try {
+            result= chbPrdDeclareInfoMapper.getProdNameByProdInsId(prodInsId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ProRegistCodeManage002Dto selectByProdInsId(String prodInsId) {
+        ChbPrdresistCodeKey key = new ChbPrdresistCodeKey();
+        key.setProdInsId(prodInsId);
+        key.setFlag("2");
+        ChbPrdresistCode  chbPrdresistCode  = chbPrdresistCodeMapper.selectByPrimaryKey(key);
+        ProRegistCodeManage002Dto dto = new ProRegistCodeManage002Dto();
+        if(chbPrdresistCode!=null){
+            dto.setProdId(chbPrdresistCode.getProdid());
+            dto.setProdName(chbPrdresistCode.getProdname());
+            dto.setProdInsId(chbPrdresistCode.getProdInsId());
+            dto.setRegCode(chbPrdresistCode.getRegCode());
+            dto.setOrgCode(chbPrdresistCode.getOrgCode());
+            dto.setOperateMode(chbPrdresistCode.getOperateMode());
+        }
+        return dto;
+    }
 }

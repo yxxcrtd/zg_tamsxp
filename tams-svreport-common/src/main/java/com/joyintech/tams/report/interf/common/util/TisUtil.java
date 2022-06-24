@@ -635,6 +635,11 @@ public class TisUtil {
 			}
 
 			outputStream = new FileOutputStream(file);
+			//add by zhoubin 20220510 start
+			//使单元格公式生效。
+			FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
+			evaluator.evaluateAll();
+			//add by zhoubin 20220510 end
 			wb.write(outputStream);
 
 			return file;

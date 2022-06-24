@@ -6,7 +6,13 @@
 			CPDS.REGIST_SEQNO registSeqno,
 		    CPDS.PROD_ID prodId,
 		    CPB.PROD_NAME prodName,
-		    CPDS.ISSUE_PARTY_ID issuePartyId,
+		    /***update by leipeng 20200628**/
+	    	<if test="model_type != null">
+		   	 CPB.REG_CODE issuePartyId, /*发行机构代码*/
+			</if>
+			<if test="model_type == null">
+		     CPDS.ISSUE_PARTY_ID issuePartyId,
+			</if>
 		    CPDS.PROD_REGIST_CODE prodRegistCode,
 		    CPDS.ORIGINAL_VALUE originalValue,
 		    CPDS.PRD_VALUE prdValue,
@@ -15,8 +21,8 @@
 		    CPDS.CNY_ORL_VALUE cnyOrlValue,
 		    CPDS.CNY_PRD_VALUE cnyPrdValue,
 		    CPDS.CNY_TAL_VALUE cnyTalValue,
-		    CPDS.REA_YIELD*100 reaYield,
-		    CPDS.NEW_EXP_YIELD*100 newExpYield,
+		    CPDS.REA_YIELD reaYield,
+		    CPDS.NEW_EXP_YIELD newExpYield,
 		    CPDS.BANK_IMP_INT bankImpInt,
 		    DATE_FORMAT(CPDS.VDATE,'%Y%m%d') vdate,
 		    DATE_FORMAT(CPDS.MDATE,'%Y%m%d') mdate,
@@ -29,56 +35,57 @@
 		    CPDS.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
 			CPDS.STATUS_DATE statusDate,
 		    CPDS.STATUS,
-		    CPDS.ORG_CODE orgCode,
+		    ifnull(CPB.ORG_CODE, CPDS.ORG_CODE) orgCode,
 		    CPDS.UPDATE_TIME updateTime,
 		    CPDS.SUBMIT_TIME submitTime,
 		    CPDS.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
 		    CPDS.REMARK,
 		    CPDS.SHARE_AMT_WAN shareAmtWan,
-		    CPDS.CASH_AMT_WAN  cashAmtWan
+		    CPDS.CASH_AMT_WAN  cashAmtWan,
+			CPDS.SUMIT_SEQ sumitSeq,
+			CPDS.YIELD_DATE yieldDate
 		FROM CHB_PRD_DEAL_SUB CPDS
-		
 		LEFT JOIN CHB_PRD_BASEINFO CPB 
 		ON CPB.PROD_ID = CPDS.PROD_ID
-		AND CPB.ORG_CODE = CPDS.ORG_CODE
-		AND CPB.STATUS = 'E'
+		<!-- AND CPB.ORG_CODE = CPDS.ORG_CODE-->
+		AND CPB.STATUS IN ('E','M')
 	</sql>
 	<!-- 查询 产品存续期登记表数据-->
 	<select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
-		<include refid="baseInfo"/>
-		<where>
-			<if test="prodNameList != null and prodNameList.size()>0">
-				<foreach collection="prodNameList" item="item" open="CPDS.PROD_ID in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="sendStatusList != null and sendStatusList.size()>0">
+        <include refid="baseInfo"/>
+		 <where>
+		   <if test="prodNameList != null and prodNameList.size()>0">
+                <foreach collection="prodNameList" item="item" open="CPDS.PROD_ID in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="sendStatusList != null and sendStatusList.size()>0">
 				<foreach collection="sendStatusList" item="item" open="and CPDS.SEND_STATUS in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
+				#{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			<if test="statusList != null and statusList.size()>0">
 				<foreach collection="statusList" item="item" open="and CPDS.STATUS in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
+				  #{item,jdbcType=VARCHAR}
 				</foreach>
 			</if>
-			<if test="regCodeList != null and regCodeList.size()>0">
-				<foreach collection="regCodeList" item="item" open="and CPDS.PROD_REGIST_CODE in(" separator="," close=")">
-					#{item,jdbcType=VARCHAR}
-				</foreach>
-			</if>
-			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
-				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND CPDS.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
-					#{submitFeedbackStatus,jdbcType=VARCHAR}
-				</foreach>
-			</if>
+		    <if test="regCodeList != null and regCodeList.size()>0">
+                <foreach collection="regCodeList" item="item" open="and CPDS.PROD_REGIST_CODE in(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND CPDS.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+             		#{submitFeedbackStatus,jdbcType=VARCHAR}
+            	</foreach>	
+		 	</if>
 			<if test="submitendDateStart != null and submitendDateStart != ''">
-				AND DATE_FORMAT(CPDS.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitendDateStart,jdbcType=VARCHAR}
+			   AND DATE_FORMAT(CPDS.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &gt;= #{submitendDateStart,jdbcType=VARCHAR}
 			</if>
 			<if test="submitendDateEnd != null and submitendDateEnd != ''">
-				AND DATE_FORMAT(CPDS.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitendDateEnd,jdbcType=VARCHAR}
+			   AND DATE_FORMAT(CPDS.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt;= #{submitendDateEnd,jdbcType=VARCHAR}
 			</if>
-			<if test="dataDateStart != null and dataDateStart != ''">
+		 	<if test="dataDateStart != null and dataDateStart != ''">
 				and DATE_FORMAT(CPDS.STATUS_DATE,'%Y-%m-%d') &gt;= #{dataDateStart,jdbcType=VARCHAR}
 			</if>
 			<if test="dataDateEnd != null and dataDateEnd != ''">
@@ -90,369 +97,361 @@
 			<if test="submitDateEnd != null and submitDateEnd != ''">
 				and DATE_FORMAT(CPDS.SUBMIT_TIME,'%Y-%m-%d') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
 			</if>
+			 <if test="mdateStart != null and mdateStart != ''">
+				 AND DATE_FORMAT(CPDS.MDATE,'%Y-%m-%d') &gt;= #{mdateStart,jdbcType=VARCHAR}
+			 </if>
+			 <if test="mdateEnd != null and mdateEnd != ''">
+				 AND DATE_FORMAT(CPDS.MDATE,'%Y-%m-%d') &lt;= #{mdateEnd,jdbcType=VARCHAR}
+			 </if>
 			<if test="registSeqno != null and registSeqno != ''">
 				and CPDS.REGIST_SEQNO = #{registSeqno,jdbcType=VARCHAR}
 			</if>
 			<if test="registList!=null and registList.size()!=0">
-				<foreach collection="registList" item="items"
-						 open=" AND TRIM(CPDS.REGIST_SEQNO) IN (" close=")" separator=",">
-					#{items,jdbcType=CHAR}
-				</foreach>
-			</if>
+			   	<foreach collection="registList" item="items" 
+	            		open=" AND TRIM(CPDS.REGIST_SEQNO) IN (" close=")" separator=",">
+	             		#{items,jdbcType=CHAR}
+	             </foreach> 
+		   	</if>
 			and CPDS.STATUS !='04'
-		</where>
+	 	</where>
 	</select>
-
+	
 	<select id="queryExportListByKeys" resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
 		<include refid="baseInfo"/>
-		<where>
-			<if test="prodDurationRegistList!=null and prodDurationRegistList.size()!=0">
-				<foreach collection="prodDurationRegistList" item="prodDurationRegist" open=" (" close=")" separator=") or (">
-					1=1
-					<if test="prodDurationRegist.registSeqno!=null and prodDurationRegist.registSeqno!=''">
-						and CPDS.regist_Seqno = #{prodDurationRegist.registSeqno}
-					</if>
-				</foreach>
-			</if>
+    	<where>
+		   	<if test="prodDurationRegistList!=null and prodDurationRegistList.size()!=0">
+			 	<foreach collection="prodDurationRegistList" item="prodDurationRegist" open=" (" close=")" separator=") or (">
+			 		       1=1
+			 	 		<if test="prodDurationRegist.registSeqno!=null and prodDurationRegist.registSeqno!=''">
+			 	 			and CPDS.regist_Seqno = #{prodDurationRegist.registSeqno} 
+			 	 		</if>
+			 	</foreach>
+		   	</if>
 		</where>
 	</select>
-
+	
 	<update id="updateSubmitStatusToOk" parameterType="java.util.List">
-		update CHB_PRD_DEAL_SUB subStatus
-		<set>
-			subStatus.SUBMIT_FEEDBACK_STATUS = '03'
-		</set>
-		<where>
-			<foreach collection="list" item="item" open="(" close=")" separator=") or (">
-				subStatus.regist_Seqno = #{item,jdbcType=VARCHAR}
-			</foreach>
-		</where>
-	</update>
-
+        update CHB_PRD_DEAL_SUB subStatus
+        <set> 
+            subStatus.SUBMIT_FEEDBACK_STATUS = '03'
+        </set>
+        <where>
+            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                subStatus.regist_Seqno = #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+    
 	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
-		update CHB_PRD_DEAL_SUB sub
-		<set>
-			<if test="sendStatus != null and sendStatus != ''">
-				sub.SEND_STATUS = #{sendStatus},
-			</if>
-			sub.submit_time = NOW(),
-			sub.UPDATE_TIME = NOW()
-		</set>
-		<where>
-			<foreach collection="prodDurationRegistList" item="item" open="(" close=")" separator=") or (">
-				sub.regist_Seqno = #{item.registSeqno}
-			</foreach>
-		</where>
-	</update>
-
-	<!-- 接口报送更新并且更新 报送流水号-->
-	<update id="updateAllInterfSubmitAndSeqBatch" >
-		update CHB_PRD_DEAL_SUB sub
-		<set>
-			<if test="sendStatus != null and sendStatus != ''">
-				sub.SEND_STATUS = #{sendStatus},
-			</if>
-			sub.submit_time = NOW(),
-			sub.UPDATE_TIME = NOW()
-		</set>
-		<where>
-			sub.SEND_STATUS = '01'
-		</where>
-	</update>
-
-	<update id="updateProdDurationRegist" parameterType="java.util.Map">
+         update CHB_PRD_DEAL_SUB sub
+        <set> 
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            sub.submit_time = NOW(),
+            sub.UPDATE_TIME = NOW()
+        </set>
+        <where>
+            <foreach collection="prodDurationRegistList" item="item" open="(" close=")" separator=") or (">
+                sub.regist_Seqno = #{item.registSeqno} 
+            </foreach>
+        </where>
+    </update>
+    
+     <!-- 接口报送更新并且更新 报送流水号-->
+    <update id="updateAllInterfSubmitAndSeqBatch" >
+         update CHB_PRD_DEAL_SUB sub
+        <set> 
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            sub.submit_time = NOW(),
+            sub.UPDATE_TIME = NOW()
+        </set>
+        <where>
+            sub.SEND_STATUS = '01'
+        </where>
+    </update>
+    
+    <update id="updateProdDurationRegist" parameterType="java.util.Map">
 		update CHB_PRD_DEAL_SUB
-		<set>
-			SEND_STATUS = '01',
+		<set> 
+		 	SEND_STATUS = '01',
 			UPDATE_TIME = NOW(),
 			SUBMIT_TIME = null,
 			SUBMIT_FEEDBACK_STATUS = null
 		</set>
 		<where>
-			<foreach collection="list" item="item" open="(" close=")" separator=") or (">
-				regist_Seqno = #{item,jdbcType=VARCHAR}
-			</foreach>
+		 	<foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                regist_Seqno = #{item,jdbcType=VARCHAR}
+            </foreach>
 		</where>
 	</update>
-
+	
 	<insert id="insertReportHis" parameterType="java.util.Map">
-		insert into CHB_PRD_DEAL_SUB_HIS (
-		HIS_NO,
-		PROD_ID,
-		ISSUE_PARTY_ID,
-		PROD_REGIST_CODE,
-		ORIGINAL_VALUE,
-		PRD_VALUE,
-		TOTAL_VALUE,
-		VALUE_CCY,
-		CNY_ORL_VALUE,
-		CNY_PRD_VALUE,
-		CNY_TAL_VALUE,
-		REA_YIELD,
-		NEW_EXP_YIELD,
-		BANK_IMP_INT,
-		VDATE,
-		MDATE,
-		PURCHASE_QTY,
-		REDEEM_QTY,
-		BALANCE_AMT,
-		PRD_QTY,
-		CCY_PURCHASE,
-		SEND_STATUS,
-		SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
-		STATUS_DATE,
-		CHB_SUBMIT_DEADLINE,
-		SUBMIT_DEADLINE,
-		STATUS,
-		CREATE_USER,
-		ORG_CODE,
-		CREATE_DEPT,
-		CREATE_TIME,
-		UPDATE_USER,
-		UPDATE_TIME,
-		SUBMIT_TIME,
-		REMARK,
-		SHARE_AMT_WAN,
-		CASH_AMT_WAN
-		)
-		select
-		REGIST_SEQNO,
-		PROD_ID,
-		ISSUE_PARTY_ID,
-		PROD_REGIST_CODE,
-		ORIGINAL_VALUE,
-		PRD_VALUE,
-		TOTAL_VALUE,
-		VALUE_CCY,
-		CNY_ORL_VALUE,
-		CNY_PRD_VALUE,
-		CNY_TAL_VALUE,
-		REA_YIELD,
-		NEW_EXP_YIELD,
-		BANK_IMP_INT,
-		VDATE,
-		MDATE,
-		PURCHASE_QTY,
-		REDEEM_QTY,
-		BALANCE_AMT,
-		PRD_QTY,
-		CCY_PURCHASE,
-		SEND_STATUS,
-		SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
-		STATUS_DATE,
-		CHB_SUBMIT_DEADLINE,
-		SUBMIT_DEADLINE,
-		STATUS,
-		CREATE_USER,
-		ORG_CODE,
-		CREATE_DEPT,
-		CREATE_TIME,
-		UPDATE_USER,
-		UPDATE_TIME,
-		SUBMIT_TIME,
-		REMARK,
-		SHARE_AMT_WAN,
-		CASH_AMT_WAN
-		from CHB_PRD_DEAL_SUB
-		where 1 =1
-		<if test="registList !=null and registList.size()>0">
-			<foreach collection="registList" item="regist" open="and PROD_ID IN (" separator=","  close=")">
-				#{regist.prodId,jdbcType=VARCHAR}
-			</foreach>
-			<foreach collection="registList" item="regist" open="and VDATE IN (" separator=","  close=")">
-				STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d')
-			</foreach>
-		</if>
-		and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+      insert into CHB_PRD_DEAL_SUB_HIS (
+	     	HIS_NO,
+			PROD_ID,
+			ISSUE_PARTY_ID,
+			PROD_REGIST_CODE,
+			ORIGINAL_VALUE,
+			PRD_VALUE,
+			TOTAL_VALUE,
+			VALUE_CCY,
+			CNY_ORL_VALUE,
+			CNY_PRD_VALUE,
+			CNY_TAL_VALUE,
+			REA_YIELD,
+			NEW_EXP_YIELD,
+			BANK_IMP_INT,
+			VDATE,
+			MDATE,
+			PURCHASE_QTY,
+			REDEEM_QTY,
+			BALANCE_AMT,
+			PRD_QTY,
+			CCY_PURCHASE,
+			SEND_STATUS,
+			SUBMIT_FEEDBACK_STATUS,
+			SUMIT_SEQ,
+			STATUS_DATE,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			STATUS,
+			CREATE_USER,
+			ORG_CODE,
+			CREATE_DEPT,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			SUBMIT_TIME,
+			REMARK,
+			SHARE_AMT_WAN,
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG,
+			YIELD_DATE
+      )
+      select  
+         REGIST_SEQNO,
+			PROD_ID,
+			ISSUE_PARTY_ID,
+			PROD_REGIST_CODE,
+			ORIGINAL_VALUE,
+			PRD_VALUE,
+			TOTAL_VALUE,
+			VALUE_CCY,
+			CNY_ORL_VALUE,
+			CNY_PRD_VALUE,
+			CNY_TAL_VALUE,
+			REA_YIELD,
+			NEW_EXP_YIELD,
+			BANK_IMP_INT,
+			VDATE,
+			MDATE,
+			PURCHASE_QTY,
+			REDEEM_QTY,
+			BALANCE_AMT,
+			PRD_QTY,
+			CCY_PURCHASE,
+			SEND_STATUS,
+			SUBMIT_FEEDBACK_STATUS,
+			SUMIT_SEQ,
+			STATUS_DATE,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			STATUS,
+			CREATE_USER,
+			ORG_CODE,
+			CREATE_DEPT,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			SUBMIT_TIME,
+			REMARK,
+			SHARE_AMT_WAN,
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG,
+			YIELD_DATE
+      from CHB_PRD_DEAL_SUB
+      where 1 =1
+       <if test="registList !=null and registList.size()>0">
+		   <foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+			   (PROD_ID,date_format(VDATE, '%Y%m%d')) = (#{regist.prodId,jdbcType=VARCHAR},date_format(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d'))
+			   and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
+		   </foreach>
+       </if>
+       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 	</insert>
-	<delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
-		delete from CHB_PRD_DEAL_SUB
-		where 1 =1
+    <delete id="deleteLastSubmitRegist" parameterType="java.util.Map">
+      delete from CHB_PRD_DEAL_SUB
+      where 1 =1
 		<if test="registList !=null and registList.size()>0">
-			<foreach collection="registList" item="regist" open="and PROD_ID IN (" separator=","  close=")">
-				#{regist.prodId,jdbcType=VARCHAR}
-			</foreach>
-			<foreach collection="registList" item="regist" open="and VDATE IN (" separator=","  close=")">
-				STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d')
+			<foreach collection="registList" item="regist" open="and ( (" separator=") or ("  close=") )">
+				concat(PROD_ID,date_format(VDATE, '%Y%m%d')) = concat(#{regist.prodId,jdbcType=VARCHAR},date_format(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d'))
+				and REGIST_SEQNO != #{regist.registSeqno,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+       and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
 	</delete>
 	<insert id="insertReportDataFromHis" parameterType="java.util.Map">
-		insert into CHB_PRD_DEAL_SUB (
-		REGIST_SEQNO,
-		PROD_ID,
-		ISSUE_PARTY_ID,
-		PROD_REGIST_CODE,
-		ORIGINAL_VALUE,
-		PRD_VALUE,
-		TOTAL_VALUE,
-		VALUE_CCY,
-		CNY_ORL_VALUE,
-		CNY_PRD_VALUE,
-		CNY_TAL_VALUE,
-		REA_YIELD,
-		NEW_EXP_YIELD,
-		BANK_IMP_INT,
-		VDATE,
-		MDATE,
-		PURCHASE_QTY,
-		REDEEM_QTY,
-		BALANCE_AMT,
-		PRD_QTY,
-		CCY_PURCHASE,
-		SEND_STATUS,
-		SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
-		STATUS_DATE,
-		CHB_SUBMIT_DEADLINE,
-		SUBMIT_DEADLINE,
-		STATUS,
-		CREATE_USER,
-		ORG_CODE,
-		CREATE_DEPT,
-		CREATE_TIME,
-		UPDATE_USER,
-		UPDATE_TIME,
-		SUBMIT_TIME,
-		REMARK,
-		SHARE_AMT_WAN,
-		CASH_AMT_WAN
-		)
-		select
-		HIS_NO,
-		PROD_ID,
-		ISSUE_PARTY_ID,
-		PROD_REGIST_CODE,
-		ORIGINAL_VALUE,
-		PRD_VALUE,
-		TOTAL_VALUE,
-		VALUE_CCY,
-		CNY_ORL_VALUE,
-		CNY_PRD_VALUE,
-		CNY_TAL_VALUE,
-		REA_YIELD,
-		NEW_EXP_YIELD,
-		BANK_IMP_INT,
-		VDATE,
-		MDATE,
-		PURCHASE_QTY,
-		REDEEM_QTY,
-		BALANCE_AMT,
-		PRD_QTY,
-		CCY_PURCHASE,
-		SEND_STATUS,
-		SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
-		STATUS_DATE,
-		CHB_SUBMIT_DEADLINE,
-		SUBMIT_DEADLINE,
-		STATUS,
-		CREATE_USER,
-		ORG_CODE,
-		CREATE_DEPT,
-		CREATE_TIME,
-		UPDATE_USER,
-		UPDATE_TIME,
-		SUBMIT_TIME,
-		REMARK,
-		SHARE_AMT_WAN,
-		CASH_AMT_WAN
-		from (
-		select HIS_NO,
-		PROD_ID,
-		ISSUE_PARTY_ID,
-		PROD_REGIST_CODE,
-		ORIGINAL_VALUE,
-		PRD_VALUE,
-		TOTAL_VALUE,
-		VALUE_CCY,
-		CNY_ORL_VALUE,
-		CNY_PRD_VALUE,
-		CNY_TAL_VALUE,
-		REA_YIELD,
-		NEW_EXP_YIELD,
-		BANK_IMP_INT,
-		VDATE,
-		MDATE,
-		PURCHASE_QTY,
-		REDEEM_QTY,
-		BALANCE_AMT,
-		PRD_QTY,
-		CCY_PURCHASE,
-		SEND_STATUS,
-		SUBMIT_FEEDBACK_STATUS,
-		SUMIT_SEQ,
-		STATUS_DATE,
-		CHB_SUBMIT_DEADLINE,
-		SUBMIT_DEADLINE,
-		STATUS,
-		CREATE_USER,
-		ORG_CODE,
-		CREATE_DEPT,
-		CREATE_TIME,
-		UPDATE_USER,
-		UPDATE_TIME,
-		SUBMIT_TIME,
-		REMARK,
-		SHARE_AMT_WAN,
-		CASH_AMT_WAN,
-		rank() over (partition by PROD_ID order by ifnull(update_time,create_time) desc) ranknum
-		from CHB_PRD_DEAL_SUB_HIS  his
-		<where>
-			<if test="registList !=null and registList.size()>0">
-				<foreach collection="registList" item="regist" open="and PROD_ID IN (" separator=","  close=")">
-					#{regist.prodId,jdbcType=VARCHAR}
-				</foreach>
-				<foreach collection="registList" item="regist" open="and VDATE IN (" separator=","  close=")">
-					STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d')
-				</foreach>
-			</if>
-		</where>
-		)
-		where 1 = 1 limit 1
+      insert into CHB_PRD_DEAL_SUB (
+          	REGIST_SEQNO,
+			PROD_ID,
+			ISSUE_PARTY_ID,
+			PROD_REGIST_CODE,
+			ORIGINAL_VALUE,
+			PRD_VALUE,
+			TOTAL_VALUE,
+			VALUE_CCY,
+			CNY_ORL_VALUE,
+			CNY_PRD_VALUE,
+			CNY_TAL_VALUE,
+			REA_YIELD,
+			NEW_EXP_YIELD,
+			BANK_IMP_INT,
+			VDATE,
+			MDATE,
+			PURCHASE_QTY,
+			REDEEM_QTY,
+			BALANCE_AMT,
+			PRD_QTY,
+			CCY_PURCHASE,
+			SEND_STATUS,
+			SUBMIT_FEEDBACK_STATUS,
+			SUMIT_SEQ,
+			STATUS_DATE,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			STATUS,
+			CREATE_USER,
+			ORG_CODE,
+			CREATE_DEPT,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			SUBMIT_TIME,
+			REMARK,
+			SHARE_AMT_WAN,
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG,
+			YIELD_DATE
+      )
+      select   
+         HIS_NO,
+			PROD_ID,
+			ISSUE_PARTY_ID,
+			PROD_REGIST_CODE,
+			ORIGINAL_VALUE,
+			PRD_VALUE,
+			TOTAL_VALUE,
+			VALUE_CCY,
+			CNY_ORL_VALUE,
+			CNY_PRD_VALUE,
+			CNY_TAL_VALUE,
+			REA_YIELD,
+			NEW_EXP_YIELD,
+			BANK_IMP_INT,
+			VDATE,
+			MDATE,
+			PURCHASE_QTY,
+			REDEEM_QTY,
+			BALANCE_AMT,
+			PRD_QTY,
+			CCY_PURCHASE,
+			SEND_STATUS,
+			SUBMIT_FEEDBACK_STATUS,
+			SUMIT_SEQ,
+			STATUS_DATE,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			STATUS,
+			CREATE_USER,
+			ORG_CODE,
+			CREATE_DEPT,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			SUBMIT_TIME,
+			REMARK,
+			SHARE_AMT_WAN,
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG,
+			YIELD_DATE
+      from (
+        select HIS_NO,
+			PROD_ID,
+			ISSUE_PARTY_ID,
+			PROD_REGIST_CODE,
+			ORIGINAL_VALUE,
+			PRD_VALUE,
+			TOTAL_VALUE,
+			VALUE_CCY,
+			CNY_ORL_VALUE,
+			CNY_PRD_VALUE,
+			CNY_TAL_VALUE,
+			REA_YIELD,
+			NEW_EXP_YIELD,
+			BANK_IMP_INT,
+			VDATE,
+			MDATE,
+			PURCHASE_QTY,
+			REDEEM_QTY,
+			BALANCE_AMT,
+			PRD_QTY,
+			CCY_PURCHASE,
+			SEND_STATUS,
+			SUBMIT_FEEDBACK_STATUS,
+			SUMIT_SEQ,
+			STATUS_DATE,
+			CHB_SUBMIT_DEADLINE,
+			SUBMIT_DEADLINE,
+			STATUS,
+			CREATE_USER,
+			ORG_CODE,
+			CREATE_DEPT,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			SUBMIT_TIME,
+			REMARK,
+			SHARE_AMT_WAN,
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG,
+			YIELD_DATE,
+            rank() over (partition by PROD_ID order by ifnull(update_time,create_time) desc) ranknum
+         from CHB_PRD_DEAL_SUB_HIS  his
+         <where>
+	       <if test="registList !=null and registList.size()>0">
+	          <foreach collection="registList" item="regist" open="and PROD_ID IN (" separator=","  close=")">
+	            #{regist.prodId,jdbcType=VARCHAR}
+	          </foreach>
+	          <foreach collection="registList" item="regist" open="and VDATE IN (" separator=","  close=")">
+            	STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d')
+          	</foreach>
+	       </if>
+         </where>
+      )as t
+      where ranknum = 1
 	</insert>
 	<delete id="deleteLastSubmitHis" parameterType="java.util.Map">
-		delete from CHB_PRD_DEAL_SUB_HIS
-		where 1 =1
-		and HIS_NO in (
-		select a.HIS_NO from (
-		SELECT
-		@rownum:=@rownum+1 rownum,
-		A.HIS_NO,
-		IF
-		(
-		(
-		@prod_id = A.prod_id
-		AND @vdate = A.vdate
-		),
-		@rank := @rank + 1,
-		@rank := 1
-		) AS myrank,
-		@prod_id := A.prod_id,
-		@vdate := A.vdate
-		FROM
-		( SELECT * FROM CHB_PRD_DEAL_SUB_HIS ORDER BY prod_id,vdate, ifnull( UPDATE_TIME, CREATE_TIME ) DESC ) A,
-		(
-		SELECT
-		@rownum := 0,
-		@prod_id := NULL,
-		@vdate := NULL,
-		@rank := 0
-		) B
-		where 1=1
-		<if test="registList !=null and registList.size()>0">
-			<foreach collection="registList" item="regist" open=" AND (PROD_ID,vdate) IN (" separator="union all"  close=")">
-				select #{regist.prodId,jdbcType=VARCHAR}, STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d') from dual
-			</foreach>
-		</if>
-		)a
-		where 1=1 limit 1
-		)
-	</delete>
-	<select id="selectByPrimaryKey" resultType="com.joyintech.tams.common.base.entity.ChbPrdDealSub" parameterType="string">
+      delete from CHB_PRD_DEAL_SUB_HIS
+      where 1 =1 
+      and HIS_NO in (
+				select a.HIS_NO from (
+					select HIS_NO,
+						row_number() over(partition by prod_id,vdate order by ifnull(UPDATE_TIME,CREATE_TIME) desc) myrank
+					from CHB_PRD_DEAL_SUB_HIS
+					where 1=1
+				   <if test="registList !=null and registList.size()>0">
+						 <foreach collection="registList" item="regist" open=" AND (PROD_ID,vdate) IN (" separator="union all"  close=")">
+						   select #{regist.prodId,jdbcType=VARCHAR}, STR_TO_DATE(#{regist.vdate,jdbcType=VARCHAR},'%Y%m%d') from dual
+						 </foreach>
+					  </if>
+			   ) as a
+			   where a.myrank = 1
+             )
+  </delete>
+  <select id="selectByPrimaryKey" resultType="com.joyintech.tams.common.base.entity.ChbPrdDealSub" parameterType="string">
   	select 
   		REGIST_SEQNO registSeqno,
 	  	PROD_ID prodId,
@@ -468,8 +467,8 @@
 		REA_YIELD reaYield,
 		NEW_EXP_YIELD newExpYield,
 		BANK_IMP_INT bankImpInt,
-		DATE_FORMAT(VDATE,'%Y%m%d') vdate,
-		DATE_FORMAT(MDATE,'%Y%m%d') mdate,
+		DATE_FORMAT(VDATE,'%Y-%m-%d') vdate,
+		DATE_FORMAT(MDATE,'%Y-%m-%d') mdate,
 		PURCHASE_QTY purchaseQty,
 		REDEEM_QTY redeemQty,
 		BALANCE_AMT balanceAmt,
@@ -489,13 +488,17 @@
 		UPDATE_USER updateUser,
 		UPDATE_TIME updateTime,
 		SUBMIT_TIME submitTime,
-		REMARK remark
+		REMARK remark,
+		SHARE_AMT_WAN shareAmtWan,
+		CASH_AMT_WAN  cashAmtWan,
+		YIELD_DATE yieldDate
 		from CHB_PRD_DEAL_SUB
 		where REGIST_SEQNO=#{registSeqno,jdbcType=VARCHAR}
   </select>
-	<select id="selectAllDataByList" resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
+     <select id="selectAllDataByList" resultType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
 		select
-		sub.PROD_REGIST_CODE  prodRegistCode,
+		sub.PROD_REGIST_CODE  registSeqno,
+		sub.PROD_REGIST_CODE   prodRegistCode,
 		sub.ISSUE_PARTY_ID  issuePartyId,
 		sub.ORIGINAL_VALUE  originalValue,
 		sub.PRD_VALUE  prdValue,
@@ -504,8 +507,8 @@
 		sub.CNY_ORL_VALUE  cnyOrlValue,
 		sub.CNY_PRD_VALUE  cnyPrdValue,
 		sub.CNY_TAL_VALUE  cnyTalValue,
-		sub.REA_YIELD*100   reaYield,
-		sub.NEW_EXP_YIELD*100 newExpYield ,
+		sub.REA_YIELD   reaYield,
+		sub.NEW_EXP_YIELD newExpYield ,
 		sub.BANK_IMP_INT  bankImpInt,
 		sub.VDATE  vdate,
 		sub.MDATE  mdate,
@@ -516,15 +519,31 @@
 		sub.BALANCE_AMT  balanceAmt,
 		sub.PRD_QTY  prdQty,
 		sub.CCY_PURCHASE  ccyPurchase,
-		sub.REMARK
+		sub.REMARK,
+		sub.YIELD_DATE yieldDate
 
 		from CHB_PRD_DEAL_SUB sub
-		where 1=1
-		<if test="keyList != null and keyList.size()>0">
+			where 1=1
+			<if test="keyList != null and keyList.size()>0">
 			<foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
-				#{items.registSeqno,jdbcType=VARCHAR}
+			#{items.registSeqno,jdbcType=VARCHAR}
 			</foreach>
-		</if>
-		order by sub.SUBMIT_DEADLINE
-	</select>
+			</if>
+			order by sub.SUBMIT_DEADLINE
+ </select>
+
+ <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto">
+	select REGIST_SEQNO
+	from CHB_PRD_DEAL_SUB
+	where
+	<if test="flag == '02'">
+		SEND_STATUS in ('02','03')
+	</if>
+	<if test="flag == '01'">
+		SEND_STATUS = '01'
+	</if>
+	<foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+		(CONCAT(PROD_ID,DATE_FORMAT(MDATE,'%Y-%m-%d'))) = (CONCAT(#{item.prodId,jdbcType=VARCHAR},#{item.mdate,jdbcType=VARCHAR}))
+	</foreach>
+ </select>
 </mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper_mysql">
 	<sql id="searchProductRatingSql">
-		SELECT * FROM (
+		SELECT a.* FROM (
 		SELECT
 		OCODE 		OCODE,
 		MARKETID 		MARKETID,
@@ -72,7 +72,7 @@
 		<if test="gradeResult != null and gradeResult != ''">
 			AND MSTRATINGRESULT01 = #{gradeResult,jdbcType=VARCHAR}
 		</if>
-		) WHERE 1=1
+		) a WHERE 1=1
 
 		<if test="baseDataType != null and baseDataType == '01'">
 			AND rk = 1

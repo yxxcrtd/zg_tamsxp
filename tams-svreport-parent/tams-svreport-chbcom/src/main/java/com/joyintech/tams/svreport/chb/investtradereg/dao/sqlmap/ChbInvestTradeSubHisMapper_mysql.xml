@@ -46,6 +46,8 @@
     <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
     <result column="AMT" property="amt" jdbcType="DECIMAL" />
     <result column="NUM" property="num" jdbcType="DECIMAL" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="BaseResultMapReg" type="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" >
     <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
@@ -99,6 +101,8 @@
     <result column="REF_TRADESEQNO" property="refTradeseqno" jdbcType="VARCHAR" />
     <result column="PRODTYPE" property="prodType" jdbcType="VARCHAR" />
     <result column="DEALTYPE" jdbcType="VARCHAR" property="dealtype" />
+    <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+    <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     HIS_NO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, ASSET_CODE, CCY, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, 
@@ -107,7 +111,7 @@
     STATUS, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
     CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
     SUBMIT_TIME, DELETE_RES, DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE, IS_ASSET_SUB, 
-    REF_TRADESEQNO, CNY_AMT, AMT, NUM
+    REF_TRADESEQNO, CNY_AMT, AMT, NUM, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
   <sql id="Base_Column_List_Reg" >
     HIS_NO REGIST_SEQNO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, 
@@ -116,10 +120,10 @@
     CHL_CPCT_ID, TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, FEE_NAME, FEE_TYPE, FEE_SECTYPE, STATUS, 
     ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CHB_SUBMIT_DEADLINE, 
     SUBMIT_DEADLINE, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, SUBMIT_TIME, DELETE_RES, 
-    DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO
+    DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO, SUMIT_SEQ, PROD_REGIST_CODE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
+    select 
     <include refid="Base_Column_List" />
     from CHB_INVEST_TRADE_SUB_HIS
     where HIS_NO = #{hisNo,jdbcType=CHAR}
@@ -143,7 +147,7 @@
       STATUS_DATE, SUBMIT_TIME, DELETE_RES, 
       DATA_SOURCE, CREATE_DEPT, DEAL_REGIST_DATE, 
       IS_ASSET_SUB, REF_TRADESEQNO, CNY_AMT, 
-      AMT, NUM)
+      AMT, NUM, SUMIT_SEQ, PROD_REGIST_CODE)
     values (#{hisNo,jdbcType=CHAR}, #{tradeCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, 
       #{registBankCode,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
       #{curAssetType,jdbcType=VARCHAR}, #{curAssetdetType,jdbcType=VARCHAR}, #{dealdate,jdbcType=TIMESTAMP}, 
@@ -158,7 +162,7 @@
       #{statusDate,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{deleteRes,jdbcType=VARCHAR}, 
       #{dataSource,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{dealRegistDate,jdbcType=TIMESTAMP}, 
       #{isAssetSub,jdbcType=VARCHAR}, #{refTradeseqno,jdbcType=CHAR}, #{cnyAmt,jdbcType=DECIMAL}, 
-      #{amt,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL})
+      #{amt,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}, #{sumitSeq,jdbcType=VARCHAR}, #{prodRegistCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.ChbInvestTradeSubHisDto" >
     insert into CHB_INVEST_TRADE_SUB_HIS
@@ -295,6 +299,12 @@
       <if test="num != null" >
         NUM,
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ,
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="hisNo != null" >
@@ -428,6 +438,12 @@
       </if>
       <if test="num != null" >
         #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="sumitSeq != null" >
+        #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        #{prodRegistCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -563,6 +579,12 @@
       <if test="num != null" >
         NUM = #{num,jdbcType=DECIMAL},
       </if>
+      <if test="sumitSeq != null" >
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="prodRegistCode != null" >
+        PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where HIS_NO = #{hisNo,jdbcType=CHAR}
   </update>
@@ -610,33 +632,35 @@
       REF_TRADESEQNO = #{refTradeseqno,jdbcType=CHAR},
       CNY_AMT = #{cnyAmt,jdbcType=DECIMAL},
       AMT = #{amt,jdbcType=DECIMAL},
-      NUM = #{num,jdbcType=DECIMAL}
+      NUM = #{num,jdbcType=DECIMAL},
+      SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+      PROD_REGIST_CODE = #{prodRegistCode,jdbcType=VARCHAR}
     where HIS_NO = #{hisNo,jdbcType=CHAR}
   </update>
-  <select id="selectInvestTradeRegByTradeCode" resultMap="BaseResultMapReg"
-          parameterType="java.util.Map">
-    select *
-    from (select
-    <include refid="Base_Column_List_Reg" />
-    ,rank() over(partition by trade_code order by create_time desc) ranknum
-    from CHB_INVEST_TRADE_SUB_HIS
-    where 1 =1
-    <if test='tradeList != null and tradeList.size() > 0'>
-      <foreach collection="tradeList" item="tradeCode" index="index" open="AND TRADE_CODE in (" close=")" separator=",">
-        #{tradeCode,jdbcType=VARCHAR}
-      </foreach>
-    </if>
-    )
-    where 1 = 1 limit 1
-  </select>
-
-  <delete id="deleteByHisno" parameterType="java.util.Map">
-    delete from CHB_INVEST_TRADE_SUB_HIS
-    where 1 =1
-    <if test='deleteList != null and deleteList.size() > 0'>
-      <foreach collection="deleteList" item="hisno" index="index" open="AND HIS_NO in (" close=")" separator=",">
-        #{hisno,jdbcType=VARCHAR}
-      </foreach>
-    </if>
-  </delete>
+    <select id="selectInvestTradeRegByTradeCode" resultMap="BaseResultMapReg"
+        parameterType="java.util.Map">
+        select *
+        from (select
+        <include refid="Base_Column_List_Reg" />
+        ,rank() over(partition by trade_code order by create_time desc) ranknum
+        from CHB_INVEST_TRADE_SUB_HIS
+        where 1 =1 
+        <if test='tradeList != null and tradeList.size() > 0'>
+          <foreach collection="tradeList" item="tradeCode" index="index" open="AND TRADE_CODE in (" close=")" separator=",">
+          #{tradeCode,jdbcType=VARCHAR} 
+          </foreach>
+        </if>
+        )
+        where 1 = 1 limit 1
+    </select>
+    
+    <delete id="deleteByHisno" parameterType="java.util.Map">
+      delete from CHB_INVEST_TRADE_SUB_HIS
+      where 1 =1
+      <if test='deleteList != null and deleteList.size() > 0'>
+        <foreach collection="deleteList" item="hisno" index="index" open="AND HIS_NO in (" close=")" separator=",">
+        #{hisno,jdbcType=VARCHAR} 
+        </foreach>
+      </if>
+    </delete>
 </mapper>

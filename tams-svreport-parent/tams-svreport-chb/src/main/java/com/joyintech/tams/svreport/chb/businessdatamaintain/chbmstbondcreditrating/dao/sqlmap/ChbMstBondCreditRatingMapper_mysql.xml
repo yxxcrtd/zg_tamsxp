@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dao.ChbMstBondCreditRatingDao_mysql">
+
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.businessdatamaintain.chbmstbondcreditrating.dto.ChbMstBondCreditRatingDto">
+        <result property="oCode" column="O_CODE" jdbcType="VARCHAR"/>
+        <result property="gradeOrgId" column="GRADE_ORG_ID" jdbcType="VARCHAR"/>
+        <result property="gradeDate" column="GRADE_DATE"/>
+        <result property="oType" column="O_TYPE"/>
+        <result property="shortLongTerm" column="SHORT_LONG_TERM" jdbcType="VARCHAR"/>
+        <result property="gradeResult" column="GRADE_RESULT" jdbcType="VARCHAR"/>
+        <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
+        <result property="createDept" column="CREATE_DEPT" />
+        <result property="createTime" column="CREATE_TIME" />
+        <result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="UPDATE_TIME" />
+        <result property="dataSource" column="DATA_SOURCE" jdbcType="VARCHAR"/>
+        <result property="source" column="SOURCE" jdbcType="VARCHAR"/>
+        <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
+
+        <result property="errMsg" column="ERR_MSG" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        O_CODE,GRADE_ORG_ID, GRADE_DATE,O_TYPE,
+        SHORT_LONG_TERM,GRADE_RESULT,
+        CREATE_USER,CREATE_DEPT,
+        CREATE_TIME,UPDATE_USER,UPDATE_TIME,
+        DATA_SOURCE,SOURCE,
+        STATUS,
+        ERR_MSG
+    </sql>
+    <insert id="insert">
+        insert into MST_BOND_CREDIT_RATING (
+        O_CODE,
+        GRADE_ORG_ID,
+        GRADE_DATE,
+        O_TYPE,
+        SHORT_LONG_TERM,
+        GRADE_RESULT,
+        DATA_SOURCE,
+        SOURCE,
+        STATUS,
+        ERR_MSG,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME )
+        select * from (
+        select TEMP.* from
+        (
+            SELECT
+            #{oCode} O_CODE,
+            #{gradeOrgId} GRADE_ORG_ID,
+            #{gradeDate} GRADE_DATE,
+            #{oType} O_TYPE,
+            #{shortLongTerm} SHORT_LONG_TERM,
+            #{gradeResult} GRADE_RESULT,
+            #{dataSource} DATA_SOURCE,
+            #{source} SOURCE,
+            #{status} STATUS,
+            #{errMsg} ERR_MSG,
+            #{createUser} CREATE_USER,
+            #{createDept} CREATE_DEPT,
+            #{createTime} CREATE_TIME,
+            #{updateUser} UPDATE_USER,
+            #{updateTime} UPDATE_TIME
+            FROM dual
+        ) TEMP
+        where not EXISTS (
+        select 1 from MST_BOND_CREDIT_RATING a where a.O_CODE = TEMP.O_CODE
+        AND a.GRADE_ORG_ID = TEMP.GRADE_ORG_ID
+        AND a.GRADE_DATE = TEMP.GRADE_DATE
+        AND a.O_TYPE = TEMP.O_TYPE
+        )
+        ) a;
+
+        update MST_BOND_CREDIT_RATING a,(
+        select * from (
+        select TEMP.* from
+        (
+            SELECT
+            #{oCode} O_CODE,
+            #{gradeOrgId} GRADE_ORG_ID,
+            #{gradeDate} GRADE_DATE,
+            #{oType} O_TYPE,
+            #{shortLongTerm} SHORT_LONG_TERM,
+            #{gradeResult} GRADE_RESULT,
+            #{dataSource} DATA_SOURCE,
+            #{source} SOURCE,
+            #{status} STATUS,
+            #{errMsg} ERR_MSG,
+            #{createUser} CREATE_USER,
+            #{createDept} CREATE_DEPT,
+            #{createTime} CREATE_TIME,
+            #{updateUser} UPDATE_USER,
+            #{updateTime} UPDATE_TIME
+            FROM dual
+        ) TEMP
+
+        ) a
+        ) b
+        set a.SHORT_LONG_TERM = b.SHORT_LONG_TERM,
+        a.GRADE_RESULT = b.GRADE_RESULT,
+        a.SOURCE = b.SOURCE,
+        a.STATUS = b.STATUS,
+        a.ERR_MSG = b.ERR_MSG,
+        a.UPDATE_USER = b.UPDATE_USER,
+        a.UPDATE_TIME = b.UPDATE_TIME
+        where a.O_CODE = b.O_CODE
+          AND a.GRADE_ORG_ID = b.GRADE_ORG_ID
+          AND a.GRADE_DATE = b.GRADE_DATE
+          AND a.O_TYPE = b.O_TYPE
+    </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into MST_BOND_CREDIT_RATING (
+        O_CODE,
+        GRADE_ORG_ID,
+        GRADE_DATE,
+        O_TYPE,
+        SHORT_LONG_TERM,
+        GRADE_RESULT,
+        DATA_SOURCE,
+        SOURCE,
+        STATUS,
+        ERR_MSG,
+        CREATE_USER,
+        CREATE_DEPT,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME )
+        select * from (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item" separator="union all">
+            SELECT
+            #{item.oCode} O_CODE,
+            #{item.gradeOrgId} GRADE_ORG_ID,
+            #{item.gradeDate} GRADE_DATE,
+            #{item.oType} O_TYPE,
+            #{item.shortLongTerm} SHORT_LONG_TERM,
+            #{item.gradeResult} GRADE_RESULT,
+            #{item.dataSource} DATA_SOURCE,
+            #{item.source} SOURCE,
+            #{item.status} STATUS,
+            #{item.errMsg} ERR_MSG,
+            #{item.createUser} CREATE_USER,
+            #{item.createDept} CREATE_DEPT,
+            #{item.createTime} CREATE_TIME,
+            #{item.updateUser} UPDATE_USER,
+            #{item.updateTime} UPDATE_TIME
+            FROM dual
+        </foreach>
+        ) TEMP
+        where not EXISTS (
+        select 1 from MST_BOND_CREDIT_RATING a where a.O_CODE = TEMP.O_CODE
+        AND a.GRADE_ORG_ID = TEMP.GRADE_ORG_ID
+        AND a.GRADE_DATE = TEMP.GRADE_DATE
+        AND a.O_TYPE = TEMP.O_TYPE
+        )
+        ) a;
+
+        update MST_BOND_CREDIT_RATING a,(
+        select * from (
+        select TEMP.* from
+        (
+        <foreach collection="list" item="item" separator="union all">
+            SELECT
+            #{item.oCode} O_CODE,
+            #{item.gradeOrgId} GRADE_ORG_ID,
+            #{item.gradeDate} GRADE_DATE,
+            #{item.oType} O_TYPE,
+            #{item.shortLongTerm} SHORT_LONG_TERM,
+            #{item.gradeResult} GRADE_RESULT,
+            #{item.dataSource} DATA_SOURCE,
+            #{item.source} SOURCE,
+            #{item.status} STATUS,
+            #{item.errMsg} ERR_MSG,
+            #{item.createUser} CREATE_USER,
+            #{item.createDept} CREATE_DEPT,
+            #{item.createTime} CREATE_TIME,
+            #{item.updateUser} UPDATE_USER,
+            #{item.updateTime} UPDATE_TIME
+            FROM dual
+        </foreach>
+        ) TEMP
+
+        ) a
+        ) b
+        set a.SHORT_LONG_TERM = b.SHORT_LONG_TERM,
+            a.GRADE_RESULT = b.GRADE_RESULT,
+            a.SOURCE = b.SOURCE,
+            a.STATUS = b.STATUS,
+            a.ERR_MSG = b.ERR_MSG,
+            a.UPDATE_USER = b.UPDATE_USER,
+            a.UPDATE_TIME = b.UPDATE_TIME
+        where a.O_CODE = b.O_CODE
+        AND a.GRADE_ORG_ID = b.GRADE_ORG_ID
+        AND a.GRADE_DATE = b.GRADE_DATE
+        AND a.O_TYPE = b.O_TYPE
+    </insert>
+    <update id="update">
+        update MST_BOND_CREDIT_RATING
+        <trim prefix="set" suffixOverrides=",">
+            <if test="gradeOrgId !=null and gradeOrgId !=''">
+                GRADE_ORG_ID = #{gradeOrgId},
+            </if>
+            <if test="shortLongTerm !=null and shortLongTerm !=''">
+                SHORT_LONG_TERM = #{shortLongTerm},
+            </if>
+            <if test="gradeResult !=null and gradeResult !=''">
+                GRADE_RESULT = #{gradeResult},
+            </if>
+            <if test="status !=null and status !=''">
+                STATUS = #{status},
+            </if>
+            <if test="updateUser !=null and updateUser !=''">
+                UPDATE_USER = #{updateUser},
+            </if>
+            <if test="updateTime !=null">
+                UPDATE_TIME = #{updateTime}
+            </if>
+        </trim>
+        <where>
+            <if test="oCode!=null and oCode!=''">
+                O_CODE = #{oCode}
+            </if>
+            <if test="gradeOrgId !=null and gradeOrgId !=''">
+                AND GRADE_ORG_ID = #{gradeOrgId}
+            </if>
+            <if test="gradeDate !=null">
+                AND GRADE_DATE = #{gradeDate}
+            </if>
+            <if test="oType!=null and oType!=''">
+                AND O_TYPE = #{oType}
+            </if>
+        </where>
+    </update>
+    <select id="selcetByKey" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from MST_BOND_CREDIT_RATING
+
+        <where>
+            <if test="oCode!=null and oCode!=''">
+                O_CODE = #{oCode}
+            </if>
+            <if test="gradeOrgId!=null and gradeOrgId!=''">
+                and GRADE_ORG_ID = #{gradeOrgId}
+            </if>
+            <if test="gradeDate!=null">
+                and GRADE_DATE = #{gradeDate}
+            </if>
+            <if test="oType!=null and oType!=''">
+                and O_TYPE = #{oType}
+            </if>
+        </where>
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>,b.ASSET_NAME oName from MST_BOND_CREDIT_RATING a
+
+        left join  (SELECT DISTINCT ASSET_CODE,ASSET_NAME FROM CHB_ASSET_INFO) b on a.O_CODE = b.ASSET_CODE
+        <where>
+            <if test="oType!=null and oType!=''">
+                O_TYPE = #{oType}
+            </if>
+            <if test="oCodes != null and oCodes.length>0">
+                <foreach collection="oCodes" item="item" open=" and O_CODE in(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="shortLongTerm!=null and shortLongTerm!=''">
+                and SHORT_LONG_TERM = #{shortLongTerm}
+            </if>
+            <if test="status!=null and status!=''">
+                and STATUS = #{status}
+            </if>
+            <if test="gradeDateStart!=null and gradeDateStart!=''">
+                and GRADE_DATE &gt;= STR_TO_DATE(#{gradeDateStart},'%Y-%m-%d')
+            </if>
+            <if test="gradeDateEnd!=null and gradeDateEnd !=''">
+                and GRADE_DATE &lt;= STR_TO_DATE(#{gradeDateEnd},'%Y-%m-%d')
+            </if>
+        </where>
+    </select>
+    <select id="getFinProdAbbr" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        distinct
+        ASSET_CODE AS code,
+        ASSET_NAME AS shortName
+        FROM CHB_ASSET_INFO
+        WHERE ASSET_TYPE2 IN
+        (SELECT ITEM_CODE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='SVR_ASSET_TYPE_FIRST_LEVEL' AND LINKED_ITEM_CODE ='004')
+        <if test="param !=null and  param !='' ">
+            AND (ASSET_CODE like concat('%',#{param},'%')
+            OR ASSET_NAME like concat('%',#{param},'%'))
+        </if>
+
+    </select>
+    <select id="getMutliCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT
+        distinct
+        ASSET_CODE AS id,
+        ASSET_NAME AS text
+        FROM CHB_ASSET_INFO
+        WHERE ASSET_TYPE2 IN
+        (SELECT ITEM_CODE FROM SYS_DATADICT_LIST_LINK WHERE LINKED_DICT_CODE ='SVR_ASSET_TYPE_FIRST_LEVEL' AND LINKED_ITEM_CODE ='004')
+        <if test="search !=null and  search !='' ">
+            AND (ASSET_CODE like concat('%',#{search},'%')
+            OR ASSET_NAME like  concat('%',#{search},'%'))
+        </if>
+    </select>
+    <select id="selectValidRecords" resultType="java.lang.Integer">
+        select count(*) from MST_BOND_CREDIT_RATING  where
+        (O_CODE,GRADE_ORG_ID,GRADE_DATE,O_TYPE) in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            (#{item.O_CODE},#{item.GRADE_ORG_ID},#{item.GRADE_DATE},#{item.O_TYPE})
+        </foreach>
+        and STATUS in ('A','E')
+    </select>
+</mapper>

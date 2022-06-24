@@ -49,14 +49,14 @@
 		rowno:false,
 		cols:[
 			{ field: 'assetUuid',width:0,sortField:'',visible:false},
-			{ title: "报送信息维护状态", field: 'dataStatusStr',width:120 ,sortField:'dataStatus'},
+			{ title: "数据状态", field: 'dataStatusStr',width:120 ,sortField:'dataStatus'},
 			{ title: "资产代码", field: 'assetCode',width:180 ,sortField:'asset_code'},
 			{ title: "资产名称", field: 'assetName',width:300 ,sortField:'asset_name'},
 			{ title: "资产一级类型",field:'orgAssetType1Str', width:120,sortField:'org_asset_type1'},
 			{ title: '资产二级分类', field:'orgAssetType2Str', width:120,sortField:'org_asset_type2'},
 			{ title: "起息日",width:100,sortField:'vDateStr', field: 'vDateStr'},
 			{ title: "到期日",width:100,sortField:'mDateStr', field: 'mDateStr'},
-			{ title: '资产/负债类别', field:'assetTypeStr', width:180,sortField:'asset_type'},
+			{ title: '资产/负债一级类别', field:'assetTypeStr', width:180,sortField:'asset_type'},
 			{ title: '资产/负债二级类别', field:'assetType2Str', width:130,sortField:'asset_type2'},
 			{ title: '错误信息', field:'errMsg', width:130,sortable:false},
 			{ field:'action', title: '操作' , type:'action',buttons: ['edit', 'delt'] , width:100}
@@ -81,7 +81,7 @@
 	table.bind('click', '.delt', function(data, index) {
 		var object = {selectedItem: [data],operateType:"delete"};
 		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			WorkFlow.doDeleteList(basePath + 'chb/assetinfodetail/AssetInfoDetail001/delete', object, "AssetInfoDetail001_btn_delete", "AssetInfoDetail002");
+			WorkFlow.doDeleteList(basePath + 'chb/assetinfodetail/AssetInfoDetail001/delete', object, "AssetInfoDetail001_btn_delete", "AssetInfoDetail002",function(){table.reload();});
 		});
 	});
 
@@ -102,13 +102,25 @@
 		$('#AssetInfoDetail001_btn_import').click(function() {
 			Joyin.confirm("请确认是否要导入数据？", function() {
 				var options = {};
-				options.pageId = "AssetInfoDetail001_2";
+				options.pageId = file;
 				options.exts = 'zip|xls|xlsx';
 				Joyin.uploadFile(options,function(fileName) {
-					Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-						Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName},function () {
-							table.reload();
-						});
+					Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName,tableName:'CHB_ASSET_INFO'}, function(result) {
+						if ($.isArray(result.joyinMessages) && result.joyinMessages.length > 0) {
+							var joyinMessages = "";
+							$.each(result.joyinMessages, function(i, joyinMessage){
+								joyinMessages += joyinMessage.message + "<br />"
+							});
+							Joyin.confirm(joyinMessages, function(){
+								Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName,tableName:'CHB_ASSET_INFO'},function () {
+									table.reload();
+								});
+							});
+						}else{
+							Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName,tableName:'CHB_ASSET_INFO'},function () {
+								table.reload();
+							});
+						}
 					});
 				},function() {
 					table.reload();
@@ -118,55 +130,10 @@
 
 		// 导出按钮
 		$('#AssetInfoDetail001_btn_export').click(function(){
-			var expArr=table.getAllCheckedRows();
-			//modify by yjp ZGBSEI-90 20210803 start
-			var elementId = '';
-			var event = JoyinUtil.getEvent();
-			if ((elementId || elementId === '') && event && event.currentTarget && $(event.currentTarget).attr('id') && $(event.currentTarget).attr('id') != elementId) {
-				elementId = $(event.currentTarget).attr('id');
-			}
-			//导出选中行
-			if ((elementId.indexOf("_btn_exportCheck")!=-1)) {
-				if(expArr.length == 0) {
-					Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
-					return;
-				}else{
-					Joyin.confirm('确认导出选中信息？',function(){
-						exportExcel(1);
-					})
-				}
-			}else{
-				if(expArr.length == 0) {
-					//导出全部行
-					Joyin.confirm('确认导出全部信息？',function(){
-						exportExcel(0);
-					})
-				}else{
-					Joyin.confirm('确认导出选中信息？',function(){
-						exportExcel(1);
-					})
-				}
-
-			}
+			var paramObj = getSearchParams();
+			Joyin.exportExcel('export', paramObj);
 		})
 
-		/**
-		 * 导出
-		 * flag:0 全部导出，1 选中导出
-		 */
-		var exportExcel = function(flag) {
-
-			var selectedItem = table.getAllCheckedRows();
-			var paramObj={};
-			if(flag==0){
-				paramObj= getSearchParams();
-			}else{
-				//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，将企转换为“&apos;” end
-				paramObj.keyList = JSON.stringify(selectedItem);
-			}
-			Joyin.exportExcel('export', paramObj);
-		};
-		//modify by yjp ZGBSEI-90 20210803 end
 	});
 }());
 

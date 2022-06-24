@@ -733,4 +733,13 @@ public class PbcPrdBaseinfoEndSubNew extends BaseEntity {
 	public String getCcyStr(){
 		return SysDataUtil.getNameFromDataDict(DictCode.币种,getCcy());
 	}
+    public String getStatusDateStr(){
+        return null !=statusDate?DateUtil.formatDateTime(statusDate):null;
+    }
+    public String getSubmitTimeStr(){
+        return null !=submitTime?DateUtil.formatDateTime(submitTime):null;
+    }
+    public String getPbcSubmitDeadlineStr(){
+        return null !=pbcSubmitDeadline?DateUtil.format(pbcSubmitDeadline):null;
+    }
 }

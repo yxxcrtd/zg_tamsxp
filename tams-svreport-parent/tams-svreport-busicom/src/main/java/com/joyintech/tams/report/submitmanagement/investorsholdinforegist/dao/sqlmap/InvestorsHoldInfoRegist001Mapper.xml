@@ -190,7 +190,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS)
 		select  SEQ_INVESTHOLD_SUB.NEXTVAL,
 		REGIST_SEQNO, REGIST_BANK_CODE,
@@ -200,7 +200,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS
 		from CHB_INVESTHOLD_INFO_SUB
 		<where>
@@ -231,7 +231,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS)
 		select  SEQ_INVESTHOLD_SUB.NEXTVAL,
 		REGIST_SEQNO, REGIST_BANK_CODE,
@@ -241,7 +241,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS
 		from CHB_INVESTHOLD_INFO_SUB
 		<where>
@@ -794,11 +794,11 @@
 			<if test="indentifyMark != null  and indentifyMark != ''">
 			    and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
 			 </if>
-			 <if test="holdDateStart != null and holdDateStart != ''">
-				and to_char(ciis.HOLD_DATE,'yyyy-MM-dd') &gt;= #{holdDateStart,jdbcType=VARCHAR}
+			<if test="holdDateStart != null and holdDateStart != ''">
+				and ciis.HOLD_DATE &gt;= to_date(#{holdDateStart,jdbcType=VARCHAR},'yyyy-MM-dd')
 			</if>
 			<if test="holdDateEnd != null and holdDateEnd != ''">
-				and to_char(ciis.HOLD_DATE,'yyyy-MM-dd') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
+				and ciis.HOLD_DATE &lt;= to_date(#{holdDateEnd,jdbcType=VARCHAR},'yyyy-MM-dd')
 			</if>
 			<if test="orgCodeList != null and orgCodeList.size()>0">
 				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
@@ -828,21 +828,17 @@
 	
 	
 	<!-- 批量插入报送状态表 -->
-	 <insert id="insertSubmitStatusDto" parameterType="com.joyintech.tams.common.base.entity.ChbSubmitStatus" >
-		 begin
-		 <foreach collection="list" item="item" index="index" separator=";" >
+	 <update id="insertSubmitStatusDto" parameterType="java.util.List">
 			 update CHB_INVESTHOLD_INFO_SUB  sub
 			 set
-			 sub.SUBMIT_SEND_STATUS = #{item.submitSendStatus}
+			 sub.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR}
 			 where
-			 sub.SUMIT_SEQ = #{item.seqno}
-		 </foreach>
-		 ;end;
-    </insert>
+			 sub.SUMIT_SEQ = #{seqno,jdbcType=VARCHAR}
+    </update>
 
 	<update id="updateSubmitStatusToSuccess" parameterType="string">
 	update CHB_INVESTHOLD_INFO_SUB set SUBMIT_FEEDBACK_STATUS ='03'
-	 where seqno = #{seqno,jdbcType=VARCHAR}
+	 where SUMIT_SEQ = #{seqno,jdbcType=VARCHAR}
 	</update>
 	
 	
@@ -854,7 +850,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS)
 		select  SEQ_INVESTHOLD_SUB.NEXTVAL,
 		REGIST_SEQNO, REGIST_BANK_CODE,
@@ -864,7 +860,7 @@
 		SUBMIT_DEADLINE, WORKFLOW_ID, SEND_STATUS,
 		STATUS_DATE, STATUS, CREATE_USER,
 		CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-		ORG_CODE, DEPT_CODE, SUBMIT_TIME,
+		ORG_CODE, DEPT_CODE, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
 		SUMIT_SEQ,SUBMIT_SEND_STATUS
 		from CHB_INVESTHOLD_INFO_SUB
 		where  

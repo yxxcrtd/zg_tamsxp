@@ -64,7 +64,7 @@
 
     <!--    分页查询-->
     <select id="selectForPage" resultType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
-        SELECT *
+        SELECT A.*
         FROM (
         select
         'erro'                       as erroOrInfo,
@@ -171,7 +171,7 @@
         <if test="salerOrgCode != null and salerOrgCode != ''">
             and info.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
-        ) ORDER BY dataStatus DESC
+        ) A ORDER BY A.dataStatus DESC
     </select>
 
     <!--    该机构是否已维护过奖惩投诉记录信息-->
@@ -193,7 +193,7 @@
     <select id="checkSalerIdenInfoImport" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
         <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
-        from CHB_SALER_IDEN_INFO
+        from CHB_SALER_IDEN_INFO where STATUS = 'E'
     </select>
 
     <!--    导入时为check查询全部-->
@@ -214,6 +214,13 @@
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
         <include refid="com.joyintech.tams.report.submitmaintenance.salerideninfo.dao.ChbSalerIdenInfoMapper.Base_Column_List" />
+        from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByPrimaryKeyCount" resultType="int" >
+        select
+            COUNT(*)
         from CHB_SALER_IDEN_INFO
         where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
     </select>
@@ -247,7 +254,7 @@
                 AND	SALER_NAME  like concat('%',concat(#{salerName,jdbcType=VARCHAR},'%'))
             </if>
         </where>
-        )
+        ) T
     </select>
 
     <!--    总部或分支机构编码联想框-->
@@ -277,6 +284,14 @@
         delete from CHB_SALER_IDEN_ERRODATA
         where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
     </delete>
+    <!--    根据主键批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.lang.String">
+        delete from CHB_SALER_IDEN_INFO
+        where SALER_INS_NO in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
 
     <!--    新建，导入插入-->
     <insert id="insert" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
@@ -302,8 +317,8 @@
             #{salerChbTrainNo,jdbcType=VARCHAR}, #{salerRiskLevel,jdbcType=VARCHAR}, #{salerQualification,jdbcType=VARCHAR}, 
             #{salerTel,jdbcType=VARCHAR}, #{salerMobile,jdbcType=VARCHAR}, #{salerMail,jdbcType=VARCHAR}, 
             #{salerStatus,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},#{orgCode,jdbcType=VARCHAR},
-            sysdate, #{createUser,jdbcType=VARCHAR}, sysdate,
-            #{updateUser,jdbcType=VARCHAR}, sysdate)
+            now(), #{createUser,jdbcType=VARCHAR}, now(),
+            #{updateUser,jdbcType=VARCHAR}, now())
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
@@ -446,7 +461,7 @@
     <update id="updateSalerRegistNo" parameterType="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto" >
         update CHB_SALER_IDEN_INFO
         set SALER_REGIST_NO = #{salerRegistNo,jdbcType=VARCHAR},
-        UPDATE_TIME = sysdate
+        UPDATE_TIME = now()
         where SALER_INS_NO = #{salerInsNo,jdbcType=VARCHAR}
     </update>
 
@@ -456,11 +471,11 @@
         SALER_ORG_CODE id,
         SALER_ORG_NAME text
         from CHB_SALER_INST_INFO
-        <where>
+        where 1=1
             <if test="search != null and search != ''">
                 and SALER_ORG_CODE like concat(concat('%', #{search}),'%')
             </if>
-        </where>
+        and STATUS = 'E'
     </select>
 
     <!--	双击查看详细信息查询info-->

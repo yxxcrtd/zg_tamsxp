@@ -93,6 +93,7 @@ public enum BatchBeanName {
     // 监管客户组别区域报送数据接入 add by qufangxu at 2021-02-24
     监管客户组别区域报送数据接入("3003","svrSaleCustSvrreportInterfTastService","saleCustSvrrepportImpMainService","监管客户组别区域报送数据接入"),
     销售结算资金交易信息表报送数据接入("3053","svrChbSalerStlDealInfoInterfTastService","ChbSalerStlDealInfoImpMainService","销售结算资金交易信息表报送数据接入"),
+    理财子公司月度统计表生成("3055","svrSubsidiaMonthReportTaskService","SubsidiaMonthReportRegistBatchService","理财子公司月度统计表生成"),
 
     /**
      * 业务明细数据自动检查报送

@@ -309,7 +309,7 @@ $(function() {
 									sortField:'pmmode'
 								},
 								{
-									title : '实际管理人员名称',
+									title : '实际管理人名称',
 									field : 'mname',
 									width : 200, 
 									sortField:'mname'
@@ -416,7 +416,7 @@ $(function() {
 									sortField:'investProfDate'
 								},
 								{
-									title : '销售手续费%',
+									title : '销售手续费率%',
 									field : 'saleFeeRate',
 									width : 200, 
 									sortField:'saleFeeRate'

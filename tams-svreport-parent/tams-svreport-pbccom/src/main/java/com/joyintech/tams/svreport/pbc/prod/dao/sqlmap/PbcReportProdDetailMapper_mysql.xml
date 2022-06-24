@@ -9,7 +9,13 @@
 	JPY_TO_CNY,OTH_TO_CNY,
 	PRODCOUNTS,	TOTAL
   </sql>
-
+    <select id="selectByReportuuid" resultType="com.joyintech.tams.svreport.pbc.prod.dto.PbcReportProdDetailDto"
+            parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_REPORT_PROD
+        where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+    </select>
 	<delete id="deleteByReportDate"  parameterType="map" >
 		delete
 		from PBC_REPORT_PROD prp
@@ -27,5 +33,44 @@
 		</if>
 		and send_status = '01'/*只删除未报送数据*/)
 	</delete>
+
+	<delete id="deleteByReportDateDept"  parameterType="map" >
+		delete
+		from PBC_REPORT_PROD prp
+		where prp.REPORTUUID in(
+		select pr.REPORTUUID from PBC_REPORT pr
+		where 1=1
+		<if test="reportStartDate != null" >
+			and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+		</if>
+		<if test="reportEndDate != null" >
+			and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+		</if>
+		<if test="reporttype != null" >
+			and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+		</if>
+		<if test="deptCode == null" >
+			and pr.DEPT_CODE is null
+		</if>
+		<if test="deptCode != null" >
+			and pr.DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+		</if>
+		and send_status = '01'/*只删除未报送数据*/)
+	</delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.prod.dto.PbcReportProdDetailDto" >
+    insert into PBC_REPORT_PROD
+      (DETAILUUID,REPORTUUID,PROPERTYCODE,
+      REPORTTYPE,GROUPTYPE, CNY,
+      USD_TO_CNY, EUR_TO_CNY,
+      GBP_TO_CNY,JPY_TO_CNY, OTH_TO_CNY,
+      PRODCOUNTS,TOTAL)
+    values (#{detailuuid,jdbcType=CHAR},#{reportuuid,jdbcType=CHAR},
+      #{propertyCode,jdbcType=VARCHAR},#{reporttype,jdbcType=VARCHAR},
+      #{grouptype,jdbcType=VARCHAR},#{cny,jdbcType=DECIMAL},
+      #{usdToCny,jdbcType=DECIMAL},
+      #{eurToCny,jdbcType=DECIMAL}, #{gbpToCny,jdbcType=DECIMAL},
+      #{jpyToCny,jdbcType=DECIMAL}, #{othToCny,jdbcType=DECIMAL},
+      #{prodcounts,jdbcType=DECIMAL},#{total,jdbcType=DECIMAL})
+  </insert>
 
 </mapper>

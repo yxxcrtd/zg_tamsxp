@@ -24,10 +24,13 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="INVEST_VARIETY" property="investVariety" jdbcType="VARCHAR" />
         <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="ACCUAMT_B" property="accuamt_b" jdbcType="DECIMAL" />
+        <result column="ACCUQTY_B" property="accuqty_b" jdbcType="DECIMAL" />
+        <result column="BCCY" property="bccy" jdbcType="VARCHAR" />
 
     </resultMap>
     <sql id="Base_Column_List" >
-    POSUUID, PROD_ID, ASSET_CODE, INVEST_TYPE,TRADE_TYPE,IS_UNDER_TRADE, CHL_ID, DEALAMT, DEALQTY, ACCUAMT, ACCUQTY, 
+    POSUUID, PROD_ID, ASSET_CODE, INVEST_TYPE,TRADE_TYPE,IS_UNDER_TRADE, CHL_ID, DEALAMT, DEALQTY, ACCUAMT, ACCUQTY,
     CDATE, ORG_CODE, DEPT_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME,INVEST_VARIETY,CCY
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -41,18 +44,18 @@
     where POSUUID = #{posuuid,jdbcType=CHAR}
   </delete>
     <insert id="insert" parameterType="com.joyintech.tams.svreport.position.dto.ChbAssetPosition" >
-    insert into CHB_ASSET_POSITION (POSUUID, PROD_ID, ASSET_CODE, 
+    insert into CHB_ASSET_POSITION (POSUUID, PROD_ID, ASSET_CODE,
       INVEST_TYPE,TRADE_TYPE,IS_UNDER_TRADE,
-      INVEST_VARIETY, CCY,CHL_ID, DEALAMT, 
-      DEALQTY, ACCUAMT, ACCUQTY, 
-      CDATE, ORG_CODE, DEPT_CODE, 
-      CREATE_USER, CREATE_TIME, UPDATE_USER, 
+      INVEST_VARIETY, CCY,CHL_ID, DEALAMT,
+      DEALQTY, ACCUAMT, ACCUQTY,
+      CDATE, ORG_CODE, DEPT_CODE,
+      CREATE_USER, CREATE_TIME, UPDATE_USER,
       UPDATE_TIME)
-    values (#{posuuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR}, 
+    values (#{posuuid,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetCode,jdbcType=VARCHAR},
       #{investType,jdbcType=VARCHAR},#{tradeType,jdbcType=VARCHAR},#{isundertrade,jdbcType=VARCHAR},
-      #{investVariety,jdbcType=VARCHAR},#{ccy,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{dealamt,jdbcType=DECIMAL}, 
-      #{dealqty,jdbcType=DECIMAL}, #{accuamt,jdbcType=DECIMAL}, #{accuqty,jdbcType=DECIMAL}, 
-      #{cdate,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
+      #{investVariety,jdbcType=VARCHAR},#{ccy,jdbcType=VARCHAR}, #{chlId,jdbcType=VARCHAR}, #{dealamt,jdbcType=DECIMAL},
+      #{dealqty,jdbcType=DECIMAL}, #{accuamt,jdbcType=DECIMAL}, #{accuqty,jdbcType=DECIMAL},
+      #{cdate,jdbcType=TIMESTAMP}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
       #{createUser,jdbcType=VARCHAR}, NOW(), #{updateUser,jdbcType=VARCHAR},
       NOW())
   </insert>
@@ -302,7 +305,7 @@
     </select>
     <insert id="insertYsdPosition" parameterType="java.util.Map" >
         insert into CHB_ASSET_POSITION
-        SELECT f_guid,
+        SELECT f_guid(),
         PROD_ID,
         ASSET_CODE,
         INVEST_TYPE,
@@ -377,7 +380,6 @@
         </if>
 
     </select>
-
 
     <delete id="deleteByDate" parameterType="java.util.Map" >
         delete from CHB_ASSET_POSITION
@@ -596,14 +598,20 @@
         0 DEALAMT,/*交易金额*/
         0 DEALQTY,/*交易份额*/
         <if test="monthReport!=null and monthReport=='01'">
+            case when ASSETINFO.ASSET_TYPE2='1405'
+            then IFNULL(ASSETBASIS.TDY_INTINCEXP,0)
+            else
             ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
-            + ifnull(ASSETBASIS.TDY_INTINCEXP,0) + ifnull(ASSETBASIS.DELAY_PAY_AMT,0) ACCUAMT,/*剩余金额*/
+            + ifnull(ASSETBASIS.TDY_INTINCEXP,0)
+            /* + ifnull(ASSETBASIS.DELAY_PAY_AMT,0)*/
+            end   ACCUAMT,/*剩余金额*/
         </if>
         <if test="monthReport!=null and monthReport=='02'">
             case when ASSETINFO.ASSET_TYPE!='07'
             then ASSETBASIS.POS_AMT
             else ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
-            + ifnull(ASSETBASIS.TDY_INTINCEXP,0) + ifnull(ASSETBASIS.DELAY_PAY_AMT,0)
+            + ifnull(ASSETBASIS.TDY_INTINCEXP,0)
+            /*+ ifnull(ASSETBASIS.DELAY_PAY_AMT,0)*/
             end ACCUAMT,/*剩余份额*/
         </if>
         ASSETBASIS.POS_AMT ACCUQTY,/*剩余本金*/
@@ -635,6 +643,7 @@
         ON ASSETINFO.ASSET_CODE = ASSETBASIS.ASSET_ID
         WHERE 1 =1
         AND ASSETBASIS.STATUS != 'D'/*删除状态数据不统计*/
+        AND ASSETINFO.STATUS != 'D'
         AND DATE_FORMAT(ASSETBASIS.VALUE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         <if test="prodids !=null and prodids.size()!=0">
             and ASSETBASIS.PROD_ID in
@@ -662,9 +671,9 @@
         LEFT JOIN BOK_BOOKSET BOOKSET /*投资组合关联账套查询相关信息*/
         ON BOOKSET.BOOKSET_ID = BALANCE.BOOKSET_ID
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
-        ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
+        ON PROD.FINPROD_MARKET_ID = replace(BALANCE.BOOKSET_ID,'F16_','')
         LEFT JOIN FIN_PRODUCT_ADD PRODADD /*产品附属信息表*/
-        ON BALANCE.BOOKSET_ID=PRODADD.PORTFOLIO_ID
+        ON replace(BALANCE.BOOKSET_ID,'F16_','')=PRODADD.PORTFOLIO_ID
         WHERE 1 =1
         AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         /*标的类金融产品.投管分类=理财产品*/
@@ -707,7 +716,7 @@
         ifnull(min(BALANCE.BALANCE_DATE),#{cdate,jdbcType=DATE}) SETTDATEDATE
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-        on prodinfo.PROD_ID = balance.BOOKSET_ID
+        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_','')
         WHERE 1 =1
         AND DATE_FORMAT(ifnull(BALANCE.UPDATE_TIME,BALANCE.CREATE_TIME),'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
@@ -756,7 +765,7 @@
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
         ON PROD.FINPROD_MARKET_ID = BALANCE.BOOKSET_ID
         WHERE 1 =1
-        AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        AND BALANCE.BALANCE_DATE = #{cdate,jdbcType=DATE}
         /*标的类金融产品.投管分类=理财产品*/
         AND PROD.FINPROD_TYPE2 = 'F16'
         and BOOKSET.ACCT_SUBJECT_TYPE = 'F18'/*取账套表的主体核算类型为F18投资组合*/
@@ -789,7 +798,7 @@
         LEFT JOIN FIN_PRODUCT PROD/*标的类金融产品表*/
         ON PROD.FINPROD_ID = BALANCE.BOOKSET_ID
         WHERE 1 =1
-        AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+        AND BALANCE.BALANCE_DATE = #{cdate,jdbcType=DATE}
         /*标的类金融产品.投管分类=理财产品*/
         AND PROD.FINPROD_TYPE2 = 'F16'
         AND BOOKSET.ACCT_SUBJECT_TYPE = 'F16'/*取账套表的主体核算类型为F16净值型产品货币性产品*/
@@ -820,7 +829,7 @@
             VAL.CCY CCY /*币种*/
             from ptl_cash_position VAL
             WHERE 1 =1
-            AND DATE_FORMAT(VAL.CDATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
+            AND VAL.CDATE = #{cdate,jdbcType=DATE}
             and exists (select 1 from fin_product_add d where d.portfolio_id = val.portfolio_id and d.profit_flag = '03')/*只取非保本理财产品*/
             and val.HODING_TYPE = '03' /*只取实际*/
             and VAL.CHL_FINPROD_ID is not null ---只取通道id不为空的数据
@@ -861,7 +870,7 @@
         BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
         FROM BOK_BALANCE BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
-        on prodinfo.PROD_ID = balance.BOOKSET_ID
+        on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_','')
         WHERE 1 =1
         AND DATE_FORMAT(BALANCE.BALANCE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{cdate,jdbcType=DATE},'%Y-%m-%d')
         and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */

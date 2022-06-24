@@ -1,18 +1,23 @@
 package com.joyintech.tams.svreport.interf.chb.prodinfo.service;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.BaseInterfService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.entity.ChbPrdOpensch;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.report.interf.common.imp.ImportGenerator;
+import com.joyintech.tams.report.interf.common.imp.sqlldr.ImpTable;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdOpenschInterfMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -56,7 +61,9 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 	
 	@Autowired
 	private SqlSessionTemplate template;
-	
+
+	@Autowired
+	private BatchInsertService batchInsertService;
 	/**
 	 * @Description 开放计划表(CHB_PRD_OPENSCH)数据接入处理
 	 * @param batchDate
@@ -196,29 +203,37 @@ public class ChbPrdOpenschInterf extends BaseInterfService{
 	 */
 	private void insertData2(List<ChbPrdOpensch> openSchlist) {
 		logger.debug("批量插入开放计划信息----开始-----:" +  df.format(new Date()));
-		SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-    	//批量插入mapper
-		ChbPrdOpenschInterfMapper chbPrdOpenschInterfMapper =  session.getMapper(ChbPrdOpenschInterfMapper.class);
-		try{
-			int count = 0;
-			for(ChbPrdOpensch sch : openSchlist){
-				chbPrdOpenschInterfMapper.insert(sch);
-        		count++;
-        		if(count % 1000 == 0){
-            		session.commit();
-            		session.clearCache();
-        		}
-        	}
-			session.commit();
-    		session.clearCache();	
+
+		if (openSchlist.size()<=5000) {
+			SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+			//批量插入mapper
+			ChbPrdOpenschInterfMapper chbPrdOpenschInterfMapper =  session.getMapper(ChbPrdOpenschInterfMapper.class);
+			try{
+				int count = 0;
+				for(ChbPrdOpensch sch : openSchlist){
+					chbPrdOpenschInterfMapper.insert(sch);
+					count++;
+					if(count % 1000 == 0){
+						session.commit();
+						session.clearCache();
+					}
+				}
+				session.commit();
+				session.clearCache();
+			}
+			finally {
+				session.close();
+			}
+		} else {
+			//sqlloader插入
+			ImpTable table = new ImpTable("CHB_PRD_OPENSCH");
+			table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+			// 临时文件存放目录
+			String tmpPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+			batchInsertService.exeBatchldr(tmpPath, openSchlist, table);
 		}
-//		catch (Exception e) {
-//            logger.debug("批量插入开放计划出错:" + e.getMessage());
-//			session.rollback();
-//        } 
-		finally {
-    		session.close();
-    	}
+
 		logger.debug("批量插入开放计划信息----结束-----:" +  df.format(new Date()));
 	}
 	

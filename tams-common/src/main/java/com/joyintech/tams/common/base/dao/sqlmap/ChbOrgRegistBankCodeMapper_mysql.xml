@@ -248,7 +248,7 @@
         <!-- 机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-05 end -->
         where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
         /**新增所属银保监局字段   20220307 leipeng****/
-        ,belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
+        AND belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
         /**新增所属银保监局字段   20220307 leipeng****/
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode" >
@@ -264,7 +264,7 @@
         , INSITITUTE_CODE = #{insitituteCode,jdbcType=VARCHAR}
         where ORG_CODE = #{orgCode,jdbcType=VARCHAR}
         /**新增所属银保监局字段   20220307 leipeng****/
-        ,belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
+        AND belogCodeCBRC = #{belogCodeCBRC,jdbcType=VARCHAR}
         /**新增所属银保监局字段   20220307 leipeng****/
     </update>
 </mapper>

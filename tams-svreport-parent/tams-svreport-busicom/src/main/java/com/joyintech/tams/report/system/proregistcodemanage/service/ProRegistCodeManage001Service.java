@@ -32,6 +32,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.slf4j.Logger;
@@ -184,7 +185,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
         for (String string : listKey) {
             chbPrdresistCodeKey  = new ChbPrdresistCodeKey();
             String[] key = StringUtil.split(string, "|");
-            chbPrdresistCodeKey.setProdid(key[0]);
+            chbPrdresistCodeKey.setProdInsId(key[0]);
             chbPrdresistCodeKey.setOrgCode(key[1]);
             chbPrdresistCodeMapper.deleteByPrimaryKey(chbPrdresistCodeKey);
         }
@@ -336,25 +337,35 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             // 验证消息
             List<String> message = new ArrayList<>();
             //系统中所有产品代码对应产品登记编码信息
-            Map<String,String> prodIdToRegCodeMap = proRegistCodeManage001Mapper.selectProdInfo().stream().collect(JoyinCollectors.toMap(x->x.get("PRODID"),x->x.get("REGCODE")));
+            Map<String,String> prodIdToRegCodeMap = proRegistCodeManage001Mapper.selectProdInfo().stream().collect(JoyinCollectors.toMap(x->x.get("prodId"),x->x.get("regCode")));
             //产品代码            	//update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
             /****ZGBSSE-907  产品登记编码管理画面，导入时，理财产品代码长度为100时，报错【产品代码输入的内容超过最大长度限制，最大长度为30】**/
-            String error0 =checkCode2(list.get(4), "产品代码", 100, true);
+            String error0 =checkCode2(list.get(3), "行内标识码", 100, true);
             if (StringUtil.isNotEmpty(error0)) {
                 message.add(error0);
-            }
-            else {
+            }else {
+                if(proRegistCodeManage001Mapper.selectInfoByProdId(list.get(3)) == null){
+                    message.add("行内标识码不存在产品申报表中！");
+                }else{
+                    entity.setProdInsId(list.get(3));
+                }
                 //update by leipeng 产品登记编码导入完成后，导入模板理财产品代码为cp002 但是导入库是行内标识码
-                entity.setProdid(list.get(4));
-                Map<String , Object> map =new HashMap<>();
-                map.put("prodid",entity.getProdid());
-                map.put("orgCode", orgCode);
+
+//                Map<String , Object> map =new HashMap<>();
+//                map.put("prodInsId",entity.getProdInsId());
+//                map.put("orgCode", orgCode);
 //                if(proRegistCodeManage001Mapper.isExist(map)>0||box.containsKey(entity.getProdid())){
 //                    message.add("同一机构中已存在此产品代码");
 //                }
 //                else{
 
 //                }
+            }
+            if(StringUtils.isNotEmpty(list.get(4))){
+                entity.setProdid(list.get(4));
+            }
+            if(StringUtils.isNotEmpty(list.get(5))){
+                entity.setOperateMode(list.get(5).split(" ")[0]);
             }
             //产品名称
             String error1 =checkCode2(list.get(1), "产品名称", 200, false);
@@ -408,12 +419,12 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
                 if(isRight){
                     entity.setRegCode(list.get(2));
                     if(prodIdToRegCodeMap.values().contains(list.get(2))){
-                        if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(3))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(4))){
                             message.add("不同的产品代码不能对应同一产品登记编码");
                         }
                     }
                     else if(box.values().contains(list.get(2))){
-                        if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(3))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(4))){
                             message.add("不同的产品代码不能对应同一产品登记编码");
                         }
                     }
@@ -454,7 +465,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                    message.add("起息日不能大于到期日！");
 //                }
 //            }
-            List<ProRegistCodeManage001Dto> list1 = proRegistCodeManage001Mapper.queryProdid(list.get(3));
+            List<ProRegistCodeManage001Dto> list1 = proRegistCodeManage001Mapper.queryProdid(list.get(4));
             if (list1.size() != 0 && StringUtil.isEmpty(list.get(2))){
 //                message.add(this.getMessage("系统中存在对应数据，更新数据请输入产品登记编码！"));
                 message.add("系统中存在对应数据，更新数据请输入产品登记编码！");
@@ -471,7 +482,7 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
                 }
             }*/
             if (CollectionUtils.isNotEmpty(message)) {
-                checkResult.add(new ExcelValidDto(entity.getProdid(), String.valueOf(i+1),
+                checkResult.add(new ExcelValidDto(entity.getProdid(), String.valueOf(i+2),
                         StringUtil.joinString(message, GlobalConstant.COMMA)));
             }
             else {

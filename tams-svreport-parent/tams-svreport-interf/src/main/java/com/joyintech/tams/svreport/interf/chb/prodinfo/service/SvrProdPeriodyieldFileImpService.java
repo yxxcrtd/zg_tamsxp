@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.interf.chb.prodinfo.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.FileImpService;
@@ -9,6 +10,7 @@ import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -101,6 +103,9 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 	
 	@Autowired
 	private ChbPrdPeriodYieldInterfMapper chbPrdPeriodYieldInterfMapper;
+
+	@Autowired
+	private BatchInsertService batchInsertService;
 	
 	@Override
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile,String date) {
@@ -126,7 +131,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 	}
 	
 	@Override
-	public String saveData(List<Map<String, String>> periodyieldList, String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> periodyieldList, String saveFlag,String dataSource) {
         String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 解析成功或失败的标识
 		boolean success = true;
@@ -134,7 +139,7 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 			// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //			List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
-			List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class);
+			List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class, dataSource);
 			listNE.stream().forEach(dto->{
 				dto.setSeqno(IDGenerator.generate(36));
 			});
@@ -145,99 +150,19 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			}
 		}else if (periodyieldList.size() <= 1000) {
 			// 数据小于1000直接入库
-			success = excuteProdPeriodyieldByStep(dateSource,saveFlag,periodyieldList, null, null, null, null, null);
+			success = excuteProdPeriodyieldByStep(dataSource,saveFlag,periodyieldList, null, null, null, null, null);
 		} else {
 			// 大于1000使用sqlloader入库
-			// 创建表
-			ImpTable table = new ImpTable(InterfDefine.产品收益率净值接口数据.getCode());
-			table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.产品收益率净值接口数据.getCode()));
-			// 创建一个线程池
-			if (interfMaxCorePoolSize < 1) {
-				interfMaxCorePoolSize = 20;
-			}
-			ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-			List<Callable<Boolean>> tasks = new ArrayList<>();
-			if (null != periodyieldList) {
-				int start = 0;
-				int end = 0;
-				int size = periodyieldList.size();
-				int max = (int) Math.ceil((double) size / 1000);
-				for (int i = 0; i < max; i++) {
-					start = end;
-					end = Math.min(size, 1000 * (i + 1));
-					List<Map<String, String>> subList = periodyieldList.subList(start, end);
-					tasks.add(new Callable<Boolean>() {
-						@Override
-						public Boolean call() {
-							return excuteProdPeriodyieldByStep(dateSource,saveFlag,subList, null, null, tmpPath, table, null);
-						}
-					});
-				}
-			}
-			// 为线程池添加任务
-			List<Future<Boolean>> taskResult;
 			try {
-				taskResult = service.invokeAll(tasks);
-			} catch (InterruptedException e) {
+				ImpTable table = new ImpTable("CHB_PRD_PERIODYIELD");
+				table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+				// 临时文件存放目录
+				String path = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+				batchInsertService.exeBatchldr(path, periodyieldList, table);
+			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				return "fail";
-			}
-			for (Future<Boolean> res : taskResult) {
-				try {
-					success = success && res.get();
-				} catch (InterruptedException | ExecutionException e) {
-					logger.error(e.getMessage(), e);
-					return "fail";
-				}
-			}
-			// 任务结束，停止线程池的所有线程
-			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_PRD_PERIODYIELD/"), new String[] { "tmp" }, false);
-			List<String> content = new ArrayList<>(periodyieldList.size());
-			String result = "";
-			for (File f : files) {
-				if (f.getName().startsWith(InterfDefine.产品收益率净值接口数据.getCode())) {
-					try {
-						content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-						logger.debug("查找sqlloder文件"+f);
-					} catch (IOException e) {
-						logger.debug("查找sqlloder文件异常");
-						logger.error(e.getMessage(), e);
-						result = "fail";
-					} finally {
-						f.delete();
-					}
-				}
-			}
-			if("fail".equals(result)){
-				return result;
-			}
-			// 系统是否使用的db2数据库
-			boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-			if (isDB2DataBase) {
-				// db2数据库处理
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRD_PERIODYIELD/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return "fail";
-					}
-				}
-			} else {
-				// oracle原逻辑
-				if (CollectionUtils.isNotEmpty(content)) {
-					try {
-						success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_PRD_PERIODYIELD/", content,
-								reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-								reportSqlldrDatabaseName);
-					} catch (IOException | InterruptedException e) {
-						logger.error(e.getMessage(), e);
-						return "fail";
-					}
-				}
 			}
 		}
 		return "success";
@@ -247,13 +172,13 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 	 * @Description 收益率入库方式：新增，日全量（根据updatetime，createtime删除数据）
 	 * @version 1.7 2019年5月20日
 	 */
-	private boolean excuteProdPeriodyieldByStep(String dateSource,String saveFlag, List<Map<String, String>> periodyieldList, String type, String[] result,
+	private boolean excuteProdPeriodyieldByStep(String dataSource,String saveFlag, List<Map<String, String>> periodyieldList, String type, String[] result,
 			String tmpPath, ImpTable table, ImpTable subTable) {
 		// 定义新增数据list
 		logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
 //		List<ChbPrdPeriodYield> listNE = convertMapToEntity(periodyieldList,dateSource);
-		List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class);
+		List<ChbPrdPeriodYield> listNE = (List<ChbPrdPeriodYield>) convertMapToEntity(periodyieldList,ChbPrdPeriodYield.class, dataSource);
 		listNE.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));
 			// 创建部门
@@ -263,18 +188,18 @@ public class SvrProdPeriodyieldFileImpService extends FileImpService {
 			// 机构代码
 			dto.setOrgCode(CommonUtil.getOrgCode());
 			// 数据来源
-			dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dateSource));
+			dto.setDataSource(SysDataUtil.getNameFromDataDict(DictCode.数据来源, dataSource));
 		});
 		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
 		logger.debug("报价信息map转dto----开始-----:" +  df.format(new Date()));
 		if (listNE != null && listNE.size() > 0) {
 			deleteAllData();
-			if (tmpPath == null) {
+//			if (tmpPath == null) {
 				// 插入报价数据
 				insertBatch(listNE);
-			} else {
-				createDataFile(tmpPath + "/CHB_PRD_PERIODYIELD/CHB_PRD_PERIODYIELD", listNE, table.getColumns());
-			}
+//			} else {
+//				createDataFile(tmpPath + "/CHB_PRD_PERIODYIELD/CHB_PRD_PERIODYIELD", listNE, table.getColumns());
+//			}
 		}
 		return (CollectionUtils.isNotEmpty(listNE));
 	}

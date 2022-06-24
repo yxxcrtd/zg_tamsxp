@@ -7,6 +7,7 @@ package com.joyintech.tams.report.system.regtimepoints.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -101,7 +102,12 @@ public class RegTimePoints001Controller extends BaseController {
         Page<RegTimePoints001Dto> pageList= regTimePointsMService.searchPage(map);
         for (RegTimePoints001Dto regTimePoints001Dto : pageList.getRoot()) {
             regTimePoints001Dto.setReportCode(SysDataUtil.getNameFromDataDict(DictCode.报表名称, regTimePoints001Dto.getReportCode()));
-            regTimePoints001Dto.setTypeDetail(SysDataUtil.getNameFromDataDict(DictCode.细分类别, regTimePoints001Dto.getTypeDetail()));
+            //净值变动
+            if (Objects.equals(regTimePoints001Dto.getTypeDetail(),DictCodeListExt2.变动类型_净值变动.getValue())) {
+                regTimePoints001Dto.setTypeDetail(DictCodeListExt2.变动类型_净值变动.getCodeName());
+            }else {
+                regTimePoints001Dto.setTypeDetail(SysDataUtil.getNameFromDataDict(DictCode.细分类别, regTimePoints001Dto.getTypeDetail()));
+            }
         }
         return pageList;
     }

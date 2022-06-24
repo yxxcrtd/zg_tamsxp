@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportProdDatMapper_mysql" >
+  <sql id="Base_Column_List" >
+    DETAILUUID,REPORTUUID,PROPERTYCODE,
+	REPORTTYPE,GROUPTYPE,
+	CNY,USD_TO_CNY,
+	EUR_TO_CNY,GBP_TO_CNY,
+	JPY_TO_CNY,OTH_TO_CNY,
+	PRODCOUNTS,	TOTAL
+  </sql>
+  
+  <select id="selectByReportuuid" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto"
+          parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PBC_REPORT_PROD_DAT
+    where REPORTUUID = #{reportuuid,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByReportDate"  parameterType="map" >
+    delete
+    from PBC_REPORT_PROD_DAT prp
+    where prp.REPORTUUID in(
+	     select pr.REPORTUUID from PBC_REPORT pr
+	      where 1=1 
+	      <if test="reportStartDate != null" >
+	      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+	      </if>
+	      <if test="reportEndDate != null" >
+	      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+	      </if>
+	      <if test="reporttype != null" >
+	    	and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+	      </if> 
+        and send_status = '01'/*只删除未报送数据*/)
+  </delete>
+
+
+    <delete id="deleteByReportUUid"  parameterType="map" >
+        delete
+        from PBC_REPORT_PROD_DAT prp
+        where prp.REPORTUUID  = #{reportUuid,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insertDataBySelect">
+        INSERT INTO PBC_REPORT_PROD_DAT (<include refid="Base_Column_List" />)
+        SELECT <include refid="Base_Column_List" /> FROM PBC_REPORT_PROD
+        WHERE REPORTUUID = #{reportUuid,jdbcType=VARCHAR}
+    </insert>
+  
+  
+  <delete id="deleteByReportDateDept"  parameterType="map" >
+    delete
+    from PBC_REPORT_PROD_DAT prp
+    where prp.REPORTUUID in(
+	     select pr.REPORTUUID from PBC_REPORT pr
+	      where 1=1 
+	      <if test="reportStartDate != null" >
+	      and DATE_FORMAT(pr.STARTDATE,'%Y-%m-%d')>= #{reportStartDate,jdbcType=VARCHAR}
+	      </if>
+	      <if test="reportEndDate != null" >
+	      and DATE_FORMAT(pr.ENDDATE,'%Y-%m-%d')>= #{reportEndDate,jdbcType=VARCHAR}
+	      </if>
+	      <if test="reporttype != null" >
+	    	and pr.REPORTTYPE = #{reporttype,jdbcType=VARCHAR}
+	      </if>
+      <if test="deptCode == null" >
+          and pr.DEPT_CODE is null
+      </if>
+	       <if test="deptCode != null" >
+	         and pr.DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
+	       </if> 
+        and send_status = '01'/*只删除未报送数据*/)
+  </delete>
+  
+  
+  <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto" >
+    insert into PBC_REPORT_PROD_DAT
+      (DETAILUUID,REPORTUUID,PROPERTYCODE,
+      REPORTTYPE,GROUPTYPE, CNY, 
+      USD_TO_CNY, EUR_TO_CNY, 
+      GBP_TO_CNY,JPY_TO_CNY, OTH_TO_CNY,
+      PRODCOUNTS,TOTAL)
+    values (#{detailuuid,jdbcType=CHAR},#{reportuuid,jdbcType=CHAR},
+      #{propertyCode,jdbcType=VARCHAR},#{reporttype,jdbcType=VARCHAR},
+      #{grouptype,jdbcType=VARCHAR},#{cny,jdbcType=DECIMAL}, 
+      #{usdToCny,jdbcType=DECIMAL}, 
+      #{eurToCny,jdbcType=DECIMAL}, #{gbpToCny,jdbcType=DECIMAL}, 
+      #{jpyToCny,jdbcType=DECIMAL}, #{othToCny,jdbcType=DECIMAL}, 
+      #{prodcounts,jdbcType=DECIMAL},#{total,jdbcType=DECIMAL})
+  </insert>
+
+
+
+    <select id="selectPbcReportPrdDatDiff" resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto"
+            parameterType="java.lang.String" >
+        select
+            ppd.*,
+        prp.CNY as cnyPrd,
+        prp.USD_TO_CNY as usdToCnyPrd,
+        prp.EUR_TO_CNY as eurToCnyPrd,
+        prp.GBP_TO_CNY as gbpToCnyPrd,
+        prp.JPY_TO_CNY as jpyToCnyPrd,
+        prp.OTH_TO_CNY as othToCnyPrd,
+        prp.PRODCOUNTS as prodcountsPrd,
+        prp.TOTAL as totalPrd
+        from PBC_REPORT_PROD_DAT ppd
+        left join PBC_REPORT_PROD  prp on ppd.REPORTUUID=prp.REPORTUUID
+        and ppd.REPORTTYPE=prp.REPORTTYPE
+        and ppd.propertyCode=prp.propertyCode
+        where ppd.REPORTUUID = #{reportuuid,jdbcType=CHAR}
+        and ppd.REPORTTYPE=#{reporttype,jdbcType=CHAR}
+    </select>
+
+    <delete id="deleteByUUIDAndType"  parameterType="java.util.Map" >
+        delete
+        from PBC_REPORT_PROD_DAT
+        where REPORTTYPE = #{reportType,jdbcType=VARCHAR}
+            AND REPORTUUID = #{reportUUID,jdbcType=CHAR}
+    </delete>
+
+    <select id="selectByDatZipCode"   resultType="com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto">
+        select     prp.*
+        from PBC_REPORT_PROD_DAT prp
+        left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
+        where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
+            and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+          and prp.PROPERTYCODE is  not  null
+          and (prp.CNY &lt;&gt; 0 or prp.USD_TO_CNY &lt;&gt; 0 or prp.EUR_TO_CNY &lt;&gt; 0 or prp.GBP_TO_CNY &lt;&gt; 0 or prp.JPY_TO_CNY &lt;&gt; 0 or
+             prp.OTH_TO_CNY &lt;&gt; 0 or prp.PRODCOUNTS &lt;&gt; 0 or prp.TOTAL&lt;&gt; 0)
+    </select>
+
+
+</mapper>

@@ -15,6 +15,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -93,13 +94,17 @@ public class ErrdataConvertUtil {
                             //对于Date类型处理
                         } else if ("java.util.Date".equals(type.getTypeName())) {
                             //对类的实例字段进行赋值
-                            field.set(chbAssetInfo, DateUtil.parse(value.toString()));
+                            try {
+                                field.set(chbAssetInfo, DateUtil.parse(value.toString()));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             //其它类型处理
                             //对类的实例字段进行赋值
                             field.set(chbAssetInfo, value);
                         }
-                    } catch (IllegalAccessException e) {
+                    } catch (Exception e) {
                         logger.error(e.getMessage(),e);
                         continue;
                     }
@@ -141,5 +146,74 @@ public class ErrdataConvertUtil {
             result = result + (new StringBuilder()).append(Character.toUpperCase(strarray[i].charAt(0)))
                     .append(strarray[i].substring(1)).toString();
         return result;
+    }
+
+    /**
+     * 错误信息表解析共通处理
+     */
+    public static <T> T errdataConvert(Class<T> clazz, String orgData) {
+        T t = null;
+        try {
+            t = clazz.newInstance();
+        } catch (InstantiationException e) {
+            return null;
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+        if ( StringUtil.isNotEmpty(orgData)){
+            logger.info("调用ErrdataConvertUtil.errdataAssetInfoConvert，传入的orgData:" + orgData);
+                Map<String, Object> dataMap = clobStrToMap(orgData);
+                for (String column : dataMap.keySet()) {
+                    Object value = dataMap.get(column);
+                    if (!StringUtil.isNotEmpty(value)) {
+                        continue;
+                    }
+                    if (StringUtil.equals(column, "CREATE_TIME") || StringUtil.equals(column, "UPDATE_TIME")){
+                        continue;
+                    }
+                    //根据数据库字段获取类的属性字段
+                    Field field = ReflectionUtils.findField(clazz, subBlank(StringUtil.lowerCase(column)));
+                    //如果字段没有则跳过。
+                    if(field==null){
+                        logger.warn("该字段在所转换的实体类中没有，对象名：{}，字段名：{}", clazz.getName(), column);
+                        continue;
+                    }
+                    field.setAccessible(true);
+                    //获取属性对应类型
+                    Type type = field.getGenericType();
+                    try {
+                        //对于BigDecimal类型处理
+                        if ("java.math.BigDecimal".equals(type.getTypeName())) {
+                            //对类的实例字段进行赋值
+                            field.set(t, new BigDecimal(value.toString()));
+                            //对于Integer类型处理
+                        } else if ("java.lang.Integer".equals(type.getTypeName()) || "int".equals(type.getTypeName())) {
+                            //对类的实例字段进行赋值
+                            field.set(t, Integer.valueOf(value.toString()));
+                            //对于Long类型处理
+                        } else if ("java.lang.Long".equals(type.getTypeName())) {
+                            //对类的实例字段进行赋值
+                            field.set(t, Long.valueOf(value.toString()));
+                            //对于Short类型处理
+                        } else if ("java.lang.Short".equals(type.getTypeName())) {
+                            //对类的实例字段进行赋值
+                            field.set(t, Short.valueOf(value.toString()));
+                            //对于Date类型处理
+                        } else if ("java.util.Date".equals(type.getTypeName())) {
+                            //对类的实例字段进行赋值
+                            field.set(t, DateUtil.parse(value.toString()));
+                        } else {
+                            //其它类型处理
+                            //对类的实例字段进行赋值
+                            field.set(t, value);
+                        }
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(),e);
+                        continue;
+                    }
+                }
+            }
+
+        return t;
     }
 }

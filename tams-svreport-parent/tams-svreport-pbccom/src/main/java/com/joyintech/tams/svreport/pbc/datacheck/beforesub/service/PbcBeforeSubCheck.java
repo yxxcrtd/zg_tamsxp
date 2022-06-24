@@ -352,21 +352,24 @@ public class PbcBeforeSubCheck extends SvrCBBaseService{
                 DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
             chbReportCheck.setDataTime(checkdate);
             String warnInfo="";
-            String c1=m.getCustomerType();
-            String c2=m.getCustomerType1();
-            if(c1!=null){
-            	String [] c1s=c1.split(",");
-            	for(String  str:c1s){
-            		if(c2==null||!c2.contains(str)){
-            			warnInfo += "客户类型与产品基本信息的客户类型不相符!";
-            			break;
-            		}
-            	}
-            }else{
-            	if(c2!=null){
-            		warnInfo += "客户类型与产品基本信息的客户类型不相符!";	
-            	}
-            }
+
+            //delete by wangyaning 20220510 start LCZCP-32
+//            String c1=m.getCustomerType();
+//            String c2=m.getCustomerType1();
+//            if(c1!=null){
+//            	String [] c1s=c1.split(",");
+//            	for(String  str:c1s){
+//            		if(c2==null||!c2.contains(str)){
+//            			warnInfo += "客户类型与产品基本信息的客户类型不相符!";
+//            			break;
+//            		}
+//            	}
+//            }else{
+//            	if(c2!=null){
+//            		warnInfo += "客户类型与产品基本信息的客户类型不相符!";
+//            	}
+//            }
+            //delete by wangyaning 20220510 end LCZCP-32
             
             if(!sdf.format(m.getVdate()).equals(sdf.format(m.getRaisingDate()))&&(m.getOperateMode().equals("4")||m.getOperateMode().equals("5"))){
 	            if (m.getProdprofit1()!=null && m.getProdprofit1().compareTo(BigDecimal.ZERO)>0 ) {//客户收益

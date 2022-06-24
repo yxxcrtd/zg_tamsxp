@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.service.asset.common.dao.BussPaFinProductBuyoutRateMapper">
-	<delete id="deleteByfinprodId">
-		delete from PA_FIN_PRODUCT_BUYOUT_RATE
-		where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-	</delete>
-</mapper>

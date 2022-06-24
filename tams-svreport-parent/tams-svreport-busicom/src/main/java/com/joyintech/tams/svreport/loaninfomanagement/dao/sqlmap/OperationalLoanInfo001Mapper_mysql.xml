@@ -49,98 +49,98 @@
         <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
-        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+         <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-        ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSETS_INVEST ASSETS_INVEST, EACH_PROPORTION EACH_PROPORTION,
-        LOANS_TYPE LOANS_TYPE, ORIG_CCY ORIG_CCY, ORIG_CONTRACT_AMOUNT ORIG_CONTRACT_AMOUNT,
-        ORIG_CONTRACT_AMOUNT_CNY ORIG_CONTRACT_AMOUNT_CNY, BORROWER_TYPE BORROWER_TYPE, BORROWER_ID BORROWER_ID,
-        INDUSTRY_INFO INDUSTRY_INFO, BORROWER_NATIONALITY BORROWER_NATIONALITY, BORROWER_PROVINCE BORROWER_PROVINCE,
-        BORROWER_CITY BORROWER_CITY, BORROWER_COUNTY BORROWER_COUNTY, LOAN_TRANSFEROR_ID LOAN_TRANSFEROR_ID,
-        LOAN_TRANSFEROR_NAME LOAN_TRANSFEROR_NAME, LOAN_CONTRACT_ORG_ID LOAN_CONTRACT_ORG_ID,
-        LOAN_CONTRACT_ORG_NAME LOAN_CONTRACT_ORG_NAME, LOAN_CONTRACT_ORG_PROVINCE LOAN_CONTRACT_ORG_PROVINCE,
-        LOAN_CONTRACT_ORG_CITY LOAN_CONTRACT_ORG_CITY, LOAN_CONTRACT_ORG_COUNTY LOAN_CONTRACT_ORG_COUNTY,
-        ENTERPRISE_INVESTOR_TYPE_FIRST ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC ENTERPRISE_INVESTOR_TYPE_SEC,
-        ENTERPRISE_INVESTOR_TYPE_THIRD ENTERPRISE_INVESTOR_TYPE_THIRD, ENTERPRISE_SCALE ENTERPRISE_SCALE,
-        LOAN_BASIS_ID LOAN_BASIS_ID, LOAN_PRD_TYPE LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST LOAN_ACTUAL_INVEST,
-        LOAN_VDATE LOAN_VDATE, LOAN_MDATE LOAN_MDATE, LOAN_EXTENSION_DUE_DATE LOAN_EXTENSION_DUE_DATE,
-        RATE_FIXED RATE_FIXED, RATE_LEVEL RATE_LEVEL, LOAN_GUARANTEE_MODE LOAN_GUARANTEE_MODE,
-        LOAN_QUALITY LOAN_QUALITY, LOAN_STATE LOAN_STATE, LOAN_TRANSFEROR_RATE LOAN_TRANSFEROR_RATE,
-        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME,
+        ASSET_UUID ASSET_UUID, ASSET_CODE ASSET_CODE, ASSETS_INVEST ASSETS_INVEST, EACH_PROPORTION EACH_PROPORTION, 
+        LOANS_TYPE LOANS_TYPE, ORIG_CCY ORIG_CCY, ORIG_CONTRACT_AMOUNT ORIG_CONTRACT_AMOUNT, 
+        ORIG_CONTRACT_AMOUNT_CNY ORIG_CONTRACT_AMOUNT_CNY, BORROWER_TYPE BORROWER_TYPE, BORROWER_ID BORROWER_ID, 
+        INDUSTRY_INFO INDUSTRY_INFO, BORROWER_NATIONALITY BORROWER_NATIONALITY, BORROWER_PROVINCE BORROWER_PROVINCE, 
+        BORROWER_CITY BORROWER_CITY, BORROWER_COUNTY BORROWER_COUNTY, LOAN_TRANSFEROR_ID LOAN_TRANSFEROR_ID, 
+        LOAN_TRANSFEROR_NAME LOAN_TRANSFEROR_NAME, LOAN_CONTRACT_ORG_ID LOAN_CONTRACT_ORG_ID, 
+        LOAN_CONTRACT_ORG_NAME LOAN_CONTRACT_ORG_NAME, LOAN_CONTRACT_ORG_PROVINCE LOAN_CONTRACT_ORG_PROVINCE, 
+        LOAN_CONTRACT_ORG_CITY LOAN_CONTRACT_ORG_CITY, LOAN_CONTRACT_ORG_COUNTY LOAN_CONTRACT_ORG_COUNTY, 
+        ENTERPRISE_INVESTOR_TYPE_FIRST ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC ENTERPRISE_INVESTOR_TYPE_SEC, 
+        ENTERPRISE_INVESTOR_TYPE_THIRD ENTERPRISE_INVESTOR_TYPE_THIRD, ENTERPRISE_SCALE ENTERPRISE_SCALE, 
+        LOAN_BASIS_ID LOAN_BASIS_ID, LOAN_PRD_TYPE LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST LOAN_ACTUAL_INVEST, 
+        LOAN_VDATE LOAN_VDATE, LOAN_MDATE LOAN_MDATE, LOAN_EXTENSION_DUE_DATE LOAN_EXTENSION_DUE_DATE, 
+        RATE_FIXED RATE_FIXED, RATE_LEVEL RATE_LEVEL, LOAN_GUARANTEE_MODE LOAN_GUARANTEE_MODE, 
+        LOAN_QUALITY LOAN_QUALITY, LOAN_STATE LOAN_STATE, LOAN_TRANSFEROR_RATE LOAN_TRANSFEROR_RATE, 
+        CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
         CREATE_DEPT CREATE_DEPT, ORG_CODE ORG_CODE, DEPT_CODE DEPT_CODE, STATUS STATUS, DATA_SOURCE DATA_SOURCE,FINPROD_ID
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select
+        select 
         <include refid="Base_Column_List" />
         from CHB_LOAN_DETAIL_INFO
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </select>
     <select id="queryPbcAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select
-        ASSET_CODE id,
-        ASSET_NAME text
-        from chb_asset_info
-        where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
-        <if test="search != null and search != ''">
-            and (ASSET_CODE like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%')
-            or ASSET_NAME like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%'))
-        </if>
+    	select 
+			ASSET_CODE id,
+			ASSET_NAME text
+		from chb_asset_info
+		where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
+		<if test="search != null and search != ''">
+		    and (ASSET_CODE like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%')
+		    or ASSET_NAME like concat_ws('','%',  #{search, jdbcType=VARCHAR},'%'))
+		</if>
     </select>
-
+    
     <select id="queryPbcAssetType" resultType="java.lang.String" parameterType="java.lang.String">
-        select
+    	select
         <!--case when pbc_asset_type1 = 'P06' then pbc_asset_type1
         else pbc_asset_type3
         end pbcAssetType-->
         pbc_asset_type3 pbcAssetType
-        from chb_asset_info
-        where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
-        and ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
+		from chb_asset_info
+		where (pbc_asset_type1 ='P06' or pbc_asset_type3='R02')
+			and ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
     </select>
-
+    
     <insert id="insertLoanInfo" parameterType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
-        insert into CHB_LOAN_DETAIL_INFO (ASSET_UUID, ASSET_CODE, ASSETS_INVEST,
-            EACH_PROPORTION, LOANS_TYPE, ORIG_CCY,
-            ORIG_CONTRACT_AMOUNT, ORIG_CONTRACT_AMOUNT_CNY,
-            BORROWER_TYPE, BORROWER_ID, INDUSTRY_INFO,
-            BORROWER_NATIONALITY, BORROWER_PROVINCE,
-            BORROWER_CITY, BORROWER_COUNTY, LOAN_TRANSFEROR_ID,
-            LOAN_TRANSFEROR_NAME, LOAN_CONTRACT_ORG_ID,
-            LOAN_CONTRACT_ORG_NAME, LOAN_CONTRACT_ORG_PROVINCE,
-            LOAN_CONTRACT_ORG_CITY, LOAN_CONTRACT_ORG_COUNTY,
-            ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC,
-            ENTERPRISE_INVESTOR_TYPE_THIRD, ENTERPRISE_SCALE,
-            LOAN_BASIS_ID, LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST,
-            LOAN_VDATE, LOAN_MDATE, LOAN_EXTENSION_DUE_DATE,
-            RATE_FIXED, RATE_LEVEL, LOAN_GUARANTEE_MODE,
-            LOAN_QUALITY, LOAN_STATE, LOAN_TRANSFEROR_RATE,
-            CREATE_USER, CREATE_TIME, UPDATE_USER,
-            UPDATE_TIME, CREATE_DEPT, ORG_CODE,
+        insert into CHB_LOAN_DETAIL_INFO (ASSET_UUID, ASSET_CODE, ASSETS_INVEST, 
+            EACH_PROPORTION, LOANS_TYPE, ORIG_CCY, 
+            ORIG_CONTRACT_AMOUNT, ORIG_CONTRACT_AMOUNT_CNY, 
+            BORROWER_TYPE, BORROWER_ID, INDUSTRY_INFO, 
+            BORROWER_NATIONALITY, BORROWER_PROVINCE, 
+            BORROWER_CITY, BORROWER_COUNTY, LOAN_TRANSFEROR_ID, 
+            LOAN_TRANSFEROR_NAME, LOAN_CONTRACT_ORG_ID, 
+            LOAN_CONTRACT_ORG_NAME, LOAN_CONTRACT_ORG_PROVINCE, 
+            LOAN_CONTRACT_ORG_CITY, LOAN_CONTRACT_ORG_COUNTY, 
+            ENTERPRISE_INVESTOR_TYPE_FIRST, ENTERPRISE_INVESTOR_TYPE_SEC, 
+            ENTERPRISE_INVESTOR_TYPE_THIRD, ENTERPRISE_SCALE, 
+            LOAN_BASIS_ID, LOAN_PRD_TYPE, LOAN_ACTUAL_INVEST, 
+            LOAN_VDATE, LOAN_MDATE, LOAN_EXTENSION_DUE_DATE, 
+            RATE_FIXED, RATE_LEVEL, LOAN_GUARANTEE_MODE, 
+            LOAN_QUALITY, LOAN_STATE, LOAN_TRANSFEROR_RATE, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
             DEPT_CODE, STATUS, DATA_SOURCE,FINPROD_ID,ASSET_TYPE
             )
-        values (#{assetUuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetsInvest,jdbcType=VARCHAR},
-            #{eachProportion,jdbcType=VARCHAR}, #{loansType,jdbcType=VARCHAR}, #{origCcy,jdbcType=CHAR},
-            #{origContractAmount,jdbcType=DECIMAL}, #{origContractAmountCny,jdbcType=DECIMAL},
-            #{borrowerType,jdbcType=CHAR}, #{borrowerId,jdbcType=VARCHAR}, #{industryInfo,jdbcType=CHAR},
-            #{borrowerNationality,jdbcType=VARCHAR}, #{borrowerProvince,jdbcType=VARCHAR},
-            #{borrowerCity,jdbcType=VARCHAR}, #{borrowerCounty,jdbcType=VARCHAR}, #{loanTransferorId,jdbcType=VARCHAR},
-            #{loanTransferorName,jdbcType=VARCHAR}, #{loanContractOrgId,jdbcType=VARCHAR},
-            #{loanContractOrgName,jdbcType=VARCHAR}, #{loanContractOrgProvince,jdbcType=VARCHAR},
-            #{loanContractOrgCity,jdbcType=VARCHAR}, #{loanContractOrgCounty,jdbcType=VARCHAR},
-            #{enterpriseInvestorTypeFirst,jdbcType=CHAR}, #{enterpriseInvestorTypeSec,jdbcType=CHAR},
-            #{enterpriseInvestorTypeThird,jdbcType=CHAR}, #{enterpriseScale,jdbcType=CHAR},
-            #{loanBasisId,jdbcType=VARCHAR}, #{loanPrdType,jdbcType=CHAR}, #{loanActualInvest,jdbcType=VARCHAR},
-            #{loanVdate,jdbcType=DATE}, #{loanMdate,jdbcType=DATE}, #{loanExtensionDueDate,jdbcType=DATE},
-            #{rateFixed,jdbcType=VARCHAR}, #{rateLevel,jdbcType=DECIMAL}, #{loanGuaranteeMode,jdbcType=CHAR},
-            #{loanQuality,jdbcType=CHAR}, #{loanState,jdbcType=CHAR}, #{loanTransferorRate,jdbcType=DECIMAL},
-            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+        values (#{assetUuid,jdbcType=CHAR}, #{assetCode,jdbcType=VARCHAR}, #{assetsInvest,jdbcType=VARCHAR}, 
+            #{eachProportion,jdbcType=VARCHAR}, #{loansType,jdbcType=VARCHAR}, #{origCcy,jdbcType=CHAR}, 
+            #{origContractAmount,jdbcType=DECIMAL}, #{origContractAmountCny,jdbcType=DECIMAL}, 
+            #{borrowerType,jdbcType=CHAR}, #{borrowerId,jdbcType=VARCHAR}, #{industryInfo,jdbcType=CHAR}, 
+            #{borrowerNationality,jdbcType=VARCHAR}, #{borrowerProvince,jdbcType=VARCHAR}, 
+            #{borrowerCity,jdbcType=VARCHAR}, #{borrowerCounty,jdbcType=VARCHAR}, #{loanTransferorId,jdbcType=VARCHAR}, 
+            #{loanTransferorName,jdbcType=VARCHAR}, #{loanContractOrgId,jdbcType=VARCHAR}, 
+            #{loanContractOrgName,jdbcType=VARCHAR}, #{loanContractOrgProvince,jdbcType=VARCHAR}, 
+            #{loanContractOrgCity,jdbcType=VARCHAR}, #{loanContractOrgCounty,jdbcType=VARCHAR}, 
+            #{enterpriseInvestorTypeFirst,jdbcType=CHAR}, #{enterpriseInvestorTypeSec,jdbcType=CHAR}, 
+            #{enterpriseInvestorTypeThird,jdbcType=CHAR}, #{enterpriseScale,jdbcType=CHAR}, 
+            #{loanBasisId,jdbcType=VARCHAR}, #{loanPrdType,jdbcType=CHAR}, #{loanActualInvest,jdbcType=VARCHAR}, 
+            #{loanVdate,jdbcType=DATE}, #{loanMdate,jdbcType=DATE}, #{loanExtensionDueDate,jdbcType=DATE}, 
+            #{rateFixed,jdbcType=VARCHAR}, #{rateLevel,jdbcType=DECIMAL}, #{loanGuaranteeMode,jdbcType=CHAR}, 
+            #{loanQuality,jdbcType=CHAR}, #{loanState,jdbcType=CHAR}, #{loanTransferorRate,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
             #{deptCode,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
             #{finprodId,jdbcType=VARCHAR},#{assetType,jdbcType=VARCHAR}
             )
     </insert>
 
-    <insert id="insertLoanInfoSelective" parameterType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
+	<insert id="insertLoanInfoSelective" parameterType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
         insert into CHB_LOAN_DETAIL_INFO
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="assetUuid != null" >
@@ -436,22 +436,22 @@
         </trim>
     </insert>
 
-    <!-- 根据主键更新数据状态-->
+	<!-- 根据主键更新数据状态-->
     <update id="updateStatus">
         update CHB_LOAN_DETAIL_INFO
         set STATUS = #{status,jdbcType=VARCHAR}
         where ASSET_UUID = #{assetUuid,jdbcType=CHAR}
     </update>
-
+    
     <!-- 查询资产代码是否已存在 -->
     <select id="checkAssetCodeExist" parameterType="java.lang.String" resultType="java.lang.Integer" >
     	select count(1) count from CHB_LOAN_DETAIL_INFO
 		where STATUS='E' and ASSET_CODE = #{assetCode,jdbcType=VARCHAR}
     </select>
-
+    
     <!-- 根据计划名称查询计划id以及待维护表ID -->
     <select id="queryPlanInfo" parameterType="java.lang.String" resultType="com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto" >
-    	select
+    	select 
 	        DISTINCT cif.FILTERID,
 	        cic.BASETABLEID
         from CHB_INFOMGR_FILTER cif
@@ -459,22 +459,22 @@
         left join CHB_INFOMGR_CONFIG cic on cifd.BASEINFORMATIONID = cic.BASEINFORMATIONID
         where cif.FILTERNAME = #{pid,jdbcType=VARCHAR}
     </select>
-
+    
     <!-- 省市县联动 -->
     <select id="getAddressSelectOption" resultType="com.joyintech.framework.select.SelectOptionDto">
-        select sdl1.ITEM_CODE id,sdl1.ITEM_VALUE text from SYS_DATADICT_LIST sdl1
-        inner join SYS_DATADICT_LIST_LINK sdll on sdll.LINKED_DICT_CODE = #{dict_code_parent}
-        and sdl1.DICT_CODE = #{item_code_field}
-        and sdl1.ITEM_CODE=sdll.ITEM_CODE
-        <if test="item_code_child != null and item_code_child != ''">
-            and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_child})
-        </if>
-        <where>
-            <if test="search != null and search !=''">
-                sdl1.ITEM_VALUE like concat_ws('','%', #{search,jdbcType=VARCHAR},'%')
-            </if>
-        </where>
-    </select>
+		select sdl1.ITEM_CODE id,sdl1.ITEM_VALUE text from SYS_DATADICT_LIST sdl1 
+		inner join SYS_DATADICT_LIST_LINK sdll on sdll.LINKED_DICT_CODE = #{dict_code_parent}
+		and sdl1.DICT_CODE = #{item_code_field}
+		and sdl1.ITEM_CODE=sdll.ITEM_CODE
+		<if test="item_code_child != null and item_code_child != ''">
+			and TRIM(sdll.LINKED_ITEM_CODE) = TRIM(#{item_code_child})
+		</if>
+		<where>
+			<if test="search != null and search !=''">
+				sdl1.ITEM_VALUE like concat_ws('','%', #{search,jdbcType=VARCHAR},'%')
+			</if>
+		</where>
+	</select>
     <!-- 查询导入资产 -->
     <select id="checkByAssetCode" parameterType="java.lang.String" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo" >
     	select * from CHB_ASSET_INFO

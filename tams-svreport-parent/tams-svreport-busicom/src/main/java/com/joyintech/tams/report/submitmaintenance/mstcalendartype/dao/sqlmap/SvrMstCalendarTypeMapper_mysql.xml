@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dao.SvrMstCalendarTypeMapper_mysql">
-    <select id="getCalendarType" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT
-        CALENDAR_NAME text,
-        CALENDAR_ID   id
-        FROM
-        MST_CALENDAR_INFO
-        WHERE
-        IS_TRADE_CALENDAR=#{YESORNO_YES_02,jdbcType=VARCHAR}
-        <if test="initValueList != null and initValueList.size()>0">
-            <foreach collection="initValueList" item="item" open="and CALENDAR_ID in(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-    </select>
-    <select id="getCalendarNameList" resultType="com.joyintech.framework.select.SuggestDto">
+<select id="getCalendarType" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT 
+		       CALENDAR_NAME text,
+		       CALENDAR_ID   id
+        FROM  
+               MST_CALENDAR_INFO
+        WHERE 
+               IS_TRADE_CALENDAR=#{YESORNO_YES_02,jdbcType=VARCHAR}
+	    <if test="initValueList != null and initValueList.size()>0">
+	    	<foreach collection="initValueList" item="item" open="and CALENDAR_ID in(" close=")" separator=",">
+	    		#{item}
+	    	</foreach>
+	    </if>          
+</select>
+<select id="getCalendarNameList" resultType="com.joyintech.framework.select.SuggestDto">
 		SELECT 
 		       DISTINCT B.TRADE_CALENDAR_ID code,
 		       A.CALENDAR_NAME name,
@@ -29,100 +29,100 @@
 		       AND A.CALENDAR_NAME like concat_ws('','%', #{calendarName,jdbcType=VARCHAR},'%')
 		       AND A.IS_TRADE_CALENDAR=#{YESORNO_YES_01,jdbcType=VARCHAR}
 </select>
-    <select id="select" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
-        SELECT
-        T6.TRADE_CALENDAR_ID tradeCalendarId,
-        T6.CALENDARNAME calendarName,
-        group_concat(T6.CALENDARTYPE) calendarType
+<select id="select" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
+		SELECT 
+		       T6.TRADE_CALENDAR_ID tradeCalendarId,
+		       T6.CALENDARNAME calendarName,
+                group_concat(T6.CALENDARTYPE, ',')  calendarType
         FROM(
-        SELECT
-        T5.TRADE_CALENDAR_ID,
-        T5.CALENDAR_ID,
-        T5.CALENDARNAME,
-        T5.CALENDARTYPE
-        FROM(
-        SELECT
-        T3.TRADE_CALENDAR_ID,
-        T3.CALENDAR_ID,
-        T3.CALENDAR_NAME CALENDARNAME,
-        T4.CALENDAR_NAME CALENDARTYPE
-        FROM(
-        SELECT
-        T1.TRADE_CALENDAR_ID,
-        T1.CALENDAR_ID,
-        T2.CALENDAR_NAME
-        FROM
-        MST_TRADE_CALENDAR T1
-        LEFT JOIN
-        MST_CALENDAR_INFO T2
-        ON
-        T1.TRADE_CALENDAR_ID = T2.CALENDAR_ID
-        WHERE
-        T2.IS_TRADE_CALENDAR= #{YESORNO_YES_01,jdbcType=VARCHAR})T3
-        LEFT JOIN
-        MST_CALENDAR_INFO T4
-        ON
-        T4.CALENDAR_ID = T3.CALENDAR_ID
-        AND T4.IS_TRADE_CALENDAR != #{YESORNO_YES_01,jdbcType=VARCHAR})T5
-        WHERE
-        T5.TRADE_CALENDAR_ID IN(
-        SELECT
-        T6.TRADE_CALENDAR_ID
-        FROM
-        MST_TRADE_CALENDAR T6
-        <where>
-            <if test="calendarTypeList != null and calendarTypeList.size != 0">
-                T6.CALENDAR_ID IN
-                <foreach collection="calendarTypeList" open="(" item="calendarType" separator="," close=")">
-                    #{calendarType,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="calendarName != null and calendarName != ''">
-                AND  T5.CALENDARNAME LIKE concat_ws('','%', #{calendarName,jdbcType=VARCHAR},'%')
-            </if>
-        </where>) )T6
+               SELECT 
+                      T5.TRADE_CALENDAR_ID,
+                      T5.CALENDAR_ID,
+                      T5.CALENDARNAME,
+                      T5.CALENDARTYPE
+               FROM(
+                      SELECT 
+                             T3.TRADE_CALENDAR_ID,
+                             T3.CALENDAR_ID,
+                             T3.CALENDAR_NAME CALENDARNAME,
+                             T4.CALENDAR_NAME CALENDARTYPE
+                      FROM(
+                             SELECT 
+                                    T1.TRADE_CALENDAR_ID,
+                                    T1.CALENDAR_ID,
+                                    T2.CALENDAR_NAME
+                             FROM   
+                                    MST_TRADE_CALENDAR T1 
+                             LEFT JOIN 
+                                    MST_CALENDAR_INFO T2  
+                             ON     
+                                    T1.TRADE_CALENDAR_ID = T2.CALENDAR_ID
+                             WHERE    
+                                    T2.IS_TRADE_CALENDAR= #{YESORNO_YES_01,jdbcType=VARCHAR})T3 
+                     LEFT JOIN 
+                             MST_CALENDAR_INFO T4 
+                     ON     
+                             T4.CALENDAR_ID = T3.CALENDAR_ID 
+                             AND T4.IS_TRADE_CALENDAR != #{YESORNO_YES_01,jdbcType=VARCHAR})T5
+               WHERE 
+                     T5.TRADE_CALENDAR_ID IN(
+                             SELECT 
+                                    T6.TRADE_CALENDAR_ID
+                             FROM   
+                                    MST_TRADE_CALENDAR T6 
+                             <where>
+			                 <if test="calendarTypeList != null and calendarTypeList.size != 0">
+				                    T6.CALENDAR_ID IN 
+				                 <foreach collection="calendarTypeList" open="(" item="calendarType" separator="," close=")">
+				                 	#{calendarType,jdbcType=VARCHAR}
+				                 </foreach> 
+			                 </if>
+			                 <if test="calendarName != null and calendarName != ''">
+				                   AND  T5.CALENDARNAME LIKE concat_ws('','%', #{calendarName,jdbcType=VARCHAR},'%')
+			                 </if>
+		                     </where>) )T6
         GROUP BY T6.TRADE_CALENDAR_ID,T6.CALENDARNAME
         ORDER BY T6.TRADE_CALENDAR_ID DESC
-    </select>
-    <select id="selectCanlendarDetail" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
-        SELECT
-        CDATE cDate,
-        (case
-        when sum(IS_HOLIDAY) > 0
-        then '节假日'
-        else '工作日'
-        end)isHoliday
-        FROM
-        MST_HOLIDAY
-        WHERE
-        CALENDAR_ID IN( SELECT
-        CALENDAR_ID
-        FROM
-        MST_TRADE_CALENDAR
-        WHERE
-        TRADE_CALENDAR_ID = #{tradeCalendarId,jdbcType = VARCHAR})
-        <if test="startCDate!=null and startCDate !='' and endCDate !='' and endCDate!=null">
-            AND
-            DATE_FORMAT(CDATE,'%Y-%m-%d') BETWEEN #{startCDate} AND #{endCDate}
-        </if>
-        <if test ="isHoliday != null and isHoliday != ''">
-            AND IS_HOLIDAY = (case when #{isHoliday} = '01' then 1 else 0 end)
-        </if>
-        GROUP BY CDATE
-    </select>
-    <select id="getCalendarName" resultType="com.joyintech.framework.select.SelectOptionDto">
-        SELECT
-        CALENDAR_NAME text,
-        CALENDAR_ID   id
-        FROM
-        MST_CALENDAR_INFO
-        WHERE
-        IS_TRADE_CALENDAR=#{YESORNO_YES_01,jdbcType=VARCHAR}
+</select>
+<select id="selectCanlendarDetail" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
+              SELECT
+                CDATE cDate,
+                (case
+                    when sum(IS_HOLIDAY) > 0
+                    then '节假日'
+                    else '工作日'
+                  end)isHoliday
+              FROM
+                MST_HOLIDAY
+              WHERE
+                CALENDAR_ID IN( SELECT
+                                  CALENDAR_ID
+                                FROM
+                                  MST_TRADE_CALENDAR
+                                WHERE
+                                  TRADE_CALENDAR_ID = #{tradeCalendarId,jdbcType = VARCHAR})
+              <if test="startCDate!=null and startCDate !='' and endCDate !='' and endCDate!=null">
+              AND
+                DATE_FORMAT(CDATE,'%Y-%m-%d') BETWEEN #{startCDate} AND #{endCDate}
+              </if>
+              <if test ="isHoliday != null and isHoliday != ''">
+                  AND IS_HOLIDAY = (case when #{isHoliday} = '01' then 1 else 0 end)
+              </if>
+             GROUP BY CDATE
+</select>
+<select id="getCalendarName" resultType="com.joyintech.framework.select.SelectOptionDto">
+		SELECT 
+		       CALENDAR_NAME text,
+		       CALENDAR_ID   id
+        FROM  
+               MST_CALENDAR_INFO
+        WHERE 
+               IS_TRADE_CALENDAR=#{YESORNO_YES_01,jdbcType=VARCHAR}
         <if test="calendarName!=null">
-            AND CALENDAR_NAME like concat_ws('','%', #{calendarName,jdbcType=VARCHAR},'%')
+        AND CALENDAR_NAME like concat_ws('','%', #{calendarName,jdbcType=VARCHAR},'%')
         </if>
-    </select>
-    <select id="getResult" resultType="int" >
+</select>
+<select id="getResult" resultType="int" >
 		SELECT 
 		      COUNT(*)
         FROM  
@@ -137,14 +137,14 @@
                                        DATE_FORMAT(CDATE,'%Y-%m-%d')=#{cDate,jdbcType=VARCHAR} AND
                                        IS_HOLIDAY='1'
 </select>
-    <delete id="deleteInTradeCalendar">
+<delete id="deleteInTradeCalendar">
         delete 
         from 
               MST_TRADE_CALENDAR
         where 
               TRADE_CALENDAR_ID = #{tradeCalendarId,jdbcType=VARCHAR}
 </delete>
-    <delete id="deleteInCalendar" >
+<delete id="deleteInCalendar" >
         delete 
         from 
               MST_CALENDAR_INFO
@@ -152,7 +152,7 @@
               CALENDAR_ID = #{calendarCode,jdbcType=VARCHAR} AND
               IS_TRADE_CALENDAR=#{isTradeCalendar,jdbcType=VARCHAR}
 </delete>
-    <select id="selectCalendar" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
+<select id="selectCalendar" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
         SELECT 
               T3.CALENDAR_NAME calendarName,
               T3.CALENDAR_ID  calendarType,
@@ -177,34 +177,34 @@
         ON
               T4.CALENDAR_ID = T3.TRADE_CALENDAR_ID
 </select>
-    <insert id="insertTradeCalendar" parameterType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto" >
-        insert into
-        MST_TRADE_CALENDAR
-        <foreach collection="calendarTypeList" item="item" open="select * from (" close=")"
-                 separator="union all">
-            select
-            #{tradeCalendarId,jdbcType=VARCHAR} TRADE_CALENDAR_ID,
-            #{item,jdbcType=VARCHAR} CALENDAR_ID,
-            #{createUser,jdbcType=VARCHAR} CREATE_USER,
-            #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
-            #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-            #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
-            from
-            dual
-        </foreach>
-    </insert>
-    <insert id="insertCalendar" parameterType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto" >
-        insert into
-        MST_CALENDAR_INFO
+<insert id="insertTradeCalendar" parameterType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto" >
+	insert into 
+	    MST_TRADE_CALENDAR
+	<foreach collection="calendarTypeList" item="item" open="select * from (" close=")" 
+	separator="union all">
+		select
+		      #{tradeCalendarId,jdbcType=VARCHAR} TRADE_CALENDAR_ID,
+	          #{item,jdbcType=VARCHAR} CALENDAR_ID,
+	          #{createUser,jdbcType=VARCHAR} CREATE_USER,
+	          #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+	          #{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+	          #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+	          #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+	    from 
+	          dual
+	</foreach>
+</insert>
+<insert id="insertCalendar" parameterType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto" >
+        insert into 
+                MST_CALENDAR_INFO
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            CALENDAR_ID,
-            CALENDAR_NAME,
+                CALENDAR_ID,
+                CALENDAR_NAME,
             <if test="otherId != null" >
                 OTHER_ID,
             </if>
-            IS_TRADE_CALENDAR,
-            REMARK,
+                IS_TRADE_CALENDAR,
+                REMARK,
             <if test="createUser != null" >
                 CREATE_USER,
             </if>
@@ -222,13 +222,13 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            #{calendarCode,jdbcType=VARCHAR},
-            #{calendarName,jdbcType=VARCHAR},
+                #{calendarCode,jdbcType=VARCHAR},
+                #{calendarName,jdbcType=VARCHAR},
             <if test="otherId != null" >
                 #{otherId,jdbcType=VARCHAR},
             </if>
-            #{isTradeCalendar,jdbcType=VARCHAR},
-            #{remark,jdbcType=VARCHAR},
+                #{isTradeCalendar,jdbcType=VARCHAR},
+                #{remark,jdbcType=VARCHAR},
             <if test="createUser != null" >
                 #{createUser,jdbcType=VARCHAR},
             </if>
@@ -245,18 +245,18 @@
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </trim>
-    </insert>
-    <update id="updateCalendar" parameterType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto" >
+</insert>   
+<update id="updateCalendar" parameterType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto" >
         update MST_CALENDAR_INFO
         <set >
-            CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR},
+                CALENDAR_NAME = #{calendarName,jdbcType=VARCHAR},
             <if test="otherId != null" >
                 OTHER_ID = #{otherId,jdbcType=VARCHAR},
             </if>
             <if test="isTradeCalendar != null" >
                 IS_TRADE_CALENDAR = #{isTradeCalendar,jdbcType=VARCHAR},
             </if>
-            REMARK = #{remark,jdbcType=VARCHAR},
+                REMARK = #{remark,jdbcType=VARCHAR},
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
@@ -265,62 +265,62 @@
             </if>
         </set>
         where CALENDAR_ID = #{calendarCode,jdbcType=VARCHAR}
-    </update>
-    <!-- 交易日历模糊下拉框  用于存款标的信息 -->
-    <select id="getTradeCalendarName" resultType="com.joyintech.framework.select.SuggestDto" parameterType="Map">
+</update>
+<!-- 交易日历模糊下拉框  用于存款标的信息 -->
+<select id="getTradeCalendarName" resultType="com.joyintech.framework.select.SuggestDto" parameterType="Map">
 		SELECT CALENDAR_ID code,CALENDAR_NAME name,CALENDAR_NAME shortName,CALENDAR_ID hidCode FROM MST_CALENDAR_INFO
 		where IS_TRADE_CALENDAR  = #{isTradeCalendar}
 </select>
 
-    <select id="selectForExport" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
-        SELECT
-        T6.TRADE_CALENDAR_ID tradeCalendarId,
-        T6.CALENDARNAME calendarName,
-        group_concat(T6.CALENDARTYPE)  calendarType
+<select id="selectForExport" resultType="com.joyintech.tams.report.submitmaintenance.mstcalendartype.dto.SvrMstCalendarType001Dto">
+		SELECT 
+		       T6.TRADE_CALENDAR_ID tradeCalendarId,
+		       T6.CALENDARNAME calendarName,
+                group_concat(T6.CALENDARTYPE, ',') calendarType
         FROM(
-        SELECT
-        T5.TRADE_CALENDAR_ID,
-        T5.CALENDAR_ID,
-        T5.CALENDARNAME,
-        T5.CALENDARTYPE
-        FROM(
-        SELECT
-        T3.TRADE_CALENDAR_ID,
-        T3.CALENDAR_ID,
-        T3.CALENDAR_NAME CALENDARNAME,
-        T4.CALENDAR_NAME CALENDARTYPE
-        FROM(
-        SELECT
-        T1.TRADE_CALENDAR_ID,
-        T1.CALENDAR_ID,
-        T2.CALENDAR_NAME
-        FROM
-        MST_TRADE_CALENDAR T1
-        LEFT JOIN
-        MST_CALENDAR_INFO T2
-        ON
-        T1.TRADE_CALENDAR_ID = T2.CALENDAR_ID
-        WHERE
-        T2.IS_TRADE_CALENDAR= 'Y')T3
-        LEFT JOIN
-        MST_CALENDAR_INFO T4
-        ON
-        T4.CALENDAR_ID = T3.CALENDAR_ID
-        AND T4.IS_TRADE_CALENDAR != 'Y')T5
-        WHERE
-        T5.TRADE_CALENDAR_ID IN(
-        SELECT
-        T6.TRADE_CALENDAR_ID
-        FROM
-        MST_TRADE_CALENDAR T6
-        <where>
-            <if test="keylist != null and keylist.size()>0">
-                <foreach collection="keylist" item="item" open="(" close=")" separator=") or (">
-                    T6.TRADE_CALENDAR_ID = #{item.tradeCalendarId}
-                </foreach>
-            </if>
-        </where>) )T6
+               SELECT 
+                      T5.TRADE_CALENDAR_ID,
+                      T5.CALENDAR_ID,
+                      T5.CALENDARNAME,
+                      T5.CALENDARTYPE
+               FROM(
+                      SELECT 
+                             T3.TRADE_CALENDAR_ID,
+                             T3.CALENDAR_ID,
+                             T3.CALENDAR_NAME CALENDARNAME,
+                             T4.CALENDAR_NAME CALENDARTYPE
+                      FROM(
+                             SELECT 
+                                    T1.TRADE_CALENDAR_ID,
+                                    T1.CALENDAR_ID,
+                                    T2.CALENDAR_NAME
+                             FROM   
+                                    MST_TRADE_CALENDAR T1 
+                             LEFT JOIN 
+                                    MST_CALENDAR_INFO T2  
+                             ON     
+                                    T1.TRADE_CALENDAR_ID = T2.CALENDAR_ID
+                             WHERE    
+                                    T2.IS_TRADE_CALENDAR= 'Y')T3 
+                     LEFT JOIN 
+                             MST_CALENDAR_INFO T4 
+                     ON     
+                             T4.CALENDAR_ID = T3.CALENDAR_ID 
+                             AND T4.IS_TRADE_CALENDAR != 'Y')T5
+               WHERE 
+                     T5.TRADE_CALENDAR_ID IN(
+                             SELECT 
+                                    T6.TRADE_CALENDAR_ID
+                             FROM   
+                                    MST_TRADE_CALENDAR T6 
+                             <where>
+                             <if test="keylist != null and keylist.size()>0">
+								<foreach collection="keylist" item="item" open="(" close=")" separator=") or (">
+									T6.TRADE_CALENDAR_ID = #{item.tradeCalendarId}
+								</foreach>
+							 </if>
+		                     </where>) )T6
         GROUP BY T6.TRADE_CALENDAR_ID,T6.CALENDARNAME
         ORDER BY T6.TRADE_CALENDAR_ID DESC
-    </select>
+</select>
 </mapper>   

@@ -403,13 +403,12 @@
 		select REPLACE(group_concat(t.remark),',','、') remark from
 		(
 		select
-		/*t1.asset_name||'+'||to_char(round(t1.balance/10000,2)) AS remark*/
 		concat(concat(t1.asset_name,'+'),round(t1.balance/10000,2)) AS remark
 		,t1.balance as balance,t1.posAmt as posAmt,row_number() over(order by t1.balance desc) as idx
 
 		from(
-		select coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ conacat('info.mdate-info.vdate','天回购')
-		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		select coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then  concat('info.mdate-info.vdate','天回购')
+		when info.asset_type2 in ('1107','1901') then  concat(info.mdate-info.vdate,'天拆借') end,
 		info.asset_code,'现金')as asset_name,
 		sum(IFNULL(CMAP.ASSETVALUE_B,0)) as balance,
 		sum(IFNULL(data.pos_amt,0)) as posAmt
@@ -441,8 +440,8 @@
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ concat(info.mdate-info.vdate,'天回购')
-		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then  concat(info.mdate-info.vdate,'天回购')
+		when info.asset_type2 in ('1107','1901') then  concat(info.mdate-info.vdate,'天拆借') end,
 		info.asset_code,'现金')
 		)t1
 		order by  t1.balance desc
@@ -485,7 +484,7 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE 1=1
 		<if test="startDate != null">
@@ -493,13 +492,12 @@
 		</if>
 		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
 		<if test="modetype != null  and modetype.equals('40')">
-　　　　    　and mst.IS_GOV='Y'
+           and mst.IS_GOV='Y'
 		</if>
 		<if test="modetype != null  and modetype.equals('41')">
 			and mst.PARTY_TYPE2='01'
 		</if>
 		<if test="modetype != null  and modetype.equals('42')">
-			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
 			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
 			 	or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
 				or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
@@ -509,7 +507,6 @@
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
 			and not exists (
 			SELECT 1 FROM
 			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
@@ -517,7 +514,6 @@
 			)
 		</if>
 		<if test="modetype != null  and modetype.equals('45')">
-			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
 			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -537,7 +533,7 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE 1=1
 		<if test="lastStartDate != null">
@@ -552,7 +548,6 @@
 			and mst.PARTY_TYPE2='01'
 		</if>
 		<if test="modetype != null  and modetype.equals('42')">
-			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
 			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
 			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
 			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
@@ -562,7 +557,6 @@
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
 			and not exists (
 			SELECT 1 FROM
 			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
@@ -570,7 +564,6 @@
 			)
 		</if>
 		<if test="modetype != null  and modetype.equals('45')">
-			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
 			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -589,7 +582,7 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE 1=1
 		<if test="startDate != null  ">
@@ -605,7 +598,6 @@
 			and mst.PARTY_TYPE2='01'
 		</if>
 		<if test="modetype != null  and modetype.equals('42')">
-			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
 			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
 			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
 			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
@@ -615,7 +607,6 @@
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
 			and not exists (
 			SELECT 1 FROM
 			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
@@ -623,7 +614,6 @@
 			)
 		</if>
 		<if test="modetype != null  and modetype.equals('45')">
-			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
 			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -642,7 +632,7 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE 1=1
 		<if test="lastStartDate != null">
@@ -657,7 +647,6 @@
 			and mst.PARTY_TYPE2='01'
 		</if>
 		<if test="modetype != null  and modetype.equals('42')">
-			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
 			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
 			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
 			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
@@ -667,7 +656,6 @@
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
 			and not exists (
 			SELECT 1 FROM
 			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
@@ -675,7 +663,6 @@
 			)
 		</if>
 		<if test="modetype != null  and modetype.equals('45')">
-			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
 			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -695,7 +682,7 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE 1=1
 		<if test="startDate != null  ">
@@ -709,7 +696,6 @@
 			and mst.PARTY_TYPE2='01'
 		</if>
 		<if test="modetype != null  and modetype.equals('42')">
-			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
 			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
 			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
 			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
@@ -719,7 +705,6 @@
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
 			and not exists (
 			SELECT 1 FROM
 			 SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
@@ -727,7 +712,6 @@
 			)
 		</if>
 		<if test="modetype != null  and modetype.equals('45')">
-			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
 			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -747,7 +731,7 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE 1=1
 		 <if test="lastStartDate != null">
@@ -761,7 +745,6 @@
 			and mst.PARTY_TYPE2='01'
 		</if>
 		<if test="modetype != null  and modetype.equals('42')">
-			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
 			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
 			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
 			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
@@ -771,7 +754,6 @@
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
 			and not exists (
 			SELECT 1 FROM
 			SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
@@ -779,7 +761,6 @@
 			)
 		</if>
 		<if test="modetype != null  and modetype.equals('45')">
-			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
 			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
@@ -790,14 +771,13 @@
 		select REPLACE(group_concat(t.remark),',','、') remark from
 		(
 		select
-		/*t1.asset_name||'+'||to_char(round(t1.balance/10000,2)) AS remark,*/
 		concat(concat(t1.asset_name,'+'),round(t1.balance/10000,2)) AS remark,
 		t1.balance as balance,
 		t1.posAmt as posAmt,row_number() over(order by t1.balance  desc) as idx
 		from
 		(select
-		coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ concat(info.mdate-info.vdate,'天回购')
-		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then  concat(info.mdate-info.vdate,'天回购')
+		when info.asset_type2 in ('1107','1901') then  concat(info.mdate-info.vdate,'天拆借') end,
 		info.asset_code,'现金')as asset_name,
 		sum(IFNULL(CMAP.ASSETVALUE_B,0)) as balance,
 		sum(IFNULL(data.pos_amt,0)) as posAmt
@@ -810,7 +790,7 @@
 		left join chb_asset_info info
 		ON cmap.asset_code=info.asset_code
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		<if test="svrischlbtm != null  and svrischlbtm!='' and svrischlbtm.equals('01')">
 			left join chb_assets_basis_data data
 			on cmap.asset_code=data.asset_id
@@ -836,7 +816,6 @@
 			and mst.PARTY_TYPE2='01'
 		</if>
 		<if test="modetype != null  and modetype.equals('42')">
-			/*****1.产能过剩行业：根据系统参数配置，取所属行业属于“产能过剩企业”的机构； 目前暂时只考虑二级行业分类**/
 			and (instr(#{INDUSTRY1, jdbcType=VARCHAR},mst.INDUSTRY) >0
 			or instr(#{INDUSTRY2, jdbcType=VARCHAR},mst.INDUSTRY2) >0
 			or instr(#{INDUSTRY3, jdbcType=VARCHAR},mst.INDUSTRY3) >0
@@ -846,7 +825,6 @@
 			and mst.INDUSTRY in ('04','07','14')
 		</if>
 		<if test="modetype != null  and modetype.equals('44')">
-			/****2.异地业务：根据系统参数配置，取所属省/市非本地的机构.本地字段可多选*/
 			and not exists (
 			SELECT 1 FROM
 			SYS_PARA P where PARA_CODE = 'SVR_LOCAL_AREA'
@@ -854,14 +832,13 @@
 			)
 		</if>
 		<if test="modetype != null  and modetype.equals('45')">
-			/****3.是否股东及其关联方:取市场机构信息中，“是否股东及其关联方”为“是”的机构。*/
 			and mst.IS_SHAREHOLDER_RELATED = '01'
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
 		</if>
-		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then /*info.mdate-info.vdate||'天回购'*/ concat(info.mdate-info.vdate,'天回购')
-		when info.asset_type2 in ('1107','1901') then /*info.mdate-info.vdate||'天拆借'*/ concat(info.mdate-info.vdate,'天拆借') end,
+		group by coalesce(info.asset_name,case when info.asset_type2 in ('1108','1902') then  concat(info.mdate-info.vdate,'天回购')
+		when info.asset_type2 in ('1107','1901') then  concat(info.mdate-info.vdate,'天拆借') end,
 		info.asset_code,'现金')
 		)t1
 		order by t1.balance desc
@@ -885,10 +862,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
 		<if test="rule != null  and rule.equals('local')">
@@ -925,10 +902,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
 		<if test="rule != null  and rule.equals('local')">
@@ -965,10 +942,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="rule != null  and rule.equals('local')">
@@ -1005,10 +982,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="rule != null  and rule.equals('local')">
@@ -1046,10 +1023,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		and INFO.IS_GOVERN_FUND='01'
@@ -1088,10 +1065,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		and INFO.IS_GOVERN_FUND='01'
@@ -1130,10 +1107,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
@@ -1169,10 +1146,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
 		<if test="rule != null  and rule.equals('local')">
 			<if test="provinces!=null and provinces.size>0">
@@ -1214,10 +1191,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
 		<if test="org != null  and org!=''">
@@ -1236,10 +1213,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		and info.asset_type2 in  ('1101','1110','1109','1111','1102','1112','1113','1114','1115','1116','1117')
 
@@ -1259,10 +1236,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 
@@ -1282,10 +1259,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('2101', '1211','1212','1213','2202', '2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1299')
 		<if test="org != null  and org!=''">
@@ -1306,10 +1283,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		and INFO.IS_GOVERN_FUND='01'
@@ -1331,10 +1308,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND mst.province IS NOT NULL
 		AND INFO.ASSET_TYPE2 IN ('1106', '2401', '1303', '2403','2402','2499')
 		and INFO.IS_GOVERN_FUND='01'
@@ -1356,10 +1333,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1378,10 +1355,10 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		and coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id) is not null
+		and coalesce(info.chb_issuer_id,info.manager_id,info.financie) is not null
 		AND INFO.ASSET_TYPE2 IN ('1002', '1003', '1004', '1005','1007','1301','1399','2617','2501','2502','1305')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1406,9 +1383,9 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		WHERE CMAP.STARTDATE = #{startDate, jdbcType = DATE}
-		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
+		AND mst.INDUSTRY IS NOT NULL and  mst.INDUSTRY !='10'
 		and info.asset_type2 in  ('1113', '1114', '1115')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -1426,9 +1403,9 @@
 		LEFT JOIN CHB_ASSET_INFO INFO
 		ON CMAP.ASSET_CODE = INFO.ASSET_CODE
 		left join mst_customer_info_add mst
-		on coalesce(info.chb_issuer_id,info.chb_manager_id,info.chb_financier_id)=mst.customer_id
+		on coalesce(info.chb_issuer_id,info.manager_id,info.financie)=mst.customer_id
 		WHERE CMAP.STARTDATE = #{lastStartDate, jdbcType = DATE}
-		AND mst.INDUSTRY IS NOT NULL　and  mst.INDUSTRY !='10'
+		AND mst.INDUSTRY IS NOT NULL and  mst.INDUSTRY !='10'
 		and info.asset_type2 in  ('1113', '1114', '1115')
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}

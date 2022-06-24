@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="MstCalendarType004.xlsx" name="交易日历明细信息一览">
-    <Worksheet javaBean="com.joyintech.tams.invest.basicdata.mstcalendartype.dto.MstCalendarType001Dto">
-        <Row>
-            <Cell order="1" name="日期">cDate</Cell>
-            <Cell order="2" name="节假日标志">isHoliday</Cell>
-        </Row>
-    </Worksheet>
-</Workbook>

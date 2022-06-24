@@ -2,21 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.reportpower.dao.ReportMenuPowerConfig001Mapper_mysql">
 	<select id="queryPageList" resultType="com.joyintech.service.disclosure.information.reportpower.dto.ReportMenuPowerConfig001Dto">
-		select reportName,roleName,repId from (select
+		select reportName,roleName,repId from (select 
 		I.REPORT_NAME reportName,
 		group_concat(P.ROLE_NAME order by I.REP_ID ,I.REPORT_NAME, I.UPDATE_TIME separator ',')  AS roleName,
 		I.REP_ID  repId,I.UPDATE_TIME
 		from
-		rep_info I
-		left join
-		rep_power P
-		on P.REPORT_ID=I.REP_ID
-		where 1=1
-		<if test="reportName != null and reportName != ''">
+        rep_info I 
+		left join 
+        rep_power P
+        on P.REPORT_ID=I.REP_ID 
+        where 1=1 
+        <if test="reportName != null and reportName != ''">
 			AND REPORT_NAME LIKE concat_ws('', '%', #{reportName,jdbcType=VARCHAR}, '%')
 		</if>
 		AND I.REPORT_TYPE='Y'
-		group by
-		I.REP_ID , I.REPORT_NAME,I.UPDATE_TIME)temp order by temp.UPDATE_TIME desc
+        group by 
+        I.REP_ID , I.REPORT_NAME,I.UPDATE_TIME)temp order by temp.UPDATE_TIME desc
 	</select>
 </mapper>

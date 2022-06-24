@@ -31,7 +31,9 @@ public class SalerRewPenaInfo002Service extends BaseService{
             SalerRewPenaInfoDto infoDto = new SalerRewPenaInfoDto();
             List<SalerRewPenaInfoDto> listSalerErrordata = chbSalerRewPenaInfoMapper.selectErroDetail(param);
             if (listSalerErrordata != null && listSalerErrordata.size() > 0) {
-                RewPenaInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, listSalerErrordata.get(0));
+                SalerRewPenaInfoDto salerRewPenaInfoDto = listSalerErrordata.get(0);
+                RewPenaInfoErrdataConvertUtil.errdataAssetInfoConvert(infoDto, salerRewPenaInfoDto);
+                infoDto.setSalerRewPenaNo(salerRewPenaInfoDto.getSalerRewPenaNo());
                 infoDto.setErroOrInfo("erro");
             }
             return infoDto;

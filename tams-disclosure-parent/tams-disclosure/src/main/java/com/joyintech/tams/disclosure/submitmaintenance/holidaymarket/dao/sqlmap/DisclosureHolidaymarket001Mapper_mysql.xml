@@ -22,6 +22,45 @@
 		</where>
 		ORDER BY A.BUSI_DATE
 	</select>
+
+	<insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.submitmaintenance.holidaymarket.dto.DisclosureHolidaymarket001Dto" >
+		insert into CHB_MKT_HOLIDAY
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="busiDate != null" >
+				BUSI_DATE,
+			</if>
+			<if test="marketCode != null" >
+				MARKET_CODE,
+			</if>
+			<if test="isHoliday != null" >
+				IS_HOLIDAY,
+			</if>
+			<if test="deptCode != null" >
+				DEPT_CODE,
+			</if>
+			<if test="status != null" >
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="busiDate != null" >
+				#{busiDate,jdbcType=DATE},
+			</if>
+			<if test="marketCode != null" >
+				#{marketCode,jdbcType=VARCHAR},
+			</if>
+			<if test="isHoliday != null" >
+				#{isHoliday,jdbcType=VARCHAR},
+			</if>
+			<if test="deptCode != null" >
+				#{deptCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
 	<select id="isNotHoliday" resultType="com.joyintech.tams.disclosure.submitmaintenance.holidaymarket.dto.DisclosureHolidaymarket001Dto" >
 		SELECT
 		A.BUSI_DATE busiDate,
@@ -39,19 +78,19 @@
 	<select id="getChbDeadline" resultType="com.joyintech.tams.disclosure.submitmaintenance.holidaymarket.dto.DisclosureHolidaymarket001Dto" >
 		select deadline.* from(
 		SELECT
-		LIMIT num,
+		@rownum:=@rownum+1 num,
 		A.BUSI_DATE busiDate,
 		A.MARKET_CODE marketCode,
 		A.IS_HOLIDAY isHoliday,
 		A.STATUS status,
 		A.DEPT_CODE deptCode
-		FROM CHB_MKT_HOLIDAY A
+		FROM (SELECT @rownum:=0) r,CHB_MKT_HOLIDAY A
 		<where>
 			<if test="type !=null and type == '01'.toString()">
-				A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+				A.BUSI_DATE &lt; STR_TO_DATE(#{holidayDate},&apos;%Y-%m-%d&apos;)
 			</if>
 			<if test="type !=null and type == '02'.toString()">
-				A.BUSI_DATE &gt; STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+				A.BUSI_DATE &gt; STR_TO_DATE(#{holidayDate},&apos;%Y-%m-%d&apos;)
 			</if>
 			AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
 			AND A.STATUS = 'E'
@@ -69,19 +108,19 @@
 	<select id="getChbDeadlineZero" resultType="com.joyintech.tams.disclosure.submitmaintenance.holidaymarket.dto.DisclosureHolidaymarket001Dto" >
 		select deadline.* from(
 		SELECT
-		LIMIT num,
+		@rownum:=@rownum+1 num,
 		A.BUSI_DATE busiDate,
 		A.MARKET_CODE marketCode,
 		A.IS_HOLIDAY isHoliday,
 		A.STATUS status,
 		A.DEPT_CODE deptCode
-		FROM CHB_MKT_HOLIDAY A
+		FROM (SELECT @rownum:=0) r,CHB_MKT_HOLIDAY A
 		<where>
 			<if test="type !=null and type == '01'.toString()">
-				A.BUSI_DATE &lt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+				A.BUSI_DATE &lt;= STR_TO_DATE(#{holidayDate},&apos;%Y-%m-%d&apos;)
 			</if>
 			<if test="type !=null and type == '02'.toString()">
-				A.BUSI_DATE &gt;= STR_TO_DATE(#{holidayDate},'%Y-%m-%d')
+				A.BUSI_DATE &gt;= STR_TO_DATE(#{holidayDate},&apos;%Y-%m-%d&apos;)
 			</if>
 			AND A.MARKET_CODE = #{marketCode,jdbcType=VARCHAR}
 			AND A.STATUS = 'E'
@@ -96,59 +135,65 @@
 		)deadline
 		where num = 1
 	</select>
-	<insert id="setDateByType">
-		MERGE INTO CHB_MKT_HOLIDAY T
-		USING (
+
+	<update id="setDateByType">
+		UPDATE CHB_MKT_HOLIDAY as T,
+		(
+		select
+		BUSI_DATE,
+		MARKET_CODE
+		from
+		(
+		select TEMP.* from
+		(
 		<foreach collection="checkDateList" item="item" index="index" separator="union" >
 			SELECT
 			#{item,jdbcType=DATE} AS BUSI_DATE,
 			#{marketCalendarType} AS MARKET_CODE
 			FROM DUAL
-		</foreach>) T1
-		ON (T1.BUSI_DATE = T.BUSI_DATE AND T1.MARKET_CODE = T.MARKET_CODE)
-		<!-- /*数据存在*/ -->
-		WHEN MATCHED THEN
-		UPDATE SET T.IS_HOLIDAY = #{isHoliday}
-		WHEN NOT MATCHED THEN
-		INSERT
-		<!--(BUSI_DATE,MARKET_CODE,IS_HOLIDAY,STATUS,DEPT_CODE,CREATE_USER,CREATE_TIME)
-        VALUES
-       (T1.BUSI_DATE,#{marketCalendarType},#{isHoliday},'E',#{deptCode},#{userId},NOW())-->
-		<trim prefix="(" suffix=")" suffixOverrides="," >
-			BUSI_DATE,
-			<if test="marketCalendarType != null and marketCalendarType != ''" >
-				MARKET_CODE,
-			</if>
-			<if test="isHoliday != null" >
-				IS_HOLIDAY,
-			</if>
-			<if test="deptCode != null" >
-				DEPT_CODE,
-			</if>
-			<if test="status != null" >
-				STATUS,CREATE_TIME,
-			</if>
-			<if test="userId != null" >
-				CREATE_USER
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides="," >
-			T1.BUSI_DATE,
-			<if test="marketCalendarType != null and marketCalendarType != ''" >
-				#{marketCalendarType,jdbcType=VARCHAR},
-			</if>
-			<if test="isHoliday != null" >
-				#{isHoliday,jdbcType=VARCHAR},
-			</if>
-			<if test="deptCode != null" >
-				#{deptCode,jdbcType=VARCHAR},
-			</if>
-			<if test="status != null" >
-				#{status,jdbcType=VARCHAR},NOW(),
-			</if>
-			<if test="userId != null" >
-				#{userId,jdbcType=VARCHAR},
-			</if>
-		</trim>
-	</insert>
+		</foreach>
+		) TEMP
+		) de
+		) AS T1
+		set
+		T.IS_HOLIDAY = #{isHoliday}
+		where
+		T1.BUSI_DATE = T.BUSI_DATE AND T1.MARKET_CODE = T.MARKET_CODE;
+
+		insert into CHB_MKT_HOLIDAY(
+		BUSI_DATE,
+		<if test="marketCalendarType != null and marketCalendarType != ''" >
+			MARKET_CODE,
+		</if>
+		<if test="isHoliday != null" >
+			IS_HOLIDAY,
+		</if>
+		<if test="deptCode != null" >
+			DEPT_CODE,
+		</if>
+		<if test="status != null" >
+			STATUS,CREATE_TIME,
+		</if>
+		<if test="userId != null" >
+			CREATE_USER
+		</if>
+		)
+		select
+		BUSI_DATE,
+		MARKET_CODE
+		from(
+		select TEMP.* from
+		(
+		<foreach collection="checkDateList" item="item" index="index" separator="union" >
+			SELECT
+			#{item,jdbcType=DATE} AS BUSI_DATE,
+			#{marketCalendarType} AS MARKET_CODE
+			FROM DUAL
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_MKT_HOLIDAY CII
+		where CII.BUSI_DATE = TEMP.BUSI_DATE
+		AND CII.MARKET_CODE = TEMP.MARKET_CODE
+		)
+		) de ;
+	</update>
 </mapper>

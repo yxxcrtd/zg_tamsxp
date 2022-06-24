@@ -53,7 +53,7 @@ public class ChbPrdresistCode extends ChbPrdresistCodeKey {
     
     private String newProdId;
     
-    
+    private String prodInsId;
 
 	public String getNewProdId() {
 		return newProdId;
@@ -200,5 +200,12 @@ public class ChbPrdresistCode extends ChbPrdresistCodeKey {
 	public void setOperateMode(String operateMode) {
 		this.operateMode = operateMode;
 	}
-    
+
+    public String getProdInsId() {
+        return prodInsId;
+    }
+
+    public void setProdInsId(String prodInsId) {
+        this.prodInsId = prodInsId;
+    }
 }

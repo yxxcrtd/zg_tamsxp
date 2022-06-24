@@ -121,20 +121,14 @@
             SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>
 
-    <update id="updateChbEmployeeInfoSubSubmitStatus">
-        update
-            CHB_EMPLOYEE_INFO_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
     <select id="querySubDataStatusBySumitSeq" resultType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto">
         SELECT
         STATUS status,
         SEND_STATUS sendStatus,
-        SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
+        case when
+        length(trim(SUBMIT_FEEDBACK_STATUS))<![CDATA[<]]>1
+        then null else SUBMIT_FEEDBACK_STATUS
+        end submitFeedbackStatus
         FROM
         ${tableName}
         WHERE
@@ -145,86 +139,5 @@
             #{item,jdbcType=VARCHAR}
         </foreach>
     </select>
-
-    <update id="updateChbAssetInfoSubSubmitStatus">
-        update
-            CHB_ASSET_INFO_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbInvestTradeSubSubmitStatus">
-        update
-            CHB_INVEST_TRADE_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbBottomAstPosSubSubmitStatus">
-        update
-            CHB_BOT_AST_POS_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbPrdEndSubSubmitStatus">
-        update
-            CHB_PRD_END_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbPrdDealSubSubmitStatus">
-        update
-            CHB_PRD_DEAL_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbPrdRaisetotSubSubmitStatus">
-        update
-            CHB_PRD_RAISETOT_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbPrdDeclareSubSubmitStatus">
-        update
-            CHB_PRD_DECLARE_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbPrdIssueSubSubmitStatus">
-        update
-            CHB_PRD_ISSUE_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
-
-    <update id="updateChbAssetValSubSubmitStatus">
-        update
-            CHB_AST_VAL_SUB
-        set
-            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
-        WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
-    </update>
 
 </mapper>

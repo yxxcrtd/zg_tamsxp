@@ -3,9 +3,9 @@
 	<Worksheet javaBean="com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub">
 		<Row>
 			<Cell order="1" name="数据状态">statusStr</Cell>
-			<Cell order="2" name="数据日期">statusDate</Cell>
+			<Cell order="2" name="数据日期">statusDateStr</Cell>
 			<Cell order="3" name="报送状态">sendStatusStr</Cell>
-			<Cell order="4" name="报送日期">submitTime</Cell>
+			<Cell order="4" name="报送日期">submitTimeStr</Cell>
 			<Cell order="5" name="报送截止日">pbcSubmitDeadlineStr</Cell>
 			<Cell order="6" name="反馈状态">submitFeedbackStatusStr</Cell>
 			<Cell order="7" name="产品代码">pbcProdIdShow</Cell>

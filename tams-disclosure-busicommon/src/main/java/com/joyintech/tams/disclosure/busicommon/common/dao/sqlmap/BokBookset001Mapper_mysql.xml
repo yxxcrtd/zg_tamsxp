@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.common.dao.BokBookset001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.busicommon.common.dto.BokBookset" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_NAME" property="booksetName" jdbcType="VARCHAR" />
+        <result column="BOOKSET_FULLNAME" property="booksetFullname" jdbcType="VARCHAR" />
+        <result column="BOOKSET_TYPE" property="booksetType" jdbcType="VARCHAR" />
+        <result column="ACCT_MODE" property="acctMode" jdbcType="VARCHAR" />
+        <result column="BOK_SPEC_MODE" property="bokSpecMode" jdbcType="VARCHAR" />
+        <result column="ACCT_SUBJECT_ID" property="acctSubjectId" jdbcType="VARCHAR" />
+        <result column="ACCT_SUBJECT_TYPE" property="acctSubjectType" jdbcType="VARCHAR" />
+        <result column="STANDARD_CCY" property="standardCcy" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID_TMPL" property="booksetIdTmpl" jdbcType="VARCHAR" />
+        <result column="ACCT_STANDARD" property="acctStandard" jdbcType="VARCHAR" />
+        <result column="START_DATE" property="startDate" jdbcType="DATE" />
+        <result column="END_DATE" property="endDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, BOOKSET_NAME BOOKSET_NAME, BOOKSET_FULLNAME BOOKSET_FULLNAME,
+        BOOKSET_TYPE BOOKSET_TYPE, ACCT_MODE ACCT_MODE, BOK_SPEC_MODE BOK_SPEC_MODE, ACCT_SUBJECT_ID ACCT_SUBJECT_ID,
+        ACCT_SUBJECT_TYPE ACCT_SUBJECT_TYPE, STANDARD_CCY STANDARD_CCY, BOOKSET_ID_TMPL BOOKSET_ID_TMPL,
+        ACCT_STANDARD ACCT_STANDARD, START_DATE START_DATE, END_DATE END_DATE, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.BokBookset001Mapper.Base_Column_List" />
+        from BOK_BOOKSET
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.BokBookset001Mapper.Base_Column_List" />
+        from BOK_BOOKSET
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.BokBookset001Mapper.Base_Column_List" />
+        from BOK_BOOKSET
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_BOOKSET
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBookset" >
+        insert into BOK_BOOKSET (BOOKSET_ID, BOOKSET_NAME, BOOKSET_FULLNAME,
+            BOOKSET_TYPE, ACCT_MODE, BOK_SPEC_MODE,
+            ACCT_SUBJECT_ID, ACCT_SUBJECT_TYPE, STANDARD_CCY,
+            BOOKSET_ID_TMPL, ACCT_STANDARD, START_DATE,
+            END_DATE, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{booksetId,jdbcType=VARCHAR}, #{booksetName,jdbcType=VARCHAR}, #{booksetFullname,jdbcType=VARCHAR},
+            #{booksetType,jdbcType=VARCHAR}, #{acctMode,jdbcType=VARCHAR}, #{bokSpecMode,jdbcType=VARCHAR},
+            #{acctSubjectId,jdbcType=VARCHAR}, #{acctSubjectType,jdbcType=VARCHAR}, #{standardCcy,jdbcType=VARCHAR},
+            #{booksetIdTmpl,jdbcType=VARCHAR}, #{acctStandard,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE},
+            #{endDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBookset" >
+        insert into BOK_BOOKSET
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="booksetName != null" >
+                BOOKSET_NAME,
+            </if>
+            <if test="booksetFullname != null" >
+                BOOKSET_FULLNAME,
+            </if>
+            <if test="booksetType != null" >
+                BOOKSET_TYPE,
+            </if>
+            <if test="acctMode != null" >
+                ACCT_MODE,
+            </if>
+            <if test="bokSpecMode != null" >
+                BOK_SPEC_MODE,
+            </if>
+            <if test="acctSubjectId != null" >
+                ACCT_SUBJECT_ID,
+            </if>
+            <if test="acctSubjectType != null" >
+                ACCT_SUBJECT_TYPE,
+            </if>
+            <if test="standardCcy != null" >
+                STANDARD_CCY,
+            </if>
+            <if test="booksetIdTmpl != null" >
+                BOOKSET_ID_TMPL,
+            </if>
+            <if test="acctStandard != null" >
+                ACCT_STANDARD,
+            </if>
+            <if test="startDate != null" >
+                START_DATE,
+            </if>
+            <if test="endDate != null" >
+                END_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetName != null" >
+                #{booksetName,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetFullname != null" >
+                #{booksetFullname,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetType != null" >
+                #{booksetType,jdbcType=VARCHAR},
+            </if>
+            <if test="acctMode != null" >
+                #{acctMode,jdbcType=VARCHAR},
+            </if>
+            <if test="bokSpecMode != null" >
+                #{bokSpecMode,jdbcType=VARCHAR},
+            </if>
+            <if test="acctSubjectId != null" >
+                #{acctSubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="acctSubjectType != null" >
+                #{acctSubjectType,jdbcType=VARCHAR},
+            </if>
+            <if test="standardCcy != null" >
+                #{standardCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetIdTmpl != null" >
+                #{booksetIdTmpl,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStandard != null" >
+                #{acctStandard,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBookset" >
+        insert into BOK_BOOKSET(BOOKSET_ID, BOOKSET_NAME, BOOKSET_FULLNAME, BOOKSET_TYPE,
+        ACCT_MODE, BOK_SPEC_MODE, ACCT_SUBJECT_ID, ACCT_SUBJECT_TYPE, STANDARD_CCY, BOOKSET_ID_TMPL,
+        ACCT_STANDARD, START_DATE, END_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select BOOKSET_ID, BOOKSET_NAME, BOOKSET_FULLNAME, BOOKSET_TYPE,
+            ACCT_MODE, BOK_SPEC_MODE, ACCT_SUBJECT_ID, ACCT_SUBJECT_TYPE, STANDARD_CCY, BOOKSET_ID_TMPL,
+            ACCT_STANDARD, START_DATE, END_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_BOOKSET
+             where 1 = 1 and BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBookset" >
+        update BOK_BOOKSET
+        <set >
+            <if test="booksetName != null" >
+                BOOKSET_NAME = #{booksetName,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetFullname != null" >
+                BOOKSET_FULLNAME = #{booksetFullname,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetType != null" >
+                BOOKSET_TYPE = #{booksetType,jdbcType=VARCHAR},
+            </if>
+            <if test="acctMode != null" >
+                ACCT_MODE = #{acctMode,jdbcType=VARCHAR},
+            </if>
+            <if test="bokSpecMode != null" >
+                BOK_SPEC_MODE = #{bokSpecMode,jdbcType=VARCHAR},
+            </if>
+            <if test="acctSubjectId != null" >
+                ACCT_SUBJECT_ID = #{acctSubjectId,jdbcType=VARCHAR},
+            </if>
+            <if test="acctSubjectType != null" >
+                ACCT_SUBJECT_TYPE = #{acctSubjectType,jdbcType=VARCHAR},
+            </if>
+            <if test="standardCcy != null" >
+                STANDARD_CCY = #{standardCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetIdTmpl != null" >
+                BOOKSET_ID_TMPL = #{booksetIdTmpl,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStandard != null" >
+                ACCT_STANDARD = #{acctStandard,jdbcType=VARCHAR},
+            </if>
+            <if test="startDate != null" >
+                START_DATE = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null" >
+                END_DATE = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBookset" >
+        update BOK_BOOKSET
+        set BOOKSET_NAME = #{booksetName,jdbcType=VARCHAR},
+            BOOKSET_FULLNAME = #{booksetFullname,jdbcType=VARCHAR},
+            BOOKSET_TYPE = #{booksetType,jdbcType=VARCHAR},
+            ACCT_MODE = #{acctMode,jdbcType=VARCHAR},
+            BOK_SPEC_MODE = #{bokSpecMode,jdbcType=VARCHAR},
+            ACCT_SUBJECT_ID = #{acctSubjectId,jdbcType=VARCHAR},
+            ACCT_SUBJECT_TYPE = #{acctSubjectType,jdbcType=VARCHAR},
+            STANDARD_CCY = #{standardCcy,jdbcType=VARCHAR},
+            BOOKSET_ID_TMPL = #{booksetIdTmpl,jdbcType=VARCHAR},
+            ACCT_STANDARD = #{acctStandard,jdbcType=VARCHAR},
+            START_DATE = #{startDate,jdbcType=DATE},
+            END_DATE = #{endDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+    </update>
+</mapper>

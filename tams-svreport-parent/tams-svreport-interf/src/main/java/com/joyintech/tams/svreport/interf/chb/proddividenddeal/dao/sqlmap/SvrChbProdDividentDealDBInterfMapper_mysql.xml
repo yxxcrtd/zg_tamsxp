@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.proddividenddeal.dao.SvrChbProdDividentDealDBInterfMapper_mysql">
-  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal" >
         <result column="SEQNO" property="seqno" jdbcType="CHAR" />
         <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
         <result column="FPROD_ID" property="fprodId" jdbcType="VARCHAR" />
@@ -23,182 +23,295 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-    </resultMap> 
-	
-  
-  <select id="selectByValuedate"  parameterType="java.util.Date" resultMap="BaseResultMap">
-  	select A.TOTLE_TRADE_ID as TRADE_ID, /*交易编号*/
-       null as FPROD_ID, /*父产品代码*/
-       C.FINPROD_MARKET_ID PROD_ID, /*产品代码*/
-       (case A.PS when  'C10' then '05' else '04' end) as TRADE_TYPE, /*交易方向*/
-       A.TRADE_DATE as REG_DATE, /*计息结束日*/
-       A.TRADE_DATE as SETTDATE_DATE, /*确认日期*/
-       A.SETTLE_DATE as PAY_DATE, /*现金流发生日期*/
-       (case A.PS when  'C10' then A.SHARE_AMT else 0 end) as TRADE_QTY, /*红利再投份额*/
-       (case A.PS when  'C10' then A.TRADE_AMT else 0 end) as TRADE_AMT, /*红利再投金额*/
-       (case A.PS when  'C9' then A.TRADE_AMT else 0 end) as INT_AMT, /*现金分红金额*/
-       B.TDY_SHARE_AMT  REG_TRADE_QTY, /*权益登记日份额*/
-       (case REVDL.UPDATE_TIME when  NULL then 'E' else 'D' end)status,
-       A.REMARK as REMARK, /*备注*/
-       REVDL.CREATE_TIME REV_DATE /*撤销日*/
-  from TRD_FIN_PRODUCT_DEAL_TOTAL A
- inner join FIN_PRODUCT C
-    on A.FINPROD_ID = C.FINPROD_ID
-   and C.PROFIT_TYPE = '03' /*货币型产品*/
-  left join BOK_POSITION_PRD B
-    ON A.FINPROD_ID = B.FINPROD_ID
-   AND B.CDATE = A.TRADE_DATE - 1
-  LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL REVDL
-    ON A.TOTLE_TRADE_ID = REVDL.P_TRADE_ID
- where C.FINPROD_TYPE2 = 'F16'
-   and A.PS in ('C9', 'C10')
-   and ifnull(A.p_trade_id, 'NOREV') = 'NOREV'
-	    <![CDATA[AND( ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+    </resultMap>
+
+
+    <select id="selectByValuedate"  parameterType="java.util.Date" resultMap="BaseResultMap">
+        select A.TOTLE_TRADE_ID as TRADE_ID, /*交易编号*/
+        null as FPROD_ID, /*父产品代码*/
+        C.FINPROD_MARKET_ID PROD_ID, /*产品代码*/
+        (case A.PS when  'C10' then '05' else '04' end) as TRADE_TYPE, /*交易方向*/
+        A.TRADE_DATE as REG_DATE, /*计息结束日*/
+        A.TRADE_DATE as SETTDATE_DATE, /*确认日期*/
+        A.SETTLE_DATE as PAY_DATE, /*现金流发生日期*/
+        (case A.PS when  'C10' then A.SHARE_AMT else 0 end) as TRADE_QTY, /*红利再投份额*/
+        (case A.PS when  'C10' then A.TRADE_AMT else 0 end) as TRADE_AMT, /*红利再投金额*/
+        (case A.PS when  'C9' then A.TRADE_AMT else 0 end) as INT_AMT, /*现金分红金额*/
+        B.TDY_SHARE_AMT  REG_TRADE_QTY, /*权益登记日份额*/
+        (case REVDL.UPDATE_TIME when  NULL then 'E' else 'D' end)status,
+        A.REMARK as REMARK, /*备注*/
+        REVDL.CREATE_TIME REV_DATE /*撤销日*/
+        from TRD_FIN_PRODUCT_DEAL_TOTAL A
+        inner join FIN_PRODUCT C
+        on A.FINPROD_ID = C.FINPROD_ID
+        and C.PROFIT_TYPE = '03' /*货币型产品*/
+        left join BOK_POSITION_PRD B
+        ON A.FINPROD_ID = B.FINPROD_ID
+        AND B.CDATE = DATE_ADD(A.TRADE_DATE,INTERVAL -1 DAY)
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL REVDL
+        ON A.TOTLE_TRADE_ID = REVDL.P_TRADE_ID
+        where C.FINPROD_TYPE2 = 'F16'
+        and A.PS in ('C9', 'C10')
+        and ifnull(A.p_trade_id, 'NOREV') = 'NOREV'
+        <![CDATA[AND( ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(C.UPDATE_TIME,C.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(B.UPDATE_TIME,B.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
         <![CDATA[or ifnull(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
-	union all		
-	SELECT D.TRADE_ID TRADE_ID, /*交易编号*/
-       (case B.FINPROD_TYPE2 when  'F24' then prd2.FINPROD_MARKET_ID else '' end) FPROD_ID, /*父产品代码*/
-       (case B.FINPROD_TYPE2 when  'F24' then B.finprod_id else B.FINPROD_MARKET_ID end) PROD_ID, /*产品代码*/
-       (case D.PS when  'C10' then '05' else '04' end) as TRADE_TYPE, /*交易方向*/
-       A.REG_DATE REG_DATE, /*权益登记日*/
-       D.TRADE_DATE SETTDATE_DATE, /*确认日期*/
-       D.SETTLE_DATE PAY_DATE, /*现金流发生日期*/
-       (case D.PS when  'C10' then D.SHARE_AMT else 0 end) as TRADE_QTY, /*红利再投份额*/
-       (case D.PS when  'C10' then D.TRADE_AMT else 0 end) as TRADE_AMT, /*红利再投金额*/
-       (case D.PS when  'C9' then D.TRADE_AMT else 0 end) as INT_AMT, /*现金分红金额*/
-       PRD.TDY_SHARE_AMT REG_TRADE_QTY, /*权益登记日份额*/
-       (case REVDL.UPDATE_TIME when  NULL then 'E' else 'D' end) status, /*有效状态*/
-       D.REMARK remark,
-       REVDL.CREATE_TIME REV_DATE /*撤销日*/
-  FROM TRD_PRODUCT_DEAL D
- INNER JOIN FIN_PRODUCT B
-    ON D.FINPROD_ID = B.FINPROD_ID
-  LEFT JOIN TRD_PRODUCT_DEAL D1
-    ON D.B_TRADE_ID = D1.TRADE_ID
-  LEFT JOIN PRD_BONUS_PLAN_N A
-    ON D1.B_TRADE_ID = A.BONUS_PLAN_ID
-  LEFT JOIN TRD_PRODUCT_DEAL REVDL
-    ON D.TRADE_ID = REVDL.P_TRADE_ID
-  LEFT JOIN BOK_POSITION_PRD PRD
-    ON PRD.FINPROD_ID = D.FINPROD_ID
-   AND PRD.CDATE = A.REG_DATE
-   LEFT JOIN FIN_PRODUCT prd2
-   on prd2.FINPROD_ID = B.P_FINPROD_ID
- WHERE D.PS IN ('C9', 'C10')
-   AND B.PROFIT_TYPE = '01'
-   and ifnull(D.p_trade_id, 'NOREV') = 'NOREV'
-        <![CDATA[AND( ifnull(D.UPDATE_TIME,D.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-        <![CDATA[or ifnull(B.UPDATE_TIME,B.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-        <![CDATA[or ifnull(D1.UPDATE_TIME,D1.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-        <![CDATA[or ifnull(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-        <![CDATA[or ifnull(PRD.UPDATE_TIME,PRD.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
-        <![CDATA[or ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>
-  </select>
- 
-  
-<delete id="deleteData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal">
-  	delete from CHB_PRD_BONUS_DEAL 
-  	where  1=1
-  	  <if test="settdateDate != null" >
-       and settdateDate = #{settdateDate,jdbcType=DATE}
-      </if>
-  </delete>
+        union all
+        SELECT D.TRADE_ID TRADE_ID, /*交易编号*/
+        (case B.FINPROD_TYPE2 when  'F24' then prd2.FINPROD_MARKET_ID else '' end) FPROD_ID, /*父产品代码*/
+        (case B.FINPROD_TYPE2 when  'F24' then B.finprod_id else B.FINPROD_MARKET_ID end) PROD_ID, /*产品代码*/
+        (case D.PS when  'C10' then '05' else '04' end) as TRADE_TYPE, /*交易方向*/
 
- <select id="getTableColumnList" resultType="string">
+        DATE_ADD(D.TRADE_DATE,INTERVAL -1 DAY) REG_DATE, /*权益登记日*/
+        D.TRADE_DATE SETTDATE_DATE, /*确认日期*/
+        D.SETTLE_DATE PAY_DATE, /*现金流发生日期*/
+        (case D.PS when  'C10' then D.SHARE_AMT else 0 end) as TRADE_QTY, /*红利再投份额*/
+        (case D.PS when  'C10' then D.TRADE_AMT else 0 end) as TRADE_AMT, /*红利再投金额*/
+        (case D.PS when  'C9' then D.TRADE_AMT else 0 end) as INT_AMT, /*现金分红金额*/
+        PRD.TDY_SHARE_AMT REG_TRADE_QTY, /*权益登记日份额*/
+        (case REVDL.UPDATE_TIME when  NULL then 'E' else 'D' end) status, /*有效状态*/
+        D.REMARK remark,
+        REVDL.CREATE_TIME REV_DATE /*撤销日*/
+        FROM TRD_PRODUCT_DEAL D
+        INNER JOIN FIN_PRODUCT B
+        ON D.FINPROD_ID = B.FINPROD_ID
+        LEFT JOIN TRD_PRODUCT_DEAL D1
+        ON D.B_TRADE_ID = D1.TRADE_ID
+        /* LEFT JOIN PRD_BONUS_PLAN_N A
+        ON D1.B_TRADE_ID = A.BONUS_PLAN_ID*/
+        LEFT JOIN TRD_PRODUCT_DEAL REVDL
+        ON D.TRADE_ID = REVDL.P_TRADE_ID
+        LEFT JOIN BOK_POSITION_PRD PRD
+        ON PRD.FINPROD_ID = D.FINPROD_ID
+        AND PRD.CDATE = DATE_ADD(D.TRADE_DATE,INTERVAL -1 DAY)
+        LEFT JOIN FIN_PRODUCT prd2
+        on prd2.FINPROD_ID = B.P_FINPROD_ID
+        <!--WHERE D.PS IN ('C9', 'C10')
+          AND B.PROFIT_TYPE = '01'
+          and ifnull(D.p_trade_id, 'NOREV') = 'NOREV'
+               <![CDATA[AND( ifnull(D.UPDATE_TIME,D.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+               <![CDATA[or ifnull(B.UPDATE_TIME,B.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+               <![CDATA[or ifnull(D1.UPDATE_TIME,D1.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+               <![CDATA[or ifnull(REVDL.UPDATE_TIME,REVDL.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>
+               <![CDATA[or ifnull(PRD.UPDATE_TIME,PRD.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP}]]>-->
+
+        <!--<![CDATA[or ifnull(A.UPDATE_TIME,A.CREATE_TIME) > #{interfDate,jdbcType=TIMESTAMP})]]>-->
+    </select>
+
+
+    <delete id="deleteData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBonusDeal">
+        delete from CHB_PRD_BONUS_DEAL
+        where  1=1
+        <if test="settdateDate != null" >
+            and settdateDate = #{settdateDate,jdbcType=DATE}
+        </if>
+    </delete>
+
+    <select id="getTableColumnList" resultType="string">
 		select COLUMN_NAME
-		from user_tab_columns
+		from information_schema.`COLUMNS`
 		where Table_Name = #{tableName,jdbcType=VARCHAR}
 	</select>
-	
-	
-	<insert id="insertChbPrdBonusDeal" >
-		MERGE INTO CHB_PRD_BONUS_DEAL CII
-		USING (
-		<foreach collection="newDataList" item="item" open="select * from("
-			close=")" separator="union all">
-			SELECT 
-			#{item.seqno,jdbcType=VARCHAR} SEQNO,
-			#{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
-			#{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
-			#{item.prodId,jdbcType=VARCHAR} PROD_ID,
-			#{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE,
-			#{item.regDate,jdbcType=DATE} REG_DATE,
-			#{item.settdateDate,jdbcType=DATE} SETTDATE_DATE,
-			#{item.payDate,jdbcType=DATE} PAY_DATE,
-			#{item.regTradeQty,jdbcType=DECIMAL} REG_TRADE_QTY,
-			#{item.tradeQty,jdbcType=DECIMAL} TRADE_QTY,
-			#{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT,
-			#{item.intAmt,jdbcType=DECIMAL} INT_AMT,
-			#{item.status,jdbcType=VARCHAR} STATUS,
-			#{item.revDate,jdbcType=DATE} REV_DATE,
-			#{item.remark,jdbcType=VARCHAR} REMARK,
-			#{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			#{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-			#{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-			#{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-			#{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
-			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT		
-			FROM
-			DUAL
-		</foreach>
-		) TEMP
-		<!-- 业务主键匹配 -->
-		ON  (CII.TRADE_ID = TEMP.TRADE_ID)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN UPDATE 
-		SET  
-		     CII.SEQNO = TEMP.SEQNO,
-		     CII.PROD_ID = TEMP.PROD_ID,
-			 CII.FPROD_ID = TEMP.FPROD_ID,
-			 CII.TRADE_TYPE = TEMP.TRADE_TYPE,
-			 CII.SETTDATE_DATE = TEMP.SETTDATE_DATE,
-			 CII.REG_DATE = TEMP.REG_DATE,
-			 CII.PAY_DATE = TEMP.PAY_DATE,
-			 CII.REG_TRADE_QTY = TEMP.REG_TRADE_QTY,
-			 CII.TRADE_QTY = TEMP.TRADE_QTY,
-			 CII.TRADE_AMT = TEMP.TRADE_AMT,
-			 CII.INT_AMT = TEMP.INT_AMT,
-			 CII.STATUS = TEMP.STATUS,
-			 CII.REV_DATE = TEMP.REV_DATE,
-			 CII.REMARK = TEMP.REMARK,
-			 CII.UPDATE_USER = TEMP.UPDATE_USER,
-			 CII.UPDATE_TIME = TEMP.UPDATE_TIME,
-			 CII.CREATE_USER = TEMP.CREATE_USER,
-			 CII.CREATE_TIME = TEMP.CREATE_TIME,
-			 CII.ORG_CODE = TEMP.ORG_CODE,
-			 CII.CREATE_DEPT = TEMP.CREATE_DEPT
-		<!-- 未匹配到这插入 -->
-		WHEN NOT MATCHED THEN INSERT (SEQNO, TRADE_ID,FPROD_ID,  PROD_ID, TRADE_TYPE,REG_DATE, SETTDATE_DATE, 
-			    PAY_DATE, REG_TRADE_QTY, TRADE_QTY,TRADE_AMT, INT_AMT, STATUS, REV_DATE,REMARK,
-			    UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME, 
-			    ORG_CODE, CREATE_DEPT)
-		VALUES( TEMP.SEQNO,
-				 TEMP.TRADE_ID,
-				 TEMP.FPROD_ID,
-				 TEMP.PROD_ID,
-				 TEMP.TRADE_TYPE,
-				 TEMP.REG_DATE,
-				 TEMP.SETTDATE_DATE,
-				 TEMP.PAY_DATE,
-				 TEMP.REG_TRADE_QTY,
-				 TEMP.TRADE_QTY,
-				 TEMP.TRADE_AMT,
-				 TEMP.INT_AMT,
-				 TEMP.STATUS,
-				 TEMP.REV_DATE,
-				 TEMP.REMARK,
-				 TEMP.UPDATE_USER,
-				 TEMP.UPDATE_TIME,
-				 TEMP.CREATE_USER,
-				 TEMP.CREATE_TIME,
-				 TEMP.ORG_CODE,
-				 TEMP.CREATE_DEPT
-				 )
-	</insert>
 
- <delete id="deleteByUpdateTime">
+
+    <insert id="insertChbPrdBonusDeal" >
+        insert into CHB_PRD_BONUS_DEAL(
+        SEQNO,
+        TRADE_ID,
+        FPROD_ID,
+        PROD_ID,
+        TRADE_TYPE,
+        REG_DATE,
+        SETTDATE_DATE,
+        PAY_DATE,
+        REG_TRADE_QTY,
+        TRADE_QTY,
+        TRADE_AMT,
+        INT_AMT,
+        STATUS,
+        REV_DATE,
+        REMARK,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        ORG_CODE,
+        CREATE_DEPT
+        )select
+        SEQNO,
+        TRADE_ID,
+        FPROD_ID,
+        PROD_ID,
+        TRADE_TYPE,
+        REG_DATE,
+        SETTDATE_DATE,
+        PAY_DATE,
+        REG_TRADE_QTY,
+        TRADE_QTY,
+        TRADE_AMT,
+        INT_AMT,
+        STATUS,
+        REV_DATE,
+        REMARK,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        ORG_CODE,
+        CREATE_DEPT
+        from(
+        select
+        TEMP.SEQNO,
+        TEMP.TRADE_ID,
+        TEMP.FPROD_ID,
+        TEMP.PROD_ID,
+        TEMP.TRADE_TYPE,
+        TEMP.REG_DATE,
+        TEMP.SETTDATE_DATE,
+        TEMP.PAY_DATE,
+        TEMP.REG_TRADE_QTY,
+        TEMP.TRADE_QTY,
+        TEMP.TRADE_AMT,
+        TEMP.INT_AMT,
+        TEMP.STATUS,
+        TEMP.REV_DATE,
+        TEMP.REMARK,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.ORG_CODE,
+        TEMP.CREATE_DEPT
+        from(
+        <foreach collection="newDataList" item="item"  separator="union all">
+            SELECT
+            #{item.seqno,jdbcType=VARCHAR} SEQNO,
+            #{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
+            #{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE,
+            #{item.regDate,jdbcType=DATE} REG_DATE,
+            #{item.settdateDate,jdbcType=DATE} SETTDATE_DATE,
+            #{item.payDate,jdbcType=DATE} PAY_DATE,
+            #{item.regTradeQty,jdbcType=DECIMAL} REG_TRADE_QTY,
+            #{item.tradeQty,jdbcType=DECIMAL} TRADE_QTY,
+            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT,
+            #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.revDate,jdbcType=DATE} REV_DATE,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            FROM DUAL
+        </foreach>
+        ) TEMP where not EXISTS (select 1 from CHB_PRD_BONUS_DEAL CII  where CII.TRADE_ID = TEMP.TRADE_ID)
+        ) de ;
+
+        UPDATE  CHB_PRD_BONUS_DEAL as A,
+        (
+        select
+        SEQNO,
+        TRADE_ID,
+        FPROD_ID,
+        PROD_ID,
+        TRADE_TYPE,
+        REG_DATE,
+        SETTDATE_DATE,
+        PAY_DATE,
+        REG_TRADE_QTY,
+        TRADE_QTY,
+        TRADE_AMT,
+        INT_AMT,
+        STATUS,
+        REV_DATE,
+        REMARK,
+        UPDATE_USER,
+        UPDATE_TIME,
+        CREATE_USER,
+        CREATE_TIME,
+        ORG_CODE,
+        CREATE_DEPT
+        from(
+        select
+        TEMP.SEQNO,
+        TEMP.TRADE_ID,
+        TEMP.FPROD_ID,
+        TEMP.PROD_ID,
+        TEMP.TRADE_TYPE,
+        TEMP.REG_DATE,
+        TEMP.SETTDATE_DATE,
+        TEMP.PAY_DATE,
+        TEMP.REG_TRADE_QTY,
+        TEMP.TRADE_QTY,
+        TEMP.TRADE_AMT,
+        TEMP.INT_AMT,
+        TEMP.STATUS,
+        TEMP.REV_DATE,
+        TEMP.REMARK,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.ORG_CODE,
+        TEMP.CREATE_DEPT
+        from(
+        <foreach collection="newDataList" item="item"  separator="union all">
+            SELECT
+            #{item.seqno,jdbcType=VARCHAR} SEQNO,
+            #{item.tradeId,jdbcType=VARCHAR} TRADE_ID,
+            #{item.fprodId,jdbcType=VARCHAR} FPROD_ID,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE,
+            #{item.regDate,jdbcType=DATE} REG_DATE,
+            #{item.settdateDate,jdbcType=DATE} SETTDATE_DATE,
+            #{item.payDate,jdbcType=DATE} PAY_DATE,
+            #{item.regTradeQty,jdbcType=DECIMAL} REG_TRADE_QTY,
+            #{item.tradeQty,jdbcType=DECIMAL} TRADE_QTY,
+            #{item.tradeAmt,jdbcType=DECIMAL} TRADE_AMT,
+            #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.revDate,jdbcType=DATE} REV_DATE,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.orgCode,jdbcType=VARCHAR} ORG_CODE,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT
+            FROM DUAL
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS B
+        set
+        A.PROD_ID = B.PROD_ID,
+        A.FPROD_ID = B.FPROD_ID,
+        A.TRADE_TYPE = B.TRADE_TYPE,
+        A.SETTDATE_DATE = B.SETTDATE_DATE,
+        A.REG_DATE = B.REG_DATE,
+        A.PAY_DATE = B.PAY_DATE,
+        A.REG_TRADE_QTY = B.REG_TRADE_QTY,
+        A.TRADE_QTY = B.TRADE_QTY,
+        A.TRADE_AMT = B.TRADE_AMT,
+        A.INT_AMT = B.INT_AMT,
+        A.STATUS = B.STATUS,
+        A.REV_DATE = B.REV_DATE,
+        A.REMARK = B.REMARK,
+        A.UPDATE_USER = B.UPDATE_USER,
+        A.UPDATE_TIME = B.UPDATE_TIME,
+        A.CREATE_USER = B.CREATE_USER,
+        A.CREATE_TIME = B.CREATE_TIME,
+        A.ORG_CODE = B.ORG_CODE,
+        A.CREATE_DEPT = B.CREATE_DEPT
+        where A.TRADE_ID = B.TRADE_ID ;
+    </insert>
+
+    <delete id="deleteByUpdateTime">
     delete from CHB_PRD_BONUS_DEAL
     where DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
   </delete>

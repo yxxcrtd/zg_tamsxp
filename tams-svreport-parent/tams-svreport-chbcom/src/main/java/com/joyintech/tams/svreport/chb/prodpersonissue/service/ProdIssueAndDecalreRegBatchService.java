@@ -554,10 +554,12 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
         gendto.setYieldHigh(dto.getYieldHigh());
         // 业绩比较基准说明
         gendto.setYieldRemark(dto.getYieldRemark());
-        // 资金托管账号
-        gendto.setBusiAcctNo(dto.getBusiAcctNo());
-        // 资金托管账户
-        gendto.setAcctName(dto.getAcctName());
+         //mod by wangyaning 2022-04-28 GDLCJGBS-417资金托管账号，账户等不属于发行登记报送内容，若存在修改，重新跑批，不应该生成修改未报送的数据 start
+//        // 资金托管账号
+//        gendto.setBusiAcctNo(dto.getBusiAcctNo());
+//        // 资金托管账户
+//        gendto.setAcctName(dto.getAcctName());
+        //mod by wangyaning 2022-04-28 GDLCJGBS-417资金托管账号，账户等不属于发行登记报送内容，若存在修改，重新跑批，不应该生成修改未报送的数据 end
         // add by dubaojun 2020-11-05 五月升级字段比较 end
         return gendto;
     }

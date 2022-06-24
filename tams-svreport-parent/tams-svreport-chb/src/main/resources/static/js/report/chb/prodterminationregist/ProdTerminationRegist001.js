@@ -68,6 +68,7 @@ $(function() {
                           return value;
                       }
                   }},
+              { title: "发行机构代码", field: 'issuePartyId',width:150 , sortField:'issuePartyId'},
               { title: "理财产品代码", field: 'prodId',width:150 , sortField:'prodId'},
               {title: '产品登记编码', field:'prodRegCode', width:150, sortField:'regCode'},
               {title: '理财产品实际终止日期', field:'mdate', width:200,type: 'date', sortField:'mdate'},

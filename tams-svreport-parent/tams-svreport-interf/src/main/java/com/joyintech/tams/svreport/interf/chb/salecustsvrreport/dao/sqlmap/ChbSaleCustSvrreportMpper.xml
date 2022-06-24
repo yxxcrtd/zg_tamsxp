@@ -47,21 +47,19 @@
             #{item.saveAmtRmb ,jdbcType=DECIMAL } SAVE_AMT_RMB,
             #{item.saveQty ,jdbcType=DECIMAL } SAVE_QTY,
             #{item.exchangeRate ,jdbcType=DECIMAL } EXCHANGE_RATE,
-            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE
+            #{item.cusType ,jdbcType=VARCHAR } CUS_TYPE,
+            sysdate  UPDATETIME
             from dual
         </foreach>
         ) TEMP
-        ON (L.FINPROD_ID = TEMP.FINPROD_ID)
+        ON (
+        L.FINPROD_ID = TEMP.FINPROD_ID
+        and L.SENDDATE = TEMP.SENDDATE and L.ISSUEMEMBER = TEMP.ISSUEMEMBER
+        and L.INORABOARD = TEMP.INORABOARD and L.CUS_CODE = TEMP.CUS_CODE
+        and L.AREA_CODE = TEMP.AREA_CODE and L.CCY = TEMP.CCY)
         WHEN MATCHED THEN
         UPDATE
         SET
-        L.SENDDATE = TEMP.SENDDATE,
---         L.FINPROD_ID = TEMP.FINPROD_ID,
-        L.ISSUEMEMBER = TEMP.ISSUEMEMBER,
-        L.INORABOARD = TEMP.INORABOARD,
-        L.CUS_CODE = TEMP.CUS_CODE,
-        L.AREA_CODE = TEMP.AREA_CODE,
-        L.CCY = TEMP.CCY,
         L.PRINAMT = TEMP.PRINAMT,
         L.PRINAMT_RMB = TEMP.PRINAMT_RMB,
         L.PRINAMT_CONFIRM = TEMP.PRINAMT_CONFIRM,
@@ -94,7 +92,9 @@
         L.SAVE_AMT_RMB = TEMP.SAVE_AMT_RMB,
         L.SAVE_QTY = TEMP.SAVE_QTY,
         L.EXCHANGE_RATE = TEMP.EXCHANGE_RATE,
-        L.CUS_TYPE = TEMP.CUS_TYPE
+        L.CUS_TYPE = TEMP.CUS_TYPE,
+        L.UPDATETIME = TEMP.UPDATETIME
+
         WHEN NOT MATCHED THEN
         INSERT (
         SENDDATE,
@@ -136,7 +136,8 @@
         SAVE_AMT_RMB,
         SAVE_QTY,
         EXCHANGE_RATE,
-        CUS_TYPE
+        CUS_TYPE,
+        UPDATETIME
         )
         VALUES(
         TEMP.SENDDATE,
@@ -178,7 +179,8 @@
         TEMP.SAVE_AMT_RMB,
         TEMP.SAVE_QTY,
         TEMP.EXCHANGE_RATE,
-        TEMP.CUS_TYPE
+        TEMP.CUS_TYPE,
+        TEMP.UPDATETIME
         )
     </insert>
 

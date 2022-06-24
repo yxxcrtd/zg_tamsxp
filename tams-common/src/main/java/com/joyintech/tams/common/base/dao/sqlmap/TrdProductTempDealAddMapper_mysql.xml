@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="CUSTOM_CASH_TYPE" property="customCashType" jdbcType="VARCHAR" />
+        <result column="GEN_TYPE" property="genType" jdbcType="VARCHAR" />
+        <result column="PUR_CFM_DATE" property="purCfmDate" jdbcType="DATE" />
+        <result column="RED_CFM_DATE" property="redCfmDate" jdbcType="DATE" />
+        <result column="REG_DATE" property="regDate" jdbcType="DATE" />
+        <result column="REG_DATE_AMT" property="regDateAmt" jdbcType="DECIMAL" />
+        <result column="BONUS_CFM_DATE" property="bonusCfmDate" jdbcType="DATE" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="RED_PROFIT" property="redProfit" jdbcType="DECIMAL" />
+        <result column="RED_COST" property="redCost" jdbcType="DECIMAL" />
+        <result column="MP_FINPROD_ID" property="mpFinprodId" jdbcType="VARCHAR" />
+        <result column="MP_BRANCH" property="mpBranch" jdbcType="DECIMAL" />
+        <result column="DEAL_MODE" property="dealMode" jdbcType="VARCHAR" />
+        <result column="WITH_LOCK_PERIOD" property="withLockPeriod" jdbcType="VARCHAR" />
+        <result column="LOCK_MDATE" property="lockMdate" jdbcType="DATE" />
+        <result column="EXC_DEAL_TYPE" property="excDealType" jdbcType="VARCHAR" />
+        <result column="CUR_PAIR" property="curPair" jdbcType="VARCHAR" />
+        <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
+        <result column="USD_AMT" property="usdAmt" jdbcType="DECIMAL" />
+        <result column="OUR_ROLE" property="ourRole" jdbcType="VARCHAR" />
+        <result column="QUOT_PRE" property="quotPre" jdbcType="DECIMAL" />
+        <result column="PRICED_DATE" property="pricedDate" jdbcType="DATE" />
+        <result column="PRICED_DATE_RATE" property="pricedDateRate" jdbcType="DECIMAL" />
+        <result column="DIF_PAY_AMT" property="difPayAmt" jdbcType="DECIMAL" />
+        <result column="DIF_PAY_CCY" property="difPayCcy" jdbcType="VARCHAR" />
+        <result column="DIF_PS" property="difPs" jdbcType="VARCHAR" />
+        <result column="PURCH_MODLE" property="purchModle" jdbcType="VARCHAR" />
+        <result column="PURCH_TYPE" property="purchType" jdbcType="VARCHAR" />
+        <result column="PURCH_DATE" property="purchDate" jdbcType="DATE" />
+        <result column="PUR_PAY_DATE" property="purPayDate" jdbcType="DATE" />
+        <result column="DEPOSIT_AMT" property="depositAmt" jdbcType="DECIMAL" />
+        <result column="FIRST_UNIT_CPRICE3" property="firstUnitCprice3" jdbcType="DECIMAL" />
+        <result column="EXP_CON_VALUE" property="expConValue" jdbcType="DECIMAL" />
+        <result column="PREB" property="preb" jdbcType="DECIMAL" />
+        <result column="PREC" property="prec" jdbcType="DECIMAL" />
+        <result column="SPO_SHARE_NUM" property="spoShareNum" jdbcType="DECIMAL" />
+        <result column="DEVIATION" property="deviation" jdbcType="DECIMAL" />
+        <result column="ASSET_RECOMMAND_ORG" property="assetRecommandOrg" jdbcType="VARCHAR" />
+        <result column="TERMINATE_RATE" property="terminateRate" jdbcType="DECIMAL" />
+        <result column="PENALTY_INTAMT" property="penaltyIntamt" jdbcType="DECIMAL" />
+        <result column="IS_CASHSET" property="isCashset" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="RELEASE_STATUS" property="releaseStatus" jdbcType="VARCHAR" />
+        <result column="IS_MANUAL_RELEASE" property="isManualRelease" jdbcType="VARCHAR" />
+        <result column="R_FINPROD_ID" property="rFinprodId" jdbcType="VARCHAR" />
+        <result column="OUR_SHARE_AMT" property="ourShareAmt" jdbcType="DECIMAL" />
+        <result column="LENDIN_SHARE_AMT" property="lendinShareAmt" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, PORTFOLIO_ID PORTFOLIO_ID, CUSTOM_CASH_TYPE CUSTOM_CASH_TYPE, 
+        GEN_TYPE GEN_TYPE, PUR_CFM_DATE PUR_CFM_DATE, RED_CFM_DATE RED_CFM_DATE, REG_DATE REG_DATE, 
+        REG_DATE_AMT REG_DATE_AMT, BONUS_CFM_DATE BONUS_CFM_DATE, ENTRUST_ID ENTRUST_ID, 
+        PAY_TYPE PAY_TYPE, RED_PROFIT RED_PROFIT, RED_COST RED_COST, MP_FINPROD_ID MP_FINPROD_ID, 
+        MP_BRANCH MP_BRANCH, DEAL_MODE DEAL_MODE, WITH_LOCK_PERIOD WITH_LOCK_PERIOD, LOCK_MDATE LOCK_MDATE, 
+        EXC_DEAL_TYPE EXC_DEAL_TYPE, CUR_PAIR CUR_PAIR, TERM_TYPE TERM_TYPE, USD_AMT USD_AMT, 
+        OUR_ROLE OUR_ROLE, QUOT_PRE QUOT_PRE, PRICED_DATE PRICED_DATE, PRICED_DATE_RATE PRICED_DATE_RATE, 
+        DIF_PAY_AMT DIF_PAY_AMT, DIF_PAY_CCY DIF_PAY_CCY, DIF_PS DIF_PS, PURCH_MODLE PURCH_MODLE, 
+        PURCH_TYPE PURCH_TYPE, PURCH_DATE PURCH_DATE, PUR_PAY_DATE PUR_PAY_DATE, DEPOSIT_AMT DEPOSIT_AMT, 
+        FIRST_UNIT_CPRICE3 FIRST_UNIT_CPRICE3, EXP_CON_VALUE EXP_CON_VALUE, PREB PREB, PREC PREC, 
+        SPO_SHARE_NUM SPO_SHARE_NUM, DEVIATION DEVIATION, ASSET_RECOMMAND_ORG ASSET_RECOMMAND_ORG, 
+        TERMINATE_RATE TERMINATE_RATE, PENALTY_INTAMT PENALTY_INTAMT, IS_CASHSET IS_CASHSET, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, RELEASE_STATUS RELEASE_STATUS, IS_MANUAL_RELEASE IS_MANUAL_RELEASE, 
+        R_FINPROD_ID R_FINPROD_ID,OUR_SHARE_AMT OUR_SHARE_AMT,LENDIN_SHARE_AMT LENDIN_SHARE_AMT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper_mysql.Base_Column_List" />
+        from TRD_PRODUCT_TEMP_DEAL_ADD
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper_mysql.Base_Column_List" />
+        from TRD_PRODUCT_TEMP_DEAL_ADD
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TrdProductTempDealAddMapper_mysql.Base_Column_List" />
+        from TRD_PRODUCT_TEMP_DEAL_ADD
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TRD_PRODUCT_TEMP_DEAL_ADD
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
+        insert into TRD_PRODUCT_TEMP_DEAL_ADD (TRADE_ID, PORTFOLIO_ID, CUSTOM_CASH_TYPE, 
+            GEN_TYPE, PUR_CFM_DATE, RED_CFM_DATE, 
+            REG_DATE, REG_DATE_AMT, BONUS_CFM_DATE, 
+            ENTRUST_ID, PAY_TYPE, RED_PROFIT, 
+            RED_COST, MP_FINPROD_ID, MP_BRANCH, 
+            DEAL_MODE, WITH_LOCK_PERIOD, LOCK_MDATE, 
+            EXC_DEAL_TYPE, CUR_PAIR, TERM_TYPE, 
+            USD_AMT, OUR_ROLE, QUOT_PRE, 
+            PRICED_DATE, PRICED_DATE_RATE, DIF_PAY_AMT, 
+            DIF_PAY_CCY, DIF_PS, PURCH_MODLE, 
+            PURCH_TYPE, PURCH_DATE, PUR_PAY_DATE, 
+            DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE, 
+            PREB, PREC, SPO_SHARE_NUM, 
+            DEVIATION, ASSET_RECOMMAND_ORG, TERMINATE_RATE, 
+            PENALTY_INTAMT, IS_CASHSET, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME, RELEASE_STATUS, IS_MANUAL_RELEASE, 
+            R_FINPROD_ID,OUR_SHARE_AMT,LENDIN_SHARE_AMT)
+        values (#{tradeId,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{customCashType,jdbcType=VARCHAR}, 
+            #{genType,jdbcType=VARCHAR}, #{purCfmDate,jdbcType=DATE}, #{redCfmDate,jdbcType=DATE}, 
+            #{regDate,jdbcType=DATE}, #{regDateAmt,jdbcType=DECIMAL}, #{bonusCfmDate,jdbcType=DATE}, 
+            #{entrustId,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, #{redProfit,jdbcType=DECIMAL}, 
+            #{redCost,jdbcType=DECIMAL}, #{mpFinprodId,jdbcType=VARCHAR}, #{mpBranch,jdbcType=DECIMAL}, 
+            #{dealMode,jdbcType=VARCHAR}, #{withLockPeriod,jdbcType=VARCHAR}, #{lockMdate,jdbcType=DATE}, 
+            #{excDealType,jdbcType=VARCHAR}, #{curPair,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, 
+            #{usdAmt,jdbcType=DECIMAL}, #{ourRole,jdbcType=VARCHAR}, #{quotPre,jdbcType=DECIMAL}, 
+            #{pricedDate,jdbcType=DATE}, #{pricedDateRate,jdbcType=DECIMAL}, #{difPayAmt,jdbcType=DECIMAL}, 
+            #{difPayCcy,jdbcType=VARCHAR}, #{difPs,jdbcType=VARCHAR}, #{purchModle,jdbcType=VARCHAR}, 
+            #{purchType,jdbcType=VARCHAR}, #{purchDate,jdbcType=DATE}, #{purPayDate,jdbcType=DATE}, 
+            #{depositAmt,jdbcType=DECIMAL}, #{firstUnitCprice3,jdbcType=DECIMAL}, #{expConValue,jdbcType=DECIMAL}, 
+            #{preb,jdbcType=DECIMAL}, #{prec,jdbcType=DECIMAL}, #{spoShareNum,jdbcType=DECIMAL}, 
+            #{deviation,jdbcType=DECIMAL}, #{assetRecommandOrg,jdbcType=VARCHAR}, #{terminateRate,jdbcType=DECIMAL}, 
+            #{penaltyIntamt,jdbcType=DECIMAL}, #{isCashset,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP}, #{releaseStatus,jdbcType=VARCHAR}, #{isManualRelease,jdbcType=VARCHAR}, 
+            #{rFinprodId,jdbcType=VARCHAR},#{ourShareAmt,jdbcType=DECIMAL}, #{lendinShareAmt,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
+        insert into TRD_PRODUCT_TEMP_DEAL_ADD
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="customCashType != null" >
+                CUSTOM_CASH_TYPE,
+            </if>
+            <if test="genType != null" >
+                GEN_TYPE,
+            </if>
+            <if test="purCfmDate != null" >
+                PUR_CFM_DATE,
+            </if>
+            <if test="redCfmDate != null" >
+                RED_CFM_DATE,
+            </if>
+            <if test="regDate != null" >
+                REG_DATE,
+            </if>
+            <if test="regDateAmt != null" >
+                REG_DATE_AMT,
+            </if>
+            <if test="bonusCfmDate != null" >
+                BONUS_CFM_DATE,
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID,
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE,
+            </if>
+            <if test="redProfit != null" >
+                RED_PROFIT,
+            </if>
+            <if test="redCost != null" >
+                RED_COST,
+            </if>
+            <if test="mpFinprodId != null" >
+                MP_FINPROD_ID,
+            </if>
+            <if test="mpBranch != null" >
+                MP_BRANCH,
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE,
+            </if>
+            <if test="withLockPeriod != null" >
+                WITH_LOCK_PERIOD,
+            </if>
+            <if test="lockMdate != null" >
+                LOCK_MDATE,
+            </if>
+            <if test="excDealType != null" >
+                EXC_DEAL_TYPE,
+            </if>
+            <if test="curPair != null" >
+                CUR_PAIR,
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE,
+            </if>
+            <if test="usdAmt != null" >
+                USD_AMT,
+            </if>
+            <if test="ourRole != null" >
+                OUR_ROLE,
+            </if>
+            <if test="quotPre != null" >
+                QUOT_PRE,
+            </if>
+            <if test="pricedDate != null" >
+                PRICED_DATE,
+            </if>
+            <if test="pricedDateRate != null" >
+                PRICED_DATE_RATE,
+            </if>
+            <if test="difPayAmt != null" >
+                DIF_PAY_AMT,
+            </if>
+            <if test="difPayCcy != null" >
+                DIF_PAY_CCY,
+            </if>
+            <if test="difPs != null" >
+                DIF_PS,
+            </if>
+            <if test="purchModle != null" >
+                PURCH_MODLE,
+            </if>
+            <if test="purchType != null" >
+                PURCH_TYPE,
+            </if>
+            <if test="purchDate != null" >
+                PURCH_DATE,
+            </if>
+            <if test="purPayDate != null" >
+                PUR_PAY_DATE,
+            </if>
+            <if test="depositAmt != null" >
+                DEPOSIT_AMT,
+            </if>
+            <if test="firstUnitCprice3 != null" >
+                FIRST_UNIT_CPRICE3,
+            </if>
+            <if test="expConValue != null" >
+                EXP_CON_VALUE,
+            </if>
+            <if test="preb != null" >
+                PREB,
+            </if>
+            <if test="prec != null" >
+                PREC,
+            </if>
+            <if test="spoShareNum != null" >
+                SPO_SHARE_NUM,
+            </if>
+            <if test="deviation != null" >
+                DEVIATION,
+            </if>
+            <if test="assetRecommandOrg != null" >
+                ASSET_RECOMMAND_ORG,
+            </if>
+            <if test="terminateRate != null" >
+                TERMINATE_RATE,
+            </if>
+            <if test="penaltyIntamt != null" >
+                PENALTY_INTAMT,
+            </if>
+            <if test="isCashset != null" >
+                IS_CASHSET,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="releaseStatus != null" >
+                RELEASE_STATUS,
+            </if>
+            <if test="isManualRelease != null" >
+                IS_MANUAL_RELEASE,
+            </if>
+            <if test="rFinprodId != null" >
+                R_FINPROD_ID,
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT,
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="customCashType != null" >
+                #{customCashType,jdbcType=VARCHAR},
+            </if>
+            <if test="genType != null" >
+                #{genType,jdbcType=VARCHAR},
+            </if>
+            <if test="purCfmDate != null" >
+                #{purCfmDate,jdbcType=DATE},
+            </if>
+            <if test="redCfmDate != null" >
+                #{redCfmDate,jdbcType=DATE},
+            </if>
+            <if test="regDate != null" >
+                #{regDate,jdbcType=DATE},
+            </if>
+            <if test="regDateAmt != null" >
+                #{regDateAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bonusCfmDate != null" >
+                #{bonusCfmDate,jdbcType=DATE},
+            </if>
+            <if test="entrustId != null" >
+                #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null" >
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="redProfit != null" >
+                #{redProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="redCost != null" >
+                #{redCost,jdbcType=DECIMAL},
+            </if>
+            <if test="mpFinprodId != null" >
+                #{mpFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="mpBranch != null" >
+                #{mpBranch,jdbcType=DECIMAL},
+            </if>
+            <if test="dealMode != null" >
+                #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="withLockPeriod != null" >
+                #{withLockPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="lockMdate != null" >
+                #{lockMdate,jdbcType=DATE},
+            </if>
+            <if test="excDealType != null" >
+                #{excDealType,jdbcType=VARCHAR},
+            </if>
+            <if test="curPair != null" >
+                #{curPair,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="usdAmt != null" >
+                #{usdAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourRole != null" >
+                #{ourRole,jdbcType=VARCHAR},
+            </if>
+            <if test="quotPre != null" >
+                #{quotPre,jdbcType=DECIMAL},
+            </if>
+            <if test="pricedDate != null" >
+                #{pricedDate,jdbcType=DATE},
+            </if>
+            <if test="pricedDateRate != null" >
+                #{pricedDateRate,jdbcType=DECIMAL},
+            </if>
+            <if test="difPayAmt != null" >
+                #{difPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="difPayCcy != null" >
+                #{difPayCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="difPs != null" >
+                #{difPs,jdbcType=VARCHAR},
+            </if>
+            <if test="purchModle != null" >
+                #{purchModle,jdbcType=VARCHAR},
+            </if>
+            <if test="purchType != null" >
+                #{purchType,jdbcType=VARCHAR},
+            </if>
+            <if test="purchDate != null" >
+                #{purchDate,jdbcType=DATE},
+            </if>
+            <if test="purPayDate != null" >
+                #{purPayDate,jdbcType=DATE},
+            </if>
+            <if test="depositAmt != null" >
+                #{depositAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="firstUnitCprice3 != null" >
+                #{firstUnitCprice3,jdbcType=DECIMAL},
+            </if>
+            <if test="expConValue != null" >
+                #{expConValue,jdbcType=DECIMAL},
+            </if>
+            <if test="preb != null" >
+                #{preb,jdbcType=DECIMAL},
+            </if>
+            <if test="prec != null" >
+                #{prec,jdbcType=DECIMAL},
+            </if>
+            <if test="spoShareNum != null" >
+                #{spoShareNum,jdbcType=DECIMAL},
+            </if>
+            <if test="deviation != null" >
+                #{deviation,jdbcType=DECIMAL},
+            </if>
+            <if test="assetRecommandOrg != null" >
+                #{assetRecommandOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="terminateRate != null" >
+                #{terminateRate,jdbcType=DECIMAL},
+            </if>
+            <if test="penaltyIntamt != null" >
+                #{penaltyIntamt,jdbcType=DECIMAL},
+            </if>
+            <if test="isCashset != null" >
+                #{isCashset,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="releaseStatus != null" >
+                #{releaseStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isManualRelease != null" >
+                #{isManualRelease,jdbcType=VARCHAR},
+            </if>
+            <if test="rFinprodId != null" >
+                #{rFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="ourShareAmt != null" >
+                #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
+        insert into TRD_PRODUCT_TEMP_DEAL_ADD(TRADE_ID, PORTFOLIO_ID, CUSTOM_CASH_TYPE, GEN_TYPE, 
+        PUR_CFM_DATE, RED_CFM_DATE, REG_DATE, REG_DATE_AMT, BONUS_CFM_DATE, ENTRUST_ID, PAY_TYPE, 
+        RED_PROFIT, RED_COST, MP_FINPROD_ID, MP_BRANCH, DEAL_MODE, WITH_LOCK_PERIOD, LOCK_MDATE, 
+        EXC_DEAL_TYPE, CUR_PAIR, TERM_TYPE, USD_AMT, OUR_ROLE, QUOT_PRE, PRICED_DATE, PRICED_DATE_RATE, 
+        DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, PURCH_MODLE, PURCH_TYPE, PURCH_DATE, PUR_PAY_DATE, 
+        DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE, PREB, PREC, SPO_SHARE_NUM, DEVIATION, 
+        ASSET_RECOMMAND_ORG, TERMINATE_RATE, PENALTY_INTAMT, IS_CASHSET, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, RELEASE_STATUS, IS_MANUAL_RELEASE, R_FINPROD_ID,OUR_SHARE_AMT,LENDIN_SHARE_AMT
+        )
+        select TRADE_ID, PORTFOLIO_ID, CUSTOM_CASH_TYPE, GEN_TYPE, 
+            PUR_CFM_DATE, RED_CFM_DATE, REG_DATE, REG_DATE_AMT, BONUS_CFM_DATE, ENTRUST_ID, PAY_TYPE, 
+            RED_PROFIT, RED_COST, MP_FINPROD_ID, MP_BRANCH, DEAL_MODE, WITH_LOCK_PERIOD, LOCK_MDATE, 
+            EXC_DEAL_TYPE, CUR_PAIR, TERM_TYPE, USD_AMT, OUR_ROLE, QUOT_PRE, PRICED_DATE, PRICED_DATE_RATE, 
+            DIF_PAY_AMT, DIF_PAY_CCY, DIF_PS, PURCH_MODLE, PURCH_TYPE, PURCH_DATE, PUR_PAY_DATE, 
+            DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE, PREB, PREC, SPO_SHARE_NUM, DEVIATION, 
+            ASSET_RECOMMAND_ORG, TERMINATE_RATE, PENALTY_INTAMT, IS_CASHSET, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            RELEASE_STATUS, IS_MANUAL_RELEASE, R_FINPROD_ID,OUR_SHARE_AMT,LENDIN_SHARE_AMT
+            
+             from TRD_PRODUCT_TEMP_DEAL_ADD
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </insert>
+
+    <insert id="insertToDealAdd" parameterType="java.lang.String">
+        INSERT INTO TRD_PRODUCT_DEAL_ADD (
+             TRADE_ID, PORTFOLIO_ID, CUSTOM_CASH_TYPE,
+             GEN_TYPE, PUR_CFM_DATE, RED_CFM_DATE,
+             REG_DATE, REG_DATE_AMT, BONUS_CFM_DATE,
+             ENTRUST_ID, PAY_TYPE, RED_PROFIT,
+             RED_COST, MP_FINPROD_ID, MP_BRANCH,
+             DEAL_MODE, WITH_LOCK_PERIOD, LOCK_MDATE,
+             EXC_DEAL_TYPE, CUR_PAIR, TERM_TYPE,
+             USD_AMT, OUR_ROLE, QUOT_PRE,
+             PRICED_DATE, PRICED_DATE_RATE, DIF_PAY_AMT,
+             DIF_PAY_CCY, DIF_PS, PURCH_MODLE,
+             PURCH_TYPE, PURCH_DATE, PUR_PAY_DATE,
+             DEPOSIT_AMT, FIRST_UNIT_CPRICE3, EXP_CON_VALUE,
+             PREB, PREC, SPO_SHARE_NUM,
+             DEVIATION, ASSET_RECOMMAND_ORG, TERMINATE_RATE,
+             PENALTY_INTAMT, IS_CASHSET, CREATE_USER,
+             CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+             UPDATE_TIME, RELEASE_STATUS, IS_MANUAL_RELEASE,
+             R_FINPROD_ID,OUR_SHARE_AMT,LENDIN_SHARE_AMT)
+        SELECT a.TRADE_ID, a.PORTFOLIO_ID, a.CUSTOM_CASH_TYPE,
+               a.GEN_TYPE, a.PUR_CFM_DATE,a.RED_CFM_DATE,
+               a.REG_DATE, a.REG_DATE_AMT, a.BONUS_CFM_DATE,
+               a.ENTRUST_ID, a.PAY_TYPE, a.RED_PROFIT,
+               a.RED_COST, a.MP_FINPROD_ID, a.MP_BRANCH,
+               a.DEAL_MODE, a.WITH_LOCK_PERIOD, a.LOCK_MDATE,
+               a.EXC_DEAL_TYPE, a.CUR_PAIR, a.TERM_TYPE,
+               a.USD_AMT, a.OUR_ROLE, a.QUOT_PRE,
+               a.PRICED_DATE, a.PRICED_DATE_RATE, a.DIF_PAY_AMT,
+               a.DIF_PAY_CCY, a.DIF_PS, a.PURCH_MODLE,
+               a.PURCH_TYPE, a.PURCH_DATE, a.PUR_PAY_DATE,
+               a.DEPOSIT_AMT, a.FIRST_UNIT_CPRICE3, a.EXP_CON_VALUE,
+               a.PREB, a.PREC, a.SPO_SHARE_NUM,
+               a.DEVIATION, a.ASSET_RECOMMAND_ORG, a.TERMINATE_RATE,
+               a.PENALTY_INTAMT, a.IS_CASHSET, a.CREATE_USER,
+               a.CREATE_DEPT, a.CREATE_TIME, a.UPDATE_USER,
+               a.UPDATE_TIME, a.RELEASE_STATUS, a.IS_MANUAL_RELEASE,
+               a.R_FINPROD_ID,a.OUR_SHARE_AMT,a.LENDIN_SHARE_AMT
+        FROM TRD_PRODUCT_TEMP_DEAL_ADD a
+        INNER JOIN TRD_PRODUCT_TEMP_DEAL d on d.TRADE_ID = a.TRADE_ID
+        WHERE d.TOTLE_TRADE_ID = #{totalTradeId,jdbcType=VARCHAR}
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
+        update TRD_PRODUCT_TEMP_DEAL_ADD
+        <set >
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="customCashType != null" >
+                CUSTOM_CASH_TYPE = #{customCashType,jdbcType=VARCHAR},
+            </if>
+            <if test="genType != null" >
+                GEN_TYPE = #{genType,jdbcType=VARCHAR},
+            </if>
+            <if test="purCfmDate != null" >
+                PUR_CFM_DATE = #{purCfmDate,jdbcType=DATE},
+            </if>
+            <if test="redCfmDate != null" >
+                RED_CFM_DATE = #{redCfmDate,jdbcType=DATE},
+            </if>
+            <if test="regDate != null" >
+                REG_DATE = #{regDate,jdbcType=DATE},
+            </if>
+            <if test="regDateAmt != null" >
+                REG_DATE_AMT = #{regDateAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bonusCfmDate != null" >
+                BONUS_CFM_DATE = #{bonusCfmDate,jdbcType=DATE},
+            </if>
+            <if test="entrustId != null" >
+                ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="redProfit != null" >
+                RED_PROFIT = #{redProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="redCost != null" >
+                RED_COST = #{redCost,jdbcType=DECIMAL},
+            </if>
+            <if test="mpFinprodId != null" >
+                MP_FINPROD_ID = #{mpFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="mpBranch != null" >
+                MP_BRANCH = #{mpBranch,jdbcType=DECIMAL},
+            </if>
+            <if test="dealMode != null" >
+                DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            </if>
+            <if test="withLockPeriod != null" >
+                WITH_LOCK_PERIOD = #{withLockPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="lockMdate != null" >
+                LOCK_MDATE = #{lockMdate,jdbcType=DATE},
+            </if>
+            <if test="excDealType != null" >
+                EXC_DEAL_TYPE = #{excDealType,jdbcType=VARCHAR},
+            </if>
+            <if test="curPair != null" >
+                CUR_PAIR = #{curPair,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null" >
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="usdAmt != null" >
+                USD_AMT = #{usdAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ourRole != null" >
+                OUR_ROLE = #{ourRole,jdbcType=VARCHAR},
+            </if>
+            <if test="quotPre != null" >
+                QUOT_PRE = #{quotPre,jdbcType=DECIMAL},
+            </if>
+            <if test="pricedDate != null" >
+                PRICED_DATE = #{pricedDate,jdbcType=DATE},
+            </if>
+            <if test="pricedDateRate != null" >
+                PRICED_DATE_RATE = #{pricedDateRate,jdbcType=DECIMAL},
+            </if>
+            <if test="difPayAmt != null" >
+                DIF_PAY_AMT = #{difPayAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="difPayCcy != null" >
+                DIF_PAY_CCY = #{difPayCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="difPs != null" >
+                DIF_PS = #{difPs,jdbcType=VARCHAR},
+            </if>
+            <if test="purchModle != null" >
+                PURCH_MODLE = #{purchModle,jdbcType=VARCHAR},
+            </if>
+            <if test="purchType != null" >
+                PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
+            </if>
+            <if test="purchDate != null" >
+                PURCH_DATE = #{purchDate,jdbcType=DATE},
+            </if>
+            <if test="purPayDate != null" >
+                PUR_PAY_DATE = #{purPayDate,jdbcType=DATE},
+            </if>
+            <if test="depositAmt != null" >
+                DEPOSIT_AMT = #{depositAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="firstUnitCprice3 != null" >
+                FIRST_UNIT_CPRICE3 = #{firstUnitCprice3,jdbcType=DECIMAL},
+            </if>
+            <if test="expConValue != null" >
+                EXP_CON_VALUE = #{expConValue,jdbcType=DECIMAL},
+            </if>
+            <if test="preb != null" >
+                PREB = #{preb,jdbcType=DECIMAL},
+            </if>
+            <if test="prec != null" >
+                PREC = #{prec,jdbcType=DECIMAL},
+            </if>
+            <if test="spoShareNum != null" >
+                SPO_SHARE_NUM = #{spoShareNum,jdbcType=DECIMAL},
+            </if>
+            <if test="deviation != null" >
+                DEVIATION = #{deviation,jdbcType=DECIMAL},
+            </if>
+            <if test="assetRecommandOrg != null" >
+                ASSET_RECOMMAND_ORG = #{assetRecommandOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="terminateRate != null" >
+                TERMINATE_RATE = #{terminateRate,jdbcType=DECIMAL},
+            </if>
+            <if test="penaltyIntamt != null" >
+                PENALTY_INTAMT = #{penaltyIntamt,jdbcType=DECIMAL},
+            </if>
+            <if test="isCashset != null" >
+                IS_CASHSET = #{isCashset,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="releaseStatus != null" >
+                RELEASE_STATUS = #{releaseStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="isManualRelease != null" >
+                IS_MANUAL_RELEASE = #{isManualRelease,jdbcType=VARCHAR},
+            </if>
+            <if test="rFinprodId != null" >
+                R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="ourShareAmt != null" >
+                OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="lendinShareAmt != null" >
+                LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TrdProductTempDealAdd" >
+        update TRD_PRODUCT_TEMP_DEAL_ADD
+        set PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            CUSTOM_CASH_TYPE = #{customCashType,jdbcType=VARCHAR},
+            GEN_TYPE = #{genType,jdbcType=VARCHAR},
+            PUR_CFM_DATE = #{purCfmDate,jdbcType=DATE},
+            RED_CFM_DATE = #{redCfmDate,jdbcType=DATE},
+            REG_DATE = #{regDate,jdbcType=DATE},
+            REG_DATE_AMT = #{regDateAmt,jdbcType=DECIMAL},
+            BONUS_CFM_DATE = #{bonusCfmDate,jdbcType=DATE},
+            ENTRUST_ID = #{entrustId,jdbcType=VARCHAR},
+            PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            RED_PROFIT = #{redProfit,jdbcType=DECIMAL},
+            RED_COST = #{redCost,jdbcType=DECIMAL},
+            MP_FINPROD_ID = #{mpFinprodId,jdbcType=VARCHAR},
+            MP_BRANCH = #{mpBranch,jdbcType=DECIMAL},
+            DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+            WITH_LOCK_PERIOD = #{withLockPeriod,jdbcType=VARCHAR},
+            LOCK_MDATE = #{lockMdate,jdbcType=DATE},
+            EXC_DEAL_TYPE = #{excDealType,jdbcType=VARCHAR},
+            CUR_PAIR = #{curPair,jdbcType=VARCHAR},
+            TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            USD_AMT = #{usdAmt,jdbcType=DECIMAL},
+            OUR_ROLE = #{ourRole,jdbcType=VARCHAR},
+            QUOT_PRE = #{quotPre,jdbcType=DECIMAL},
+            PRICED_DATE = #{pricedDate,jdbcType=DATE},
+            PRICED_DATE_RATE = #{pricedDateRate,jdbcType=DECIMAL},
+            DIF_PAY_AMT = #{difPayAmt,jdbcType=DECIMAL},
+            DIF_PAY_CCY = #{difPayCcy,jdbcType=VARCHAR},
+            DIF_PS = #{difPs,jdbcType=VARCHAR},
+            PURCH_MODLE = #{purchModle,jdbcType=VARCHAR},
+            PURCH_TYPE = #{purchType,jdbcType=VARCHAR},
+            PURCH_DATE = #{purchDate,jdbcType=DATE},
+            PUR_PAY_DATE = #{purPayDate,jdbcType=DATE},
+            DEPOSIT_AMT = #{depositAmt,jdbcType=DECIMAL},
+            FIRST_UNIT_CPRICE3 = #{firstUnitCprice3,jdbcType=DECIMAL},
+            EXP_CON_VALUE = #{expConValue,jdbcType=DECIMAL},
+            PREB = #{preb,jdbcType=DECIMAL},
+            PREC = #{prec,jdbcType=DECIMAL},
+            SPO_SHARE_NUM = #{spoShareNum,jdbcType=DECIMAL},
+            DEVIATION = #{deviation,jdbcType=DECIMAL},
+            ASSET_RECOMMAND_ORG = #{assetRecommandOrg,jdbcType=VARCHAR},
+            TERMINATE_RATE = #{terminateRate,jdbcType=DECIMAL},
+            PENALTY_INTAMT = #{penaltyIntamt,jdbcType=DECIMAL},
+            IS_CASHSET = #{isCashset,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            RELEASE_STATUS = #{releaseStatus,jdbcType=VARCHAR},
+            IS_MANUAL_RELEASE = #{isManualRelease,jdbcType=VARCHAR},
+            R_FINPROD_ID = #{rFinprodId,jdbcType=VARCHAR},
+            OUR_SHARE_AMT = #{ourShareAmt,jdbcType=DECIMAL},
+            LENDIN_SHARE_AMT = #{lendinShareAmt,jdbcType=DECIMAL}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+    </update>
+</mapper>

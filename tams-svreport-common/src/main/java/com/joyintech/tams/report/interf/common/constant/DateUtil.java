@@ -668,11 +668,16 @@ public class DateUtil extends DateUtils {
         try {
             format.setLenient(lenient);
             format.parse(str);
+            String str2 = format.format(format.parse(str));
+            if (StringUtil.equals(str, str2)) {
+                return true;
+            }else{
+                return false;
+            }
         }
         catch (Exception e) {
             return false;
         }
-        return true;
     }
 
     public static boolean isDateStrE(String str,boolean lenient) {
@@ -680,11 +685,16 @@ public class DateUtil extends DateUtils {
         try {
             format.setLenient(lenient);
             format.parse(str);
+            String str2 = format.format(format.parse(str));
+            if (StringUtil.equals(str, str2)) {
+                return true;
+            }else{
+                return false;
+            }
         }
         catch (Exception e) {
             return false;
         }
-        return true;
     }
 
     /**

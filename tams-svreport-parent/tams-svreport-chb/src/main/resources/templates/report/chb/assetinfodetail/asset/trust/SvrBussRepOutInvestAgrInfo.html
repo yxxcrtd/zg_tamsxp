@@ -12,8 +12,7 @@
 <body>
 <div class="pro-module-wrap" th:id="|${entityName}_div|">
     <div class="pro-module">
-        <h3 class="pro-module-title"><span class="title-des">委外投资——协议方式</span>（<span class="star-sign">*</span>必填）<i
-                class="iconfont icon-arrow-down pro-down-icon"></i></h3>
+        <h3 class="pro-module-title"><span class="title-des">中债资产要素信息——委外投资——协议方式</span></h3>
         <div class="pro-module-item">
 
 
@@ -42,15 +41,19 @@
                 </div>
 
 
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-utext="#{SvrBussRepOutInvestAgrInfo.trustee}" style="line-height: normal!important;">受托人</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_trustee|" th:name="|${entityName}.trustee|"
-                               th:value="${entity?.trustee}" class="layui-input form-input" required="required"
-                               maxlength="100"/>
-                    </div>
-                </div>
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap"
+						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.trustee}" style="line-height: normal!important;">受托人</label>
+					<div class="layui-input-inline input-inline">
+						<select th:id="|${entityName}_trustee|"
+								th:name="|${entityName}.trustee|"
+								th:initValue="${entity?.trustee}"
+								class="layui-input form-input input-select"
+								required="required"
+								data-th-data-url="@{/common/select/getTrusterId}">
+						</select>
+					</div>
+				</div>
             </div>
 
 
@@ -60,18 +63,26 @@
 					<label class="layui-form-label form-label-wrap"
 						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.managerId}" style="line-height: normal!important;">实际管理人</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" th:id="|${entityName}_managerId|" th:name="|${entityName}.managerId|"
-							   th:value="${entity?.managerId}" class="layui-input form-input" required="required"
-							   maxlength="100"/>
+						<select th:id="|${entityName}_managerId|"
+								th:name="|${entityName}.managerId|"
+								th:initValue="${entity?.managerId}"
+								class="layui-input form-input input-select"
+								required="required"
+								data-th-data-url="@{/common/select/getManagerId}">
+						</select>
 					</div>
 				</div>
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
 						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.trusteeId}" style="line-height: normal!important;">托管人</label>
 					<div class="layui-input-inline input-inline">
-						<input type="text" th:id="|${entityName}_trusteeId|" th:name="|${entityName}.trusteeId|"
-							   th:value="${entity?.trusteeId}" class="layui-input form-input" required="required"
-							   maxlength="100"/>
+						<select th:id="|${entityName}_trusteeId|"
+								th:name="|${entityName}.trusteeId|"
+								th:initValue="${entity?.trusteeId}"
+								class="layui-input form-input input-select"
+								required="required"
+								data-th-data-url="@{/common/select/getTrusterId}">
+						</select>
 					</div>
 				</div>
 
@@ -110,22 +121,33 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_investType|"
                                th:name="|${entityName}.investType|" th:value="${entity?.investType}"
-                               class="layui-input form-input" maxlength="150" required/>
+                               class="layui-input form-input"  required/>
                     </div>
                 </div>
 
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap"
-						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.capUseIndu}">资金运用行业一级分类</label>
-					<div class="layui-input-inline input-inline">
-						<select id="investcapUseIndu" th:name="|${entityName}.capUseIndu|"
+					<label class="layui-form-label form-label-wrap">资金运用行业分类</label>
+					<div class="layui-input-inline input-inline buss-inline-wrap"
+						 style="width: 30%!important;display: inline-block;">
+						<select th:id="|${entityName}_capUseIndu|" th:name="|${entityName}.capUseIndu|"
 								data-th-data-result="${INSTITUTION_INDUSTRY_FIRST_LEVEL}"
 								th:initValue="${entity?.capUseIndu}"
+								th:childrenIds="|${entityName}_capUseInduLevel2|"
 								class="layui-input form-input input-select" placeholder="请输入内容"
-								childrenIds="investcapUseInduLevel2"
 								data-th-placeholder="#{SysCommon.placeholder}" required>
 						</select>
 					</div>
+					<div class="layui-input-inline input-inline buss-inline-wrap"
+						 style="width: 30%!important;display: inline-block;">
+						<select th:id="|${entityName}_capUseInduLevel2|" th:name="|${entityName}.capUseInduLevel2|"
+								data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
+								th:initValue="${entity?.capUseInduLevel2}"
+								data-th-parentids="|${entityName}_capUseIndu|"
+								class="layui-input form-input input-select" placeholder="请输入内容"
+								data-th-placeholder="#{SysCommon.placeholder}" required>
+						</select>
+					</div>
+
 				</div>
 
 
@@ -133,16 +155,22 @@
             <div class="layui-form-item">
 
 				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap"
-						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.capUseInduLevel2}">资金运用行业二级分类</label>
+					<label class="layui-form-label form-label-wrap">投资运作起始日期</label>
 					<div class="layui-input-inline input-inline">
-						<select th:id="investcapUseInduLevel2" th:name="|${entityName}.capUseInduLevel2|"
-								data-th-data-result="${INSTITUTION_INDUSTRY_SECOND_LEVEL}"
-								th:initValue="${entity?.capUseInduLevel2}"
-								class="layui-input form-input input-select" placeholder="请输入内容"
-								parentIds="investcapUseIndu"
-								data-th-placeholder="#{SysCommon.placeholder}" >
-						</select>
+
+						<input type="text" disabled="true"
+							   th:id="|${entityName}_vdate|"
+							   class="layui-input form-input input-dateSelect" />
+					</div>
+				</div>
+
+
+				<div class="form-inline-wrap" >
+					<label class="layui-form-label form-label-wrap ">投资运作终止日期</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" disabled="true"
+							   th:id="|${entityName}_mdate|"
+							   class="layui-input form-input input-dateSelect" />
 					</div>
 				</div>
 
@@ -160,22 +188,24 @@
 				</div>
 
 
+
+			</div>
+
+
+            <div class="layui-form-item">
+
 				<div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-utext="#{SvrBussRepOutInvestAgrInfo.rateFlag}"
-                           style="line-height: normal!important;">是否有预期收益率</label>
-                    <div class="layui-input-inline input-inline">
+					<label class="layui-form-label form-label-wrap"
+						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.rateFlag}"
+						   style="line-height: normal!important;">是否有预期收益率</label>
+					<div class="layui-input-inline input-inline">
 						<select th:id="|${entityName}_rateFlag|" th:name="|${entityName}.rateFlag|"
 								th:initValue="${entity?.rateFlag}" class="layui-input form-input input-select"
 								placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
 								data-th-data-result="${SVR_YES_OR_NO}">
 						</select>
-                    </div>
-                </div>
-			</div>
-
-
-            <div class="layui-form-item">
+					</div>
+				</div>
 
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
@@ -200,21 +230,23 @@
                                th:value="${entity?.minRate}" data-th-data-textrange="5">
                     </div>
                 </div>
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-utext="#{SvrBussRepOutInvestAgrInfo.mgrFeeRate}"
-                           style="line-height: normal!important;">管理费率%</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_mgrFeeRate|"
-                               th:name="|${entityName}.mgrFeeRate|" placeholder="请输入内容" data-pattern=""
-                               data-fixtype="2" class="layui-input form-input text-number"
-                               th:value="${entity?.mgrFeeRate}" data-th-data-textrange="5" required>
-                    </div>
-                </div>
+
 
             </div>
 
             <div class="layui-form-item">
+
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap"
+						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.mgrFeeRate}"
+						   style="line-height: normal!important;">管理费率%</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" th:id="|${entityName}_mgrFeeRate|"
+							   th:name="|${entityName}.mgrFeeRate|" placeholder="请输入内容" data-pattern=""
+							   data-fixtype="2" class="layui-input form-input text-number"
+							   th:value="${entity?.mgrFeeRate}" data-th-data-textrange="5" required>
+					</div>
+				</div>
 
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
@@ -239,24 +271,24 @@
                                th:value="${entity?.tradeFeeRate}" data-th-data-textrange="5" required>
                     </div>
                 </div>
-                <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-utext="#{SvrBussRepOutInvestAgrInfo.agencyFeeRate}"
-                           style="line-height: normal!important;">中介服务机构合计费率%</label>
-                    <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_agencyFeeRate|"
-                               th:name="|${entityName}.agencyFeeRate|" placeholder="请输入内容" data-pattern=""
-                               data-fixtype="2" class="layui-input form-input text-number"
-                               th:value="${entity?.agencyFeeRate}" data-th-data-textrange="5" required>
-                    </div>
-                </div>
+
 
             </div>
 
 
 
             <div class="layui-form-item">
-
+				<div class="form-inline-wrap">
+					<label class="layui-form-label form-label-wrap"
+						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.agencyFeeRate}"
+						   style="line-height: normal!important;">中介服务机构合计费率%</label>
+					<div class="layui-input-inline input-inline">
+						<input type="text" th:id="|${entityName}_agencyFeeRate|"
+							   th:name="|${entityName}.agencyFeeRate|" placeholder="请输入内容" data-pattern=""
+							   data-fixtype="2" class="layui-input form-input text-number"
+							   th:value="${entity?.agencyFeeRate}" data-th-data-textrange="5" required>
+					</div>
+				</div>
 				<div class="form-inline-wrap">
 					<label class="layui-form-label form-label-wrap"
 						   data-th-utext="#{SvrBussRepOutInvestAgrInfo.otherFeeRate}"
@@ -269,77 +301,10 @@
 					</div>
 				</div>
 
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repPppflag}">公共PPP</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_pppflag|" th:name="|${entityName}.pppflag|"
-								th:initValue="${entity?.pppflag}"
-								class="layui-input form-input input-select" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
-						</select>
-					</div>
-				</div>
 
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repBondtostockFlag}">是否投向市场化债转股相关产品的部分</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_bondtostockFlag|" th:name="|${entityName}.bondtostockFlag|"
-								th:initValue="${entity?.bondtostockFlag}"
-								class="layui-input form-input input-select" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}" data-th-data-result="${SVR_YES_OR_NO}" required>
-						</select>
-					</div>
-				</div>
 
             </div>
-			<!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段start -->
-			<div class="layui-form-item">
 
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType1}" >新人行一级分类</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_pbcAssetType1|" th:name="|${entityName}.pbcAssetType1|" th:initValue="${entity?.pbcAssetType1}"
-								th:childrenIds="|${entityName}_pbcAssetType2|" required
-								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_1}">
-						</select>
-					</div>
-				</div>
-
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType2}" >新人行二级分类</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_pbcAssetType2|" th:name="|${entityName}.pbcAssetType2|" th:initValue="${entity?.pbcAssetType2}"
-								th:childrenIds="|${entityName}_pbcAssetType3|" th:parentIds="|${entityName}_pbcAssetType1|" required
-								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_2}">
-						</select>
-					</div>
-				</div>
-
-				<div class="form-inline-wrap">
-					<label class="layui-form-label form-label-wrap" data-th-text="#{SvrBussRepDepositInfo.pbcAssetType3}" >新人行三级分类</label>
-					<div class="layui-input-inline input-inline">
-						<select th:id="|${entityName}_pbcAssetType3|" th:name="|${entityName}.pbcAssetType3|" th:initValue="${entity?.pbcAssetType3}"
-								th:parentIds="|${entityName}_pbcAssetType2|" required
-								class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${SVR_PBC_ASSET_TYPE_3}">
-						</select>
-					</div>
-				</div>
-
-			</div>
-			<!--add by yjp 估值穿透开发--监管报送资产基本信息维护导入功能合并华夏字段end -->
-
-            <div class="layui-form-item">
-                <div class="form-inline-wrap" style="width: 100% !important;">
-                    <label class="layui-form-label form-label-wrap" data-th-utext="#{SvrBussRepOutInvestAgrInfo.remark}"
-                           style="width: 12.55%;">备注</label>
-                    <div class="layui-input-inline input-inline" style="width: 86% !important;">
-                        <input th:id="|${entityName}_remark|" th:name="|${entityName}.remark|" placeholder="请输入内容"
-                               class="layui-input form-input" data-th-placeholder="#{SysCommon.placeholder}"
-							   data-th-value="${entity?.remark}" maxlength="128" style="width: 100%!important;">
-                        </input>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

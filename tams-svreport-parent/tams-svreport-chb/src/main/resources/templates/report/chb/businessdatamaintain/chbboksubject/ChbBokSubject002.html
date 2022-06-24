@@ -1,0 +1,110 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layout/default}">
+<head>
+    <meta charset="utf-8">
+    <title data-th-text="#{ChbBokSubject002}">新建科目</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
+        <div class="pro-module">
+            <div class="pro-module-item">
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable"
+                               data-th-text="#{ChbBokSubject.subjectNo}">科目号</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="subjectNo" name="subjectNo" class="layui-input form-input"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-th-value="${entity?.subjectNo}" required>
+                            <input type="hidden"  id="booksetId" name="booksetId" class="layui-input form-input" data-th-value="${entity?.booksetId}"/>
+                        </div>
+
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable"
+                               data-th-text="#{ChbBokSubject.subjectName}">科目名称</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="subjectName" name="subjectName" class="layui-input form-input"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-th-value="${entity?.subjectName}" required>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable"
+                               data-th-text="#{ChbBokSubject.fsubjectId}">上级科目号</label>
+                        <div class="layui-input-inline input-inline">
+                            <select type="text" id="fsubjectId" name="fsubjectId"
+                                    class="layui-input form-input input-select"
+                                    formatoption = "false"
+                                    data-th-data-url='@{/chb/businessdatamaintain/chbboksubject/chbboksubject001/getSubjectId2}'
+                                    data-th-initValue="${entity?.fsubjectId}"
+                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable"
+                               data-th-text="#{ChbBokSubject.subjectType}">科目类型</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="subjectType" name="subjectType" class="layui-input form-input input-select"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-th-data-result='${SUBJECT_TYPE}'
+                                   data-th-value="${entity?.subjectType}" required>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable"
+                               data-th-text="#{ChbBokSubject.subjectLevel}">科目级别</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="subjectLevel" name="subjectLevel" class="layui-input form-input input-select"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-th-data-result='${SUBJECT_LEVEL}'
+                                   data-th-value="${entity?.subjectLevel}" required>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable"
+                               data-th-text="#{ChbBokSubject.balFlag}">科目方向</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="balFlag" name="balFlag" class="layui-input form-input input-select"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-th-data-result='${BAL_FLAG}'
+                                   data-th-value="${entity?.balFlag}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable"
+                               data-th-text="#{ChbBokSubject.remark}">备注</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" id="remark" name="remark"
+                                   class="layui-input form-input"
+                                   data-th-value="${entity?.remark}">
+                        </div>
+                        <input type="hidden"  id="statusValid" name="statusValid" class="layui-input form-input" data-th-value="${entity?.statusValid}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="layui-col-md11" style="margin: 10px;">
+        <div class="text-center">
+            <a id="ChbBokSubject002_btn_submit" class="layui-btn layui-btn-sm btn-submit">提交</a>
+            <a id="ChbBokSubject002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel">取消</a>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script data-th-src="@{/js/report/chb/businessdatamaintain/chbboksubject/ChbBokSubject002.js}"
+            type="text/javascript"></script>
+</div>
+
+</body>
+</html>

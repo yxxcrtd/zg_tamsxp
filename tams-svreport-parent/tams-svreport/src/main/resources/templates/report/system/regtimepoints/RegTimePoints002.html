@@ -38,7 +38,7 @@
             <div class="layui-inline layui-col-md6">
                 <label class="layui-form-label form-lable">行内报送时点要求</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="number" id="submitPointBond" name="submitPointBond" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.submitPointBond}" required>
+                    <input type="number" id="submitPointBond" name="submitPointBond" class="layui-input form-input text-number" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.submitPointBond}" data-textrange="0" required>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
             <div class="layui-inline layui-col-md6">
                 <label class="layui-form-label form-lable">监管报送时点要求</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="number" id="submitPointBank" name="submitPointBank" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.submitPointBank}" required>
+                    <input type="number" id="submitPointBank" name="submitPointBank" class="layui-input form-input text-number" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.submitPointBank}" data-textrange="0" required>
                 </div>
             </div>
         </div>

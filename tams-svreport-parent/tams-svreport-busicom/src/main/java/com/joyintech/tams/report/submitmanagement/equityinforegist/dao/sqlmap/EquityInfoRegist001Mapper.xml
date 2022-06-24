@@ -650,7 +650,7 @@
         OTHER_CAP_ACC_BANK, SPV_REGIST_CODE, HOLDER_DATE,
         HOLDER_NAME, HOLDER_SEX, HOLDER_RISK_PREFER,
         HOLDER_CELLPHONE, HOLDER_TELEPHONE, HOLDER_EMAIL,
-        REMARK, SUBMIT_STATUS, SUBMIT_TIME,
+        REMARK, SUBMIT_STATUS, SUBMIT_TIME,SUBMIT_FEEDBACK_STATUS,
         SUBMIT_DEADLINE,
         STATUS, DEPT_CODE,
         UPDATE_USER, UPDATE_TIME, CREATE_USER,
@@ -667,7 +667,7 @@
         A.OTHER_CAP_ACC_BANK, A.SPV_REGIST_CODE, A.HOLDER_DATE,
         A.HOLDER_NAME, A.HOLDER_SEX, A.HOLDER_RISK_PREFER,
         A.HOLDER_CELLPHONE, A.HOLDER_TELEPHONE, A.HOLDER_EMAIL,
-        A.REMARK, A.SUBMIT_STATUS, A.SUBMIT_TIME,
+        A.REMARK, A.SUBMIT_STATUS, A.SUBMIT_TIME,A.SUBMIT_FEEDBACK_STATUS,
         A.SUBMIT_DEADLINE,
         A.STATUS, A.DEPT_CODE,
         A.UPDATE_USER, A.UPDATE_TIME, A.CREATE_USER,
@@ -932,10 +932,41 @@
         SELECT count(1)
         from CHB_EQU_HOLD
         where
-        INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
-        and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+        <if test="INDENTIFY_MARK!=null and INDENTIFY_MARK!=''">
+            INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
+        </if>
+        <if test="REGIST_BANK_CODE !=null and REGIST_BANK_CODE!=''">
+            and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+        </if>
         <!-- 检查识别标识是否存在，删除状态的数据不为已存在的识别标识 -->
         and status !='D'
+    </select>
+    <select id= "countIndentifyMarkAll" resultType="java.lang.Integer">
+        SELECT SUM(HOLD_INFO)
+        from
+        (
+        select count(1) as HOLD_INFO from CHB_EQU_HOLD
+        where
+        <if test="INDENTIFY_MARK!=null and INDENTIFY_MARK!=''">
+            INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
+        </if>
+        <if test="REGIST_BANK_CODE !=null and REGIST_BANK_CODE!=''">
+            and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+        </if>
+        <!-- 检查识别标识是否存在，删除状态的数据不为已存在的识别标识 -->
+        and status !='D'
+        union all
+        select count(1) as HOLD_INFO from CHB_EQU_HOLD_CHECK
+        where
+        <if test="INDENTIFY_MARK!=null and INDENTIFY_MARK!=''">
+            INDENTIFY_MARK = #{INDENTIFY_MARK,jdbcType=VARCHAR}
+        </if>
+        <if test="REGIST_BANK_CODE !=null and REGIST_BANK_CODE!=''">
+            and REGIST_BANK_CODE = #{REGIST_BANK_CODE,jdbcType=VARCHAR}
+        </if>
+        <!-- 检查识别标识是否存在，删除状态的数据不为已存在的识别标识 -->
+        and status !='D'
+        )A
     </select>
     <!-- 将履历表中最大的数据重新插入登记表 -->
     <insert id="insertEquityRegistFromHis" parameterType="java.util.List" >
@@ -1131,6 +1162,7 @@
         HOLDER_CELLPHONE          as holderCellphone,
         HOLDER_TELEPHONE          as holderTelephone,
         HOLDER_EMAIL              as holderEmail,
+        HOLDER_CLASSIFY           AS holderClassify,
         TYPE                      as type,
         REMARK,
         SUBMIT_STATUS             as submitStatus,
@@ -1328,6 +1360,7 @@
                     HOLDER_CELLPHONE          AS holderCellphone,
                     HOLDER_TELEPHONE          AS holderTelephone,
                     HOLDER_EMAIL              AS holderEmail,
+                    HOLDER_CLASSIFY           AS holderClassify,
                     TYPE                      AS type,
                     REMARK,
                     SUBMIT_STATUS                                               AS submitStatus,

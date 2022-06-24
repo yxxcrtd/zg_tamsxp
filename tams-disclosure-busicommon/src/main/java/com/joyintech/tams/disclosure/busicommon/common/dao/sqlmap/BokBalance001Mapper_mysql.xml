@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance" >
+        <id column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <id column="BALANCE_DATE" property="balanceDate" jdbcType="DATE" />
+        <id column="SUBJECT_NO" property="subjectNo" jdbcType="VARCHAR" />
+        <result column="FSUBJECT_NO" property="fsubjectNo" jdbcType="VARCHAR" />
+        <result column="SUBJECT_LEVEL" property="subjectLevel" jdbcType="DECIMAL" />
+        <result column="BAL_FLAG" property="balFlag" jdbcType="VARCHAR" />
+        <result column="BAL_CO_FLAG" property="balCoFlag" jdbcType="VARCHAR" />
+        <result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
+        <result column="O_AMT" property="oAmt" jdbcType="DECIMAL" />
+        <result column="O_C_AMT" property="oCAmt" jdbcType="DECIMAL" />
+        <result column="O_D_AMT" property="oDAmt" jdbcType="DECIMAL" />
+        <result column="O_CO_AMT" property="oCoAmt" jdbcType="DECIMAL" />
+        <result column="O_CO_C_AMT" property="oCoCAmt" jdbcType="DECIMAL" />
+        <result column="O_CO_D_AMT" property="oCoDAmt" jdbcType="DECIMAL" />
+        <result column="B_CCY" property="bCcy" jdbcType="VARCHAR" />
+        <result column="B_AMT" property="bAmt" jdbcType="DECIMAL" />
+        <result column="B_C_AMT" property="bCAmt" jdbcType="DECIMAL" />
+        <result column="B_CO_AMT" property="bCoAmt" jdbcType="DECIMAL" />
+        <result column="B_CO_C_AMT" property="bCoCAmt" jdbcType="DECIMAL" />
+        <result column="B_CO_D_AMT" property="bCoDAmt" jdbcType="DECIMAL" />
+        <result column="B_D_AMT" property="bDAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_AMT" property="tdyOAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_C_AMT" property="tdyOCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_D_AMT" property="tdyODAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_CO_AMT" property="tdyOCoAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_CO_C_AMT" property="tdyOCoCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_O_CO_D_AMT" property="tdyOCoDAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_AMT" property="tdyBAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_C_AMT" property="tdyBCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_D_AMT" property="tdyBDAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_CO_AMT" property="tdyBCoAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_CO_C_AMT" property="tdyBCoCAmt" jdbcType="DECIMAL" />
+        <result column="TDY_B_CO_D_AMT" property="tdyBCoDAmt" jdbcType="DECIMAL" />
+        <result column="IS_LEAF" property="isLeaf" jdbcType="VARCHAR" />
+        <result column="NUM_AMT" property="numAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="TDY_AMT_FLAG" property="tdyAmtFlag" jdbcType="VARCHAR" />
+        <result column="TDY_CO_FLAG" property="tdyCoFlag" jdbcType="VARCHAR" />
+        <result column="TDY_PUR_O_D_ULAMT" property="tdyPurODUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_O_D_ULAMT" property="tdyRedODUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_PUR_O_C_ULAMT" property="tdyPurOCUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_O_C_ULAMT" property="tdyRedOCUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_PUR_B_D_ULAMT" property="tdyPurBDUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_B_D_ULAMT" property="tdyRedBDUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_PUR_B_C_ULAMT" property="tdyPurBCUlamt" jdbcType="DECIMAL" />
+        <result column="TDY_RED_B_C_ULAMT" property="tdyRedBCUlamt" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BOOKSET_ID BOOKSET_ID, BALANCE_DATE BALANCE_DATE, SUBJECT_NO SUBJECT_NO, FSUBJECT_NO FSUBJECT_NO,
+        SUBJECT_LEVEL SUBJECT_LEVEL, BAL_FLAG BAL_FLAG, BAL_CO_FLAG BAL_CO_FLAG, O_CCY O_CCY,
+        O_AMT O_AMT, O_C_AMT O_C_AMT, O_D_AMT O_D_AMT, O_CO_AMT O_CO_AMT, O_CO_C_AMT O_CO_C_AMT,
+        O_CO_D_AMT O_CO_D_AMT, B_CCY B_CCY, B_AMT B_AMT, B_C_AMT B_C_AMT, B_CO_AMT B_CO_AMT,
+        B_CO_C_AMT B_CO_C_AMT, B_CO_D_AMT B_CO_D_AMT, B_D_AMT B_D_AMT, TDY_O_AMT TDY_O_AMT,
+        TDY_O_C_AMT TDY_O_C_AMT, TDY_O_D_AMT TDY_O_D_AMT, TDY_O_CO_AMT TDY_O_CO_AMT, TDY_O_CO_C_AMT TDY_O_CO_C_AMT,
+        TDY_O_CO_D_AMT TDY_O_CO_D_AMT, TDY_B_AMT TDY_B_AMT, TDY_B_C_AMT TDY_B_C_AMT, TDY_B_D_AMT TDY_B_D_AMT,
+        TDY_B_CO_AMT TDY_B_CO_AMT, TDY_B_CO_C_AMT TDY_B_CO_C_AMT, TDY_B_CO_D_AMT TDY_B_CO_D_AMT,
+        IS_LEAF IS_LEAF, NUM_AMT NUM_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, TDY_AMT_FLAG TDY_AMT_FLAG,
+        TDY_CO_FLAG TDY_CO_FLAG, TDY_PUR_O_D_ULAMT TDY_PUR_O_D_ULAMT, TDY_RED_O_D_ULAMT TDY_RED_O_D_ULAMT,
+        TDY_PUR_O_C_ULAMT TDY_PUR_O_C_ULAMT, TDY_RED_O_C_ULAMT TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT TDY_PUR_B_D_ULAMT,
+        TDY_RED_B_D_ULAMT TDY_RED_B_D_ULAMT, TDY_PUR_B_C_ULAMT TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT TDY_RED_B_C_ULAMT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List" />
+        from BOK_BALANCE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List" />
+        from BOK_BALANCE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalanceKey" >
+        select
+        <include refid="com.joyintech.tams.disclosure.busicommon.common.dao.BokBalance001Mapper.Base_Column_List" />
+        from BOK_BALANCE
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+        and BALANCE_DATE = #{balanceDate,jdbcType=DATE}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalanceKey" >
+        delete from BOK_BALANCE
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+          and BALANCE_DATE = #{balanceDate,jdbcType=DATE}
+          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByBooksetId" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalanceKey" >
+        delete from BOK_BALANCE
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance" >
+        insert into BOK_BALANCE (BOOKSET_ID, BALANCE_DATE, SUBJECT_NO,
+            FSUBJECT_NO, SUBJECT_LEVEL, BAL_FLAG,
+            BAL_CO_FLAG, O_CCY, O_AMT,
+            O_C_AMT, O_D_AMT, O_CO_AMT,
+            O_CO_C_AMT, O_CO_D_AMT, B_CCY,
+            B_AMT, B_C_AMT, B_CO_AMT,
+            B_CO_C_AMT, B_CO_D_AMT, B_D_AMT,
+            TDY_O_AMT, TDY_O_C_AMT, TDY_O_D_AMT,
+            TDY_O_CO_AMT, TDY_O_CO_C_AMT, TDY_O_CO_D_AMT,
+            TDY_B_AMT, TDY_B_C_AMT, TDY_B_D_AMT,
+            TDY_B_CO_AMT, TDY_B_CO_C_AMT, TDY_B_CO_D_AMT,
+            IS_LEAF, NUM_AMT, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, TDY_AMT_FLAG, TDY_CO_FLAG,
+            TDY_PUR_O_D_ULAMT, TDY_RED_O_D_ULAMT, TDY_PUR_O_C_ULAMT,
+            TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT,
+            TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT)
+        values (#{booksetId,jdbcType=VARCHAR}, #{balanceDate,jdbcType=DATE}, #{subjectNo,jdbcType=VARCHAR},
+            #{fsubjectNo,jdbcType=VARCHAR}, #{subjectLevel,jdbcType=DECIMAL}, #{balFlag,jdbcType=VARCHAR},
+            #{balCoFlag,jdbcType=VARCHAR}, #{oCcy,jdbcType=VARCHAR}, #{oAmt,jdbcType=DECIMAL},
+            #{oCAmt,jdbcType=DECIMAL}, #{oDAmt,jdbcType=DECIMAL}, #{oCoAmt,jdbcType=DECIMAL},
+            #{oCoCAmt,jdbcType=DECIMAL}, #{oCoDAmt,jdbcType=DECIMAL}, #{bCcy,jdbcType=VARCHAR},
+            #{bAmt,jdbcType=DECIMAL}, #{bCAmt,jdbcType=DECIMAL}, #{bCoAmt,jdbcType=DECIMAL},
+            #{bCoCAmt,jdbcType=DECIMAL}, #{bCoDAmt,jdbcType=DECIMAL}, #{bDAmt,jdbcType=DECIMAL},
+            #{tdyOAmt,jdbcType=DECIMAL}, #{tdyOCAmt,jdbcType=DECIMAL}, #{tdyODAmt,jdbcType=DECIMAL},
+            #{tdyOCoAmt,jdbcType=DECIMAL}, #{tdyOCoCAmt,jdbcType=DECIMAL}, #{tdyOCoDAmt,jdbcType=DECIMAL},
+            #{tdyBAmt,jdbcType=DECIMAL}, #{tdyBCAmt,jdbcType=DECIMAL}, #{tdyBDAmt,jdbcType=DECIMAL},
+            #{tdyBCoAmt,jdbcType=DECIMAL}, #{tdyBCoCAmt,jdbcType=DECIMAL}, #{tdyBCoDAmt,jdbcType=DECIMAL},
+            #{isLeaf,jdbcType=VARCHAR}, #{numAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{tdyAmtFlag,jdbcType=VARCHAR}, #{tdyCoFlag,jdbcType=VARCHAR},
+            #{tdyPurODUlamt,jdbcType=DECIMAL}, #{tdyRedODUlamt,jdbcType=DECIMAL}, #{tdyPurOCUlamt,jdbcType=DECIMAL},
+            #{tdyRedOCUlamt,jdbcType=DECIMAL}, #{tdyPurBDUlamt,jdbcType=DECIMAL}, #{tdyRedBDUlamt,jdbcType=DECIMAL},
+            #{tdyPurBCUlamt,jdbcType=DECIMAL}, #{tdyRedBCUlamt,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance" >
+        insert into BOK_BALANCE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="balanceDate != null" >
+                BALANCE_DATE,
+            </if>
+            <if test="subjectNo != null" >
+                SUBJECT_NO,
+            </if>
+            <if test="fsubjectNo != null" >
+                FSUBJECT_NO,
+            </if>
+            <if test="subjectLevel != null" >
+                SUBJECT_LEVEL,
+            </if>
+            <if test="balFlag != null" >
+                BAL_FLAG,
+            </if>
+            <if test="balCoFlag != null" >
+                BAL_CO_FLAG,
+            </if>
+            <if test="oCcy != null" >
+                O_CCY,
+            </if>
+            <if test="oAmt != null" >
+                O_AMT,
+            </if>
+            <if test="oCAmt != null" >
+                O_C_AMT,
+            </if>
+            <if test="oDAmt != null" >
+                O_D_AMT,
+            </if>
+            <if test="oCoAmt != null" >
+                O_CO_AMT,
+            </if>
+            <if test="oCoCAmt != null" >
+                O_CO_C_AMT,
+            </if>
+            <if test="oCoDAmt != null" >
+                O_CO_D_AMT,
+            </if>
+            <if test="bCcy != null" >
+                B_CCY,
+            </if>
+            <if test="bAmt != null" >
+                B_AMT,
+            </if>
+            <if test="bCAmt != null" >
+                B_C_AMT,
+            </if>
+            <if test="bCoAmt != null" >
+                B_CO_AMT,
+            </if>
+            <if test="bCoCAmt != null" >
+                B_CO_C_AMT,
+            </if>
+            <if test="bCoDAmt != null" >
+                B_CO_D_AMT,
+            </if>
+            <if test="bDAmt != null" >
+                B_D_AMT,
+            </if>
+            <if test="tdyOAmt != null" >
+                TDY_O_AMT,
+            </if>
+            <if test="tdyOCAmt != null" >
+                TDY_O_C_AMT,
+            </if>
+            <if test="tdyODAmt != null" >
+                TDY_O_D_AMT,
+            </if>
+            <if test="tdyOCoAmt != null" >
+                TDY_O_CO_AMT,
+            </if>
+            <if test="tdyOCoCAmt != null" >
+                TDY_O_CO_C_AMT,
+            </if>
+            <if test="tdyOCoDAmt != null" >
+                TDY_O_CO_D_AMT,
+            </if>
+            <if test="tdyBAmt != null" >
+                TDY_B_AMT,
+            </if>
+            <if test="tdyBCAmt != null" >
+                TDY_B_C_AMT,
+            </if>
+            <if test="tdyBDAmt != null" >
+                TDY_B_D_AMT,
+            </if>
+            <if test="tdyBCoAmt != null" >
+                TDY_B_CO_AMT,
+            </if>
+            <if test="tdyBCoCAmt != null" >
+                TDY_B_CO_C_AMT,
+            </if>
+            <if test="tdyBCoDAmt != null" >
+                TDY_B_CO_D_AMT,
+            </if>
+            <if test="isLeaf != null" >
+                IS_LEAF,
+            </if>
+            <if test="numAmt != null" >
+                NUM_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="tdyAmtFlag != null" >
+                TDY_AMT_FLAG,
+            </if>
+            <if test="tdyCoFlag != null" >
+                TDY_CO_FLAG,
+            </if>
+            <if test="tdyPurODUlamt != null" >
+                TDY_PUR_O_D_ULAMT,
+            </if>
+            <if test="tdyRedODUlamt != null" >
+                TDY_RED_O_D_ULAMT,
+            </if>
+            <if test="tdyPurOCUlamt != null" >
+                TDY_PUR_O_C_ULAMT,
+            </if>
+            <if test="tdyRedOCUlamt != null" >
+                TDY_RED_O_C_ULAMT,
+            </if>
+            <if test="tdyPurBDUlamt != null" >
+                TDY_PUR_B_D_ULAMT,
+            </if>
+            <if test="tdyRedBDUlamt != null" >
+                TDY_RED_B_D_ULAMT,
+            </if>
+            <if test="tdyPurBCUlamt != null" >
+                TDY_PUR_B_C_ULAMT,
+            </if>
+            <if test="tdyRedBCUlamt != null" >
+                TDY_RED_B_C_ULAMT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="balanceDate != null" >
+                #{balanceDate,jdbcType=DATE},
+            </if>
+            <if test="subjectNo != null" >
+                #{subjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fsubjectNo != null" >
+                #{fsubjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectLevel != null" >
+                #{subjectLevel,jdbcType=DECIMAL},
+            </if>
+            <if test="balFlag != null" >
+                #{balFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="balCoFlag != null" >
+                #{balCoFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="oCcy != null" >
+                #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="oAmt != null" >
+                #{oAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCAmt != null" >
+                #{oCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oDAmt != null" >
+                #{oDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCoAmt != null" >
+                #{oCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCoCAmt != null" >
+                #{oCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCoDAmt != null" >
+                #{oCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="bAmt != null" >
+                #{bAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCAmt != null" >
+                #{bCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCoAmt != null" >
+                #{bCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCoCAmt != null" >
+                #{bCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCoDAmt != null" >
+                #{bCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bDAmt != null" >
+                #{bDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOAmt != null" >
+                #{tdyOAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCAmt != null" >
+                #{tdyOCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyODAmt != null" >
+                #{tdyODAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCoAmt != null" >
+                #{tdyOCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCoCAmt != null" >
+                #{tdyOCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCoDAmt != null" >
+                #{tdyOCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBAmt != null" >
+                #{tdyBAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCAmt != null" >
+                #{tdyBCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBDAmt != null" >
+                #{tdyBDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCoAmt != null" >
+                #{tdyBCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCoCAmt != null" >
+                #{tdyBCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCoDAmt != null" >
+                #{tdyBCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="isLeaf != null" >
+                #{isLeaf,jdbcType=VARCHAR},
+            </if>
+            <if test="numAmt != null" >
+                #{numAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tdyAmtFlag != null" >
+                #{tdyAmtFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyCoFlag != null" >
+                #{tdyCoFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyPurODUlamt != null" >
+                #{tdyPurODUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedODUlamt != null" >
+                #{tdyRedODUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyPurOCUlamt != null" >
+                #{tdyPurOCUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedOCUlamt != null" >
+                #{tdyRedOCUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyPurBDUlamt != null" >
+                #{tdyPurBDUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedBDUlamt != null" >
+                #{tdyRedBDUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyPurBCUlamt != null" >
+                #{tdyPurBCUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedBCUlamt != null" >
+                #{tdyRedBCUlamt,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance" >
+        insert into BOK_BALANCE(BOOKSET_ID, BALANCE_DATE, SUBJECT_NO, FSUBJECT_NO, SUBJECT_LEVEL,
+        BAL_FLAG, BAL_CO_FLAG, O_CCY, O_AMT, O_C_AMT, O_D_AMT, O_CO_AMT, O_CO_C_AMT, O_CO_D_AMT,
+        B_CCY, B_AMT, B_C_AMT, B_CO_AMT, B_CO_C_AMT, B_CO_D_AMT, B_D_AMT, TDY_O_AMT, TDY_O_C_AMT,
+        TDY_O_D_AMT, TDY_O_CO_AMT, TDY_O_CO_C_AMT, TDY_O_CO_D_AMT, TDY_B_AMT, TDY_B_C_AMT,
+        TDY_B_D_AMT, TDY_B_CO_AMT, TDY_B_CO_C_AMT, TDY_B_CO_D_AMT, IS_LEAF, NUM_AMT, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, TDY_AMT_FLAG, TDY_CO_FLAG, TDY_PUR_O_D_ULAMT,
+        TDY_RED_O_D_ULAMT, TDY_PUR_O_C_ULAMT, TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT,
+        TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT)
+        select BOOKSET_ID, BALANCE_DATE, SUBJECT_NO, FSUBJECT_NO, SUBJECT_LEVEL,
+            BAL_FLAG, BAL_CO_FLAG, O_CCY, O_AMT, O_C_AMT, O_D_AMT, O_CO_AMT, O_CO_C_AMT, O_CO_D_AMT,
+            B_CCY, B_AMT, B_C_AMT, B_CO_AMT, B_CO_C_AMT, B_CO_D_AMT, B_D_AMT, TDY_O_AMT, TDY_O_C_AMT,
+            TDY_O_D_AMT, TDY_O_CO_AMT, TDY_O_CO_C_AMT, TDY_O_CO_D_AMT, TDY_B_AMT, TDY_B_C_AMT,
+            TDY_B_D_AMT, TDY_B_CO_AMT, TDY_B_CO_C_AMT, TDY_B_CO_D_AMT, IS_LEAF, NUM_AMT, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TDY_AMT_FLAG, TDY_CO_FLAG, TDY_PUR_O_D_ULAMT,
+            TDY_RED_O_D_ULAMT, TDY_PUR_O_C_ULAMT, TDY_RED_O_C_ULAMT, TDY_PUR_B_D_ULAMT, TDY_RED_B_D_ULAMT,
+            TDY_PUR_B_C_ULAMT, TDY_RED_B_C_ULAMT
+             from BOK_BALANCE
+             where 1 = 1 and BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR}) and BALANCE_DATE = #{balanceDate,jdbcType=DATE} and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance" >
+        update BOK_BALANCE
+        <set >
+            <if test="fsubjectNo != null" >
+                FSUBJECT_NO = #{fsubjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="subjectLevel != null" >
+                SUBJECT_LEVEL = #{subjectLevel,jdbcType=DECIMAL},
+            </if>
+            <if test="balFlag != null" >
+                BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="balCoFlag != null" >
+                BAL_CO_FLAG = #{balCoFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="oCcy != null" >
+                O_CCY = #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="oAmt != null" >
+                O_AMT = #{oAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCAmt != null" >
+                O_C_AMT = #{oCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oDAmt != null" >
+                O_D_AMT = #{oDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCoAmt != null" >
+                O_CO_AMT = #{oCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCoCAmt != null" >
+                O_CO_C_AMT = #{oCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="oCoDAmt != null" >
+                O_CO_D_AMT = #{oCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCcy != null" >
+                B_CCY = #{bCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="bAmt != null" >
+                B_AMT = #{bAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCAmt != null" >
+                B_C_AMT = #{bCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCoAmt != null" >
+                B_CO_AMT = #{bCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCoCAmt != null" >
+                B_CO_C_AMT = #{bCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bCoDAmt != null" >
+                B_CO_D_AMT = #{bCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="bDAmt != null" >
+                B_D_AMT = #{bDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOAmt != null" >
+                TDY_O_AMT = #{tdyOAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCAmt != null" >
+                TDY_O_C_AMT = #{tdyOCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyODAmt != null" >
+                TDY_O_D_AMT = #{tdyODAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCoAmt != null" >
+                TDY_O_CO_AMT = #{tdyOCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCoCAmt != null" >
+                TDY_O_CO_C_AMT = #{tdyOCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyOCoDAmt != null" >
+                TDY_O_CO_D_AMT = #{tdyOCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBAmt != null" >
+                TDY_B_AMT = #{tdyBAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCAmt != null" >
+                TDY_B_C_AMT = #{tdyBCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBDAmt != null" >
+                TDY_B_D_AMT = #{tdyBDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCoAmt != null" >
+                TDY_B_CO_AMT = #{tdyBCoAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCoCAmt != null" >
+                TDY_B_CO_C_AMT = #{tdyBCoCAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyBCoDAmt != null" >
+                TDY_B_CO_D_AMT = #{tdyBCoDAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="isLeaf != null" >
+                IS_LEAF = #{isLeaf,jdbcType=VARCHAR},
+            </if>
+            <if test="numAmt != null" >
+                NUM_AMT = #{numAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tdyAmtFlag != null" >
+                TDY_AMT_FLAG = #{tdyAmtFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyCoFlag != null" >
+                TDY_CO_FLAG = #{tdyCoFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="tdyPurODUlamt != null" >
+                TDY_PUR_O_D_ULAMT = #{tdyPurODUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedODUlamt != null" >
+                TDY_RED_O_D_ULAMT = #{tdyRedODUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyPurOCUlamt != null" >
+                TDY_PUR_O_C_ULAMT = #{tdyPurOCUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedOCUlamt != null" >
+                TDY_RED_O_C_ULAMT = #{tdyRedOCUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyPurBDUlamt != null" >
+                TDY_PUR_B_D_ULAMT = #{tdyPurBDUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedBDUlamt != null" >
+                TDY_RED_B_D_ULAMT = #{tdyRedBDUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyPurBCUlamt != null" >
+                TDY_PUR_B_C_ULAMT = #{tdyPurBCUlamt,jdbcType=DECIMAL},
+            </if>
+            <if test="tdyRedBCUlamt != null" >
+                TDY_RED_B_C_ULAMT = #{tdyRedBCUlamt,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+        and BALANCE_DATE = #{balanceDate,jdbcType=DATE}
+        and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance" >
+        update BOK_BALANCE
+        set FSUBJECT_NO = #{fsubjectNo,jdbcType=VARCHAR},
+            SUBJECT_LEVEL = #{subjectLevel,jdbcType=DECIMAL},
+            BAL_FLAG = #{balFlag,jdbcType=VARCHAR},
+            BAL_CO_FLAG = #{balCoFlag,jdbcType=VARCHAR},
+            O_CCY = #{oCcy,jdbcType=VARCHAR},
+            O_AMT = #{oAmt,jdbcType=DECIMAL},
+            O_C_AMT = #{oCAmt,jdbcType=DECIMAL},
+            O_D_AMT = #{oDAmt,jdbcType=DECIMAL},
+            O_CO_AMT = #{oCoAmt,jdbcType=DECIMAL},
+            O_CO_C_AMT = #{oCoCAmt,jdbcType=DECIMAL},
+            O_CO_D_AMT = #{oCoDAmt,jdbcType=DECIMAL},
+            B_CCY = #{bCcy,jdbcType=VARCHAR},
+            B_AMT = #{bAmt,jdbcType=DECIMAL},
+            B_C_AMT = #{bCAmt,jdbcType=DECIMAL},
+            B_CO_AMT = #{bCoAmt,jdbcType=DECIMAL},
+            B_CO_C_AMT = #{bCoCAmt,jdbcType=DECIMAL},
+            B_CO_D_AMT = #{bCoDAmt,jdbcType=DECIMAL},
+            B_D_AMT = #{bDAmt,jdbcType=DECIMAL},
+            TDY_O_AMT = #{tdyOAmt,jdbcType=DECIMAL},
+            TDY_O_C_AMT = #{tdyOCAmt,jdbcType=DECIMAL},
+            TDY_O_D_AMT = #{tdyODAmt,jdbcType=DECIMAL},
+            TDY_O_CO_AMT = #{tdyOCoAmt,jdbcType=DECIMAL},
+            TDY_O_CO_C_AMT = #{tdyOCoCAmt,jdbcType=DECIMAL},
+            TDY_O_CO_D_AMT = #{tdyOCoDAmt,jdbcType=DECIMAL},
+            TDY_B_AMT = #{tdyBAmt,jdbcType=DECIMAL},
+            TDY_B_C_AMT = #{tdyBCAmt,jdbcType=DECIMAL},
+            TDY_B_D_AMT = #{tdyBDAmt,jdbcType=DECIMAL},
+            TDY_B_CO_AMT = #{tdyBCoAmt,jdbcType=DECIMAL},
+            TDY_B_CO_C_AMT = #{tdyBCoCAmt,jdbcType=DECIMAL},
+            TDY_B_CO_D_AMT = #{tdyBCoDAmt,jdbcType=DECIMAL},
+            IS_LEAF = #{isLeaf,jdbcType=VARCHAR},
+            NUM_AMT = #{numAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            TDY_AMT_FLAG = #{tdyAmtFlag,jdbcType=VARCHAR},
+            TDY_CO_FLAG = #{tdyCoFlag,jdbcType=VARCHAR},
+            TDY_PUR_O_D_ULAMT = #{tdyPurODUlamt,jdbcType=DECIMAL},
+            TDY_RED_O_D_ULAMT = #{tdyRedODUlamt,jdbcType=DECIMAL},
+            TDY_PUR_O_C_ULAMT = #{tdyPurOCUlamt,jdbcType=DECIMAL},
+            TDY_RED_O_C_ULAMT = #{tdyRedOCUlamt,jdbcType=DECIMAL},
+            TDY_PUR_B_D_ULAMT = #{tdyPurBDUlamt,jdbcType=DECIMAL},
+            TDY_RED_B_D_ULAMT = #{tdyRedBDUlamt,jdbcType=DECIMAL},
+            TDY_PUR_B_C_ULAMT = #{tdyPurBCUlamt,jdbcType=DECIMAL},
+            TDY_RED_B_C_ULAMT = #{tdyRedBCUlamt,jdbcType=DECIMAL}
+        where BOOKSET_ID = (select F_PROD_ID from rep_prod_info where PROD_ID = #{booksetId,jdbcType=VARCHAR})
+          and BALANCE_DATE = #{balanceDate,jdbcType=DATE}
+          and SUBJECT_NO = #{subjectNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

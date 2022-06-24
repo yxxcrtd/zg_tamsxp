@@ -76,9 +76,9 @@
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentprdinfo/AgentPrdInfo001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/agentprdinfo/AgentPrdInfo001/delete', object,"AgentPrdInfo001_btn_delete", "AgentPrdInfo001", function(result) {
-                                        table.reload();
-                                    });
+                           Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentprdinfo/AgentPrdInfo001/delete', object, function() {
+                                                      $('#AgentPrdInfo001_btn_search').trigger("click");
+                           });
             });
         });
     });
@@ -140,8 +140,8 @@
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentprdinfo/AgentPrdInfo001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'report/submitmaintenance/agentprdinfo/AgentPrdInfo001/delete', object,"AgentPrdInfo001_btn_delete", "AgentPrdInfo001", function(result) {
-                        table.reload();
+                    Joyin.ajaxJson(basePath + 'report/submitmaintenance/agentprdinfo/AgentPrdInfo001/delete', object, function() {
+                           $('#AgentPrdInfo001_btn_search').trigger("click");
                     });
                 });
             });

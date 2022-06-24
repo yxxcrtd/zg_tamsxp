@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.joyintech.tams.report.common.dao.ColumnTypeMapper_mysql">
+    <resultMap id="BaseResultMap"   type="com.joyintech.tams.common.base.entity.ColumnTypeDto">
+        <result column="COLUMN_NAME" property="columnNname"   jdbcType="VARCHAR" />
+        <result column="COMMENTS" property="comment"    jdbcType="VARCHAR" />
+        <result column="DATA_TYPE" property="columnType"  jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="queryColmnInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT COLUMN_NAME,COMMENTS FROM
+        (SELECT DISTINCT B.COLUMN_NAME COLUMN_NAME,
+        A.COMMENTS COMMENTS ,B.COLUMN_ID COLUMN_ID
+        FROM USER_COL_COMMENTS A
+        ,ALL_TAB_COLUMNS B
+        WHERE A.TABLE_NAME = B.TABLE_NAME AND
+        A.COLUMN_NAME = B.COLUMN_NAME
+        <if test="tableId != null" >
+            AND A.TABLE_NAME = #{tableId,jdbcType=CHAR}
+        </if>
+        ) temp
+        ORDER BY COLUMN_ID
+    </select>
+    <select id="queryAllColumnByTableId" resultType="java.lang.String" parameterType="java.lang.String" >
+        <!--SELECT COLUMN_NAME,COMMENTS FROM (
+        SELECT DISTINCT B.COLUMN_NAME COLUMN_NAME,
+        A.COMMENTS COMMENTS ,B.COLUMN_ID COLUMN_ID
+        FROM USER_COL_COMMENTS A
+        ,ALL_TAB_COLUMNS B
+        WHERE A.TABLE_NAME = B.TABLE_NAME AND
+        A.COLUMN_NAME = B.COLUMN_NAME
+        <if test="tableId != null" >
+            AND A.TABLE_NAME = #{tableId,jdbcType=CHAR}
+        </if>
+        ) temp ORDER BY COLUMN_ID-->
+        <if test="tableId != null" >
+            SELECT DISTINCT B.COLUMN_NAME COLUMN_NAME,
+            B.column_comment COMMENTS
+            FROM information_schema.columns B
+            WHERE B.TABLE_NAME = #{tableId,jdbcType=CHAR}
+        </if>
+    </select>
+    <select id="queryColumn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		SELECT DISTINCT COLUMN_NAME, UPPER(DATA_TYPE) as DATA_TYPE
+ 		 FROM information_schema.`COLUMNS`
+ 	    WHERE TABLE_NAME = #{tableId,jdbcType=CHAR}
+	</select>
+    <select id="queryUUID" resultType="java.lang.Integer" parameterType="java.util.Map" >
+		SELECT COUNT(*)
+ 		 FROM information_schema.`COLUMNS`
+ 	    WHERE TABLE_NAME = #{tableId,jdbcType=CHAR}
+      AND COLUMN_NAME = #{column,jdbcType=CHAR}
+      AND DATA_TYPE = 'char'
+      #AND DATA_LENGTH = 36
+	</select>
+</mapper>

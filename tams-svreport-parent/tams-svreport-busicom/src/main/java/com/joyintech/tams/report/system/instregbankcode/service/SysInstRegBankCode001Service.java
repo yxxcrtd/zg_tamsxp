@@ -154,7 +154,7 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
 
 
             if(!StringUtil.isEmpty(dataDto.getBelogCodeCBRC())){
-                dataDto.setBelogCodeCBRC(dataDto.getBelogCodeCBRC().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.监管机构, dataDto.getBelogCodeCBRC()));
+                dataDto.setBelogCodeCBRC(SvrDataUtil.getNameFromDataDict(DictCode.监管机构, dataDto.getBelogCodeCBRC()));
             }
           /*  if (instituteMap.containsKey(dataDto.getOrgCode())) {
             	dataDto.setInsitituteCode(instituteMap.get(dataDto.getOrgCode()));
@@ -243,25 +243,26 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
             }
 
             // 登记银行代码
-            String registBankCode = list.get(2);
+            String registBankCode = list.get(1);
             Map<String,TransformRule001Dto> spzMap=new HashMap<String,TransformRule001Dto>();
             Map<String,List<ChbTransformRuleObjDto>> objFiledsMap=new HashMap<String,List<ChbTransformRuleObjDto>>();
             equityInfoValid.checkBankCodeNew(messageList, registBankCode,spzMap,objFiledsMap,null);
             // 总行机构代码
-            String pbcBankCode = list.get(3);
+            String pbcBankCode = list.get(2);
             equityInfoValid.checkPbcBankCode(messageList, pbcBankCode);
             // 是否理财子公司
-            String isFinSubCompany = list.get(4);
+            String isFinSubCompany = list.get(3);
             if (StringUtil.isEmpty(isFinSubCompany)) {
                 messageList.add(this.getMessage("REPORT_COMMON_E_0057", "是否理财子公司"));
             }else{
-                if(!StringUtil.equals(isFinSubCompany,"1") && !StringUtil.equals(isFinSubCompany,"2") ){
+                String split = isFinSubCompany.split(" ")[0];
+                if(!StringUtil.equals(split,"1") && !StringUtil.equals(split,"2") ){
                     messageList.add(this.getMessage("REPORT_COMMON_E_0112"));
                 }
             }
 
             //社会信用代码
-            String insitituteCode = list.get(5);
+            String insitituteCode = list.get(4);
             if (StringUtil.isEmpty(insitituteCode)) {
                 messageList.add(this.getMessage("REPORT_COMMON_E_0057", "社会信用代码"));
             }
@@ -281,7 +282,7 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
             //TISHKBS-2372 社会信用代码要求只能是18位的数字或大写英文组合 add by wangyaning 20210625 end
 
             /******所属银保监局不可为空**/
-            String belogCodeCBRC = list.get(6);
+            String belogCodeCBRC = list.get(5);
             if (StringUtil.isEmpty(belogCodeCBRC)) {
                 messageList.add(this.getMessage("REPORT_COMMON_E_0057", "所属银保监局"));
             }
@@ -296,11 +297,11 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
                 entity.setCreateDept(orgCode);
                 /*机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-19 begin*/
                 entity.setPbcBankCode(pbcBankCode);
-                entity.setIsFinSubCompany(isFinSubCompany);
+                entity.setIsFinSubCompany(isFinSubCompany.split(" ")[0]);
                 /*机构登记银行代码管理增加总行机构代码和是否理财子公司字段 add by gaojian 2019-06-19 end*/
                 entity.setInsitituteCode(insitituteCode);
                 /****新增所属银保监局字段   20220307 leipeng**/
-                entity.setBelogCodeCBRC(belogCodeCBRC);
+                entity.setBelogCodeCBRC(belogCodeCBRC.split(" ")[0]);
                 /****新增所属银保监局字段   20220307 leipeng**/
 
                 entities.add(entity);

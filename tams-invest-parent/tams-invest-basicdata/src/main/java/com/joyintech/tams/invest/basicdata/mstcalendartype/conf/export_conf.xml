@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="MstCalendarType001.xlsx" name="日历类型信息一览">
-    <Worksheet javaBean="com.joyintech.tams.invest.basicdata.mstcalendartype.dto.MstCalendarType001Dto">
-        <Row>
-            <Cell order="1" name="交易日历名称">calendarName</Cell>
-            <Cell order="2" name="包含市场日历类型">calendarType</Cell>
-        </Row>
-    </Worksheet>
-</Workbook>

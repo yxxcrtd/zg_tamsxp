@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper_mysql">
-    <select id="selectAllCashPositionByTotle" resultType="com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto">
-        SELECT * FROM PTL_CASH_POSITION_FLOW WHERE
-        ORDER_ID like concat('%',IFNULL(#{totleId},''),'%')
-    </select>
-</mapper>

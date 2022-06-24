@@ -99,5 +99,14 @@ public class ManuallyGeneratingPbcData001Controller extends BaseController{
     public AjaxResult getYesterDayDate(){
         return manuallyGeneratingPbcDataService.getYesterDayDate();
     }
-    
+	/**
+	 * 产品内部代码
+	 * @return 产品内部代码下拉框初始值
+	 */
+	@ResponseBody
+	@RequestMapping("/getInsideProdId")
+	public List<SelectOptionDto> getInsideProdId() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return manuallyGeneratingpbcDataMService.getInsideProdId(param);
+	}
 }

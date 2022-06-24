@@ -2,22 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.service.disclosure.information.config.poireportmodelmanage.dao.PoiReportModelManage001Mapper_mysql">
 	<select id="searchReports" parameterType="java.util.Map" resultType="com.joyintech.tams.common.base.entity.DisPoiTab">
-		select
-		TAB_NUM tabNum,
-		TAB_NAME tabName,
-		TEMP_PATH tempPath,
-		TEMP_NAME tempName,
-		case  when STATUS='E' then '有效'
-		when  STATUS='D' then '删除'
-		else '待处理'
-		end
-		status
-		from DIS_POI_TAB
-		WHERE 1=1
-		<if test="tabNum!=null and tabNum!=''">
+	select
+	TAB_NUM tabNum,
+	TAB_NAME tabName,
+	TEMP_PATH tempPath,
+	TEMP_NAME tempName,
+	case  when STATUS='E' then '有效'
+    when  STATUS='D' then '删除'
+    else '待处理'
+    end
+	 status
+	from DIS_POI_TAB 
+	WHERE 1=1 
+        <if test="tabNum!=null and tabNum!=''">
 			and TAB_NUM like concat(concat('%',#{tabNum,jdbcType=VARCHAR}),'%')
 		</if>
-		<if test="tabName!=null and tabName!=''">
+        <if test="tabName!=null and tabName!=''">
 			and TAB_NAME like concat(concat('%',#{tabName,jdbcType=VARCHAR}),'%')
 		</if>
 		<if test="tempName!=null and tempName!=''">

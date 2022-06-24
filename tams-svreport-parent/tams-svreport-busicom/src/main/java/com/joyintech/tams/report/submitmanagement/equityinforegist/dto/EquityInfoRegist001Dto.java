@@ -701,6 +701,11 @@ public class EquityInfoRegist001Dto extends TableRow {
         this.holderClassify = holderClassify;
     }
 
+    public String getHolderClassifyStr() {
+        return  holderClassify +' '+SysDataUtil.getNameFromDataDict(DictCode.投资者分类, holderClassify);
+    }
+
+
     /**
      * 获取 spvCapAccBank
      *

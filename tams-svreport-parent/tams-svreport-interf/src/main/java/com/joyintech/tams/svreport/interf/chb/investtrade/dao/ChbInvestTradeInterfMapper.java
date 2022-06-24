@@ -173,4 +173,8 @@ public interface ChbInvestTradeInterfMapper {
 	List<MstCounterPartyDto> selectAllTradeCounter();
 
 	ChbOrgRegistBankCode selectByRegistBankCode(String registBankCode);
+
+    void deleteChbInvestTrade(@Param("list") List<ChbInvestTrade> list);
+
+	void deleteChbInvestTradeErroData(@Param("list") List<ChbInvestTrade> list);
 }

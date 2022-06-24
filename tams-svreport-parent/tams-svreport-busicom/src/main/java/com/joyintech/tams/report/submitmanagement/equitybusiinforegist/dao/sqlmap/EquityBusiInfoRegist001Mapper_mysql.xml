@@ -310,7 +310,6 @@
     </update>
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateInterfSubmitAndSeq" parameterType="java.util.Map">
-        /*begin*/
         <foreach collection="investList" item="item" index="index" separator=";">
             update CHB_INVESTHOLD_INFO_SUB sub
             set
@@ -321,7 +320,6 @@
             where
             sub.REGIST_SEQNO = #{item.registSeqno}
         </foreach>
-        /* ;end;*/
     </update>
 
     <!-- add by etliu 20180818 start-->
@@ -639,7 +637,6 @@
     </delete>
     <!-- 接口报送更新并且更新 报送流水号-->
     <update id="updateInterfSeq" parameterType="java.util.Map">
-        /*begin*/
         <foreach collection="investList" item="item" index="index" separator=";">
             update CHB_EQUDET_SUB sub
             set
@@ -653,7 +650,7 @@
             and sub.INDENTIFY_MARK = #{item.indentifyMark}
             and sub.SUBMIT_STATUS='02'
         </foreach>
-        /*;end;*/
+        ;
     </update>
 
 
@@ -963,7 +960,7 @@
     </update>
     <!-- 根据识别标识与登记银行代码从信息维护表中查询数据插入登记表 -->
     <insert id="insertEquityBusiHis" parameterType="java.util.List">
-        insert into CHB_EQUDET_HIS ( BUSI_SEQNO, REG_CODE,
+        insert into CHB_EQUDET_HIS (HIS_NO, BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
         BUSI_TYPE, CCY, AMOUNT,
@@ -977,7 +974,7 @@
         UPDATE_TIME, CREATE_USER, CREATE_TIME,
         DATA_SOURCE, ORG_CODE, AGENT,
         CREATE_DEPT, IS_SUBMIT)
-        select
+        select _NEXTINDEX('seq_equity_busi'),
         BUSI_SEQNO, REG_CODE,
         ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
         EQUITY_CONF_DATE, SHARE_CONF_DATETIME, FUND_ACC_PLACE,
@@ -1077,7 +1074,7 @@
         ciis.SUMIT_SEQ sumitSeq,
         ciis.CHECK_SEQNO checkSeqno
         from CHB_EQUDET_SUB ciis
-        left join CHB_SUBMIT_STATUS status
+        left join CHB_EQUDET_SUBMIT_STATUS status
         on ciis.sumit_seq = status.seqno
         <where>
             ciis.SUBMIT_STATUS='01'
@@ -1151,18 +1148,7 @@
     <delete id="deleteEquDetSubmitRegist" parameterType="map">
         delete from CHB_EQUDET_SUB aa
         where aa.SUBMIT_STATUS in ('02','03')
-        and ( BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK) IN
-        ( SELECT * FROM (
-        SELECT
-        BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
-        FROM
-        chb_equdet_sub
-        GROUP BY
-        BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
-        HAVING
-        COUNT(1) > 1)t
-        )
-        <!--and EXISTS (
+        and EXISTS (
         select BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK,count(1)
         from chb_equdet_sub ciis
         <include refid="wherecase"/>
@@ -1171,7 +1157,7 @@
         and ciis.REGIST_BANK_CODE=aa.REGIST_BANK_CODE
         and ciis.INDENTIFY_MARK=aa.INDENTIFY_MARK
         group by BUSI_SEQNO, REG_CODE, REGIST_BANK_CODE, INDENTIFY_MARK
-        having count(1)>1)-->
+        having count(1)>1)
     </delete>
     <sql id="wherecase">
         <where>
@@ -1376,13 +1362,6 @@
         set sub.SUBMIT_STATUS = '02',
         sub.submit_time = NOW()
         where sub.SUBMIT_STATUS = '01'
-        <!--update CHB_EQUDET_SUB sub
-        set sub.SUBMIT_STATUS = '02',
-            sub.submit_time = NOW()
-        where
-            sub.SUMIT_SEQ in (select SUMIT_SEQ from CHB_EQUDET_SEND_TEMP)
-            and sub.SUBMIT_STATUS = '01'-->
-
     </update>
     <select id="getChbEquSubSend" resultType="string" parameterType="map">
 		select INDENTIFY_MARK from CHB_EQU_SUB  cs
@@ -1522,7 +1501,6 @@
 
     <update id="updateChbEquSubSubmitStatus" parameterType="java.util.List">
         /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-        begin
         <foreach collection="list" item="item" index="index" open="" close=";" separator=";">
             update CHB_EQU_SUB
             <set >
@@ -1532,7 +1510,6 @@
             </set>
             where SUMIT_SEQ = #{item.seqno,jdbcType=VARCHAR}
         </foreach>
-        end;
         /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
     </update>
 </mapper>

@@ -3,11 +3,11 @@
 <mapper namespace="com.joyintech.service.disclosure.information.manage.estimatereveal.dao.EstimateReveal001Mapper_mysql">
 	<select id="findPage" resultType="com.joyintech.service.disclosure.information.manage.estimatereveal.dto.EstimateReveal001Dto">
 		SELECT
-		rel.PRODID prodid,
-		rel.PROD_NAME prodName,
-		rel.REP_TYPE repType,
-		rfp.NAME repTypeName,
-		rel.REP_NAME repName,
+			rel.PRODID prodid,
+			rel.PROD_NAME prodName,
+			rel.REP_TYPE repType,
+			rfp.NAME repTypeName,
+			rel.REP_NAME repName,
 		CASE
 		WHEN rel.START_DATE IS NULL
 		OR rel.START_DATE = rel.END_DATE THEN
@@ -25,38 +25,38 @@
 		LEFT JOIN REP_INFO ri ON rel.REP_ID = ri.REP_ID
 		LEFT JOIN REP_FTP_PATH rfp ON ri.REPORT_CATEGORY = rfp.ID
 		WHERE
-		rel.STATUS = #{status,jdbcType=VARCHAR}
+		    rel.STATUS = #{status,jdbcType=VARCHAR}
 		<if test="revealEndDateBegin !=null and revealEndDateBegin !='' ">
-			AND DATE_FORMAT(rel.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
-		</if>
-		<if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
-			AND DATE_FORMAT(rel.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
-		</if>
-		<if test="repName !=null and repName !='' ">
-			AND rel.REP_NAME like CONCAT('%',CONCAT(#{repName,jdbcType=VARCHAR},'%'))
-		</if>
-		<if test="prodIdArr != null and prodIdArr.length > 0">
-			AND (rel.PRODID IN
+            AND DATE_FORMAT(rel.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[>=]]> #{revealEndDateBegin,jdbcType=VARCHAR}
+        </if>
+        <if test="revealEndDateEnd !=null and revealEndDateEnd !='' ">
+            AND DATE_FORMAT(rel.REVEAL_END_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{revealEndDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="repName !=null and repName !='' ">
+            AND rel.REP_NAME like CONCAT('%',CONCAT(#{repName,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="prodIdArr != null and prodIdArr.length > 0">
+	 		AND (rel.PRODID IN
 			<foreach item="item" collection="prodIdArr" index="index"
-					 open="(" separator="," close=")">
-				<if test="(index % 998) == 0">
-					null) OR rel.PRODID IN (
-				</if>
+				open="(" separator="," close=")">
+				 <if test="(index % 998) == 0">
+	                    null) OR rel.PRODID IN (
+                 </if>
 				#{item}
 			</foreach>
-			)
+		 )
 		</if>
 		<if test="jobIdArr != null and jobIdArr.length > 0">
 			AND rel.JOB_ID in
 			<foreach item="item" collection="jobIdArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
 		<if test="repTypeArr != null and repTypeArr.length > 0">
-			AND ri.REPORT_CATEGORY IN
+	 		AND ri.REPORT_CATEGORY IN
 			<foreach item="item" collection="repTypeArr" index="index"
-					 open="(" separator="," close=")">
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>

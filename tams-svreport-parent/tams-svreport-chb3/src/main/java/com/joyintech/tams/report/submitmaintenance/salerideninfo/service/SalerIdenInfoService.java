@@ -109,6 +109,7 @@ public class SalerIdenInfoService extends CommonExportService<SalerIdenInfoDto> 
         param.put("dataList", ExcelUtil.getDataList(fileName));
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
+        param.put("fileName", fileName);
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerIdenInfo/checkConfirmMsgForImportData",
                 param,
@@ -145,6 +146,7 @@ public class SalerIdenInfoService extends CommonExportService<SalerIdenInfoDto> 
         param.put("dataList", ExcelUtil.getDataList(fileName));
         param.put("orgCode", CommonUtil.getOrgCode());
         param.put("deptCode", CommonUtil.getDeptCode());
+        param.put("fileName", fileName);
         return restTemplate.postForObject(
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/SalerIdenInfo/checkConfirmMsgForImportCodeData",
                 param,

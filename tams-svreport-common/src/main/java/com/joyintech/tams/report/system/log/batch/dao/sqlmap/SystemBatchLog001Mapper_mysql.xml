@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.report.system.log.batch.dao.SystemBatchLog001Mapper_mysql">
-	<select id="searchForPage" resultType="com.joyintech.tams.report.system.log.batch.dto.SystemBatchLog001Dto">
-    	select
-    		A.BATCH_ID AS batchId,
-            C.TASK_ID as taskId,
-            C.TASK_NAME as taskName,
-            A.TASK_STATUS as taskStatus,
-            A.START_TIME as startTime,
-            A.END_TIME as endTime,
-            A.START_DATE as busiStart,
-            A.END_DATE as busiEnd,
-            A.TASK_RESULT as taskResult,
-            IFNULL(B.REAL_NAME, 'system') as taskAssign,
-            A.START_MODULE as startModule,
-            A.GRADE_TYPE as taskPriority,
-            A.TASK_CREATE_TIME as createTime
+    <select id="queryTask" resultMap="com.joyintech.tams.common.base.dao.ChbSysTaskMapper.BaseResultMap">
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysTaskMapper.Sql_All_Effective_Data" />
+    </select>
+    <select id="searchForPage" resultType="com.joyintech.tams.report.system.log.batch.dto.SystemBatchLog001Dto">
+        select
+        A.BATCH_ID AS batchId,
+        C.TASK_ID as taskId,
+        C.TASK_NAME as taskName,
+        A.TASK_STATUS as taskStatus,
+        A.START_TIME as startTime,
+        A.END_TIME as endTime,
+        A.START_DATE as busiStart,
+        A.END_DATE as busiEnd,
+        A.TASK_RESULT as taskResult,
+        IFNULL(B.REAL_NAME, 'system') as taskAssign,
+        A.START_MODULE as startModule,
+        A.GRADE_TYPE as taskPriority,
+        A.TASK_CREATE_TIME as createTime
         from
-            CHB_SYS_BATCH_LOG A
-            LEFT JOIN CHB_SYS_USER B ON B.USER_ID = A.TASK_ASSIGN AND B.STATUS = 'E'
-            LEFT JOIN CHB_SYS_TASK C ON A.TASK_ID = C.TASK_ID
+        CHB_SYS_BATCH_LOG A
+        LEFT JOIN CHB_SYS_USER B ON B.USER_ID = A.TASK_ASSIGN AND B.STATUS = 'E'
+        LEFT JOIN CHB_SYS_TASK C ON A.TASK_ID = C.TASK_ID
         <where>
             <if test="taskId != null and !taskId.equals('')">
                 AND A.TASK_ID = #{taskId,jdbcType=VARCHAR}
@@ -30,13 +33,13 @@
             <if test="busiDateStart != null and !busiDateStart.equals('')">
                 AND A.START_DATE &gt;= STR_TO_DATE(#{busiDateStart}, '%Y-%m-%d')
             </if>
-            <if test="busiDateEnd != null and !busiDateEnd.equals('')"> 
+            <if test="busiDateEnd != null and !busiDateEnd.equals('')">
                 AND A.END_DATE &lt;= STR_TO_DATE(#{busiDateEnd}, '%Y-%m-%d')
             </if>
             <if test="batchIdList != null">
-            	<foreach collection="batchIdList" item="item" open=" AND A.BATCH_ID IN (" close=")" separator=",">
-		 	 		#{item}
-		 		</foreach>
+                <foreach collection="batchIdList" item="item" open=" AND A.BATCH_ID IN (" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
         </where>
         ORDER BY A.CREATE_TIME DESC

@@ -69,7 +69,7 @@ public class InvestorsHoldInfoExportCommonService extends CommonExportService<In
     @Autowired
     private ChbSubinfoAutoBatchLogMapper chbSubinfoAutoBatchLogMapper;
     
-    private static final String CHB_EQUDET_SUB_NAME = "CHB_INVESTHOLD_INFO_SUB";
+    private static final String CHB_EQUDET_SUB_NAME = "投资者持有信息登记";
 
     /**
      * 日志

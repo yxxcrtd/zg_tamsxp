@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.svreport.interf.chb.prodinfo.dao.ChbPrdBaseinfoInterfMapper_mysql">
 	<resultMap id="BaseResultMap"
-		type="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+			   type="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		<result column="FPROD_ID" jdbcType="VARCHAR" property="fprodId" />
 		<result column="PROD_ID" jdbcType="VARCHAR" property="prodId" />
 		<result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
@@ -60,7 +60,7 @@
 		<result column="CON_PRD_TRAGET" jdbcType="VARCHAR" property="conPrdTraget" />
 		<result column="IS_YIELD" jdbcType="VARCHAR" property="isYield" />
 		<result column="IS_YIELD_MEAS_BASIS" jdbcType="VARCHAR"
-			property="isYieldMeasBasis" />
+				property="isYieldMeasBasis" />
 		<result column="INV_TYPE_RAT" jdbcType="VARCHAR" property="invTypeRat" />
 		<result column="RISK_TYPE" jdbcType="VARCHAR" property="riskType" />
 		<result column="HIGH_YIELD" jdbcType="DECIMAL" property="highYield" />
@@ -121,7 +121,6 @@
 		<result column="AGENT" jdbcType="VARCHAR" property="agent" />
 		<result column="FIDUCIARY_DUTY" jdbcType="VARCHAR" property="fiduciaryDuty" />
 		<result column="TRANSFER_TYPE" jdbcType="VARCHAR" property="transferType" />
-		<result column="IS_MARKET_FUND" jdbcType="VARCHAR" property="isMarketFund" />
 		<result column="EXC_FIN_SECTOR" property="excFinSector" />
 		<result column="IS_SHORT_TERM" property="isShortTerm" />
 		<result column="SHORT_TERM" property="shortTerm" />
@@ -130,10 +129,10 @@
 		<result column="YIELD" property="yield" />
 		<result column="INVEST_FEE_RATE" property="investFeeRate" />
 		<result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType" />
-
+		<result column="ZJXT_FLAG" jdbcType="VARCHAR" property="zjxtFlag" />
 	</resultMap>
 	<insert id="insert"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		insert into
 		CHB_PRD_BASEINFO (
 		PRODUUID, FPROD_ID, PROD_ID,
@@ -175,8 +174,9 @@
 		DEPT_CODE, WORKFLOW_ID, DATA_SOURCE,
 		RAISE_TYPE, MANAGE_TYPE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,IS_MARKET_FUND
+		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE
 		)
+		values (
 		<foreach collection="list" item="dto" separator="union all">
 			SELECT
 			#{dto.produuid,jdbcType=CHAR}, #{dto.fprodId,jdbcType=VARCHAR},
@@ -276,11 +276,25 @@
 			NOW(),
 			#{dto.agent,jdbcType=VARCHAR},
 			#{dto.fiduciaryDuty,jdbcType=VARCHAR},
-			#{dto.transferType,jdbcType=VARCHAR},
-			#{dto.isMarketFund,jdbcType=VARCHAR}
+			#{dto.transferType,jdbcType=VARCHAR}
 			FROM DUAL
 		</foreach>
+		)
 	</insert>
+	<update id="updateChbPrdresistCodes">
+		<foreach collection="list" item="item" index="index"
+				 separator=";">
+			update CHB_PRDRESIST_CODE
+			<set>
+				<if test="item.prodId != null">
+					PRODID = #{item.prodId,jdbcType=VARCHAR},
+				</if>
+
+			</set>
+			where PROD_INS_ID = #{item.prodInsId,jdbcType=VARCHAR}
+		</foreach>
+		;
+	</update>
 	<delete id="deleteByDate" parameterType="java.util.Date">
 		delete from CHB_PRD_BASEINFO
 		where ifnull(c.update_time,c.create_time) = #{batchTime,jdbcType=TIMESTAMP}
@@ -290,421 +304,148 @@
 		delete from CHB_PRD_BASEINFO
 		where DATE_FORMAT(UPDATE_TIME,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')
 	</delete>
-	
+
 	<delete id="deleteByProdid"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		delete from CHB_PRD_BASEINFO
 		<where>
 			<foreach collection="insertList" item="item" index="index"
-				open="PROD_ID in (" close=")" separator=",">
+					 open="PROD_ID in (" close=")" separator=",">
 				#{item.prodId,jdbcType=VARCHAR}
 			</foreach>
 		</where>
 	</delete>
-
+	<delete id="deleteChbPrdBaseinfoErroData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+		delete from CHB_PRD_BASEINFO_ERRODATA
+		<where>
+			<foreach collection="list" item="item" index="index"
+					 open="PROD_ID in (" close=")" separator=",">
+				#{item.prodId,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</delete>
 	<insert id="insertBymodel"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		insert into CHB_PRD_BASEINFO (PRODUUID, FPROD_ID, PROD_ID,
-		ORG_CODE, PROD_NAME, REG_CODE,
-		LACKS, PROD_INS_ID, PROFIT_TYPE,
-		INVESTOR_TYPE, IS_INTACT, STATUS,
-		BASIC, PRODTYPE, ISAGENCY,
-		SALETARGET, DURATIONFLAG, MDATE,
-		VDATE, TERMINATEDATE, IVSTORIENTATION,
-		OPEN_BUSS_REMARK, RAISE_PSTRDATE, RAISE_PENDDATE,
-		DECLARE_STATUS, ISSUING_STATUS, RISK_LEVEL,
-		TERMTYPE, RAISE_CCY, RAISE_VDATE,
-		RAISE_ENDDATE, TEMPLATE_NAME, PROD_BRAND,
-		PROD_STAGE, DESIGNER_NAME, DESIGNER_ID,
-		APPROVER_NAME, APPROVER_ID, MANAGER_NAME,
-		MANAGER_ID, BOOK_MODE, LIAISON_NAME,
-		LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL,
-		INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL,
-		OPERATE_MODE, CMMODE, PMMODE,
-		MNAME, INV_ASSET_TYPE, CONT_MODE,
-		COOPERATION_NAME, CON_PRD_TRAGET, IS_YIELD,
-		IS_YIELD_MEAS_BASIS, INV_TYPE_RAT, RISK_TYPE,
-		HIGH_YIELD, LOW_YIELD, SALE_AREA,
-		SALE_AMT_STR, CASH_PRIN_CCY, CASH_PROF_CCY,
-		RAISE_AMT_PLAN, SALE_FEE_RATE, INVEST_PRIN_DATE,
-		INVEST_PROF_DATE, TRU_FEE_RATE, IN_DEP_CODE,
-		IN_DEP_NAME, OUT_DEP_CTRY, OUT_DEP_NAME,
-		TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, CREDIT_FLAG,
-		CREDIT_TYPE, PRICED_MODE, PRD_VDATE,
-		PRD_MDATE, EXP_AVG_YIELD, IS_CONSTRACTE,
-		GRADE_TYPE, YIELD_COMMENT, OPEN_MODE,
-		OPEN_CIRCLE, OPEN_CIRCLE_DAYS, RULE_COMMENT,
-		FIRST_OPEN_DAY, HOLIDAY_ON_FLAG, AVG_OPEN_COUNT,
-		OPEN_BUSS, HIGH_YIELD_ISSUE, LOW_YIELD_ISSUE,
-		CREDIT_MODE, ISSUE_PARTY_ID, OPENTYPEP,
-		OPENDAYP, OPENCYCLEP, OPENCYCLEUNITP,
-		WEEKP, DAYP, WORKDAYP,
-		REMARK, DEPT_CODE, WORKFLOW_ID,
-		DATA_SOURCE, RAISE_TYPE, MANAGE_TYPE,
-		UPDATE_USER, UPDATE_TIME, CREATE_USER,
-		CREATE_TIME, AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,IS_MARKET_FUND,
-		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE
+									  ORG_CODE, PROD_NAME, REG_CODE,
+									  LACKS, PROD_INS_ID, PROFIT_TYPE,
+									  INVESTOR_TYPE, IS_INTACT, STATUS,
+									  BASIC, PRODTYPE, ISAGENCY,
+									  SALETARGET, DURATIONFLAG, MDATE,
+									  VDATE, TERMINATEDATE, IVSTORIENTATION,
+									  OPEN_BUSS_REMARK, RAISE_PSTRDATE, RAISE_PENDDATE,
+									  DECLARE_STATUS, ISSUING_STATUS, RISK_LEVEL,
+									  TERMTYPE, RAISE_CCY, RAISE_VDATE,
+									  RAISE_ENDDATE, TEMPLATE_NAME, PROD_BRAND,
+									  PROD_STAGE, DESIGNER_NAME, DESIGNER_ID,
+									  APPROVER_NAME, APPROVER_ID, MANAGER_NAME,
+									  MANAGER_ID, BOOK_MODE, LIAISON_NAME,
+									  LIAISON_TEL, LIAISON_MOBILE, LIAISON_EMAIL,
+									  INVEST_ARAE, INVEST_COUNTRY, FINAN_SER_MODEL,
+									  OPERATE_MODE, CMMODE, PMMODE,
+									  MNAME, INV_ASSET_TYPE, CONT_MODE,
+									  COOPERATION_NAME, CON_PRD_TRAGET, IS_YIELD,
+									  IS_YIELD_MEAS_BASIS, INV_TYPE_RAT, RISK_TYPE,
+									  HIGH_YIELD, LOW_YIELD, SALE_AREA,
+									  SALE_AMT_STR, CASH_PRIN_CCY, CASH_PROF_CCY,
+									  RAISE_AMT_PLAN, SALE_FEE_RATE, INVEST_PRIN_DATE,
+									  INVEST_PROF_DATE, TRU_FEE_RATE, IN_DEP_CODE,
+									  IN_DEP_NAME, OUT_DEP_CTRY, OUT_DEP_NAME,
+									  TERM_RIGHT_FLAG, CUS_REDEEM_FLAG, CREDIT_FLAG,
+									  CREDIT_TYPE, PRICED_MODE, PRD_VDATE,
+									  PRD_MDATE, EXP_AVG_YIELD, IS_CONSTRACTE,
+									  GRADE_TYPE, YIELD_COMMENT, OPEN_MODE,
+									  OPEN_CIRCLE, OPEN_CIRCLE_DAYS, RULE_COMMENT,
+									  FIRST_OPEN_DAY, HOLIDAY_ON_FLAG, AVG_OPEN_COUNT,
+									  OPEN_BUSS, HIGH_YIELD_ISSUE, LOW_YIELD_ISSUE,
+									  CREDIT_MODE, ISSUE_PARTY_ID, OPENTYPEP,
+									  OPENDAYP, OPENCYCLEP, OPENCYCLEUNITP,
+									  WEEKP, DAYP, WORKDAYP,
+									  REMARK, DEPT_CODE, WORKFLOW_ID,
+									  DATA_SOURCE, RAISE_TYPE, MANAGE_TYPE,
+									  UPDATE_USER, UPDATE_TIME, CREATE_USER,
+									  CREATE_TIME, AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,
+									  EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,IS_YLLCCP,IS_FHXGCP,ZJXT_FLAG
 		)
 		values (#{produuid,jdbcType=CHAR}, #{fprodId,jdbcType=VARCHAR},
-		#{prodId,jdbcType=VARCHAR},
-		#{orgCode,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR},
-		#{lacks,jdbcType=VARCHAR}, #{prodInsId,jdbcType=VARCHAR},
-		#{profitType,jdbcType=VARCHAR},
-		#{investorType,jdbcType=VARCHAR}, #{isIntact,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
-		#{basic,jdbcType=VARCHAR}, #{prodtype,jdbcType=VARCHAR},
-		#{isagency,jdbcType=VARCHAR},
-		#{saletarget,jdbcType=VARCHAR}, #{durationflag,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP},
-		#{vdate,jdbcType=TIMESTAMP}, #{terminatedate,jdbcType=TIMESTAMP},
-		#{ivstorientation,jdbcType=VARCHAR},
-		#{openBussRemark,jdbcType=VARCHAR},
-		#{raisePstrdate,jdbcType=TIMESTAMP},
-		#{raisePenddate,jdbcType=TIMESTAMP},
-		#{declareStatus,jdbcType=VARCHAR}, #{issuingStatus,jdbcType=VARCHAR},
-		#{riskLevel,jdbcType=VARCHAR},
-		#{termtype,jdbcType=VARCHAR}, #{raiseCcy,jdbcType=VARCHAR}, #{raiseVdate,jdbcType=TIMESTAMP},
-		#{raiseEnddate,jdbcType=TIMESTAMP}, #{templateName,jdbcType=VARCHAR},
-		#{prodBrand,jdbcType=VARCHAR},
-		#{prodStage,jdbcType=DECIMAL}, #{designerName,jdbcType=VARCHAR}, #{designerId,jdbcType=VARCHAR},
-		#{approverName,jdbcType=VARCHAR}, #{approverId,jdbcType=VARCHAR},
-		#{managerName,jdbcType=VARCHAR},
-		#{managerId,jdbcType=VARCHAR}, #{bookMode,jdbcType=VARCHAR}, #{liaisonName,jdbcType=VARCHAR},
-		#{liaisonTel,jdbcType=VARCHAR}, #{liaisonMobile,jdbcType=VARCHAR},
-		#{liaisonEmail,jdbcType=VARCHAR},
-		#{investArae,jdbcType=VARCHAR}, #{investCountry,jdbcType=VARCHAR}, #{finanSerModel,jdbcType=VARCHAR},
-		#{operateMode,jdbcType=VARCHAR}, #{cmmode,jdbcType=VARCHAR},
-		#{pmmode,jdbcType=VARCHAR},
-		#{mname,jdbcType=VARCHAR}, #{invAssetType,jdbcType=VARCHAR}, #{contMode,jdbcType=VARCHAR},
-		#{cooperationName,jdbcType=VARCHAR}, #{conPrdTraget,jdbcType=VARCHAR},
-		#{isYield,jdbcType=VARCHAR},
-		#{isYieldMeasBasis,jdbcType=VARCHAR}, #{invTypeRat,jdbcType=VARCHAR}, #{riskType,jdbcType=VARCHAR},
-		#{highYield,jdbcType=DECIMAL}, #{lowYield,jdbcType=DECIMAL},
-		#{saleArea,jdbcType=VARCHAR},
-		#{saleAmtStr,jdbcType=DECIMAL}, #{cashPrinCcy,jdbcType=VARCHAR}, #{cashProfCcy,jdbcType=VARCHAR},
-		#{raiseAmtPlan,jdbcType=DECIMAL}, #{saleFeeRate,jdbcType=DECIMAL},
-		#{investPrinDate,jdbcType=VARCHAR},
-		#{investProfDate,jdbcType=VARCHAR}, #{truFeeRate,jdbcType=DECIMAL},
-		#{inDepCode,jdbcType=VARCHAR},
-		#{inDepName,jdbcType=VARCHAR}, #{outDepCtry,jdbcType=VARCHAR}, #{outDepName,jdbcType=VARCHAR},
-		#{termRightFlag,jdbcType=VARCHAR}, #{cusRedeemFlag,jdbcType=VARCHAR},
-		#{creditFlag,jdbcType=VARCHAR},
-		#{creditType,jdbcType=VARCHAR}, #{pricedMode,jdbcType=VARCHAR}, #{prdVdate,jdbcType=TIMESTAMP},
-		#{prdMdate,jdbcType=TIMESTAMP}, #{expAvgYield,jdbcType=DECIMAL},
-		#{isConstracte,jdbcType=VARCHAR},
-		#{gradeType,jdbcType=VARCHAR}, #{yieldComment,jdbcType=VARCHAR}, #{openMode,jdbcType=VARCHAR},
-		#{openCircle,jdbcType=VARCHAR}, #{openCircleDays,jdbcType=DECIMAL},
-		#{ruleComment,jdbcType=VARCHAR},
-		#{firstOpenDay,jdbcType=TIMESTAMP}, #{holidayOnFlag,jdbcType=VARCHAR}, #{avgOpenCount,jdbcType=DECIMAL},
-		#{openBuss,jdbcType=VARCHAR}, #{highYieldIssue,jdbcType=DECIMAL},
-		#{lowYieldIssue,jdbcType=DECIMAL},
-		#{creditMode,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{opentypep,jdbcType=VARCHAR},
-		#{opendayp,jdbcType=VARCHAR}, #{opencyclep,jdbcType=VARCHAR},
-		#{opencycleunitp,jdbcType=VARCHAR},
-		#{weekp,jdbcType=VARCHAR}, #{dayp,jdbcType=VARCHAR}, #{workdayp,jdbcType=VARCHAR},
-		#{remark,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
-		#{workflowId,jdbcType=VARCHAR},
-		#{dataSource,jdbcType=VARCHAR}, #{raiseType,jdbcType=VARCHAR}, #{manageType,jdbcType=VARCHAR},
-		#{updateUser,jdbcType=VARCHAR}, NOW(),
-		#{createUser,jdbcType=VARCHAR},
-		NOW(), #{agent,jdbcType=VARCHAR},
-		#{fiduciaryDuty,jdbcType=VARCHAR},
-		#{transferType,jdbcType=VARCHAR},
-		#{isMarketFund,jdbcType=VARCHAR},
-		#{excFinSector,jdbcType=VARCHAR},#{isShortTerm,jdbcType=VARCHAR},#{shortTerm,jdbcType=DECIMAL},
-		#{isFreeRedem,jdbcType=VARCHAR}, #{cashManaCate,jdbcType=VARCHAR},
-		#{yield,jdbcType=DECIMAL},#{investFeeRate,jdbcType=DECIMAL},#{customerType,jdbcType=VARCHAR})
+				#{prodId,jdbcType=VARCHAR},
+				#{orgCode,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR},
+				#{lacks,jdbcType=VARCHAR}, #{prodInsId,jdbcType=VARCHAR},
+				#{profitType,jdbcType=VARCHAR},
+				#{investorType,jdbcType=VARCHAR}, #{isIntact,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+				#{basic,jdbcType=VARCHAR}, #{prodtype,jdbcType=VARCHAR},
+				#{isagency,jdbcType=VARCHAR},
+				#{saletarget,jdbcType=VARCHAR}, #{durationflag,jdbcType=VARCHAR}, #{mdate,jdbcType=TIMESTAMP},
+				#{vdate,jdbcType=TIMESTAMP}, #{terminatedate,jdbcType=TIMESTAMP},
+				#{ivstorientation,jdbcType=VARCHAR},
+				#{openBussRemark,jdbcType=VARCHAR},
+				#{raisePstrdate,jdbcType=TIMESTAMP},
+				#{raisePenddate,jdbcType=TIMESTAMP},
+				#{declareStatus,jdbcType=VARCHAR}, #{issuingStatus,jdbcType=VARCHAR},
+				#{riskLevel,jdbcType=VARCHAR},
+				#{termtype,jdbcType=VARCHAR}, #{raiseCcy,jdbcType=VARCHAR}, #{raiseVdate,jdbcType=TIMESTAMP},
+				#{raiseEnddate,jdbcType=TIMESTAMP}, #{templateName,jdbcType=VARCHAR},
+				#{prodBrand,jdbcType=VARCHAR},
+				#{prodStage,jdbcType=DECIMAL}, #{designerName,jdbcType=VARCHAR}, #{designerId,jdbcType=VARCHAR},
+				#{approverName,jdbcType=VARCHAR}, #{approverId,jdbcType=VARCHAR},
+				#{managerName,jdbcType=VARCHAR},
+				#{managerId,jdbcType=VARCHAR}, #{bookMode,jdbcType=VARCHAR}, #{liaisonName,jdbcType=VARCHAR},
+				#{liaisonTel,jdbcType=VARCHAR}, #{liaisonMobile,jdbcType=VARCHAR},
+				#{liaisonEmail,jdbcType=VARCHAR},
+				#{investArae,jdbcType=VARCHAR}, #{investCountry,jdbcType=VARCHAR}, #{finanSerModel,jdbcType=VARCHAR},
+				#{operateMode,jdbcType=VARCHAR}, #{cmmode,jdbcType=VARCHAR},
+				#{pmmode,jdbcType=VARCHAR},
+				#{mname,jdbcType=VARCHAR}, #{invAssetType,jdbcType=VARCHAR}, #{contMode,jdbcType=VARCHAR},
+				#{cooperationName,jdbcType=VARCHAR}, #{conPrdTraget,jdbcType=VARCHAR},
+				#{isYield,jdbcType=VARCHAR},
+				#{isYieldMeasBasis,jdbcType=VARCHAR}, #{invTypeRat,jdbcType=VARCHAR}, #{riskType,jdbcType=VARCHAR},
+				#{highYield,jdbcType=DECIMAL}, #{lowYield,jdbcType=DECIMAL},
+				#{saleArea,jdbcType=VARCHAR},
+				#{saleAmtStr,jdbcType=DECIMAL}, #{cashPrinCcy,jdbcType=VARCHAR}, #{cashProfCcy,jdbcType=VARCHAR},
+				#{raiseAmtPlan,jdbcType=DECIMAL}, #{saleFeeRate,jdbcType=DECIMAL},
+				#{investPrinDate,jdbcType=VARCHAR},
+				#{investProfDate,jdbcType=VARCHAR}, #{truFeeRate,jdbcType=DECIMAL},
+				#{inDepCode,jdbcType=VARCHAR},
+				#{inDepName,jdbcType=VARCHAR}, #{outDepCtry,jdbcType=VARCHAR}, #{outDepName,jdbcType=VARCHAR},
+				#{termRightFlag,jdbcType=VARCHAR}, #{cusRedeemFlag,jdbcType=VARCHAR},
+				#{creditFlag,jdbcType=VARCHAR},
+				#{creditType,jdbcType=VARCHAR}, #{pricedMode,jdbcType=VARCHAR}, #{prdVdate,jdbcType=TIMESTAMP},
+				#{prdMdate,jdbcType=TIMESTAMP}, #{expAvgYield,jdbcType=DECIMAL},
+				#{isConstracte,jdbcType=VARCHAR},
+				#{gradeType,jdbcType=VARCHAR}, #{yieldComment,jdbcType=VARCHAR}, #{openMode,jdbcType=VARCHAR},
+				#{openCircle,jdbcType=VARCHAR}, #{openCircleDays,jdbcType=DECIMAL},
+				#{ruleComment,jdbcType=VARCHAR},
+				#{firstOpenDay,jdbcType=TIMESTAMP}, #{holidayOnFlag,jdbcType=VARCHAR}, #{avgOpenCount,jdbcType=DECIMAL},
+				#{openBuss,jdbcType=VARCHAR}, #{highYieldIssue,jdbcType=DECIMAL},
+				#{lowYieldIssue,jdbcType=DECIMAL},
+				#{creditMode,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{opentypep,jdbcType=VARCHAR},
+				#{opendayp,jdbcType=VARCHAR}, #{opencyclep,jdbcType=VARCHAR},
+				#{opencycleunitp,jdbcType=VARCHAR},
+				#{weekp,jdbcType=VARCHAR}, #{dayp,jdbcType=VARCHAR}, #{workdayp,jdbcType=VARCHAR},
+				#{remark,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+				#{workflowId,jdbcType=VARCHAR},
+				#{dataSource,jdbcType=VARCHAR}, #{raiseType,jdbcType=VARCHAR}, #{manageType,jdbcType=VARCHAR},
+				#{updateUser,jdbcType=VARCHAR}, NOW(),
+				#{createUser,jdbcType=VARCHAR},
+				NOW(), #{agent,jdbcType=VARCHAR},
+				#{fiduciaryDuty,jdbcType=VARCHAR},
+				#{transferType,jdbcType=VARCHAR},
+				#{excFinSector,jdbcType=VARCHAR},#{isShortTerm,jdbcType=VARCHAR},#{shortTerm,jdbcType=DECIMAL},
+				#{isFreeRedem,jdbcType=VARCHAR}, #{cashManaCate,jdbcType=VARCHAR},
+				#{yield,jdbcType=DECIMAL},#{investFeeRate,jdbcType=DECIMAL},#{customerType,jdbcType=VARCHAR}
+				   ,#{isYllccp,jdbcType=VARCHAR},#{isFhxgcp,jdbcType=VARCHAR},#{zjxtFlag,jdbcType=VARCHAR})
 	</insert>
 
 	<delete id="deleteBymodel"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		delete from CHB_PRD_BASEINFO
 		<where>
 			PROD_ID = #{prodId,jdbcType=VARCHAR}
 		</where>
 	</delete>
 	<insert id="mergeInfoList"
-		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
-		MERGE INTO CHB_PRD_BASEINFO CII
-		USING (
-		<foreach collection="newDataList" item="dto" open="select * from("
-			close=")" separator="union all">
-			select
-			#{dto.produuid,jdbcType=CHAR} PRODUUID, 
-			#{dto.fprodId,jdbcType=VARCHAR} FPROD_ID,
-			#{dto.prodId,jdbcType=VARCHAR} PROD_ID,
-			#{dto.orgCode,jdbcType=VARCHAR} ORG_CODE, 
-			#{dto.prodName,jdbcType=VARCHAR} PROD_NAME, 
-			#{dto.regCode,jdbcType=VARCHAR} REG_CODE,
-			#{dto.lacks,jdbcType=VARCHAR} LACKS, 
-			#{dto.prodInsId,jdbcType=VARCHAR} PROD_INS_ID,
-			#{dto.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
-			#{dto.investorType,jdbcType=VARCHAR} INVESTOR_TYPE,
-			#{dto.isIntact,jdbcType=VARCHAR} IS_INTACT, 
-			#{dto.status,jdbcType=VARCHAR} STATUS,
-			#{dto.basic,jdbcType=VARCHAR} BASIC, 
-			#{dto.prodtype,jdbcType=VARCHAR} PRODTYPE,
-			#{dto.isagency,jdbcType=VARCHAR} ISAGENCY, 
-			#{dto.saletarget,jdbcType=VARCHAR} SALETARGET,
-			#{dto.durationflag,jdbcType=VARCHAR} DURATIONFLAG,
-			#{dto.mdate,jdbcType=TIMESTAMP} MDATE,
-			#{dto.vdate,jdbcType=TIMESTAMP} VDATE,
-			#{dto.terminatedate,jdbcType=TIMESTAMP} TERMINATEDATE,
-			#{dto.ivstorientation,jdbcType=VARCHAR} IVSTORIENTATION,
-			#{dto.openBussRemark,jdbcType=VARCHAR} OPEN_BUSS_REMARK,
-			#{dto.raisePstrdate,jdbcType=TIMESTAMP} RAISE_PSTRDATE,
-			#{dto.raisePenddate,jdbcType=TIMESTAMP} RAISE_PENDDATE,
-			#{dto.declareStatus,jdbcType=VARCHAR} DECLARE_STATUS,
-			#{dto.issuingStatus,jdbcType=VARCHAR} ISSUING_STATUS,
-			#{dto.riskLevel,jdbcType=VARCHAR} RISK_LEVEL, 
-			#{dto.termtype,jdbcType=VARCHAR} TERMTYPE,
-			#{dto.raiseCcy,jdbcType=VARCHAR} RAISE_CCY,
-			#{dto.raiseVdate,jdbcType=TIMESTAMP} RAISE_VDATE,
-			#{dto.raiseEnddate,jdbcType=TIMESTAMP} RAISE_ENDDATE,
-			#{dto.templateName,jdbcType=VARCHAR} TEMPLATE_NAME,
-			#{dto.prodBrand,jdbcType=VARCHAR} PROD_BRAND, 
-			#{dto.prodStage,jdbcType=DECIMAL} PROD_STAGE,
-			#{dto.designerName,jdbcType=VARCHAR} DESIGNER_NAME,
-			#{dto.designerId,jdbcType=VARCHAR} DESIGNER_ID,
-			#{dto.approverName,jdbcType=VARCHAR} APPROVER_NAME,
-			#{dto.approverId,jdbcType=VARCHAR} APPROVER_ID,
-			#{dto.managerName,jdbcType=VARCHAR} MANAGER_NAME,
-			#{dto.managerId,jdbcType=VARCHAR} MANAGER_ID,
-			#{dto.bookMode,jdbcType=VARCHAR} BOOK_MODE, 
-			#{dto.liaisonName,jdbcType=VARCHAR} LIAISON_NAME,
-			#{dto.liaisonTel,jdbcType=VARCHAR} LIAISON_TEL,
-			#{dto.liaisonMobile,jdbcType=VARCHAR} LIAISON_MOBILE,
-			#{dto.liaisonEmail,jdbcType=VARCHAR} LIAISON_EMAIL,
-			#{dto.investArae,jdbcType=VARCHAR} INVEST_ARAE,
-			#{dto.investCountry,jdbcType=VARCHAR} INVEST_COUNTRY,
-			#{dto.finanSerModel,jdbcType=VARCHAR} FINAN_SER_MODEL,
-			#{dto.operateMode,jdbcType=VARCHAR} OPERATE_MODE,
-			#{dto.cmmode,jdbcType=VARCHAR} CMMODE, 
-			#{dto.pmmode,jdbcType=VARCHAR} PMMODE, 
-			#{dto.mname,jdbcType=VARCHAR} MNAME,
-			#{dto.invAssetType,jdbcType=VARCHAR} INV_ASSET_TYPE,
-			#{dto.contMode,jdbcType=VARCHAR} CONT_MODE,
-			#{dto.cooperationName,jdbcType=VARCHAR} COOPERATION_NAME,
-			#{dto.conPrdTraget,jdbcType=VARCHAR} CON_PRD_TRAGET,
-			#{dto.isYield,jdbcType=VARCHAR} IS_YIELD,
-			#{dto.isYieldMeasBasis,jdbcType=VARCHAR} IS_YIELD_MEAS_BASIS,
-			#{dto.invTypeRat,jdbcType=VARCHAR} INV_TYPE_RAT, 
-			#{dto.riskType,jdbcType=VARCHAR} RISK_TYPE,
-			#{dto.highYield,jdbcType=DECIMAL} HIGH_YIELD,
-			#{dto.lowYield,jdbcType=DECIMAL} LOW_YIELD, 
-			#{dto.saleArea,jdbcType=VARCHAR} SALE_AREA,
-			#{dto.saleAmtStr,jdbcType=DECIMAL} SALE_AMT_STR,
-			#{dto.cashPrinCcy,jdbcType=VARCHAR} CASH_PRIN_CCY,
-			#{dto.cashProfCcy,jdbcType=VARCHAR} CASH_PROF_CCY,
-			#{dto.raiseAmtPlan,jdbcType=DECIMAL} RAISE_AMT_PLAN,
-			#{dto.saleFeeRate,jdbcType=DECIMAL} SALE_FEE_RATE,
-			#{dto.investPrinDate,jdbcType=VARCHAR} INVEST_PRIN_DATE,
-			#{dto.investProfDate,jdbcType=VARCHAR} INVEST_PROF_DATE,
-			#{dto.truFeeRate,jdbcType=DECIMAL} TRU_FEE_RATE,
-			#{dto.inDepCode,jdbcType=VARCHAR} IN_DEP_CODE,
-			#{dto.inDepName,jdbcType=VARCHAR} IN_DEP_NAME,
-			#{dto.outDepCtry,jdbcType=VARCHAR} OUT_DEP_CTRY, 
-			#{dto.outDepName,jdbcType=VARCHAR} OUT_DEP_NAME,
-			#{dto.termRightFlag,jdbcType=VARCHAR} TERM_RIGHT_FLAG,
-			#{dto.cusRedeemFlag,jdbcType=VARCHAR} CUS_REDEEM_FLAG,
-			#{dto.creditFlag,jdbcType=VARCHAR} CREDIT_FLAG,
-			#{dto.creditType,jdbcType=VARCHAR} CREDIT_TYPE,
-			#{dto.pricedMode,jdbcType=VARCHAR} PRICED_MODE,
-			#{dto.prdVdate,jdbcType=TIMESTAMP} PRD_VDATE,
-			#{dto.prdMdate,jdbcType=TIMESTAMP} PRD_MDATE,
-			#{dto.expAvgYield,jdbcType=DECIMAL} EXP_AVG_YIELD,
-			#{dto.isConstracte,jdbcType=VARCHAR} IS_CONSTRACTE,
-			#{dto.gradeType,jdbcType=VARCHAR} GRADE_TYPE,
-			#{dto.yieldComment,jdbcType=VARCHAR} YIELD_COMMENT,
-			#{dto.openMode,jdbcType=VARCHAR} OPEN_MODE, 
-			#{dto.openCircle,jdbcType=VARCHAR} OPEN_CIRCLE,
-			#{dto.openCircleDays,jdbcType=DECIMAL} OPEN_CIRCLE_DAYS,
-			#{dto.ruleComment,jdbcType=VARCHAR} RULE_COMMENT,
-			#{dto.firstOpenDay,jdbcType=TIMESTAMP} FIRST_OPEN_DAY,
-			#{dto.holidayOnFlag,jdbcType=VARCHAR} HOLIDAY_ON_FLAG,
-			#{dto.avgOpenCount,jdbcType=DECIMAL} AVG_OPEN_COUNT,
-			#{dto.openBuss,jdbcType=VARCHAR} OPEN_BUSS,
-			#{dto.highYieldIssue,jdbcType=DECIMAL} HIGH_YIELD_ISSUE,
-			#{dto.lowYieldIssue,jdbcType=DECIMAL} LOW_YIELD_ISSUE,
-			#{dto.creditMode,jdbcType=VARCHAR} CREDIT_MODE,
-			#{dto.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
-			#{dto.opentypep,jdbcType=VARCHAR} OPENTYPEP, 
-			#{dto.opendayp,jdbcType=VARCHAR} OPENDAYP,
-			#{dto.opencyclep,jdbcType=VARCHAR} OPENCYCLEP,
-			#{dto.opencycleunitp,jdbcType=VARCHAR} OPENCYCLEUNITP,
-			#{dto.weekp,jdbcType=VARCHAR} WEEKP,
-			#{dto.dayp,jdbcType=VARCHAR} DAYP, 
-			#{dto.workdayp,jdbcType=VARCHAR} WORKDAYP,
-			#{dto.remark,jdbcType=VARCHAR} REMARK,
-			#{dto.deptCode,jdbcType=VARCHAR} DEPT_CODE, 
-			#{dto.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
-			#{dto.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-			#{dto.raiseType,jdbcType=VARCHAR} RAISE_TYPE,
-			#{dto.manageType,jdbcType=VARCHAR} MANAGE_TYPE,
-			#{dto.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-			NOW() UPDATE_TIME,
-			#{dto.createUser,jdbcType=VARCHAR} CREATE_USER,
-			NOW() CREATE_TIME,
-			#{dto.agent,jdbcType=VARCHAR} AGENT,
-			#{dto.fiduciaryDuty,jdbcType=VARCHAR} FIDUCIARY_DUTY,
-			#{dto.transferType,jdbcType=VARCHAR} TRANSFER_TYPE,
-			#{dto.isMarketFund,jdbcType=VARCHAR} IS_MARKET_FUND,
-			#{dto.excFinSector,jdbcType=VARCHAR} EXC_FIN_SECTOR,
-			#{dto.isShortTerm,jdbcType=VARCHAR} IS_SHORT_TERM,
-			#{dto.shortTerm,jdbcType=DECIMAL} SHORT_TERM,
-			#{dto.isFreeRedem,jdbcType=VARCHAR} IS_FREE_REDEM,
-			#{dto.cashManaCate,jdbcType=VARCHAR} CASH_MANA_CATE,
-			#{dto.yield,jdbcType=DECIMAL} YIELD,
-			#{dto.investFeeRate,jdbcType=DECIMAL} INVEST_FEE_RATE,
-			#{dto.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE
-			<!-- 插入交易日历字段 add by hpp 2019-12-16 -->
-			,#{dto.calendarId,jdbcType=VARCHAR} CALENDAR_ID
-			,#{dto.yieldLow,jdbcType=DECIMAL} YIELD_LOW
-			,#{dto.yieldHigh,jdbcType=DECIMAL} YIELD_HIGH
-			,#{dto.yieldRemark,jdbcType=VARCHAR} YIELD_REMARK
-			,#{dto.busiAcctNo,jdbcType=VARCHAR} BUSI_ACCT_NO
-			,#{dto.acctName,jdbcType=VARCHAR} ACCT_NAME
-			from dual
-		</foreach>
-		) TEMP
-		<!-- 业务主键匹配 -->
-		ON (CII.PROD_ID = TEMP.PROD_ID)
-		<!-- 匹配到则更新 -->
-		WHEN MATCHED THEN
-		UPDATE
-		SET 
-		CII.PRODUUID = TEMP.PRODUUID, 
-		CII.FPROD_ID = TEMP.FPROD_ID,
-		CII.ORG_CODE = TEMP.ORG_CODE, 
-		CII.PROD_NAME = TEMP.PROD_NAME, 
-		CII.REG_CODE = TEMP.REG_CODE,
-		CII.LACKS = TEMP.LACKS, 
-		CII.PROD_INS_ID = TEMP.PROD_INS_ID, 
-		CII.PROFIT_TYPE = TEMP.PROFIT_TYPE,
-		CII.INVESTOR_TYPE = TEMP.INVESTOR_TYPE, 
-		CII.IS_INTACT = TEMP.IS_INTACT, 
-		CII.STATUS = (case TEMP.STATUS when 'E' then 'M' else 'D' end),
-		CII.BASIC = TEMP.BASIC, 
-		CII.PRODTYPE = TEMP.PRODTYPE,
-		CII.ISAGENCY = TEMP.ISAGENCY, 
-		CII.SALETARGET = TEMP.SALETARGET,
-		CII.DURATIONFLAG = TEMP.DURATIONFLAG, 
-		CII.MDATE = TEMP.MDATE, 
-		CII.VDATE = TEMP.VDATE,
-		CII.TERMINATEDATE = TEMP.TERMINATEDATE, 
-		CII.IVSTORIENTATION = TEMP.IVSTORIENTATION, 
-		CII.OPEN_BUSS_REMARK = TEMP.OPEN_BUSS_REMARK,
-		CII.RAISE_PSTRDATE = TEMP.RAISE_PSTRDATE, 
-		CII.RAISE_PENDDATE = TEMP.RAISE_PENDDATE, 
-		CII.DECLARE_STATUS = TEMP.DECLARE_STATUS,
-		CII.ISSUING_STATUS = TEMP.ISSUING_STATUS, 
-		CII.RISK_LEVEL = TEMP.RISK_LEVEL, 
-		CII.TERMTYPE = TEMP.TERMTYPE,
-		CII.RAISE_CCY = TEMP.RAISE_CCY, 
-		CII.RAISE_VDATE = TEMP.RAISE_VDATE, 
-		CII.RAISE_ENDDATE = TEMP.RAISE_ENDDATE,
-		CII.TEMPLATE_NAME = TEMP.TEMPLATE_NAME, 
-		CII.PROD_BRAND = TEMP.PROD_BRAND, 
-		CII.PROD_STAGE = TEMP.PROD_STAGE,
-		CII.DESIGNER_NAME = TEMP.DESIGNER_NAME, 
-		CII.DESIGNER_ID = TEMP.DESIGNER_ID, 
-		CII.APPROVER_NAME = TEMP.APPROVER_NAME,
-		CII.APPROVER_ID = TEMP.APPROVER_ID, 
-		CII.MANAGER_NAME = TEMP.MANAGER_NAME, 
-		CII.MANAGER_ID = TEMP.MANAGER_ID,
-		CII.BOOK_MODE = TEMP.BOOK_MODE, 
-		CII.LIAISON_NAME = TEMP.LIAISON_NAME, 
-		CII.LIAISON_TEL = TEMP.LIAISON_TEL,
-		CII.LIAISON_MOBILE = TEMP.LIAISON_MOBILE, 
-		CII.LIAISON_EMAIL = TEMP.LIAISON_EMAIL, 
-		CII.INVEST_ARAE = TEMP.INVEST_ARAE,
-		CII.INVEST_COUNTRY = TEMP.INVEST_COUNTRY, 
-		CII.FINAN_SER_MODEL = TEMP.FINAN_SER_MODEL, 
-		CII.OPERATE_MODE = TEMP.OPERATE_MODE,
-		CII.CMMODE = TEMP.CMMODE, 
-		CII.PMMODE = TEMP.PMMODE, 
-		CII.MNAME = TEMP.MNAME,
-		CII.INV_ASSET_TYPE = TEMP.INV_ASSET_TYPE, 
-		CII.CONT_MODE = TEMP.CONT_MODE, 
-		CII.COOPERATION_NAME = TEMP.COOPERATION_NAME,
-		CII.CON_PRD_TRAGET = TEMP.CON_PRD_TRAGET, 
-		CII.IS_YIELD = TEMP.IS_YIELD, 
-		CII.IS_YIELD_MEAS_BASIS = TEMP.IS_YIELD_MEAS_BASIS,
-		CII.INV_TYPE_RAT = TEMP.INV_TYPE_RAT, 
-		CII.RISK_TYPE = TEMP.RISK_TYPE, 
-		CII.HIGH_YIELD = TEMP.HIGH_YIELD,
-		CII.LOW_YIELD = TEMP.LOW_YIELD, 
-		CII.SALE_AREA = TEMP.SALE_AREA, 
-		CII.SALE_AMT_STR = TEMP.SALE_AMT_STR,
-		CII.CASH_PRIN_CCY = TEMP.CASH_PRIN_CCY, 
-		CII.CASH_PROF_CCY = TEMP.CASH_PROF_CCY, 
-		CII.RAISE_AMT_PLAN = TEMP.RAISE_AMT_PLAN,
-		CII.SALE_FEE_RATE = TEMP.SALE_FEE_RATE, 
-		CII.INVEST_PRIN_DATE = TEMP.INVEST_PRIN_DATE, 
-		CII.INVEST_PROF_DATE = TEMP.INVEST_PROF_DATE,
-		CII.TRU_FEE_RATE = TEMP.TRU_FEE_RATE, 
-		CII.IN_DEP_CODE = TEMP.IN_DEP_CODE, 
-		CII.IN_DEP_NAME = TEMP.IN_DEP_NAME,
-		CII.OUT_DEP_CTRY = TEMP.OUT_DEP_CTRY, 
-		CII.OUT_DEP_NAME = TEMP.OUT_DEP_NAME, 
-		CII.TERM_RIGHT_FLAG = TEMP.TERM_RIGHT_FLAG,
-		CII.CUS_REDEEM_FLAG = TEMP.CUS_REDEEM_FLAG, 
-		CII.CREDIT_FLAG = TEMP.CREDIT_FLAG, 
-		CII.CREDIT_TYPE = TEMP.CREDIT_TYPE,
-		CII.PRICED_MODE = TEMP.PRICED_MODE, 
-		CII.PRD_VDATE = TEMP.PRD_VDATE, 
-		CII.PRD_MDATE = TEMP.PRD_MDATE,
-		CII.EXP_AVG_YIELD = TEMP.EXP_AVG_YIELD, 
-		CII.IS_CONSTRACTE = TEMP.IS_CONSTRACTE, 
-		CII.GRADE_TYPE = TEMP.GRADE_TYPE,
-		CII.YIELD_COMMENT = TEMP.YIELD_COMMENT, 
-		CII.OPEN_MODE = TEMP.OPEN_MODE, 
-		CII.OPEN_CIRCLE = TEMP.OPEN_CIRCLE,
-		CII.OPEN_CIRCLE_DAYS = TEMP.OPEN_CIRCLE_DAYS, 
-		CII.RULE_COMMENT = TEMP.RULE_COMMENT, 
-		CII.FIRST_OPEN_DAY = TEMP.FIRST_OPEN_DAY,
-		CII.HOLIDAY_ON_FLAG = TEMP.HOLIDAY_ON_FLAG, 
-		CII.AVG_OPEN_COUNT = TEMP.AVG_OPEN_COUNT, 
-		CII.OPEN_BUSS = TEMP.OPEN_BUSS,
-		CII.HIGH_YIELD_ISSUE = TEMP.HIGH_YIELD_ISSUE, 
-		CII.LOW_YIELD_ISSUE = TEMP.LOW_YIELD_ISSUE, 
-		CII.CREDIT_MODE = TEMP.CREDIT_MODE,
-		CII.ISSUE_PARTY_ID = TEMP.ISSUE_PARTY_ID, 
-		CII.OPENTYPEP = TEMP.OPENTYPEP, 
-		CII.OPENDAYP = TEMP.OPENDAYP,
-		CII.OPENCYCLEP = TEMP.OPENCYCLEP, 
-		CII.OPENCYCLEUNITP = TEMP.OPENCYCLEUNITP, 
-		CII.WEEKP = TEMP.WEEKP,
-		CII.DAYP = TEMP.DAYP, 
-		CII.WORKDAYP = TEMP.WORKDAYP, 
-		CII.REMARK = TEMP.REMARK,
-		CII.DEPT_CODE = TEMP.DEPT_CODE, 
-		CII.WORKFLOW_ID = TEMP.WORKFLOW_ID, 
-		CII.DATA_SOURCE = TEMP.DATA_SOURCE,
-		CII.RAISE_TYPE = TEMP.RAISE_TYPE, 
-		CII.MANAGE_TYPE = TEMP.MANAGE_TYPE, 
-		CII.UPDATE_USER = TEMP.UPDATE_USER,
-		CII.UPDATE_TIME = TEMP.UPDATE_TIME, 
-		CII.AGENT = TEMP.AGENT,
-		CII.FIDUCIARY_DUTY = TEMP.FIDUCIARY_DUTY,
-		CII.TRANSFER_TYPE = TEMP.TRANSFER_TYPE,
-		CII.IS_MARKET_FUND = TEMP.IS_MARKET_FUND,
-		CII.EXC_FIN_SECTOR = TEMP.EXC_FIN_SECTOR,
-		CII.IS_SHORT_TERM = TEMP.IS_SHORT_TERM,
-		CII.SHORT_TERM = TEMP.SHORT_TERM,
-		CII.IS_FREE_REDEM = TEMP.IS_FREE_REDEM,
-		CII.CASH_MANA_CATE = TEMP.CASH_MANA_CATE,
-		CII.YIELD = TEMP.YIELD,
-		CII.INVEST_FEE_RATE = TEMP.INVEST_FEE_RATE,
-		CII.CUSTOMER_TYPE = TEMP.CUSTOMER_TYPE
-		<!-- 插入交易日历字段 add by hpp 2019-12-16 -->
-		,CII.CALENDAR_ID = TEMP.CALENDAR_ID
-		,CII.YIELD_LOW = TEMP.YIELD_LOW
-		,CII.YIELD_HIGH = TEMP.YIELD_HIGH
-		,CII.YIELD_REMARK = TEMP.YIELD_REMARK
-		,CII.BUSI_ACCT_NO = TEMP.BUSI_ACCT_NO
-		,CII.ACCT_NAME = TEMP.ACCT_NAME
-		<!-- 未匹配到这插入 -->
-		WHEN NOT MATCHED THEN
-		INSERT (PRODUUID, FPROD_ID, PROD_ID,
+			parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
+		insert into CHB_PRD_BASEINFO(PRODUUID, FPROD_ID, PROD_ID,
 		ORG_CODE, PROD_NAME, REG_CODE,
 		LACKS, PROD_INS_ID, PROFIT_TYPE,
 		INVESTOR_TYPE, IS_INTACT, STATUS,
@@ -743,152 +484,466 @@
 		DEPT_CODE, WORKFLOW_ID, DATA_SOURCE,
 		RAISE_TYPE, MANAGE_TYPE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,IS_MARKET_FUND,
+		AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,
 		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,
 		CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,CALENDAR_ID
-		,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME
-		)
-		values(
-		TEMP.PRODUUID, 
-		TEMP.FPROD_ID, 
-		TEMP.PROD_ID,
-		TEMP.ORG_CODE, 
-		TEMP.PROD_NAME, 
-		TEMP.REG_CODE,
-		TEMP.LACKS, 
-		TEMP.PROD_INS_ID, 
-		TEMP.PROFIT_TYPE,
-		TEMP.INVESTOR_TYPE, 
-		TEMP.IS_INTACT, 
-		TEMP.STATUS,
-		TEMP.BASIC, 
-		TEMP.PRODTYPE,
-		TEMP.ISAGENCY, 
-		TEMP.SALETARGET,
-		TEMP.DURATIONFLAG, 
-		TEMP.MDATE, 
-		TEMP.VDATE,
-		TEMP.TERMINATEDATE, 
-		TEMP.IVSTORIENTATION, 
-		TEMP.OPEN_BUSS_REMARK,
-		TEMP.RAISE_PSTRDATE, 
-		TEMP.RAISE_PENDDATE, 
-		TEMP.DECLARE_STATUS,
-		TEMP.ISSUING_STATUS, 
-		TEMP.RISK_LEVEL, 
-		TEMP.TERMTYPE,
-		TEMP.RAISE_CCY, 
-		TEMP.RAISE_VDATE, 
-		TEMP.RAISE_ENDDATE,
-		TEMP.TEMPLATE_NAME, 
-		TEMP.PROD_BRAND, 
-		TEMP.PROD_STAGE,
-		TEMP.DESIGNER_NAME, 
-		TEMP.DESIGNER_ID, 
-		TEMP.APPROVER_NAME,
-		TEMP.APPROVER_ID, 
-		TEMP.MANAGER_NAME, 
-		TEMP.MANAGER_ID,
-		TEMP.BOOK_MODE, 
-		TEMP.LIAISON_NAME, 
-		TEMP.LIAISON_TEL,
-		TEMP.LIAISON_MOBILE, 
-		TEMP.LIAISON_EMAIL, 
-		TEMP.INVEST_ARAE,
-		TEMP.INVEST_COUNTRY, 
-		TEMP.FINAN_SER_MODEL, 
-		TEMP.OPERATE_MODE,
-		TEMP.CMMODE, 
-		TEMP.PMMODE, 
-		TEMP.MNAME,
-		TEMP.INV_ASSET_TYPE, 
-		TEMP.CONT_MODE, 
-		TEMP.COOPERATION_NAME,
-		TEMP.CON_PRD_TRAGET, 
-		TEMP.IS_YIELD, 
-		TEMP.IS_YIELD_MEAS_BASIS,
-		TEMP.INV_TYPE_RAT, 
-		TEMP.RISK_TYPE, 
-		TEMP.HIGH_YIELD,
-		TEMP.LOW_YIELD, 
-		TEMP.SALE_AREA, 
-		TEMP.SALE_AMT_STR,
-		TEMP.CASH_PRIN_CCY, 
-		TEMP.CASH_PROF_CCY, 
-		TEMP.RAISE_AMT_PLAN,
-		TEMP.SALE_FEE_RATE, 
-		TEMP.INVEST_PRIN_DATE, 
-		TEMP.INVEST_PROF_DATE,
-		TEMP.TRU_FEE_RATE, 
-		TEMP.IN_DEP_CODE, 
-		TEMP.IN_DEP_NAME,
-		TEMP.OUT_DEP_CTRY, 
-		TEMP.OUT_DEP_NAME, 
-		TEMP.TERM_RIGHT_FLAG,
-		TEMP.CUS_REDEEM_FLAG, 
-		TEMP.CREDIT_FLAG, 
-		TEMP.CREDIT_TYPE,
-		TEMP.PRICED_MODE, 
-		TEMP.PRD_VDATE, 
-		TEMP.PRD_MDATE,
-		TEMP.EXP_AVG_YIELD, 
-		TEMP.IS_CONSTRACTE, 
-		TEMP.GRADE_TYPE,
-		TEMP.YIELD_COMMENT, 
-		TEMP.OPEN_MODE, 
-		TEMP.OPEN_CIRCLE,
-		TEMP.OPEN_CIRCLE_DAYS, 
-		TEMP.RULE_COMMENT, 
-		TEMP.FIRST_OPEN_DAY,
-		TEMP.HOLIDAY_ON_FLAG, 
-		TEMP.AVG_OPEN_COUNT, 
-		TEMP.OPEN_BUSS,
-		TEMP.HIGH_YIELD_ISSUE, 
-		TEMP.LOW_YIELD_ISSUE, 
-		TEMP.CREDIT_MODE,
-		TEMP.ISSUE_PARTY_ID, 
-		TEMP.OPENTYPEP, 
-		TEMP.OPENDAYP,
-		TEMP.OPENCYCLEP, 
-		TEMP.OPENCYCLEUNITP, 
-		TEMP.WEEKP,
-		TEMP.DAYP, 
-		TEMP.WORKDAYP, 
-		TEMP.REMARK,
-		TEMP.DEPT_CODE, 
-		TEMP.WORKFLOW_ID, 
-		TEMP.DATA_SOURCE,
-		TEMP.RAISE_TYPE, 
-		TEMP.MANAGE_TYPE, 
-		TEMP.UPDATE_USER,
-		TEMP.UPDATE_TIME, 
-		TEMP.CREATE_USER, 
-		TEMP.CREATE_TIME,
-		TEMP.AGENT,
-		TEMP.FIDUCIARY_DUTY,
-		TEMP.TRANSFER_TYPE,
-		TEMP.IS_MARKET_FUND,
-		TEMP.EXC_FIN_SECTOR,
-		TEMP.IS_SHORT_TERM,
-		TEMP.SHORT_TERM,
-		TEMP.IS_FREE_REDEM,
-		TEMP.CASH_MANA_CATE,
-		TEMP.YIELD,
-		TEMP.INVEST_FEE_RATE,
-		TEMP.CUSTOMER_TYPE
+		,YIELD_LOW,YIELD_HIGH,YIELD_REMARK,BUSI_ACCT_NO,ACCT_NAME,IS_TRANSFER
+		,IS_FHXGCP,IS_YLLCCP,GRAD_PROPORTION,PRD_SPEC_PROPERTY,ZJXT_FLAG
+		,MANA_CATE_FIT,ISSUE_STATUS_REMARK,FIT_CIRCLE_DAYS)
+		select
+		de.*
+		from
+		(
+		select TEMP.* from
+		(
+		<foreach collection="newDataList" item="dto"  separator="union all">
+			select
+			#{dto.produuid,jdbcType=CHAR} PRODUUID,
+			#{dto.fprodId,jdbcType=VARCHAR} FPROD_ID,
+			#{dto.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{dto.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{dto.prodName,jdbcType=VARCHAR} PROD_NAME,
+			#{dto.regCode,jdbcType=VARCHAR} REG_CODE,
+			#{dto.lacks,jdbcType=VARCHAR} LACKS,
+			#{dto.prodInsId,jdbcType=VARCHAR} PROD_INS_ID,
+			#{dto.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+			#{dto.investorType,jdbcType=VARCHAR} INVESTOR_TYPE,
+			#{dto.isIntact,jdbcType=VARCHAR} IS_INTACT,
+			#{dto.status,jdbcType=VARCHAR} STATUS,
+			#{dto.basic,jdbcType=VARCHAR} BASIC,
+			#{dto.prodtype,jdbcType=VARCHAR} PRODTYPE,
+			#{dto.isagency,jdbcType=VARCHAR} ISAGENCY,
+			#{dto.saletarget,jdbcType=VARCHAR} SALETARGET,
+			#{dto.durationflag,jdbcType=VARCHAR} DURATIONFLAG,
+			#{dto.mdate,jdbcType=TIMESTAMP} MDATE,
+			#{dto.vdate,jdbcType=TIMESTAMP} VDATE,
+			#{dto.terminatedate,jdbcType=TIMESTAMP} TERMINATEDATE,
+			#{dto.ivstorientation,jdbcType=VARCHAR} IVSTORIENTATION,
+			#{dto.openBussRemark,jdbcType=VARCHAR} OPEN_BUSS_REMARK,
+			#{dto.raisePstrdate,jdbcType=TIMESTAMP} RAISE_PSTRDATE,
+			#{dto.raisePenddate,jdbcType=TIMESTAMP} RAISE_PENDDATE,
+			#{dto.declareStatus,jdbcType=VARCHAR} DECLARE_STATUS,
+			#{dto.issuingStatus,jdbcType=VARCHAR} ISSUING_STATUS,
+			#{dto.riskLevel,jdbcType=VARCHAR} RISK_LEVEL,
+			#{dto.termtype,jdbcType=VARCHAR} TERMTYPE,
+			#{dto.raiseCcy,jdbcType=VARCHAR} RAISE_CCY,
+			#{dto.raiseVdate,jdbcType=TIMESTAMP} RAISE_VDATE,
+			#{dto.raiseEnddate,jdbcType=TIMESTAMP} RAISE_ENDDATE,
+			#{dto.templateName,jdbcType=VARCHAR} TEMPLATE_NAME,
+			#{dto.prodBrand,jdbcType=VARCHAR} PROD_BRAND,
+			CAST(#{dto.prodStage,jdbcType=DECIMAL} AS DECIMAL(30,4) )PROD_STAGE,
+			#{dto.designerName,jdbcType=VARCHAR} DESIGNER_NAME,
+			#{dto.designerId,jdbcType=VARCHAR} DESIGNER_ID,
+			#{dto.approverName,jdbcType=VARCHAR} APPROVER_NAME,
+			#{dto.approverId,jdbcType=VARCHAR} APPROVER_ID,
+			#{dto.managerName,jdbcType=VARCHAR} MANAGER_NAME,
+			#{dto.managerId,jdbcType=VARCHAR} MANAGER_ID,
+			#{dto.bookMode,jdbcType=VARCHAR} BOOK_MODE,
+			#{dto.liaisonName,jdbcType=VARCHAR} LIAISON_NAME,
+			#{dto.liaisonTel,jdbcType=VARCHAR} LIAISON_TEL,
+			#{dto.liaisonMobile,jdbcType=VARCHAR} LIAISON_MOBILE,
+			#{dto.liaisonEmail,jdbcType=VARCHAR} LIAISON_EMAIL,
+			#{dto.investArae,jdbcType=VARCHAR} INVEST_ARAE,
+			#{dto.investCountry,jdbcType=VARCHAR} INVEST_COUNTRY,
+			#{dto.finanSerModel,jdbcType=VARCHAR} FINAN_SER_MODEL,
+			#{dto.operateMode,jdbcType=VARCHAR} OPERATE_MODE,
+			#{dto.cmmode,jdbcType=VARCHAR} CMMODE,
+			#{dto.pmmode,jdbcType=VARCHAR} PMMODE,
+			#{dto.mname,jdbcType=VARCHAR} MNAME,
+			#{dto.invAssetType,jdbcType=VARCHAR} INV_ASSET_TYPE,
+			#{dto.contMode,jdbcType=VARCHAR} CONT_MODE,
+			#{dto.cooperationName,jdbcType=VARCHAR} COOPERATION_NAME,
+			#{dto.conPrdTraget,jdbcType=VARCHAR} CON_PRD_TRAGET,
+			#{dto.isYield,jdbcType=VARCHAR} IS_YIELD,
+			#{dto.isYieldMeasBasis,jdbcType=VARCHAR} IS_YIELD_MEAS_BASIS,
+			#{dto.invTypeRat,jdbcType=VARCHAR} INV_TYPE_RAT,
+			#{dto.riskType,jdbcType=VARCHAR} RISK_TYPE,
+			CAST(#{dto.highYield,jdbcType=DECIMAL} AS DECIMAL(8,5) ) HIGH_YIELD,
+			CAST(#{dto.lowYield,jdbcType=DECIMAL} AS DECIMAL(8,5) ) LOW_YIELD,
+			#{dto.saleArea,jdbcType=VARCHAR} SALE_AREA,
+			CAST(#{dto.saleAmtStr,jdbcType=DECIMAL} AS DECIMAL(30,4) ) SALE_AMT_STR,
+			#{dto.cashPrinCcy,jdbcType=VARCHAR} CASH_PRIN_CCY,
+			#{dto.cashProfCcy,jdbcType=VARCHAR} CASH_PROF_CCY,
+			CAST(#{dto.raiseAmtPlan,jdbcType=DECIMAL}  AS DECIMAL(30,4) ) RAISE_AMT_PLAN,
+			CAST(#{dto.saleFeeRate,jdbcType=DECIMAL} AS DECIMAL(30,4) )  SALE_FEE_RATE,
+			#{dto.investPrinDate,jdbcType=VARCHAR} INVEST_PRIN_DATE,
+			#{dto.investProfDate,jdbcType=VARCHAR} INVEST_PROF_DATE,
+			CAST(#{dto.truFeeRate,jdbcType=DECIMAL} AS DECIMAL(30,14) )TRU_FEE_RATE,
+			#{dto.inDepCode,jdbcType=VARCHAR} IN_DEP_CODE,
+			#{dto.inDepName,jdbcType=VARCHAR} IN_DEP_NAME,
+			#{dto.outDepCtry,jdbcType=VARCHAR} OUT_DEP_CTRY,
+			#{dto.outDepName,jdbcType=VARCHAR} OUT_DEP_NAME,
+			#{dto.termRightFlag,jdbcType=VARCHAR} TERM_RIGHT_FLAG,
+			#{dto.cusRedeemFlag,jdbcType=VARCHAR} CUS_REDEEM_FLAG,
+			#{dto.creditFlag,jdbcType=VARCHAR} CREDIT_FLAG,
+			#{dto.creditType,jdbcType=VARCHAR} CREDIT_TYPE,
+			#{dto.pricedMode,jdbcType=VARCHAR} PRICED_MODE,
+			#{dto.prdVdate,jdbcType=TIMESTAMP} PRD_VDATE,
+			#{dto.prdMdate,jdbcType=TIMESTAMP} PRD_MDATE,
+			CAST(#{dto.expAvgYield,jdbcType=DECIMAL} AS DECIMAL(30,14) )  EXP_AVG_YIELD,
+			#{dto.isConstracte,jdbcType=VARCHAR} IS_CONSTRACTE,
+			#{dto.gradeType,jdbcType=VARCHAR} GRADE_TYPE,
+			#{dto.yieldComment,jdbcType=VARCHAR} YIELD_COMMENT,
+			#{dto.openMode,jdbcType=VARCHAR} OPEN_MODE,
+			#{dto.openCircle,jdbcType=VARCHAR} OPEN_CIRCLE,
+			CAST(#{dto.openCircleDays,jdbcType=DECIMAL} AS DECIMAL(30,4) )  OPEN_CIRCLE_DAYS,
+			#{dto.ruleComment,jdbcType=VARCHAR} RULE_COMMENT,
+			#{dto.firstOpenDay,jdbcType=TIMESTAMP} FIRST_OPEN_DAY,
+			#{dto.holidayOnFlag,jdbcType=VARCHAR} HOLIDAY_ON_FLAG,
+			CAST(#{dto.avgOpenCount,jdbcType=DECIMAL} AS DECIMAL(30,4) ) AVG_OPEN_COUNT,
+			#{dto.openBuss,jdbcType=VARCHAR} OPEN_BUSS,
+			CAST(#{dto.highYieldIssue,jdbcType=DECIMAL} AS DECIMAL(30,4) )   HIGH_YIELD_ISSUE,
+			CAST(#{dto.lowYieldIssue,jdbcType=DECIMAL} AS DECIMAL(30,4) )  LOW_YIELD_ISSUE,
+			#{dto.creditMode,jdbcType=VARCHAR} CREDIT_MODE,
+			#{dto.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+			#{dto.opentypep,jdbcType=VARCHAR} OPENTYPEP,
+			#{dto.opendayp,jdbcType=VARCHAR} OPENDAYP,
+			#{dto.opencyclep,jdbcType=VARCHAR} OPENCYCLEP,
+			#{dto.opencycleunitp,jdbcType=VARCHAR} OPENCYCLEUNITP,
+			#{dto.weekp,jdbcType=VARCHAR} WEEKP,
+			#{dto.dayp,jdbcType=VARCHAR} DAYP,
+			#{dto.workdayp,jdbcType=VARCHAR} WORKDAYP,
+			#{dto.remark,jdbcType=VARCHAR} REMARK,
+			#{dto.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{dto.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+			#{dto.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{dto.raiseType,jdbcType=VARCHAR} RAISE_TYPE,
+			#{dto.manageType,jdbcType=VARCHAR} MANAGE_TYPE,
+			#{dto.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			NOW() UPDATE_TIME,
+			#{dto.createUser,jdbcType=VARCHAR} CREATE_USER,
+			NOW() CREATE_TIME,
+			#{dto.agent,jdbcType=VARCHAR} AGENT,
+			#{dto.fiduciaryDuty,jdbcType=VARCHAR} FIDUCIARY_DUTY,
+			#{dto.transferType,jdbcType=VARCHAR} TRANSFER_TYPE,
+			#{dto.excFinSector,jdbcType=VARCHAR} EXC_FIN_SECTOR,
+			#{dto.isShortTerm,jdbcType=VARCHAR} IS_SHORT_TERM,
+			CAST(#{dto.shortTerm,jdbcType=DECIMAL} AS DECIMAL(30) ) SHORT_TERM,
+			#{dto.isFreeRedem,jdbcType=VARCHAR} IS_FREE_REDEM,
+			#{dto.cashManaCate,jdbcType=VARCHAR} CASH_MANA_CATE,
+			CAST(#{dto.yield,jdbcType=DECIMAL} AS DECIMAL(30,14) ) YIELD,
+			CAST(#{dto.investFeeRate,jdbcType=DECIMAL} AS DECIMAL(30,14) ) INVEST_FEE_RATE,
+			#{dto.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE
+			<!-- 插入交易日历字段 add by hpp 2019-12-16 -->
+			,#{dto.calendarId,jdbcType=VARCHAR} CALENDAR_ID
+			,CAST(#{dto.yieldLow,jdbcType=DECIMAL}  AS DECIMAL(8,5) ) YIELD_LOW
+			,CAST(#{dto.yieldHigh,jdbcType=DECIMAL} AS DECIMAL(8,5) ) YIELD_HIGH
+			,#{dto.yieldRemark,jdbcType=VARCHAR} YIELD_REMARK
+			,#{dto.busiAcctNo,jdbcType=VARCHAR} BUSI_ACCT_NO
+			,#{dto.acctName,jdbcType=VARCHAR} ACCT_NAME
+			,#{dto.isTransfer,jdbcType=VARCHAR} IS_TRANSFER
+			,#{dto.isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP
+			,#{dto.isYllccp,jdbcType=VARCHAR} IS_YLLCCP
+			,CAST(#{dto.gradProportion,jdbcType=DECIMAL}  AS DECIMAL(8,5) )GRAD_PROPORTION
+			,#{dto.prdSpecProperty,jdbcType=VARCHAR} PRD_SPEC_PROPERTY
+			,#{dto.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
+			,#{dto.manaCateFit,jdbcType=VARCHAR} MANA_CATE_FIT
+			,#{dto.issueStatusRemark,jdbcType=VARCHAR} ISSUE_STATUS_REMARK
+			,#{dto.fitCircleDays,jdbcType=DECIMAL} FIT_CIRCLE_DAYS
+
+			from dual
+		</foreach>
+		) TEMP where not exists (select 1 from CHB_PRD_BASEINFO CII where CII.PROD_ID = TEMP.PROD_ID)
+		) de ;
+
+		UPDATE  CHB_PRD_BASEINFO as A,
+		(
+		select TEMP.* from
+		(
+		<foreach collection="newDataList" item="dto"  separator="union all">
+			select
+			#{dto.produuid,jdbcType=CHAR} PRODUUID,
+			#{dto.fprodId,jdbcType=VARCHAR} FPROD_ID,
+			#{dto.prodId,jdbcType=VARCHAR} PROD_ID,
+			#{dto.orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{dto.prodName,jdbcType=VARCHAR} PROD_NAME,
+			#{dto.regCode,jdbcType=VARCHAR} REG_CODE,
+			#{dto.lacks,jdbcType=VARCHAR} LACKS,
+			#{dto.prodInsId,jdbcType=VARCHAR} PROD_INS_ID,
+			#{dto.profitType,jdbcType=VARCHAR} PROFIT_TYPE,
+			#{dto.investorType,jdbcType=VARCHAR} INVESTOR_TYPE,
+			#{dto.isIntact,jdbcType=VARCHAR} IS_INTACT,
+			#{dto.status,jdbcType=VARCHAR} STATUS,
+			#{dto.basic,jdbcType=VARCHAR} BASIC,
+			#{dto.prodtype,jdbcType=VARCHAR} PRODTYPE,
+			#{dto.isagency,jdbcType=VARCHAR} ISAGENCY,
+			#{dto.saletarget,jdbcType=VARCHAR} SALETARGET,
+			#{dto.durationflag,jdbcType=VARCHAR} DURATIONFLAG,
+			#{dto.mdate,jdbcType=TIMESTAMP} MDATE,
+			#{dto.vdate,jdbcType=TIMESTAMP} VDATE,
+			#{dto.terminatedate,jdbcType=TIMESTAMP} TERMINATEDATE,
+			#{dto.ivstorientation,jdbcType=VARCHAR} IVSTORIENTATION,
+			#{dto.openBussRemark,jdbcType=VARCHAR} OPEN_BUSS_REMARK,
+			#{dto.raisePstrdate,jdbcType=TIMESTAMP} RAISE_PSTRDATE,
+			#{dto.raisePenddate,jdbcType=TIMESTAMP} RAISE_PENDDATE,
+			#{dto.declareStatus,jdbcType=VARCHAR} DECLARE_STATUS,
+			#{dto.issuingStatus,jdbcType=VARCHAR} ISSUING_STATUS,
+			#{dto.riskLevel,jdbcType=VARCHAR} RISK_LEVEL,
+			#{dto.termtype,jdbcType=VARCHAR} TERMTYPE,
+			#{dto.raiseCcy,jdbcType=VARCHAR} RAISE_CCY,
+			#{dto.raiseVdate,jdbcType=TIMESTAMP} RAISE_VDATE,
+			#{dto.raiseEnddate,jdbcType=TIMESTAMP} RAISE_ENDDATE,
+			#{dto.templateName,jdbcType=VARCHAR} TEMPLATE_NAME,
+			#{dto.prodBrand,jdbcType=VARCHAR} PROD_BRAND,
+			CAST(#{dto.prodStage,jdbcType=DECIMAL} AS DECIMAL(30,4) )PROD_STAGE,
+			#{dto.designerName,jdbcType=VARCHAR} DESIGNER_NAME,
+			#{dto.designerId,jdbcType=VARCHAR} DESIGNER_ID,
+			#{dto.approverName,jdbcType=VARCHAR} APPROVER_NAME,
+			#{dto.approverId,jdbcType=VARCHAR} APPROVER_ID,
+			#{dto.managerName,jdbcType=VARCHAR} MANAGER_NAME,
+			#{dto.managerId,jdbcType=VARCHAR} MANAGER_ID,
+			#{dto.bookMode,jdbcType=VARCHAR} BOOK_MODE,
+			#{dto.liaisonName,jdbcType=VARCHAR} LIAISON_NAME,
+			#{dto.liaisonTel,jdbcType=VARCHAR} LIAISON_TEL,
+			#{dto.liaisonMobile,jdbcType=VARCHAR} LIAISON_MOBILE,
+			#{dto.liaisonEmail,jdbcType=VARCHAR} LIAISON_EMAIL,
+			#{dto.investArae,jdbcType=VARCHAR} INVEST_ARAE,
+			#{dto.investCountry,jdbcType=VARCHAR} INVEST_COUNTRY,
+			#{dto.finanSerModel,jdbcType=VARCHAR} FINAN_SER_MODEL,
+			#{dto.operateMode,jdbcType=VARCHAR} OPERATE_MODE,
+			#{dto.cmmode,jdbcType=VARCHAR} CMMODE,
+			#{dto.pmmode,jdbcType=VARCHAR} PMMODE,
+			#{dto.mname,jdbcType=VARCHAR} MNAME,
+			#{dto.invAssetType,jdbcType=VARCHAR} INV_ASSET_TYPE,
+			#{dto.contMode,jdbcType=VARCHAR} CONT_MODE,
+			#{dto.cooperationName,jdbcType=VARCHAR} COOPERATION_NAME,
+			#{dto.conPrdTraget,jdbcType=VARCHAR} CON_PRD_TRAGET,
+			#{dto.isYield,jdbcType=VARCHAR} IS_YIELD,
+			#{dto.isYieldMeasBasis,jdbcType=VARCHAR} IS_YIELD_MEAS_BASIS,
+			#{dto.invTypeRat,jdbcType=VARCHAR} INV_TYPE_RAT,
+			#{dto.riskType,jdbcType=VARCHAR} RISK_TYPE,
+			CAST(#{dto.highYield,jdbcType=DECIMAL} AS DECIMAL(8,5) ) HIGH_YIELD,
+			CAST(#{dto.lowYield,jdbcType=DECIMAL} AS DECIMAL(8,5) ) LOW_YIELD,
+			#{dto.saleArea,jdbcType=VARCHAR} SALE_AREA,
+			CAST(#{dto.saleAmtStr,jdbcType=DECIMAL} AS DECIMAL(30,4) ) SALE_AMT_STR,
+			#{dto.cashPrinCcy,jdbcType=VARCHAR} CASH_PRIN_CCY,
+			#{dto.cashProfCcy,jdbcType=VARCHAR} CASH_PROF_CCY,
+			CAST(#{dto.raiseAmtPlan,jdbcType=DECIMAL}  AS DECIMAL(30,4) ) RAISE_AMT_PLAN,
+			CAST(#{dto.saleFeeRate,jdbcType=DECIMAL} AS DECIMAL(30,4) )  SALE_FEE_RATE,
+			#{dto.investPrinDate,jdbcType=VARCHAR} INVEST_PRIN_DATE,
+			#{dto.investProfDate,jdbcType=VARCHAR} INVEST_PROF_DATE,
+			CAST(#{dto.truFeeRate,jdbcType=DECIMAL} AS DECIMAL(30,14) )TRU_FEE_RATE,
+			#{dto.inDepCode,jdbcType=VARCHAR} IN_DEP_CODE,
+			#{dto.inDepName,jdbcType=VARCHAR} IN_DEP_NAME,
+			#{dto.outDepCtry,jdbcType=VARCHAR} OUT_DEP_CTRY,
+			#{dto.outDepName,jdbcType=VARCHAR} OUT_DEP_NAME,
+			#{dto.termRightFlag,jdbcType=VARCHAR} TERM_RIGHT_FLAG,
+			#{dto.cusRedeemFlag,jdbcType=VARCHAR} CUS_REDEEM_FLAG,
+			#{dto.creditFlag,jdbcType=VARCHAR} CREDIT_FLAG,
+			#{dto.creditType,jdbcType=VARCHAR} CREDIT_TYPE,
+			#{dto.pricedMode,jdbcType=VARCHAR} PRICED_MODE,
+			#{dto.prdVdate,jdbcType=TIMESTAMP} PRD_VDATE,
+			#{dto.prdMdate,jdbcType=TIMESTAMP} PRD_MDATE,
+			CAST(#{dto.expAvgYield,jdbcType=DECIMAL} AS DECIMAL(30,14) )  EXP_AVG_YIELD,
+			#{dto.isConstracte,jdbcType=VARCHAR} IS_CONSTRACTE,
+			#{dto.gradeType,jdbcType=VARCHAR} GRADE_TYPE,
+			#{dto.yieldComment,jdbcType=VARCHAR} YIELD_COMMENT,
+			#{dto.openMode,jdbcType=VARCHAR} OPEN_MODE,
+			#{dto.openCircle,jdbcType=VARCHAR} OPEN_CIRCLE,
+			CAST(#{dto.openCircleDays,jdbcType=DECIMAL} AS DECIMAL(30,4) )  OPEN_CIRCLE_DAYS,
+			#{dto.ruleComment,jdbcType=VARCHAR} RULE_COMMENT,
+			#{dto.firstOpenDay,jdbcType=TIMESTAMP} FIRST_OPEN_DAY,
+			#{dto.holidayOnFlag,jdbcType=VARCHAR} HOLIDAY_ON_FLAG,
+			CAST(#{dto.avgOpenCount,jdbcType=DECIMAL} AS DECIMAL(30,4) ) AVG_OPEN_COUNT,
+			#{dto.openBuss,jdbcType=VARCHAR} OPEN_BUSS,
+			CAST(#{dto.highYieldIssue,jdbcType=DECIMAL} AS DECIMAL(30,4) )   HIGH_YIELD_ISSUE,
+			CAST(#{dto.lowYieldIssue,jdbcType=DECIMAL} AS DECIMAL(30,4) )  LOW_YIELD_ISSUE,
+			#{dto.creditMode,jdbcType=VARCHAR} CREDIT_MODE,
+			#{dto.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+			#{dto.opentypep,jdbcType=VARCHAR} OPENTYPEP,
+			#{dto.opendayp,jdbcType=VARCHAR} OPENDAYP,
+			#{dto.opencyclep,jdbcType=VARCHAR} OPENCYCLEP,
+			#{dto.opencycleunitp,jdbcType=VARCHAR} OPENCYCLEUNITP,
+			#{dto.weekp,jdbcType=VARCHAR} WEEKP,
+			#{dto.dayp,jdbcType=VARCHAR} DAYP,
+			#{dto.workdayp,jdbcType=VARCHAR} WORKDAYP,
+			#{dto.remark,jdbcType=VARCHAR} REMARK,
+			#{dto.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{dto.workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+			#{dto.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+			#{dto.raiseType,jdbcType=VARCHAR} RAISE_TYPE,
+			#{dto.manageType,jdbcType=VARCHAR} MANAGE_TYPE,
+			#{dto.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			NOW() UPDATE_TIME,
+			#{dto.createUser,jdbcType=VARCHAR} CREATE_USER,
+			NOW() CREATE_TIME,
+			#{dto.agent,jdbcType=VARCHAR} AGENT,
+			#{dto.fiduciaryDuty,jdbcType=VARCHAR} FIDUCIARY_DUTY,
+			#{dto.transferType,jdbcType=VARCHAR} TRANSFER_TYPE,
+			#{dto.excFinSector,jdbcType=VARCHAR} EXC_FIN_SECTOR,
+			#{dto.isShortTerm,jdbcType=VARCHAR} IS_SHORT_TERM,
+			CAST(#{dto.shortTerm,jdbcType=DECIMAL} AS DECIMAL(30) ) SHORT_TERM,
+			#{dto.isFreeRedem,jdbcType=VARCHAR} IS_FREE_REDEM,
+			#{dto.cashManaCate,jdbcType=VARCHAR} CASH_MANA_CATE,
+			CAST(#{dto.yield,jdbcType=DECIMAL} AS DECIMAL(30,14) ) YIELD,
+			CAST(#{dto.investFeeRate,jdbcType=DECIMAL} AS DECIMAL(30,14) ) INVEST_FEE_RATE,
+			#{dto.customerType,jdbcType=VARCHAR} CUSTOMER_TYPE
+			<!-- 插入交易日历字段 add by hpp 2019-12-16 -->
+			,#{dto.calendarId,jdbcType=VARCHAR} CALENDAR_ID
+			,CAST(#{dto.yieldLow,jdbcType=DECIMAL}  AS DECIMAL(8,5) ) YIELD_LOW
+			,CAST(#{dto.yieldHigh,jdbcType=DECIMAL} AS DECIMAL(8,5) ) YIELD_HIGH
+			,#{dto.yieldRemark,jdbcType=VARCHAR} YIELD_REMARK
+			,#{dto.busiAcctNo,jdbcType=VARCHAR} BUSI_ACCT_NO
+			,#{dto.acctName,jdbcType=VARCHAR} ACCT_NAME
+			,#{dto.isTransfer,jdbcType=VARCHAR} IS_TRANSFER
+			,#{dto.isFhxgcp,jdbcType=VARCHAR} IS_FHXGCP
+			,#{dto.isYllccp,jdbcType=VARCHAR} IS_YLLCCP
+			,CAST(#{dto.gradProportion,jdbcType=DECIMAL}  AS DECIMAL(8,5) )GRAD_PROPORTION
+			,#{dto.prdSpecProperty,jdbcType=VARCHAR} PRD_SPEC_PROPERTY
+			,#{dto.zjxtFlag,jdbcType=VARCHAR} ZJXT_FLAG
+			,#{dto.manaCateFit,jdbcType=VARCHAR} MANA_CATE_FIT
+			,#{dto.issueStatusRemark,jdbcType=VARCHAR} ISSUE_STATUS_REMARK
+			,#{dto.fitCircleDays,jdbcType=DECIMAL} FIT_CIRCLE_DAYS
+			from dual
+		</foreach>
+		) TEMP
+		) AS B
+		set
+		A.PRODUUID = B.PRODUUID,
+		A.FPROD_ID = B.FPROD_ID,
+		A.ORG_CODE = B.ORG_CODE,
+		A.PROD_NAME = B.PROD_NAME,
+		A.REG_CODE = B.REG_CODE,
+		A.LACKS = B.LACKS,
+		A.PROD_INS_ID = B.PROD_INS_ID,
+		A.PROFIT_TYPE = B.PROFIT_TYPE,
+		A.INVESTOR_TYPE = B.INVESTOR_TYPE,
+		A.IS_INTACT = B.IS_INTACT,
+		A.STATUS = B.STATUS,
+		A.BASIC = B.BASIC,
+		A.PRODTYPE = B.PRODTYPE,
+		A.ISAGENCY = B.ISAGENCY,
+		A.SALETARGET = B.SALETARGET,
+		A.DURATIONFLAG = B.DURATIONFLAG,
+		A.MDATE = B.MDATE,
+		A.VDATE = B.VDATE,
+		A.TERMINATEDATE = B.TERMINATEDATE,
+		A.IVSTORIENTATION = B.IVSTORIENTATION,
+		A.OPEN_BUSS_REMARK = B.OPEN_BUSS_REMARK,
+		A.RAISE_PSTRDATE = B.RAISE_PSTRDATE,
+		A.RAISE_PENDDATE = B.RAISE_PENDDATE,
+		A.DECLARE_STATUS = B.DECLARE_STATUS,
+		A.ISSUING_STATUS = B.ISSUING_STATUS,
+		A.RISK_LEVEL = B.RISK_LEVEL,
+		A.TERMTYPE = B.TERMTYPE,
+		A.RAISE_CCY = B.RAISE_CCY,
+		A.RAISE_VDATE = B.RAISE_VDATE,
+		A.RAISE_ENDDATE = B.RAISE_ENDDATE,
+		A.TEMPLATE_NAME = B.TEMPLATE_NAME,
+		A.PROD_BRAND = B.PROD_BRAND,
+		A.PROD_STAGE = B.PROD_STAGE,
+		A.DESIGNER_NAME = B.DESIGNER_NAME,
+		A.DESIGNER_ID = B.DESIGNER_ID,
+		A.APPROVER_NAME = B.APPROVER_NAME,
+		A.APPROVER_ID = B.APPROVER_ID,
+		A.MANAGER_NAME = B.MANAGER_NAME,
+		A.MANAGER_ID = B.MANAGER_ID,
+		A.BOOK_MODE = B.BOOK_MODE,
+		A.LIAISON_NAME = B.LIAISON_NAME,
+		A.LIAISON_TEL = B.LIAISON_TEL,
+		A.LIAISON_MOBILE = B.LIAISON_MOBILE,
+		A.LIAISON_EMAIL = B.LIAISON_EMAIL,
+		A.INVEST_ARAE = B.INVEST_ARAE,
+		A.INVEST_COUNTRY = B.INVEST_COUNTRY,
+		A.FINAN_SER_MODEL = B.FINAN_SER_MODEL,
+		A.OPERATE_MODE = B.OPERATE_MODE,
+		A.CMMODE = B.CMMODE,
+		A.PMMODE = B.PMMODE,
+		A.MNAME = B.MNAME,
+		A.INV_ASSET_TYPE = B.INV_ASSET_TYPE,
+		A.CONT_MODE = B.CONT_MODE,
+		A.COOPERATION_NAME = B.COOPERATION_NAME,
+		A.CON_PRD_TRAGET = B.CON_PRD_TRAGET,
+		A.IS_YIELD = B.IS_YIELD,
+		A.IS_YIELD_MEAS_BASIS = B.IS_YIELD_MEAS_BASIS,
+		A.INV_TYPE_RAT = B.INV_TYPE_RAT,
+		A.RISK_TYPE = B.RISK_TYPE,
+		A.HIGH_YIELD = B.HIGH_YIELD,
+		A.LOW_YIELD = B.LOW_YIELD,
+		A.SALE_AREA = B.SALE_AREA,
+		A.SALE_AMT_STR = B.SALE_AMT_STR,
+		A.CASH_PRIN_CCY = B.CASH_PRIN_CCY,
+		A.CASH_PROF_CCY = B.CASH_PROF_CCY,
+		A.RAISE_AMT_PLAN = B.RAISE_AMT_PLAN,
+		A.SALE_FEE_RATE = B.SALE_FEE_RATE,
+		A.INVEST_PRIN_DATE = B.INVEST_PRIN_DATE,
+		A.INVEST_PROF_DATE = B.INVEST_PROF_DATE,
+		A.TRU_FEE_RATE = B.TRU_FEE_RATE,
+		A.IN_DEP_CODE = B.IN_DEP_CODE,
+		A.IN_DEP_NAME = B.IN_DEP_NAME,
+		A.OUT_DEP_CTRY = B.OUT_DEP_CTRY,
+		A.OUT_DEP_NAME = B.OUT_DEP_NAME,
+		A.TERM_RIGHT_FLAG = B.TERM_RIGHT_FLAG,
+		A.CUS_REDEEM_FLAG = B.CUS_REDEEM_FLAG,
+		A.CREDIT_FLAG = B.CREDIT_FLAG,
+		A.CREDIT_TYPE = B.CREDIT_TYPE,
+		A.PRICED_MODE = B.PRICED_MODE,
+		A.PRD_VDATE = B.PRD_VDATE,
+		A.PRD_MDATE = B.PRD_MDATE,
+		A.EXP_AVG_YIELD = B.EXP_AVG_YIELD,
+		A.IS_CONSTRACTE = B.IS_CONSTRACTE,
+		A.GRADE_TYPE = B.GRADE_TYPE,
+		A.YIELD_COMMENT = B.YIELD_COMMENT,
+		A.OPEN_MODE = B.OPEN_MODE,
+		A.OPEN_CIRCLE = B.OPEN_CIRCLE,
+		A.OPEN_CIRCLE_DAYS = B.OPEN_CIRCLE_DAYS,
+		A.RULE_COMMENT = B.RULE_COMMENT,
+		A.FIRST_OPEN_DAY = B.FIRST_OPEN_DAY,
+		A.HOLIDAY_ON_FLAG = B.HOLIDAY_ON_FLAG,
+		A.AVG_OPEN_COUNT = B.AVG_OPEN_COUNT,
+		A.OPEN_BUSS = B.OPEN_BUSS,
+		A.HIGH_YIELD_ISSUE = B.HIGH_YIELD_ISSUE,
+		A.LOW_YIELD_ISSUE = B.LOW_YIELD_ISSUE,
+		A.CREDIT_MODE = B.CREDIT_MODE,
+		A.ISSUE_PARTY_ID = B.ISSUE_PARTY_ID,
+		A.OPENTYPEP = B.OPENTYPEP,
+		A.OPENDAYP = B.OPENDAYP,
+		A.OPENCYCLEP = B.OPENCYCLEP,
+		A.OPENCYCLEUNITP = B.OPENCYCLEUNITP,
+		A.WEEKP = B.WEEKP,
+		A.DAYP = B.DAYP,
+		A.WORKDAYP = B.WORKDAYP,
+		A.REMARK = B.REMARK,
+		A.DEPT_CODE = B.DEPT_CODE,
+		A.WORKFLOW_ID = B.WORKFLOW_ID,
+		A.DATA_SOURCE = B.DATA_SOURCE,
+		A.RAISE_TYPE = B.RAISE_TYPE,
+		A.MANAGE_TYPE = B.MANAGE_TYPE,
+		A.UPDATE_USER = B.UPDATE_USER,
+		A.UPDATE_TIME = B.UPDATE_TIME,
+		A.AGENT = B.AGENT,
+		A.FIDUCIARY_DUTY = B.FIDUCIARY_DUTY,
+		A.TRANSFER_TYPE = B.TRANSFER_TYPE,
+		A.EXC_FIN_SECTOR = B.EXC_FIN_SECTOR,
+		A.IS_SHORT_TERM = B.IS_SHORT_TERM,
+		A.SHORT_TERM = B.SHORT_TERM,
+		A.IS_FREE_REDEM = B.IS_FREE_REDEM,
+		A.CASH_MANA_CATE = B.CASH_MANA_CATE,
+		A.YIELD = B.YIELD,
+		A.INVEST_FEE_RATE = B.INVEST_FEE_RATE,
+		A.CUSTOMER_TYPE = B.CUSTOMER_TYPE
 		<!-- 插入交易日历字段 add by hpp 2019-12-16 -->
-		,TEMP.CALENDAR_ID
-		,TEMP.YIELD_LOW
-		,TEMP.YIELD_HIGH
-		,TEMP.YIELD_REMARK
-		,TEMP.BUSI_ACCT_NO
-		,TEMP.ACCT_NAME
-		)
+		,A.CALENDAR_ID = B.CALENDAR_ID
+		,A.YIELD_LOW = B.YIELD_LOW
+		,A.YIELD_HIGH = B.YIELD_HIGH
+		,A.YIELD_REMARK = B.YIELD_REMARK
+		,A.BUSI_ACCT_NO = B.BUSI_ACCT_NO
+		,A.ACCT_NAME = B.ACCT_NAME
+		,A.IS_TRANSFER = B.IS_TRANSFER
+		,A.IS_FHXGCP = B.IS_FHXGCP
+		,A.IS_YLLCCP = B.IS_YLLCCP
+		,A.GRAD_PROPORTION = B.GRAD_PROPORTION
+		,A.PRD_SPEC_PROPERTY = B.PRD_SPEC_PROPERTY
+		,A.ZJXT_FLAG = B.ZJXT_FLAG
+		,A.MANA_CATE_FIT = B.MANA_CATE_FIT
+		,A.ISSUE_STATUS_REMARK = B.ISSUE_STATUS_REMARK
+		,A.FIT_CIRCLE_DAYS = B.FIT_CIRCLE_DAYS
+		where A.PROD_ID = B.PROD_ID;
 	</insert>
 	<select id="getParentCode" parameterType="java.lang.String" resultType="java.lang.String">
-			select
+		select
 			FPROD_ID
-			from CHB_PRD_BASEINFO
-			where PROD_ID = #{newFinprodId}
+		from CHB_PRD_BASEINFO
+		where PROD_ID = #{newFinprodId}
 	</select>
 </mapper>

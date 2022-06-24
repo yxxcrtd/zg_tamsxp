@@ -123,9 +123,7 @@
     </resultMap>
 
     <select id="selectDetailList" resultType="com.joyintech.tams.svreport.chb.monthreportdetail.dto.ChbMonthReportDetailAsset">
-        select *
-        from (
-        SELECT
+            SELECT
             P.POSUUID,
             D1.propername reportType1,
             D2.propername reportType2,
@@ -169,9 +167,8 @@
             P.INDUSTRY3,
             P.INDUSTRY4,
             ifnull(mp.COUNTER_NAME, p.RIVAL_PARTY) rivalParty,
-            /*P.PRIVATEPRD_FLAG privateprdFlag,*/
-            (case D2.propertycode when 'AMT2_1_12' then P.PRIVATEFUND_FLAG) privatefundFlag,
-            P.PRIVATEFUND_FLAG privatefundFlag,
+            P.PRIVATEPRD_FLAG privateprdFlag,
+            (case D2.propertycode when 'AMT2_1_12' then P.PRIVATEFUND_FLAG end) privatefundFlag,
             P.MAIN_GRADE mainGrade,
             P.CREDIT_GRADE creditGrade,
             P.RATING,
@@ -198,14 +195,13 @@
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D3 ON D3.propertycode = D4.codeparent and D3.proplevel = '3'
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D2 ON D2.propertycode = D3.codeparent and D2.proplevel = '2'
             LEFT JOIN CHB_REPORT_TEMPLATEDETAIL D1 ON D1.propertycode = D2.codeparent and D1.proplevel = '1'
-            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE AND AP.VALUE_DATE =
-            /*DECODE(P.TERM,NULL,STR_TO_DATE('19000101','%Y-%m-%d'),ADD_MONTHS(STR_TO_DATE(P.TERM||'01','%Y-%m-%d'),1)-1)*/
-            (case P.TERM when NULL then STR_TO_DATE('19000101','%Y-%m-%d') else adddate(STR_TO_DATE(concat(P.TERM,'01'),'%Y-%m-%d'),interval 1 month)-1 end)
-            LEFT JOIN (SELECT ASSET_ID,ASSET_RATE,change_date,
-            row_number() over(partition by ASSET_ID order by change_date desc) row_number
+            LEFT JOIN CHB_ASSETS_BASIS_DATA AP ON AP.PROD_ID = P.PROD_ID AND AP.ASSET_ID = P.ASSET_CODE
+            AND AP.VALUE_DATE = case P.TERM  when  null  then STR_TO_DATE('19000101','%Y-%m-%d') else adddate(STR_TO_DATE(P.TERM||'01','%Y-%m-%d'),interval -1 month) end
+            LEFT JOIN (SELECT ASSET_ID,ifnull(ASSET_RATE,0)*100 ASSET_RATE,change_date,
+            row_number() over(partition by ASSET_ID order by change_date desc) rn
             FROM CHB_ASSET_RATE
             WHERE asset_rate is not null
-            AND CHANGE_DATE &lt;= adddate(STR_TO_DATE(CONCAT(#{enddate,jdbcType=VARCHAR},'01'),'%Y-%m-%d'),interval 1 month)-1) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.row_number = 1
+            AND CHANGE_DATE &lt;= adddate(STR_TO_DATE(CONCAT(#{enddate,jdbcType=VARCHAR},'01'),'%Y-%m-%d'),interval 1 month)-1) RATE ON RATE.ASSET_ID = P.ASSET_CODE AND RATE.rn = 1
 
 
             WHERE P.PROD_ID IS NOT NULL
@@ -233,16 +229,24 @@
             </if>
 
             <if test="keysList != null and keysList.size()>0 ">
+                AND P.POSUUID IN
+                <trim suffixOverrides=" OR P.POSUUID IN ()">
+                    <foreach collection='keysList' open='(' close=')' index='index'
+                             item='item'>
+                        <if test="index != 0">
+                            <choose>
+                                <when test="index % 1000 == 999">) OR P.POSUUID IN (</when>
+                                <otherwise>,</otherwise>
+                            </choose>
+                        </if>
+                        #{item}
+                    </foreach>
+                </trim>
 
-                <foreach item="item" index="index" collection="keysList" separator="," open=" AND P.POSUUID IN(" close=")">
-                    <if test="(index % 999) == 998">
-                        null) OR P.POSUUID in (
-                    </if>
-                    #{item}
-                </foreach>
 
             </if>
-        ORDER BY D4.ORDERNO)
+        ORDER BY D4.ORDERNO
+
     </select>
 
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SelectOptionDto">
@@ -318,7 +322,7 @@
         (case when MC.CUSTOMER_NAME is null then T.TRADE_COUNTER else MC.CUSTOMER_NAME end)
         else MP.COUNTER_NAME end as TRADE_COUNTER,
         MP.COUNTER_ID,MP.LINK_ID,
-        row_number() over(partition by T.PROD_ID,T.ASSET_CODE,T.TRADE_COUNTER order by DEALDATE) 'row_number'
+        rank() over(partition by T.PROD_ID,T.ASSET_CODE order by DEALDATE) rk
         FROM CHB_INVEST_TRADE T
         LEFT JOIN MST_CUSTOMER_INFO MC ON MC.CUSTOMER_ID = T.TRADE_COUNTER
         LEFT JOIN CHB_MST_COUNTER_PARTY MP ON MP.COUNTER_ID = T.TRADE_COUNTER
@@ -332,7 +336,7 @@
             </foreach>
         </if>
         ) a
-        WHERE A.row_number = 1
+        WHERE A.rk = 1
     </select>
 
 

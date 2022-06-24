@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDatfileDetailRelationMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation" >
+        <id column="DETAILID" property="detailid" jdbcType="CHAR" />
+        <id column="FILECODE" property="filecode" jdbcType="VARCHAR" />
+        <id column="GENDATE" property="gendate" jdbcType="DATE" />
+        <id column="BUSI_ID" property="busiId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DETAILID DETAILID, FILECODE FILECODE, GENDATE GENDATE, BUSI_ID BUSI_ID, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDatfileDetailRelationMapper.Base_Column_List" />
+        from PBC_DATFILE_DETAIL_RELATION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDatfileDetailRelationMapper.Base_Column_List" />
+        from PBC_DATFILE_DETAIL_RELATION
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelationKey" >
+        select
+        <include refid="com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDatfileDetailRelationMapper.Base_Column_List" />
+        from PBC_DATFILE_DETAIL_RELATION
+        where DETAILID = #{detailid,jdbcType=CHAR}
+        and FILECODE = #{filecode,jdbcType=VARCHAR}
+        and GENDATE = #{gendate,jdbcType=DATE}
+        and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelationKey" >
+        delete from PBC_DATFILE_DETAIL_RELATION
+        where DETAILID = #{detailid,jdbcType=CHAR}
+          and FILECODE = #{filecode,jdbcType=VARCHAR}
+          and GENDATE = #{gendate,jdbcType=DATE}
+          and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation" >
+        insert into PBC_DATFILE_DETAIL_RELATION (DETAILID, FILECODE, GENDATE,
+            BUSI_ID, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{detailid,jdbcType=CHAR}, #{filecode,jdbcType=VARCHAR}, #{gendate,jdbcType=DATE},
+            #{busiId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation" >
+        insert into PBC_DATFILE_DETAIL_RELATION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="detailid != null" >
+                DETAILID,
+            </if>
+            <if test="filecode != null" >
+                FILECODE,
+            </if>
+            <if test="gendate != null" >
+                GENDATE,
+            </if>
+            <if test="busiId != null" >
+                BUSI_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="detailid != null" >
+                #{detailid,jdbcType=CHAR},
+            </if>
+            <if test="filecode != null" >
+                #{filecode,jdbcType=VARCHAR},
+            </if>
+            <if test="gendate != null" >
+                #{gendate,jdbcType=DATE},
+            </if>
+            <if test="busiId != null" >
+                #{busiId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation" >
+        insert into PBC_DATFILE_DETAIL_RELATION(DETAILID, FILECODE, GENDATE, BUSI_ID, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select DETAILID, FILECODE, GENDATE, BUSI_ID, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PBC_DATFILE_DETAIL_RELATION
+             where 1 = 1 and DETAILID = #{detailid,jdbcType=CHAR} and FILECODE = #{filecode,jdbcType=VARCHAR} and GENDATE = #{gendate,jdbcType=DATE} and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation" >
+        update PBC_DATFILE_DETAIL_RELATION
+        <set >
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where DETAILID = #{detailid,jdbcType=CHAR}
+        and FILECODE = #{filecode,jdbcType=VARCHAR}
+        and GENDATE = #{gendate,jdbcType=DATE}
+        and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation" >
+        update PBC_DATFILE_DETAIL_RELATION
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where DETAILID = #{detailid,jdbcType=CHAR}
+          and FILECODE = #{filecode,jdbcType=VARCHAR}
+          and GENDATE = #{gendate,jdbcType=DATE}
+          and BUSI_ID = #{busiId,jdbcType=VARCHAR}
+    </update>
+    <insert id="insertList" parameterType="java.util.List" >
+        insert into PBC_DATFILE_DETAIL_RELATION (
+        DETAILID, FILECODE, GENDATE,
+        BUSI_ID, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select DISTINCT A.* from (
+        <foreach collection="list" item="relation" index="index" separator="union all">
+            select
+            #{relation.detailid,jdbcType=CHAR} DETAILID,
+            #{relation.filecode,jdbcType=VARCHAR} FILECODE,
+            #{relation.gendate,jdbcType=DATE} GENDATE,
+            #{relation.busiId,jdbcType=VARCHAR} BUSI_ID,
+            #{relation.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{relation.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{relation.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{relation.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{relation.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            from dual
+        </foreach>
+        )A
+    </insert>
+    <select id="selectUnSendDatafileAfterYesterday" resultType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation">
+        SELECT
+		    t1.fileid,
+		    t1.filepath,
+		    t2.detailid,
+		    t2.detailcode,
+		    t3.filecode,
+		    t3.gendate,
+		    t3.busi_id as busiId
+		FROM
+		    pbc_datfile t1
+		    LEFT JOIN pbc_datfile_detail t2 ON t2.fileid=t1.fileid
+		    LEFT JOIN pbc_datfile_detail_relation t3 ON t3.detailid=t2.detailid
+		    LEFT JOIN pbc_prd_baseinfo_sub t4 ON t4.regist_seqno=t3.busi_id /*产品基本信息*/
+		    LEFT JOIN PBC_PRD_ACCOUNT_SUB t5 ON t5.regist_seqno=t3.busi_id /*资产池基本信息*/
+		    LEFT JOIN PBC_INIT_PROD_RAISING_SUB t6 ON t6.regist_seqno=t3.busi_id/*产品起始募集信息*/
+		    LEFT JOIN PBC_PRD_BASEINFO_END_SUB t7 ON t7.regist_seqno=t3.busi_id/*产品终止信息*/
+		    LEFT JOIN PBC_PRD_ACCOUNT_END_SUB t8 ON t8.regist_seqno=t3.busi_id/*资产池终止登记*/
+		    LEFT JOIN PBC_PROD_RAISING_SUB t9 ON t9.regist_seqno=t3.busi_id/*产品资金募集信息*/
+		    LEFT JOIN PBC_REPORT t10 ON t10.REPORTUUID=t3.busi_id/*资产负债信息*/
+		WHERE
+		    1=1
+		    AND t1.cdate >= #{batchDate,jdbcType=DATE} - 1
+		    AND t1.status = #{status,jdbcType=VARCHAR}
+		    AND t3.detailid IS NOT NULL
+		    AND(
+		        t4.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t5.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t6.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t7.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t8.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t9.send_status = #{sendStatus,jdbcType=VARCHAR}
+		        or t10.send_status = #{sendStatus,jdbcType=VARCHAR}
+		    )
+    </select>
+    <delete id="deleteByDetailid" parameterType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation" >
+        delete from PBC_DATFILE_DETAIL_RELATION
+        where DETAILID = #{detailid,jdbcType=CHAR}
+    </delete>
+    <select id="selectRelationByFileid" resultType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation">
+        SELECT
+		    t1.detailcode,
+		    t2.busi_id as busiId
+		    ,t2.detailid
+		FROM
+		    pbc_datfile_detail_relation t2
+		    LEFT JOIN pbc_datfile_detail t1 ON t2.detailid=t1.detailid
+        WHERE t1.fileid = #{fileid,jdbcType=CHAR}
+    </select>
+    <select id="selectAllDatafileAfterYesterday" resultType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation">
+    	SELECT
+		    t1.fileid,
+            group_concat(t2.detailid) detailid
+		FROM
+		    pbc_datfile t1
+		    LEFT JOIN pbc_datfile_detail t2 ON t2.fileid=t1.fileid
+		WHERE
+		    1=1
+		    AND t1.cdate>=#{batchDate,jdbcType=DATE}-1
+		    AND t1.status=#{status,jdbcType=VARCHAR}
+		group BY
+		    t1.fileid
+    </select>
+    <select id="selectRelationByDetailids" resultType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation">
+        select DETAILID, FILECODE, GENDATE, BUSI_ID
+        from pbc_datfile_detail_relation
+        where 1=1
+        and detailid in
+        <foreach collection="detailids" item="detailid" open="(" separator="," close=")">
+            #{detailid,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    <select id="selectSendRelationByFileid" resultType="com.joyintech.tams.svreport.pbc.classic.data.dto.PbcDatfileDetailRelation">
+        SELECT
+        t1.fileid,
+        t1.filepath,
+        t2.detailid,
+        t2.detailcode,
+        t3.filecode,
+        t3.gendate,
+        t3.busi_id as busiId
+        FROM
+        pbc_datfile t1
+        LEFT JOIN pbc_datfile_detail t2 ON t2.fileid=t1.fileid
+        LEFT JOIN pbc_datfile_detail_relation t3 ON t3.detailid=t2.detailid
+        LEFT JOIN pbc_prd_baseinfo_sub t4 ON t4.regist_seqno=t3.busi_id /*产品基本信息*/
+        LEFT JOIN PBC_PRD_ACCOUNT_SUB t5 ON t5.regist_seqno=t3.busi_id /*资产池基本信息*/
+        LEFT JOIN PBC_INIT_PROD_RAISING_SUB t6 ON t6.regist_seqno=t3.busi_id/*产品起始募集信息*/
+        LEFT JOIN PBC_PRD_BASEINFO_END_SUB t7 ON t7.regist_seqno=t3.busi_id/*产品终止信息*/
+        LEFT JOIN PBC_PRD_ACCOUNT_END_SUB t8 ON t8.regist_seqno=t3.busi_id/*资产池终止登记*/
+        LEFT JOIN PBC_PROD_RAISING_SUB t9 ON t9.regist_seqno=t3.busi_id/*产品资金募集信息*/
+        LEFT JOIN PBC_REPORT t10 ON t10.REPORTUUID=t3.busi_id/*资产负债信息*/
+        WHERE
+        1=1
+        AND t1.fileid = #{fileid,jdbcType=VARCHAR}
+        AND t1.status = #{status,jdbcType=VARCHAR}
+        AND t3.detailid IS NOT NULL
+        <!--
+        AND(
+            t4.send_status = #{sendStatus,jdbcType=VARCHAR}
+            or t5.send_status = #{sendStatus,jdbcType=VARCHAR}
+            or t6.send_status = #{sendStatus,jdbcType=VARCHAR}
+            or t7.send_status = #{sendStatus,jdbcType=VARCHAR}
+            or t8.send_status = #{sendStatus,jdbcType=VARCHAR}
+            or t9.send_status = #{sendStatus,jdbcType=VARCHAR}
+            or t10.send_status = #{sendStatus,jdbcType=VARCHAR}
+        ) -->
+    </select>
+</mapper>

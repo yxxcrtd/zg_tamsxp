@@ -22,6 +22,62 @@
 		<result column="DICTCODE" property="dictCode"
 				jdbcType="VARCHAR" />
 	</resultMap>
+
+	<select id="queryAllBaseInformation" resultMap="BaseResultMap">
+		  SELECT A.BASEINFORMATIONID AS BASEINFORMATIONID,
+  			B.MGRTABLE_NAME          AS BASETABLEID,
+  			B.MGRTABLE_CHI_NAME      AS BASETABLENAME,
+  			A.BASECOLUMNID           AS BASECOLUMNID,
+  			A.BASECOLUMNNAME         AS BASECOLUMNNAME,
+  			A.BASECOLUMNTYPE         AS BASECOLUMNTYPE,
+  			B.DATAOBJECT             AS DATAOBJECT,
+  			A.BUSINESSPKFLAG         AS BUSINESSPKFLAG,
+  			A.DICTCODE               AS DICTCODE
+		  FROM CHB_INFOMGR_CONFIG A
+          LEFT JOIN CHB_MGRTABLE_INFO B
+		  ON A.BASETABLEID = B.MGRTABLE_ID
+	</select>
+
+	<select id="queryBaseInfoById" parameterType="java.lang.String"
+			resultMap="BaseResultMap">
+		SELECT A.BASEINFORMATIONID AS BASEINFORMATIONID,
+		B.MGRTABLE_NAME          AS BASETABLEID,
+		B.MGRTABLE_CHI_NAME      AS BASETABLENAME,
+		A.BASECOLUMNID           AS BASECOLUMNID,
+		A.BASECOLUMNNAME         AS BASECOLUMNNAME,
+		A.BASECOLUMNTYPE         AS BASECOLUMNTYPE,
+		B.DATAOBJECT             AS DATAOBJECT,
+		A.BUSINESSPKFLAG         AS BUSINESSPKFLAG,
+		A.DICTCODE               AS DICTCODE
+		FROM CHB_INFOMGR_CONFIG A
+		LEFT JOIN CHB_MGRTABLE_INFO B
+		ON A.BASETABLEID = B.MGRTABLE_ID
+		WHERE 1=1
+		<if test="list != null and list.size() > 0">
+			<foreach collection="list" item="item" open="(" close=")"
+					 separator=") or (">
+				A.BASEINFORMATIONID = #{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</select>
+
+	<select id ="queryItemByDictCode" resultType="Map" parameterType="java.lang.String">
+		SELECT ITEM_CODE, ITEM_VALUE FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{dictCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryConditionPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+	 	SELECT BASEINFORMATIONID, BASECOLUMNID, BASECOLUMNNAME, BASECOLUMNTYPE, BUSINESSPKFLAG, DICTCODE
+		 FROM CHB_INFOMGR_CONFIG WHERE BASETABLEID = #{mgrTableId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryTableInfoByTableName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT MGRTABLE_NAME AS BASETABLEID,
+			   HEADER_NUM AS HEADER_NUM
+	    FROM CHB_MGRTABLE_INFO
+	    WHERE MGRTABLE_CHI_NAME = #{tableName, jdbcType=VARCHAR}
+	    AND STATUS = 'E'
+	</select>
+
 	<select id="queryBaseInfoByParams" resultType="Map" statementType="STATEMENT">
 		SELECT * FROM ${tableId} WHERE 
 		<if test="list==null or list.size()==0">
@@ -101,6 +157,22 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 		</foreach>
 	</select>
 
+	<select id="queryAllTableInfo" resultMap="BaseResultMap">
+		SELECT MGRTABLE_ID AS BASETABLEID,
+			MGRTABLE_CHI_NAME AS BASETABLENAME
+		FROM CHB_MGRTABLE_INFO
+		WHERE STATUS = 'E'
+	</select>
+
+	<select id="queryTableIdByInterfType" resultMap="BaseResultMap" parameterType="java.lang.String">
+		<if test="interfType != null">
+			SELECT MGRTABLE_NAME AS BASETABLEID,
+			MGRTABLE_CHI_NAME AS BASETABLENAME
+			FROM CHB_MGRTABLE_INFO
+			WHERE DATAOBJECT = #{interfType,jdbcType=VARCHAR}
+		</if>
+	</select>
+
 	<update id="deleteData" parameterType="java.util.Map" statementType="STATEMENT">
 	<if test="map != null and map.size() > 0">
 		UPDATE ${tableId} SET STATUS = 'D', UPDATE_TIME = NOW()
@@ -110,5 +182,344 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 			</foreach>
 		</where>
 	</if>
+	</update>
+
+	<select id="queryDateColumnList" resultType="java.lang.String" parameterType="java.lang.String">
+		<if test="tableId != null">
+			SELECT distinct COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
+			AND UPPER(DATA_TYPE) ='DATE'
+		</if>
+	</select>
+
+	<select id="queryTimeColumnList" resultType="java.lang.String" parameterType="java.lang.String">
+		<if test="tableId != null">
+			SELECT distinct COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
+			AND DATA_TYPE in('datetime','timestamp')
+		</if>
+	</select>
+
+	<select id="queryNumberColumnList" resultType="java.lang.String" parameterType="java.lang.String">
+		<if test="tableId != null">
+			select
+			COLUMN_NAME from information_schema.COLUMNS
+			WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
+			AND (DATA_TYPE LIKE concat_ws('', '%','decimal', '%') or DATA_TYPE LIKE concat_ws('', '%','int', '%'))
+		</if>
+	</select>
+
+	<select id="queryDictCode" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT DICTCODE FROM CHB_INFOMGR_CONFIG
+		WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR}
+		AND BASECOLUMNID = #{columnId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryColumnByTableId"
+			parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT A.BASEINFORMATIONID AS BASEINFORMATIONID,
+		B.MGRTABLE_NAME          AS BASETABLEID,
+		B.MGRTABLE_CHI_NAME      AS BASETABLENAME,
+		A.BASECOLUMNID           AS BASECOLUMNID,
+		A.BASECOLUMNNAME         AS BASECOLUMNNAME,
+		A.BASECOLUMNTYPE         AS BASECOLUMNTYPE,
+		B.DATAOBJECT             AS DATAOBJECT,
+		A.BUSINESSPKFLAG         AS BUSINESSPKFLAG,
+		A.DICTCODE               AS DICTCODE
+		FROM CHB_INFOMGR_CONFIG A
+		LEFT JOIN CHB_MGRTABLE_INFO B
+		ON A.BASETABLEID = B.MGRTABLE_ID
+		WHERE A.BASECOLUMNTYPE != 'N'
+		AND A.BASECOLUMNTYPE != 'U'
+		<if test="tableId != null">
+			AND A.BASETABLEID = #{tableId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="queryBaseInfoByTableId"
+			parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT A.BASEINFORMATIONID AS BASEINFORMATIONID,
+		B.MGRTABLE_NAME          AS BASETABLEID,
+		B.MGRTABLE_CHI_NAME      AS BASETABLENAME,
+		A.BASECOLUMNID           AS BASECOLUMNID,
+		A.BASECOLUMNNAME         AS BASECOLUMNNAME,
+		A.BASECOLUMNTYPE         AS BASECOLUMNTYPE,
+		B.DATAOBJECT             AS DATAOBJECT,
+		A.BUSINESSPKFLAG         AS BUSINESSPKFLAG,
+		A.DICTCODE               AS DICTCODE
+		FROM CHB_INFOMGR_CONFIG A
+		LEFT JOIN CHB_MGRTABLE_INFO B
+		ON A.BASETABLEID = B.MGRTABLE_ID
+		WHERE 1 = 1
+		<if test="tableId != null">
+			AND A.BASETABLEID = #{tableId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="queryBaseInfoIdList" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT BASEINFORMATIONID
+		FROM CHB_INFOMGR_CONFIG
+		WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR}
+		<if test="columnList != null and columnList.size() > 0">
+			<foreach collection="columnList" item="column"
+					 open=" AND BASECOLUMNID IN (" close=")" separator=",">
+				#{column,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="queryPlanByfilterId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		<if test="filterId != null">
+			SELECT BI.BASEINFORMATIONID,
+			BI.BASETABLEID,
+			BI.BASECOLUMNID,
+			BI.BASECOLUMNNAME,
+			BI.BASECOLUMNTYPE
+			FROM CHB_INFOMGR_FILTER_DETAIL FID
+			LEFT JOIN CHB_INFOMGR_CONFIG BI
+			ON BI.BASEINFORMATIONID = FID.BASEINFORMATIONID
+			WHERE FID.FILTERID = #{filterId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="queryChbLoanDetailInfoByParams" resultType="Map" statementType="STATEMENT">
+		SELECT * FROM CHB_LOAN_DETAIL_INFO WHERE
+		<if test="list==null or list.size()==0">
+			1=1
+		</if>
+		<foreach item="item" index="index" collection="list" open=" " separator="and" close=" ">
+			<choose>
+				<when test="item.baseColumnType == 'T'.toString()">
+					${item.baseColumnId} LIKE '%${item.columnText}%'
+				</when>
+				<when test="item.baseColumnType == 'D'.toString()">
+					STR_TO_DATE(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ >= ]]> '${item.startDate}'
+					AND STR_TO_DATE(${item.baseColumnId},'%Y-%m-%d') <![CDATA[ <= ]]> '${item.endDate}'
+				</when>
+				<when test="item.baseColumnType == 'S'.toString()">
+					1=1 and ${item.baseColumnId} in
+					<foreach collection="item.columnSeq" item="items" open="(" separator="," close=")">
+						'${items}'
+					</foreach>
+				</when>
+			</choose>
+		</foreach>
+		<if test="flag">
+			AND STATUS != 'D'
+		</if>
+		<if test="assetType != null">
+			and ASSET_TYPE='${assetType}'
+		</if>
+	</select>
+
+	<select id="queryTableIdByDataObject" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT MGRTABLE_NAME AS BASETABLEID
+		 FROM CHB_MGRTABLE_INFO
+		WHERE DATAOBJECT = #{dataObject,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryBisinessPkListByTable" resultType="java.lang.String" parameterType="java.lang.String">
+		<if test="tableId != null">
+			SELECT BASECOLUMNID FROM CHB_INFOMGR_CONFIG
+			WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR} AND BUSINESSPKFLAG = 'Y'
+		</if>
+	</select>
+
+	<select id="querydataObjectByTable" resultType="java.lang.String" parameterType="java.lang.String">
+		<if test="tableId != null">
+			SELECT DATAOBJECT FROM CHB_MGRTABLE_INFO
+			WHERE MGRTABLE_NAME = #{tableId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectHeaderNumByChiName" resultType="java.lang.Integer">
+		SELECT HEADER_NUM
+		FROM CHB_MGRTABLE_INFO
+		WHERE MGRTABLE_CHI_NAME = #{chiName}
+	</select>
+
+	<select id="queryAllColumns" resultType="java.lang.String" parameterType="java.lang.String">
+		<if test="tableId != null">
+			SELECT distinct COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME = #{tableId,jdbcType=VARCHAR}
+
+		</if>
+	</select>
+
+	<select id="checkDataIsExist" parameterType="java.util.Map" statementType="STATEMENT" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ${tableId}
+		<where>
+			<foreach collection="map" index="key" item="value" separator="AND">
+				${key} = ${value}
+			</foreach>
+			<if test="tableId == 'CHB_LOAN_DETAIL_INFO' ">
+				and STATUS = 'E'
+			</if>
+		</where>
+	</select>
+
+	<select id="queryPrimarykeyByTableName" resultType="java.lang.String" parameterType="java.lang.String">
+		<if test="tableId != null">
+			SELECT BASECOLUMNID FROM CHB_INFOMGR_CONFIG WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR} AND BASECOLUMNTYPE = 'U'
+		</if>
+	</select>
+
+	<select id="queryColumnTypeByCondition" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT BASECOLUMNTYPE FROM CHB_INFOMGR_CONFIG WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR}
+		AND BASECOLUMNID = #{curColumn,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryColumnNameByCondition" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT BASECOLUMNNAME FROM CHB_INFOMGR_CONFIG WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR}
+		AND BASECOLUMNID = #{curColumn,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateData" parameterType="java.util.Map" statementType="STATEMENT">
+		UPDATE ${tableId} SET
+		<foreach collection="map" index="key" item="value" separator=",">
+			${key} = case when CAST(${value} as character)= 'null' then null else ${value} end
+		</foreach>
+		<where>
+			<foreach collection="pkMap" index="key" item="value" separator="AND">
+				${key} = ${value}
+			</foreach>
+		</where>
+	</update>
+
+	<insert id="insertData" parameterType="java.util.Map" statementType="STATEMENT">
+		INSERT INTO ${tableId}
+		<foreach collection="map" index="key" item="value" open="(" separator="," close=")">
+			<if test="value!=null">
+		    ${key}
+			</if>
+		</foreach>
+		VALUES
+		<foreach collection="map" index="key" item="value" open="(" separator="," close=")">
+			<if test="value!=null">
+			${value}
+			</if>
+		</foreach>
+	</insert>
+
+	<insert id="insertBatch" parameterType="com.joyintech.tams.common.base.entity.BaseInformationDto">
+		INSERT INTO CHB_INFOMGR_CONFIG (
+		BASEINFORMATIONID,
+		BASETABLEID,
+		BASECOLUMNID,
+		BASECOLUMNNAME,
+		BASECOLUMNTYPE,
+		BUSINESSPKFLAG,
+		DICTCODE
+		) VALUES
+		<foreach collection="insertList" item="item" index="index" separator="," >
+			(
+			#{item.baseInformationId, jdbcType=VARCHAR},
+			#{item.baseTableId, jdbcType=VARCHAR},
+			#{item.baseColumnId, jdbcType=VARCHAR},
+			#{item.baseColumnName, jdbcType=VARCHAR},
+			#{item.baseColumnType, jdbcType=VARCHAR},
+			#{item.businesspkFlag, jdbcType=VARCHAR},
+			#{item.dictCode, jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="deleteDataWithOutStatus" parameterType="java.util.Map" statementType="STATEMENT">
+		<if test="map != null and map.size() > 0">
+			DELETE FROM ${tableId}
+			<where>
+				<foreach collection="map" index="key" item="value" separator="AND">
+					(${key} = ${value})
+				</foreach>
+			</where>
+		</if>
+	</delete>
+
+	<delete id="deleteQueryCondition" parameterType="java.util.Map">
+		DELETE FROM CHB_INFOMGR_CONFIG WHERE BASETABLEID = #{mgrTableId, jdbcType=VARCHAR}
+	</delete>
+
+	<update id="mergePrdBaseInfo" parameterType="java.util.Map">
+		update chb_prd_baseinfo
+		<set>
+			<if test="PROD_INS_ID != null">
+				PROD_INS_ID = if(PROD_INS_ID is null , ${PROD_INS_ID} ,PROD_INS_ID),
+			</if>
+			<if test="PROD_BRAND != null">
+				PROD_BRAND = if(PROD_BRAND is null , ${PROD_BRAND} ,PROD_BRAND),
+			</if>
+			<if test="PROD_STAGE != null">
+				PROD_STAGE = if(PROD_STAGE is null , ${PROD_STAGE} ,PROD_STAGE),
+			</if>
+			<if test="RAISE_TYPE != null">
+				RAISE_TYPE = if(RAISE_TYPE is null , ${RAISE_TYPE} ,RAISE_TYPE),
+			</if>
+			<if test="PROFIT_TYPE != null">
+				PROFIT_TYPE = if(PROFIT_TYPE is null , ${PROFIT_TYPE} ,PROFIT_TYPE),
+			</if>
+			<if test="TERMTYPE != null">
+				TERMTYPE = if(TERMTYPE is null , ${TERMTYPE} ,TERMTYPE),
+			</if>
+			<if test="EXC_FIN_SECTOR != null">
+				EXC_FIN_SECTOR = if(EXC_FIN_SECTOR is null , ${EXC_FIN_SECTOR} ,EXC_FIN_SECTOR),
+			</if>
+			<if test="OPERATE_MODE != null">
+				OPERATE_MODE = if(OPERATE_MODE is null , ${OPERATE_MODE} ,OPERATE_MODE),
+			</if>
+			<if test="IS_SHORT_TERM != null">
+				IS_SHORT_TERM = if(IS_SHORT_TERM is null , ${IS_SHORT_TERM} ,IS_SHORT_TERM),
+			</if>
+			<if test="SHORT_TERM != null">
+				SHORT_TERM = if(SHORT_TERM is null , ${SHORT_TERM} ,SHORT_TERM),
+			</if>
+			<if test="CASH_MANA_CATE != null">
+				CASH_MANA_CATE = if(CASH_MANA_CATE is null , ${CASH_MANA_CATE} ,CASH_MANA_CATE),
+			</if>
+			<if test="IVSTORIENTATION != null">
+				IVSTORIENTATION = if(IVSTORIENTATION is null , ${IVSTORIENTATION} ,IVSTORIENTATION),
+			</if>
+			<if test="CONT_MODE != null">
+				CONT_MODE = if(CONT_MODE is null , ${CONT_MODE} ,CONT_MODE),
+			</if>
+			<if test="RAISE_CCY != null">
+				RAISE_CCY = if(RAISE_CCY is null , ${RAISE_CCY} ,RAISE_CCY),
+			</if>
+			<if test="CASH_PRIN_CCY != null">
+				CASH_PRIN_CCY = if(CASH_PRIN_CCY is null , ${CASH_PRIN_CCY} ,CASH_PRIN_CCY),
+			</if>
+			<if test="CASH_PROF_CCY != null">
+				CASH_PROF_CCY = if(CASH_PROF_CCY is null , ${CASH_PROF_CCY} ,CASH_PROF_CCY),
+			</if>
+			<if test="INVEST_ARAE != null">
+				INVEST_ARAE = if(INVEST_ARAE is null , ${INVEST_ARAE} ,INVEST_ARAE),
+			</if>
+			<if test="IN_DEP_NAME != null">
+				IN_DEP_NAME = if(IN_DEP_NAME is null , ${IN_DEP_NAME} ,IN_DEP_NAME),
+			</if>
+			<if test="IN_DEP_CODE != null">
+				IN_DEP_CODE = if(IN_DEP_CODE is null , ${IN_DEP_CODE} ,IN_DEP_CODE),
+			</if>
+			<if test="OUT_DEP_CTRY != null">
+				OUT_DEP_CTRY = if(OUT_DEP_CTRY is null , ${OUT_DEP_CTRY} ,OUT_DEP_CTRY),
+			</if>
+			<if test="OUT_DEP_NAME != null">
+				OUT_DEP_NAME = if(OUT_DEP_NAME is null , ${OUT_DEP_NAME} ,OUT_DEP_NAME),
+			</if>
+			<if test="RISK_LEVEL != null">
+				RISK_LEVEL = if(RISK_LEVEL is null , ${RISK_LEVEL} ,RISK_LEVEL),
+			</if>
+			<if test="TERM_RIGHT_FLAG != null">
+				TERM_RIGHT_FLAG = if(TERM_RIGHT_FLAG is null , ${TERM_RIGHT_FLAG} ,TERM_RIGHT_FLAG),
+			</if>
+			<if test="CUS_REDEEM_FLAG != null">
+				CUS_REDEEM_FLAG = if(CUS_REDEEM_FLAG is null , ${CUS_REDEEM_FLAG} ,CUS_REDEEM_FLAG),
+			</if>
+			<if test="CREDIT_FLAG != null">
+				CREDIT_FLAG = if(CREDIT_FLAG is null , ${CREDIT_FLAG} ,CREDIT_FLAG),
+			</if>
+			<if test="CREDIT_TYPE != null">
+				CREDIT_TYPE = if(CREDIT_TYPE is null , ${CREDIT_TYPE} ,CREDIT_TYPE),
+			</if>
+			<if test="CREDIT_MODE != null">
+				CREDIT_MODE = if(CREDIT_MODE is null , ${CREDIT_MODE} ,CREDIT_MODE),
+			</if>
+		</set> where PROD_ID = ${PROD_INS_ID}
 	</update>
 </mapper>

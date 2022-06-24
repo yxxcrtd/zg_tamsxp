@@ -112,7 +112,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 	/**
 	 * 使用sqlloader入库的条数限制
 	 */
-	private static final int SQLLOADER_MAX_SIZE = 1000;
+	private static final int SQLLOADER_MAX_SIZE = 100000;
 	private String reportSqlldrDatabaseName;
 
 	@Autowired
@@ -130,7 +130,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 	private SqlSessionTemplate template;
 
 	private boolean excuteProdBaseInfoByStep(List<Map<String, String>> baseinfoList, String tmpPath, ImpTable table,
-			String saveFlag,String dateSource) {
+			String saveFlag,String dataSource) {
 
 		// 定义新增数据list-验证不通过数据
 		// List<ChbPrdFeeDeal> listNA = new ArrayList<ChbPrdFeeDeal>();
@@ -141,7 +141,7 @@ public class SvrProdDealFileImpService extends FileImpService {
 		HashMap<String, ChbPrdDeal> dlMap = new HashMap<String, ChbPrdDeal>();
 		String key = "";
 		// modify by convertMapToEntity yangxianjiu 2022-01-18 start
-		List<ChbPrdDeal> baseList = (List<ChbPrdDeal>) convertMapToEntity(baseinfoList,ChbPrdDeal.class);
+		List<ChbPrdDeal> baseList = (List<ChbPrdDeal>) convertMapToEntity(baseinfoList,ChbPrdDeal.class, dataSource);
 //		for (Map<String, String> map : baseinfoList) {
 		for (ChbPrdDeal deal : baseList) {
 //			ChbPrdDeal deal = dataConversionEntity(map);

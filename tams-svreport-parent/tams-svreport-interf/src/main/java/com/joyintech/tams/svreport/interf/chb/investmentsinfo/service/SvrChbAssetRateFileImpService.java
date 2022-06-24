@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.interf.chb.investmentsinfo.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.FileImpService;
@@ -10,6 +11,7 @@ import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
 import com.joyintech.tams.common.base.entity.ChbAssetRate;
 import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -105,6 +107,9 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 	@Autowired
 	private ChbAssetRateInterfMapper chbAssetRateInterfMapper;
 
+	@Autowired
+	private BatchInsertService batchInsertService;
+
 	@Override
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 		String result = "";
@@ -129,13 +134,13 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 	}
 
 	@Override
-	public String saveData(List<Map<String, String>> chbAssetRateList, String saveFlag,String dateSource) {
+	public String saveData(List<Map<String, String>> chbAssetRateList, String saveFlag,String dataSource) {
 		String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 解析成功或失败的标识
 		boolean success = true;
 
 		logger.debug("资产利率基本信息map转dto----开始-----:" +  df.format(new Date()));
-		List<ChbAssetRate> listNE = (List<ChbAssetRate>) convertMapToEntity(chbAssetRateList, ChbAssetRate.class);
+		List<ChbAssetRate> listNE = (List<ChbAssetRate>) convertMapToEntity(chbAssetRateList, ChbAssetRate.class, dataSource);
 		listNE.stream().forEach(item->{
 			item.setSeqno(IDGenerator.generate(36));//主键
 		});
@@ -150,97 +155,17 @@ public class SvrChbAssetRateFileImpService extends FileImpService {
 				insertBatch(listNE);
 			} else {
 				// 大于1000使用sqlloader入库
-				// 创建表
-				ImpTable table = new ImpTable(InterfDefine.资产利率基本信息接口数据.getCode());
-				table.setColumns(ImportGenerator.createImpTableColumns(InterfDefine.资产利率基本信息接口数据.getCode()));
-				// 创建一个线程池
-				if (interfMaxCorePoolSize < 1) {
-					interfMaxCorePoolSize = 20;
-				}
-				ExecutorService service = new JoyinThreadPoolExecutor(interfMaxCorePoolSize);
-				List<Callable<Boolean>> tasks = new ArrayList<>();
-				if (null != chbAssetRateList) {
-					int start = 0;
-					int end = 0;
-					int size = chbAssetRateList.size();
-					int max = (int) Math.ceil((double) size / 1000);
-					for (int i = 0; i < max; i++) {
-						start = end;
-						end = Math.min(size, 1000 * (i + 1));
-						List<Map<String, String>> subList = chbAssetRateList.subList(start, end);
-						tasks.add(new Callable<Boolean>() {
-							@Override
-							public Boolean call() {
-								createDataFile(tmpPath + "/CHB_ASSET_RATE/CHB_ASSET_RATE", listNE, table.getColumns());
-								return true;
-							}
-						});
-					}
-				}
-				// 为线程池添加任务
-				List<Future<Boolean>> taskResult;
 				try {
-					taskResult = service.invokeAll(tasks);
-				} catch (InterruptedException e) {
+					//sqlloader插入
+					ImpTable table = new ImpTable("CHB_ASSET_RATE");
+					table.setColumns(ImportGenerator.createImpTableColumns(table.getName()));
+					// 临时文件存放目录
+					String path = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
+
+					batchInsertService.exeBatchldr(path, listNE, table);
+				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					return "fail";
-				}
-				for (Future<Boolean> res : taskResult) {
-					try {
-						success = success && res.get();
-					} catch (InterruptedException | ExecutionException e) {
-						logger.error(e.getMessage(), e);
-						return "fail";
-					}
-				}
-				// 任务结束，停止线程池的所有线程
-				service.shutdown();
-				Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_ASSET_RATE/"), new String[] { "tmp" }, false);
-				List<String> content = new ArrayList<>(chbAssetRateList.size());
-				String result = "";
-				for (File f : files) {
-					if (f.getName().startsWith(InterfDefine.资产利率基本信息接口数据.getCode())) {
-						try {
-							content.addAll(FileUtils.readLines(f, Charset.forName("UTF-8")));
-							logger.debug("查找sqlloder文件"+f);
-						} catch (IOException e) {
-							logger.debug("查找sqlloder文件异常");
-							logger.error(e.getMessage(), e);
-							result = "fail";
-						} finally {
-							f.delete();
-						}
-					}
-				}
-				if("fail".equals(result)){
-					return result;
-				}
-				// 系统是否使用的db2数据库
-				boolean isDB2DataBase = CommonUtil.isDB2DataBase();
-				if (isDB2DataBase) {
-					// db2数据库处理
-					if (CollectionUtils.isNotEmpty(content)) {
-						try {
-							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_RATE/", content,
-									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "del",
-									reportSqlldrDatabaseName);
-						} catch (IOException | InterruptedException e) {
-							logger.error(e.getMessage(), e);
-							return "fail";
-						}
-					}
-				} else {
-					// oracle原逻辑
-					if (CollectionUtils.isNotEmpty(content)) {
-						try {
-							success = success && ImportGenerator.importToDBByPart(table, tmpPath+"/CHB_ASSET_RATE/", content,
-									reportInterfOneTimeSqlLdrDataCount, reportInterfOneTimeSqlLdrCommitCount, "txt",
-									reportSqlldrDatabaseName);
-						} catch (IOException | InterruptedException e) {
-							logger.error(e.getMessage(), e);
-							return "fail";
-						}
-					}
 				}
 			}
 		}

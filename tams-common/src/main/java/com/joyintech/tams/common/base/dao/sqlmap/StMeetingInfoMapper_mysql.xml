@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StMeetingInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StMeetingInfo" >
+        <id column="MEETINGSEQ" property="meetingseq" jdbcType="VARCHAR" />
+        <result column="MEETINGDESC" property="meetingdesc" jdbcType="VARCHAR" />
+        <result column="COMPANYCODE" property="companycode" jdbcType="VARCHAR" />
+        <result column="COMPANYINFO" property="companyinfo" jdbcType="VARCHAR" />
+        <result column="MEETINGDATEBEGIN" property="meetingdatebegin" jdbcType="DATE" />
+        <result column="MEETINGDATEEND" property="meetingdateend" jdbcType="DATE" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        MEETINGSEQ MEETINGSEQ, MEETINGDESC MEETINGDESC, COMPANYCODE COMPANYCODE, COMPANYINFO COMPANYINFO, 
+        MEETINGDATEBEGIN MEETINGDATEBEGIN, MEETINGDATEEND MEETINGDATEEND, TRADE_DATE TRADE_DATE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StMeetingInfoMapper_mysql.Base_Column_List" />
+        from ST_MEETING_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StMeetingInfoMapper_mysql.Base_Column_List" />
+        from ST_MEETING_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StMeetingInfoMapper_mysql.Base_Column_List" />
+        from ST_MEETING_INFO
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from ST_MEETING_INFO
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StMeetingInfo" >
+        insert into ST_MEETING_INFO (MEETINGSEQ, MEETINGDESC, COMPANYCODE, 
+            COMPANYINFO, MEETINGDATEBEGIN, MEETINGDATEEND, 
+            TRADE_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{meetingseq,jdbcType=VARCHAR}, #{meetingdesc,jdbcType=VARCHAR}, #{companycode,jdbcType=VARCHAR}, 
+            #{companyinfo,jdbcType=VARCHAR}, #{meetingdatebegin,jdbcType=DATE}, #{meetingdateend,jdbcType=DATE}, 
+            #{tradeDate,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StMeetingInfo" >
+        insert into ST_MEETING_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="meetingseq != null" >
+                MEETINGSEQ,
+            </if>
+            <if test="meetingdesc != null" >
+                MEETINGDESC,
+            </if>
+            <if test="companycode != null" >
+                COMPANYCODE,
+            </if>
+            <if test="companyinfo != null" >
+                COMPANYINFO,
+            </if>
+            <if test="meetingdatebegin != null" >
+                MEETINGDATEBEGIN,
+            </if>
+            <if test="meetingdateend != null" >
+                MEETINGDATEEND,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="meetingseq != null" >
+                #{meetingseq,jdbcType=VARCHAR},
+            </if>
+            <if test="meetingdesc != null" >
+                #{meetingdesc,jdbcType=VARCHAR},
+            </if>
+            <if test="companycode != null" >
+                #{companycode,jdbcType=VARCHAR},
+            </if>
+            <if test="companyinfo != null" >
+                #{companyinfo,jdbcType=VARCHAR},
+            </if>
+            <if test="meetingdatebegin != null" >
+                #{meetingdatebegin,jdbcType=DATE},
+            </if>
+            <if test="meetingdateend != null" >
+                #{meetingdateend,jdbcType=DATE},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StMeetingInfo" >
+        insert into ST_MEETING_INFO(MEETINGSEQ, MEETINGDESC, COMPANYCODE, COMPANYINFO, MEETINGDATEBEGIN, 
+        MEETINGDATEEND, TRADE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select MEETINGSEQ, MEETINGDESC, COMPANYCODE, COMPANYINFO, MEETINGDATEBEGIN, 
+            MEETINGDATEEND, TRADE_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from ST_MEETING_INFO
+             where 1 = 1 and MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StMeetingInfo" >
+        update ST_MEETING_INFO
+        <set >
+            <if test="meetingdesc != null" >
+                MEETINGDESC = #{meetingdesc,jdbcType=VARCHAR},
+            </if>
+            <if test="companycode != null" >
+                COMPANYCODE = #{companycode,jdbcType=VARCHAR},
+            </if>
+            <if test="companyinfo != null" >
+                COMPANYINFO = #{companyinfo,jdbcType=VARCHAR},
+            </if>
+            <if test="meetingdatebegin != null" >
+                MEETINGDATEBEGIN = #{meetingdatebegin,jdbcType=DATE},
+            </if>
+            <if test="meetingdateend != null" >
+                MEETINGDATEEND = #{meetingdateend,jdbcType=DATE},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StMeetingInfo" >
+        update ST_MEETING_INFO
+        set MEETINGDESC = #{meetingdesc,jdbcType=VARCHAR},
+            COMPANYCODE = #{companycode,jdbcType=VARCHAR},
+            COMPANYINFO = #{companyinfo,jdbcType=VARCHAR},
+            MEETINGDATEBEGIN = #{meetingdatebegin,jdbcType=DATE},
+            MEETINGDATEEND = #{meetingdateend,jdbcType=DATE},
+            TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where MEETINGSEQ = #{meetingseq,jdbcType=VARCHAR}
+    </update>
+</mapper>

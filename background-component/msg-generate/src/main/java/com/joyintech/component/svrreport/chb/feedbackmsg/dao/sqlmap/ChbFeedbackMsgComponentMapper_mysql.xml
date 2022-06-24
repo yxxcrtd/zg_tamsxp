@@ -173,7 +173,7 @@
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
 
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
 
         </set>
         where
@@ -200,7 +200,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -226,7 +226,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -252,7 +252,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -279,7 +279,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -306,7 +306,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -332,7 +332,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -357,7 +357,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -383,7 +383,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -409,7 +409,7 @@
         <if test="submitFeedbackMsg != null">
             SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
         </if>
-        UPDATE_TIME = SYSDATE
+        UPDATE_TIME = now()
     </set>
     where
     <choose>
@@ -492,6 +492,9 @@
             <if test="operateMode != null" >
                 OPERATE_MODE,
             </if>
+            <if test="prodInsId != null">
+                PROD_INS_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="prodid != null" >
@@ -524,16 +527,19 @@
             <if test="updateUser != null" >
                 #{updateUser,jdbcType=VARCHAR},
             </if>
-                sysdate,
+                now(),
             <if test="createUser != null" >
                 #{createUser,jdbcType=VARCHAR},
             </if>
-                sysdate,
+                now(),
             <if test="createDept != null" >
                 #{createDept,jdbcType=VARCHAR},
             </if>
             <if test="operateMode != null" >
                 #{operateMode,jdbcType=VARCHAR},
+            </if>
+            <if test="prodInsId != null">
+                #{prodInsId,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -572,7 +578,7 @@
             <if test="updateUser != null" >
                 UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             </if>
-                UPDATE_TIME = sysdate,
+                UPDATE_TIME = now(),
             <if test="operateMode != null" >
                 OPERATE_MODE = #{operateMode,jdbcType=VARCHAR}
             </if>
