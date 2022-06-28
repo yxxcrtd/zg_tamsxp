@@ -17,13 +17,19 @@ $(function() {
         }
 
         //行内报送时点要求 超出 中债报送时点要求
-        if(submitPointBank&&!(submitPointBond < submitPointBank)){
+        if(submitPointBank&&(submitPointBond - submitPointBank > 0)){
             Joyin.confirm("填写的行内报送时点要求超出中债报送时点要求范围，可能会导致报送不及时，请确认是否保存？", function(){
                 Joyin.ajaxJson(basePath + 'svreport/system/regtimepoints/RegTimePoints002/save',object,function(result){
                     layui.layer.closeAll();
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 });
+            });
+        }else{
+            Joyin.ajaxJson(basePath + 'svreport/system/regtimepoints/RegTimePoints002/save',object,function(result){
+                layui.layer.closeAll();
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
             });
         }
 
