@@ -28,6 +28,8 @@
     <result column="INSTITUTION_CODE" property="institutionCode" jdbcType="VARCHAR" />
     <result column="BANK_CAPITAL" property="bankCapital" jdbcType="VARCHAR" />
     <result column="SHARES_TYPE" property="sharesType" jdbcType="VARCHAR" />
+    <result column="PARTY_TYPE1" property="partyType1" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     POSUUID, PRODID, ORG_CODE, POSITION_TYPE, CHL_ID, ASSET_CODE, ASSET_TYPE1, ASSET_TYPE2,
@@ -440,17 +442,23 @@
   <select id="selectByDateAndProdid" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
 
-    PMAP.POSUUID, PMAP.PRODID, PMAP.ORG_CODE, PMAP.POSITION_TYPE, PMAP.CHL_ID, PMAP.ASSET_CODE, PMAP.ASSET_TYPE1, PMAP.ASSET_TYPE2,
+    PMAP.POSUUID, PMAP.PRODID, PMAP.ORG_CODE, PMAP.POSITION_TYPE, PMAP.CHL_ID, PMAP.ASSET_CODE, PMAP.ASSET_TYPE1,
+    case when ASSETINFO.ASSET_TYPE2='1108'
+    THEN 'R03'
+    ELSE PMAP.ASSET_TYPE2
+    END ASSET_TYPE2,
     PMAP.ASSET_TYPE3, PMAP.STARTDATE, PMAP.ENDDATE, PMAP.BOOKDATE, PMAP.CCY, PMAP.AMT, PMAP.INT_AMT, PMAP.END_DAYS, PMAP.BAL_FLAG,PMAP.RATING,
     ASSETINFO.BANK_SEC_CAPITAL,
     ASSETINFO.BANK_SEC_PERPETUAL,
     ASSETINFO.BANK_SEC_PREFER,
     ASSETINFO.IS_PERPETUAL,
     ASSETINFO.BANK_CAPITAL,
-    ASSETINFO.SHARES_TYPE
+    ASSETINFO.SHARES_TYPE,
+    minfo.PARTY_TYPE1
     from PBC_MONTH_ASSET_POSITION PMAP
     left join CHB_ASSET_INFO ASSETINFO
     ON ASSETINFO.ASSET_CODE = PMAP.ASSET_CODE  and  ASSETINFO.status in('E','M')
+    left join MST_CUSTOMER_INFO_ADD minfo on minfo.CUSTOMER_ID =ASSETINFO.CHB_ISSUER_ID
     where TO_CHAR(ENDDATE,'yyyy-MM-dd') = #{bookDate,jdbcType=VARCHAR}
     <if test="prodList !=null">
       <foreach collection="prodList" item="prodid" open="and PRODID in ("

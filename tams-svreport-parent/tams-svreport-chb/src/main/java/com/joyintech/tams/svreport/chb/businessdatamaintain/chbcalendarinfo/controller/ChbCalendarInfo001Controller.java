@@ -135,56 +135,7 @@ public class ChbCalendarInfo001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() {
-        Map<String, Object> params= RequestUtil.getPageParam();
-        List<ChbCalendarInfo001Dto> list = Lists.newArrayList();
-        if(StringUtils.isNotEmpty((String)params.get("selectData"))){
-            List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
-            List<ChbCalendarInfo001Dto> dtoList = selectData.stream().map(e -> {
-                ChbCalendarInfo001Dto dto = new ChbCalendarInfo001Dto();
-                dto.setCalendarId((String) e.get("CALENDAR_ID"));
-                try {
-                    dto.setCdate(DateUtil.parseDate((String) e.get("CDATE"),"yyyy-MM-dd"));
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                return dto;
-            }).collect(Collectors.toList());
-            list = chbTradingCalendarInfo001Service.selectByKeys(dtoList);
-        }else {
-            if (Objects.equals(params.get("ishDay"), DictCodeList.是否_是.getValue())) {
-                params.put("ishDay", 1);
-            } else if (StringUtil.equals(params.get("ishDay"), DictCodeList.是否_否.getValue())) {
-                params.put("ishDay", 0);
-            }
-            String calendarType = (String) params.get("calendarType");
-            if (StringUtil.isNotEmpty(calendarType)) {
-                params.put("calendarTypeList", StringUtil.split(calendarType, GlobalConstant.COMMA));
-            }
-            list = chbTradingCalendarInfo001Service.selectAll(params);
-        }
-        List<ChbCalendarInfo001Dto> dtoList = Lists.newArrayList();
-        if(list.size()>0){
-            for (int k=0;k<list.size();k++){
-                if(list.get(k).getStatus().equals("A")){
-                    ChbCalendarInfo001Dto chbCalendarInfo001Dto = ErrdataConvertUtil.errdataConvert(ChbCalendarInfo001Dto.class, list.get(k).getOrgData());
-                    chbCalendarInfo001Dto.setStatus("A");
-                    chbCalendarInfo001Dto.setErrMsg(list.get(k).getErrMsg());
-                    dtoList.add(chbCalendarInfo001Dto);
-                }else{
-                    dtoList.add(list.get(k));
-                }
-            }
-        }
-        File outFile = chbTradingCalendarInfo001Service.makeFile(
-                "com/joyintech/tams/svreport/chb/businessdatamaintain/chbcalendarinfo/conf/export_conf.xml",
-                dtoList);
-        return ExportUtil.export(
-                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
-                        + DateUtil.format(new Date())
-                        + SystemGlobalConstant.CLOSE_PARENTHESIS
-                        + SystemGlobalConstant.POINT
-                        + FileNameUtil.getFileExtName(outFile),
-                outFile, true);
+        return chbTradingCalendarInfo001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 
 }

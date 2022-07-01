@@ -2263,7 +2263,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					isContans=true;
             				}
                     		/** end 添加模板导入A列为导出时,应该提示“不要使用“操作类型”为“导出”的进行导入 add by  dongxiangyang 20201028*/
-            				boolean flag = checkSingleData(pkDataMap, tableName);
+							boolean flag;
+							//科目余额没有STATUS字段，单独处理
+							if (!Objects.equals("BOK_BALANCE",tableName)) {
+								flag = this.checkSingleData(pkDataMap, tableName);
+							} else {
+								flag = this.checkNoStatusDataIsExist(pkDataMap, tableName);
+							}
             				if (flag && StringUtil.equals(strList.get(0), "新增")) {
             					int rowNum = j + 1;
             					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
@@ -2620,6 +2626,20 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 
     	return flag;
     }
+
+	private boolean checkNoStatusDataIsExist(Map<String, String> pkDataMap, String tableId) {
+		boolean flag = false;
+		try
+		{int count = baseInformationMapper.checkNoStatusDataIsExist(pkDataMap, tableId);
+			if (count > 0) {
+				flag = true;
+			}
+		}catch(Exception e){
+			return flag;
+		}
+
+		return flag;
+	}
     
     /**
      * 检查传入数据和指定表的数据是否主键冲突并返回主键冲突数据
@@ -2909,6 +2929,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					}
             					insertMap.put("INDENTIFY_MARK", indentifyMark);
             				}
+							//投资者交易信息是否代销字段处理
+							if (Objects.equals("'是'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'01'");
+							}
+							if (Objects.equals("'否'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'02'");
+							}
             			}
                         // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
                         Set<String> keySet = new HashSet<>(insertMap.keySet());
@@ -3110,6 +3137,13 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					}
             					updateMap.put("INDENTIFY_MARK", indentifyMark);
             				}
+							//投资者交易信息是否代销字段处理
+							if (Objects.equals("'是'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'01'");
+							}
+							if (Objects.equals("'否'",insertMap.get("ISAGENCY"))) {
+								insertMap.put("ISAGENCY", "'02'");
+							}
             			}
                         // add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
                         keySet = new HashSet<>(updateMap.keySet());

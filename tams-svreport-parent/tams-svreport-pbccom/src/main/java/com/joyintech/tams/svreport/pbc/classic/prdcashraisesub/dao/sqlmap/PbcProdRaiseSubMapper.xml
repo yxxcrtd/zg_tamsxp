@@ -1890,9 +1890,22 @@
   </select>
   <!-- 手工处理 -->
   <update id="doManul" parameterType="map">
-    UPDATE PBC_PROD_RAISING_SUB a left join PBC_PRD_BASEINFO_SUB b
-    on a.PBC_PROD_ID = b.PBC_PROD_ID
-    LEFT JOIN(
+    UPDATE PBC_PROD_RAISING_SUB c
+    set
+    c.SEND_STATUS = '03',
+    c.SUBMIT_FEEDBACK_STATUS = '03',
+    <if test="submitadd != null and submitadd != ''">
+      c.SUBMIT_TIME = sysdate + #{submitadd},
+    </if>
+    <if test="submitadd == null">
+      c.SUBMIT_TIME = sysdate,
+    </if>
+    c.UPDATE_TIME = sysdate
+    <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
+    , c.STATUS_DATE = sysdate
+    <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
+    where EXISTS(
+    select 1 from PBC_PRD_BASEINFO_SUB a left join (
     SELECT
     inside_prod_id,
     pbc_code
@@ -1901,35 +1914,26 @@
     WHERE
     status='E'
     AND code_type='01'
-    ) t2 ON t2.inside_prod_id=b.PROD_ID
-    set
-    a.SEND_STATUS = '03',
-    a.SUBMIT_FEEDBACK_STATUS = '03',
-    <if test="submitadd != null and submitadd != ''">
-      a.SUBMIT_TIME = sysdate + #{submitadd},
+    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=c.PBC_PROD_ID
+    <if test="list != null and list.size() >0">
+      <foreach collection="list" open=" and (NVL(t.pbc_code,c.PBC_PROD_ID),to_char(c.RAISING_DATE,'yyyy-MM-dd')) in (" close=")" separator="union all" item="item">
+        select #{item.pbcProdId,jdbcType=CHAR},
+        #{item.raisingDateStr,jdbcType=CHAR}
+        from dual
+      </foreach>
     </if>
-    <if test="submitadd == null">
-      a.SUBMIT_TIME = sysdate,
-    </if>
-    a.UPDATE_TIME = sysdate
-    <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
-    , a.STATUS_DATE = sysdate
-    <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
-    <where>
-      <if test="list != null and list.size() >0">
-        <foreach collection="list" open="(NVL(t2.pbc_code,a.PBC_PROD_ID),a.RAISING_DATE) in (" close=")" separator="union all" item="item">
-          select #{item.pbcProdId,jdbcType=CHAR},
-          #{item.raisingDate,jdbcType=CHAR}
-          from dual
-        </foreach>
-      </if>
-    </where>
+    )
   </update>
   <!-- 取消手工处理 -->
   <update id="cancelManul" parameterType="java.util.List">
-    UPDATE PBC_PROD_RAISING_SUB a left join PBC_PRD_BASEINFO_SUB b
-    on a.PBC_PROD_ID = b.PBC_PROD_ID
-    LEFT JOIN(
+    UPDATE PBC_PROD_RAISING_SUB c
+    set
+    c.SEND_STATUS = '01',
+    c.UPDATE_TIME = sysdate,
+    c.SUBMIT_TIME = null,
+    c.SUBMIT_FEEDBACK_STATUS = null
+    where EXISTS(
+    select 1 from PBC_PRD_BASEINFO_SUB a left join (
     SELECT
     inside_prod_id,
     pbc_code
@@ -1938,21 +1942,15 @@
     WHERE
     status='E'
     AND code_type='01'
-    ) t2 ON t2.inside_prod_id=b.PROD_ID
-    set
-    a.SEND_STATUS = '01',
-    a.UPDATE_TIME = sysdate,
-    a.SUBMIT_TIME = null,
-    a.SUBMIT_FEEDBACK_STATUS = null
-    <where>
-      <if test="list != null and list.size() >0">
-        <foreach collection="list" open="(NVL(t2.pbc_code,a.PBC_PROD_ID),a.RAISING_DATE) in (" close=")" separator="union all" item="item">
-          select #{item.pbcProdId,jdbcType=CHAR},
-          #{item.raisingDate,jdbcType=CHAR}
-          from dual
-        </foreach>
-      </if>
-    </where>
+    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=c.PBC_PROD_ID
+    <if test="list != null and list.size() >0">
+      <foreach collection="list" open=" and (NVL(t.pbc_code,c.PBC_PROD_ID),to_char(c.RAISING_DATE,'yyyy-MM-dd')) in (" close=")" separator="union all" item="item">
+        select #{item.pbcProdId,jdbcType=CHAR},
+        #{item.raisingDateStr,jdbcType=CHAR}
+        from dual
+      </foreach>
+    </if>
+    )
   </update>
   <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
     insert into PBC_PROD_RAISING_SUB_HIS (<include refid="Base_Column_List2"></include>)
@@ -2017,7 +2015,7 @@
     )
   </delete>
   <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
-    delete from PBC_PROD_RAISING_SUB where EXISTS(
+    delete from PBC_PROD_RAISING_SUB c where EXISTS(
     select 1 from PBC_PRD_BASEINFO_SUB a left join (
     SELECT
     inside_prod_id,
@@ -2027,17 +2025,15 @@
     WHERE
     status='E'
     AND code_type='01'
-    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=PBC_PROD_ID
-    <where>
+    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=c.PBC_PROD_ID
       <if test="list != null and list.size() >0">
-        <foreach collection="list" open=" and (NVL(t.pbc_code,PBC_PROD_ID),RAISING_DATE) in (" close=")" separator="union all" item="item">
+        <foreach collection="list" open=" and (NVL(t.pbc_code,c.PBC_PROD_ID),to_char(c.RAISING_DATE,'yyyy-MM-dd')) in (" close=")" separator="union all" item="item">
           select #{item.pbcProdId,jdbcType=CHAR},
-          #{item.raisingDate,jdbcType=CHAR}
+          #{item.raisingDateStr,jdbcType=CHAR}
           from dual
         </foreach>
       </if>
       and SEND_STATUS in ('02','03')
-    </where>
         )
   </delete>
 

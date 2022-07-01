@@ -13,7 +13,7 @@
 		where
 			CBL.TASK_ID in ('3001','3002','3071')
 			<if test="taskId!=null and taskId!=''">
-				CBL.TASK_ID = #{taskId}
+				AND CBL.TASK_ID = #{taskId}
 			</if>
 			<if test="date!=null and date!=''">
 				AND to_char(CBL.START_TIME,'yyyy-MM-dd') &lt;= #{date,jdbcType=VARCHAR}

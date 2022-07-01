@@ -102,7 +102,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             entity.setCashManaCate(cashManaCate);
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            entity.setProduuid(IDGenerator.generate(32));
+            entity.setProduuid(IDGenerator.generate(36));
             List<ChbPrdBaseinfo> chbPrdBaseInfoDtos = Lists.newArrayList((ChbPrdBaseinfo) entity);
             chbPrdBaseinfoInterfMapper.deleteChbPrdBaseinfoErroData(chbPrdBaseInfoDtos);
             ChbPrdresistCode chbPrdresistCode = new ChbPrdresistCode();
@@ -158,6 +158,10 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             }
         }else{
              dto = chbPrdBaseInfoDao.selectByKey(produuid);
+        }
+        if(dto!=null&&dto.getProdId()!=null){
+                Map<String,String> map=chbPrdBaseInfoDao.selectRegCodeByProdId(dto.getProdId());
+                dto.setRegCode(map.get("REG_CODE"));//从产品登记编码带值
         }
         return dto;
     }

@@ -75,7 +75,8 @@
 		CREATE_DEPT,
 		STATUS,
 		DATA_SOURCE,
-		MD5PRIMARYKEY
+		MD5PRIMARYKEY,
+		CCY
 		from
 		(
 		select TEMP.* from
@@ -102,7 +103,8 @@
 			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
 			#{item.status,jdbcType=VARCHAR} STATUS,
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
+			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY,
+			#{item.ccy,jdbcType=VARCHAR} CCY
 			FROM
 			DUAL
 		</foreach>
@@ -127,7 +129,8 @@
 		A.UPDATE_USER = B.UPDATE_USER,
 		A.STATUS = B.STATUS,
 		A.DATA_SOURCE = B.DATA_SOURCE,
-		A.MD5PRIMARYKEY = B.MD5PRIMARYKEY
+		A.MD5PRIMARYKEY = B.MD5PRIMARYKEY,
+		A.CCY = B.CCY
 		where A.PROD_ID = B.PROD_ID
 		AND A.ASSET_ID = B.ASSET_ID
 		AND A.VALUE_DATE = B.VALUE_DATE;
@@ -151,7 +154,8 @@
 		CREATE_DEPT,
 		STATUS,
 		DATA_SOURCE,
-		MD5PRIMARYKEY)
+		MD5PRIMARYKEY,
+		CCY)
 		select VAL_ID,
 		PROD_ID,
 		ASSET_ID,
@@ -172,7 +176,8 @@
 		CREATE_DEPT,
 		STATUS,
 		DATA_SOURCE,
-		MD5PRIMARYKEY from
+		MD5PRIMARYKEY,
+		CCY from
 		(
 		select TEMP.* from
 		(
@@ -198,7 +203,8 @@
 			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
 			#{item.status,jdbcType=VARCHAR} STATUS,
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
+			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY,
+			#{item.ccy,jdbcType=VARCHAR} CCY
 			FROM
 			DUAL
 		</foreach>

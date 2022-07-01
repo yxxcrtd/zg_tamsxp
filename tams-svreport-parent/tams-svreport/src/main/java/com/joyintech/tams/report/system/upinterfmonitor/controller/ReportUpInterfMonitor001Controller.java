@@ -65,6 +65,12 @@ public class ReportUpInterfMonitor001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isFromMain", "01");
 		}
+		if(StringUtil.isNotEmpty(map.get("fileHandleStatus"))){
+			model.addAttribute("fileHandleStatus", map.get("fileHandleStatus").toString().trim());
+			model.addAttribute("searchDataStart", map.get("searchDataStart"));
+			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
+			model.addAttribute("isFromMain", "01");
+		}
 		super.setSelectOptionToModel(model, DictCode.上游接口文件类型,DictCode.上游接口文件读取处理状态);
 		return super.init(model);
 	}

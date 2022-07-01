@@ -44,11 +44,15 @@
         }
         var  sharesTypeChangeType= function(){
              // 股票类型”选择“02 优先股”时必填，否则置灰不可填
-            if($("#svrBussRepEquityInfoDto_sharesType").val()!='02'){
-                $('#isBankCap').attr('disabled',true);
-                $("#isBankCap").val('').trigger("change");
-            }else{
-                $('#isBankCap').attr('disabled',false);
+            var assetTvalueEquity=$('#assetType2').val();
+            //权益类资产
+            if(assetTvalueEquity=='1305'||assetTvalueEquity=='1302' || assetTvalueEquity=='1301') {
+                if ($("#svrBussRepEquityInfoDto_sharesType").val() != '02') {
+                    $('#isBankCap').attr('disabled', true);
+                    $("#isBankCap").val('').trigger("change");
+                } else {
+                    $('#isBankCap').attr('disabled', false);
+                }
             }
         }
 

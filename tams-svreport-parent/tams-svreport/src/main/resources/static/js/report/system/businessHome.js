@@ -21,6 +21,9 @@ var getHoldInfoSourceInfoUrl = basePath + "system/businessHome/getHoldInfoSource
         var temp=Date.ofDate(searchDate.replace(/-/g,"/"));
         searchDataEnd=temp.format();
         data.searchDataEnd=searchDataEnd;
+        data.searchDataStart=searchDataEnd;
+        var fileHandleStatus= a.attr("dataSubtype");
+        data.fileHandleStatus=fileHandleStatus;
         var newTab = {
             pageId: a.attr("tab-pageid"),
             title: a.attr("tab-title"),

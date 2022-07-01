@@ -5,6 +5,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 科目定义controller
@@ -47,6 +50,8 @@ public class ChbBokSubject002Controller extends BaseController {
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String subjectNo = getParam("subjectNo");
         String booksetId = getParam("booksetId");
+        String statusValid = getParam("statusValid");
+        String datauuid = getParam("datauuid");
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             ChbBokSubjectDto dto = bokSubjectService.getBussinessEntityByWorkflowId(
                     workflowId);
@@ -55,7 +60,7 @@ public class ChbBokSubject002Controller extends BaseController {
         }
         else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(subjectNo) ) {
             //通过主键查询数据
-            ChbBokSubjectDto dto = bokSubjectService.selcetByKey(subjectNo,booksetId);
+            ChbBokSubjectDto dto = bokSubjectService.selcetByKey(subjectNo,booksetId,statusValid,datauuid);
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
         return super.init(model);

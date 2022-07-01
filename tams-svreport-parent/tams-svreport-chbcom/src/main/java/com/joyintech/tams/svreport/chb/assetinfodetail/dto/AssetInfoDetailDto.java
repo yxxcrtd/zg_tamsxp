@@ -19,6 +19,7 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -1086,7 +1087,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	}
 	public String getBankCapitalStr() {
 		if(StringUtil.isNotEmpty(this.getBankCapital())) {
-			return this.getBankCapital() + " " + SysDataUtil.getNameFromDataDict(DictCode.中债月度明细_银行资本补充工具, this.getBankCapital());
+			return this.getBankCapital() + " " + SysDataUtil.getNameFromDataDict(DictCode.银行资本补充工具, this.getBankCapital());
 		}
 		return this.getBankCapital();
 	}
@@ -2532,4 +2533,9 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	public void setOrgData(String orgData) {
 		this.orgData = orgData;
 	}
+
+	public String getEquityQuitStr() {
+		return DateUtil.format(super.getEquityQuit());
+	}
+
 }

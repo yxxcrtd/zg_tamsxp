@@ -14,7 +14,7 @@
 		BASIS_CYY as basisCyy,
 		QUOT_UNIT as quotUnit,
         STATUS as statusValid,
-		ERR_MSG as errMsg,
+		null as errMsg,
 		INPUT_TYPE as  inputType,
 		CREATE_USER as createUser,
 		CREATE_DEPT as createDept,

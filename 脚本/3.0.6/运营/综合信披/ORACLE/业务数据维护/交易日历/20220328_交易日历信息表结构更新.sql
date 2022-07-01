@@ -12,11 +12,14 @@ if 	num1 = 0   then execute immediate 'ALTER TABLE MST_HOLIDAY ADD STATUS VARCHA
 end if;
 if  num2 = 0   then execute immediate 'ALTER TABLE MST_HOLIDAY ADD DATA_SOURCE VARCHAR2(50)';
 end if;
-if  num3 = 0   then execute immediate 'ALTER TABLE MST_HOLIDAY ADD ERR_MSG CLOB';
+if  num3 = 1   then execute immediate 'alter table MST_HOLIDAY drop column ERR_MSG';
+
 end if;
 
 end;
 /
 COMMENT  ON  COLUMN  MST_HOLIDAY.STATUS   is  '数据状态';
 COMMENT  ON  COLUMN  MST_HOLIDAY.DATA_SOURCE   is  '数据来源';
+
+ALTER TABLE MST_HOLIDAY ADD ERR_MSG CLOB;
 COMMENT  ON  COLUMN  MST_HOLIDAY.ERR_MSG   is  '错误信息';

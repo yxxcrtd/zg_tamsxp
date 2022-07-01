@@ -1,0 +1,1 @@
+delete from sys_menu where MENU_ID = 'REPORT_MAINTAIN_001_003_002';

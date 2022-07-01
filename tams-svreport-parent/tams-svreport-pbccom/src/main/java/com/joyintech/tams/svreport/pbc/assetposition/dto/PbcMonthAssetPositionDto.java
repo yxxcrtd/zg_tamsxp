@@ -234,6 +234,18 @@ public class PbcMonthAssetPositionDto extends CommonProductRatingDto implements 
      */
     private  String  isPerpetual;
 
+    /**
+     * 市场机构机构规模
+     */
+    private String  partyType1;
+
+    public String getPartyType1() {
+        return partyType1;
+    }
+
+    public void setPartyType1(String partyType1) {
+        this.partyType1 = partyType1;
+    }
 
     public Date getPayDate() {
 		return payDate;

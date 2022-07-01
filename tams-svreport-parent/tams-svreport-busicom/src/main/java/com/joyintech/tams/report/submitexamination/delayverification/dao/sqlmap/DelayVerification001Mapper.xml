@@ -2673,7 +2673,7 @@ SELECT
     <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
         left join (
         select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
-        row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+        row_number() OVER (partition BY PBC_PROD_ID ORDER BY nvl(UPDATE_TIME,CREATE_TIME)
         DESC) AS myrank
         FROM pbc_prd_baseinfo_sub
         where PBC_PROD_ID is not null) a
@@ -2694,7 +2694,7 @@ SELECT
     <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
         left join (
         select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
-        row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+        row_number() OVER (partition BY PBC_PROD_ID ORDER BY nvl(UPDATE_TIME,CREATE_TIME)
         DESC) AS myrank
         FROM pbc_prd_baseinfo_sub
         where PBC_PROD_ID is not null) a
@@ -2744,7 +2744,7 @@ SELECT
     <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
         left join
         (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
-        row_number() OVER (partition BY PBC_PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME)
+        row_number() OVER (partition BY PBC_PROD_ID ORDER BY nvl(UPDATE_TIME,CREATE_TIME)
         DESC) AS myrank
         FROM pbc_prd_baseinfo_sub_new) a
         WHERE a.myrank=1)
@@ -2942,7 +2942,7 @@ SELECT
                         <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
                             left join (
                             select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
-                            row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+                            row_number() OVER (partition BY PBC_PROD_ID ORDER BY nvl(UPDATE_TIME,CREATE_TIME)
                             DESC) AS myrank
                             FROM pbc_prd_baseinfo_sub
                             where PBC_PROD_ID is not null) a
@@ -2963,7 +2963,7 @@ SELECT
                         <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
                             left join (
                             select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
-                            row_number() OVER (partition BY PBC_PROD_ID ORDER BY ifnull(UPDATE_TIME,CREATE_TIME)
+                            row_number() OVER (partition BY PBC_PROD_ID ORDER BY nvl(UPDATE_TIME,CREATE_TIME)
                             DESC) AS myrank
                             FROM pbc_prd_baseinfo_sub
                             where PBC_PROD_ID is not null) a
@@ -3013,7 +3013,7 @@ SELECT
                         <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
                             left join
                             (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
-                            row_number() OVER (partition BY PBC_PROD_ID ORDER BY IFNULL(UPDATE_TIME,CREATE_TIME)
+                            row_number() OVER (partition BY PBC_PROD_ID ORDER BY nvl(UPDATE_TIME,CREATE_TIME)
                             DESC) AS myrank
                             FROM pbc_prd_baseinfo_sub_new) a
                             WHERE a.myrank=1)

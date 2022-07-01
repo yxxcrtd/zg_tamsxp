@@ -10,6 +10,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.system.base.entity.SysDatadictListLink;
+import com.joyintech.tams.common.base.entity.MstCustomerInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -19,6 +20,7 @@ import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.*;
+import com.joyintech.tams.svreport.interf.chb.baseinfo.dao.SvrMstCustomerInfoAddImpMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -53,6 +55,8 @@ public class AssetInfoDetailUtil {
 
     @Autowired
     private DataCheckCommonMapper chbDataCheckCommonMapper;
+    @Autowired
+    private SvrMstCustomerInfoAddImpMapper svrMstCustomerInfoAddImpMapper;
 
     private static String ISNUMBER2 = "isNumber2";
 
@@ -2836,10 +2840,10 @@ public class AssetInfoDetailUtil {
                                     e.setFinancierType104(e.getFinancierType1() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按规模划分, e.getFinancierType1()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getFinancierType2())) {
-                                    e.setFinancierType204(e.getFinancierType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getFinancierType2()));
+                                    e.setFinancierType204(e.getFinancierType2() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, e.getFinancierType2()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getFinancierType3())) {
-                                    e.setFinancierType304(e.getFinancierType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, e.getFinancierType3()));
+                                    e.setFinancierType304(e.getFinancierType3() + " " + SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按经济类型划分, e.getFinancierType3()));
                                 }
                                 e.setFinanceProj04(e.getFinanceProj());
                                 if(StringUtil.isNotEmpty(e.getIndustryLevel2Type())) {
@@ -3054,23 +3058,53 @@ public class AssetInfoDetailUtil {
                                     e.setRateFlag12(e.getRateFlag() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getRateFlag()));
                                 }
                                 if(StringUtil.isNotEmpty(e.getMaxRate())) {
-                                    e.setMaxRate12(e.getMaxRate().toString());
+                                    if(e.getMaxRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getMaxRate().toString(),"0E-14")) {
+                                        e.setMaxRate12("0.00000");
+                                    }else{
+                                        e.setMaxRate12(e.getMaxRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
-                                e.setMinRate12(e.getMinRate12());
+                                if(StringUtil.isNotEmpty(e.getMinRate())) {
+                                    if(e.getMinRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getMinRate().toString(),"0E-14")) {
+                                        e.setMinRate12("0.00000");
+                                    }else{
+                                        e.setMinRate12(e.getMinRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
+                                }
                                 if(StringUtil.isNotEmpty(e.getMgrFeeRate())) {
-                                    e.setMgrFeeRate12(e.getMgrFeeRate().toString());
+                                    if(e.getMgrFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getMgrFeeRate().toString(),"0E-14")) {
+                                        e.setMgrFeeRate12("0.00000");
+                                    }else{
+                                        e.setMgrFeeRate12(e.getMgrFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getTruFeeRate())) {
-                                    e.setTruFeeRate12(e.getTruFeeRate().toString());
+                                    if(e.getTruFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getTruFeeRate().toString(),"0E-14")) {
+                                        e.setTruFeeRate12("0.00000");
+                                    }else{
+                                        e.setTruFeeRate12(e.getTruFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getTradeFeeRate())) {
-                                    e.setTradeFeeRate12(e.getTradeFeeRate().toString());
+                                    if(e.getTradeFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getTradeFeeRate().toString(),"0E-14")) {
+                                        e.setTradeFeeRate12("0.00000");
+                                    }else{
+                                        e.setTradeFeeRate12(e.getTradeFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getAgencyFeeRate())) {
-                                    e.setAgencyFeeRate12(e.getAgencyFeeRate().toString());
+                                    if(e.getAgencyFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getAgencyFeeRate().toString(),"0E-14")) {
+                                        e.setAgencyFeeRate12("0.00000");
+                                    }else{
+                                        e.setAgencyFeeRate12(e.getAgencyFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                                 if(StringUtil.isNotEmpty(e.getOtherFeeRate())) {
-                                    e.setOtherFeeRate12(e.getOtherFeeRate().toString());
+                                    if(e.getOtherFeeRate().compareTo(new BigDecimal(BigInteger.ZERO))==0 || StringUtil.equals(e.getOtherFeeRate().toString(),"0E-14")) {
+                                        e.setOtherFeeRate12("0.00000");
+                                    }else{
+                                        e.setOtherFeeRate12(e.getOtherFeeRate().setScale(5,BigDecimal.ROUND_HALF_UP).toString());
+                                    }
                                 }
                             } catch (Exception exception) {
                                 exception.printStackTrace();
@@ -3358,6 +3392,43 @@ public class AssetInfoDetailUtil {
                             }
                             break;
                         default:
+                    }
+                }
+            });
+        }
+    }
+
+    //处理查询出的数据
+    public void dealFinancie(List<AssetInfoDetailDto> dealList){
+        //获取托管人，管理人，融资人信息
+        List<MstCustomerInfo> customerList = svrMstCustomerInfoAddImpMapper.getAllCustomerInfo();
+        Map<String,String> customerMap = customerList.stream().collect(HashMap<String,String>::new,
+                (map, item)->map.put(item.getCustomerId(), item.getCustomerName()), (m, n)->m.putAll(n));
+
+        if(dealList !=null && dealList.size()>0){
+            dealList.forEach(e->{
+                //托管人
+                if(StringUtil.isNotEmpty(e.getTrusteeId())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getTrusteeId()))) {
+                        e.setTrusteeId(e.getTrusteeId() + " " + customerMap.get(e.getTrusteeId()));
+                    }
+                }
+                //管理人
+                if(StringUtil.isNotEmpty(e.getManagerId())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getManagerId()))) {
+                        e.setManagerId(e.getManagerId() + " " + customerMap.get(e.getManagerId()));
+                    }
+                }
+                //融资人
+                if(StringUtil.isNotEmpty(e.getFinancie())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getFinancie()))) {
+                        e.setFinancie(e.getFinancie() + " " + customerMap.get(e.getFinancie()));
+                    }
+                }
+                //发行人
+                if(StringUtil.isNotEmpty(e.getChbIssuerId())){
+                    if(StringUtil.isNotEmpty(customerMap.get(e.getChbIssuerId()))) {
+                        e.setChbIssuerId(e.getChbIssuerId() + " " + customerMap.get(e.getChbIssuerId()));
                     }
                 }
             });

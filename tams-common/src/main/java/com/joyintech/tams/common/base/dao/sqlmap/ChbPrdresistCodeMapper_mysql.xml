@@ -45,6 +45,9 @@
             <if test="prodInsId != null and flag == '2'.toString()" >
                 and PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
             </if>
+            <if test="prodid != null and prodid != ''" >
+                and PRODID = #{prodid,jdbcType=VARCHAR}
+            </if>
         </where>
         <!-- where REG_CODE = #{reg_code,jdbcType=VARCHAR} -->
         <!--  where PRODID = #{prodid,jdbcType=VARCHAR} -->

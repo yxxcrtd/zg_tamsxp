@@ -368,7 +368,8 @@
                     <div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_pledgeType|" th:name="|${entityName}.pledgeType|"
                                 th:initValue="${entity?.pledgeType}"
-                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                class="layui-input form-input input-select"
+                                placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
                                 data-th-data-result="${SVR_PLEDGE_TYPE}">
                         </select>
@@ -381,7 +382,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" th:id="|${entityName}_pledgeValue|"
                                th:name="|${entityName}.pledgeValue|"
-                               data-th-value="${entity?.pledgeValue}" class="layui-input form-input"
+                               data-th-value="${entity?.pledgeValue}" class="layui-input form-input text-number" data-textrange="2"
                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
                     </div>
                 </div>

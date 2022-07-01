@@ -214,13 +214,14 @@
 <!--	取得银行月报信息-->
 	<select id="selectChbPrdPosition" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
 		SELECT
-		A.PRODID prodid, B.REG_CODE prdRegistCode, A.DIRTYAMTSUM dirtyamtsum, A.CLEANAMTSUM cleanamtsum, A.ENDAMTSUM_OTH endamtsumOth
+		A.PRODID prodid, B.REG_CODE prdRegistCode, sum(A.DIRTYAMTSUM) dirtyamtsum, sum(A.CLEANAMTSUM) cleanamtsum, sum(A.ENDAMTSUM_OTH) endamtsumOth
 		FROM
 		CHB_MONTH_PRD_POSITION A
 		left join
 		CHB_PRDRESIST_CODE B
 		on A.PRODID = B.PRODID
 		WHERE STARTDATE = to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd') and  ENDDATE = to_date(#{batchDateEnd,jdbcType=VARCHAR},'yyyy-mm-dd')
+		GROUP BY A.PRODID , B.REG_CODE
 	</select>
 <!--	分投资者类型获得投资者数量-->
 	<select id="typeHolderNum" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect">
@@ -422,4 +423,27 @@
 		)
 		WHERE excNo = 1
 	</select>
+
+	<select id="getPrdPeriodyield" resultType="com.joyintech.tams.svreport.chb.monthcollect.dto.PrdPeriodyieldForMonthCollect">
+		select
+		B.REG_CODE prodId,
+		A.PROD_VALUE prodValue
+		from
+		(select
+		PROD_ID,
+		PROD_VALUE
+		FROM
+		(select
+		PROD_ID,PROD_VALUE,ROW_NUMBER() over( partition by PROD_ID order by CHANGE_DATE desc ) excNo
+		from
+		chb_prd_periodyield
+		where
+		CHANGE_DATE <![CDATA[ <= ]]> to_date(#{batchDateEnd,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+		AND CHANGE_DATE  <![CDATA[ >= ]]> to_date(#{batchDateStart,jdbcType=VARCHAR},'yyyy-mm-dd'))tmp
+		WHERE excNo = 1) A
+		left join CHB_PRDRESIST_CODE B
+		on B.PRODID = A.PROD_ID
+		where B.REG_CODE is not null
+	</select>
+
 </mapper>

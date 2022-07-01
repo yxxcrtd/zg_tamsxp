@@ -1,0 +1,1 @@
+UPDATE CHB_DATACHECK_RULE_INV SET OBJVALUE = '\\S{0,15}',REMARK = '代码必须填写15位字符' WHERE CHECKMETHOD = 'isCustomizedString' AND SRCPROPERTY = 'svrBussFinBondRepInfoDto.assetId';

@@ -10,7 +10,7 @@
 		null                      as disabledThing,
 		erro.REGIST_SEQNO         as registSeqno,
 		'01'                      as maintainStatus,
-		'A'              as dataStatus,
+		'A'              as statusValid,
 		null             as accountName,
 		null             as tradeCounterAccNo,
 		null             as tradeCounterAccName,
@@ -57,7 +57,7 @@
 		'01'                      as disabledThing,
 		info.REGIST_SEQNO         as registSeqno,
 		'02'                      as maintainStatus,
-		info.DATA_STATUS          as dataStatus,
+		info.DATA_STATUS          as statusValid,
 		info.ACCOUNT_NAME              as accountName,
 		info.TRADE_COUNTER_ACC_NO              as tradeCounterAccNo,
 		info.TRADE_COUNTER_ACC_NAME              as tradeCounterAccName,
@@ -95,7 +95,7 @@
 		<if test="searchTradeVdateStart != null and searchTradeVdateStart != ''">
 			and info.TRADE_VDATE between str_to_date(#{searchTradeVdateStart,jdbcType=VARCHAR},'%Y-%m-%d') and str_to_date(#{searchTradeVdateEnd,jdbcType=VARCHAR},'%Y-%m-%d')
 		</if>
-		)  as a ORDER BY dataStatus DESC
+		)  as a ORDER BY statusValid DESC
 	</select>
 
 

@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -14,6 +15,8 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.service.ChbBokSubjectService;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
+import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 科目定义controller
@@ -284,18 +288,36 @@ public class ChbBokSubject001Controller extends BaseController {
     public ResponseEntity<byte[]> export()
             throws Exception {
         /** modify by yanya on 20210209 增加按照选择数据进行导出 start**/
-        String datas = this.getParam("datas");
         Map<String, Object> params= RequestUtil.getPageParam();
-        List<ChbBokSubjectDto> list = null;
-        if (StringUtil.isNotEmpty(datas)) {
-            list = JsonUtils.json2List(datas, ChbBokSubjectDto.class);
+        List<ChbBokSubjectDto> list = Lists.newArrayList();
+        if(StringUtils.isNotEmpty((String)params.get("selectData"))){
+            List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
+            List<ChbBokSubjectDto> dtoList = selectData.stream().map(e -> {
+                ChbBokSubjectDto dto = new ChbBokSubjectDto();
+                dto.setBooksetId((String)e.get("booksetId"));
+                dto.setSubjectNo((String) e.get("subjectNo"));
+                return dto;
+            }).collect(Collectors.toList());
+            list = bokSubjectService.selectByKeys(dtoList);
+        }else {
+            list = bokSubjectService.selectAll(params);
         }
-        else {
-            list = bokSubjectService.selectAllList(params);
+        List<ChbBokSubjectDto> dtoList = Lists.newArrayList();
+        if(list.size()>0){
+            for (int k=0;k<list.size();k++){
+                if(list.get(k).getStatusValid().equals("A")){
+                    ChbBokSubjectDto chbBokSubjectDto = ErrdataConvertUtil.errdataConvert(ChbBokSubjectDto.class, list.get(k).getOrgData());
+                    chbBokSubjectDto.setStatusValid("A");
+                    chbBokSubjectDto.setErrMsg(list.get(k).getErrMsg());
+                    dtoList.add(chbBokSubjectDto);
+                }else{
+                    dtoList.add(list.get(k));
+                }
+            }
         }
         File outFile = bokSubjectService.makeFile(
                 "/com/joyintech/tams/svreport/chb/businessdatamaintain/chbboksubject/conf/export_conf.xml",
-                list);
+                dtoList);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
                         + DateUtil.format(new Date())

@@ -131,7 +131,7 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 		
 		//add by leipeng 20200628
 //		if(CommonUtil.isBAmodel()){
-			pageParam.put("model_type", "01");
+//			pageParam.put("model_type", "01");
 //		}
 		
 		if(pageParam.get(GlobalConstant.PARAM_PAGE)!=null){

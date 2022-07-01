@@ -99,8 +99,8 @@ public class BusinessHomeService {
 						businessinfo.setProcessednum(checkdata.getCheckfailnum());
 					}
 				}
-				checkDatatotal = checkDatatotal + businessinfo.getDatanum();
-				accessFiletotal = accessFiletotal + businessinfo.getAccessFilenum();
+				checkDatatotal = checkDatatotal + businessinfo.getCheckfailnum();
+				accessFiletotal = accessFiletotal + businessinfo.getExceptionnum();
 			}
 		}
 		for (BusinessHomeDto checkdata : checkdatalist) {

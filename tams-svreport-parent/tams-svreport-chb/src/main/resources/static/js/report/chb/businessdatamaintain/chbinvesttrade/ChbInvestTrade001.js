@@ -92,7 +92,7 @@ $(function() {
         data.operateType='edit'
         data.pageModel=PAGE_MODEL_EDIT;
         Joyin.confirm("请确认是否修改?", function(){
-            Joyin.dialog(JoyinUtil.getLabel("CchbInvestTrade002"),
+            Joyin.dialog("投资交易信息修改",
                 basePath + "/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/init",
                 "98%", "95%",data,
                 function(){table.reload();});
@@ -103,6 +103,9 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
+        if(data.statusValid !="E"){
+            return Joyin.error("只能删除有效数据，请重新选择");
+        }
         var object = {selectedItem: [data], operateType:"delete"};
         Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
             WorkFlow.doDeleteList(basePath + 'chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/delete', object, "CchbInvestTrade001_btn_delete", "CchbInvestTrade002",function(){
@@ -127,7 +130,7 @@ $(function() {
     $(function() {
         //新建
         $('#CchbInvestTrade001_btn_add').click(function() {
-            Joyin.dialog(JoyinUtil.getLabel("SysCommon.create")+JoyinUtil.getLabel("CchbInvestTrade002"),
+            Joyin.dialog("投资交易信息新建",
                 basePath + "chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/init",
                 "95%", "80%", {pageModel:PAGE_MODEL_NEW});
         });
@@ -146,6 +149,11 @@ $(function() {
             if (!selArr || selArr.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("没有选中数据"));
                 return;
+            }
+            for(var i=0;i<selArr.length;i++){
+                if(selArr[i].statusValid !="E"){
+                    return Joyin.error("只能删除有效数据，请重新选择");
+                }
             }
             var object = {selectedItem: selArr, operateType:"delete"};
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){

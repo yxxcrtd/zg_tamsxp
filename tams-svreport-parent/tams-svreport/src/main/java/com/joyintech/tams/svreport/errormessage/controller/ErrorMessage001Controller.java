@@ -74,6 +74,11 @@ public class ErrorMessage001Controller extends BaseController{
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isFromMain", "01");
 		}
+		if(StringUtil.isNotEmpty(map.get("searchDataStart"))){
+			model.addAttribute("searchDataStart", map.get("searchDataStart"));
+			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
+			model.addAttribute("isFromMain", "01");
+		}
 		// modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 start
 		super.setSelectOptionToModel(model,	DictCode.维护数据状态, DictCode.校验接口类型);
 		// modify by dubaojun 2020-11-03 错误数据页面接口类型取值修改为数据字典 end

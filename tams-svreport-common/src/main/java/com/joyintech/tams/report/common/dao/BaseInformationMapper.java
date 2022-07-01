@@ -203,7 +203,15 @@ public interface BaseInformationMapper {
 	 * @return 查询到的数据条数
 	 */
 	int checkDataIsExist(@Param("map") Map<String, String> map, @Param("tableId") String tableId);
-	
+
+	/**
+	 * 根据传入的主键组合查询没有字段Status数据是否已经存在
+	 * @param map 主键组合
+	 * @param tableId 待查询表
+	 * @return 查询到的数据条数
+	 */
+	int checkNoStatusDataIsExist(@Param("map") Map<String, String> map, @Param("tableId") String tableId);
+
 	/**
 	 * 根据表名查询所有字段名集合
 	 * @param tableId 表名

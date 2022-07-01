@@ -75,4 +75,8 @@ public interface ChbBokSubjectDao {
     void batchInsert(@Param("list") List<ChbBokSubjectDto> list);
 
     int  selectValidRecords(@Param("list") List<Map<String,String>> list);
+
+    int countDuplicatedData(List<Map<String, String>> list);
+
+    List<ChbBokSubjectDto> selectByKeys(@Param("list") List<ChbBokSubjectDto> list);
 }

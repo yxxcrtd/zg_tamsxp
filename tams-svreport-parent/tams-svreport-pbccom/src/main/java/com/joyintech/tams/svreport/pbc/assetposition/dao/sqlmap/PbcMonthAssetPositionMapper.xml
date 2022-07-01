@@ -869,7 +869,13 @@
         val.ASSET_ID ASSET_CODE,/*资产代码*/
         /*VAL.CHL_ID CHL_ID,通道代码*/
         val.CCY CCY,/*币种*/
-        NVL(VAL.TDY_FLOAT_INGPL,0)+NVL(VAL.TDY_COST_AMT,0) AMT,/*金额*/
+        /**金融衍生品统计公允价值，债券借贷统计利息*/
+        case when assetinfo.PBC_ASSET_TYPE3  in ('J01','J02') AND assetinfo.asset_type2='1405'
+        THEN NVL(VAL.TDY_INTINCEXP,0)
+        WHEN assetinfo.PBC_ASSET_TYPE3  in ('J01','J02') AND assetinfo.asset_type2 !='1405'
+        THEN NVL(VAL.TDY_FLOAT_INGPL,0)
+        ELSE NVL(VAL.TDY_FLOAT_INGPL,0)+NVL(VAL.TDY_COST_AMT,0)
+        END AMT,/*金额*/
         nvl(VAL.TDY_INTINCEXP,0) int_amt,/*利息 组合资产估值.当日应计利息+组合资产估值.其他应收款（本金）+组合资产估值.其他应收款（收益）*/
         NVL(VAL.DELAY_PAY_AMT,0) DELAY_PAY_AMT,/*待清算款*/
         val.MDATE MDATE,/*到期日*/

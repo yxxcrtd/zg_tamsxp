@@ -70,6 +70,10 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
      */
     private String statusValid;
 
+    private String orgData;
+
+    private String datauuid;
+
     // updateFlg 02 不展示  01 显示
     public String getUpdateFlg() {
         if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
@@ -192,5 +196,19 @@ public class ChbBokSubjectDto extends BokSubject implements ProcessEntity {
         this.errMsg = errMsg;
     }
 
+    public String getOrgData() {
+        return orgData;
+    }
 
+    public void setOrgData(String orgData) {
+        this.orgData = orgData;
+    }
+
+    public String getDatauuid() {
+        return datauuid;
+    }
+
+    public void setDatauuid(String datauuid) {
+        this.datauuid = datauuid;
+    }
 }

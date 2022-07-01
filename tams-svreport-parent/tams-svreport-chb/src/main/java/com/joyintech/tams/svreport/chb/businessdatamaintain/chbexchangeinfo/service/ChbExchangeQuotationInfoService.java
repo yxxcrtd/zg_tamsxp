@@ -396,7 +396,7 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
         List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
         List<Map<String,String>> list = new ArrayList<>();
         dataList.forEach(item->{
-            Map<String,String> map = new HashMap<>();
+            Map<String,String> map = new HashMap<>(14);
             map.put("EXCHARGE_CODE", item.get(0));
             map.put("TRADE_DATE",item.get(1));
             map.put("OPEN_PRICE", item.get(2));
@@ -412,6 +412,9 @@ public class ChbExchangeQuotationInfoService extends CommonExportService<ChbExch
             } catch (Exception e) {
                 logger.error("解析导入文件异常:{}", e.getMessage());
             }
+            map.put("INPUT_TYPE", "");
+            map.put("ERR_MSG", "");
+            map.put("DATA_SOURCE", "D");
             list.add(map);
         });
 

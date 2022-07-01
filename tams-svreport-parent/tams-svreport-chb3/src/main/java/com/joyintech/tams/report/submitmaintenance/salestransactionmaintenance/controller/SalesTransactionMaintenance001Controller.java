@@ -216,7 +216,7 @@ public class SalesTransactionMaintenance001Controller extends BaseController {
     public AjaxResult check(@RequestBody SalesTransactionMaintenanceDto salesTransactionMaintenanceDto) {
         AjaxResult ar =new AjaxResult();
         List<ValidMessage> errorList = ar.getErrorList();
-        if (StringUtil.equals(salesTransactionMaintenanceDto.getDataStatus(), DictCodeListExt1.维护数据状态_删除.getValue())) {
+        if (StringUtil.equals(salesTransactionMaintenanceDto.getStatusValid(), DictCodeListExt1.维护数据状态_删除.getValue())) {
             errorList.add(new ValidMessage("数据状态为删除的数据不允许修改！"));
             ar.setErrorList(errorList);
         }

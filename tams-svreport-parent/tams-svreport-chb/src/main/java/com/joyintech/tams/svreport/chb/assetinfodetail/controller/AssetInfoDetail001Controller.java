@@ -192,6 +192,8 @@ public class AssetInfoDetail001Controller extends BaseController {
 						}
 					}
 				}
+				//处理融资人，托管人，管理人
+				assetInfoDetailUtil.dealFinancie(assetInfoDetailDtoList);
 				assetInfoDetailUtil.processAssetInfoDetailDtos(assetInfoDetailDtoList);
 				File outFile = assetInfoDetailMService.makeFile(
 						"/com/joyintech/tams/svreport/chb/assetinfodetail/conf/export_conf_multiple.xml",

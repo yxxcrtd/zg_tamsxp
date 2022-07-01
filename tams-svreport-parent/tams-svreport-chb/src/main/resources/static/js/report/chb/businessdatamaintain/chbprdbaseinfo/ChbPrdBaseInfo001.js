@@ -32,7 +32,7 @@ $(function() {
             }
         },
         dblclick: function (table, data) {
-            Joyin.dialog(JoyinUtil.getLabel("FinStockInfo002.title"),
+            Joyin.dialog(JoyinUtil.getLabel("CchbPrdBaseInfo002.title"),
                 basePath + "/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/init",
                 "99%", "99%", {
                     pageModel: PAGE_MODEL_REFERENCE,

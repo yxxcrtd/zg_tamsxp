@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,9 @@ public class OperationalInfo001Controller extends BaseController {
 	
 	@Autowired
 	private OperationalInfoMService operationalInfoMService;
+
+	private static final List<String> LIST_TABLE_NAME = Arrays.asList("CHB_PRD_DECLARE_SUB_TMP","CHB_PRD_ISSUE_SUB_TMP", "CHB_PRD_RAISETOT_SUB_TMP","CHB_PRD_DEAL_SUB_TMP","CHB_PRD_END_SUB_TMP",
+			"CHB_ASSET_INFO_TMP","CHB_BOT_AST_POS_SUB_TMP","CHB_INVEST_TRADE_SUB_TMP","CHB_AST_VAL_SUB_TMP" ,"CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB" );
 	
 	/**
 	 * 页面初始化
@@ -76,11 +80,13 @@ public class OperationalInfo001Controller extends BaseController {
 		}
 		List<SelectOptionDto> listTableName = new ArrayList<SelectOptionDto>();
 		baseInfomationList.forEach(baseInformationDto -> {
-			SelectOptionDto selectOptionDto = new SelectOptionDto();
-            selectOptionDto.setId(baseInformationDto.getBaseTableId());
-            selectOptionDto.setText(baseInformationDto.getBaseTableName());
-            selectOptionDto.setCol("");
-            listTableName.add(selectOptionDto);
+			if (!LIST_TABLE_NAME.contains(baseInformationDto.getBaseTableId())) {
+				SelectOptionDto selectOptionDto = new SelectOptionDto();
+				selectOptionDto.setId(baseInformationDto.getBaseTableId());
+				selectOptionDto.setText(baseInformationDto.getBaseTableName());
+				selectOptionDto.setCol("");
+				listTableName.add(selectOptionDto);
+			}
 		});
         model.addAttribute("tableNames", JsonUtils.objectArray2Json(listTableName.toArray())); 
         // 首页点入设置默认查询条件

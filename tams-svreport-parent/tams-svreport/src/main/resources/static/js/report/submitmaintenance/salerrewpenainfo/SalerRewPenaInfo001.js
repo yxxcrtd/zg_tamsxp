@@ -44,7 +44,7 @@
         cols:[
              {field:'erroOrInfo', title:'来自erro还是info',visible:false}
             ,{field:'salerRewPenaNo', title:'奖惩编号',visible:false}
-            ,{field:'dataStatusStr', title: '数据状态', width:'150',sortField:'dataStatus'}
+            ,{field:'statusValidStr', title: '数据状态', width:'150',sortField:'statusValid'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
             ,{field:'salerInsNo', title: '内部编号', width:'150',sortField:'salerInsNo'}
             ,{field:'salerRewPenaTyep', title: '记录分类', width:'150',sortField:'salerRewPenaTyep'}
@@ -95,7 +95,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-                    if(data.dataStatus !="E"){
+                    if(data.statusValid !="E"){
                         return Joyin.error("只能删除有效数据，请重新选择");
                     }
         var object = {selectedItem: [data], operateType:"delete"};
@@ -158,7 +158,7 @@
                 return;
             }
             for(var i=0;i<selArr.length;i++){
-                if(selArr[i].dataStatus !="E"){
+                if(selArr[i].statusValid !="E"){
                    return Joyin.error("只能删除有效数据，请重新选择");
                 }
             }

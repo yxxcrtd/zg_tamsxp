@@ -124,7 +124,7 @@ public interface CommonCodeCheckMapper {
 
     List<Map<String, String>> selectChbPrdDeclareInfoBusKey(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
 
-    void deleteChbPrdDeclareInfoErrorData(String prodInsId);
+    void deleteChbPrdDeclareInfoErrorData(@Param("prodInsId") String prodInsId);
 
     void deleteChbPrdDeclareInfo(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
 
@@ -141,4 +141,10 @@ public interface CommonCodeCheckMapper {
     void deleteMstExchargeQuoteErrodata(@Param("exchargeCode") String exchargeCode, @Param("tradeDate") String tradeDate,@Param("datasourceType") String datasourceType);
 
     void deleteMstExchargeQuote(@Param("list") List<MstExchargeQuoteErrodataWithBLOBs> list);
+
+   int  checkExistsFsubjectId(String fsubjectId);
+
+    void deleteBokSubjectErrodata(@Param("booksetId") String booksetId,@Param("subjectNo") String subjectNo);
+
+    void deleteBokSubject(@Param("list") List<BokSubjectErrodataWithBLOBs> list);
 }

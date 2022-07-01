@@ -45,6 +45,9 @@
             <if test="prodInsId != null and flag == '2'.toString()" >
                 and PROD_INS_ID = #{prodInsId,jdbcType=VARCHAR}
             </if>
+            <if test="prodid != null and prodid != ''" >
+                and PRODID = #{prodid,jdbcType=VARCHAR}
+            </if>
         </where>
         <!-- where REG_CODE = #{reg_code,jdbcType=VARCHAR} -->
        <!--  where PRODID = #{prodid,jdbcType=VARCHAR} -->
@@ -96,14 +99,14 @@
             a.PRODID = b.PRODID,
             a.ORG_CODE = b.ORG_CODE,
             a.REG_CODE = b.REG_CODE,
-            a.PRODNAME = b.PRODNAME
+            a.PRODNAME = b.PRODNAME,
             a.DEPT_CODE = b.DEPT_CODE,
             a.OPERATE_MODE = b.OPERATE_MODE,
             a.UPDATE_USER = b.UPDATE_USER,
             a.UPDATE_TIME = b.UPDATE_TIME
         WHEN NOT MATCHED THEN
             insert (PRODID,ORG_CODE,REG_CODE,PROD_INS_ID,PRODNAME,DEPT_CODE,OPERATE_MODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME)
-            values (b.PRODID,b.ORG_CODE,b.REG_CODE,b.PROD_INS_ID,b.PRODNAME,b.DEPT_CODE,b.UPDATE_USER,b.UPDATE_TIME,b.CREATE_USER,b.CREATE_TIME)
+            values (b.PRODID,b.ORG_CODE,b.REG_CODE,b.PROD_INS_ID,b.PRODNAME,b.DEPT_CODE,b.OPERATE_MODE,b.UPDATE_USER,b.UPDATE_TIME,b.CREATE_USER,b.CREATE_TIME)
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdresistCode" >
         insert into CHB_PRDRESIST_CODE(PRODID, ORG_CODE, PRODNAME, REG_CODE,PROD_INS_ID, VDATE, MDATE,

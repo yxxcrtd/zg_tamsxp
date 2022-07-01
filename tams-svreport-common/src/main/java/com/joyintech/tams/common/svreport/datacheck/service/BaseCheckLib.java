@@ -193,7 +193,7 @@ public class BaseCheckLib {
             byte[] b_gbk = srcValue.getBytes("GBK");
             return (b_gbk.length < length);
         } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
     }
@@ -684,7 +684,7 @@ public class BaseCheckLib {
         try {
             return srcValue.matches(format);
         } catch(Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
     }
@@ -709,7 +709,7 @@ public class BaseCheckLib {
         try {
             ff= srcValue.matches(format);
         } catch(Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.debug(e.getMessage(),e);
             return false;
         }
         //白名单验证不通过后继续检查有没有存在生僻字库中
@@ -1320,16 +1320,22 @@ public class BaseCheckLib {
      * @return
      */
     public static int compareToAll(String srcValue, String objValue) {
+        int data = 0;
         if(StringUtil.isNotEmpty(srcValue) && StringUtil.isNotEmpty(objValue)){
             if(isNumberStr(srcValue) && isNumberStr(objValue)){
-                return new BigDecimal(srcValue).compareTo(new BigDecimal(objValue));
+                data = new BigDecimal(srcValue).compareTo(new BigDecimal(objValue));
             }else if(isDateStr(srcValue) && isDateStr(objValue)){
-                return DateUtil.parse(srcValue).compareTo(DateUtil.parse(objValue));
-            }else{
-                return compareToAll(srcValue, objValue);
+                data = DateUtil.parse(srcValue).compareTo(DateUtil.parse(objValue));
             }
+            //当一个值为空会无穷递归修改
+        }else if(StringUtil.isEmpty(srcValue)){
+            data = -1;
+        }else if(StringUtil.isEmpty(objValue)){
+            data = 1;
+        }else if(StringUtil.isEmpty(objValue)&&StringUtil.isEmpty(srcValue)){
+            data = 0;
         }
-        return compareToAll(srcValue, objValue);
+        return data;
     }
 
     /**
@@ -1341,6 +1347,7 @@ public class BaseCheckLib {
         try {
             new BigDecimal(str).toString();
         } catch (Exception e) {
+            logger.debug("转换数字异常：",e);
             return false;//异常 说明包含非数字
         }
         return true;
@@ -1355,6 +1362,7 @@ public class BaseCheckLib {
         try {
             DateUtil.parse(str).toString();
         } catch (Exception e) {
+            logger.debug("转换日期异常：",e);
             return false;//异常 说明包含非日期
         }
         return true;

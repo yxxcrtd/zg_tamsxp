@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="form-inline-wrap">
-                    <label class="layui-form-label form-label" data-th-utext="#{SvrBussRepAssetMngProdInfo.prodRegisterCode}">理财产品登记编码</label>
+                    <label class="layui-form-label form-label">理财产品登记编码</label>
                     <div class="layui-input-inline input-inline">
                         <input th:id="|${entityName}_prodRegisterCode|" th:name="|${entityName}.prodRegisterCode|"
                                th:value="${entity?.prodRegisterCode}" class="layui-input form-input" disabled
@@ -79,12 +79,11 @@
 
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
-                           data-th-utext="#{SvrBussRepAssetMngProdInfo.checkCode}"
                            style="line-height: normal!important;">资管计划登记编码</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_checkCode|" data-th-maxlength="85"
+                        <input type="text" th:id="|${entityName}_checkCode|" data-th-maxlength="256"
                                th:name="|${entityName}.checkCode|" th:value="${entity?.checkCode}"
-                               class="layui-input form-input" maxlength="300" placeholder="请输入内容"
+                               class="layui-input form-input" maxlength="256" placeholder="请输入内容"
                                data-th-placeholder="#{SysCommon.placeholder}"/>
                     </div>
                 </div>

@@ -25,6 +25,7 @@
         <result property="tradeType" column="TRADE_TYPE" jdbcType="VARCHAR"/>
         <result property="chlAgrtName" column="CHL_AGRT_NAME" jdbcType="VARCHAR"/>
         <result property="isUnderTrade" column="IS_UNDER_TRADE" jdbcType="VARCHAR"/>
+        <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
         <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="orgCode" column="ORG_CODE" jdbcType="VARCHAR"/>
         <result property="deptCode" column="DEPT_CODE" jdbcType="VARCHAR"/>
@@ -62,6 +63,7 @@
                 #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
                 #{dealdate,jdbcType=DATE} DEALDATE,
                 #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                #{tradeType,jdbcType=VARCHAR} TRADE_TYPE,
                 #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
                 #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
                 #{endRate,jdbcType=NUMERIC} END_RATE,
@@ -95,6 +97,7 @@
                     a.CUR_ASSETDET_TYPE = b.CUR_ASSETDET_TYPE,
                     a.DEALDATE = b.DEALDATE,
                     a.TRADE_COUNTER = b.TRADE_COUNTER,
+                    a.TRADE_TYPE = b.TRADE_TYPE,
                     a.UNIT_PRICE_FULL = b.UNIT_PRICE_FULL,
                     a.UNIT_PRICE_NET = b.UNIT_PRICE_NET,
                     a.END_RATE = b.END_RATE,
@@ -126,6 +129,7 @@
                        CUR_ASSETDET_TYPE,
                        DEALDATE,
                        TRADE_COUNTER,
+                       TRADE_TYPE,
                        UNIT_PRICE_FULL,
                        UNIT_PRICE_NET,
                        END_RATE,
@@ -159,6 +163,7 @@
                            b.CUR_ASSETDET_TYPE,
                            b.DEALDATE,
                            b.TRADE_COUNTER,
+                           b.TRADE_TYPE,
                            b.UNIT_PRICE_FULL,
                            b.UNIT_PRICE_NET,
                            b.END_RATE,
@@ -249,7 +254,9 @@
         </where>
     </select>
     <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
-        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName}
+select  a.PRODID as PROD_ID,a.REG_CODE from CHB_PRDRESIST_CODE a
+inner join  CHB_PRD_BASEINFO b on a.PRODID=b.PROD_ID
+where b.PROD_NAME=#{prodName}
     </select>
     <select id="selectByKey" resultMap="BaseResultMap">
         select
@@ -270,7 +277,7 @@
         a.END_RATE,
         a.CONTRACT_CODE,
         a.REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -320,7 +327,7 @@
         a.END_RATE,
         a.CONTRACT_CODE,
         a.REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -335,11 +342,12 @@
         a.INVEST_TRADER_ID,
         a.INVEST_TRADER_NAME,
         a.ERR_MSG errMsg,
-        null orgData
-        b.REG_CODE regCode,
+        null orgData,
+        code.REG_CODE regCode,
         c.ASSET_NAME assetName
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
+        LEFT JOIN CHB_PRDRESIST_CODE code on code.PRODID=b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
         <where>
             <if test="prodNames != null and prodNames.length>0">
@@ -396,7 +404,7 @@
         null END_RATE,
         null CONTRACT_CODE,
         null REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -486,7 +494,7 @@
         a.END_RATE,
         a.CONTRACT_CODE,
         a.REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -530,7 +538,7 @@
         null END_RATE,
         null CONTRACT_CODE,
         null REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -699,4 +707,31 @@
         delete from CHB_INVEST_TRADE
         where to_char(nvl(UPDATE_TIME,CREATE_TIME),'yyyy-mm-dd') = to_char(sysdate,'yyyy-mm-dd')
     </delete>
+
+    <select id="getRateNearByDate" resultType="java.math.BigDecimal">
+        select
+        <choose>
+            <when test="pricetype == '01'">
+                cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '02'">
+                cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '03'">
+                cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '04'">
+                cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <otherwise >
+                cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </otherwise>
+        </choose>
+        from MST_EXCHARGE_QUOTE cmei
+        where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
+        and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
+        and cmei.DATASOURCE_TYPE = 'SAFE'
+        AND cmei.TRADE_DATE=
+        ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
+    </select>
 </mapper>

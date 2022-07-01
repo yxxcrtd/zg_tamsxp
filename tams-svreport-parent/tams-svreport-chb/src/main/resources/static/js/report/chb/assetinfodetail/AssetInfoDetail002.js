@@ -345,7 +345,7 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('05').attr('disabled', true).trigger('change');
                 $("#svrBussRepAssetAstBillInfoDto_content_one_div").hide();
             }else{
-                $("#svrBussRepAssetAstBillInfoDto_notstandSecType").val('').trigger("change");
+
                 $("#svrBussRepAssetAstBillInfoDto_notstandSecType").attr("disabled",false);
                 $("#svrBussRepAssetAstBillInfoDto_content_one_div").show();
             }
@@ -359,11 +359,11 @@ var QueryFunc=function(){
             }
         }else if(obj["07"].indexOf(repAssetType)>=0){
             //金融衍生品
-            if(repAssetType!='1403'){
-                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('99').trigger("change");
-            }else{
-                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('').trigger("change");
-            }
+//            if(repAssetType!='1403'){
+//                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('99').trigger("change");
+//            }else{
+//                $("#svrBussRepFinanciallInfoDto_holdPurpose").val('').trigger("change");
+//            }
         }else if(obj["08"].indexOf(repAssetType)>=0){
             //QDII债券资产
         }else if(obj["09"].indexOf(repAssetType)>=0){
@@ -389,18 +389,55 @@ var QueryFunc=function(){
                 $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").prop("required",true).trigger('change');
             }else{
                 $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").attr("disabled",true);
+                $("#svrBussRepAssetMngProdInfoDto_financialProductFlag").prop("required",false).val('').trigger('change');
             }
         }else if(obj["13"].indexOf(repAssetType)>=0){
             //商品类资产
         }else if(obj["14"].indexOf(repAssetType)>=0){
             //各类资产的其他项
-            $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_guaType").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").trigger("change");
-            $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").trigger("change");
+
+            //担保人与融资人关系
+            if(repAssetType != '1299' && repAssetType != ''){
+                $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").val('').attr('disabled', true);
+            }else{
+                if( $("#svrBussRepOtherInvestTargetInfoDto_guaType").val()==''){
+                    $("#svrBussRepOtherInvestTargetInfoDto_relationFinan").val('').attr('disabled', true);
+                }
+            }
+
+            //担保方式
+            if(repAssetType =='2299' || repAssetType =='1599' || repAssetType=='1399'){
+                $("#svrBussRepOtherInvestTargetInfoDto_guaType").val('').attr('disabled', true);
+            }else{
+                $("#svrBussRepOtherInvestTargetInfoDto_guaType").val('').attr('disabled', false);
+            }
+
+            //抵质押物价值（元）
+            if(repAssetType != '1299' && repAssetType != ''){
+                $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").val('').attr('disabled', true);
+            }else{
+                if($("#svrBussRepOtherInvestTargetInfoDto_guaType").val()==''){
+                    $("#svrBussRepOtherInvestTargetInfoDto_pledgeValue").val('').attr('disabled', true);
+                }
+            }
+
+            // 担保性质
+            if(repAssetType != '1299' && repAssetType != ''){
+                $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").val('').attr('disabled', true);
+            }else{
+                if($("#svrBussRepOtherInvestTargetInfoDto_guaType").val()==''){
+                    $("#svrBussRepOtherInvestTargetInfoDto_natureGuarantee").val('').attr('disabled', true);
+                }
+            }
+
+            //是否为债转股
+            if(repAssetType=='1299' || repAssetType=='2299' || repAssetType=='1599'){
+                $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").val('').attr('disabled', true).prop('required',false).trigger('change');
+            }else{
+                $("#svrBussRepOtherInvestTargetInfoDto_deptEquity").val('').attr('disabled', false).prop('required',true).trigger('change');
+            }
         }else if(obj["16"].indexOf(repAssetType)>=0){
-            //委外投资——协议方式
+            //委外投资——协议方式~
         }else if(obj["17"].indexOf(repAssetType)>=0){
             //其他（负债）类资产
         }else if(obj["18"].indexOf(repAssetType)>=0){
@@ -506,7 +543,14 @@ var QueryFunc=function(){
     var assetVal = function(){
         var repAssetType = $('#assetType2').val();
         $("input[id$='_assetName']").val($('#assetName').val());
-        $("input[id$='_assetId']").val($('#assetCode').val());
+
+        var ids = $("input[id$='_assetId']");
+        $.each(ids,function(index,obj){
+           if(null==obj.value||''==obj.value){
+               obj.value = $('#assetCode').val();
+           }
+        });
+
         if (repAssetType == '1503'){
             $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
         }else {

@@ -734,10 +734,14 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
         for (int i = 0; i < equityList.size(); i++ ) {
             EquityInfo001Dto  equityInfo001Dto = equityList.get(i);
             equityInfo001Dto.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            if(mst.containsKey(equityInfo001Dto.getIndentifyMark())){
-                map=mst.get(equityInfo001Dto.getIndentifyMark()).get(0);
+            if(nullFalg){
+                if(mst.containsKey(equityInfo001Dto.getIndentifyMark())){
+                    map=mst.get(equityInfo001Dto.getIndentifyMark()).get(0);
+                }
+            }else{
+                    map = listType.get(i);
+
             }
-            //            map = listType.get(i);
             List<EquityInfoRegist001Dto> listRegistDto = mapRegist.get(equityInfo001Dto.getBankCode() + GlobalConstant.VERTICAL_LINE
                     + GlobalConstant.VERTICAL_LINE + equityInfo001Dto.getIndentifyMark());
             if(null == listRegistDto || listRegistDto.size() == 0 ) {

@@ -6,6 +6,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.C
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -46,4 +47,6 @@ public interface ChbInvestTradeDao {
     int selectByBusinessKey(@Param("prodId") String prodId,@Param("tradeCode") String tradeCode,@Param("assetCode") String assetCode);
 
     List<ChbInvestTradeDto> selectByKeys(@Param("list") List<String> list);
+
+    BigDecimal getRateNearByDate(Map<String, Object> temp);
 }

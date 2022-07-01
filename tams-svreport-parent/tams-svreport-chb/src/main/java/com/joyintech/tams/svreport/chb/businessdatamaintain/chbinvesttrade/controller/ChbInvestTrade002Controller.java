@@ -6,6 +6,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
@@ -45,7 +46,7 @@ public class ChbInvestTrade002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.币种_中债);
         this.setSelectOptionToModel(model, DictCode.资产计量方式);
         this.setSelectOptionToModel(model, DictCode.资金流动类型);
-        this.setSelectOptionToModel(model, DictCode.客户二级类型);
+        this.setSelectOptionToModel(model, DictCode.对手方类型);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String tradeCode = getParam("tradeCode");
         String prodId = getParam("prodId");
@@ -157,5 +158,13 @@ public class ChbInvestTrade002Controller extends BaseController {
         // 流程开始
         String msg = chbInvestTradeService.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+    @ResponseBody
+    @RequestMapping("getCnyAmt")
+    public AjaxResult dealCnyAmt(){
+        AjaxResult result  = new AjaxResult();
+        result.setData(chbInvestTradeService.dealCnyAmt(RequestUtil.getPageParam()));
+        return result;
     }
 }

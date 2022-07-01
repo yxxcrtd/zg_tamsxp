@@ -188,6 +188,15 @@
             (#{item.exchargeCode},#{item.tradeDate},#{item.datasourceType})
         </foreach>
     </delete>
+    <delete id="deleteBokSubjectErrodata">
+        delete from bok_subject_errodata where BOOKSET_ID = #{booksetId} and SUBJECT_NO = #{subjectNo}
+    </delete>
+    <delete id="deleteBokSubject">
+        delete from BOK_SUBJECT where (BOOKSET_ID,SUBJECT_NO) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.booksetId},#{item.subjectNo})
+        </foreach>
+    </delete>
     <select id="selectChbInvestTradeBusKey" resultType="java.util.Map">
         select PROD_ID,ASSET_CODE,TRADE_CODE from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
@@ -241,5 +250,8 @@
         and ASSET_CODE = #{assetCode}
         and CUR_ASSET_TYPE = #{curAssetType}
         and STATUS = 'E'
+    </select>
+    <select id="checkExistsFsubjectId" resultType="java.lang.Integer">
+        select count(1) from BOK_SUBJECT where SUBJECT_NO = #{fsubjectId}
     </select>
 </mapper>

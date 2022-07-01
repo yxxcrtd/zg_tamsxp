@@ -24,8 +24,24 @@
         },
 		searchOnInit: false,
 		cellMinWidth:100 ,
+        dblclick: function(table, data){
+
+            Joyin.dialog(JoyinUtil.getLabel("CchbInvestTrade002"),
+                basePath + "chb/businessdatamaintain/chbboksubject/chbboksubject002/init",
+                "98%", "95%", {
+                    pageModel: PAGE_MODEL_REFERENCE,
+                    datauuid: data.datauuid,
+                    statusValid: data.statusValid,
+                    booksetId:data.booksetId,
+                    subjectNo:data.subjectNo
+                },
+                function(){table.reload();});
+
+        },
 		cols: [
 		    {field:'booksetId', visible: false },
+		    {field:'datauuid', visible: false },
+		    {field:'statusValid', visible: false },
 		    {field:'subjectNo', width:100, title: 'ChbBokSubject.subjectNo'}
 		    ,{field:'subjectName', width:150, title: 'ChbBokSubject.subjectName'}
 		    ,{field:'fsubjectId', width:100, title: 'ChbBokSubject.fsubjectId'}

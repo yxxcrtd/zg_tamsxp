@@ -98,7 +98,7 @@
         null                         as salerStatus,
         erro.DATA_DATE               as dataDate,
         null                         as remark,
-        'A'                          as dataStatus,
+        'A'                          as statusValid,
         erro.ERR_MSG                 as errMsg
         from CHB_SALER_IDEN_ERRODATA erro
         where 1=1
@@ -152,7 +152,7 @@
         info.SALER_STATUS            as salerStatus,
         info.DATA_DATE               as dataDate,
         info.REMARK                  as remark,
-        info.STATUS                  as dataStatus,
+        info.STATUS                  as statusValid,
         null                         as errMsg
         from CHB_SALER_IDEN_INFO info
         where 1=1
@@ -171,7 +171,7 @@
         <if test="salerOrgCode != null and salerOrgCode != ''">
             and info.SALER_ORG_CODE  like concat('%',concat(#{salerOrgCode,jdbcType=VARCHAR},'%'))
         </if>
-        ) A ORDER BY A.dataStatus DESC
+        ) A ORDER BY A.statusValid DESC
     </select>
 
     <!--    该机构是否已维护过奖惩投诉记录信息-->
