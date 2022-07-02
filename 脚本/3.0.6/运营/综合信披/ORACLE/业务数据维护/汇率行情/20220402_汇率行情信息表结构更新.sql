@@ -1,4 +1,3 @@
-
 declare
 num1   number;
 num2   number;
@@ -12,11 +11,14 @@ if 	num1 = 0   then execute immediate 'ALTER TABLE MST_EXCHARGE_QUOTE ADD STATUS
 end if;
 if  num2 = 0   then execute immediate 'ALTER TABLE MST_EXCHARGE_QUOTE ADD DATA_SOURCE VARCHAR2(50)';
 end if;
-if  num3 = 0   then execute immediate 'ALTER TABLE MST_EXCHARGE_QUOTE ADD ERR_MSG CLOB';
+if  num3 = 1   then execute immediate 'ALTER TABLE MST_EXCHARGE_QUOTE drop column ERR_MSG ';
+
 end if;
 
 end;
 /
 COMMENT  ON  COLUMN  MST_EXCHARGE_QUOTE.STATUS   is  '数据状态';
 COMMENT  ON  COLUMN  MST_EXCHARGE_QUOTE.DATA_SOURCE   is  '数据来源';
+
+ALTER TABLE MST_EXCHARGE_QUOTE ADD ERR_MSG CLOB;
 COMMENT  ON  COLUMN  MST_EXCHARGE_QUOTE.ERR_MSG   is  '错误信息';

@@ -231,6 +231,12 @@
 		STATUS = #{status}
 		<foreach collection="prdRegistCodeList" item="prdRegistCode" open=" and PRD_REGIST_CODE in (" close=")" separator=",">
 			#{prdRegistCode,jdbcType=VARCHAR}
+		</foreach>
+		union all
+		select COUNT(PROD_ID) num from CHB_PRD_BASEINFO where
+		STATUS = #{status}
+		<foreach collection="prodIdList" item="prodId" open=" and PROD_ID in (" close=")" separator=",">
+			#{prodId,jdbcType=VARCHAR}
 		</foreach>) t
 	</select>
 
@@ -336,5 +342,20 @@
 		raise_type raiseType
 		from chb_prd_declare_info
 		where prod_ins_id = #{prodId}
+	</select>
+
+	<select id="selectProdBaseInfo" resultType="map">
+		select PROD_INS_ID prodInsId , REG_CODE regCode
+		from CHB_PRD_BASEINFO
+	</select>
+	<select id="checkRegCode" resultType="java.lang.Integer">
+		select count(1) from  CHB_PRD_BASEINFO where REG_CODE = #{regCode}
+	</select>
+	<select id="selectRegCode" resultType="java.lang.Integer">
+		select count(1) from CHB_PRD_BASEINFO
+		where
+		PROD_INS_ID = #{prodInsId}
+		or
+		REG_CODE = #{regCode}
 	</select>
 </mapper>

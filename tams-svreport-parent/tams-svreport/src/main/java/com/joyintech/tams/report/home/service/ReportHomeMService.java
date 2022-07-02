@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -19,6 +21,8 @@ import com.joyintech.tams.report.home.dto.InfoAreaDto;
 import com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 
+import javax.annotation.Resource;
+
 /**
  * 主页
  *
@@ -29,6 +33,9 @@ import com.joyintech.tams.report.interf.common.constant.DateUtil;
  */
 @Service
 public class ReportHomeMService extends BaseService<ITableRow>{
+
+    @Resource
+    private IPlatformDate iPlatformDate;
 
 	  /**
     *
@@ -93,7 +100,7 @@ public class ReportHomeMService extends BaseService<ITableRow>{
      */
     public AjaxResult getSystemNow(){
         AjaxResult result = new AjaxResult();
-        result.setData(DateUtil.getYesterDayDate());
+        result.setData(DateUtil.format(new DateTime(iPlatformDate.getSysDate()).plusDays(-1).toDate()));
         return result;
     }
 

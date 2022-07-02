@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
@@ -259,8 +260,13 @@ public class SvrAssetInfoFileImpService  extends FileImpService{
         List<ChbAssetInfo> assetInfoList = new ArrayList<>(infoList.size());
         List<String> listCloumn = baseMapper.getTableColumnList(InterfDefine.资产要素信息接口数据.getCode());
         assetInfoList = (List<ChbAssetInfo>)super.convertMapToEntity(infoList, ChbAssetInfo.class, dataSource);
-        chbAssetInfoInterfMapper.deleteByAssetCodeList(assetInfoList);
-        chbAssetInfoInterfMapper.deleteChbAssetInfoErroData(assetInfoList);
+        //分批删除
+        List<List<ChbAssetInfo>> partitionList = Lists.partition(assetInfoList, 800);
+        for (List<ChbAssetInfo> partition : partitionList) {
+            chbAssetInfoInterfMapper.deleteByAssetCodeList(partition);
+            chbAssetInfoInterfMapper.deleteChbAssetInfoErroData(partition);
+        }
+
         // 交易对手信息
         List<ChbMstCounterParty> allCounterList = chbMstCounterPartyInterfMapper.selectAllCounterParty();
         // 交易对手信息

@@ -1,5 +1,7 @@
 package com.joyintech.tams.report.submitmaintenance.salerideninfo.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -19,7 +21,7 @@ public class SalerIdenInfoDto extends ChbSalerIdenInfo implements ProcessEntity 
     private String pageModel;//页面模型
     private String disabledThing;//置灰控制
     private String erroOrInfo;//来自erro还是info
-    private String dataStatus;//来自erro还是info
+    private String statusValid;//来自erro还是info
     /**
      * 原始数据
      */
@@ -33,6 +35,27 @@ public class SalerIdenInfoDto extends ChbSalerIdenInfo implements ProcessEntity 
      * 选中的数据
      */
     private transient List<SalerIdenInfoDto> selectedItem;
+
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
+
+    // updateFlg 02 不展示  01 显示
+    public String getUpdateFlg() {
+        if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
+            return "02";
+        }else{
+            return "01";
+        }
+    }
+    public String getStatusValidStr() {
+        return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                getStatusValid());
+    }
 
     public String getOperateType() {
         return operateType;
@@ -50,8 +73,8 @@ public class SalerIdenInfoDto extends ChbSalerIdenInfo implements ProcessEntity 
         this.selectedItem = selectedItem;
     }
 
-    public String getDataStatusStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
     }
 
     public String getSalerSexStr() {
@@ -195,11 +218,4 @@ public class SalerIdenInfoDto extends ChbSalerIdenInfo implements ProcessEntity 
         return counter;
     }
 
-    public String getDataStatus() {
-        return dataStatus;
-    }
-
-    public void setDataStatus(String dataStatus) {
-        this.dataStatus = dataStatus;
-    }
 }

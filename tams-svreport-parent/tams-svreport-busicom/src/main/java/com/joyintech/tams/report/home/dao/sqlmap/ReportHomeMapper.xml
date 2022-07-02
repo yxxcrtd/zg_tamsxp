@@ -2124,4 +2124,45 @@
 		FROM prd_tmp P
 		<include refid="belongInstitutionCode_1" />
 	</select>
+
+	<select id="selectSubsidiaMonth" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+		WITH prd_tmp AS (
+		SELECT
+		<include refid="sendStatusFlag" />
+		SUBMIT_DEADLINE,
+		CHB_SUBMIT_DEADLINE,
+		ORG_CODE
+		FROM  CHB_MONTH_REPORT_SUB
+		WHERE 1=1
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCode != null and orgCode.size>0">
+			<foreach collection="orgCode" item = "item" open=" and ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+		SELECT
+		SUM(DECODE(SEND_STATUS,'01',1,0)) as delaynum, /*已延期*/
+		min(DECODE(SEND_STATUS,'02',to_char(SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as mindate,
+		max(DECODE(SEND_STATUS,'02',to_char(CHB_SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as maxdate,
+		SUM(DECODE(SEND_STATUS,'02',1,0)) as delayingnum, /*即将延期*/
+		SUM(DECODE(SEND_STATUS,'03',1,0)) as sendnum, /*将报送*/
+		SUM(DECODE(SEND_STATUS,'04',1,0)) as manualnum, /*手工处理*/
+		SUM(DECODE(SEND_STATUS,'05',1,0)) as interfPassnum, /*接口通过*/
+		SUM(DECODE(SEND_STATUS,'06',1,0)) as interfBacknum, /*接口退回*/
+		null as deletenum, /*删除模版*/
+		null as countType,
+		'27' as reporttype /*子公司月度统计报表*/
+		FROM prd_tmp P
+	</select>
+
 </mapper>

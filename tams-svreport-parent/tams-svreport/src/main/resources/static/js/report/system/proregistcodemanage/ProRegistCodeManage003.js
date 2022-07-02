@@ -22,6 +22,7 @@
                 }
             });
         }
+
         /*var regCode = function(){
         	var regCode = $('#regCode').val();
         	if(regCode){
@@ -67,18 +68,26 @@
                                     Joyin.error(result.data[0].message);
                                     return;
                              }else{
-                                 Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodInsId:prodInsId,regCode:regCode}, function(result) {
-                                     Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
-                                         Joyin.confirm(result.data, function() {
-                                            if(operateType === 'save') {
-                                                WorkFlow.doSaveList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_save");
-                                            }
-                                            else {
-                                                WorkFlow.doSubmitList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_submit");
-                                            }
-                                    });
+                                Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/selectRegCode',{prodInsId:prodInsId,regCode:regCode}, function(result) {
+                                         if(result>0){
+                                             Joyin.error(JoyinUtil.getMessage("已经在产品基本信息维护模块中使用了的产品登记编码信息，禁止修改。"));
+                                             return false;
+                                         }else{
+                                             Joyin.ajax(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/checkInsertData', {prodInsId:prodInsId,regCode:regCode}, function(result) {
+                                                 Joyin.ajaxJson(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/check', object, function(result) {
+                                                     Joyin.confirm(result.data, function() {
+                                                         if(operateType === 'save') {
+                                                             WorkFlow.doSaveList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_save");
+                                                         }
+                                                         else {
+                                                             WorkFlow.doSubmitList(basePath + 'svreport/system/proregistcodemanage/ProRegistCodeManage003/save', object, "ProRegistCodeManage003_btn_submit");
+                                                         }
+                                                     });
+                                                 });
+                                             });
+                                         }
                                 });
-                              });
+
                          }
                       });
             		}

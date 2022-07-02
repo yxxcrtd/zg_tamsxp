@@ -34,7 +34,7 @@ public class ChbBokSubjectDtoValidator implements BeanValidator {
                     && !!StringUtil.isEmpty(dto.getBooksetId())
                     //新建
                     && StringUtil.isEmpty(dto.getStatusValid())) {
-                ChbBokSubjectDto resultDto = bokSubjectService.selcetByKey(dto.getSubjectNo(), dto.getBooksetId());
+                ChbBokSubjectDto resultDto = bokSubjectService.selcetByKey(dto.getSubjectNo(), dto.getBooksetId(),null,null);
                 if (null != resultDto) {
                     resultList.add(new ValidMessage("subjectNo", "科目号已存在"));
                 }

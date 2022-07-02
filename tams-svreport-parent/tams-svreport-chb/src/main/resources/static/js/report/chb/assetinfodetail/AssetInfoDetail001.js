@@ -37,7 +37,7 @@
 		 * 双击查看
 		 */
 		dblclick: function (table, data) {
-			Joyin.dialog(JoyinUtil.getLabel("FinStockInfo002.title"),
+			Joyin.dialog(JoyinUtil.getLabel("AssetInfoDetail002.title"),
 				basePath + "chb/assetinfodetail/AssetInfoDetail002/init",
 				"99%", "99%", {
 					pageModel: PAGE_MODEL_REFERENCE,

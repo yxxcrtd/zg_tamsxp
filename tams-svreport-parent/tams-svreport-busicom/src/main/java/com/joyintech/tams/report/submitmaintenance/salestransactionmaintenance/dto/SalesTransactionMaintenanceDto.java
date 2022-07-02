@@ -4,6 +4,8 @@
  
 package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -28,6 +30,7 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     private String pageModel;//页面模型
     private String operateType;//操作类型
     private String dataStatus;// 数据状态
+    private String statusValid;// 数据状态
     private String bankCode;// 登记银行代码
     private String registSeqno;//主键uuid
     private String maintainStatus;//报送信息维护状态
@@ -132,6 +135,27 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
      * 数据接入日期
      */
     private Date receptDate;
+
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
+
+    // updateFlg 02 不展示  01 显示
+    public String getUpdateFlg() {
+        if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
+            return "02";
+        }else{
+            return "01";
+        }
+    }
+    public String getStatusValidStr() {
+        return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                getStatusValid());
+    }
     /**
      * 取得 销售结算资金交易日期字符串格式
      * @return 销售结算资金交易日期
@@ -343,8 +367,8 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     public String getTradePsName() {
         return this.getTradePs() + " " + SysDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, this.getTradePs());
     }
-    public String getDataStatusName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
     }
     public String getTradeCcyName() {
         return this.getTradeCcy() + " " + SysDataUtil.getNameFromDataDict(DictCode.币种_中债, this.getTradeCcy());

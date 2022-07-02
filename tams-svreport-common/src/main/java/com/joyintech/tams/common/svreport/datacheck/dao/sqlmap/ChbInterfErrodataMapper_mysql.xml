@@ -39,16 +39,47 @@
     where DATAID = #{dataid,jdbcType=VARCHAR}
   </delete>
 	<insert id="insert" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
-    insert into CHB_INTERF_ERRODATA (DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME,
-      STATUS, UPDATE_USER, CREATE_USER,
-      UPDATE_TIME, CREATE_TIME, WORKFLOW_ID,
-      ORG_CODE, DEPT_CODE, CREATE_DEPT,
-      ORG_DATA, ERR_MSG)
-    values (#{datauuid,jdbcType=VARCHAR},#{dataid,jdbcType=VARCHAR}, #{interfType,jdbcType=VARCHAR}, #{fireName,jdbcType=VARCHAR},
-      #{status,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR},
-      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
-      #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+         insert into
+		CHB_INTERF_ERRODATA
+             (DATAUUID,DATAID,
+		     INTERF_TYPE, FIRE_NAME,
+		STATUS, UPDATE_USER, CREATE_USER,
+		UPDATE_TIME, CREATE_TIME, WORKFLOW_ID,
+		ORG_CODE, DEPT_CODE, CREATE_DEPT,
+		ORG_DATA, ERR_MSG)
+		select A.* from (
+			select
+			#{datauuid,jdbcType=VARCHAR} DATAUUID,
+			#{dataid,jdbcType=VARCHAR} DATAID,
+			#{interfType,jdbcType=VARCHAR} INTERF_TYPE,
+			#{fireName,jdbcType=VARCHAR} FIRE_NAME,
+			#{status,jdbcType=VARCHAR} STATUS,
+			#{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+			#{createUser,jdbcType=VARCHAR} CREATE_USER,
+			#{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+			#{createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+			#{workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+			#{orgCode,jdbcType=VARCHAR} ORG_CODE,
+			#{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+			#{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+			#{orgData,jdbcType=VARCHAR} ORG_DATA,
+			#{errMsg,jdbcType=VARCHAR} ERR_MSG
+			from dual
+		) A ON DUPLICATE KEY
+		UPDATE
+			INTERF_TYPE=A.INTERF_TYPE,
+			FIRE_NAME=A.FIRE_NAME,
+			STATUS=A.STATUS,
+			UPDATE_USER=A.UPDATE_USER,
+			CREATE_USER=A.CREATE_USER,
+			UPDATE_TIME=NOW(),
+			CREATE_TIME=NOW(),
+			WORKFLOW_ID=A.WORKFLOW_ID,
+			ORG_CODE=A.ORG_CODE,
+			DEPT_CODE=A.DEPT_CODE,
+			CREATE_DEPT=A.CREATE_DEPT,
+			ORG_DATA=A.ORG_DATA,
+			ERR_MSG=A.ERR_MSG
   </insert>
 	<insert id="insertSelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
 		insert into CHB_INTERF_ERRODATA

@@ -59,7 +59,7 @@
         OVERDRAWN_FLAG, GEN_DETSUB_FLAG, BASE_SUBJECT_NATURE,
         INV_AIM, SEC_MANAGE_ACCT_ID, CREATE_USER,
         CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME) VALUES
+        UPDATE_TIME,STATUS) VALUES
         <foreach collection="list" item="item" separator=",">
             (
             #{item.booksetId,jdbcType=VARCHAR}, #{item.subjectNo,jdbcType=VARCHAR}, #{item.subjectName,jdbcType=VARCHAR},
@@ -68,7 +68,7 @@
             #{item.overdrawnFlag,jdbcType=VARCHAR}, #{item.genDetsubFlag,jdbcType=VARCHAR}, #{item.baseSubjectNature,jdbcType=VARCHAR},
             #{item.invAim,jdbcType=VARCHAR}, #{item.secManageAcctId,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
             #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
-            #{item.updateTime,jdbcType=TIMESTAMP}
+            #{item.updateTime,jdbcType=TIMESTAMP},#{item.status,jdbcType=VARCHAR}
             )
         </foreach>
     </insert>

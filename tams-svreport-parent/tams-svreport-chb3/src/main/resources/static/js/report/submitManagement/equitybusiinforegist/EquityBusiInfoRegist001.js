@@ -118,8 +118,8 @@ $(function() {
             {title: '识别标识',field:'indentifyMark', width:150},
             {title: '产品登记编码', field:'regCode', width:100},
             {title: '业务种类',field:'busiType', width:150},
-            {title: '业务确认日期',field:'equityConfDate', width:150, type: 'date', sortField:'equityConfDate', visible: false},/*界面查询性能优化*/
-            {title: '业务确认日期',field:'equityConfDateStr', width:150, sortField:'equityConfDate'},
+            {title: '业务确认日期',field:'equityConfDate', width:150, type: 'date', sortField:'equityConfDate'},/*界面查询性能优化*/
+            {title: '业务确认日期',field:'equityConfDateStr', width:150, sortField:'equityConfDate', visible: false},
             {title: '业务确认时间',field:'shareConfDatetime', width:150},
             {title: '币种',field:'ccy', width:150},
             {title: '金额',field:'amount', width:150,type:'number'},

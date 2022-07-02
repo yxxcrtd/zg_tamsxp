@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Repository
 public interface ChbPrdBaseInfoDao {
-    ChbPrdBaseInfoDto selectByKey(String produuid);
+    ChbPrdBaseInfoDto selectByKey(String prodId);
 
     List<SuggestDto> getProdIdAndProdName(Map<String, Object> pageParam);
 
@@ -45,4 +45,6 @@ public interface ChbPrdBaseInfoDao {
     List<Map<String,String>> selectByProdIdKey(String prodId);
 
     List<ChbPrdBaseInfoDto> selectByKeys(@Param("list") List<String> list);
+
+    ChbPrdBaseInfoDto selectByProdId(String prodId);
 }

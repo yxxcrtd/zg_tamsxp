@@ -132,16 +132,17 @@ public class SvrExchangFileImpService extends FileImpService {
 		// modify by convertMapToEntity yangnxianjiu 2022-01-19 end
 		logger.debug("汇率数据转dto---结束-----:" +  df.format(new Date()));
 		if(!CollectionUtils.isEmpty(listNE)){
+			List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList = Lists.newArrayList();
+			listNE.forEach(e->{
+				MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = new MstExchargeQuoteErrodataWithBLOBs();
+				mstExchargeQuoteErrodataWithBLOBs.setExchargeCode(e.getExchargeCode());
+				mstExchargeQuoteErrodataWithBLOBs.setTradeDate(e.getTradeDate());
+				mstExchargeQuoteErrodataWithBLOBs.setDatasourceType(e.getDatasourceType());
+				mstExchargeQuoteErrodataList.add(mstExchargeQuoteErrodataWithBLOBs);
+			});
+			commonCodeCheckBatchService.deleteMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
 			// 增量模式根据业务主键更新
 			if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
-				List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList = Lists.newArrayList();
-				listNE.forEach(e->{
-					MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = new MstExchargeQuoteErrodataWithBLOBs();
-					mstExchargeQuoteErrodataWithBLOBs.setExchargeCode(e.getExchargeCode());
-					mstExchargeQuoteErrodataWithBLOBs.setTradeDate(e.getTradeDate());
-					mstExchargeQuoteErrodataList.add(mstExchargeQuoteErrodataWithBLOBs);
-				});
-				commonCodeCheckBatchService.deleteMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
 				chbExchangeImpMapper.deleteExchangeBatch(listNE);
 				mergeExchangeInfo(listNE);
 			}
@@ -150,14 +151,6 @@ public class SvrExchangFileImpService extends FileImpService {
 				Map<Date, List<MstExchargeQuote>> mstExchargeQuoteMap = listNE.stream().collect(JoyinCollectors.groupingBy(MstExchargeQuote::getTradeDate));
 				Set<Date> dateSet = mstExchargeQuoteMap.keySet();
 				deleteAllData(dateSet);
-				List<MstExchargeQuoteErrodataWithBLOBs> mstExchargeQuoteErrodataList = Lists.newArrayList();
-				listNE.forEach(e->{
-					MstExchargeQuoteErrodataWithBLOBs mstExchargeQuoteErrodataWithBLOBs = new MstExchargeQuoteErrodataWithBLOBs();
-					mstExchargeQuoteErrodataWithBLOBs.setExchargeCode(e.getExchargeCode());
-					mstExchargeQuoteErrodataWithBLOBs.setTradeDate(e.getTradeDate());
-					mstExchargeQuoteErrodataList.add(mstExchargeQuoteErrodataWithBLOBs);
-				});
-				commonCodeCheckBatchService.deleteMstExchargeQuoteErrodata(mstExchargeQuoteErrodataList);
 				chbExchangeImpMapper.deleteExchangeBatch(listNE);
 				if (listNE.size() <= 1000) {
 					insertExchangeInfo(listNE);

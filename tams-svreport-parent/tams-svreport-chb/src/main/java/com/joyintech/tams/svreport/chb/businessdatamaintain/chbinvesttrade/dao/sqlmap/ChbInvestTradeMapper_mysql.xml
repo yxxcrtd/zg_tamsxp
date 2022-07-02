@@ -25,6 +25,7 @@
         <result property="tradeType" column="TRADE_TYPE" jdbcType="VARCHAR"/>
         <result property="chlAgrtName" column="CHL_AGRT_NAME" jdbcType="VARCHAR"/>
         <result property="isUnderTrade" column="IS_UNDER_TRADE" jdbcType="VARCHAR"/>
+        <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
         <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="orgCode" column="ORG_CODE" jdbcType="VARCHAR"/>
         <result property="deptCode" column="DEPT_CODE" jdbcType="VARCHAR"/>
@@ -62,6 +63,7 @@
                 CUR_ASSETDET_TYPE,
                 DEALDATE,
                 TRADE_COUNTER,
+                TRADE_TYPE,
                 UNIT_PRICE_FULL,
                 UNIT_PRICE_NET,
                 END_RATE,
@@ -97,6 +99,7 @@
                        #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
                        #{dealdate,jdbcType=DATE} DEALDATE,
                        #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                       #{tradeType,jdbcType=VARCHAR} TRADE_TYPE,
                        #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
                        #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
                        #{endRate,jdbcType=NUMERIC} END_RATE,
@@ -139,6 +142,7 @@
                 #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
                 #{dealdate,jdbcType=DATE} DEALDATE,
                 #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                #{tradeType,jdbcType=VARCHAR} TRADE_TYPE,
                 #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
                 #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
                 #{endRate,jdbcType=NUMERIC} END_RATE,
@@ -170,6 +174,7 @@
                     a.CUR_ASSETDET_TYPE = b.CUR_ASSETDET_TYPE,
                     a.DEALDATE = b.DEALDATE,
                     a.TRADE_COUNTER = b.TRADE_COUNTER,
+                    a.TRADE_TYPE = b.TRADE_TYPE,
                     a.UNIT_PRICE_FULL = b.UNIT_PRICE_FULL,
                     a.UNIT_PRICE_NET = b.UNIT_PRICE_NET,
                     a.END_RATE = b.END_RATE,
@@ -258,7 +263,9 @@
 
     </select>
     <select id="selectProdIdAndRegCodeByProdName" resultType="java.util.Map">
-        SELECT PROD_ID,REG_CODE FROM CHB_PRD_BASEINFO WHERE PROD_NAME=#{prodName} limit 1
+select  a.PRODID as PROD_ID,a.REG_CODE from CHB_PRDRESIST_CODE a
+inner join  CHB_PRD_BASEINFO b on a.PRODID=b.PROD_ID
+where b.PROD_NAME=#{prodName} limit 1
     </select>
     <select id="selectByKey" resultMap="BaseResultMap">
         select
@@ -279,7 +286,7 @@
         a.END_RATE,
         a.CONTRACT_CODE,
         a.REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -329,7 +336,7 @@
         a.END_RATE,
         a.CONTRACT_CODE,
         a.REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -405,7 +412,7 @@
         null END_RATE,
         null CONTRACT_CODE,
         null REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -539,52 +546,51 @@
             #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
             FROM  DUAL
         </foreach>
-        ) TEMP where not exists (SELECT 1 FROM CHB_INVEST_TRADE a where a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID = TEMP.PROD_ID AND a.ASSET_CODE = TEMP.ASSET_CODE )
+        ) TEMP where not exists (SELECT 1 FROM CHB_INVEST_TRADE a where a.TRADE_CODE = TEMP.TRADE_CODE AND a.PROD_ID =
+        TEMP.PROD_ID AND a.ASSET_CODE = TEMP.ASSET_CODE )
         )a;
 
         UPDATE CHB_INVEST_TRADE a,(
         select * from
         ( select TEMP.* from
         (
-            <foreach collection="list" item="item" separator="union all">
-                SELECT
-                #{item.tradeSeqno,jdbcType=VARCHAR} TRADE_SEQNO,
-                #{item.tradeCode,jdbcType=VARCHAR} TRADE_CODE,
-                #{item.prodId,jdbcType=VARCHAR} PROD_ID,
-                #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
-                #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
-                #{item.ccy,jdbcType=VARCHAR} CCY,
-                #{item.amt,jdbcType=NUMERIC} AMT,
-                #{item.cnyAmt,jdbcType=NUMERIC} CNY_AMT,
-                #{item.curAssetType,jdbcType=VARCHAR} CUR_ASSET_TYPE,
-                #{item.curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
-                #{item.dealdate,jdbcType=DATE} DEALDATE,
-                #{item.tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
-                #{item.unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
-                #{item.unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
-                #{item.endRate,jdbcType=NUMERIC} END_RATE,
-                #{item.contractCode,jdbcType=VARCHAR} CONTRACT_CODE,
-                #{item.remark,jdbcType=VARCHAR} REMARK,
-                #{item.status,jdbcType=VARCHAR} STATUS,
-                #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
-                #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
-                #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
-                #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
-                #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
-                #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-                #{item.num,jdbcType=NUMERIC} NUM,
-                #{item.assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
-                #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
-                #{item.investApproverId,jdbcType=VARCHAR} INVEST_APPROVER_ID,
-                #{item.investApproverName,jdbcType=VARCHAR} INVEST_APPROVER_NAME,
-                #{item.investTraderId,jdbcType=VARCHAR} INVEST_TRADER_ID,
-                #{item.investTraderName,jdbcType=VARCHAR} INVEST_TRADER_NAME,
-                #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
-                FROM  DUAL
-            </foreach>
-            ）TEMP
-            ）a
-        )b SET
+        <foreach collection="list" item="item" separator="union all">SELECT
+            #{
+            item.tradeSeqno,jdbcType=VARCHAR} TRADE_SEQNO,
+            #{item.tradeCode,jdbcType=VARCHAR} TRADE_CODE,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.registBankCode,jdbcType=VARCHAR} REGIST_BANK_CODE,
+            #{item.assetCode,jdbcType=VARCHAR} ASSET_CODE,
+            #{item.ccy,jdbcType=VARCHAR} CCY,
+            #{item.amt,jdbcType=NUMERIC} AMT,
+            #{item.cnyAmt,jdbcType=NUMERIC} CNY_AMT,
+            #{item.curAssetType,jdbcType=VARCHAR} CUR_ASSET_TYPE,
+            #{item.curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
+            #{item.dealdate,jdbcType=DATE} DEALDATE,
+            #{item.tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+            #{item.unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
+            #{item.unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
+            #{item.endRate,jdbcType=NUMERIC} END_RATE,
+            #{item.contractCode,jdbcType=VARCHAR} CONTRACT_CODE,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.deptCode,jdbcType=VARCHAR} DEPT_CODE,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+            #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
+            #{item.num,jdbcType=NUMERIC} NUM,
+            #{item.assetMethod,jdbcType=VARCHAR} ASSET_METHOD,
+            #{item.rivalPartyType,jdbcType=VARCHAR} RIVAL_PARTY_TYPE,
+            #{item.investApproverId,jdbcType=VARCHAR} INVEST_APPROVER_ID,
+            #{item.investApproverName,jdbcType=VARCHAR} INVEST_APPROVER_NAME,
+            #{item.investTraderId,jdbcType=VARCHAR} INVEST_TRADER_ID,
+            #{item.investTraderName,jdbcType=VARCHAR} INVEST_TRADER_NAME,
+            #{item.errMsg,jdbcType=VARCHAR} ERR_MSG FROM DUAL
+        </foreach>)TEMP
+        ) a
+        ) b SET
         a.REGIST_BANK_CODE = b.REGIST_BANK_CODE,
         a.CCY = b.CCY,
         a.AMT = b.AMT,
@@ -646,7 +652,7 @@
         a.END_RATE,
         a.CONTRACT_CODE,
         a.REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -690,7 +696,7 @@
         null END_RATE,
         null CONTRACT_CODE,
         null REMARK,
-        a.STATUS statusValid,
+        a.STATUS,
         a.DEPT_CODE,
         a.CREATE_USER,
         a.CREATE_TIME,
@@ -718,4 +724,31 @@
         )a
         order by a.DEALDATE desc,a.PROD_ID asc
     </select>
+    <select id="getRateNearByDate" resultType="java.math.BigDecimal">
+        select
+        <choose>
+            <when test="pricetype == '01'">
+                cmei.OPEN_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '02'">
+                cmei.CLOSE_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '03'">
+                cmei.HIGH_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <when test="pricetype == '04'">
+                cmei.LOW_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </when>
+            <otherwise >
+                cmei.MID_PRICE/(case when cmei.QUOT_UNIT=0 then 1 else cmei.QUOT_UNIT end)
+            </otherwise>
+        </choose>
+        from MST_EXCHARGE_QUOTE cmei
+        where  cmei.BASIS_CYY= #{CCY_ORIGINAL,jdbcType=VARCHAR}
+        and cmei.QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR}
+        and cmei.DATASOURCE_TYPE = 'SAFE'
+        AND cmei.TRADE_DATE=
+        ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
+    </select>
+
 </mapper>

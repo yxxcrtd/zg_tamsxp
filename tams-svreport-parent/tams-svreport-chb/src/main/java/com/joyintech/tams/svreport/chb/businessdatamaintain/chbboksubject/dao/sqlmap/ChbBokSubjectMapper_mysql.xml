@@ -136,6 +136,7 @@
 
     <select id="selectAll" resultType="com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto">
         select
+        null as datauuid,
         BS.BOOKSET_ID as booksetId,
         BS.SUBJECT_NO as subjectNo,
         BS.SUBJECT_NAME as subjectName,
@@ -152,7 +153,8 @@
         BS.DATA_SOURCE as dataSource,
         BS.STATUS as statusValid,
         BS.REMARK as remark,
-        BS.ERR_MSG as errMsg
+        BS.ERR_MSG as errMsg,
+        null as orgData
         from BOK_SUBJECT BS
         <where>
             <if test="subjectLevel != null and subjectLevel != ''">
@@ -177,7 +179,52 @@
                 AND BS.STATUS = #{status}
             </if>
         </where>
-        order by BS.BOOKSET_ID,BS.SUBJECT_NO,BS.SUBJECT_LEVEL
+        union all
+        select
+        BS.DATAUUID as datauuid,
+        BS.BOOKSET_ID as booksetId,
+        BS.SUBJECT_NO as subjectNo,
+        BS.SUBJECT_NAME as subjectName,
+        BS.FSUBJECT_ID as fsubjectId,
+        BS.SUBJECT_TYPE as subjectType,
+        BS.SUBJECT_LEVEL as subjectLevel,
+        BS.BAL_FLAG as balFlag,
+        BS.CREATE_USER as createUser,
+        BS.CREATE_DEPT as createDept,
+        BS.CREATE_TIME as createTime,
+        BS.UPDATE_USER as updateUser,
+        BS.UPDATE_TIME as updateTime,
+        BS.UPDATE_TIME as updateDate,
+        null as dataSource,
+        BS.STATUS as statusValid,
+        null as remark,
+        BS.ERR_MSG as errMsg,
+        BS.ORG_DATA as orgData
+        from BOK_SUBJECT_ERRODATA BS
+        <where>
+            <if test="subjectLevel != null and subjectLevel != ''">
+                BS.SUBJECT_LEVEL = #{subjectLevel}
+            </if>
+            <if test="balFlag != null and balFlag != ''">
+                AND BS.BAL_FLAG = #{balFlag}
+            </if>
+            <if test="fsubjectId != null and fsubjectId != ''">
+                AND BS.FSUBJECT_ID = #{fsubjectId}
+            </if>
+            <if test="subjectNo != null and subjectNo != ''">
+                AND BS.SUBJECT_NO like concat(#{subjectNo} ,'%')
+            </if>
+            <if test="subjectName != null and subjectName != ''">
+                AND BS.SUBJECT_NAME like concat('%',#{subjectName},'%')
+            </if>
+            <if test="subjectType != null and subjectType != ''">
+                AND BS.SUBJECT_TYPE = #{subjectType}
+            </if>
+            <if test="status != null and status != ''">
+                AND BS.STATUS = #{status}
+            </if>
+        </where>
+        order by booksetId,subjectNo,subjectLevel
     </select>
 
 
@@ -290,5 +337,11 @@
             (#{item.BOOKSET_ID},#{item.SUBJECT_NO})
         </foreach>
         and STATUS in ('A','E')
+    </select>
+    <select id="countDuplicatedData" resultType="java.lang.Integer">
+        select count(1) from BOK_SUBJECT where (BOOKSET_ID,SUBJECT_NO) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.BOOKSET_ID},#{item.SUBJECT_NO})
+        </foreach>
     </select>
 </mapper>

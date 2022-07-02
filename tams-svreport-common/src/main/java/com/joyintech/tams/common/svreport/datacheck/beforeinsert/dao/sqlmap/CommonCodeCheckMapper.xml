@@ -264,9 +264,19 @@
     <delete id="deleteMstExchargeQuote">
         delete from MST_EXCHARGE_QUOTE  where (EXCHARGE_CODE,TRADE_DATE,DATASOURCE_TYPE) in
         <foreach collection="list" item="item" open ="(" close=")" separator=",">
-            (#{item.exchargeCode},to_date(#{item.tradeDate},'yyyy-MM-dd'),#{item.datasourceType})
+            (#{item.exchargeCode},#{item.tradeDate},#{item.datasourceType})
         </foreach>
     </delete>
+    <delete id="deleteBokSubjectErrodata">
+        delete from bok_subject_errodata where BOOKSET_ID = #{booksetId} and SUBJECT_NO = #{subjectNo}
+    </delete>
+    <delete id="deleteBokSubject">
+        delete from BOK_SUBJECT where (BOOKSET_ID,SUBJECT_NO) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+        (#{item.booksetId},#{item.subjectNo})
+        </foreach>
+    </delete>
+
 
     <select id="checkSalerCredentNo" resultType="integer" parameterType="java.lang.String" >
         select
@@ -366,5 +376,8 @@
         and ASSET_CODE = #{assetCode}
         and CUR_ASSET_TYPE = #{curAssetType}
         and STATUS = 'E'
+    </select>
+    <select id="checkExistsFsubjectId" resultType="java.lang.Integer">
+        select count(1) from BOK_SUBJECT where SUBJECT_NO = #{fsubjectId}
     </select>
 </mapper>

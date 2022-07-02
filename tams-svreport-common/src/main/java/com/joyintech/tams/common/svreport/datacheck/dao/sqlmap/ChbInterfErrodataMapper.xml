@@ -39,16 +39,80 @@
     where DATAID = #{dataid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
-    insert into CHB_INTERF_ERRODATA (DATAUUID,DATAID, INTERF_TYPE, FIRE_NAME, 
-      STATUS, UPDATE_USER, CREATE_USER, 
-      UPDATE_TIME, CREATE_TIME, WORKFLOW_ID, 
-      ORG_CODE, DEPT_CODE, CREATE_DEPT, 
-      ORG_DATA, ERR_MSG)
-    values (#{datauuid,jdbcType=VARCHAR},#{dataid,jdbcType=VARCHAR}, #{interfType,jdbcType=VARCHAR}, #{fireName,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{workflowId,jdbcType=VARCHAR}, 
-      #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
-      #{orgData,jdbcType=CLOB}, #{errMsg,jdbcType=CLOB})
+    MERGE INTO CHB_INTERF_ERRODATA T
+    USING (
+      select
+      #{datauuid,jdbcType=VARCHAR} DATAUUID,
+      #{dataid,jdbcType=VARCHAR} DATAID,
+      #{interfType,jdbcType=VARCHAR} INTERF_TYPE,
+      #{fireName,jdbcType=VARCHAR} FIRE_NAME,
+      #{status,jdbcType=VARCHAR} STATUS,
+      #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+      #{createUser,jdbcType=VARCHAR } CREATE_USER,
+      sysdate  UPDATE_TIME,
+      sysdate  CREATE_TIME,
+      #{workflowId,jdbcType=VARCHAR} WORKFLOW_ID,
+      #{orgCode,jdbcType=VARCHAR} ORG_CODE,
+      #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
+      #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
+      #{orgData,jdbcType=CLOB} ORG_DATA,
+      #{errMsg,jdbcType=CLOB} ERR_MSG
+      from dual
+    ) TEMP
+    ON (T.DATAID = TEMP.DATAID)
+    WHEN MATCHED THEN
+    UPDATE
+    SET
+    T.DATAUUID = TEMP.DATAUUID,
+    T.INTERF_TYPE = TEMP.INTERF_TYPE,
+    T.FIRE_NAME = TEMP.FIRE_NAME,
+    T.STATUS = TEMP.STATUS,
+    T.UPDATE_USER = TEMP.UPDATE_USER,
+    T.CREATE_USER = TEMP.CREATE_USER,
+    T.UPDATE_TIME = TEMP.UPDATE_TIME,
+    T.CREATE_TIME = TEMP.CREATE_TIME,
+    T.WORKFLOW_ID = TEMP.WORKFLOW_ID,
+    T.ORG_CODE = TEMP.ORG_CODE,
+    T.DEPT_CODE = TEMP.DEPT_CODE,
+    T.CREATE_DEPT = TEMP.CREATE_DEPT,
+    T.ORG_DATA = TEMP.ORG_DATA,
+    T.ERR_MSG = TEMP.ERR_MSG
+
+    WHEN NOT MATCHED THEN
+    INSERT (
+    DATAUUID,
+    DATAID,
+    INTERF_TYPE,
+    FIRE_NAME,
+    STATUS,
+    UPDATE_USER,
+    CREATE_USER,
+    UPDATE_TIME,
+    CREATE_TIME,
+    WORKFLOW_ID,
+    DEPT_CODE,
+    CREATE_DEPT,
+    ORG_CODE,
+    ORG_DATA,
+    ERR_MSG
+    )
+    VALUES(
+    TEMP.DATAUUID,
+    TEMP.DATAID,
+    TEMP.INTERF_TYPE,
+    TEMP.FIRE_NAME,
+    TEMP.STATUS,
+    TEMP.UPDATE_USER,
+    TEMP.CREATE_USER,
+    TEMP.UPDATE_TIME,
+    TEMP.CREATE_TIME,
+    TEMP.WORKFLOW_ID,
+    TEMP.ORG_CODE,
+    TEMP.DEPT_CODE,
+    TEMP.CREATE_DEPT,
+    TEMP.ORG_DATA,
+    TEMP.ERR_MSG
+    )
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
     insert into CHB_INTERF_ERRODATA

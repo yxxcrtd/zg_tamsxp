@@ -355,6 +355,15 @@ select * from (SELECT t.*,LIMIT ROW_ID FROM ${tableId} t WHERE
 		</where>
 	</select>
 
+	<select id="checkNoStatusDataIsExist" parameterType="java.util.Map" statementType="STATEMENT" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ${tableId}
+		<where>
+			<foreach collection="map" index="key" item="value" separator="AND">
+				${key} = ${value}
+			</foreach>
+		</where>
+	</select>
+
 	<select id="queryPrimarykeyByTableName" resultType="java.lang.String" parameterType="java.lang.String">
 		<if test="tableId != null">
 			SELECT BASECOLUMNID FROM CHB_INFOMGR_CONFIG WHERE BASETABLEID = #{tableId,jdbcType=VARCHAR} AND BASECOLUMNTYPE = 'U'

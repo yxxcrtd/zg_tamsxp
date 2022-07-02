@@ -54,7 +54,8 @@ public enum ChbCheckTableInfo {
     资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, "CHB_ASSET_INFO_SUB"),
     投资交易信息表("CHB_INVEST_TRADE", true, "TRADE_SEQNO", new String[] {"PROD_ID","ASSET_CODE","TRADE_CODE"}, ""),
     节假日("MST_HOLIDAY", true, "", new String[] {"CALENDAR_ID","CDATE"}, ""),
-    汇率行情信息("MST_EXCHARGE_QUOTE", true, "", new String[] {"EXCHARGE_CODE","TRADE_DATE","DATASOURCE_TYPE"}, "");
+    汇率行情信息("MST_EXCHARGE_QUOTE", true, "", new String[] {"EXCHARGE_CODE","TRADE_DATE","DATASOURCE_TYPE"}, ""),
+    科目定义("BOK_SUBJECT", true, "", new String[] {"BOOKSET_ID","SUBJECT_NO"}, "");
     /**
      * 根据tableName获取枚举对象
      * @param tableName 表名

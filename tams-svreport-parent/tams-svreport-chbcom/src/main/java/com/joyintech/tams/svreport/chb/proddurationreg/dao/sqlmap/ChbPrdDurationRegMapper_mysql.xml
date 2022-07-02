@@ -173,6 +173,7 @@
 		INFO.PRD_VDATE,
 		INFO.OPERATE_MODE,
 		TEMP.status,
+		TEMP.CHANG_TYPE,
 		code.REG_CODE
 	</select>
 
@@ -298,6 +299,7 @@
 		INFO.VDATE,
 		INFO.OPERATE_MODE,
 		TEMP.Status,
+		TEMP.CHANG_TYPE,
 		code.REG_CODE
 	</select>
 

@@ -13,16 +13,29 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.ExcelUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.BokSubjectErrodataMapper;
+import com.joyintech.tams.common.base.entity.BokSubjectErrodataWithBLOBs;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dao.ChbBokSubjectDao;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbexchangeinfo.service.ChbExchangeQuotationInfoService;
+import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
+import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
+import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
+import com.joyintech.tams.svreport.interf.dis.boksubject.service.BokSubjectInterfService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +60,13 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
     private ChbBokSubjectDao bokSubjectDao;
     @Autowired
     private BaseCommonCheckService baseCommonCheckService;
-
+    @Autowired
+    private BokSubjectInterfService bokSubjectInterfService;
+    @Autowired
+    private BokSubjectErrodataMapper bokSubjectErrodataMapper;
+    @Autowired
+    private CommonCodeCheckBatchService commonCodeCheckBatchService;
+    private final Logger logger = LoggerFactory.getLogger(ChbBokSubjectService.class);
     /**
      * 检索上级科目代码列表
      *
@@ -139,26 +158,48 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
     @Override
     public void doComplete(ChbBokSubjectDto entity, OperationType type) {
         if (OperationType.DELETE.equals(type)) {
-            entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
-            bokSubjectDao.update(entity);
+            if(entity.getStatusValid().equals(DictCodeListExt1.维护数据状态_待处理.getValue())){
+                bokSubjectErrodataMapper.deleteByPrimaryKey(entity.getDatauuid());
+            }else{
+                entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
+                bokSubjectDao.update(entity);
+            }
 
         }
         else if (OperationType.NEW.equals(type)) {
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
             entity.setBooksetId("00000000000000000002");
-            entity.setErrMsg("");
+            BokSubjectErrodataWithBLOBs bokSubjectErrodataWithBLOBs = new BokSubjectErrodataWithBLOBs();
+            bokSubjectErrodataWithBLOBs.setBooksetId(entity.getBooksetId());
+            bokSubjectErrodataWithBLOBs.setSubjectNo(entity.getSubjectNo());
+            commonCodeCheckBatchService.deleteBokSubjectErrodata( Lists.newArrayList(bokSubjectErrodataWithBLOBs));
             bokSubjectDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
+            if(entity.getStatusValid().equals(DictCodeListExt1.维护数据状态_待处理.getValue())){
+                bokSubjectErrodataMapper.deleteByPrimaryKey(entity.getDatauuid());
+                entity.setDataSource(DictCodeListExt2.数据来源_接口.getValue());
+            }
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            bokSubjectDao.update(entity);
+            bokSubjectDao.insert(entity);
         }
     }
 
 
-    public ChbBokSubjectDto selcetByKey(String subjectNo,String booksetId){
-        return bokSubjectDao.selcetByKey(subjectNo,booksetId);
+    public ChbBokSubjectDto selcetByKey(String subjectNo,String booksetId,String statusValid,String datauuid){
+        ChbBokSubjectDto dto = new ChbBokSubjectDto();
+        if(StringUtils.isNotEmpty(statusValid)&&statusValid.equals(DictCodeListExt1.维护数据状态_待处理.getValue())){
+            BokSubjectErrodataWithBLOBs bokSubjectErrodataWithBLOBs = bokSubjectErrodataMapper.selectByPrimaryKey(datauuid);
+            if(bokSubjectErrodataWithBLOBs!=null){
+                dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),bokSubjectErrodataWithBLOBs.getOrgData());
+                dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
+                dto.setDatauuid(datauuid);
+            }
+        }else{
+            dto = bokSubjectDao.selcetByKey(subjectNo,booksetId);
+        }
+        return dto;
     }
 
     /**
@@ -255,19 +296,10 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
             map.put("SUBJECT_NO",item.get(0));
             map.put("SUBJECT_NAME",item.get(1));
             map.put("FSUBJECT_ID",item.get(2));
-            map.put("SUBJECT_TYPE",null!=item.get(3)&&item.get(3).length()>1?"0"+item.get(3).substring(0,1):"");
-            map.put("SUBJECT_LEVEL",null !=item.get(4)&&item.get(4).length()>1?item.get(4).substring(0,1):"");
-            if(null !=item.get(5)&&item.get(5).length()>1){
-                switch (item.get(5).substring(0,1)){
-                    case "1":map.put("BAL_FLAG","D");break;
-                    case "2":map.put("BAL_FLAG","C");break;
-                    case "3":map.put("BAL_FLAG","B");break;
-                }
-            }else{
-                map.put("BAL_FLAG","");
-            }
-
-            map.put("REMARK",item.get(5));
+            map.put("SUBJECT_TYPE",item.get(3).split(" ")[0]);
+            map.put("SUBJECT_LEVEL",item.get(4).split(" ")[0]);
+            map.put("BAL_FLAG",item.get(5).split(" ")[0]);
+            map.put("REMARK",item.get(6));
             list.add(map);
         });
 
@@ -504,26 +536,29 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
      * @return 处理结果
      */
     public AjaxResult checkConfirmMsgForImportData(String fileName,String tableName) throws Exception  {
+
         AjaxResult webResult = new AjaxResult();
-        if (fileName.indexOf("科目定义") == -1){
-            webResult.setMessage(this.getMessage("ImportFileName"),MessageType.错误消息);
+        // 检查文件名是否包含汇率行情信息
+        if (!fileName.contains("科目定义")) {
+            webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
             return webResult;
         }
-        List<Map<String, String>> mapList = dataMapAnalysis(fileName);
-        int size = mapList.size();
-        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", mapList, tableName, fileName, tableName, tableName, null, null);
-
-        long count = mapList.stream().filter(ele ->null != ele.get("STATUS")&&ele.get("STATUS").equals("A")).count();
-        webResult.setMessage(this.getMessage("ChbImportMessage",mapList.size()-count,size-mapList.size(),count),MessageType.确认消息);
-        int duplicate = 0;
-        if(!CollectionUtils.isEmpty(mapList)){
-            duplicate = bokSubjectDao.selectValidRecords(mapList);
+        List<Map<String, String>> list = Lists.newArrayList();
+        try {
+            list = dataMapAnalysis(fileName);
+        } catch (Exception e) {
+            logger.error("解析导入文件异常:{}", e.getMessage());
         }
-        //查数据库记录
-        List<JoyinMessage> joyinMessages = new ArrayList<>();
-        JoyinMessage ms = new JoyinMessage(this.getMessage("ChbImportDuplicateMessage",duplicate), MessageType.确认消息);
-        joyinMessages.add(ms);
-        webResult.setJoyinMessages(joyinMessages);
+        if(list.size()<1){
+            webResult.setMessage("请勿上传空文件", MessageType.错误消息);
+            return webResult;
+        }
+        int i = bokSubjectDao.countDuplicatedData(list);
+        if(list.size()>0){
+            String[] checkEuplicatedKeys ={"BOOKSET_ID","SUBJECT_NO"};
+            int dup = DuplicateDataUtil.countDuplicatedData(list, checkEuplicatedKeys);
+            webResult.setMessage(this.getMessage("SvrDuplicateMessage",dup,i), MessageType.确认消息);
+        }
         return webResult;
     }
 
@@ -543,53 +578,16 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
 
 
     public List<ExcelValidDto> importFileSave(String fileName,String tableName) throws Exception {
-        List<Map<String, String>> list = dataMapAnalysis(fileName);
-        List<ExcelValidDto> checkResult = baseCommonCheckService.checkDataAll("D", list, tableName, fileName, tableName, tableName, null, null);
-        if(!CollectionUtils.isEmpty(list)){
-            List<ChbBokSubjectDto> chbBokSubjectDtoDtos = converToBean(list);
-            // mysql load data
-           /* StringBuilder sb = new StringBuilder();
-            BatchInsertUtil batchInsertUtil = new BatchInsertUtil();
-            for (ChbBokSubjectDto dto : chbBokSubjectDtoDtos) {
-                batchInsertUtil.builderAppend(sb,"00000000000000000002");
-                batchInsertUtil.builderAppend(sb,dto.getSubjectNo());
-                batchInsertUtil.builderAppend(sb,dto.getSubjectName());
-                batchInsertUtil.builderAppend(sb,dto.getFsubjectId());
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,dto.getSubjectType());
-                batchInsertUtil.builderAppend(sb,dto.getSubjectLevel());
-                batchInsertUtil.builderAppend(sb,dto.getBalFlag());
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,dto.getCreateUser());
-                batchInsertUtil.builderAppend(sb,dto.getCreateDept());
-                batchInsertUtil.builderAppend(sb,DateUtil.format(dto.getCreateTime()));
-                batchInsertUtil.builderAppend(sb,dto.getUpdateUser());
-                batchInsertUtil.builderAppend(sb,DateUtil.format(dto.getUpdateTime()));
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,"");
-                batchInsertUtil.builderAppend(sb,dto.getDataSource());
-                batchInsertUtil.builderAppend(sb,dto.getStatus());
-                batchInsertUtil.builderAppend(sb,dto.getRemark());
-                batchInsertUtil.builderEnd(sb,dto.getErrMsg());
-            }
-            byte[] bytes = sb.toString().getBytes();
-            ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-            batchInsertUtil.bulkLoadFromInputStream(tableName,in);*/
-            //按500条分批保存
-            List<List<ChbBokSubjectDto>> partition = Lists.partition(chbBokSubjectDtoDtos, 500);
-            for (List<ChbBokSubjectDto> dtos : partition) {
 
-                bokSubjectDao.batchInsert(dtos);
-            }
+        List<Map<String, String>> list = Lists.newArrayList();
+        try {
+            list = dataMapAnalysis(fileName);
+        } catch (Exception e) {
+            logger.error("解析导入文件异常:{}", e.getMessage());
         }
-        return checkResult.stream().filter(ele ->null != ele.getValidKey()&&ele.getValidKey().equals("YW")).collect(Collectors.toList());
+        List<ExcelValidDto> listExcel = new ArrayList<ExcelValidDto>();
+        bokSubjectInterfService.importDB(listExcel,list,new InterfFile(),null);
+        return listExcel;
     }
     public List<ChbBokSubjectDto> converToBean(List<Map<String,String>> dataList)
             throws ParseException {
@@ -632,5 +630,13 @@ public class ChbBokSubjectService extends CommonExportService<ChbBokSubjectDto> 
 
         }
         return returnInfoList;
+    }
+
+    public List<ChbBokSubjectDto> selectByKeys(List<ChbBokSubjectDto> dtoList) {
+        return bokSubjectDao.selectByKeys(dtoList);
+    }
+
+    public List<ChbBokSubjectDto> selectAll(Map<String, Object> params) {
+        return bokSubjectDao.selectAll(params);
     }
 }

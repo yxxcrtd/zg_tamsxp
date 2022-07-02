@@ -64,7 +64,7 @@
         null                     as salerComplainDetail,
         null                     as salerComplainResult,
         SALER_COMPLAIN_DATE       as salerComplainDate,
-        'A'                       as dataStatus,
+        'A'                       as statusValid,
         ERR_MSG          as errMsg
         from CHB_SALER_REW_PENA_ERRODATA
         where 1=1
@@ -107,7 +107,7 @@
         SALER_COMPLAIN_DETAIL     as salerComplainDetail,
         SALER_COMPLAIN_RESULT     as salerComplainResult,
         SALER_COMPLAIN_DATE       as salerComplainDate,
-        STATUS                    as dataStatus,
+        STATUS                    as statusValid,
         null                     as errMsg
         from CHB_SALER_REW_PENA_INFO
         where 1=1
@@ -132,7 +132,7 @@
         <if test="searchSalerComplainDateEnd != null and searchSalerComplainDateEnd != ''">
             and DATE_FORMAT(SALER_COMPLAIN_DATE,'%Y-%m-%d')<![CDATA[<=]]> #{searchSalerComplainDateEnd,jdbcType=VARCHAR}
         </if>
-        ) A ORDER BY A.dataStatus DESC
+        ) A ORDER BY A.statusValid DESC
     </select>
 
     <!--	查询中债银行机构代码-->

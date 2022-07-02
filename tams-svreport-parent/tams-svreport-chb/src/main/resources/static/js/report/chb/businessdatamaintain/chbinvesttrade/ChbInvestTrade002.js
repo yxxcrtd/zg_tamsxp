@@ -1,4 +1,12 @@
 (function() {
+
+    var editFlag = true;
+    var init=function() {
+        if(pageModel!=PAGE_MODEL_NEW && pageModel!=PAGE_MODEL_EDIT){
+            editFlag=false;
+        }
+    };
+
     //双击查看
     if('detail'==detail){
         $('#CchbInvestTrade002_div').hide();
@@ -72,7 +80,7 @@
             if ('' == tradeCounter || null == tradeCounter) {
             } else {
                 Joyin.ajaxJson(basePath + '/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/selectRivalPartyType?tradeCounter=' + tradeCounter, {}, function (result) {
-                    $('#rivalPartyType').val(result['COUNTER_TYPE']);
+                    $('#rivalPartyType').val(result['COUNTER_TYPE']).trigger('change');
                 })
             }
         });
@@ -108,10 +116,51 @@
             });
         };
 
+    //折合人民币金额字段取得
+    var countCnyAmt = function(){
+        if($("#ccy").val()=='CNY'||$("#dealdate").val()==""||$('#amt').val()==""){
+            $("#cnyAmt").val($("#amt").val()).blur();
+            return ;
+        }
+        else{
+            var param = {};
+            var holdDate=$("#dealdate").val();
+            param.HOLDDATE= Date.ofDate(holdDate).format();
+            param.amount=$('#amt').val();
+            param.CCY=$('#ccy').val();
+            if (param.HOLDDATE && param.CCY && param.amount) {
+                Joyin.ajax('getCnyAmt',param,function(result){
+                    if(result.data){
+                        $("#cnyAmt").val(result.data).trigger('change').blur();
+                    }
+                });
+            }
+        }
+
+    };
+
         /**
          * 画面加载完成
          */
         $(function () {
+            init();
+            $("#ccy").on('change',function(){
+               if(editFlag){
+                  countCnyAmt();
+               }
+             });
+
+            $("#dealdate").on('change',function(){
+                 if(editFlag){
+                    countCnyAmt();
+                 }
+            });
+
+            $("#amt").on('change',function(){
+               if(editFlag){
+                  countCnyAmt();
+               }
+            });
             //修改和审批被驳回时，保存按钮隐藏
             $('#btnSave_wfl').hide();
             // 绑定按钮事件

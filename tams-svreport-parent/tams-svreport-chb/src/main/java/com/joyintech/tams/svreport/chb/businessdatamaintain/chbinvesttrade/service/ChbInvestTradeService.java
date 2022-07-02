@@ -12,6 +12,8 @@ import com.joyintech.tams.common.InterfFile;
 import com.joyintech.tams.common.base.dao.ChbInvestTradeErrodataMapper;
 import com.joyintech.tams.common.base.entity.ChbInfoMgrResultConfig;
 import com.joyintech.tams.common.base.entity.ChbInvestTrade;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -27,6 +29,7 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao.C
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
+import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbInvestTradeInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investtrade.service.SvrInvestTradeFileImpService;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -39,7 +42,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wubingbing
@@ -62,10 +67,17 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     private ChbInvestTradeInterfMapper chbInvestTradeInterfMapper;
     @Autowired
     private ChbInvestTradeErrodataMapper chbInvestTradeErrodataMapper;
+    /**
+     * 投资交易接入mapper
+     */
+    @Autowired
+    private ChbAssetInfoInterfMapper chbAssetInfoInterfMapper;
     @Override
     public void doComplete(ChbInvestTradeDto entity, OperationType type) {
+        //得到交易类型
+        this.setTradeType(entity);
         if (OperationType.DELETE.equals(type)) {
-            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatus())){
                 chbInvestTradeErrodataMapper.deleteByPrimaryKey(entity.getTradeSeqno());
             }else{
                 entity.setStatus(DictCodeListExt1.维护数据状态_删除.getValue());
@@ -76,13 +88,13 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         else if (OperationType.NEW.equals(type)) {
             entity.setDataSource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            entity.setTradeSeqno(IDGenerator.generate(32));
+            entity.setTradeSeqno(IDGenerator.generate(36));
             List<ChbInvestTrade> chbInvestTrades = Lists.newArrayList((ChbInvestTrade) entity);
             chbInvestTradeInterfMapper.deleteChbInvestTradeErroData(chbInvestTrades);
             chbInvestTradeDao.insert(entity);
         }
         else if(OperationType.MODIFY.equals(type)){
-            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatusValid())){
+            if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),entity.getStatus())){
                 //删除errodata记录
                 chbInvestTradeErrodataDao.deleteByPrimaryKey(entity.getTradeSeqno());
                 entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
@@ -91,6 +103,27 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             chbInvestTradeDao.insert(entity);
         }
 
+    }
+
+    /**
+     * 得到交易类型
+     * @param dto
+     */
+    private void setTradeType(ChbInvestTradeDto dto){
+        // 根据资产代码和资产分类：资管计划去中债要素表中查询
+        List<String> assetTypeList = new ArrayList<String>(3);
+        assetTypeList.add(DictCodeListExt2.资产_负债类别_资产管理产品.getValue());
+        assetTypeList.add(DictCodeListExt2.资产_负债类别_私募基金.getValue());
+        assetTypeList.add(DictCodeListExt2.资产_负债类别_委外投资_协议方式.getValue());
+        List<String> assetPlanLList = chbAssetInfoInterfMapper.selectAssetCodeByAssetType(assetTypeList, null);
+        Map<String,String> assetPlanLMap = assetPlanLList.stream().collect(Collectors.toMap(p -> p, p -> p,(key1, key2) -> key2));
+        // TRADE_TYPE资产交易默认'01'，判断是否为资管计划交易,即资产一级分类为资管计划
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(assetPlanLList)
+                && assetPlanLMap.get(dto.getAssetCode()) != null){
+            dto.setTradeType(DictCodeListExt2.投资端交易类型_资管计划交易.getValue());
+        }else{
+            dto.setTradeType("01");
+        }
     }
 
     public Page<SelectOptionDto> getProdName(Map<String, Object> param) {
@@ -126,11 +159,11 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             ChbInvestTradeErrodataWithBLOBsDto chbInvestTradeErrodataWithBLOBsDto = chbInvestTradeErrodataDao.selectByPrimaryKey(tradeSeqno);
             if(chbInvestTradeErrodataWithBLOBsDto!=null){
                 dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbInvestTradeErrodataWithBLOBsDto.getOrgData());
-                dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
+                dto.setStatus(DictCodeListExt3.中债数据状态_待处理.getValue());
                 dto.setTradeSeqno(chbInvestTradeErrodataWithBLOBsDto.getDatauuid());
                 // 获取产品名称和产品登记编码
                 if(!StringUtils.isEmpty(dto.getProdId())){
-                    ChbPrdBaseInfoDto chbPrdBaseInfoDto = chbPrdBaseInfoDao.selectByKey(dto.getProdId());
+                    ChbPrdBaseInfoDto chbPrdBaseInfoDto = chbPrdBaseInfoDao.selectByProdId(dto.getProdId());
                     if(chbPrdBaseInfoDto!=null){
                         dto.setProdName(chbPrdBaseInfoDto.getProdName()==null?null:chbPrdBaseInfoDto.getProdName());
                         dto.setRegCode(chbPrdBaseInfoDto.getRegCode()==null?null:chbPrdBaseInfoDto.getRegCode());
@@ -163,7 +196,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         if(null==map){
             map = new HashMap<>();
         }
-        map.put("COUNTER_TYPE", SysDataUtil.getNameFromDataDict(DictCode.客户二级类型,map.get("COUNTER_TYPE2")));
+        map.put("COUNTER_TYPE", this.counterType2RivalPartyType(map.get("COUNTER_TYPE2")));
         return map;
     }
 
@@ -254,5 +287,80 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
 
     public List<ChbInvestTradeDto> selectByKeys(List<String> tradeSeqnos) {
         return chbInvestTradeDao.selectByKeys(tradeSeqnos);
+    }
+
+    public BigDecimal dealCnyAmt(Map<String, Object> pageParam) {
+        pageParam.put("HOLDDATE",DateUtil.parse(pageParam.get("HOLDDATE").toString()));
+        pageParam.put("CCY_ORIGINAL", pageParam.get("CCY"));
+        pageParam.put("CCY_CONVERT", DictCodeListExt1.币种_中债_人民币.getValue());
+        BigDecimal amount = new BigDecimal(pageParam.get("amount").toString());
+        // 汇率计算规则
+        pageParam.put("pricetype", SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE));
+        BigDecimal rate = chbInvestTradeDao.getRateNearByDate(pageParam);
+        rate = rate==null?BigDecimal.ZERO:rate;
+        return ArithmeticUtil.multiply(rate,amount);
+    }
+
+    public  String counterType2RivalPartyType(String counterType) {
+        if (StringUtil.isEmpty(counterType)) {
+            return null;
+        }
+        String rivalPartyType = null;
+        switch (counterType) {
+            case "C0100":
+                rivalPartyType = "01";
+                break;
+            case "C0200":
+                rivalPartyType = "02";
+                break;
+            case "C0300":
+                rivalPartyType = "03";
+                break;
+            case "C0400":
+                rivalPartyType = "04";
+                break;
+            case "C0401":
+                rivalPartyType = "05";
+                break;
+            case "C0402":
+                rivalPartyType = "06";
+                break;
+            case "C0500":
+                rivalPartyType = "07";
+                break;
+            case "C0501":
+                rivalPartyType = "08";
+                break;
+            case "C0502":
+                rivalPartyType = "09";
+                break;
+            case "C0503":
+                rivalPartyType = "10";
+                break;
+            case "C0504":
+                rivalPartyType = "11";
+                break;
+            case "C0505":
+                rivalPartyType = "12";
+                break;
+            case "C0506":
+                rivalPartyType = "13";
+                break;
+            case "C0507":
+                rivalPartyType = "14";
+                break;
+            case "C0508":
+                rivalPartyType = "15";
+                break;
+            case "C0509":
+                rivalPartyType = "16";
+                break;
+            case "C0600":
+                rivalPartyType = "17";
+                break;
+            default:
+                break;
+        }
+        return rivalPartyType;
     }
 }

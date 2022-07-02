@@ -2,7 +2,7 @@
 <Workbook filePath="SalerIdenInfo_export.xlsx" name="销售人员奖惩投诉记录信息">
 	<Worksheet javaBean="com.joyintech.tams.report.submitmaintenance.salerideninfo.dto.SalerIdenInfoDto">
 		<Row>
-			<Cell order="1" name="数据状态">dataStatusStr</Cell>
+			<Cell order="1" name="数据状态">statusValidStr</Cell>
 			<Cell order="2" name="销售机构代码">salerInstCode</Cell>
 			<Cell order="3" name="姓名">salerName</Cell>
 			<Cell order="4" name="性别">salerSex</Cell>

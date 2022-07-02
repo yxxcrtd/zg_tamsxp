@@ -334,4 +334,7 @@ public interface ReportHomeMapper {
 	 * @return List<SubmitInformationRegistrationDto>
 	 */
 	List<SubmitInformationRegistrationDto> selectChbAgentPrd(Map<String, Object> parmMap);
+
+	List<SubmitInformationRegistrationDto> selectSubsidiaMonth(Map<String, Object> parmMap);
+
 }

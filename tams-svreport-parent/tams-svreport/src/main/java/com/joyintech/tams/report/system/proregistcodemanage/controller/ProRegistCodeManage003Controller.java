@@ -183,4 +183,20 @@ public class ProRegistCodeManage003Controller extends BaseController {
     public String getProdNameByProdInsId(String prodInsId){
         return proRegistCodeManage003Service.getProdNameByProdInsId(prodInsId);
     }
+
+    /**
+     * 产品名称
+     * @param prodInsId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/selectRegCode")
+    public int selectRegCode(String prodInsId,String regCode){
+        return proRegistCodeManage003Service.selectRegCode(prodInsId,regCode);
+    }
+    @ResponseBody
+    @RequestMapping("/checkRegCode")
+    public int checkRegCode(String regCode){
+        return proRegistCodeManage003Service.checkRegCode(regCode);
+    }
 }

@@ -1,5 +1,7 @@
 package com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
+import com.joyintech.component.svrreport.chb.contant.DictCodeList;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -20,7 +22,7 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
     private String operateType;//操作类型
     private String elementId;//页面元素
     private String pageModel;//页面模型
-    private String dataStatus;//数据状态
+    private String statusValid;//数据状态
     private String disabledThing;//置灰控制
     private String erroOrInfo;//来自erro还是info
     /**
@@ -42,6 +44,27 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
      */
     private transient List<SalerRewPenaInfoDto> selectedItem;
 
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
+
+    // updateFlg 02 不展示  01 显示
+    public String getUpdateFlg() {
+        if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
+            return "02";
+        }else{
+            return "01";
+        }
+    }
+    public String getStatusValidStr() {
+        return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+                getStatusValid());
+    }
+
     public String getOperateType() {
         return operateType;
     }
@@ -58,8 +81,8 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
         this.selectedItem = selectedItem;
     }
 
-    public String getDataStatusStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getDataStatus());
+    public String getStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.维护数据状态, this.getStatus());
     }
 
     public String getSalerRewPenaTyepStr() {
@@ -138,11 +161,4 @@ public class SalerRewPenaInfoDto extends ChbSalerRewPenaInfo implements ProcessE
         this.salerName = salerName;
     }
 
-    public String getDataStatus() {
-        return dataStatus;
-    }
-
-    public void setDataStatus(String dataStatus) {
-        this.dataStatus = dataStatus;
-    }
 }

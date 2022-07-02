@@ -2460,5 +2460,44 @@
 			</if>
 		</if>
 	</select>
+	<select id="selectSubsidiaMonth" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+		SELECT
+		SUM(case when SEND_STATUS ='01' then 1 else 0 END ) as delaynum,
+		min(case when SEND_STATUS ='02' then DATE_FORMAT(SUBMIT_DEADLINE, '%Y-%m-%d') else null END ) as mindate,
+		max(case when SEND_STATUS ='02' then DATE_FORMAT(CHB_SUBMIT_DEADLINE, '%Y-%m-%d') else null END ) as maxdate,
+		SUM(case when SEND_STATUS ='02' then 1 else 0 END ) as delayingnum,
+		SUM(case when SEND_STATUS ='03' then 1 else 0 END ) as sendnum,
+		SUM(case when SEND_STATUS ='04' then 1 else 0 END ) as manualnum,
+		SUM(case when SEND_STATUS ='05' then 1 else 0 END ) as interfPassnum,
+		SUM(case when SEND_STATUS ='06' then 1 else 0 END ) as interfBacknum,
+		null as deletenum, /*删除模版*/
+		null as countType,
+		'27' as reporttype /*月度统计报表*/
+		FROM
+		(
+		SELECT
+		<include refid="sendStatusFlag" />
+		SUBMIT_DEADLINE,
+		CHB_SUBMIT_DEADLINE,
+		ORG_CODE
+		FROM  CHB_MONTH_REPORT_SUB
+		WHERE 1=1
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCode != null and orgCode.size>0">
+			<foreach collection="orgCode" item = "item" open=" and ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		) P
+	</select>
 
 </mapper>

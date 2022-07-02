@@ -1,0 +1,1 @@
+UPDATE sys_page as A,(select MENU_ID,PAGE_ID from sys_menu ) AS B SET A.MENU_ID = B.MENU_ID where A.PAGE_ID = B.PAGE_ID;

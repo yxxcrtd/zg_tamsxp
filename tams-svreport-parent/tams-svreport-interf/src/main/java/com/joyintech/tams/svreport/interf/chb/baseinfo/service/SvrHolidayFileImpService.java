@@ -170,14 +170,6 @@ public class SvrHolidayFileImpService extends FileImpService {
 			if(F.equals(saveFlag)){
 				//全量
 			}else{
-				List<MstHolidayErrodataWithBLOBs> errDataList = Lists.newArrayList();
-				listNE.forEach(e->{
-					MstHolidayErrodataWithBLOBs errodataWithBLOBs = new MstHolidayErrodataWithBLOBs();
-					errodataWithBLOBs.setCalendarId(e.getCalendarId());
-					errodataWithBLOBs.setCdate(e.getCdate());
-					errDataList.add(errodataWithBLOBs);
-				});
-				commonCodeCheckBatchService.deleteMstHolidayErrodata(errDataList);
 				//增量
 				isSucess = mergeData(listNE);
 			}
@@ -232,5 +224,4 @@ public class SvrHolidayFileImpService extends FileImpService {
         logger.info("节假日插入结束--------------" + new Date());
         return  isSuccess;
 	}
-
 }

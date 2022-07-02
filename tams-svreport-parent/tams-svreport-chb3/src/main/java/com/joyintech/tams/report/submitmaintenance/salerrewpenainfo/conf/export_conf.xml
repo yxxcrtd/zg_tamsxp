@@ -2,7 +2,7 @@
 <Workbook filePath="SalerRewPenaInfo_export.xlsx" name="销售人员奖惩投诉记录信息">
 	<Worksheet javaBean="com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto">
 		<Row>
-			<Cell order="1" name="数据状态">statusStr</Cell>
+			<Cell order="1" name="数据状态">statusValidStr</Cell>
 			<Cell order="2" name="销售机构代码">salerInstCode</Cell>
 			<Cell order="3" name="内部编号">salerInsNo</Cell>
 			<Cell order="4" name="记录分类">salerRewPenaTyepStr</Cell>

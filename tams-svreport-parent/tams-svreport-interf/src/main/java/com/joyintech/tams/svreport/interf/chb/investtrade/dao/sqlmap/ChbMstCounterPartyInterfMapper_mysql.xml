@@ -381,11 +381,8 @@
 				<if test="item.isCentralCounter != null">
 					IS_CENTRAL_COUNTER = #{item.isCentralCounter,jdbcType=VARCHAR},
 				</if>
-				<if test='item.status != null and item.status != "D"'>
-					STATUS = 'M',
-				</if>
-				<if test='item.status != null and item.status == "D"'>
-					STATUS = 'D'
+				<if test='item.status != null'>
+					STATUS = #{item.status,jdbcType=VARCHAR}
 				</if>
 			</set>
 			where COUNTER_ID = #{item.counterId,jdbcType=VARCHAR}

@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.monthcollect.dao;
 
 import com.joyintech.tams.svreport.chb.monthcollect.dto.ChbMonthCollect;
+import com.joyintech.tams.svreport.chb.monthcollect.dto.PrdPeriodyieldForMonthCollect;
 import com.joyintech.tams.svreport.chb.monthcollect.dto.ccyExcharge;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -85,4 +86,6 @@ public interface SvrMonthCollectInterfMapper {
 	List<ccyExcharge> USDExchange(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
 	//	获取美元转人民币汇率
 	ccyExcharge USDExchangeCNY(@Param("exchangeSource")String exchangeSource,@Param("batchDateStart")String batchDateStart,@Param("batchDateEnd")String batchDateEnd);
+	//获取最新净值
+	List<PrdPeriodyieldForMonthCollect> getPrdPeriodyield(@Param("batchDateStart")String batchDateStart, @Param("batchDateEnd")String batchDateEnd);
 }

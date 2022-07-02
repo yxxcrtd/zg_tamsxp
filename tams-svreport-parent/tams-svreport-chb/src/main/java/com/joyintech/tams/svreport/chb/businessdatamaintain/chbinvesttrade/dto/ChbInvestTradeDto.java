@@ -55,6 +55,14 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
      */
     private String statusValid;
 
+    public String getStatusValid() {
+        return statusValid;
+    }
+
+    public void setStatusValid(String statusValid) {
+        this.statusValid = statusValid;
+    }
+
     // updateFlg 02 不展示  01 显示
     public String getUpdateFlg() {
         if(!StringUtil.isEmpty(statusValid) && StringUtil.equals(DictCodeList.维护数据状态_删除.getValue(), statusValid)){
@@ -67,14 +75,6 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
     public String getStatusValidStr() {
         return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
                 getStatusValid());
-    }
-
-    public String getStatusValid() {
-        return statusValid;
-    }
-
-    public void setStatusValid(String statusValid) {
-        this.statusValid = statusValid;
     }
 
 
@@ -158,7 +158,7 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         this.assetName = assetName;
     }
     public String getCcyStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.币种,getCcy());
+        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债,getCcy());
     }
     public String getAssetMethodStr(){
         return SysDataUtil.getNameFromDataDict(DictCode.资产计量方式,getAssetMethod());
@@ -167,7 +167,7 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.资金流动类型,getCurAssetType());
     }
     public String getRivalPartyTypeStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.交易对手类型,getRivalPartyType());
+        return SysDataUtil.getNameFromDataDict(DictCode.对手方类型,getRivalPartyType());
     }
     public String getDealdateStr(){
         return null !=getDealdate()? DateUtil.format(getDealdate()):null;

@@ -7,6 +7,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.chb.basicdata.perprodeclareinfo.dao.SvrPerProDeclareInfoMapper;
@@ -58,7 +59,8 @@ public class SvrPerProDeclareInfoMService extends CommonExportService<SvrPerProD
         dto.setCreateUser(CommonUtil.getUserName());
         dto.setUpdateUser(CommonUtil.getUserName());
 
-        dto.setDeclareUuid(UUID.randomUUID().toString().replace("-", "").toUpperCase() + (new Random().nextInt(8998)+1000) + "");
+        //之前的生成主键有问题
+        dto.setDeclareUuid(IDGenerator.generate(36));
         dto.setStatus("E");
 
         int num = svrPerProDeclareInfoMapper.insertSvrPerProDeclareInfo(dto);
@@ -1087,7 +1089,7 @@ public class SvrPerProDeclareInfoMService extends CommonExportService<SvrPerProD
             // 备注
             dto.setRemark(list.get(63));
             // 主键
-            dto.setDeclareUuid(UUID.randomUUID().toString().replace("-", "").toUpperCase() + (new Random().nextInt(8998)+1000) + "");
+            dto.setDeclareUuid(IDGenerator.generate(36));
             returnInfoList.add(dto);
 
         }

@@ -66,67 +66,13 @@
         }
         if(getElementById('guaType').val()==''){
             getElementById('guaTypeRemark').val('').attr('disabled', true).trigger('change');
+            //当担保方式空值时,需要清空然后置灰
+            getElementById('pledgeType').val('').attr('disabled', true).trigger('change');
+            getElementById('pledgeValue').val('').attr('disabled', true).trigger('change');
+            getElementById('relationFinan').val('').attr('disabled', true).trigger('change');
+            getElementById('natureGuarantee').val('').attr('disabled', true).trigger('change');
         }else{
             getElementById('guaTypeRemark').attr('disabled', false);
-        }
-
-        var repAssetType = $('#assetType2').val();
-        if(repAssetType =='2299' || repAssetType =='1599' || repAssetType=='1399'){
-            getElementById('guaType').val('').attr('disabled', true);
-        }else{
-            getElementById('guaType').val('').attr('disabled', false);
-        }
-    }
-
-    /**
-     * 担保人与融资人关系
-     */
-    function otherRelationFinan() {
-        var repAssetType = $('#assetType2').val();
-        if(repAssetType != '1299' && repAssetType != ''){
-            getElementById('relationFinan').val('').attr('disabled', true);
-        }else{
-            if(getElementById('guaType').val()==''){
-                getElementById('relationFinan').val('').attr('disabled', true);
-            }
-        }
-    }
-
-    /**
-     * 抵质押物价值（元）
-     */
-    function otherPledgeValue() {
-        var repAssetType = $('#assetType2').val();
-        if(repAssetType != '1299' && repAssetType != ''){
-            getElementById('pledgeValue').attr('disabled', true);
-        }else{
-            if(getElementById('guaType').val()==''){
-                getElementById('pledgeValue').attr('disabled', true);
-            }
-        }
-    }
-
-    /**
-     * 担保性质
-     */
-    function otherNatureGuarantee() {
-        var repAssetType = $('#assetType2').val();
-        if(repAssetType != '1299' && repAssetType != ''){
-            getElementById('natureGuarantee').val('').attr('disabled', true);
-        }else{
-            if(getElementById('guaType').val()==''){
-                getElementById('natureGuarantee').val('').attr('disabled', true);
-            }
-        }
-    }
-
-    /**
-     * 是否为债转股
-     */
-    function otherDeptEquity() {
-        var repAssetType = $('#assetType2').val();
-        if(repAssetType=='1299' || repAssetType=='2299' || repAssetType=='1599'){
-            getElementById('deptEquity').val('').attr('disabled', true);
         }
     }
 
@@ -134,10 +80,6 @@
         otherrepRateFlagChangeType();
         otherindustryFlagChangeType();
         otherbyRepGuaType();
-        otherRelationFinan();
-        otherPledgeValue();
-        otherNatureGuarantee();
-        otherDeptEquity();
         //是否有预期收益率
         getElementById('rateFlag').change(function(){
             otherrepRateFlagChangeType();
@@ -155,26 +97,6 @@
         //担保方式事件 中债新增 20200407 end
         getElementById('guaType').change(function(){
             otherbyRepGuaType();
-        });
-
-        //担保人与融资人关系  20220621
-        getElementById('relationFinan').change(function(){
-            otherRelationFinan();
-        });
-
-        //抵质押物价值（元）  20220621
-        getElementById('pledgeValue').change(function(){
-            otherPledgeValue();
-        });
-
-        //担保性质  20220621
-        getElementById('natureGuarantee').change(function(){
-            otherNatureGuarantee();
-        });
-
-        //是否为债转股  20220621
-        getElementById('deptEquity').change(function(){
-            otherDeptEquity();
         });
     });
 

@@ -43,7 +43,7 @@
         erro.SALER_ORG_CODE       as salerOrgCode,
         erro.SALER_ORG_NAME       as salerOrgName,
         erro.SALER_ORG_LEVEL      as salerOrgLevel,
-        'A'                       as dataStatus,
+        'A'                       as statusValid,
         erro.DATA_DATE            as dataDate,
         erro.WORKFLOW_ID          as workflowId,
         null                      as remark,
@@ -69,7 +69,7 @@
         info.SALER_ORG_CODE       as salerOrgCode,
         info.SALER_ORG_NAME       as salerOrgName,
         info.SALER_ORG_LEVEL      as salerOrgLevel,
-        info.STATUS               as dataStatus,
+        info.STATUS               as statusValid,
         info.DATA_DATE            as dataDate,
         null                      as workflowId,
         info.REMARK               as remark,
@@ -85,7 +85,7 @@
         <if test="status != null and status != ''">
             and info.STATUS = #{status,jdbcType=VARCHAR}
         </if>
-        ) ORDER BY dataStatus DESC
+        ) ORDER BY statusValid DESC
     </select>
 
     <!--    删除检查-->

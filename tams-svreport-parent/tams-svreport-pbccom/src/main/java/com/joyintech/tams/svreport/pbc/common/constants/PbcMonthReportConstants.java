@@ -114,6 +114,8 @@ public class PbcMonthReportConstants {
 
     public static final String PBC_ASSETTYPE2_R02= "R02";//其他
 
+    public static final String PBC_ASSETTYPE2_R03= "R03";//1108买入返售
+
     public static final String PBC_ASSETTYPE2_Q01= "Q01";//贷款收益权
 
     public static final String PBC_ASSETTYPE2_Q02= "Q02";//债务证券收益权

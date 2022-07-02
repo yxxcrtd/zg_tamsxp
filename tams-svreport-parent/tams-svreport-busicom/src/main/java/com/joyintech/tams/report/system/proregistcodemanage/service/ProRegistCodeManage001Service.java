@@ -326,6 +326,8 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
     private List<ExcelValidDto> convertToEntity(List<List<String>> dataList,
                                                 List<ChbPrdresistCode> entities, Map<String, String> box,String orgCode) {
         List<ExcelValidDto> checkResult = new ArrayList<>();
+        //产品基本信息中存在的产品代码及产品登记编码
+        Map<String,String> prodBaseInfoMap = proRegistCodeManage001Mapper.selectProdBaseInfo().stream().collect(JoyinCollectors.toMap(x->x.get("prodInsId"),x->x.get("regCode")));
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             if (null == list || list.size() != 9) {
@@ -361,8 +363,12 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 
 //                }
             }
-            if(StringUtils.isNotEmpty(list.get(4))){
-                entity.setProdid(list.get(4));
+            if(StringUtils.isNotEmpty(list.get(3))){
+                if (StringUtil.isNotEmpty(prodBaseInfoMap.get(list.get(3)))) {
+                    message.add("已经在产品基本信息维护模块中使用了的产品登记编码信息，不允许覆盖！");
+                }else{
+                    entity.setProdid(list.get(3));
+                }
             }
             if(StringUtils.isNotEmpty(list.get(5))){
                 entity.setOperateMode(list.get(5).split(" ")[0]);

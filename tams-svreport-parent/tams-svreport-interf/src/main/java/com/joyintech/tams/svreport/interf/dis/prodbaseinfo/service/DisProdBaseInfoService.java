@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -271,6 +272,28 @@ public class DisProdBaseInfoService extends FileImpService {
             BUSINESSKEY_DIS_PRD_BASEINFO);
         ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(
             InterfDefine.产品基本信息接口数据.getCode());
+        if (interfConfig == null) {
+            logger.info("CHB_INTERF_CONFIG表中无配置项！");
+            return "fail";
+        }
+        String saveFlag = interfConfig.getContentType();
+        return saveData(listData, saveFlag, interfFile.getDataSource());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String importDB(List<ExcelValidDto> listExcel,List<Map<String, String>> listData, InterfFile interfFile, String date) {
+        if(CollectionUtils.isEmpty(listData)){
+            return "success";
+        }
+        // 数据检查
+        checkData(listData, interfFile.getFilename(), InterfDefine.产品基本信息接口数据.getCode(),
+                InterfDefine.数据检查类型_产品基本信息接口.getCode(), BUSINESSKEY_DIS_PRD_BASEINFO,
+                BUSINESSKEY_DIS_PRD_BASEINFO);
+        ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(
+                InterfDefine.产品基本信息接口数据.getCode());
         if (interfConfig == null) {
             logger.info("CHB_INTERF_CONFIG表中无配置项！");
             return "fail";
