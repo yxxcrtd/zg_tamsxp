@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Lists;
@@ -161,7 +162,11 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
         }
         if(dto!=null&&dto.getProdId()!=null){
                 Map<String,String> map=chbPrdBaseInfoDao.selectRegCodeByProdId(dto.getProdId());
-                dto.setRegCode(map.get("REG_CODE"));//从产品登记编码带值
+                //从产品登记编码带值
+                if (CollectionUtil.isNotEmpty(map)) {
+                    dto.setRegCode(map.get("REG_CODE"));
+                }
+
         }
         return dto;
     }
