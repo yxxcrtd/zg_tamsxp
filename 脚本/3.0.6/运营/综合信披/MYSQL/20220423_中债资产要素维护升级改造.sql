@@ -204,7 +204,7 @@ values ('ASSET_INFO_DETAIL_RULE_1006-bondtostockFlag-002', 'AssetInfoRegist002',
 
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_PRO_STYLE' AND ITEM_CODE = '99';
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('SVR_PRO_STYLE', '99', '其他', 3, '0', 'system', null, now(), 'system', n, null);
+values ('SVR_PRO_STYLE', '99', '其他', 3, '0', 'system', null, now(), 'system', now(), null);
 
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE CHECKMETHOD IN ('isCustomizedString','lessThanCharLength') AND SRCPROPERTY = 'remark' AND PAGE_ID = 'AssetInfoRegist002';
 
