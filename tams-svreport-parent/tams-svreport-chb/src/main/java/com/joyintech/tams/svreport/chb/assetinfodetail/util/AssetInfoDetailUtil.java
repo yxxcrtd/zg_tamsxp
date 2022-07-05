@@ -1002,7 +1002,7 @@ public class AssetInfoDetailUtil {
         dto.setInvestType(list.get(headList.indexOf("资金运用方式")));
         dto.setCapUseInduLevel2(SysDataUtil.getZZDictCodeFromName(DictCode.机构所属行业二级分类, list.get(headList.indexOf("资金运用行业"))));
         dto.setCapUseIndu(dict.get("industry"+dto.getCapUseInduLevel2()));
-        dto.setProProperty(SysDataUtil.getZZDictCodeFromName(DictCode.管理方式_发行登记, list.get(headList.indexOf("委外投资属性"))));
+        dto.setProProperty(SysDataUtil.getZZDictCodeFromName(DictCode.委外投资属性_中债, list.get(headList.indexOf("委外投资属性"))));
         dto.setRateFlag(SysDataUtil.getZZDictCodeFromName(DictCode.是否_中债, list.get(headList.indexOf("是否有预期收益率"))));
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("预期最高收益率")))) {
             if (CommonUtil.isFloatNumeric(list.get(headList.indexOf("预期最高收益率")))){
