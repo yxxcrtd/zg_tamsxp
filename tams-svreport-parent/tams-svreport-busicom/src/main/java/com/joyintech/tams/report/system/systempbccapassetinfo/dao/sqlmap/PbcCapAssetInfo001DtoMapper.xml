@@ -285,7 +285,7 @@
             </foreach>
         </if>
         <if test="keyList != null and keyList.size > 0">
-            and t.ASSET_UUID in
+            and b.ASSET_UUID in
             <foreach collection="keyList" open="(" close=")" separator="," item="item">
                 #{item,jdbcType=VARCHAR}
             </foreach>
