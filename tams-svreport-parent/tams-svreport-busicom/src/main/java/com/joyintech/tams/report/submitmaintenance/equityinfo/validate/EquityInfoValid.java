@@ -10,10 +10,7 @@
 
 package com.joyintech.tams.report.submitmaintenance.equityinfo.validate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -3359,7 +3356,7 @@ public class EquityInfoValid {
         // 查询参数
         Map<String, Object> paramMap = new HashMap<>();
 
-        List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = null;
+        List<EquityInfoRegist001Dto> equityInfoRegist001DtoList = new LinkedList<>();
         List<EquityInfoRegist001Dto> equityInfoRegist001DtoListTemp = null;
         // 所有 bankCode indentifyMark 列表
         for (int i = 0; i < dataList.size(); i++) {
@@ -3373,7 +3370,7 @@ public class EquityInfoValid {
             paramMap.put("bankCodeList", bankCodeList);
             paramMap.put("indentifyMarkList", indentifyMarkList);
             equityInfoRegist001DtoList = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
-            paramMap = null;
+            paramMap.clear();
         } else {
             // 分批处理
             int part = dataCount / 1000;
@@ -3384,7 +3381,7 @@ public class EquityInfoValid {
                 equityInfoRegist001DtoListTemp = equityInfoRegist001Mapper.queryAllForEquityInfo(paramMap);
                 bankCodeList.subList(0, 1000).clear();
                 indentifyMarkList.subList(0, 1000).clear();
-                paramMap = null;
+                paramMap.clear();
                 // 追加临时列表的数据
                 equityInfoRegist001DtoList.addAll(equityInfoRegist001DtoListTemp);
             }
