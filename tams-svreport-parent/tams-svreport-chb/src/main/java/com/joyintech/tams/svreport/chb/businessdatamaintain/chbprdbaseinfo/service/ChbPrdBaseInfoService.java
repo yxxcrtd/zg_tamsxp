@@ -182,6 +182,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     }
 
     public List<ChbPrdBaseInfoDto> selectAll(Map<String, Object> params) {
+        params.put("customerTypeList", StringUtil.isNotEmpty(params.get("customerType"))?(params.get("customerType").toString().split(",")):null);
+        params.put("issuingStatusList", StringUtil.isNotEmpty(params.get("issuingStatus"))?(params.get("issuingStatus").toString().split(",")):null);
         return chbPrdBaseInfoDao.selectAll(params);
     }
 

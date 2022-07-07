@@ -115,7 +115,7 @@
 		<!-- dingzhipeng add end 2017-10-23 -->
 		<!-- 选中导出使用的参数 -->
 		<if test="keys != null and keys.size() > 0">
-			<foreach collection="keys" item="key" open=" AND ORG_CODE || '|' || PRODID IN (" close=")" separator=",">
+			<foreach collection="keys" item="key" open=" AND CONCAT_WS('|',ORG_CODE,PRODID) IN (" close=")" separator=",">
 				#{key,jdbcType=VARCHAR}
 			</foreach>
 		</if>
