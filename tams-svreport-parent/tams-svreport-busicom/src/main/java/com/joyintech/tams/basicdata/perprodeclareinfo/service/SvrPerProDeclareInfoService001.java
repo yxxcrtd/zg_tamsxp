@@ -331,7 +331,19 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
                                 logger.error(e.getMessage(), e);
                             }
                         }else{
-                            m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                            //add by zhoubin 20220707 start
+                            //投资者风险偏好支持多选, 单独处理成用逗号分割
+                            if (Objects.equals("RISK_TYPE",config.getRealColumnId())) {
+                                List<String> riskTypeList=new LinkedList<>();
+                                List<String> splitList = Arrays.asList(StringUtils.split(m.get(config.getRealColumnId()),","));
+                                splitList.forEach(e->{
+                                    riskTypeList.add(e.split(" ")[0]);
+                                });
+                                m.put(config.getRealColumnId(),String.join(",",riskTypeList));
+                            } else {
+                                m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                            }
+                            //add by zhoubin 20220707 end
                         }
                     }
                 }
