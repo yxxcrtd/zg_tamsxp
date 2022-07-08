@@ -385,13 +385,13 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 						this.getMessage("REPORT_COMMON_FILE_E_0001", "文件内容")));
 				continue;
 			}
-			for (int j = i + 1; j < dataList.size(); j++) {
-				if (StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))) {
-					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),
-							"第" + (i + 1) + "行"+"人行代码与" + "第" + (j + 1) + "行人行代码相同！"));
-					//buffer.append("第" + (i + 1) + "行"+"产品代码与" + "第" + (j + 1) + "行产品代码相同！");
-				}
-			}
+//			for (int j = i + 1; j < dataList.size(); j++) {
+//				if (StringUtils.equals(dataList.get(i).get(2), dataList.get(j).get(2))) {
+//					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),
+//							"第" + (i + 1) + "行"+"人行代码与" + "第" + (j + 1) + "行人行代码相同！"));
+//					//buffer.append("第" + (i + 1) + "行"+"产品代码与" + "第" + (j + 1) + "行产品代码相同！");
+//				}
+//			}
 			ProPeoplebankcodeManagement001Dto entity = new ProPeoplebankcodeManagement001Dto();
 			// 验证消息
 			List<String> message = new ArrayList<>();
