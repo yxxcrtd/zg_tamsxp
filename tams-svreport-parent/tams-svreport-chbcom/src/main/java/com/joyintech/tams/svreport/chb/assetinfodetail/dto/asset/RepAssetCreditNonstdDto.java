@@ -174,7 +174,11 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
      */
     private String repFinArea;
 
-
+    /**
+     * 融资人所属地区
+     */
+    private String repFinAreaLevel2;
+    
     /**
      * 融资人组织机构代码
      */
@@ -827,6 +831,13 @@ public class RepAssetCreditNonstdDto extends BaseEntity {
         this.repFinArea = repFinArea == null ? null : repFinArea.trim();
     }
 
+    public String getRepFinAreaLevel2() {
+        return repFinAreaLevel2;
+    }
+
+    public void setRepFinAreaLevel2(String repFinAreaLevel2) {
+        this.repFinAreaLevel2 = repFinAreaLevel2;
+    }
 
     /**
      * 取得 融资人组织机构代码

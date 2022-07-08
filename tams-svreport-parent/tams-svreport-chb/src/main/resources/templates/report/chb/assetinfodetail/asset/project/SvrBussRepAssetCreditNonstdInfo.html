@@ -823,13 +823,35 @@
                 <div class="form-inline-wrap">
                     <label class="layui-form-label form-label-wrap"
                            data-th-text="#{SvrBussRepAssetCreditNonstdInfo.repFinArea}">融资人所属地区</label>
-                    <div class="layui-input-inline input-inline">
+                    <div class="layui-input-inline input-inline"
+                         style="width: 30%!important;display: inline-block;">
+                        <select th:id="|${entityName}_repFinAreaLevel2|"
+                                th:name="|${entityName}.repFinAreaLevel2|"
+                                th:childrenIds="|${entityName}_repFinArea|"
+                                th:initValue="${entity?.repFinAreaLevel2}"
+                                data-th-data-result="${ADMINISTRATIVE_TYPE1}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}" required>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline input-inline"
+                         style="width: 30%!important;display: inline-block;">
+                        <select th:id="|${entityName}_repFinArea|"
+                                th:name="|${entityName}.repFinArea|"
+                                th:initValue="${entity?.repFinArea}"
+                                data-th-parentids="|${entityName}_repFinAreaLevel2|"
+                                data-th-data-result="${ADMINISTRATIVE_TYPE2}"
+                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                data-th-placeholder="#{SysCommon.placeholder}">
+                        </select>
+                    </div>
+                    <!--<div class="layui-input-inline input-inline">
                         <select th:id="|${entityName}_repFinArea|" th:name="|${entityName}.repFinArea|"
                                 th:initValue="${entity?.repFinArea}" class="layui-input form-input input-select"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required
                                 data-th-data-result="${ADMINISTRATIVE_TYPE2}">
                         </select>
-                    </div>
+                    </div>-->
                 </div>
 
 

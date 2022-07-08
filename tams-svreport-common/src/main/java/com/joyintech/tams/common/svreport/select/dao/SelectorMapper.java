@@ -21,6 +21,7 @@ public interface SelectorMapper {
 
     List<SelectOptionDto> getPbcCapAssetInfo(Map<String, Object> param);
 
-
     MstCustomerInfoAdd getCustomerInfo(Map<String, Object> param);
+
+    String getSysDataLink(String code);
 }

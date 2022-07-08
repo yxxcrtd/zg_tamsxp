@@ -3,6 +3,9 @@ package com.joyintech.tams.svreport.chb.assetinfodetail.asset.project.controller
 import com.joyintech.framework.annotation.SubPageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -15,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 非标准化债权类资产/新增可投资资产--中债报送
@@ -55,8 +59,23 @@ public class SvrBussRepAssetCreditNonstdInfoController extends BaseController{
                 DictCode.重点监控行业和领域类别,DictCode.担保方式,DictCode.资产评级,DictCode.计息基础_中债,
                 DictCode.发行机构类型_按技术领域划分,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分
                 ,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.行政区划_市,DictCode.资产评级,DictCode.人行机构规模,DictCode.受让形式
-                ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
+                ,DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类,DictCode.行政区划_省}
          );
+
+        // 维度值
+        List<SelectOptionDto> list = super.getSelectOption(DictCode.行政区划_市);
+        if(StringUtil.isNotEmpty(list)){
+            for(int i = 0 ; i<list.size() ; i++){
+                if(StringUtil.equals(list.get(i).getId(),"110200") || StringUtil.equals(list.get(i).getId(),"120200") || StringUtil.equals(list.get(i).getId(),"310200")
+                        ||StringUtil.equals(list.get(i).getId(),"419000")||StringUtil.equals(list.get(i).getId(),"429000")||StringUtil.equals(list.get(i).getId(),"469000")
+                        ||StringUtil.equals(list.get(i).getId(),"500200")||StringUtil.equals(list.get(i).getId(),"659000")){
+                    list.remove(i);
+                    i--;
+                }
+            }
+        }
+        model.addAttribute("ADMINISTRATIVE_TYPE2", JsonUtils.objectArray2Json(list.toArray()));
+
         //中债新增数据字典
         setSelectOptionToModel(model, DictCode.计息类型);
         setSelectOptionToModel(model, DictCode.利息分布方式);
