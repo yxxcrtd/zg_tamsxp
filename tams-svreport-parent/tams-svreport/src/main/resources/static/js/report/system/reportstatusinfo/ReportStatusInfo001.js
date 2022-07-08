@@ -8,6 +8,7 @@ var ReportStatusInfo001 = function() {
             obj.startDate = $('#reportDate').startDate();
             obj.endDate = $('#reportDate').endDate();
             $('#registSeqNo').val("");
+            obj.repStatus =  $('#repStatus').val();
             return obj;
         },
         table : $('#ReportStatusTable').joyintable({
