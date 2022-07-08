@@ -158,12 +158,14 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
                 dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbPrdBaseinfoErrodataWithBLOBsDto.getOrgData());
                 dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
                 dto.setProduuid(produuid);
-                //产品投资性质
-                dto.setIvstorientation(prdDeclareInfoDto.getIvstorientation());
-                //产品运作模式
-                dto.setOperateMode(prdDeclareInfoDto.getOperateMode());
-                //是否现金管理类
-                dto.setCashManaCate(prdDeclareInfoDto.getCashManaCate());
+                if (prdDeclareInfoDto != null) {
+                    //产品投资性质
+                    dto.setIvstorientation(prdDeclareInfoDto.getIvstorientation());
+                    //产品运作模式
+                    dto.setOperateMode(prdDeclareInfoDto.getOperateMode());
+                    //是否现金管理类
+                    dto.setCashManaCate(prdDeclareInfoDto.getCashManaCate());
+                }
             }
         }else{
              dto = chbPrdBaseInfoDao.selectByKey(produuid);
