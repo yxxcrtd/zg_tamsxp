@@ -44,7 +44,7 @@ public interface ChbInvestTradeDao {
 
     int countDuplicatedData(@Param("list") List<Map<String, String>> list);
 
-    int selectByBusinessKey(@Param("prodId") String prodId,@Param("tradeCode") String tradeCode,@Param("assetCode") String assetCode);
+    int selectByBusinessKey(@Param("tradeCode") String tradeCode);
 
     List<ChbInvestTradeDto> selectByKeys(@Param("list") List<String> list);
 
