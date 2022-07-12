@@ -86,6 +86,9 @@ public class InvestorsHoldInfo001Controller extends BaseController {
             model.addAttribute("MY_AGENCY_CODE",myOrgCode);
 //            model.addAttribute("AGENCY_CODE_LIST",JsonUtils.objectArray2Json(CommonUtil.getOrgCodeList(myOrgCode).toArray()));
         }
+        String dateStr = DateUtil.format(new Date());
+        model.addAttribute("DATE_START",dateStr);
+        model.addAttribute("DATE_END",dateStr);
         model.addAttribute("statusE", DictCodeListExt1.维护数据状态_有效.getValue());
         super.setSelectOptionToModel(model, DictCode.维护数据状态);
         return super.init(model);
