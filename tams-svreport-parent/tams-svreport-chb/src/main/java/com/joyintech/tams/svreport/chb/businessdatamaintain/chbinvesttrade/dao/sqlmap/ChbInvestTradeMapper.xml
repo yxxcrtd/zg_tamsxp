@@ -471,7 +471,7 @@ where b.PROD_NAME=#{prodName}
         and status = 'E'
     </select>
     <select id="selectByBusinessKey" resultType="java.lang.Integer">
-        select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
+        select count(1) from CHB_INVEST_TRADE where TRADE_CODE =#{tradeCode}
     </select>
     <select id="selectByKeys" resultMap="BaseResultMap">
         select * from (

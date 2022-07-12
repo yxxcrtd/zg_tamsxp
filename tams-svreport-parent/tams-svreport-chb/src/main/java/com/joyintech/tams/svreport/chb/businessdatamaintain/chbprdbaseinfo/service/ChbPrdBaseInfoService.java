@@ -153,9 +153,19 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
         if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),status)){
             ChbPrdBaseinfoErrodataWithBLOBsDto chbPrdBaseinfoErrodataWithBLOBsDto = chbPrdBaseinfoErrodataDao.selectByPrimaryKey(produuid);
             if(chbPrdBaseinfoErrodataWithBLOBsDto !=null){
+                //查询产品申报信息
+                ChbPrdDeclareInfoDto prdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(chbPrdBaseinfoErrodataWithBLOBsDto.getProdId());
                 dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbPrdBaseinfoErrodataWithBLOBsDto.getOrgData());
                 dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
                 dto.setProduuid(produuid);
+                if (prdDeclareInfoDto != null) {
+                    //产品投资性质
+                    dto.setIvstorientation(prdDeclareInfoDto.getIvstorientation());
+                    //产品运作模式
+                    dto.setOperateMode(prdDeclareInfoDto.getOperateMode());
+                    //是否现金管理类
+                    dto.setCashManaCate(prdDeclareInfoDto.getCashManaCate());
+                }
             }
         }else{
              dto = chbPrdBaseInfoDao.selectByKey(produuid);
