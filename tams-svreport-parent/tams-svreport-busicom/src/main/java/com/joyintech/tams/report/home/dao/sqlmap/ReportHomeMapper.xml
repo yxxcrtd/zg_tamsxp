@@ -448,7 +448,7 @@
 	    interfBack.interfBacknum as interfBacknum,/*接口退回*/
 	    deleteTemp.deletenum as deletenum,/*删除模版*/
 	    deleteTemp.countType as countType,
-	   	'28' as reporttype /*投资者持有信息*/
+	   	'26' as reporttype /*投资者持有信息*/
 	   	FROM
 	   	(select count(ciis1.SUBMIT_STATUS) as delaynum from CHB_EQUDET_SUB  ciis1 WHERE to_char(ciis1.CHB_SUBMIT_DEADLINE,'yyyy-mm-dd') &lt; to_char(#{searchDate,jdbcType=TIMESTAMP},'yyyy-mm-dd') and  ciis1.SUBMIT_STATUS=#{NO_SUBMIT}
 	   	<if test="createDeptList != null and createDeptList.size>0">

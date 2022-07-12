@@ -322,7 +322,7 @@ public class ReportHomeService{
 						break;
 					case 投资者持有信息_PAGEID: menulist1.add(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
 						break;
-					case 投资者明细信息_PAGEID: menulist1.add("28");
+					case 投资者明细信息_PAGEID: menulist1.add(DictCodeListExt2.报表名称_投资者明细信息登记.getValue());
 						break;
 					case 人行报表_PAGEID: menulist1.add(DictCodeListExt2.报表名称_人行月度统计报表.getValue());
 						break;
