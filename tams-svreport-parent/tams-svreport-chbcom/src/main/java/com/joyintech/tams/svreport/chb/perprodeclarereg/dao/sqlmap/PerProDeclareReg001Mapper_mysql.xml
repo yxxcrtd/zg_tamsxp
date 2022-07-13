@@ -66,6 +66,7 @@
 		<result column="CREDIT_MODE" property="creditMode" />
 		<result column="REMARK" property="remark" />
 		<result column="NINE_FILE" property="nineFile" />
+		<result column="TEN_FILE" property="tenFile" />
 		<result column="FILE_NO" property="fileNo" />
 		<result column="PRE_REG_DATE" property="preRegDate" />
 		<result column="PRE_APP_DATE" property="preAppDate" />
@@ -512,8 +513,9 @@
 		baseinfo.INVEST_FEE_RATE,/*投资管理费率%*/
 		baseinfo.STATUS STATUS,
 		sub.NINE_FILE,
-		sub.FILE_NO,
-		sub.FILE_NUM,
+		baseinfo.TEN_FILE,
+		baseinfo.FILE_NO,
+		baseinfo.FILE_NUM,
 		baseinfo.IS_FHXGCP,
 		baseinfo.PRD_SPEC_PROPERTY
 		from CHB_PRD_DECLARE_INFO baseinfo
@@ -918,7 +920,7 @@
         #{creditType,jdbcType=VARCHAR},
         #{creditMode,jdbcType=VARCHAR},
         #{remark,jdbcType=VARCHAR} ,
-        #{nineFile,jdbcType=VARCHAR} ,
+        #{tenFile,jdbcType=VARCHAR} ,
         #{fileNo,jdbcType=VARCHAR} ,
         #{preRegDate,jdbcType=DATE}  ,
         #{preAppDate,jdbcType=DATE}  ,

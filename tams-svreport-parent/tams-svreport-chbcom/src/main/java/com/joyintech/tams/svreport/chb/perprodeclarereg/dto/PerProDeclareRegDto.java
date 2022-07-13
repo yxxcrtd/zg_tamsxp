@@ -367,6 +367,11 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
      * 九大附件
      */
     private String nineFile;
+    /**
+     * 十大附件
+     */
+    private String tenFile;
+
 
     /**
      * 文件代码
@@ -1542,6 +1547,15 @@ public class PerProDeclareRegDto extends BaseEntity implements ITableRow{
      */
     public void setNineFile(String nineFile) {
         this.nineFile = nineFile == null ? null : nineFile.trim();
+    }
+
+
+    public String getTenFile() {
+        return tenFile;
+    }
+
+    public void setTenFile(String tenFile) {
+        this.tenFile = tenFile;
     }
 
     /**
