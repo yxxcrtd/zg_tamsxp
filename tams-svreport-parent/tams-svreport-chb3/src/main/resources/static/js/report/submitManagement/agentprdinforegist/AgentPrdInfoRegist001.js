@@ -54,6 +54,7 @@ $(function(){
             ,{field: 'submitTimeStr', title: "报送日期",visible:false, width:150,sortField:'submitTime'}
             ,{field: 'submitTime', title: "报送日期", type:'datetime', width:150,sortField:'submitTime'}
             ,{field: 'chbSubmitDeadline', title: "报送截止日", type:'date', width:100,sortField:'chbSubmitDeadline'}
+            ,{field: 'dataDateStr', title: "数据日期", width:100,sortField:'dataDate'}
             ,{field: 'submitFeedbackStatusStr', title: "反馈状态", width:100,sortField:'submitFeedbackStatus'}
             ,{field: 'issuePartyId', title: '发行机构代码', width:120,sortField:'issuePartyId'}
             ,{field: 'agentInstitutionCode', title: '代理销售机构代码', width:100,sortField:'agentInstitutionCode'}

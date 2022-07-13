@@ -28,6 +28,7 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
     private String regCode;
     private String assetName;
     private String orgData;
+    private String counterName;
 
 
     /**
@@ -182,5 +183,13 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
 
     public void setOrgData(String orgData) {
         this.orgData = orgData;
+    }
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
     }
 }

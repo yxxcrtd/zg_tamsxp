@@ -1,0 +1,23 @@
+delete from CHB_DATACHECK_RULE_INV
+ where checkruleid in
+       ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000329',
+        'ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000330',
+        'ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000331',
+        'ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000332',
+        'ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000333');
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000329', 'AssetInfoRegist002', 'isNumber2', 'svrBussRepQDIIStructureInfoDto.maxYield', null, '8,5', 'Y', '结构性票据最高收益率以百分数形式表示时必须为n(8,5)格式。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000330', 'AssetInfoRegist002', 'compareValueAsNumber', 'svrBussRepQDIIStructureInfoDto.maxYield', '>=', '0', 'Y', '结构性票据最高收益率必须大于等于0。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000331', 'AssetInfoRegist002', 'isNotEmpty', 'svrBussRepQDIIStructureInfoDto.maxYield', null, null, 'N', '结构性票据最高收益率要素不可为空', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000332', 'AssetInfoRegist002', 'comparePropertyAsNumber', 'svrBussRepQDIIStructureInfoDto.minYield', '<=', 'svrBussRepQDIIStructureInfoDto.maxYield', 'Y', '结构性票据最高收益率必须大于等于结构性票据最低收益率。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000333', 'AssetInfoRegist002', 'isNumber2', 'svrBussRepQDIIStructureInfoDto.minYield', null, '8,5', 'Y', '结构性票据最低收益率以百分数形式表示时必须为n(8,5)格式。', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+

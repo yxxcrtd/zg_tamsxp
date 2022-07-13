@@ -335,8 +335,6 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
      */
     private void dealIsspartList(List<PbcPrdBaseinfoSubDatDiffDto> listDetail){
         List<String> innerProdIds = new ArrayList<>();
-        List<PbcProdAssetpoolCode> poolCodeList = new ArrayList<>();
-        Map<String,String> innerProdIdMapping = new HashMap<>();
         for (PbcPrdBaseinfoSubDatDiffDto pbcPrdBaseinfoSubDat : listDetail) {
             String prodId = pbcPrdBaseinfoSubDat.getProdId();
             if(StrUtil.isNotEmpty(prodId) && !innerProdIds.contains(prodId)){
@@ -359,26 +357,7 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
                 String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(StringUtils.isBlank(issuePartyId)?null:issuePartyId.substring(0,6), pbcPrdBaseinfoSubDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, pbcPrdBaseinfoSubDat.getVdate());
                 //add by zhoubin 20220424 start
                 pbcPrdBaseinfoSubDat.setPbcProdIdExternal(pbcProdIdExternal);
-                innerProdIdMapping.put(prodId,pbcProdIdExternal);
             }
-        }
-        Date date=DateUtil.parse(DateUtil.getCurrentDate());
-        //没有查询到的插入
-        for(Map.Entry<String, String> entry : innerProdIdMapping.entrySet()){
-            PbcProdAssetpoolCode prodAssetpoolCode = new PbcProdAssetpoolCode();
-            prodAssetpoolCode.setInsideProdId(entry.getKey());
-            prodAssetpoolCode.setPbcCode(entry.getValue());
-            prodAssetpoolCode.setCodeType(DictCodeListExt3.代码类型_产品.getValue());
-            prodAssetpoolCode.setStatus("E");
-            prodAssetpoolCode.setCreateUser(SecurityUtil.getLoginUser().getUserName());
-            prodAssetpoolCode.setCreateTime(date);
-            prodAssetpoolCode.setOrgCode(SecurityUtil.getLoginUser().getOrgCode());
-            prodAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
-            prodAssetpoolCode.setUpdateTime(date);
-            poolCodeList.add(prodAssetpoolCode);
-        }
-        if(!CollectionUtils.isEmpty(poolCodeList)){
-            pbcProdAssetpoolCodeMapper.batchInsertPbcCode(poolCodeList);
         }
     }
 

@@ -16,6 +16,7 @@
         <result property="curAssetdetType" column="CUR_ASSETDET_TYPE" jdbcType="VARCHAR"/>
         <result property="dealdate" column="DEALDATE" jdbcType="TIMESTAMP"/>
         <result property="tradeCounter" column="TRADE_COUNTER" jdbcType="VARCHAR"/>
+        <result property="counterName" column="COUNTER_NAME" jdbcType="VARCHAR"/>
         <result property="unitPriceFull" column="UNIT_PRICE_FULL" jdbcType="DECIMAL"/>
         <result property="unitPriceNet" column="UNIT_PRICE_NET" jdbcType="DECIMAL"/>
         <result property="endRate" column="END_RATE" jdbcType="DECIMAL"/>
@@ -26,7 +27,6 @@
         <result property="chlAgrtName" column="CHL_AGRT_NAME" jdbcType="VARCHAR"/>
         <result property="isUnderTrade" column="IS_UNDER_TRADE" jdbcType="VARCHAR"/>
         <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
-        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="orgCode" column="ORG_CODE" jdbcType="VARCHAR"/>
         <result property="deptCode" column="DEPT_CODE" jdbcType="VARCHAR"/>
         <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
@@ -281,6 +281,7 @@ where b.PROD_NAME=#{prodName} limit 1
         a.CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
         a.END_RATE,
@@ -307,9 +308,11 @@ where b.PROD_NAME=#{prodName} limit 1
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="tradeSeqno!=null and tradeSeqno!=''">
-                a.TRADE_SEQNO = #{tradeSeqno}
+                AND a.TRADE_SEQNO = #{tradeSeqno}
             </if>
         </where>
     </select>
@@ -331,6 +334,7 @@ where b.PROD_NAME=#{prodName} limit 1
         a.CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
         a.END_RATE,
@@ -357,9 +361,11 @@ where b.PROD_NAME=#{prodName} limit 1
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
-                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                <foreach collection="prodNames" item="item" open=" and b.PROD_NAME in(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
@@ -407,6 +413,7 @@ where b.PROD_NAME=#{prodName} limit 1
         null CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         null UNIT_PRICE_FULL,
         null UNIT_PRICE_NET,
         null END_RATE,
@@ -433,9 +440,11 @@ where b.PROD_NAME=#{prodName} limit 1
         from chb_invest_trade_errodata a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
-                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                <foreach collection="prodNames" item="item" open=" and b.PROD_NAME in(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
@@ -630,7 +639,7 @@ where b.PROD_NAME=#{prodName} limit 1
         and status = 'E'
     </select>
     <select id="selectByBusinessKey" resultType="java.lang.Integer">
-        select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
+        select count(1) from CHB_INVEST_TRADE where TRADE_CODE =#{tradeCode}
     </select>
     <select id="selectByKeys" resultMap="BaseResultMap">
         select * from (

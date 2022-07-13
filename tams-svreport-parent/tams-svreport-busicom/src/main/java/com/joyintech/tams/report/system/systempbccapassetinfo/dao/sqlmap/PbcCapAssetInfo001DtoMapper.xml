@@ -258,6 +258,7 @@
         and t.PBC_ASSET_TYPE2='T02'
         and t.PBC_ASSET_TYPE3='M02'
         and t.STATUS!='D'
+        and b.STATUS != 'D'
         <if test="planSdateStart != null and planSdateStart != ''" >
             AND to_char(t.PLAN_SDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{planSdateStart}
         </if>
@@ -285,7 +286,7 @@
             </foreach>
         </if>
         <if test="keyList != null and keyList.size > 0">
-            and t.ASSET_UUID in
+            and b.ASSET_UUID in
             <foreach collection="keyList" open="(" close=")" separator="," item="item">
                 #{item,jdbcType=VARCHAR}
             </foreach>

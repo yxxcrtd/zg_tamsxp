@@ -24,11 +24,17 @@
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable">报送状态</label>
                         <div class="layui-input-inline input-inline">
-                            <input type="text" id="repStatus"
+                         <!--   <input type="text" id="repStatus"
                                    name="repStatus"
                                    data-th-initValue="${repStatus}"
                                    class="layui-input form-input input-select"
-                                   data-th-data-result="${SUBMIT_STATUS}" />
+                                   data-th-data-result="${SUBMIT_STATUS}"/>-->
+                            <select id="repStatus" class="layui-input form-input input-select"
+                                    data-th-data-result='${SUBMIT_STATUS}' placeholder="请选择"
+                                    data-th-initvalue="${repStatus}"
+                                    data-th-placeholder="#{SysCommon.placeholder}"
+                                    allowClear="true">
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md4">

@@ -37,5 +37,22 @@
         }
 
         starOtherKind();
-    })
+    });
+    var tips;
+    $("label").on({
+        mouseenter: function () {
+            if(this.innerText.length>10){
+                var that = this;
+                tips = layer.tips("<span style='color:#000;'>" + this.innerText + "</span>", that, {
+                    tips: [2, '#fff'],
+                    time: 0,
+                    area: 'auto',
+                    maxWidth: 500
+                });
+            }
+        },
+        mouseleave:function(){
+            layer.close(tips);
+        }
+    });
 }());

@@ -53,7 +53,7 @@ public class SvrBussRepOutInvestAgrInfoController extends BaseController {
         String entityName = this.getParam("entityName");
         //1.赋值界面数据字典
         setSelectOptionToModel(model, new DictCode[]{DictCode.资金实际投向, DictCode.机构所属行业一级分类,
-                        DictCode.机构所属行业二级分类, DictCode.管理方式_发行登记, DictCode.是否_中债,
+                        DictCode.机构所属行业二级分类, DictCode.委外投资属性_中债, DictCode.是否_中债,
                 DictCode.人行资产一级分类,DictCode.人行资产二级分类,DictCode.人行资产三级分类}
         );
 
