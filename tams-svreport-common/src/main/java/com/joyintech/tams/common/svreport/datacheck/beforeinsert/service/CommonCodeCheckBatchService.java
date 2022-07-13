@@ -304,14 +304,6 @@ public class CommonCodeCheckBatchService {
                     sb.append("当“资金流动类型”选择“11其他收入”“12其他支出”之外的类型时，“产品登记编码+行内交易编码+行内资产/负债编码+资金流动类型”不得同时与已有数据重复；");
                 }
             }
-            try {
-                if(dataMap.get("CCY").equals("CNY")){
-                    if(!dataMap.get("AMT").equals(dataMap.get("CNY_AMT"))){
-                        sb.append("当币种选择人民币时，发生金额必须等于折算人民币金额；");
-                    }
-                }
-            } catch (Exception e) {
-            }
             if(StringUtils.isEmpty(errMsg)){
                 if(StringUtils.isNotEmpty(sb.toString())&&excelValidDtoList!=null){
                     excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf((i+2)),sb.toString()));
