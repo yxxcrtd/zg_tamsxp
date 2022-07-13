@@ -92,7 +92,7 @@
         ,{field:'yield', title: '业绩比较基准',width:130,type:'number'}
         ,{field:'remark', title: '备注',width:130}
         ,{field:'errMsg', title: '错误信息',width:130}
-        ,{field:'updateTimeStr', width:100, title: '更新时间'}
+        ,{field:'updateTimeStr', width:200, title: '更新时间'}
         ,{field:'updateUser', width:100, title: '更新人'},
         {
             field : 'fileNo',

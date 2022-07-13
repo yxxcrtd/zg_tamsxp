@@ -715,7 +715,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getProfitTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品收益类型,this.profitType);
+        if(StringUtil.isBlank(profitType)) {
+            return null;
+        }
+        return profitType+" "+SysDataUtil.getNameFromDataDict(DictCode.产品收益类型,this.profitType);
     }
 
     /**
@@ -735,7 +738,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getTermtypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品期限,this.termtype);
+        if(StringUtil.isBlank(termtype)) {
+            return null;
+        }
+        return termtype+" "+SysDataUtil.getNameFromDataDict(DictCode.产品期限,this.termtype);
     }
 
     /**
@@ -755,7 +761,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getExcFinSectorStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,this.excFinSector);
+        if(StringUtil.isBlank(excFinSector)) {
+            return null;
+        }
+        return excFinSector+" "+SysDataUtil.getNameFromDataDict(DictCode.是否_中债,this.excFinSector);
     }
 
     /**
@@ -775,7 +784,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getInvestAraeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.资金投向地区,this.investArae);
+        if(StringUtil.isBlank(investArae)) {
+            return null;
+        }
+        return investArae+" "+SysDataUtil.getNameFromDataDict(DictCode.资金投向地区,this.investArae);
     }
 
     /**
@@ -800,11 +812,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String investCountryStr = "";
                 for (String str : split) {
-                    investCountryStr += SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,str) + ",";
+                    investCountryStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,str) + ",";
                 }
                 return investCountryStr.substring(0,investCountryStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,this.getInvestCountry());
+            return investCountry+" "+SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,this.getInvestCountry());
         }
         return this.getInvestCountry();
     }
@@ -826,7 +838,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getFinanSerModelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.理财业务服务模式,this.finanSerModel);
+        if(StringUtil.isBlank(finanSerModel)) {
+            return null;
+        }
+        return finanSerModel+" "+SysDataUtil.getNameFromDataDict(DictCode.理财业务服务模式,this.finanSerModel);
     }
 
     /**
@@ -846,7 +861,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getOperateModeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品运作模式,this.operateMode);
+        if(StringUtil.isBlank(operateMode)) {
+            return null;
+        }
+        return operateMode+" "+SysDataUtil.getNameFromDataDict(DictCode.产品运作模式,this.operateMode);
     }
 
     /**
@@ -866,7 +884,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getRaiseTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.募集方式,this.raiseType);
+        if(StringUtil.isBlank(raiseType)) {
+            return null;
+        }
+        return raiseType+" "+SysDataUtil.getNameFromDataDict(DictCode.募集方式_中债,this.raiseType);
     }
 
     /**
@@ -886,7 +907,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getCmmodeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品资产配置方式_中债,this.cmmode);
+        if(StringUtil.isBlank(cmmode)) {
+            return null;
+        }
+        return cmmode+" "+SysDataUtil.getNameFromDataDict(DictCode.产品资产配置方式_中债,this.cmmode);
     }
 
     /**
@@ -906,7 +930,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getPmmodeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品管理模式,this.pmmode);
+        if(StringUtil.isBlank(pmmode)) {
+            return null;
+        }
+        return pmmode+" "+SysDataUtil.getNameFromDataDict(DictCode.产品管理模式,this.pmmode);
     }
 
     /**
@@ -942,7 +969,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getPricedModeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.定价方式,this.pricedMode);
+        if(StringUtil.isBlank(pricedMode)) {
+            return null;
+        }
+        return pricedMode+" "+SysDataUtil.getNameFromDataDict(DictCode.定价方式,this.pricedMode);
     }
 
     /**
@@ -962,7 +992,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getIvstorientationStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.投资性质,this.ivstorientation);
+        if(StringUtil.isBlank(ivstorientation)) {
+            return null;
+        }
+        return ivstorientation+" "+SysDataUtil.getNameFromDataDict(DictCode.投资性质,this.ivstorientation);
     }
 
     /**
@@ -998,7 +1031,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getIsShortTermStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债,this.isShortTerm);
+        if(StringUtil.isBlank(isShortTerm)) {
+            return null;
+        }
+        return isShortTerm+" "+SysDataUtil.getNameFromDataDict(DictCode.是否_中债,this.isShortTerm);
     }
 
     /**
@@ -1034,7 +1070,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getIsFreeRedemStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.是否_中债_期限,this.isFreeRedem);
+        if(StringUtil.isBlank(isFreeRedem)) {
+            return null;
+        }
+        return isFreeRedem+" "+SysDataUtil.getNameFromDataDict(DictCode.是否_中债_期限,this.isFreeRedem);
     }
 
 
@@ -1055,7 +1094,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getCashManaCateStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.是否,this.cashManaCate);
+        if(StringUtil.isBlank(cashManaCate)) {
+            return null;
+        }
+        return cashManaCate+" "+SysDataUtil.getNameFromDataDict(DictCode.是或否,this.cashManaCate);
     }
 
     /**
@@ -1080,11 +1122,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String saleAreaStr = "";
                 for (String str : split) {
-                    saleAreaStr += SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,str) + ",";
+                    saleAreaStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,str) + ",";
                 }
                 return saleAreaStr.substring(0,saleAreaStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,this.getSaleArea());
+            return saleArea+" "+SysDataUtil.getNameFromDataDict(DictCode.销售区域_中债,this.getSaleArea());
         }
         return this.getSaleArea();
     }
@@ -1128,11 +1170,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String raiseCcyStr = "";
                 for (String str : split) {
-                    raiseCcyStr += SysDataUtil.getNameFromDataDict(DictCode.币种,str) + ",";
+                    raiseCcyStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.币种,str) + ",";
                 }
                 return raiseCcyStr.substring(0,raiseCcyStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.币种,this.getRaiseCcy());
+            return raiseCcy+" "+SysDataUtil.getNameFromDataDict(DictCode.币种,this.getRaiseCcy());
         }
         return this.getRaiseCcy();
     }
@@ -1160,11 +1202,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String cashPrinCcyStr = "";
                 for (String str : split) {
-                    cashPrinCcyStr += SysDataUtil.getNameFromDataDict(DictCode.币种,str) + ",";
+                    cashPrinCcyStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.币种,str) + ",";
                 }
                 return cashPrinCcyStr.substring(0,cashPrinCcyStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.币种,this.getCashPrinCcy());
+            return cashPrinCcy+" "+SysDataUtil.getNameFromDataDict(DictCode.币种,this.getCashPrinCcy());
         }
         return this.getCashPrinCcy();
     }
@@ -1192,11 +1234,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String cashProfCcyStr = "";
                 for (String str : split) {
-                    cashProfCcyStr += SysDataUtil.getNameFromDataDict(DictCode.币种,str) + ",";
+                    cashProfCcyStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.币种,str) + ",";
                 }
                 return cashProfCcyStr.substring(0,cashProfCcyStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.币种,this.getCashProfCcy());
+            return cashProfCcy+" "+SysDataUtil.getNameFromDataDict(DictCode.币种,this.getCashProfCcy());
         }
         return this.getCashProfCcy();
     }
@@ -1308,7 +1350,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getInDepNameStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.境内托管机构名称,this.inDepName);
+        if(StringUtil.isBlank(inDepName)) {
+            return null;
+        }
+        return inDepName+" "+SysDataUtil.getNameFromDataDict(DictCode.境内托管机构名称,this.inDepName);
     }
 
     /**
@@ -1349,11 +1394,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String outDepCtryStr = "";
                 for (String str : split) {
-                    outDepCtryStr += SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,str) + ",";
+                    outDepCtryStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,str) + ",";
                 }
                 return outDepCtryStr.substring(0,outDepCtryStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,this.getOutDepCtry());
+            return outDepCtry+" "+SysDataUtil.getNameFromDataDict(DictCode.所属国家或地区,this.getOutDepCtry());
         }
         return this.getOutDepCtry();
     }
@@ -1400,11 +1445,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String riskTypeStr = "";
                 for (String str : split) {
-                    riskTypeStr += SysDataUtil.getNameFromDataDict(DictCode.投资者风险偏好,str) + ",";
+                    riskTypeStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.投资者风险偏好,str) + ",";
                 }
                 return riskTypeStr.substring(0,riskTypeStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.投资者风险偏好,this.getRiskType());
+            return riskType+" "+SysDataUtil.getNameFromDataDict(DictCode.投资者风险偏好,this.getRiskType());
         }
         return this.getRiskType();
     }
@@ -1426,7 +1471,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getRiskLevelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品风险等级,this.riskLevel);
+        if(StringUtil.isBlank(riskLevel)) {
+            return null;
+        }
+        return  riskLevel+" "+SysDataUtil.getNameFromDataDict(DictCode.产品风险等级,this.riskLevel);
     }
 
     /**
@@ -1446,7 +1494,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getTermRightFlagStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.有无,this.termRightFlag);
+        if(StringUtil.isBlank(termRightFlag)) {
+            return null;
+        }
+        return termRightFlag+" "+SysDataUtil.getNameFromDataDict(DictCode.有无,this.termRightFlag);
     }
 
     /**
@@ -1466,7 +1517,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getCusRedeemFlagStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.有无,this.cusRedeemFlag);
+        if(StringUtil.isBlank(cusRedeemFlag)) {
+            return null;
+        }
+        return cusRedeemFlag+" "+SysDataUtil.getNameFromDataDict(DictCode.有无,this.cusRedeemFlag);
     }
 
     /**
@@ -1502,7 +1556,7 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getContModeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.合作模式,this.contMode);
+        return contMode+" "+SysDataUtil.getNameFromDataDict(DictCode.合作模式,this.contMode);
     }
 
     /**
@@ -1538,7 +1592,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getInvestPrinDateStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.投资本金_收益_到账日,this.investPrinDate);
+        if(StringUtil.isBlank(investPrinDate)) {
+            return null;
+        }
+        return investPrinDate+" "+SysDataUtil.getNameFromDataDict(DictCode.投资本金_收益_到账日,this.investPrinDate);
     }
 
     /**
@@ -1558,7 +1615,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getInvestProfDateStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.投资本金_收益_到账日,this.investProfDate);
+        if(StringUtil.isBlank(investProfDate)) {
+            return null;
+        }
+        return investProfDate+" "+SysDataUtil.getNameFromDataDict(DictCode.投资本金_收益_到账日,this.investProfDate);
     }
 
     /**
@@ -1578,7 +1638,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getCreditFlagStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.有无,this.creditFlag);
+        if(StringUtil.isBlank(creditFlag)) {
+            return null;
+        }
+        return creditFlag+" "+SysDataUtil.getNameFromDataDict(DictCode.有无,this.creditFlag);
     }
 
     /**
@@ -1604,11 +1667,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String creditTypeStr = "";
                 for (String str : split) {
-                    creditTypeStr += SysDataUtil.getNameFromDataDict(DictCode.产品增信机构类型,str) + ",";
+                    creditTypeStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.产品增信机构类型,str) + ",";
                 }
                 return creditTypeStr.substring(0,creditTypeStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.产品增信机构类型,this.getCreditType());
+            return creditType+" "+SysDataUtil.getNameFromDataDict(DictCode.产品增信机构类型,this.getCreditType());
         }
         return this.getCreditType();
     }
@@ -1630,7 +1693,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getCreditModeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.产品增信形式,this.creditMode);
+        if(StringUtil.isBlank(creditMode)) {
+            return null;
+        }
+        return creditMode+" "+SysDataUtil.getNameFromDataDict(DictCode.产品增信形式,this.creditMode);
     }
 
     /**
@@ -1746,7 +1812,10 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getIsFhxgcpStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.是否,this.isFhxgcp);
+        if(StringUtil.isBlank(isFhxgcp)) {
+            return null;
+        }
+        return isFhxgcp+" "+SysDataUtil.getNameFromDataDict(DictCode.是否,this.isFhxgcp);
     }
 
     /**
@@ -1771,11 +1840,11 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
             if (split.length > 1 ){
                 String prdSpecPropertyStr = "";
                 for (String str : split) {
-                    prdSpecPropertyStr += SysDataUtil.getNameFromDataDict(DictCode.产品特殊属性,str) + ",";
+                    prdSpecPropertyStr += str+" "+SysDataUtil.getNameFromDataDict(DictCode.产品特殊属性,str) + ",";
                 }
                 return prdSpecPropertyStr.substring(0,prdSpecPropertyStr.length()-1);
             }
-            return SysDataUtil.getNameFromDataDict(DictCode.产品特殊属性,this.getPrdSpecProperty());
+            return prdSpecProperty+" "+SysDataUtil.getNameFromDataDict(DictCode.产品特殊属性,this.getPrdSpecProperty());
         }
         return this.getPrdSpecProperty();
     }
@@ -1880,5 +1949,9 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
 
     public void setOrgData(String orgData) {
         this.orgData = orgData;
+    }
+
+    public String getUpdateTimeStr() {
+        return DateUtil.formatDateTime(super.getUpdateTime());
     }
 }
