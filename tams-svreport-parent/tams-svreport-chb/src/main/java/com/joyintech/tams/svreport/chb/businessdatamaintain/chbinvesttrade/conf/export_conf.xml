@@ -17,7 +17,7 @@
             <Cell order="13" name="资金流动类型">curAssetTypeStr</Cell>
             <Cell order="14" name="资金流动类型说明">curAssetdetType</Cell>
             <Cell order="15" name="交易日">dealdateStr</Cell>
-            <Cell order="16" name="交易对手">tradeCounter</Cell>
+            <Cell order="16" name="交易对手">counterName</Cell>
             <Cell order="17" name="交易对手类型">rivalPartyTypeStr</Cell>
             <Cell order="18" name="单位成交价（全价）">unitPriceFull</Cell>
             <Cell order="19" name="单位成交价（净价）">unitPriceNet</Cell>
