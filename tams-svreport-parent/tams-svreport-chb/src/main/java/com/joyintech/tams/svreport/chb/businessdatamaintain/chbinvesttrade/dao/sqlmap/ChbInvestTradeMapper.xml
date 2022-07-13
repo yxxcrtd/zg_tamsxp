@@ -16,6 +16,7 @@
         <result property="curAssetdetType" column="CUR_ASSETDET_TYPE" jdbcType="VARCHAR"/>
         <result property="dealdate" column="DEALDATE" jdbcType="TIMESTAMP"/>
         <result property="tradeCounter" column="TRADE_COUNTER" jdbcType="VARCHAR"/>
+        <result property="counterName" column="COUNTER_NAME" jdbcType="VARCHAR"/>
         <result property="unitPriceFull" column="UNIT_PRICE_FULL" jdbcType="DECIMAL"/>
         <result property="unitPriceNet" column="UNIT_PRICE_NET" jdbcType="DECIMAL"/>
         <result property="endRate" column="END_RATE" jdbcType="DECIMAL"/>
@@ -271,6 +272,7 @@ where b.PROD_NAME=#{prodName}
         a.CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
         a.END_RATE,
@@ -297,9 +299,11 @@ where b.PROD_NAME=#{prodName}
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="tradeSeqno!=null and tradeSeqno!=''">
-                a.TRADE_SEQNO = #{tradeSeqno}
+                AND a.TRADE_SEQNO = #{tradeSeqno}
             </if>
         </where>
     </select>
@@ -321,6 +325,7 @@ where b.PROD_NAME=#{prodName}
         a.CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
         a.END_RATE,
@@ -348,9 +353,11 @@ where b.PROD_NAME=#{prodName}
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_PRDRESIST_CODE code on code.PRODID=b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
-                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                <foreach collection="prodNames" item="item" open=" and b.PROD_NAME in(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
@@ -398,6 +405,7 @@ where b.PROD_NAME=#{prodName}
         null CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         null UNIT_PRICE_FULL,
         null UNIT_PRICE_NET,
         null END_RATE,
@@ -424,9 +432,11 @@ where b.PROD_NAME=#{prodName}
         from chb_invest_trade_errodata a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
-                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                <foreach collection="prodNames" item="item" open=" and b.PROD_NAME in(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
