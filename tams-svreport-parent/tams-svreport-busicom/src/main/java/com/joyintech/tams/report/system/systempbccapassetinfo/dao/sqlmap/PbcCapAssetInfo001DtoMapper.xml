@@ -258,6 +258,7 @@
         and t.PBC_ASSET_TYPE2='T02'
         and t.PBC_ASSET_TYPE3='M02'
         and t.STATUS!='D'
+        and b.STATUS != 'D'
         <if test="planSdateStart != null and planSdateStart != ''" >
             AND to_char(t.PLAN_SDATE,'yyyy-MM-dd') <![CDATA[>=]]> #{planSdateStart}
         </if>
