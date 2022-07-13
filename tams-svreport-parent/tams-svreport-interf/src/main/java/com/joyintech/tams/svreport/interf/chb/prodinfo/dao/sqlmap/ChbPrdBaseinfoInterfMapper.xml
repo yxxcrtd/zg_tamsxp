@@ -318,6 +318,17 @@
 		</where>
 	</delete>
 
+	<select id="getPrdBaseinfoByDataSource"  resultType="java.lang.String">
+		select PROD_ID from CHB_PRD_BASEINFO
+		<where>
+			DATA_SOURCE != 'I'
+			<foreach collection="list" item="item" index="index"
+					 open=" AND PROD_ID in (" close=")" separator=",">
+				#{item.prodId,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</select>
+
 	<insert id="insertBymodel"
 		parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		insert into CHB_PRD_BASEINFO (PRODUUID, FPROD_ID, PROD_ID,

@@ -14,6 +14,8 @@ public interface ChbPrdBaseinfoInterfMapper {
 	int deleteByDate(Date batchTime);
 
 	int deleteByProdid(@Param("insertList")List<ChbPrdBaseinfo> prodinfos);
+
+	List<String> getPrdBaseinfoByDataSource(@Param("list") List<ChbPrdBaseinfo> list);
 	
 	int insertBymodel(ChbPrdBaseinfo prod);
 	

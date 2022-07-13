@@ -315,6 +315,17 @@
 			</foreach>
 		</where>
 	</delete>
+
+	<select id="getPrdBaseinfoByDataSource"  resultType="java.lang.String">
+		select PROD_ID from CHB_PRD_BASEINFO
+		<where>
+			DATA_SOURCE != 'I'
+			<foreach collection="list" item="item" index="index"
+					 open=" AND PROD_ID in (" close=")" separator=",">
+				#{item.prodId,jdbcType=VARCHAR}
+			</foreach>
+		</where>
+	</select>
 	<delete id="deleteChbPrdBaseinfoErroData" parameterType="com.joyintech.tams.common.base.entity.ChbPrdBaseinfo">
 		delete from CHB_PRD_BASEINFO_ERRODATA
 		<where>

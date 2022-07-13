@@ -208,10 +208,13 @@ public class SvrProdInfoFileImpService extends FileImpService {
 
 	@Override
 	public String saveData(List<Map<String, String>> listData, String saveFlag, String dataSource) {
-		String tmpPath = SvrDataUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,
-				GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 		// 转dto
 		List<ChbPrdBaseinfo> chbPrdBaseinfoList  = (List<ChbPrdBaseinfo>) convertMapToEntity(listData,ChbPrdBaseinfo.class, dataSource);
+		//覆盖
+		if (StringUtil.equals("N",saveFlag) && StringUtil.equals("I",dataSource)) {
+			List<String> prodIds = chbPrdBaseinfoInterfMapper.getPrdBaseinfoByDataSource(chbPrdBaseinfoList);
+			chbPrdBaseinfoList=chbPrdBaseinfoList.stream().filter(e->prodIds.contains(e.getProdId())).collect(Collectors.toList());
+		}
 		chbPrdBaseinfoInterfMapper.deleteByProdid(chbPrdBaseinfoList);
 		chbPrdBaseinfoInterfMapper.deleteChbPrdBaseinfoErroData(chbPrdBaseinfoList);
 		List<ChbPrdDeclareInfoDto> chbPrdDeclareInfoDtoList = chbPrdDeclareInfoMapper.selectByChbPrdDeclareInfoList(chbPrdBaseinfoList.stream().map(e -> e.getProdInsId()).collect(Collectors.toList()));
@@ -219,17 +222,11 @@ public class SvrProdInfoFileImpService extends FileImpService {
 			for (ChbPrdDeclareInfoDto chbPrdDeclareInfoDto : chbPrdDeclareInfoDtoList) {
 				if(chbPrdBaseinfo.getProdInsId().equals(chbPrdDeclareInfoDto.getProdInsId())){
 					String prodName = chbPrdBaseinfo.getProdName();
-					Date createTime = chbPrdBaseinfo.getCreateTime();
-					String createUser = chbPrdBaseinfo.getCreateUser();
-					Date updateTime = chbPrdBaseinfo.getUpdateTime();
-					String updateUser = chbPrdBaseinfo.getUpdateUser();
 					String source = chbPrdBaseinfo.getDataSource();
 					BeanUtils.copyProperties(chbPrdDeclareInfoDto,chbPrdBaseinfo);
 					chbPrdBaseinfo.setProdName(prodName);
-					chbPrdBaseinfo.setCreateTime(createTime);
-					chbPrdBaseinfo.setCreateUser(createUser);
-					chbPrdBaseinfo.setUpdateTime(updateTime);
-					chbPrdBaseinfo.setUpdateUser(updateUser);
+					chbPrdBaseinfo.setCreateUser(CommonUtil.getUserName());
+					chbPrdBaseinfo.setUpdateUser(CommonUtil.getUserName());
 					chbPrdBaseinfo.setDataSource(source);
 					chbPrdBaseinfo.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 					break;
@@ -251,12 +248,8 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		});
 		// 更新产品登记编码表
 		chbPrdBaseinfoInterfMapper.updateChbPrdresistCodes(chbPrdBaseinfoList);
-		if (chbPrdBaseinfoList != null && chbPrdBaseinfoList.size() > 0) {
-			if(InterfConstants.SAVEFLAG_ADD.equals(saveFlag)){
-				insertDataMerge(chbPrdBaseinfoList);
-			}else{
-
-			}
+		if (CollectionUtils.isNotEmpty(chbPrdBaseinfoList)) {
+			insertDataMerge(chbPrdBaseinfoList);
 		}
 		return "success";
 	}
@@ -294,10 +287,9 @@ public class SvrProdInfoFileImpService extends FileImpService {
 		}
 		checkImportData(listExcel,listData, interfFile.getFilename(), ChbCheckTableInfo.个人发行登记表INFO,interfConfig.getCoverFlag(), listExcel == null? "I" : "D");
 
-		String saveFlag = interfConfig.getContentType();
 		String result = "";
 		if(listData.size()>0){
-			result=saveData(listData, listExcel == null?saveFlag:InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
+			result=saveData(listData, interfConfig.getCoverFlag(),listExcel == null? "I" : "D");
 		}
 		// 更新系统配置时间
 		ChbInterfUtil.updateInterfTimeBySysdate( InterfDefine.产品基本信息接口数据.getCode());
