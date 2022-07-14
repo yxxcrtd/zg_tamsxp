@@ -93,7 +93,12 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		headList.add("客户统一编号");
 		headList.add("识别标识");
 		headList.add("客户姓名");
+		/**add by dxy  投资者明细7月升级  20220520 start*/
+		headList.add("交易序列号");
 		headList.add("关联活期存款账号");
+		headList.add("关联活期存款账号开户行代码");
+		headList.add("关联活期存款账号开户行名称");
+		/**add by dxy  投资者明细7月升级  20220520 end*/
 		headList.add("关联账号开户所在地");
 		headList.add("是否代销");
 		headList.add("代销机构代码");
@@ -154,7 +159,12 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		headList.add("客户统一编号");
 		headList.add("识别标识");
 		headList.add("客户姓名");
+		/**add by dxy  投资者明细7月升级  20220520 start*/
+		headList.add("交易序列号");
 		headList.add("关联活期存款账号");
+		headList.add("关联活期存款账号开户行代码");
+		headList.add("关联活期存款账号开户行名称");
+		/**add by dxy  投资者明细7月升级  20220520 end*/
 		headList.add("关联账号开户所在地");
 		headList.add("是否代销");
 		headList.add("代销机构代码");

@@ -31,6 +31,7 @@ import com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransfor
 import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dao.EquityInfoRegist001Mapper;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -98,7 +99,7 @@ public class EquityInfo002Service extends BaseService{
      */
     public AjaxResult checkOrSave(EquityInfo001Dto dto,boolean isSave) {
         if(StringUtil.isEmpty(dto.getBankCode())){
-            // dto.setBankCode(CommonUtil.getUserBankCode());//注释，微服务不能获取登录session
+             dto.setBankCode(CommonUtil.getUserBankCode(""));//注释，微服务不能获取登录session
         }
         if(StringUtil.isEmpty(dto.getHolderEmail())){
             dto.setHolderEmail(ReportGlobalConstant.DEFAULTEMAIL);

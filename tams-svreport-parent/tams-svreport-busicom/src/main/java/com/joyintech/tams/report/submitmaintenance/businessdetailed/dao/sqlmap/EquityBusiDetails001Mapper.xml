@@ -76,6 +76,9 @@
 		    cequdet.REMARK remark/*28、备注*/
 		    ,cequdet.INTERF_CHECK_RESULT interfCheckResult /*29、导入检查结果*/
 		    ,cequdet.ACCOUNT account /*产品代码*/
+        ,cequdet.TRADE_SEQ tradeSeq
+        ,cequdet.FUND_ACC_CODE fundAccCode
+        ,cequdet.FUND_ACC_NAME fundAccName
 		FROM CHB_EQUDET cequdet
 		where 1=1
 		<if test="regCodeList != null and regCodeList.size() > 0">
@@ -141,7 +144,8 @@
 	        CONTRACT_NO contractNo, FIN_ACC finAcc, CUST_CONTRACT_NO custContractNo, CUST_NAME custName,
 	        AGENCY_CODE agencyCode, AGENCY_NAME agencyName, AGENCY_FSA agencyFsa, BUSI_FSA busiFsa,
 	        PROD_VALUE prodValue, FEE_AMT feeAmt, TRAN_TELL_NAME tranTellName, STATUS dataStatus
-	        ,ORG_INDENTIFY_MARK orgIndentifyMark
+	        ,ORG_INDENTIFY_MARK orgIndentifyMark,TRADE_SEQ tradeSeq,FUND_ACC_CODE fundAccCode,
+	        FUND_ACC_NAME fundAccName
         from CHB_EQUDET
         where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
           and ACCOUNT = #{account,jdbcType=VARCHAR}
@@ -269,6 +273,15 @@
             <if test="isSubmit != null" >
                 IS_SUBMIT = #{isSubmit,jdbcType=CHAR},
             </if>
+            <if test="tradeSeq != null">
+                TRADE_SEQ = #{tradeSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="fundAccCode != null">
+                FUND_ACC_CODE = #{fundAccCode,jdbcType=VARCHAR},
+            </if>
+            <if test="fundAccName != null">
+                FUND_ACC_NAME = #{fundAccName,jdbcType=VARCHAR},
+            </if>
           INTERF_CHECK_RESULT = #{interfCheckResult,jdbcType=VARCHAR}
         </set>
         where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
@@ -323,7 +336,8 @@
         SHARES, CHANNEL, FUND_ACC, IS_CONSIGN, REMARK, CONTRACT_NO, FIN_ACC, CUST_CONTRACT_NO,
         CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME,
         STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-        DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK
+        DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK,
+        TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME
         )
         <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
             #{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
@@ -339,7 +353,8 @@
             #{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
             #{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.dataSource,jdbcType=CHAR},
             #{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-            #{item.isSubmit,jdbcType=CHAR},#{item.interfCheckResult,jdbcType=VARCHAR}, #{item.orgIndentifyMark,jdbcType=VARCHAR}
+            #{item.isSubmit,jdbcType=CHAR},#{item.interfCheckResult,jdbcType=VARCHAR}, #{item.orgIndentifyMark,jdbcType=VARCHAR},
+            #{item.tradeSeq,jdbcType=CHAR} TRADE_SEQ,#{item.fundAccCode,jdbcType=CHAR} FUND_ACC_CODE,#{item.fundAccName,jdbcType=CHAR} FUND_ACC_NAME
         </foreach>
     </insert>
 

@@ -26,15 +26,18 @@
 			<Cell order="22" name="理财账号">finAcc</Cell>
 			<Cell order="23" name="客户统一编号">custContractNo</Cell>
 			<Cell order="24" name="客户姓名">custName</Cell>
-			<Cell order="25" name="关联活期存款账号">fundAcc</Cell>
-			<Cell order="26" name="关联账号开户所在地">fundAccPlace</Cell>
-			<Cell order="27" name="是否代销">isConsign</Cell>
-			<Cell order="28" name="代销机构代码">agencyCode</Cell>
-			<Cell order="29" name="代销机构名称">agencyName</Cell>
-			<Cell order="30" name="代销机构所属监管机构">agencyFsa</Cell>
-			<Cell order="31" name="业务发生地所属监管">busiFsa</Cell>
-			<Cell order="32" name="交易柜员号">tranTellName</Cell>
-			<Cell order="33" name="备注">remark</Cell>
+			<Cell order="25" name="交易序列号">tradeSeq</Cell>
+			<Cell order="26" name="关联活期存款账号">fundAcc</Cell>
+			<Cell order="27" name="关联活期存款账号开户行代码">fundAccCode</Cell>
+			<Cell order="28" name="关联活期存款账号开户行名称">fundAccName</Cell>
+			<Cell order="29" name="关联账号开户所在地">fundAccPlace</Cell>
+			<Cell order="30" name="是否代销">isConsign</Cell>
+			<Cell order="31" name="代销机构代码">agencyCode</Cell>
+			<Cell order="32" name="代销机构名称">agencyName</Cell>
+			<Cell order="33" name="代销机构所属监管机构">agencyFsa</Cell>
+			<Cell order="34" name="业务发生地所属监管">busiFsa</Cell>
+			<Cell order="35" name="交易柜员号">tranTellName</Cell>
+			<Cell order="36" name="备注">remark</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

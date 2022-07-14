@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="QEquityBusiInfoRegistCHB.xlsx" name="投资者明细信息登记">
+    <Worksheet javaBean="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto">
+        <Row>
+            <Cell order="1" name="发行机构代码">registBankCode</Cell>
+            <Cell order="2" name="销售合同号">contractNo</Cell>
+            <Cell order="3" name="核心交易流水号">busiSeqno</Cell>
+            <Cell order="4" name="理财账号">finAcc</Cell>
+            <Cell order="5" name="客户统一编号">custContractNo</Cell>
+            <Cell order="6" name="识别标识">indentifyMark</Cell>
+            <Cell order="7" name="客户姓名">custName</Cell>
+            <Cell order="8" name="关联活期存款账号">fundAcc</Cell>
+            <Cell order="9" name="关联账号开户所在地">fundAccPlace</Cell>
+            <Cell order="10" name="是否代销">isConsign</Cell>
+            <Cell order="11" name="代销机构代码">agencyCode</Cell>
+            <Cell order="12" name="代销机构名称">agencyName</Cell>
+            <Cell order="13" name="代销机构所属监管机构">agencyFsa</Cell>
+            <Cell order="14" name="产品登记编码">regCode</Cell>
+            <Cell order="15" name="业务种类">busiType</Cell>
+            <Cell order="16" name="业务发生地所属监管">busiFsa</Cell>
+            <Cell order="17" name="业务确认日期">equityConfDateStr</Cell>
+            <Cell order="18" name="业务确认时间">shareConfDatetime</Cell>
+            <Cell order="19" name="币种">ccy</Cell>
+            <Cell order="20" name="金额">amountExportExcel</Cell>
+            <Cell order="21" name="折算人民币金额">amountCnyExportExcel</Cell>
+            <Cell order="22" name="确认净值">prodValueExportExcel</Cell>
+            <Cell order="23" name="份额">sharesExportExcel</Cell>
+            <Cell order="24" name="费用">feeAmtExportExcel</Cell>
+            <Cell order="25" name="渠道">channel</Cell>
+            <Cell order="26" name="交易柜员号">tranTellName</Cell>
+            <Cell order="27" name="备注">remark</Cell>
+        </Row>
+    </Worksheet>
+</Workbook>

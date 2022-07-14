@@ -365,6 +365,19 @@ public class EquityBusiInfoRegist001Dto extends BaseEntity {
      * 删除原因
      */
     private String deleteReason;
+
+    /**
+     *交易序列号
+     */
+    private  String  tradeSeq;
+    /**
+     *关联活期存款账号开户行代码
+     */
+    private String  fundAccCode;
+    /**
+     *关联活期存款账号开户行名称
+     */
+    private  String fundAccName;
     /**
      * 取得 产品代码
      * @return 产品代码
@@ -1036,5 +1049,29 @@ public class EquityBusiInfoRegist001Dto extends BaseEntity {
 
     public void setDeleteReason(String deleteReason) {
         this.deleteReason = deleteReason;
+    }
+
+    public String getTradeSeq() {
+        return tradeSeq;
+    }
+
+    public void setTradeSeq(String tradeSeq) {
+        this.tradeSeq = tradeSeq;
+    }
+
+    public String getFundAccCode() {
+        return fundAccCode;
+    }
+
+    public void setFundAccCode(String fundAccCode) {
+        this.fundAccCode = fundAccCode;
+    }
+
+    public String getFundAccName() {
+        return fundAccName;
+    }
+
+    public void setFundAccName(String fundAccName) {
+        this.fundAccName = fundAccName;
     }
 }

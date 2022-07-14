@@ -980,7 +980,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      */
     public List<Map<String, String>> listToMap(List<List<String>> dataList) {
         String[] fieldName = {"registBankCode", "contractNo", "busiSeqno", "finAcc",
-                "custContractNo", "indentifyMark", "custName", "fundAcc", "fundAccPlace", "isConsign",
+                "custContractNo", "indentifyMark", "custName","tradeSeq", "fundAcc",
+                "fundAccCode","fundAccName","fundAccPlace", "isConsign",
                 "agencyCode", "agencyName", "agencyFsa", "account", "busiType", "busiFsa",
                 "equityConfDate", "shareConfDatetime", "ccy", "amount", "amountCny", "prodValue",
                 "shares", "feeAmt", "channel", "tranTellName", "remark"};
@@ -1029,7 +1030,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     public List<Map<String, String>> listToMapEx(List<List<String>> dataList) {
         String[] fieldName = {"REGIST_BANK_CODE", "CONTRACT_NO", "BUSI_SEQNO", "FIN_ACC",
-                "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME", "FUND_ACC", "FUND_ACC_PLACE", "IS_CONSIGN",
+                "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME","TRADE_SEQ", "FUND_ACC",
+                "FUND_ACC_CODE","FUND_ACC_NAME","FUND_ACC_PLACE", "IS_CONSIGN",
                 "AGENCY_CODE", "AGENCY_NAME", "AGENCY_FSA", "ACCOUNT", "BUSI_TYPE", "BUSI_FSA",
                 "EQUITY_CONF_DATE", "SHARE_CONF_DATETIME", "CCY", "AMOUNT", "AMOUNT_CNY", "PROD_VALUE",
                 "SHARES", "FEE_AMT", "CHANNEL", "TRAN_TELL_NAME", "REMARK"};
@@ -1301,7 +1303,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
      */
     public List<Map<String, String>> listToMapChb(List<List<String>> dataList) {
         String[] fieldName = {"registBankCode", "contractNo", "busiSeqno", "finAcc",
-                "custContractNo", "indentifyMark", "custName", "fundAcc", "fundAccPlace", "isConsign",
+                "custContractNo", "indentifyMark", "custName", "tradeSeq", "fundAcc", "fundAccCode",
+                "fundAccName", "fundAccPlace", "isConsign",
                 "agencyCode", "agencyName", "agencyFsa", "regCode", "busiType", "busiFsa",
                 "equityConfDate", "shareConfDatetime", "ccy", "amount", "amountCny", "prodValue",
                 "shares", "feeAmt", "channel", "tranTellName", "remark"};
@@ -1370,7 +1373,8 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
     public List<Map<String, String>> listToMapChbEx(List<List<String>> dataList) {
         String[] fieldName = {"REGIST_BANK_CODE", "CONTRACT_NO", "BUSI_SEQNO", "FIN_ACC",
-                "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME", "FUND_ACC", "FUND_ACC_PLACE", "IS_CONSIGN",
+                "CUST_CONTRACT_NO", "INDENTIFY_MARK", "CUST_NAME","TRADE_SEQ", "FUND_ACC",
+                "FUND_ACC_CODE", "FUND_ACC_NAME", "FUND_ACC_PLACE", "IS_CONSIGN",
                 "AGENCY_CODE", "AGENCY_NAME", "AGENCY_FSA", "REG_CODE", "BUSI_TYPE", "BUSI_FSA",
                 "EQUITY_CONF_DATE", "SHARE_CONF_DATETIME", "CCY", "AMOUNT", "AMOUNT_CNY", "PROD_VALUE",
                 "SHARES", "FEE_AMT", "CHANNEL", "TRAN_TELL_NAME", "REMARK"};
@@ -1451,7 +1455,9 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                 }
                 if (StringUtil.isEmpty(checkMapI.get("registBankCode"))
                         || StringUtil.isEmpty(checkMapI.get("busiSeqno"))
-                        || StringUtil.isEmpty(checkMapI.get("account"))) {
+                        || StringUtil.isEmpty(checkMapI.get("account"))
+                        || StringUtil.isEmpty(checkMapI.get("tradeSeq"))
+                        ||StringUtil.isEmpty(checkMapI.get("equityConfDate"))) {
                     continue;
                 }
                 // 判断导入的数据是否存在重复的主键
@@ -1474,6 +1480,15 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
                         //return result;
                         //updateBy zhangjinyang 数据重复后继续判断 end
                     }
+                    /**add by dxy  投资者明细7月升级  20220519 start*/
+                    if ( checkMapI.get("equityConfDate").equals(checkMapJ.get("equityConfDate"))
+                            && checkMapI.get("tradeSeq").equals(checkMapJ.get("tradeSeq"))
+                            && checkMapI.get("account").equals(checkMapJ.get("account"))) {
+                        result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(j + 2),
+                                this.getMessage("REPORT_COMMON_FILE_E_0028",
+                                        String.valueOf(i + 2) + "," + String.valueOf(j + 2))));
+                    }
+                    /**add by dxy  投资者明细7月升级  20220519 end*/
                 }
             }
             
@@ -1615,7 +1630,18 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
 
                 // 6 客户姓名
                 entity.setCustName(item.get("custName"));
+                /**add  by  dxy 投资者明细7月升级  20220519 start*/
 
+                //交易序列号
+                entity.setTradeSeq(item.get("tradeSeq"));
+
+                //关联活期存款账号开户行代码
+                entity.setFundAccCode(item.get("fundAccCode"));
+
+                //关联活期存款账号开户行名称
+                entity.setFundAccName(item.get("fundAccName"));
+
+                /**add  by  dxy 投资者明细7月升级  20220519 end*/
                 // 7 关联活期存款账号
                 entity.setFundAcc(item.get("fundAcc"));
 
@@ -2354,6 +2380,13 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
             }
             // 过滤主键重复的数据
             DataCheckService.checkDuplicatedData(equityList, "BUSI_SEQNO", "ACCOUNT", "REGIST_BANK_CODE");
+
+            /**statr by dxy 中债7月投资者明细升级  20220518 start*/
+            //过滤：交易序列号+产品代码+交易确认日期
+            DataCheckService.checkDuplicatedData(equityList, "TRADE_SEQ", "ACCOUNT", "EQUITY_CONF_DATE");
+            /**statr by dxy 中债7月投资者明细升级  20220518 end*/
+
+
             List<Map<String, String>> checkMapList = new ArrayList<Map<String, String>>();
             for (Map<String, String> map : equityList) {
                 Map<String, String> checkmap = new HashMap<String, String>();
@@ -3314,6 +3347,11 @@ public class EquityBusiDetails001Service extends CommonExportService<EquiteBusiD
         entity.setRemark(item.get("REMARK"));
         entity.setDeptCode(item.get("DEPT_CODE"));// 部门代码
         entity.setCreateDept(item.get("CREATE_DEPT"));// 创建部门
+        /**statr by dxy 中债7月投资者明细升级  20220518 start*/
+        entity.setTradeSeq(item.get("TRADE_SEQ"));
+        entity.setFundAccCode(item.get("FUND_ACC_CODE"));
+        entity.setFundAccName(item.get("FUND_ACC_NAME"));
+        /**statr by dxy 中债7月投资者明细升级  20220518 end*/
         if (errmsg != null) {
             entity.setInterfCheckResult(errmsg);
         }

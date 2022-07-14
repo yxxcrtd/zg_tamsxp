@@ -193,6 +193,34 @@
 		</div>
 	  </div>
     </div>
+      <div class="layui-form-item">
+          <div class="layui-inline layui-col-md6">
+              <label class="layui-form-label form-label-wrap">交易序列号</label>
+              <div class="layui-input-inline input-inline">
+                  <input type="text" id="tradeSeq" name="tradeSeq" class="layui-input form-input" placeholder="请输入内容"
+                         data-th-placeholder="#{SysCommon.placeholder}" required
+                         data-th-value="${entity?.tradeSeq}" >
+              </div>
+          </div>
+          <div class="layui-inline layui-col-md6">
+              <label class="layui-form-label form-label-wrap">关联活期存款账号开户行代码</label>
+              <div class="layui-input-inline input-inline">
+                  <input type="text" id="fundAccCode" name="fundAccCode" class="layui-input form-input" placeholder="请输入内容"
+                         data-th-placeholder="#{SysCommon.placeholder}" required
+                         data-th-value="${entity?.fundAccCode}" >
+              </div>
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <div class="layui-inline layui-col-md6">
+              <label class="layui-form-label form-label-wrap">关联活期存款账号开户行名称</label>
+              <div class="layui-input-inline input-inline">
+                  <input type="text" id="fundAccName" name="fundAccName" class="layui-input form-input" placeholder="请输入内容"
+                         data-th-placeholder="#{SysCommon.placeholder}" required
+                         data-th-value="${entity?.fundAccName}" >
+              </div>
+          </div>
+      </div>
     <div class="layui-form-item">
       <div class="layui-inline layui-col-md6">
         <label class="layui-form-label form-label-wrap"

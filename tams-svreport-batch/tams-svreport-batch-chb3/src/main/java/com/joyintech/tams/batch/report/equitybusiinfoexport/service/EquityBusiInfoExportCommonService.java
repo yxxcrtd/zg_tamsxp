@@ -74,6 +74,8 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
     private static Logger logger = LoggerFactory.getLogger(EquityBusiInfoExportCommonService.class);
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public String export(long count, Map<String,Object> param, ChbSubinfoBatchLog batchLog){
+        //是否升级投资者明细  01是  02否
+        String isUpgrade = SvrDataUtil.getSysParam("SVR_HX_ISUPGRADE");
         Timestamp startTime = new Timestamp(System.currentTimeMillis());
         int size = StringUtil.integerValueOf(CacheUtil.getSysParam("export_excel_row_count"), 50000);
         long fileCount = (long)Math.ceil((double)count/size);
@@ -96,7 +98,7 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
                 tasks.add(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
-                        return exportByPage(newParam);
+                        return exportByPage(newParam,isUpgrade);
                     }
                 });
             }
@@ -178,14 +180,18 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
 
 
 
-    private boolean exportByPage(Map<String,Object> param){
+    private boolean exportByPage(Map<String,Object> param,String isUpgrade){
         logger.info("分线程读取数据开始"+DateUtil.getDateTimestamp());
         List<EquityBusiInfoRegist001Dto> listDto =  equityBusiInfoExportMapper.selectAllDataByPage(param);
         dealDataList(listDto);
         dealBigDecmailData(listDto);
         int index = (int) param.get("index");
         logger.info("分线程导出开始"+DateUtil.getDateTimestamp());
-        batchMakeFile("/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_batch.xml",listDto,index);
+        if(StringUtil.isNotEmpty(isUpgrade)&&StringUtil.equals("01",isUpgrade)) {
+            batchMakeFile("/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf_batch.xml", listDto, index);
+        }else {
+            batchMakeFile("/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/q_export_conf_batch.xml",listDto,index);
+        }
         logger.info("分线程导出结束"+DateUtil.getDateTimestamp());
         return true;
     }

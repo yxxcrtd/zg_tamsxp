@@ -142,7 +142,10 @@
 		ciis.ORG_CODE               orgCode,
 		ciis.DEPT_CODE              deptCode,
 		ciis.SUMIT_SEQ				sumitSeq,
-		ciis.CHECK_SEQNO			checkSeqno
+		ciis.CHECK_SEQNO			checkSeqno,
+		ciis.TRADE_SEQ              tradeSeq,
+		ciis.FUND_ACC_CODE				fundAccCode,
+		ciis.FUND_ACC_NAME			fundAccName
 		from CHB_EQUDET_SUB ciis
 		left join CHB_EQUDET_SUBMIT_STATUS cs
 		on cs.seqno=ciis.SUMIT_SEQ
