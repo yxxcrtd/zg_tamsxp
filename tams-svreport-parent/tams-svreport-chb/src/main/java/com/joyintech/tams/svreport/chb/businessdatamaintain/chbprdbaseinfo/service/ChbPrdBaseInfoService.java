@@ -9,6 +9,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.CacheUtil;
@@ -263,6 +264,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
                 }
             }
             subMap.put("PRODUUID",IDGenerator.generate(36));
+            subMap.put("CREATE_USER", LoginUserUtil.getUserName());
+            subMap.put("UPDATE_USER",LoginUserUtil.getUserName());
 
             list.add(subMap);
         }
