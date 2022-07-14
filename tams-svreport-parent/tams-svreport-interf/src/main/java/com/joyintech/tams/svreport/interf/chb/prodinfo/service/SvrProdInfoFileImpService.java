@@ -223,10 +223,10 @@ public class SvrProdInfoFileImpService extends FileImpService {
 				if(chbPrdBaseinfo.getProdInsId().equals(chbPrdDeclareInfoDto.getProdInsId())){
 					String prodName = chbPrdBaseinfo.getProdName();
 					String source = chbPrdBaseinfo.getDataSource();
+					chbPrdDeclareInfoDto.setCreateUser(StringUtil.equals("I",dataSource)?"interf":chbPrdBaseinfo.getCreateUser());
+					chbPrdDeclareInfoDto.setUpdateUser(StringUtil.equals("I",dataSource)?"interf":chbPrdBaseinfo.getUpdateUser());
 					BeanUtils.copyProperties(chbPrdDeclareInfoDto,chbPrdBaseinfo);
 					chbPrdBaseinfo.setProdName(prodName);
-					chbPrdBaseinfo.setCreateUser(StringUtil.isEmpty(chbPrdBaseinfo.getCreateUser())?"interf":chbPrdBaseinfo.getCreateUser());
-					chbPrdBaseinfo.setUpdateUser(StringUtil.isEmpty(chbPrdBaseinfo.getUpdateUser())?"interf":chbPrdBaseinfo.getUpdateUser());
 					chbPrdBaseinfo.setDataSource(source);
 					chbPrdBaseinfo.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
 					break;
