@@ -1,0 +1,5 @@
+delete from SYS_MENU where MENU_ID = 'REPORT_MAINTAIN_001_004_011' and PAGE_ID = 'CchbInvestTrade001';
+delete from SYS_MENU where MENU_ID = 'REPORT_MAINTAIN_001_003_002';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_MAINTAIN_001_003_005', 'REP', null, 'REPORT_MAINTAIN_001_003', 'CchbInvestTrade001', 5, '2', '投资交易信息维护', 'system', null, sysdate, 'system', sysdate);
+delete from SYS_PAGE where PAGE_ID = 'CchbInvestTrade001';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('CchbInvestTrade001', 'SVR', '/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001', 'report/chb/businessdatamaintain/chbinvesttrade/ChbInvestTrade001', 'REPORT_MAINTAIN_001_003_005', null, null, '02', '01', '投资交易信息', 'system', null, sysdate, 'system', sysdate);
