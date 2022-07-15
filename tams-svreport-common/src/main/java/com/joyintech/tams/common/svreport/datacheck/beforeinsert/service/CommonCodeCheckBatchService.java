@@ -198,6 +198,9 @@ public class CommonCodeCheckBatchService {
                 case 投资交易表登记TMP:
                     checkInvestTradeInfo(map, prodRegistCodeMap);
                     break;
+                case 投资交易信息接口数据:
+                    checkInvestTrade(map);
+                    break;
                 case 投资交易信息表:
                     checkChbInvestTrade(excelValidDtoList,map,i);
                     break;
@@ -2867,6 +2870,28 @@ public class CommonCodeCheckBatchService {
 //              errMsgBuilder.append("未进行资产要素登记[").append("ASSET_CODE=").append(assetCode).append("];");
 //          }
 //      }
+        dataMap.put("ERRMSG", errMsgBuilder.toString());
+    }
+
+
+    /**
+     * 资交易信息维护数据检查
+     *
+     * @param dataMap 被检查的数据
+     */
+    public void checkInvestTrade(Map<String, String> dataMap) {
+        StringBuilder errMsgBuilder = new StringBuilder(dataMap.getOrDefault("ERRMSG", ""));
+        // 交易对手
+        String tradeCounter = dataMap.get("TRADE_COUNTER");
+        //交易对手代码
+        String counterId = dataMap.get("COUNTER_ID");
+        ChbMstCounterParty chbMstCounterParty = commonCodeCheckMapper.selectOneCounterParty(tradeCounter,"E");
+        if (chbMstCounterParty!=null) {
+            if (Objects.equals(chbMstCounterParty.getRelatedTradeStatus(),"99")) {
+                errMsgBuilder.append("交易对手关联交易情况为“99 其他关联交易情况”时, 备注不能为空[").append("COUNTER_ID=").append(counterId).append("];");;
+            }
+
+        }
         dataMap.put("ERRMSG", errMsgBuilder.toString());
     }
 

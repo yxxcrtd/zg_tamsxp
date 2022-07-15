@@ -380,4 +380,27 @@
     <select id="checkExistsFsubjectId" resultType="java.lang.Integer">
         select count(1) from BOK_SUBJECT where SUBJECT_NO = #{fsubjectId}
     </select>
+
+    <select id="selectOneCounterParty" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+        SELECT
+            a.STATUS,
+            a.COUNTER_ID,
+            a.COUNTER_NAME,
+            a.RELATED_TRADE_STATUS,
+            a.COUNTER_TYPE1,
+            a.COUNTER_TYPE2,
+            a.CREATE_USER,
+            a.CREATE_TIME as createTime,
+            a.UPDATE_USER,
+            a.UPDATE_TIME as updateTime,
+            a.SVR_DATA_SOURCES as dataSource,
+            '' as uuid
+        FROM
+            chb_mst_counter_party a
+        where
+            PROD_ID = #{prodId}
+          and TRADE_CODE = #{tradeCode}
+          and CUR_ASSET_TYPE = #{curAssetType}
+          and STATUS = 'E'
+    </select>
 </mapper>
