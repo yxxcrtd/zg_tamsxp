@@ -112,6 +112,20 @@ public class ChbAssetsBasisData extends BaseEntity {
     private BigDecimal tdyLossAmt;
 
     /**
+     * 影子价格
+     */
+    private BigDecimal shadowAmt;
+
+
+    public BigDecimal getShadowAmt() {
+        return shadowAmt;
+    }
+
+    public void setShadowAmt(BigDecimal shadowAmt) {
+        this.shadowAmt = shadowAmt;
+    }
+
+    /**
      * 取得 主键
      * @return 主键
      */

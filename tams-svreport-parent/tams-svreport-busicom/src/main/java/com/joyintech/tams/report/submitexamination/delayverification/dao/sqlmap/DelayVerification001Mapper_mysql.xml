@@ -2061,12 +2061,14 @@
                 concat_ws('', '机构代码 ' ,info.ORG_CODE , ',内部编号 ' , info.SALER_INS_NO) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
-            <when test="tableId !=null and tableId=='CHB_AGENT_INSTITUTION_SUB'">
-                concat_ws('', '代销机构代码 ', info.AGENT_INSTITUTION_CODE) as code,
+            <!-- 16. 产品持仓登记 -->
+            <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
+                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
-            <when test="tableId !=null and tableId=='CHB_AGENT_PRD_SUB'">
-                concat_ws('', '产品登记编码 ' , info.PROD_REGIST_CODE , ',代销机构代码 ' , info.AGENT_INSTITUTION_CODE) as code,
+            <!-- 17. 产品状态登记 -->
+            <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
+                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
         </choose>
@@ -2082,13 +2084,7 @@
         info.SUBMIT_TIME as submitTime,
         info.CHB_SUBMIT_DEADLINE as submitDeadline,
         <choose>
-            <when test="tableId != null and tableId == 'CHB_AGENT_INSTITUTION_SUB'">
-                null ORG_CODE,
-            </when>
-            <when test="tableId != null and tableId == 'CHB_AGENT_PRD_SUB'">
-                null ORG_CODE,
-            </when>
-            <otherwise>
+            <when test="tableId != 'CHB_AST_POS_SUB' and tableId != 'CHB_PRD_STATUS_SUB'">
                 info.ORG_CODE,
             </otherwise>
         </choose>
@@ -2340,7 +2336,18 @@
                     <when test="tableId !=null and tableId=='CHB_EQUDET_SUB'">
                         concat_ws('','机构代码 ', info.ORG_CODE , '，产品登记编码' , info.REG_CODE ,'，核心交易流水号' , info.BUSI_SEQNO ) as code,
                         info.SUBMIT_STATUS as submitStatus,
-                    </when>
+
+
+                        <!-- 16. 产品持仓登记 -->
+                        <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
+                            concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                            info.SEND_STATUS as submitStatus,
+                        </when>
+                        <!-- 17. 产品状态登记 -->
+                        <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
+                            concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                            info.SEND_STATUS as submitStatus,
+                        </when></when>
                 </choose>
                 <!-- sdl2.ITEM_VALUE as submitStatus, -->
                 <!-- <choose>
@@ -2353,7 +2360,11 @@
                 </choose> -->
                 info.SUBMIT_TIME as submitTime,
                 info.CHB_SUBMIT_DEADLINE as submitDeadline,
-                info.ORG_CODE,
+                <choose>
+                    <when test="tableId != 'CHB_AST_POS_SUB' and tableId != 'CHB_PRD_STATUS_SUB'">
+                        info.ORG_CODE,
+                    </when>
+                </choose>
                 info.CREATE_DEPT,
                 info.CREATE_USER AS createUser,
                 info.CREATE_DEPT AS createDept,
