@@ -1,16 +1,16 @@
 package com.joyintech.tams.common;
 
 import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
+import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbMstCounterPartyInterfMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.ChbInterfConfigDto;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.svreport.interf.chb.investtrade.service.SvrInvestTradeFileImpService;
 import com.joyintech.tams.svreport.interf.dis.tradeinfo.service.DisRepTreadInfoService;
@@ -40,6 +45,8 @@ public class InvestTradeFileImpService extends AbstractFileImpService {
 	private SvrInvestTradeFileImpService svrInvestTradeFileImpService;
 	@Autowired
 	private DisRepTreadInfoService disRepTreadInfoService;
+	@Autowired
+	private ChbMstCounterPartyInterfMapper chbMstCounterPartyInterfMapper;
 
 	/**
 	 * 日志
@@ -104,7 +111,21 @@ public class InvestTradeFileImpService extends AbstractFileImpService {
 			}
 			@SuppressWarnings("unchecked")
 			List<Map<String, String>> dataList = (List<Map<String, String>>) parseResult.get("dataList");
-			
+
+				//查询所有有效的交易对手数据
+				List<ChbMstCounterParty> counterPartyList = chbMstCounterPartyInterfMapper.selectOneDate("E");
+				Map<String, ChbMstCounterParty> counterPartyMap = counterPartyList.stream().collect(Collectors.toMap(ChbMstCounterParty::getCounterId, ChbMstCounterParty -> ChbMstCounterParty));
+				for (Map<String, String> data: dataList) {
+					//交易对手的备注中取
+					if (counterPartyMap.containsKey(data.get("TRADE_COUNTER"))) {
+						ChbMstCounterParty counterParty = counterPartyMap.get(data.get("TRADE_COUNTER"));
+						if (Objects.equals(counterParty.getRelatedTradeStatus(),"99")) {
+							data.put("REMARK", counterParty.getRemark());
+						}
+					}
+				}
+
+
 			// 创建线程池
 			ExecutorService taskpool = new JoyinThreadPoolExecutor(serviceList.size());
 			List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -113,7 +134,7 @@ public class InvestTradeFileImpService extends AbstractFileImpService {
 				FileImpService service = serviceList.get(i);
 				tasks.add(new Callable<Boolean>() {
 					@Override
-					public Boolean call() throws ParseException {
+					public Boolean call()  {
 						Boolean res = true;
 						if ("fail".equals(service.importDB(null, service.copyDataList(dataList),interfFile, currentDate))) {
 							res = false;

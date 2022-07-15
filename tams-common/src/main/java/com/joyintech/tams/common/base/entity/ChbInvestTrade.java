@@ -128,6 +128,11 @@ public class ChbInvestTrade extends BaseChbEntity implements Cloneable{
     private String tradeType;
 
     /**
+     * 交易发起时间
+     */
+    private Date tradeTime;
+
+    /**
      * 通道名称
      */
     private String chlAgrtName;
@@ -216,8 +221,21 @@ public class ChbInvestTrade extends BaseChbEntity implements Cloneable{
      * 划款方式
      */
     private String payType;
-    
-   /**
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    /**
+     * 数据来源
+     */
+    private String svrDataSources;
+
+    /**
      * 资产计量方式
      */
     private String assetMethod;
