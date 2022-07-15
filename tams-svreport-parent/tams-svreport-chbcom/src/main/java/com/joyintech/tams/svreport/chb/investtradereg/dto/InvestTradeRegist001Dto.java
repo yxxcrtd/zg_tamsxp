@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 
 /**
  * 描述:CHB_INVEST_TRADE_SUB表的实体类
@@ -106,6 +107,16 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
      * 交易日
      */
     private Date dealdate;
+
+    /**
+     * 交易交易起始日
+     */
+    private Date tradeTime;
+    /**
+     * 关联交易情况
+     */
+    @DictFormat(DictCode.关联交易情况)
+    private String relatedTradeStatus;
 
     /**
      * 交易对手
@@ -1271,6 +1282,31 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
         return dealdateStr;
     }
 
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    public String getRelatedTradeStatus() {
+        return relatedTradeStatus;
+    }
+
+    public void setRelatedTradeStatus(String relatedTradeStatus) {
+        this.relatedTradeStatus = relatedTradeStatus;
+    }
+    public String getRelatedTradeStatusStr() {
+        if (StringUtil.isNotBlank(relatedTradeStatus)){
+            return relatedTradeStatus.trim() +" "+SysDataUtil.getNameFromDataDict(DictCode.关联交易情况, relatedTradeStatus);
+        }
+        return relatedTradeStatus;
+    }
+
+    public String getTradeTimeStr() {
+        return DateUtil.format(this.getTradeTime(), "yyyyMMddHHmmss");
+    }
     public void setDealdateStr(String dealdateStr) {
         this.dealdateStr = dealdateStr;
     }
