@@ -153,7 +153,9 @@ GROUP BY asset.POS_DATE,
       WORKFLOW_ID, STATUS, ORG_CODE, 
       DEPT_CODE, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
-      DATASOURCE,INT_AMT,CASH_FLAG
+      DATASOURCE,INT_AMT,CASH_FLAG,
+      SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT
       )
      values(
       #{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP}, 
@@ -163,7 +165,10 @@ GROUP BY asset.POS_DATE,
       #{workflowId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 
       #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
       sysdate, #{updateUser,jdbcType=VARCHAR}, sysdate, 
-      #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR}
+      #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR},
+      #{shadowAmt,jdbcType=DECIMAL},#{posAmtCprice,jdbcType=DECIMAL},#{oIssueAmt,jdbcType=DECIMAL},
+      #{oUninvestCash,jdbcType=DECIMAL},#{oPosAmt,jdbcType=DECIMAL},#{oShadowAmt,jdbcType=DECIMAL},
+      #{oPosAmtCprice,jdbcType=DECIMAL},#{oIntAmt,jdbcType=DECIMAL}
       )
   </insert>
 

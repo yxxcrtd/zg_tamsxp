@@ -74,6 +74,11 @@
 		and SUB.STATUS != '03')
 		and POS.STATUS != 'D'
 		and POS.ASSET_CODE!='REMAININGCASH'
+		<if test='subjectNoList!=null and subjectNoList.size()>0'>
+			<foreach collection="subjectNoList" item="subjectNo" index="index" open="and POS.ASSET_CODE not in (" close=")" separator=",">
+				#{subjectNo,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
 

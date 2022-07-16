@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.datacheck.beforesub.dao;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,4 +61,13 @@ public interface ChbBeforeSubErrorCheckMapper {
 	List<Map<String, String>> selectChbEmployeeSub(@Param("checkdate") Date checkdate);
 	
 	int isInEmployeeSub(@Param("key") String key);
+
+
+    List<Map<String,Object>> selectChbAstPosSub(@Param("checkdate") Date checkdate,@Param("keys") List<String> keys);
+
+    BigDecimal selectPositionAmt(@Param("prodId")String prodId, @Param("checkdate") String checkdate);
+
+    BigDecimal  selectMonthAssetTotalAmt(@Param("termid")String termid);
+
+    BigDecimal  selectMonthAssetTotalBoAmt(@Param("termid")String termid);
 }

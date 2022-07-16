@@ -2,6 +2,7 @@ package com.joyintech.tams.common.base.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述:CHB_BOT_AST_POS表的实体类
@@ -9,7 +10,7 @@ import java.util.Date;
  * @author:  Administrator
  * @创建时间: 2019-01-28
  */
-public class ChbBotAstPosition extends ChbBotAstPositionKey{
+public class ChbBotAstPosition extends ChbBotAstPositionKey {
 
     /**
      * 发行机构代码
@@ -42,9 +43,19 @@ public class ChbBotAstPosition extends ChbBotAstPositionKey{
     private BigDecimal issueAmt;
 
     /**
+     * 人民币发行金额-原币
+     */
+    private BigDecimal oIssueAmt;
+
+    /**
      * 未投资头寸
      */
     private BigDecimal uninvestCash;
+
+    /**
+     * 未投资头寸-原币
+     */
+    private BigDecimal oUninvestCash;
 
     /**
      * 持仓数量
@@ -140,6 +151,36 @@ public class ChbBotAstPosition extends ChbBotAstPositionKey{
      * 利息
      */
     private BigDecimal intAmt;
+
+    /**
+     * 底层资产折算人民币影子价格
+     */
+    private BigDecimal    shadowAmt;
+
+    /**
+     * 底层资产折算人民币净价市值
+     */
+    private BigDecimal  posAmtCprice;
+
+    /**
+     * 原币-底层资产影子价格
+     */
+    private  BigDecimal oShadowAmt;
+    /**
+     * 原币-利息
+     */
+    private  BigDecimal oIntAmt;
+
+    /**
+     * 原币-底层资产净价市值
+     */
+    private  BigDecimal oPosAmtCprice;
+
+    /**
+     * 原币-底层资产全价币值（元）
+     */
+    private  BigDecimal oPosAmt;
+
 
     /**
      * 发行机构代码
@@ -506,6 +547,7 @@ public class ChbBotAstPosition extends ChbBotAstPositionKey{
 	public void setMonthReport(String monthReport) {
 		this.monthReport = monthReport;
 	}
+
     public String getCashFlag() {
         return cashFlag;
     }
@@ -521,7 +563,84 @@ public class ChbBotAstPosition extends ChbBotAstPositionKey{
     public void setIntAmt(BigDecimal intAmt) {
         this.intAmt = intAmt;
     }
+
     public String getPlanAssetIdAndSubjectCd() {
-        return this.getPlanAssetId() + this.getAssetCode();
+	    return this.getPlanAssetId() + this.getAssetCode();
+    }
+
+    public BigDecimal getoUninvestCash() {
+        return oUninvestCash;
+    }
+
+    public void setoUninvestCash(BigDecimal oUninvestCash) {
+        this.oUninvestCash = oUninvestCash;
+    }
+
+    public BigDecimal getoIssueAmt() {
+        return oIssueAmt;
+    }
+
+    public void setoIssueAmt(BigDecimal oIssueAmt) {
+        this.oIssueAmt = oIssueAmt;
+    }
+
+
+    public BigDecimal getShadowAmt() {
+        return shadowAmt;
+    }
+
+    public void setShadowAmt(BigDecimal shadowAmt) {
+        this.shadowAmt = shadowAmt;
+    }
+
+    public BigDecimal getoShadowAmt() {
+        return oShadowAmt;
+    }
+
+    public void setoShadowAmt(BigDecimal oShadowAmt) {
+        this.oShadowAmt = oShadowAmt;
+    }
+
+    public BigDecimal getoIntAmt() {
+        return oIntAmt;
+    }
+
+    public void setoIntAmt(BigDecimal oIntAmt) {
+        this.oIntAmt = oIntAmt;
+    }
+
+
+    public BigDecimal getoPosAmt() {
+        return oPosAmt;
+    }
+
+    public void setoPosAmt(BigDecimal oPosAmt) {
+        this.oPosAmt = oPosAmt;
+    }
+
+    public BigDecimal getPosAmtCprice() {
+        return posAmtCprice;
+    }
+
+    public void setPosAmtCprice(BigDecimal posAmtCprice) {
+        this.posAmtCprice = posAmtCprice;
+    }
+
+    public BigDecimal getoPosAmtCprice() {
+        return oPosAmtCprice;
+    }
+
+    public void setoPosAmtCprice(BigDecimal oPosAmtCprice) {
+        this.oPosAmtCprice = oPosAmtCprice;
+    }
+
+    private List<String> subjectNoList;
+
+    public List<String> getSubjectNoList() {
+        return subjectNoList;
+    }
+
+    public void setSubjectNoList(List<String> subjectNoList) {
+        this.subjectNoList = subjectNoList;
     }
 }

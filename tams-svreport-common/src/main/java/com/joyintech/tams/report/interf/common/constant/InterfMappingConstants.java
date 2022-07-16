@@ -104,4 +104,17 @@ public final class InterfMappingConstants {
 	 */
 	public static final String SUBASSETTYPE_ORSTOCK = "SUBASSETTYPE_ORSTOCK";
 	// 理财子新增 新增理财子公司月报资产头寸字段设置 end
+
+	/**
+	 * 资产持仓登记直投科目体系
+	 */
+	public static final String SUBJECT_INVEST_TYPE_NAME = "SUBJECT_INVEST_TYPE_NAME";
+	/**
+	 * 资产持仓登记底层科目体系
+	 */
+	public static final String BOTTON_SUBJECT_INVEST_TYPE_NAME = "BOTTON_SUBJECT_INVEST_TYPE_NAME";
+	/**
+	 * 资产类型和品种映射配置
+	 */
+	public static final String ASSET_TYPE2_CATA_TYPE = "ASSET_TYPE2_CATA_TYPE";
 }

@@ -602,7 +602,11 @@
     	and  pos.status !='D'
     	and  info.status!='D'
         and  pos.asset_code!='REMAININGCASH'
-    	
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and pos.asset_code not in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
   	</select>
   	<select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
   		flushCache="true" useCache="false">
@@ -672,7 +676,12 @@
     POSITION.IN_ASSET_TYPE,
     POSITION.PPPFLAG, POSITION.MONIT_TYPE, POSITION.MANAGE_TYPE, 
     POSITION.IS_GOVERN_FUND1, POSITION.PRIVATEFUND_FLAG, POSITION.PRIVATEPRD_FLAG, 
-    POSITION.BONDTOSTOCK_FLAG, POSITION.RATING,POSITION.ASSETTYPE2,ASSETINFO.ASSET_TYPE3,
+    POSITION.BONDTOSTOCK_FLAG,
+    case when POSITION.RATING='99'
+      THEN NULL
+      ELSE POSITION.RATING
+      END RATING
+    ,POSITION.ASSETTYPE2,ASSETINFO.ASSET_TYPE3,
     ASSETINFO.BANK_SEC_CAPITAL,
     ASSETINFO.BANK_SEC_PERPETUAL,
     ASSETINFO.BANK_SEC_PREFER,

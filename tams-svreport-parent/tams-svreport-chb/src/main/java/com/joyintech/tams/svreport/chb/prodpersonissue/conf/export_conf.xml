@@ -18,12 +18,13 @@
 			<Cell order="14" name="开放模式">openModeStr</Cell>
 			<Cell order="15" name="规律开放周期">openCircleStr</Cell>
 			<Cell order="16" name="其他规律开放周期 (天)">openCircleDays</Cell>
-			<Cell order="17" name="无规律开放说明">ruleComment</Cell>
-			<Cell order="18" name="首次开放周期起始日">firstOpenDayStr</Cell>
-			<Cell order="19" name="节假日是否开放">holidayOnFlagStr</Cell>
-			<Cell order="20" name="平均开放次数（年化）">avgOpenCount</Cell>
-			<Cell order="21" name="开放期业务">openBussStr</Cell>
-			<Cell order="22" name="开放期业务说明">openBussRemark</Cell>
+			<Cell order="17" name="定期开放周期 (天)">periodicIntervalDays</Cell>
+			<Cell order="18" name="无规律开放说明">ruleComment</Cell>
+			<Cell order="19" name="首次开放周期起始日">firstOpenDayStr</Cell>
+			<Cell order="20" name="节假日是否开放">holidayOnFlagStr</Cell>
+			<Cell order="21" name="平均开放次数（年化）">avgOpenCount</Cell>
+			<Cell order="22" name="开放期业务">openBussStr</Cell>
+			<Cell order="23" name="开放期业务说明">openBussRemark</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

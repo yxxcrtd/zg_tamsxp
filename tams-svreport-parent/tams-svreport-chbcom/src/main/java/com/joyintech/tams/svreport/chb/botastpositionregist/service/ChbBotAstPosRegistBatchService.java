@@ -1,14 +1,13 @@
 package com.joyintech.tams.svreport.chb.botastpositionregist.service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
+import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,11 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
      */
     @Autowired
     private ChbCommonCheckService chbCommonCheckService;
-    
+	/**
+	 * 映射配置mapper
+	 */
+	@Autowired
+	private ChbTypeMappingExMapper chbTypeMappingExMapper;
     
 	public void createRegist(Date batchTime,String InstitutionCode){
         // 设置批处理bean
@@ -70,6 +73,14 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
 		List<Date> isUpdate = chbBotAstPosCBMapper.queryUpdateDate(DateUtil.format(batchTime));
 		if(CollectionUtils.isEmpty(isUpdate))
 			return;
+		//取得系统配置的科目信息
+		List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
+				.selectByMappingcode(InterfMappingConstants.BOTTON_SUBJECT_INVEST_TYPE_NAME);
+		List<String> subjectNoList = new ArrayList<String>();
+		for(ChbTypeMappingEx mapping: subjectNoMappingList){
+			// 获取源属性1：科目号
+			subjectNoList.add(mapping.getSrcfield1());
+		}
 		for(Date posDate : isUpdate){
 			//每周日或每月最后一天生成登记
 			if(!isLastDay(posDate)) continue;
@@ -118,7 +129,7 @@ public class ChbBotAstPosRegistBatchService  extends SvrCBBaseService{
             //生成数据状态为“新建”，报送状态为“未报送”的登记
             // modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
             List<ChbBotAstPositionSub> insertDataList = chbBotAstPosCBMapper.queryInsertGenerateList(DateUtil.format(posDate), isChbBtm, ToolsUtil.getCurrentTime(batchTime),
-                    null, null,InstitutionCode);
+                    null, null,InstitutionCode,subjectNoList);
 
 			for (ChbBotAstPositionSub sub:insertDataList) {
 				List<Date>  dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(),

@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.svreport.chb.astposregist.dao.ChbAstPosRegist001Mapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto" >
+        <result column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PRD_REGIST_CODE" property="prdRegistCode" jdbcType="VARCHAR" />
+        <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="TIMESTAMP" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="POS_TYPE" property="posType" jdbcType="VARCHAR" />
+        <result column="INTER_LEVE_NO" property="interLeveNo" jdbcType="VARCHAR" />
+        <result column="INTER_ASSET_TYPE" property="interAssetType" jdbcType="VARCHAR" />
+        <result column="INTER_ASSET_CODE" property="interAssetCode" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
+        <result column="FLOAT_INGPL" property="floatIngpl" jdbcType="DECIMAL" />
+        <result column="CNY_FLOAT_INGPL" property="cnyFloatIngpl" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_CPRICE" property="unitValueCprice" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_FPRICE" property="unitValueFprice" jdbcType="DECIMAL" />
+        <result column="QTY" property="qty" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="BALANCE_AMT" property="balanceAmt" jdbcType="DECIMAL" />
+        <result column="VALUE_REG_DATE" property="valueRegDate" jdbcType="TIMESTAMP" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <select id="genExcuteDate" resultType="java.util.Date">
+        SELECT
+        MIN(A.CDATA)
+        FROM (SELECT MAX(VALUE_DATE) AS CDATA
+        FROM chb_assets_basis_data
+        where VALUE_DATE &lt; STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
+        UNION ALL
+        SELECT MAX(BALANCE_DATE) AS CDATE
+        FROM bok_balance
+        where BALANCE_DATE &lt; STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
+        ) A
+    </select>
+
+    <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto">
+        select
+        sub.REGIST_SEQNO  as registSeqno,
+        sub.PROD_ID  as prodId,
+        sub.ISSUE_PARTY_ID as issuePartyId,
+        sub.PRD_REGIST_CODE as prdRegistCode,
+        sub.TERMID as termid,
+        sub.VALUE_DATE as valueDate,
+        sub.ASSET_ID as assetId,
+        sub.POS_TYPE as posType,
+        sub.INTER_LEVE_NO as interLeveNo,
+        sub.INTER_ASSET_TYPE as interAssetType,
+        sub.INTER_ASSET_CODE as interAssetCode,
+        sub.SUBJECT_NAME as subjectName,
+        sub.AMT as amt,
+        sub.CNY_AMT as cnyAmt,
+        sub.FLOAT_INGPL as floatIngpl,
+        sub.CNY_FLOAT_INGPL as cnyFloatIngpl,
+        sub.UNIT_VALUE_CPRICE as unitValueCprice,
+        sub.UNIT_VALUE_FPRICE as unitValueFprice,
+        sub.QTY  as  qty,
+        sub.CCY as ccy,
+        sub.REMARK as remark,
+        sub.BALANCE_AMT as balanceAmt,
+        sub.VALUE_REG_DATE as valueRegDate,
+        sub.SEND_STATUS as sendStatus,
+        sub.STATUS_DATE as statusDate,
+        sub.STATUS as status,
+        sub.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE as submitDeadline,
+        sub.SUBMIT_TIME as submitTime,
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+        sub.CREATE_DEPT as  createDept,
+        sub.CREATE_USER as  createUser,
+        sub.CREATE_TIME as createTime,
+        sub.UPDATE_USER as updateUser,
+        sub.UPDATE_TIME as updateTime,
+        sub.SEND_STATUS as sendStatusStr,
+        sub.STATUS as statusStr,
+        sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatusStr,
+        sub.POS_TYPE as posTypeStr,
+        sub.INTER_ASSET_TYPE as interAssetTypeStr,
+        sub.CCY as ccyStr
+        from CHB_AST_POS_SUB sub
+        where 1=1
+        <if test="registCodeList != null and registCodeList.size()>0">
+            <foreach collection="registCodeList" item="items" open="and sub.PRD_REGIST_CODE in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="assetIdList != null and assetIdList.size()>0">
+            <foreach collection="assetIdList" item="items" open="and sub.ASSET_ID in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="posTypeList != null and posTypeList.size()>0">
+            <foreach collection="posTypeList" item="items" open="and sub.POS_TYPE in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="valueDateStart != null and valueDateStart != ''">
+            and DATE_FORMAT(sub.VALUE_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{valueDateStart}
+        </if>
+        <if test="valueDateEnd != null and valueDateEnd != ''">
+            and DATE_FORMAT(sub.VALUE_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{valueDateEnd}
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
+        </if>
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
+        </if>
+        <if test="termid != null and termid != ''">
+            and  sub.TERMID = #{termid,jdbcType=VARCHAR}
+        </if>
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="statusList != null and statusList">
+            <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+            <foreach collection="submitFeedbackStatusList" item='items' open= "and sub.SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by sub.SUBMIT_DEADLINE
+    </select>
+
+    <select id="selectAllDataByList" resultMap="BaseResultMap">
+        select
+        sub.REGIST_SEQNO,
+        sub.PROD_ID,
+        sub.ISSUE_PARTY_ID,
+        sub.PRD_REGIST_CODE,
+        sub.TERMID,
+        sub.VALUE_DATE,
+        sub.ASSET_ID,
+        sub.POS_TYPE,
+        sub.INTER_LEVE_NO,
+        sub.INTER_ASSET_TYPE,
+        sub.INTER_ASSET_CODE,
+        sub.SUBJECT_NAME,
+        sub.AMT,
+        sub.CNY_AMT,
+        sub.FLOAT_INGPL,
+        sub.CNY_FLOAT_INGPL,
+        sub.UNIT_VALUE_CPRICE,
+        sub.UNIT_VALUE_FPRICE,
+        sub.QTY,
+        sub.CCY,
+        sub.REMARK,
+        sub.BALANCE_AMT,
+        sub.VALUE_REG_DATE,
+        sub.SEND_STATUS,
+        sub.STATUS_DATE,
+        sub.STATUS,
+        sub.CHB_SUBMIT_DEADLINE,
+        sub.SUBMIT_DEADLINE,
+        sub.SUBMIT_TIME,
+        sub.SUBMIT_FEEDBACK_STATUS,
+        sub.CREATE_DEPT,
+        sub.CREATE_USER,
+        sub.CREATE_TIME,
+        sub.UPDATE_USER,
+        sub.UPDATE_TIME
+        from CHB_AST_POS_SUB sub
+        where 1=1
+        <if test="keyList != null and keyList.size() > 0">
+            <foreach collection="keyList" item="items" open="and sub.TERMID in (" separator="," close=")">
+                #{items.termid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by sub.SUBMIT_DEADLINE
+    </select>
+
+    <select id="selectRegistSeqnoList" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto">
+        select REGIST_SEQNO
+        from CHB_AST_POS_SUB
+        where
+        <if test="flag=='02'">
+            SEND_STATUS in ('02','03')
+        </if>
+        <if test="flag=='01'">
+            SEND_STATUS = '01'
+        </if>
+        <foreach collection="list" item="item" open="and ( (" separator=") or (" close=") )">
+         REGIST_SEQNO != #{item.registSeqno,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+        update CHB_AST_POS_SUB sub
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            sub.SUBMIT_FEEDBACK_STATUS = '03',
+            sub.submit_time = NOW(),
+            sub.UPDATE_TIME = NOW()
+        </set>
+        <where>
+            <foreach collection="registList" item="item" open="(" close=")" separator=") or (">
+                sub.TERMID = #{item.termid}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="updateAllInterfSubmitAndSeqBatch">
+        update CHB_AST_POS_SUB sub
+        <set>
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            sub.submit_time = NOW(),
+            sub.UPDATE_TIME = NOW()
+        </set>
+        <where>
+            sub.SEND_STATUS = '01'
+        </where>
+    </update>
+
+    <insert id="insertSubHisBatch"  parameterType="java.lang.String">
+    insert into CHB_AST_POS_SUB_HIS (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+            PRD_REGIST_CODE, TERMID, VALUE_DATE,
+            ASSET_ID, POS_TYPE, INTER_LEVE_NO,
+            INTER_ASSET_TYPE, INTER_ASSET_CODE, SUBJECT_NAME,
+            AMT, CNY_AMT, FLOAT_INGPL,
+            CNY_FLOAT_INGPL, UNIT_VALUE_CPRICE, UNIT_VALUE_FPRICE,
+            QTY, CCY, REMARK, BALANCE_AMT,
+            VALUE_REG_DATE, SEND_STATUS, STATUS_DATE,
+            STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+            SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME
+      )
+      select
+            REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+            PRD_REGIST_CODE, TERMID, VALUE_DATE,
+            ASSET_ID, POS_TYPE, INTER_LEVE_NO,
+            INTER_ASSET_TYPE, INTER_ASSET_CODE, SUBJECT_NAME,
+            AMT, CNY_AMT, FLOAT_INGPL,
+            CNY_FLOAT_INGPL, UNIT_VALUE_CPRICE, UNIT_VALUE_FPRICE,
+            QTY, CCY, REMARK, BALANCE_AMT,
+            VALUE_REG_DATE, SEND_STATUS, STATUS_DATE,
+            STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+            SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME
+    from CHB_AST_POS_SUB
+    where SEND_STATUS in ('02','03')
+        <if test="regList !=null and regList.size()>0">
+            <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteRegistSeqnoList">
+        delete from CHB_BOT_AST_POS_SUB
+        where
+        <foreach collection="regList" item="item" open="REGIST_SEQNO in (" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+   </delete>
+
+    <select id="selectByprodId" resultType="java.lang.String" parameterType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto">
+        select a.REGIST_SEQNO from (
+        SELECT
+        @rownum:=@rownum+1 rownum,
+        REGIST_SEQNO,
+        IF( (@prod_id = a.prod_id  and  @asset_id = a.asset_id and @inter_asset_code = a.inter_asset_code ), @rank := @rank + 1, @rank := 1 ) AS myrank,
+        @prod_id := a.prod_id,
+        @asset_id = a.asset_id,
+        @inter_asset_code = a.inter_asset_code
+        FROM
+        ( SELECT * FROM CHB_AST_POS_SUB_HIS  ORDER BY  ifnull( UPDATE_TIME, CREATE_TIME ) DESC) a,
+        ( SELECT @rownum := 0, @prod_id := NULL, @rank := 0 )b
+        where
+        <foreach collection="regList" item="item" open="(" separator=") or (" close=")">
+            prod_id = #{item.prodId,jdbcType=VARCHAR}
+            and asset_id = #{item.assetId,jdbcType=VARCHAR}
+            and inter_asset_code = #{item.interAssetCode,jdbcType=VARCHAR}
+        </foreach>
+        )a
+        where 1=1    and a.myrank=1
+    </select>
+
+    <update id="updateTerminationRegist"  parameterType="java.util.Map">
+        update CHB_AST_POS_SUB
+        <set>
+            SEND_STATUS = '01',
+            UPDATE_TIME = NOW(),
+            SUBMIT_TIME = null,
+            SUBMIT_FEEDBACK_STATUS = null
+        </set>
+        <where>
+            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                TERMID = #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+     </update>
+
+    <insert id="insertSeletForSub" parameterType="java.lang.String">
+      insert into CHB_AST_POS_SUB (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+            PRD_REGIST_CODE, TERMID, VALUE_DATE,
+            ASSET_ID, POS_TYPE, INTER_LEVE_NO,
+            INTER_ASSET_TYPE, INTER_ASSET_CODE, SUBJECT_NAME,
+            AMT, CNY_AMT, FLOAT_INGPL,
+            CNY_FLOAT_INGPL, UNIT_VALUE_CPRICE, UNIT_VALUE_FPRICE,
+            QTY, CCY, REMARK, BALANCE_AMT,
+            VALUE_REG_DATE, SEND_STATUS, STATUS_DATE,
+            STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+            SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME
+      )
+      select
+      REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+            PRD_REGIST_CODE, TERMID, VALUE_DATE,
+            ASSET_ID, POS_TYPE, INTER_LEVE_NO,
+            INTER_ASSET_TYPE, INTER_ASSET_CODE, SUBJECT_NAME,
+            AMT, CNY_AMT, FLOAT_INGPL,
+            CNY_FLOAT_INGPL, UNIT_VALUE_CPRICE, UNIT_VALUE_FPRICE,
+            QTY, CCY, REMARK, BALANCE_AMT,
+            VALUE_REG_DATE, SEND_STATUS, STATUS_DATE,
+            STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+            SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME
+    from CHB_AST_POS_SUB_HIS
+        where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
+        <if test="regList !=null and regList.size()>0">
+            <foreach collection="regList" item="item" open="and REGIST_SEQNO IN (" separator=","  close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </insert>
+
+
+    <delete id="deleteBySeqno">
+        delete from CHB_AST_POS_SUB_HIS
+        where
+        <foreach collection="seqnolist" item="item" open="REGIST_SEQNO in ("
+                 separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
+    <select id="selectAllDataByKeyList" resultMap="BaseResultMap"  parameterType="java.util.List" >
+        select
+        sub.REGIST_SEQNO,
+        sub.PROD_ID,
+        sub.ISSUE_PARTY_ID,
+        sub.PRD_REGIST_CODE,
+        sub.TERMID,
+        sub.VALUE_DATE,
+        sub.ASSET_ID,
+        sub.POS_TYPE,
+        sub.INTER_LEVE_NO,
+        sub.INTER_ASSET_TYPE,
+        sub.INTER_ASSET_CODE,
+        sub.SUBJECT_NAME,
+        sub.AMT,
+        sub.CNY_AMT,
+        sub.FLOAT_INGPL,
+        sub.CNY_FLOAT_INGPL,
+        sub.UNIT_VALUE_CPRICE,
+        sub.UNIT_VALUE_FPRICE,
+        sub.QTY,
+        sub.CCY,
+        sub.REMARK,
+        sub.BALANCE_AMT,
+        sub.VALUE_REG_DATE,
+        sub.SEND_STATUS,
+        sub.STATUS_DATE,
+        sub.STATUS,
+        sub.CHB_SUBMIT_DEADLINE,
+        sub.SUBMIT_DEADLINE,
+        sub.SUBMIT_TIME,
+        sub.SUBMIT_FEEDBACK_STATUS,
+        sub.CREATE_DEPT,
+        sub.CREATE_USER,
+        sub.CREATE_TIME,
+        sub.UPDATE_USER,
+        sub.UPDATE_TIME
+        from CHB_AST_POS_SUB sub
+        where 1=1
+        <if test="keyList != null and keyList.size() > 0">
+            <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        order by sub.SUBMIT_DEADLINE
+    </select>
+
+    <select id="generateDate">
+SELECT
+MIN(A.CDATA)
+FROM (SELECT MAX(VALUE_DATE) AS CDATA
+      FROM chb_assets_basis_data
+      where VALUE_DATE &lt;  STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
+      and status !='D'
+      UNION ALL
+      SELECT MAX(BALANCE_DATE) AS CDATE
+      FROM bok_balance
+      where BALANCE_DATE &lt; STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
+     ) A
+
+    </select>
+
+    <select id="selectsubmitRecodeList" resultType="java.lang.String">
+    select SEND_STATUS  from CHB_AST_POS_SUB
+    WHERE VALUE_DATE= STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
+    AND SEND_STATUS='03'
+    UNION ALL
+    select SEND_STATUS  from CHB_PRD_STATUS_SUB
+    WHERE PRD_STATUS_DATE= STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
+    AND SEND_STATUS='03'
+    </select>
+
+    <delete id="deleteAstPosSubByTerm">
+    delete from CHB_AST_POS_SUB
+    where TERMID=#{termid,jdbcType=VARCHAR}
+    and SEND_STATUS='01'
+    </delete>
+
+    <delete id="deletePrdStatusByTerm">
+    delete from CHB_PRD_STATUS_SUB
+    where TERMID=#{termid,jdbcType=VARCHAR}
+    and SEND_STATUS='01'
+    </delete>
+
+    <select id="selectAssetBasiscData" resultType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosBatchResultDto">
+select
+a.POS_AMT as posAmt,/**当前持仓*/
+a.TDY_COST_AMT as tdyCostAmt,/**当日成本*/
+a.TDY_FLOAT_INGPL as tdyFloatIngpl,/**当日估值增值*/
+a.SHADOW_AMT  as  shadowAmt,/**影子价格*/
+a.TDY_INTINCEXP as tdyIntincexp,/**当日累计应计利息余额*/
+a.TDY_LOSS_AMT as tdyLossAmt,/**减值*/
+ifNull(b.PRIN_BASEAMT,0) as prinBaseamt,/**面值*/
+b.MDATE as mdate,/**到期日*/
+c.ORG_CODE as issuePartyId,/**发行机构代码*/
+b.RATE_FLAG  as RateFlag,/**是否有预期收益绿*/
+a.REC_PAY_LEND_FEE_AMT as recPayLendFeeAmt,/**应付/应收债券借贷费用*/
+a.PROD_ID as prodId,
+a.VALUE_DATE as valueDate,
+b.CCY as ccy,
+c.REG_CODE as prdRegistCode,
+a.ASSET_ID as assetId,
+b.ASSET_TYPE2   assetType2
+from chb_assets_basis_data a
+left join chb_asset_info b on a.ASSET_ID=b.ASSET_CODE
+and b.STATUS !='D'
+left join chb_prdresist_code c on a.PROD_ID=c.PRODID
+left join chb_prd_baseinfo  d on d.PROD_ID=a.PROD_ID
+and d.STATUS !='D'
+where a.STATUS !='D'
+and a.VALUE_DATE=STR_TO_DATE(#{objectDate,jdbcType=VARCHAR},'%Y-%m-%d')
+
+</select>
+    
+<select id="selectBalanceData" resultType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosBatchResultDto">
+select
+sum(a.O_AMT) as oAmt,/**原币金额*/
+c.ORG_CODE as  issuePartyId,/**发行机构代码*/
+a.BOOKSET_ID as prodId ,/**产品代码*/
+a.BALANCE_DATE as valueDate,/**持仓日期*/
+d.RAISE_CCY as ccy,/**币种*/
+c.REG_CODE  as prdRegistCode,/**产品登记编码*/
+case when a.SUBJECT_NO='1204.01'
+        then '1002.01'
+        when a.SUBJECT_NO='1204.07'
+        then '1002.01'
+        when a.SUBJECT_NO='1204.02'
+        then '1021'
+        when a.SUBJECT_NO='1204.03'
+        then '1031'
+        else  a.SUBJECT_NO
+        end
+        as subjectNo /**科目代码*/
+from BOK_BALANCE a
+left join chb_prdresist_code c on a.BOOKSET_ID=c.PRODID
+left join chb_prd_baseinfo  d on a.BOOKSET_ID=d.PROD_ID
+and d.STATUS !='D'
+where a.BALANCE_DATE=STR_TO_DATE(#{objectDate,jdbcType=VARCHAR},'%Y-%m-%d')
+group by c.ORG_CODE,a.BOOKSET_ID,a.BALANCE_DATE,d.RAISE_CCY,c.REG_CODE
+,case when a.SUBJECT_NO='1204.01'
+        then '1002.01'
+        when a.SUBJECT_NO='1204.07'
+        then '1002.01'
+        when a.SUBJECT_NO='1204.02'
+        then '1021'
+        when a.SUBJECT_NO='1204.03'
+        then '1031'
+        else  a.SUBJECT_NO
+        end
+</select>
+
+<select id="selectBotAstData" resultType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosBatchResultDto">
+select
+pos.TOTAL_NUM as totalNum,/**总发行数量*/
+ifnull(ainfo.PRIN_BASEAMT,100) as prinBaseamt,/**份额面值*/
+ainfo.MDATE as mdate,/**到期日*/
+pos.ISSUE_PARTY_ID as issuePartyId,/**发行机构代码*/
+pos.POS_DATE as valueDate,/**持仓日期*/
+pos.PLAN_ASSET_ID as planAssetId,/**资管计划代码*/
+pos.O_ISSUE_AMT as oIssueAmt,/**资管计划总发行金额*/
+pos.O_UNINVEST_CASH as oUninvestCash,/**未投资头寸*/
+pos.POS_NUM as posNum,/**持仓数量*/
+ainfo.ASSET_CODE as assetId,/**底层资产代码*/
+ainfo.ASSET_TYPE2 as assetType2,/**资产负债二级类别*/
+ainfo.CCY as ccy,/**币种*/
+ainfo.RATE_FLAG  as RateFlag,/**是否有预期收益绿*/
+pos.O_POS_AMT as oPosAmt,/**底层资产市值*/
+pos.O_SHADOW_AMT as oPosShadowAmt,/**底层资产影子价格*/
+pos.O_POS_AMT_CPRICE as oPosCleanPricEmarketValue, /**底层资产净价市值*/
+pos.ASSET_CODE as subjectNo /**科目代码*/
+from chb_bot_ast_pos  pos
+inner  join (
+    select
+    a.PLAN_ASSET_ID,
+    max(a.POS_DATE) as POS_DATE
+    from chb_bot_ast_pos a
+    inner join(
+        select distinct(a.ASSET_ID) as PLAN_ASSET_ID
+        from chb_assets_basis_data a
+                 left join chb_asset_info b on a.ASSET_ID = b.ASSET_CODE
+        where a.VALUE_DATE = STR_TO_DATE(#{objectDate,jdbcType=VARCHAR},'%Y-%m-%d')
+          and a.STATUS = 'E'
+          and b.ASSET_TYPE2 in (
+            select SRCFIELD1
+            from CHB_TYPE_MAPPING_EX
+            where MAPPINGCODE = 'ASSET_TYPE2_CATA_TYPE'
+              and OBJFIELD1 IN ('12', '13', '14')
+        )
+    ) tmp on tmp.PLAN_ASSET_ID=a.PLAN_ASSET_ID
+    where a.STATUS !='D' and a.POS_DATE &lt;= STR_TO_DATE(#{objectDate,jdbcType=VARCHAR},'%Y-%m-%d')
+    group by a.PLAN_ASSET_ID
+) tmp2 on tmp2.PLAN_ASSET_ID=pos.PLAN_ASSET_ID
+and tmp2.POS_DATE=pos.POS_DATE
+left join CHB_ASSET_INFO  ainfo
+on  ainfo.ASSET_CODE=pos.ASSET_CODE
+AND ainfo.STATUS !='D'
+
+</select>
+
+
+
+
+    <insert id="insertChbAstPosBatchList" parameterType="java.util.List">
+        insert into chb_ast_pos_sub (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        PRD_REGIST_CODE, TERMID, VALUE_DATE,
+        ASSET_ID, POS_TYPE, INTER_LEVE_NO,
+        INTER_ASSET_TYPE, INTER_ASSET_CODE, SUBJECT_NAME,
+        AMT, CNY_AMT, FLOAT_INGPL,
+        CNY_FLOAT_INGPL, UNIT_VALUE_CPRICE, UNIT_VALUE_FPRICE,
+        QTY, CCY, REMARK, BALANCE_AMT,
+        VALUE_REG_DATE, SEND_STATUS, STATUS_DATE,
+        STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+        CREATE_USER, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME,ERR_MSG)
+        select A.* from (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select
+            #{item.registSeqno,jdbcType=CHAR} REGIST_SEQNO,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+            #{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
+            #{item.termid,jdbcType=VARCHAR} TERMID,
+            #{item.valueDate,jdbcType=TIMESTAMP} VALUE_DATE,
+            #{item.assetId,jdbcType=VARCHAR} ASSET_ID, #{item.posType,jdbcType=VARCHAR} POS_TYPE,
+            #{item.interLeveNo,jdbcType=VARCHAR} INTER_LEVE_NO,
+            #{item.interAssetType,jdbcType=VARCHAR} INTER_ASSET_TYPE, #{item.interAssetCode,jdbcType=VARCHAR} INTER_ASSET_CODE,
+            #{item.subjectName,jdbcType=VARCHAR} SUBJECT_NAME,
+            #{item.amt,jdbcType=DECIMAL} AMT, #{item.cnyAmt,jdbcType=DECIMAL} CNY_AMT, #{item.floatIngpl,jdbcType=DECIMAL} FLOAT_INGPL,
+            #{item.cnyFloatIngpl,jdbcType=DECIMAL} CNY_FLOAT_INGPL, #{item.unitValueCprice,jdbcType=DECIMAL} UNIT_VALUE_CPRICE,
+            #{item.unitValueFprice,jdbcType=DECIMAL} UNIT_VALUE_FPRICE,
+            #{item.qty,jdbcType=DECIMAL} QTY, #{item.ccy,jdbcType=CHAR} CCY,
+            #{item.remark,jdbcType=VARCHAR} REMARK, #{item.balanceAmt,jdbcType=DECIMAL} BALANCE_AMT,
+            #{item.valueRegDate,jdbcType=TIMESTAMP} VALUE_REG_DATE, #{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
+            #{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
+            #{item.status,jdbcType=VARCHAR} STATUS, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE,
+            #{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+            #{item.submitTime,jdbcType=TIMESTAMP} SUBMIT_TIME, #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER, #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            #{item.errMsg,jdbcType=VARCHAR} ERR_MSG
+            from dual
+        </foreach>
+        ) A
+    </insert>
+
+    <insert id="insertChbPrdStatusBatchList" parameterType="java.util.List">
+        insert into chb_prd_status_sub (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        PRD_REGIST_CODE, PRD_TOTAL_AMT, PRD_LEVERAGE,
+        PRD_STATUS_DATE, TERMID, REMARK,
+        SEND_STATUS, STATUS_DATE, STATUS,
+        CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+        SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+        CREATE_USER, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select A.* from (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select
+            #{item.registSeqno,jdbcType=CHAR} REGIST_SEQNO, #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
+            #{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE, #{item.prdTotalAmt,jdbcType=DECIMAL} PRD_TOTAL_AMT,
+            #{item.prdLeverage,jdbcType=DECIMAL} PRD_LEVERAGE,
+            #{item.prdStatusDate,jdbcType=TIMESTAMP} PRD_STATUS_DATE, #{item.termid,jdbcType=VARCHAR} TERMID,
+            #{item.remark,jdbcType=VARCHAR} REMARK,
+            #{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS, #{item.statusDate,jdbcType=TIMESTAMP} STATUS_DATE,
+            #{item.status,jdbcType=VARCHAR} STATUS,
+            #{item.chbSubmitDeadline,jdbcType=TIMESTAMP} CHB_SUBMIT_DEADLINE, #{item.submitDeadline,jdbcType=TIMESTAMP} SUBMIT_DEADLINE,
+            #{item.submitTime,jdbcType=TIMESTAMP} SUBMIT_TIME, #{item.submitFeedbackStatus,jdbcType=VARCHAR} SUBMIT_FEEDBACK_STATUS,
+            #{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
+            #{item.createUser,jdbcType=VARCHAR} CREATE_USER, #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            from dual
+        </foreach>
+        ) A
+    </insert>
+
+
+</mapper>

@@ -11,10 +11,7 @@
 package com.joyintech.tams.svreport.chb.datacheck.beforesub.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ChbPrdDeclareSub;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -25,6 +22,7 @@ import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
 import com.joyintech.tams.common.svreport.datacheck.service.DataCheckService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dao.ChbDeadLineMapper;
 import com.joyintech.tams.report.common.dto.ChbDeadLine001Dto;
 import com.joyintech.tams.report.common.util.SysDataUtil;
@@ -32,12 +30,14 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001
 import com.joyintech.tams.svreport.chb.common.SvrCustomerNumCheckService;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.dao.ChbBeforeSubErrorCheckMapper;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -327,7 +327,298 @@ public class BeforeSubErrorCheck {
         logger.info("产品募集总量登记错误检查结束.");
         return resultList;
     }
-    
+    /**
+     *
+     * 资产持仓登记检查
+     * @param checkdate
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<CheckReport001Dto> checkChbAstPosReg(List<Map<String,String>> listDataStr,Date checkdate,List<String> keys,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+        logger.info("资产持仓登记错误检查开始.");
+        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+        //如果传入的list是空，则是数据检查批处理和页面检查，需要从库里查数据
+        if(CollectionUtils.isEmpty(listDataStr)){
+            listDataStr=new ArrayList<>();
+            //读取数据，查询登记表数据
+            List<Map<String,Object>> listData = chbBeforeSubErrorCheckMapper.selectChbAstPosSub(checkdate,keys);
+            for(Map<String,Object> singleMap:listData){
+                Map <String,String> smap=new HashMap<String,String>();
+                for(String singlekey:singleMap.keySet()){
+                    smap.put(singlekey, singleMap.get(singlekey)==null?null:singleMap.get(singlekey).toString());
+                }
+                listDataStr.add(smap);
+            }
+        }
+        //校验当期月报的合格性
+        Map<String,String>  mapMsg=checkAstPosSubList(listDataStr,checkdate,DateUtil.format(checkdate,DateUtil.MONTH_OTHER_FORMAT));
+
+        List<Map<String, String>> listError = new ArrayList<>();
+        for (Map<String,String> map : listDataStr){
+            //单条数据报送前检查
+            checkAstPosSingleRegist(map);
+            if(mapMsg.containsKey(map.get("PROD_ID"))){
+                map.put("ERR_MSG",StringUtil.isEmpty(map.get("ERR_MSG"))?mapMsg.get(map.get("PROD_ID")):(map.get("ERR_MSG")+"|"+mapMsg.get(map.get("PROD_ID"))));
+            }
+            if(mapMsg.containsKey("month")){
+                map.put("ERR_MSG",StringUtil.isEmpty(map.get("ERR_MSG"))?mapMsg.get("month"):(map.get("ERR_MSG")+"|"+mapMsg.get("month")));
+            }
+            if(mapMsg.containsKey("monthBo")){
+                map.put("ERR_MSG",StringUtil.isEmpty(map.get("ERR_MSG"))?mapMsg.get("monthBo"):(map.get("ERR_MSG")+"|"+mapMsg.get("monthBo")));
+            }
+            if (StringUtil.isNotEmpty(map.get("ERR_MSG"))){
+                listError.add(map);
+            }
+        }
+
+        for ( Map<String,String> m:listError ) {
+            String posType=m.get("POS_TYPE");
+            //不合格的数据加入到不合格列表
+            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
+            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
+            chbReportCheck.setRefseqno(m.get("REGIST_SEQNO"));
+            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_资产持仓登记.getValue());
+            chbReportCheck.setRepName(DictCodeListExt2.报表名称_资产持仓登记.getCodeName());
+            if(StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统资产.getValue())||
+                    StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统负债.getValue())){
+                chbReportCheck.setValidKey((StringUtil.isNotEmpty(m.get("PRD_REGIST_CODE")) ? (";产品登记编码:"+m.get("PRD_REGIST_CODE")): "") +
+                        (StringUtil.isNotEmpty(m.get("ASSET_ID")) ? (";行内资产/负债编码:"+m.get("ASSET_ID")): "")
+                        +(StringUtil.isNotEmpty(m.get("INTER_ASSET_CODE")) ? (";中间层行内资产/负债编码:"+m.get("INTER_ASSET_CODE")): "")
+                        +(StringUtil.isNotEmpty(m.get("VALUE_DATE")) ? (";持仓日期:"+m.get("VALUE_DATE")): "")
+                        +(StringUtil.isNotEmpty(m.get("CCY")) ? (";币种:"+m.get("CCY")): ""));
+            }else{
+                chbReportCheck.setValidKey((StringUtil.isNotEmpty(m.get("PRD_REGIST_CODE")) ? (";产品登记编码:"+m.get("PRD_REGIST_CODE")): "") +
+                        (StringUtil.isNotEmpty(m.get("SUBJECT_NAME")) ? (";会计科目名称:"+m.get("SUBJECT_NAME")): "")
+                        +(StringUtil.isNotEmpty(m.get("INTER_ASSET_CODE")) ? (";中间层行内资产/负债编码:"+m.get("INTER_ASSET_CODE")): "")
+                        +(StringUtil.isNotEmpty(m.get("VALUE_DATE")) ? (";持仓日期:"+m.get("VALUE_DATE")): "")
+                        +(StringUtil.isNotEmpty(m.get("CCY")) ? (";币种:"+m.get("CCY")): ""));
+            }
+            chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
+                    DictCode.检查结果, DictCodeListExt2.检查结果_检查不通过.getCodeName()));
+            chbReportCheck.setDataTime(checkdate);
+            String errorInfo=m.get("ERR_MSG");
+            if(!errorInfo.equals("")){
+                chbReportCheck.setErrorInfo(errorInfo);
+                resultList.add(chbReportCheck);
+            }
+        }
+        logger.info("资产登记错误检查结束.");
+        return resultList;
+    }
+
+    /**
+     *单挑资产持仓的校验
+     * @param dataMap
+     * @param
+     * @param
+     */
+    private void checkAstPosSingleRegist(Map<String, String> dataMap) {
+        StringBuffer errMsgSb = new StringBuffer();
+//        boolean flag=false;
+//        //持仓类别
+//        String posType = dataMap.get("POS_TYPE");
+//        String prdRegistCode = dataMap.get("PRD_REGIST_CODE");
+        String assetId = dataMap.get("ASSET_ID");
+//        String subjectName = dataMap.get("SUBJECT_NAME");
+        String interAssetCode = dataMap.get("INTER_ASSET_CODE");
+//        String valueDate = dataMap.get("VALUE_DATE");
+//        String ccy = dataMap.get("CCY");
+//        if(StringUtil.isNotEmpty(posType)){
+//            //必填校验
+//            if(StringUtil.isEmpty(prdRegistCode)){
+//                errMsgSb.append("产品登记编码必填");
+//                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//                flag=true;
+//            }
+////            if(StringUtil.isEmpty(interAssetCode)){
+////                errMsgSb.append("中间层行内资产/负债编码必填");
+////                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+////                flag=true;
+////            }
+//            if(StringUtil.isEmpty(valueDate)){
+//                errMsgSb.append("持仓日期必填");
+//                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//                flag=true;
+//            }
+//            if(StringUtil.isEmpty(ccy)){
+//                errMsgSb.append("币种必填");
+//                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//                flag=true;
+//            }
+//            if(StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统资产.getValue())||
+//                    StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统负债.getValue())){
+//                if(StringUtil.isEmpty(assetId)){
+//                    errMsgSb.append("当“持仓类别”为“02 登记系统资产”或“03 登记系统负债”时，行内资产/负债编码必填");
+//                    errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//                    flag=true;
+//                }
+//                //校验重复
+//                if(!flag){
+//                    if(keyMap.containsKey(prdRegistCode+assetId+interAssetCode+valueDate+ccy)){
+//                        errMsgSb.append("当“持仓类别”为“02 登记系统资产”或“03 登记系统负债”时，" +
+//                                "“产品登记编码”、“行内资产/负债编码”、“中间层行内资产/负债编码”、“持仓日期”和“币种”这五个要素必填且五要素不可同时重复");
+//                        errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//                    }else{
+//                        keyMap.put(prdRegistCode+assetId+interAssetCode+valueDate+ccy,prdRegistCode+assetId+interAssetCode+valueDate+ccy);
+//                    }
+//                }
+//
+//            }else{
+//                if(StringUtil.isEmpty(subjectName)){
+//                    errMsgSb.append("当“持仓类别”为“01 现金及活期存款”或“04 其他资产”“05 其他负债”时，会计科目名称必填");
+//                    errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//                    flag=true;
+//                }
+//                //校验重复
+//                if(!flag){
+//                    if(keyMap.containsKey(prdRegistCode+subjectName+interAssetCode+valueDate+ccy)){
+//                        errMsgSb.append("当“持仓类别”为“01 现金及活期存款”或“04 其他资产”“05 其他负债”时，" +
+//                                "“产品登记编码”、“会计科目名称”、“中间层行内资产/负债编码”、“持仓日期”和“币种”这五个要素必填且五要素不可同时重复");
+//                        errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//                    }else{
+//                        keyMap.put(prdRegistCode+subjectName+interAssetCode+valueDate+ccy,prdRegistCode+subjectName+interAssetCode+valueDate+ccy);
+//                    }
+//                }
+//            }
+//        }
+        if (StringUtil.isNotEmpty(assetId)){
+            int j = chbBeforeSubErrorCheckMapper.isInAssetInfoSub(assetId);
+            if(j<1){
+                errMsgSb.append("行内资产/负债编码未进行资产要素登记！");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+        }
+        if (StringUtil.isNotEmpty(interAssetCode)){
+            int j = chbBeforeSubErrorCheckMapper.isInAssetInfoSub(interAssetCode);
+            if(j<1){
+                errMsgSb.append("中间层行内资产/负债编码未进行资产要素登记！");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+        }
+//        if(StringUtil.isNotEmpty(ccy)){
+//            String amt=dataMap.get("AMT");
+//            String camt=dataMap.get("CNY_AMT");
+//            String floatIngpl=dataMap.get("FLOAT_INGPL");
+//            String cfloatIngpl=dataMap.get("CNY_FLOAT_INGPL");
+//            if(!StringUtil.equals(amt,camt)){
+//                errMsgSb.append("t当“币种”字段为“CNY人民币”时，“金额”和“折算人民币金额”字段必须相等!");
+//                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//            }
+//            if(!StringUtil.equals(floatIngpl,cfloatIngpl)){
+//                errMsgSb.append("t当“币种”字段为“CNY人民币”时，“公允价值”和“折算人民币公允价值”必须相等!");
+//                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+//            }
+//        }
+        String errMSg = "";
+        if (errMsgSb.length() > 0){
+            errMSg = errMsgSb.substring(0, errMsgSb.length() - 1);
+        }
+        dataMap.put("ERR_MSG", errMSg);
+    }
+    /**
+     * 校验资产持仓登记，单产品维护和整期维度
+     * @param listDataStr
+     */
+    private Map<String,String> checkAstPosSubList(List<Map<String,String>> listDataStr,Date checkdate,String termid){
+        Map<String,String> errMSgmap =new HashMap<>();
+        //单产品+持仓类别的维度（01,02,04,="ZC",03,05="FZ"）map
+        Map<String, BigDecimal>  gmap=new HashMap<>();
+        Set<String>   listpd=new HashSet<>();
+        //合计资产
+        BigDecimal  hjzc=BigDecimal.ZERO;
+        //合计负债
+        BigDecimal  fzhj=BigDecimal.ZERO;
+        //最底层资产合计资产
+        BigDecimal  lowhjzc=BigDecimal.ZERO;
+        //最底层资产合计负债
+        BigDecimal  lowfzhj=BigDecimal.ZERO;
+
+        for(Map<String,String> datamap:listDataStr){
+            //如果该产品代码为空,跳过不处理
+            if(StringUtil.isEmpty(datamap.get("PROD_ID"))){
+                continue;
+            }
+            //中间层数
+            String interLeveNo = datamap.get("INTER_LEVE_NO");
+            //持仓类别
+            String posType = datamap.get("POS_TYPE");
+            //资产穿透情况
+            String interAssetType = datamap.get("INTER_ASSET_TYPE");
+            //产品代码
+            String prdCode = datamap.get("PROD_ID");
+            listpd.add(prdCode);
+            //金额
+            BigDecimal amt=datamap.get("AMT")==null?BigDecimal.ZERO:new BigDecimal(datamap.get("AMT"));
+
+
+
+            if(StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_现金及活期存款.getValue())||
+                    StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统资产.getValue())||
+                    StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_其他资产.getValue())){
+                //中间层数为0
+                if(StringUtil.equals("0",interLeveNo)){
+                    hjzc= ArithmeticUtil.doAdd(hjzc,amt);
+                }
+                //资产
+                if(gmap.containsKey(prdCode+"_ZC")){
+                    gmap.put(prdCode+"_ZC", ArithmeticUtil.doAdd(gmap.get(prdCode+"_ZC"),amt));
+                }else{
+                    gmap.put(prdCode+"_ZC",amt);
+                }
+                if(StringUtil.equals(interAssetType, DictCodeListExt3.资产穿透情况_最底层资产.getValue())){
+                    lowhjzc=ArithmeticUtil.doAdd(lowhjzc,amt);
+                }
+
+            }else{
+                //负债
+                if(gmap.containsKey(prdCode+"_FZ")){
+                    gmap.put(prdCode+"_FZ", ArithmeticUtil.doAdd(gmap.get(prdCode+"_FZ"),amt));
+                }else{
+                    gmap.put(prdCode+"_FZ",amt);
+                }
+                //持仓类别 = 03、 05
+                //中间层数为0
+                if(StringUtil.equals("0",interLeveNo)) {
+                    fzhj = ArithmeticUtil.doAdd(fzhj, amt);
+                }
+                if(StringUtil.equals(interAssetType, DictCodeListExt3.资产穿透情况_最底层资产.getValue())){
+                    lowfzhj=ArithmeticUtil.doAdd(lowfzhj,amt);
+                }
+            }
+        }
+        //循环产品代码
+        for(String str:listpd){
+            BigDecimal zcAmt=gmap.get(str+"_ZC");
+            BigDecimal fzAmt=gmap.get(str+"_FZ");
+            //根据产品代码查询头寸的份额*最新单位净值
+            BigDecimal posAm= chbBeforeSubErrorCheckMapper.selectPositionAmt(str,DateUtil.format(checkdate));
+            //单产品持仓类别为“01 现金及活期存款/02 登记系统资产/04 其他资产”合计-持仓类别为“03 登记系统负债/05 其他负债”合计=单产品份额*最新产品单位净值；
+            if(posAm==null||ArithmeticUtil.subtract(ArithmeticUtil.subtract(zcAmt,fzAmt),posAm)
+                    .compareTo(new BigDecimal("0.1"))>0){
+                errMSgmap.put(str,"单产品持仓类别为“01 现金及活期存款/02 登记系统资产/04 其他资产”合计-" +
+                        "持仓类别为“03 登记系统负债/05 其他负债”合计!=单产品份额*最新产品单位净值");
+            }
+        }
+//        //查询月末的G06资产端穿透前合计值
+//        BigDecimal monthAmt= chbBeforeSubErrorCheckMapper.selectMonthAssetTotalAmt(termid);
+//        //计算差值>0.1
+//        if(monthAmt==null||ArithmeticUtil.subtract(ArithmeticUtil.subtract(hjzc,fzhj),monthAmt).abs()
+//                .compareTo(new BigDecimal("0.1"))>0){
+//            errMSgmap.put("month","所有产品（“中间层资产（首层）”+“最底层资产”-“资管计划底层资产”）" +
+//                    "持仓类别为“01 现金及活期存款/02 登记系统资产/04 其他资产”合计-持仓类别为“03 登记系统负债/05 其他负债”合计" +
+//                    "!=G06资产端穿透前合计值!");
+//        }
+//        //查询月末的G06资产端穿透后合计值
+//        BigDecimal monthBotAmt= chbBeforeSubErrorCheckMapper.selectMonthAssetTotalBoAmt(termid);
+//        if(monthBotAmt==null||ArithmeticUtil.subtract(ArithmeticUtil.subtract(lowhjzc,lowfzhj),monthBotAmt).abs()
+//                .compareTo(new BigDecimal("0.1"))>0){
+//            errMSgmap.put("monthBo","所有产品（ “最底层资产”）持仓类别为" +
+//                    "“01 现金及活期存款/02 登记系统资产/04 其他资产”合计-持仓类别为“03 登记系统负债/05 其他负债”合计" +
+//                    "!=G06资产端穿透后合计值");
+//        }
+        return errMSgmap;
+    }
     /**
      * 
      * 投资交易登记检查

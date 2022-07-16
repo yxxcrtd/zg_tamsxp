@@ -26,6 +26,7 @@ public enum ChbCheckTableInfo {
     产品存续登记表SUB("CHB_PRD_DEAL_SUB", true, null, new String[] {"PROD_ID", "MDATE"}, ""),
     底层资产持仓信息登记表SUB("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}, ""),
     终止登记SUB("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}, ""),
+    资产持仓登记SUB("CHB_AST_POS_SUB", true, null, new String[] {"PRD_REGIST_CODE","VALUE_DATE","ASSET_ID","SUBJECT_NAME","INTER_ASSET_CODE","CCY","POS_TYPE"}, ""),
 
     /*文件接入*/
     资产要素登记表INFO("CHB_ASSET_INFO", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, ""),
