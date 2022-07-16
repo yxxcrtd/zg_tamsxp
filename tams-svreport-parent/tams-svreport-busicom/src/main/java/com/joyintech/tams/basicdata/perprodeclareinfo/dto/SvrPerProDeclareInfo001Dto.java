@@ -438,7 +438,7 @@ public class SvrPerProDeclareInfo001Dto extends BaseEntity implements ProcessEnt
     }
 
     public String getStatusValidStr() {
-        return com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
+        return getStatusValid()+" "+com.joyintech.framework.util.SysDataUtil.getNameFromDataDict(DictCode.维护数据状态,
                 getStatusValid());
     }
 

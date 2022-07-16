@@ -1347,7 +1347,6 @@ public class BaseCheckLib {
         try {
             new BigDecimal(str).toString();
         } catch (Exception e) {
-            logger.debug("转换数字异常：",e);
             return false;//异常 说明包含非数字
         }
         return true;
@@ -1362,7 +1361,6 @@ public class BaseCheckLib {
         try {
             DateUtil.parse(str).toString();
         } catch (Exception e) {
-            logger.debug("转换日期异常：",e);
             return false;//异常 说明包含非日期
         }
         return true;
