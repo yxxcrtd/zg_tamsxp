@@ -2086,7 +2086,7 @@
         <choose>
             <when test="tableId != 'CHB_AST_POS_SUB' and tableId != 'CHB_PRD_STATUS_SUB'">
                 info.ORG_CODE,
-            </otherwise>
+            </when>
         </choose>
         <choose>
             <when test="tableId != null and tableId == 'CHB_AGENT_INSTITUTION_SUB'">
@@ -2336,18 +2336,17 @@
                     <when test="tableId !=null and tableId=='CHB_EQUDET_SUB'">
                         concat_ws('','机构代码 ', info.ORG_CODE , '，产品登记编码' , info.REG_CODE ,'，核心交易流水号' , info.BUSI_SEQNO ) as code,
                         info.SUBMIT_STATUS as submitStatus,
-
-
-                        <!-- 16. 产品持仓登记 -->
-                        <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
-                            concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
-                            info.SEND_STATUS as submitStatus,
-                        </when>
-                        <!-- 17. 产品状态登记 -->
-                        <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
-                            concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
-                            info.SEND_STATUS as submitStatus,
-                        </when></when>
+                    </when>
+                    <!-- 16. 产品持仓登记 -->
+                    <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
+                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
+                    <!-- 17. 产品状态登记 -->
+                    <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
+                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
                 </choose>
                 <!-- sdl2.ITEM_VALUE as submitStatus, -->
                 <!-- <choose>
@@ -2889,7 +2888,7 @@
                 </if>
                 <!-- 2. 人行单产品月报-产品基本信息 -->
                 <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
-                    LEFT JOIN(
+                    LEFT JOIN (
                     SELECT
                     inside_prod_id,
                     pbc_code
@@ -3019,7 +3018,6 @@
                     </foreach>
                 </if>
             </when>
-            <otherwise></otherwise>
         </choose>
         ) temp
         <where>
