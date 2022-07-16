@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.astposregist.dao;
 
 import com.joyintech.tams.common.base.entity.ChbAstPosSub;
+import com.joyintech.tams.common.base.entity.ChbPrdStatusSub;
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosBatchResultDto;
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;
 import org.apache.ibatis.annotations.Param;

@@ -9,6 +9,7 @@ import com.joyintech.tams.batch.report.autosendcb.common.service.SvrCBBaseServic
 import com.joyintech.tams.common.base.dao.BaseMapper;
 import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbAstPosSub;
+import com.joyintech.tams.common.base.entity.ChbPrdStatusSub;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
@@ -577,7 +578,7 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 		//循环处理
 		for(String  key:dbotMap.keySet()){
 			 //产品状态登记
-			ChbPrdStatusSub  sub=new ChbPrdStatusSub();
+			ChbPrdStatusSub sub=new ChbPrdStatusSub();
 			//期数
 			sub.setTermid(DateUtil.format(objectDate,DateUtil.MONTH_OTHER_FORMAT));
 			//登记序列
