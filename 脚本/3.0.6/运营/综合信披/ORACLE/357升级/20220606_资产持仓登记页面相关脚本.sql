@@ -116,11 +116,11 @@ INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE) VALUES ('SVR_INTER_ASSET_TYPE', '03', '最底层资产', 3, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 
-delete from  sys_datadict_list where DICT_CODE='SVR_REPORT_CODE' and ITEM_CODE in ('42','43');
+delete from  sys_datadict_list where DICT_CODE='SVR_REPORT_CODE' and ITEM_CODE in ('45','46');
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-VALUES ('SVR_REPORT_CODE', '42', '产品状态登记', 42, '0', 'system', null, sysdate, 'system', sysdate, null);
+VALUES ('SVR_REPORT_CODE', '45', '产品状态登记', 45, '0', 'system', null, sysdate, 'system', sysdate, null);
 INSERT INTO sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-VALUES ('SVR_REPORT_CODE', '43', '资产持仓登记', 43, '0', 'system', null, sysdate, 'system', sysdate, null);
+VALUES ('SVR_REPORT_CODE', '46', '资产持仓登记', 46, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 
 delete from sys_datadict_list where DICT_CODE='SVR_CHECK_INTERF_TYPE' and ITEM_CODE='CHB_AST_POS_SUB';

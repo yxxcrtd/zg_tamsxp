@@ -1,0 +1,2 @@
+update  sys_para  set param_value='81,82,83,84,85,86,87,88,89,90,90,90,65,95,95,95,95,95,95,95,95,95' where para_code='COLOR_CONFIG_top_list';
+update  sys_para  set param_value='69,72,73,18,75,76,77,78,79,80,80,80,40,60,60,60,60,60,60,60,60,60' where para_code='COLOR_CONFIG_mid_list';
