@@ -558,11 +558,11 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 			if(StringUtil.isNotEmpty(item.getRivalPartyType())) {
 				item.setRivalPartyType(item.getRivalPartyType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.对手方类型,item.getRivalPartyType()));
 			}
-			/**0722升级***/
+			/**0722升级* **/
 			if(StringUtil.isNotEmpty(item.getRelatedTradeStatus())) {
 				item.setRelatedTradeStatus(item.getRelatedTradeStatus()+" "+SvrDataUtil.getNameFromDataDict(DictCode.关联交易情况,item.getRelatedTradeStatus()));
 			}
-			/**0722升级***/
+			/**0722升级* **/
 			//银行模式时,资产数据取当前机构的产品登记编码
 			if(!CommonUtil.isBAmodel()){
 				item.setRegistBankCode(CommonUtil.selectBankCode());
