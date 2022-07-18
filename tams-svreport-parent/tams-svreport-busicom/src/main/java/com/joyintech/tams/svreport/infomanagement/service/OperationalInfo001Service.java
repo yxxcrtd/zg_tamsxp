@@ -455,11 +455,18 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 						realStr = str.replace(assetType, "");
 					}
 				}
+
 				// 查询结果为日期类型字段处理
 				if (dateColumnList.contains(str) || dateColumnList.contains(realStr)) {
 					Object dateObj = newMap.get(str);
 					if (null != dateObj) {
-						newMap.put(str, DateUtil.format((Date) dateObj));
+						//产品状态登记中产品状态统计日格式进行处理
+						if (Objects.equals("CHB_PRD_STATUS_SUB",tableName) && Objects.equals("PRD_STATUS_DATE",str)) {
+							newMap.put(str, DateUtil.format((Date) dateObj,"yyyyMMdd"));
+						} else{
+							newMap.put(str, DateUtil.format((Date) dateObj));
+						}
+
 					}
 					
 				}

@@ -286,9 +286,9 @@ public class CommonCodeCheckBatchService {
         String assetCode = dataMap.get("ASSET_CODE");
         String curAssetType = dataMap.get("CUR_ASSET_TYPE");
         if(!errMsg.equals("重复数据;")){
-            if(commonCodeCheckMapper.checkExistsAssetCode(assetCode)<1){
-                sb.append("行内资产/负债编码不存在；");
-            }
+//            if(commonCodeCheckMapper.checkExistsAssetCode(assetCode)<1){
+//                sb.append("行内资产/负债编码不存在；");
+//            }
             if(StringUtil.equals(curAssetType,"11")||StringUtil.equals(curAssetType,"12")){
                 Map<String, Object> param = new HashMap<>();
                 param.put("prodId",dataMap.get("PROD_ID"));

@@ -49,4 +49,20 @@ public interface ChbInvestTradeDao {
     List<ChbInvestTradeDto> selectByKeys(@Param("list") List<String> list);
 
     BigDecimal getRateNearByDate(Map<String, Object> temp);
+
+
+    Map<String,Object> queryCounterType(@Param("counterId") String counterId);
+
+    /**
+     * 交易对手ID
+     * @return
+     */
+    List<SelectOptionDto> queryCounterIdList(Map<String, Object> param);
+
+
+    /**
+     * 交易对手二级市场
+     * @return
+     */
+    List<SelectOptionDto> queryCounterType2List(Map<String, Object> param);
 }

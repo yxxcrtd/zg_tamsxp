@@ -93,8 +93,9 @@
 			#{item.createDept,jdbcType=VARCHAR} CREATE_DEPT,
 			#{item.status,jdbcType=VARCHAR} STATUS,
 			#{item.dataSource,jdbcType=VARCHAR} DATA_SOURCE,
-			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY
-			,#{item.ccy,jdbcType=VARCHAR} CCY
+			#{item.md5primarykey,jdbcType=CHAR} MD5PRIMARYKEY,
+			#{item.ccy,jdbcType=VARCHAR} CCY,
+			#{item.shadowAmt,jdbcType=DECIMAL} SHADOW_AMT
 			FROM
 			DUAL
 		</foreach>
@@ -126,11 +127,12 @@
 			 CII.DATA_SOURCE = TEMP.DATA_SOURCE,
 			 CII.MD5PRIMARYKEY = TEMP.MD5PRIMARYKEY
 			 ,CII.CCY = TEMP.CCY
+			 ,CII.SHADOW_AMT = TEMP.SHADOW_AMT
 		<!-- 未匹配到则插入 -->
 		WHEN NOT MATCHED THEN INSERT (VAL_ID, PROD_ID,  ASSET_ID, VALUE_DATE, MDATE, 
 			    POS_AMT, TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, DELAY_PAY_AMT, TDY_INTADJEXP_ADD,
 			    REMARK, CREATE_TIME, UPDATE_TIME, CREATE_DEPT, ORG_CODE, DEPT_CODE, CREATE_USER, 
-			    UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY)
+			    UPDATE_USER, STATUS, DATA_SOURCE,MD5PrimaryKey,CCY,SHADOW_AMT)
 		VALUES( TEMP.VAL_ID,
 				 TEMP.PROD_ID,
 				 TEMP.ASSET_ID,
@@ -152,8 +154,9 @@
 				 TEMP.UPDATE_USER,
 				 TEMP.STATUS,
 				 TEMP.DATA_SOURCE,
-				 TEMP.MD5PRIMARYKEY
-				 ,TEMP.CCY)
+				 TEMP.MD5PRIMARYKEY,
+				 TEMP.CCY,
+		         TEMP.SHADOW_AMT)
 	</insert>
 	<insert id="insertChbAssetBasisDataNoBtm" >
 		MERGE INTO CHB_ASSETS_BASIS_DATA_NOBTM CII

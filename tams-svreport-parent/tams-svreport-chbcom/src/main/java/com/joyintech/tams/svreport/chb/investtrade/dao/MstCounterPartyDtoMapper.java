@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.investtrade.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -41,4 +42,6 @@ public interface MstCounterPartyDtoMapper {
 	 * List<String>
 	 */
 	List<MstCounterPartyDto> selectAllTradeCounter();
+
+	List<MstCounterPartyDto> selectOneDate(Map<String, Object> param);
 }

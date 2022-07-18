@@ -66,9 +66,18 @@ public class ChbInvestTradeSubTmp extends BaseEntity {
     private Date dealdate;
 
     /**
+     * 交易发起日
+     */
+    private Date tradeTime;
+
+    /**
      * 交易对手
      */
     private String tradeCounter;
+    /**
+     * 关联交易情况
+     */
+    private String relatedTradeStatus;
 
     /**
      * 单位成交价格（全价）
@@ -247,6 +256,22 @@ public class ChbInvestTradeSubTmp extends BaseEntity {
      */
     public void setAssetCode(String assetCode) {
         this.assetCode = assetCode == null ? null : assetCode.trim();
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    public String getRelatedTradeStatus() {
+        return relatedTradeStatus;
+    }
+
+    public void setRelatedTradeStatus(String relatedTradeStatus) {
+        this.relatedTradeStatus = relatedTradeStatus;
     }
 
     /**

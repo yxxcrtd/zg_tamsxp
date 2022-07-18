@@ -99,7 +99,7 @@
     from CHB_PRD_STATUS_SUB sub left join CHB_PRDRESIST_CODE cp
     on sub.PROD_ID = cp.PRODID
     <where>
-      TO_CHAR(sub.PRD_STATUS_DATE,'%Y%m%d')=#{prdStatusDateStr,jdbcType=VARCHAR}
+      TO_CHAR(sub.PRD_STATUS_DATE,'yyyyMMdd')=#{prdStatusDateStr,jdbcType=VARCHAR}
     </where>
 
   </select>

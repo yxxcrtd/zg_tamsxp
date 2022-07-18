@@ -204,7 +204,8 @@ public class SvrMaptoEntityUtil {
 				if ("java.util.Date".equals(type.getTypeName())) {
 					// add by zhangliang 20201104 对于create_time或者update_time需要保留具体的时分秒 start
 					// update by zoujiamin  20210628  新增SUBMIT_DEADLINE 、CHB_SUBMIT_DEADLINE 保留时分秒  TISHKBS-2240
-					if (StringUtil.equals("CREATE_TIME", str) || StringUtil.equals("UPDATE_TIME", str) || StringUtil.equals("SUBMIT_DEADLINE", str) || StringUtil.equals("CHB_SUBMIT_DEADLINE", str) ){
+					if (StringUtil.equals("CREATE_TIME", str) || StringUtil.equals("UPDATE_TIME", str) || StringUtil.equals("SUBMIT_DEADLINE", str)
+							|| StringUtil.equals("CHB_SUBMIT_DEADLINE", str) || StringUtil.equals("TRADE_TIME", str)){
 						map.put(str, DateUtil.formatDateTime((Date)field.get(clazz)));
 					}else{
 						map.put(str, DateUtil.format((Date)field.get(clazz)));

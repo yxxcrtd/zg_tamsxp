@@ -29,6 +29,20 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
     private String assetName;
     private String orgData;
 
+    /**
+     * 关联交易情况
+     */
+    private String relatedTradeStatus;
+    /**
+     * 交易对手的状态
+     */
+    private String tradeCounterStatus;
+
+
+    /**
+     * 交易对手名称
+     */
+    private String counterName;
 
     /**
      * 操作类型
@@ -102,6 +116,32 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         this.pageModel = pageModel;
     }
 
+    public String getRelatedTradeStatus() {
+        return relatedTradeStatus;
+    }
+
+    public void setRelatedTradeStatus(String relatedTradeStatus) {
+        this.relatedTradeStatus = relatedTradeStatus;
+    }
+
+    public String getTradeCounterStatus() {
+        return tradeCounterStatus;
+    }
+
+    public void setTradeCounterStatus(String tradeCounterStatus) {
+        this.tradeCounterStatus = tradeCounterStatus;
+    }
+
+
+
+    public String getCounterName() {
+        return counterName;
+    }
+
+    public void setCounterName(String counterName) {
+        this.counterName = counterName;
+    }
+
     public String getElementId() {
         return elementId;
     }
@@ -167,7 +207,7 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.资金流动类型,getCurAssetType());
     }
     public String getRivalPartyTypeStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.对手方类型,getRivalPartyType());
+        return SysDataUtil.getNameFromDataDict(DictCode.客户二级类型,getRivalPartyType());
     }
     public String getDealdateStr(){
         return null !=getDealdate()? DateUtil.format(getDealdate()):null;
@@ -182,5 +222,13 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
 
     public void setOrgData(String orgData) {
         this.orgData = orgData;
+    }
+
+    public String getRelatedTradeStatusStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.关联交易情况, relatedTradeStatus);
+    }
+
+    public String getTradeTimeStr() {
+        return super.getTradeTime()==null?null:DateUtil.format(super.getTradeTime(), "yyyyMMddHHmmss");
     }
 }

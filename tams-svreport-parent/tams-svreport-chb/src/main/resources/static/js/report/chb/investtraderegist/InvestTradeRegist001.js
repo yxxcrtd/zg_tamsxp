@@ -52,6 +52,7 @@ $(function() {
           cols:[
               { field: 'registSeqno',visible:false},
               { field: 'status',visible:false},
+              { title: "relatedTradeStatus",  visible:false, field:'relatedTradeStatus'},
               { title: "数据状态", field: 'statusName',width:100,sortField:'status'},
               { title: "数据日期", field: 'statusDate', type: 'datetime',sortField:'statusDate'},
               { field: 'sendStatus',visible:false},
@@ -65,7 +66,7 @@ $(function() {
                       }
                   }},
               { title: "报送日期", field: 'submitTime', type: 'datetime',sortField:'submitTime'},
-              { title: "报送截止日", field: 'chbSubmitDeadline', type: 'date',sortField:'chbSubmitDeadline'},
+              { title: "报送截止日", field: 'chbSubmitDeadline', type: 'datetime',sortField:'chbSubmitDeadline'},
               { title: "反馈状态", field: 'submitFeedbackStatus',width:100 ,sortField:'submitFeedbackStatus',
                   render:function (value,visible,row,options) {
                       if(value == "发送中" || value == "发送异常"){
@@ -90,7 +91,9 @@ $(function() {
               {title: '资金流动类型',field:'curAssetType', width:150,sortField:'curAssetType'},
               {title: '资金流动类型说明',field:'curAssetdetType', width:200,sortField:'curAssetdetType'},
               {title: '交易日',field:'dealdate', width:200,type: 'date',sortField:'dealdate'},
+              { title: "交易发起时间", field:'tradeTimeStr',width:'12%',sortField:'tradeTime'},
               {title: '交易对手方',field:'tradeCounter', width:200,sortField:'tradeCounter'},
+              { title: "关联交易情况", field:'relatedTradeStatusStr',width:'12%',sortField:'relatedTradeStatus'},
               {title: '交易对手方类型',field:'rivalPartyType',width:150,sortField:'rivalPartyType'},
               {title: '单位成交价格（全价）',field:'unitPriceFull', digit:4,type:'money',width:200,sortField:'unitPriceFull'},
               {title: '单位成交价格（净价）',field:'unitPriceNet', digit:4,type:'money',width:200,sortField:'unitPriceNet'},

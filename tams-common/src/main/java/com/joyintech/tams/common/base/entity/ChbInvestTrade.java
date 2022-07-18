@@ -133,6 +133,11 @@ public class ChbInvestTrade extends BaseChbEntity implements Cloneable{
     private Date tradeTime;
 
     /**
+     * 交易发起日格式化的时间
+     */
+    private String tradeDate;
+
+    /**
      * 通道名称
      */
     private String chlAgrtName;
@@ -647,6 +652,14 @@ public class ChbInvestTrade extends BaseChbEntity implements Cloneable{
      */
     public void setIsUnderTrade(String isUnderTrade) {
         this.isUnderTrade = isUnderTrade == null ? null : isUnderTrade.trim();
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 
     /**

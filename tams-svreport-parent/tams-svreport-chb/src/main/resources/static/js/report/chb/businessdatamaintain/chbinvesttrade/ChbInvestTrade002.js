@@ -81,6 +81,7 @@
             } else {
                 Joyin.ajaxJson(basePath + '/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade002/selectRivalPartyType?tradeCounter=' + tradeCounter, {}, function (result) {
                     $('#rivalPartyType').val(result['COUNTER_TYPE']).trigger('change');
+                    $('#relatedTradeStatus').val(result['RELATED_TRADE_STATUS']).trigger('change');
                 })
             }
         });
