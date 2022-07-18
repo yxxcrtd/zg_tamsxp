@@ -312,5 +312,19 @@ public class ChbPrdIssueSubSetService {
 			cnBondItem20.setValue(sub.getSumitSeq());
 			cnBondItemMap1.put("RegistrationSerialNumber", cnBondItem20);
 		}
+
+
+		/***0722升级**/
+
+		//定期开放周期(天)
+		if(StringUtil.isNotEmpty(sub.getPeriodicIntervalDays())){
+			CnBondInterfItemDto cnBondItem40 = new CnBondInterfItemDto();
+			cnBondItem40.setValue(String.valueOf(sub.getPeriodicIntervalDays().setScale(0, BigDecimal.ROUND_UP)));
+			cnBondItem40.setUnitRef(ChbConstant.PURE);
+			cnBondItem40.setDecimals("0");
+			cnBondItemMap1.put("PeriodicIntervalDays", cnBondItem40);
+		}
+
+		/***0722升级**/
 	}
 }

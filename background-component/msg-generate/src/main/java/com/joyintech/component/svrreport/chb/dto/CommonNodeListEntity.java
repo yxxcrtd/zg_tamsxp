@@ -139,6 +139,23 @@ public class CommonNodeListEntity implements Feild {
     @XmlElement(name = "wemax:WealthManagementProductMarketingDocuments")
     private CommonNodeEntity wealthManagementProductMarketingDocuments;
 
+    /***0722升级*/
+    /**
+     * 流动性风险评估文件
+     */
+    @XmlElement(name = "wemax:LiquidityRiskAssessmentDocuments")
+    private CommonNodeEntity LiquidityRiskAssessmentDocuments;
+
+
+    public CommonNodeEntity getLiquidityRiskAssessmentDocuments() {
+        return LiquidityRiskAssessmentDocuments;
+    }
+
+    public void setLiquidityRiskAssessmentDocuments(CommonNodeEntity liquidityRiskAssessmentDocuments) {
+        LiquidityRiskAssessmentDocuments = liquidityRiskAssessmentDocuments;
+    }
+    /***0722升级*/
+
     /**
      * 其他材料
      */
