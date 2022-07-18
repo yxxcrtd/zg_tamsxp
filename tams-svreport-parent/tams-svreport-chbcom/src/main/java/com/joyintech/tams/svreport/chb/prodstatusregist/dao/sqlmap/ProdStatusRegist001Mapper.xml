@@ -42,8 +42,7 @@
         and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{submitendDateStart}
       </if>
       <if test="submitendDateEnd != null and submitendDateEnd != ''">
-        and 
-        (sub.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{submitendDateEnd}
+        and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{submitendDateEnd}
       </if>
       <if test="dataDateStart != null and dataDateStart != ''">
         and TO_CHAR(sub.STATUS_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{dataDateStart}
