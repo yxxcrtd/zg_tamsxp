@@ -368,7 +368,7 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
         }
     }
 
-    public AjaxResult tenFileUploadBatch(List<Map<String, Object>> fileList) throws Exception {
+    public AjaxResult tenFileUploadBatch(List<Map<String, Object>> fileList,Map<String,String> omap) throws Exception {
         StringBuffer fileCheckMsg = new StringBuffer();
         for(Map<String, Object> map:fileList){
             String srcName=(String) map.get("srcName");
@@ -474,6 +474,15 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
                             fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
                         }
                     }
+                }
+                //	当理财产品的“产品运作模式”为“03 开放式净值型”或“04 开放式非净值型”时第9类文件“流动性风险评估文件”必传。
+                if(StringUtil.equals( DictCodeListExt2.产品运作模式_开放式净值型.getValue(),omap.get(fileProdId))||
+                        StringUtil.equals( DictCodeListExt2.产品运作模式_开放式非净值型.getValue(),omap.get(fileProdId)) ){
+                    if(!fileExistsMap.containsKey("09")){
+                        fileCheckMsg1.append(fileProdId + "当理财产品的“产品运作模式”为“03 开放式净值型”或“04 开放式非净值型”时第9类文件“流动性风险评估文件”必传。");
+                        fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
+                    }
+
                 }
 
             } catch (Exception e) {

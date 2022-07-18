@@ -76,8 +76,10 @@ public class SvrPerProDeclareInfo003Controller extends BaseController {
         AjaxResult res=new AjaxResult();
         try {
             List<String> prodInsIdList=new ArrayList<String>();
+            Map<String,String>  omap=new HashMap<>();
             for(SvrPerProDeclareInfo001Dto svrPerProDeclareInfo001Dto:dto.getUploadArrStr()){
                 prodInsIdList.add(svrPerProDeclareInfo001Dto.getProdInsId());
+                omap.put(svrPerProDeclareInfo001Dto.getProdInsId(),svrPerProDeclareInfo001Dto.getOperateMode());
             }
             List<Map<String, Object>> fileList=new ArrayList<>();
             List<UploadFileInfo> fileArray=new ArrayList<UploadFileInfo>();
@@ -91,7 +93,7 @@ public class SvrPerProDeclareInfo003Controller extends BaseController {
                 map.put("prodInsIdList", prodInsIdList);
                 fileList.add(map);
             }
-            res=svrPerProDeclareInfo00rvice.tenFileUploadBatch(fileList);
+            res=svrPerProDeclareInfo00rvice.tenFileUploadBatch(fileList,omap);
 
         } catch (Exception e) {
             throw new BusinessException(e);

@@ -337,4 +337,8 @@ public interface ReportHomeMapper {
 
 	List<SubmitInformationRegistrationDto> selectSubsidiaMonth(Map<String, Object> parmMap);
 
+	List<SubmitInformationRegistrationDto> selectSubPrdStatus(Map<String, Object> parmMap);
+
+	List<SubmitInformationRegistrationDto> selectSubAstPos(Map<String, Object> parmMap);
+
 }

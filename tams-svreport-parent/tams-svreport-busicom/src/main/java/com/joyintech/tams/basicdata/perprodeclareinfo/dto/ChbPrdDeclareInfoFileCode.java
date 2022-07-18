@@ -27,7 +27,9 @@ public enum ChbPrdDeclareInfoFileCode {
 
     理财产品宣传材料("08", "理财产品宣传材料", true, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
 
-    其他材料("09", "其他材料", false, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx");
+    流动性风险评估文件("09", "流动性风险评估文件", false, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx"),
+
+    其他材料("99", "其他材料", false, false, 20, "doc,docx,xls,xlsx,zip,pdf,jpg,jpeg,bmp,png,gif,gd,ppt,pptx");
 
 
 

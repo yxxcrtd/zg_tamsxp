@@ -26,6 +26,7 @@
     var tabCols = [
         {field:'declareUuid', title: '主键UUID', visible : false}
         ,{field:'statusValid', title: '状态', visible : false}
+        ,{field:'operateMode', title: '产品运作模式', visible : false}
         ,{field:'statusValidStr', title: 'SvrPerProDeclareInfo001.status', width:90}
         ,{field:'prodName', title: 'SvrPerProDeclareInfo001.prodName', width:100}
         ,{field:'prodInsId', title: 'SvrPerProDeclareInfo001.prodInsId', width:100}
@@ -197,6 +198,7 @@
                 var dataSrc={
                     fileNo:data.fileNo,
                     prodInsId:data.prodInsId,
+                    operateMode:data.operateMode
 
                 }
                 dataArr[i]=dataSrc;
@@ -218,6 +220,7 @@
                             "60%", {
                                 pageModel : PAGE_MODEL_NEW,
                                 prodInsId : data.prodInsId,
+                                operateMode:data.operateMode,
                                 dataArrStr : dataArrStr
                             },function(){
                                 table.reload();
@@ -229,6 +232,7 @@
                     "60%", {
                         pageModel : PAGE_MODEL_NEW,
                         prodInsId : data.prodInsId,
+                        operateMode:data.operateMode,
                         dataArrStr : dataArrStr
                     },function(){
                         table.reload();
@@ -417,6 +421,7 @@
                     var data={
                         fileNo:uploadArr[i].fileNo,
                         prodInsId:uploadArr[i].prodInsId,
+                        operateMode:uploadArr[i].operateMode
                     }
                     dataArr[i]=data;
 
@@ -437,6 +442,7 @@
                                     "60%", {
                                         pageModel : PAGE_MODEL_NEW,
                                         prodInsId : uploadArr.prodInsId,
+                                        operateMode:uploadArr.operateMode,
                                         dataArrStr : dataArrStr
                                     },function(){
                                         table.reload();
@@ -448,6 +454,7 @@
                             "60%", {
                                 pageModel : PAGE_MODEL_NEW,
                                 prodInsId : uploadArr.prodInsId,
+                                operateMode:uploadArr.operateMode,
                                 dataArrStr : dataArrStr
                             },function(){
                                 table.reload();
