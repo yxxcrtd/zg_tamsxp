@@ -43,7 +43,7 @@ INSERT INTO chb_infomgr_result_config VALUES ('99fe904a-5418-4f06-beee-408cfa107
 INSERT INTO chb_infomgr_result_config VALUES ('8c4170dc-66b1-42fc-8da4-87f3bfeca226', 'CHB_PRD_ISSUE_SUB_TMP', 'UPDATE_TIME', '更新时间', '', 33, 'N', NULL);
 
 /**产品发行登记-新增字段:定期开放周期(天) 校验规则**/
-DELETE FROM chb_datacheck_rule WHERE checkruleid IN('ys8E4A49-6813-5A9E-2022-202205160001','ys8E4A49-6813-5A9E-2022-202205160002','ys8E4A49-6813-5A9E-2022-202205160003');
+DELETE FROM chb_datacheck_rule WHERE checkruleid IN('ys8E4A49-6813-5A9E-2022-202205160001','ys8E4A49-6813-5A9E-2022-202205160002','ys214A49-6813-5A9E-2022-202205160003');
 DELETE FROM chb_datacheck_condition WHERE checkconditionid ='ys214A49-6813-5A9E-2022-20220516000A';
 INSERT INTO chb_datacheck_rule VALUES ('ys8E4A49-6813-5A9E-2022-202205160001', 'CHB_PRD_ISSUE_SUB', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isNumber', 'PERIODIC_INTERVAL_DAYS', NULL, '4,0', 'Y', '定期开放周期(天)必须为n..4格式。', 'E');
 INSERT INTO chb_datacheck_rule VALUES ('ys8E4A49-6813-5A9E-2022-202205160002', 'CHB_PRD_ISSUE_SUB', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'compareValueAsNumber', 'PERIODIC_INTERVAL_DAYS', '>=', '0', 'Y', '定期开放周期(天)必须大于等于0。', 'E');
@@ -51,11 +51,11 @@ INSERT INTO chb_datacheck_condition VALUES ('ys214A49-6813-5A9E-2022-20220516000
 INSERT INTO chb_datacheck_rule VALUES ('ys214A49-6813-5A9E-2022-202205160003', 'CHB_PRD_ISSUE_SUB', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isNotEmpty', 'PERIODIC_INTERVAL_DAYS', NULL, NULL, 'N', '定期开放周期(天)要素必填。', 'E');
 
 /**产品基本信息接口-新增字段:定期开放周期(天) 校验规则**/
-DELETE FROM chb_datacheck_rule WHERE checkruleid IN('ys8E4A49-6813-info-2022-202205160001','ys8E4A49-6813-info-2022-202205160002','ys8E4A49-6813-info-2022-202205160003');
+DELETE FROM chb_datacheck_rule WHERE checkruleid IN('ys8E4A49-6813-info-2022-202205160001','ys8E4A49-6813-info-2022-202205160002','ys214A49-6813-info-2022-202205160003');
 DELETE FROM chb_datacheck_condition WHERE checkconditionid ='ys214A49-6813-info-2022-20220516000A';
 INSERT INTO chb_datacheck_rule VALUES ('ys8E4A49-6813-info-2022-202205160001', 'CHB_PRD_BASEINFO', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isNumber', 'FIT_CIRCLE_DAYS', NULL, '4,0', 'Y', '定期开放周期(天)必须为n..4格式。', 'E');
 INSERT INTO chb_datacheck_rule VALUES ('ys8E4A49-6813-info-2022-202205160002', 'CHB_PRD_BASEINFO', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'compareValueAsNumber', 'FIT_CIRCLE_DAYS', '>=', '0', 'Y', '定期开放周期(天)必须大于等于0。', 'E');
-INSERT INTO chb_datacheck_condition VALUES ('ys214A49-6813-info-2022-20220516000A', 'ys214A49-6813-5A9E-2022-202205160003', 'compareValue', 'OPEN_MODE', '==', '01', '当开放模式为有规律开放', 'E');
+INSERT INTO chb_datacheck_condition VALUES ('ys214A49-6813-info-2022-20220516000A', 'ys214A49-6813-info-2022-202205160003', 'compareValue', 'OPEN_MODE', '==', '01', '当开放模式为有规律开放', 'E');
 INSERT INTO chb_datacheck_rule VALUES ('ys214A49-6813-info-2022-202205160003', 'CHB_PRD_BASEINFO', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isNotEmpty', 'FIT_CIRCLE_DAYS', NULL, NULL, 'N', '定期开放周期(天)要素必填。', 'E');
 
 
