@@ -560,7 +560,7 @@ public class InvestTradeRegist001Service extends SvrCommonExportService<InvestTr
 			}
 			/**0722升级***/
 			if(StringUtil.isNotEmpty(item.getRelatedTradeStatus())) {
-				item.setRivalPartyType(item.getRelatedTradeStatus()+" "+SvrDataUtil.getNameFromDataDict(DictCode.关联交易情况,item.getRelatedTradeStatus()));
+				item.setRelatedTradeStatus(item.getRelatedTradeStatus()+" "+SvrDataUtil.getNameFromDataDict(DictCode.关联交易情况,item.getRelatedTradeStatus()));
 			}
 			/**0722升级***/
 			//银行模式时,资产数据取当前机构的产品登记编码
