@@ -184,11 +184,15 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 			Map<String, String> inSidecounterMap = new HashMap<String, String>();
 			//交易对手类型存储map
 			Map<String, String> counterMapType = new HashMap<String, String>();
+			// 交易关联情况map
+			Map<String, String> counterMapTypeRela = new HashMap<String, String>();
+
 			if (!CollectionUtils.isEmpty(counterList)) {
 				for (MstCounterPartyDto counter : counterList) {
 					counterMap.put(counter.getCounterId(), counter.getCounterName());
 					counterMapType.put(counter.getCounterId(), counter.getCounterType2());
-					if ("05".equals(counter.getCounterType())) {//交易对手类型为05的是内部交易对手
+					counterMapTypeRela.put(counter.getCounterId(), counter.getRelatedTradeStatus());
+					if ("02".equals(counter.getRelatedTradeStatus())) {//对手方为本机构其他理财产品
 						inSidecounterMap.put(counter.getCounterId(), counter.getCounterName());
 					}
 				}
@@ -215,6 +219,11 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 				//交易对手类型赋值 add by wm 2020-07-24 start
 				if (StringUtil.isEmpty(dto.getRivalPartyType()) && StringUtil.isNotEmpty(counterMapType.get(dto.getTradeCounter()))) {
 					dto.setRivalPartyType(this.counterType2RivalPartyType(counterMapType.get(dto.getTradeCounter())));
+				}
+
+				//交易关联情况赋值
+				if (StringUtil.isNotEmpty(counterMapTypeRela.get(dto.getTradeCounter()))) {
+					dto.setRelatedTradeStatus(counterMapTypeRela.get(dto.getTradeCounter()));
 				}
 				//交易对手类型赋值 add by wm 2020-07-24 end
 				if (!StringUtil.equals(dto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue())) {

@@ -91,7 +91,12 @@ public class MstCounterPartyDto {
      * 是否为中央交易对手方
      */
     private String isCentralCounter;
-    
+
+    /**
+     * 关联交易情况
+     */
+    private String relatedTradeStatus;
+
     public String getCounterType1() {
 		return counterType1;
 	}
@@ -338,5 +343,13 @@ public class MstCounterPartyDto {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRelatedTradeStatus() {
+        return relatedTradeStatus;
+    }
+
+    public void setRelatedTradeStatus(String relatedTradeStatus) {
+        this.relatedTradeStatus = relatedTradeStatus;
     }
 }

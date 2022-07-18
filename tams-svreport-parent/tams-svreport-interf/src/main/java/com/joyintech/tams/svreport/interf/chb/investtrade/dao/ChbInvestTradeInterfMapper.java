@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.tams.svreport.interf.chb.investtrade.dto.ChbSecRepayInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -174,7 +176,16 @@ public interface ChbInvestTradeInterfMapper {
 
 	ChbOrgRegistBankCode selectByRegistBankCode(String registBankCode);
 
-    void deleteChbInvestTrade(@Param("list") List<ChbInvestTrade> list);
+	List<ChbSecRepayInfoDto> selectSecRepayInfo();
+
+	List<Map<String,String>> selectNotExistsCounterList(@Param("list")List<String> counterList);
+
+	void mergeCounterInfoList(@Param("list")List<Map<String,String>> counterList);
+
 
 	void deleteChbInvestTradeErroData(@Param("list") List<ChbInvestTrade> list);
+
+	void deleteChbInvestTrade(@Param("list") List<ChbInvestTrade> list);
+
+	void mergeCounterInfoListReal(@Param("list")List<Map<String,String>> counterList);
 }

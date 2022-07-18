@@ -2764,7 +2764,7 @@
         insert into CHB_INVEST_TRADE(
         TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
         INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
-        ASSET_CODE, CCY, AMT,
+        ASSET_CODE, CCY, AMT,TRADE_TIME,
         CNY_AMT, NUM, CUR_ASSET_TYPE,
         CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
         UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
@@ -2782,7 +2782,7 @@
         select
         TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
         INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
-        ASSET_CODE, CCY, AMT,
+        ASSET_CODE, CCY, AMT,TRADE_TIME,
         CNY_AMT, NUM, CUR_ASSET_TYPE,
         CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
         UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
@@ -2808,6 +2808,7 @@
         TEMP.ASSET_CODE,
         TEMP.CCY,
         TEMP.AMT,
+        TEMP.TRADE_TIME,
         TEMP.CNY_AMT,
         TEMP.NUM,
         TEMP.CUR_ASSET_TYPE,
@@ -2855,6 +2856,7 @@
             #{item.assetCode,jdbcType=VARCHAR}  ASSET_CODE,
             #{item.ccy,jdbcType=VARCHAR}  CCY,
             CAST(#{item.amt,jdbcType=DECIMAL} AS DECIMAL(30,2)) AMT,
+            #{item.tradeTime,jdbcType=TIMESTAMP}  TRADE_TIME,
             CAST(#{item.cnyAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) CNY_AMT,
             CAST(#{item.num,jdbcType=DECIMAL} AS DECIMAL(30,5))  NUM,
             #{item.curAssetType,jdbcType=VARCHAR}  CUR_ASSET_TYPE,
@@ -2900,7 +2902,7 @@
         select
         TRADE_SEQNO, TRADE_CODE, INVEST_VARIETY,
         INVEST_TYPE, PROD_ID, REGIST_BANK_CODE,
-        ASSET_CODE, CCY, AMT,
+        ASSET_CODE, CCY, AMT,TRADE_TIME,
         CNY_AMT, NUM, CUR_ASSET_TYPE,
         CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
         UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
@@ -2926,6 +2928,7 @@
         TEMP.ASSET_CODE,
         TEMP.CCY,
         TEMP.AMT,
+        TEMP.TRADE_TIME,
         TEMP.CNY_AMT,
         TEMP.NUM,
         TEMP.CUR_ASSET_TYPE,
@@ -2971,6 +2974,7 @@
             #{item.registBankCode,jdbcType=VARCHAR}  REGIST_BANK_CODE,
             #{item.assetCode,jdbcType=VARCHAR}  ASSET_CODE,
             #{item.ccy,jdbcType=VARCHAR}  CCY,
+            #{item.tradeTime,jdbcType=TIMESTAMP}  TRADE_TIME,
             CAST(#{item.amt,jdbcType=DECIMAL} AS DECIMAL(30,2)) AMT,
             CAST(#{item.cnyAmt,jdbcType=DECIMAL} AS DECIMAL(30,2)) CNY_AMT,
             CAST(#{item.num,jdbcType=DECIMAL} AS DECIMAL(30,5))  NUM,
@@ -3020,6 +3024,7 @@
         A.ASSET_CODE = B.ASSET_CODE,
         A.CCY = B.CCY,
         A.AMT = B.AMT,
+        A.TRADE_TIME = B.TRADE_TIME,
         A.CNY_AMT = B.CNY_AMT,
         A.NUM = B.NUM,
         A.CUR_ASSET_TYPE = B.CUR_ASSET_TYPE,
@@ -3360,4 +3365,105 @@
         </foreach>
         ;
     </update>
+
+    <select id="selectSecRepayInfo" resultType="com.joyintech.tams.svreport.interf.chb.investtrade.dto.ChbSecRepayInfoDto">
+        select
+            b.SEC_ID secId,
+            b.SEC_NM secNm,
+            b.REPAY_DT repayDt,
+            b.REPAY_RATE repayRate,
+            b.REPAY_NET repayNet,
+            b.TRADE_MARKET tradeMarket,
+            b.REPAY_CYCLE_DAY repayCycleDay,
+            b.REPAY_MODE repayMode
+        from chb_asset_info a inner join chb_sec_repay_info b on a.ASSET_CODE=b.SEC_ID where
+                a.ASSET_TYPE2 in ('1101','1110','1109','1102','1101','1111','1112','1113','1114','1115','1116','1117')
+    </select>
+
+    <select id="selectCounterPartyNotExists" parameterType="java.util.List"
+            resultType="com.joyintech.tams.common.base.entity.ChbInvestTrade"
+            resultSetType="FORWARD_ONLY" fetchSize="1000">
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select
+            #{item.tradeCounter}
+            from dual
+        </foreach>
+        select
+        a.tradeCounter
+        from a
+        left join chb_mst_counter_party counter on a.tradeCounter=counter.COUNTER_NAME
+        left join chb_prdresist_code registcode on a.tradeCounter=registcode.reg_code
+        left join chb_mst_counter_party_errordata errordata on a.tradeCounter=counter.COUNTER_NAME
+        where counter.COUNTER_NAME is null and registcode.reg_code is not null
+        and errordata.COUNTER_NAME is null
+    </select>
+    <insert id="mergeCounterInfoList" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTrade">
+        insert into chb_mst_counter_party_errordata(DATAUUID,COUNTER_ID,COUNTER_NAME,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        values
+        <foreach collection="subList"  item="index" separator=",">
+            (UUID_SHORT(),
+            #{index.tradeCounter},
+            #{index.tradeCounter},
+            'system',
+            'system',
+            now(),
+            'system',
+            now())
+        </foreach>
+    </insert>
+
+    <select id="selectNotExistsCounterList" resultType="java.util.Map" parameterType="java.util.List" >
+        WITH a AS(
+        <foreach collection="list" item="item" separator="union all">
+            SELECT #{item.TRADE_COUNTER} AS tradeCounter FROM DUAL
+        </foreach>
+        )
+        SELECT
+        a.tradeCounter AS counterId,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN prod.REG_CODE ELSE a.tradeCounter END AS counterName,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN 'C05' ELSE NULL END AS counterType1,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN 'C0500' ELSE NULL END AS counterType2,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN '02' ELSE NULL END AS relatedTradeStatus,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN '01' ELSE '02' END AS isReal
+        FROM a
+        LEFT join chb_mst_counter_party counter ON a.tradeCounter=counter.COUNTER_NAME
+        LEFT join chb_mst_counter_party_errordata errCounter ON a.tradeCounter=errCounter.COUNTER_NAME
+        LEFT join
+        (SELECT registCode.REG_CODE,baseInfo.PROD_ID,baseInfo.PROD_NAME
+        FROM CHB_PRD_BASEINFO baseInfo LEFT join chb_prdresist_code registCode
+        ON baseInfo.PROD_ID=registCode.PRODID) prod
+        on a.tradeCounter = prod.REG_CODE or a.tradeCounter = prod.PROD_ID or a.tradeCounter = prod.PROD_NAME
+        WHERE counter.COUNTER_NAME IS NULL AND errCounter.COUNTER_NAME IS NULL
+    </select>
+    <insert id="mergeCounterInfoListReal" parameterType="java.util.List" >
+        insert into chb_mst_counter_party (COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID,
+        MANAGER_ID, HEAD_BANK, CONTACT, CONTACT_WAY, REMARK, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SVR_DATA_SOURCES,
+        COUNTER_TYPE1, COUNTER_TYPE2, IS_CENTRAL_COUNTER, UUID, STATUS, RELATED_TRADE_STATUS)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.counterId},
+            null,
+            #{item.counterName},
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            'system',
+            'Z70039',
+            now(),
+            'system',
+            now(),
+            '02',
+            #{item.counterType1},
+            #{item.counterType2},
+            null,
+            UUID_SHORT(),
+            'E',
+            #{item.relatedTradeStatus}
+            )
+        </foreach>
+    </insert>
 </mapper>

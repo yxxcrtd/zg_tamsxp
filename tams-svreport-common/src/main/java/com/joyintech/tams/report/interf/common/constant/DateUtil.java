@@ -119,7 +119,7 @@ public class DateUtil extends DateUtils {
             return parseDate(dateString,
                     new String[] {DEFAULT_DATE_FORMAT_CN, DEFAULT_DATE_FORMAT_EN,DEFAULT_ANOTHER_FORMAT,
                             DATETIME_FORMAT_WITH_NO_SLIP, DEFAULT_DATETIME_FORMAT, DEFAULT_OTHER_FORMAT,
-                            "yyyy-MM","yyyy/MM/dd HH:mm","yyyy-MM-dd HH:mm","yyyyMMdd HH:mm","yyyy-MM-dd HH:mm:ss","yyyyMMdd HH:mm:ss","yyyyMMddHHmm"});
+                            "yyyy-MM","yyyy/MM/dd HH:mm","yyyy-MM-dd HH:mm","yyyyMMdd HH:mm","yyyy-MM-dd HH:mm:ss","yyyyMMdd HH:mm:ss","yyyyMMddHHmm","yyyyMMddHHmmss"});
         }
         catch (ParseException e) {
             throw new BusinessException("Date ParseException");

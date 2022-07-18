@@ -56,6 +56,13 @@ public interface ComminCodeCheckTmpMapper {
      */
     int queryChbAssetInfoSubByAssetCode(@Param("assetCode")String  assetCode);
 
+    /**
+     *  根据行内资产负债编码查询是否存在已报送的数据
+     * @param assetCode 行内资产负债编码
+     * @return 记录个数
+     */
+    int queryChbAssetInfoSubByAssetCodeAndSendStatus(@Param("assetCode")String  assetCode);
+
     // add by dubaojun 2020-10-12 配置无法实现，代码实现的check start
     /**
      * 根据查询参数获取对应的产品交易登记信息中行内资产/负债编码

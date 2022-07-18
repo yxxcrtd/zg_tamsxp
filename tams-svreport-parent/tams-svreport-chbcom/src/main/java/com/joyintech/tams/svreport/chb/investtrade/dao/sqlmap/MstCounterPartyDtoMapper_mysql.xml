@@ -245,6 +245,33 @@
     <select id="selectAllTradeCounter" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from chb_mst_counter_party
+        from chb_mst_counter_party where STATUS='E'
+    </select>
+
+    <select id="selectOneDate" resultType="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto">
+        SELECT
+        a.STATUS,
+        a.COUNTER_ID,
+        a.COUNTER_NAME,
+        a.RELATED_TRADE_STATUS,
+        a.COUNTER_TYPE1,
+        a.COUNTER_TYPE2,
+        a.CREATE_USER,
+        a.CREATE_TIME as createTime,
+        a.UPDATE_USER,
+        a.UPDATE_TIME as updateTime,
+        a.REMARK as remark,
+        '' as uuid
+        FROM
+        chb_mst_counter_party a
+        <where>
+            <if test="counterId != null and counterId != ''">
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+
     </select>
 </mapper>

@@ -18,18 +18,20 @@
             <Cell order="13" name="交易日">dealdateStr</Cell>
             <Cell order="14" name="交易对手">tradeCounter</Cell>
             <Cell order="15" name="交易对手类型">rivalPartyTypeStr</Cell>
-            <Cell order="16" name="单位成交价（全价）">unitPriceFull</Cell>
-            <Cell order="17" name="单位成交价（净价）">unitPriceNet</Cell>
-            <Cell order="18" name="到期收益率">endRate</Cell>
-            <Cell order="19" name="成交编号/合同号">contractCode</Cell>
-            <Cell order="20" name="审批交易人身份证号">investApproverId</Cell>
-            <Cell order="21" name="交易审批人姓名">investApproverName</Cell>
-            <Cell order="22" name="交易员身份证号">investTraderId</Cell>
-            <Cell order="23" name="交易员姓名">investTraderName</Cell>
-            <Cell order="24" name="备注">remark</Cell>
-            <Cell order="25" name="错误信息">errMsg</Cell>
-            <Cell order="27" name="更新时间">updateTimeStr</Cell>
-            <Cell order="28" name="更新人">updateUser</Cell>
+            <Cell order="16" name="关联交易情况">relatedTradeStatusStr</Cell>
+            <Cell order="17" name="交易发起时间">tradeTimeStr</Cell>
+            <Cell order="18" name="单位成交价（全价）">unitPriceFull</Cell>
+            <Cell order="19" name="单位成交价（净价）">unitPriceNet</Cell>
+            <Cell order="20" name="到期收益率">endRate</Cell>
+            <Cell order="21" name="成交编号/合同号">contractCode</Cell>
+            <Cell order="22" name="审批交易人身份证号">investApproverId</Cell>
+            <Cell order="23" name="交易审批人姓名">investApproverName</Cell>
+            <Cell order="24" name="交易员身份证号">investTraderId</Cell>
+            <Cell order="25" name="交易员姓名">investTraderName</Cell>
+            <Cell order="26" name="备注">remark</Cell>
+            <Cell order="27" name="错误信息">errMsg</Cell>
+            <Cell order="28" name="更新时间">updateTimeStr</Cell>
+            <Cell order="29" name="更新人">updateUser</Cell>
         </Row>
     </Worksheet>
 </Workbook>

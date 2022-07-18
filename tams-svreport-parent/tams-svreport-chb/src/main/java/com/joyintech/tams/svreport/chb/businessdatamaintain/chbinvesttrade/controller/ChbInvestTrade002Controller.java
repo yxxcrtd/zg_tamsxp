@@ -4,10 +4,8 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -29,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,7 +45,8 @@ public class ChbInvestTrade002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.币种_中债);
         this.setSelectOptionToModel(model, DictCode.资产计量方式);
         this.setSelectOptionToModel(model, DictCode.资金流动类型);
-        this.setSelectOptionToModel(model, DictCode.对手方类型);
+        this.setSelectOptionToModel(model, DictCode.关联交易情况);
+        model.addAttribute("SVR_RIVAL_PARTY_TYPE", JsonUtils.objectArray2Json(this.queryCounterType2List().toArray()));
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String tradeCode = getParam("tradeCode");
         String prodId = getParam("prodId");
@@ -166,5 +166,14 @@ public class ChbInvestTrade002Controller extends BaseController {
         AjaxResult result  = new AjaxResult();
         result.setData(chbInvestTradeService.dealCnyAmt(RequestUtil.getPageParam()));
         return result;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/queryCounterType2List")
+    public List<SelectOptionDto> queryCounterType2List() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        List<SelectOptionDto> list = chbInvestTradeService.queryCounterType2List(param);
+        return list;
     }
 }

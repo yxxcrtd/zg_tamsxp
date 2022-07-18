@@ -29,6 +29,8 @@ import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dao.C
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.dto.ChbPrdBaseInfoDto;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
 import com.joyintech.tams.svreport.chb.common.util.ErrdataConvertUtil;
+import com.joyintech.tams.svreport.chb.investtrade.dao.MstCounterPartyDtoMapper;
+import com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto;
 import com.joyintech.tams.svreport.interf.chb.assetinfo.dao.ChbAssetInfoInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investtrade.dao.ChbInvestTradeInterfMapper;
 import com.joyintech.tams.svreport.interf.chb.investtrade.service.SvrInvestTradeFileImpService;
@@ -40,6 +42,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -67,6 +71,8 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     private ChbInvestTradeInterfMapper chbInvestTradeInterfMapper;
     @Autowired
     private ChbInvestTradeErrodataMapper chbInvestTradeErrodataMapper;
+    @Autowired
+    private MstCounterPartyDtoMapper mstCounterPartyDtoMapper;
     /**
      * 投资交易接入mapper
      */
@@ -194,10 +200,12 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
     public Map<String, String> selectRivalPartyType(String tradeCounter) {
         Map<String, String> map = chbInvestTradeDao.selectRivalPartyType(tradeCounter);
         if(null==map){
-            map = new HashMap<>();
+            return new HashMap<>();
         }
-        map.put("COUNTER_TYPE", this.counterType2RivalPartyType(map.get("COUNTER_TYPE2")));
-        return map;
+        Map<String, String> resultMap=new HashMap<>(2);
+        resultMap.put("COUNTER_TYPE", map.get("COUNTER_TYPE2"));
+        resultMap.put("RELATED_TRADE_STATUS", map.get("RELATED_TRADE_STATUS"));
+        return resultMap;
     }
 
     public AjaxResult checkConfirmMsgForImportData(String fileName) throws Exception{
@@ -218,6 +226,14 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             webResult.setMessage(this.getMessage("SvrDuplicateMessage",dup,i), MessageType.确认消息);
         }
         return webResult;
+    }
+
+    public List<SelectOptionDto> queryCounterIdList(Map<String, Object> param) {
+        return chbInvestTradeDao.queryCounterIdList(param);
+    }
+
+    public List<SelectOptionDto> queryCounterType2List(Map<String, Object> param) {
+        return chbInvestTradeDao.queryCounterType2List(param);
     }
     /**
      * excel导入数据整理
@@ -253,6 +269,12 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
             columnList.add(i,columnName);
         }
 
+        //查询所有有效的交易对手数据
+        Map<String,Object> counterMap =new HashMap<>(1);
+        counterMap.put("status","E");
+        List<MstCounterPartyDto> counterPartyList = mstCounterPartyDtoMapper.selectOneDate(counterMap);
+        Map<String, MstCounterPartyDto> counterPartyMap = counterPartyList.stream().collect(Collectors.toMap(MstCounterPartyDto::getCounterId, MstCounterPartyDto -> MstCounterPartyDto));
+
         List<Map<String,String>> list = new ArrayList<>();
         for(int i=1;i<dataList.size();++i){
             Map<String,String> subMap = new HashMap<>();
@@ -263,7 +285,13 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
                 }
             }
             subMap.put("TRADE_SEQNO",IDGenerator.generate(36));
-
+            //交易对手的备注中取
+            if (counterPartyMap.containsKey(dataList.get(i).get(14))) {
+                MstCounterPartyDto counterPartyDto = counterPartyMap.get(dataList.get(i).get(14));
+                if (Objects.equals(counterPartyDto.getRelatedTradeStatus(),"99")) {
+                    subMap.put("REMARK",counterPartyDto.getRemark());
+                }
+            }
             list.add(subMap);
         }
         for (ChbInfoMgrResultConfig config : chbInfoMgrResultConfigList) {
@@ -300,6 +328,7 @@ public class ChbInvestTradeService extends CommonExportService<ChbInvestTradeDto
         rate = rate==null?BigDecimal.ZERO:rate;
         return ArithmeticUtil.multiply(rate,amount);
     }
+
 
     public  String counterType2RivalPartyType(String counterType) {
         if (StringUtil.isEmpty(counterType)) {

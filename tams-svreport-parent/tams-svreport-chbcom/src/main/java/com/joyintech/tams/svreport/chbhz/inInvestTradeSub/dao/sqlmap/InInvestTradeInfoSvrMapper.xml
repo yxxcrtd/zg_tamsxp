@@ -12,7 +12,9 @@
         <result column="CUR_ASSET_TYPE" property="curAssetType" jdbcType="VARCHAR" />
         <result column="CUR_ASSETDET_TYPE" property="curAssetdetType" jdbcType="VARCHAR" />
         <result column="DEALDATE" property="dealdate" jdbcType="DATE" />
+         <result column="TRADE_TIME" property="tradeTime" jdbcType="TIMESTAMP" />
         <result column="TRADE_COUNTER" property="tradeCounter" jdbcType="VARCHAR" />
+         <result column="RELATED_TRADE_STATUS" property="relatedTradeStatus" jdbcType="VARCHAR" />
         <result column="UNIT_PRICE_FULL" property="unitPriceFull" jdbcType="DECIMAL" />
         <result column="UNIT_PRICE_NET" property="unitPriceNet" jdbcType="DECIMAL" />
         <result column="END_RATE" property="endRate" jdbcType="DECIMAL" />

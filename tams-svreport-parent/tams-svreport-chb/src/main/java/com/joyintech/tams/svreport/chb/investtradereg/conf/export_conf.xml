@@ -19,14 +19,16 @@
 			<Cell order="13" name="单位成交价格（全价）">unitPriceFull</Cell><!-- 单位成交价格（全价） -->
 			<Cell order="14" name="到期收益率%">endRateString</Cell><!-- 到期收益率% -->
 			<Cell order="15" name="交易对手方">tradeCounter</Cell><!-- 交易对手方 -->
-			<Cell order="16" name="交易对手方类型">rivalPartyType</Cell><!-- 交易对手方类型 -->
-			<Cell order="17" name="成交编号/合同号">contractCode</Cell><!-- 成交编号/合同号 -->
-			<Cell order="18" name="交易审批人身份证号">investApproverId</Cell><!-- 交易审批人身份证号 -->
-			<Cell order="19" name="交易审批人姓名">investApproverName</Cell><!-- 交易审批人姓名 -->
-			<Cell order="20" name="交易员身份证号">investTraderId</Cell><!-- 交易员身份证号 -->
-			<Cell order="21" name="交易员姓名">investTraderName</Cell><!-- 交易员姓名 -->
-			<Cell order="22" name="交易日">dealdateStr</Cell><!-- 交易日 -->
-			<Cell order="23" name="备注">remark</Cell><!-- 备注 -->
+			<Cell order="16" name="关联交易情况">relatedTradeStatusStr</Cell><!-- 交易对手方 -->
+			<Cell order="17" name="交易对手方类型">rivalPartyType</Cell><!-- 交易对手方类型 -->
+			<Cell order="18" name="成交编号/合同号">contractCode</Cell><!-- 成交编号/合同号 -->
+			<Cell order="19" name="交易审批人身份证号">investApproverId</Cell><!-- 交易审批人身份证号 -->
+			<Cell order="20" name="交易审批人姓名">investApproverName</Cell><!-- 交易审批人姓名 -->
+			<Cell order="21" name="交易员身份证号">investTraderId</Cell><!-- 交易员身份证号 -->
+			<Cell order="22" name="交易员姓名">investTraderName</Cell><!-- 交易员姓名 -->
+			<Cell order="23" name="交易日">dealdateStr</Cell><!-- 交易日 -->
+			<Cell order="24" name="交易发起时间">tradeTimeStr</Cell><!-- 交易日 -->
+			<Cell order="25" name="备注">remark</Cell><!-- 备注 -->
 		</Row>
 	</Worksheet>
 </Workbook>

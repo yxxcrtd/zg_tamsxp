@@ -68,6 +68,8 @@ $(function() {
             ,{field:'dealdateStr',sortable:false,width:160,  title: 'ChbInvestTrade001.dealdate'}
             ,{field:'tradeCounter',sortable:false,width:180,title: 'ChbInvestTrade001.tradeCounter'}
             ,{field:'rivalPartyTypeStr', sortable:false,width:100, title: 'ChbInvestTrade001.rivalPartyType'}
+            ,{field:'relatedTradeStatusStr', sortable:false,width:100, title: '关联交易情况'}
+            ,{field:'tradeTimeStr', sortable:false,width:100, title: '交易发起时间'}
             ,{field:'unitPriceFull',sortable:false,width:100,title: 'ChbInvestTrade001.unitPriceFull'}
             ,{field:'unitPriceNet', sortable:false, width:100,title: 'ChbInvestTrade001.unitPriceNet'}
             ,{field:'endRate', sortable:false, width:100,title: 'ChbInvestTrade001.endRate'}

@@ -12,6 +12,7 @@ package com.joyintech.tams.svreport.submanagement.server;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
@@ -19,10 +20,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.chbreport.codecheck.dao.ComminCodeCheckTmpMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -60,6 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -102,7 +102,8 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 
 
 	private static final List<String> CHB_SUB_LIST = Arrays.asList("CHB_ASSET_INFO_TMP","CHB_AST_VAL_SUB_TMP","CHB_BOT_AST_POS_SUB_TMP","CHB_EMPLOYEE_INFO",
-			"CHB_INVEST_TRADE_SUB_TMP","CHB_PRD_DEAL_SUB_TMP","CHB_PRD_DECLARE_SUB_TMP","CHB_PRD_END_SUB_TMP","CHB_PRD_ISSUE_SUB_TMP","CHB_PRD_RAISETOT_SUB_TMP");
+			"CHB_INVEST_TRADE_SUB_TMP","CHB_PRD_DEAL_SUB_TMP","CHB_PRD_DECLARE_SUB_TMP","CHB_PRD_END_SUB_TMP","CHB_PRD_ISSUE_SUB_TMP","CHB_PRD_RAISETOT_SUB_TMP",
+			"CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB");
 
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 282;
@@ -133,6 +134,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 
 	@Autowired
 	private ChbMgrTableInfoMapper chbMgrTableInfoMapper;
+
+	@Autowired
+	private ComminCodeCheckTmpMapper comminCodeCheckTmpMapper;
 
 	@Autowired
 	private OperationalLoanInfo001CheckService operationalLoanInfo001CheckService;
@@ -2262,6 +2266,28 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					}
 					// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
 
+					if (Objects.equals("CHB_AST_POS_SUB",tableId)) {
+						String asset_id = dataMap.get("ASSET_ID");
+						String inter_asset_code = dataMap.get("INTER_ASSET_CODE");
+
+						if (!StringUtils.isEmpty(asset_id)) {
+							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(asset_id);
+							if (count<1) {
+								checkResult.add(new ExcelValidDto("行内资产/负债编码[ASSET_ID]", String.valueOf(j+1),"行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+							}
+
+						}
+
+						if (!StringUtils.isEmpty(inter_asset_code)) {
+							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(inter_asset_code);
+							if (count<1) {
+								checkResult.add(new ExcelValidDto("中间层行内资产/负债编码[INTER_ASSET_CODE]", String.valueOf(j+1),"中间层行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+							}
+
+						}
+
+
+					}
 					dataMap.put("ERRMSG_ROW", String.valueOf(j));
 
 					/**A列为删除列的  不进行规则代码check了  add by dongxiangyang  20201029*/
@@ -2660,11 +2686,16 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									}
 									// 时间类型字段全存入当前时间
 								} else if (timeColumnList.contains(column)) {
-                                    if(BaseCommonCheckService.isMYSQLDataBase()){
-                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
-                                    }else{
-                                        columnData = "SYSDATE";
-                                    }
+									//产品状态登记和资产持仓登记日期单独处理
+									ArrayList<String> prdList = Lists.newArrayList("CHB_PRD_STATUS_SUB", "CHB_AST_POS_SUB");
+									ArrayList<String> dateList = Lists.newArrayList("PRD_STATUS_DATE", "VALUE_DATE");
+									if (!prdList.contains(tableName) ||  !dateList.contains(column)){
+										if(BaseCommonCheckService.isMYSQLDataBase()){
+											columnData = "NOW()";
+										}else{
+											columnData = "SYSDATE";
+										}
+									}
 									// 创建者和修改者均设置为当前用户
 								} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
@@ -2737,6 +2768,11 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 										indentifyMark = "'"+indentifyMark.replace("'", "")+"'";
 									}
 									insertMap.put("INDENTIFY_MARK", indentifyMark);
+								}
+							}else if (Objects.equals("CHB_PRD_STATUS_SUB",tableName) || Objects.equals("CHB_AST_POS_SUB",tableName)) {
+								insertMap.put("REGIST_SEQNO", "'" + IDGenerator.generate(32) + "'");
+								if(StringUtil.isNotBlank(insertMap.get("VALUE_DATE"))){
+									insertMap.put("VALUE_DATE","'"+insertMap.get("VALUE_DATE")+"'");
 								}
 							}
 							// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
@@ -3460,7 +3496,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		}
 
 		//添加日期类型默认字段 减少处理  ,从业人员登记因无其他入口.不需要ROW_DATE字段 leipeng
-		if(!tableId.equals("CHB_EMPLOYEE_INFO")){
+		if(!tableId.equals("CHB_EMPLOYEE_INFO") &&
+				!tableId.equals("CHB_PRD_STATUS_SUB") &&
+				!tableId.equals("CHB_AST_POS_SUB")){
 			firstData.add("ROW_DATE");
 		}
 
@@ -3506,7 +3544,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				data.add(j+1, realData);
 			}
 			//添加日期类型默认字段 减少处理  ,从业人员登记因无其他入口.不需要ROW_DATE字段 leipeng
-			if(!tableId.equals("CHB_EMPLOYEE_INFO")){
+			if(!tableId.equals("CHB_EMPLOYEE_INFO")&&
+					!tableId.equals("CHB_PRD_STATUS_SUB") &&
+					!tableId.equals("CHB_AST_POS_SUB")){
 				data.add(DateUtil.getCurrentDate());
 			}
 			dataList.add(i, data);

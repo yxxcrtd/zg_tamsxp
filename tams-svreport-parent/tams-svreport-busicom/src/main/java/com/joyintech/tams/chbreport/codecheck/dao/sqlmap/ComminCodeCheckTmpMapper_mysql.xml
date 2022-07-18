@@ -144,6 +144,10 @@
     <select id="queryChbAssetInfoSubByAssetCode" resultType="java.lang.Integer">
         select count(1) from CHB_ASSET_INFO_SUB where ASSET_CODE = #{assetCode}
     </select>
+
+    <select id="queryChbAssetInfoSubByAssetCodeAndSendStatus" resultType="java.lang.Integer">
+        select count(1) from CHB_ASSET_INFO_SUB where ASSET_CODE = #{assetCode} AND SEND_STATUS IN ('02','03')
+    </select>
     <!--add by zhangliang 20201010 end-->
 
     <!-- add by dubaojun 2020-10-12 配置无法实现，代码实现的check start -->
