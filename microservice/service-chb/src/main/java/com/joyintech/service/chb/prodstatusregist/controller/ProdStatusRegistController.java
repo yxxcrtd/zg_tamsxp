@@ -1,12 +1,9 @@
 package com.joyintech.service.chb.prodstatusregist.controller;
 
-import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.service.ProdStatusRegist001Service;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -83,6 +80,13 @@ public class ProdStatusRegistController {
 	*/
 	@PostMapping("reportCheck")
 	public Map<String,Object> reportCheck(@RequestBody Map<String,Object> map) {
-        return new HashMap<String,Object>();
+		Map<String,Object> returnMap = new HashMap<>(1);
+		ExcelValidDto excelValidDto = new ExcelValidDto();
+		excelValidDto.setCheckResult("01");
+		List<ExcelValidDto> result=new ArrayList<ExcelValidDto>(1);
+		result.add(excelValidDto);
+		returnMap.put("excelValidDtoList",result);
+		returnMap.put("resultList",new ArrayList<ProdStatusRegist001Dto>(1));
+		return returnMap;
 	}
 }
