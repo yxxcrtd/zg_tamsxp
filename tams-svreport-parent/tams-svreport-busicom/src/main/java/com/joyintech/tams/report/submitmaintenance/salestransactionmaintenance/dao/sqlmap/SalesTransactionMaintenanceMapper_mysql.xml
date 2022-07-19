@@ -27,6 +27,7 @@
 		erro.TRADE_PS             as tradePs,
 		erro.TRADE_VDATE          as tradeVdate,
 		null                      as remark,
+		null                      as tradeType,
 		erro.ERR_MSG              as errMsg
 		from CHB_SALER_STL_DEA_ERRODATA erro
 		where 1=1
@@ -74,6 +75,7 @@
 		info.TRADE_PS             as tradePs,
 		info.TRADE_VDATE          as tradeVdate,
 		info.REMARK               as remark,
+		info.TRADE_TYPE           as tradeType,
 		null                      as errMsg
 		from CHB_SALER_STL_DEAL_INFO info
 		where 1=1
@@ -121,6 +123,7 @@
 	TRADE_TIME,
 	POSTSCRIPT,
 	REMARK,
+	TRADE_TYPE,
 	RECEPT_DATE,
 	ORG_CODE,
 	CREATE_USER,
@@ -145,6 +148,8 @@
 	#{tradeTime,jdbcType=VARCHAR},
 	#{postscript,jdbcType=VARCHAR},
 	#{remark,jdbcType=VARCHAR},
+	#{tradeType,jdbcType=VARCHAR},
+	#{postscript,jdbcType=VARCHAR},
 	#{receptDate,jdbcType=DATE},
 	#{orgCode,jdbcType=VARCHAR},
 	#{createUser,jdbcType=VARCHAR},
@@ -152,6 +157,56 @@
 	NOW()
 	)
 	</insert>
+
+	<!--	双击查看详细信息查询info-->
+	<select id="selectDetail"
+			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		select
+		'01'                disabledThing,
+		a.REGIST_SEQNO     registSeqno,
+		'02'               maintainStatus,
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.ACCOUNT_NAME accountName,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_COUNTER_ACC_NO tradeCounterAccNo,
+		a.TRADE_COUNTER_ACC_NAME tradeCounterAccName,
+		a.TRADE_COUNTER_ACC_BANK_NAME tradeCounterAccBankName,
+		a.TRADE_COUNTER_ACC_BANK_NO tradeCounterAccBankNo,
+		a.TRADE_CCY tradeCcy,
+		a.TRADE_AMT tradeAmt,
+		a.TRADE_VDATE tradeVdate,
+		a.TRADE_TIME tradeTime,
+		a.POSTSCRIPT postscript,
+		a.TRADE_TYPE tradeType,
+		a.REMARK remark
+		from CHB_SALER_STL_DEAL_INFO a
+		where
+		REGIST_SEQNO=#{registSeqno}
+	</select>
+
+	<!--	双击查看详细信息查询erro-->
+	<select id="selectErroDetail"
+			resultType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
+		select
+		null                disabledThing,
+		a.REGIST_SEQNO      registSeqno,
+		'01'               maintainStatus,
+		a.INSTITUTION_CODE institutionCode,
+		a.PRD_REGIST_CODE prdRegistCode,
+		a.ACCOUNT_NO accountNo,
+		a.TRADE_NO tradeNo,
+		a.TRADE_PS tradePs,
+		a.TRADE_VDATE tradeVdate,
+		a.ORG_DATA orgData,
+		a.ERR_MSG errMsg
+		FROM  CHB_SALER_STL_DEA_ERRODATA a
+		where
+		REGIST_SEQNO=#{registSeqno}
+	</select>
+
 	<!--	修改-->
 	<update id="update" parameterType="com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto">
 		UPDATE CHB_SALER_STL_DEAL_INFO

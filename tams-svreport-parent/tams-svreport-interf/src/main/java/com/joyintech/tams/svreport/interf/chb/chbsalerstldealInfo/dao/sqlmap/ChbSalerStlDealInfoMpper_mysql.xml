@@ -8,13 +8,13 @@
         TRADE_NO, REGIST_SEQNO, DATA_STATUS, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO,
         TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY,
         TRADE_AMT, TRADE_VDATE, TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER,
-        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, TRADE_TYPE)
         select
         INSTITUTION_CODE, PRD_REGIST_CODE, ACCOUNT_NO,
         TRADE_NO, REGIST_SEQNO, DATA_STATUS, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO,
         TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY,
         TRADE_AMT, TRADE_VDATE, TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER,
-        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, TRADE_TYPE
         from (
         select
         TEMP.*
@@ -45,7 +45,8 @@
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER ,
             #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} CREATE_USER,
-            #{item.updateTime,jdbcType=TIMESTAMP} CREATE_TIME
+            #{item.updateTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.tradeType,jdbcType=TIMESTAMP} TRADE_TYPE
             from dual
         </foreach>
         ) TEMP where not EXISTS (select 1 from CHB_SALER_STL_DEAL_INFO CII where CII.INSTITUTION_CODE = TEMP.INSTITUTION_CODE
@@ -61,7 +62,7 @@
         TRADE_NO, REGIST_SEQNO, DATA_STATUS, ACCOUNT_NAME, TRADE_PS, TRADE_COUNTER_ACC_NO,
         TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY,
         TRADE_AMT, TRADE_VDATE, TRADE_TIME, POSTSCRIPT, REMARK, RECEPT_DATE, CREATE_USER,
-        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        ORG_CODE, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, TRADE_TYPE
         from (
         select
         TEMP.*
@@ -92,7 +93,8 @@
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER ,
             #{item.updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} CREATE_USER,
-            #{item.updateTime,jdbcType=TIMESTAMP} CREATE_TIME
+            #{item.updateTime,jdbcType=TIMESTAMP} CREATE_TIME,
+            #{item.tradeType,jdbcType=TIMESTAMP} TRADE_TYPE
             from dual
         </foreach>
         ) TEMP
@@ -120,6 +122,7 @@
         ,A.CREATE_TIME                   = B.CREATE_TIME
         ,A.UPDATE_USER                   = B.UPDATE_USER
         ,A.UPDATE_TIME                   = B.UPDATE_TIME
+        ,A.TRADE_TYPE                    = B.TRADE_TYPE
         where A.INSTITUTION_CODE = B.INSTITUTION_CODE
         and A.TRADE_NO = B.TRADE_NO
         and A.ACCOUNT_NO = B.ACCOUNT_NO

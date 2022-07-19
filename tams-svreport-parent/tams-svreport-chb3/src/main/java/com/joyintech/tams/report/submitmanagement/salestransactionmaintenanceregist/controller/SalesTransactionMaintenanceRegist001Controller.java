@@ -160,7 +160,6 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
      * @see
      * @since 1.6.0
      */
-    @ResponseBody
     @RequestMapping(value = ACTION_EXPORT)
     public ResponseEntity<byte[]> export() {
         List<SalesTransactionMaintenanceRegist001Dto> dtoList = salesTransactionMaintenanceRegist001Service.setDataList(RequestUtil.getParameters(getRequest()));

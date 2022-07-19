@@ -100,6 +100,11 @@ public class ChbSalerStlDealInfo extends ChbSalerStlDealInfoKey {
     private String orgCode;
 
     /**
+     * 销售结算交易类型
+     */
+    private String tradeType;
+
+    /**
      * 取得 主键uuid 
      * @return 主键uuid 
      */
@@ -388,5 +393,13 @@ public class ChbSalerStlDealInfo extends ChbSalerStlDealInfoKey {
      */
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode == null ? null : orgCode.trim();
+    }
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
     }
 }

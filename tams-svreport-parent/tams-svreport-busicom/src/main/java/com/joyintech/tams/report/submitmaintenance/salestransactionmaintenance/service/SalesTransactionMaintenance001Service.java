@@ -3,6 +3,9 @@ package com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.report.common.util.SysDataUtil;
+import com.joyintech.tams.report.submitmaintenance.salerrewpenainfo.dto.SalerRewPenaInfoDto;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dao.SalesTransactionMaintenanceMapper;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.dto.SalesTransactionMaintenanceDto;
 import org.apache.commons.collections4.CollectionUtils;
@@ -53,7 +56,9 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
      */
     public Page<SalesTransactionMaintenanceDto> selectForPage(int page,int length,Map<String, Object> pageParam)
     {
-        return super.queryForPage(page,length,() -> salestransactionmaintenanceMapper.selectForPage(pageParam));
+        Page<SalesTransactionMaintenanceDto> pageList = super.queryForPage(page,length,() -> salestransactionmaintenanceMapper.selectForPage(pageParam));
+        this.formatByType(pageList.getRoot());
+        return pageList;
     }
 
     /**
@@ -63,7 +68,9 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
      * @throws Exception
      */
     public List<SalesTransactionMaintenanceDto> queryAllList(Map<String, Object> params) throws Exception{
-        return salestransactionmaintenanceMapper.selectForPage(params);
+        List<SalesTransactionMaintenanceDto> queryAllList = salestransactionmaintenanceMapper.selectForPage(params);
+        this.formatByType(queryAllList);
+        return queryAllList;
     }
 
     /**
@@ -111,6 +118,7 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             headList.add("销售结算资金账户名称");
             headList.add("销售结算资金交易流水号");
             headList.add("销售结算资金流动方向");
+            headList.add("销售结算交易类型");
             headList.add("销售结算资金交易对手方账号");
             headList.add("销售结算资金交易对手方账户名称");
             headList.add("销售结算资金交易对手方账户开户行名称");
@@ -172,29 +180,31 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             salesTransactionMaintenanceDto.setTradeNo(list.get(4));
             //销售结算资金流动方向
             salesTransactionMaintenanceDto.setTradePs(this.subDictcode(list.get(5), " "));
+            //销售结算交易类型
+            salesTransactionMaintenanceDto.setTradeType(this.subDictcode(list.get(6), " "));
             //销售结算资金交易对手方账号
-            salesTransactionMaintenanceDto.setTradeCounterAccNo(list.get(6));
+            salesTransactionMaintenanceDto.setTradeCounterAccNo(list.get(7));
             //销售结算资金交易对手方账户名称
-            salesTransactionMaintenanceDto.setTradeCounterAccName(list.get(7));
+            salesTransactionMaintenanceDto.setTradeCounterAccName(list.get(8));
             //销售结算资金交易对手方开户行名称
-            salesTransactionMaintenanceDto.setTradeCounterAccBankName(list.get(8));
+            salesTransactionMaintenanceDto.setTradeCounterAccBankName(list.get(9));
             //销售结算资金交易对手方账户开户行号
-            salesTransactionMaintenanceDto.setTradeCounterAccBankNo(list.get(9));
+            salesTransactionMaintenanceDto.setTradeCounterAccBankNo(list.get(10));
             //销售结算资金交易币种
-            salesTransactionMaintenanceDto.setTradeCcy(this.subDictcode(list.get(10), " "));
+            salesTransactionMaintenanceDto.setTradeCcy(this.subDictcode(list.get(11), " "));
             //销售结算资金交易金额
-            salesTransactionMaintenanceDto.setTradeAmt(new BigDecimal(list.get(11)));
+            salesTransactionMaintenanceDto.setTradeAmt(new BigDecimal(list.get(12)));
             //估值日
-            salesTransactionMaintenanceDto.setTradeVdate(DateUtil.parse(list.get(12)));
+            salesTransactionMaintenanceDto.setTradeVdate(DateUtil.parse(list.get(13)));
             //销售结算资金交易时间
-            salesTransactionMaintenanceDto.setTradeTime(list.get(13));
+            salesTransactionMaintenanceDto.setTradeTime(list.get(14));
             //销售结算资金交易附言
-            if(StringUtils.isNotEmpty(list.get(14))){
-                salesTransactionMaintenanceDto.setPostscript(list.get(14));
+            if(StringUtils.isNotEmpty(list.get(15))){
+                salesTransactionMaintenanceDto.setPostscript(list.get(15));
             }
             //备注
-            if(StringUtils.isNotEmpty(list.get(15))){
-                salesTransactionMaintenanceDto.setRemark(list.get(15));
+            if(StringUtils.isNotEmpty(list.get(16))){
+                salesTransactionMaintenanceDto.setRemark(list.get(16));
             }
             //数据状态
             salesTransactionMaintenanceDto.setDataStatus("E");
@@ -269,42 +279,47 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
                 flag = false;
                 message.add("销售结算资金流动方向不能为空");
             }
-            //销售结算资金交易对手方账号
+            //销售结算交易类型
             if(list.get(6) == null || list.get(6).trim().equals("")){
+                flag = false;
+                message.add("销售结算交易类型不能为空");
+            }
+            //销售结算资金交易对手方账号
+            if(list.get(7) == null || list.get(7).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易对手方账号不能为空");
             }
             //销售结算资金交易对手方账户名称
-            if(list.get(7) == null || list.get(7).trim().equals("")){
+            if(list.get(8) == null || list.get(8).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易对手方账户名称不能为空");
             }
             //销售结算资金交易对手方开户行名称
-            if(list.get(8) == null || list.get(8).trim().equals("")){
+            if(list.get(9) == null || list.get(9).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易对手方开户行名称不能为空");
             }
             //销售结算资金交易对手方账户开户行号
-            if(list.get(9) == null || list.get(9).trim().equals("")){
+            if(list.get(10) == null || list.get(10).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易对手方账户开户行号不能为空");
             }
             //销售结算资金交易币种
-            if(list.get(10) == null || list.get(10).trim().equals("")){
+            if(list.get(11) == null || list.get(11).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易币种不能为空");
             }
             //销售结算资金交易金额
-            if(list.get(11) == null || list.get(11).trim().equals("")){
+            if(list.get(12) == null || list.get(12).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易金额不能为空");
             }else{
-                if(!checkFigure(list.get(11))){
+                if(!checkFigure(list.get(12))){
                     flag = false;
                     message.add("销售结算资金交易金额不是数字");
                 }
                 else{
-                    BigDecimal amt=new BigDecimal(list.get(11));
+                    BigDecimal amt=new BigDecimal(list.get(12));
                     BigDecimal Zero = BigDecimal.ZERO;
                     if(amt.compareTo(Zero) == -1 || amt.compareTo(Zero) == 0){
                         flag = false;
@@ -314,26 +329,26 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             }
             
             //销售结算资金交易日期
-            if(list.get(12) == null || list.get(12).trim().equals("")){
+            if(list.get(13) == null || list.get(13).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易日期不能为空");
             }else{
-                if (!checkDate(list.get(12))) {
+                if (!checkDate(list.get(13))) {
                     flag = false;
                     message.add("销售结算资金交易日期格式不正确");
                 }
             }
             //销售结算资金交易时间
-            if(list.get(13) == null || list.get(13).trim().equals("")){
+            if(list.get(14) == null || list.get(14).trim().equals("")){
                 flag = false;
                 message.add("销售结算资金交易时间不能为空");
-            }else if(!(list.get(13) == null || list.get(13).trim().equals(""))){
-                if (!checkFigure(list.get(13))) {
+            }else if(!(list.get(14) == null || list.get(14).trim().equals(""))){
+                if (!checkFigure(list.get(14))) {
                     flag = false;
                     message.add("销售结算资金交易时间不是数字");
                 }
-                String tradeTime = list.get(13);
-                if (list.get(13).length() != 6) {
+                String tradeTime = list.get(14);
+                if (list.get(14).length() != 6) {
                     flag = false;
                     message.add("交易时间填写错误（例23:59:59填写235959）");
                 }else if (Integer.parseInt(tradeTime.substring(0,2)) > 23){
@@ -433,5 +448,42 @@ public class SalesTransactionMaintenance001Service extends CommonExportService<S
             }
         }
         return value;
+    }
+
+    public static List<SalesTransactionMaintenanceDto> formatByType(List<SalesTransactionMaintenanceDto> dataList) {
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            dataList.forEach(item -> {
+                if(StringUtil.isNotEmpty(item.getTradePs())) {
+                    item.setTradePs(getDictCodeAndName(DictCode.销售结算资金流动方向, item.getTradePs()));
+                }
+                if(StringUtil.isNotEmpty(item.getTradeCcy())) {
+                    item.setTradeCcy(getDictCodeAndName(DictCode.币种_中债, item.getTradeCcy()));
+                }
+                if(StringUtil.isNotEmpty(item.getTradeType())) {
+                    item.setTradeType(getDictCodeAndName(DictCode.销售结算交易类型, item.getTradeType()));
+                }
+            });
+        }
+        return dataList;
+    }
+
+    /**
+     * 转换成key+value形式
+     * @param dictCode  字典表中数据类型
+     * @param value  需要换换的值
+     * @return  key+value
+     * @see
+     * @since 1.0
+     */
+    public static String getDictCodeAndName(DictCode dictCode,String value){
+        if(com.joyintech.framework.util.StringUtil.isNotEmpty(value)){
+            String tempName = SysDataUtil.getNameFromDataDict(dictCode, value);
+            if (com.joyintech.framework.util.StringUtil.isEmpty(tempName)) {
+                return value;
+            } else {
+                return value + " " + SysDataUtil.getNameFromDataDict(dictCode, value);
+            }
+        }
+        return "";
     }
 }

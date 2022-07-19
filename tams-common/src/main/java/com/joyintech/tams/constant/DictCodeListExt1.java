@@ -1919,6 +1919,10 @@ public enum DictCodeListExt1 implements BaseDictCodeList {
 	登记资产类型_债券(DictCode.登记资产类型,"01","债券"),
 	登记资产类型_质押式回购(DictCode.登记资产类型,"02","质押式回购"),
 	CSTP资产类型_债券(DictCode.CSTP资产类型,"BOND","债券"),
+
+	客户账户交易信息(DictCode.销售结算交易类型,"01","客户账户交易信息"),
+	募集归集账户之间交易信息(DictCode.销售结算交易类型,"02","募集归集账户之间交易信息"),
+	募集归集账户与托管账户交易信息(DictCode.销售结算交易类型,"03","募集归集账户与托管账户交易信息"),
 	;
 
     /**

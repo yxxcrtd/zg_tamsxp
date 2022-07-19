@@ -70,6 +70,17 @@
                                 </div>
                                 <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
+                                        <label class="layui-form-label form-lable">销售结算交易类型</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select type="text" id="tradeType" name="tradeType" formatoption="true"
+                                                    data-th-initValue='${entity?.tradeType}'
+                                                    class="layui-input form-input input-select"
+                                                    data-th-data-result="${SALES_TRADE_TYPE}" placeholder="请输入内容" required
+                                                    data-th-placeholder="#{SysCommon.placeholder}">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售结算资金交易对手方账号</label>
                                         <div class="layui-input-inline input-inline ">
                                             <input id="tradeCounterAccNo" data-th-value='${entity?.tradeCounterAccNo}' name="tradeCounterAccNo"
@@ -77,6 +88,8 @@
                                                    data-th-placeholder="#{SysCommon.placeholder}">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售结算资金交易对手方账户名称</label>
                                         <div class="layui-input-inline input-inline ">
@@ -85,8 +98,6 @@
                                                    data-th-placeholder="#{SysCommon.placeholder}">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售结算资金交易对手方开户行名称</label>
                                         <div class="layui-input-inline input-inline ">
@@ -95,6 +106,8 @@
                                                    data-th-placeholder="#{SysCommon.placeholder}">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售结算资金交易对手方账户开户行号</label>
                                         <div class="layui-input-inline input-inline ">
@@ -103,8 +116,6 @@
                                                    data-th-placeholder="#{SysCommon.placeholder}">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售结算资金交易币种</label>
                                         <div class="layui-input-inline input-inline">
@@ -116,6 +127,8 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售结算资金交易金额</label>
                                         <div class="layui-input-inline input-inline ">
@@ -125,8 +138,6 @@
                                                    data-th-placeholder="#{SysCommon.placeholder}">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable">销售结算资金交易日期</label>
                                         <div class="layui-input-inline input-inline">
@@ -135,16 +146,17 @@
                                                    required="required" placeholder="请输入内容"
                                                    data-th-placeholder="#{SysCommon.placeholder}"
                                                    data-th-value='${#dates.format(entity?.tradeVdate,"yyyy-MM-dd")}'/>
-
                                         </div>
                                     </div>
+                                </div>
+                                <div class="layui-form-item">
                                     <div class="layui-inline layui-col-md6">
-                                        <label class="layui-form-label form-lable">销售结算资金交易时间</label>
-                                        <div class="layui-input-inline input-inline ">
-                                            <input id="tradeTime" data-th-value='${entity?.tradeTime}' name="tradeTime" maxlength="6"
-                                                   class="layui-input form-input" placeholder="请输入内容" required
-                                                   data-th-placeholder="#{SysCommon.placeholder}">
-                                        </div>
+                                         <label class="layui-form-label form-lable">销售结算资金交易时间</label>
+                                         <div class="layui-input-inline input-inline ">
+                                             <input id="tradeTime" data-th-value='${entity?.tradeTime}' name="tradeTime" maxlength="6"
+                                                    class="layui-input form-input" placeholder="请输入内容" required
+                                                    data-th-placeholder="#{SysCommon.placeholder}">
+                                         </div>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">

@@ -2364,7 +2364,6 @@
                         info.ORG_CODE,
                     </when>
                 </choose>
-                info.CREATE_DEPT,
                 info.CREATE_USER AS createUser,
                 info.CREATE_DEPT AS createDept,
                 <choose>

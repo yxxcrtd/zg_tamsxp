@@ -28,6 +28,7 @@
 		CREATE_TIME,
 		UPDATE_USER,
 		UPDATE_TIME,
+		TRADE_TYPE,
 		REMARK
 	    FROM CHB_SALER_STL_DEAL_INFO
 		WHERE DATE_FORMAT(ifnull(UPDATE_TIME,CREATE_TIME),'%Y-%m-%d') = #{batchDate,jdbcType=VARCHAR}
@@ -66,6 +67,7 @@
 		 SEND_STATUS,
 		 STATUS_DATE,
 		 SUBMIT_TIME,
+		 TRADE_TYPE,
 		 REMARK
 		FROM CHB_SALER_STL_DEAL_SUB
 		WHERE  1=1
@@ -97,7 +99,7 @@
 		TRADE_AMT,TRADE_VDATE,TRADE_TIME,POSTSCRIPT,DATA_STATUS,
 		ORG_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SUBMIT_FEEDBACK_STATUS,
-		SEND_STATUS,STATUS_DATE,SUBMIT_TIME,REMARK from
+		SEND_STATUS,STATUS_DATE,SUBMIT_TIME,REMARK,TRADE_TYPE from
 		(
 		select TEMP.* from
 		(
@@ -133,7 +135,8 @@
 			#{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
 			#{item.statusDate,jdbcType=VARCHAR} STATUS_DATE,
 			#{item.submitTime,jdbcType=VARCHAR} SUBMIT_TIME,
-			#{item.remark,jdbcType=VARCHAR} REMARK
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE
 			FROM DUAL
 		</foreach>
 		) TEMP where not exists (select 1 from CHB_SALER_STL_DEAL_SUB CII where CII.INSTITUTION_CODE = TEMP.INSTITUTION_CODE
@@ -150,7 +153,7 @@
 		TRADE_AMT,TRADE_VDATE,TRADE_TIME,POSTSCRIPT,DATA_STATUS,
 		ORG_CODE,UPDATE_USER,UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		SUMIT_SEQ,CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,SUBMIT_FEEDBACK_STATUS,
-		SEND_STATUS,STATUS_DATE,SUBMIT_TIME,REMARK from
+		SEND_STATUS,STATUS_DATE,SUBMIT_TIME,REMARK,TRADE_TYPE from
 		(
 		select TEMP.* from
 		(
@@ -186,7 +189,8 @@
 			#{item.sendStatus,jdbcType=VARCHAR} SEND_STATUS,
 			#{item.statusDate,jdbcType=VARCHAR} STATUS_DATE,
 			#{item.submitTime,jdbcType=VARCHAR} SUBMIT_TIME,
-			#{item.remark,jdbcType=VARCHAR} REMARK
+			#{item.remark,jdbcType=VARCHAR} REMARK,
+			#{item.tradeType,jdbcType=VARCHAR} TRADE_TYPE
 			FROM DUAL
 		</foreach>
 		) TEMP
@@ -210,9 +214,12 @@
 		A.ORG_CODE = B.ORG_CODE,
 		A.UPDATE_TIME = B.UPDATE_TIME,
 		A.UPDATE_USER = B.UPDATE_USER,
-		A.REMARK = B.REMARK where  exists (select 1 from CHB_SALER_STL_DEAL_SUB CII where CII.INSTITUTION_CODE = B.INSTITUTION_CODE
-		AND CII.TRADE_NO = B.TRADE_NO
-		AND CII.DATA_STATUS = B.DATA_STATUS);
+		A.REMARK = B.REMARK,
+		A.TRADE_TYPE = B.TRADE_TYPE
+		where  exists (select 1 from CHB_SALER_STL_DEAL_SUB CII
+		               where CII.INSTITUTION_CODE = B.INSTITUTION_CODE
+		               AND CII.TRADE_NO = B.TRADE_NO
+		               AND CII.DATA_STATUS = B.DATA_STATUS);
 	</insert>
 
 	<insert id="insertBatchData" parameterType="com.joyintech.tams.common.base.entity.ChbSalesTransactionInfoSub">
@@ -220,7 +227,7 @@
 		TRADE_COUNTER_ACC_NAME, TRADE_COUNTER_ACC_BANK_NAME, TRADE_COUNTER_ACC_BANK_NO, TRADE_CCY, TRADE_AMT, TRADE_VDATE,TRADE_TIME,POSTSCRIPT, REMARK,
 		CHB_SUBMIT_DEADLINE,SUBMIT_DEADLINE,
 		STATUS_DATE,SUMIT_SEQ,SEND_STATUS,
-		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+		CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, TRADE_TYPE)
 		values(
 		#{registSeqno,jdbcType=VARCHAR},#{dataStatus,jdbcType=VARCHAR},#{institutionCode,jdbcType=VARCHAR},#{prdRegistCode,jdbcType=VARCHAR},
 		#{accountNo,jdbcType=VARCHAR},#{accountName,jdbcType=VARCHAR},#{tradeNo,jdbcType=VARCHAR}, #{tradePs,jdbcType=VARCHAR},
@@ -230,7 +237,7 @@
 		#{postscript,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
 		#{chbSubmitDeadline,jdbcType=DATE},#{submitDeadline,jdbcType=DATE},now(),
 		#{sumitSeq,jdbcType=VARCHAR},#{sendStatus,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR},
-		now(),#{updateUser},now())
+		now(),#{updateUser},now(),#{tradeType,jdbcType=VARCHAR})
 	</insert>
 
 </mapper>

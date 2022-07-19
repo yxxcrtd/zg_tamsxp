@@ -3054,6 +3054,67 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:RegistrationSerialNumber")
     private CommonNodeEntity registrationSerialNumber;
 
+    /***0722升级**/
+
+    /**
+     * 定期开放周期
+     */
+    @XmlElement(name = "wemax:PeriodicIntervalDays")
+    private CommonNodeEntity periodicIntervalDays;
+
+    /**
+     * 理财产品宣传材料
+     */
+    @XmlElement(name = "wemax:LiquidityRiskAssessmentDocumentsTuple")
+    private List<CommonNodeListEntity> LiquidityRiskAssessmentDocumentsTuple;
+
+    /**
+     * 交易发起时间
+     */
+    @XmlElement(name = "wemax:TransactionStartTime")
+    private CommonNodeEntity TransactionStartTime;
+
+
+    /**
+     * 关联交易情况
+     */
+    @XmlElement(name = "wemax:RelatedPartyTransactionCounterpartyType")
+    private CommonNodeEntity RelatedPartyTransactionCounterpartyType;
+
+    public CommonNodeEntity getPeriodicIntervalDays() {
+        return periodicIntervalDays;
+    }
+
+    public void setPeriodicIntervalDays(CommonNodeEntity periodicIntervalDays) {
+        this.periodicIntervalDays = periodicIntervalDays;
+    }
+
+    public List<CommonNodeListEntity> getLiquidityRiskAssessmentDocumentsTuple() {
+        return LiquidityRiskAssessmentDocumentsTuple;
+    }
+
+    public void setLiquidityRiskAssessmentDocumentsTuple(List<CommonNodeListEntity> liquidityRiskAssessmentDocumentsTuple) {
+        LiquidityRiskAssessmentDocumentsTuple = liquidityRiskAssessmentDocumentsTuple;
+    }
+
+    public CommonNodeEntity getTransactionStartTime() {
+        return TransactionStartTime;
+    }
+
+    public void setTransactionStartTime(CommonNodeEntity transactionStartTime) {
+        TransactionStartTime = transactionStartTime;
+    }
+
+    public CommonNodeEntity getRelatedPartyTransactionCounterpartyType() {
+        return RelatedPartyTransactionCounterpartyType;
+    }
+
+    public void setRelatedPartyTransactionCounterpartyType(CommonNodeEntity relatedPartyTransactionCounterpartyType) {
+        RelatedPartyTransactionCounterpartyType = relatedPartyTransactionCounterpartyType;
+    }
+
+
+    /***0722升级**/
     /**
      * 分类总量登记明细
      */

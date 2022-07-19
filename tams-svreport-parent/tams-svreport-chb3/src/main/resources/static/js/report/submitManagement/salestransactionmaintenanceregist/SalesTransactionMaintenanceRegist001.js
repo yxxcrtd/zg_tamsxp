@@ -65,6 +65,7 @@ $(function(){
             ,{field:'accountName', title: '销售结算资金账户名称', width:'150',sortField:'accountName'}
             ,{field:'tradeNo', title: '销售结算资金交易流水号', width:'150',sortField:'tradeNo'}
             ,{field:'tradePs', title: '销售结算资金流动方向', width:'150'}
+            ,{field:'tradeType', title: '销售结算交易类型', width:'150'}
             ,{field:'tradePsName', title: '销售结算资金流动方向', visible:false}
             ,{field:'tradeCounterAccNo', title: '销售结算资金交易对手方账号', width:'150',sortField:'tradeCounterAccNo'}
             ,{field:'tradeCounterAccName', title: '销售结算资金交易对手方账户名称', width:'150',sortField:'tradeCounterAccName'}

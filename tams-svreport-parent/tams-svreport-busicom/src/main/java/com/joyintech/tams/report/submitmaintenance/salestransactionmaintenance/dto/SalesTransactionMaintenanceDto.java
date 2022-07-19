@@ -123,6 +123,11 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
     private String postscript;
 
     /**
+     * 销售结算交易类型
+     */
+    private String tradeType;
+
+    /**
      * 备注
      */
     private String remark;
@@ -423,5 +428,13 @@ public class SalesTransactionMaintenanceDto extends BaseEntity  implements Proce
 
     public void setDisabledThing(String disabledThing) {
         this.disabledThing = disabledThing;
+    }
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
     }
 }

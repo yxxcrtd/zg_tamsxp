@@ -168,6 +168,13 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
      * 备注
      */
     private String remark;
+
+    /**
+     * 销售结算交易类型
+     */
+    @DictFormat(DictCode.销售结算交易类型)
+    private String tradeType;
+
     /**
      * 取得 销售结算资金交易日期字符串格式
      * @return 销售结算资金交易日期
@@ -446,6 +453,12 @@ public class SalesTransactionMaintenanceRegist001Dto extends BaseEntity implemen
     public void setCheckSeqno(String checkSeqno) {
         this.checkSeqno = checkSeqno;
     }
-    
 
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
+    }
 }

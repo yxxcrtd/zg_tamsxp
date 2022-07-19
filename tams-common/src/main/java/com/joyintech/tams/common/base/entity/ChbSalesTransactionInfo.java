@@ -97,6 +97,11 @@ public class ChbSalesTransactionInfo extends BaseEntity {
     private String postscript;
 
     /**
+     * 销售结算交易类型
+     */
+    private String tradeType;
+
+    /**
      * 备注
      */
     private String remark;
@@ -251,5 +256,13 @@ public class ChbSalesTransactionInfo extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
     }
 }

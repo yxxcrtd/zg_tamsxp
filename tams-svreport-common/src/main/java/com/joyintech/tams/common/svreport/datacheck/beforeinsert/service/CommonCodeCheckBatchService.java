@@ -35,7 +35,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -228,6 +230,10 @@ public class CommonCodeCheckBatchService {
 
         Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
 
+        //所有交易对手信息
+        List<ChbMstCounterParty> counterPartyList = commonCodeCheckMapper.selectCounterPartyList();
+        Map<String, ChbMstCounterParty> counterPartyMap = counterPartyList.stream().collect(Collectors.toMap(ChbMstCounterParty::getCounterId, ChbMstCounterParty -> ChbMstCounterParty));
+
         Map<String,String> detailMap = new HashMap();
         //循环处理待check数据
         for (int i = list.size() - 1; i >= 0; i--){
@@ -264,11 +270,8 @@ public class CommonCodeCheckBatchService {
                 case 投资交易表登记TMP:
                     checkInvestTradeInfo(map, prodRegistCodeMap);
                     break;
-                case 投资交易信息接口数据:
-                    checkInvestTrade(map);
-                    break;
                 case 投资交易信息表:
-                    checkChbInvestTrade(excelValidDtoList,map,i);
+                    checkChbInvestTrade(excelValidDtoList,map,counterPartyMap,i);
                     break;
                 case 资产估值信息登记表SUB:
                 case 资产估值信息登记TMP:
@@ -346,15 +349,17 @@ public class CommonCodeCheckBatchService {
         }
     }
 
-    private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, int i) {
+    private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, Map<String, ChbMstCounterParty> counterPartyMap,int i) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         StringBuilder sb = new StringBuilder();
         String assetCode = dataMap.get("ASSET_CODE");
         String curAssetType = dataMap.get("CUR_ASSET_TYPE");
+        //交易对手代码
+        String tradeCounter = dataMap.get("TRADE_COUNTER");
         if(!errMsg.equals("重复数据;")){
-//            if(commonCodeCheckMapper.checkExistsAssetCode(assetCode)<1){
-//                sb.append("行内资产/负债编码不存在；");
-//            }
+            if(commonCodeCheckMapper.checkExistsAssetCode(assetCode)<1){
+                sb.append("行内资产/负债编码不存在；");
+            }
             if(StringUtil.equals(curAssetType,"11")||StringUtil.equals(curAssetType,"12")){
                 Map<String, Object> param = new HashMap<>();
                 param.put("prodId",dataMap.get("PROD_ID"));
@@ -373,14 +378,26 @@ public class CommonCodeCheckBatchService {
                     sb.append("当“资金流动类型”选择“11其他收入”“12其他支出”之外的类型时，“产品登记编码+行内交易编码+行内资产/负债编码+资金流动类型”不得同时与已有数据重复；");
                 }
             }
-            try {
-                if(dataMap.get("CCY").equals("CNY")){
-                    if(!dataMap.get("AMT").equals(dataMap.get("CNY_AMT"))){
-                        sb.append("当币种选择人民币时，发生金额必须等于折算人民币金额；");
-                    }
+
+            //交易对手校验
+            if (counterPartyMap.containsKey(tradeCounter)) {
+                ChbMstCounterParty chbMstCounterParty = counterPartyMap.get(counterPartyMap);
+                if (StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"99")) {
+                    sb.append("交易对手关联交易情况为“99 其他关联交易情况”时, 备注不能为空[").append("TRADE_COUNTER=").append(tradeCounter).append("];");;
                 }
-            } catch (Exception e) {
+
+                if (StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"02") ||
+                     StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"04")) {
+                    Pattern pattern = Pattern.compile("(([0-9A-Z]{14})|([0-9A-Z]{15})|([\\\\u65e0]))");
+                    Matcher matcher = pattern.matcher(tradeCounter);
+                    if (!matcher.matches()) {
+                        sb.append("交易对手关联交易情况为“02 对手方为本机构其他理财产品或04 对手方为股东方或子公司的理财产品”时, 交易对手识别标识格式不对。正确的格式：14或15位大写字母或数字。[").append("TRADE_COUNTER=").append(tradeCounter).append("];");
+                    }
+
+                }
+
             }
+
             if(StringUtils.isEmpty(errMsg)){
                 if(StringUtils.isNotEmpty(sb.toString())&&excelValidDtoList!=null){
                     excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf((i+2)),sb.toString()));

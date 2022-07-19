@@ -351,6 +351,11 @@ public class ChbMsgSetCommonService {
             if (node.getOtherDocuments() != null) {
                 subnodelists.add(node.getOtherDocuments());
             }
+
+            // 流动性风险评估文件
+            if (node.getLiquidityRiskAssessmentDocuments() != null) {
+                subnodelists.add(node.getLiquidityRiskAssessmentDocuments());
+            }
         }
         // 循环基本信息子节点list
         for (CommonNodeEntity subnode : subnodelists) {
