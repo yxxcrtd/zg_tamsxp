@@ -13225,6 +13225,7 @@
                 ,#{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE
                 ,#{item.isConstracteBusi,jdbcType=VARCHAR} IS_CONSTRACTE_BUSI
                 ,#{item.billCode,jdbcType=VARCHAR} BILL_CODE
+                ,#{item.isDepositFlag,jdbcType=VARCHAR} IS_DEPOSIT_FLAG
                 from dual
             </foreach>
         ) TEMP
@@ -13459,6 +13460,7 @@
             ,CII.CREDIT_ASSET_CODE	=	TEMP.CREDIT_ASSET_CODE
             ,CII.IS_CONSTRACTE_BUSI = TEMP.IS_CONSTRACTE_BUSI
             ,CII.BILL_CODE = TEMP.BILL_CODE
+            ,CII.IS_DEPOSIT_FLAG = TEMP.IS_DEPOSIT_FLAG
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13575,6 +13577,7 @@
         ,CREDIT_ASSET_CODE
         ,IS_CONSTRACTE_BUSI
         ,BILL_CODE
+        ,IS_DEPOSIT_FLAG
         )
         values(
             TEMP.ASSET_UUID,
@@ -13803,6 +13806,7 @@
             ,TEMP.CREDIT_ASSET_CODE
             ,TEMP.IS_CONSTRACTE_BUSI
             ,TEMP.BILL_CODE
+            ,IS_DEPOSIT_FLAG
         )
     </insert>
 
