@@ -13191,7 +13191,8 @@
         ACCOUNT_NO,
         CREDIT_ASSET_CODE,
         IS_CONSTRACTE_BUSI,
-        BILL_CODE
+        BILL_CODE,
+        IS_DEPOSIT_FLAG
         )
         select
         TEMP.*
@@ -13424,6 +13425,7 @@
             ,#{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE
             ,#{item.isConstracteBusi,jdbcType=VARCHAR} IS_CONSTRACTE_BUSI
             ,#{item.billCode,jdbcType=VARCHAR} BILL_CODE
+            ,#{item.isDepositFlag,jdbcType=VARCHAR} IS_DEPOSIT_FLAG
             from dual
         </foreach>
         ) TEMP where not exists (select 1 from CHB_ASSET_INFO a where a.ASSET_CODE = TEMP.ASSET_CODE);
@@ -13659,6 +13661,7 @@
             ,#{item.creditAssetCode,jdbcType=VARCHAR} CREDIT_ASSET_CODE
             ,#{item.isConstracteBusi,jdbcType=VARCHAR} IS_CONSTRACTE_BUSI
             ,#{item.billCode,jdbcType=VARCHAR} BILL_CODE
+            ,#{item.isDepositFlag,jdbcType=VARCHAR} IS_DEPOSIT_FLAG
             from dual
         </foreach>
         ) TEMP
@@ -13887,6 +13890,7 @@
         ,A.CREDIT_ASSET_CODE	=	B.CREDIT_ASSET_CODE
         ,A.IS_CONSTRACTE_BUSI = B.IS_CONSTRACTE_BUSI
         ,A.BILL_CODE = B.BILL_CODE
+        ,A.IS_DEPOSIT_FLAG = B.IS_DEPOSIT_FLAG
         <!-- 未匹配到这插入 -->
         where A.ASSET_CODE = B.ASSET_CODE
     </insert>
