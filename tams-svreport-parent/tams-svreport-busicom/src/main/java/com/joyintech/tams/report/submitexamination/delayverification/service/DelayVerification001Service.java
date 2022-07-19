@@ -136,7 +136,7 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
                              "CHB_BOT_AST_POS_SUB","CHB_MONTH_REPORT","CHB_SALER_STL_DEAL_SUB","CHB_SALE_MONTH_REPORT","CHB_INVESTHOLD_INFO_SUB","CHB_EQU_SUB","CHB_EQUDET_SUB",
                              "CHB_SALER_INST_SUB","CHB_SALER_IDEN_SUB","CHB_SALER_REW_PENA_SUB","CHB_AGENT_INSTITUTION_SUB","CHB_AGENT_PRD_SUB","CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB"};
         String [] reportIndex={"01","02","04","06","07","10","11",
-                                "12","05","08","34","36","16","14","26","42","43","44","40","41","42","43"};
+                                "12","05","08","34","36","16","14","26","42","43","44","40","41","45","46"};
         pageParam.put("nosubmit", DictCodeListExt2.报送状态_未报送.getValue());
         pageParam.put("manualSub", DictCodeListExt2.报送状态_手工处理.getValue());
         Date now=svrBaseCommonService.getSysDate();
