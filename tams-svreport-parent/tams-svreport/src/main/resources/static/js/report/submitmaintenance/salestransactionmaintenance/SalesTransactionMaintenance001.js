@@ -52,11 +52,12 @@
             ,{field:'tradeCounterAccName', title: '销售结算资金交易对手方账户名称', width:'150',sortField:'tradeCounterAccName'}
             ,{field:'tradeCounterAccBankNo', title: '销售结算资金交易对手方开户行名称 ', width:'150',sortField:'tradeCounterAccBankNo'}
             ,{field:'tradeCounterAccBankName', title: '销售结算资金交易对手方账户开户行号 ', width:'150',sortField:'tradeCounterAccBankName'}
-            ,{field:'tradeCcyName', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
+            ,{field:'tradeCcy', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
             ,{field:'tradeAmt', title: '销售结算资金交易金额', width:'150',sortField:'tradeAmt',type:'money',digit: 2}
             ,{field:'tradeTime', title: '销售结算资金交易时间', width:'150',sortField:'tradeTime'}
             ,{field:'tradeNo', title: '销售结算资金交易流水号', width:'150',sortField:'tradeNo'}
-            ,{field:'tradePsName', title: '销售结算资金流动方向', width:'150',sortField:'tradePs'}
+            ,{field:'tradePs', title: '销售结算资金流动方向', width:'150',sortField:'tradePs'}
+            ,{field:'tradeType', title: '销售结算交易类型', width:'150',sortField:'tradeType'}
             ,{field:'tradeVdate', title: '销售结算资金交易日期', width:'150',sortField:'tradeVdate',type:'date'}
             ,{field:'errMsg', title: '错误信息', width:'150',sortField:'errMsg'}
             ,{field:'postscript', title: '销售结算资金交易附言', width:'150',sortField:'postscript'}
@@ -150,20 +151,6 @@
             });
         });
     });
-//            // 导入按钮点击事件
-//            $('#SalesTransactionMaintenance001_btn_import').click(function() {
-//                Joyin.confirm(JoyinUtil.getMessage('CHB_ISIMPORT'), function() {
-//                    Joyin.uploadFile(function(fileName) {
-//                        Joyin.ajax('checkConfirmMsgForImportData', {fileName: fileName}, function() {
-//                            Joyin.ajax('importFile', {fileName: fileName});
-//                        },function() {
-//                            $('iframe').contents().find("#loading").hide();
-//                        });
-//                    },function() {
-//                        table.reload();
-//                    });
-//                });
-//            });
 
         /**
          * 批量删除按钮
