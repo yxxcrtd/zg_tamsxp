@@ -31,8 +31,8 @@
 			<Cell order="27" name="*发行方式">issueModeStr</Cell>
 			<Cell order="28" name="*主体评级">secMainGradeStr</Cell>
 			<Cell order="29" name="*发行机构类型（按规模划分）">partyType1Str</Cell>
-			<Cell order="30" name="*发行机构类型（按技术领域划分）">partyType2Str</Cell>
-			<Cell order="31" name="*发行机构类型（按经济类型划分）">partyType3Str</Cell>
+			<Cell order="30" name="*发行机构类型（按技术领域划分）">partyType3Str</Cell>
+			<Cell order="31" name="*发行机构类型（按经济类型划分）">partyType2Str</Cell>
 			<Cell order="32" name="*发行机构所属行业">industryLevel203</Cell>
 			<Cell order="33" name="*登记托管机构">registOrgStr</Cell>
 			<Cell order="34" name="登记托管机构说明">registorgComment</Cell>
@@ -191,7 +191,7 @@
 			<Cell order="187" name="*管理人">managerId12</Cell>
 			<Cell order="188" name="*托管人">trusteeId12</Cell>
 			<Cell order="189" name="*金额">amt12</Cell>
-			<Cell order="190" name="*资金实际投向">truActType12Str</Cell>
+			<Cell order="190" name="*资金实际投向">truActType12</Cell>
 			<Cell order="191" name="*资金运用方式">investType12</Cell>
 			<Cell order="192" name="*资金运用行业">capUseInduLevel212</Cell>
 			<Cell order="193" name="*资管计划成立日期">planSdate12</Cell>
