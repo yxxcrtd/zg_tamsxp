@@ -75,7 +75,7 @@ $(function() {
             ,{field:'calendarId', sortable:false,width:100, title: 'CchbPrdBaseInfo001.calendarId'}
             ,{field:'busiAcctNo',sortable:false,width:100,title: 'CchbPrdBaseInfo001.busiAcctNo'}
             ,{field:'acctName',sortable:false,width:100,title: 'CchbPrdBaseInfo001.acctName'}
-            ,{field:'basicStr', sortable:false, width:100,title: 'CchbPrdBaseInfo001.basic'}
+            ,{field:'basic', sortable:false, width:100,title: 'CchbPrdBaseInfo001.basic'}
             ,{field:'terminatedateStr', sortable:false, width:100,title: 'CchbPrdBaseInfo001.terminatedate'}
             ,{field:'issuingStatusStr', sortable:false, width:100,title: 'CchbPrdBaseInfo001.issuingStatus'}
             ,{field:'fiduciaryDutyStr', sortable:false, width:100,title: 'CchbPrdBaseInfo001.fiduciaryDuty'}
