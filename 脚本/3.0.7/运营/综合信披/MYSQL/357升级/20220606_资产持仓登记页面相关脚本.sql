@@ -46,13 +46,13 @@ ENGINE=InnoDB
 ;
 
 
-delete from sys_menu  where MENU_ID='SVR_003_005_005';
+delete from sys_menu  where MENU_ID='REPORT_REGIST_001_001_014';
 INSERT INTO sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('SVR_003_005_005', 'SVR', null, 'SVR_003_005', 'SvrChbAstPosRegist001', 5, null, '资产持仓登记', 'system', null, '2021-04-08 09:50:08', 'system', '2021-04-08 09:50:08');
+VALUES ('REPORT_REGIST_001_001_014', 'SVR', null, 'REPORT_REGIST_001_001', 'SvrChbAstPosRegist001', 10, null, '资产持仓登记', 'system', null, '2021-04-08 09:50:08', 'system', '2021-04-08 09:50:08');
 
 delete from sys_page  where PAGE_ID='SvrChbAstPosRegist001';
 INSERT INTO sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES ('SvrChbAstPosRegist001', 'SVR', '/chb/astposregist/ChbAstPosRegist001', 'report/chb/astposregist/ChbAstPosRegist001', 'SVR_003_005_005', null, null, '02', '01', '资产持仓登记', 'system', null, '2021-04-08 09:59:45', 'system', '2021-04-08 09:59:45');
+VALUES ('SvrChbAstPosRegist001', 'SVR', '/chb/astposregist/ChbAstPosRegist001', 'report/chb/astposregist/ChbAstPosRegist001', 'REPORT_REGIST_001_001_014', null, null, '02', '01', '资产持仓登记', 'system', null, '2021-04-08 09:59:45', 'system', '2021-04-08 09:59:45');
 
 delete  from sys_page_element where PAGE_ID='SvrChbAstPosRegist001';
 INSERT INTO sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG) VALUES ('SvrChbAstPosRegist001', 'SvrChbAstPosRegist001_btn_cancelManual', '01', '01', null, '取消手工处理', 'system', null, '2020-07-03 16:26:39', 'system', '2020-07-03 16:26:39', 'C');
