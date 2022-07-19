@@ -68,29 +68,29 @@
 			  nvl(price.PRICE,1)
           *
              decode(typex.SRCFIELD1,
-             'NOMONEYFOUND',(costAmt+floatingpl)/posAmt,
+             'NOMONEYFOUND',(costAmt+floatingpl-lossamt)/posAmt,
              'MONEYFOUND',decode(info.TRM_FUND_TYPE,'01',100,'05',0.01,1),
              <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  begin-->
-             'STOCK', (costAmt+floatingpl)/posAmt,
-             'DERIVATIVE', (costAmt+floatingpl),
+             'STOCK', (costAmt+floatingpl-lossamt)/posAmt,
+             'DERIVATIVE', (costAmt+floatingpl-lossamt),
              <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  end-->
              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  begin-->
-             'OPTION', (costAmt+floatingpl),
+             'OPTION', (costAmt+floatingpl-lossamt),
              <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  end-->
-             decode(assetbasis.valueDate,assetbasis.mdate,100,100*(costAmt+floatingpl)/posAmt))  unitValNet,
+             decode(assetbasis.valueDate,assetbasis.mdate,100,100*(costAmt+floatingpl-lossamt)/posAmt))  unitValNet,
         nvl(price.PRICE,1)
           *
              decode(typex.SRCFIELD1,
-              'MONEYFOUND',(costAmt+floatingpl+intincexp)/posAmt,
-              'NOMONEYFOUND',(costAmt+floatingpl)/posAmt,
+              'MONEYFOUND',(costAmt+floatingpl+intincexp-lossamt)/posAmt,
+              'NOMONEYFOUND',(costAmt+floatingpl-lossamt)/posAmt,
               <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  begin-->
-              'STOCK', (costAmt+floatingpl+intincexp)/posAmt,
-              'DERIVATIVE', (costAmt+floatingpl+intincexp),
+              'STOCK', (costAmt+floatingpl+intincexp-lossamt)/posAmt,
+              'DERIVATIVE', (costAmt+floatingpl+intincexp-lossamt),
               <!-- 增加股票和衍生品估值信息处理 add by gaojian 2019-07-24  end-->
               <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  begin-->
-              'OPTION', (costAmt+floatingpl+intincexp),
+              'OPTION', (costAmt+floatingpl+intincexp-lossamt),
               <!-- 增加期权估值信息处理 add by zhengxiaolian 2020-01-15  end-->
-              decode(assetbasis.valueDate,assetbasis.mdate,100,100*(costAmt+floatingpl+intincexp)/posAmt)) unitValTotal
+              decode(assetbasis.valueDate,assetbasis.mdate,100,100*(costAmt+floatingpl+intincexp-lossamt)/posAmt)) unitValTotal
            from (select 
 				ASSET_ID assetCode,
 				VALUE_DATE valueDate,
@@ -99,7 +99,8 @@
 				sum(nvl(TDY_COST_AMT,0)) costAmt,
 				sum(nvl(TDY_INTINCEXP,0)) intincexp,
 				sum(nvl(POS_AMT,0)) posAmt,
-        sum(nvl(TDY_FLOAT_INGPL,0)) floatingpl
+                sum(nvl(TDY_FLOAT_INGPL,0)) floatingpl,
+		        sum(nvl(TDY_LOSS_AMT,0)) lossamt
         		<if test="isBtm ==null or isBtm=='01' ">
 				FROM CHB_ASSETS_BASIS_DATA basis
 				</if>

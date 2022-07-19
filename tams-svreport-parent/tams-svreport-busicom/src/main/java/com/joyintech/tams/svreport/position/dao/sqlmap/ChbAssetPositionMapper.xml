@@ -605,6 +605,7 @@
         		 then NVL(ASSETBASIS.TDY_INTINCEXP,0)
      		 else (NVL(ASSETBASIS.TDY_COST_AMT,0) + NVL(ASSETBASIS.TDY_FLOAT_INGPL,0)
       				+ NVL(ASSETBASIS.TDY_INTINCEXP,0) /*+ NVL(ASSETBASIS.DELAY_PAY_AMT,0)*/)
+      				- NVL(ASSETBASIS.TDY_LOSS_AMT,0)
       			end ACCUAMT,/*剩余金额*/ 
 			</if>
 			<if test="monthReport!=null and monthReport=='02'">
@@ -612,6 +613,7 @@
 				then ASSETBASIS.POS_AMT
 				else NVL(ASSETBASIS.TDY_COST_AMT,0) + NVL(ASSETBASIS.TDY_FLOAT_INGPL,0)
 				+ NVL(ASSETBASIS.TDY_INTINCEXP,0) + NVL(ASSETBASIS.DELAY_PAY_AMT,0)
+                - NVL(ASSETBASIS.TDY_LOSS_AMT,0)
 			end ACCUAMT,/*剩余份额*/ 
 			</if>         
 			ASSETBASIS.POS_AMT ACCUQTY,/*剩余本金*/

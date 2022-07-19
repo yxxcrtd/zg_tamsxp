@@ -17,6 +17,7 @@ import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -141,10 +142,75 @@ public class CommonCodeCheckBatchService {
                     checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName(), mapLinshi);
                 case  总部或分支机构信息表INFO:
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
+                case 资产持仓登记SUB:
+                    checkAstPosSubSingle(map);
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    /**
+     * 资产持仓登记单条校验
+     * @param dataMap
+     */
+    public  void  checkAstPosSubSingle(Map<String, String> dataMap){
+        StringBuffer errMsgSb = new StringBuffer();
+        //持仓类别
+        String posType = dataMap.get("POS_TYPE");
+        String prdRegistCode = dataMap.get("PRD_REGIST_CODE");
+        String assetId = dataMap.get("ASSET_ID");
+        String subjectName = dataMap.get("SUBJECT_NAME");
+        String interAssetCode = dataMap.get("INTER_ASSET_CODE");
+        String valueDate = dataMap.get("VALUE_DATE");
+        String ccy = dataMap.get("CCY");
+        //必填校验
+        if(StringUtil.isEmpty(prdRegistCode)){
+            errMsgSb.append("产品登记编码必填");
+            errMsgSb.append(GlobalConstant.SEMICOLON);
+        }
+        if(StringUtil.isEmpty(valueDate)){
+            errMsgSb.append("持仓日期必填");
+            errMsgSb.append(GlobalConstant.SEMICOLON);
+        }
+        if(StringUtil.isEmpty(ccy)){
+            errMsgSb.append("币种必填");
+            errMsgSb.append(GlobalConstant.SEMICOLON);
+        }
+        if(StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统资产.getValue())||
+                StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统负债.getValue())) {
+            if (StringUtil.isEmpty(assetId)) {
+                errMsgSb.append("当“持仓类别”为“02 登记系统资产”或“03 登记系统负债”时，行内资产/负债编码必填");
+                errMsgSb.append(GlobalConstant.SEMICOLON);
+            }
+        }else {
+            if(StringUtil.isEmpty(subjectName)){
+                errMsgSb.append("当“持仓类别”为“01 现金及活期存款”或“04 其他资产”“05 其他负债”时，会计科目名称必填");
+                errMsgSb.append(GlobalConstant.SEMICOLON);
+            }
+        }
+        if(StringUtil.isNotEmpty(ccy)&&StringUtil.equals(ccy,"CNY")){
+            String amt=dataMap.get("AMT");
+            String camt=dataMap.get("CNY_AMT");
+            String floatIngpl=dataMap.get("FLOAT_INGPL");
+            String cfloatIngpl=dataMap.get("CNY_FLOAT_INGPL");
+            if(!StringUtil.equals(amt,camt)){
+                errMsgSb.append("当“币种”字段为“CNY人民币”时，“金额”和“折算人民币金额”字段必须相等!");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+            if(!StringUtil.equals(floatIngpl,cfloatIngpl)){
+                errMsgSb.append("当“币种”字段为“CNY人民币”时，“公允价值”和“折算人民币公允价值”必须相等!");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+        }
+        String errMSg = "";
+        if (errMsgSb.length() > 0){
+            errMSg = errMsgSb.substring(0, errMsgSb.length() - 1);
+        }
+        dataMap.put("ERRMSG", errMSg);
+
+
     }
     /**
      * 登记的入库前的代码检查

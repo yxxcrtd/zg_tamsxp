@@ -65,24 +65,24 @@
 		<!-- case when info.ASSET_TYPE2 in ('1107','1108','1901','1902') then 100 else delete by lingxq 此类资产不特殊处理-->
 		(ifnull(price.PRICE,1) *
 		(case typex.SRCFIELD1
-		when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt
+		when 'NOMONEYFOUND' then (costAmt+floatingpl-lossamt)/posAmt
 		when 'MONEYFOUND' then (case info.TRM_FUND_TYPE when '01' then 100 when '05' then 0.01 else 1 end)
-		when 'STOCK' then (costAmt+floatingpl)/posAmt
-		when 'DERIVATIVE' then  (costAmt+floatingpl)
-		when 'OPTION' then (costAmt+floatingpl)
+		when 'STOCK' then (costAmt+floatingpl-lossamt)/posAmt
+		when 'DERIVATIVE' then  (costAmt+floatingpl-lossamt)
+		when 'OPTION' then (costAmt+floatingpl-lossamt)
 		else
-		if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl)/posAmt)
+		if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl-lossamt)/posAmt)
 		end
 		)) unitValNet,
 		(ifnull(price.PRICE,1) *
 		(case typex.SRCFIELD1
-		when 'MONEYFOUND' then (costAmt+floatingpl+intincexp)/posAmt
-		when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt
-		when 'STOCK' then (costAmt+floatingpl+intincexp)/posAmt
-		when 'DERIVATIVE' then  (costAmt+floatingpl+intincexp)/posAmt
-		when 'OPTION' then (costAmt+floatingpl+intincexp)
+		when 'MONEYFOUND' then (costAmt+floatingpl+intincexp-lossamt)/posAmt
+		when 'NOMONEYFOUND' then (costAmt+floatingpl-lossamt)/posAmt
+		when 'STOCK' then (costAmt+floatingpl+intincexp-lossamt)/posAmt
+		when 'DERIVATIVE' then  (costAmt+floatingpl+intincexp-lossamt)/posAmt
+		when 'OPTION' then (costAmt+floatingpl+intincexp-lossamt)
 		else
-		if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl+intincexp)/posAmt)
+		if(assetbasis.valueDate=assetbasis.mdate,100,100*(costAmt+floatingpl+intincexp-lossamt)/posAmt)
 		end
 		)) unitValTotal
 		from (select
@@ -93,7 +93,8 @@
 		sum(ifnull(TDY_COST_AMT,0)) costAmt,
 		sum(ifnull(TDY_INTINCEXP,0)) intincexp,
 		sum(ifnull(POS_AMT,0)) posAmt,
-		sum(ifnull(TDY_FLOAT_INGPL,0)) floatingpl
+		sum(ifnull(TDY_FLOAT_INGPL,0)) floatingpl,
+		sum(ifnull(TDY_LOSS_AMT,0)) lossamt
 		<if test="isBtm ==null or isBtm=='01' ">
 			FROM CHB_ASSETS_BASIS_DATA basis
 		</if>

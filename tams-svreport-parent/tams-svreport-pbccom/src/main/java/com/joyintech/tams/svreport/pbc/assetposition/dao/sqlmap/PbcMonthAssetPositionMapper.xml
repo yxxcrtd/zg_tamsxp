@@ -1493,5 +1493,34 @@
       </foreach>
     </if>
   </select>
-
+  <select id="selectJZByEndDateAndProd" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto"
+          resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+    select
+    assetinfo.PBC_ASSET_TYPE1 ASSET_TYPE1,
+    assetinfo.PBC_ASSET_TYPE2 ASSET_TYPE2,
+    assetinfo.PBC_ASSET_TYPE3 ASSET_TYPE3,
+    '01' POSITION_TYPE,
+    VAL.VALUE_DATE BOOKDATE,/*报表统计日期*/
+    VAL.PROD_ID PRODID,/*产品代码*/
+    val.ASSET_ID ASSET_CODE,/*资产代码*/
+    val.CCY CCY,/*币种*/
+    nvl(VAL.TDY_LOSS_AMT,0) AMT /*金额*/
+    from  CHB_ASSETS_BASIS_DATA VAL
+    left join chb_prd_baseinfo prodinfo
+    on prodinfo.prod_id = val.prod_id
+    left join chb_asset_info assetinfo
+    on assetinfo.asset_code=VAL.ASSET_ID
+    where 1 =1
+    and to_char(VAL.VALUE_DATE,'yyyy-MM-dd') = #{reportEndDate,jdbcType=VARCHAR}
+    and assetinfo.ASSET_UUID is not null /* 去除头寸表中资产代码匹配不到数据的情况 */
+    and nvl(VAL.TDY_LOSS_AMT,0) >0
+    and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
+    and val.STATUS in ('E','M')/*有效状态：有效、修改*/
+    <if test="prodList !=null and prodList.size()>0">
+      <foreach collection="prodList" item="prodid" open="and VAL.PROD_ID in (" separator=","
+               close=")">
+        #{prodid,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+  </select>
 </mapper>

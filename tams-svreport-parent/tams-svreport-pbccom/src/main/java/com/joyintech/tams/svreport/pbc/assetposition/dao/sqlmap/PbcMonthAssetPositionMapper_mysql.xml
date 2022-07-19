@@ -1443,8 +1443,8 @@
     VAL.PROD_ID PRODID,/*产品代码*/
     val.ASSET_ID ASSET_CODE,/*资产代码*/
     val.CCY CCY,/*币种*/
-    ifnull(VAL.EN_JZZB,0) AMT,/*金额*/
-    isRepmnm isRepmnm
+    ifnull(VAL.TDY_LOSS_AMT,0) AMT/*金额*/
+
     from  CHB_ASSETS_BASIS_DATA VAL
     left join chb_prd_baseinfo prodinfo
     on prodinfo.prod_id = val.prod_id
@@ -1453,7 +1453,7 @@
     where 1 =1
     and DATE_FORMAT(VAL.VALUE_DATE,'%Y-%m-%d') = #{reportEndDate,jdbcType=VARCHAR}
     and assetinfo.ASSET_UUID is not null /* 去除头寸表中资产代码匹配不到数据的情况 */
-    and ifnull(VAL.EN_JZZB,0) != 0
+    and ifnull(VAL.TDY_LOSS_AMT,0) != 0
     and prodinfo.PROFIT_TYPE = '03'/*只取非保本理财产品 */
     and val.STATUS in ('E','M')/*有效状态：有效、修改*/
     <if test="prodList !=null and prodList.size()>0">
