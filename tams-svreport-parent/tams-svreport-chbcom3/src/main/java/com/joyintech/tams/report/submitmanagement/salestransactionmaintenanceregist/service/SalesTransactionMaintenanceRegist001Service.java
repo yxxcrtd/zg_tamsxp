@@ -286,8 +286,15 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
     public void dealDataList(List<SalesTransactionMaintenanceRegist001Dto> list) {
         list.forEach(item -> {
             if (StringUtil.isNotEmpty(item.getTradePs())) {
-                item.setTradePs(item.getTradePs() + " " + SvrDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, item.getTradePs()));
-                item.setTradeCcy(item.getTradeCcy() + " " + SvrDataUtil.getNameFromDataDict(DictCode.币种_中债, item.getTradeCcy()));
+                if(StringUtil.isNotEmpty(item.getTradePs())) {
+                    item.setTradePs(item.getTradePs() + " " + SvrDataUtil.getNameFromDataDict(DictCode.销售结算资金流动方向, item.getTradePs()));
+                }
+                if(StringUtil.isNotEmpty(item.getTradeCcy())) {
+                    item.setTradeCcy(item.getTradeCcy() + " " + SvrDataUtil.getNameFromDataDict(DictCode.币种_中债, item.getTradeCcy()));
+                }
+                if(StringUtil.isNotEmpty(item.getTradeType())){
+                    item.setTradeType(item.getTradeType() + " " + SvrDataUtil.getNameFromDataDict(DictCode.销售结算交易类型, item.getTradeType()));
+                }
             }
         });
     }

@@ -357,6 +357,7 @@ public class SvrSalesTransactionDBInterf extends BaseService{
 		tmpDto.setAccountName(null==dto.getAccountName()?"":dto.getAccountName());
 		tmpDto.setTradeNo(null==dto.getTradeNo()?"":dto.getTradeNo());
 		tmpDto.setTradePs(null==dto.getTradePs()?"":dto.getTradePs());
+		tmpDto.setTradeType(null==dto.getTradeType()?"":dto.getTradeType());
 		tmpDto.setTradeCounterAccNo(null==dto.getTradeCounterAccNo()?"":dto.getTradeCounterAccNo());
 		tmpDto.setTradeCounterAccName(null==dto.getTradeCounterAccName()?"":dto.getTradeCounterAccName());
 		tmpDto.setTradeCounterAccBankName(null==dto.getTradeCounterAccBankName()?"":dto.getTradeCounterAccBankName());
