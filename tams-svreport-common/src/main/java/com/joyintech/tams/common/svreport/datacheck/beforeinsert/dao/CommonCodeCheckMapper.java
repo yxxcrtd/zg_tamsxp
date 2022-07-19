@@ -128,6 +128,8 @@ public interface CommonCodeCheckMapper {
      */
     ChbMstCounterParty selectOneCounterParty(@Param("counterId") String counterId,@Param("status") String status);
 
+    List<ChbMstCounterParty> selectCounterPartyList();
+
     void deleteChbAssetInfo(@Param("list") List<ChbAssetInfoErrodataWithBLOBs> list);
 
     List<Map<String, String>> selectChbPrdDeclareInfoBusKey(@Param("list") List<ChbPrdDeclareInfoErrodataWithBLOBs> list);
