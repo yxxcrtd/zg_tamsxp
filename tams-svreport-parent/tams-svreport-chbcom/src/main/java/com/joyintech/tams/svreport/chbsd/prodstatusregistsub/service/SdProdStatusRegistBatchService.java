@@ -49,7 +49,7 @@ public class SdProdStatusRegistBatchService {
 	private ProdStatusRegist001Service prodStatusRegist001Service;
 
 	
-	public void sendTerminationInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
+	public void sendSubInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
 		logger.debug("产品状态登记未报送数据检索开始------" + df.format(new Date()));
 		// 1、报送数据检索,取得 List
 		Map<String,Object> map = new HashMap<>();

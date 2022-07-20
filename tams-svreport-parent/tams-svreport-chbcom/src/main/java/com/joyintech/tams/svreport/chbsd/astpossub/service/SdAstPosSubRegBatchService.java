@@ -52,7 +52,7 @@ public class SdAstPosSubRegBatchService {
 	@Autowired
 	private ChbAstPosRegist001Service chbAstPosRegist001Service;
 	
-	public void sendTerminationInfoMsg(Date batchDate, List<String> prodIdList) throws Exception {
+	public void sendSubInfoMsg(Date batchDate, List<String> prodIdList) throws Exception {
 		logger.debug("资产持仓信息登记未报送数据检索开始------" + df.format(new Date()));
 		// 1、报送数据检索,取得 List
 		List<ChbAstPosRegist001Dto> listSub = sdAstPosSubRegSvrMapper.selcteDataByIds(DateUtil.format(batchDate), prodIdList);
