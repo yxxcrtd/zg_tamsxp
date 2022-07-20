@@ -62,8 +62,8 @@ $(function() {
             ,{field:'yieldRemark',sortable:false,width:100,  title: 'CchbPrdBaseInfo001.yieldRemark'}
             ,{field:'openModeStr',sortable:false,width:100,title: 'CchbPrdBaseInfo001.openMode'}
             ,{field:'openCircleStr', sortable:false,width:100, title: 'CchbPrdBaseInfo001.openCircle'}
-            ,{field:'fitCircleDays', sortable:false,width:100, title: 'CchbPrdBaseInfo001.fitCircleDays'}
             ,{field:'openCircleDays',sortable:false,width:100,title: 'CchbPrdBaseInfo001.openCircleDays'}
+            ,{field:'fitCircleDays', sortable:false,width:100, title: 'CchbPrdBaseInfo001.fitCircleDays'}
             ,{field:'ruleComment', sortable:false, width:100,title: 'CchbPrdBaseInfo001.ruleComment'}
             ,{field:'firstOpenDayStr', sortable:false, width:100,title: 'CchbPrdBaseInfo001.firstOpenDay'}
             ,{field:'holidayOnFlagStr', sortable:false, width:100, title: 'CchbPrdBaseInfo001.holidayOnFlag'}

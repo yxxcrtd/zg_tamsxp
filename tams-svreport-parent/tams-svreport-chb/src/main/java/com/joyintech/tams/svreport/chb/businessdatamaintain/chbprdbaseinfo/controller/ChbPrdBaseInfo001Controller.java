@@ -176,7 +176,7 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
             List<Map> selectData = JSONArray.parseArray((String) params.get("selectData"), Map.class);
             List<String> produuids = selectData.stream().map(e -> (String)e.get("produuid")).collect(Collectors.toList());
             list = chbPrdBaseInfoService.selectByKeys(produuids);
-        } {
+        }else  {
             list = chbPrdBaseInfoService.selectAll(params);
         }
         List<ChbPrdBaseInfoDto> dtoList = Lists.newArrayList();
