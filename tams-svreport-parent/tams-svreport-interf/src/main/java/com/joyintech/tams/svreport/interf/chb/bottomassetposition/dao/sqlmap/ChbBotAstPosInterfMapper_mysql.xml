@@ -196,7 +196,9 @@
     WORKFLOW_ID, STATUS, ORG_CODE,
     DEPT_CODE, CREATE_USER, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-    DATASOURCE)
+    DATASOURCE,INT_AMT,CASH_FLAG,
+      SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT)
     select POS_ID, ISSUE_PARTY_ID, POS_DATE,
     PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
     ISSUE_AMT, UNINVEST_CASH, POS_NUM,
@@ -204,7 +206,10 @@
     WORKFLOW_ID, STATUS, ORG_CODE,
     DEPT_CODE, CREATE_USER, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-    DATASOURCE from
+    DATASOURCE,INT_AMT,CASH_FLAG,
+      SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT
+       from
     (
     select TEMP.* from
     (
@@ -231,7 +236,17 @@
       NOW() CREATE_TIME,
       #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
       NOW() UPDATE_TIME,
-      #{item.datasource,jdbcType=VARCHAR} DATASOURCE
+      #{item.datasource,jdbcType=VARCHAR} DATASOURCE,
+        #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
+        #{item.cashFlag,jdbcType=VARCHAR} CASH_FLAG,
+        #{item.shadowAmt,jdbcType=DECIMAL} SHADOW_AMT,
+        #{item.posAmtCprice,jdbcType=DECIMAL} POS_AMT_CPRICE,
+        #{item.oIssueAmt,jdbcType=DECIMAL} O_ISSUE_AMT,
+        #{item.oUninvestCash,jdbcType=DECIMAL} O_UNINVEST_CASH,
+        #{item.oPosAmt,jdbcType=DECIMAL} O_POS_AMT,
+        #{item.oShadowAmt,jdbcType=DECIMAL} O_SHADOW_AMT,
+        #{item.oPosAmtCprice,jdbcType=DECIMAL} O_POS_AMT_CPRICE,
+        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT
       FROM DUAL
     </foreach>
     ) TEMP where not exists (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
@@ -259,7 +274,9 @@
     CREATE_TIME,
     UPDATE_USER,
     UPDATE_TIME,
-    DATASOURCE from
+    DATASOURCE,INT_AMT,CASH_FLAG,
+      SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT from
     (
     select TEMP.* from
     (
@@ -286,7 +303,17 @@
       NOW() CREATE_TIME,
       #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
       NOW() UPDATE_TIME,
-      #{item.datasource,jdbcType=VARCHAR} DATASOURCE
+      #{item.datasource,jdbcType=VARCHAR} DATASOURCE,
+        #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
+        #{item.cashFlag,jdbcType=VARCHAR} CASH_FLAG,
+        #{item.shadowAmt,jdbcType=DECIMAL} SHADOW_AMT,
+        #{item.posAmtCprice,jdbcType=DECIMAL} POS_AMT_CPRICE,
+        #{item.oIssueAmt,jdbcType=DECIMAL} O_ISSUE_AMT,
+        #{item.oUninvestCash,jdbcType=DECIMAL} O_UNINVEST_CASH,
+        #{item.oPosAmt,jdbcType=DECIMAL} O_POS_AMT,
+        #{item.oShadowAmt,jdbcType=DECIMAL} O_SHADOW_AMT,
+        #{item.oPosAmtCprice,jdbcType=DECIMAL} O_POS_AMT_CPRICE,
+        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT
       FROM DUAL
     </foreach>
     ) TEMP
@@ -311,7 +338,17 @@
     A.CREATE_TIME = B.CREATE_TIME,
     A.UPDATE_USER = B.UPDATE_USER,
     A.UPDATE_TIME = B.UPDATE_TIME,
-    A.DATASOURCE = B.DATASOURCE
+    A.DATASOURCE = B.DATASOURCE,
+      A.INT_AMT = B.INT_AMT,
+      A.CASH_FLAG = B.CASH_FLAG,
+      A.SHADOW_AMT = B.SHADOW_AMT,
+      A.POS_AMT_CPRICE = B.POS_AMT_CPRICE,
+      A.O_ISSUE_AMT = B.O_ISSUE_AMT,
+      A.O_UNINVEST_CASH = B.O_UNINVEST_CASH,
+      A.O_POS_AMT = B.O_POS_AMT,
+      A.O_SHADOW_AMT = B.O_SHADOW_AMT,
+      A.O_POS_AMT_CPRICE = B.O_POS_AMT_CPRICE,
+      A.O_INT_AMT = B.O_INT_AMT
     where A.PLAN_ASSET_ID = B.PLAN_ASSET_ID
     and A.ASSET_CODE = B.ASSET_CODE
     and A.POS_DATE = B.POS_DATE;
