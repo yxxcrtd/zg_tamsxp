@@ -48,7 +48,6 @@
         <result property="investApproverName" column="INVEST_APPROVER_NAME" jdbcType="VARCHAR"/>
         <result property="investTraderId" column="INVEST_TRADER_ID" jdbcType="VARCHAR"/>
         <result property="investTraderName" column="INVEST_TRADER_NAME" jdbcType="VARCHAR"/>
-        <result property="counterName" column="COUNTER_NAME" jdbcType="VARCHAR"/>
         <result property="relatedTradeStatus" column="RELATED_TRADE_STATUS" jdbcType="VARCHAR"/>
         <result property="tradeCounterStatus" column="TRADE_COUNTER_STATUS" jdbcType="VARCHAR"/>
         <result property="rivalPartyType" column="RIVAL_PARTY_TYPE" jdbcType="VARCHAR"/>
@@ -315,7 +314,6 @@ where b.PROD_NAME=#{prodName} limit 1
         b.REG_CODE regCode,
         b.PROD_NAME prodName,
         c.ASSET_NAME assetName,
-        d.COUNTER_NAME,
         d.RELATED_TRADE_STATUS,
         d.STATUS  TRADE_COUNTER_STATUS,
         d.COUNTER_TYPE2  RIVAL_PARTY_TYPE
@@ -372,7 +370,6 @@ where b.PROD_NAME=#{prodName} limit 1
         null as orgData,
         b.REG_CODE regCode,
         c.ASSET_NAME assetName,
-        d.COUNTER_NAME,
         d.RELATED_TRADE_STATUS ,
         d.STATUS AS TRADE_COUNTER_STATUS,
         d.COUNTER_TYPE2 AS RIVAL_PARTY_TYPE
@@ -455,7 +452,6 @@ where b.PROD_NAME=#{prodName} limit 1
         a.ORG_DATA orgData,
         b.REG_CODE regCode,
         c.ASSET_NAME assetName,
-        d.COUNTER_NAME,
         d.RELATED_TRADE_STATUS,
         d.STATUS AS TRADE_COUNTER_STATUS,
         d.COUNTER_TYPE2 AS RIVAL_PARTY_TYPE

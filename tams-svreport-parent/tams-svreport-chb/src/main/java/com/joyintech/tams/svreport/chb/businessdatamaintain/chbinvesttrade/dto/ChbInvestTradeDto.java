@@ -28,8 +28,6 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
     private String regCode;
     private String assetName;
     private String orgData;
-    private String counterName;
-
     /**
      * 关联交易情况
      */
@@ -131,16 +129,6 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
 
     public void setTradeCounterStatus(String tradeCounterStatus) {
         this.tradeCounterStatus = tradeCounterStatus;
-    }
-
-
-
-    public String getCounterName() {
-        return counterName;
-    }
-
-    public void setCounterName(String counterName) {
-        this.counterName = counterName;
     }
 
     public String getElementId() {
