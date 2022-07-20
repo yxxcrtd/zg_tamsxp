@@ -33,7 +33,7 @@
             <Cell order="29" name="备注">remark</Cell>
             <Cell order="30" name="资金托管账号">busiAcctNo</Cell>
             <Cell order="31" name="资金托管账户">acctName</Cell>
-            <Cell order="32" name="计息基础">basicStr</Cell>
+            <Cell order="32" name="计息基础">basic</Cell>
             <Cell order="33" name="提前终止日">terminatedateStr</Cell>
             <Cell order="34" name="是否母行划转产品">isTransferStr</Cell>
             <Cell order="35" name="现金管理类产品-是否完全符合">manaCateFitStr</Cell>
