@@ -103,6 +103,16 @@ public class ChbPrdFeeDeal extends BaseEntity{
     private Date revDate;
 
     /**
+     * 交易发起时间
+     */
+    private Date tradeTime;
+
+    /**
+     * 交易发起日格式化的时间
+     */
+    private String tradeDate;
+
+    /**
      * 更新人
      */
     private String updateUser;
@@ -372,6 +382,22 @@ public class ChbPrdFeeDeal extends BaseEntity{
      */
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode == null ? null : orgCode.trim();
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 
     /**

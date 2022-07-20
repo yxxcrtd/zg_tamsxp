@@ -155,6 +155,19 @@ public class ChbConstant {
      * 从业人员登记
      */
     public static final String FILE_112_TYPE = "112";
+
+    /***0722升级**/
+    /**
+     * 产品状态登记
+     */
+    public static final String FILE_115_TYPE = "115";
+
+    /**
+     * 资产持仓登记
+     */
+    public static final String FILE_116_TYPE = "116";
+    /***0722升级**/
+
     /**
      * 公募/私募产品报告登记
      */

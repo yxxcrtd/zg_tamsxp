@@ -126,7 +126,7 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 		return page;
 	}
 	
-	private void dealResultlist(List<ChbAstPosRegist001Dto> resultlist){
+	public void dealResultlist(List<ChbAstPosRegist001Dto> resultlist){
 		if(!CollectionUtils.isEmpty(resultlist)){
 			for(ChbAstPosRegist001Dto dto : resultlist){
 				if(StringUtil.isNotEmpty(dto.getSubmitFeedbackStatus())){
@@ -151,6 +151,33 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 		}
 	}
 
+
+	/***0722升级**/
+	public void dealResultlistSend(List<ChbAstPosRegist001Dto> resultlist){
+		if(!CollectionUtils.isEmpty(resultlist)){
+			for(ChbAstPosRegist001Dto dto : resultlist){
+				if(StringUtil.isNotEmpty(dto.getSubmitFeedbackStatus())){
+					dto.setSubmitFeedbackStatus(SvrDataUtil.getNameFromDataDict(DictCode.报送反馈状态,dto.getSubmitFeedbackStatus()));
+				}
+				if(StringUtil.isNotEmpty(dto.getCcy())){
+					dto.setCcy(SvrDataUtil.getNameFromDataDict(DictCode.币种_中债,dto.getCcy()));
+				}
+				if(StringUtil.isNotEmpty(dto.getPosType())){
+					dto.setPosType(dto.getPosType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.中债持仓类型,dto.getPosType()));
+				}
+				if(StringUtil.isNotEmpty(dto.getInterAssetType())){
+					dto.setInterAssetType(dto.getInterAssetType()+" "+SvrDataUtil.getNameFromDataDict(DictCode.资产穿透情况,dto.getInterAssetType()));
+				}
+				if(StringUtil.isNotEmpty(dto.getSendStatus())){
+					dto.setSendStatus(SvrDataUtil.getNameFromDataDict(DictCode.报送状态,dto.getSendStatus()));
+				}
+				if(StringUtil.isNotEmpty(dto.getStatus())){
+					dto.setStatus(SvrDataUtil.getNameFromDataDict(DictCode.报送数据状态,dto.getStatus()));
+				}
+			}
+		}
+	}
+	/***0722升级**/
 	/**
 	 * @Description 查询前数据处理
 	 * @param pageParam
@@ -502,6 +529,7 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 			for(ChbAstPosRegist001Dto dto : list){
 				keylist.add(dto.getRegistSeqno());
 			}
+			dealResultlist(list);
 		}
 		return keylist;
 	}
@@ -517,7 +545,6 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 		List<ChbAstPosRegist001Dto> endlist = chbAstPosRegist001Mapper.selectAllDataByKeyList(checkKeys);
 		//获取当前的月末时间
 		Date checkDate=endlist.get(0).getValueDate();
-		dealResultlist(endlist);
 		endmap = endlist.stream().collect(Collectors.toMap(ChbAstPosRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));
 		List<ExcelValidDto> result = new ArrayList<ExcelValidDto>();
 		List<CheckReport001Dto> resultlist  = new ArrayList<CheckReport001Dto>();
@@ -546,6 +573,7 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 			}
 			returnMap.put("excelValidDtoList",result);
 		}
+		dealResultlistSend(endlist);
 		returnMap.put("resultList",endlist);
 		return returnMap;
 	}

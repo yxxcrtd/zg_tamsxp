@@ -1,10 +1,15 @@
 package com.joyintech.service.chb.astposregist.controller;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;
 import com.joyintech.tams.svreport.chb.astposregist.service.ChbAstPosRegist001Service;
+import com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +88,13 @@ public class ChbAstPosRegistController {
 	public Map<String,Object> reportCheck(@RequestBody Map<String,Object> map) {
 		List<String> keyList = new ArrayList<String>();
         Map<String, Object> param = map;
-        keyList=chbAstPosRegist001Service.getCheckEndList(param);
+        /***0722升级**/
+        if (!param.containsKey("keyList")) {
+            keyList = chbAstPosRegist001Service.getCheckEndList(param);
+        } else {
+            keyList = StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys"));
+        }
+        /***0722升级**/
         if (CollectionUtils.isEmpty(keyList)) {
             List<ExcelValidDto> checkResult = new ArrayList<ExcelValidDto>();
             checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据",null));

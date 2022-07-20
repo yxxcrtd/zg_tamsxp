@@ -180,7 +180,40 @@ public interface ChbComponentStatusUpdateMapper {
 	public int updateChbEmployeeInfoSubSendStatus(@Param("registNo") String registNo, @Param("sendStatus") String sendStatus,
 			@Param("feedbackStatus") String feedbackStatus);
 
+	/***0722升级**/
+	/**
+	 * 报表名称_产品状态登记  发送状态
+	 * @param sendStatus
+	 * @param feedbackStatus
+	 * @return
+	 */
+	public int updateChbPrdStatusSubSendStatus(@Param("registNo") String registNo, @Param("sendStatus") String sendStatus,
+												  @Param("feedbackStatus") String feedbackStatus);
 
+	/**
+	 * 报表名称_资产持仓登记发送状态
+	 * @param sendStatus
+	 * @param feedbackStatus
+	 * @return
+	 */
+	public int updateChbAstPosSubSendStatus(@Param("registNo") String registNo, @Param("sendStatus") String sendStatus,
+												  @Param("feedbackStatus") String feedbackStatus);
+
+	/**
+	 * 报表名称_产品状态登记 反馈状态
+	 * @param status
+	 * @return
+	 */
+	public int updateChbPrdStatusSubSubmitStatus(@Param("registNo") String registNo, @Param("status") String status);
+
+	/**
+	 * 报表名称_资产持仓登记 反馈状态
+	 * @param status
+	 * @return
+	 */
+	public int updateChbAstPosSubmitStatus(@Param("registNo") String registNo, @Param("status") String status);
+
+	/***0722升级**/
 	/**
 	 * 从业人员登记 反馈状态
 	 * @param status

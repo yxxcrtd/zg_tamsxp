@@ -110,8 +110,23 @@ public interface ChbFeedbackMsgComponentMapper {
 	 * @param status  反馈状态
 	 * @return
 	 */
-	int updateChbEmployeeInfoSub(ChbSubmitStatusDto status);
+	int updateChbAstPosSub(ChbSubmitStatusDto status);
 
+	/****0722升级**/
+	/**
+	 * 更新产品状态登记 反馈状态
+	 * @param status  反馈状态
+	 * @return
+	 */
+	int updateChbPrdStatusSub(ChbSubmitStatusDto status);
+
+	/**
+	 * 更新资产持仓登记 反馈状态
+	 * @param status  反馈状态
+	 * @return
+	 */
+	int updateChbEmployeeInfoSub(ChbSubmitStatusDto status);
+	/****0722升级**/
 
 	/**
 	 * 更新投资者明细 反馈状态

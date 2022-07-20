@@ -461,6 +461,14 @@ public class ChbFeedbackMsgService {
                 else if (StrUtil.equals(DictCodeList.报表名称_从业人员登记.getValue(), submitType)) {
                     chbFeedbackMsgComponentMapper.updateChbEmployeeInfoSub(status);
                 }
+                /***0722升级**/
+                else if (StrUtil.equals(DictCodeList.报表名称_产品状态登记.getValue(), submitType)) {
+                    chbFeedbackMsgComponentMapper.updateChbPrdStatusSub(status);
+                }
+                else if (StrUtil.equals(DictCodeList.报表名称_资产持仓登记.getValue(), submitType)) {
+                    chbFeedbackMsgComponentMapper.updateChbAstPosSub(status);
+                }
+                /***0722升级**/
             }
 
         }

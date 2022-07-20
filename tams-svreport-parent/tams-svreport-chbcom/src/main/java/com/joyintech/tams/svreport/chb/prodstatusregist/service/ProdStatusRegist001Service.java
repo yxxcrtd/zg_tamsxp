@@ -399,7 +399,7 @@ public class ProdStatusRegist001Service extends CommonExportService<ProdStatusRe
 	* @author: 王冠/wangguan
 	* @date: 2019年6月25日 上午10:40:07 
 	*/
-	public List<String> getCheckEndList(Map<String, Object> param) {
+	public List<String> getCheckList(Map<String, Object> param) {
 		dealSearchParam(param);
 		List<String> keylist = new ArrayList<String>();
 		List<ProdStatusRegist001Dto> list = prodStatusRegist001Mapper.selectAllData(param);

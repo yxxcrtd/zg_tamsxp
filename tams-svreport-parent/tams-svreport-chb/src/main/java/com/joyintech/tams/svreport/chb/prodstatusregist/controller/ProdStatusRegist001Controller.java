@@ -8,7 +8,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.entity.ChbPrdStatusSub;
+import com.joyintech.component.svrreport.chb.dto.ChbPrdStatusSub;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -16,6 +16,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.service.ProdStatusRegist001Service;
 import com.joyintech.tams.svreport.chb.prodstatusregist.service.ProdStatusRegistMService;
+import com.joyintech.tams.svreport.chbsd.prodstatusregistsub.service.SdProdStatusRegistBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ public class ProdStatusRegist001Controller extends BaseController {
 	private ProdStatusRegist001Service prodStatusRegist001Service;
 	@Autowired
 	private ProdStatusRegistMService prodStatusRegistMService;
+
+    @Autowired
+    private SdProdStatusRegistBatchService sdProdStatusRegistBatchService;
 
     /**
      * 日志
@@ -199,7 +203,7 @@ public class ProdStatusRegist001Controller extends BaseController {
         if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
             sendDataCheckType = SendDataCheckType.重新报送;
         }
-        //sdProdTerminationBatchService.sendBatchCommon(dataList, sendDataCheckType);
+        sdProdStatusRegistBatchService.sendBatchCommon(dataList, sendDataCheckType);
 
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }
