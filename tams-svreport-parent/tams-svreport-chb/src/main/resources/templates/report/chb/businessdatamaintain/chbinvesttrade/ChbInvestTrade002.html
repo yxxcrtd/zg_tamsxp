@@ -172,17 +172,38 @@
 
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">交易发起时间</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="text" name="tradeDate" id="tradeDate"
+                                   class="layui-input form-input"
+                                   data-th-value='${entity?.tradeTimeStr}'
+                                   required>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbInvestTrade001.tradeCounter}">交易对手</label>
                         <div class="layui-input-inline input-inline">
                             <select type="text" id="tradeCounter" name="tradeCounter" class="layui-input form-input input-select"
-                                   data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName}'
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
-                                   data-th-initValue="${entity?.tradeCounter}" required>
+                                    data-th-data-url='@{/chb/businessdatamaintain/chbinvesttrade/chbinvesttrade001/getCustomerName}'
+                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" formatoption = "false"
+                                    data-th-initValue="${entity?.tradeCounter}" required>
                             </select>
                         </div>
 
                     </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label form-lable">关联交易情况</label>
+                        <div class="layui-input-inline input-inline">
+                            <select  id="relatedTradeStatus" name="relatedTradeStatus"
+                                     data-th-initValue="${entity?.relatedTradeStatus}"
+                                     class="layui-input form-input input-select"
+                                     data-th-data-result="${SVR_RELATED_TRADE_STATUS}">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ChbInvestTrade001.rivalPartyType}">交易对手方类型</label>
@@ -192,29 +213,6 @@
                                    data-th-data-result='${SVR_RIVAL_PARTY_TYPE}'
                                    data-th-value="${entity?.rivalPartyType}" required disabled>
 
-                        </div>
-                    </div>
-                    <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">交易发起时间</label>
-                        <div class="layui-input-inline input-inline">
-                            <input type="text" name="tradeDate" id="tradeDate"
-                                   class="layui-input form-input"
-                                   data-th-value='${entity?.tradeTimeStr}'
-                                   required>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="layui-form-item">
-
-                    <div class="form-inline-wrap">
-                        <label class="layui-form-label form-lable">关联交易情况</label>
-                        <div class="layui-input-inline input-inline">
-                            <select  id="relatedTradeStatus" name="relatedTradeStatus"
-                                     data-th-initValue="${entity?.relatedTradeStatus}"
-                                     class="layui-input form-input input-select"
-                                     data-th-data-result="${SVR_RELATED_TRADE_STATUS}">
-                            </select>
                         </div>
                     </div>
 

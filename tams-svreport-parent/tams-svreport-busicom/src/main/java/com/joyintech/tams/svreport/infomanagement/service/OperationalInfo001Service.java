@@ -461,11 +461,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					Object dateObj = newMap.get(str);
 					if (null != dateObj) {
 						//产品状态登记中产品状态统计日格式进行处理
-						if (Objects.equals("CHB_PRD_STATUS_SUB",tableName) && Objects.equals("PRD_STATUS_DATE",str)) {
+						if (StringUtil.equals("CHB_PRD_STATUS_SUB",tableName) && StringUtil.equals("PRD_STATUS_DATE",str)) {
 							newMap.put(str, DateUtil.format((Date) dateObj,"yyyyMMdd"));
-						} else{
+						} //产品费用信息交易发起时间特殊处理
+						else if (StringUtil.equals("CHB_PRD_FEE_DEAL",tableName) && StringUtil.equals("TRADE_TIME",str)){
+							newMap.put(str, DateUtil.format((Date) dateObj,"yyyyMMddHHmmss"));
+						}else{
 							newMap.put(str, DateUtil.format((Date) dateObj));
 						}
+
 
 					}
 					

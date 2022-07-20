@@ -63,14 +63,13 @@ $(function() {
             ,{field:'num',sortable:false,   width:50,title: 'ChbInvestTrade001.num'}
             ,{field:'assetMethodStr',sortable:false,width:100, title: 'ChbInvestTrade001.assetMethod'}
             ,{field:'curAssetTypeStr', sortable:false,width:100,title: 'ChbInvestTrade001.curAssetType'}
-
             ,{field:'curAssetdetType', sortable:false, width:100, title: '资金流动类型说明'}
             ,{field:'dealdateStr',sortable:false,width:160,  title: 'ChbInvestTrade001.dealdate'}
+            ,{field:'tradeTimeStr', sortable:false,width:100, title: '交易发起时间'}
             ,{field:'tradeCounter',visible:false}
             ,{field:'counterName',sortable:false,width:180,title: 'ChbInvestTrade001.tradeCounter'}
-            ,{field:'rivalPartyTypeStr', sortable:false,width:100, title: 'ChbInvestTrade001.rivalPartyType'}
             ,{field:'relatedTradeStatusStr', sortable:false,width:100, title: '关联交易情况'}
-            ,{field:'tradeTimeStr', sortable:false,width:100, title: '交易发起时间'}
+            ,{field:'rivalPartyTypeStr', sortable:false,width:100, title: 'ChbInvestTrade001.rivalPartyType'}
             ,{field:'unitPriceFull',sortable:false,width:100,title: 'ChbInvestTrade001.unitPriceFull'}
             ,{field:'unitPriceNet', sortable:false, width:100,title: 'ChbInvestTrade001.unitPriceNet'}
             ,{field:'endRate', sortable:false, width:100,title: 'ChbInvestTrade001.endRate'}
@@ -78,7 +77,6 @@ $(function() {
             ,{field:'investApproverId',sortable:false,   width:150,title: 'ChbInvestTrade001.investApproverId'}
             ,{field:'investApproverName',sortable:false,width:100, title: 'ChbInvestTrade001.investApproverName'}
             ,{field:'investTraderId', sortable:false,width:100,title: 'ChbInvestTrade001.investTraderId'}
-
             ,{field:'investTraderName',sortable:false,width:180,title: 'ChbInvestTrade001.investTraderName'}
             ,{field:'remark', sortable:false,width:100, title: 'ChbInvestTrade001.remark'}
             ,{field:'errMsg',sortable:false,width:100,title: 'ChbInvestTrade001.errMsg'}
