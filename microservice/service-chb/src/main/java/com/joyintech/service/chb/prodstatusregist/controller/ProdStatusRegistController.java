@@ -1,9 +1,12 @@
 package com.joyintech.service.chb.prodstatusregist.controller;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.service.ProdStatusRegist001Service;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,13 +83,21 @@ public class ProdStatusRegistController {
 	*/
 	@PostMapping("reportCheck")
 	public Map<String,Object> reportCheck(@RequestBody Map<String,Object> map) {
-		Map<String,Object> returnMap = new HashMap<>(1);
-		ExcelValidDto excelValidDto = new ExcelValidDto();
-		excelValidDto.setCheckResult("01");
-		List<ExcelValidDto> result=new ArrayList<ExcelValidDto>(1);
-		result.add(excelValidDto);
-		returnMap.put("excelValidDtoList",result);
-		returnMap.put("resultList",new ArrayList<ProdStatusRegist001Dto>(1));
-		return returnMap;
+		List<String> keyList = new ArrayList<String>();
+		Map<String, Object> param = map;
+		if(!param.containsKey("checkKeys")){
+			keyList=prodStatusRegist001Service.getCheckList(param);
+		}
+		else{
+			keyList= StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys"));
+		}
+		if (CollectionUtils.isEmpty(keyList)) {
+			List<ExcelValidDto> checkResult = new ArrayList<ExcelValidDto>();
+			checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "无报送数据",null));
+			Map<String,Object> returnMap = new HashMap<>();
+			returnMap.put("excelValidDtoList",checkResult);
+			return returnMap;
+		}
+		return prodStatusRegist001Service.checkData(keyList);
 	}
 }
