@@ -515,7 +515,8 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 		Iterator<PbcPrdBaseinfoSub> it = infoList.iterator();
 		while(it.hasNext()){
 			PbcPrdBaseinfoSub info = it.next();
-			if(SysDataUtil.getNameFromDataDict(DictCode.报送状态, "03").equals(info.getSendStatus())){
+			//if(SysDataUtil.getNameFromDataDict(DictCode.报送状态, "03").equals(info.getSendStatus())){
+			if(StringUtils.equals(info.getSendStatus(),"03")){
 				it.remove();
 			}
 		}

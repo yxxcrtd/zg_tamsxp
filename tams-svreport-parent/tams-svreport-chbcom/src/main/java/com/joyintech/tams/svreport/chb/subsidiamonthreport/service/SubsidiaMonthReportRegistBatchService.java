@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,9 +114,16 @@ public class SubsidiaMonthReportRegistBatchService extends SvrCBBaseService {
         // 报表频率：月报
         chbMonthReportSub.setReportfrequ(ChbMonthReportPrdConstants.REPORT_FREQU_M);
 
+        ChbOrgRegistBankCode bankCode = CommonUtil.getUserBank();
+        String  code=CommonUtil.selectBankCode();
+        String  name=CommonUtil.selectBankCodeName();
+        if(null!=bankCode){
+            code = bankCode.getRegistBankCode();
+            name = bankCode.getBelongInstitutionName();
+        }
         // 发行机构代码取值
-        chbMonthReportSub.setIssuePartyId(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID));
-        chbMonthReportSub.setIssuePartyName(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_NAME));
+        chbMonthReportSub.setIssuePartyId(code);
+        chbMonthReportSub.setIssuePartyName(name);
 
         // 用户信息
         chbMonthReportSub.setOrgCode(CommonUtil.getOrgCode());

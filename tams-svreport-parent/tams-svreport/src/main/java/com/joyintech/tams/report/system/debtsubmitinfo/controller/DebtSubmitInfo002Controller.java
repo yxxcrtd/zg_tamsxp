@@ -89,6 +89,7 @@ public class DebtSubmitInfo002Controller extends BaseController{
     public String init(Model model) {
         Map<String,Object>param=RequestUtil.getPageParam();
         model.addAttribute("reportNo", param.get("reportNo"));
+        model.addAttribute("repCode", param.get("repCode"));
         model.addAttribute("repName",param.get("repName"));
         model.addAttribute("reBackStatus", DictCodeListExt2.报送反馈状态_中债退回.getValue());
         super.setSelectOptionToModel(model, DictCode.报送反馈状态);

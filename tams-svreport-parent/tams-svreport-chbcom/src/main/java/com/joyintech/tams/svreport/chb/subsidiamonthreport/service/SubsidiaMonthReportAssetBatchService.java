@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.joyintech.tams.constant.DictCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,57 +166,86 @@ public class SubsidiaMonthReportAssetBatchService {
             }
 
             // 1 标准化债权类资产
-            if ("F01".equals(pos.getSunassettype())) {
-                // 1.1 合 计
-                calcMonthReportSubDetail(AMT1_1, pos, true, false);
-                // 其中 1.1.a 信用债
-                if ("F0101".equals(pos.getSunassettype2()) || "F0102".equals(pos.getSunassettype2())) {
+            if (pos.getSunassettype() != null && pos.getSunassettype().indexOf("F01") != -1) {
+                // 其中 1.1.a 信用债&&不等于可转债
+                if ((pos.getSunassettype2() != null && pos.getSunassettype2().indexOf("F0102")  != -1)&&
+                        (!StringUtil.equals("04",pos.getBankCapital()))) {
                     calcMonthReportSubDetail(AMT1_1_a, pos, true, false);
                     // 其中 1.1.a.a PPN等低流动性债券 非公开发行：02 公开发行：01
                     //if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
-                    if ("F0101".equals(pos.getSunassettype2())) {//不判定是否公开发行
+                    //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  start
+                    if (pos.getRating() == null || Integer.parseInt(SvrDataUtil.getCodeFromDataDictByName(DictCode.资产评级, pos.getRating())) > 4) {//不判定是否公开发行
+                        //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  end
                         calcMonthReportSubDetail(AMT1_1_a_a, pos, true, false);
                     }
+                    // 1.1 合 计
+                    calcMonthReportSubDetail(AMT1_1, pos, true, false);
+                    // 1.2 加权剩余期限
+                    calcMonthReportSubDetail(AMT1_2, pos, false, true);
                 }
+//                if (pos.getSunassettype2() != null && pos.getSunassettype2().indexOf("F0101")  != -1) {
+//                    calcMonthReportSubDetail(AMT1_1_a, pos, true, false);
+//                    // 其中 1.1.a.a PPN等低流动性债券 非公开发行：02 公开发行：01
+//                    //if ("F0101".equals(pos.getSunassettype2()) && "02".equals(pos.getIssueMode())) {
+//                    //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  start
+//                    if (pos.getRating() == null || Integer.parseInt(SvrDataUtil.getCodeFromDataDictByName(DictCode.资产评级, pos.getRating())) > 4) {//不判定是否公开发行
+//                        //其债项评级在AA+（不含）以下或无信用评级 modify by wuhaisen  20220120  end
+//                        calcMonthReportSubDetail(AMT1_1_a_a, pos, true, false);
+//                    }
+//                }
                 // 1.1.b 利率债
-                else if ("F0103".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0103")  != -1 &&
+                        (!StringUtil.equals("04",pos.getBankCapital()))) {
                     calcMonthReportSubDetail(AMT1_1_b, pos, true, false);
+                    // 1.1 合 计
+                    calcMonthReportSubDetail(AMT1_1, pos, true, false);
+                    // 1.2 加权剩余期限
+                    calcMonthReportSubDetail(AMT1_2, pos, false, true);
                 }
                 // 1.1.c 固定收益类公募基金
-                else if ("F0104".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0104")  != -1) {
                     calcMonthReportSubDetail(AMT1_1_c, pos, true, false);
+                    // 1.1 合 计
+                    calcMonthReportSubDetail(AMT1_1, pos, true, false);
+                    // 1.2 加权剩余期限
+                    calcMonthReportSubDetail(AMT1_2, pos, false, true);
                 }
-                // 1.2 加权剩余期限
-                calcMonthReportSubDetail(AMT1_2, pos, false, true);
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0105")  != -1) {
+                    // 1.1 合 计
+                    calcMonthReportSubDetail(AMT1_1, pos, true, false);
+                    // 1.2 加权剩余期限
+                    calcMonthReportSubDetail(AMT1_2, pos, false, true);
+                }
+
             }
             // 2 非标准化债权类资产
-            else if ("F02".equals(pos.getSunassettype())) {
+            if (pos.getSunassettype() != null && pos.getSunassettype().indexOf("F02") != -1) {
                 // 2.1 通过信托贷款和信托产品
-                if ("F0201".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0201")  != -1) {
                     calcMonthReportSubDetail(AMT2_1, pos, true, false);
                 }
                 // 2.2 通过证券期货经营机构资管产品
-                else if ("F0202".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0202")  != -1) {
                     calcMonthReportSubDetail(AMT2_2, pos, true, false);
                 }
                 // 2.3 通过保险资管产品
-                else if ("F0203".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0203")  != -1) {
                     calcMonthReportSubDetail(AMT2_3, pos, true, false);
                 }
                 // 2.4 通过委托贷款
-                else if ("F0204".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0204")  != -1) {
                     calcMonthReportSubDetail(AMT2_4, pos, true, false);
                 }
                 // 2.5 通过债权融资类产品
-                else if ("F0205".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0205")  != -1) {
                     calcMonthReportSubDetail(AMT2_5, pos, true, false);
                 }
                 // 2.6 通过其他形式
-                else if ("F0206".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0206")  != -1) {
                     calcMonthReportSubDetail(AMT2_6, pos, true, false);
                 }
                 // 2.7 直接投资
-                else if ("F0207".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0207")  != -1) {
                     calcMonthReportSubDetail(AMT2_7, pos, true, false);
                 }
                 // 2.8 合 计
@@ -224,70 +254,74 @@ public class SubsidiaMonthReportAssetBatchService {
                 calcMonthReportSubDetail(AMT2_9, pos, false, true);
             }
             // 3 股票类资产
-            else if ("F03".equals(pos.getSunassettype())) {
+            if (pos.getSunassettype() != null && pos.getSunassettype().indexOf("F03") != -1) {
                 // 3.1 合 计
                 calcMonthReportSubDetail(AMT3_1, pos, true, false);
             }
             // 4 未上市企业股权
-            else if ("F04".equals(pos.getSunassettype())) {
+            if (pos.getSunassettype() != null && pos.getSunassettype().indexOf("F04") != -1) {
                 // 4.1 合 计
                 calcMonthReportSubDetail(AMT4_1, pos, true, false);
                 // 其中 4.1.a 政府出资产业投资基金
-                if ("F0401".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0401")  != -1) {
                     calcMonthReportSubDetail(AMT4_1_a, pos, true, false);
                 }
                 // 4.1.b 创业投资基金
-                else if ("F0402".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0402")  != -1) {
                     calcMonthReportSubDetail(AMT4_1_b, pos, true, false);
                 }
                 // 4.2 加权剩余期限
                 calcMonthReportSubDetail(AMT4_2, pos, false, true);
             }
             // 5 银行资本补充工具
-            else if ("F05".equals(pos.getSunassettype())) {
+            if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F05")  != -1) {
                 // 5.1 合 计
                 calcMonthReportSubDetail(AMT5_1, pos, true, false);
                 // 其中 5.1.a 优先股
-                if ("F0501".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0501")  != -1) {
                     calcMonthReportSubDetail(AMT5_1_a, pos, true, false);
                 }
                 // 5.1.b 永续债（债性）
-                else if ("F0502".equals(pos.getSunassettype2()) || "F0506".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0502")  != -1
+                        ||pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0506")  != -1) {
                     calcMonthReportSubDetail(AMT5_1_b, pos, true, false);
                 }
                 // 5.1.c 永续债（股性）
-                else if ("F0503".equals(pos.getSunassettype2()) || "F0505".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0503")  != -1
+                        || pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1) {
                     calcMonthReportSubDetail(AMT5_1_c, pos, true, false);
                 }
                 // 5.1.d 二级资本债
-                else if ("F0504".equals(pos.getSunassettype2()) || "F0505".equals(pos.getSunassettype2()) || "F0506".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0504")  != -1
+                        || pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0505")  != -1
+                        || pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0506")  != -1) {
                     calcMonthReportSubDetail(AMT5_1_d, pos, true, false);
                 }
                 // 5.2 加权剩余期限
                 calcMonthReportSubDetail(AMT5_2, pos, false, true);
             }
             // 6 其他资产
-            else if ("F06".equals(pos.getSunassettype())) {
+            if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F06")  != -1) {
                 // 6.1 合 计
                 calcMonthReportSubDetail(AMT6_1, pos, true, false);
                 // 其中 6.1.a 拆放同业及买入返售
-                if ("F0601".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0601")  != -1) {
                     calcMonthReportSubDetail(AMT6_1_a, pos, true, false);
                 }
                 // 6.1.b 现金及银行存款
-                else if ("F0602".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0602")  != -1) {
                     calcMonthReportSubDetail(AMT6_1_b, pos, true, false);
                 }
                 // 6.1.c 其他公募基金
-                else if ("F0603".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0603")  != -1) {
                     calcMonthReportSubDetail(AMT6_1_c, pos, true, false);
                 }
                 // 6.1.d 商品及金融衍生产品
-                else if ("F0604".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0604")  != -1) {
                     calcMonthReportSubDetail(AMT6_1_d, pos, true, false);
                 }
                 // 6.1.e QDII
-                else if ("F0605".equals(pos.getSunassettype2())) {
+                if (pos.getSunassettype() != null && pos.getSunassettype2().indexOf("F0605")  != -1) {
                     calcMonthReportSubDetail(AMT6_1_e, pos, true, false);
                 }
                 // 6.2 加权剩余期限

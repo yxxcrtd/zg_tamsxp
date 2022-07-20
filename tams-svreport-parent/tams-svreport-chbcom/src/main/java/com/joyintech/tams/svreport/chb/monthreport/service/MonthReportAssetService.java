@@ -359,6 +359,7 @@ public class MonthReportAssetService {
             }
         }
 		// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 start
+		// add by dubaojun 2020-06-06 新增理财子公司月报资产头寸字段设置 start
 		if (CollectionUtils.isNotEmpty(positionList)) {
 			// 存储资产对应的期限和子公司资产分类，防止多次计算
 			Map<String, ChbMonthAssetPosition> assetMap = new HashMap<>();
@@ -429,70 +430,117 @@ public class MonthReportAssetService {
 					String key7 = null;//主键7
 					String key8 = null;//主键8
 					String key9 = null;//主键9
-					if(StringUtil.equals(key1, DictCodeListExt2.资产_负债二级类别_公司债券.getValue())){
-						key2 = position.getBankSecKzzq();
-					}
-					else if(StringUtil.equals(key1, DictCodeListExt2.资产_负债二级类别_股票_一级市场.getValue())){
-						key2 = chbAssetInfo.getBankSecPrefer();
-					}
-					ChbTypeMappingEx mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
-							key1, key2, key3, key4, key5, key6, key7, key8, key9);
-					if (mapping != null) {
-						position.setSunassettype(mapping.getObjfield1());
-						position.setSunassettype2(mapping.getObjfield2());
-					}
-					//特殊处理：银行资本补充工具、是否PPN等低流动性债券、是否商业银行优先股、创业投资基金、是否未上市企业-政府出资产业投资基金
-					//银行资本补充工具 排除05其他银行资本工具
-					if(StringUtil.isNotEmpty(chbAssetInfo.getBankCapital()) &&
-							!DictCodeListExt3.银行资本补充工具_其他银行资本补充工具.getValue().equals(chbAssetInfo.getBankCapital())) {
-						key5 = chbAssetInfo.getBankCapital();
-						key1 = null;
-						key2 = null;
-					}
-					//是否PPN等低流动性债券
-					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsPpn()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsPpn())) {
-						key6 = chbAssetInfo.getIsPpn();
-						key1 = null;
-						key2 = null;
-					}
-					//是否商业银行优先股
-					else if(StringUtil.isNotEmpty(chbAssetInfo.getBankSecPrefer()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getBankSecPrefer())) {
-						key7 = chbAssetInfo.getBankSecPrefer();
-						key1 = null;
-						key2 = null;
-					}
-					//创业投资基金
-					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsGovernFund()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsGovernFund())) {
-						key8 = chbAssetInfo.getIsGovernFund();
-						key1 = null;
-						key2 = null;
-					}
-					//是否未上市企业-政府出资产业投资基金
-					else if(StringUtil.isNotEmpty(chbAssetInfo.getIsunlisted()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsunlisted())) {
-						key9 = chbAssetInfo.getIsunlisted();
-						key1 = null;
-						key2 = null;
-					}
-					// 如果一条数据符合多个规则，则重复计算
-					if(key1 == null && (key5 != null || key6 != null || key7 != null || key8 != null || key9 != null)){
-						ChbTypeMappingEx mapping1 = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
-								key1, key2, key3, key4, key5, key6, key7, key8, key9);
-						if (mapping1 != null) {
-							position.setSunassettype(position.getSunassettype()+","+mapping1.getObjfield1());
-							position.setSunassettype2(position.getSunassettype2()+","+mapping1.getObjfield2());
+					//直投
+					if(supAssetInfo==null){
+						/**1.只根据中债二级资产类型来映射*/
+						//1305且银行资本补充工具不为空的情况不走该判断
+						//1302且银行资本补充工具不为空的情况不走该判断
+						//1301且银行资本补充工具不为空的情况不走该判断
+						//1112且银行资本补充工具不为空的情况不走该判断
+						//1101且银行资本补充工具不为空的情况不走该判断
+						//2613且银行资本补充工具不为空的情况不走该判断
+						if((!("1305".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1302".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1301".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("2613".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1112".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1113".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1114".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1115".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1116".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1117".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1101".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1110".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1109".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1102".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))&&
+								(!("1111".equals(key1)&&StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())))){
+							ChbTypeMappingEx mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+									key1, key2, key3, key4, key5, key6, key7, key8, key9);
+							if (mapping != null) {
+								position.setSunassettype(mapping.getObjfield1());
+								position.setSunassettype2(mapping.getObjfield2());
+							}
+						}
+						/**2.再根据中债二级资产类型+其余字段来映射 */
+						//特殊处理：银行资本补充工具、是否PPN等低流动性债券、是否商业银行优先股、创业投资基金、是否未上市企业-政府出资产业投资基金
+						//银行资本补充工具
+						if(StringUtil.isNotEmpty(chbAssetInfo.getBankCapital())) {
+							key5 = chbAssetInfo.getBankCapital();
+							key2 = null;
+						}
+						//是否PPN等低流动性债券
+						else if(StringUtil.isNotEmpty(chbAssetInfo.getIsPpn()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsPpn())) {
+							key6 = chbAssetInfo.getIsPpn();
+							key2 = null;
+						}
+						//是否未上市企业-政府出资产业投资基金
+						else if(StringUtil.isNotEmpty(chbAssetInfo.getIsunlisted()) && DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsunlisted())) {
+							key9 = chbAssetInfo.getIsunlisted();
+							key2 = null;
+						}
+						if((key5 != null || key6 != null || key7 != null || key8 != null || key9 != null)){
+							/**只有特殊字段来映射*/
+							ChbTypeMappingEx mapping1 = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+									null, key2, key3, key4, key5, key6, key7, key8, key9);
+							if (mapping1 != null) {
+								position.setSunassettype((position.getSunassettype()==null?"":(position.getSunassettype()+","))+mapping1.getObjfield1());
+								position.setSunassettype2((position.getSunassettype2()==null?"":(position.getSunassettype2()+","))+mapping1.getObjfield2());
+							}
+							/**资产负债二级类别+特殊字段来映射*/
+							ChbTypeMappingEx mapping2 = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+									key1, key2, key3, key4, key5, key6, key7, key8, key9);
+							if (mapping2 != null) {
+								position.setSunassettype((position.getSunassettype()==null?"":(position.getSunassettype()+","))+mapping2.getObjfield1());
+								position.setSunassettype2((position.getSunassettype2()==null?"":(position.getSunassettype2()+","))+mapping2.getObjfield2());
+							}
 						}
 					}
-
 					if(supAssetInfo != null){
 						key4 = supAssetInfo.getAssetType2();
-						key2 = null;
-					}
+						/**3.底层+首层二级资产类别映射*/
+						if(StringUtil.isNotEmpty(supAssetInfo.getIsunlisted())){
+							/*穿透的私募基金不统计是否未上市企业-政府出资产业投资基金=“是”*/
+							ChbTypeMappingEx	mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+									key1, null, null, key4, null, null, null, null, supAssetInfo.getIsunlisted());
+							if (mapping != null) {
+								position.setSunassettype((position.getSunassettype()==null?"":(position.getSunassettype()+","))+mapping.getObjfield1());
+								position.setSunassettype2((position.getSunassettype2()==null?"":(position.getSunassettype2()+","))+mapping.getObjfield2());
+							}
+						}else {
+							ChbTypeMappingEx	mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+									key1, null, null, key4, null, null, null, null, null);
+							if (mapping != null) {
+								position.setSunassettype((position.getSunassettype()==null?"":(position.getSunassettype()+","))+mapping.getObjfield1());
+								position.setSunassettype2((position.getSunassettype2()==null?"":(position.getSunassettype2()+","))+mapping.getObjfield2());
+							}
+						}
+						/**4.底层特殊处理 私募基金底层穿透需要取：穿透的资产是否政府出资产业投资基金*/
+						if("2607".equals(key4)||
+								"2610".equals(key4)||
+								"2611".equals(key4)||
+								"2612".equals(key4)||
+								"2617".equals(key4)||
+								"2613".equals(key4)){
+							/**穿透后的资产作为首层类型来映射*/
+							ChbTypeMappingEx	mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+									key4, key2, key3, null, key5, key6, key7, key8, key9);
+							if (mapping != null) {
+								position.setSunassettype((position.getSunassettype()==null?"":(position.getSunassettype()+","))+mapping.getObjfield1());
+								position.setSunassettype2((position.getSunassettype2()==null?"":(position.getSunassettype2()+","))+mapping.getObjfield2());
+							}
+							/**是否政府出资产业投资基金*/
+							if(StringUtil.isNotEmpty(supAssetInfo.getIsunlisted()) && DictCodeList.是否_中债_是.getValue().equals(supAssetInfo.getIsunlisted())){
+								key9 = supAssetInfo.getIsunlisted();
+								key4=null;
+							}
+							mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
+									null, key2, key3, key4, key5, key6, key7, key8, key9);
+							if (mapping != null) {
+								position.setSunassettype((position.getSunassettype()==null?"":(position.getSunassettype()+","))+mapping.getObjfield1());
+								position.setSunassettype2((position.getSunassettype2()==null?"":(position.getSunassettype2()+","))+mapping.getObjfield2());
+							}
+						}
 
-					mapping = chbTypeMappingService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_SUBASSETTYPE,
-							key1, key2, key3, key4, key5, key6, key7, key8, key9);
-					if (mapping != null) {
-						position.setSunassettype(position.getSunassettype()+","+mapping.getObjfield1());
-						position.setSunassettype2(position.getSunassettype2()+","+mapping.getObjfield2());
 					}
 					assetMap.put(assetKey, position);
 				}

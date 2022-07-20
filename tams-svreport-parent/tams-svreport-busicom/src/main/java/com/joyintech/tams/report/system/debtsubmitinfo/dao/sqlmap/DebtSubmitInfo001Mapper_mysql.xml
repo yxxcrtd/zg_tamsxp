@@ -71,7 +71,8 @@
 		order by cir.CREATE_TIME desc
 	</select>
 	<select id="viewDetailPage" resultType="com.joyintech.tams.report.system.debtsubmitinfo.dto.DebtSubmitInfo001Dto">
-	SELECT
+		<if test="repCode != null and (repCode.equals('14') or repCode.equals('16'))" >
+         SELECT
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 			css.SUMIT_SEQ as seqNo,
 			null AS submitNum,
@@ -92,7 +93,7 @@
 			css.INDENTIFY_MARK as uniqueIdenti
 		</if>
 		<if test="repCode != null and repCode.equals('16')" >
-			css.ORG_CODE||','||css.INDENTIFY_MARK||','||css.PRD_REGIST_CODE||','||to_char(css.HOLD_DATE,'yyyy-MM-dd')||','||css.CCY as uniqueIdenti
+			CONCAT_WS(',',ORG_CODE,css.INDENTIFY_MARK,css.PRD_REGIST_CODE,DATE_FORMAT(css.HOLD_DATE,'%Y-%m-%d'),css.CCY) as uniqueIdenti
 		</if>
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		FROM
@@ -115,13 +116,13 @@
 	 	</if>
 		<if test="uniqueIdenti != null and uniqueIdenti !='' ">
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-			and css.ORG_CODE||','||css.INDENTIFY_MARK||','||css.PRD_REGIST_CODE||','||to_char(css.HOLD_DATE,'yyyy-MM-dd')||','||css.CCY like '%' || #{uniqueIdenti} || '%'
+			and CONCAT_WS(',',css.ORG_CODE,css.INDENTIFY_MARK,css.PRD_REGIST_CODE,DATE_FORMAT(css.HOLD_DATE,'%Y-%m-%d'),css.CCY) like  concat('%', #{uniqueIdenti},'%')
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		</if>
 	 	<!--增加投资者明细信息-->
-	UNION ALL
-
-	SELECT
+			UNION ALL
+		</if>
+		SELECT
 		cess.SEQNO AS seqNo,
 		cess.SUBMIT_NUM AS submitNum,
 		cess.SUBMIT_TYPE AS repName,

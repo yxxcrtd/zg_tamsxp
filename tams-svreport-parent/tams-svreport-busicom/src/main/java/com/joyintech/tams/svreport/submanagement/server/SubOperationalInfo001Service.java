@@ -9,6 +9,7 @@
  */
 package com.joyintech.tams.svreport.submanagement.server;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -3127,9 +3128,10 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			}
 		}
 		else{
-			String tableName=chbInfoMgrResultConfigMapper.getTableNameByTableId((String) param.get("serachInterf"));
-
-			if(StringUtil.isEmpty(tableName)){
+			//add by zhoubin 20220711 start
+			List<String> tableIds = baseInformationMapper.queryTableIdByDataObject((String) param.get("serachInterf"));
+			//add by zhoubin 20220711 end
+			if(CollectionUtil.isEmpty(tableIds)){
 				flag = true;
 			}
 		}

@@ -76,7 +76,7 @@ $(function () {
             {title: "反馈状态", field: 'submitFeedbackStatusStr', width: 100, sortable: false},
             {title: '报表名称', field: 'reportname', width: 350, sortable: false},
             {title: '报告期', field: 'termname', width: 150, sortable: false},
-            {title: '机构名称', field: 'deptName', width: 150, sortable: false},
+            {title: '机构名称', field: 'issuePartyName', width: 150, sortable: false},
             {field: 'sendStatus', visible: false},
             {field: 'status', visible: false},
             {field: 'reportuuid', visible: false},

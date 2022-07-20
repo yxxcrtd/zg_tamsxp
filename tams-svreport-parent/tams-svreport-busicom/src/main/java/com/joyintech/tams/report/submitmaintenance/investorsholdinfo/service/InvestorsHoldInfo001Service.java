@@ -405,7 +405,9 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 			pageParam.replace("pageIds", pageIds, null);
 			/***TISHKBS-2369  CLONE - UAT-投资者持有信息，已删除的数据能做导出，如果已删除数据与现有效数据是同一识别号，同一识别号可导出多条数据**/
 			/***在不选择全部导出时候,限制只导出E状态的数据**/
-			pageParam.put("status","E");
+			if(!StringUtil.isNotEmpty(pageParam.get("status"))){
+				pageParam.put("status",DictCodeListExt1.维护数据状态_有效.getValue());
+			}
 		}
 		// 设置参数
 		dealSearchParam(pageParam);

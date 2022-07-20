@@ -215,7 +215,7 @@ public class ChbInvestTrade001Controller extends BaseController {
         List<ChbInvestTradeDto> dtoList = Lists.newArrayList();
         if(list.size()>0){
             for (int k=0;k<list.size();k++){
-                if(list.get(k).getStatus().equals("A")){
+                if(list.get(k).getStatusValid().equals("A")){
                     ChbInvestTradeDto chbInvestTradeDto = ErrdataConvertUtil.errdataConvert(ChbInvestTradeDto.class, list.get(k).getOrgData());
                     chbInvestTradeDto.setStatus("A");
                     chbInvestTradeDto.setErrMsg(list.get(k).getErrMsg());
