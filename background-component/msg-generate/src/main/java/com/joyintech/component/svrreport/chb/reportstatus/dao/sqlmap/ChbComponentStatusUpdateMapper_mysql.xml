@@ -129,7 +129,7 @@
             SEND_STATUS = #{sendStatus, jdbcType=VARCHAR},
             SUBMIT_FEEDBACK_STATUS = #{feedbackStatus, jdbcType=VARCHAR},
             SUBMIT_FEEDBACK_MSG = NULL,
-            SUBMIT_TIME = SYSDATE
+            SUBMIT_TIME = now()
         WHERE
             SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>
@@ -141,7 +141,7 @@
             SEND_STATUS = #{sendStatus, jdbcType=VARCHAR},
             SUBMIT_FEEDBACK_STATUS = #{feedbackStatus, jdbcType=VARCHAR},
             SUBMIT_FEEDBACK_MSG = NULL,
-            SUBMIT_TIME = SYSDATE
+            SUBMIT_TIME = now()
         WHERE
             SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>

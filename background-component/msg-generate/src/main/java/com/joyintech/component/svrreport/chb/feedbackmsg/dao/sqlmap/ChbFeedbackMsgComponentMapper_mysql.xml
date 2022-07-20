@@ -307,7 +307,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
@@ -333,7 +333,7 @@
             <if test="submitFeedbackMsg != null">
                 SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
             </if>
-            UPDATE_TIME = SYSDATE
+            UPDATE_TIME = now()
         </set>
         where
         <choose>
