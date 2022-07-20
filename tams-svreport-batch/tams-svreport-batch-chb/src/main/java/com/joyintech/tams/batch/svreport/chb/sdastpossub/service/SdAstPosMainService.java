@@ -19,7 +19,7 @@ import java.util.List;
  * @创建时间：
  * @修改记录：
  */
-@Service(value="sdPrdStatusMainService")
+@Service(value="sdAstPosMainService")
 @Scope("prototype")
 @Transactional(rollbackFor = Exception.class)
 public class SdAstPosMainService {
