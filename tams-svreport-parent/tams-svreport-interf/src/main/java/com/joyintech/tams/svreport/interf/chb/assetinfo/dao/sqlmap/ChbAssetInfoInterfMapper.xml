@@ -13806,7 +13806,7 @@
             ,TEMP.CREDIT_ASSET_CODE
             ,TEMP.IS_CONSTRACTE_BUSI
             ,TEMP.BILL_CODE
-            ,IS_DEPOSIT_FLAG
+            ,TEMP.IS_DEPOSIT_FLAG
         )
     </insert>
 
