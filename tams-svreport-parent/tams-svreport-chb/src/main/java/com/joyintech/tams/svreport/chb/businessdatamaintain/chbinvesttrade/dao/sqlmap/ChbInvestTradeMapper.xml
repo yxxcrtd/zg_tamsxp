@@ -798,4 +798,83 @@ where b.PROD_NAME=#{prodName}
             </if>
         </where>
     </select>
+
+    <select id="selectNotExistsCounterList" resultType="java.util.Map" parameterType="java.util.List" >
+        WITH a AS(
+        <foreach collection="list" item="counter" separator="union all">
+            SELECT #{counter} AS tradeCounter FROM DUAL
+        </foreach>
+        )
+        SELECT
+        a.tradeCounter AS counterId,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN prod.REG_CODE ELSE a.tradeCounter END AS counterName,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN 'C05' ELSE NULL END AS counterType1,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN 'C0500' ELSE NULL END AS counterType2,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN '02' ELSE NULL END AS relatedTradeStatus,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN '01' ELSE '02' END AS isReal
+        FROM a
+        LEFT join chb_mst_counter_party counter ON a.tradeCounter=counter.COUNTER_ID
+        LEFT join chb_mst_counter_party_errordata errCounter ON a.tradeCounter=errCounter.COUNTER_ID
+        LEFT join
+        (SELECT registCode.REG_CODE,registCode.PRODID as PROD_ID,ifnull(registCode.PRODNAME,baseInfo.PROD_NAME) as PROD_NAME
+        FROM chb_prdresist_code registCode LEFT join CHB_PRD_BASEINFO baseInfo
+        ON baseInfo.PROD_ID=registCode.PRODID) prod
+        on a.tradeCounter = prod.REG_CODE
+        or a.tradeCounter = prod.PROD_ID
+        or a.tradeCounter = prod.PROD_NAME
+        WHERE counter.COUNTER_NAME IS NULL AND errCounter.COUNTER_NAME IS NULL
+    </select>
+
+    <insert id="mergeCounterInfoList" parameterType="java.util.List" >
+        insert into chb_mst_counter_party_errordata (DATAUUID, COUNTER_ID,COUNTER_NAME,COUNTER_TYPE1,COUNTER_TYPE2, STATUS,
+        CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,RELATED_TRADE_STATUS)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (sys_guid(),
+            #{item.counterId},
+            #{item.counterName},
+            #{item.counterType1},
+            #{item.counterType2},
+            'A',
+            'system',
+            'Z70039',
+            sysdate,
+            'system',
+            sysdate,
+            #{item.relatedTradeStatus}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="mergeCounterInfoListReal" parameterType="java.util.List" >
+        insert into chb_mst_counter_party (COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID,
+        MANAGER_ID, HEAD_BANK, CONTACT, CONTACT_WAY, REMARK, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SVR_DATA_SOURCES,
+        COUNTER_TYPE1, COUNTER_TYPE2, IS_CENTRAL_COUNTER, UUID, STATUS, RELATED_TRADE_STATUS)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.counterId},
+            null,
+            #{item.counterName},
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            'system',
+            'Z70039',
+            sysdate,
+            'system',
+            sysdate,
+            '02',
+            #{item.counterType1},
+            #{item.counterType2},
+            null,
+            sys_guid(),
+            'E',
+            #{item.relatedTradeStatus}
+            )
+        </foreach>
+    </insert>
 </mapper>
