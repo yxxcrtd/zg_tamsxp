@@ -104,6 +104,7 @@ public enum BatchBeanName {
     投资者持有信息登记手工处理("3072", "investorsHoldInfoRegistAutoManualCBService","investorsHoldInfoRegistAutoManualCBMainService", "投资者持有信息登记手工处理"),
 	投资者身份信息登记手工处理("3073", "equityInfoRegistAutoManualCBService","equityInfoRegistAutoManualCBMainService", "投资者身份信息登记手工处理"),
 	投资者明细信息登记导出("3075","equityBusiInfoExportService","equityBusiInfoExportMainService","投资者明细信息登记导出"),
+    资产持仓登记批处理导出("7809","chbAstPosRegistExportService","chbAstPosRegistExportMainService","资产持仓登记批处理导出"),
     投资者明细信息补登记("7808","equityBusiInfoSupplyExportService","equityBusiInfoSupplyExportMainService","投资者明细信息补登记"),
     产品运作模式更新("3074","svrUpdateOperateModeTaskService","UpdateOperateModeMainService","产品运作模式更新"),
 	产品费用交易头寸接口数据接入("3076","svrChbPrdFeeBasisInfoTaskService","chbPrdFeeBasisImpMainService","产品费用交易头寸接口数据接入"),

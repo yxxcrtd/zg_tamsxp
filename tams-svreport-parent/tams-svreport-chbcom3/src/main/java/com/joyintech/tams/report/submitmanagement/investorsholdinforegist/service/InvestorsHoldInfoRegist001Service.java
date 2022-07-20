@@ -1272,35 +1272,6 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 		// 检查报送的数据中是否存在已报送数据
 		map.put("checkFlag", true);
 
-//		// 未报送的数据
-//        if (!StringUtil.isEmptyList(notSendList)) {
-//            // 分批处理
-//            int maxDataCountOneTime = 50;
-//            int dataCount = notSendList.size();
-//            Map<String, Object> tempMap = new HashMap<String, Object>();
-//            tempMap.putAll(map);
-//            if (dataCount <= maxDataCountOneTime) {
-//                tempMap.put("investList", notSendList);
-//                this.doMannulForNotSubmitData(tempMap);
-//            }
-//            else {
-//                List<InvestorsHoldInfoRegist001Dto> newDataList = new ArrayList<InvestorsHoldInfoRegist001Dto>();
-//                newDataList.addAll(notSendList);
-//
-//                // 分批处理
-//                int part = dataCount / maxDataCountOneTime; // 分批数
-//                for (int i = 0; i < part; i++ ) {
-//                    tempMap.put("investList", newDataList.subList(0, maxDataCountOneTime));
-//                    this.doMannulForNotSubmitData(tempMap);
-//                    newDataList.subList(0, maxDataCountOneTime).clear();
-//                }
-//                // 最后剩下的数据
-//                if (CollectionUtils.isNotEmpty(newDataList)) {
-//                    tempMap.put("investList", newDataList);
-//                    this.doMannulForNotSubmitData(tempMap);
-//                }
-//            }
-//        }
 		// 未报送的数据 插入报送状态表
 		if (!StringUtil.isEmptyList(listStatus)) {
 			// 分批处理
@@ -1350,40 +1321,16 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
                 }
             }
         }
-        /*手工处理增加留痕处理以及已报送数据登记表删除 add by yuluan 2019-03-29 begin*/
-		// add by zcw 优化start
-		/*
-		 * SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd"); //
-		 * List<InvestorsHoldInfoRegist001Dto> list =
-		 * investorsHoldInfoRegist001Mapper.selectAllData(map); List<String>
-		 * keys1 = new ArrayList<>(); for(InvestorsHoldInfoRegist001Dto
-		 * single:investorsHoldInfoRegistList){ String
-		 * key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE
-		 * +single.getIndentifyMark() +GlobalConstant.UNDER_LINE
-		 * +single.getPrdRegistCode() +GlobalConstant.UNDER_LINE
-		 * +single.getCcy()+GlobalConstant.UNDER_LINE
-		 * +sdf.format(single.getHoldDate());
-		 * 
-		 * keys1.add(key); } if
-		 * (CollectionUtils.isNotEmpty(investorsHoldInfoRegistList)) { //
-		 * 讲第一次报送的数据数据履历表
-		 * investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHis(
-		 * keys1); // 删除已报送数据
-		 * investorsHoldInfoRegist001Mapper.deleteSubmitRegist(keys1); }
-		 */
-		if (CollectionUtils.isNotEmpty(investorsHoldInfoRegistList)) {
+
+		if (CollectionUtils.isNotEmpty(notSendList)) {
 			// 讲第一次报送的数据数据履历表
-			investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHisBetter(investorsHoldInfoRegistList);
+			investorsHoldInfoRegist001Mapper.insertInvestorsHoldInfoRegistHisBetter(notSendList);
 			// 删除已报送数据
-			investorsHoldInfoRegist001Mapper.deleteSubmitRegistBetter(investorsHoldInfoRegistList);
+			investorsHoldInfoRegist001Mapper.deleteSubmitRegistBetter(notSendList);
 		}
 		// add by zcw 优化end
-		/* 手工处理增加留痕处理以及已报送数据登记表删除 add by yuluan 2019-03-29 end */
-		// investorsHoldInfoRegist001Mapper.updateInterfSubmit(DictCodeListExt2.报送状态_手工处理.getValue(),
-		// investorsHoldInfoRegistList);
 		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), investorsHoldInfoRegistList, false);
-//		// 插入报送状态表
-//		investorsHoldInfoRegist001Mapper.insertSubmitStatus(listStatus);
+
 	}
 	
 	/**

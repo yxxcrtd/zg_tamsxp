@@ -424,7 +424,7 @@
 		interfBack.interfBacknum as interfBacknum,
 		deleteTemp.deletenum as deletenum,
 		deleteTemp.countType as countType,
-		'28' as reporttype
+		'26' as reporttype
 		FROM
 		(select count(ciis1.SUBMIT_STATUS) as delaynum from CHB_EQUDET_SUB  ciis1 WHERE DATE_FORMAT(ciis1.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') &lt; DATE_FORMAT(#{searchDate,jdbcType=TIMESTAMP},'%Y-%m-%d') and  ciis1.SUBMIT_STATUS=#{NO_SUBMIT}
 		<if test="createDeptList != null and createDeptList.size>0">

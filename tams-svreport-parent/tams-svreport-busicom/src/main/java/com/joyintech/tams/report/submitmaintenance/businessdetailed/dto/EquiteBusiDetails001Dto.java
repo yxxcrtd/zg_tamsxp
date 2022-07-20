@@ -17,9 +17,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.framework.validation.annotation.Amount;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.annotation.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -182,6 +180,7 @@ public class EquiteBusiDetails001Dto extends TableRow {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
 	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.amount",groups={ValidateGroupEdit.class})
+	@Amount(fieldName = "SvrEquityBusinessDetails002.amount",groups={ValidateGroupEdit.class})
 	private BigDecimal amount;
 
     /**
@@ -189,12 +188,14 @@ public class EquiteBusiDetails001Dto extends TableRow {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
 	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.amountCny",groups={ValidateGroupEdit.class})
+	@Amount(fieldName = "SvrEquityBusinessDetails002.amountCny",groups={ValidateGroupEdit.class})
 	private BigDecimal amountCny;
 
     /**
      * 确认净值
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
+	@NetValue(fieldName = "SvrEquityBusinessDetails002.prodValue",groups = {ValidateGroupEdit.class})
     private BigDecimal prodValue;
 
     /**
@@ -202,6 +203,8 @@ public class EquiteBusiDetails001Dto extends TableRow {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
 	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.shares",groups={ValidateGroupEdit.class})
+	@Amount(fieldName = "SvrEquityBusinessDetails002.shares",maxDecBit = 5,
+			groups = {ValidateGroupEdit.class}) //校验位不小于0
 	private BigDecimal shares;
 
     /**
@@ -209,6 +212,7 @@ public class EquiteBusiDetails001Dto extends TableRow {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
 	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.feeAmt",groups={ValidateGroupEdit.class})
+	@Amount(fieldName = "SvrEquityBusinessDetails002.feeAmt",groups = {ValidateGroupEdit.class})
 	private BigDecimal feeAmt;
 
     /**

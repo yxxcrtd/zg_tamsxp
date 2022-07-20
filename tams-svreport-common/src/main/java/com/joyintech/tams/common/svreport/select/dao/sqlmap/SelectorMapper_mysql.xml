@@ -86,4 +86,10 @@
 
     </select>
 
+    <select id="getSysDataLink" resultType="String">
+        select trim(LINKED_ITEM_CODE) from sys_datadict_list_link
+        WHERE DICT_CODE = 'ADMINISTRATIVE_TYPE2' and LINKED_DICT_CODE = 'ADMINISTRATIVE_TYPE1'
+        AND ITEM_CODE = #{code}
+    </select>
+
 </mapper>

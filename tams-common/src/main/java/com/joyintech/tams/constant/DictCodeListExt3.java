@@ -660,6 +660,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     //行内资产四级分类 add by chendijun 20200113 end
     // 中债报送Excel下载数据字典 zhangyf 20200111 start
     报送文件类别_投资者明细信息登记(DictCode.报送文件类别,"01","投资者明细信息登记"),
+    报送文件类别_资产持仓登记批处理导出(DictCode.报送文件类别,"04","资产持仓登记导出"),
     报送文件类别_投资者明细信息补登记(DictCode.报送文件类别,"99","投资者明细信息补登记"),
     报送处理状态_正常结束(DictCode.报送处理状态,"01","正常结束"),
     报送处理状态_异常结束(DictCode.报送处理状态,"02","异常结束"),

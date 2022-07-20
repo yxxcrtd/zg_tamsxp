@@ -71,7 +71,8 @@
 		order by cir.CREATE_TIME desc
 	</select>
 	<select id="viewDetailPage" resultType="com.joyintech.tams.report.system.debtsubmitinfo.dto.DebtSubmitInfo001Dto">
-	SELECT
+		<if test="repCode != null and (repCode.equals('14') or repCode.equals('16'))" >
+        SELECT
 		/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		css.SUMIT_SEQ as seqNo,
 			null AS submitNum,
@@ -119,9 +120,11 @@
 			/***三期CHB_SUBMIT_STATUS去除改造  20220310**/
 		</if>
 	 	<!--增加投资者明细信息-->
-	UNION ALL
+			UNION ALL
+		</if>
 
-	SELECT
+
+		SELECT
 		cess.SEQNO AS seqNo,
 		cess.SUBMIT_NUM AS submitNum,
 		cess.SUBMIT_TYPE AS repName,

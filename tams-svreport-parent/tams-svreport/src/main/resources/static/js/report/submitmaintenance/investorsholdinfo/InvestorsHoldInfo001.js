@@ -4,8 +4,8 @@ $(function() {
      */
     var init=function(){
         if(isFromMain=='01'){
+            $('#holdDate').val(searchDataStart+' - '+searchDataEnd);
         	setTimeout(function() {
-          	   $('#holdDate').val(searchDataStart+' - '+searchDataEnd);
                  table.load();
              }, 500);
             //setTimeout(function() {$('#InvestorsHoldInfo001_btn_search').click();},500);

@@ -1257,7 +1257,12 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 				// 发生错误的业务表表名
 				String tableName = (String) map.get("INTERF_TYPE");
 				// 错误数据
-				String errorData = this.clobToString((Clob) map.get("ORG_DATA"));
+				String errorData ="";
+				if (BaseCommonCheckService.isMYSQLDataBase()) {
+					errorData = (String) map.get("ORG_DATA");
+				} else {
+					errorData = this.clobToString((Clob) map.get("ORG_DATA"));
+				}
 				/**关于ORG_DATA中值会出现逗号的情况，导致分割错误，ZZOTZL-125     add by  dongxiangyang  20201023*/
 			    Map<String,String> errorMap=JsonUtils.json2Object(errorData, HashMap.class);
 //				String[] errorDataList = errorData.split(GlobalConstant.COMMA);

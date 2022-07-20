@@ -153,4 +153,11 @@ public class AgentPrdInfoRegistDto extends ChbAgentPrdSub implements ProcessEnti
     public void setAgentInstitutionName(String agentInstitutionName) {
         this.agentInstitutionName = agentInstitutionName;
     }
+    //数据日期字符串化
+    public String getDataDateStr() {
+        if(StringUtil.isNotEmpty(this.getDataDate())){
+            return DateUtil.format(this.getDataDate());
+        }
+        return null;
+    }
 }

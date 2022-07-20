@@ -20,7 +20,7 @@
 			<Cell order="14" name="到期收益率%">endRateString</Cell><!-- 到期收益率% -->
 			<Cell order="15" name="交易对手方">tradeCounter</Cell><!-- 交易对手方 -->
 			<Cell order="16" name="关联交易情况">relatedTradeStatusStr</Cell><!-- 交易对手方 -->
-			<Cell order="17" name="交易对手方类型">rivalPartyType</Cell><!-- 交易对手方类型 -->
+			<Cell order="17" name="交易对手方类型">rivalPartyTypeStr</Cell><!-- 交易对手方类型 -->
 			<Cell order="18" name="成交编号/合同号">contractCode</Cell><!-- 成交编号/合同号 -->
 			<Cell order="19" name="交易审批人身份证号">investApproverId</Cell><!-- 交易审批人身份证号 -->
 			<Cell order="20" name="交易审批人姓名">investApproverName</Cell><!-- 交易审批人姓名 -->

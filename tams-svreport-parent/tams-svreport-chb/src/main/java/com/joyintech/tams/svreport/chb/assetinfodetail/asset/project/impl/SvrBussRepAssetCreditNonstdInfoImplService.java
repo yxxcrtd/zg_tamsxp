@@ -84,6 +84,11 @@ public class SvrBussRepAssetCreditNonstdInfoImplService extends BaseService<SvrB
                 //实体类转换方法
                 DtoChangeUtil.SetChbToRep(chbAssetInfo, dto, DtoChangeUtil.target, false);
             }
+
+            if(StringUtil.isNotEmpty(dto.getRepFinArea())){
+                dto.setRepFinAreaLevel2(selectorMapper.getSysDataLink(dto.getRepFinArea()));
+            }
+
             //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（非标准化债权类资产/新增可投资资产）);
             if (StringUtil.isNotEmpty(dto.getRepFinancie())) {
                 Map<String,Object> map = new HashMap<>();

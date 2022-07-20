@@ -16,6 +16,7 @@
         <result property="curAssetdetType" column="CUR_ASSETDET_TYPE" jdbcType="VARCHAR"/>
         <result property="dealdate" column="DEALDATE" jdbcType="TIMESTAMP"/>
         <result property="tradeCounter" column="TRADE_COUNTER" jdbcType="VARCHAR"/>
+        <result property="counterName" column="COUNTER_NAME" jdbcType="VARCHAR"/>
         <result property="tradeTime" column="TRADE_TIME" jdbcType="DATE"/>
         <result property="unitPriceFull" column="UNIT_PRICE_FULL" jdbcType="DECIMAL"/>
         <result property="unitPriceNet" column="UNIT_PRICE_NET" jdbcType="DECIMAL"/>
@@ -27,7 +28,6 @@
         <result property="chlAgrtName" column="CHL_AGRT_NAME" jdbcType="VARCHAR"/>
         <result property="isUnderTrade" column="IS_UNDER_TRADE" jdbcType="VARCHAR"/>
         <result property="statusValid" column="STATUS" jdbcType="VARCHAR"/>
-        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
         <result property="orgCode" column="ORG_CODE" jdbcType="VARCHAR"/>
         <result property="deptCode" column="DEPT_CODE" jdbcType="VARCHAR"/>
         <result property="createUser" column="CREATE_USER" jdbcType="VARCHAR"/>
@@ -48,7 +48,6 @@
         <result property="investApproverName" column="INVEST_APPROVER_NAME" jdbcType="VARCHAR"/>
         <result property="investTraderId" column="INVEST_TRADER_ID" jdbcType="VARCHAR"/>
         <result property="investTraderName" column="INVEST_TRADER_NAME" jdbcType="VARCHAR"/>
-        <result property="counterName" column="COUNTER_NAME" jdbcType="VARCHAR"/>
         <result property="relatedTradeStatus" column="RELATED_TRADE_STATUS" jdbcType="VARCHAR"/>
         <result property="tradeCounterStatus" column="TRADE_COUNTER_STATUS" jdbcType="VARCHAR"/>
         <result property="rivalPartyType" column="RIVAL_PARTY_TYPE" jdbcType="VARCHAR"/>
@@ -290,6 +289,7 @@ where b.PROD_NAME=#{prodName} limit 1
         a.CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         a.TRADE_TIME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
@@ -314,7 +314,6 @@ where b.PROD_NAME=#{prodName} limit 1
         b.REG_CODE regCode,
         b.PROD_NAME prodName,
         c.ASSET_NAME assetName,
-        d.COUNTER_NAME,
         d.RELATED_TRADE_STATUS,
         d.STATUS  TRADE_COUNTER_STATUS,
         d.COUNTER_TYPE2  RIVAL_PARTY_TYPE
@@ -323,8 +322,9 @@ where b.PROD_NAME=#{prodName} limit 1
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
         LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="tradeSeqno!=null and tradeSeqno!=''">
-                a.TRADE_SEQNO = #{tradeSeqno}
+                AND a.TRADE_SEQNO = #{tradeSeqno}
             </if>
         </where>
     </select>
@@ -346,6 +346,7 @@ where b.PROD_NAME=#{prodName} limit 1
         a.CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         a.TRADE_TIME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
@@ -369,7 +370,6 @@ where b.PROD_NAME=#{prodName} limit 1
         null as orgData,
         b.REG_CODE regCode,
         c.ASSET_NAME assetName,
-        d.COUNTER_NAME,
         d.RELATED_TRADE_STATUS ,
         d.STATUS AS TRADE_COUNTER_STATUS,
         d.COUNTER_TYPE2 AS RIVAL_PARTY_TYPE
@@ -378,8 +378,9 @@ where b.PROD_NAME=#{prodName} limit 1
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
         LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
-                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                <foreach collection="prodNames" item="item" open=" and b.PROD_NAME in(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
@@ -427,6 +428,7 @@ where b.PROD_NAME=#{prodName} limit 1
         null CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        d.COUNTER_NAME,
         a.TRADE_TIME,
         null UNIT_PRICE_FULL,
         null UNIT_PRICE_NET,
@@ -450,7 +452,6 @@ where b.PROD_NAME=#{prodName} limit 1
         a.ORG_DATA orgData,
         b.REG_CODE regCode,
         c.ASSET_NAME assetName,
-        d.COUNTER_NAME,
         d.RELATED_TRADE_STATUS,
         d.STATUS AS TRADE_COUNTER_STATUS,
         d.COUNTER_TYPE2 AS RIVAL_PARTY_TYPE
@@ -459,8 +460,9 @@ where b.PROD_NAME=#{prodName} limit 1
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
         LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
         <where>
+            d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
-                <foreach collection="prodNames" item="item" open="b.PROD_NAME in(" separator="," close=")">
+                <foreach collection="prodNames" item="item" open=" and b.PROD_NAME in(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
@@ -659,7 +661,7 @@ where b.PROD_NAME=#{prodName} limit 1
         and status = 'E'
     </select>
     <select id="selectByBusinessKey" resultType="java.lang.Integer">
-        select count(1) from CHB_INVEST_TRADE where PROD_ID = #{prodId} and TRADE_CODE =#{tradeCode} and ASSET_CODE =#{assetCode}
+        select count(1) from CHB_INVEST_TRADE where TRADE_CODE =#{tradeCode}
     </select>
     <select id="selectByKeys" resultMap="BaseResultMap">
         select * from (

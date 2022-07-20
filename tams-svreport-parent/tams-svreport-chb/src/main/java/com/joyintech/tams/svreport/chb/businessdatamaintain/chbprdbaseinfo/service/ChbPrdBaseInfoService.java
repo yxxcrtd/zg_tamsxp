@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chb.businessdatamaintain.chbprdbaseinfo.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Lists;
@@ -152,16 +153,30 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
         if(StringUtil.equals(DictCodeListExt3.中债数据状态_待处理.getValue(),status)){
             ChbPrdBaseinfoErrodataWithBLOBsDto chbPrdBaseinfoErrodataWithBLOBsDto = chbPrdBaseinfoErrodataDao.selectByPrimaryKey(produuid);
             if(chbPrdBaseinfoErrodataWithBLOBsDto !=null){
+                //查询产品申报信息
+                ChbPrdDeclareInfoDto prdDeclareInfoDto = chbPrdDeclareInfoMapper.selectByProdInsId(chbPrdBaseinfoErrodataWithBLOBsDto.getProdId());
                 dto = ErrdataConvertUtil.errdataConvert(dto.getClass(),chbPrdBaseinfoErrodataWithBLOBsDto.getOrgData());
                 dto.setStatusValid(DictCodeListExt3.中债数据状态_待处理.getValue());
                 dto.setProduuid(produuid);
+                if (prdDeclareInfoDto != null) {
+                    //产品投资性质
+                    dto.setIvstorientation(prdDeclareInfoDto.getIvstorientation());
+                    //产品运作模式
+                    dto.setOperateMode(prdDeclareInfoDto.getOperateMode());
+                    //是否现金管理类
+                    dto.setCashManaCate(prdDeclareInfoDto.getCashManaCate());
+                }
             }
         }else{
              dto = chbPrdBaseInfoDao.selectByKey(produuid);
         }
         if(dto!=null&&dto.getProdId()!=null){
                 Map<String,String> map=chbPrdBaseInfoDao.selectRegCodeByProdId(dto.getProdId());
-                dto.setRegCode(map.get("REG_CODE"));//从产品登记编码带值
+                //从产品登记编码带值
+                if (CollectionUtil.isNotEmpty(map)) {
+                    dto.setRegCode(map.get("REG_CODE"));
+                }
+
         }
         return dto;
     }
@@ -177,6 +192,8 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
     }
 
     public List<ChbPrdBaseInfoDto> selectAll(Map<String, Object> params) {
+        params.put("customerTypeList", StringUtil.isNotEmpty(params.get("customerType"))?(params.get("customerType").toString().split(",")):null);
+        params.put("issuingStatusList", StringUtil.isNotEmpty(params.get("issuingStatus"))?(params.get("issuingStatus").toString().split(",")):null);
         return chbPrdBaseInfoDao.selectAll(params);
     }
 

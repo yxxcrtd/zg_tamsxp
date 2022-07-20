@@ -323,7 +323,9 @@ public class ChbTransMonthReportAssetBatchService {
         if (Objects.equals(pos.getBankCapital(), DictCodeListExt3.银行资本补充工具_永续债_债性.getValue()) ||
                 Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_永续债_股性.getValue()) ||
                 Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_二级资本债.getValue()) ||
-                Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_优先股.getValue()) ) {
+                Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_优先股.getValue())||
+                Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_可转债.getValue())||
+                Objects.equals(pos.getBankCapital(),DictCodeListExt3.银行资本补充工具_其他银行资本补充工具.getValue()) ) {
                 // 5.1 合 计
                 calcMonthReportSubDetail(AMT5_1, pos, true, false, null);
                 // 计算剩余加权期限使用剩余期限不等于零的合计 modify by wuhaisen 20220120 start

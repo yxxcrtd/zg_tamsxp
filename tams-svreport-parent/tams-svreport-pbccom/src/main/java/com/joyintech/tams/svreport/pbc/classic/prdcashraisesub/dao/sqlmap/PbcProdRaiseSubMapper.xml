@@ -1890,67 +1890,43 @@
   </select>
   <!-- 手工处理 -->
   <update id="doManul" parameterType="map">
-    UPDATE PBC_PROD_RAISING_SUB c
+    update PBC_PROD_RAISING_SUB
     set
-    c.SEND_STATUS = '03',
-    c.SUBMIT_FEEDBACK_STATUS = '03',
+    SEND_STATUS = '03',
+    SUBMIT_FEEDBACK_STATUS = '03',
     <if test="submitadd != null and submitadd != ''">
-      c.SUBMIT_TIME = sysdate + #{submitadd},
+      SUBMIT_TIME = sysdate + #{submitadd},
     </if>
     <if test="submitadd == null">
-      c.SUBMIT_TIME = sysdate,
+      SUBMIT_TIME = sysdate,
     </if>
-    c.UPDATE_TIME = sysdate
+    UPDATE_TIME = sysdate
     <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 begin -->
-    , c.STATUS_DATE = sysdate
+    , STATUS_DATE = sysdate
     <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
-    where EXISTS(
-    select 1 from PBC_PRD_BASEINFO_SUB a left join (
-    SELECT
-    inside_prod_id,
-    pbc_code
-    FROM
-    pbc_prod_assetpool_code
-    WHERE
-    status='E'
-    AND code_type='01'
-    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=c.PBC_PROD_ID
-    <if test="list != null and list.size() >0">
-      <foreach collection="list" open=" and (NVL(t.pbc_code,c.PBC_PROD_ID),to_char(c.RAISING_DATE,'yyyy-MM-dd')) in (" close=")" separator="union all" item="item">
-        select #{item.pbcProdId,jdbcType=CHAR},
-        #{item.raisingDateStr,jdbcType=CHAR}
-        from dual
-      </foreach>
-    </if>
-    )
+    <where>
+      <if test="list != null and list.size() >0">
+        <foreach collection="list" open="(REGIST_SEQNO) in (" close=")" separator="union all" item="item">
+          select #{item.registSeqno,jdbcType=VARCHAR} from dual
+        </foreach>
+      </if>
+    </where>
   </update>
   <!-- 取消手工处理 -->
   <update id="cancelManul" parameterType="java.util.List">
-    UPDATE PBC_PROD_RAISING_SUB c
+    update PBC_PROD_RAISING_SUB
     set
-    c.SEND_STATUS = '01',
-    c.UPDATE_TIME = sysdate,
-    c.SUBMIT_TIME = null,
-    c.SUBMIT_FEEDBACK_STATUS = null
-    where EXISTS(
-    select 1 from PBC_PRD_BASEINFO_SUB a left join (
-    SELECT
-    inside_prod_id,
-    pbc_code
-    FROM
-    pbc_prod_assetpool_code
-    WHERE
-    status='E'
-    AND code_type='01'
-    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=c.PBC_PROD_ID
-    <if test="list != null and list.size() >0">
-      <foreach collection="list" open=" and (NVL(t.pbc_code,c.PBC_PROD_ID),to_char(c.RAISING_DATE,'yyyy-MM-dd')) in (" close=")" separator="union all" item="item">
-        select #{item.pbcProdId,jdbcType=CHAR},
-        #{item.raisingDateStr,jdbcType=CHAR}
-        from dual
-      </foreach>
-    </if>
-    )
+    SEND_STATUS = '01',
+    UPDATE_TIME = sysdate,
+    SUBMIT_TIME = null,
+    SUBMIT_FEEDBACK_STATUS = null
+    <where>
+      <if test="list != null and list.size() >0">
+        <foreach collection="list" open="(REGIST_SEQNO) in (" close=")" separator="union all" item="item">
+          select #{item.registSeqno,jdbcType=VARCHAR} from dual
+        </foreach>
+      </if>
+    </where>
   </update>
   <insert id="insertHisBatchBySendStatus" parameterType="java.util.List">
     insert into PBC_PROD_RAISING_SUB_HIS (<include refid="Base_Column_List2"></include>)
@@ -2015,26 +1991,15 @@
     )
   </delete>
   <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
-    delete from PBC_PROD_RAISING_SUB c where EXISTS(
-    select 1 from PBC_PRD_BASEINFO_SUB a left join (
-    SELECT
-    inside_prod_id,
-    pbc_code
-    FROM
-    pbc_prod_assetpool_code
-    WHERE
-    status='E'
-    AND code_type='01'
-    ) t ON t.inside_prod_id=a.PROD_ID where a.PBC_PROD_ID=c.PBC_PROD_ID
+    delete from PBC_PROD_RAISING_SUB
+    <where>
       <if test="list != null and list.size() >0">
-        <foreach collection="list" open=" and (NVL(t.pbc_code,c.PBC_PROD_ID),to_char(c.RAISING_DATE,'yyyy-MM-dd')) in (" close=")" separator="union all" item="item">
-          select #{item.pbcProdId,jdbcType=CHAR},
-          #{item.raisingDateStr,jdbcType=CHAR}
-          from dual
+        <foreach collection="list" open="(REGIST_SEQNO) in (" close=")" separator="union all" item="item">
+          select #{item.registSeqno,jdbcType=CHAR} from dual
         </foreach>
       </if>
       and SEND_STATUS in ('02','03')
-        )
+    </where>
   </delete>
 
   <select id="selectByDimension" parameterType="map" resultMap="BaseResultMap">

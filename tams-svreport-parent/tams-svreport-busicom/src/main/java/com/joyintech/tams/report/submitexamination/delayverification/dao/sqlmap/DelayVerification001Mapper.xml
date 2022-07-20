@@ -863,12 +863,7 @@
                 </foreach>
             </if>
         </where>
-
         union all
-
-
-
-
         <!-- 11.投资者持有信息-->
         select
         count(temp.SEND_STATUS) as total,
@@ -1209,6 +1204,53 @@
         from CHB_AGENT_PRD_SUB_HIS ces
         where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
         )temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+        </where>
+
+        union all
+        <!-- 21.产品状态登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        nvl(sum(temp.lateNums),0) as unSubmitNum,
+        '21' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_PRD_STATUS_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        ) temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+        </where>
+        union all
+        <!-- 22.资产持仓登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        nvl(sum(temp.lateNums),0) as unSubmitNum,
+        '22' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_AST_POS_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        ) temp
         <where>
             <if test="isNotCount !=null and isNotCount=='01'">
                 <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
@@ -3067,11 +3109,4 @@
         order by temp.submitDeadline DESC
 
     </select>
-    <!-- <select id ="readConfig" resultType="java.lang.String">
-        SELECT
-            sp.SUBSYSTEM_CODE || ',' || sp.PARAM_VALUE
-            from SYS_PARA sp
-        where
-            sp.PARA_CODE='COLOR_CONFIG'
-    </select> -->
 </mapper>
