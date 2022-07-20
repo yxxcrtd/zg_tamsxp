@@ -387,6 +387,7 @@
         sub.STATUS_DATE,
         sub.STATUS,
         sub.CHB_SUBMIT_DEADLINE,
+        sub.SUBMIT_SEQ,
         sub.SUBMIT_DEADLINE,
         sub.SUBMIT_TIME,
         sub.SUBMIT_FEEDBACK_STATUS,

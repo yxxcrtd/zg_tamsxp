@@ -297,6 +297,60 @@
     </update>
 
 
+
+    <update id="updateChbPrdStatusSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_PRD_STATUS_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+    <update id="updateChbAstPosSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
+        update CHB_AST_POS_SUB
+        <set >
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="submitFeedbackMsg != null">
+                SUBMIT_FEEDBACK_MSG = #{submitFeedbackMsg,jdbcType=VARCHAR},
+            </if>
+            UPDATE_TIME = SYSDATE
+        </set>
+        where
+        <choose>
+            <when test="submitNum !=null and submitNum != ''">
+                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                SUMIT_SEQ IN (
+                SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
+                REPORT_NO = #{reportNo,jdbcType=VARCHAR}
+                )
+            </otherwise>
+        </choose>
+
+    </update>
+
+
     <update id="updateChbPrdEndSub" parameterType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto" >
         update CHB_PRD_END_SUB
         <set >
