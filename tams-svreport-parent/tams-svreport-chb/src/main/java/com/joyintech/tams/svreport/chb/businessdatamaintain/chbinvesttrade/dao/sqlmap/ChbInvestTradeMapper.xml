@@ -17,7 +17,7 @@
         <result property="dealdate" column="DEALDATE" jdbcType="TIMESTAMP"/>
         <result property="tradeCounter" column="TRADE_COUNTER" jdbcType="VARCHAR"/>
         <result property="counterName" column="COUNTER_NAME" jdbcType="VARCHAR"/>
-        <result property="tradeTime" column="TRADE_TIME" jdbcType="DATE"/>
+        <result property="tradeTime" column="TRADE_TIME" jdbcType="TIMESTAMP"/>
         <result property="unitPriceFull" column="UNIT_PRICE_FULL" jdbcType="DECIMAL"/>
         <result property="unitPriceNet" column="UNIT_PRICE_NET" jdbcType="DECIMAL"/>
         <result property="endRate" column="END_RATE" jdbcType="DECIMAL"/>
@@ -67,7 +67,7 @@
                 #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
                 #{dealdate,jdbcType=DATE} DEALDATE,
                 #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
-                to_date(#{item.tradeDate},'yyyyMMddHH24miss') TRADE_TIME,
+                to_date(#{tradeDate},'yyyyMMddHH24miss') TRADE_TIME,
                 #{tradeType,jdbcType=VARCHAR} TRADE_TYPE,
                 #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
                 #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,

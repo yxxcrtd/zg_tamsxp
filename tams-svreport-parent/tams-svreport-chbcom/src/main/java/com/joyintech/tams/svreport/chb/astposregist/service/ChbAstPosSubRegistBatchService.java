@@ -27,6 +27,8 @@ import com.joyintech.tams.svreport.chb.astposregist.dao.ChbAstPosRegist001Mapper
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosBatchResultDto;
 import com.joyintech.tams.svreport.chb.datacheck.beforeinsert.service.ChbCommonCheckService;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -603,6 +605,8 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 			sub.setRemark("理财产品总资产金额=资产持仓登记表中最底层资产金额合计 理财产品杠杆率（%）=理财产品总资产金额/(理财产品总资产金额-理财产品总负债合计）；");
 			//数据状态
 			sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+			// 报送流水号
+			sub.setSubmitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 			//数据日期
 			sub.setStatusDate(DateUtil.now());
 			//报送状态=01 未报送
@@ -728,6 +732,8 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 		sub.setValueDate(objecDate);
 		//数据状态
 		sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+		// 报送流水号
+		sub.setSubmitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
 		//数据日期
 		sub.setStatusDate(DateUtil.now());
 		//报送状态=01 未报送
