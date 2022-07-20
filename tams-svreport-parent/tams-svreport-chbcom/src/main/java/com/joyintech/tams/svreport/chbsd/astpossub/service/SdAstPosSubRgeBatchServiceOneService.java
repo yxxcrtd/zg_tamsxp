@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chbsd.astpossub.service;
 
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
+import com.joyintech.component.svrreport.chb.dto.ChbAstPosSub;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;
@@ -42,12 +43,12 @@ public class SdAstPosSubRgeBatchServiceOneService extends AutoSendCBBaseService 
     * @throws Exception 
     */
     public boolean handleDataPerTime(int handleIndex, 
-    		                         int dataCountPerTime,List<ChbAstPosRegist001Dto> msgRstList,
-    		                         List<ChbAstPosRegist001Dto> sendResult, SendDataCheckType sendDataCheckType)  throws Exception{
+    		                         int dataCountPerTime,List<ChbAstPosSub> msgRstList,
+    		                         List<ChbAstPosSub> sendResult, SendDataCheckType sendDataCheckType)  throws Exception{
         logger.info("【资产持仓登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         try {
-//            	 msgSend.sendChbPrdEndSubMsgs(msgRstList, sendDataCheckType);
+            	 msgSend.sendChbAstPosSubMsgs(msgRstList, sendDataCheckType);
             	 sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【资产持仓登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());

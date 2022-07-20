@@ -103,6 +103,23 @@ public class MsgSendServiceImpl implements MsgSendService {
 	 */
 	@Autowired
 	private ChbEmployeeInfoSubSetService chbEmployeeInfoSubSetService;
+
+	/***0722升级*/
+
+	/**
+	 * 产品状态登记 - 报文设置
+	 */
+	@Autowired
+	private ChbProdStatusSubSetService chbProdStatusSubSetService;
+
+
+	/**
+	 * 资产持仓登记 - 报文设置
+	 */
+	@Autowired
+	private ChbAstPosSubSetService chbAstPosSubSetService;
+
+	/***0722升级*/
 	
 	@Autowired
 	private CnBondSendService cnBondSendService;
@@ -396,5 +413,49 @@ public class MsgSendServiceImpl implements MsgSendService {
 //		ChbMsgReturnInfoDto chbMsgReturnInfoDto = getChbMsgSendInfo(chbMsgBuildInfoDto);
 //		return chbMsgReturnInfoDto;
 	}
+
+
+
+	/**
+	 * <设置产品状态登记>
+	 * @param datas 产品状态数据体
+	 * @return 报送信息「需要拼装的数据」
+	 * @see MsgSendService
+	 * @since 1.0
+	 * @add by zhaoyongsheng 20201017
+	 */
+	@Override
+	//public ChbMsgReturnInfoDto sendChbEmployeeInfoSubMsgs(List<ChbEmployeeInfoDto> datas) throws Exception{
+	public void sendProdStatusSubMsgs(List<ChbPrdStatusSub> datas, SendDataCheckType sendDataCheckType) throws Exception{
+		// 1. 设置报文
+		ChbMsgBuildInfoDto chbMsgBuildInfoDto = chbProdStatusSubSetService.setMsg(datas);
+
+		// 2. 发送数据
+		getChbMsgSendInfo(chbMsgBuildInfoDto, sendDataCheckType);
+//		ChbMsgReturnInfoDto chbMsgReturnInfoDto = getChbMsgSendInfo(chbMsgBuildInfoDto);
+//		return chbMsgReturnInfoDto;
+	}
+
+
+	/**
+	 * <设置资产持仓登记>
+	 * @param datas 资产持仓数据体
+	 * @return 报送信息「需要拼装的数据」
+	 * @see MsgSendService
+	 * @since 1.0
+	 * @add by zhaoyongsheng 20201017
+	 */
+	@Override
+	//public ChbMsgReturnInfoDto sendChbEmployeeInfoSubMsgs(List<ChbEmployeeInfoDto> datas) throws Exception{
+	public void sendChbAstPosSubMsgs(List<ChbAstPosSub> datas, SendDataCheckType sendDataCheckType) throws Exception{
+		// 1. 设置报文
+		ChbMsgBuildInfoDto chbMsgBuildInfoDto = chbAstPosSubSetService.setMsg(datas);
+
+		// 2. 发送数据
+		getChbMsgSendInfo(chbMsgBuildInfoDto, sendDataCheckType);
+//		ChbMsgReturnInfoDto chbMsgReturnInfoDto = getChbMsgSendInfo(chbMsgBuildInfoDto);
+//		return chbMsgReturnInfoDto;
+	}
+
 
 }

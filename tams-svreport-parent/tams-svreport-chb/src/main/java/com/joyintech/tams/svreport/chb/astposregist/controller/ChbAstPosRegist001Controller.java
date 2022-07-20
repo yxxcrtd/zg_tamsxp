@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.astposregist.controller;
 
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
+import com.joyintech.component.svrreport.chb.dto.ChbAstPosSub;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -231,15 +232,15 @@ public class ChbAstPosRegist001Controller extends BaseController {
             }
             //查询数据
         }
-
+        /***0722升级**/
         //报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
-        List<ChbAstPosRegist001Dto> dataList = new ArrayList<>();
+        List<ChbAstPosSub> dataList = new ArrayList<>();
         for(ChbAstPosRegist001Dto sdDto:list){
-            ChbAstPosRegist001Dto target = new ChbAstPosRegist001Dto();
+            ChbAstPosSub target = new ChbAstPosSub();
             BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
             dataList.add(target);
         }
-
+        /***0722升级**/
         SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
         if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
             sendDataCheckType = SendDataCheckType.重新报送;

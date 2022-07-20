@@ -71,6 +71,9 @@
           #{items,jdbcType=VARCHAR}
         </foreach>
       </if>
+      <if test="batchDate != null and batchDate != ''">
+        and TO_CHAR(sub.PRD_STATUS_DATE,'yyyyMMdd')=#{prdStatusDateStr,jdbcType=VARCHAR}
+      </if>
       and sub.STATUS !='04'
       order by sub.SUBMIT_DEADLINE
     </where>

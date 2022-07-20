@@ -172,6 +172,28 @@ public class ChbComponentStatusUpdateService {
                     }
                 }
             }
+            /***0722升级**/
+            else if (StrUtil.equals(DictCodeList.报表名称_产品状态登记.getValue(), dealType)) {
+                for (String registSeq : registSeqs) {
+                    msgLogMapper.updateChbPrdStatusSubSendStatus(registSeq, sendStatus, feedbackStatus);
+                    index ++;
+                    if (index == maxSqlNum) {
+                        sqlSession.commit();
+                        index = 0;
+                    }
+                }
+            }
+            else if (StrUtil.equals(DictCodeList.报表名称_资产持仓登记.getValue(), dealType)) {
+                for (String registSeq : registSeqs) {
+                    msgLogMapper.updateChbAstPosSubSendStatus(registSeq, sendStatus, feedbackStatus);
+                    index ++;
+                    if (index == maxSqlNum) {
+                        sqlSession.commit();
+                        index = 0;
+                    }
+                }
+            }
+            /***0722升级**/
         } catch (Exception e) {
             logger.error("批量执行失败", e);
             sqlSession.rollback();
@@ -294,6 +316,28 @@ public class ChbComponentStatusUpdateService {
                     }
                 }
             }
+            /***0722升级**/
+            else if (StrUtil.equals(DictCodeList.报表名称_产品状态登记.getValue(), dealType)) {
+                for (String registSeq : registSeqs) {
+                    msgLogMapper.updateChbPrdStatusSubSubmitStatus(registSeq, status);
+                    index ++;
+                    if (index == maxSqlNum) {
+                        sqlSession.commit();
+                        index = 0;
+                    }
+                }
+            }
+            else if (StrUtil.equals(DictCodeList.报表名称_资产持仓登记.getValue(), dealType)) {
+                for (String registSeq : registSeqs) {
+                    msgLogMapper.updateChbAstPosSubmitStatus(registSeq, status);
+                    index ++;
+                    if (index == maxSqlNum) {
+                        sqlSession.commit();
+                        index = 0;
+                    }
+                }
+            }
+            /***0722升级**/
         } catch (Exception e) {
             logger.error("批量执行失败", e);
             sqlSession.rollback();

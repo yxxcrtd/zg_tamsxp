@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chbsd.astpossub.service;
 
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
+import com.joyintech.component.svrreport.chb.dto.ChbAstPosSub;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
@@ -81,9 +82,10 @@ public class SdAstPosSubRegBatchService {
     		return;
     	}
 		//报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
-		List<ChbAstPosRegist001Dto> dataList = new ArrayList<ChbAstPosRegist001Dto>();
+		chbAstPosRegist001Service.dealResultlist(listSub);
+		List<ChbAstPosSub> dataList = new ArrayList<ChbAstPosSub>();
 		for(ChbAstPosRegist001Dto sdDto : listSub){
-			ChbAstPosRegist001Dto target = new ChbAstPosRegist001Dto();
+			ChbAstPosSub target = new ChbAstPosSub();
 			BeanUtils.copyProperties(target, sdDto); 
 			dataList.add(target);
 		}
@@ -95,7 +97,7 @@ public class SdAstPosSubRegBatchService {
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbAstPosRegist001Dto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
+	public void sendBatchCommon(List<ChbAstPosSub> dataList, SendDataCheckType sendDataCheckType) throws Exception{
 		//3、调用【产品终止信息登记】报送组件
 		logger.debug("资产持仓信息登记报文报送开始------" + df.format(new Date()));
 		//获取单批次发送条目数
@@ -105,8 +107,8 @@ public class SdAstPosSubRegBatchService {
 		int handleIndex = 1;
 		int dataCount = dataList.size();
 		// 报送数据条数
-		List<ChbAstPosRegist001Dto> sendResult = new ArrayList<ChbAstPosRegist001Dto>();
-		List<ChbAstPosRegist001Dto> newDataList = new ArrayList<ChbAstPosRegist001Dto>();
+		List<ChbAstPosSub> sendResult = new ArrayList<ChbAstPosSub>();
+		List<ChbAstPosSub> newDataList = new ArrayList<ChbAstPosSub>();
 		newDataList.addAll(dataList);
 		//分批处理数据报送
 		if (dataCount <= dataCountPerTime) {
