@@ -65,4 +65,10 @@ public interface ChbInvestTradeDao {
      * @return
      */
     List<SelectOptionDto> queryCounterType2List(Map<String, Object> param);
+
+    List<Map<String,String>> selectNotExistsCounterList(@Param("list")List<String> counterList);
+
+    void mergeCounterInfoList(@Param("list")List<Map<String,String>> counterList);
+
+    void mergeCounterInfoListReal(@Param("list")List<Map<String,String>> counterList);
 }
