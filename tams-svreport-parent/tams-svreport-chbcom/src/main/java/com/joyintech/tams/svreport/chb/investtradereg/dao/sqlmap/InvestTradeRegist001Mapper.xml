@@ -1031,22 +1031,12 @@
         on prodinfo.prod_id = investtrade.PROD_ID
 		LEFT JOIN CHB_ASSET_INFO ASSETINFO
 		on ASSETINFO.asset_code = investtrade.asset_code
-		
 		left join CHB_PRDRESIST_CODE code
 		on code.prodid = investtrade.PROD_ID
-		
 		where 1 =1
         <!-- 不过滤状态 -->
         <!-- and investtrade.status = 'E' -->/*有效状态*/
 		<![CDATA[and to_char(GREATEST(nvl(investtrade.update_time,investtrade.create_time),investtrade.DEALDATE), 'yyyy-MM-dd') = #{registDate,jdbcType=VARCHAR}]]>
-		<!-- /*资产交易未登记*/
-		and not exists(
-			select 1
-			from chb_invest_trade_sub investtradesub
-			where 1=1 
-			and investtradesub.ref_tradeseqno = investtrade.TRADE_SEQNO
-			and investtrade.status != '03'/*不为删除数据*/
-		) -->
         <if test="tradenoList !=null and tradenoList.size()>0">
             <!-- 产品代码不为空时 -->
             <foreach collection="tradenoList" item="tradeCode" open="and investtrade.TRADE_CODE in (" close=")" separator=",">
@@ -1077,6 +1067,7 @@
 		'12' cur_asset_type,/*其他支出*/
 		prdfeedeal.fee_name cur_assetdet_type,
 		prdfeedeal.PAY_DATE dealdate,
+        prdfeedeal.TRADE_TIME,
 		prdfeedeal.TRADE_COUNTER,
 		null unit_price_full,
 		null UNIT_PRICE_NET,
@@ -1135,9 +1126,6 @@
       <if test="feeOrg != null and  feeOrg=='02'.toString()">
         and prdfeedeal.FEE_TYPE in ('02')/*他行费用*/
       </if>
-		<!-- and prdfeedeal.FEE_SECTYPE in ('05','06','07','09') -->
-        <!-- 不过滤状态 -->
-		<!-- and prdfeedeal.status = 'E' -->/*有效状态*/
 		<![CDATA[and to_char(GREATEST(nvl(prdfeedeal.update_time,prdfeedeal.create_time),prdfeedeal.PAY_DATE), 'yyyy-MM-dd') = #{registDate,jdbcType=VARCHAR}]]>
         <if test="tradenoList !=null and tradenoList.size()>0">
             <!-- 产品代码不为空时 -->
@@ -1151,14 +1139,6 @@
                 #{prodId,jdbcType=VARCHAR}
             </foreach>
         </if>
-		<!-- /*费用交易未登记*/
-		and not exists(
-			select 1
-			from chb_invest_trade_sub investtradesub
-			where 1=1 
-			and investtradesub.ref_tradeseqno = prdfeedeal.SEQNO
-			and prdfeedeal.status != '03'/*不为删除数据*/
-		) -->
 	</select>
 	
 	<insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">

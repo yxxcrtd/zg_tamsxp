@@ -1031,14 +1031,6 @@
     <!-- 不过滤状态 -->
     <!-- and investtrade.status = 'E' -->/*有效状态*/
     <![CDATA[and DATE_FORMAT(GREATEST(ifnull(investtrade.update_time,investtrade.create_time),investtrade.DEALDATE), '%Y-%m-%d') = #{registDate,jdbcType=VARCHAR}]]>
-    <!-- /*资产交易未登记*/
-    and not exists(
-        select 1
-        from chb_invest_trade_sub investtradesub
-        where 1=1
-        and investtradesub.ref_tradeseqno = investtrade.TRADE_SEQNO
-        and investtrade.status != '03'/*不为删除数据*/
-    ) -->
     <if test="tradenoList !=null and tradenoList.size()>0">
       <!-- 产品代码不为空时 -->
       <foreach collection="tradenoList" item="tradeCode" open="and investtrade.TRADE_CODE in (" close=")" separator=",">
@@ -1069,6 +1061,7 @@
     '12' cur_asset_type,/*其他支出*/
     prdfeedeal.fee_name cur_assetdet_type,
     prdfeedeal.PAY_DATE dealdate,
+    prdfeedeal.TRADE_TIME,
     prdfeedeal.TRADE_COUNTER,
     null unit_price_full,
     null UNIT_PRICE_NET,
