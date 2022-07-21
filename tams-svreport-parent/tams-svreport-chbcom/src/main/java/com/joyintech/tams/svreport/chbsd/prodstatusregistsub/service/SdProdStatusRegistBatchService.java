@@ -7,6 +7,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.service.ProdStatusRegist001Service;
 import com.joyintech.tams.svreport.chbsd.prdendsub.dto.SdProdTerminationSvrDto;
@@ -48,14 +49,12 @@ public class SdProdStatusRegistBatchService {
 	@Autowired
 	private ProdStatusRegist001Service prodStatusRegist001Service;
 
+
 	
 	public void sendSubInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
 		logger.debug("产品状态登记未报送数据检索开始------" + df.format(new Date()));
 		// 1、报送数据检索,取得 List
-		Map<String,Object> map = new HashMap<>();
-		map.put("prodIdList",prodIdList);
-		map.put("batchDate",DateUtil.format(batchDate));
-		List<ProdStatusRegist001Dto> listSub = prodStatusRegist001Service.selectAllData(map);
+		List<ProdStatusRegist001Dto> listSub = prodStatusRegist001Service.selcteDataByIds(DateUtil.format(batchDate), prodIdList);
 		logger.debug("产品状态登记未报送数据检索结束------" + df.format(new Date()));
 
 		if(StringUtil.isEmptyList(listSub)){
@@ -85,7 +84,7 @@ public class SdProdStatusRegistBatchService {
 		List<ChbPrdStatusSub> dataList = new ArrayList<ChbPrdStatusSub>();
 		for(ProdStatusRegist001Dto sdDto : listSub){
 			ChbPrdStatusSub target = new ChbPrdStatusSub();
-			BeanUtils.copyProperties(target, sdDto);
+			BeanUtils.copyProperties(sdDto, target);
 			dataList.add(target);
 		}
 
