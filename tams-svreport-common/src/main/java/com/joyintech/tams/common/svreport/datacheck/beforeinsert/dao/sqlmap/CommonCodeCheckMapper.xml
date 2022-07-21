@@ -231,7 +231,7 @@
     <delete id="deleteChbInvestTrade" parameterType="com.joyintech.tams.common.base.entity.ChbInvestTradeErrodataWithBLOBs">
         delete from CHB_INVEST_TRADE where (PROD_ID,TRADE_CODE,ASSET_CODE) in
         <foreach collection="list" item = "item" open="(" close=")" separator=",">
-            (item.#{prodId},#{item.tradeCode},#{item.assetCode})
+            (#{item.prodId},#{item.tradeCode},#{item.assetCode})
         </foreach>
     </delete>
     <delete id="deleteChbAssetInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAssetInfoErrodataWithBLOBs">
@@ -326,7 +326,7 @@
     <select id="selectChbInvestTradeBusKey" resultType="java.util.Map">
         select PROD_ID,ASSET_CODE,TRADE_CODE from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            (#{item.prodId},#{item.assetCode},#{tradeCode})
+            (#{item.prodId},#{item.assetCode},#{item.tradeCode})
         </foreach>
         and DATA_SOURCE !='D'
         and STATUS = 'E'

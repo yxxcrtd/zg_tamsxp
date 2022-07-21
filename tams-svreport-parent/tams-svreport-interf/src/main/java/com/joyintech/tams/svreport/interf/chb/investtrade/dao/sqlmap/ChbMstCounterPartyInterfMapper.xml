@@ -383,7 +383,6 @@
 	a.CREATE_TIME as createTime,
 	a.UPDATE_USER,
 	a.UPDATE_TIME as updateTime,
-	a.SVR_DATA_SOURCES as dataSource,
 	a.REMARK as remark
 	FROM
 	chb_mst_counter_party a

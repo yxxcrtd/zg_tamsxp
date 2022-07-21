@@ -200,7 +200,7 @@
     <select id="selectChbInvestTradeBusKey" resultType="java.util.Map">
         select PROD_ID,ASSET_CODE,TRADE_CODE from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            (#{item.prodId},#{item.assetCode},#{tradeCode})
+            (#{item.prodId},#{item.assetCode},#{item.tradeCode})
         </foreach>
         and DATA_SOURCE !='D'
         and STATUS = 'E'

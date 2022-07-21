@@ -381,7 +381,7 @@ public class CommonCodeCheckBatchService {
 
             //交易对手校验
             if (counterPartyMap.containsKey(tradeCounter)) {
-                ChbMstCounterParty chbMstCounterParty = counterPartyMap.get(counterPartyMap);
+                ChbMstCounterParty chbMstCounterParty = counterPartyMap.get(tradeCounter);
                 if (StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"99")) {
                     sb.append("交易对手关联交易情况为“99 其他关联交易情况”时, 备注不能为空[").append("TRADE_COUNTER=").append(tradeCounter).append("];");;
                 }
