@@ -451,7 +451,7 @@ public class ProdStatusRegist001Service extends CommonExportService<ProdStatusRe
 					result.add(exc);
 				}else{
 					ExcelValidDto exc=new ExcelValidDto();
-					exc.setValidKey("产品代码:"+endmap.get(key).getProdId());
+					exc.setValidKey("产品登记编码:"+endmap.get(key).getProdId());
 					exc.setCheckResult("01");
 					result.add(exc);
 				}

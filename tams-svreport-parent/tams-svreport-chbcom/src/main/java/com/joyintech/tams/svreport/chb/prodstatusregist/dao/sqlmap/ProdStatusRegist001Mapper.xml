@@ -355,6 +355,7 @@
     sub.STATUS status,
     sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
     sub.SUBMIT_DEADLINE submitDeadline,
+    sub.SUBMIT_SEQ submitSeq,
     sub.SUBMIT_TIME submitTime,
     sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
     from CHB_PRD_STATUS_SUB sub left join CHB_PRD_BASEINFO cp
