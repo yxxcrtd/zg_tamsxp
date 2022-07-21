@@ -75,4 +75,12 @@ public interface ChbBotAstPosInterfMapper {
 	 */
 	List<ChbBotAstPosition> getNoBotAstCashDataFromRsk(Date batchTime);
 
+	/**
+	 * 查询所有资管计划资产
+	 * @param
+	 * @return
+	 */
+	List<ChbAssetInfo> selectChbAstInfoBotInfo();
+
+
 }
