@@ -40,6 +40,11 @@ public class SvrBussRepEquityInfoDto extends RepAssetEquity{
      */
     private String assetName;
 
+    /**
+     * 股票/企业名称
+     */
+    private String financie;
+
 
     /**
      * 股票类型 01 普通股/02 优先股/99 其他
@@ -346,5 +351,13 @@ public class SvrBussRepEquityInfoDto extends RepAssetEquity{
 
     public void setIsunlisted(String isunlisted) {
         this.isunlisted = isunlisted;
+    }
+
+    public String getFinancie() {
+        return financie;
+    }
+
+    public void setFinancie(String financie) {
+        this.financie = financie;
     }
 }

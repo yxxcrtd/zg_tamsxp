@@ -70,6 +70,7 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	private String mdate01;
 	private String assetYield01;
 	private String basis01;
+	private String financie01;
 
 	private String assetId03;
 	private String assetName03;
@@ -116,9 +117,10 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	private String mdate05;
 	private String industryShares205;
 	private String assetYield05;
+	private String financie05;
 
 	private String assetId06;
-	private String assetName06;
+	private String financie06;
 	private String industryShares206;
 	private String investStage06;
 	private String sharesType106;
@@ -1534,12 +1536,12 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 		this.assetId06 = assetId06;
 	}
 
-	public String getAssetName06() {
-		return assetName06;
+	public String getFinancie06() {
+		return financie06;
 	}
 
-	public void setAssetName06(String assetName06) {
-		this.assetName06 = assetName06;
+	public void setFinancie06(String financie06) {
+		this.financie06 = financie06;
 	}
 
 	public String getIndustryShares206() {
@@ -2538,4 +2540,19 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 		return DateUtil.format(super.getEquityQuit());
 	}
 
+	public String getFinancie01() {
+		return financie01;
+	}
+
+	public void setFinancie01(String financie01) {
+		this.financie01 = financie01;
+	}
+
+	public String getFinancie05() {
+		return financie05;
+	}
+
+	public void setFinancie05(String financie05) {
+		this.financie05 = financie05;
+	}
 }

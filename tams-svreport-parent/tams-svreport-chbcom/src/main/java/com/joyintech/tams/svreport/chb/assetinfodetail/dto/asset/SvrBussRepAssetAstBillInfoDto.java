@@ -316,6 +316,11 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
      */
     private String billCode;
 
+    /**
+     * 融资人
+     */
+    private String financie;
+
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -480,5 +485,13 @@ public class SvrBussRepAssetAstBillInfoDto extends RepAssetAstBill{
 
     public void setBillCode(String billCode) {
         this.billCode = billCode;
+    }
+
+    public String getFinancie() {
+        return financie;
+    }
+
+    public void setFinancie(String financie) {
+        this.financie = financie;
     }
 }

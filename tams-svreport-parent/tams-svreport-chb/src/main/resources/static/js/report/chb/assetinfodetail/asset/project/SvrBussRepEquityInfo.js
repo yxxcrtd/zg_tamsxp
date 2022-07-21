@@ -61,7 +61,9 @@
         $("#svrBussRepEquityInfoDto_sharesType").change(function(){
             sharesTypeChangeType();
         });
-
+        if(pageModel==PAGE_MODEL_EDIT){
+         $("#svrBussRepEquityInfoDto_financie").attr("disabled",true);
+        }
     })
     var tips;
     $("label").on({

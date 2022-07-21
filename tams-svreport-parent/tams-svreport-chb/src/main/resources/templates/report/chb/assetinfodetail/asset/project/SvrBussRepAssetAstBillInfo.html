@@ -205,6 +205,19 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-label-wrap">融资人</label>
+                    <div class="layui-input-inline input-inline">
+                        <select th:id="|${entityName}_financie|"
+                                th:name="|${entityName}.financie|"
+                                th:initValue="${entity?.financie}"
+                                class="layui-input form-input input-select"
+                                required="required"
+                                data-th-data-url="@{/common/select/getTrusterId}">
+                        </select>
+                    </div>
+                </div>
+
             </div>
 
         </div>
