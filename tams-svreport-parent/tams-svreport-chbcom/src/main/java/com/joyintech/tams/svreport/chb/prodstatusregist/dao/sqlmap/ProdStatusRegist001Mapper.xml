@@ -115,7 +115,7 @@
     from CHB_PRD_STATUS_SUB sub
     <where>
       <if test="keyList != null and keyList.size() > 0">
-        <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+        <foreach collection="keyList" item="items" open="and TRIM(sub.REGIST_SEQNO) in (" separator="," close=")">
           #{items,jdbcType=VARCHAR}
         </foreach>
       </if>
