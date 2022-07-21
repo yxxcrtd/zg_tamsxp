@@ -473,7 +473,6 @@ ifNull(b.PRIN_BASEAMT,0) as prinBaseamt,/**面值*/
 b.MDATE as mdate,/**到期日*/
 c.ORG_CODE as issuePartyId,/**发行机构代码*/
 b.RATE_FLAG  as RateFlag,/**是否有预期收益绿*/
-a.REC_PAY_LEND_FEE_AMT as recPayLendFeeAmt,/**应付/应收债券借贷费用*/
 a.PROD_ID as prodId,
 a.VALUE_DATE as valueDate,
 b.CCY as ccy,

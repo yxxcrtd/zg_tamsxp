@@ -238,10 +238,10 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 
 				}
 				if(DictCodeListExt3.资产持仓品种_金融衍生品2.getValue().equals(mapAssetType.get(dto.getAssetType2()).getObjfield2())){
-					//单位净价: 应付/应收借贷费用
-					sub.setUnitValueCprice(dto.getRecPayLendFeeAmt());
-					//单位全价: 应付/应收借贷费用
-					sub.setUnitValueFprice(dto.getRecPayLendFeeAmt());
+					//单位净价: 累计应计利息
+					sub.setUnitValueCprice(dto.getTdyFloatIngpl());
+					//单位全价: 累计应计利息
+					sub.setUnitValueFprice(dto.getTdyFloatIngpl());
 				}
 				if(DictCodeListExt3.资产持仓品种_净值型资产.getValue().equals(mapAssetType.get(dto.getAssetType2()).getObjfield2())||
 						("12".equals(mapAssetType.get(dto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_否.getValue().equals(dto.getRateFlag()))||
