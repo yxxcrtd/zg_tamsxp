@@ -736,6 +736,19 @@
     (CASE WHEN DC.SUB_CLASS = 'ZQ' THEN IFNULL(HB.REPAY_NET, 100) ELSE 1 END) POS_NUM,
     IFNULL(SUM(SUB.SMV), 0) POS_AMT,
     IFNULL(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0) INT_AMT,/** 利息**/
+    0   SHADOW_AMT,/** 底层资产影子价格**/
+    ((case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV))<![CDATA[<]]>0 then 0
+    else ifnull(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV)), 0) end)
+    -ifnull(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0))
+    as POS_AMT_CPRICE,/** 底层资产折算人民币净价市值**/
+    case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV_ORI)*-1,sub.SMV_ORI))<![CDATA[<]]>0 then 0
+    else ifnull(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV_ORI)), 0) end as O_POS_AMT, /**  原币-底层资产全价币值（元）*/
+    ifnull(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV_ORI ELSE 0 END),0) as O_INT_AMT,/** 原币-利息**/
+    0  as O_SHADOW_AMT,/** 原币-底层资产影子价格**/
+    ((case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV_ORI)*-1,sub.SMV_ORI))<![CDATA[<]]>0 then 0
+    else ifnull(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV_ORI)*-1,sub.SMV_ORI)), 0) end)
+    -ifnull(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV_ORI ELSE 0 END),0))
+    as O_POS_AMT_CPRICE,/** 原币-底层资产净价市值**/
     MAX(IFNULL(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
     FROM RSK_VALTBL_ASSET_SUB SUB /** 估值表导入后的资产数据**/
 
@@ -786,7 +799,8 @@
         SELECT
             HZ.PTL_ID PLAN_ASSET_ID,
             HZ.SUB_CODE ASSET_CODE,
-            SUM(IFNULL(SMV,0))  POS_AMT
+            SUM(IFNULL(SMV,0))  POS_AMT,
+            SUM(IFNULL(HZ.SMV_ORI,0)) O_UNINVEST_CASH
         FROM RSK_VALTBL_SUM_ASSET_SUB HZ
         WHERE HZ.VAL_DATE = #{batchTime,jdbcType=DATE}
         /** 实收资本、资产净值**/
@@ -871,7 +885,9 @@
           CHECK_CODE checkCode,
           TARGET_AMT targetAmt,
           ASSET_TYPE2 assetType2,
-          TRADE_MARKET tradeMarket
+          TRADE_MARKET tradeMarket,
+          CCY  ccy
+
         FROM CHB_ASSET_INFO
         WHERE  ASSET_TYPE2 IN ('1108','1902')
         AND STATUS IN ('E','M')
@@ -890,5 +906,31 @@
             where MAPPINGCODE = 'ASSET_TYPE2_CATA_TYPE'
               and OBJFIELD1 IN ('12', '13', '14')
               )
+    </select>
+
+    <select id="getBotDataFromBalance" resultMap="BaseResultMap">
+        select
+        sub.VAL_DATE POS_DATE,/** 持仓日期**/
+        sub.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+        sub.SUB_CODE ASSET_CODE, /** 资产代码**/
+        fp.CCY  CCY,/** 币种**/
+        SUM(IFNULL(SUB.SMV,0)) POS_AMT,
+        SUM(IFNULL(sub.SMV_ORI,0))  AS O_POS_AMT,/**原币-底层资产全价币值（元）*/
+        MAX(IFNULL(sub.CREATE_TIME, sub.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB sub
+        LEFT JOIN FIN_PRODUCT fp
+        ON fp.FINPROD_ID = sub.PTL_ID
+        where sub.VAL_DATE = #{batchTime,jdbcType=DATE}
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and sub.SUB_CODE in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        group  by
+        sub.VAL_DATE,
+        sub.PTL_ID,
+        sub.SUB_CODE,
+        fp.CCY
+
     </select>
 </mapper>
