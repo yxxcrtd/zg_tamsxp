@@ -29,6 +29,7 @@
         <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_SEQ" property="submitSeq" jdbcType="VARCHAR" />
         <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
         <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
         <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
@@ -49,7 +50,7 @@
             VALUE_REG_DATE, SEND_STATUS, STATUS_DATE,
             STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
             SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
-            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,SUBMIT_SEQ,
             UPDATE_TIME
   </sql>
     <select id="selcteDataByIds" parameterType="java.util.List" resultMap="BaseResultMap">

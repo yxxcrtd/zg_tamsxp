@@ -352,6 +352,7 @@
         sub.SEND_STATUS sendStatus,
         sub.STATUS_DATE statusDate,
         sub.STATUS status,
+        sub.SUBMIT_SEQ submitSeq,
         sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
         sub.SUBMIT_DEADLINE submitDeadline,
         sub.SUBMIT_TIME submitTime,

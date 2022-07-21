@@ -65,16 +65,16 @@ public class SdAstPosSubRegBatchService {
 
 		// 调用check逻辑
 		logger.debug("资产持仓信息登记数据检查开始------检查前数据个数：" + listSub.size());
-		List<CheckReport001Dto> resultlist = chbAstPosRegist001Service.check(null,null);
-		Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1, key2)->key1));
-		for (int i = listSub.size() - 1; i >= 0; i--){
-			if (checkmap.containsKey(listSub.get(i).getRegistSeqno())
-					&& (StringUtil.isNotEmpty(checkmap.get(listSub.get(i).getRegistSeqno()).getErrorInfo())
-					|| (StringUtil.isNotEmpty(checkmap.get(listSub.get(i).getRegistSeqno()).getWarnInfo())
-					&& !StringUtil.equals("01", CacheUtil.getSysParam("CHB_WARNING_CHECKRESULT_IS_SEND"))))){
-				listSub.remove(i);
-			}
-		}
+//		List<CheckReport001Dto> resultlist = chbAstPosRegist001Service.check(null,null);
+//		Map<String,CheckReport001Dto> checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1, key2)->key1));
+//		for (int i = listSub.size() - 1; i >= 0; i--){
+//			if (checkmap.containsKey(listSub.get(i).getRegistSeqno())
+//					&& (StringUtil.isNotEmpty(checkmap.get(listSub.get(i).getRegistSeqno()).getErrorInfo())
+//					|| (StringUtil.isNotEmpty(checkmap.get(listSub.get(i).getRegistSeqno()).getWarnInfo())
+//					&& !StringUtil.equals("01", CacheUtil.getSysParam("CHB_WARNING_CHECKRESULT_IS_SEND"))))){
+//				listSub.remove(i);
+//			}
+//		}
 		logger.debug("资产持仓信息登记数据检查结束------检查后数据个数：" + listSub.size());
 
 		if(StringUtil.isEmptyList(listSub)){
