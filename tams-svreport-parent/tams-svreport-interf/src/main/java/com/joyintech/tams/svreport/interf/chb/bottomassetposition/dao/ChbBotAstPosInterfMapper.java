@@ -82,5 +82,11 @@ public interface ChbBotAstPosInterfMapper {
 	 */
 	List<ChbAssetInfo> selectChbAstInfoBotInfo();
 
+	/**
+	 * 根据配置科目号，获取底层资产持仓信息
+	 * @param batchTime
+	 * @return
+	 */
+	List<ChbBotAstPosition> getBotDataFromBalance(@Param("batchTime")Date batchTime,@Param("subjectNoList")List<String> subjectNoList);
 
 }

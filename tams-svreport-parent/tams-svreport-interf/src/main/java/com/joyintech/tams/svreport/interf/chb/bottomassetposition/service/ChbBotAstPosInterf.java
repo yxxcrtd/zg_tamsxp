@@ -12,6 +12,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.BaseInterfService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.base.dao.ChbAssetsBasisDataMapper;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
 import com.joyintech.tams.constant.DictCode;
@@ -74,6 +75,11 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 	private static String SUB_CODE_601 = "601";
 	//资产净值科目号
 	private static String SUB_CODE_701 = "701";
+	/**
+	 * 映射配置mapper
+	 */
+	@Autowired
+	private ChbTypeMappingExMapper chbTypeMappingExMapper;
 	/**
 	 * 日志
 	 */
@@ -314,11 +320,42 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 		List<ChbBotAstPosition> repBotList = getRepBotDataFromRsk(date,botUnInvestBotMap,botTotalNumMap);
 		//5、虚拟一笔剩余现金底层资产REMAININGCASH(为G06而用)
 		List<ChbBotAstPosition> botCashList = getCashBotDataFromRsk(date,botUnInvestBotMap,botTotalNumMap);
+
+		//7.追加新增的科目体系
+		List<ChbBotAstPosition> banlanceList =getCashBotDataFromBalance(date,botUnInvestBotMap,botTotalNumMap);
 		allBotList.addAll(otherBotList);
 		allBotList.addAll(repBotList);
 		allBotList.addAll(botCashList);
+		allBotList.addAll(banlanceList);
+
 		logger.info("-----------------获取底层持仓数据结束---------------");
 		return allBotList;
+	}
+
+	/**
+	 * 根据科目体系来获取底层资产持仓信息
+	 * @param date
+	 * @return
+	 */
+	private List<ChbBotAstPosition> getCashBotDataFromBalance(Date date,
+															  Map<String,List<ChbBotAstPosition>> botUnInvestBotMap,
+															  Map<String,List<ChbBotAstPosition>> botTotalNumMap){
+		//7.1 取得系统配置的科目信息
+		List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
+				.selectByMappingcode(InterfMappingConstants.BOTTON_SUBJECT_INVEST_TYPE_NAME);
+		List<String> subjectNoList = new ArrayList<String>();
+		for(ChbTypeMappingEx mapping: subjectNoMappingList){
+			// 获取源属性1：科目号
+			subjectNoList.add(mapping.getSrcfield1());
+		}
+		//7.2  以【7.1】的科目为筛选条件，取得底层估值表的信息
+		List<ChbBotAstPosition> astlist = chbBotAstPosInterfMapper.getBotDataFromBalance(date,subjectNoList);
+		//7.3调用共通【底层资产的资产净值、实收资本、未投资头寸的赋值】，
+		astlist.forEach(pos ->{
+			setBotAssetOtherAmt(pos,botUnInvestBotMap,botTotalNumMap,true);
+		});
+		return astlist;
+
 	}
 	/**
 	 * 获取跑批日所有资管计划的未投资头寸
@@ -371,6 +408,8 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 			if (null != botUnInvestBotMap.get(pos.getPlanAssetId())) {
 				List<ChbBotAstPosition> tmp = botUnInvestBotMap.get(pos.getPlanAssetId());
 				pos.setUninvestCash(tmp.get(0).getPosAmt());
+				//原币-资管及委外未投资头寸
+				pos.setoUninvestCash(tmp.get(0).getoUninvestCash());
 			}
 		}
 		//总发行数量 = 实收资本
@@ -382,6 +421,8 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 		if(null != botTotalNumMap.get(pos.getPlanAssetId() + SUB_CODE_701)){
 			List<ChbBotAstPosition> tmp = botTotalNumMap.get(pos.getPlanAssetId() + SUB_CODE_701);
 			pos.setIssueAmt(tmp.get(0).getPosAmt());
+			//原币-资管计划总发行金额
+			pos.setoIssueAmt(tmp.get(0).getoUninvestCash());
 		}
 	}
 	/**
@@ -470,6 +511,8 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 				}
 				//最后一笔之前的累计值
 				BigDecimal tmpAmt = BigDecimal.ZERO;
+				//最后一笔之前的累计值2
+				BigDecimal tmpAmt2 = BigDecimal.ZERO;
 				//当前循环光标
 				int index = 0;
 				//"计算利息->回购占比公式 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额)"
@@ -479,12 +522,20 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 					if(index == intAmtList.size() - 1){
 						//最后一笔倒减
 						resultMap.put(key,bot.getPosAmt().subtract(tmpAmt));
+						//原币-利息处理
+						resultMap.put(key+ GlobalConstant.UNDER_LINE+"02",bot.getoUninvestCash().subtract(tmpAmt2));
+
 						logger.info("计算利息->最后一笔回购金额倒减,回购底层利息总市值="+totalTargetAmt+",倒减金额="+tmpAmt,"最后一笔利息="+totalTargetAmt.subtract(tmpAmt));
 					}else{
 						//当前回购市值 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额) 保留两位小数
 						BigDecimal curAmt = bot.getPosAmt().multiply(info.getTargetAmt().divide(totalTargetAmt,14, RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP);
+						BigDecimal curAmt2 = bot.getoUninvestCash().multiply(info.getTargetAmt().divide(totalTargetAmt,14,RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP);
 						tmpAmt = tmpAmt.add(curAmt);
+						tmpAmt2 = tmpAmt2.add(curAmt2);
 						resultMap.put(key,curAmt);
+						//原币-利息处理
+						resultMap.put(key+ GlobalConstant.UNDER_LINE+"02",curAmt2);
+
 						logger.info("计算利息->第"+ (index + 1) +"笔回购拆分各项值,底层回购的市值="+bot.getPosAmt()+",当前回购的标的金额="+info.getTargetAmt()+",回购标的总金额"+totalTargetAmt);
 					}
 					index ++ ;
@@ -542,6 +593,8 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 			}
 			//最后一笔之前的累计值
 			BigDecimal tmpAmt = BigDecimal.ZERO;
+			//最后一笔之前的累计值2
+			BigDecimal tmpAmt2 = BigDecimal.ZERO;
 			//当前循环光标
 			int index = 0;
 			//"计算成本->回购占比公式 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额)"
@@ -556,24 +609,41 @@ public class ChbBotAstPosInterf extends BaseInterfService {
 				setBotAssetOtherAmt(pos,botUnInvestBotMap,botTotalNumMap,true);
 				//成本数值
 				BigDecimal cost = BigDecimal.ZERO;
+				//成本数值2
+				BigDecimal cost2 = BigDecimal.ZERO;
 				if(index == costAmtList.size() - 1){
 					//最后一笔倒减
 					cost = bot.getPosAmt().subtract(tmpAmt);
+					cost2 = bot.getoUninvestCash().subtract(tmpAmt2);
 					logger.info("计算成本->最后一笔回购金额倒减,回购底层成本总市值="+ bot.getPosAmt() +",倒减金额="+tmpAmt+",最后一笔成本="+cost);
 				}else{
 					//当前回购市值 = 底层回购的市值 * (当前回购的标的金额 / 回购标的总金额) 保留两位小数
 					cost=ArithmeticUtil.multiply(bot.getPosAmt(),ArithmeticUtil.divide(info.getTargetAmt(),totalTargetAmt,14)).setScale(2, RoundingMode.HALF_UP);
 					tmpAmt = tmpAmt.add(cost);
+					cost2 = bot.getoUninvestCash().multiply(info.getTargetAmt().divide(totalTargetAmt,14,RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP);
+					tmpAmt2 = tmpAmt2.add(cost2);
 					logger.info("计算成本->第"+ (index + 1) +"笔回购拆分各项值：底层回购的市值="+bot.getPosAmt()+",当前回购的标的金额="+info.getTargetAmt()+",回购标的总金额"+ totalTargetAmt);
 				}
 				pos.setPosAmt(cost);
+				//原币-底层资产全价币值（元）
+				pos.setoPosAmtCprice(cost2);
+
 				String key = bot.getPlanAssetId() + GlobalConstant.UNDER_LINE + info.getAssetCode();
 				if(null != intAmtMap.get(key)){
 					//市值 = 成本 + 利息
 					pos.setPosAmt(cost.add(intAmtMap.get(key)));
+					pos.setoPosAmtCprice(cost2.add(intAmtMap.get(key+ GlobalConstant.UNDER_LINE +"02")));
 					//利息
 					pos.setIntAmt(intAmtMap.get(key));
+					//原币-利息
+					pos.setoIntAmt(intAmtMap.get(key+ GlobalConstant.UNDER_LINE +"02"));
+
 				}
+				//原币-底层资产影子价格		=空
+
+				//原币-底层资产净价市值=原币-底层资产全价币值（元）
+				pos.setoPosAmtCprice(pos.getoPosAmt().subtract(pos.getoIntAmt()));
+
 				//持仓数量
 				pos.setPosNum(info.getTargetAmt());
 				resultList.add(pos);

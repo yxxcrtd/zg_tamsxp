@@ -2,8 +2,6 @@
 COMMENT ON COLUMN chb_assets_basis_data.TDY_FLOAT_INGPL  IS '当日估值增值';
 ALTER  TABLE chb_assets_basis_data ADD SHADOW_AMT NUMBER(30,2);
 COMMENT ON COLUMN chb_assets_basis_data.SHADOW_AMT  IS '影子价格';
-ALTER  TABLE chb_assets_basis_data ADD REC_PAY_LEND_FEE_AMT DECIMAL(30,2);
-COMMENT ON COLUMN chb_assets_basis_data.REC_PAY_LEND_FEE_AMT  IS '应付/应收债券借贷费用';
 
 
 /**底层资产持仓新增字段*/

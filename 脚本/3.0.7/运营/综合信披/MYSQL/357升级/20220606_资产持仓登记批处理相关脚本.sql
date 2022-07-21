@@ -1,8 +1,6 @@
 /**资产基础指标新增字段*/
 ALTER  table chb_assets_basis_data  modify   COLUMN  TDY_FLOAT_INGPL  DECIMAL(30,14)  COMMENT   '当日估值增值';
 ALTER  TABLE chb_assets_basis_data ADD SHADOW_AMT DECIMAL(30,2) COMMENT '影子价格' ;
-ALTER  TABLE chb_assets_basis_data ADD REC_PAY_LEND_FEE_AMT DECIMAL(30,2) COMMENT '应付/应收债券借贷费用' ;
-
 
 /**底层资产持仓新增字段*/
 ALTER  table chb_bot_ast_pos  modify   COLUMN  ISSUE_AMT  DECIMAL(30,14)  COMMENT   '资管计划总发行金额';
