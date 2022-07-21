@@ -243,7 +243,14 @@ public class MsgSendServiceImpl implements MsgSendService {
 			case "12":
 				DIReportCode = DictCodeList.报表编码_资产估值信息登记.getValue();
 				break;
-
+				/***0722升级**/
+			case "45":
+				DIReportCode = DictCodeList.报表编码_产品状态登记.getValue();
+				break;
+			case "46":
+				DIReportCode = DictCodeList.报表编码_资产持仓登记.getValue();
+				break;
+				/***0722升级**/
 		}
 		return DIReportCode;
 	}
