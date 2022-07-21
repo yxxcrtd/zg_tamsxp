@@ -439,7 +439,7 @@ public class ProdStatusRegist001Service extends CommonExportService<ProdStatusRe
 		// 检查登记表中小于今天所有未报送的数据
 		if(CollectionUtils.isNotEmpty(checkKeys)){
 			// 调用检查方法
-//			resultlist.addAll(check(null,checkKeys));
+			resultlist.addAll(check(null,checkKeys));
 			checkmap = resultlist.stream().collect(Collectors.toMap(CheckReport001Dto::getRefseqno,(p)->p,(key1,key2)->key1));
 			for(String key : checkKeys){
 				if(checkmap.get(key)!=null){
