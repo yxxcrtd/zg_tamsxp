@@ -8596,7 +8596,7 @@ public class AssetInfoRegist001Dto extends BaseEntity implements ITableRow {
 	public String getAssetName06() {
 		if (!StringUtil.isBlank(getAssetType())) {
 			if ("06".equals(getAssetType())) {
-				return assetName;
+				return financie;
 			} else {
 				return null;
 			}
