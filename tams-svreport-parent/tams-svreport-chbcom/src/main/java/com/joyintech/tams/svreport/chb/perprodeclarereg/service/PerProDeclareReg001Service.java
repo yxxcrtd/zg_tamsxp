@@ -386,7 +386,7 @@ public class PerProDeclareReg001Service extends SvrCommonExportService<PerProDec
 				List<String> prdSpecPropertys=StringUtil.splitToList(GlobalConstant.COMMA, item.getPrdSpecProperty());
 				item.setPrdSpecProperty("");
 				for(String prdSpecProperty : prdSpecPropertys){
-					item.setPrdSpecProperty(item.getPrdSpecProperty()+";"+prdSpecProperty+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性, prdSpecProperty));
+					item.setPrdSpecProperty(item.getPrdSpecProperty()+","+prdSpecProperty+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性, prdSpecProperty));
 				}
 				item.setPrdSpecProperty(item.getPrdSpecProperty().substring(1));
 			}
