@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.prodstatusregist.dao;
 
 import com.joyintech.tams.common.base.dao.ChbPrdStatusSubMapper;
+import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;
 import com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,8 @@ public interface ProdStatusRegist001Mapper extends ChbPrdStatusSubMapper {
 	List<ProdStatusRegist001Dto> selectAllDataByKeyList(@Param("keyList") List<String> keyList);
 	
 	List<ProdStatusRegist001Dto> selectAllData(Map<String, Object> pageParam);
+
+	List<ProdStatusRegist001Dto>  selcteDataByIds(@Param("batchdate")String  batchdate, @Param("prodIdList") List<String> prodIdList);
 
 	void updateSubmitStatusToOk(@Param("list") List<String> registSeqList);
 

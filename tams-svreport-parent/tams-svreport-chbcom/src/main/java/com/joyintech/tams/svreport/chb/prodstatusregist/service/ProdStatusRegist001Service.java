@@ -25,6 +25,7 @@ import com.joyintech.tams.svreport.chb.prodstatusregist.dao.ProdStatusRegist001M
 import com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,6 +223,12 @@ public class ProdStatusRegist001Service extends CommonExportService<ProdStatusRe
     public List<ProdStatusRegist001Dto> selectAllData(Map<String, Object> pageParam){
         return prodStatusRegist001Mapper.selectAllData(pageParam);
     }
+
+
+	public List<ProdStatusRegist001Dto> selcteDataByIds(String  batchdate, List<String> prodIdList){
+		return prodStatusRegist001Mapper.selcteDataByIds(batchdate,prodIdList);
+	}
+
     @Override
     public Page<ProdStatusRegist001Dto> selectPageData(Map<String, Object> pageParam) {
         List<ProdStatusRegist001Dto> data = restTemplate.postForList(
