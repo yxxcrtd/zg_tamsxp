@@ -1,0 +1,1 @@
+ALTER  TABLE chb_assets_basis_data DROP COLUMN REC_PAY_LEND_FEE_AMT;
