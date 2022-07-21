@@ -653,6 +653,10 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
             tableName = "资产交易信息登记";
         }else  if ("资产估值信息登记".equals(tableName)){
             tableName = "资产估值信息登记";
+        }else  if ("产品状态登记".equals(tableName)){
+            tableName = "产品状态登记";
+        }else  if ("资产持仓登记".equals(tableName)){
+            tableName = "资产持仓登记";
         }
         return tableName;
     }

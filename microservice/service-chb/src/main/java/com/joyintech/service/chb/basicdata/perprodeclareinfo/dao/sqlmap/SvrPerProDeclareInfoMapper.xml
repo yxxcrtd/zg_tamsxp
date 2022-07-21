@@ -2198,7 +2198,7 @@
         FROM
             CHB_PRD_DECLARE_INFO T1
         WHERE
-            T1.DECLARE_UUID = #{declareUuid,jdbcType=CHAR}
+            TRIM(T1.DECLARE_UUID) = #{declareUuid,jdbcType=CHAR}
     </select>
 
     <!-- 获取产品名称 联想下拉框  -->

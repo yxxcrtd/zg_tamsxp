@@ -26,6 +26,15 @@
     <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR" />
     <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL"/>
     <result column="CASH_FLAG" property="cashFlag" jdbcType="VARCHAR"/>
+    <result column="O_UNINVEST_CASH" property="oUninvestCash" jdbcType="DECIMAL"/>
+    <result column="SHADOW_AMT" property="shadowAmt" jdbcType="DECIMAL"/>
+    <result column="POS_AMT_CPRICE" property="posAmtCprice" jdbcType="DECIMAL"/>
+    <result column="O_ISSUE_AMT" property="oIssueAmt" jdbcType="DECIMAL"/>
+    <result column="O_POS_AMT_CPRICE" property="oPosAmtCprice" jdbcType="DECIMAL"/>
+    <result column="O_INT_AMT" property="oIntAmt" jdbcType="DECIMAL"/>
+    <result column="O_SHADOW_AMT" property="oShadowAmt" jdbcType="DECIMAL"/>
+    <result column="O_POS_AMT" property="oPosAmt" jdbcType="DECIMAL"/>
+    <result column="CCY" property="ccy" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
     POS_ID, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, ISSUE_AMT, 
@@ -551,7 +560,8 @@ GROUP BY asset.POS_DATE,
         SELECT
         SUB.VAL_DATE AS POS_DATE,
         SUB.PTL_ID AS PLAN_ASSET_ID,
-        SUM(nvl(SUB.SMV,0))  AS POS_AMT
+        SUM(nvl(SUB.SMV,0))  AS POS_AMT,
+        SUM(nvl(SUB.SMV_ORI,0))  AS O_UNINVEST_CASH
         FROM RSK_VALTBL_ASSET_SUB SUB
         WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
         /** 活期存款、清算款、备付金、保证金**/
@@ -675,4 +685,17 @@ GROUP BY asset.POS_DATE,
         GROUP BY SUB.PTL_ID
 
     </select>
+    <select id="selectChbAstInfoBotInfo" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+    select  ASSET_CODE assetCode,
+    CCY ccy
+    from CHB_ASSET_INFO
+    WHERE STATUS !='D'
+    and ASSET_TYPE2 in (
+            select SRCFIELD1
+            from CHB_TYPE_MAPPING_EX
+            where MAPPINGCODE = 'ASSET_TYPE2_CATA_TYPE'
+              and OBJFIELD1 IN ('12', '13', '14')
+              )
+    </select>
+
 </mapper>

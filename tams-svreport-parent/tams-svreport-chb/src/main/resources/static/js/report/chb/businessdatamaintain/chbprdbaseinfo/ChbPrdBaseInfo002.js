@@ -126,6 +126,7 @@
             $('#openCircleDays').removeAttr('disabled');
         }
         /**中债5月升级 add by dxy*/
+        if(pageModel === PAGE_MODEL_EDIT||pageModel === PAGE_MODEL_NEW){
             if(openCircle=='01'){
                 $('#fitCircleDays').val('1').trigger('change')
             }else if(openCircle=='02'){
@@ -143,28 +144,31 @@
             }else if(openCircle=='99'){
                 $('#fitCircleDays').val('').trigger('change')
             }
+            /**中债5月升级 add by dxy*/
+        }
+    });
+    if(pageModel === PAGE_MODEL_EDIT||pageModel === PAGE_MODEL_NEW) {
         /**中债5月升级 add by dxy*/
-    });
-    /**中债5月升级 add by dxy*/
-    $('#openCircleDays').change(function (){
-        var oDays = $('#openCircleDays').val();
-        var  ocashCate = $('#cashManaCate').val();
-        if(ocashCate=='01'){
-            $('#fitCircleDays').val('0').trigger('change');
-        }else{
-            $('#fitCircleDays').val(oDays).trigger('change');
-        }
-    });
-    $('#cashManaCate').change(function (){
-        var  ocashCate = $('#cashManaCate').val();
-        var openCircle = $('#openCircle').val();
-        var oDays = $('#openCircleDays').val();
-        if(ocashCate=='01'&&openCircle=='99'){
-            $('#fitCircleDays').val('0').trigger('change');
-        }else{
-            $('#fitCircleDays').val(oDays).trigger('change');
-        }
-    });
+        $('#openCircleDays').change(function () {
+            var oDays = $('#openCircleDays').val();
+            var ocashCate = $('#cashManaCate').val();
+            if (ocashCate == '01') {
+                $('#fitCircleDays').val('0').trigger('change');
+            } else {
+                // $('#fitCircleDays').val(oDays).trigger('change');
+            }
+        });
+        $('#cashManaCate').change(function () {
+            var ocashCate = $('#cashManaCate').val();
+            var openCircle = $('#openCircle').val();
+            var oDays = $('#openCircleDays').val();
+            if (ocashCate == '01' && openCircle == '99') {
+                $('#fitCircleDays').val('0').trigger('change');
+            } else {
+                // $('#fitCircleDays').val(oDays).trigger('change');
+            }
+        });
+    }
     /**中债5月升级 add by dxy*/
 
 

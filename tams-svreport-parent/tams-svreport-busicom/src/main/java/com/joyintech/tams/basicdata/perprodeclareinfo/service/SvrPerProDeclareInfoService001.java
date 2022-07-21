@@ -244,7 +244,7 @@ public class SvrPerProDeclareInfoService001 extends CommonExportService<SvrPerPr
         else if (OperationType.NEW.equals(type)) {
             entity.setDatasource(DictCodeListExt2.数据来源_新建导入.getValue());
             entity.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());
-            entity.setDeclareUuid(IDGenerator.generate(32));
+            entity.setDeclareUuid(IDGenerator.generate(36));
             ChbPrdDeclareInfoDto dto = new ChbPrdDeclareInfoDto();
             dto.setProdInsId(entity.getProdInsId());
             chbPrdDeclareInfoMapper.deleteChbPrdDeclareInfoErroDataByKey(Lists.newArrayList(dto));
