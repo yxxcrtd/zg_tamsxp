@@ -532,7 +532,7 @@ function getColumns() {
                 data: resultData,
                 allowClear:true,
             });
-            if (headerNum == "2") {
+            if (tableName=="CHB_ASSET_INFO_TMP" && headerNum == "2") {
                 layui.use([ 'table' ], function() {
                     var table = layui.table;
                     table.render({
@@ -735,7 +735,7 @@ function showTables() {
 		return;
 	}
 	// 资产要素表特殊处理
-	if (headerNum == "2") {
+	if (tableName=="CHB_ASSET_INFO_TMP" && headerNum == "2") {
 		layui.use(
 			[ 'table' ],
 			function() {
