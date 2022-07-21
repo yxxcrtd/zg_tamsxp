@@ -702,7 +702,9 @@ var QueryFunc=function(){
             $('#chbIssuerId').attr('disabled',true);
             $("#chbIssuerId").val('').trigger("change");
         }
-
+        if(repAssetType = '2101'){
+            $('#chbIssuerId').attr('disabled',false);
+        }
 
     }
 

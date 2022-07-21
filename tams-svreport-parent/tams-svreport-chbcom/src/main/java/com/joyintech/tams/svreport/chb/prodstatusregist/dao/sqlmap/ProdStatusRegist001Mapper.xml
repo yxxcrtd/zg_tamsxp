@@ -10,7 +10,7 @@
     select
     sub.REGIST_SEQNO registSeqno,
     sub.PROD_ID prodId,
-    cp.PRODNAME prodName,
+    cpb.PROD_NAME prodName,
     sub.ISSUE_PARTY_ID issuePartyId,
     sub.PRD_REGIST_CODE prdRegistCode,
     sub.PRD_TOTAL_AMT prdTotalAmt,
@@ -25,8 +25,8 @@
     sub.SUBMIT_DEADLINE submitDeadline,
     sub.SUBMIT_TIME submitTime,
     sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
-    from CHB_PRD_STATUS_SUB sub left join CHB_PRDRESIST_CODE cp
-    on sub.PROD_ID = cp.PRODID
+    from CHB_PRD_STATUS_SUB sub left join CHB_PRD_BASEINFO cpb
+    on sub.PROD_ID = cpb.PROD_ID
     <where>
       <if test="prodIdList != null and prodIdList.size()>0">
         <foreach collection="prodIdList" item="items" open="and sub.prod_id in (" separator="," close =")">

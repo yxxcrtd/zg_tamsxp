@@ -2758,6 +2758,9 @@ public class AssetInfoDetailUtil {
                     switch (e.getAssetType()){
                         case "01":
                             try {
+                                if(StringUtil.isNotEmpty(e.getFinancie())) {
+                                    e.setFinancie01(e.getFinancie());
+                                }
                                 if(StringUtil.isNotEmpty(e.getAmt())) {
                                     e.setAmt01(e.getAmt().toString());
                                 }
@@ -2886,6 +2889,9 @@ public class AssetInfoDetailUtil {
 
                         case "05":
                             try {
+                                if(StringUtil.isNotEmpty(e.getFinancie())) {
+                                    e.setFinancie05(e.getFinancie());
+                                }
                                 if(StringUtil.isNotEmpty(e.getIsResale())) {
                                     e.setIsResale05(e.getIsResale() + " " + SysDataUtil.getNameFromDataDict(DictCode.是否_中债, e.getIsResale()));
                                 }
@@ -2911,7 +2917,9 @@ public class AssetInfoDetailUtil {
 
                         case "06":
                             try {
-                                e.setAssetName06(e.getAssetName());
+                                if(StringUtil.isNotEmpty(e.getFinancie())) {
+                                    e.setFinancie06(e.getFinancie());
+                                }
                                 if(StringUtil.isNotEmpty(e.getIndustryShares2())) {
                                     e.setIndustryShares206(e.getIndustryShares2() + " " + SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类, e.getIndustryShares2()));
                                 }
