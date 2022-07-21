@@ -141,25 +141,29 @@
       ,info.IS_TRANSFER IS_TRANSFER
       ,info.IS_FULLY_COMPLIANT IS_NOTICE
       ,case when info.PRODTYPE = 'M' then
-      case when info.VDATE = #{enddate, jdbcType=DATE} and info.MDATE != #{enddate, jdbcType=DATE}
-      then (ifnull(val4.TDY_UNIT_VALUE_SUM, 1) - ifnull(val5.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val5.TDY_UNIT_VALUE_SUM, 1) * TIMESTAMPDIFF(DAY,info.VDATE,#{statusDate, jdbcType=DATE})) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      when info.VDATE = #{enddate, jdbcType=DATE} and info.MDATE = #{enddate, jdbcType=DATE}
+      case when info.VDATE <![CDATA[>=]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[>=]]> #{enddate, jdbcType=DATE}  and info.VDATE <![CDATA[<>]]> #{enddate, jdbcType=DATE}
+      then (ifnull(val.TDY_UNIT_VALUE_SUM, 1) - ifnull(val5.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val5.TDY_UNIT_VALUE_SUM, 1) * TIMESTAMPDIFF(DAY,info.VDATE,#{enddate, jdbcType=DATE})) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE <![CDATA[>=]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[>=]]> #{enddate, jdbcType=DATE}  and info.VDATE <![CDATA[=]]> #{enddate, jdbcType=DATE}
+      then (ifnull(val5.TDY_UNIT_VALUE_SUM, 1)-1) / (1 * 1) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE  <![CDATA[<]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[>=]]>  #{enddate, jdbcType=DATE}
+      then (ifnull(val.TDY_UNIT_VALUE_SUM, 1) - ifnull(val2.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val2.TDY_UNIT_VALUE_SUM, 1) * (TIMESTAMPDIFF(DAY,#{startdate,jdbcType=DATE},#{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE <![CDATA[<]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[<]]> #{enddate, jdbcType=DATE}
+      then (ifnull(val3.TDY_UNIT_VALUE_SUM, 1) - ifnull(val2.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val2.TDY_UNIT_VALUE_SUM, 1) * (TIMESTAMPDIFF(DAY,#{startdate,jdbcType=DATE},info.MDATE) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE <![CDATA[>=]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[<]]>  #{enddate, jdbcType=DATE}
       then (ifnull(val3.TDY_UNIT_VALUE_SUM, 1) - ifnull(val5.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val5.TDY_UNIT_VALUE_SUM, 1) * TIMESTAMPDIFF(DAY,info.VDATE,info.MDATE)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      when info.VDATE = DATE_ADD(#{startdate,jdbcType=DATE},interval -1 day) and info.MDATE  =#{enddate, jdbcType=DATE}
-      then (ifnull(val3.TDY_UNIT_VALUE_SUM, 1) - ifnull(val2.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val2.TDY_UNIT_VALUE_SUM, 1) * (TIMESTAMPDIFF(DAY,#{startdate, jdbcType=DATE},info.MDATE) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      when info.VDATE =  #{startdate,jdbcType=DATE} and info.MDATE = #{enddate, jdbcType=DATE}
-      then (ifnull(val.TDY_UNIT_VALUE_SUM, 1) - ifnull(val2.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val2.TDY_UNIT_VALUE_SUM, 1) * (TIMESTAMPDIFF(DAY,#{startdate, jdbcType=DATE},#{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      else (ifnull(val.TDY_UNIT_VALUE_SUM, 1) - ifnull(val5.TDY_UNIT_VALUE_SUM, 1)) / (ifnull(val5.TDY_UNIT_VALUE_SUM, 1) * (TIMESTAMPDIFF(DAY,info.VDATE,#{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end) end
+      else 0 end
       when info.PRODTYPE = 'N' then
-      case when info.VDATE = #{enddate, jdbcType=DATE} and  info.MDATE != #{enddate, jdbcType=DATE}
-      then (ifnull(val4.UNIT_VALUE_TOTAL, 1) - ifnull(val5.UNIT_VALUE_TOTAL, 1)) / (ifnull(val5.UNIT_VALUE_TOTAL, 1) * TIMESTAMPDIFF(DAY,info.VDATE,#{statusDate, jdbcType=DATE})) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      when info.VDATE = #{enddate, jdbcType=DATE} and info.MDATE = #{enddate, jdbcType=DATE}
+      case when info.VDATE <![CDATA[>=]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[>=]]>  #{enddate, jdbcType=DATE} and info.VDATE <![CDATA[<>]]> #{enddate, jdbcType=DATE}
+      then (ifnull(val.UNIT_VALUE_TOTAL, 1) - ifnull(val5.UNIT_VALUE_TOTAL, 1)) / (ifnull(val5.UNIT_VALUE_TOTAL, 1) * TIMESTAMPDIFF(DAY,info.VDATE,#{enddate, jdbcType=DATE})) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE <![CDATA[>=]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[>=]]>  #{enddate, jdbcType=DATE} and info.VDATE <![CDATA[=]]> #{enddate, jdbcType=DATE}
+      then (ifnull(val5.UNIT_VALUE_TOTAL, 1)-1) / (1 * 1) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE  <![CDATA[<]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[>=]]>  #{enddate, jdbcType=DATE}
+      then (ifnull(val.UNIT_VALUE_TOTAL, 1) - ifnull(val2.UNIT_VALUE_TOTAL, 1)) / (ifnull(val2.UNIT_VALUE_TOTAL, 1) * (TIMESTAMPDIFF(DAY,#{startdate,jdbcType=DATE},#{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE <![CDATA[<]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[<]]> #{enddate, jdbcType=DATE}
+      then (ifnull(val3.UNIT_VALUE_TOTAL, 1) - ifnull(val2.UNIT_VALUE_TOTAL, 1)) / (ifnull(val2.UNIT_VALUE_TOTAL, 1) * (TIMESTAMPDIFF(DAY,#{startdate,jdbcType=DATE},info.MDATE) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
+      when info.VDATE <![CDATA[>=]]> #{startdate,jdbcType=DATE} and  info.MDATE <![CDATA[<]]>  #{enddate, jdbcType=DATE}
       then (ifnull(val3.UNIT_VALUE_TOTAL, 1) - ifnull(val5.UNIT_VALUE_TOTAL, 1)) / (ifnull(val5.UNIT_VALUE_TOTAL, 1) * TIMESTAMPDIFF(DAY,info.VDATE,info.MDATE)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      when info.VDATE = DATE_ADD(#{startdate,jdbcType=DATE},interval -1 day) and info.MDATE = #{enddate, jdbcType=DATE}
-      then (ifnull(val3.UNIT_VALUE_TOTAL, 1) - ifnull(val2.UNIT_VALUE_TOTAL, 1)) / (ifnull(val2.UNIT_VALUE_TOTAL, 1) * (TIMESTAMPDIFF(DAY,#{startdate, jdbcType=DATE},info.MDATE) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      when info.VDATE = #{startdate,jdbcType=DATE} and info.MDATE  = #{enddate, jdbcType=DATE}
-      then (ifnull(val.UNIT_VALUE_TOTAL, 1) - ifnull(val2.UNIT_VALUE_TOTAL, 1)) / (ifnull(val2.UNIT_VALUE_TOTAL, 1) * (TIMESTAMPDIFF(DAY,#{startdate, jdbcType=DATE},#{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end)
-      else (ifnull(val.UNIT_VALUE_TOTAL, 1) - ifnull(val5.UNIT_VALUE_TOTAL, 1)) / (ifnull(val5.UNIT_VALUE_TOTAL, 1) * (TIMESTAMPDIFF(DAY,info.VDATE,#{enddate, jdbcType=DATE}) + 1)) * (case when info.BASIC = 'A/360' then 360 when info.BASIC = 'A/365' then 365 else 1 end) end
+      else 0 end
       when info.PRODTYPE = 'R' then
       case when info.OPERATE_MODE in ('01', '02') then info.EXP_AVG_YIELD
       when info.OPERATE_MODE in ('03', '04') then cpr.PROD_YIELD end
