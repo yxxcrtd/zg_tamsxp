@@ -68,7 +68,7 @@
         ,{field:'raiseCcyStr', title: '募集币种',width:130,sortField: 'raiseCcy'}
         ,{field:'cashPrinCcyStr', title: '兑付本金币种',width:130,sortField: 'cashPrinCcy'}
         ,{field:'cashProfCcyStr', title: '兑付收益币种',width:130,sortField: 'cashProfCcy'}
-        ,{field:'saleAmtStr', title: '起点销售金额',width:130,type: 'number',sortField: 'saleAmt'}
+        ,{field:'saleAmtStr', title: '起点销售金额',width:130,type: 'number'}
         ,{field:'raiseAmtPlan', title: '计划募集金额',width:130,type: 'number'}
         ,{field:'raisePstrdate', title: '募集起始日（从)',width:130,type: 'date'}
         ,{field:'raisePenddate', title: '募集起始日（到)',width:130,type: 'date'}
