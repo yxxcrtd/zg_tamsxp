@@ -148,17 +148,7 @@
 								></select>
 							</div>
 						</div>
-						<div class="form-inline-wrap" id="ivstorientation_div" style="display:none">
 
-							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.ivstorientation}">产品投资性质</label>
-							<div class="layui-input-inline input-inline">
-								<select  id="ivstorientation" name="ivstorientation" required
-										 data-th-initValue="${entity?.ivstorientation}"
-										 class="layui-input form-input input-select"
-										 data-th-data-result="${INVEST_TYPE}"
-								></select>
-							</div>
-						</div>
 						<div class="form-inline-wrap">
 
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.gradProportion}">分级比例</label>
@@ -170,17 +160,19 @@
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
 						</div>
-					</div>
-					<div class="layui-form-item">
+
 						<div class="form-inline-wrap" >
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.yieldRemark}">业绩比较基准说明</label>
 							<div class="layui-input-inline input-inline">
 								<input type="text" name="yieldRemark" id="yieldRemark"
-									   data-th-value="${entity?.yieldRemark}" 
+									   data-th-value="${entity?.yieldRemark}"
 									   class="layui-input form-input" placeholder="请输入内容"
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
 						</div>
+
+					</div>
+					<div class="layui-form-item">
 
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap"data-th-text="#{CchbPrdBaseInfo001.openMode}">开放模式</label>
@@ -202,8 +194,7 @@
 								></select>
 							</div>
 						</div>
-					</div>
-					<div class="layui-form-item">
+
 						<div class="form-inline-wrap" >
 
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.openCircleDays}">其他规律开放周期（天）</label>
@@ -214,6 +205,8 @@
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
 						</div>
+					</div>
+					<div class="layui-form-item">
 						<div class="form-inline-wrap" id="operateMode_div" style="display: none">
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.operateMode}">产品运作模式</label>
 							<div class="layui-input-inline input-inline">
@@ -233,8 +226,6 @@
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
 						</div>
-					</div>
-					<div class="layui-form-item">
 						<div class="form-inline-wrap">
 							<label class="layui-form-label form-label-wrap " data-th-text="#{CchbPrdBaseInfo001.ruleComment}">无规律开放说明</label>
 							<div class="layui-input-inline input-inline">
@@ -244,6 +235,8 @@
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
 						</div>
+					</div>
+					<div class="layui-form-item">
 						<div class="form-inline-wrap" >
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.firstOpenDay}">首次开放周期起始日</label>
 							<div class="layui-input-inline input-inline">
@@ -263,8 +256,6 @@
 							</div>
 						</div>
 
-					</div>
-					<div class="layui-form-item">
 						<div class="form-inline-wrap" >
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.avgOpenCount}">平均开放次数（年化）</label>
 							<div class="layui-input-inline input-inline">
@@ -275,6 +266,8 @@
 									   data-th-placeholder="#{SysCommon.placeholder}" >
 							</div>
 						</div>
+					</div>
+					<div class="layui-form-item">
 						<div class="form-inline-wrap" >
 							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.openBuss}">开放期业务</label>
 							<div class="layui-input-inline input-inline">
@@ -295,53 +288,54 @@
 							</div>
 						</div>
 
-					</div>
-					<div class="layui-form-item">
-							<div class="form-inline-wrap" >
-								<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.prodtype}">产品类型</label>
-								<div class="layui-input-inline input-inline">
-									<select  id="prodtype" name="prodtype" required
-											 data-th-initValue="${entity?.prodtype}"
-											 class="layui-input form-input input-select"
-											 data-th-data-result="${SVR_PRODTYPE}"
-									></select>
-								</div>
-							</div>
-							<div class="form-inline-wrap" >
-								<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.calendarId}">产品交易日历</label>
-								<div class="layui-input-inline input-inline">
-									<select name="calendarId" id="calendarId"
-											class="layui-input form-input input-select"
-											data-th-placeholder="#{SysCommon.placeholder}"
-											data-th-data-url="@{/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/queryCalendarInfoList}"
-											data-th-initValue='${entity?.calendarId}' >
-									</select>
-								</div>
-							</div>
-							<div class="form-inline-wrap" >
-								<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.issuingStatus}">发行状态</label>
-								<div class="layui-input-inline input-inline">
-									<select  id="issuingStatus" name="issuingStatus"
-											 data-th-initValue="${entity?.issuingStatus==null?'03':entity?.issuingStatus}"
-											 class="layui-input form-input input-select"
-											 data-th-data-result="${SVR_ISSUING_STATUS}"
-									></select>
-								</div>
+						<div class="form-inline-wrap" >
+							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.prodtype}">产品类型</label>
+							<div class="layui-input-inline input-inline">
+								<select  id="prodtype" name="prodtype" required
+										 data-th-initValue="${entity?.prodtype}"
+										 class="layui-input form-input input-select"
+										 data-th-data-result="${SVR_PRODTYPE}"
+								></select>
 							</div>
 						</div>
 					</div>
 					<div class="layui-form-item">
 						<div class="form-inline-wrap" >
-								<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.remark}">备注</label>
-								<div class="layui-input-inline input-inline">
-									<input type="text" name="remark" id="remark"
-										   data-th-value="${entity?.remark}"
-										   class="layui-input form-input" placeholder="请输入内容"
-										   data-th-placeholder="#{SysCommon.placeholder}" >
-								</div>
+							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.calendarId}">产品交易日历</label>
+							<div class="layui-input-inline input-inline">
+								<select name="calendarId" id="calendarId"
+										class="layui-input form-input input-select"
+										data-th-placeholder="#{SysCommon.placeholder}"
+										data-th-data-url="@{/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo001/queryCalendarInfoList}"
+										data-th-initValue='${entity?.calendarId}' >
+								</select>
 							</div>
+						</div>
+						<div class="form-inline-wrap" >
+							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.issuingStatus}">发行状态</label>
+							<div class="layui-input-inline input-inline">
+								<select  id="issuingStatus" name="issuingStatus"
+										 data-th-initValue="${entity?.issuingStatus==null?'03':entity?.issuingStatus}"
+										 class="layui-input form-input input-select"
+										 data-th-data-result="${SVR_ISSUING_STATUS}"
+								></select>
+							</div>
+						</div>
 					</div>
+					<div class="layui-form-item">
+						<div class="form-inline-wrap" >
+							<label class="layui-form-label form-label-wrap" data-th-text="#{CchbPrdBaseInfo001.remark}">备注</label>
+							<div class="layui-input-inline input-inline">
+								<input type="text" name="remark" id="remark"
+									   data-th-value="${entity?.remark}"
+									   class="layui-input form-input" placeholder="请输入内容"
+									   data-th-placeholder="#{SysCommon.placeholder}" >
+							</div>
+						</div>
 					</div>
+				</div>
+
+			</div>
 			<div class="pro-module">
 				<h3 class="pro-module-title">
 					<span class="title-des">募集总量登记</span>
