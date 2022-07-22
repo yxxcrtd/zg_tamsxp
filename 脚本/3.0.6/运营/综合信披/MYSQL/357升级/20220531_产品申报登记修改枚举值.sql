@@ -1,1 +1,0 @@
-update SYS_DATADICT_LIST set item_value = '本机构作为实际管理人' where item_code = '01' and dict_code in('PROD_MANAGE','SVR_PROD_MANAGE');

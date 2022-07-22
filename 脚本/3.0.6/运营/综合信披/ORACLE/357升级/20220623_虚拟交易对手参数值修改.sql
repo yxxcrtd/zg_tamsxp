@@ -1,2 +1,0 @@
-delete from sys_para where SYSTEM_CODE = 'SVR'and PARA_CODE = 'SVR_VIRTUAL_COUNTER'; 
-INSERT INTO sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG) VALUES ('SVR', 'SVR_VIRTUAL_COUNTER', '华夏银行理财代理人;05;03', '01', null, '虚拟交易对手相关信息配置:交易对手;交易对手类型;关联交易情况', 'system', null, sysdate, 'system', sysdate, null, '01');
