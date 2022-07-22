@@ -41,9 +41,7 @@ UPDATE_TIME                   datetime       null comment   '更新时间',
 primary key (REGIST_SEQNO)
 
 )COMMENT='资产持仓登记表'
-COLLATE='utf8mb4_0900_ai_ci'
-ENGINE=InnoDB
-;
+COLLATE='utf8_bin';
 
 
 delete from sys_menu  where MENU_ID='REPORT_REGIST_001_001_014';

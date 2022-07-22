@@ -2105,12 +2105,12 @@
             </when>
             <!-- 16. 产品持仓登记 -->
             <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
-                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',持仓类别', info.POS_TYPE,',行内资产/负债编码', info.ASSET_ID,',持仓日期', DATE_FORMAT(info.VALUE_DATE,'%Y-%m-%d'),',科目名称', info.SUBJECT_NAME,',中间层行内资产/负债编码', info.INTER_ASSET_CODE,',币种', info.CCY) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
             <!-- 17. 产品状态登记 -->
             <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
-                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID,',产品状态统计日',  DATE_FORMAT(info.PRD_STATUS_DATE,'%Y-%m-%d')) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
         </choose>
@@ -2372,12 +2372,12 @@
                     </when>
                     <!-- 16. 产品持仓登记 -->
                     <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
-                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',持仓类别', info.POS_TYPE,',行内资产/负债编码', info.ASSET_ID,',持仓日期', DATE_FORMAT(info.VALUE_DATE,'%Y-%m-%d'),',科目名称', info.SUBJECT_NAME,',中间层行内资产/负债编码', info.INTER_ASSET_CODE,',币种', info.CCY) as code,
                         info.SEND_STATUS as submitStatus,
                     </when>
                     <!-- 17. 产品状态登记 -->
                     <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
-                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID) as code,
+                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',发行机构代码', info.ISSUE_PARTY_ID,',产品状态统计日', DATE_FORMAT(info.PRD_STATUS_DATE,'%Y-%m-%d')) as code,
                         info.SEND_STATUS as submitStatus,
                     </when>
                 </choose>
