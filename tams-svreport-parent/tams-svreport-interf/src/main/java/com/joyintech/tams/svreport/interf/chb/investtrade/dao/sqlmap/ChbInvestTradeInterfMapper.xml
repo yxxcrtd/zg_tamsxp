@@ -6365,9 +6365,13 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
                 #{item.rate,jdbcType=DECIMAL}  RATE,
                 #{item.basis,jdbcType=VARCHAR}  BASIS,
                 #{item.dealtype,jdbcType=VARCHAR}  DEALTYPE,
-                #{item.facevalue,jdbcType=DECIMAL}  FACEVALUE
-                 ,#{item.assetMethod,jdbcType=VARCHAR}  ASSET_METHOD
-                ,#{item.rivalPartyType,jdbcType=VARCHAR}  RIVAL_PARTY_TYPE
+                #{item.facevalue,jdbcType=DECIMAL}  FACEVALUE,
+                #{item.assetMethod,jdbcType=VARCHAR}  ASSET_METHOD,
+                #{item.rivalPartyType,jdbcType=VARCHAR}  RIVAL_PARTY_TYPE,
+                #{item.investApproverId,jdbcType=VARCHAR}  INVEST_APPROVER_ID ,
+                #{item.investApproverName,jdbcType=VARCHAR}  INVEST_APPROVER_NAME,
+                #{item.investTraderId,jdbcType=VARCHAR}  INVEST_TRADER_ID,
+                #{item.investTraderName,jdbcType=VARCHAR}  INVEST_TRADER_NAME
                from dual
             </foreach>
         ) TEMP
@@ -6376,8 +6380,7 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN 
         UPDATE 
-        SET <!-- CII.TRADE_SEQNO = TEMP.TRADE_SEQNO,
-            CII.TRADE_CODE = TEMP.TRADE_CODE, -->
+        SET
             CII.INVEST_VARIETY = TEMP.INVEST_VARIETY,
             CII.INVEST_TYPE = TEMP.INVEST_TYPE,
             CII.PROD_ID = TEMP.PROD_ID,
@@ -6405,7 +6408,6 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
             CII.ORG_CODE = TEMP.ORG_CODE,
             CII.DEPT_CODE = TEMP.DEPT_CODE,
             CII.CREATE_USER = TEMP.CREATE_USER,
-            /*CII.CREATE_TIME = TEMP.CREATE_TIME,*/
             CII.UPDATE_USER = TEMP.UPDATE_USER,
             CII.UPDATE_TIME = TEMP.UPDATE_TIME,
             CII.STATUS_DATE = TEMP.STATUS_DATE,
@@ -6414,9 +6416,13 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
             CII.RATE = TEMP.RATE,
             CII.BASIS = TEMP.BASIS,
             CII.DEALTYPE = TEMP.DEALTYPE,
-            CII.FACEVALUE = TEMP.FACEVALUE
-            ,CII.ASSET_METHOD = TEMP.ASSET_METHOD
-			,CII.RIVAL_PARTY_TYPE = TEMP.RIVAL_PARTY_TYPE
+            CII.FACEVALUE = TEMP.FACEVALUE,
+            CII.ASSET_METHOD = TEMP.ASSET_METHOD,
+			CII.RIVAL_PARTY_TYPE = TEMP.RIVAL_PARTY_TYPE,
+            CII.INVEST_APPROVER_ID = TEMP.INVEST_APPROVER_ID,
+            CII.INVEST_APPROVER_NAME = TEMP.INVEST_APPROVER_NAME,
+            CII.INVEST_TRADER_ID = TEMP.INVEST_TRADER_ID,
+            CII.INVEST_TRADER_NAME = TEMP.INVEST_TRADER_NAME
 
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN 
@@ -6431,9 +6437,10 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
           STATUS, ORG_CODE, DEPT_CODE, 
           CREATE_USER, CREATE_TIME, UPDATE_USER, 
           UPDATE_TIME, STATUS_DATE, REV_DATE, 
-          DATA_SOURCE, RATE, BASIS, 
-          DEALTYPE, FACEVALUE
-          ,ASSET_METHOD,RIVAL_PARTY_TYPE)
+          DATA_SOURCE, RATE, BASIS, DEALTYPE,
+          FACEVALUE,ASSET_METHOD,RIVAL_PARTY_TYPE,
+          INVEST_APPROVER_ID ,INVEST_APPROVER_NAME,
+          INVEST_TRADER_ID,INVEST_TRADER_NAME)
         values(
             TEMP.TRADE_SEQNO,
             TEMP.TRADE_CODE,
@@ -6473,9 +6480,13 @@ ON ORG.TOTLE_TRADE_ID = DEAL.TOTLE_TRADE_ID
             TEMP.RATE,
             TEMP.BASIS,
             TEMP.DEALTYPE,
-            TEMP.FACEVALUE
-             ,TEMP.ASSET_METHOD
-            ,TEMP.RIVAL_PARTY_TYPE
+            TEMP.FACEVALUE,
+            TEMP.ASSET_METHOD,
+            TEMP.RIVAL_PARTY_TYPE,
+            TEMP.INVEST_APPROVER_ID,
+            TEMP.INVEST_APPROVER_NAME,
+            TEMP.INVEST_TRADER_ID,
+            TEMP.INVEST_TRADER_NAME
         )
     </insert>
     
