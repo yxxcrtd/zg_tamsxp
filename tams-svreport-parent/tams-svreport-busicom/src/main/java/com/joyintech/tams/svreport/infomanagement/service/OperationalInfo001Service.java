@@ -2764,22 +2764,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             		String assetType = "";
             		// 资产要素表数据处理
             		if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-//            			String dataPara = "";
-//            			for (int i = 7; i <= 274; i ++) {
-//                			String str = strList.get(i);
-//                			if (StringUtil.isNotEmpty(str)) {
-//                				dataPara = queryAssetType(i);
-//                				break;
-//                			}
-//                		}
-//            			if (StringUtil.isEmpty(dataPara)) {
-//                			continue;
-//                		}
-//            			String[] dataParaArr = dataPara.split(":");
-//                		beginIndex = Integer.parseInt(dataParaArr[0].split("-")[0]);
-//                		endIndex = Integer.parseInt(dataParaArr[0].split("-")[1]);
-//                		assetType = dataParaArr[1];
-            			
             			String assetType2=strList.get(4);
             			String[] dataParaArr = assetMap.get(assetType2).split(":");
             			beginIndex = Integer.parseInt(dataParaArr[1].split("-")[0]);
@@ -2815,7 +2799,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             		HashMap<String, String> updateMap = new HashMap<String, String>();
             		switch(strList.get(0)) {
             		case "新增" :
-//            			for (int i = 1; i < size; i ++) {
             			for (Integer i : indexList) {
             				String column = columnList.get(i);
             				String columnData = strList.get(i);
@@ -2848,18 +2831,30 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					    if(columnData==null||("").equals(columnData)){
                                         columnData = null;
                                     }else {
-                                        //excel中输入了时间戳数据处理
-                                        if (columnData.length() > 10) {
-                                            columnData = columnData.substring(0, 10);
-                                        }
-                                        String dateStr = formatDateStr(columnData);
-                                        if (null != dateStr) {
-                                            columnData = "DATE'" + dateStr + "'";
-                                        } else {
-                                            columnData = null;
-                                        }
+										//add by zhoubin 20220721 start GLTZJY-1615
+                                        //产品费用交易信息中的交易发起时间特殊处理
+										if (StringUtil.equals("CHB_PRD_FEE_DEAL",tableName) && StringUtil.equals("TRADE_TIME",column)) {
+											Date tradeTime = DateUtil.parse(columnData, "yyyyMMddHHmmss");
+											if (BaseCommonCheckService.isMYSQLDataBase()) {
+												columnData = "STR_TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','%Y-%m-%d %H:%i:%s')";
+											} else {
+												columnData = "TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','yyyy-MM-DD HH24:MI:SS')";
+											}
+											//add by zhoubin 20220721 end GLTZJY-1615
+										} else {
+											//excel中输入了时间戳数据处理
+											if (columnData.length() > 10) {
+												columnData = columnData.substring(0, 10);
+											}
+											 String dateStr = formatDateStr(columnData);
+											if (null != dateStr) {
+												columnData = "DATE'" + dateStr + "'";
+											} else {
+												columnData = null;
+											}
+										}
+
                                     }
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
             					}
             					// 时间类型字段全存入当前时间
             				} else if (timeColumnList.contains(column)) {
@@ -2964,7 +2959,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			dataInsertList.add(insertMap);
             			break;
             		case "删除" :
-//            			for (int i = 1; i < size; i ++) {
             			for (Integer i : indexList) {
             				String column = columnList.get(i);
             				String columnData = strList.get(i);
@@ -2986,7 +2980,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 									} else {
 										columnData = null;
 									}
-//            					columnData = "DATE'" + columnData.substring(0, 10) +"'";
 								}
             				} else {
             					columnData = "'" + columnData + "'";
@@ -2995,16 +2988,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                 		}
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
             				deleteMap.put("ASSET_TYPE", "'" + assetType + "'");
-//            				String industryShares2 = deleteMap.get("INDUSTRY_SHARES2");
-//            				if (StringUtil.isNotEmpty(industryShares2)) {
-//            					String industryShares1 = tamsBaseMapper.queryFirstIndustryBySecondIndustry(industryShares2.replace("'", ""));
-//            					deleteMap.put("INDUSTRY_SHARES", "'" + industryShares1 + "'");
-//            				}
             			}
             			dataDeleteList.add(deleteMap);
             			break;
             		case "修改" :
-//            			for (int i = 1; i < size; i ++) {
             			for (Integer i : indexList) {
             				String column = columnList.get(i);
             				String columnData = strList.get(i);
@@ -3050,7 +3037,6 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                                         } else {
                                             columnData = null;
                                         }
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'"; 
                                     }
                                 }
             				// 时间类型字段
