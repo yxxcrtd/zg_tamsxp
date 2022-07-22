@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
@@ -249,34 +250,34 @@ public class SvrProdInfoFileImpService extends FileImpService {
 			}
 			dto.setDurationflag("03");
 			//加工定期开放周期天
-			if(StringUtil.equals("01",dto.getOpenMode())){
-				//开放模式=01,定期开放周期天是空的时候去折算
+			if(StringUtil.equals(DictCodeListExt2.开放模式_中债_有规律开放.getValue(),dto.getOpenMode())){
+				//开放模式=01 有规律开放,定期开放周期天是空的时候去折算
 				if(!StringUtil.isNotEmpty(dto.getFitCircleDays())){
 					//01 每天开放→1；
 					if(StringUtil.equals("01",dto.getOpenCircle())){
 						dto.setFitCircleDays(new BigDecimal("1"));
 					}
-					//02 每天开放→7；
+					//02 每周开放一次→7；
 					else if(StringUtil.equals("02",dto.getOpenCircle())){
 							dto.setFitCircleDays(new BigDecimal("7"));
 					}
-					//03 每天开放→14；
+					//03 每两周开放一次→14；
 					else if(StringUtil.equals("03",dto.getOpenCircle())){
 						dto.setFitCircleDays(new BigDecimal("14"));
 					}
-					//04 每天开放→30；
+					//04 每月开放一次→30；
 					else if(StringUtil.equals("04",dto.getOpenCircle())){
 						dto.setFitCircleDays(new BigDecimal("30"));
 					}
-					//05 每天开放→90；
+					//05 每季度开放一次→90；
 					else if(StringUtil.equals("05",dto.getOpenCircle())){
 						dto.setFitCircleDays(new BigDecimal("90"));
 					}
-					//06 每天开放→180；
+					//06 每半年开放一次→180；
 					else if(StringUtil.equals("06",dto.getOpenCircle())){
 						dto.setFitCircleDays(new BigDecimal("180"));
 					}
-					//07 每天开放→360；
+					//07 每年开放一次→360；
 					else if(StringUtil.equals("07",dto.getOpenCircle())){
 						dto.setFitCircleDays(new BigDecimal("360"));
 					}
