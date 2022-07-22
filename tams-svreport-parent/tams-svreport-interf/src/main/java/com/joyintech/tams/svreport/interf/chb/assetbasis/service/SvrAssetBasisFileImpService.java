@@ -317,7 +317,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                             (value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(
                                 value));
                     } catch (Exception e) {
-                        logger.error(e.getMessage(),e);
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }
@@ -326,7 +326,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                         field.set(chbAssetsBasisData,
                             (value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
                     } catch (Exception e) {
-                        logger.error(e.getMessage(),e);
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }
@@ -335,7 +335,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                         field.set(chbAssetsBasisData,
                             (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
                     } catch ( Exception e) {
-                        logger.error(e.getMessage(),e);
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }
@@ -344,7 +344,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                         try {
                             field.set(chbAssetsBasisData, DateUtil.parse(value));
                         } catch (Exception e) {
-                            logger.error(e.getMessage(),e);
+                            logger.debug(e.getMessage(),e);
                             return ;
                         }
                     }
@@ -353,7 +353,7 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                     try {
                         field.set(chbAssetsBasisData, (value == null || "".equals(value)) ? "" : value);
                     } catch ( Exception e) {
-                        logger.error(e.getMessage(),e);
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }
