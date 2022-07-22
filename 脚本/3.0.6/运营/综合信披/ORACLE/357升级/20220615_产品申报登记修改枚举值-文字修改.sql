@@ -1,1 +1,0 @@
-update SYS_DATADICT_LIST set ITEM_VALUE = '本机构为实际管理人' where ITEM_CODE = '01' and DICT_CODE in('PROD_MANAGE','SVR_PROD_MANAGE');
