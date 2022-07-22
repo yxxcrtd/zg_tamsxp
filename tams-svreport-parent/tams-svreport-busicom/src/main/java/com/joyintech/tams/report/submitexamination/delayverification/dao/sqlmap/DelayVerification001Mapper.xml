@@ -2137,12 +2137,12 @@
             </when>
             <!-- 16. 产品持仓登记 -->
             <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
-                '产品登记编码' || info.PRD_REGIST_CODE || ',发行机构代码' || info.ISSUE_PARTY_ID as code,
+                '产品登记编码' || info.PRD_REGIST_CODE ||',持仓类别'|| info.POS_TYPE || ',行内资产/负债编码'|| info.ASSET_ID ||',持仓日期'|| to_char(info.VALUE_DATE,'yyyy-MM-dd') || ',科目名称'|| info.SUBJECT_NAME || ',中间层行内资产/负债编码' ||info.INTER_ASSET_CODE||',币种' || info.CCY as code,
                 info.SEND_STATUS as submitStatus,
             </when>
             <!-- 17. 产品状态登记 -->
             <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
-                '产品登记编码' || info.PRD_REGIST_CODE || ',发行机构代码' || info.ISSUE_PARTY_ID as code,
+                '产品登记编码' || info.PRD_REGIST_CODE || ',发行机构代码' || info.ISSUE_PARTY_ID  || ',产品状态统计日' || to_char(info.PRD_STATUS_DATE,'yyyy-MM-dd') as code,
                 info.SEND_STATUS as submitStatus,
             </when>
         </choose>
@@ -2412,6 +2412,29 @@
                     <when test="tableId !=null and tableId=='CHB_EQUDET_SUB'">
                         '机构代码 '|| info.ORG_CODE || '，产品登记编码' || info.REG_CODE ||'，核心交易流水号' || info.BUSI_SEQNO as code,
                         info.SUBMIT_STATUS as submitStatus,
+                    </when>
+                    <!--  16.总部或分支机构信息登记 -->
+                    <when test="tableId !=null and tableId=='CHB_SALER_INST_SUB'">
+                        '机构代码 ' || info.ORG_CODE || ',销售机构代码 ' || info.SALER_INST_CODE as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
+                    <!--  17.销售人员身份信息登记 -->
+                    <when test="tableId !=null and tableId=='CHB_SALER_IDEN_SUB'">
+                        '机构代码 ' || info.ORG_CODE || ',内部编号 ' || info.SALER_INS_NO as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
+                    <!--  销售人员奖惩投诉记录信息登记 -->
+                    <when test="tableId !=null and tableId=='CHB_SALER_REW_PENA_SUB'">
+                        '机构代码 ' || info.ORG_CODE || ',内部编号 ' || info.SALER_INS_NO as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
+                    <when test="tableId !=null and tableId=='CHB_AGENT_INSTITUTION_SUB'">
+                        '代销机构代码 ' || info.AGENT_INSTITUTION_CODE as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
+                    <when test="tableId !=null and tableId=='CHB_AGENT_PRD_SUB'">
+                        '产品登记编码 ' || info.PROD_REGIST_CODE || ',代销机构代码 ' || info.AGENT_INSTITUTION_CODE as code,
+                        info.SEND_STATUS as submitStatus,
                     </when>
                 </choose>
                 info.SUBMIT_TIME as submitTime,
