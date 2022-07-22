@@ -54,13 +54,17 @@ OR REPLACE VIEW CHB_SUB_TWO_VIEW as
         '行内资产/负债编码：'||ASSET_CODE||'；估值日期：'||TO_CHAR(VAL_DATE, 'yyyy-MM-dd') as UNIQUE_CODE
     from CHB_AST_VAL_SUB
     union all
-    select REGIST_SEQNO, '42' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
+    select REGIST_SEQNO, '45' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
         SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, SUBMIT_FEEDBACK_MSG,
-       '产品登记编码：'||PRD_REGIST_CODE as UNIQUE_CODE
+       '产品登记编码：'||PRD_REGIST_CODE ||'；产品状态统计日：'||to_char(PRD_STATUS_DATE,'yyyy-MM-dd') as UNIQUE_CODE
     from CHB_PRD_STATUS_SUB
     union all
-    select REGIST_SEQNO, '43' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
+    select REGIST_SEQNO, '46' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
     SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, SUBMIT_FEEDBACK_MSG,
-    '产品登记编码：'||PRD_REGIST_CODE as UNIQUE_CODE
-    from CHB_AST_POS_SUB
+    CASE WHEN t1.POS_TYPE IN ('02','03') THEN '产品登记编码：'||PRD_REGIST_CODE||'；行内资产/负债编码：'||asset_id||'；中间层行内资产/负债编码：'||inter_asset_code||'；持仓日期'||to_char(value_date,'yyyy-MM-dd')||'；币种'||ccy
+    ELSE '产品登记编码：'||PRD_REGIST_CODE||'；会计科目名称：'||subject_name||'；中间层行内资产/负债编码：'||inter_asset_code||'；持仓日期'||to_char(value_date,'yyyy-MM-dd')||'；币种'||ccy  END    as UNIQUE_CODE
+    from CHB_AST_POS_SUB t1
+    left join SYS_DATADICT_LIST t2
+        on DICT_CODE = 'SVR_POS_TYPE'
+        and t2.ITEM_CODE = t1.POS_TYPE
 );

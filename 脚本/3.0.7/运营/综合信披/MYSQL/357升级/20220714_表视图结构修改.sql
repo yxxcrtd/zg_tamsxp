@@ -18,12 +18,12 @@ OR REPLACE VIEW CHB_SUB_TWO_VIEW as
     union all
     select REGIST_SEQNO, '05' as REP_TYPE, SUMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
         SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, SUBMIT_FEEDBACK_MSG,
-        '资管计划代码：'||PLAN_ASSET_ID||'；行内资产/负债编码：'||ASSET_CODE||'；持仓日期：'||TO_CHAR(POS_DATE, 'yyyy-MM-dd') as UNIQUE_CODE
+        '资管计划代码：'||PLAN_ASSET_ID||'；行内资产/负债编码：'||ASSET_CODE||'；持仓日期：'||date_format(POS_DATE, '%Y-%m-%d') as UNIQUE_CODE
     from CHB_BOT_AST_POS_SUB
     union all
     select REGIST_SEQNO, '06' as REP_TYPE, SUMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
         SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, SUBMIT_FEEDBACK_MSG,
-        '产品登记编码：'||PROD_REGIST_CODE||'；业务结束日：'||TO_CHAR(MDATE, 'yyyy-MM-dd') as UNIQUE_CODE
+        '产品登记编码：'||PROD_REGIST_CODE||'；业务结束日：'||date_format(MDATE, '%Y-%m-%d') as UNIQUE_CODE
     from CHB_PRD_DEAL_SUB
     union all
     select REGIST_SEQNO, '07' as REP_TYPE, SUMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
@@ -51,16 +51,20 @@ OR REPLACE VIEW CHB_SUB_TWO_VIEW as
     union all
     select REGIST_SEQNO, '12' as REP_TYPE, SUMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
         SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, SUBMIT_FEEDBACK_MSG,
-        '行内资产/负债编码：'||ASSET_CODE||'；估值日期：'||TO_CHAR(VAL_DATE, 'yyyy-MM-dd') as UNIQUE_CODE
+        '行内资产/负债编码：'||ASSET_CODE||'；估值日期：'||date_format(VAL_DATE, '%Y-%m-%d') as UNIQUE_CODE
     from CHB_AST_VAL_SUB
     union all
-    select REGIST_SEQNO, '42' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
+    select REGIST_SEQNO, '45' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
         SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, SUBMIT_FEEDBACK_MSG,
-       '产品登记编码：'+PRD_REGIST_CODE as UNIQUE_CODE
+       '产品登记编码：'||PRD_REGIST_CODE ||'；产品状态统计日：'||date_format(PRD_STATUS_DATE,'%Y-%m-%d') as UNIQUE_CODE
     from CHB_PRD_STATUS_SUB
     union all
-    select REGIST_SEQNO, '43' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
+    select REGIST_SEQNO, '46' as REP_TYPE, SUBMIT_SEQ, SUBMIT_TIME, SEND_STATUS,
     SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, SUBMIT_FEEDBACK_MSG,
-    '产品登记编码：'+PRD_REGIST_CODE as UNIQUE_CODE
-    from CHB_AST_POS_SUB
+    CASE WHEN t1.POS_TYPE IN ('02','03') THEN '产品登记编码：'||PRD_REGIST_CODE||'；行内资产/负债编码：'||asset_id||'；中间层行内资产/负债编码：'||inter_asset_code||'；持仓日期'||date_format(value_date,'%Y-%m-%d')||'；币种'||ccy
+    ELSE '产品登记编码：'||PRD_REGIST_CODE||'；会计科目名称：'||subject_name||'；中间层行内资产/负债编码：'||inter_asset_code||'；持仓日期'||date_format(value_date,'%Y-%m-%d')||'；币种'||ccy  END    as UNIQUE_CODE
+    from CHB_AST_POS_SUB t1
+    left join SYS_DATADICT_LIST t2
+        on DICT_CODE = 'SVR_POS_TYPE'
+        and t2.ITEM_CODE = t1.POS_TYPE
 );
