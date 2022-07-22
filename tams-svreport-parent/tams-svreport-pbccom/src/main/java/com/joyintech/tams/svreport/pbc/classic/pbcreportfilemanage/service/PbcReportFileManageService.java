@@ -204,16 +204,16 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
 			File file;
 			//delete by wangyaning 20220511 GDLCJGBS-561 start
-//			if(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI.equals(pbcDataFile.getFilecode())){
-//				Map<String,Object> map = new HashMap<>();
-//				index ++;
-//				//碰到PPI类型文件重新组装
-//				map.put("index",String.valueOf(index));
-//				pbcClassicsDataFileHelper.setSysSeqService(SpringContextUtil.getBean(SysSeqService.class));
-//				file = new SafelyFile(pbcClassicsDataFileNewService.genDataFile(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI,pbcDataFile.getFileid(),new Date(),map));
-//			}else{
+			if(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI.equals(pbcDataFile.getFilecode())){
+				Map<String,Object> map = new HashMap<>();
+				index ++;
+				//碰到PPI类型文件重新组装
+				map.put("index",String.valueOf(index));
+				pbcClassicsDataFileHelper.setSysSeqService(SpringContextUtil.getBean(SysSeqService.class));
+				file = new SafelyFile(pbcClassicsDataFileNewService.genDataFile(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI,pbcDataFile.getFileid(),new Date(),map));
+			}else{
 				file = new SafelyFile(pbcDataFile.getFilepath());
-//			}
+			}
 			//delete by wangyaning 20220511 GDLCJGBS-561 end
 			sourceFiles.add(file);
 		}
@@ -273,7 +273,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 				unSendDataFiles.add(pbcDataFile);
 			}
 			*/
-			
+
 			// 根据fileid查询文件明细表和关系表是否有记录
 			List<PbcDatfileDetailRelation> relationList = pbcDatfileDetailRelationMapper
 					.selectSendRelationByFileid(searchParam);
