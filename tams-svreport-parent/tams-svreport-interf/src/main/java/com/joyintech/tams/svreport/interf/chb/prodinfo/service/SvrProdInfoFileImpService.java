@@ -248,6 +248,51 @@ public class SvrProdInfoFileImpService extends FileImpService {
 				dto.setRegCode(chbPrdresistCode == null ? "" : chbPrdresistCode.getRegCode());// 产品登记编码
 			}
 			dto.setDurationflag("03");
+			//加工定期开放周期天
+			if(StringUtil.equals("01",dto.getOpenMode())){
+				//开放模式=01,定期开放周期天是空的时候去折算
+				if(!StringUtil.isNotEmpty(dto.getFitCircleDays())){
+					//01 每天开放→1；
+					if(StringUtil.equals("01",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("1"));
+					}
+					//02 每天开放→7；
+					else if(StringUtil.equals("02",dto.getOpenCircle())){
+							dto.setFitCircleDays(new BigDecimal("7"));
+					}
+					//03 每天开放→14；
+					else if(StringUtil.equals("03",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("14"));
+					}
+					//04 每天开放→30；
+					else if(StringUtil.equals("04",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("30"));
+					}
+					//05 每天开放→90；
+					else if(StringUtil.equals("05",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("90"));
+					}
+					//06 每天开放→180；
+					else if(StringUtil.equals("06",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("180"));
+					}
+					//07 每天开放→360；
+					else if(StringUtil.equals("07",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("360"));
+					}
+					//99=取其它规律开放周期天数
+					else if(StringUtil.equals("99",dto.getOpenCircle())){
+						if(dto.getOpenCircleDays()!=null){
+							dto.setFitCircleDays(dto.getOpenCircleDays());
+						}
+					}
+					if(StringUtil.equals("01",dto.getCashManaCate())){
+						dto.setFitCircleDays(BigDecimal.ZERO);
+					}
+				}
+			}
+
+
 		});
 		// 更新产品登记编码表
 		chbPrdBaseinfoInterfMapper.updateChbPrdresistCodes(chbPrdBaseinfoList);
