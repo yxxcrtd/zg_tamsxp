@@ -481,31 +481,31 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 						newMap.put(str, dateObj.toString());
 					}
 				}
-			if(StringUtil.equals("CHB_PRD_DECLARE_SUB_TMP",tableName)){
-					if (StringUtil.equals("PRD_SPEC_PROPERTY",str)){
-						if (StringUtil.isNotEmpty(map.get(str))){
-							if (map.get(str).toString().contains(GlobalConstant.SEMICOLON)){
-								List<String> targetTypeList = StringUtil.splitToList(GlobalConstant.SEMICOLON, map.get(str).toString());
-								StringBuffer sb = new StringBuffer();
-								for(String targetType : targetTypeList) {
-									if (targetType.split(" ")[0].length() > 0){
-										sb.append(";");
-										SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,targetType.split(" ")[0]);
-										sb.append(targetType.split(" ")[0]+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,targetType.split(" ")[0]));
-									}
-								}
-								if (sb.length() > 0){
-									//map.get(str).toString() = sb.substring(1, sb.length());
-									map.put(str,sb.substring(1, sb.length()));
-								}
-							}else{
-								if (StringUtil.isNotEmpty(map.get(str))){
-									map.put(str,map.get(str).toString().split(" ")[0]+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,map.get(str).toString().split(" ")[0]));
-								}
-							}
-						}
-					}
-				}
+//			if(StringUtil.equals("CHB_PRD_DECLARE_SUB_TMP",tableName)){
+//					if (StringUtil.equals("PRD_SPEC_PROPERTY",str)){
+//						if (StringUtil.isNotEmpty(map.get(str))){
+//							if (map.get(str).toString().contains(GlobalConstant.SEMICOLON)){
+//								List<String> targetTypeList = StringUtil.splitToList(GlobalConstant.SEMICOLON, map.get(str).toString());
+//								StringBuffer sb = new StringBuffer();
+//								for(String targetType : targetTypeList) {
+//									if (targetType.split(" ")[0].length() > 0){
+//										sb.append(";");
+//										SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,targetType.split(" ")[0]);
+//										sb.append(targetType.split(" ")[0]+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,targetType.split(" ")[0]));
+//									}
+//								}
+//								if (sb.length() > 0){
+//									//map.get(str).toString() = sb.substring(1, sb.length());
+//									map.put(str,sb.substring(1, sb.length()));
+//								}
+//							}else{
+//								if (StringUtil.isNotEmpty(map.get(str))){
+//									map.put(str,map.get(str).toString().split(" ")[0]+" "+SvrDataUtil.getNameFromDataDict(DictCode.产品特殊属性,map.get(str).toString().split(" ")[0]));
+//								}
+//							}
+//						}
+//					}
+//				}
 				// 查询结果为枚举类型字段处理
 				String resultDictCode = resultMap.get(str);
 				if (StringUtil.isNotEmpty(resultDictCode) && null != newMap.get(str) ) {
