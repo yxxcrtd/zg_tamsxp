@@ -491,13 +491,6 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 					if(!StringUtil.isNotEmpty(dto.getIntAmt())){
 						dto.setIntAmt(dto.getoIntAmt());
 					}
-					if(StringUtil.isNotEmpty(dto.getPosAmt())&&StringUtil.isNotEmpty(dto.getIntAmt())){
-                        //净价市值=底层资产全价市值-利息
-						dto.setPosAmtCprice(ArithmeticUtil.subtract(dto.getPosAmt(),dto.getIntAmt()));
-					}else {
-						//净价市值=净价市值-原币
-						dto.setPosAmtCprice(dto.getoPosAmtCprice());
-					}
 				}else{
          			//非人名币，判断为空的话需要去折算
 					if(!StringUtil.isNotEmpty(dto.getIssueAmt())){
@@ -520,15 +513,6 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 						dto.setIntAmt(ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
 								dto.getPosDate(), dto.getoIntAmt(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
 					}
-					if(StringUtil.isNotEmpty(dto.getPosAmt())&&StringUtil.isNotEmpty(dto.getIntAmt())){
-						//净价市值=底层资产全价市值-利息
-						dto.setPosAmtCprice(ArithmeticUtil.subtract(dto.getPosAmt(),dto.getIntAmt()));
-					}else {
-						//净价市值=净价市值-原币+折算
-						dto.setPosAmtCprice(ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
-								dto.getPosDate(), dto.getoPosAmtCprice(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
-					}
-
 				}
 			}else{
          		//不存在资产要素的情况
@@ -547,9 +531,10 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 				if(!StringUtil.isNotEmpty(dto.getIntAmt())){
 					dto.setIntAmt(dto.getoIntAmt());
 				}
-				//净价市值=净价市值-原币
-				dto.setPosAmtCprice(dto.getoPosAmtCprice());
+
 			}
+			 //净价市值=底层资产全价市值-利息
+			 dto.setPosAmtCprice(ArithmeticUtil.subtract(dto.getPosAmt(),dto.getIntAmt()));
 	 }
 	}
 }
