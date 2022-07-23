@@ -886,10 +886,10 @@
             </if>
 
             <if test="prodId!=null and prodId!=''">
-                and PROD_ID = #{prodId}
+                and PROD_ID  like '%' || #{prodId} || '%'
             </if>
             <if test="prodName!=null and prodName!=''">
-                and PROD_NAME = #{prodName}
+                and PROD_NAME like '%' || #{prodName} || '%'
             </if>
             <if test="regCode!=null and regCode!=''">
                 and REG_CODE = #{regCode}
