@@ -5,11 +5,14 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.service.ChbInvestTradeService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -57,6 +60,9 @@ public class ChbInvestTrade002Controller extends BaseController {
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             dto = chbInvestTradeService.getBussinessEntityByWorkflowId(
                     workflowId);
+            if (StringUtil.isNotBlank(dto.getTradeDate())) {
+                dto.setTradeTime(DateUtil.parse(dto.getTradeDate(),"yyyyMMddHHmmss"));
+            }
             model.addAttribute("pageModel",dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
@@ -85,7 +91,7 @@ public class ChbInvestTrade002Controller extends BaseController {
                 dto.setEndRate(dto.getEndRate().setScale(5,BigDecimal.ROUND_HALF_DOWN));
             }
         }
-        model.addAttribute("tradeCode_New",IDGenerator.generate(32));
+        model.addAttribute("tradeCode_New", IDGenerator.generate(32));
         //获取本行登记代码
         model.addAttribute("registBankCode_New",CommonUtil.selectBankCode());
         return super.init(model);
