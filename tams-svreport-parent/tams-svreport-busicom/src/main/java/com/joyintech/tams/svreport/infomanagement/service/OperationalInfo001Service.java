@@ -102,6 +102,10 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 	private static final List<String> CHB_ASSET_INFO_LIST = Arrays.asList("CHB_ASSET_INFO", "CHB_ASSET_INFO_TMP");
 	//业务数据维护表
 	private static final List<String> CHB_INFO_LIST = Arrays.asList("CHB_PRD_BASEINFO","CHB_INVEST_TRADE");
+	//含有交易发起时间的表名
+	private static final List<String> TRADE_TIME_LIST = Arrays.asList("CHB_PRD_FEE_DEAL","CHB_INVEST_TRADE_SUB_TMP");
+	//需要交易发起时间格式化特殊处理的表
+	private static final List<String> CHB_TRADE_TIME_LIST = Arrays.asList("CHB_PRD_FEE_DEAL");
 
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 282;
@@ -464,7 +468,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 						if (StringUtil.equals("CHB_PRD_STATUS_SUB",tableName) && StringUtil.equals("PRD_STATUS_DATE",str)) {
 							newMap.put(str, DateUtil.format((Date) dateObj,"yyyyMMdd"));
 						} //产品费用信息交易发起时间特殊处理
-						else if (StringUtil.equals("CHB_PRD_FEE_DEAL",tableName) && StringUtil.equals("TRADE_TIME",str)){
+						else if (TRADE_TIME_LIST.contains(tableName) && StringUtil.equals("TRADE_TIME",str)){
 							newMap.put(str, DateUtil.format((Date) dateObj,"yyyyMMddHHmmss"));
 						}else{
 							newMap.put(str, DateUtil.format((Date) dateObj));
@@ -2833,13 +2837,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                                     }else {
 										//add by zhoubin 20220721 start GLTZJY-1615
                                         //产品费用交易信息中的交易发起时间特殊处理
-										if (StringUtil.equals("CHB_PRD_FEE_DEAL",tableName) && StringUtil.equals("TRADE_TIME",column)) {
-											Date tradeTime = DateUtil.parse(columnData, "yyyyMMddHHmmss");
-											if (BaseCommonCheckService.isMYSQLDataBase()) {
-												columnData = "STR_TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','%Y-%m-%d %H:%i:%s')";
-											} else {
-												columnData = "TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','yyyy-MM-DD HH24:MI:SS')";
-											}
+										String tradeTimeColumnData = getTradeTimeFormat(tableName, column, columnData);
+										if (StringUtil.isNotBlank(tradeTimeColumnData)) {
+											columnData=tradeTimeColumnData;
 											//add by zhoubin 20220721 end GLTZJY-1615
 										} else {
 											//excel中输入了时间戳数据处理
@@ -3027,16 +3027,24 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                                     if (columnData == null || ("").equals(columnData)) {
                                         columnData= "'" + columnData + "'";
                                     } else {
-                                        //excel中输入了时间戳数据处理
-                                        if (columnData.length() > 10) {
-                                            columnData = columnData.substring(0, 10);
-                                        }
-                                        String dateStr = formatDateStr(columnData);
-                                        if (null != dateStr) {
-                                            columnData = "DATE'" + dateStr + "'";
-                                        } else {
-                                            columnData = null;
-                                        }
+										//产品费用交易信息中的交易发起时间特殊处理
+										String tradeTimeColumnData = getTradeTimeFormat(tableName, column, columnData);
+										if (StringUtil.isNotBlank(tradeTimeColumnData)) {
+											columnData=tradeTimeColumnData;
+											//add by zhoubin 20220721 end GLTZJY-1615
+										} else {
+											//excel中输入了时间戳数据处理
+											if (columnData.length() > 10) {
+												columnData = columnData.substring(0, 10);
+											}
+											String dateStr = formatDateStr(columnData);
+											if (null != dateStr) {
+												columnData = "DATE'" + dateStr + "'";
+											} else {
+												columnData = null;
+											}
+										}
+
                                     }
                                 }
             				// 时间类型字段
@@ -4002,4 +4010,25 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		}
         return buffer.toString();
     }
+
+	/**
+	 * 格式化交易发起时间
+	 * @param tableName
+	 * @param column
+	 * @param columnData
+	 * @return
+	 */
+	private String getTradeTimeFormat(String tableName,String column,String columnData) {
+		if (CHB_TRADE_TIME_LIST.contains(tableName) && StringUtil.equals("TRADE_TIME", column)) {
+			Date tradeTime = DateUtil.parse(columnData, "yyyyMMddHHmmss");
+			if (BaseCommonCheckService.isMYSQLDataBase()) {
+				columnData = "STR_TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','%Y-%m-%d %H:%i:%s')";
+			} else {
+				columnData = "TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','yyyy-MM-DD HH24:MI:SS')";
+			}
+
+			return columnData;
+		}
+		return null;
+	}
 }
