@@ -150,8 +150,8 @@
 		and not exists  (
 		select 1 from CHB_BOT_AST_POS POS
 		where DATE_FORMAT(SUB.POS_DATE,'%Y-%m-%d') = DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d')
-		and PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
-		and BOTASSET.ASSET_CODE = POS.ASSET_CODE
+		and sub.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
+		and sub.ASSET_CODE = POS.ASSET_CODE
 		and POS.STATUS != 'D')
 	</select>
 

@@ -220,8 +220,8 @@
 		and not exists  (
 		select 1 from CHB_BOT_AST_POS POS 
 			where to_char(SUB.POS_DATE,'yyyy-MM-dd') = to_char(POS.POS_DATE,'yyyy-MM-dd')
-			  and PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
-			  and BOTASSET.ASSET_CODE = POS.ASSET_CODE
+			  and sub.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
+			  and sub.ASSET_CODE = POS.ASSET_CODE
 			  and POS.STATUS != 'D')
 	</select>
 
