@@ -133,7 +133,7 @@ public class ChbBotAstPosition extends ChbBotAstPositionKey {
     private BigDecimal accuamt;
     
     /**
-     * 剩余金额
+     * 币种
      */
     private String ccy;
     

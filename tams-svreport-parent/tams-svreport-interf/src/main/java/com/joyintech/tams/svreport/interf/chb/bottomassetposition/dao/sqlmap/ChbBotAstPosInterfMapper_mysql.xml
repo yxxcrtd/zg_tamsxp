@@ -164,7 +164,7 @@
         CREATE_TIME, UPDATE_USER, UPDATE_TIME,
         DATASOURCE,INT_AMT,CASH_FLAG,
         SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
-        O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT
+        O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY
         )
         values(
         #{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP},
@@ -177,7 +177,7 @@
         #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR},
         #{shadowAmt,jdbcType=DECIMAL},#{posAmtCprice,jdbcType=DECIMAL},#{oIssueAmt,jdbcType=DECIMAL},
         #{oUninvestCash,jdbcType=DECIMAL},#{oPosAmt,jdbcType=DECIMAL},#{oShadowAmt,jdbcType=DECIMAL},
-        #{oPosAmtCprice,jdbcType=DECIMAL},#{oIntAmt,jdbcType=DECIMAL}
+        #{oPosAmtCprice,jdbcType=DECIMAL},#{oIntAmt,jdbcType=DECIMAL},#{ccy,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -207,7 +207,7 @@
     CREATE_TIME, UPDATE_USER, UPDATE_TIME,
     DATASOURCE,INT_AMT,CASH_FLAG,
       SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
-      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT)
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY)
     select POS_ID, ISSUE_PARTY_ID, POS_DATE,
     PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
     ISSUE_AMT, UNINVEST_CASH, POS_NUM,
@@ -217,7 +217,7 @@
     CREATE_TIME, UPDATE_USER, UPDATE_TIME,
     DATASOURCE,INT_AMT,CASH_FLAG,
       SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
-      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY
        from
     (
     select TEMP.* from
@@ -255,7 +255,8 @@
         #{item.oPosAmt,jdbcType=DECIMAL} O_POS_AMT,
         #{item.oShadowAmt,jdbcType=DECIMAL} O_SHADOW_AMT,
         #{item.oPosAmtCprice,jdbcType=DECIMAL} O_POS_AMT_CPRICE,
-        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT
+        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT,
+        #{item.ccy,jdbcType=VARCHAR} CASH_FLAG,
       FROM DUAL
     </foreach>
     ) TEMP where not exists (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
@@ -285,7 +286,7 @@
     UPDATE_TIME,
     DATASOURCE,INT_AMT,CASH_FLAG,
       SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
-      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT from
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY from
     (
     select TEMP.* from
     (
@@ -322,7 +323,8 @@
         #{item.oPosAmt,jdbcType=DECIMAL} O_POS_AMT,
         #{item.oShadowAmt,jdbcType=DECIMAL} O_SHADOW_AMT,
         #{item.oPosAmtCprice,jdbcType=DECIMAL} O_POS_AMT_CPRICE,
-        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT
+        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT,
+        #{item.ccy,jdbcType=DECIMAL} CCY
       FROM DUAL
     </foreach>
     ) TEMP
@@ -357,7 +359,8 @@
       A.O_POS_AMT = B.O_POS_AMT,
       A.O_SHADOW_AMT = B.O_SHADOW_AMT,
       A.O_POS_AMT_CPRICE = B.O_POS_AMT_CPRICE,
-      A.O_INT_AMT = B.O_INT_AMT
+      A.O_INT_AMT = B.O_INT_AMT,
+      A.CCY = B.CCY
     where A.PLAN_ASSET_ID = B.PLAN_ASSET_ID
     and A.ASSET_CODE = B.ASSET_CODE
     and A.POS_DATE = B.POS_DATE;

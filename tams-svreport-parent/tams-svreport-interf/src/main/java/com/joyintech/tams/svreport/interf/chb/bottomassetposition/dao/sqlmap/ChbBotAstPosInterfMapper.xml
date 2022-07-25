@@ -164,7 +164,7 @@ GROUP BY asset.POS_DATE,
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       DATASOURCE,INT_AMT,CASH_FLAG,
       SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
-      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY
       )
      values(
       #{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP}, 
@@ -177,7 +177,7 @@ GROUP BY asset.POS_DATE,
       #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR},
       #{shadowAmt,jdbcType=DECIMAL},#{posAmtCprice,jdbcType=DECIMAL},#{oIssueAmt,jdbcType=DECIMAL},
       #{oUninvestCash,jdbcType=DECIMAL},#{oPosAmt,jdbcType=DECIMAL},#{oShadowAmt,jdbcType=DECIMAL},
-      #{oPosAmtCprice,jdbcType=DECIMAL},#{oIntAmt,jdbcType=DECIMAL}
+      #{oPosAmtCprice,jdbcType=DECIMAL},#{oIntAmt,jdbcType=DECIMAL},#{ccy,jdbcType=VARCHAR}
       )
   </insert>
 
@@ -234,7 +234,8 @@ GROUP BY asset.POS_DATE,
       #{item.oPosAmt,jdbcType=DECIMAL} O_POS_AMT,
       #{item.oShadowAmt,jdbcType=DECIMAL} O_SHADOW_AMT,
       #{item.oPosAmtCprice,jdbcType=DECIMAL} O_POS_AMT_CPRICE,
-      #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT
+      #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT,
+      #{item.ccy,jdbcType=VARCHAR} CCY
 	FROM DUAL
 		</foreach>
 		) TEMP
@@ -273,7 +274,8 @@ GROUP BY asset.POS_DATE,
       CII.O_POS_AMT = TEMP.O_POS_AMT,
       CII.O_SHADOW_AMT = TEMP.O_SHADOW_AMT,
       CII.O_POS_AMT_CPRICE = TEMP.O_POS_AMT_CPRICE,
-      CII.O_INT_AMT = TEMP.O_INT_AMT
+      CII.O_INT_AMT = TEMP.O_INT_AMT,
+      CII.CCY = TEMP.CCY
 
       <!-- 未匹配到这插入 -->
 		WHEN NOT MATCHED THEN INSERT (POS_ID, ISSUE_PARTY_ID, POS_DATE, 
@@ -284,7 +286,7 @@ GROUP BY asset.POS_DATE,
       DEPT_CODE, CREATE_USER, CREATE_DEPT, 
       CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
       DATASOURCE,INT_AMT,CASH_FLAG,SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
-      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT)
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY)
 		VALUES( TEMP.POS_ID,
 		 TEMP.ISSUE_PARTY_ID,
 		 TEMP.POS_DATE,
@@ -316,7 +318,8 @@ GROUP BY asset.POS_DATE,
          TEMP.O_POS_AMT,
          TEMP.O_SHADOW_AMT,
          TEMP.O_POS_AMT_CPRICE,
-         TEMP.O_INT_AMT
+         TEMP.O_INT_AMT,
+         TEMP.CCY
 			)
 	</insert>
 	
