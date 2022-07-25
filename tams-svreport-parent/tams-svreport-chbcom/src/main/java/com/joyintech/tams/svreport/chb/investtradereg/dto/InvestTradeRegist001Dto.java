@@ -1238,10 +1238,8 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
 	}
 
     public String getRivalPartyTypeStr() {
-        if (!StringUtil.isEmpty(this.getRivalPartyType())){
-            return SvrDataUtil.getZZDictCodeAndName(DictCode.对手方类型, this.getRivalPartyType());
-        }
-        return this.getRivalPartyType();
+        return StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.对手方类型, this.getRivalPartyType()))?
+                SvrDataUtil.getZZDictCodeAndName(DictCode.对手方类型, this.getRivalPartyType()):this.getRivalPartyType();
 	}
 
 	public String getAssetMethodNum() {
@@ -1293,11 +1291,10 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
     public void setRelatedTradeStatus(String relatedTradeStatus) {
         this.relatedTradeStatus = relatedTradeStatus;
     }
+
     public String getRelatedTradeStatusStr() {
-        if (StringUtil.isNotBlank(relatedTradeStatus)){
-            return SysDataUtil.getZZDictCodeAndName(DictCode.关联交易情况, relatedTradeStatus);
-        }
-        return relatedTradeStatus;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.关联交易情况, this.getRelatedTradeStatus()))?
+                SysDataUtil.getZZDictCodeAndName(DictCode.关联交易情况, relatedTradeStatus):this.getRelatedTradeStatus();
     }
 
     public String getTradeTimeStr() {
