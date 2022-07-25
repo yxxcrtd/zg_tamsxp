@@ -414,27 +414,28 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 				//折算公允价值
 				BigDecimal chzfAmt = ChbCcyConvertUtil.exchangeMoney(botdto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), objecDate, dsub.getFloatIngpl(), rateMap, exchangeSource);
 				dsub.setCnyFloatIngpl(chzfAmt.setScale(2, RoundingMode.HALF_UP));
-				if(DictCodeListExt3.资产持仓品种_金融衍生品.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())){
+				if(mapAssetType.containsKey(botdto.getAssetType2())){
+					if(DictCodeListExt3.资产持仓品种_金融衍生品.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())){
 						//单位净价: null
-					dsub.setUnitValueCprice(null);
+						dsub.setUnitValueCprice(null);
 						//单位全价: null
-					dsub.setUnitValueFprice(null);
+						dsub.setUnitValueFprice(null);
 
-				}
-				if(DictCodeListExt3.资产持仓品种_净值型资产.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())||
+					}
+					if(DictCodeListExt3.资产持仓品种_净值型资产.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())||
 							("12".equals(mapAssetType.get(botdto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_否.getValue().equals(botdto.getRateFlag()))||
 							("13".equals(mapAssetType.get(botdto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_否.getValue().equals(botdto.getRateFlag()))){
 						//单位净价=底层资产净价市值/持仓数量
-					dsub.setUnitValueCprice(ArithmeticUtil.divide(botdto.getoPosCleanPricEmarketValue(),botdto.getPosNum(),4));
+						dsub.setUnitValueCprice(ArithmeticUtil.divide(botdto.getoPosCleanPricEmarketValue(),botdto.getPosNum(),4));
 						//单位全价=底层资产全价市值/持仓数量
-					dsub.setUnitValueFprice(ArithmeticUtil.divide(botdto.getoPosAmt(),botdto.getPosNum(),4));
+						dsub.setUnitValueFprice(ArithmeticUtil.divide(botdto.getoPosAmt(),botdto.getPosNum(),4));
 
 					}
-				if(DictCodeListExt3.资产持仓品种_预期收益型资产.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())||
+					if(DictCodeListExt3.资产持仓品种_预期收益型资产.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())||
 							("12".equals(mapAssetType.get(botdto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_是.getValue().equals(botdto.getRateFlag()))||
 							("13".equals(mapAssetType.get(botdto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_是.getValue().equals(botdto.getRateFlag()))){
 
-					//华夏个性化  有还本计划记录
+						//华夏个性化  有还本计划记录
 //					if(secRepayInfoMap!=null&&secRepayInfoMap.containsKey(botdto.getAssetId())){
 //						//单位净价=还本后面值* 底层资产净价市值/持仓数量
 //						dsub.setUnitValueCprice(ArithmeticUtil.divide(botdto.getoPosCleanPricEmarketValue(),botdto.getPosNum(),14).multiply(secRepayInfoMap.get(botdto.getAssetId()).getRepayNet()==null?new BigDecimal("100"):secRepayInfoMap.get(botdto.getAssetId()).getRepayNet())
@@ -451,6 +452,7 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 								.setScale(4, RoundingMode.HALF_UP));
 //					}
 					}
+				}
 				//数量= 此循环明细的.持仓数量 *折算率
 				dsub.setQty(ArithmeticUtil.multiply(botdto.getPosNum(),crate).setScale(5, RoundingMode.HALF_UP));
 				}
