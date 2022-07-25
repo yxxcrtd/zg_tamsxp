@@ -343,8 +343,13 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 //                }
 				// add by zhangliang 20201109 数据流向处理 ===================================end
 
+				// add by zcw 当SVR_IF_REAL_COUNTER参数配置为虚拟交易对手 并且交易对手关联情况为对手方为本机构其他理财产品时
+				// 交易对手、交易对手类型、关联交易情况按照SVR_VIRTUAL_COUNTER默认参数配置 分号隔开
 				if ("1".equals(ifrealCounter) && inSidecounterMap.containsKey(dto.getTradeCounter())) {
-					dto.setTradeCounter(virtualCounter);
+					String[] splitstr = virtualCounter.split(";");
+					dto.setTradeCounter(splitstr[0]);
+					dto.setRivalPartyType(splitstr[1]);
+					dto.setRelatedTradeStatus(splitstr[2]);
 				} else {
 					// 交易对手
 					List<String> countList = StringUtil.splitToList(GlobalConstant.COMMA, dto.getTradeCounter());
