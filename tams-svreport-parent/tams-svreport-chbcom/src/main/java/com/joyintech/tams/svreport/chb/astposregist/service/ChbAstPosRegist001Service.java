@@ -211,6 +211,13 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 			if (StringUtil.isNotBlank(posType)) {
 				pageParam.put("posTypeList", StringUtil.splitToList(GlobalConstant.COMMA, posType));
 			}
+			//
+			// 持仓类别
+			String interAssetType = (String) pageParam.get("interAssetType");
+			if (StringUtil.isNotBlank(interAssetType)) {
+				pageParam.put("interAssetTypeList", StringUtil.splitToList(GlobalConstant.COMMA, interAssetType));
+			}
+			
 			// 报送状态
 			String sendStatus = (String) pageParam.get("sendStatus");
 			// 将报送状态当做多选下拉框处理

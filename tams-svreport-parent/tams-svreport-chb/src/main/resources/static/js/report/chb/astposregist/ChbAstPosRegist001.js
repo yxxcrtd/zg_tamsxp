@@ -10,6 +10,9 @@ $(function() {
               assetCode:$('#assetCode').val()==null?null:$('#assetCode').val().join(","),
               //产品登记编码
               regCode:$('#regCode').val()==null?null:$('#regCode').val().join(","),
+              //资产穿透情况
+
+              interAssetType:$('#interAssetType').val()==null?null:$('#interAssetType').val().join(","),
               //持仓类别
               posType : $('#posType').val()==null?null:$('#posType').val().join(","),
               //持仓日期
@@ -90,7 +93,8 @@ $(function() {
               {title: '数量',field:'qty', width:250,type:'money',digit:5, sortField:'qty'},
               {title: '币种', field:'ccyStr', width:150, sortField:'ccyStr'},
               {title: '余额',field:'balanceAmt', width:250,type:'money',digit:2, sortField:'balanceAmt',visible:false},
-              {title: '持仓日期', field:'valueDate', width:200,type: 'date', sortField:'valueDate'}
+              {title: '持仓日期', field:'valueDate', width:200,type: 'date', sortField:'valueDate'},
+              {title: '备注', field:'remark', width:150, sortField:'remark'}
           ]
       });
 

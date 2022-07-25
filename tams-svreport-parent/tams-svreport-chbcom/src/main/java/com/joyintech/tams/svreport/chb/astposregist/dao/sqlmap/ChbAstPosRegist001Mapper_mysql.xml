@@ -111,6 +111,11 @@
                 #{items,jdbcType=VARCHAR}
             </foreach>
         </if>
+        <if test="interAssetTypeList != null and interAssetTypeList.size()>0">
+            <foreach collection="interAssetTypeList" item="items" open="and sub.INTER_ASSET_TYPE in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
         <if test="valueDateStart != null and valueDateStart != ''">
             and DATE_FORMAT(sub.VALUE_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{valueDateStart}
         </if>

@@ -31,7 +31,7 @@
 						</div>
 					</div>
 					<div class="layui-inline layui-col-md4">
-						<label class="layui-form-label form-lable">资产代码</label>
+						<label class="layui-form-label form-lable">行内资产/负债编码</label>
 						<div class="layui-input-inline input-inline">
 							<select id="assetCode" class="input-select"
 									data-th-data-url='@{/chb/assetinfodetail/AssetInfoDetail001/getAssetCode}'
@@ -42,6 +42,20 @@
 
 						</div>
 					</div>
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">资产穿透情况</label>
+						<div class="layui-input-inline input-inline">
+							<select id="interAssetType" name="interAssetType"
+									class="layui-input form-input input-select"
+									data-th-data-result='${SVR_INTER_ASSET_TYPE}'
+									placeholder="请选择"
+									data-th-placeholder="#{SysCommon.selectplaceholder}"
+									allowClear="true" multiple="multiple">
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">持仓类别</label>
 						<div class="layui-input-inline input-inline">
@@ -54,8 +68,6 @@
 							</select>
 						</div>
 					</div>
-				</div>
-				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">持仓日期</label>
 						<div class="layui-input-inline input-inline">
@@ -76,17 +88,17 @@
 							</select>
 						</div>
 					</div>
+				</div>
+
+				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">报送日期</label>
 						<div class="layui-input-inline input-inline">
 							<input id="submitDate" type="text" name="timeControl"
-								class="layui-input form-input timeControl input-dateRangeSelect"
-								placeholder="请选择日期区间" />
+								   class="layui-input form-input timeControl input-dateRangeSelect"
+								   placeholder="请选择日期区间" />
 						</div>
 					</div>
-				</div>
-
-				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">反馈状态</label>
 						<div class="layui-input-inline input-inline">
@@ -106,16 +118,16 @@
 								placeholder="请选择日期区间" />
 						</div>
 					</div>
+				</div>
+				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">数据日期</label>
 						<div class="layui-input-inline input-inline">
 							<input id="dataDate" type="text" name="datatimeControl"
-								class="layui-input form-input timeControl input-dateRangeSelect"
-								placeholder="请选择日期区间" />
+								   class="layui-input form-input timeControl input-dateRangeSelect"
+								   placeholder="请选择日期区间" />
 						</div>
 					</div>
-				</div>
-				<div class="layui-form-item">
 				<div class="layui-inline layui-col-md4">
 					<label class="layui-form-label form-lable">数据状态</label>
 					<div class="layui-input-inline input-inline">
