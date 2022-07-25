@@ -93,9 +93,9 @@ public class ChbAstPosRegist001Controller extends BaseController {
             Date reportEndDate = calendar.getTime();
             model.addAttribute("searchDataStart", DateUtil.format(reportStartDate));
             model.addAttribute("searchDataEnd", DateUtil.format(reportEndDate));
+            model.addAttribute("isMain", "02");
         }
-        model.addAttribute("isMain", "02");
-        model.addAttribute("SVR_REPORT_CODE", DictCodeListExt2.报表名称_产品终止登记.getValue());
+        model.addAttribute("SVR_REPORT_CODE", DictCodeListExt2.报表名称_资产持仓登记.getValue());
         model.addAttribute("FILE_HANDLE_STATUS", DictCodeListExt3.中债一二三期文件处理状态_未处理.getValue());
     	super.setSelectOptionToModel(model, DictCode.报送数据状态,
                 DictCode.报送状态,DictCode.报送反馈状态,DictCode.中债持仓类型,DictCode.资产穿透情况);
