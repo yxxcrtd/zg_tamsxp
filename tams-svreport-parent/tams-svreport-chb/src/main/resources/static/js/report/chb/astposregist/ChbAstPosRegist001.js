@@ -458,13 +458,13 @@ $(function() {
                      if($('#submitStatus').val()=='02'||$('#submitStatus').val()=='03'){
                          $('#valueDate').val(searchDataStart+' - '+searchDataEnd);
                      }else{
-                         $('#submitendDate').val(searchDataStart+' - '+searchDataEnd);
+                         // $('#submitendDate').val(searchDataStart+' - '+searchDataEnd);
                      }
                      table.load();
                  }, 500);
              }else{
                  setTimeout(function() {
-                     $('#submitendDate').val(searchDataStart+' - '+searchDataEnd);
+                     // $('#submitendDate').val(searchDataStart+' - '+searchDataEnd);
                      $('#valueDate').val(searchDataStart+' - '+searchDataEnd);
                      table.load();
                  }, 500);
