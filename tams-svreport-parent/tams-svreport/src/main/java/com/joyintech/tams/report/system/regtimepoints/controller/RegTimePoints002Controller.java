@@ -81,6 +81,7 @@ public class RegTimePoints002Controller extends BaseController {
             //流程中的查看
         ChbRegTimePoints entity = regTimePointsMService.selectByPrimaryKey(seqno);
         model.addAttribute("entity",entity);
+        super.setSelectOptionToModel(model, DictCode.报表名称);
 
         return super.init(model);
     }

@@ -14,10 +14,16 @@
             <div id="editOrNew" class="layui-inline layui-col-md6">
                 <label class="layui-form-label form-lable">报表名称</label>
                 <div class="layui-input-inline input-inline">
-                    <input disabled type="text" id="reportCode" name="reportCode" class="layui-input form-input" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" data-th-value="${entity?.reportCode}" >
+                    <select  id="reportCode" name="reportCode" disabled
+                             data-th-initValue="${entity?.reportCode}"
+                             class="layui-input form-input input-select"
+                             data-th-data-result="${SVR_REPORT_CODE}"
+                    ></select>
                 </div>
             </div>
         </div>
+
+
         <div class="layui-form-item">
             <div id="editOrNew" class="layui-inline layui-col-md6">
                 <label class="layui-form-label form-lable">细分类</label>
