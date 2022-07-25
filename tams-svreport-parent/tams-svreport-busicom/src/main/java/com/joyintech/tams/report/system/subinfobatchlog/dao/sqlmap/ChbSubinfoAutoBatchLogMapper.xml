@@ -320,13 +320,16 @@
 	        from CHB_SUBINFO_BATCH_LOG
 	        where 1=1
         <if test="busiConfirmDateStart != null and busiConfirmDateStart != ''">
-            AND CASE WHEN REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 3) IS NULL
-            THEN (REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 1) <![CDATA[>=]]> #{busiConfirmDateStart,jdbcType=VARCHAR}
+            AND (CASE WHEN REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 3) IS NULL
+            AND (REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 1) <![CDATA[>=]]> #{busiConfirmDateStart,jdbcType=VARCHAR}
             AND REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 1) <![CDATA[<=]]> #{busiConfirmDateEnd,jdbcType=VARCHAR})
-            ELSE
-            (REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 3) <![CDATA[>=]]> #{busiConfirmDateStart,jdbcType=VARCHAR}
+            THEN 0
+            WHEN REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 3) IS NOT NULL
+            AND (REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 3) <![CDATA[>=]]> #{busiConfirmDateStart,jdbcType=VARCHAR}
             AND REGEXP_SUBSTR(BUSI_CONFIRM_DATE, '[^ - ]+', 1, 1) <![CDATA[<=]]> #{busiConfirmDateEnd,jdbcType=VARCHAR})
-            END
+            THEN 0
+            ELSE 1
+            END)=0
         </if>
 	        <if test="queryDateStart != null and queryDateStart != ''">
 	        	and END_TIME >= to_date(#{queryDateStart,jdbcType=DATE},'yyyy-MM-dd')
