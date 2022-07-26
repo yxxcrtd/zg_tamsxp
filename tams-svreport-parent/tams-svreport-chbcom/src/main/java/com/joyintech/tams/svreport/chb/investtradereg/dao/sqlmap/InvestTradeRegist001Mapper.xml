@@ -1021,7 +1021,6 @@
 		investtrade.DEALTYPE DEALTYPE, /*交易类型*/
 		prodinfo.prodtype prodtype/*产品类型N M净值型*/
 		,investtrade.ASSET_METHOD
-		,investtrade.RIVAL_PARTY_TYPE
         ,investtrade.INVEST_APPROVER_ID
         ,investtrade.INVEST_APPROVER_NAME
         ,investtrade.INVEST_TRADER_ID
@@ -1104,7 +1103,6 @@
 		NULL DEALTYPE, /*交易类型*/
         prodinfo.prodtype prodtype/*产品类型N M净值型*/
         ,NULL ASSET_METHOD
-		,RIVAL_PARTY_TYPE RIVAL_PARTY_TYPE
         ,prdfeedeal.INVEST_APPROVER_ID
         ,prdfeedeal.INVEST_APPROVER_NAME
         ,prdfeedeal.INVEST_TRADER_ID
