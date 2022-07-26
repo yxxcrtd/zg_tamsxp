@@ -2467,7 +2467,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             	/*add by xuyang 底层持仓数据导入，新增资产编码是否存在资产要素校验，不存在，不允许导入 start*/
 				if(tableId.equals("CHB_BOT_AST_POS")){
 					int rowNum=0;
-					if(dataList.get(0).get(4).equals("ASSET_CODE")){
+					if(dataList.get(0).get(3).equals("ASSET_CODE")){
 						checkResult.addAll(operationalLoanInfo001CheckService.checkImportBotAstPosData(dataMapList,bisinessPkList));
 					}else{
 						checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(rowNum),"导入底层资产持仓数据模板不正确"));
