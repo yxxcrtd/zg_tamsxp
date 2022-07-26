@@ -112,6 +112,11 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
      * 交易交易起始日
      */
     private Date tradeTime;
+
+    /**
+     * 交易交易起始日格式化
+     */
+    private String tradeDate;
     /**
      * 关联交易情况
      */
@@ -1282,6 +1287,14 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
 
     public void setTradeTime(Date tradeTime) {
         this.tradeTime = tradeTime;
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
     }
 
     public String getRelatedTradeStatus() {
