@@ -167,6 +167,10 @@ public class CommonCodeCheckBatchService {
         String interAssetCode = dataMap.get("INTER_ASSET_CODE");
         String valueDate = dataMap.get("VALUE_DATE");
         String ccy = dataMap.get("CCY");
+        String errMsg = dataMap.get("ERRMSG");
+        if (StringUtil.isNotBlank(errMsg)) {
+            errMsgSb.append(errMsg);
+        }
         //必填校验
         if(StringUtil.isEmpty(prdRegistCode)){
             errMsgSb.append("产品登记编码必填");
