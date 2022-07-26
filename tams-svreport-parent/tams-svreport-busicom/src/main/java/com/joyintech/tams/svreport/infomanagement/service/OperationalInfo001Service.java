@@ -2285,7 +2285,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                     		/** end 添加模板导入A列为导出时,应该提示“不要使用“操作类型”为“导出”的进行导入 add by  dongxiangyang 20201028*/
 							boolean flag;
 							//科目余额没有STATUS字段，单独处理
-							if (!Objects.equals("BOK_BALANCE",tableName)) {
+							/**市场机构附属表无status字段  wangyaning 20220726*/
+							if (!Objects.equals("BOK_BALANCE",tableName) && !Objects.equals("MST_CUSTOMER_INFO_ADD",tableName)) {
 								flag = this.checkSingleData(pkDataMap, tableName);
 							} else {
 								flag = this.checkNoStatusDataIsExist(pkDataMap, tableName);
