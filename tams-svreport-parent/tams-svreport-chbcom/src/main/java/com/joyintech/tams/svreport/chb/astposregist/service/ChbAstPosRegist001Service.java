@@ -322,7 +322,9 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 
 
     public List<ChbAstPosRegist001Dto> selectAllData(Map<String, Object> pageParam){
-        return chbAstPosRegist001Mapper.selectAllData(pageParam);
+		List<ChbAstPosRegist001Dto> dtoList = chbAstPosRegist001Mapper.selectAllData(pageParam);
+		dealResultlist(dtoList);
+		return dtoList;
     }
     @Override
     public Page<ChbAstPosRegist001Dto> selectPageData(Map<String, Object> pageParam) {
