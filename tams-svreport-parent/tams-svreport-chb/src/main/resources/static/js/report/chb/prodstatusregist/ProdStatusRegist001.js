@@ -186,7 +186,7 @@ $(function() {
           var expArr=table.getAllCheckedRows();
           var param={};
           if(expArr.length ==0){
-              Joyin.error("请勾选需要导出的数据! ");
+              Joyin.error("请勾选需要导出的月份数据! ");
               return;
           }
           // 用来标注选择数据中存在修改或者已报送数据，默认为false
