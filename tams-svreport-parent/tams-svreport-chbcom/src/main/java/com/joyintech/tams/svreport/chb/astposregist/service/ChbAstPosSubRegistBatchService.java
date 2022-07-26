@@ -175,8 +175,6 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 			sub.setRegistSeqno(IDGenerator.generate(36));
 			//期数
 			sub.setTermid(DateUtil.format(objecDate,DateUtil.MONTH_OTHER_FORMAT));
-			//发行机构代码
-			sub.setIssuePartyId(dto.getIssuePartyId());
 			//产品登记编码
 			sub.setPrdRegistCode(dto.getPrdRegistCode());
 			//产品代码
@@ -287,8 +285,6 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 				sub.setRegistSeqno(IDGenerator.generate(36));
 				//期数
 				sub.setTermid(DateUtil.format(objecDate,DateUtil.MONTH_OTHER_FORMAT));
-				//发行机构代码
-				sub.setIssuePartyId(bato.getIssuePartyId());
 				//产品登记编码
 				sub.setPrdRegistCode(bato.getPrdRegistCode());
 				//产品代码
@@ -342,8 +338,6 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 			sub.setRegistSeqno(IDGenerator.generate(36));
 			//期数
 			sub.setTermid(DateUtil.format(objecDate,DateUtil.MONTH_OTHER_FORMAT));
-			//发行机构代码
-			sub.setIssuePartyId(sdto.getIssuePartyId());
 			//产品登记编码
 			sub.setPrdRegistCode(sdto.getPrdRegistCode());
 			//产品代码
@@ -376,8 +370,6 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 				dsub.setRegistSeqno(IDGenerator.generate(36));
 				//期数
 				dsub.setTermid(DateUtil.format(objecDate,DateUtil.MONTH_OTHER_FORMAT));
-				//发行机构代码
-				dsub.setIssuePartyId(botdto.getIssuePartyId());
 				//产品登记编码=上方资产基础表的产品登记编码
 				dsub.setPrdRegistCode(sdto.getPrdRegistCode());
 				//产品代码
@@ -588,7 +580,8 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 			//登记序列
 			sub.setRegistSeqno(IDGenerator.generate(36));
 			//发行机构代码
-			sub.setIssuePartyId(dbotMap.get(key).get(0).getIssuePartyId());
+			String issuePartyId = CommonUtil.selectBankCode();
+			sub.setIssuePartyId(issuePartyId);
 			//产品等级编码
 			sub.setPrdRegistCode(key);
 			//产品代码
@@ -732,6 +725,9 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 		//持仓日期
 		sub.setValueDate(objecDate);
+		//发行机构代码
+		String issuePartyId = CommonUtil.selectBankCode();
+		sub.setIssuePartyId(issuePartyId);
 		//数据状态
 		sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
 		// 报送流水号
