@@ -2915,13 +2915,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             					// 修改者改为当前用户
             				} else if ("UPDATE_USER".equals(column)) {
             					columnData = "'" + userName + "'";
-            					// 数据状态改为 M
             				} else if ("STATUS".equals(column)){
-								if (CHB_INFO_LIST.contains(tableName)) {
-									columnData = "'" + "E" + "'";
-								} else {
-									columnData = "'" + "M" + "'";
-								}
+								columnData = "'" + "E" + "'";
 
             				} else if(StringUtil.isNotEmpty(columnData)&&columnData.contains("'")){
             					columnData = "'" +columnData.replace("'", "''")+ "'";
@@ -2930,15 +2925,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				}
             				updateMap.put(column, columnData);
                 		}
-            			
-            			//增加状态字段的设置
-						if (CHB_INFO_LIST.contains(tableName)) {
-							updateMap.put("STATUS", "'" + "E" + "'");
-						} else {
-							updateMap.put("STATUS", "'" + "M" + "'");
-						}
 
-            			
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
             			if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
             					Arrays.asList(INTERF_DATASOURCE).contains(tableName)){
@@ -2948,7 +2935,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
             			    String  SYSDATE="'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
             				updateMap.put("ASSET_TYPE", "'" + assetType + "'");
-            				updateMap.put("STATUS", "'" + "M" + "'");
+            				updateMap.put("STATUS", "'" + "E" + "'");
 
                             if(BaseCommonCheckService.isMYSQLDataBase()){
                                 updateMap.put("UPDATE_TIME", SYSDATE);
