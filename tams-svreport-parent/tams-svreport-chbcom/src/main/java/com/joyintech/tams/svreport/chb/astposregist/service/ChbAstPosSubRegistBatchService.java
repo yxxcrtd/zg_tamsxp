@@ -447,6 +447,8 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 				}
 				//数量= 此循环明细的.持仓数量 *折算率
 				dsub.setQty(ArithmeticUtil.multiply(botdto.getPosNum(),crate).setScale(5, RoundingMode.HALF_UP));
+				//币种 = 底层资产要素.币种
+				dsub.setCcy(botdto.getCcy());
 				}
 				//底层资产代码为底层科目的处理
 				else {
@@ -477,9 +479,9 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 						//折算人民币金额
 					    BigDecimal chbAmt = ChbCcyConvertUtil.exchangeMoney(sdto.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), objecDate, dsub.getAmt(), rateMap, exchangeSource);
 					    dsub.setCnyAmt(chbAmt.setScale(2, RoundingMode.HALF_UP));
+					//币种 = 资管计划币种.币种
+					dsub.setCcy(sdto.getCcy());
 				}
-				//币种 = 此循环明细的.币种
-				dsub.setCcy(sdto.getCcy());
 				//计算折算人名币值
 				BigDecimal chaUnitValueCprice = ChbCcyConvertUtil.exchangeMoney(dsub.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), objecDate, dsub.getUnitValueCprice(), rateMap, exchangeSource);
 				BigDecimal chaUnitValueFprice = ChbCcyConvertUtil.exchangeMoney(dsub.getCcy(), DictCodeListExt1.币种_中债_人民币.getValue(), objecDate, dsub.getUnitValueFprice(), rateMap, exchangeSource);
