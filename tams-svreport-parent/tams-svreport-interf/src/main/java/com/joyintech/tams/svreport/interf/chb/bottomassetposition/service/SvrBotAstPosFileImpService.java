@@ -460,9 +460,9 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 	 */
 	private  void  desultBotAstStatus(List<ChbBotAstPosition> list){
 		//查询资产要素
-		List<ChbAssetInfo>   assetList=chbBotAstPosInterfMapper.selectChbAstInfoBotInfo();
-	    Map<String,ChbAssetInfo>  mapAsset=assetList.stream().collect(
-				JoyinCollectors.toMap(x -> x.getAssetCode(), x -> x));
+//		List<ChbAssetInfo>   assetList=chbBotAstPosInterfMapper.selectChbAstInfoBotInfo();
+//	    Map<String,ChbAssetInfo>  mapAsset=assetList.stream().collect(
+//				JoyinCollectors.toMap(x -> x.getAssetCode(), x -> x));
 		Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
 		String exchangeSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE);
 		//循环接口数据
@@ -470,10 +470,7 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 			 //净价市值-原币=原币_底层资产全价市值-原币_利息
 			 dto.setoPosAmtCprice(ArithmeticUtil.subtract(dto.getoPosAmt(),dto.getoIntAmt()));
 			 dto.setPosId(IDGenerator.generate(36));
-         	//资管计划已存在
-         	if(mapAsset.containsKey(dto.getPlanAssetId())){
-         		String ccy=mapAsset.get(dto.getPlanAssetId()).getCcy();
-         		//资管计划币种=人名币
+         		String ccy=dto.getCcy();
          		if(StringUtil.equals(DictCodeListExt1.币种_中债_人民币.getValue(),ccy)){
          			//为空的情况下塞值
 					if(!StringUtil.isNotEmpty(dto.getIssueAmt())){
@@ -514,25 +511,6 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 								dto.getPosDate(), dto.getoIntAmt(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
 					}
 				}
-			}else{
-         		//不存在资产要素的情况
-				if(!StringUtil.isNotEmpty(dto.getIssueAmt())){
-					dto.setIssueAmt(dto.getoIssueAmt());
-				}
-				if(!StringUtil.isNotEmpty(dto.getUninvestCash())){
-					dto.setUninvestCash(dto.getoUninvestCash());
-				}
-				if(!StringUtil.isNotEmpty(dto.getPosAmt())){
-					dto.setPosAmt(dto.getoPosAmt());
-				}
-				if(!StringUtil.isNotEmpty(dto.getShadowAmt())){
-					dto.setShadowAmt(dto.getoShadowAmt());
-				}
-				if(!StringUtil.isNotEmpty(dto.getIntAmt())){
-					dto.setIntAmt(dto.getoIntAmt());
-				}
-
-			}
 			 //净价市值=底层资产全价市值-利息
 			 dto.setPosAmtCprice(ArithmeticUtil.subtract(dto.getPosAmt(),dto.getIntAmt()));
 	 }
