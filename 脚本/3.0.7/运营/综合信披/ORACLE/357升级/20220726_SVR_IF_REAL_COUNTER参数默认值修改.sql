@@ -1,0 +1,1 @@
+update sys_para set PARAM_VALUE = '0' WHERE SYS_PARA.PARA_CODE='SVR_IF_REAL_COUNTER';

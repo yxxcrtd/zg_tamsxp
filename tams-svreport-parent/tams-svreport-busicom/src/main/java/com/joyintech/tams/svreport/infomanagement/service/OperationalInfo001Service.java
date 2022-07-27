@@ -2285,7 +2285,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                     		/** end 添加模板导入A列为导出时,应该提示“不要使用“操作类型”为“导出”的进行导入 add by  dongxiangyang 20201028*/
 							boolean flag;
 							//科目余额没有STATUS字段，单独处理
-							if (!Objects.equals("BOK_BALANCE",tableName)) {
+							/**市场机构附属表无status字段  wangyaning 20220726*/
+							if (!Objects.equals("BOK_BALANCE",tableName) && !Objects.equals("MST_CUSTOMER_INFO_ADD",tableName)) {
 								flag = this.checkSingleData(pkDataMap, tableName);
 							} else {
 								flag = this.checkNoStatusDataIsExist(pkDataMap, tableName);
@@ -2466,7 +2467,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             	/*add by xuyang 底层持仓数据导入，新增资产编码是否存在资产要素校验，不存在，不允许导入 start*/
 				if(tableId.equals("CHB_BOT_AST_POS")){
 					int rowNum=0;
-					if(dataList.get(0).get(4).equals("ASSET_CODE")){
+					if(dataList.get(0).get(3).equals("ASSET_CODE")){
 						checkResult.addAll(operationalLoanInfo001CheckService.checkImportBotAstPosData(dataMapList,bisinessPkList));
 					}else{
 						checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(rowNum),"导入底层资产持仓数据模板不正确"));

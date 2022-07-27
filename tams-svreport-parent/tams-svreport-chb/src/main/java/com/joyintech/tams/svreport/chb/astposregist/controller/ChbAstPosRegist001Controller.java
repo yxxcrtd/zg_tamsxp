@@ -122,19 +122,21 @@ public class ChbAstPosRegist001Controller extends BaseController {
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() {
     	Map<String, Object> pageParam = RequestUtil.getPageParam();
+        List<ChbAstPosRegist001Dto> dtoList = new LinkedList<>();
     	if(pageParam.containsKey("keyList")){
-          List<ChbAstPosRegist001Dto> dtoList = chbAstPosRegistMService.selectForExport(RequestUtil.getParameters(getRequest()));
-          File outFile = chbAstPosRegist001Service.makeFile(
-              "/com/joyintech/tams/svreport/chb/astposregist/conf/export_conf.xml", dtoList);
-          return ExportUtil.export(
-              this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-                                   + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
-                                   + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
-              outFile, true);
-    	}
-    	else{
-          return chbAstPosRegist001Service.export(this.getPageId(), RequestUtil.getPageParam());
-    	}
+          dtoList = chbAstPosRegistMService.selectForExport(RequestUtil.getParameters(getRequest()));
+
+    	} else {
+            dtoList =chbAstPosRegist001Service.selectAllData(pageParam);
+        }
+        File outFile = chbAstPosRegist001Service.makeFile(
+                "/com/joyintech/tams/svreport/chb/astposregist/conf/export_conf.xml", dtoList);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+                        + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
+
     }
     /**
      *手工处理功能

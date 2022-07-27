@@ -563,7 +563,7 @@ AND ainfo.STATUS !='D'
 </select>
 
     <insert id="insertChbAstPosBatchList" parameterType="java.util.List">
-        insert into chb_ast_pos_sub (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        insert into chb_ast_pos_sub (REGIST_SEQNO,SUBMIT_SEQ, PROD_ID, ISSUE_PARTY_ID,
         PRD_REGIST_CODE, TERMID, VALUE_DATE,
         ASSET_ID, POS_TYPE, INTER_LEVE_NO,
         INTER_ASSET_TYPE, INTER_ASSET_CODE, SUBJECT_NAME,
@@ -579,6 +579,7 @@ AND ainfo.STATUS !='D'
         <foreach collection="list" item="item" index="index" separator="union all">
             select
             #{item.registSeqno,jdbcType=CHAR} REGIST_SEQNO,
+            #{item.submitSeq,jdbcType=CHAR} SUBMIT_SEQ,
             #{item.prodId,jdbcType=VARCHAR} PROD_ID,
             #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
             #{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE,
@@ -609,7 +610,7 @@ AND ainfo.STATUS !='D'
     </insert>
 
     <insert id="insertChbPrdStatusBatchList" parameterType="java.util.List">
-        insert into chb_prd_status_sub (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+        insert into chb_prd_status_sub (REGIST_SEQNO, SUBMIT_SEQ,PROD_ID, ISSUE_PARTY_ID,
         PRD_REGIST_CODE, PRD_TOTAL_AMT, PRD_LEVERAGE,
         PRD_STATUS_DATE, TERMID, REMARK,
         SEND_STATUS, STATUS_DATE, STATUS,
@@ -620,7 +621,9 @@ AND ainfo.STATUS !='D'
         select A.* from (
         <foreach collection="list" item="item" index="index" separator="union all">
             select
-            #{item.registSeqno,jdbcType=CHAR} REGIST_SEQNO, #{item.prodId,jdbcType=VARCHAR} PROD_ID,
+            #{item.registSeqno,jdbcType=CHAR} REGIST_SEQNO,
+            #{item.submitSeq,jdbcType=CHAR} SUBMIT_SEQ,
+            #{item.prodId,jdbcType=VARCHAR} PROD_ID,
             #{item.issuePartyId,jdbcType=VARCHAR} ISSUE_PARTY_ID,
             #{item.prdRegistCode,jdbcType=VARCHAR} PRD_REGIST_CODE, #{item.prdTotalAmt,jdbcType=DECIMAL} PRD_TOTAL_AMT,
             #{item.prdLeverage,jdbcType=DECIMAL} PRD_LEVERAGE,
