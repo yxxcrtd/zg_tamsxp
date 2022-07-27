@@ -82,7 +82,9 @@ public class ChbAstPosRegist001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}else {
+
             Calendar calendar = Calendar.getInstance();
+            calendar.setTime( DateUtil.platDateFromCache());
             // 获取上月的第一天
             calendar.add(Calendar.MONTH, -1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
