@@ -85,7 +85,7 @@ $(function() {
               {title: '中间层行内资产/负债编码', field:'interAssetCode', width:150, sortField:'interAssetCode'},
               {title: '会计科目名称', field:'subjectName', width:150, sortField:'subjectName'},
               {title: '金额',field:'amt', width:250,type:'money',digit:2, sortField:'amt'},
-              {title: '折算人名币金额',field:'cnyAmt', width:250,type:'money',digit:2, sortField:'cnyAmt'},
+              {title: '折算人民币金额',field:'cnyAmt', width:250,type:'money',digit:2, sortField:'cnyAmt'},
               {title: '公允价值',field:'floatIngpl', width:250,type:'money',digit:2, sortField:'floatIngpl'},
               {title: '折算人民币公允价值',field:'cnyFloatIngpl', width:250,type:'money',digit:2, sortField:'cnyFloatIngpl'},
               {title: '单位估值（净价）',field:'unitValueCprice', width:250,type:'money',digit:4, sortField:'unitValueCprice'},
