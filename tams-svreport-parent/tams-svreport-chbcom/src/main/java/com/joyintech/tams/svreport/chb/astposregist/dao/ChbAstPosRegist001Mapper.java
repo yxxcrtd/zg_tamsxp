@@ -46,7 +46,9 @@ public interface ChbAstPosRegist001Mapper {
      */
     Date genExcuteDate(@Param("batchTime") String batchTime);
 
-    List<String>  selectsubmitRecodeList(@Param("batchTime") String batchTime);
+    List<String>  selectsubmitRecodeListAst(@Param("batchTime") String batchTime);
+
+    List<String>  selectsubmitRecodeListPrd(@Param("batchTime") String batchTime);
 
     /**
      * 删除资产持仓登记

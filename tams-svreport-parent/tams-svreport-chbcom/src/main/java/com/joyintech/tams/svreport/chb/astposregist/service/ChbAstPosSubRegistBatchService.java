@@ -128,14 +128,6 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 		Map<String,ChbTypeMappingEx>  mapAssetType=assetTypeMappingList.stream().collect(
 				JoyinCollectors.toMap(x -> x.getSrcfield1(), x -> x));
 
-		//3.1 判断是否有已报送的月报
-		if(CollectionUtils.isNotEmpty(chbAstPosRegist001Mapper.selectsubmitRecodeList(DateUtil.format(objecDate)))){
-			logger.info("【已报送的月报，不再生成报送数据】");
-			return;
-		}
-		//3.2 清除历史数据
-		deleteMonthReport(objecDate);
-
         /**【4】.基础数据获得  start*/
         //4.1 从资产基础指标数据
 		List<ChbAstPosBatchResultDto> listbasisdata=chbAstPosRegist001Mapper.selectAssetBasiscData(DateUtil.format(objecDate));
@@ -510,11 +502,24 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 //		List<ChbAstPosSub> insertList=checkAstPosSubList(listsposub,objecDate);
 
 		/**【8】.登记数据批量入库   */
-		if(CollectionUtils.isNotEmpty(listsposub)){
-			insertChbAstPosBtach(listsposub);
+		if(CollectionUtils.isNotEmpty(chbAstPosRegist001Mapper.selectsubmitRecodeListAst(DateUtil.format(objecDate)))){
+			logger.info("【已报送的资产持仓月报，不再生成报送数据】");
+		}else {
+            //删除资产持仓登记数据
+			chbAstPosRegist001Mapper.deleteAstPosSubByTerm(DateUtil.format(objecDate,DateUtil.MONTH_OTHER_FORMAT));
+			if(CollectionUtils.isNotEmpty(listsposub)){
+				insertChbAstPosBtach(listsposub);
+			}
 		}
-		if(CollectionUtils.isNotEmpty(listprdsub)){
-			insertChbPrdStatusBatch(listprdsub);
+
+		if(CollectionUtils.isNotEmpty(chbAstPosRegist001Mapper.selectsubmitRecodeListPrd(DateUtil.format(objecDate)))){
+			logger.info("【已报送的产品状态月报，不再生成报送数据】");
+		}else{
+			//删除产品状态登记数据
+			chbAstPosRegist001Mapper.deletePrdStatusByTerm(DateUtil.format(objecDate,DateUtil.MONTH_OTHER_FORMAT));
+			if(CollectionUtils.isNotEmpty(listprdsub)){
+				insertChbPrdStatusBatch(listprdsub);
+			}
 		}
 
 	}

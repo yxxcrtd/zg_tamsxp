@@ -449,11 +449,13 @@ FROM (SELECT MAX(VALUE_DATE) AS CDATA
 
     </select>
 
-    <select id="selectsubmitRecodeList" resultType="java.lang.String">
+    <select id="selectsubmitRecodeListAst" resultType="java.lang.String">
     select SEND_STATUS  from CHB_AST_POS_SUB
     WHERE VALUE_DATE= STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
     AND SEND_STATUS='03'
-    UNION ALL
+    </select>
+
+    <select id="selectsubmitRecodeListPrd" resultType="java.lang.String">
     select SEND_STATUS  from CHB_PRD_STATUS_SUB
     WHERE PRD_STATUS_DATE= STR_TO_DATE(#{batchTime,jdbcType=VARCHAR},'%Y-%m-%d')
     AND SEND_STATUS='03'
