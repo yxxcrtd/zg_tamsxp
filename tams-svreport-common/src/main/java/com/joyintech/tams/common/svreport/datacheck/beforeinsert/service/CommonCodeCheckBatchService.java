@@ -362,9 +362,9 @@ public class CommonCodeCheckBatchService {
                 if (StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"02") ||
                      StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"04")) {
                     Pattern pattern = Pattern.compile("(([0-9A-Z]{14})|([0-9A-Z]{15})|([\\\\u65e0]))");
-                    Matcher matcher = pattern.matcher(tradeCounter);
+                    Matcher matcher = pattern.matcher(chbMstCounterParty.getCounterName());
                     if (!matcher.matches()) {
-                        sb.append("交易对手关联交易情况为“02 对手方为本机构其他理财产品或04 对手方为股东方或子公司的理财产品”时, 交易对手识别标识格式不对。正确的格式：14或15位大写字母或数字。[").append("TRADE_COUNTER=").append(tradeCounter).append("];");
+                        sb.append("交易对手关联交易情况为“02 对手方为本机构其他理财产品或04 对手方为股东方或子公司的理财产品”时, 交易对手报送字段格式不对。正确的格式：14或15位大写字母或数字。[").append("TRADE_COUNTER=").append(chbMstCounterParty.getCounterName()).append("];");
                     }
 
                 }
