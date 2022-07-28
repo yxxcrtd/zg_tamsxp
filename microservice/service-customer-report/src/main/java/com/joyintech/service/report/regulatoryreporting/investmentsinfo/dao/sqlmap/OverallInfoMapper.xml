@@ -264,7 +264,11 @@
 			)
 		</if>
 		<if test="rating != null  and rating.equals('4')">
-			and cmap.rating is null
+			and (cmap.rating is null or cmap.rating
+			in(
+			select item_value from sys_datadict_list where dict_code='SVR_MAIN_GRADE' and item_code = '99'
+			)
+			)
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
