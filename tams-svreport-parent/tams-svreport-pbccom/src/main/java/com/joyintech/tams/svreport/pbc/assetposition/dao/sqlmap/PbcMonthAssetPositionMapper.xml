@@ -222,6 +222,99 @@
     CAP_USE_INDU_LEVEL2, ISSUE_PARTY_NAME, SEC_CREDIT_GRADE_TYPE, SEC_MAIN_GRADE, BLN_AREA, 
     INDUSTRY_PBC, CUSTOMER_OBJ_TYPE, BUY_PLACE,ORG_ASSET_TYPE1,INSTIT_SIZE
   </sql>
+  <sql id="Sec_Rating_List" >
+    with a as	(
+    SELECT asset_code,rating FROM (
+    select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
+    <if test="sysflag=='01'.toString()"> /*推荐评级*/
+      ,brating.is_recommand asc
+    </if>
+    <if test="sysflag=='02'.toString()"> /*最大评级*/
+      ,brating.GRADE_RESULT asc
+    </if>
+    <if test="sysflag=='03'.toString()"> /*最小评级*/
+      ,brating.GRADE_RESULT desc
+    </if>
+    ) my_rank
+    ,brating.O_CODE as asset_code
+    ,brating.GRADE_RESULT as rating
+    from MST_BOND_CREDIT_RATING brating
+    where 1=1
+    and brating.O_TYPE = '01' /*主体评级*/
+    and brating.SHORT_LONG_TERM = '02' /*长期*/
+    and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+    ) where my_rank=1
+    ) ,
+    b as
+    (
+    SELECT asset_code,rating FROM (
+    select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
+    <if test="sysflag=='01'.toString()"> /*推荐评级*/
+      ,brating.is_recommand asc
+    </if>
+    <if test="sysflag=='02'.toString()"> /*最大评级*/
+      ,brating.GRADE_RESULT asc
+    </if>
+    <if test="sysflag=='03'.toString()"> /*最小评级*/
+      ,brating.GRADE_RESULT desc
+    </if>
+    ) my_rank
+    ,brating.O_CODE as asset_code
+    ,brating.GRADE_RESULT as rating
+    from MST_BOND_CREDIT_RATING brating
+    where 1=1
+    and brating.O_TYPE = '01' /*主体评级*/
+    and brating.SHORT_LONG_TERM = '01' /*短期*/
+    and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+    ) where my_rank=1
+    ),
+    c as
+    (
+    SELECT asset_code,rating FROM (
+    select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
+    <if test="sysflag=='01'.toString()"> /*推荐评级*/
+      ,brating.is_recommand asc
+    </if>
+    <if test="sysflag=='02'.toString()"> /*最大评级*/
+      ,brating.GRADE_RESULT asc
+    </if>
+    <if test="sysflag=='03'.toString()"> /*最小评级*/
+      ,brating.GRADE_RESULT desc
+    </if>
+    ) my_rank
+    ,brating.O_CODE as asset_code
+    ,brating.GRADE_RESULT as rating
+    from MST_BOND_CREDIT_RATING brating
+    where 1=1
+    and brating.O_TYPE = '02' /*债项评级*/
+    and brating.SHORT_LONG_TERM = '02' /*长期*/
+    and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+    ) where my_rank=1
+    ),
+
+    d as(
+    SELECT asset_code,rating FROM (
+    select row_number() over(partition by brating.O_CODE order by brating.O_CODE,brating.GRADE_DATE desc
+    <if test="sysflag=='01'.toString()"> /*推荐评级*/
+      ,brating.is_recommand asc
+    </if>
+    <if test="sysflag=='02'.toString()"> /*最大评级*/
+      ,brating.GRADE_RESULT asc
+    </if>
+    <if test="sysflag=='03'.toString()"> /*最小评级*/
+      ,brating.GRADE_RESULT desc
+    </if>
+    ) my_rank
+    ,brating.O_CODE as asset_code
+    ,brating.GRADE_RESULT as rating
+    from MST_BOND_CREDIT_RATING brating
+    where 1=1
+    and brating.O_TYPE = '02' /*债项评级*/
+    and brating.SHORT_LONG_TERM = '01' /*短期*/
+    and brating.GRADE_DATE<![CDATA[<=]]>#{enddate,jdbcType=DATE}
+    ) where my_rank=1
+    )
+  </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -858,6 +951,7 @@
 
   <select id="selectPositionFromValutionSubSystem" parameterType="com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto"
           resultMap="BaseResultMap" resultSetType="FORWARD_ONLY" fetchSize="1000">
+      <include refid="Sec_Rating_List" />
         select
         assetinfo.PBC_ASSET_TYPE1 ASSET_TYPE1,
         assetinfo.PBC_ASSET_TYPE2 ASSET_TYPE2,
@@ -884,7 +978,7 @@
         nvl(assetinfo.INDUSTRY,assetinfo.INDUSTRY_PBC) INDUSTRY,/*融资人、发行人行业一级类别*/
         assetinfo.PROFIT_TYPE REP_PROFIT_TYPE ,/*项目类收售益权*/
         '01' IS_NEED_REFLECT,/*是否需要映射人行一级二级三级类型*/
-        nvl(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT) rating/*债券评级*/
+        nvl(nvl(c.rating ,d.rating),nvl(a.rating,b.rating)) rating/*债券评级*/
         <if test="isChlBtm ==null or isChlBtm=='01' ">
           FROM CHB_ASSETS_BASIS_DATA VAL
         </if>
@@ -895,44 +989,24 @@
         on assetinfo.asset_code=VAL.ASSET_ID
         left join chb_prd_baseinfo prodinfo
         on prodinfo.prod_id = val.prod_id
-        <!--获取债项评级 -->
-        left join (
-        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-        SELECT
-        TEMP.GRADERESULT as GRADERESULT,
-        TEMP.OCODE AS OCODE,
-        rank() over (partition by TEMP.OCODE order by rownum) rk
-        FROM (
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
-        <!-- add by zhangliang 20210319 start-->
-        AND OTYPE = '02'
-        <!-- add by zhangliang 20210319 end-->
-        )
-        <!--SQL注入 -->
-        <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
-          ${getProductRatingOrderSqlByZx}
-        </if>
-        )t where t.rk = '1'
-        )bestRatingZx on bestRatingZx.OCODE = VAL.asset_id
-        <!--获取主体评级 -->
-        left join(
-        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
-        SELECT
-        TEMP.GRADERESULT as GRADERESULT,
-        TEMP.OCODE AS OCODE,
-        rank() over (partition by TEMP.OCODE order by rownum) rk
-        FROM(
-        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
-        <!-- add by zhangliang 20210319 start-->
-        AND OTYPE = '01'
-        <!-- add by zhangliang 20210319 end-->
-        )
-        <!--SQL注入 -->
-        <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
-          ${getProductRatingOrderSqlByZt}
-        </if>
-        )t where t.rk = '1'
-        )bestRatingZt on bestRatingZt.OCODE = assetinfo.CHB_ISSUER_ID
+       <choose>
+         <when test="principalRatingDimension != null and principalRatingDimension !='' and principalRatingDimension == '02'">
+           left join a
+           on assetinfo.CHB_ISSUER_ID=a.ASSET_CODE
+           left join b
+           on assetinfo.CHB_ISSUER_ID=b.ASSET_CODE
+         </when>
+         <otherwise>
+           left join a
+           on VAL.ASSET_ID=a.ASSET_CODE
+           left join b
+           on VAL.ASSET_ID=b.ASSET_CODE
+         </otherwise>
+       </choose>
+       left join c
+       on VAL.ASSET_ID=c.ASSET_CODE
+       left join d
+       on VAL.ASSET_ID=d.ASSET_CODE
         where 1 =1
         and VAL.VALUE_DATE=#{bookdate,jdbcType=DATE}
         and assetinfo.ASSET_UUID is not null /* 去除头寸表中资产代码匹配不到数据的情况 */
