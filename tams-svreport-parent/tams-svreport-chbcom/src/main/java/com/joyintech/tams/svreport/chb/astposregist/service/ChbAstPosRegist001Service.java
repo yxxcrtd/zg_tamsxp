@@ -247,6 +247,11 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 			if (StringUtil.isNotBlank(status)) {
 				pageParam.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
 			}
+			// 会计科目名称
+			String subjectName = (String) pageParam.get("subjectName");
+			if (StringUtil.isNotBlank(subjectName)) {
+				pageParam.put("subjectNameList", StringUtil.splitToList(GlobalConstant.COMMA, subjectName));
+			}
 		}
 	}
 
@@ -334,6 +339,7 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 
 
     public List<ChbAstPosRegist001Dto> selectAllData(Map<String, Object> pageParam){
+		dealSearchParam(pageParam);
 		List<ChbAstPosRegist001Dto> dtoList = chbAstPosRegist001Mapper.selectAllData(pageParam);
 		dealResultlist(dtoList);
 		return dtoList;

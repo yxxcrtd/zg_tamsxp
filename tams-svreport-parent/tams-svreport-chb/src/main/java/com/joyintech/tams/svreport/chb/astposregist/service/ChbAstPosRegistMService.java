@@ -3,11 +3,15 @@ package com.joyintech.tams.svreport.chb.astposregist.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
 import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.ChbBatchPara;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
@@ -15,10 +19,12 @@ import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog;
 import com.joyintech.tams.svreport.chb.astposregist.dao.ChbAstPosRegist001Mapper;
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +42,8 @@ public class ChbAstPosRegistMService extends BaseService<ChbAstPosRegist001Dto>{
 	private ChbAstPosRegist001Mapper chbAstPosRegist001Mapper;
 	@Autowired
 	private ChbBatchParaMapper chbBatchParaMapper;
+	@Autowired
+	private ChbTypeMappingExMapper chbTypeMappingExMapper;
 
 
 
@@ -209,5 +217,16 @@ public class ChbAstPosRegistMService extends BaseService<ChbAstPosRegist001Dto>{
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 会计科目下拉框
+	 * @return
+	 */
+	public List<SelectOptionDto> getSubjectNameList(Map<String, Object> map) {
+		String subjectName = (String)map.get("subjectName");
+		List<String> subjectNameList = StringUtil.splitToList(GlobalConstant.COMMA, subjectName);
+		map.put("subjectNameList", subjectNameList);
+		return chbTypeMappingExMapper.getSubjectNameList(map);
 	}
 }

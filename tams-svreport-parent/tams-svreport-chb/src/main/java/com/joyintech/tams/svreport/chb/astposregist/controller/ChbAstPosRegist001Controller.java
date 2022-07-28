@@ -8,6 +8,7 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -205,7 +206,7 @@ public class ChbAstPosRegist001Controller extends BaseController {
     /**
      * 中债直连报送
      *
-     * @param map
+     * @param param
      *            传入需要报送的主键
      * @return 反馈信息
      * @see
@@ -309,5 +310,15 @@ public class ChbAstPosRegist001Controller extends BaseController {
     @RequestMapping(value = "batchExportAndDoManual")
     public AjaxResult batchExportAndDoManual(@RequestParam Map<String, Object> param) {
         return chbAstPosRegistMService.batchExportAndDoManual(param);
+    }
+
+    /**
+     * 会计科目下拉框
+     * @return 产品名称列表
+     */
+    @RequestMapping("/getSubjectNameList")
+    @ResponseBody
+    public List<SelectOptionDto> getSubjectNameList() {
+        return chbAstPosRegistMService.getSubjectNameList(RequestUtil.getPageParam());
     }
 }

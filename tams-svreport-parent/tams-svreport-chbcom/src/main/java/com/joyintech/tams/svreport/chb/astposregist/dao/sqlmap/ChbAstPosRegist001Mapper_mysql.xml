@@ -158,6 +158,11 @@
                 #{items,jdbcType=VARCHAR}
             </foreach>
         </if>
+        <if test="subjectNameList != null and subjectNameList.size()>0">
+            <foreach collection="subjectNameList" item='items' open= "and sub.SUBJECT_NAME in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
         order by sub.SUBMIT_DEADLINE
     </select>
 
@@ -721,6 +726,11 @@ AND ainfo.STATUS !='D'
         </if>
         <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
             <foreach collection="submitFeedbackStatusList" item='items' open= "and sub.SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="subjectNameList != null and subjectNameList.size()>0">
+            <foreach collection="subjectNameList" item='items' open= "and sub.SUBJECT_NAME in (" separator="," close=")">
                 #{items,jdbcType=VARCHAR}
             </foreach>
         </if>

@@ -76,21 +76,35 @@
 								   placeholder="请选择日期区间" />
 						</div>
 					</div>
+
+					<div class="layui-inline layui-col-md4">
+						<label class="layui-form-label form-lable">会计科目名称</label>
+						<div class="layui-input-inline input-inline">
+							<select id="subjectName" name="subjectName" class="input-select"
+									data-th-data-url='@{/chb/astposregist/ChbAstPosRegist001/getSubjectNameList}'
+									initvalue="" placeholder="请选择"
+									data-th-placeholder="#{SysCommon.selectplaceholder}"
+									allowClear="true" multiple="multiple">
+							</select>
+
+						</div>
+					</div>
+
+				</div>
+
+				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">报送状态</label>
 						<div class="layui-input-inline input-inline">
 							<select id="submitStatus" name="submitStatus"
-								class="layui-input form-input input-select"
-								data-th-data-result='${SUBMIT_STATUS}'
-								data-th-initvalue="${submitStatus}" placeholder="请选择"
-								data-th-placeholder="#{SysCommon.selectplaceholder}"
-								allowClear="true" multiple="multiple">
+									class="layui-input form-input input-select"
+									data-th-data-result='${SUBMIT_STATUS}'
+									data-th-initvalue="${submitStatus}" placeholder="请选择"
+									data-th-placeholder="#{SysCommon.selectplaceholder}"
+									allowClear="true" multiple="multiple">
 							</select>
 						</div>
 					</div>
-				</div>
-
-				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">报送日期</label>
 						<div class="layui-input-inline input-inline">
@@ -110,16 +124,17 @@
 							</select>
 						</div>
 					</div>
+
+				</div>
+				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">报送截止日</label>
 						<div class="layui-input-inline input-inline">
 							<input id="submitendDate" type="text" name="endtimeControl"
-								class="layui-input form-input timeControl input-dateRangeSelect"
-								placeholder="请选择日期区间" />
+								   class="layui-input form-input timeControl input-dateRangeSelect"
+								   placeholder="请选择日期区间" />
 						</div>
 					</div>
-				</div>
-				<div class="layui-form-item">
 					<div class="layui-inline layui-col-md4">
 						<label class="layui-form-label form-lable">数据日期</label>
 						<div class="layui-input-inline input-inline">
