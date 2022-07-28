@@ -222,16 +222,16 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 //				}
 				if(DictCodeListExt3.资产持仓品种_金融衍生品.getValue().equals(mapAssetType.get(dto.getAssetType2()).getObjfield2())){
 					//单位净价: 当日估值增值
-					sub.setUnitValueCprice(dto.getTdyFloatIngpl());
+					sub.setUnitValueCprice(ArithmeticUtil.divide(dto.getTdyFloatIngpl(),dto.getPosAmt(),14));
 					//单位全价:当日估值增值
-					sub.setUnitValueFprice(dto.getTdyFloatIngpl());
+					sub.setUnitValueFprice(ArithmeticUtil.divide(dto.getTdyFloatIngpl(),dto.getPosAmt(),14));
 
 				}
 				if(DictCodeListExt3.资产持仓品种_金融衍生品2.getValue().equals(mapAssetType.get(dto.getAssetType2()).getObjfield2())){
 					//单位净价: 累计应计利息
-					sub.setUnitValueCprice(dto.getTdyIntincexp());
+					sub.setUnitValueCprice(ArithmeticUtil.divide(dto.getTdyIntincexp(),dto.getPosAmt(),14));
 					//单位全价: 累计应计利息
-					sub.setUnitValueFprice(dto.getTdyIntincexp());
+					sub.setUnitValueFprice(ArithmeticUtil.divide(dto.getTdyIntincexp(),dto.getPosAmt(),14));
 				}
 				if(DictCodeListExt3.资产持仓品种_净值型资产.getValue().equals(mapAssetType.get(dto.getAssetType2()).getObjfield2())||
 						("12".equals(mapAssetType.get(dto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_否.getValue().equals(dto.getRateFlag()))||
@@ -400,25 +400,25 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 				dsub.setCnyFloatIngpl(chzfAmt.setScale(2, RoundingMode.HALF_UP));
 				if(mapAssetType.containsKey(botdto.getAssetType2())){
 					if(DictCodeListExt3.资产持仓品种_金融衍生品.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())){
-//						//单位净价: null
-//						dsub.setUnitValueCprice(botdto.getoPosCleanPricEmarketValue());
-//						//单位全价: null
-//						dsub.setUnitValueFprice(botdto.getoPosAmt());
+						//单位净价=底层资产净价市值/持仓数量
+						dsub.setUnitValueCprice(ArithmeticUtil.divide(botdto.getoPosCleanPricEmarketValue(),botdto.getPosNum(),14));
+						//单位全价=底层资产全价市值/持仓数量
+						dsub.setUnitValueFprice(ArithmeticUtil.divide(botdto.getoPosAmt(),botdto.getPosNum(),14));
 					}
 					if(DictCodeListExt3.资产持仓品种_金融衍生品2.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())){
-//						//单位净价: null
-//						dsub.setUnitValueCprice(botdto.getoPosCleanPricEmarketValue());
-//						//单位全价: null
-//						dsub.setUnitValueFprice(botdto.getoPosAmt());
+						//单位净价=底层资产净价市值/持仓数量
+						dsub.setUnitValueCprice(ArithmeticUtil.divide(botdto.getoPosCleanPricEmarketValue(),botdto.getPosNum(),14));
+						//单位全价=底层资产全价市值/持仓数量
+						dsub.setUnitValueFprice(ArithmeticUtil.divide(botdto.getoPosAmt(),botdto.getPosNum(),14));
 
 					}
 					if(DictCodeListExt3.资产持仓品种_净值型资产.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())||
 							("12".equals(mapAssetType.get(botdto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_否.getValue().equals(botdto.getRateFlag()))||
 							("13".equals(mapAssetType.get(botdto.getAssetType2()).getObjfield1())&& DictCodeList.是否_中债_否.getValue().equals(botdto.getRateFlag()))){
 						//单位净价=底层资产净价市值/持仓数量
-						dsub.setUnitValueCprice(ArithmeticUtil.divide(botdto.getoPosCleanPricEmarketValue(),botdto.getPosNum(),4));
+						dsub.setUnitValueCprice(ArithmeticUtil.divide(botdto.getoPosCleanPricEmarketValue(),botdto.getPosNum(),14));
 						//单位全价=底层资产全价市值/持仓数量
-						dsub.setUnitValueFprice(ArithmeticUtil.divide(botdto.getoPosAmt(),botdto.getPosNum(),4));
+						dsub.setUnitValueFprice(ArithmeticUtil.divide(botdto.getoPosAmt(),botdto.getPosNum(),14));
 
 					}
 					if(DictCodeListExt3.资产持仓品种_预期收益型资产.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())||
