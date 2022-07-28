@@ -27,10 +27,9 @@
 		*
 		FROM
 		(
-		SELECT
-		tmp_page.*,
-		@rownum := @rownum + 1  row_id
-		FROM (select @rownum := 0 ) r , (
+		SELECT tmp_page.*,
+		ROWNUM row_id
+		FROM  (
 		select
 		sub.REGIST_SEQNO  as registSeqno,
 		sub.PROD_ID  as prodId,

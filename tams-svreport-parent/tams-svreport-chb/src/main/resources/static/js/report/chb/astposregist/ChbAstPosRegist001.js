@@ -134,7 +134,7 @@ $(function() {
                   var calc=result;
                   if(calc==true){
                       //可以导出
-                      exportExcel("0");
+                      exportAndDoManual(paramObj);
                   }else{
                       //弹出不可导出
                       Joyin.error("所选报送数据包含多个报送月份数据，不允许中债Excel导出！");
@@ -322,6 +322,64 @@ $(function() {
   //            });
           }
       };
+
+    function exportAndDoManual(param){
+        Joyin.ajaxJson('checkExport', param, function(result){
+            if(result.data){
+                Joyin.confirm(JoyinUtil.getMessage("是否将导出数据的报送状态改为“手工处理”？"), function() {
+                    // 后台批处理导出
+                    Joyin.ajax('batchExportAndDoManual',
+                        {key: JSON.stringify(param),
+                            busiConfirmDate: $('#valueDate').startDate()+' - '+$('#valueDate').endDate(),// 业务确认日期
+                            selectedBatchGroup: '7809,7810',// 批处理id
+                            selectedProductGroup: '',
+                            startDate: new Date(),
+                            endDate: new Date(),
+                            batchGroupType: '1',
+                            prodGroupType: '0',
+                            detailName: '资产持仓登记-导出中债excel文件'},
+                        function(result2) {
+                            if(result2.data){
+                                Joyin.alert(JoyinUtil.getMessage("REPORT_MANUAL_0009"));
+                            }else{
+                                Joyin.alert(result2.message);
+                            }
+                            table.load();
+                        }
+                    );
+                },null,function(){
+                    // 后台批处理导出
+                    Joyin.ajax('batchExport',
+                        {key: JSON.stringify(param),
+                            selectedBatchGroup: '7809',// 批处理id
+                            selectedProductGroup: '',
+                            startDate: new Date(),
+                            endDate: new Date(),
+                            batchGroupType: '1',
+                            prodGroupType: '0',
+                            detailName: '资产持仓登记-导出中债excel文件'},
+                        function(result2) {
+                            if(result2.data){
+                                Joyin.alert(JoyinUtil.getMessage("REPORT_MANUAL_0009"));
+                            }else{
+                                Joyin.alert(result2.message);
+                            }
+                            table.load();
+                        }
+                    );
+                });
+            } else {
+                // 无勾选导出，数量小于设置值走勾选逻辑
+                Joyin.ajax('searchInfo',
+                    param,
+                    function (result) {
+                        if (result && result.length > 0){
+                            exportExcel("0");
+                        }
+                    });
+            }
+        });
+    }
       
       /**
        * 确认导出之后的操作

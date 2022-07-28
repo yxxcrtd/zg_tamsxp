@@ -1,5 +1,6 @@
 package com.joyintech.service.chb.astposregist.controller;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.JsonUtils;
@@ -12,10 +13,7 @@ import com.joyintech.tams.svreport.chb.astposregist.service.ChbAstPosRegist001Se
 import com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -104,4 +102,12 @@ public class ChbAstPosRegistController {
         }
         return chbAstPosRegist001Service.checkData(keyList);
 	}
+
+    @ResponseBody
+    @RequestMapping(value = "countExportNum")
+    public int countExportNum(@RequestParam Map<String, Object> param) {
+        int dataNum = chbAstPosRegist001Service.countExportNum(param);
+        return dataNum;
+
+    }
 }

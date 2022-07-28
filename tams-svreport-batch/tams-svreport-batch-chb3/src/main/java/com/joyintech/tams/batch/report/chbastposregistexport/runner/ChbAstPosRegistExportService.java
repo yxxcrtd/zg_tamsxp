@@ -51,34 +51,10 @@ public class ChbAstPosRegistExportService extends BatchBaseService {
     public JobExecution execute() throws BatchException {
         JobExecution result = new JobExecution(1L);
         result.setStatus(BatchStatus.FAILED);
-        SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
-        if (batchExecuteInfo == null) {
-            logger.info("无启动参数，批处理退出。");
-            return result;
-        }
-        Date executeDate = batchExecuteInfo.getExecuteDate();
-        //插入报送信息登记生成记录表
-        this.addBatchLog(executeDate);
-        chbAstPosRegistExportMainService.getExportData(executeDate);
+        chbAstPosRegistExportMainService.getExportData();
         result.setStatus(BatchStatus.COMPLETED);
         return result;
 
     }
 
-    private void addBatchLog(Date executeDate) {
-        ChbSubinfoBatchLog log = new ChbSubinfoBatchLog();
-        log.setBatchExeId(IDGenerator.generate());
-        log.setTaskId(BatchBeanName.资产持仓登记批处理导出.getTaskId());
-        log.setBusiConfirmDate(DateUtil.format(executeDate));
-        log.setOperator(LoginUserUtil.getUserName());
-        log.setFileType(DictCodeListExt3.报送文件类别_资产持仓登记批处理导出.getValue());
-        log.setDealStatus(DictCodeListExt3.报送处理状态_未处理.getValue());
-        log.setGenCondition(null);
-        log.setCreateUser(LoginUserUtil.getUserName());
-        log.setCreateTime(new Date());
-        log.setUpdateUser(LoginUserUtil.getUserName());
-        log.setUpdateTime(new Date());
-        // 日志存表
-        chbSubinfoBatchLogService.insert(log);
-    }
 }

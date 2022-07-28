@@ -85,5 +85,7 @@ public interface ChbAstPosRegist001Mapper {
 
     void insertChbPrdStatusBatchList(@Param("list")List<ChbPrdStatusSub>  list);
 
-//    List<ChbSecRepayInfoDto> selectSecRepayInfo(@Param("objectDate") String objectDate);
+    int countExportNum(Map<String,Object> map);
+
+    int selectNoendCountByTaskBeanName(String beanname);
 }

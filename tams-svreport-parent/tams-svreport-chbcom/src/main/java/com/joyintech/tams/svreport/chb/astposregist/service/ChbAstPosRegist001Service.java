@@ -1,13 +1,18 @@
 package com.joyintech.tams.svreport.chb.astposregist.service;
 
+import com.alibaba.fastjson.JSON;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.batch.batchstart.service.SysBatchStart001Service;
 import com.joyintech.tams.common.base.dao.BaseMapper;
+import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
+import com.joyintech.tams.common.base.entity.ChbBatchPara;
 import com.joyintech.tams.common.svreport.chb.constant.CheckConfConstants;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -16,12 +21,15 @@ import com.joyintech.tams.common.svreport.datacheck.dao.ChbCheckRuleoutMapper;
 import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.service.SvrCommonExportService;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
+import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog;
 import com.joyintech.tams.svreport.chb.astposregist.dao.ChbAstPosRegist001Mapper;
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
@@ -51,6 +59,10 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 
 	@Autowired
 	private ChbAstPosRegist001Mapper chbAstPosRegist001Mapper;
+	@Autowired
+	private ChbBatchParaMapper chbBatchParaMapper;
+
+
 	/**
 	 * logger
 	 */
@@ -624,4 +636,42 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 		}
 		return resultList;
 	}
+
+
+	public int countExportNum(Map<String, Object> pageParam) {
+		dealSearchParam(pageParam);
+		int dataNum = chbAstPosRegist001Mapper.countExportNum(pageParam);
+		return dataNum;
+	}
+
+
+
+	/**
+	 * add by zhoubin
+	 * 将报送状态置为手工处理
+	 * @param param
+	 */
+	@SuppressWarnings("unchecked")
+	public void updateSumStausAll(Map<String, Object> param){
+
+		//先查询出参数表的参数
+		List<ChbBatchPara> chbBatchParas=chbBatchParaMapper.selectAllData();
+		if(!StringUtil.isEmptyList(chbBatchParas)){
+			for(ChbBatchPara single:chbBatchParas){
+				if(single.getTaskId().equals(BatchBeanName.资产持仓登记手工处理.getTaskId())){
+					Map<String,Object> ssmap=(Map<String,Object>) JSON.parse(single.getParas());
+					param=ssmap;
+				}
+			}
+		}
+		List<ChbAstPosRegist001Dto> list= chbAstPosRegist001Mapper.selectAllData(param);
+
+		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), list, false);
+		if(!StringUtil.isEmptyList(chbBatchParas)){
+			for(ChbBatchPara single:chbBatchParas){
+				chbBatchParaMapper.deleteByPrimaryKey(single.getParaId());
+			}
+		}
+	}
+
 }

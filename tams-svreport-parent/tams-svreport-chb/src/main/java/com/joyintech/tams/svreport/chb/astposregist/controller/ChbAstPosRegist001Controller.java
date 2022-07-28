@@ -10,6 +10,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -27,10 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -255,4 +253,61 @@ public class ChbAstPosRegist001Controller extends BaseController {
     }
 
     /**end  中债一二期直连代码  add  by  wangzehui  20201012*/
+
+    /**
+     *
+     * 查询功能(无分页)
+     * <功能详细描述>
+     * @return 存储了查询结果的list
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/searchInfo")
+    public List<ChbAstPosRegist001Dto> searchInfo(@RequestParam Map<String,Object> param){
+        return chbAstPosRegistMService.queryForAstPosRegistList(param);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "checkExport")
+    public AjaxResult checkExport(@RequestBody Map<String, Object> param) {
+        AjaxResult ajaxResult = new AjaxResult();
+        boolean batchExport = false;
+        // 未勾选
+        if (!RequestUtil.getPageParam().containsKey("keyList")) {
+            // 中债报送批处理导出数据量。大于等于此参数则需要批处理导出。
+            String batchExportNum = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SUBINFO_BATCH_EXPORT_NUM);
+            if (StringUtil.isEmpty(batchExportNum)) {
+                // 默认为100w
+                batchExportNum = "1000000";
+            }
+            int dataNum = chbAstPosRegistMService.countExportNum(param);
+            if (dataNum >= Integer.parseInt(batchExportNum)) {
+                batchExport = true;
+            }
+        }
+        ajaxResult.setData(batchExport);
+        return ajaxResult;
+    }
+    /**
+     * 启动批处理导出
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "batchExport")
+    public AjaxResult batchExport(@RequestParam Map<String, Object> param) {
+        return chbAstPosRegistMService.batchExport(param);
+    }
+
+    /**
+     * 启动批处理导出和手工处理
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "batchExportAndDoManual")
+    public AjaxResult batchExportAndDoManual(@RequestParam Map<String, Object> param) {
+        return chbAstPosRegistMService.batchExportAndDoManual(param);
+    }
 }

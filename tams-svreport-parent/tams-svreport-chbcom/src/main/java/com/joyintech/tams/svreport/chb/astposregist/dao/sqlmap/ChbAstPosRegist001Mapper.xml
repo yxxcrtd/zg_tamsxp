@@ -642,4 +642,78 @@ AND ainfo.STATUS !='D'
         ) A
     </insert>
 
+    <select id="countExportNum" resultType="int">
+        select
+        count(1)
+        from CHB_AST_POS_SUB sub
+        where 1=1
+        <if test="registCodeList != null and registCodeList.size()>0">
+            <foreach collection="registCodeList" item="items" open="and sub.PRD_REGIST_CODE in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="assetIdList != null and assetIdList.size()>0">
+            <foreach collection="assetIdList" item="items" open="and sub.ASSET_ID in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="posTypeList != null and posTypeList.size()>0">
+            <foreach collection="posTypeList" item="items" open="and sub.POS_TYPE in (" separator="," close =")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="valueDateStart != null and valueDateStart != ''">
+            and TO_CHAR(sub.VALUE_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{valueDateStart}
+        </if>
+        <if test="valueDateEnd != null and valueDateEnd != ''">
+            and TO_CHAR(sub.VALUE_DATE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{valueDateEnd}
+        </if>
+        <if test="submitendDateStart != null and submitendDateStart != ''">
+            and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{submitendDateStart}
+        </if>
+        <if test="submitendDateEnd != null and submitendDateEnd != ''">
+            and TO_CHAR(sub.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{submitendDateEnd}
+        </if>
+        <if test="dataDateStart != null and dataDateStart != ''">
+            and TO_CHAR(sub.STATUS_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{dataDateStart}
+        </if>
+        <if test="dataDateEnd != null and dataDateEnd != ''">
+            and TO_CHAR(sub.STATUS_DATE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{dataDateEnd}
+        </if>
+        <if test="submitDateStart != null and submitDateStart != ''">
+            and TO_CHAR(sub.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[ >= ]]> #{submitDateStart}
+        </if>
+        <if test="submitDateEnd != null and submitDateEnd != ''">
+            and TO_CHAR(sub.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[ <= ]]> #{submitDateEnd}
+        </if>
+        <if test="termid != null and termid != ''">
+            and  sub.TERMID = #{termid,jdbcType=VARCHAR}
+        </if>
+        <if test="sendStatusList != null and sendStatusList.size()>0">
+            <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="statusList != null and statusList">
+            <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+            <foreach collection="submitFeedbackStatusList" item='items' open= "and sub.SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
+                #{items,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectNoendCountByTaskBeanName" parameterType="string" resultType="int">
+        select count(1)
+        from SYS_BATCHGRP_EXEC_INFO info
+                 left join SYS_BATCH_JOB bj
+                           on info.BATCH_SEQ_NO=bj.BATCH_SEQ_NO
+        where
+            bj.TASK_ID=#{taskid,jdbcType=VARCHAR}
+          and info.STATUS in ('UNR','RUN')
+    </select>
+
 </mapper>

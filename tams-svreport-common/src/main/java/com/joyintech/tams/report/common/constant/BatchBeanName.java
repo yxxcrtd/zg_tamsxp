@@ -103,6 +103,7 @@ public enum BatchBeanName {
     投资者份额检查批处理("3070", "equityShareCheckService","equityShareCheckMainService", "投资者份额检查批处理"),
     投资者持有信息登记手工处理("3072", "investorsHoldInfoRegistAutoManualCBService","investorsHoldInfoRegistAutoManualCBMainService", "投资者持有信息登记手工处理"),
 	投资者身份信息登记手工处理("3073", "equityInfoRegistAutoManualCBService","equityInfoRegistAutoManualCBMainService", "投资者身份信息登记手工处理"),
+    资产持仓登记手工处理("7810", "chbAstPosRegistAutoManualService","chbAstPosRegistAutoManualMainService", "资产持仓登记手工处理"),
 	投资者明细信息登记导出("3075","equityBusiInfoExportService","equityBusiInfoExportMainService","投资者明细信息登记导出"),
     资产持仓登记批处理导出("7809","chbAstPosRegistExportService","chbAstPosRegistExportMainService","资产持仓登记批处理导出"),
     投资者明细信息补登记("7808","equityBusiInfoSupplyExportService","equityBusiInfoSupplyExportMainService","投资者明细信息补登记"),
