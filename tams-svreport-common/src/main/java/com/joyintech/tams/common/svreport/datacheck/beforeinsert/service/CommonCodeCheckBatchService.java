@@ -160,41 +160,10 @@ public class CommonCodeCheckBatchService {
     public  void  checkAstPosSubSingle(Map<String, String> dataMap){
         StringBuffer errMsgSb = new StringBuffer();
         //持仓类别
-        String posType = dataMap.get("POS_TYPE");
-        String prdRegistCode = dataMap.get("PRD_REGIST_CODE");
-        String assetId = dataMap.get("ASSET_ID");
-        String subjectName = dataMap.get("SUBJECT_NAME");
-        String interAssetCode = dataMap.get("INTER_ASSET_CODE");
-        String valueDate = dataMap.get("VALUE_DATE");
         String ccy = dataMap.get("CCY");
         String errMsg = dataMap.get("ERRMSG");
         if (StringUtil.isNotBlank(errMsg)) {
             errMsgSb.append(errMsg);
-        }
-        //必填校验
-        if(StringUtil.isEmpty(prdRegistCode)){
-            errMsgSb.append("产品登记编码必填");
-            errMsgSb.append(GlobalConstant.SEMICOLON);
-        }
-        if(StringUtil.isEmpty(valueDate)){
-            errMsgSb.append("持仓日期必填");
-            errMsgSb.append(GlobalConstant.SEMICOLON);
-        }
-        if(StringUtil.isEmpty(ccy)){
-            errMsgSb.append("币种必填");
-            errMsgSb.append(GlobalConstant.SEMICOLON);
-        }
-        if(StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统资产.getValue())||
-                StringUtil.equals(posType, DictCodeListExt3.中债持仓类型_登记系统负债.getValue())) {
-            if (StringUtil.isEmpty(assetId)) {
-                errMsgSb.append("当“持仓类别”为“02 登记系统资产”或“03 登记系统负债”时，行内资产/负债编码必填");
-                errMsgSb.append(GlobalConstant.SEMICOLON);
-            }
-        }else {
-            if(StringUtil.isEmpty(subjectName)){
-                errMsgSb.append("当“持仓类别”为“01 现金及活期存款”或“04 其他资产”“05 其他负债”时，会计科目名称必填");
-                errMsgSb.append(GlobalConstant.SEMICOLON);
-            }
         }
         if(StringUtil.isNotEmpty(ccy)&&StringUtil.equals(ccy,"CNY")){
             String amt=dataMap.get("AMT");
