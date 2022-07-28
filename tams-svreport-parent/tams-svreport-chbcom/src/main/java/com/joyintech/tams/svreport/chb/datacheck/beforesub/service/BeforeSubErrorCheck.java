@@ -549,7 +549,7 @@ public class BeforeSubErrorCheck {
             String prdCode = datamap.get("PROD_ID");
             listpd.add(prdCode);
             //金额
-            BigDecimal amt=datamap.get("AMT")==null?BigDecimal.ZERO:new BigDecimal(datamap.get("AMT"));
+            BigDecimal amt=datamap.get("CNY_AMT")==null?BigDecimal.ZERO:new BigDecimal(datamap.get("CNY_AMT"));
 
 
 
@@ -600,23 +600,23 @@ public class BeforeSubErrorCheck {
                         "持仓类别为“03 登记系统负债/05 其他负债”合计!=单产品份额*最新产品单位净值");
             }
         }
-//        //查询月末的G06资产端穿透前合计值
-//        BigDecimal monthAmt= chbBeforeSubErrorCheckMapper.selectMonthAssetTotalAmt(termid);
-//        //计算差值>0.1
-//        if(monthAmt==null||ArithmeticUtil.subtract(ArithmeticUtil.subtract(hjzc,fzhj),monthAmt).abs()
-//                .compareTo(new BigDecimal("0.1"))>0){
-//            errMSgmap.put("month","所有产品（“中间层资产（首层）”+“最底层资产”-“资管计划底层资产”）" +
-//                    "持仓类别为“01 现金及活期存款/02 登记系统资产/04 其他资产”合计-持仓类别为“03 登记系统负债/05 其他负债”合计" +
-//                    "!=G06资产端穿透前合计值!");
-//        }
-//        //查询月末的G06资产端穿透后合计值
-//        BigDecimal monthBotAmt= chbBeforeSubErrorCheckMapper.selectMonthAssetTotalBoAmt(termid);
-//        if(monthBotAmt==null||ArithmeticUtil.subtract(ArithmeticUtil.subtract(lowhjzc,lowfzhj),monthBotAmt).abs()
-//                .compareTo(new BigDecimal("0.1"))>0){
-//            errMSgmap.put("monthBo","所有产品（ “最底层资产”）持仓类别为" +
-//                    "“01 现金及活期存款/02 登记系统资产/04 其他资产”合计-持仓类别为“03 登记系统负债/05 其他负债”合计" +
-//                    "!=G06资产端穿透后合计值");
-//        }
+        //查询月末的G06资产端穿透前合计值
+        BigDecimal monthAmt= chbBeforeSubErrorCheckMapper.selectMonthAssetTotalAmt(termid);
+        //计算差值>0.1
+        if(monthAmt==null||ArithmeticUtil.subtract(hjzc,monthAmt).abs()
+                .compareTo(new BigDecimal("0.1"))>0){
+            errMSgmap.put("month","所有产品（“中间层资产（首层）”+“最底层资产”-“资管计划底层资产”）" +
+                    "持仓类别为“01 现金及活期存款/02 登记系统资产/04 其他资产”合计" +
+                    "!=G06 A列期末余额（穿透前）1.15合计值!");
+        }
+        //查询月末的G06资产端穿透后合计值
+        BigDecimal monthBotAmt= chbBeforeSubErrorCheckMapper.selectMonthAssetTotalBoAmt(termid);
+        if(monthBotAmt==null||ArithmeticUtil.subtract(lowhjzc,monthBotAmt).abs()
+                .compareTo(new BigDecimal("0.1"))>0){
+            errMSgmap.put("monthBo","所有产品（ “最底层资产”）持仓类别为" +
+                    "“01 现金及活期存款/02 登记系统资产/04 其他资产”合计" +
+                    "!=G06 B列期末余额（穿透后）1.15合计值");
+        }
         return errMSgmap;
     }
     /**

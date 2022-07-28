@@ -326,18 +326,14 @@
     <select id="selectMonthAssetTotalAmt"  resultType="java.math.BigDecimal">
 SELECT
 ifnull(
-(select ifnull(BALANCE,0) from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
-AND TERMID= #{termid,jdbcType=VARCHAR})-(
-select ifnull(BALANCE,0) from chb_month_report_detail  where PROPERTYCODE='AMT2_3'
+(select BALANCE*10000 from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
 AND TERMID= #{termid,jdbcType=VARCHAR}),0) FROM DUAL
 </select>
 
     <select id="selectMonthAssetTotalBoAmt"  resultType="java.math.BigDecimal">
 SELECT
 ifnull(
-(select ifnull(BOTTOMBALANCE,0) from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
-AND TERMID= #{termid,jdbcType=VARCHAR})-(
-select ifnull(BOTTOMBALANCE,0) from chb_month_report_detail  where PROPERTYCODE='AMT2_3'
+(select BOTTOMBALANCE*10000 from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
 AND TERMID= #{termid,jdbcType=VARCHAR}),0) FROM DUAL
 </select>
 </mapper>
