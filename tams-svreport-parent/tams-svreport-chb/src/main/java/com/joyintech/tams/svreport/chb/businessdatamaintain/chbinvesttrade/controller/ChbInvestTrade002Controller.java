@@ -49,11 +49,8 @@ public class ChbInvestTrade002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.资产计量方式);
         this.setSelectOptionToModel(model, DictCode.资金流动类型);
         this.setSelectOptionToModel(model, DictCode.关联交易情况);
-        model.addAttribute("SVR_RIVAL_PARTY_TYPE", JsonUtils.objectArray2Json(this.queryCounterType2List().toArray()));
+        this.setSelectOptionToModel(model, DictCode.客户二级类型);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
-        String tradeCode = getParam("tradeCode");
-        String prodId = getParam("prodId");
-        String assetCode = getParam("assetCode");
         String status = getParam("statusValid");
         String tradeSeqno = getParam("tradeSeqno");
         ChbInvestTradeDto dto=null;
