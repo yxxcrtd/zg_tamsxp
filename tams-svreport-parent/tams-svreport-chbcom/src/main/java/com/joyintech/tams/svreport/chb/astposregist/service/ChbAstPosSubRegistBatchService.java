@@ -408,16 +408,16 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 				dsub.setCnyFloatIngpl(chzfAmt.setScale(2, RoundingMode.HALF_UP));
 				if(mapAssetType.containsKey(botdto.getAssetType2())){
 					if(DictCodeListExt3.资产持仓品种_金融衍生品.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())){
-						//单位净价: null
-						dsub.setUnitValueCprice(botdto.getoPosCleanPricEmarketValue());
-						//单位全价: null
-						dsub.setUnitValueFprice(botdto.getoPosAmt());
+//						//单位净价: null
+//						dsub.setUnitValueCprice(botdto.getoPosCleanPricEmarketValue());
+//						//单位全价: null
+//						dsub.setUnitValueFprice(botdto.getoPosAmt());
 					}
 					if(DictCodeListExt3.资产持仓品种_金融衍生品2.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())){
-						//单位净价: null
-						dsub.setUnitValueCprice(botdto.getoPosCleanPricEmarketValue());
-						//单位全价: null
-						dsub.setUnitValueFprice(botdto.getoPosAmt());
+//						//单位净价: null
+//						dsub.setUnitValueCprice(botdto.getoPosCleanPricEmarketValue());
+//						//单位全价: null
+//						dsub.setUnitValueFprice(botdto.getoPosAmt());
 
 					}
 					if(DictCodeListExt3.资产持仓品种_净值型资产.getValue().equals(mapAssetType.get(botdto.getAssetType2()).getObjfield2())||
