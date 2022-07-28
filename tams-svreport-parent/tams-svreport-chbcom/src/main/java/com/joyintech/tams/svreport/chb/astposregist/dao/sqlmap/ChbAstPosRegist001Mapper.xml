@@ -409,7 +409,7 @@
         from CHB_AST_POS_SUB sub
         where 1=1
         <if test="keyList != null and keyList.size() > 0">
-            <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+            <foreach collection="keyList" item="items" open="and sub.termid in (" separator="," close=")">
                 #{items,jdbcType=VARCHAR}
             </foreach>
         </if>

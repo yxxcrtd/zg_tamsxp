@@ -87,11 +87,12 @@ public class ChbAstPosRegistController {
 		List<String> keyList = new ArrayList<String>();
         Map<String, Object> param = map;
         /***0722升级**/
-        if (!param.containsKey("keyList")) {
-            keyList = chbAstPosRegist001Service.getCheckEndList(param);
-        } else {
-            keyList = StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys"));
-        }
+//        if (!param.containsKey("keyList")) {
+           Map<String,Object> map1 = chbAstPosRegist001Service.getCheckEndList(param);
+//        } else {
+//            keyList = StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("checkKeys"));
+//        }
+        keyList=(List<String>) map1.get("keylist");
         /***0722升级**/
         if (CollectionUtils.isEmpty(keyList)) {
             List<ExcelValidDto> checkResult = new ArrayList<ExcelValidDto>();
@@ -100,7 +101,7 @@ public class ChbAstPosRegistController {
 			returnMap.put("excelValidDtoList",checkResult);
 			return returnMap;
         }
-        return chbAstPosRegist001Service.checkData(keyList);
+        return chbAstPosRegist001Service.checkData((List<String>) map1.get("keylistseq"),keyList);
 	}
 
     @ResponseBody

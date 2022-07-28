@@ -542,9 +542,12 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 	* @Function: ProdTerminationRegist001Service.java
 	* @Description: 查询资产持仓终止登记待检查数据
 	*/
-	public List<String> getCheckEndList(Map<String, Object> param) {
+	public Map<String,Object> getCheckEndList(Map<String, Object> param) {
+		Map<String,Object> map=new HashMap<>();
 		dealSearchParam(param);
 		List<String> keylist = new ArrayList<String>();
+		List<String> keylistseq = new ArrayList<String>();
+
 		//当勾选数据后，查询当期的月报数据
 		if(param.containsKey("investList")){
 			List<ChbAstPosRegist001Dto> investList=(List<ChbAstPosRegist001Dto>)param.get("investList");
@@ -552,24 +555,30 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 			param.put("termid",termid);
 		}
 		List<ChbAstPosRegist001Dto> list= chbAstPosRegist001Mapper.selectAllData(param);
+		Set<String> set1=new HashSet<>();
 		if(CollectionUtils.isNotEmpty(list)){
 			for(ChbAstPosRegist001Dto dto : list){
-				keylist.add(dto.getRegistSeqno());
+				//添加期数
+				set1.add(dto.getTermid());
+				keylistseq.add(dto.getRegistSeqno());
 			}
-			dealResultlist(list);
+//			dealResultlist(list);
 		}
-		return keylist;
+		keylist.addAll(set1);
+		map.put("keylist",keylist);
+		map.put("keylistseq",keylistseq);
+		return map;
 	}
 
 	/**
 	* @Function: ProdTerminationRegist001Service.java
 	* @Description: 资产持仓登记数据检查功能实现
 	*/
-	public Map<String,Object> checkData(List<String> checkKeys){
+	public Map<String,Object> checkData(List<String> checkKeys,List<String> termidList){
 		Map<String,CheckReport001Dto> checkmap = new HashMap<String,CheckReport001Dto>();
 		Map<String,ChbAstPosRegist001Dto> endmap = new HashMap<String,ChbAstPosRegist001Dto>();
 		Map<String,Object> returnMap = new HashMap<>();
-		List<ChbAstPosRegist001Dto> endlist = chbAstPosRegist001Mapper.selectAllDataByKeyList(checkKeys);
+		List<ChbAstPosRegist001Dto> endlist = chbAstPosRegist001Mapper.selectAllDataByKeyList(termidList);
 		//获取当前的月末时间
 		Date checkDate=endlist.get(0).getValueDate();
 		endmap = endlist.stream().collect(Collectors.toMap(ChbAstPosRegist001Dto::getRegistSeqno,(p)->p,(key1,key2)->key1));

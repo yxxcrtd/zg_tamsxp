@@ -219,15 +219,16 @@ public class ChbAstPosRegist001Controller extends BaseController {
         List<ChbAstPosRegist001Dto> list=new ArrayList<>();
         // 选择行数据时
         if (param.containsKey("keyList")) {
-            String keyList = param.get("keyList").toString();
-            try {
-                list = JsonUtils.json2List(keyList,
-                        ChbAstPosRegist001Dto.class);
-            }
-            catch (IOException e) {
-                // e.printStackTrace();
-                logger.error(e.getMessage(), e);
-            }
+            list = chbAstPosRegistMService.selectForExport(RequestUtil.getParameters(getRequest()));
+//            String keyList = param.get("keyList").toString();
+//            try {
+//                list = JsonUtils.json2List(keyList,
+//                        ChbAstPosRegist001Dto.class);
+//            }
+//            catch (IOException e) {
+//                // e.printStackTrace();
+//                logger.error(e.getMessage(), e);
+//            }
         }else{
             Page<ChbAstPosRegist001Dto> page = chbAstPosRegistMService.selectForPage(RequestUtil.getPageParam());
             if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
