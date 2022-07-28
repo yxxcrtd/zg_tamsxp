@@ -3,14 +3,7 @@ package com.joyintech.tams.batch.report.chbastposregistexport.runner;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.batch.report.chbastposregistexport.service.ChbAstPosRegistExportMainService;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.report.common.constant.BatchBeanName;
-import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog;
 import com.joyintech.tams.report.system.subinfobatchlog.service.ChbSubinfoBatchLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +13,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 
 /**
@@ -42,9 +34,6 @@ public class ChbAstPosRegistExportService extends BatchBaseService {
 
     @Resource
     private ChbAstPosRegistExportMainService chbAstPosRegistExportMainService;
-
-    @Resource
-    private ChbSubinfoBatchLogService chbSubinfoBatchLogService;
 
 
     @Override

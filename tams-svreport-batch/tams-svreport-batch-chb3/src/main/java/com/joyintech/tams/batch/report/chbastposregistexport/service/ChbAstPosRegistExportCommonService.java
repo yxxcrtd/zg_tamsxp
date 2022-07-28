@@ -65,7 +65,7 @@ public class ChbAstPosRegistExportCommonService extends CommonExportService<Equi
     @Resource
     private ChbSubinfoAutoBatchLogMapper chbSubinfoAutoBatchLogMapper;
 
-    private static final String CHB_AST_POS_SUB_NAME = "CHB_AST_POS_SUB";
+    private static final String CHB_AST_POS_SUB_NAME = "资产持仓登记";
 
     /**
      * 日志

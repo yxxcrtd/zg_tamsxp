@@ -1,0 +1,5 @@
+delete from sys_menu where PAGE_ID = 'ErrorMessage001';
+delete from SYS_PAGE where PAGE_ID = 'ErrorMessage001';
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_CHECK_001_003_004', 'SVR', null, 'REPORT_CHECK_001_003', 'ErrorMessage001', 4, '2', '数据检查', 'system', null, now(), 'system', now());
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ErrorMessage001', 'REP', '/chb/errormessage/ErrorMessage001', 'report/errormessage/ErrorMessage001', 'REPORT_CHECK_001_003_004', null, null, '02', '02', '数据检查', 'system', null, now(), 'system',now());
+delete from sys_menu where MENU_ID = 'REPORT_CHECK_001_002';
