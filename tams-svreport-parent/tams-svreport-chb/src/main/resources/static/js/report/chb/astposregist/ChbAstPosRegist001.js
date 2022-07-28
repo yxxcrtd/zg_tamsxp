@@ -18,6 +18,8 @@ $(function() {
               //持仓日期
               valueDateStart:$('#valueDate').startDate(),
               valueDateEnd:$('#valueDate').endDate(),
+              subjectName : $('#subjectName').val() == null ? null : $(
+                  '#subjectName').val().join(","),
               //报送截止日
               submitendDateStart:$('#submitendDate').startDate(),
               submitendDateEnd:$('#submitendDate').endDate(),
@@ -369,14 +371,7 @@ $(function() {
                     );
                 });
             } else {
-                // 无勾选导出，数量小于设置值走勾选逻辑
-                Joyin.ajax('searchInfo',
-                    param,
-                    function (result) {
-                        if (result && result.length > 0){
-                            exportExcel("0");
-                        }
-                    });
+                exportExcel("1");
             }
         });
     }

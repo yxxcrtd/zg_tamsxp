@@ -105,9 +105,8 @@ public class ChbAstPosRegistController {
 
     @ResponseBody
     @RequestMapping(value = "countExportNum")
-    public int countExportNum(@RequestParam Map<String, Object> param) {
+    public int countExportNum(@RequestBody Map<String, Object> param) {
         int dataNum = chbAstPosRegist001Service.countExportNum(param);
         return dataNum;
-
     }
 }
