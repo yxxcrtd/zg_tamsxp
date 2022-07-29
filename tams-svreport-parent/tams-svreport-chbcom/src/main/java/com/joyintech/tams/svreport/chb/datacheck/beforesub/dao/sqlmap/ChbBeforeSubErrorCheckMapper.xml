@@ -342,7 +342,7 @@
 	<select id="selectMonthAssetTotalAmt"  resultType="java.math.BigDecimal">
 SELECT
 nvl(
-(select BALANCE*10000 from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
+(select BALANCE from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
 AND TERMID= #{termid,jdbcType=VARCHAR}),0) FROM DUAL
 
 </select>
