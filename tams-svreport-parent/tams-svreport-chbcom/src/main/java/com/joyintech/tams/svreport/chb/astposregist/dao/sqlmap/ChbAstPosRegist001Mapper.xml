@@ -169,6 +169,7 @@
     <select id="selectAllDataByList" resultMap="BaseResultMap">
         select
         sub.REGIST_SEQNO,
+        sub.SUBMIT_SEQ,
         sub.PROD_ID,
         sub.ISSUE_PARTY_ID,
         sub.PRD_REGIST_CODE,
