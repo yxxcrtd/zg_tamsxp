@@ -164,6 +164,8 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 	            //资产管理产品信息,是否掌控计划底层资产详情不存值
 	            else if(DictCodeListExt2.资产_负债类别_资产管理产品.getValue().equals(dto.getAssetType())){
 	            	dto.setIsCtrlBottom(null);
+                    dto.setMngOrgName(null);
+                    dto.setTruOrgName(null);
 	            }
 	            
 				// 登记编码
