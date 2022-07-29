@@ -607,7 +607,7 @@ public class BeforeSubErrorCheck {
                 .compareTo(new BigDecimal("0.1"))>0){
             errMSgmap.put("month","所有产品（“中间层资产（首层）”+“最底层资产”-“资管计划底层资产”）" +
                     "持仓类别为“01 现金及活期存款/02 登记系统资产/04 其他资产”合计" +
-                    "!=G06 A列期末余额（穿透前）1.15合计值!");
+                    "!=G06 A列期末余额（穿透前）1.15合计值*10000!");
         }
         //查询月末的G06资产端穿透后合计值
         BigDecimal monthBotAmt= chbBeforeSubErrorCheckMapper.selectMonthAssetTotalBoAmt(termid);
@@ -615,7 +615,7 @@ public class BeforeSubErrorCheck {
                 .compareTo(new BigDecimal("0.1"))>0){
             errMSgmap.put("monthBo","所有产品（ “最底层资产”）持仓类别为" +
                     "“01 现金及活期存款/02 登记系统资产/04 其他资产”合计" +
-                    "!=G06 B列期末余额（穿透后）1.15合计值");
+                    "!=G06 B列期末余额（穿透后）1.15合计值*10000!");
         }
         return errMSgmap;
     }
