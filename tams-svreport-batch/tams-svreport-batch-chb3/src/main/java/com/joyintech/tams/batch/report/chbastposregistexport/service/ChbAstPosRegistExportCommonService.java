@@ -191,15 +191,16 @@ public class ChbAstPosRegistExportCommonService extends CommonExportService<Equi
     private boolean exportByPage(Map<String,Object> param){
         logger.info("分线程读取数据开始"+DateUtil.getDateTimestamp());
         List<ChbAstPosRegist001Dto> listDto =  chbAstPosRegistExportMapper.selectAllDataByPage(param);
+        String termId = listDto.get(0).getTermid();
         dealDataList(listDto);
         int index = (int) param.get("index");
         logger.info("分线程导出开始"+DateUtil.getDateTimestamp());
-        batchMakeFile("/com/joyintech/tams/report/submitmanagement/chbastposregistconf/export_conf.xml",listDto,index);
+        batchMakeFile("/com/joyintech/tams/report/submitmanagement/chbastposregistconf/export_conf.xml",listDto,index,termId);
         logger.info("分线程导出结束"+DateUtil.getDateTimestamp());
         return true;
     }
 
-    private File batchMakeFile(String configFile,List<ChbAstPosRegist001Dto> contents, int index){
+    private File batchMakeFile(String configFile,List<ChbAstPosRegist001Dto> contents, int index,String termId){
         if (null == contents) {
             contents = Collections.emptyList();
         }
@@ -221,11 +222,11 @@ public class ChbAstPosRegistExportCommonService extends CommonExportService<Equi
             while(contents.size() > count) {
                 List<?> subList = contents.subList(0, count);
                 contents = contents.subList(count, contents.size());
-                fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, subList, new LongAdder(), 0L, count, index, sum));
+                fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, subList, new LongAdder(), 0L, count, index, sum,termId));
                 sum++;
             }
 
-            fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, contents, new LongAdder(), 0L, count, index, sum));
+            fileList.add(this.makeSingleFile(wb, reportConfig, (String)null, fileType, contents, new LongAdder(), 0L, count, index, sum,termId));
         } catch (Exception var24) {
             var24.printStackTrace();
         } finally {
@@ -306,7 +307,7 @@ public class ChbAstPosRegistExportCommonService extends CommonExportService<Equi
         return (Workbook)wb;
     }
 
-    private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount, int fileNameIndex, int sum) throws IOException {
+    private File makeSingleFile(Workbook wb, JoyinBookConfig reportConfig, String pageId, String fileType, List<?> contents, LongAdder current, long total, int sheetMaxRowCount, int fileNameIndex, int sum,String termId) throws IOException {
         wb.close();
         wb = this.getWorkbook(reportConfig);
         Sheet sheet1 = wb.getSheetAt(0);
@@ -343,7 +344,7 @@ public class ChbAstPosRegistExportCommonService extends CommonExportService<Equi
             }
         }
 
-        String outFileName = CHB_AST_POS_SUB_NAME + GlobalConstant.UNDER_LINE  + System.currentTimeMillis() + fileNameIndex + sum + fileType;
+        String outFileName = CHB_AST_POS_SUB_NAME + GlobalConstant.UNDER_LINE  + termId + GlobalConstant.UNDER_LINE + fileNameIndex + sum + fileType;
         String tmpPath = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH);
         File file = new File(tmpPath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {

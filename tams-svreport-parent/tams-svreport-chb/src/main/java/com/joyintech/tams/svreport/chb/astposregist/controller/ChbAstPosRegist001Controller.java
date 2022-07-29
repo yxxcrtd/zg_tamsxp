@@ -130,11 +130,15 @@ public class ChbAstPosRegist001Controller extends BaseController {
     	} else {
             dtoList =chbAstPosRegist001Service.selectAllData(pageParam);
         }
+    	String termId = null;
+    	if(CollectionUtils.isNotEmpty(dtoList)){
+            termId = dtoList.get(0).getTermid();
+        }
         File outFile = chbAstPosRegist001Service.makeFile(
                 "/com/joyintech/tams/svreport/chb/astposregist/conf/export_conf.xml", dtoList);
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-                        + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+                        + termId + GlobalConstant.CLOSE_PARENTHESIS
                         + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
 

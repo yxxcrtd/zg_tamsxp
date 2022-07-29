@@ -17,6 +17,7 @@ import com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001D
 import com.joyintech.tams.svreport.chb.prodstatusregist.service.ProdStatusRegist001Service;
 import com.joyintech.tams.svreport.chb.prodstatusregist.service.ProdStatusRegistMService;
 import com.joyintech.tams.svreport.chbsd.prodstatusregistsub.service.SdProdStatusRegistBatchService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,9 +113,13 @@ public class ProdStatusRegist001Controller extends BaseController {
         List<ProdStatusRegist001Dto> dtoList = prodStatusRegistMService.selectForExport(RequestUtil.getParameters(getRequest()));
         File outFile = prodStatusRegist001Service.makeFile(
                 "/com/joyintech/tams/svreport/chb/prodstatusregist/conf/export_conf.xml", dtoList);
+        String termId = null;
+        if(CollectionUtils.isNotEmpty(dtoList)){
+            termId = dtoList.get(0).getTermid();
+        }
         return ExportUtil.export(
                 this.getMessage(this.getPageId()) + GlobalConstant.OPEN_PARENTHESIS
-                        + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS
+                        + termId + GlobalConstant.CLOSE_PARENTHESIS
                         + GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
     }
