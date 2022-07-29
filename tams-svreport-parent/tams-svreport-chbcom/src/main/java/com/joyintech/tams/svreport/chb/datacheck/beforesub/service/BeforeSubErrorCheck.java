@@ -374,6 +374,15 @@ public class BeforeSubErrorCheck {
 
         for ( Map<String,String> m:listError ) {
             String posType=m.get("POS_TYPE");
+            String valueDate =StringUtil.isNotEmpty(m.get("VALUE_DATE")) ? (";持仓日期:"+m.get("VALUE_DATE")) : "";
+            if(StringUtil.isNotEmpty(m.get("VALUE_DATE"))){
+                String valueDateStr = m.get("VALUE_DATE");
+                if(valueDateStr.contains(" ")){
+                    int index = valueDateStr.indexOf(" ");
+                    valueDateStr = valueDateStr.substring(0,index);
+                }
+                valueDate = ";持仓日期:"+valueDateStr;
+            }
             //不合格的数据加入到不合格列表
             CheckReport001Dto chbReportCheck = new CheckReport001Dto();
             chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
@@ -385,13 +394,13 @@ public class BeforeSubErrorCheck {
                 chbReportCheck.setValidKey((StringUtil.isNotEmpty(m.get("PRD_REGIST_CODE")) ? (";产品登记编码:"+m.get("PRD_REGIST_CODE")): "") +
                         (StringUtil.isNotEmpty(m.get("ASSET_ID")) ? (";行内资产/负债编码:"+m.get("ASSET_ID")): "")
                         +(StringUtil.isNotEmpty(m.get("INTER_ASSET_CODE")) ? (";中间层行内资产/负债编码:"+m.get("INTER_ASSET_CODE")): "")
-                        +(StringUtil.isNotEmpty(m.get("VALUE_DATE")) ? (";持仓日期:"+m.get("VALUE_DATE")): "")
+                        +valueDate
                         +(StringUtil.isNotEmpty(m.get("CCY")) ? (";币种:"+m.get("CCY")): ""));
             }else{
                 chbReportCheck.setValidKey((StringUtil.isNotEmpty(m.get("PRD_REGIST_CODE")) ? (";产品登记编码:"+m.get("PRD_REGIST_CODE")): "") +
                         (StringUtil.isNotEmpty(m.get("SUBJECT_NAME")) ? (";会计科目名称:"+m.get("SUBJECT_NAME")): "")
                         +(StringUtil.isNotEmpty(m.get("INTER_ASSET_CODE")) ? (";中间层行内资产/负债编码:"+m.get("INTER_ASSET_CODE")): "")
-                        +(StringUtil.isNotEmpty(m.get("VALUE_DATE")) ? (";持仓日期:"+m.get("VALUE_DATE")): "")
+                        +valueDate
                         +(StringUtil.isNotEmpty(m.get("CCY")) ? (";币种:"+m.get("CCY")): ""));
             }
             chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
