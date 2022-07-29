@@ -191,6 +191,12 @@ public class ChbAstPosBatchResultDto extends BaseEntity implements ITableRow {
     private   String  errMsg;
 
 
+    /**
+     *借贷方向
+     */
+    private  String  balFlag;
+
+
     public String getErrMsg() {
         return errMsg;
     }
@@ -455,5 +461,13 @@ public class ChbAstPosBatchResultDto extends BaseEntity implements ITableRow {
 
     public void setRecPayLendFeeAmt(BigDecimal recPayLendFeeAmt) {
         this.recPayLendFeeAmt = recPayLendFeeAmt;
+    }
+
+    public String getBalFlag() {
+        return balFlag;
+    }
+
+    public void setBalFlag(String balFlag) {
+        this.balFlag = balFlag;
     }
 }

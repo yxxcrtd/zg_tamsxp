@@ -283,6 +283,11 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 				sub.setProdId(bato.getProdId());
 				//持仓类别=配置记录的持仓类别
 				sub.setPosType(mapsubject.get(bato.getSubjectNo()).getObjfield2());
+				//3001的贷方数计为 05 其它负债
+				if(StringUtil.equals("3001",bato.getSubjectNo())&&
+				 StringUtil.equals(DictCodeList.借贷方向_贷.getValue(),bato.getBalFlag()) ){
+					sub.setPosType(DictCodeListExt3.中债持仓类型_其他负债.getValue());
+				}
 				//中间层层数
 				sub.setInterLeveNo("0");
 				//资产穿透情况=03 ： 最底层资产

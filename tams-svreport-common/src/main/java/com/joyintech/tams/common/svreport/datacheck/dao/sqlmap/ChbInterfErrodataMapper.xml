@@ -39,7 +39,8 @@
     where DATAID = #{dataid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
-    MERGE INTO CHB_INTERF_ERRODATA T
+    BEGIN
+  MERGE INTO CHB_INTERF_ERRODATA T
     USING (
       select
       #{datauuid,jdbcType=VARCHAR} DATAUUID,
@@ -55,8 +56,8 @@
       #{orgCode,jdbcType=VARCHAR} ORG_CODE,
       #{deptCode,jdbcType=VARCHAR} DEPT_CODE,
       #{createDept,jdbcType=VARCHAR} CREATE_DEPT,
-      #{orgData,jdbcType=CLOB} ORG_DATA,
-      #{errMsg,jdbcType=CLOB} ERR_MSG
+      empty_clob() ORG_DATA,
+      empty_clob() ERR_MSG
       from dual
     ) TEMP
     ON (T.DATAID = TEMP.DATAID)
@@ -112,7 +113,14 @@
     TEMP.CREATE_DEPT,
     TEMP.ORG_DATA,
     TEMP.ERR_MSG
-    )
+    );
+    <if test="orgData != null and orgData != ''">
+      update CHB_INTERF_ERRODATA set ORG_DATA = #{orgData} where DATAID = #{dataid};
+    </if>
+    <if test="errMsg != null and errMsg != ''">
+      update CHB_INTERF_ERRODATA set ERR_MSG = #{errMsg} where DATAID = #{dataid};
+    </if>
+    END;
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.common.svreport.datacheck.dto.ChbInterfErrodataWithBLOBs" >
     insert into CHB_INTERF_ERRODATA

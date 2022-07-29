@@ -169,6 +169,7 @@
     <select id="selectAllDataByList" resultMap="BaseResultMap">
         select
         sub.REGIST_SEQNO,
+        sub.SUBMIT_SEQ,
         sub.PROD_ID,
         sub.ISSUE_PARTY_ID,
         sub.PRD_REGIST_CODE,
@@ -492,33 +493,15 @@ a.BOOKSET_ID as prodId ,/**产品代码*/
 a.BALANCE_DATE as valueDate,/**持仓日期*/
 d.RAISE_CCY as ccy,/**币种*/
 c.REG_CODE  as prdRegistCode,/**产品登记编码*/
-case when a.SUBJECT_NO='1204.01'
-        then '1002.01'
-        when a.SUBJECT_NO='1204.07'
-        then '1002.01'
-        when a.SUBJECT_NO='1204.02'
-        then '1021'
-        when a.SUBJECT_NO='1204.03'
-        then '1031'
-        else  a.SUBJECT_NO
-        end
-        as subjectNo /**科目代码*/
+a.BAL_FLAG  balFlag,/**借贷方向*/
+a.SUBJECT_NO subjectNo /**科目代码*/
 from BOK_BALANCE a
 left join chb_prdresist_code c on a.BOOKSET_ID=c.PRODID
 left join chb_prd_baseinfo  d on a.BOOKSET_ID=d.PROD_ID
 and d.STATUS !='D'
 where a.BALANCE_DATE=TO_DATE(#{objectDate,jdbcType=VARCHAR},'yyyy-MM-dd')
-group by c.ORG_CODE,a.BOOKSET_ID,a.BALANCE_DATE,d.RAISE_CCY,c.REG_CODE
-,case when a.SUBJECT_NO='1204.01'
-        then '1002.01'
-        when a.SUBJECT_NO='1204.07'
-        then '1002.01'
-        when a.SUBJECT_NO='1204.02'
-        then '1021'
-        when a.SUBJECT_NO='1204.03'
-        then '1031'
-        else  a.SUBJECT_NO
-        end
+group by c.ORG_CODE,a.BOOKSET_ID,a.BALANCE_DATE,d.RAISE_CCY,c.REG_CODE,a.BAL_FLAG
+,a.SUBJECT_NO
 </select>
 
     <select id="selectBotAstData" resultType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosBatchResultDto">

@@ -2116,7 +2116,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						if (!StringUtils.isEmpty(asset_id)) {
 							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(asset_id);
 							if (count<1) {
-								//checkResult.add(new ExcelValidDto("行内资产/负债编码[ASSET_ID="+asset_id+"]", String.valueOf(j+1),"行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+								checkResult.add(new ExcelValidDto("行内资产/负债编码[ASSET_ID="+asset_id+"]", String.valueOf(j+1),"行内资产/负债编码在[资产要素登记]中不存在或未报送"));
 							}
 
 						}
@@ -2124,7 +2124,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						if (!StringUtils.isEmpty(inter_asset_code)) {
 							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(inter_asset_code);
 							if (count<1) {
-								//checkResult.add(new ExcelValidDto("中间层行内资产/负债编码[INTER_ASSET_CODE="+inter_asset_code+"]", String.valueOf(j+1),"中间层行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+								checkResult.add(new ExcelValidDto("中间层行内资产/负债编码[INTER_ASSET_CODE="+inter_asset_code+"]", String.valueOf(j+1),"中间层行内资产/负债编码在[资产要素登记]中不存在或未报送"));
 							}
 
 						}

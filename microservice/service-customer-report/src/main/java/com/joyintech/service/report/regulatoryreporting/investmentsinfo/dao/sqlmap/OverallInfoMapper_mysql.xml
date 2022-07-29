@@ -302,6 +302,8 @@
 				and di.model_type = '02' AND DI.DATA_TYPE= 'PTL01'
 			</if>
 			WHERE AI.STATUS IN ('E','M')
+		    and AI.CONSTRACTE_BUSI_TYPE is not null
+		    AND AI.CONSTRACTE_GRADE  is not null
 			and AI.ASSET_TYPE2 IN ('1116','2299','1201','1210','1202','1203','1204','1205','1206','1207','1208','1209','1211','1212','1213','2202'
 		,'1299','1301','1399','2101','2617')
 			and (POS.ASSET_CODE is not null or POS1.ASSET_CODE is not null
