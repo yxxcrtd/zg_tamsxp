@@ -17,6 +17,7 @@ import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -34,7 +35,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -141,10 +144,48 @@ public class CommonCodeCheckBatchService {
                     checkSalerIdenInfo(map,ChbCheckTableInfo.销售人员身份信息表INFO.getTableName(), mapLinshi);
                 case  总部或分支机构信息表INFO:
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
+                case 资产持仓登记SUB:
+                    checkAstPosSubSingle(map);
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    /**
+     * 资产持仓登记单条校验
+     * @param dataMap
+     */
+    public  void  checkAstPosSubSingle(Map<String, String> dataMap){
+        StringBuffer errMsgSb = new StringBuffer();
+        //持仓类别
+        String ccy = dataMap.get("CCY");
+        String errMsg = dataMap.get("ERRMSG");
+        if (StringUtil.isNotBlank(errMsg)) {
+            errMsgSb.append(errMsg);
+        }
+        if(StringUtil.isNotEmpty(ccy)&&StringUtil.equals(ccy,"CNY")){
+            String amt=dataMap.get("AMT");
+            String camt=dataMap.get("CNY_AMT");
+            String floatIngpl=dataMap.get("FLOAT_INGPL");
+            String cfloatIngpl=dataMap.get("CNY_FLOAT_INGPL");
+            if(!StringUtil.equals(amt,camt)){
+                errMsgSb.append("当“币种”字段为“CNY人民币”时，“金额”和“折算人民币金额”字段必须相等!");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+            if(!StringUtil.equals(floatIngpl,cfloatIngpl)){
+                errMsgSb.append("当“币种”字段为“CNY人民币”时，“公允价值”和“折算人民币公允价值”必须相等!");
+                errMsgSb.append(GlobalConstant.VERTICAL_LINE);
+            }
+        }
+        String errMSg = "";
+        if (errMsgSb.length() > 0){
+            errMSg = errMsgSb.substring(0, errMsgSb.length() - 1);
+        }
+        dataMap.put("ERRMSG", errMSg);
+
+
     }
     /**
      * 登记的入库前的代码检查
@@ -161,6 +202,10 @@ public class CommonCodeCheckBatchService {
         Set<String> saleInstSet = new HashSet<>();
 
         Map<String, List<String>> prodRegistCodeMap = new HashMap<>();
+
+        //所有交易对手信息
+        List<ChbMstCounterParty> counterPartyList = commonCodeCheckMapper.selectCounterPartyList();
+        Map<String, ChbMstCounterParty> counterPartyMap = counterPartyList.stream().collect(Collectors.toMap(ChbMstCounterParty::getCounterId, ChbMstCounterParty -> ChbMstCounterParty));
 
         Map<String,String> detailMap = new HashMap();
         //循环处理待check数据
@@ -199,7 +244,7 @@ public class CommonCodeCheckBatchService {
                     checkInvestTradeInfo(map, prodRegistCodeMap);
                     break;
                 case 投资交易信息表:
-                    checkChbInvestTrade(excelValidDtoList,map,i);
+                    checkChbInvestTrade(excelValidDtoList,map,counterPartyMap,i);
                     break;
                 case 资产估值信息登记表SUB:
                 case 资产估值信息登记TMP:
@@ -277,11 +322,13 @@ public class CommonCodeCheckBatchService {
         }
     }
 
-    private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, int i) {
+    private void checkChbInvestTrade(List<ExcelValidDto> excelValidDtoList, Map<String, String> dataMap, Map<String, ChbMstCounterParty> counterPartyMap,int i) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         StringBuilder sb = new StringBuilder();
         String assetCode = dataMap.get("ASSET_CODE");
         String curAssetType = dataMap.get("CUR_ASSET_TYPE");
+        //交易对手代码
+        String tradeCounter = dataMap.get("TRADE_COUNTER");
         if(!errMsg.equals("重复数据;")){
             if(commonCodeCheckMapper.checkExistsAssetCode(assetCode)<1){
                 sb.append("行内资产/负债编码不存在；");
@@ -304,6 +351,26 @@ public class CommonCodeCheckBatchService {
                     sb.append("当“资金流动类型”选择“11其他收入”“12其他支出”之外的类型时，“产品登记编码+行内交易编码+行内资产/负债编码+资金流动类型”不得同时与已有数据重复；");
                 }
             }
+
+            //交易对手校验
+            if (counterPartyMap.containsKey(tradeCounter)) {
+                ChbMstCounterParty chbMstCounterParty = counterPartyMap.get(tradeCounter);
+                if (StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"99")) {
+                    sb.append("交易对手关联交易情况为“99 其他关联交易情况”时, 备注不能为空[").append("TRADE_COUNTER=").append(tradeCounter).append("];");;
+                }
+
+                if (StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"02") ||
+                     StringUtil.equals(chbMstCounterParty.getRelatedTradeStatus(),"04")) {
+                    Pattern pattern = Pattern.compile("(([0-9A-Z]{14})|([0-9A-Z]{15})|([\\\\u65e0]))");
+                    Matcher matcher = pattern.matcher(chbMstCounterParty.getCounterName());
+                    if (!matcher.matches()) {
+                        sb.append("交易对手关联交易情况为“02 对手方为本机构其他理财产品或04 对手方为股东方或子公司的理财产品”时, 交易对手报送字段格式不对。正确的格式：14或15位大写字母或数字。[").append("TRADE_COUNTER=").append(chbMstCounterParty.getCounterName()).append("];");
+                    }
+
+                }
+
+            }
+
             if(StringUtils.isEmpty(errMsg)){
                 if(StringUtils.isNotEmpty(sb.toString())&&excelValidDtoList!=null){
                     excelValidDtoList.add(new ExcelValidDto("导入成功",String.valueOf((i+2)),sb.toString()));
@@ -2859,6 +2926,28 @@ public class CommonCodeCheckBatchService {
 //              errMsgBuilder.append("未进行资产要素登记[").append("ASSET_CODE=").append(assetCode).append("];");
 //          }
 //      }
+        dataMap.put("ERRMSG", errMsgBuilder.toString());
+    }
+
+
+    /**
+     * 资交易信息维护数据检查
+     *
+     * @param dataMap 被检查的数据
+     */
+    public void checkInvestTrade(Map<String, String> dataMap) {
+        StringBuilder errMsgBuilder = new StringBuilder(dataMap.getOrDefault("ERRMSG", ""));
+        // 交易对手
+        String tradeCounter = dataMap.get("TRADE_COUNTER");
+        //交易对手代码
+        String counterId = dataMap.get("COUNTER_ID");
+        ChbMstCounterParty chbMstCounterParty = commonCodeCheckMapper.selectOneCounterParty(tradeCounter,"E");
+        if (chbMstCounterParty!=null) {
+            if (Objects.equals(chbMstCounterParty.getRelatedTradeStatus(),"99")) {
+                errMsgBuilder.append("交易对手关联交易情况为“99 其他关联交易情况”时, 备注不能为空[").append("COUNTER_ID=").append(counterId).append("];");;
+            }
+
+        }
         dataMap.put("ERRMSG", errMsgBuilder.toString());
     }
 

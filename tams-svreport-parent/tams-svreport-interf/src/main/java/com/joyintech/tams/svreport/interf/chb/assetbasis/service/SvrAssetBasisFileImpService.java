@@ -316,8 +316,8 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                         field.set(chbAssetsBasisData,
                             (value == null || "".equals(value)) ? BigDecimal.ZERO : new BigDecimal(
                                 value));
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
+                    } catch (Exception e) {
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }
@@ -325,8 +325,8 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                     try {
                         field.set(chbAssetsBasisData,
                             (value == null || "".equals(value)) ? 0 : Integer.valueOf(value));
-                    } catch (IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
+                    } catch (Exception e) {
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }
@@ -334,8 +334,8 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                     try {
                         field.set(chbAssetsBasisData,
                             (value == null || "".equals(value)) ? 0 : Short.valueOf(value));
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
+                    } catch ( Exception e) {
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }
@@ -343,8 +343,8 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                     if (value != null&&""!=value) {
                         try {
                             field.set(chbAssetsBasisData, DateUtil.parse(value));
-                        } catch (IllegalAccessException e) {
-                            logger.error(e.getMessage(),e);
+                        } catch (Exception e) {
+                            logger.debug(e.getMessage(),e);
                             return ;
                         }
                     }
@@ -352,8 +352,8 @@ public class SvrAssetBasisFileImpService extends FileImpService{
                 else {
                     try {
                         field.set(chbAssetsBasisData, (value == null || "".equals(value)) ? "" : value);
-                    } catch ( IllegalAccessException e) {
-                        logger.error(e.getMessage(),e);
+                    } catch ( Exception e) {
+                        logger.debug(e.getMessage(),e);
                         return ;
                     }
                 }

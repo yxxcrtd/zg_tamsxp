@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.StringUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -123,36 +124,19 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 	private boolean excuteProdBaseInfoByStep(List<Map<String, String>> baseinfoList, 
 			String tmpPath, ImpTable table, String saveFlag,String dataSource) {
 
-		// 定义新增数据list-验证不通过数据
-//		List<ChbPrdFeeDeal> listNA = new ArrayList<ChbPrdFeeDeal>();
-		// 定义新增数据list-验证通过数据
 		List<ChbPrdFeeDeal> listNE = new ArrayList<ChbPrdFeeDeal>();
-		// modify by convertMapToEntity yangxianjiu 2022-01-19 start
+
 		listNE = (List<ChbPrdFeeDeal>) convertMapToEntity(baseinfoList,ChbPrdFeeDeal.class, dataSource);
 		listNE.stream().forEach(dto->{
 			dto.setSeqno(IDGenerator.generate(36));
 		});
-//		Date paydate=null;
-//		for (Map<String, String> map : baseinfoList) {
-//			ChbPrdFeeDeal feedeal =  dataConversionEntity(map);
-//			if(paydate==null&&feedeal.getPayDate()!=null){
-//				paydate=feedeal.getPayDate();
-//			}
-//			feedeal.setDataSource(dateSource);
-//
-//			listNE.add(feedeal);
-//		}
-		// modify by convertMapToEntity yangxianjiu 2022-01-19 end
+
 		if (listNE != null && listNE.size() > 0) {
-			// 如果是增量文件则不需要删除
-//			if (tmpPath == null) {
+
 			insertPrdFeeDealDataMerge(listNE);
 			
 			logger.debug("产品费用交易插入结束--------------" + new Date());
-//			}else{
-//					chbPrdDealInterfMapper.deletePrdFeeDealByDate(paydate);
-//				createDataFile(tmpPath + "/CHB_PRD_FEEDEAL", listNE, table.getColumns());
-//			}
+
 			return CollectionUtils.isNotEmpty(listNE);
 		}
 		
@@ -359,10 +343,8 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 	}
 	@Override
 	public String importDB(List<Map<String, String>> listData,InterfFile interfFile, String date) {
-		String result="success";
-//		 	List<Map<String, String>> listEerro = 
-		 			checkData(listData,interfFile.getFilename(),InterfDefine.产品费用交易接口数据.getCode(),InterfDefine.产品费用交易接口数据.getCode(),BUSINESSKEY_CHB_PRD_FEEDEAL,BUSINESSKEY_CHB_PRD_FEEDEAL);
-//		 	listData.addAll(listEerro);
+		   String result="success";
+		 	checkData(listData,interfFile.getFilename(),InterfDefine.产品费用交易接口数据.getCode(),InterfDefine.产品费用交易接口数据.getCode(),BUSINESSKEY_CHB_PRD_FEEDEAL,BUSINESSKEY_CHB_PRD_FEEDEAL);
 		 	ChbInterfConfigDto interfConfig = ChbInterfUtil.queryInterfConfigByInterfid(InterfDefine.产品费用交易接口数据.getCode());
 	        if (interfConfig == null){
 	            logger.info("CHB_INTERF_CONFIG表中无配置项！");
@@ -370,6 +352,11 @@ public class SvrProdFeeDealFileImpService extends FileImpService{
 	        }
 	        String saveFlag = interfConfig.getContentType();
 	        if(!listData.isEmpty()){
+				listData.forEach(map->{
+					if (StringUtil.isNotBlank(map.get("TRADE_TIME"))) {
+						map.put("TRADE_DATE",map.get("TRADE_TIME"));
+					}
+				});
 	        	result=saveData(listData, saveFlag, interfFile.getDataSource());
 	        }
 	        // 更新系统配置时间

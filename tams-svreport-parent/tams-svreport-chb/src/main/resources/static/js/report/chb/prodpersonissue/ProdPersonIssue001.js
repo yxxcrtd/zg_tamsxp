@@ -144,6 +144,7 @@ $(function(){
             { title: "开放模式", field: 'openMode',width:200, sortField:'openMode'},
             { title: "规律开放周期", field: 'openCircle',width:200, sortField:'openCircle'},
             { title: "其他规律开放周期（天）", field: 'openCircleDays',width:200, sortField:'openCircleDays'},
+            { title: "定期开放周期（天）", field: 'periodicIntervalDays',width:200, sortField:'periodicIntervalDays'},
             { title: "无规律开放说明", field: 'ruleComment',width:200, sortField:'ruleComment'},
             { title: "首次开放周期起始日", field: 'firstOpenDay',type: 'date',width:200, sortField:'firstOpenDay'},
             { title: "节假日是否开放", field: 'holidayOnFlag', width:200, sortField:'holidayOnFlag'},

@@ -130,6 +130,7 @@ public class BeforeSubCheck extends SvrCBBaseService{
         resultList.addAll(beforeSubErrorCheck.checkProdDeclareSub(checkdate,null,mapInvestTradeRuleout));
         /**end  中债一二期报送前检查强制校验检查  add  by ***  20201010 */
         resultList.addAll(beforeSubErrorCheck.checkProdRaiseTotalReg(checkdate,null,mapInvestTradeRuleout));
+        resultList.addAll(beforeSubErrorCheck.checkChbAstPosReg(null,checkdate,null,null));
 
         //警告逻辑检查
         resultList.addAll(checkProdEndReg(checkdate,mapPrdEndRuleout,null));

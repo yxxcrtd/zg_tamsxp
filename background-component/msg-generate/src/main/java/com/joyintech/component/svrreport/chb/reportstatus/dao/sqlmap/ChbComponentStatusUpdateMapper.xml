@@ -202,6 +202,48 @@
         WHERE
             SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>
+
+    <update id="updateChbPrdStatusSubSendStatus">
+        update
+            CHB_PRD_STATUS_SUB
+        set
+            SEND_STATUS = #{sendStatus, jdbcType=VARCHAR},
+            SUBMIT_FEEDBACK_STATUS = #{feedbackStatus, jdbcType=VARCHAR},
+            SUBMIT_FEEDBACK_MSG = NULL,
+            SUBMIT_TIME = SYSDATE
+        WHERE
+            SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateChbAstPosSubSendStatus">
+        update
+            CHB_AST_POS_SUB
+        set
+            SEND_STATUS = #{sendStatus, jdbcType=VARCHAR},
+            SUBMIT_FEEDBACK_STATUS = #{feedbackStatus, jdbcType=VARCHAR},
+            SUBMIT_FEEDBACK_MSG = NULL,
+            SUBMIT_TIME = SYSDATE
+        WHERE
+            SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateChbPrdStatusSubSubmitStatus">
+        update
+            CHB_PRD_STATUS_SUB
+        set
+            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
+        WHERE
+            SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateChbAstPosSubmitStatus">
+        update
+            CHB_AST_POS_SUB
+        set
+            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
+        WHERE
+            SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+    </update>
     
     <update id="updateChbEmployeeInfoSubSubmitStatus">
         update
@@ -209,7 +251,7 @@
         set
             SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
         WHERE
-            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+            SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>
 
     <select id="querySubDataStatusBySumitSeq" resultType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto">

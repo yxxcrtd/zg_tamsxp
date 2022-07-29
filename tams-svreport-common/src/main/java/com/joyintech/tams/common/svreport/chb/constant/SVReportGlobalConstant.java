@@ -416,7 +416,7 @@ public class SVReportGlobalConstant {
      */
     //public static final String CUSTOMER_JSBANK_CODE  = "CUSTOMER_JSBANK_CODE";
     /**
-     * 【中债交易对手取值】0：虚拟交易对手，参数配置， 1：真实交易对手，即交易表存的交易对手
+     * 【中债交易对手取值】1：虚拟交易对手，参数配置， 0：真实交易对手，即交易表存的交易对手
      */
     public static final String SVR_IF_REAL_COUNTER = "SVR_IF_REAL_COUNTER";
     /**

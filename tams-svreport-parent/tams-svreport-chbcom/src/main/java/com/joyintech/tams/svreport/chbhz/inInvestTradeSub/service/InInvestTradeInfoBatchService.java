@@ -109,8 +109,20 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 		// 2 、校验、生成错误数据、正确数据的数据结构
 		// 查询数据库表字段
 		List<String> listCloumn = baseMapper.getTableColumnList(investTradeTableName);
+		//为后面交易TRADE_TIME
+		listCloumn.add("TRADE_DATE");
 		// 2.1调用共通 将list<接口表DTO>转换成List<Map<Key, Object>>格式
 		List<Map<String, String>> listMap = svrMaptoEntityUtil.convertEntityToMap(listTmp, listCloumn);
+		if (CollectionUtils.isNotEmpty(listMap)) {
+			listMap.forEach(e->{
+				if (e.containsKey("TRADE_TIME")) {
+					e.put("TRADE_DATE",e.get("TRADE_TIME"));
+					Date tradeTime = DateUtil.parse(e.get("TRADE_TIME"));
+				    e.put("TRADE_TIME",DateUtil.format(tradeTime,"yyyyMMddHHmmss"));
+
+				}
+			});
+		}
 		// 2.2调用FileImpService.checkData方法
 		// add by dubaojun 2020-10-12 修复文件名为null异常的问题 start
 		checkData(true, listMap, investTradeTableName, investTradeTableName, investTradeTableName, BUSSINESSKEY,
@@ -126,6 +138,13 @@ public class InInvestTradeInfoBatchService extends FileImpService {
 		// 3.1 对[2]清理掉错误数据的List，调用以下共通，进行数据类型转化处理。将检查后的listMap 转为List<业务表登记表Dto>
 		List<InvestTradeRegist001Dto> chbInvestTradeSubList = svrMaptoEntityUtil.convertMapToEntity(listMap, listCloumn,
 				InvestTradeRegist001Dto.class);
+		listCloumn.remove("TRADE_DATE");
+
+		if (CollectionUtils.isNotEmpty(chbInvestTradeSubList)) {
+			chbInvestTradeSubList.forEach(e->{
+				e.setTradeTime(DateUtil.parse(e.getTradeDate()));
+			});
+		}
 
 		// 拼接查询主keylist
 		// modify by dubaojun 2020-10-17 业务主键设置不正确修改 start

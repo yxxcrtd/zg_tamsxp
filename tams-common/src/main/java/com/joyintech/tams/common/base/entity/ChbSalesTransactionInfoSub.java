@@ -148,6 +148,11 @@ public class ChbSalesTransactionInfoSub extends BaseEntity {
      */
     private String remark;
 
+    /**
+     * 销售结算交易类型
+     */
+    private String tradeType;
+
     public String getCheckSeqno() {
         return checkSeqno;
     }
@@ -388,7 +393,17 @@ public class ChbSalesTransactionInfoSub extends BaseEntity {
         this.remark = remark;
     }
 
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(String tradeType) {
+        this.tradeType = tradeType;
+    }
+
     public String getKey(){
         return this.getInstitutionCode() + "_" + this.getTradeNo() + "_" + this.getPrdRegistCode() + "_" + this.getAccountNo();
+
+
     }
 }

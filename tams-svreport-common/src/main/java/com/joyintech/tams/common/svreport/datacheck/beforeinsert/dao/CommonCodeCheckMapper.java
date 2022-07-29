@@ -107,6 +107,8 @@ public interface CommonCodeCheckMapper {
 
     void deleteChbInvestTradeErrorData(@Param("prodId") String prodId,@Param("assetCode") String assetCode, @Param("tradeCode") String tradeCode);
 
+    void deleteChbInvestTrade(@Param("list") List<ChbInvestTradeErrodataWithBLOBs> list);
+    
     void deleteChbPrdBaseInfoErrorData(String prodId);
 
 
@@ -118,7 +120,15 @@ public interface CommonCodeCheckMapper {
 
     void deleteChbPrdBaseInfo(@Param("list") List<ChbPrdBaseinfoErrodataWithBLOBs> list);
 
-    void deleteChbInvestTrade(@Param("list") List<ChbInvestTradeErrodataWithBLOBs> list);
+    /**
+     * 交易对手信息获取
+     * @param counterId
+     * @param status
+     * @return
+     */
+    ChbMstCounterParty selectOneCounterParty(@Param("counterId") String counterId,@Param("status") String status);
+
+    List<ChbMstCounterParty> selectCounterPartyList();
 
     void deleteChbAssetInfo(@Param("list") List<ChbAssetInfoErrodataWithBLOBs> list);
 

@@ -4,14 +4,15 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.svreport.chb.businessdatamaintain.chbboksubject.dto.ChbBokSubjectDto;
+import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.dto.ChbInvestTradeDto;
 import com.joyintech.tams.svreport.chb.businessdatamaintain.chbinvesttrade.service.ChbInvestTradeService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,17 +48,18 @@ public class ChbInvestTrade002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.币种_中债);
         this.setSelectOptionToModel(model, DictCode.资产计量方式);
         this.setSelectOptionToModel(model, DictCode.资金流动类型);
-        this.setSelectOptionToModel(model, DictCode.对手方类型);
+        this.setSelectOptionToModel(model, DictCode.关联交易情况);
+        this.setSelectOptionToModel(model, DictCode.客户二级类型);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
-        String tradeCode = getParam("tradeCode");
-        String prodId = getParam("prodId");
-        String assetCode = getParam("assetCode");
         String status = getParam("statusValid");
         String tradeSeqno = getParam("tradeSeqno");
         ChbInvestTradeDto dto=null;
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             dto = chbInvestTradeService.getBussinessEntityByWorkflowId(
                     workflowId);
+            if (StringUtil.isNotBlank(dto.getTradeDate())) {
+                dto.setTradeTime(DateUtil.parse(dto.getTradeDate(),"yyyyMMddHHmmss"));
+            }
             model.addAttribute("pageModel",dto.getPageModel());
             model.addAttribute(GlobalConstant.ENTITY, dto);
         }
@@ -85,7 +88,7 @@ public class ChbInvestTrade002Controller extends BaseController {
                 dto.setEndRate(dto.getEndRate().setScale(5,BigDecimal.ROUND_HALF_DOWN));
             }
         }
-        model.addAttribute("tradeCode_New",IDGenerator.generate(32));
+        model.addAttribute("tradeCode_New", IDGenerator.generate(32));
         //获取本行登记代码
         model.addAttribute("registBankCode_New",CommonUtil.selectBankCode());
         return super.init(model);
@@ -166,5 +169,14 @@ public class ChbInvestTrade002Controller extends BaseController {
         AjaxResult result  = new AjaxResult();
         result.setData(chbInvestTradeService.dealCnyAmt(RequestUtil.getPageParam()));
         return result;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/queryCounterType2List")
+    public List<SelectOptionDto> queryCounterType2List() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        List<SelectOptionDto> list = chbInvestTradeService.queryCounterType2List(param);
+        return list;
     }
 }

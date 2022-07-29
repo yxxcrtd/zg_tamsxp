@@ -289,7 +289,7 @@ $(function() {
     });
     
 	table.bind('click', '.fileView', function(data, index) {
-	    var height = '600px';
+	    var height = '90%';
 	    var btns = {};
 	    var keyList = [];
 	    var dialogIndex = -1;
@@ -301,7 +301,7 @@ $(function() {
 	   
 	    var param={reportuuid:data.reportuuid,
 	    			termid:data.termid}
-	    dialogIndex = Joyin.dialog('预览', path, '1200px', height, param, function (params) {
+	    dialogIndex = Joyin.dialog('预览', path, '90%', height, param, function (params) {
 	    }, btns);
 
 	});

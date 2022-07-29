@@ -27,14 +27,14 @@ var debtSubmitInfo = function() {
             }
         },
         //双击显示详情页
-        dblclick:function(table, data) {
+        /*dblclick:function(table, data) {
         	var param={};
             param.reportNo=data.reportNo;
             param.repName=data.repName;
-            /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
+            /!***三期CHB_SUBMIT_STATUS去除改造  20220310**!/
             param.repCode=data.repCode;
         	Joyin.dialog("反馈信息详情页",detailUrl,'900px','90%',param);
-        },
+        },*/
         checkbox : false,
         cols: [
             {field: 'reportNo',visible:false},

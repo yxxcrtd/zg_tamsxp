@@ -23,13 +23,26 @@
                     </div>
                 </div>
 
+<!--                <div class="form-inline-wrap">-->
+<!--                    <label class="layui-form-label form-lable"-->
+<!--                           data-th-utext="#{SvrBussRepEquityInfo.assetName}">股票/企业名称</label>-->
+<!--                    <div class="layui-input-inline input-inline">-->
+<!--                        <input type="text" th:id="|${entityName}_assetName|"-->
+<!--                               th:value="${entity?.assetName}" disabled="disabled"-->
+<!--                               data-fixtype="2" class="layui-input form-input" required/>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="form-inline-wrap">
-                    <label class="layui-form-label form-lable"
+                    <label class="layui-form-label form-label-wrap"
                            data-th-utext="#{SvrBussRepEquityInfo.assetName}">股票/企业名称</label>
                     <div class="layui-input-inline input-inline">
-                        <input type="text" th:id="|${entityName}_assetName|"
-                               th:value="${entity?.assetName}" disabled="disabled"
-                               data-fixtype="2" class="layui-input form-input" required/>
+                        <select th:id="|${entityName}_financie|"
+                                th:name="|${entityName}.financie|"
+                                th:initValue="${entity?.financie}"
+                                class="layui-input form-input input-select"
+                                required="required"
+                                data-th-data-url="@{/common/select/getTrusterId}">
+                        </select>
                     </div>
                 </div>
 

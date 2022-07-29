@@ -26,6 +26,7 @@ public enum ChbCheckTableInfo {
     产品存续登记表SUB("CHB_PRD_DEAL_SUB", true, null, new String[] {"PROD_ID", "MDATE"}, ""),
     底层资产持仓信息登记表SUB("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}, ""),
     终止登记SUB("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}, ""),
+    资产持仓登记SUB("CHB_AST_POS_SUB", true, null, new String[] {"PRD_REGIST_CODE","VALUE_DATE","ASSET_ID","SUBJECT_NAME","INTER_ASSET_CODE","CCY","POS_TYPE"}, ""),
 
     /*文件接入*/
     资产要素登记表INFO("CHB_ASSET_INFO", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, ""),
@@ -55,7 +56,8 @@ public enum ChbCheckTableInfo {
     投资交易信息表("CHB_INVEST_TRADE", true, "TRADE_SEQNO", new String[] {"PROD_ID","ASSET_CODE","TRADE_CODE"}, ""),
     节假日("MST_HOLIDAY", true, "", new String[] {"CALENDAR_ID","CDATE"}, ""),
     汇率行情信息("MST_EXCHARGE_QUOTE", true, "", new String[] {"EXCHARGE_CODE","TRADE_DATE","DATASOURCE_TYPE"}, ""),
-    科目定义("BOK_SUBJECT", true, "", new String[] {"BOOKSET_ID","SUBJECT_NO"}, "");
+    科目定义("BOK_SUBJECT", true, "", new String[] {"BOOKSET_ID","SUBJECT_NO"}, ""),
+    投资交易信息接口数据("CHB_INVEST_TRADE", true, "TRADE_CODE", new String[] {"TRADE_CODE"},"");
     /**
      * 根据tableName获取枚举对象
      * @param tableName 表名

@@ -28,8 +28,20 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
     private String regCode;
     private String assetName;
     private String orgData;
-    private String counterName;
+    /**
+     * 关联交易情况
+     */
+    private String relatedTradeStatus;
+    /**
+     * 交易对手的状态
+     */
+    private String tradeCounterStatus;
 
+
+    /**
+     * 交易对手名称
+     */
+    private String counterName;
 
     /**
      * 操作类型
@@ -103,6 +115,22 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         this.pageModel = pageModel;
     }
 
+    public String getRelatedTradeStatus() {
+        return relatedTradeStatus;
+    }
+
+    public void setRelatedTradeStatus(String relatedTradeStatus) {
+        this.relatedTradeStatus = relatedTradeStatus;
+    }
+
+    public String getTradeCounterStatus() {
+        return tradeCounterStatus;
+    }
+
+    public void setTradeCounterStatus(String tradeCounterStatus) {
+        this.tradeCounterStatus = tradeCounterStatus;
+    }
+
     public String getElementId() {
         return elementId;
     }
@@ -159,16 +187,16 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
         this.assetName = assetName;
     }
     public String getCcyStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.币种_中债,getCcy());
+        return SysDataUtil.getZZDictCodeAndName(DictCode.币种_中债,getCcy());
     }
     public String getAssetMethodStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.资产计量方式,getAssetMethod());
+        return SysDataUtil.getZZDictCodeAndName(DictCode.资产计量方式,getAssetMethod());
     }
     public String getCurAssetTypeStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.资金流动类型,getCurAssetType());
+        return SysDataUtil.getZZDictCodeAndName(DictCode.资金流动类型,getCurAssetType());
     }
     public String getRivalPartyTypeStr(){
-        return SysDataUtil.getNameFromDataDict(DictCode.对手方类型,getRivalPartyType());
+        return SysDataUtil.getZZDictCodeAndName(DictCode.客户二级类型,getRivalPartyType());
     }
     public String getDealdateStr(){
         return null !=getDealdate()? DateUtil.format(getDealdate()):null;
@@ -191,5 +219,13 @@ public class ChbInvestTradeDto extends ChbInvestTrade implements ProcessEntity {
 
     public void setCounterName(String counterName) {
         this.counterName = counterName;
+    }
+
+    public String getRelatedTradeStatusStr() {
+        return SysDataUtil.getZZDictCodeAndName(DictCode.关联交易情况, relatedTradeStatus);
+    }
+
+    public String getTradeTimeStr() {
+        return super.getTradeTime()==null?null:DateUtil.format(super.getTradeTime(), "yyyyMMddHHmmss");
     }
 }

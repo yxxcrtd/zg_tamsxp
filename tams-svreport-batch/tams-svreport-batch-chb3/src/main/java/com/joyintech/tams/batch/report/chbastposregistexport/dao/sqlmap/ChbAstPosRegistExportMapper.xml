@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.batch.report.chbastposregistexport.dao.ChbAstPosRegistExportMapper">
+
+	<select id="getBatchLog" resultType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog">
+		select *
+		from chb_subinfo_batch_log
+		where deal_status = '04'
+	</select>
+
+	<select id="countExportNum" parameterType="map" resultType="int">
+		select count(*)
+		from CHB_AST_POS_SUB sub
+		<where>
+			<if test="valueDateStart != null and valueDateStart != ''">
+				and TO_CHAR(sub.VALUE_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{valueDateStart}
+			</if>
+			<if test="valueDateEnd != null and valueDateEnd != ''">
+				and TO_CHAR(sub.VALUE_DATE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{valueDateEnd}
+			</if>
+		</where>
+	</select>
+	<select id="selectAllDataByPage"  resultType="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto"
+			resultSetType="FORWARD_ONLY" fetchSize="10000">
+
+		SELECT
+		*
+		FROM
+		(
+		SELECT tmp_page.*,
+		ROWNUM row_id
+		FROM  (
+		select
+		sub.REGIST_SEQNO  as registSeqno,
+		sub.PROD_ID  as prodId,
+		sub.ISSUE_PARTY_ID as issuePartyId,
+		sub.PRD_REGIST_CODE as prdRegistCode,
+		sub.TERMID as termid,
+		sub.VALUE_DATE as valueDate,
+		sub.ASSET_ID as assetId,
+		sub.POS_TYPE as posType,
+		sub.INTER_LEVE_NO as interLeveNo,
+		sub.INTER_ASSET_TYPE as interAssetType,
+		sub.INTER_ASSET_CODE as interAssetCode,
+		sub.SUBJECT_NAME as subjectName,
+		sub.AMT as amt,
+		sub.CNY_AMT as cnyAmt,
+		sub.FLOAT_INGPL as floatIngpl,
+		sub.CNY_FLOAT_INGPL as cnyFloatIngpl,
+		sub.UNIT_VALUE_CPRICE as unitValueCprice,
+		sub.UNIT_VALUE_FPRICE as unitValueFprice,
+		sub.QTY  as  qty,
+		sub.CCY as ccy,
+		sub.REMARK as remark,
+		sub.BALANCE_AMT as balanceAmt,
+		sub.VALUE_REG_DATE as valueRegDate,
+		sub.SEND_STATUS as sendStatus,
+		sub.STATUS_DATE as statusDate,
+		sub.STATUS as status,
+		sub.CHB_SUBMIT_DEADLINE as chbSubmitDeadline,
+		sub.SUBMIT_DEADLINE as submitDeadline,
+		sub.SUBMIT_TIME as submitTime,
+		sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatus,
+		sub.CREATE_DEPT as  createDept,
+		sub.CREATE_USER as  createUser,
+		sub.CREATE_TIME as createTime,
+		sub.UPDATE_USER as updateUser,
+		sub.UPDATE_TIME as updateTime,
+		sub.SEND_STATUS as sendStatusStr,
+		sub.STATUS as statusStr,
+		sub.SUBMIT_FEEDBACK_STATUS as submitFeedbackStatusStr,
+		sub.POS_TYPE as posTypeStr,
+		sub.INTER_ASSET_TYPE as interAssetTypeStr,
+		sub.CCY as ccyStr
+		from CHB_AST_POS_SUB sub
+		<where>
+			<if test="valueDateStart != null and valueDateStart != ''">
+				and TO_CHAR(sub.VALUE_DATE,'yyyy-MM-dd') <![CDATA[ >= ]]> #{valueDateStart}
+			</if>
+			<if test="valueDateEnd != null and valueDateEnd != ''">
+				and TO_CHAR(sub.VALUE_DATE,'yyyy-MM-dd') <![CDATA[ <= ]]> #{valueDateEnd}
+			</if>
+		</where>
+		order by sub.VALUE_DATE desc
+		) tmp_page
+		) a
+		WHERE
+		row_id &lt;= #{end}
+		AND row_id &gt; #{start}
+	</select>
+
+</mapper>

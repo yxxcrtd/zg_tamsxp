@@ -26,6 +26,15 @@
     <result column="DATASOURCE" property="datasource" jdbcType="VARCHAR"/>
     <result column="INT_AMT" property="intAmt" jdbcType="DECIMAL"/>
     <result column="CASH_FLAG" property="cashFlag" jdbcType="VARCHAR"/>
+      <result column="O_UNINVEST_CASH" property="oUninvestCash" jdbcType="DECIMAL"/>
+      <result column="SHADOW_AMT" property="shadowAmt" jdbcType="DECIMAL"/>
+      <result column="POS_AMT_CPRICE" property="posAmtCprice" jdbcType="DECIMAL"/>
+      <result column="O_ISSUE_AMT" property="oIssueAmt" jdbcType="DECIMAL"/>
+      <result column="O_POS_AMT_CPRICE" property="oPosAmtCprice" jdbcType="DECIMAL"/>
+      <result column="O_INT_AMT" property="oIntAmt" jdbcType="DECIMAL"/>
+      <result column="O_SHADOW_AMT" property="oShadowAmt" jdbcType="DECIMAL"/>
+      <result column="O_POS_AMT" property="oPosAmt" jdbcType="DECIMAL"/>
+      <result column="CCY" property="ccy" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List">
         POS_ID, ISSUE_PARTY_ID, POS_DATE, PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM, ISSUE_AMT,
@@ -153,7 +162,9 @@
         WORKFLOW_ID, STATUS, ORG_CODE,
         DEPT_CODE, CREATE_USER, CREATE_DEPT,
         CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-        DATASOURCE,INT_AMT,CASH_FLAG
+        DATASOURCE,INT_AMT,CASH_FLAG,
+        SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+        O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY
         )
         values(
         #{posId,jdbcType=CHAR}, #{issuePartyId,jdbcType=VARCHAR}, #{posDate,jdbcType=TIMESTAMP},
@@ -163,7 +174,10 @@
         #{workflowId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
         #{deptCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
         NOW(), #{updateUser,jdbcType=VARCHAR}, NOW(),
-        #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR}
+        #{datasource,jdbcType=VARCHAR},#{intAmt,jdbcType=DECIMAL},#{cashFlag,jdbcType=VARCHAR},
+        #{shadowAmt,jdbcType=DECIMAL},#{posAmtCprice,jdbcType=DECIMAL},#{oIssueAmt,jdbcType=DECIMAL},
+        #{oUninvestCash,jdbcType=DECIMAL},#{oPosAmt,jdbcType=DECIMAL},#{oShadowAmt,jdbcType=DECIMAL},
+        #{oPosAmtCprice,jdbcType=DECIMAL},#{oIntAmt,jdbcType=DECIMAL},#{ccy,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -191,7 +205,9 @@
     WORKFLOW_ID, STATUS, ORG_CODE,
     DEPT_CODE, CREATE_USER, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-    DATASOURCE)
+    DATASOURCE,INT_AMT,CASH_FLAG,
+      SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY)
     select POS_ID, ISSUE_PARTY_ID, POS_DATE,
     PLAN_ASSET_ID, ASSET_CODE, TOTAL_NUM,
     ISSUE_AMT, UNINVEST_CASH, POS_NUM,
@@ -199,7 +215,10 @@
     WORKFLOW_ID, STATUS, ORG_CODE,
     DEPT_CODE, CREATE_USER, CREATE_DEPT,
     CREATE_TIME, UPDATE_USER, UPDATE_TIME,
-    DATASOURCE from
+    DATASOURCE,INT_AMT,CASH_FLAG,
+      SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY
+       from
     (
     select TEMP.* from
     (
@@ -226,7 +245,18 @@
       NOW() CREATE_TIME,
       #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
       NOW() UPDATE_TIME,
-      #{item.datasource,jdbcType=VARCHAR} DATASOURCE
+      #{item.datasource,jdbcType=VARCHAR} DATASOURCE,
+        #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
+        #{item.cashFlag,jdbcType=VARCHAR} CASH_FLAG,
+        #{item.shadowAmt,jdbcType=DECIMAL} SHADOW_AMT,
+        #{item.posAmtCprice,jdbcType=DECIMAL} POS_AMT_CPRICE,
+        #{item.oIssueAmt,jdbcType=DECIMAL} O_ISSUE_AMT,
+        #{item.oUninvestCash,jdbcType=DECIMAL} O_UNINVEST_CASH,
+        #{item.oPosAmt,jdbcType=DECIMAL} O_POS_AMT,
+        #{item.oShadowAmt,jdbcType=DECIMAL} O_SHADOW_AMT,
+        #{item.oPosAmtCprice,jdbcType=DECIMAL} O_POS_AMT_CPRICE,
+        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT,
+        #{item.ccy,jdbcType=VARCHAR} CASH_FLAG,
       FROM DUAL
     </foreach>
     ) TEMP where not exists (select 1 from CHB_BOT_AST_POS CII where CII.PLAN_ASSET_ID = TEMP.PLAN_ASSET_ID
@@ -254,7 +284,9 @@
     CREATE_TIME,
     UPDATE_USER,
     UPDATE_TIME,
-    DATASOURCE from
+    DATASOURCE,INT_AMT,CASH_FLAG,
+      SHADOW_AMT,POS_AMT_CPRICE,O_ISSUE_AMT,O_UNINVEST_CASH,
+      O_POS_AMT,O_SHADOW_AMT,O_POS_AMT_CPRICE,O_INT_AMT,CCY from
     (
     select TEMP.* from
     (
@@ -281,7 +313,18 @@
       NOW() CREATE_TIME,
       #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
       NOW() UPDATE_TIME,
-      #{item.datasource,jdbcType=VARCHAR} DATASOURCE
+      #{item.datasource,jdbcType=VARCHAR} DATASOURCE,
+        #{item.intAmt,jdbcType=DECIMAL} INT_AMT,
+        #{item.cashFlag,jdbcType=VARCHAR} CASH_FLAG,
+        #{item.shadowAmt,jdbcType=DECIMAL} SHADOW_AMT,
+        #{item.posAmtCprice,jdbcType=DECIMAL} POS_AMT_CPRICE,
+        #{item.oIssueAmt,jdbcType=DECIMAL} O_ISSUE_AMT,
+        #{item.oUninvestCash,jdbcType=DECIMAL} O_UNINVEST_CASH,
+        #{item.oPosAmt,jdbcType=DECIMAL} O_POS_AMT,
+        #{item.oShadowAmt,jdbcType=DECIMAL} O_SHADOW_AMT,
+        #{item.oPosAmtCprice,jdbcType=DECIMAL} O_POS_AMT_CPRICE,
+        #{item.oIntAmt,jdbcType=DECIMAL} O_INT_AMT,
+        #{item.ccy,jdbcType=DECIMAL} CCY
       FROM DUAL
     </foreach>
     ) TEMP
@@ -306,7 +349,18 @@
     A.CREATE_TIME = B.CREATE_TIME,
     A.UPDATE_USER = B.UPDATE_USER,
     A.UPDATE_TIME = B.UPDATE_TIME,
-    A.DATASOURCE = B.DATASOURCE
+    A.DATASOURCE = B.DATASOURCE,
+      A.INT_AMT = B.INT_AMT,
+      A.CASH_FLAG = B.CASH_FLAG,
+      A.SHADOW_AMT = B.SHADOW_AMT,
+      A.POS_AMT_CPRICE = B.POS_AMT_CPRICE,
+      A.O_ISSUE_AMT = B.O_ISSUE_AMT,
+      A.O_UNINVEST_CASH = B.O_UNINVEST_CASH,
+      A.O_POS_AMT = B.O_POS_AMT,
+      A.O_SHADOW_AMT = B.O_SHADOW_AMT,
+      A.O_POS_AMT_CPRICE = B.O_POS_AMT_CPRICE,
+      A.O_INT_AMT = B.O_INT_AMT,
+      A.CCY = B.CCY
     where A.PLAN_ASSET_ID = B.PLAN_ASSET_ID
     and A.ASSET_CODE = B.ASSET_CODE
     and A.POS_DATE = B.POS_DATE;
@@ -685,6 +739,19 @@
     (CASE WHEN DC.SUB_CLASS = 'ZQ' THEN IFNULL(HB.REPAY_NET, 100) ELSE 1 END) POS_NUM,
     IFNULL(SUM(SUB.SMV), 0) POS_AMT,
     IFNULL(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0) INT_AMT,/** 利息**/
+    0   SHADOW_AMT,/** 底层资产影子价格**/
+    ((case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV))<![CDATA[<]]>0 then 0
+    else ifnull(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV)), 0) end)
+    -ifnull(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV ELSE 0 END),0))
+    as POS_AMT_CPRICE,/** 底层资产折算人民币净价市值**/
+    case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV_ORI)*-1,sub.SMV_ORI))<![CDATA[<]]>0 then 0
+    else ifnull(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV)*-1,sub.SMV_ORI)), 0) end as O_POS_AMT, /**  原币-底层资产全价币值（元）*/
+    ifnull(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV_ORI ELSE 0 END),0) as O_INT_AMT,/** 原币-利息**/
+    0  as O_SHADOW_AMT,/** 原币-底层资产影子价格**/
+    ((case when fp.TYPE_8 in ('F16','F18','F19')　and SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV_ORI)*-1,sub.SMV_ORI))<![CDATA[<]]>0 then 0
+    else ifnull(SUM(decode(substr(sub.SUB_CODE,0,1),'2',ABS(sub.SMV_ORI)*-1,sub.SMV_ORI)), 0) end)
+    -ifnull(SUM(CASE WHEN SUB.SUB_CODE LIKE '1204%' OR SUB.SUB_CODE LIKE '1203%' THEN SUB.SMV_ORI ELSE 0 END),0))
+    as O_POS_AMT_CPRICE,/** 原币-底层资产净价市值**/
     MAX(IFNULL(SUB.CREATE_TIME, SUB.UPDATE_TIME)) UPDATE_TIME
     FROM RSK_VALTBL_ASSET_SUB SUB /** 估值表导入后的资产数据**/
 
@@ -722,7 +789,8 @@
         SELECT
             SUB.VAL_DATE AS POS_DATE,
             SUB.PTL_ID AS PLAN_ASSET_ID,
-            SUM(IFNULL(SUB.SMV,0))  AS POS_AMT
+            SUM(IFNULL(SUB.SMV,0))  AS POS_AMT,
+            SUM(nvl(SUB.SMV_ORI,0))  AS O_UNINVEST_CASH
         FROM RSK_VALTBL_ASSET_SUB SUB
         WHERE SUB.VAL_DATE = #{batchTime,jdbcType=DATE}
         /** 活期存款、清算款、备付金、保证金**/
@@ -734,7 +802,8 @@
         SELECT
             HZ.PTL_ID PLAN_ASSET_ID,
             HZ.SUB_CODE ASSET_CODE,
-            SUM(IFNULL(SMV,0))  POS_AMT
+            SUM(IFNULL(SMV,0))  POS_AMT,
+            SUM(IFNULL(HZ.SMV_ORI,0)) O_UNINVEST_CASH
         FROM RSK_VALTBL_SUM_ASSET_SUB HZ
         WHERE HZ.VAL_DATE = #{batchTime,jdbcType=DATE}
         /** 实收资本、资产净值**/
@@ -819,10 +888,52 @@
           CHECK_CODE checkCode,
           TARGET_AMT targetAmt,
           ASSET_TYPE2 assetType2,
-          TRADE_MARKET tradeMarket
+          TRADE_MARKET tradeMarket,
+          CCY  ccy
+
         FROM CHB_ASSET_INFO
         WHERE  ASSET_TYPE2 IN ('1108','1902')
         AND STATUS IN ('E','M')
         AND #{batchTime,jdbcType=DATE} BETWEEN VDATE AND MDATE
+    </select>
+
+
+    <select id="selectChbAstInfoBotInfo" resultType="com.joyintech.tams.common.base.entity.ChbAssetInfo">
+    select  ASSET_CODE assetCode,
+    CCY ccy
+    from CHB_ASSET_INFO
+    WHERE STATUS !='D'
+    and ASSET_TYPE2 in (
+            select SRCFIELD1
+            from CHB_TYPE_MAPPING_EX
+            where MAPPINGCODE = 'ASSET_TYPE2_CATA_TYPE'
+              and OBJFIELD1 IN ('12', '13', '14')
+              )
+    </select>
+
+    <select id="getBotDataFromBalance" resultMap="BaseResultMap">
+        select
+        sub.VAL_DATE POS_DATE,/** 持仓日期**/
+        sub.PTL_ID PLAN_ASSET_ID,/** 资管计划行内资产/负债编码**/
+        sub.SUB_CODE ASSET_CODE, /** 资产代码**/
+        fp.CCY  CCY,/** 币种**/
+        SUM(IFNULL(SUB.SMV,0)) POS_AMT,
+        SUM(IFNULL(sub.SMV_ORI,0))  AS O_POS_AMT,/**原币-底层资产全价币值（元）*/
+        MAX(IFNULL(sub.CREATE_TIME, sub.UPDATE_TIME)) UPDATE_TIME
+        FROM RSK_VALTBL_ASSET_SUB sub
+        LEFT JOIN FIN_PRODUCT fp
+        ON fp.FINPROD_ID = sub.PTL_ID
+        where sub.VAL_DATE = #{batchTime,jdbcType=DATE}
+        <if test='subjectNoList!=null and subjectNoList.size()>0'>
+            <foreach collection="subjectNoList" item="subjectNo" index="index" open="and sub.SUB_CODE in (" close=")" separator=",">
+                #{subjectNo,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        group  by
+        sub.VAL_DATE,
+        sub.PTL_ID,
+        sub.SUB_CODE,
+        fp.CCY
+
     </select>
 </mapper>

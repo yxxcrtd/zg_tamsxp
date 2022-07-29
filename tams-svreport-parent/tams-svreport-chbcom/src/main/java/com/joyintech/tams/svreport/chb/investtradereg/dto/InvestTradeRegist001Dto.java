@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
+import com.joyintech.tams.report.common.util.SysDataUtil;
 
 /**
  * 描述:CHB_INVEST_TRADE_SUB表的实体类
@@ -106,6 +107,21 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
      * 交易日
      */
     private Date dealdate;
+
+    /**
+     * 交易交易起始日
+     */
+    private Date tradeTime;
+
+    /**
+     * 交易交易起始日格式化
+     */
+    private String tradeDate;
+    /**
+     * 关联交易情况
+     */
+    @DictFormat(DictCode.关联交易情况)
+    private String relatedTradeStatus;
 
     /**
      * 交易对手
@@ -971,9 +987,6 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
 		this.assetMethodStr = assetMethodStr;
 	}
 
-	public void setRivalPartyTypeStr(String rivalPartyTypeStr) {
-		this.rivalPartyTypeStr = rivalPartyTypeStr;
-	}
 
 	/**
      * 报送反馈状态
@@ -1228,13 +1241,10 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
         }
         return this.getAssetMethodNum();
 	}
-    
-    private  String   rivalPartyTypeStr;
+
     public String getRivalPartyTypeStr() {
-        if (!StringUtil.isEmpty(this.getRivalPartyTypeNum())){
-            return this.getRivalPartyTypeNum().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.对手方类型, this.getRivalPartyTypeNum());
-        }
-        return this.getRivalPartyTypeNum();
+        return StringUtil.isNotEmpty(SvrDataUtil.getNameFromDataDict(DictCode.对手方类型, this.getRivalPartyType()))?
+                SvrDataUtil.getZZDictCodeAndName(DictCode.对手方类型, this.getRivalPartyType()):this.getRivalPartyType();
 	}
 
 	public String getAssetMethodNum() {
@@ -1271,6 +1281,38 @@ public class InvestTradeRegist001Dto extends BaseEntity implements ITableRow {
         return dealdateStr;
     }
 
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public String getRelatedTradeStatus() {
+        return relatedTradeStatus;
+    }
+
+    public void setRelatedTradeStatus(String relatedTradeStatus) {
+        this.relatedTradeStatus = relatedTradeStatus;
+    }
+
+    public String getRelatedTradeStatusStr() {
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.关联交易情况, this.getRelatedTradeStatus()))?
+                SysDataUtil.getZZDictCodeAndName(DictCode.关联交易情况, relatedTradeStatus):this.getRelatedTradeStatus();
+    }
+
+    public String getTradeTimeStr() {
+        return DateUtil.format(this.getTradeTime(), "yyyyMMddHHmmss");
+    }
     public void setDealdateStr(String dealdateStr) {
         this.dealdateStr = dealdateStr;
     }

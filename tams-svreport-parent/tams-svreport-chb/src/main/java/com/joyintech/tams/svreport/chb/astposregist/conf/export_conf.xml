@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="AstPosSubRegist001.xlsx" name="资产持仓登记">
+	<Worksheet dataStart="2"  javaBean="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto">
+		<Row>
+			<Cell order="1" name="发行机构代码">issuePartyId</Cell>
+			<Cell order="2" name="产品登记编码">prdRegistCode</Cell>
+			<Cell order="3" name="持仓类别">posTypeStr</Cell>
+			<Cell order="4" name="行内资产/负债编码">assetId</Cell>
+			<Cell order="5" name="资产穿透情况">interAssetTypeStr</Cell>
+			<Cell order="6" name="中间层数">interLeveNo</Cell>
+			<Cell order="7" name="中间层行内资产/负债编码">interAssetCode</Cell>
+			<Cell order="8" name="会计科目名称">subjectName</Cell>
+			<Cell order="9" name="金额">amtStr</Cell>
+			<Cell order="10" name="折算人民币金额">cnyAmtStr</Cell>
+			<Cell order="11" name="公允价值">floatIngplStr</Cell>
+			<Cell order="12" name="折算人民币公允价值">cnyFloatIngplStr</Cell>
+			<Cell order="13" name="单位估值（净价）">unitValueCpriceStr</Cell>
+			<Cell order="14" name="单位估值（全价）">unitValueFpriceStr</Cell>
+			<Cell order="15" name="数量">qtyStr</Cell>
+			<Cell order="16" name="币种">ccy</Cell>
+			<Cell order="17" name="持仓日期">valueDateStr</Cell>
+			<Cell order="18" name="备注">remark</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

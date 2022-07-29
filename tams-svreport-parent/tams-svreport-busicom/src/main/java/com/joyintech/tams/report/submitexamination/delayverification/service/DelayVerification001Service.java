@@ -10,12 +10,9 @@
 
 package com.joyintech.tams.report.submitexamination.delayverification.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +57,8 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
      */
     @Autowired
     private SvrBaseCommonService svrBaseCommonService;
+
+    private final List chbList= Lists.newArrayList("CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB");
     
     /**
      * 延时报送检查的查询方法
@@ -135,9 +134,9 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
         String [] tableList={"CHB_PRD_DECLARE_SUB","CHB_PRD_ISSUE_SUB","CHB_PRD_RAISETOT_SUB","CHB_PRD_DEAL_SUB",
                              "CHB_PRD_END_SUB","CHB_ASSET_INFO_SUB","CHB_INVEST_TRADE_SUB","CHB_AST_VAL_SUB",
                              "CHB_BOT_AST_POS_SUB","CHB_MONTH_REPORT","CHB_SALER_STL_DEAL_SUB","CHB_SALE_MONTH_REPORT","CHB_INVESTHOLD_INFO_SUB","CHB_EQU_SUB","CHB_EQUDET_SUB",
-                             "CHB_SALER_INST_SUB","CHB_SALER_IDEN_SUB","CHB_SALER_REW_PENA_SUB","CHB_AGENT_INSTITUTION_SUB","CHB_AGENT_PRD_SUB"};
+                             "CHB_SALER_INST_SUB","CHB_SALER_IDEN_SUB","CHB_SALER_REW_PENA_SUB","CHB_AGENT_INSTITUTION_SUB","CHB_AGENT_PRD_SUB","CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB"};
         String [] reportIndex={"01","02","04","06","07","10","11",
-                                "12","05","08","34","36","16","14","26","42","43","44","40","41"};
+                                "12","05","08","34","36","16","14","26","42","43","44","40","41","45","46"};
         pageParam.put("nosubmit", DictCodeListExt2.报送状态_未报送.getValue());
         pageParam.put("manualSub", DictCodeListExt2.报送状态_手工处理.getValue());
         Date now=svrBaseCommonService.getSysDate();
@@ -188,6 +187,10 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
             }else{
                 // HIS表赋值  2019-05-31 高健
                // pageParam.put("hisTableId",tableId+"_HIS");
+                //CHB_PRD_STATUS_SUB没有对应的HIS表
+                if (!chbList.contains(tableId)) {
+                    pageParam.put("hisTableId",tableId+"_HIS");
+                }
                 resultPage =super.queryForPage(pagenum,legth,()->delayVerification001Mapper.searchTable(pageParam));
             }
         }

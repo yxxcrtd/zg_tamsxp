@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.prodstatusregist.dao.ProdStatusRegist001Mapper_mysql">
+
+    <resultMap id="prdStatusSubMap" type="com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto"
+               extends="com.joyintech.tams.common.base.dao.ChbPrdStatusSubMapper.BaseResultMap"/>
+
+
+  <select id="selectAllData" resultType="com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto">
+  select
+      sub.REGIST_SEQNO registSeqno,
+      sub.PROD_ID prodId,
+      cpb.PROD_NAME prodName,
+      sub.ISSUE_PARTY_ID issuePartyId,
+      sub.PRD_REGIST_CODE prdRegistCode,
+      sub.PRD_TOTAL_AMT prdTotalAmt,
+      sub.PRD_LEVERAGE prdLeverage,
+      sub.PRD_STATUS_DATE prdStatusDate,
+      sub.TERMID termid,
+      sub.REMARK remark,
+      sub.SEND_STATUS sendStatus,
+      sub.STATUS_DATE statusDate,
+      sub.STATUS status,
+      sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+      sub.SUBMIT_DEADLINE submitDeadline,
+      sub.SUBMIT_TIME submitTime,
+      sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
+      from CHB_PRD_STATUS_SUB sub left join CHB_PRD_BASEINFO cpb
+      on sub.PROD_ID = cpb.PROD_ID
+  <where>
+      <if test="prodIdList != null and prodIdList.size()>0">
+          <foreach collection="prodIdList" item="items" open="and sub.prod_id in (" separator="," close =")">
+              #{items,jdbcType=VARCHAR}
+          </foreach>
+      </if>
+      <if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
+          <foreach collection="prdRegistCodeList" item="items" open="and sub.PRD_REGIST_CODE in (" separator="," close =")">
+              #{items,jdbcType=VARCHAR}
+          </foreach>
+      </if>
+      <if test="submitendDateStart != null and submitendDateStart != ''">
+          and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitendDateStart}
+      </if>
+      <if test="submitendDateEnd != null and submitendDateEnd != ''">
+          and DATE_FORMAT(sub.CHB_SUBMIT_DEADLINE,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitendDateEnd}
+      </if>
+      <if test="dataDateStart != null and dataDateStart != ''">
+          and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{dataDateStart}
+      </if>
+      <if test="dataDateEnd != null and dataDateEnd != ''">
+          and DATE_FORMAT(sub.STATUS_DATE,'%Y-%m-%d') <![CDATA[ <= ]]> #{dataDateEnd}
+      </if>
+      <if test="submitDateStart != null and submitDateStart != ''">
+          and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ >= ]]> #{submitDateStart}
+      </if>
+      <if test="submitDateEnd != null and submitDateEnd != ''">
+          and DATE_FORMAT(sub.SUBMIT_TIME,'%Y-%m-%d') <![CDATA[ <= ]]> #{submitDateEnd}
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size()>0">
+          <foreach collection="sendStatusList" item="items" open="and sub.SEND_STATUS in (" separator="," close=")">
+              #{items,jdbcType=VARCHAR}
+          </foreach>
+      </if>
+      <if test="statusList != null and statusList">
+          <foreach collection="statusList" item="items" open="and sub.STATUS in (" separator="," close=")">
+              #{items,jdbcType=VARCHAR}
+          </foreach>
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size()>0">
+          <foreach collection="submitFeedbackStatusList" item='items' open= "and sub.SUBMIT_FEEDBACK_STATUS in (" separator="," close=")">
+              #{items,jdbcType=VARCHAR}
+          </foreach>
+      </if>
+      <if test="batchDate != null and batchDate != ''">
+            and  DATE_FORMAT(sub.PRD_STATUS_DATE,'%Y%m%d')=#{prdStatusDateStr,jdbcType=VARCHAR}
+      </if>
+      and sub.STATUS !='04'
+      order by sub.SUBMIT_DEADLINE
+  </where>
+
+  </select>  
+  <select id="selectAllDataByList"  resultType="com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto">
+      select
+      sub.REGIST_SEQNO registSeqno,
+      sub.PROD_ID prodId,
+      cp.PRODNAME prodName,
+      sub.ISSUE_PARTY_ID issuePartyId,
+      sub.PRD_REGIST_CODE prdRegistCode,
+      sub.PRD_TOTAL_AMT prdTotalAmt,
+      sub.PRD_LEVERAGE prdLeverage,
+      sub.PRD_STATUS_DATE prdStatusDate,
+      sub.TERMID termid,
+      sub.REMARK remark,
+      sub.SEND_STATUS sendStatus,
+      sub.STATUS_DATE statusDate,
+      sub.STATUS status,
+      sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+      sub.SUBMIT_DEADLINE submitDeadline,
+      sub.SUBMIT_TIME submitTime,
+      sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
+      from CHB_PRD_STATUS_SUB sub left join CHB_PRDRESIST_CODE cp
+      on sub.PROD_ID = cp.PRODID
+      <where>
+          DATE_FORMAT(sub.PRD_STATUS_DATE,'%Y%m%d')=#{prdStatusDateStr,jdbcType=VARCHAR}
+      </where>
+
+  </select>
+  <!-- 用REGIST_SEQNO查询产品终止登记数据 add by wangg 20190625 -->
+  <select id="selectAllDataByKeyList" parameterType="java.util.List" resultMap="prdStatusSubMap">
+
+      select
+      sub.REGIST_SEQNO,sub.PROD_ID,sub.ISSUE_PARTY_ID,sub.PRD_REGIST_CODE,sub.PRD_TOTAL_AMT,
+      sub.PRD_LEVERAGE,sub.PRD_STATUS_DATE,sub.TERMID,sub.REMARK,sub.SEND_STATUS,sub.STATUS_DATE,sub.SUBMIT_SEQ,
+      sub.STATUS,sub.CHB_SUBMIT_DEADLINE,sub.SUBMIT_DEADLINE,sub.SUBMIT_TIME,sub.SUBMIT_FEEDBACK_STATUS
+      from CHB_PRD_STATUS_SUB sub
+      <where>
+          <if test="keyList != null and keyList.size() > 0">
+              <foreach collection="keyList" item="items" open="and sub.REGIST_SEQNO in (" separator="," close=")">
+                  #{items,jdbcType=VARCHAR}
+              </foreach>
+          </if>
+      </where>
+  </select>
+  
+  <update id="updateSubmitStatusToOk" parameterType="java.util.List">
+        update CHB_PRD_STATUS_SUB
+        <set> 
+            SUBMIT_FEEDBACK_STATUS = '03',
+            UPDATE_TIME=NOW()
+        </set>
+        <where>
+            <foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                regist_Seqno = #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
+    </update>
+    
+	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
+         update CHB_PRD_STATUS_SUB sub
+        <set> 
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            sub.SUBMIT_FEEDBACK_STATUS = '03',
+            sub.submit_time = NOW(),
+            sub.UPDATE_TIME = NOW()
+        </set>
+        <where>
+            <foreach collection="registList" item="item" open="(" close=")" separator=") or (">
+                sub.PRD_STATUS_DATE = #{item.prdStatusDate}
+            </foreach>
+        </where>
+    </update>
+    
+    <!-- 接口报送更新并且更新 报送流水号-->
+    <update id="updateAllInterfSubmitAndSeqBatch" >
+         update CHB_PRD_STATUS_SUB sub
+        <set> 
+            <if test="sendStatus != null and sendStatus != ''">
+                sub.SEND_STATUS = #{sendStatus},
+            </if>
+            sub.submit_time = NOW(),
+            sub.UPDATE_TIME = NOW()
+        </set>
+        <where>
+            sub.SEND_STATUS = '01'
+        </where>
+    </update>
+    
+    <update id="updateTerminationRegist" parameterType="java.util.Map">
+		update CHB_PRD_STATUS_SUB
+		<set> 
+		 	SEND_STATUS = '01',
+			UPDATE_TIME = NOW(),
+			SUBMIT_TIME = null,
+			SUBMIT_FEEDBACK_STATUS = null
+		</set>
+		<where>
+		 	<foreach collection="list" item="item" open="(" close=")" separator=") or (">
+                PRD_STATUS_DATE = #{item,jdbcType=VARCHAR}
+            </foreach>
+		</where>
+	</update>
+	
+	<insert id="insertBatch" parameterType="com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto">
+    insert into CHB_PRD_STATUS_SUB (PROD_REGIST_CODE,SUMIT_SEQ,REGIST_SEQNO, PROD_ID, MDATE,
+      ISSUE_PARTY_ID, PROFIT, CUSTOM_PROFIT, 
+      CUSTOM_PROFIT_ORI, CUSTOM_AMT_ORI, CUSTOM_AMT, 
+      CUSTOM_QTY, CUS_YEAR_YIELD, PRD_YEAR_YIELD, 
+      CUST_FEE_IN, MAN_FEE_IN, COU_FEE_IN, 
+      OTHER_FEE_IN, CUST_FEE_OUT, MAN_FEE_OUT, 
+      COU_FEE_OUT, ADV_FEE_OUT, OTHER_FEE_OUT, 
+      SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, 
+      STATUS, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+      SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+      ORG_CODE, DEPT_CODE
+      )
+      select * from (
+        <foreach collection="insertList" item="item" index="index" separator="union all" >
+        select
+        #{item.prodRegistCode,jdbcType=VARCHAR} prodRegistCode,
+        #{item.sumitSeq,jdbcType=VARCHAR} sumitSeq,
+        #{item.registSeqno,jdbcType=VARCHAR} registSeqno, #{item.prodId,jdbcType=VARCHAR} prodId, #{item.mdate,jdbcType=TIMESTAMP} mdate,
+        #{item.issuePartyId,jdbcType=VARCHAR} issuePartyId, #{item.profit,jdbcType=DECIMAL} profit, #{item.customProfit,jdbcType=DECIMAL} customProfit,
+        #{item.customProfitOri,jdbcType=DECIMAL} customProfitOri, #{item.customAmtOri,jdbcType=DECIMAL} customAmtOri, #{item.customAmt,jdbcType=DECIMAL} customAmt,
+        #{item.customQty,jdbcType=DECIMAL} customQty, #{item.cusYearYield,jdbcType=DECIMAL} cusYearYield, #{item.prdYearYield,jdbcType=DECIMAL} prdYearYield,
+        #{item.custFeeIn,jdbcType=DECIMAL} custFeeIn, #{item.manFeeIn,jdbcType=DECIMAL} manFeeIn, #{item.couFeeIn,jdbcType=DECIMAL} couFeeIn,
+        #{item.otherFeeIn,jdbcType=DECIMAL} otherFeeIn, #{item.custFeeOut,jdbcType=DECIMAL} custFeeOut, #{item.manFeeOut,jdbcType=DECIMAL} manFeeOut,
+        #{item.couFeeOut,jdbcType=DECIMAL} couFeeOut, #{item.advFeeOut,jdbcType=DECIMAL} advFeeOut, #{item.otherFeeOut,jdbcType=DECIMAL} otherFeeOut,
+        #{item.sendStatus,jdbcType=VARCHAR} sendStatus, #{item.submitFeedbackStatus,jdbcType=VARCHAR} submitFeedbackStatus, #{item.statusDate,jdbcType=TIMESTAMP} statusDate,
+        #{item.status,jdbcType=VARCHAR} status, #{item.createUser,jdbcType=VARCHAR} createUser, #{item.createDept,jdbcType=VARCHAR} createDept,
+        NOW() createTime, #{item.updateUser,jdbcType=VARCHAR} updateUser, NOW() updateTime,
+        #{item.submitTime,jdbcType=TIMESTAMP} submitTime, #{item.chbSubmitDeadline,jdbcType=TIMESTAMP} chbSubmitDeadline, #{item.submitDeadline,jdbcType=TIMESTAMP} submitDeadline,
+        #{item.orgCode,jdbcType=VARCHAR} orgCode, #{item.deptCode,jdbcType=VARCHAR} deptCode
+        from dual
+        </foreach>
+      ) tmp
+  </insert>
+  
+  <update id="updateBatch" parameterType="com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto">
+    begin
+	<foreach collection="updateList" item="item" index="index" separator=";">
+    update CHB_PRD_STATUS_SUB
+    <set>
+      <if test="item.prodId != null" >
+        PROD_ID = #{item.prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="item.mdate != null" >
+        MDATE = #{item.mdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.issuePartyId != null" >
+        ISSUE_PARTY_ID = #{item.issuePartyId,jdbcType=VARCHAR},
+      </if>
+      <if test="item.profit != null" >
+        PROFIT = #{item.profit,jdbcType=DECIMAL},
+      </if>
+      <if test="item.customProfit != null" >
+        CUSTOM_PROFIT = #{item.customProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="item.customProfitOri != null" >
+        CUSTOM_PROFIT_ORI = #{item.customProfitOri,jdbcType=DECIMAL},
+      </if>
+      <if test="item.customAmtOri != null" >
+        CUSTOM_AMT_ORI = #{item.customAmtOri,jdbcType=DECIMAL},
+      </if>
+      <if test="item.customAmt != null" >
+        CUSTOM_AMT = #{item.customAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="item.customQty != null" >
+        CUSTOM_QTY = #{item.customQty,jdbcType=DECIMAL},
+      </if>
+      <if test="item.cusYearYield != null" >
+        CUS_YEAR_YIELD = #{item.cusYearYield,jdbcType=DECIMAL},
+      </if>
+      <if test="item.prdYearYield != null" >
+        PRD_YEAR_YIELD = #{item.prdYearYield,jdbcType=DECIMAL},
+      </if>
+      <if test="item.custFeeIn != null" >
+        CUST_FEE_IN = #{item.custFeeIn,jdbcType=DECIMAL},
+      </if>
+      <if test="item.manFeeIn != null" >
+        MAN_FEE_IN = #{item.manFeeIn,jdbcType=DECIMAL},
+      </if>
+      <if test="item.couFeeIn != null" >
+        COU_FEE_IN = #{item.couFeeIn,jdbcType=DECIMAL},
+      </if>
+      <if test="item.otherFeeIn != null" >
+        OTHER_FEE_IN = #{item.otherFeeIn,jdbcType=DECIMAL},
+      </if>
+      <if test="item.custFeeOut != null" >
+        CUST_FEE_OUT = #{item.custFeeOut,jdbcType=DECIMAL},
+      </if>
+      <if test="item.manFeeOut != null" >
+        MAN_FEE_OUT = #{item.manFeeOut,jdbcType=DECIMAL},
+      </if>
+      <if test="item.couFeeOut != null" >
+        COU_FEE_OUT = #{item.couFeeOut,jdbcType=DECIMAL},
+      </if>
+      <if test="item.advFeeOut != null" >
+        ADV_FEE_OUT = #{item.advFeeOut,jdbcType=DECIMAL},
+      </if>
+      <if test="item.otherFeeOut != null" >
+        OTHER_FEE_OUT = #{item.otherFeeOut,jdbcType=DECIMAL},
+      </if>
+      <if test="item.sendStatus != null" >
+        SEND_STATUS = #{item.sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="item.submitFeedbackStatus != null" >
+        SUBMIT_FEEDBACK_STATUS = #{item.submitFeedbackStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="item.statusDate != null" >
+        STATUS_DATE = #{item.statusDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.status != null" >
+        STATUS = #{item.status,jdbcType=VARCHAR},
+      </if>
+      <if test="item.createUser != null" >
+        CREATE_USER = #{item.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="item.createDept != null" >
+        CREATE_DEPT = #{item.createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="item.createTime != null" >
+        CREATE_TIME = #{item.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.updateUser != null" >
+        UPDATE_USER = #{item.updateUser,jdbcType=VARCHAR},
+      </if>
+        UPDATE_TIME = NOW(),
+      <if test="item.submitTime != null" >
+        SUBMIT_TIME = #{item.submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.chbSubmitDeadline != null" >
+        CHB_SUBMIT_DEADLINE = #{item.chbSubmitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.submitDeadline != null" >
+        SUBMIT_DEADLINE = #{item.submitDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.orgCode != null" >
+        ORG_CODE = #{item.orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="item.deptCode != null" >
+        DEPT_CODE = #{item.deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="item.sumitSeq != null" >
+        SUMIT_SEQ = #{item.sumitSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="item.prodRegistCode != null" >
+        PROD_REGIST_CODE = #{item.prodRegistCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PROD_ID = #{item.prodId,jdbcType=VARCHAR}
+    and SEND_STATUS = '01'
+    </foreach>
+    ;end;
+  </update>
+
+
+    <select id="selcteDataByIds" parameterType="java.util.List" resultType="com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto">
+        select
+        sub.REGIST_SEQNO registSeqno,
+        sub.PROD_ID prodId,
+        cp.PROD_NAME prodName,
+        sub.ISSUE_PARTY_ID issuePartyId,
+        sub.PRD_REGIST_CODE prdRegistCode,
+        sub.PRD_TOTAL_AMT prdTotalAmt,
+        sub.PRD_LEVERAGE prdLeverage,
+        sub.PRD_STATUS_DATE prdStatusDate,
+        sub.TERMID termid,
+        sub.REMARK remark,
+        sub.SEND_STATUS sendStatus,
+        sub.STATUS_DATE statusDate,
+        sub.STATUS status,
+        sub.SUBMIT_SEQ submitSeq,
+        sub.CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+        sub.SUBMIT_DEADLINE submitDeadline,
+        sub.SUBMIT_TIME submitTime,
+        sub.SUBMIT_FEEDBACK_STATUS submitFeedbackStatus
+        from CHB_PRD_STATUS_SUB sub left join CHB_PRD_BASEINFO cp
+        on sub.PROD_ID = cp.PROD_ID AND CP.STATUS != 'D'
+        where SEND_STATUS = '01'
+        AND SUB.STATUS = '01'
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND SUB.PROD_ID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+</mapper>

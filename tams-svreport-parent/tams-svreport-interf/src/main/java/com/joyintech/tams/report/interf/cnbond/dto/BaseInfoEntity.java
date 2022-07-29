@@ -1232,6 +1232,156 @@ public class BaseInfoEntity implements Feild {
     @XmlElement(name = "wemax:AggregateAmount")
     private CommonNodeEntity aggregateAmount;
 
+
+    /***0722升级**/
+
+    /**
+     * 定期开放周期
+     */
+    @XmlElement(name = "wemax:PeriodicIntervalDays")
+    private CommonNodeEntity periodicIntervalDays;
+
+    /**
+     * 理财产品宣传材料
+     */
+    @XmlElement(name = "wemax:LiquidityRiskAssessmentDocumentsTuple")
+    private List<CommonNodeListEntity> LiquidityRiskAssessmentDocumentsTuple;
+
+    /**
+     * 交易发起时间
+     */
+    @XmlElement(name = "wemax:TransactionStartTime")
+    private CommonNodeEntity TransactionStartTime;
+
+
+    /**
+     * 关联交易情况
+     */
+    @XmlElement(name = "wemax:RelatedPartyTransactionCounterpartyType")
+    private CommonNodeEntity RelatedPartyTransactionCounterpartyType;
+
+    /**
+     * 理财产品总资产金额(元)
+     */
+    @XmlElement(name = "wemax:AggregateInvestedAssetAmountCNY")
+    private CommonNodeEntity AggregateInvestedAssetAmountCNY;
+
+    /**
+     * 理财产品杠杆率
+     */
+    @XmlElement(name = "wemax:LeverageRatio")
+    private CommonNodeEntity LeverageRatio;
+
+    /**
+     * 理财产品杠杆率
+     */
+    @XmlElement(name = "wemax:ProductStatusReportingDate")
+    private CommonNodeEntity ProductStatusReportingDate;
+
+    /**
+     * 理财产品杠杆率
+     */
+    @XmlElement(name = "wemax:ProductStatusRegistrationDetails")
+    private CommonNodeEntity ProductStatusRegistrationDetails;
+
+
+    /**
+     * 持仓类别
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesType")
+    private CommonNodeEntity ProductInvestedAssetsLiabilitiesType;
+
+    /**
+     * 行内资产/负债编码
+     */
+    @XmlElement(name = "wemax:AssetsAndLiabilitiesIdentificationCode")
+    private CommonNodeEntity AssetsAndLiabilitiesIdentificationCode;
+
+
+    /**
+     * 中间层数
+     */
+    @XmlElement(name = "wemax:NumberOfMezzanines")
+    private CommonNodeEntity NumberOfMezzanines;
+
+    /**
+     * 中间层行内资产/负债编码
+     */
+    @XmlElement(name = "wemax:MezzanineAssetsLiabilitiesIdentificationCode")
+    private CommonNodeEntity MezzanineAssetsLiabilitiesIdentificationCode;
+
+
+    /**
+     * 会计科目名称
+     */
+    @XmlElement(name = "wemax:AccountTitle")
+    private CommonNodeEntity AccountTitle;
+
+    /**
+     * 金额
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesRegistrationInvestedAmount")
+    private CommonNodeEntity ProductInvestedAssetsLiabilitiesRegistrationInvestedAmount;
+
+    /**
+     * 资产穿透情况
+     */
+    @XmlElement(name = "wemax:InvestedAssetsLiabilitiesStructure")
+    private CommonNodeEntity InvestedAssetsLiabilitiesStructure;
+
+
+    /**
+     * 折算人民币金额（元）
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesRegistrationInvestedAmountCny")
+    private CommonNodeEntity ProductInvestedAssetsLiabilitiesRegistrationInvestedAmountCny;
+
+
+    /**
+     * 公允价值
+     */
+    @XmlElement(name = "wemax:FairValue")
+    private CommonNodeEntity FairValue;
+
+
+    /**
+     * 单位估值(净价)
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet")
+    private CommonNodeEntity ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet;
+
+    /**
+     * 单位估值(全价)
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull")
+    private CommonNodeEntity ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull;
+
+    /**
+     * 折算人民币公允价值
+     */
+    @XmlElement(name = "wemax:FairValueCNY")
+    private CommonNodeEntity FairValueCNY;
+
+    /**
+     * 数量
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesRegistrationQuantity")
+    private CommonNodeEntity ProductInvestedAssetsLiabilitiesRegistrationQuantity;
+
+    /**
+     * 持仓日期
+     */
+    @XmlElement(name = "wemax:ReportingDate")
+    private CommonNodeEntity ReportingDate;
+
+    /**
+     * 备注
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesRegistrationDetails")
+    private CommonNodeEntity ProductInvestedAssetsLiabilitiesRegistrationDetails;
+
+    /***0722升级**/
+
     /**
      * 加权剩余期限（天）
      */
@@ -9368,4 +9518,179 @@ public class BaseInfoEntity implements Feild {
         this.businessType = businessType;
     }
 
+    public CommonNodeEntity getPeriodicIntervalDays() {
+        return periodicIntervalDays;
+    }
+
+    public void setPeriodicIntervalDays(CommonNodeEntity periodicIntervalDays) {
+        this.periodicIntervalDays = periodicIntervalDays;
+    }
+
+    public List<CommonNodeListEntity> getLiquidityRiskAssessmentDocumentsTuple() {
+        return LiquidityRiskAssessmentDocumentsTuple;
+    }
+
+    public void setLiquidityRiskAssessmentDocumentsTuple(List<CommonNodeListEntity> liquidityRiskAssessmentDocumentsTuple) {
+        LiquidityRiskAssessmentDocumentsTuple = liquidityRiskAssessmentDocumentsTuple;
+    }
+
+    public CommonNodeEntity getTransactionStartTime() {
+        return TransactionStartTime;
+    }
+
+    public void setTransactionStartTime(CommonNodeEntity transactionStartTime) {
+        TransactionStartTime = transactionStartTime;
+    }
+
+    public CommonNodeEntity getRelatedPartyTransactionCounterpartyType() {
+        return RelatedPartyTransactionCounterpartyType;
+    }
+
+    public void setRelatedPartyTransactionCounterpartyType(CommonNodeEntity relatedPartyTransactionCounterpartyType) {
+        RelatedPartyTransactionCounterpartyType = relatedPartyTransactionCounterpartyType;
+    }
+
+    public CommonNodeEntity getAggregateInvestedAssetAmountCNY() {
+        return AggregateInvestedAssetAmountCNY;
+    }
+
+    public void setAggregateInvestedAssetAmountCNY(CommonNodeEntity aggregateInvestedAssetAmountCNY) {
+        AggregateInvestedAssetAmountCNY = aggregateInvestedAssetAmountCNY;
+    }
+
+    public CommonNodeEntity getLeverageRatio() {
+        return LeverageRatio;
+    }
+
+    public void setLeverageRatio(CommonNodeEntity leverageRatio) {
+        LeverageRatio = leverageRatio;
+    }
+
+    public CommonNodeEntity getProductStatusReportingDate() {
+        return ProductStatusReportingDate;
+    }
+
+    public void setProductStatusReportingDate(CommonNodeEntity productStatusReportingDate) {
+        ProductStatusReportingDate = productStatusReportingDate;
+    }
+
+    public CommonNodeEntity getProductStatusRegistrationDetails() {
+        return ProductStatusRegistrationDetails;
+    }
+
+    public void setProductStatusRegistrationDetails(CommonNodeEntity productStatusRegistrationDetails) {
+        ProductStatusRegistrationDetails = productStatusRegistrationDetails;
+    }
+
+    public CommonNodeEntity getProductInvestedAssetsLiabilitiesType() {
+        return ProductInvestedAssetsLiabilitiesType;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesType(CommonNodeEntity productInvestedAssetsLiabilitiesType) {
+        ProductInvestedAssetsLiabilitiesType = productInvestedAssetsLiabilitiesType;
+    }
+
+    public CommonNodeEntity getNumberOfMezzanines() {
+        return NumberOfMezzanines;
+    }
+
+    public void setNumberOfMezzanines(CommonNodeEntity numberOfMezzanines) {
+        NumberOfMezzanines = numberOfMezzanines;
+    }
+
+    public CommonNodeEntity getMezzanineAssetsLiabilitiesIdentificationCode() {
+        return MezzanineAssetsLiabilitiesIdentificationCode;
+    }
+
+    public void setMezzanineAssetsLiabilitiesIdentificationCode(CommonNodeEntity mezzanineAssetsLiabilitiesIdentificationCode) {
+        MezzanineAssetsLiabilitiesIdentificationCode = mezzanineAssetsLiabilitiesIdentificationCode;
+    }
+
+    public CommonNodeEntity getAccountTitle() {
+        return AccountTitle;
+    }
+
+    public void setAccountTitle(CommonNodeEntity accountTitle) {
+        AccountTitle = accountTitle;
+    }
+
+    public CommonNodeEntity getProductInvestedAssetsLiabilitiesRegistrationInvestedAmount() {
+        return ProductInvestedAssetsLiabilitiesRegistrationInvestedAmount;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesRegistrationInvestedAmount(CommonNodeEntity productInvestedAssetsLiabilitiesRegistrationInvestedAmount) {
+        ProductInvestedAssetsLiabilitiesRegistrationInvestedAmount = productInvestedAssetsLiabilitiesRegistrationInvestedAmount;
+    }
+
+    public CommonNodeEntity getInvestedAssetsLiabilitiesStructure() {
+        return InvestedAssetsLiabilitiesStructure;
+    }
+
+    public void setInvestedAssetsLiabilitiesStructure(CommonNodeEntity investedAssetsLiabilitiesStructure) {
+        InvestedAssetsLiabilitiesStructure = investedAssetsLiabilitiesStructure;
+    }
+
+    public CommonNodeEntity getProductInvestedAssetsLiabilitiesRegistrationInvestedAmountCny() {
+        return ProductInvestedAssetsLiabilitiesRegistrationInvestedAmountCny;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesRegistrationInvestedAmountCny(CommonNodeEntity productInvestedAssetsLiabilitiesRegistrationInvestedAmountCny) {
+        ProductInvestedAssetsLiabilitiesRegistrationInvestedAmountCny = productInvestedAssetsLiabilitiesRegistrationInvestedAmountCny;
+    }
+
+    public CommonNodeEntity getFairValue() {
+        return FairValue;
+    }
+
+    public void setFairValue(CommonNodeEntity fairValue) {
+        FairValue = fairValue;
+    }
+
+    public CommonNodeEntity getProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet() {
+        return ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet(CommonNodeEntity productInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet) {
+        ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet = productInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet;
+    }
+
+    public CommonNodeEntity getProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull() {
+        return ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull(CommonNodeEntity productInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull) {
+        ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull = productInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull;
+    }
+
+    public CommonNodeEntity getFairValueCNY() {
+        return FairValueCNY;
+    }
+
+    public void setFairValueCNY(CommonNodeEntity fairValueCNY) {
+        FairValueCNY = fairValueCNY;
+    }
+
+    public CommonNodeEntity getProductInvestedAssetsLiabilitiesRegistrationQuantity() {
+        return ProductInvestedAssetsLiabilitiesRegistrationQuantity;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesRegistrationQuantity(CommonNodeEntity productInvestedAssetsLiabilitiesRegistrationQuantity) {
+        ProductInvestedAssetsLiabilitiesRegistrationQuantity = productInvestedAssetsLiabilitiesRegistrationQuantity;
+    }
+
+    public CommonNodeEntity getReportingDate() {
+        return ReportingDate;
+    }
+
+    public void setReportingDate(CommonNodeEntity reportingDate) {
+        ReportingDate = reportingDate;
+    }
+
+    public CommonNodeEntity getProductInvestedAssetsLiabilitiesRegistrationDetails() {
+        return ProductInvestedAssetsLiabilitiesRegistrationDetails;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesRegistrationDetails(CommonNodeEntity productInvestedAssetsLiabilitiesRegistrationDetails) {
+        ProductInvestedAssetsLiabilitiesRegistrationDetails = productInvestedAssetsLiabilitiesRegistrationDetails;
+    }
 }

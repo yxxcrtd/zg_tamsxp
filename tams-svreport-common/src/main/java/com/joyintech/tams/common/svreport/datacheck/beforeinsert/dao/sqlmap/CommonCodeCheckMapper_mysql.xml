@@ -200,7 +200,7 @@
     <select id="selectChbInvestTradeBusKey" resultType="java.util.Map">
         select PROD_ID,ASSET_CODE,TRADE_CODE from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
-            (#{item.prodId},#{item.assetCode},#{tradeCode})
+            (#{item.prodId},#{item.assetCode},#{item.tradeCode})
         </foreach>
         and DATA_SOURCE !='D'
         and STATUS = 'E'
@@ -233,8 +233,22 @@
         select count(1) from CHB_ASSET_INFO where ASSET_CODE = #{assetCode} and STATUS = 'E'
     </select>
 
-    <select id="checkInvestTradeCodeOther" resultType="java.lang.Integer">
-        select count(1) from CHB_INVEST_TRADE
+    <select id="selectOneCounterParty" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+        SELECT
+        a.STATUS,
+        a.COUNTER_ID,
+        a.COUNTER_NAME,
+        a.RELATED_TRADE_STATUS,
+        a.COUNTER_TYPE1,
+        a.COUNTER_TYPE2,
+        a.CREATE_USER,
+        a.CREATE_TIME as createTime,
+        a.UPDATE_USER,
+        a.UPDATE_TIME as updateTime,
+        a.SVR_DATA_SOURCES as dataSource,
+        '' as uuid
+        FROM
+        chb_mst_counter_party a
         where
         PROD_ID = #{prodId}
         and TRADE_CODE = #{tradeCode}
@@ -253,5 +267,15 @@
     </select>
     <select id="checkExistsFsubjectId" resultType="java.lang.Integer">
         select count(1) from BOK_SUBJECT where SUBJECT_NO = #{fsubjectId}
+    </select>
+    <select id="selectCounterPartyList" resultType="com.joyintech.tams.common.base.entity.ChbMstCounterParty">
+        SELECT
+            STATUS,
+            COUNTER_ID,
+            COUNTER_NAME,
+            RELATED_TRADE_STATUS,
+            COUNTER_TYPE1,
+            COUNTER_TYPE2
+        FROM chb_mst_counter_party  where STATUS = 'E'
     </select>
 </mapper>

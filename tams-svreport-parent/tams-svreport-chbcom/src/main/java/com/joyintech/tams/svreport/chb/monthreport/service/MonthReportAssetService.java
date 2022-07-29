@@ -8,6 +8,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
 import com.joyintech.tams.common.base.dao.ChbAssetInfoMapper;
 import com.joyintech.tams.common.base.dao.ChbPrdBaseinfoMapper;
+import com.joyintech.tams.common.base.dao.ChbTypeMappingExMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -90,6 +91,11 @@ public class MonthReportAssetService {
 	@Autowired
 	private ChbPrdBaseinfoMapper chbPrdBaseinfoMapper;
 
+	/**
+	 * 映射配置mapper
+	 */
+	@Autowired
+	private ChbTypeMappingExMapper chbTypeMappingExMapper;
 	/**
 	 * 映射service
 	 */
@@ -713,7 +719,17 @@ public class MonthReportAssetService {
     }
     
     private List<ChbBotAstPosition> genMonthPlanPosition ( ChbBotAstPosition pos ) {
-        List<ChbBotAstPosition> list = new ArrayList<ChbBotAstPosition>();
+		//取得系统配置的科目信息
+		List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
+				.selectByMappingcode(InterfMappingConstants.BOTTON_SUBJECT_INVEST_TYPE_NAME);
+		List<String> subjectNoList = new ArrayList<String>();
+		for(ChbTypeMappingEx mapping: subjectNoMappingList){
+			// 获取源属性1：科目号
+			subjectNoList.add(mapping.getSrcfield1());
+		}
+		pos.setSubjectNoList(subjectNoList);
+
+		List<ChbBotAstPosition> list = new ArrayList<ChbBotAstPosition>();
         //查询底层持仓
         List<ChbBotAstPosition> listUnderDeal = chbMonthAssetPositionMapper.selectPlanDeal(pos);
         for ( ChbBotAstPosition p11:listUnderDeal ) {

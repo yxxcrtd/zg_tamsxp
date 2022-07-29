@@ -76,7 +76,11 @@
             asset.BANK_CAPITAL bankCapital,
             asset.SHARES_TYPE sharesType,
             info.IS_FHXGCP isFhxgcp,
-            position.ASSETTYPE2 assetType2
+            position.ASSETTYPE2 assetType2,
+            case when position.RATING='无评级'
+            THEN NULL
+            ELSE POSITION.RATING
+            END rating
         from CHB_MONTH_ASSET_POSITION position
         left join CHB_PRD_BASEINFO info
         on info.PROD_ID = position.PROD_ID

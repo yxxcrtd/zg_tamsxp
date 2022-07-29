@@ -127,5 +127,28 @@ public interface MsgSendService {
 	 */
 	//ChbMsgReturnInfoDto sendChbEmployeeInfoSubMsgs(List<ChbEmployeeInfoDto> datas) throws Exception;
 	void sendChbEmployeeInfoSubMsgs(List<ChbEmployeeInfoDto> datas, SendDataCheckType sendDataCheckType) throws Exception;
-	
+
+	/***0722升级**/
+	/**
+	 * <产品状态登记>
+	 * @param datas 数据内容
+	 * @return 报送信息「需要拼装的数据」
+	 * @see MsgSendService
+	 * @since 1.0
+	 * @add by zhaoyongsheng 20201017
+	 */
+	void sendProdStatusSubMsgs(List<ChbPrdStatusSub> datas, SendDataCheckType sendDataCheckType) throws Exception;
+
+
+	/**
+	 * <资产持仓登记>
+	 * @param datas 数据内容
+	 * @return 报送信息「需要拼装的数据」
+	 * @see MsgSendService
+	 * @since 1.0
+	 * @add by zhaoyongsheng 20201017
+	 */
+	void sendChbAstPosSubMsgs(List<ChbAstPosSub> datas, SendDataCheckType sendDataCheckType) throws Exception;
+
+	/***0722升级**/
 }

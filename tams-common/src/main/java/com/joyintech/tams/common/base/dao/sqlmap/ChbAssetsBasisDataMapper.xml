@@ -59,7 +59,7 @@
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbAssetsBasisData" >
         insert into CHB_ASSETS_BASIS_DATA (VAL_ID, PROD_ID, ASSET_ID, 
-            VALUE_DATE, MDATE, POS_AMT, 
+            VALUE_DATE, MDATE, POS_AMT, SHADOW_AMT,
             TDY_COST_AMT, TDY_FLOAT_INGPL, TDY_INTINCEXP, 
             DELAY_PAY_AMT, REMARK, CREATE_TIME, 
             UPDATE_TIME, CREATE_DEPT, ORG_CODE, 
@@ -68,7 +68,7 @@
             CCY, TDY_INTADJEXP_ADD, CHL_ID, 
             TDY_LOSS_AMT)
         values (#{valId,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, 
-            #{valueDate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{posAmt,jdbcType=DECIMAL}, 
+            #{valueDate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{posAmt,jdbcType=DECIMAL}, #{shadowAmt,jdbcType=DECIMAL},
             #{tdyCostAmt,jdbcType=DECIMAL}, #{tdyFloatIngpl,jdbcType=DECIMAL}, #{tdyIntincexp,jdbcType=DECIMAL}, 
             #{delayPayAmt,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, 

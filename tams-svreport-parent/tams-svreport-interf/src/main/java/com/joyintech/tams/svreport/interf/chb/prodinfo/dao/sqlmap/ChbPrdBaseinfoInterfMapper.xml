@@ -611,7 +611,6 @@
 		) TEMP
 		<!-- 业务主键匹配 -->
 		ON (CII.PROD_ID = TEMP.PROD_ID)
-		<!-- 匹配到则更新 -->
 		WHEN MATCHED THEN
 		UPDATE
 		SET 

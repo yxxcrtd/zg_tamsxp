@@ -103,8 +103,11 @@ public enum BatchBeanName {
     投资者份额检查批处理("3070", "equityShareCheckService","equityShareCheckMainService", "投资者份额检查批处理"),
     投资者持有信息登记手工处理("3072", "investorsHoldInfoRegistAutoManualCBService","investorsHoldInfoRegistAutoManualCBMainService", "投资者持有信息登记手工处理"),
 	投资者身份信息登记手工处理("3073", "equityInfoRegistAutoManualCBService","equityInfoRegistAutoManualCBMainService", "投资者身份信息登记手工处理"),
+    资产持仓登记手工处理("7810", "chbAstPosRegistAutoManualService","chbAstPosRegistAutoManualMainService", "资产持仓登记手工处理"),
 	投资者明细信息登记导出("3075","equityBusiInfoExportService","equityBusiInfoExportMainService","投资者明细信息登记导出"),
-	产品运作模式更新("3074","svrUpdateOperateModeTaskService","UpdateOperateModeMainService","产品运作模式更新"),
+    资产持仓登记批处理导出("7809","chbAstPosRegistExportService","chbAstPosRegistExportMainService","资产持仓登记批处理导出"),
+    投资者明细信息补登记("7808","equityBusiInfoSupplyExportService","equityBusiInfoSupplyExportMainService","投资者明细信息补登记"),
+    产品运作模式更新("3074","svrUpdateOperateModeTaskService","UpdateOperateModeMainService","产品运作模式更新"),
 	产品费用交易头寸接口数据接入("3076","svrChbPrdFeeBasisInfoTaskService","chbPrdFeeBasisImpMainService","产品费用交易头寸接口数据接入"),
 	产品分红交易接口数据接入("3077","svrProdDiviendBasisInfoTaskService","chbPrdDividendBasisImpMainService","产品分红交易接口数据接入"),
     产品利率基本信息接口数据接入("4100","svrProdRateInfoInterfTaskService","SvrProdRateInfoImpMainService","产品利率基本信息接口数据接入"),
@@ -116,6 +119,7 @@ public enum BatchBeanName {
     总部或分支机构信息接入("3091","svrSaleInstInterfTaskService","SvrSaleInstImpMainService","总部或分支机构信息接入"),
     销售人员身份信息接入("3092","svrSaleIderInterfTaskService","SvrSaleIderImpMainService","销售人员身份信息接入"),
     销售人员奖惩投诉记录信息接入("3093","svrSaleIRewPenaInterfTaskService","SvrSaleRewPenaImpMainService","销售人员奖惩投诉记录信息接入"),
+    资产持仓信息登记报送("3200","svrChbAstPosSubTaskService","ChbAstPosSubCBMainService","资产持仓信息登记报送"),
 
             ;
 	/**

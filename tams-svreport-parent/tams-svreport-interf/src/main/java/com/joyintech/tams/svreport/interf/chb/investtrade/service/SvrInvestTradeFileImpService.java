@@ -186,6 +186,11 @@ public class SvrInvestTradeFileImpService  extends FileImpService{
         String saveFlag = interfConfig.getContentType();
         String result= "";
         if(investTradeList.size()>0){
+            investTradeList.forEach(map->{
+                if (StringUtil.isNotBlank(map.get("TRADE_TIME"))) {
+                    map.put("TRADE_DATE",map.get("TRADE_TIME"));
+                }
+            });
             result = saveData(investTradeList, listExcel == null?saveFlag:InterfConstants.SAVEFLAG_ADD, listExcel == null? "I" : "D");
         }
         // 更新系统配置时间

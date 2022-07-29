@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
@@ -1316,8 +1317,15 @@ public class EquityBusiInfoRegist001Service extends CommonExportService<EquityBu
      */
     private void sendInvestorsHoldCHBOneFile(List<EquityBusiInfoRegist001Dto> registList, boolean isSendAllData) {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        // 元素名称
-        String title = "wemax_IssuerIdentificationCode|wemax_SalesContractNumber|wemax_FundamentalTransactionSerialNumber|wemax_WealthManagementAccountNumber|wemax_ClientUnifiedCode|wemax_DiscriminationId|wemax_ClientName|wemax_AssociatedCurrentAccountNumber|wemax_BranchLocationOfAssociatedCurrentAccount|wemax_OtherDistributionAgentsPleaseSelect|wemax_DistributionAgentIdentificationCode|wemax_DistributionAgentName|wemax_RegulatorOfDistributionAgent|wemax_ProductRegistrationCode|wemax_BusinessType|wemax_RegulatorOfBusinessLocation|wemax_SettlementDate|wemax_SettlementTime|wemax_Currency|wemax_BusinessDetailsAmount|wemax_BusinessDetailsAmountCNY|wemax_SettlementUnitValue|wemax_BusinessDetailsUnits|wemax_BusinessDetailsFees|wemax_Channel|wemax_TransactionTellerNumber|wemax_InvestorsBusinessDetailsInformationDetails|wemax_RegistrationSerialNumber";
+        //是否升级投资者明细  01是  02否
+        String isUpgrade = SvrDataUtil.getSysParam("SVR_HX_ISUPGRADE");
+        String title="";
+        if(StringUtil.isNotEmpty(isUpgrade)&&StringUtil.equals("01",isUpgrade)){
+            // 元素名称
+            title = "wemax_IssuerIdentificationCode|wemax_SalesContractNumber|wemax_FundamentalTransactionSerialNumber|wemax_WealthManagementAccountNumber|wemax_ClientUnifiedCode|wemax_DiscriminationId|wemax_ClientName|wemax_TransactionSequenceNumber|wemax_AssociatedCurrentAccountNumber|wemax_BankIdentificationCodeOfAssociatedCurrentAccount|wemax_BankNameOfAssociatedCurrentAccount|wemax_BranchLocationOfAssociatedCurrentAccount|wemax_OtherDistributionAgentsPleaseSelect|wemax_DistributionAgentIdentificationCode|wemax_DistributionAgentName|wemax_RegulatorOfDistributionAgent|wemax_ProductRegistrationCode|wemax_BusinessType|wemax_RegulatorOfBusinessLocation|wemax_SettlementDate|wemax_SettlementTime|wemax_Currency|wemax_BusinessDetailsAmount|wemax_BusinessDetailsAmountCNY|wemax_SettlementUnitValue|wemax_BusinessDetailsUnits|wemax_BusinessDetailsFees|wemax_Channel|wemax_TransactionTellerNumber|wemax_InvestorsBusinessDetailsInformationDetails|wemax_RegistrationSerialNumber";
+        }else {
+            title = "wemax_IssuerIdentificationCode|wemax_SalesContractNumber|wemax_FundamentalTransactionSerialNumber|wemax_WealthManagementAccountNumber|wemax_ClientUnifiedCode|wemax_DiscriminationId|wemax_ClientName|wemax_AssociatedCurrentAccountNumber|wemax_BranchLocationOfAssociatedCurrentAccount|wemax_OtherDistributionAgentsPleaseSelect|wemax_DistributionAgentIdentificationCode|wemax_DistributionAgentName|wemax_RegulatorOfDistributionAgent|wemax_ProductRegistrationCode|wemax_BusinessType|wemax_RegulatorOfBusinessLocation|wemax_SettlementDate|wemax_SettlementTime|wemax_Currency|wemax_BusinessDetailsAmount|wemax_BusinessDetailsAmountCNY|wemax_SettlementUnitValue|wemax_BusinessDetailsUnits|wemax_BusinessDetailsFees|wemax_Channel|wemax_TransactionTellerNumber|wemax_InvestorsBusinessDetailsInformationDetails|wemax_RegistrationSerialNumber";
+        }
         // 元素字符串结果集
         StringBuffer info = new StringBuffer("\n" + "    <![CDATA[" + '\n');
         info.append(title);
@@ -1359,13 +1367,26 @@ public class EquityBusiInfoRegist001Service extends CommonExportService<EquityBu
                 registSeqKeyMap.put(currRegistSeq, dto.getBusiSeqno() + "," + dto.getRegCode() + ","
                         + dto.getRegistBankCode() + "," +dto.getIndentifyMark());
                 String  prdvalue=dto.getProdValue()==null?"":dto.getProdValue().setScale(5,RoundingMode.HALF_UP).toString();
-                String value = dto.getRegistBankCode()+"|"+dto.getContractNo()+"|"+dto.getBusiSeqno()+"|"+dto.getFinAcc()
-                        + "|" + dto.getCustContractNo()+ "|"+ dto.getIndentifyMark()+ "|"+ dto.getCustName()+ "|"+ dto.getFundAcc()
-                        + "|" + dto.getFundAccPlace()+ "|"+ dto.getIsConsign()+ "|"+ (dto.getAgencyCode()==null?"":dto.getAgencyCode())+ "|"+ (dto.getAgencyName()==null?"":dto.getAgencyName())
-                        + "|" + (dto.getAgencyFsa()==null?"":dto.getAgencyFsa())+ "|"+ dto.getRegCode()+ "|"+ dto.getBusiType()+ "|"+ dto.getBusiFsa()
-                        + "|" + sdf.format(dto.getEquityConfDate())+ "|"+ dto.getShareConfDatetime()+ "|"+ dto.getCcy()+ "|"+ dto.getAmount().setScale(2,RoundingMode.HALF_UP)
-                        + "|"+ dto.getAmountCny().setScale(2,RoundingMode.HALF_UP) + "|" + prdvalue+ "|"+ dto.getShares().setScale(5,RoundingMode.HALF_UP)+ "|"+ dto.getFeeAmt().setScale(2,RoundingMode.HALF_UP)
-                        + "|"+ dto.getChannel()+ "|"+ dto.getTranTellName() + "|" + (dto.getRemark()==null?"":dto.getRemark()) + "|" + registSeqNo;
+                String value ="";
+                if(StringUtil.isNotEmpty(isUpgrade)&&StringUtil.equals("01",isUpgrade)){
+                    value = dto.getRegistBankCode()+"|"+dto.getContractNo()+"|"+dto.getBusiSeqno()+"|"+dto.getFinAcc()
+                            + "|" + dto.getCustContractNo()+ "|"+ dto.getIndentifyMark()+ "|"+ dto.getCustName()+ "|"+  dto.getTradeSeq()+ "|"+dto.getFundAcc()
+                            + "|" +dto.getFundAccCode()+ "|" +dto.getFundAccName() + "|" +dto.getFundAccPlace()+ "|"+ dto.getIsConsign()+ "|"+ (dto.getAgencyCode()==null?"":dto.getAgencyCode())+ "|"+ (dto.getAgencyName()==null?"":dto.getAgencyName())
+                            + "|" + (dto.getAgencyFsa()==null?"":dto.getAgencyFsa())+ "|"+ dto.getRegCode()+ "|"+ dto.getBusiType()+ "|"+ dto.getBusiFsa()
+                            + "|" + sdf.format(dto.getEquityConfDate())+ "|"+ dto.getShareConfDatetime()+ "|"+ dto.getCcy()+ "|"+ dto.getAmount().setScale(2,RoundingMode.HALF_UP)
+                            + "|"+ dto.getAmountCny().setScale(2,RoundingMode.HALF_UP) + "|" + prdvalue+ "|"+ dto.getShares().setScale(5,RoundingMode.HALF_UP)+ "|"+ dto.getFeeAmt().setScale(2,RoundingMode.HALF_UP)
+                            + "|"+ dto.getChannel()+ "|"+ dto.getTranTellName() + "|" + (dto.getRemark()==null?"":dto.getRemark()) + "|" + registSeqNo;
+
+                }else{
+                    value = dto.getRegistBankCode()+"|"+dto.getContractNo()+"|"+dto.getBusiSeqno()+"|"+dto.getFinAcc()
+                            + "|" + dto.getCustContractNo()+ "|"+ dto.getIndentifyMark()+ "|"+ dto.getCustName()+ "|"+ dto.getFundAcc()
+                            + "|" + dto.getFundAccPlace()+ "|"+ dto.getIsConsign()+ "|"+ (dto.getAgencyCode()==null?"":dto.getAgencyCode())+ "|"+ (dto.getAgencyName()==null?"":dto.getAgencyName())
+                            + "|" + (dto.getAgencyFsa()==null?"":dto.getAgencyFsa())+ "|"+ dto.getRegCode()+ "|"+ dto.getBusiType()+ "|"+ dto.getBusiFsa()
+                            + "|" + sdf.format(dto.getEquityConfDate())+ "|"+ dto.getShareConfDatetime()+ "|"+ dto.getCcy()+ "|"+ dto.getAmount().setScale(2,RoundingMode.HALF_UP)
+                            + "|"+ dto.getAmountCny().setScale(2,RoundingMode.HALF_UP) + "|" + prdvalue+ "|"+ dto.getShares().setScale(5,RoundingMode.HALF_UP)+ "|"+ dto.getFeeAmt().setScale(2,RoundingMode.HALF_UP)
+                            + "|"+ dto.getChannel()+ "|"+ dto.getTranTellName() + "|" + (dto.getRemark()==null?"":dto.getRemark()) + "|" + registSeqNo;
+
+                }
                 info.append(value);
                 info.append('\n');
             }

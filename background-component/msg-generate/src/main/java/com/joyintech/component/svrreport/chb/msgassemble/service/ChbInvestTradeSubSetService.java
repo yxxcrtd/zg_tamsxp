@@ -11,11 +11,7 @@
 package com.joyintech.component.svrreport.chb.msgassemble.service;
 
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.n3r.idworker.Sid;
 import org.slf4j.Logger;
@@ -291,7 +287,22 @@ public class ChbInvestTradeSubSetService {
 
 		/***1217升级**/
 
+		/***0722升级**/
+		//交易发起时间
+		if(StringUtil.isNotEmpty(item.getTradeTime())){
+			CnBondInterfItemDto cnBondItem50 = new CnBondInterfItemDto();
+			cnBondItem50.setValue(DateUtil.format(item.getTradeTime(),"yyyyMMddHHmmss"));
+			cnBondItemMap1.put("TransactionStartTime", cnBondItem50);
+		}
 
+		//关联交易情况
+		if(StringUtil.isNotEmpty(item.getRelatedTradeStatus())){
+			CnBondInterfItemDto cnBondItem51 = new CnBondInterfItemDto();
+			cnBondItem51.setValue(item.getRelatedTradeStatus());
+			cnBondItemMap1.put("RelatedPartyTransactionCounterpartyType", cnBondItem51);
+		}
+
+		/***0722升级**/
 		//交易对手方
 		if(StringUtil.isNotEmpty(item.getTradeCounter())){
 		    CnBondInterfItemDto cnBondItem14 = new CnBondInterfItemDto();

@@ -47,7 +47,7 @@ public class SalesTransactionMaintenance002Controller extends BaseController {
    @Override
    @RequestMapping(PAGE_INIT)
    public String init(Model model) {
-       super.setSelectOptionToModel(model, DictCode.销售结算资金流动方向,DictCode.币种_中债);
+       super.setSelectOptionToModel(model, DictCode.销售结算资金流动方向,DictCode.币种_中债,DictCode.销售结算交易类型);
        String registSeqno = getParam("registSeqno");
        String maintainStatus = getParam("maintainStatus");
        if(WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(registSeqno)) {

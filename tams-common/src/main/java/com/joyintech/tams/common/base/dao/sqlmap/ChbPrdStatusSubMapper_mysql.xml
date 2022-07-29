@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbPrdStatusSubMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbPrdStatusSub" >
+        <id column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PRD_REGIST_CODE" property="prdRegistCode" jdbcType="VARCHAR" />
+        <result column="PRD_TOTAL_AMT" property="prdTotalAmt" jdbcType="DECIMAL" />
+        <result column="PRD_LEVERAGE" property="prdLeverage" jdbcType="DECIMAL" />
+        <result column="PRD_STATUS_DATE" property="prdStatusDate" jdbcType="TIMESTAMP" />
+        <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REGIST_SEQNO REGIST_SEQNO, PROD_ID PROD_ID, ISSUE_PARTY_ID ISSUE_PARTY_ID, PRD_REGIST_CODE PRD_REGIST_CODE, 
+        PRD_TOTAL_AMT PRD_TOTAL_AMT, PRD_LEVERAGE PRD_LEVERAGE, PRD_STATUS_DATE PRD_STATUS_DATE, 
+        TERMID TERMID, REMARK REMARK, SEND_STATUS SEND_STATUS, STATUS_DATE STATUS_DATE, STATUS STATUS, 
+        CHB_SUBMIT_DEADLINE CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE SUBMIT_DEADLINE, SUBMIT_TIME SUBMIT_TIME, 
+        SUBMIT_FEEDBACK_STATUS SUBMIT_FEEDBACK_STATUS, CREATE_DEPT CREATE_DEPT, CREATE_USER CREATE_USER, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdStatusSubMapper.Base_Column_List" />
+        from chb_prd_status_sub
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdStatusSubMapper.Base_Column_List" />
+        from chb_prd_status_sub
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbPrdStatusSubMapper.Base_Column_List" />
+        from chb_prd_status_sub
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from chb_prd_status_sub
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbPrdStatusSub" >
+        insert into chb_prd_status_sub (REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, 
+            PRD_REGIST_CODE, PRD_TOTAL_AMT, PRD_LEVERAGE, 
+            PRD_STATUS_DATE, TERMID, REMARK, 
+            SEND_STATUS, STATUS_DATE, STATUS, 
+            CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
+            SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT, 
+            CREATE_USER, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{registSeqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{issuePartyId,jdbcType=VARCHAR}, 
+            #{prdRegistCode,jdbcType=VARCHAR}, #{prdTotalAmt,jdbcType=DECIMAL}, #{prdLeverage,jdbcType=DECIMAL}, 
+            #{prdStatusDate,jdbcType=TIMESTAMP}, #{termid,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{sendStatus,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, 
+            #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP}, 
+            #{submitTime,jdbcType=TIMESTAMP}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdStatusSub" >
+        insert into chb_prd_status_sub
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                REGIST_SEQNO,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID,
+            </if>
+            <if test="prdRegistCode != null" >
+                PRD_REGIST_CODE,
+            </if>
+            <if test="prdTotalAmt != null" >
+                PRD_TOTAL_AMT,
+            </if>
+            <if test="prdLeverage != null" >
+                PRD_LEVERAGE,
+            </if>
+            <if test="prdStatusDate != null" >
+                PRD_STATUS_DATE,
+            </if>
+            <if test="termid != null" >
+                TERMID,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE,
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="registSeqno != null" >
+                #{registSeqno,jdbcType=CHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRegistCode != null" >
+                #{prdRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="prdTotalAmt != null" >
+                #{prdTotalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="prdLeverage != null" >
+                #{prdLeverage,jdbcType=DECIMAL},
+            </if>
+            <if test="prdStatusDate != null" >
+                #{prdStatusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="termid != null" >
+                #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbPrdStatusSub" >
+        insert into chb_prd_status_sub(REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, PRD_REGIST_CODE, 
+        PRD_TOTAL_AMT, PRD_LEVERAGE, PRD_STATUS_DATE, TERMID, REMARK, SEND_STATUS, STATUS_DATE, 
+        STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, 
+        CREATE_DEPT, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, PRD_REGIST_CODE, 
+            PRD_TOTAL_AMT, PRD_LEVERAGE, PRD_STATUS_DATE, TERMID, REMARK, SEND_STATUS, STATUS_DATE, 
+            #{status,jdbcType=VARCHAR} STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, 
+            CREATE_DEPT, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from chb_prd_status_sub
+             where STATUS = 'E' and REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbPrdStatusSub" >
+        update chb_prd_status_sub
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePartyId != null" >
+                ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="prdRegistCode != null" >
+                PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
+            </if>
+            <if test="prdTotalAmt != null" >
+                PRD_TOTAL_AMT = #{prdTotalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="prdLeverage != null" >
+                PRD_LEVERAGE = #{prdLeverage,jdbcType=DECIMAL},
+            </if>
+            <if test="prdStatusDate != null" >
+                PRD_STATUS_DATE = #{prdStatusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="termid != null" >
+                TERMID = #{termid,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="statusDate != null" >
+                STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitFeedbackStatus != null" >
+                SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbPrdStatusSub" >
+        update chb_prd_status_sub
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            PRD_REGIST_CODE = #{prdRegistCode,jdbcType=VARCHAR},
+            PRD_TOTAL_AMT = #{prdTotalAmt,jdbcType=DECIMAL},
+            PRD_LEVERAGE = #{prdLeverage,jdbcType=DECIMAL},
+            PRD_STATUS_DATE = #{prdStatusDate,jdbcType=TIMESTAMP},
+            TERMID = #{termid,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            STATUS_DATE = #{statusDate,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
+    </update>
+</mapper>

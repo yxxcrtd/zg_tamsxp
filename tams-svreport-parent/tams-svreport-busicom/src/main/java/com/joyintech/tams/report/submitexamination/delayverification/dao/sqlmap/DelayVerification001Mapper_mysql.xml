@@ -69,10 +69,6 @@
             ) tmp
     </select>
     <select id="searchDate" resultType="com.joyintech.tams.report.submitexamination.delayverification.dto.DelayVerification001Dto">
-        <!-- 参数searchDateStart 查询开始日
-                searchDateEnd 查询结束日
-                nosubmit 未提交的状态值
-                -->
         select
         unSubmitNum,
         total,
@@ -1187,6 +1183,52 @@
                 temp.SEND_STATUS != #{manualSub}
             </if>
         </where>
+        union all
+        <!-- 21.产品状态登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        nvl(sum(temp.lateNums),0) as unSubmitNum,
+        '21' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_PRD_STATUS_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        ) temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+        </where>
+        union all
+        <!-- 22.资产持仓登记 -->
+        select
+        count(temp.SEND_STATUS) as total,
+        nvl(sum(temp.lateNums),0) as unSubmitNum,
+        '22' as pageType
+        from(
+        select
+        case when ces.SEND_STATUS != #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+        when ces.SEND_STATUS = #{nosubmit}
+        and ces.CHB_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+        else 0 end lateNums,  <!-- 统计延时数据 -->
+        ces.SEND_STATUS
+        from CHB_AST_POS_SUB ces
+        where ces.CHB_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+        ) temp
+        <where>
+            <if test="isNotCount !=null and isNotCount=='01'">
+                <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                temp.SEND_STATUS != #{manualSub}
+            </if>
+        </where>
 
         ) tmp
     </select>
@@ -2061,36 +2103,23 @@
                 concat_ws('', '机构代码 ' ,info.ORG_CODE , ',内部编号 ' , info.SALER_INS_NO) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
-            <when test="tableId !=null and tableId=='CHB_AGENT_INSTITUTION_SUB'">
-                concat_ws('', '代销机构代码 ', info.AGENT_INSTITUTION_CODE) as code,
+            <!-- 16. 产品持仓登记 -->
+            <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
+                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',持仓类别', info.POS_TYPE,',行内资产/负债编码', info.ASSET_ID,',持仓日期', DATE_FORMAT(info.VALUE_DATE,'%Y-%m-%d'),',会计科目名称', info.SUBJECT_NAME,',中间层行内资产/负债编码', info.INTER_ASSET_CODE,',币种', info.CCY) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
-            <when test="tableId !=null and tableId=='CHB_AGENT_PRD_SUB'">
-                concat_ws('', '产品登记编码 ' , info.PROD_REGIST_CODE , ',代销机构代码 ' , info.AGENT_INSTITUTION_CODE) as code,
+            <!-- 17. 产品状态登记 -->
+            <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
+                concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',产品状态统计日',  DATE_FORMAT(info.PRD_STATUS_DATE,'%Y-%m-%d')) as code,
                 info.SEND_STATUS as submitStatus,
             </when>
         </choose>
-        <!-- sdl2.ITEM_VALUE as submitStatus, -->
-        <!-- <choose>
-            <when test="tableId !=null and tableId=='CHB_INVESTHOLD_INFO_SUB'">
-            info.SEND_STATUS submitStatus,
-            </when>
-            <otherwise>
-            info.SUBMIT_STATUS submitStatus,
-            </otherwise>
-        </choose> -->
         info.SUBMIT_TIME as submitTime,
         info.CHB_SUBMIT_DEADLINE as submitDeadline,
         <choose>
-            <when test="tableId != null and tableId == 'CHB_AGENT_INSTITUTION_SUB'">
-                null ORG_CODE,
-            </when>
-            <when test="tableId != null and tableId == 'CHB_AGENT_PRD_SUB'">
-                null ORG_CODE,
-            </when>
-            <otherwise>
+            <when test="tableId != 'CHB_AST_POS_SUB' and tableId != 'CHB_PRD_STATUS_SUB'">
                 info.ORG_CODE,
-            </otherwise>
+            </when>
         </choose>
         <choose>
             <when test="tableId != null and tableId == 'CHB_AGENT_INSTITUTION_SUB'">
@@ -2341,6 +2370,16 @@
                         concat_ws('','机构代码 ', info.ORG_CODE , '，产品登记编码' , info.REG_CODE ,'，核心交易流水号' , info.BUSI_SEQNO ) as code,
                         info.SUBMIT_STATUS as submitStatus,
                     </when>
+                    <!-- 16. 产品持仓登记 -->
+                    <when test="tableId !=null and tableId=='CHB_AST_POS_SUB'">
+                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',持仓类别', info.POS_TYPE,',行内资产/负债编码', info.ASSET_ID,',持仓日期', DATE_FORMAT(info.VALUE_DATE,'%Y-%m-%d'),',会计科目名称', info.SUBJECT_NAME,',中间层行内资产/负债编码', info.INTER_ASSET_CODE,',币种', info.CCY) as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
+                    <!-- 17. 产品状态登记 -->
+                    <when test="tableId !=null and tableId=='CHB_PRD_STATUS_SUB'">
+                        concat_ws('','产品登记编码', info.PRD_REGIST_CODE , ',产品状态统计日', DATE_FORMAT(info.PRD_STATUS_DATE,'%Y-%m-%d')) as code,
+                        info.SEND_STATUS as submitStatus,
+                    </when>
                 </choose>
                 <!-- sdl2.ITEM_VALUE as submitStatus, -->
                 <!-- <choose>
@@ -2353,8 +2392,11 @@
                 </choose> -->
                 info.SUBMIT_TIME as submitTime,
                 info.CHB_SUBMIT_DEADLINE as submitDeadline,
-                info.ORG_CODE,
-                info.CREATE_DEPT,
+                <choose>
+                    <when test="tableId != 'CHB_AST_POS_SUB' and tableId != 'CHB_PRD_STATUS_SUB'">
+                        info.ORG_CODE,
+                    </when>
+                </choose>
                 info.CREATE_USER AS createUser,
                 info.CREATE_DEPT AS createDept,
                 <choose>
@@ -2878,7 +2920,7 @@
                 </if>
                 <!-- 2. 人行单产品月报-产品基本信息 -->
                 <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
-                    LEFT JOIN(
+                    LEFT JOIN (
                     SELECT
                     inside_prod_id,
                     pbc_code
@@ -3008,7 +3050,6 @@
                     </foreach>
                 </if>
             </when>
-            <otherwise></otherwise>
         </choose>
         ) temp
         <where>

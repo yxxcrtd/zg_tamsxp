@@ -244,7 +244,32 @@ public class ChbInvestTradeSubDto {
 
     /***1217升级**/
 
+    /***0722升级**/
+    /**
+     * 交易交易起始日
+     */
+    private Date tradeTime;
+    /**
+     * 关联交易情况
+     */
+    private String relatedTradeStatus;
 
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    public String getRelatedTradeStatus() {
+        return relatedTradeStatus;
+    }
+
+    public void setRelatedTradeStatus(String relatedTradeStatus) {
+        this.relatedTradeStatus = relatedTradeStatus;
+    }
+    /***0722升级**/
     /**
      * 取得 产品代码
      * @return 产品代码

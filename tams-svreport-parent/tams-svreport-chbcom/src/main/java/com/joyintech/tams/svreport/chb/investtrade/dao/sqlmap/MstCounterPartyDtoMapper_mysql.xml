@@ -19,11 +19,12 @@
         <result column="COUNTER_TYPE1" property="counterType1" jdbcType="VARCHAR" />
         <result column="COUNTER_TYPE2" property="counterType2" jdbcType="VARCHAR" />
         <result column="IS_CENTRAL_COUNTER" property="isCentralCounter" jdbcType="VARCHAR" />
+        <result column="RELATED_TRADE_STATUS" property="relatedTradeStatus" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
     COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, HEAD_BANK, CONTACT,
     CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
-    ,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER
+    ,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,RELATED_TRADE_STATUS
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
@@ -40,13 +41,13 @@
       LINK_ID, MANAGER_ID, HEAD_BANK,
       CONTACT, CONTACT_WAY, REMARK,
       CREATE_USER, CREATE_DEPT, CREATE_TIME,
-      UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER)
+      UPDATE_USER, UPDATE_TIME,COUNTER_TYPE1,COUNTER_TYPE2,IS_CENTRAL_COUNTER,RELATED_TRADE_STATUS)
     values (#{counterId,jdbcType=VARCHAR}, #{counterType,jdbcType=VARCHAR}, #{counterName,jdbcType=VARCHAR},
       #{linkId,jdbcType=VARCHAR}, #{managerId,jdbcType=VARCHAR}, #{headBank,jdbcType=VARCHAR},
       #{contact,jdbcType=VARCHAR}, #{contactWay,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
       #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
-      #{counterType1,jdbcType=VARCHAR},#{counterType2,jdbcType=VARCHAR},#{isCentralCounter,jdbcType=VARCHAR})
+      #{counterType1,jdbcType=VARCHAR},#{counterType2,jdbcType=VARCHAR},#{isCentralCounter,jdbcType=VARCHAR},#{relatedTradeStatus,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto" >
         insert into CHB_MST_COUNTER_PARTY
@@ -102,6 +103,9 @@
             <if test="isCentralCounter != null" >
                 IS_CENTRAL_COUNTER,
             </if>
+            <if test="relatedTradeStatus != null" >
+                RELATED_TRADE_STATUS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="counterId != null" >
@@ -154,6 +158,9 @@
             </if>
             <if test="isCentralCounter != null" >
                 #{isCentralCounter,jdbcType=VARCHAR},
+            </if>
+            <if test="relatedTradeStatus != null" >
+                #{relatedTradeStatus,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -208,6 +215,9 @@
             <if test="isCentralCounter != null" >
                 IS_CENTRAL_COUNTER=#{isCentralCounter,jdbcType=VARCHAR},
             </if>
+            <if test="relatedTradeStatus != null" >
+                RELATED_TRADE_STATUS=#{relatedTradeStatus,jdbcType=VARCHAR},
+            </if>
         </set>
         where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
     </update>
@@ -228,7 +238,8 @@
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
       COUNTER_TYPE1=#{counterType1,jdbcType=VARCHAR},
       COUNTER_TYPE2=#{counterType2,jdbcType=VARCHAR},
-      IS_CENTRAL_COUNTER=#{isCentralCounter,jdbcType=VARCHAR}
+      IS_CENTRAL_COUNTER=#{isCentralCounter,jdbcType=VARCHAR},
+      RELATED_TRADE_STATUS=#{relatedTradeStatus,jdbcType=VARCHAR}
     where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
   </update>
 
@@ -245,6 +256,33 @@
     <select id="selectAllTradeCounter" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from chb_mst_counter_party
+        from chb_mst_counter_party where STATUS='E'
+    </select>
+
+    <select id="selectOneDate" resultType="com.joyintech.tams.svreport.chb.investtrade.dto.MstCounterPartyDto">
+        SELECT
+        a.STATUS,
+        a.COUNTER_ID,
+        a.COUNTER_NAME,
+        a.RELATED_TRADE_STATUS,
+        a.COUNTER_TYPE1,
+        a.COUNTER_TYPE2,
+        a.CREATE_USER,
+        a.CREATE_TIME as createTime,
+        a.UPDATE_USER,
+        a.UPDATE_TIME as updateTime,
+        a.REMARK as remark,
+        '' as uuid
+        FROM
+        chb_mst_counter_party a
+        <where>
+            <if test="counterId != null and counterId != ''">
+                COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+
     </select>
 </mapper>

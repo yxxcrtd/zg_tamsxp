@@ -135,6 +135,17 @@ public class CnBondInterfService extends InterfService {
      * 从业人员登记
      */
     private static final String FILE_112_TYPE = "112";
+    /***0722升级**/
+    /**
+     * 产品状态登记
+     */
+    private static final String FILE_115_TYPE = "115";
+
+    /**
+     * 资产持仓登记
+     */
+    private static final String FILE_116_TYPE = "116";
+    /***0722升级**/
 
     /**
      * 投资者身份信息登记
@@ -612,6 +623,22 @@ public class CnBondInterfService extends InterfService {
             contextList.add(context1);
             fileType = FILE_112_TYPE;
         }
+        /***0722升级**/
+        else if (DictCodeListExt2.报表名称_产品状态登记.getValue().equals(dealType)) {
+            // 设置基本信息
+            entity.setProductStatusRegistrationTuple(bases);
+            // 添加context 标签
+            contextList.add(context1);
+            fileType = FILE_115_TYPE;
+        }
+        else if (DictCodeListExt2.报表名称_资产持仓登记.getValue().equals(dealType)) {
+            // 设置基本信息
+            entity.setProductInvestedAssetsLiabilitiesRegistrationTuple(bases);
+            // 添加context 标签
+            contextList.add(context1);
+            fileType = FILE_116_TYPE;
+        }
+        /***0722升级**/
         else if (DictCodeListExt2.报表名称_分类总量信息登记.getValue().equals(dealType)) {
             // 设置基本信息
             entity.setInvestorsSummationOfDiffenrentTypesInformationRegistrationTuple(bases);

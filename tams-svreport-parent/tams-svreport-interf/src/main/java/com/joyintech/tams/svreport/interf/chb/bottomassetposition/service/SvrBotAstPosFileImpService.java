@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,8 +22,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import com.joyintech.framework.file.SafelyFile;
-import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.svreport.base.service.BatchInsertService;
+import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -36,8 +40,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.tams.common.FileImpService;
 import com.joyintech.tams.common.InterfDefine;
 import com.joyintech.tams.common.InterfFile;
@@ -347,10 +349,14 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 //			Map<String,Object> dataMap = convertMapToEntity(posList,dataSource,saveFlag);
 //			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) dataMap.get("list");
 			List<ChbBotAstPosition> list = (List<ChbBotAstPosition>) convertMapToEntity(posList,ChbBotAstPosition.class, dataSource);
-			list.stream().forEach(dto->{
-				dto.setPosId(IDGenerator.generate(36));
-			});
+//			list.stream().forEach(dto->{
+//				dto.setPosId(IDGenerator.generate(36));
+//			});
 			//modify by convertMapToEntity yangxianjiu 2022-01-19 end
+			/**add by dxy  357升级资管计划文件接口字段*/
+			desultBotAstStatus(list);
+			/**add by dxy  357升级资管计划文件接口字段*/
+
 			mergeData(list);
 		}else if (posList.size() <= reportInterfOneTimeSqlLdrDataCount) {
 			deleteByUpdateTime(new Date());
@@ -448,6 +454,65 @@ public class SvrBotAstPosFileImpService extends FileImpService{
 	}
 
 
-	
-	
+	/**
+	 * 处理资管计划底层资产持仓信息接口的本币金额
+	 * @param list
+	 */
+	private  void  desultBotAstStatus(List<ChbBotAstPosition> list){
+		//查询资产要素
+//		List<ChbAssetInfo>   assetList=chbBotAstPosInterfMapper.selectChbAstInfoBotInfo();
+//	    Map<String,ChbAssetInfo>  mapAsset=assetList.stream().collect(
+//				JoyinCollectors.toMap(x -> x.getAssetCode(), x -> x));
+		Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
+		String exchangeSource = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_EXCHANGE_SOURCE);
+		//循环接口数据
+         for(ChbBotAstPosition dto:list){
+			 //净价市值-原币=原币_底层资产全价市值-原币_利息
+			 dto.setoPosAmtCprice(ArithmeticUtil.subtract(dto.getoPosAmt(),dto.getoIntAmt()));
+			 dto.setPosId(IDGenerator.generate(36));
+         		String ccy=dto.getCcy();
+         		if(StringUtil.equals(DictCodeListExt1.币种_中债_人民币.getValue(),ccy)){
+         			//为空的情况下塞值
+					if(!StringUtil.isNotEmpty(dto.getIssueAmt())){
+						dto.setIssueAmt(dto.getoIssueAmt());
+					}
+					if(!StringUtil.isNotEmpty(dto.getUninvestCash())){
+						dto.setUninvestCash(dto.getoUninvestCash());
+					}
+					if(!StringUtil.isNotEmpty(dto.getPosAmt())){
+						dto.setPosAmt(dto.getoPosAmt());
+					}
+					if(!StringUtil.isNotEmpty(dto.getShadowAmt())){
+						dto.setShadowAmt(dto.getoShadowAmt());
+					}
+					if(!StringUtil.isNotEmpty(dto.getIntAmt())){
+						dto.setIntAmt(dto.getoIntAmt());
+					}
+				}else{
+         			//非人名币，判断为空的话需要去折算
+					if(!StringUtil.isNotEmpty(dto.getIssueAmt())){
+						dto.setIssueAmt(ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
+								dto.getPosDate(), dto.getoIssueAmt(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
+					}
+					if(!StringUtil.isNotEmpty(dto.getUninvestCash())){
+						dto.setUninvestCash(ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
+								dto.getPosDate(), dto.getoUninvestCash(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
+					}
+					if(!StringUtil.isNotEmpty(dto.getPosAmt())){
+						dto.setPosAmt(ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
+								dto.getPosDate(), dto.getoPosAmt(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
+					}
+					if(!StringUtil.isNotEmpty(dto.getShadowAmt())){
+						dto.setShadowAmt(ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
+								dto.getPosDate(), dto.getoShadowAmt(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
+					}
+					if(!StringUtil.isNotEmpty(dto.getIntAmt())){
+						dto.setIntAmt(ChbCcyConvertUtil.exchangeMoney(ccy, DictCodeListExt1.币种_中债_人民币.getValue(),
+								dto.getPosDate(), dto.getoIntAmt(), rateMap, exchangeSource).setScale(2, RoundingMode.HALF_UP));
+					}
+				}
+			 //净价市值=底层资产全价市值-利息
+			 dto.setPosAmtCprice(ArithmeticUtil.subtract(dto.getPosAmt(),dto.getIntAmt()));
+	 }
+	}
 }

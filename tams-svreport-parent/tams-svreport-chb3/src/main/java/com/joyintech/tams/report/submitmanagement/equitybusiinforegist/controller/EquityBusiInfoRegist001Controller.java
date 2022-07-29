@@ -216,15 +216,23 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("export")
     public ResponseEntity<byte[]> export() {
+        //是否升级投资者明细  01是  02否
+        String isUpgrade = SvrDataUtil.getSysParam("SVR_HX_ISUPGRADE");
         if (RequestUtil.getPageParam().containsKey("keyList")) {
             String flag = (String)RequestUtil.getPageParam().get("flag");
             List<EquityBusiInfoRegist001Dto> dtoList = equityBusiInfoRegist001Service.selectAllList(
                     RequestUtil.getParameters(getRequest()));
             File outFile = null;
             if (StringUtil.equals("0", flag)) {
-                outFile = equityBusiInfoRegist001Service.makeFile(
-                        "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf.xml",
-                        dtoList);
+                if(StringUtil.isNotEmpty(isUpgrade)&&StringUtil.equals("01",isUpgrade)) {
+                    outFile = equityBusiInfoRegist001Service.makeFile(
+                            "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/export_conf.xml",
+                            dtoList);
+                }else{
+                    outFile = equityBusiInfoRegist001Service.makeFile(
+                            "/com/joyintech/tams/report/submitmanagement/equitybusiinforegist/conf/q_export_conf.xml",
+                            dtoList);
+                }
             }
             else if (StringUtil.equals("1", flag)) {
                 outFile = equityBusiInfoRegist001Service.makeFile(

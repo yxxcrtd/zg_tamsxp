@@ -17,6 +17,7 @@
         <result property="dealdate" column="DEALDATE" jdbcType="TIMESTAMP"/>
         <result property="tradeCounter" column="TRADE_COUNTER" jdbcType="VARCHAR"/>
         <result property="counterName" column="COUNTER_NAME" jdbcType="VARCHAR"/>
+        <result property="tradeTime" column="TRADE_TIME" jdbcType="TIMESTAMP"/>
         <result property="unitPriceFull" column="UNIT_PRICE_FULL" jdbcType="DECIMAL"/>
         <result property="unitPriceNet" column="UNIT_PRICE_NET" jdbcType="DECIMAL"/>
         <result property="endRate" column="END_RATE" jdbcType="DECIMAL"/>
@@ -47,6 +48,9 @@
         <result property="investApproverName" column="INVEST_APPROVER_NAME" jdbcType="VARCHAR"/>
         <result property="investTraderId" column="INVEST_TRADER_ID" jdbcType="VARCHAR"/>
         <result property="investTraderName" column="INVEST_TRADER_NAME" jdbcType="VARCHAR"/>
+        <result property="relatedTradeStatus" column="RELATED_TRADE_STATUS" jdbcType="VARCHAR"/>
+        <result property="tradeCounterStatus" column="TRADE_COUNTER_STATUS" jdbcType="VARCHAR"/>
+        <result property="rivalPartyType" column="RIVAL_PARTY_TYPE" jdbcType="VARCHAR"/>
     </resultMap>
     <insert id="insert">
         MERGE INTO  CHB_INVEST_TRADE a USING (
@@ -63,6 +67,7 @@
                 #{curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
                 #{dealdate,jdbcType=DATE} DEALDATE,
                 #{tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                to_date(#{tradeDate},'yyyyMMddHH24miss') TRADE_TIME,
                 #{tradeType,jdbcType=VARCHAR} TRADE_TYPE,
                 #{unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
                 #{unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
@@ -97,6 +102,7 @@
                     a.CUR_ASSETDET_TYPE = b.CUR_ASSETDET_TYPE,
                     a.DEALDATE = b.DEALDATE,
                     a.TRADE_COUNTER = b.TRADE_COUNTER,
+                    a.TRADE_TIME = b.TRADE_TIME,
                     a.TRADE_TYPE = b.TRADE_TYPE,
                     a.UNIT_PRICE_FULL = b.UNIT_PRICE_FULL,
                     a.UNIT_PRICE_NET = b.UNIT_PRICE_NET,
@@ -129,6 +135,7 @@
                        CUR_ASSETDET_TYPE,
                        DEALDATE,
                        TRADE_COUNTER,
+                       TRADE_TIME,
                        TRADE_TYPE,
                        UNIT_PRICE_FULL,
                        UNIT_PRICE_NET,
@@ -163,6 +170,7 @@
                            b.CUR_ASSETDET_TYPE,
                            b.DEALDATE,
                            b.TRADE_COUNTER,
+                           b.TRADE_TIME,
                            b.TRADE_TYPE,
                            b.UNIT_PRICE_FULL,
                            b.UNIT_PRICE_NET,
@@ -273,6 +281,7 @@ where b.PROD_NAME=#{prodName}
         a.DEALDATE,
         a.TRADE_COUNTER,
         d.COUNTER_NAME,
+        a.TRADE_TIME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
         a.END_RATE,
@@ -287,7 +296,6 @@ where b.PROD_NAME=#{prodName}
         a.DATA_SOURCE,
         a.NUM,
         a.ASSET_METHOD,
-        a.RIVAL_PARTY_TYPE,
         a.INVEST_APPROVER_ID,
         a.INVEST_APPROVER_NAME,
         a.INVEST_TRADER_ID,
@@ -295,11 +303,14 @@ where b.PROD_NAME=#{prodName}
         a.ERR_MSG,
         b.REG_CODE regCode,
         b.PROD_NAME prodName,
-        c.ASSET_NAME assetName
+        c.ASSET_NAME assetName,
+        d.RELATED_TRADE_STATUS,
+        d.STATUS  TRADE_COUNTER_STATUS,
+        d.COUNTER_TYPE2  RIVAL_PARTY_TYPE
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
-        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
+        LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
         <where>
             d.STATUS != 'D'
             <if test="tradeSeqno!=null and tradeSeqno!=''">
@@ -326,6 +337,7 @@ where b.PROD_NAME=#{prodName}
         a.DEALDATE,
         a.TRADE_COUNTER,
         d.COUNTER_NAME,
+        a.TRADE_TIME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
         a.END_RATE,
@@ -340,7 +352,6 @@ where b.PROD_NAME=#{prodName}
         a.DATA_SOURCE,
         a.NUM,
         a.ASSET_METHOD,
-        a.RIVAL_PARTY_TYPE,
         a.INVEST_APPROVER_ID,
         a.INVEST_APPROVER_NAME,
         a.INVEST_TRADER_ID,
@@ -348,12 +359,15 @@ where b.PROD_NAME=#{prodName}
         a.ERR_MSG errMsg,
         null orgData,
         code.REG_CODE regCode,
-        c.ASSET_NAME assetName
+        c.ASSET_NAME assetName,
+        d.RELATED_TRADE_STATUS,
+        d.STATUS  TRADE_COUNTER_STATUS,
+        d.COUNTER_TYPE2  RIVAL_PARTY_TYPE
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_PRDRESIST_CODE code on code.PRODID=b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
-        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
+        LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
         <where>
             d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
@@ -406,6 +420,7 @@ where b.PROD_NAME=#{prodName}
         a.DEALDATE,
         a.TRADE_COUNTER,
         d.COUNTER_NAME,
+        a.TRADE_TIME,
         null UNIT_PRICE_FULL,
         null UNIT_PRICE_NET,
         null END_RATE,
@@ -420,7 +435,6 @@ where b.PROD_NAME=#{prodName}
         null DATA_SOURCE,
         null NUM,
         null ASSET_METHOD,
-        null RIVAL_PARTY_TYPE,
         null INVEST_APPROVER_ID,
         null INVEST_APPROVER_NAME,
         null INVEST_TRADER_ID,
@@ -428,11 +442,14 @@ where b.PROD_NAME=#{prodName}
         a.ERR_MSG errMsg,
         a.ORG_DATA   orgData,
         b.REG_CODE regCode,
-        c.ASSET_NAME assetName
+        c.ASSET_NAME assetName,
+        d.RELATED_TRADE_STATUS,
+        d.STATUS  TRADE_COUNTER_STATUS,
+        d.COUNTER_TYPE2  RIVAL_PARTY_TYPE
         from chb_invest_trade_errodata a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
-        LEFT JOIN CHB_MST_COUNTER_PARTY d on a.TRADE_COUNTER = d.COUNTER_ID
+        LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
         <where>
             d.STATUS != 'D'
             <if test="prodNames != null and prodNames.length>0">
@@ -471,7 +488,7 @@ where b.PROD_NAME=#{prodName}
 
     </select>
     <select id="selectRivalPartyType" resultType="java.util.Map">
-        select COUNTER_TYPE2 from CHB_MST_COUNTER_PARTY where COUNTER_ID = #{tradeCounter}
+        select COUNTER_TYPE2,RELATED_TRADE_STATUS from CHB_MST_COUNTER_PARTY where STATUS='E' AND COUNTER_ID = #{tradeCounter}
     </select>
     <select id="countDuplicatedData" resultType="java.lang.Integer">
         select count(*) from CHB_INVEST_TRADE where (PROD_ID,ASSET_CODE,TRADE_CODE) in
@@ -498,6 +515,7 @@ where b.PROD_NAME=#{prodName}
         a.CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        a.TRADE_TIME,
         a.UNIT_PRICE_FULL,
         a.UNIT_PRICE_NET,
         a.END_RATE,
@@ -512,7 +530,6 @@ where b.PROD_NAME=#{prodName}
         a.DATA_SOURCE,
         a.NUM,
         a.ASSET_METHOD,
-        a.RIVAL_PARTY_TYPE,
         a.INVEST_APPROVER_ID,
         a.INVEST_APPROVER_NAME,
         a.INVEST_TRADER_ID,
@@ -520,10 +537,15 @@ where b.PROD_NAME=#{prodName}
         a.ERR_MSG errMsg,
         null as orgData,
         b.REG_CODE regCode,
-        c.ASSET_NAME assetName
+        c.ASSET_NAME assetName,
+        d.COUNTER_NAME,
+        d.RELATED_TRADE_STATUS,
+        d.STATUS  TRADE_COUNTER_STATUS,
+        d.COUNTER_TYPE2  RIVAL_PARTY_TYPE
         FROM CHB_INVEST_TRADE a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
        where a.TRADE_SEQNO in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
         #{item}
@@ -542,6 +564,7 @@ where b.PROD_NAME=#{prodName}
         null CUR_ASSETDET_TYPE,
         a.DEALDATE,
         a.TRADE_COUNTER,
+        a.TRADE_TIME,
         null UNIT_PRICE_FULL,
         null UNIT_PRICE_NET,
         null END_RATE,
@@ -556,7 +579,6 @@ where b.PROD_NAME=#{prodName}
         null DATA_SOURCE,
         null NUM,
         null ASSET_METHOD,
-        null RIVAL_PARTY_TYPE,
         null INVEST_APPROVER_ID,
         null INVEST_APPROVER_NAME,
         null INVEST_TRADER_ID,
@@ -564,10 +586,15 @@ where b.PROD_NAME=#{prodName}
         a.ERR_MSG errMsg,
         a.ORG_DATA  orgData,
         b.REG_CODE regCode,
-        c.ASSET_NAME assetName
+        c.ASSET_NAME assetName,
+        d.COUNTER_NAME,
+        d.RELATED_TRADE_STATUS,
+        d.STATUS  TRADE_COUNTER_STATUS,
+        d.COUNTER_TYPE2  RIVAL_PARTY_TYPE
         from chb_invest_trade_errodata a
         LEFT JOIN CHB_PRD_BASEINFO b ON a.PROD_ID = b.PROD_ID
         LEFT JOIN CHB_ASSET_INFO c ON a.ASSET_CODE = c.ASSET_CODE
+        LEFT JOIN CHb_MST_COUNTER_PARTY d on a.TRADE_COUNTER=d.COUNTER_ID
         where a.DATAUUID in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
             #{item}
@@ -593,6 +620,7 @@ where b.PROD_NAME=#{prodName}
                 #{item.curAssetdetType,jdbcType=VARCHAR} CUR_ASSETDET_TYPE,
                 #{item.dealdate,jdbcType=DATE} DEALDATE,
                 #{item.tradeCounter,jdbcType=VARCHAR} TRADE_COUNTER,
+                to_date(#{item.tradeDate},'yyyyMMddHH24miss') TRADE_TIME,
                 #{item.unitPriceFull,jdbcType=NUMERIC} UNIT_PRICE_FULL,
                 #{item.unitPriceNet,jdbcType=NUMERIC} UNIT_PRICE_NET,
                 #{item.endRate,jdbcType=NUMERIC} END_RATE,
@@ -627,6 +655,7 @@ where b.PROD_NAME=#{prodName}
                     a.CUR_ASSETDET_TYPE = b.CUR_ASSETDET_TYPE,
                     a.DEALDATE = b.DEALDATE,
                     a.TRADE_COUNTER = b.TRADE_COUNTER,
+                    a.TRADE_TIME = b.TRADE_TIME,
                     a.UNIT_PRICE_FULL = b.UNIT_PRICE_FULL,
                     a.UNIT_PRICE_NET = b.UNIT_PRICE_NET,
                     a.END_RATE = b.END_RATE,
@@ -658,6 +687,7 @@ where b.PROD_NAME=#{prodName}
                        CUR_ASSETDET_TYPE,
                        DEALDATE,
                        TRADE_COUNTER,
+                       TRADE_TIME,
                        UNIT_PRICE_FULL,
                        UNIT_PRICE_NET,
                        END_RATE,
@@ -691,6 +721,7 @@ where b.PROD_NAME=#{prodName}
                               b.CUR_ASSETDET_TYPE,
                               b.DEALDATE,
                               b.TRADE_COUNTER,
+                              b.TRADE_TIME,
                               b.UNIT_PRICE_FULL,
                               b.UNIT_PRICE_NET,
                               b.END_RATE,
@@ -743,4 +774,107 @@ where b.PROD_NAME=#{prodName}
         AND cmei.TRADE_DATE=
         ( select max(TRADE_DATE) from MST_EXCHARGE_QUOTE  where DATASOURCE_TYPE = 'SAFE' and BASIS_CYY = #{CCY_ORIGINAL,jdbcType=VARCHAR} and QUOT_CYY = #{CCY_CONVERT,jdbcType=VARCHAR} and TRADE_DATE &lt;= #{HOLDDATE,jdbcType=DATE})
     </select>
+
+    <select id="queryCounterIdList" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select COUNTER_ID as id,COUNTER_NAME as text from chb_mst_counter_party
+        <where>
+            STATUS='E'
+            <if test="search != null and search !='' ">
+                AND (COUNTER_ID LIKE concat('%', #{search},'%') or COUNTER_NAME like concat('%', #{search},'%'))
+            </if>
+        </where>
+    </select>
+    <select id="queryCounterType"  resultType="map">
+        select COUNTER_TYPE2 as rivalPartyType,RELATED_TRADE_STATUS  as relatedTradeStatus
+        from chb_mst_counter_party where STATUS='E' AND COUNTER_ID=#{counterId}
+    </select>
+    <select id="queryCounterType2List" parameterType="java.util.Map" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select  a.COUNTER_TYPE2 as id,b.ITEM_VALUE as text from chb_mst_counter_party a
+        inner join SYS_DATADICT_LIST b on a.COUNTER_TYPE2=b.ITEM_CODE
+        <where>
+            a.STATUS='E'  AND b.DICT_CODE='SVR_CUSTOMER_TYPE2'
+            <if test="search != null and search !='' ">
+                AND (a.COUNTER_TYPE2 LIKE '%'||#{search}||'%') or (b.ITEM_VALUE like '%'||#{search}||'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectNotExistsCounterList" resultType="java.util.Map" parameterType="java.util.List" >
+        WITH a AS(
+        <foreach collection="list" item="counter" separator="union all">
+            SELECT #{counter} AS tradeCounter FROM DUAL
+        </foreach>
+        )
+        SELECT
+        a.tradeCounter AS counterId,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN prod.REG_CODE ELSE a.tradeCounter END AS counterName,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN 'C05' ELSE NULL END AS counterType1,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN 'C0500' ELSE NULL END AS counterType2,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN '02' ELSE NULL END AS relatedTradeStatus,
+        CASE WHEN prod.REG_CODE IS NOT NULL THEN '01' ELSE '02' END AS isReal
+        FROM a
+        LEFT join chb_mst_counter_party counter ON a.tradeCounter=counter.COUNTER_ID
+        LEFT join chb_mst_counter_party_errordata errCounter ON a.tradeCounter=errCounter.COUNTER_ID
+        LEFT join
+        (SELECT registCode.REG_CODE,registCode.PRODID as PROD_ID,ifnull(registCode.PRODNAME,baseInfo.PROD_NAME) as PROD_NAME
+        FROM chb_prdresist_code registCode LEFT join CHB_PRD_BASEINFO baseInfo
+        ON baseInfo.PROD_ID=registCode.PRODID) prod
+        on a.tradeCounter = prod.REG_CODE
+        or a.tradeCounter = prod.PROD_ID
+        or a.tradeCounter = prod.PROD_NAME
+        WHERE counter.COUNTER_NAME IS NULL AND errCounter.COUNTER_NAME IS NULL
+    </select>
+
+    <insert id="mergeCounterInfoList" parameterType="java.util.List" >
+        insert into chb_mst_counter_party_errordata (DATAUUID, COUNTER_ID,COUNTER_NAME,COUNTER_TYPE1,COUNTER_TYPE2, STATUS,
+        CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,RELATED_TRADE_STATUS)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (sys_guid(),
+            #{item.counterId},
+            #{item.counterName},
+            #{item.counterType1},
+            #{item.counterType2},
+            'A',
+            'system',
+            'Z70039',
+            sysdate,
+            'system',
+            sysdate,
+            #{item.relatedTradeStatus}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="mergeCounterInfoListReal" parameterType="java.util.List" >
+        insert into chb_mst_counter_party (COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID,
+        MANAGER_ID, HEAD_BANK, CONTACT, CONTACT_WAY, REMARK, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, SVR_DATA_SOURCES,
+        COUNTER_TYPE1, COUNTER_TYPE2, IS_CENTRAL_COUNTER, UUID, STATUS, RELATED_TRADE_STATUS)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.counterId},
+            null,
+            #{item.counterName},
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            'system',
+            'Z70039',
+            sysdate,
+            'system',
+            sysdate,
+            '02',
+            #{item.counterType1},
+            #{item.counterType2},
+            null,
+            sys_guid(),
+            'E',
+            #{item.relatedTradeStatus}
+            )
+        </foreach>
+    </insert>
 </mapper>

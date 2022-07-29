@@ -125,7 +125,53 @@
         }else{
             $('#openCircleDays').removeAttr('disabled');
         }
+        /**中债5月升级 add by dxy*/
+        if(pageModel === PAGE_MODEL_EDIT||pageModel === PAGE_MODEL_NEW){
+            if(openCircle=='01'){
+                $('#fitCircleDays').val('1').trigger('change')
+            }else if(openCircle=='02'){
+                $('#fitCircleDays').val('7').trigger('change')
+            }else if(openCircle=='03'){
+                $('#fitCircleDays').val('14').trigger('change')
+            }else if(openCircle=='04'){
+                $('#fitCircleDays').val('30').trigger('change')
+            }else if(openCircle=='05'){
+                $('#fitCircleDays').val('90').trigger('change')
+            }else if(openCircle=='06'){
+                $('#fitCircleDays').val('180').trigger('change')
+            }else if(openCircle=='07'){
+                $('#fitCircleDays').val('360').trigger('change')
+            }else if(openCircle=='99'){
+                $('#fitCircleDays').val('').trigger('change')
+            }
+            /**中债5月升级 add by dxy*/
+        }
     });
+    if(pageModel === PAGE_MODEL_EDIT||pageModel === PAGE_MODEL_NEW) {
+        /**中债5月升级 add by dxy*/
+        $('#openCircleDays').change(function () {
+            var oDays = $('#openCircleDays').val();
+            var ocashCate = $('#cashManaCate').val();
+            if (ocashCate == '01') {
+                $('#fitCircleDays').val('0').trigger('change');
+            } else {
+                // $('#fitCircleDays').val(oDays).trigger('change');
+            }
+        });
+        $('#cashManaCate').change(function () {
+            var ocashCate = $('#cashManaCate').val();
+            var openCircle = $('#openCircle').val();
+            var oDays = $('#openCircleDays').val();
+            if (ocashCate == '01' && openCircle == '99') {
+                $('#fitCircleDays').val('0').trigger('change');
+            } else {
+                // $('#fitCircleDays').val(oDays).trigger('change');
+            }
+        });
+    }
+    /**中债5月升级 add by dxy*/
+
+
     $('#openBuss').change(function (){
         var openBuss = $('#openBuss').val();
         if(openBuss!='99'){

@@ -44,7 +44,10 @@
 		ciis.ORG_CODE               orgCode,
 		ciis.DEPT_CODE              deptCode,
 		ciis.SUMIT_SEQ				sumitSeq,
-		ciis.CHECK_SEQNO			checkSeqno
+		ciis.CHECK_SEQNO			checkSeqno,
+		ciis.TRADE_SEQ tradeSeq,
+		ciis.FUND_ACC_CODE fundAccCode,
+		ciis.FUND_ACC_NAME fundAccName
 		from CHB_EQUDET_SUB ciis
 		left join CHB_EQUDET_SUBMIT_STATUS cs
 		on cs.seqno=ciis.SUMIT_SEQ
@@ -229,7 +232,7 @@
 		STATUS, WORKFLOW_ID,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK)
+		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK,TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME)
 		select  SEQ_EQUDET_SUB.NEXTVAL,
 		BUSI_SEQNO, REG_CODE,
 		ACCOUNT,REGIST_BANK_CODE, INDENTIFY_MARK,
@@ -244,7 +247,8 @@
 		STATUS, null WORKFLOW_ID,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK
+		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK,
+		TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME
 		from CHB_EQUDET_SUB
 		<where>
 			<foreach collection="investList" item="equityRegist" open="(" close=")" separator=") or (">
@@ -490,7 +494,7 @@
 		STATUS, SUMIT_SEQ,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK)
+		STATUS_DATE,CHECK_SEQNO,ORG_INDENTIFY_MARK ,TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME)
 		select ciish.BUSI_SEQNO, ciish.REG_CODE,
 		ciish.ACCOUNT,ciish.REGIST_BANK_CODE, ciish.INDENTIFY_MARK,
 		ciish.EQUITY_CONF_DATE, ciish.SHARE_CONF_DATETIME, ciish.FUND_ACC_PLACE,
@@ -503,7 +507,8 @@
 		ciish.STATUS, ciish.SUMIT_SEQ,ciish.DEPT_CODE,
 		ciish.UPDATE_USER, ciish.UPDATE_TIME,ciish.CREATE_USER,ciish.CREATE_TIME,
 		ciish.ORG_CODE, ciish.CHB_SUBMIT_DEADLINE,ciish.CREATE_DEPT,
-		ciish.STATUS_DATE,ciish.CHECK_SEQNO,ciish.ORG_INDENTIFY_MARK
+		ciish.STATUS_DATE,ciish.CHECK_SEQNO,ciish.ORG_INDENTIFY_MARK,
+		TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME
 		from (select max(HIS_NO) HIS_NO,BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK
 		from CHB_EQUDET_SUB_HIS where SUBMIT_STATUS !='01'
 		GROUP BY BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK) A
@@ -563,7 +568,10 @@
 		ciis.ORG_CODE               orgCode,
 		ciis.DEPT_CODE              deptCode,
 		ciis.SUMIT_SEQ				sumitSeq,
-		ciis.CHECK_SEQNO			checkSeqno
+		ciis.CHECK_SEQNO			checkSeqno,
+		ciis.TRADE_SEQ tradeSeq,
+		ciis.FUND_ACC_CODE fundAccCode,
+		ciis.FUND_ACC_NAME fundAccName
 		from CHB_EQUDET_SUB ciis
 		left join CHB_EQUDET_SUBMIT_STATUS status
 		on ciis.sumit_seq = status.seqno
@@ -691,7 +699,8 @@
 		SHARES, CHANNEL, FUND_ACC, IS_CONSIGN, REMARK, CONTRACT_NO, FIN_ACC, CUST_CONTRACT_NO,
 		CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME,
 		STATUS, WORKFLOW_ID, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK
+		DATA_SOURCE, ORG_CODE, AGENT, CREATE_DEPT, IS_SUBMIT,INTERF_CHECK_RESULT,ORG_INDENTIFY_MARK,TRADE_SEQ,
+		FUND_ACC_CODE,FUND_ACC_NAME
 		)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
 			#{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
@@ -708,6 +717,9 @@
 			#{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.dataSource,jdbcType=CHAR},
 			#{item.orgCode,jdbcType=VARCHAR}, #{item.agent,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
 			#{item.isSubmit,jdbcType=CHAR},#{item.interfCheckResult,jdbcType=CHAR},#{item.orgIndentifyMark,jdbcType=CHAR}
+			,#{item.tradeSeq,jdbcType=VARCHAR} TRADE_SEQ
+			,#{item.fundAccCode,jdbcType=VARCHAR} FUND_ACC_CODE
+			,#{item.fundAccName,jdbcType=VARCHAR} FUND_ACC_NAME
 		</foreach>
 	</insert>
 	<insert id="insertBtachInterfEquityBusiSub">
@@ -718,7 +730,7 @@
 		CUST_NAME, AGENCY_CODE, AGENCY_NAME, AGENCY_FSA, BUSI_FSA, PROD_VALUE, FEE_AMT, TRAN_TELL_NAME,
 		SUBMIT_DEADLINE,CHB_SUBMIT_DEADLINE,CHECK_SEQNO,STATUS_DATE,SUBMIT_STATUS,SUBMIT_TIME,SUMIT_SEQ,
 		STATUS,  DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER, CREATE_TIME,
-		ORG_CODE,  CREATE_DEPT,ORG_INDENTIFY_MARK
+		ORG_CODE,  CREATE_DEPT,ORG_INDENTIFY_MARK,TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME
 		)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
 			#{item.busiSeqno,jdbcType=VARCHAR}, #{item.regCode,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR},
@@ -737,7 +749,9 @@
 			#{item.deptCode,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP},
 			#{item.createUser,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
 			#{item.orgCode,jdbcType=VARCHAR},  #{item.createDept,jdbcType=VARCHAR},  #{item.orgIndentifyMark,jdbcType=VARCHAR}
-
+			,#{item.tradeSeq,jdbcType=VARCHAR} TRADE_SEQ
+			,#{item.fundAccCode,jdbcType=VARCHAR} FUND_ACC_CODE
+			,#{item.fundAccName,jdbcType=VARCHAR} FUND_ACC_NAME
 		</foreach>
 	</insert>
 	<!-- 批量更新 -->
@@ -851,6 +865,15 @@
 				<if test="item.isSubmit != null" >
 					IS_SUBMIT = #{item.isSubmit,jdbcType=CHAR},
 				</if>
+				<if test="item.tradeSeq != null">
+					TRADE_SEQ = #{item.tradeSeq,jdbcType=VARCHAR},
+				</if>
+				<if test="item.fundAccCode != null">
+					FUND_ACC_CODE = #{item.fundAccCode,jdbcType=VARCHAR},
+				</if>
+				<if test="item.fundAccName != null">
+					FUND_ACC_NAME = #{item.fundAccName,jdbcType=VARCHAR}
+				</if>
 				INTERF_CHECK_RESULT = #{item.interfCheckResult,jdbcType=CHAR}
 			</set>
 			where BUSI_SEQNO = #{item.busiSeqno,jdbcType=VARCHAR}
@@ -874,7 +897,7 @@
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		DATA_SOURCE, ORG_CODE, AGENT,
-		CREATE_DEPT, IS_SUBMIT)
+		CREATE_DEPT, IS_SUBMIT , TRADE_SEQ, FUND_ACC_CODE, FUND_ACC_NAME)
 		select  seq_equity_busi.NEXTVAL,
 		BUSI_SEQNO, REG_CODE,
 		ACCOUNT, REGIST_BANK_CODE, INDENTIFY_MARK,
@@ -889,7 +912,8 @@
 		WORKFLOW_ID, DEPT_CODE, UPDATE_USER,
 		UPDATE_TIME, CREATE_USER, CREATE_TIME,
 		DATA_SOURCE, ORG_CODE, AGENT,
-		CREATE_DEPT, IS_SUBMIT
+		CREATE_DEPT, IS_SUBMIT,
+		TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME
 		from CHB_EQUDET A
 		<where>
 			<foreach collection="list" index="index" item="item" open="(" separator="or" close=")">
@@ -1018,7 +1042,7 @@
 		STATUS, WORKFLOW_ID,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO)
+		STATUS_DATE,CHECK_SEQNO,TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME)
 		select  SEQ_EQUDET_SUB.NEXTVAL,
 		tt.BUSI_SEQNO, tt.REG_CODE,
 		ACCOUNT,tt.REGIST_BANK_CODE, tt.INDENTIFY_MARK,
@@ -1033,7 +1057,7 @@
 		STATUS, null WORKFLOW_ID,DEPT_CODE,
 		UPDATE_USER, UPDATE_TIME,CREATE_USER,CREATE_TIME,
 		ORG_CODE, CHB_SUBMIT_DEADLINE,CREATE_DEPT,
-		STATUS_DATE,CHECK_SEQNO
+		STATUS_DATE,CHECK_SEQNO,TRADE_SEQ,FUND_ACC_CODE,FUND_ACC_NAME
 		from CHB_EQUDET_SUB tt
 		INNER join (
 		select BUSI_SEQNO,REG_CODE,REGIST_BANK_CODE,INDENTIFY_MARK,count(1)

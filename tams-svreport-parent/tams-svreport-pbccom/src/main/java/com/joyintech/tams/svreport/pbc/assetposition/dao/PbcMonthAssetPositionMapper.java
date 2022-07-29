@@ -182,6 +182,17 @@ public interface PbcMonthAssetPositionMapper {
 																			@Param("prodList")List<String> prodList,@Param("assetList") List<String> assetList
 			,@Param("subjectNoList") List<String> subjectNoList,@Param("yqSubjectNoList") List<String> yqSubjectNoList);
 
+	/**
+	 * 功能:从资产基础指标中查询减值数据
+	 * @since 1.1.0
+	 * @version 1.1.0
+	 * @author：zhengxiaolain 2022年3月16日
+	 * @param prodList 产品代码
+	 * @param reportEndDate 结束日期
+	 * @return
+	 * List<PbcMonthAssetPositionDto>
+	 */
+	List<PbcMonthAssetPositionDto> selectJZByEndDateAndProd(@Param("reportEndDate")String reportEndDate,@Param("prodList")List<String> prodList);
 
 
 }

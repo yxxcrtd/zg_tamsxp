@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.report.interf.common.constant.InterfConstants;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dao.ChbPrdDeclareInfoMapper;
 import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
@@ -245,6 +246,51 @@ public class SvrProdInfoFileImpService extends FileImpService {
 				dto.setRegCode(chbPrdresistCode == null ? "" : chbPrdresistCode.getRegCode());// 产品登记编码
 			}
 			dto.setDurationflag("03");
+			//加工定期开放周期天
+			if(StringUtil.equals(DictCodeListExt2.开放模式_中债_有规律开放.getValue(),dto.getOpenMode())){
+				//开放模式=01 有规律开放,定期开放周期天是空的时候去折算
+				if(!StringUtil.isNotEmpty(dto.getFitCircleDays())){
+					//01 每天开放→1；
+					if(StringUtil.equals("01",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("1"));
+					}
+					//02 每周开放一次→7；
+					else if(StringUtil.equals("02",dto.getOpenCircle())){
+							dto.setFitCircleDays(new BigDecimal("7"));
+					}
+					//03 每两周开放一次→14；
+					else if(StringUtil.equals("03",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("14"));
+					}
+					//04 每月开放一次→30；
+					else if(StringUtil.equals("04",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("30"));
+					}
+					//05 每季度开放一次→90；
+					else if(StringUtil.equals("05",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("90"));
+					}
+					//06 每半年开放一次→180；
+					else if(StringUtil.equals("06",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("180"));
+					}
+					//07 每年开放一次→360；
+					else if(StringUtil.equals("07",dto.getOpenCircle())){
+						dto.setFitCircleDays(new BigDecimal("360"));
+					}
+					//99=取其它规律开放周期天数
+					else if(StringUtil.equals("99",dto.getOpenCircle())){
+						if(dto.getOpenCircleDays()!=null){
+							dto.setFitCircleDays(dto.getOpenCircleDays());
+						}
+					}
+					if(StringUtil.equals("01",dto.getCashManaCate())){
+						dto.setFitCircleDays(BigDecimal.ZERO);
+					}
+				}
+			}
+
+
 		});
 		// 更新产品登记编码表
 		chbPrdBaseinfoInterfMapper.updateChbPrdresistCodes(chbPrdBaseinfoList);

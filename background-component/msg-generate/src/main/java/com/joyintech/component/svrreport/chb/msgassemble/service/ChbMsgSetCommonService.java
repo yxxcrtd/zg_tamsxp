@@ -351,6 +351,11 @@ public class ChbMsgSetCommonService {
             if (node.getOtherDocuments() != null) {
                 subnodelists.add(node.getOtherDocuments());
             }
+
+            // 流动性风险评估文件
+            if (node.getLiquidityRiskAssessmentDocuments() != null) {
+                subnodelists.add(node.getLiquidityRiskAssessmentDocuments());
+            }
         }
         // 循环基本信息子节点list
         for (CommonNodeEntity subnode : subnodelists) {
@@ -860,6 +865,22 @@ public class ChbMsgSetCommonService {
             contextList.add(context1);
             fileType = ChbConstant.FILE_112_TYPE;
         }
+        /***0722升级**/
+        else if (DictCodeList.报表名称_产品状态登记.getValue().equals(dealType)) {
+            // 设置基本信息
+            entity.setProductStatusRegistrationTuple(bases);
+            // 添加context 标签
+            contextList.add(context1);
+            fileType = ChbConstant.FILE_115_TYPE;
+        }
+        else if (DictCodeList.报表名称_资产持仓登记.getValue().equals(dealType)) {
+            // 设置基本信息
+            entity.setProductInvestedAssetsLiabilitiesRegistrationTuple(bases);
+            // 添加context 标签
+            contextList.add(context1);
+            fileType = ChbConstant.FILE_116_TYPE;
+        }
+        /***0722升级**/
         else if (DictCodeList.报表名称_分类总量信息登记.getValue().equals(dealType)) {
             // 设置基本信息
             entity.setInvestorsSummationOfDiffenrentTypesInformationRegistrationTuple(bases);

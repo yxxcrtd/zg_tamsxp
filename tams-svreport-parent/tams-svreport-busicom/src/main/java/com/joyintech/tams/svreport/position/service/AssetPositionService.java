@@ -153,7 +153,7 @@ public class AssetPositionService extends SvrCBBaseService{
             return ;
         }
         for (Date startDate = minBalancedate ; startDate.compareTo(batchDate) <= 0;) {
-            genAssetPositionMP(startDate, prodids, assetcodes,true,InterfMappingConstants.MAPPINGCODE_CASH_SUBJECTNO_MKT);
+            genAssetPositionMP(startDate, prodids, assetcodes,true,InterfMappingConstants.SUBJECT_INVEST_TYPE_NAME);
             startDate = DateUtil.addDay(startDate, 1);
         }
         // 记录批处理结束日志
@@ -175,7 +175,7 @@ public class AssetPositionService extends SvrCBBaseService{
      * @return 
      */
     @SuppressWarnings("rawtypes")
-    private int genAssetPositionMP(Date batchDate, List<String> prodids, 
+    private int     genAssetPositionMP(Date batchDate, List<String> prodids,
             List<String> assetcodes, boolean isBalance,String mappingCode) {
         // 删除大于等于今日的资产头寸
         Map<String, Object> param = new HashMap<String, Object>();
@@ -204,8 +204,12 @@ public class AssetPositionService extends SvrCBBaseService{
             List<ChbTypeMappingEx>  subjectNoMappingList = chbTypeMappingExMapper
                     .selectByMappingcode(mappingCode);
             for(ChbTypeMappingEx mapping: subjectNoMappingList){
-                // 获取源属性1：科目号
-                subjectNoList.add(mapping.getSrcfield1());
+                //获取持仓类别=01的科目
+                if(StringUtil.equals(mapping.getObjfield2(),"01")){
+                    // 获取源属性1：科目号
+                    subjectNoList.add(mapping.getSrcfield1());
+                }
+
             }
             param.put("subjectNoList", subjectNoList);
             AssetPositionService asetPositionService =  SpringContextUtil.getBean(AssetPositionService.class);

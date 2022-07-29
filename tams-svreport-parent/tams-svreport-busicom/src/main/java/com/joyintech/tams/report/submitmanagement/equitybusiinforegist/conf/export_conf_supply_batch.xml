@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="EquityBusiInfoRegistCHB01.xlsx" name="投资者明细信息登记">
+	<Worksheet javaBean="com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.EquityBusiInfoRegist001Dto">
+		<Row>
+            <Cell order="1" name="发行机构代码">registBankCode</Cell>
+            <Cell order="2" name="核心交易流水号">busiSeqno</Cell>
+            <Cell order="3" name="产品登记编码">regCode</Cell>
+            <Cell order="4" name="业务确认日期">equityConfDateStr</Cell>
+            <Cell order="5" name="交易序列号">tradeSeq</Cell>
+            <Cell order="6" name="关联活期存款账号开户行代码">fundAccCode</Cell>
+            <Cell order="7" name="关联活期存款账号开户行名称">fundAccName</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

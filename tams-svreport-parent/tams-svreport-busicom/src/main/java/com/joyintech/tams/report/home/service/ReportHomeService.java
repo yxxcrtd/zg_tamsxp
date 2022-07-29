@@ -75,6 +75,8 @@ public class ReportHomeService{
 	private static final String 销售结算资金交易登记_PAGEID = "SalesTransactionMaintenanceRegist001";
 	private static final String 理财业务销售数据月度统计表登记_PAGEID = "SellMonthReport001";
 	private static final String 理财子公司月度统计表_PAGEID = "SvrSubsidiaMonthReport001";
+	private static final String 产品状态登记_PAGEID = "SvrProdStatusRegist001";
+	private static final String 资产持仓登记_PAGEID = "SvrChbAstPosRegist001";
 
 
 
@@ -164,6 +166,12 @@ public class ReportHomeService{
 				}
 				else if (DictCodeListExt2.报表名称_理财子公司月度统计表.getValue().equals(report)){
 					dtoList.addAll(reportHomeMapper.selectSubsidiaMonth(parmMap));
+				}
+				else if (DictCodeListExt2.报表名称_产品状态登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectSubPrdStatus(parmMap));
+				}
+				else if (DictCodeListExt2.报表名称_资产持仓登记.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectSubAstPos(parmMap));
 				}
 			}
 		}
@@ -353,6 +361,10 @@ public class ReportHomeService{
 					case 理财业务销售数据月度统计表登记_PAGEID:menulist1.add(DictCodeListExt2.报表名称_理财业务销售数据月度统计表登记.getValue());
 						break;
 					case 理财子公司月度统计表_PAGEID:menulist1.add(DictCodeListExt2.报表名称_理财子公司月度统计表.getValue());
+						break;
+					case 产品状态登记_PAGEID:menulist1.add(DictCodeListExt2.报表名称_产品状态登记.getValue());
+						break;
+					case 资产持仓登记_PAGEID:menulist1.add(DictCodeListExt2.报表名称_资产持仓登记.getValue());
 						break;
 				}
 			}

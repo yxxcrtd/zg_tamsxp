@@ -38,6 +38,7 @@
                      $('#accountNo').prop("disabled",true);
                      $('#tradeNo').prop("disabled",true);
                      $('#tradePs').prop("disabled",true);
+                     $('#tradeType').prop("disabled",true);
                       $('#accountName').prop("disabled",true);
                       $('#tradeCounterAccNo').prop("disabled",true);
                       $('#tradeCounterAccName').prop("disabled",true);
@@ -47,13 +48,6 @@
                       $('#tradeTime').prop("disabled",true);
                       $('#tradeVdate').prop("disabled",true);
                   }
-//                  if($('#disabledThing').val() == null || $('#disabledThing').val() == ""){
-//                      $('#institutionCode').prop("disabled",true);
-//                      $('#prdRegistCode').prop("disabled",true);
-//                      $('#accountNo').prop("disabled",true);
-//                      $('#tradeNo').prop("disabled",true);
-//                      $('#tradePs').prop("disabled",true);
-//                  }
            }
            }
 

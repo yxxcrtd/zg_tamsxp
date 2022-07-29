@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.interf.chb.investtrade.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -129,5 +130,7 @@ public interface ChbMstCounterPartyInterfMapper {
      * int
      */
     int deleteByUpdateTime(@Param("isToday")boolean isToday);
-	
+
+	List<ChbMstCounterParty> selectOneDate(@Param("status") String status);
+
 }

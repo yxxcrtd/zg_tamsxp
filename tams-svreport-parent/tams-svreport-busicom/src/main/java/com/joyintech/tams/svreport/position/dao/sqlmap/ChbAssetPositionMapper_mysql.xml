@@ -602,7 +602,7 @@
             then IFNULL(ASSETBASIS.TDY_INTINCEXP,0)
             else
             ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
-            + ifnull(ASSETBASIS.TDY_INTINCEXP,0)
+            + ifnull(ASSETBASIS.TDY_INTINCEXP,0) - ifnull(ASSETBASIS.TDY_LOSS_AMT,0)
             /* + ifnull(ASSETBASIS.DELAY_PAY_AMT,0)*/
             end   ACCUAMT,/*剩余金额*/
         </if>
@@ -610,7 +610,7 @@
             case when ASSETINFO.ASSET_TYPE!='07'
             then ASSETBASIS.POS_AMT
             else ifnull(ASSETBASIS.TDY_COST_AMT,0) + ifnull(ASSETBASIS.TDY_FLOAT_INGPL,0)
-            + ifnull(ASSETBASIS.TDY_INTINCEXP,0)
+            + ifnull(ASSETBASIS.TDY_INTINCEXP,0) - ifnull(ASSETBASIS.TDY_LOSS_AMT,0)
             /*+ ifnull(ASSETBASIS.DELAY_PAY_AMT,0)*/
             end ACCUAMT,/*剩余份额*/
         </if>

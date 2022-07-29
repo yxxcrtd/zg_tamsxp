@@ -71,7 +71,11 @@
             position.SUNASSETTYPE sunassettype,
             position.SUNASSETTYPE2 sunassettype2,
             info.IS_TRANSFER isFprod,
-            asset.ISSUE_MODE issueMode
+            asset.ISSUE_MODE issueMode,
+            case when position.RATING='无评级'
+            THEN NULL
+            ELSE POSITION.RATING
+            END rating
         from CHB_MONTH_ASSET_POSITION position
         inner join CHB_PRD_BASEINFO info
         on info.PROD_ID = position.PROD_ID

@@ -702,8 +702,6 @@ var QueryFunc=function(){
             $('#chbIssuerId').attr('disabled',true);
             $("#chbIssuerId").val('').trigger("change");
         }
-
-
     }
 
     var  initprofitFlag=function(){

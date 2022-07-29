@@ -99,6 +99,20 @@ public class BusinessForXMLEntity extends XbrliXbrlEntity {
     @XmlElement(name = "wemax:PractitionerRegistrationTuple")
     private List<BaseInfoEntity> practitionerRegistrationTuple;
 
+    /***0722升级**/
+    /**
+     * 子节点
+     */
+    @XmlElement(name = "wemax:ProductStatusRegistrationTuple")
+    private List<BaseInfoEntity> ProductStatusRegistrationTuple;
+
+    /**
+     * 子节点
+     */
+    @XmlElement(name = "wemax:ProductInvestedAssetsLiabilitiesRegistrationTuple")
+    private List<BaseInfoEntity> ProductInvestedAssetsLiabilitiesRegistrationTuple;
+    /***0722升级**/
+
     /**
      * 子节点(分类总量)
      */
@@ -398,4 +412,19 @@ public class BusinessForXMLEntity extends XbrliXbrlEntity {
         this.investorsBusinessDetailsInformationRegistrationCsvDataExplanatory = investorsBusinessDetailsInformationRegistrationCsvDataExplanatory;
     }
 
+    public List<BaseInfoEntity> getProductStatusRegistrationTuple() {
+        return ProductStatusRegistrationTuple;
+    }
+
+    public void setProductStatusRegistrationTuple(List<BaseInfoEntity> productStatusRegistrationTuple) {
+        ProductStatusRegistrationTuple = productStatusRegistrationTuple;
+    }
+
+    public List<BaseInfoEntity> getProductInvestedAssetsLiabilitiesRegistrationTuple() {
+        return ProductInvestedAssetsLiabilitiesRegistrationTuple;
+    }
+
+    public void setProductInvestedAssetsLiabilitiesRegistrationTuple(List<BaseInfoEntity> productInvestedAssetsLiabilitiesRegistrationTuple) {
+        ProductInvestedAssetsLiabilitiesRegistrationTuple = productInvestedAssetsLiabilitiesRegistrationTuple;
+    }
 }

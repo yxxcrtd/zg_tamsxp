@@ -325,4 +325,24 @@
     and SRCFIELD1 = #{srcfield1,jdbcType=VARCHAR}
   </select>
 
+
+  <select id="getSubjectNameList" resultType="com.joyintech.framework.select.SelectOptionDto">
+    select
+      OBJFIELD3 id,
+      OBJFIELD3 text
+    from CHB_TYPE_MAPPING_EX
+    where  status='E'
+    and mappingcode in ('SUBJECT_INVEST_TYPE_NAME','BOTTON_SUBJECT_INVEST_TYPE_NAME')
+    <if test="search != null and search != ''">
+      and OBJFIELD3 like '%' || #{search} || '%'
+    </if>
+    <if test="subjectNameList !=null and subjectNameList.size()>0">
+      <foreach collection="subjectNameList" item="subjectName" open="and OBJFIELD3 in (" close=")" separator=",">
+        #{subjectName,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    group by OBJFIELD3
+  </select>
+
+
 </mapper>

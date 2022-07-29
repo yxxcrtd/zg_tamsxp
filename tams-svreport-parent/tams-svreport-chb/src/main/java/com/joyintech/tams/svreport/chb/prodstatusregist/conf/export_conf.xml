@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="ProdStatusRegist001.xlsx" name="产品状态登记">
+	<Worksheet dataStart="2"  javaBean="com.joyintech.tams.svreport.chb.prodstatusregist.dto.ProdStatusRegist001Dto">
+		<Row>
+			<Cell order="1" name="发行机构代码">issuePartyId</Cell>
+			<Cell order="2" name="产品登记编码">prdRegistCode</Cell>
+			<Cell order="3" name="理财产品总资产金额(元)">prdTotalAmtStr</Cell>
+			<Cell order="4" name="理财产品杠杆率(%)">prdLeverage</Cell>
+			<Cell order="5" name="产品状态统计日">prdStatusDateStr</Cell>
+			<Cell order="6" name="备注">remark</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

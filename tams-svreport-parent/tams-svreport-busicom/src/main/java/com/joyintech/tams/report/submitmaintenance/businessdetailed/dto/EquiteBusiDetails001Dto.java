@@ -305,8 +305,26 @@ public class EquiteBusiDetails001Dto extends TableRow {
      * 产品运作模式
      */
     private String operateMode;
-    
-    private Map<String,String> tempMap;
+
+	/**
+	 * 中债反馈信息
+	 */
+	private String repFailedInfo;
+	/**
+	 *交易序列号
+	 */
+	private  String  tradeSeq;
+	/**
+	 *关联活期存款账号开户行代码
+	 */
+	private String  fundAccCode;
+	/**
+	 *关联活期存款账号开户行名称
+	 */
+	private  String fundAccName;
+
+
+	private Map<String,String> tempMap;
 
 	public String getOperateType() {
 		return operateType;
@@ -722,5 +740,36 @@ public class EquiteBusiDetails001Dto extends TableRow {
 	public void setTempMap(Map<String, String> tempMap) {
 		this.tempMap = tempMap;
 	}
-	
+
+	public String getRepFailedInfo() {
+		return repFailedInfo;
+	}
+
+	public void setRepFailedInfo(String repFailedInfo) {
+		this.repFailedInfo = repFailedInfo;
+	}
+
+	public String getTradeSeq() {
+		return tradeSeq;
+	}
+
+	public void setTradeSeq(String tradeSeq) {
+		this.tradeSeq = tradeSeq;
+	}
+
+	public String getFundAccCode() {
+		return fundAccCode;
+	}
+
+	public void setFundAccCode(String fundAccCode) {
+		this.fundAccCode = fundAccCode;
+	}
+
+	public String getFundAccName() {
+		return fundAccName;
+	}
+
+	public void setFundAccName(String fundAccName) {
+		this.fundAccName = fundAccName;
+	}
 }

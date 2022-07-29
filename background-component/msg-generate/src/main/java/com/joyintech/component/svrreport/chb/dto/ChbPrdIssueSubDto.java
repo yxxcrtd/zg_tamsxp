@@ -835,4 +835,19 @@ public class ChbPrdIssueSubDto {
     public void setAcctName(String acctName) {
         this.acctName = acctName == null ? null : acctName.trim();
     }
+
+    /***0722升级**/
+    /**
+     * 定期开放周期
+     */
+    private  BigDecimal   periodicIntervalDays;
+
+    public BigDecimal getPeriodicIntervalDays() {
+        return periodicIntervalDays;
+    }
+
+    public void setPeriodicIntervalDays(BigDecimal periodicIntervalDays) {
+        this.periodicIntervalDays = periodicIntervalDays;
+    }
+    /***0722升级**/
 }

@@ -27,6 +27,7 @@
 		erro.TRADE_PS             as tradePs,
 		erro.TRADE_VDATE          as tradeVdate,
 		null                      as remark,
+		null                      as tradeType,
 		to_char(erro.ERR_MSG)     as errMsg
 		from CHB_SALER_STL_DEA_ERRODATA erro
 		where 1=1
@@ -74,6 +75,7 @@
 		info.TRADE_PS             as tradePs,
 		info.TRADE_VDATE          as tradeVdate,
 		info.REMARK               as remark,
+		info.TRADE_TYPE           as tradeType,
 		null                      as errMsg
 		from CHB_SALER_STL_DEAL_INFO info
 		where 1=1
@@ -120,6 +122,7 @@
 		a.TRADE_VDATE tradeVdate,
 		a.TRADE_TIME tradeTime,
 		a.POSTSCRIPT postscript,
+		a.TRADE_TYPE tradeType,
 		a.REMARK remark
 		from CHB_SALER_STL_DEAL_INFO a
 		where
@@ -313,6 +316,7 @@
 	TRADE_TIME,
 	POSTSCRIPT,
 	REMARK,
+	TRADE_TYPE,
 	RECEPT_DATE,
 	ORG_CODE,
 	CREATE_USER,
@@ -337,6 +341,7 @@
 	#{tradeTime,jdbcType=VARCHAR},
 	#{postscript,jdbcType=VARCHAR},
 	#{remark,jdbcType=VARCHAR},
+	#{tradeType,jdbcType=VARCHAR},
 	#{receptDate,jdbcType=DATE},
 	#{orgCode,jdbcType=VARCHAR},
 	#{createUser,jdbcType=VARCHAR},

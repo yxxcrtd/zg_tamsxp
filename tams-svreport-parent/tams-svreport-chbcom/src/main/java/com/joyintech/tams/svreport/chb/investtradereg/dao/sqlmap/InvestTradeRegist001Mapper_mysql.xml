@@ -16,7 +16,9 @@
     <result column="CUR_ASSET_TYPE" property="curAssetType" jdbcType="VARCHAR" />
     <result column="CUR_ASSETDET_TYPE" property="curAssetdetType" jdbcType="VARCHAR" />
     <result column="DEALDATE" property="dealdate" jdbcType="DATE" />
+    <result column="TRADE_TIME" property="tradeTime" jdbcType="TIMESTAMP" />
     <result column="TRADE_COUNTER" property="tradeCounter" jdbcType="VARCHAR" />
+    <result column="RELATED_TRADE_STATUS" property="relatedTradeStatus" jdbcType="VARCHAR" />
     <result column="UNIT_PRICE_FULL" property="unitPriceFull" jdbcType="DECIMAL" />
     <result column="UNIT_PRICE_NET" property="unitPriceNet" jdbcType="DECIMAL" />
     <result column="END_RATE" property="endRate" jdbcType="DECIMAL" />
@@ -117,7 +119,7 @@
     <result column="INVEST_TRADER_NAME" property="investTraderName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    REGIST_SEQNO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE,
+    REGIST_SEQNO, TRADE_CODE, PROD_ID, REGIST_BANK_CODE, TRADE_TIME,RELATED_TRADE_STATUS,
     ASSET_CODE, CCY, CNY_AMT, AMT, NUM, CUR_ASSET_TYPE, CUR_ASSETDET_TYPE, DEALDATE,
     TRADE_COUNTER, UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE, CONTRACT_CODE, REMARK,
     CHL_CPCT_ID, TRADE_TYPE, CHL_AGRT_NAME, FEE_ID, FEE_NAME, FEE_TYPE, FEE_SECTYPE, STATUS,
@@ -151,38 +153,46 @@
     delete from CHB_INVEST_TRADE_SUB
     where REGIST_SEQNO = #{registSeqno,jdbcType=CHAR}
   </delete>
+  	<delete id="deleteByProdid" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto">
+    delete from CHB_INVEST_TRADE_SUB
+      where SEND_STATUS = '01'
+        <foreach collection="deleteList" item="item" index="index" open="and PROD_ID in (" close=")" separator=",">
+        #{item.prodId,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
   <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" >
     insert into CHB_INVEST_TRADE_SUB (PROD_REGIST_CODE,SUMIT_SEQ,REGIST_SEQNO, TRADE_CODE,  PROD_ID, REGIST_BANK_CODE,
-    ASSET_CODE, CCY, CNY_AMT,
-    AMT, NUM, CUR_ASSET_TYPE,
-    CUR_ASSETDET_TYPE, DEALDATE, TRADE_COUNTER,
-    UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
-    CONTRACT_CODE, REMARK, CHL_CPCT_ID,
-    TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
-    FEE_NAME, FEE_TYPE, FEE_SECTYPE,
-    STATUS, ORG_CODE, DEPT_CODE,
-    CREATE_USER, CREATE_TIME, UPDATE_USER,
-    UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
-    SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
-    SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
-    CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,ASSET_METHOD,RIVAL_PARTY_TYPE,
-    INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME)
-    values (#{prodRegistCode,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=CHAR}, #{tradeCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR},
-    #{assetCode,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{cnyAmt,jdbcType=DECIMAL},
-    #{amt,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}, #{curAssetType,jdbcType=VARCHAR},
-    #{curAssetdetType,jdbcType=VARCHAR}, #{dealdate,jdbcType=TIMESTAMP}, #{tradeCounter,jdbcType=VARCHAR},
-    #{unitPriceFull,jdbcType=DECIMAL}, #{unitPriceNet,jdbcType=DECIMAL}, #{endRate,jdbcType=DECIMAL},
-    #{contractCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{chlCpctId,jdbcType=VARCHAR},
-    #{tradeType,jdbcType=VARCHAR}, #{chlAgrtName,jdbcType=VARCHAR}, #{feeId,jdbcType=VARCHAR},
-    #{feeName,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{feeSectype,jdbcType=VARCHAR},
-    #{status,jdbcType=CHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
-    #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-    #{updateTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP},
-    #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP},
-    #{submitTime,jdbcType=TIMESTAMP}, #{deleteRes,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
-    #{createDept,jdbcType=VARCHAR},#{dealRegistDate,jdbcType=TIMESTAMP},#{isAssetSub,jdbcType=VARCHAR},#{refTradeseqno,jdbcType=VARCHAR}
-    ,#{assetMethod,jdbcType=VARCHAR},#{rivalPartyType,jdbcType=VARCHAR},#{investApproverId,jdbcType=VARCHAR},#{investApproverName,jdbcType=VARCHAR}
-    ,#{investTraderId,jdbcType=VARCHAR},#{investTraderName,jdbcType=VARCHAR})
+      ASSET_CODE, CCY, CNY_AMT,
+      AMT, NUM, CUR_ASSET_TYPE, RELATED_TRADE_STATUS,
+      CUR_ASSETDET_TYPE, DEALDATE,TRADE_TIME, TRADE_COUNTER,
+      UNIT_PRICE_FULL, UNIT_PRICE_NET, END_RATE,
+      CONTRACT_CODE, REMARK, CHL_CPCT_ID,
+      TRADE_TYPE, CHL_AGRT_NAME, FEE_ID,
+      FEE_NAME, FEE_TYPE, FEE_SECTYPE,
+      STATUS, ORG_CODE, DEPT_CODE,
+      CREATE_USER, CREATE_TIME, UPDATE_USER,
+      UPDATE_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+      SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE,
+      SUBMIT_TIME, DELETE_RES, DATA_SOURCE,
+      CREATE_DEPT, DEAL_REGIST_DATE,IS_ASSET_SUB,REF_TRADESEQNO,ASSET_METHOD,RIVAL_PARTY_TYPE,
+      INVEST_APPROVER_ID, INVEST_APPROVER_NAME, INVEST_TRADER_ID, INVEST_TRADER_NAME)
+    values (#{prodRegistCode,jdbcType=VARCHAR},
+      #{sumitSeq,jdbcType=VARCHAR},#{registSeqno,jdbcType=CHAR}, #{tradeCode,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR},
+      #{assetCode,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{cnyAmt,jdbcType=DECIMAL},
+      #{amt,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}, #{curAssetType,jdbcType=VARCHAR}, #{relatedTradeStatus,jdbcType=VARCHAR},
+      #{curAssetdetType,jdbcType=VARCHAR}, #{dealdate,jdbcType=TIMESTAMP},#{tradeTime,jdbcType=TIMESTAMP}, #{tradeCounter,jdbcType=VARCHAR},
+      #{unitPriceFull,jdbcType=DECIMAL}, #{unitPriceNet,jdbcType=DECIMAL}, #{endRate,jdbcType=DECIMAL},
+      #{contractCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{chlCpctId,jdbcType=VARCHAR},
+      #{tradeType,jdbcType=VARCHAR}, #{chlAgrtName,jdbcType=VARCHAR}, #{feeId,jdbcType=VARCHAR},
+      #{feeName,jdbcType=VARCHAR}, #{feeType,jdbcType=VARCHAR}, #{feeSectype,jdbcType=VARCHAR},
+      #{status,jdbcType=CHAR}, #{orgCode,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR},
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP},
+      #{sendStatus,jdbcType=VARCHAR}, #{submitFeedbackStatus,jdbcType=VARCHAR}, #{statusDate,jdbcType=TIMESTAMP},
+      #{submitTime,jdbcType=TIMESTAMP}, #{deleteRes,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR},
+      #{createDept,jdbcType=VARCHAR},#{dealRegistDate,jdbcType=TIMESTAMP},#{isAssetSub,jdbcType=VARCHAR},#{refTradeseqno,jdbcType=VARCHAR}
+     ,#{assetMethod,jdbcType=VARCHAR},#{rivalPartyType,jdbcType=VARCHAR},#{investApproverId,jdbcType=VARCHAR},#{investApproverName,jdbcType=VARCHAR}
+     ,#{investTraderId,jdbcType=VARCHAR},#{investTraderName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.joyintech.tams.svreport.chb.investtradereg.dto.InvestTradeRegist001Dto" >
     insert into CHB_INVEST_TRADE_SUB
@@ -714,6 +724,8 @@
     sub.CUR_ASSETDET_TYPE curAssetdetType,
     sub.DEALDATE dealdate,
     DATE_FORMAT(sub.DEALDATE, '%Y%m%d') dealdateStr,
+    sub.TRADE_TIME tradeTime,
+    sub.RELATED_TRADE_STATUS  relatedTradeStatus,
     sub.TRADE_COUNTER tradeCounter,
     <!-- modify by mashukai TISHKBS-1702 非货币基金单位成交价格应为空值 start-->
     case when deal.INVEST_VARIETY = '14' and sub.CUR_ASSET_TYPE = '09'
@@ -852,10 +864,10 @@
     order by sub.dealdate desc
   </select>
   <select id="selectAllDataByList" resultMap="BaseResultMap">
-    select
-    sub.REGIST_SEQNO, sub.TRADE_CODE, sub.PROD_ID, sub.REGIST_BANK_CODE,
+  select
+  	sub.REGIST_SEQNO, sub.TRADE_CODE, sub.PROD_ID, sub.REGIST_BANK_CODE,
     sub.ASSET_CODE, sub.CCY, sub.CNY_AMT, sub.AMT, sub.NUM, sub.CUR_ASSET_TYPE, sub.CUR_ASSETDET_TYPE, sub.DEALDATE,
-    sub.TRADE_COUNTER,
+    sub.TRADE_COUNTER, sub.TRADE_TIME,sub.RELATED_TRADE_STATUS,
     <!-- modify by mashukai TISHKBS-1702 非货币基金单位成交价格应为空值 start-->
     case when deal.INVEST_VARIETY = '14' and sub.CUR_ASSET_TYPE = '09'
     then null
@@ -964,6 +976,7 @@
     investtrade.CUR_ASSET_TYPE,
     investtrade.CUR_ASSETDET_TYPE,
     investtrade.DEALDATE,
+    investtrade.TRADE_TIME,
     investtrade.TRADE_COUNTER,
     investtrade.UNIT_PRICE_FULL,
     investtrade.UNIT_PRICE_NET,
@@ -1002,7 +1015,6 @@
     investtrade.DEALTYPE DEALTYPE, /*交易类型*/
     prodinfo.prodtype prodtype/*产品类型N M净值型*/
     ,investtrade.ASSET_METHOD
-    ,investtrade.RIVAL_PARTY_TYPE
     ,investtrade.INVEST_APPROVER_ID
     ,investtrade.INVEST_APPROVER_NAME
     ,investtrade.INVEST_TRADER_ID
@@ -1018,14 +1030,6 @@
     <!-- 不过滤状态 -->
     <!-- and investtrade.status = 'E' -->/*有效状态*/
     <![CDATA[and DATE_FORMAT(GREATEST(ifnull(investtrade.update_time,investtrade.create_time),investtrade.DEALDATE), '%Y-%m-%d') = #{registDate,jdbcType=VARCHAR}]]>
-    <!-- /*资产交易未登记*/
-    and not exists(
-        select 1
-        from chb_invest_trade_sub investtradesub
-        where 1=1
-        and investtradesub.ref_tradeseqno = investtrade.TRADE_SEQNO
-        and investtrade.status != '03'/*不为删除数据*/
-    ) -->
     <if test="tradenoList !=null and tradenoList.size()>0">
       <!-- 产品代码不为空时 -->
       <foreach collection="tradenoList" item="tradeCode" open="and investtrade.TRADE_CODE in (" close=")" separator=",">
@@ -1056,6 +1060,7 @@
     '12' cur_asset_type,/*其他支出*/
     prdfeedeal.fee_name cur_assetdet_type,
     prdfeedeal.PAY_DATE dealdate,
+    prdfeedeal.TRADE_TIME,
     prdfeedeal.TRADE_COUNTER,
     null unit_price_full,
     null UNIT_PRICE_NET,
@@ -1092,7 +1097,6 @@
     NULL DEALTYPE, /*交易类型*/
     prodinfo.prodtype prodtype/*产品类型N M净值型*/
     ,NULL ASSET_METHOD
-    ,RIVAL_PARTY_TYPE RIVAL_PARTY_TYPE
     ,prdfeedeal.INVEST_APPROVER_ID
     ,prdfeedeal.INVEST_APPROVER_NAME
     ,prdfeedeal.INVEST_TRADER_ID
@@ -1601,7 +1605,7 @@
     sub.SUBMIT_DEADLINE, sub.SEND_STATUS, sub.SUBMIT_FEEDBACK_STATUS,
     sub.STATUS_DATE, sub.SUBMIT_TIME, sub.DELETE_RES,
     sub.DATA_SOURCE, sub.CREATE_DEPT, sub.DEAL_REGIST_DATE,
-    sub.IS_ASSET_SUB,info.PROD_NAME,
+    sub.IS_ASSET_SUB,info.PROD_NAME,sub.TRADE_TIME,sub.RELATED_TRADE_STATUS,
     sub.SUMIT_SEQ, sub.PROD_REGIST_CODE,ASSET_METHOD,RIVAL_PARTY_TYPE
     ,sub.INVEST_APPROVER_ID, sub.INVEST_APPROVER_NAME, sub.INVEST_TRADER_ID, sub.INVEST_TRADER_NAME
     from CHB_INVEST_TRADE_SUB sub

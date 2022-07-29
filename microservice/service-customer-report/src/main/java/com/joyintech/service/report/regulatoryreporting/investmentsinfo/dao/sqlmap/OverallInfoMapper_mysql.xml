@@ -244,10 +244,15 @@
 			and cmap.rating is not null
 			and cmap.rating in(
 			select item_value from sys_datadict_list where dict_code='SVR_MAIN_GRADE' and item_code<![CDATA[>=]]> '13'
+			and  item_code<![CDATA[<]]> '99'
 			)
 		</if>
 		<if test="rating != null  and rating.equals('4')">
-			and cmap.rating is null
+			and (cmap.rating is null or cmap.rating
+			in(
+			select item_value from sys_datadict_list where dict_code='SVR_MAIN_GRADE' and item_code = '99'
+			)
+			)
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}
@@ -411,11 +416,15 @@
 			and cmap.rating is not null
 			and cmap.rating in(
 			select item_value from sys_datadict_list where dict_code='SVR_MAIN_GRADE' and item_code<![CDATA[>=]]> '13'
+			and item_code<![CDATA[<]]> '99'
 			)
 		</if>
 		<if test="rating != null  and rating.equals('4')">
 			and info.asset_type2 in  ('1112','1113','1114','1115','1116','1117')
-			and cmap.rating is null
+			and (cmap.rating is null or cmap.rating
+			in(
+			select item_value from sys_datadict_list where dict_code='SVR_MAIN_GRADE' and item_code = '99'
+			)
 		</if>
 		<if test="org != null  and org!=''">
 			and di.institution_code=#{org, jdbcType=VARCHAR}

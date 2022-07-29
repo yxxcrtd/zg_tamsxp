@@ -13,6 +13,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
@@ -20,10 +21,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.chbreport.codecheck.dao.ComminCodeCheckTmpMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationDetailMapper;
 import com.joyintech.tams.common.base.dao.FilterInformationMapper;
 import com.joyintech.tams.common.base.entity.*;
@@ -41,13 +40,18 @@ import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
 import com.joyintech.tams.report.common.dao.ChbMgrTableInfoMapper;
 import com.joyintech.tams.report.common.dao.ColumnTypeMapper;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.system.proregistcodemanage.dao.ProRegistCodeManage001Mapper;
 import com.joyintech.tams.svreport.infomanagement.service.OperationalLoanInfo001CheckService;
+import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -61,6 +65,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,6 +78,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.joyintech.tams.common.svreport.chb.util.SvrDataUtil.getSysParam;
@@ -101,9 +107,18 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	// 资产要素表名
 	private static final List<String> CHB_ASSET_INFO_LIST = Arrays.asList("CHB_ASSET_INFO_TMP");
 
+	//需要交易发起时间格式化特殊处理的表
+	private static final List<String> CHB_TRADE_TIME_LIST = Arrays.asList("CHB_INVEST_TRADE_SUB_TMP");
+
 
 	private static final List<String> CHB_SUB_LIST = Arrays.asList("CHB_ASSET_INFO_TMP","CHB_AST_VAL_SUB_TMP","CHB_BOT_AST_POS_SUB_TMP","CHB_EMPLOYEE_INFO",
-			"CHB_INVEST_TRADE_SUB_TMP","CHB_PRD_DEAL_SUB_TMP","CHB_PRD_DECLARE_SUB_TMP","CHB_PRD_END_SUB_TMP","CHB_PRD_ISSUE_SUB_TMP","CHB_PRD_RAISETOT_SUB_TMP");
+			"CHB_INVEST_TRADE_SUB_TMP","CHB_PRD_DEAL_SUB_TMP","CHB_PRD_DECLARE_SUB_TMP","CHB_PRD_END_SUB_TMP","CHB_PRD_ISSUE_SUB_TMP","CHB_PRD_RAISETOT_SUB_TMP",
+			"CHB_PRD_STATUS_SUB","CHB_AST_POS_SUB");
+
+	//产品状态登记和资产持仓登记日期单独处理
+	private ArrayList<String> prdList = Lists.newArrayList("CHB_PRD_STATUS_SUB", "CHB_AST_POS_SUB");
+
+	private ArrayList<String> dateList = Lists.newArrayList("PRD_STATUS_DATE", "VALUE_DATE");
 
 	// 资产要素字段数据临界值（该字段为备注所在的索引值）
 	private static final Integer CAI_BASE_COUNT = 282;
@@ -136,7 +151,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	private ChbMgrTableInfoMapper chbMgrTableInfoMapper;
 
 	@Autowired
+	private ComminCodeCheckTmpMapper comminCodeCheckTmpMapper;
+
+	@Autowired
 	private OperationalLoanInfo001CheckService operationalLoanInfo001CheckService;
+	@Autowired
+	private ProRegistCodeManage001Mapper proRegistCodeManage001Mapper;
 	// 需要存入数据来源的接口
 	private static final String[] INTERF_DATASOURCE = new String[] {"CHB_ASSET_INFO","CHB_BOT_AST_POS"};
 
@@ -397,8 +417,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 
 		if(CHB_ASSET_INFO_LIST.contains(tableName)&&StringUtil.equals("1", headerNum)){
 			//是资产基本信息并且是配置的单表头
-			//DictCodeListExt2 dictCodeListExt2=DictCodeListExt2.from(DictCode.资产_负债类别, mgrTableChiName);
-			//String assetType=SysDataUtil.getCodeFromDataDictByName(DictCode.资产_负债类别, mgrTableChiName);
 			String assetType=nameMap.get(mgrTableChiName);
 			param.put("assetType", assetType);
 		}
@@ -446,7 +464,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				String realStr = "";
 				if (CHB_ASSET_INFO_LIST.contains(tableName)) {
 					//代码合并删除此行代码
-					//	String assetType = map.get("ASSET_TYPE") == null ? "" : map.get("ASSET_TYPE").toString();
 					if (str.endsWith(assetType)) {
 						realStr = str.replace(assetType, "");
 					}
@@ -500,7 +517,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	 */
 	private List<Object> queryDataList(Map<String, Object> param) {
 		List<Object> list = new ArrayList<Object>();
-		//String tableId = (String) param.get("tableId");
 		String tableName=(String) param.get("tableName");
 		String assetType=(String) param.get("assetType");
 		String columnIds = (String) param.get("columnIds");
@@ -670,54 +686,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		//针对单独维护页面，无需tableName,headerNum 故增加判断 add by wm 2020-06-29 end
 		return JSON.toJSONString(resultData);
 
-//		if("CHB_ASSET_INFO".equals(tableName)){
-//			//List<Map<String, Integer>> title1StrList = new ArrayList<Map<String, Integer>>();
-//			//List<Map<String, String>> title2StrList = new ArrayList<Map<String, String>>();
-//
-//			Map<String,Integer>title1Map=new HashMap<String,Integer>();
-//			Map<String,String>title2Map=new HashMap<String,String>();
-//
-//			int[] titleList = new int[titleMap.size()];
-//			Arrays.fill(titleList, 0);
-//
-//			for(int i = 0; i < size; i ++){
-//				ChbInfoMgrResultConfig info = list.get(i);
-//				String columnName=info.getColumnName() == null || "".equals(info.getColumnName()) ? info.getColumnId()
-//						: info.getColumnName();
-//				data.put(info.getColumnId(),columnName);
-//
-//				title2Map.put(info.getColumnId(),columnName);
-//
-//				String titleName=mappingMap.get(info.getColumnId());
-//				String indexStr=titleMap.get(titleName);
-//				if(StringUtil.isNotEmpty(indexStr)){
-//					int index=Integer.parseInt(indexStr);
-//
-//					titleList[index]++;
-//				}
-//
-//			}
-//			for (String key : titleMap.keySet()) {
-//				//找出一级表头
-//				Integer index=Integer.parseInt(titleMap.get(key));
-//				if(titleList[index]>0){
-//					title1Map.put(key, titleList[index]);
-//				}
-//
-//			}
-//			resultData.put("title1", JSON.toJSONString(title1Map));
-//			resultData.put("title2", JSON.toJSONString(title2Map));
-//			return JSON.toJSONString(resultData);
-//		}else{
-//			for (int i = 0; i < size; i ++) {
-//				ChbInfoMgrResultConfig info = list.get(i);
-//				data.put(info.getColumnId(),
-//						(info.getColumnName() == null || "".equals(info.getColumnName())) ? info.getColumnId()
-//								: info.getColumnName());
-//			}
-//			return JSON.toJSONString(data);
-//		}
-
 	}
 
 
@@ -803,9 +771,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	 * @return 已保存方案信息
 	 */
 	public Page<FilterInformationDto> queryFilterInfoByUserId(Map<String, Object> pageParam) {
-//		String userId = CommonUtil.getUid();
 		String searchKey = (String) pageParam.get("searchKey");
-//		pageParam.put("userId", pageParam.get("userId"));
 		pageParam.put("searchCondition","%" + searchKey + "%");
 		int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
 		int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
@@ -960,17 +926,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 
 			}
 		}
-		/*
-		 * else { list = queryDataList(param); for (Object obj : list) { HashMap<String,
-		 * Object> map = (HashMap<String, Object>) obj; String assetType =
-		 * map.get("ASSET_TYPE").toString(); for (String str : map.keySet()) { //
-		 * 查询结果为枚举类型字段处理 String resultDictCode = resultMap.get(str); if
-		 * (StringUtil.isNotEmpty(resultDictCode) && null != map.get(str) ) { String
-		 * dateObj = map.get(str).toString(); String value =
-		 * queryValueByDictAndKey(resultDictCode, dateObj); map.put(str, value);
-		 * map.put(str + assetType, value); } else { map.put(str + assetType,
-		 * map.get(str)); } } listMap.add(map); } }
-		 */
 
 		int size = chbInfoMgrResultConfigList.size();
 		String[] title = new String[size + 1];
@@ -1032,7 +987,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	private ResponseEntity<byte[]> exportInfo(Map<String, Object> param) {
 		List<HashMap<String, Object>> listMap = new ArrayList<>();
 		ResponseEntity<byte[]> responseEntity= null;
-//		String tableId = (String) param.get("tableId");
 		String tableId = (String) param.get("tableName");
 		//获取表名
 		ChbMgrTableInfo  chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyTableId(tableId);
@@ -1042,8 +996,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 
 		if(CHB_ASSET_INFO_LIST.contains(tableName)&&StringUtil.equals("1", headerNum)){
 			//是资产基本信息并且是配置的单表头
-			//DictCodeListExt2 dictCodeListExt2=DictCodeListExt2.from(DictCode.资产_负债类别, mgrTableChiName);
-			//String assetType=SysDataUtil.getCodeFromDataDictByName(DictCode.资产_负债类别, mgrTableChiName);
 			String assetType=nameMap.get(mgrTableChiName);
 			param.put("assetType", assetType);
 		}
@@ -1105,7 +1057,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 										}
 									}
 									if (sb.length() > 0){
-										//map.get(str).toString() = sb.substring(1, sb.length());
 										map.put(str,sb.substring(1, sb.length()));
 									}
 								}else{
@@ -1143,7 +1094,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				objs = new Object[size + 1];
 				objs[0] = "导出";
 				for (int k = 1; k < size + 1; k++) {
-//					objs[k] = data.get(title[k]);
 					objs[k] = data.get(titleCode[k]);
 					// 查询结果为枚举类型字段处理
 					String resultDictCode = resultMap.get(titleCode[k]);
@@ -1224,18 +1174,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				String errorData = this.clobToString((Clob) map.get("ORG_DATA"));
 				/**关于ORG_DATA中值会出现逗号的情况，导致分割错误，ZZOTZL-125     add by  dongxiangyang  20201023*/
 				Map<String,String> errorMap=JsonUtils.json2Object(errorData, HashMap.class);
-//				String[] errorDataList = errorData.split(GlobalConstant.COMMA);
-//				Map<String, String> errorMap = new HashMap<String, String>(1 << 4);
-//				int dataSize = errorDataList.length;
-//				for (int i = 0; i < dataSize; i ++) {
-//					String[] errorArray = errorDataList[i].split(GlobalConstant.COLON);
-//					if (errorArray.length > 1) {
-//						errorMap.put(errorArray[0], errorArray[1]);
-//					} else {
-//						errorMap.put(errorArray[0], "");
-//					}
-//
-//				}
 				/**关于ORG_DATA中值会出现逗号的情况，导致分割错误， ZZOTZL-125   add by  dongxiangyang  20201023*/
 				tableMap.put(tableName, errorMap);
 				mapList.add(tableMap);
@@ -1253,7 +1191,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		selectParam.put("tableId", tableIds.get(0));
 		List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
 		Map<String, String> resultMap = new HashMap<String, String>(16);
-//            List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = new ArrayList<ChbInfoMgrResultConfig>();
 		// 资产要素表导出需要合并单元格的列号索引
 		List<Integer> mergeIndexList = new ArrayList<Integer>();
 		if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
@@ -1367,13 +1304,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		int i = 1;
 		for (ChbInfoMgrResultConfig chbInfoMgrResultConfig : chbInfoMgrResultConfigList) {
 			title[i] = chbInfoMgrResultConfig.getColumnName();
-			// modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 start
-//                if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
-//                    titleCode[i] = chbInfoMgrResultConfig.getRealColumnId();
-//                }
-//                else{
 			titleCode[i] = chbInfoMgrResultConfig.getColumnId();
-//                }
 			// modify by dubaojun 2020-10-31 在上面已经设置了带有ASSET_TYPE的字段值，此处直接取即可 end
 			i++;
 		}
@@ -1405,7 +1336,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		}
 
 
-//		}
 		try {
 			if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
 				responseEntity = chbAssetListToExcel(tableIds.get(0),tableIds.get(0), title, dataList, enumIndexMap, mergeIndexList);;
@@ -1456,18 +1386,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，因为在js里进行了转换，故这里给转换回来 end
 			/**关于ORG_DATA中值会出现逗号的情况，导致分割错误，  ZZOTZL-125  add by  dongxiangyang  20201023*/
 			Map<String,String> errorMap=JsonUtils.json2Object(errorData, HashMap.class);
-//			String[] errorDataList = errorData.split(GlobalConstant.COMMA);
-//			Map<String, String> errorMap = new HashMap<String, String>(1 << 4);
-//			int dataSize = errorDataList.length;
-//			for (int i = 0; i < dataSize; i ++) {
-//				String[] errorArray = errorDataList[i].split(GlobalConstant.COLON);
-//				if (errorArray.length > 1) {
-//					errorMap.put(errorArray[0], errorArray[1]);
-//				} else {
-//					errorMap.put(errorArray[0], "");
-//				}
-//
-//			}
 			/**关于ORG_DATA中值会出现逗号的情况，导致分割错误，  ZZOTZL-125   add by  dongxiangyang  20201023*/
 			tableMap.put(tableName, errorMap);
 			mapList.add(tableMap);
@@ -1613,9 +1531,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				String selectBoxRef = getSelectBoxRef(index + 1, length, tableName + "_ENUM");
 				refAddressMap.put(index, selectBoxRef);
 			}
-//			XSSFDataValidation validate = setBoxs(sheet, refAddressMap);
 			setBoxs(sheet, refAddressMap, 2);
-//			sheet.addValidationData(validate);
 			// 必须在单元格设值以后进行
 			// 设置为根据内容自动调整列宽
 			for (int k = 0; k < columnNum; k++) {
@@ -1678,7 +1594,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		String chiName="";
 		if(CHB_ASSET_INFO_LIST.contains(tableName)){
 			//如果是资产要素表,资产大类做
-			//chiName="资产基本信息";
 			ChbMgrTableInfo  chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyTableId(tableId);
 			chiName=chbMgrTableInfo.getMgrTableChiName();
 		}else{
@@ -1763,9 +1678,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				}
 			}
 
-//			XSSFDataValidation validate = setBoxs(sheet, refAddressMap);
 			setBoxs(sheet, refAddressMap,1);
-//			sheet.addValidationData(validate);
 			// 必须在单元格设值以后进行
 			// 设置为根据内容自动调整列宽
 			for (int k = 0; k < columnNum; k++) {
@@ -1837,7 +1750,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		}
 
 		// 导入文件相关表信息
-		//BaseInformationDto baseInformationDto = tableInfoList.get(0);
 		String tableId = chbMgrTableInfo.getMgrTableName();
 		String headerNum=chbMgrTableInfo.getHeaderNum();
 		tableName=chbMgrTableInfo.getMgrTableName();
@@ -1977,10 +1889,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
 							"表" + tableName + "中无以下字段：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)));
 					return checkResult;
-//            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	           	webResult.setMessage("表" + tableId + "中无以下字段：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)
-//    	           		+ ", 请检查导入文件");
-//    	            return webResult;
 				}
 
 				if (null != bisinessPkList && bisinessPkList.size() > 0) {
@@ -1994,19 +1902,13 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				if (errorLists.size() > 0) {
 					checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "导入文件中缺少以下业务主键：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)));
 					return checkResult;
-//            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	           	webResult.setMessage("导入文件中缺少以下业务主键：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA));
-//    	            return webResult;
 				}
 				List<Map<String, String>> listDupError = new ArrayList<Map<String,String>>();
-//            	List<String> dupErrorStrList = new LinkedList<String>();
 				// 解析出的文件转换为Map集合
 				List<Map<String, String>> dataMapList = new ArrayList<Map<String,String>>();
 				List<Map<String, String>> pkdataMapList = new ArrayList<Map<String,String>>();
 				// 对应表日期类型字段集合
-//                List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableId);
 				// 主键相关数据集合,用来检查新增数据是否和数据库数据有重复
-//            	List<Map<String, String>> pkDataMapList = new ArrayList<Map<String,String>>();
 				List<String> columnList = dataList.get(0);
 				int size = columnList.size();
 				// 存储业务主键对应的索引
@@ -2016,27 +1918,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						pkIndex.add(i);
 					}
 				}
-//            	// 存储有空值的业务主键
-//            	List<String> noDataPkList = new LinkedList<String>();
-//            	// 跳出循环标志
-//            	boolean breakFlag = true;
-//            	for (int i = 0; i < dataList.size() && breakFlag; i ++) {
-//            		List<String> strList = dataList.get(i);
-//            		for (int j = 0; j < pkIndex.size() && breakFlag; j ++) {
-//            			String data = strList.get(pkIndex.get(j));
-//            			// 有业务主键字段没存值,结束循环并且提示用户
-//            			if (StringUtils.isEmpty(data)) {
-//            				noDataPkList.add(columnList.get(j));
-//            				breakFlag = false;
-//            			}
-//            		}
-//            	}
-//            	// 业务主键有空值
-//            	if (noDataPkList.size() > 0) {
-//            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	           	webResult.setMessage("导入文件中以下业务主键存在空值：" + StringUtil.joinString(noDataPkList, GlobalConstant.COMMA));
-//    	            return webResult;
-//            	}
 
 				List<SysDataDict> secondIndustryList = tamsBaseMapper.queryFirstIndustryBySecondIndustry();
 				Map<String, String> secondIndustryMap = new HashMap<String, String>();
@@ -2047,7 +1928,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					/**定义当有新增修改和删除的数据时 的标识  add  by dongxiangyang  20201028  start*/
 					boolean   isContans=false;
 					/**定义当有新增修改和删除的数据时 的标识  add  by dongxiangyang  20201028  end*/
-//            	for (List<String> strList : dataList) {
 					List<String> strList = dataList.get(j);
 					if ("操作类型".equals(strList.get(0))) {
 						continue;
@@ -2122,42 +2002,17 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									strList1.add(pkDataMap.get(key));
 								}
 								checkResult.add(new ExcelValidDto(StringUtil.joinString(strList1, GlobalConstant.COMMA), String.valueOf(rowNum), strList.get(0) + "数据不存在"));
-//            				    return  checkResult;
 								isContans=true;
 							}
-//            				pkDataMapList.add(pkDataMap);
 						}
 					}
 					// add by zhangliang 20201026 修改删除的时候需要判断是否是否存在 end
 					// 资产要素导入数据不全标识
-//        			boolean assetInfoFlag = true;
-
-
 					int beginIndex = 0;
 					int endIndex = 0;
 					String assetType = "";
 					// 资产要素表数据处理
 					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-//            			String dataPara = "";
-//            			for (int i = 7; i <= 274; i ++) {
-//                			String str = strList.get(i);
-//                			if (StringUtil.isNotEmpty(str)) {
-//                				dataPara = queryAssetType(i);
-//                				break;
-//                			}
-//                		}
-//            			if (StringUtil.isEmpty(dataPara)) {
-//            				checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(j + 2), "资产要素导入需要填写资产/负债类别相关信息"));
-////            				webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-////            	           	webResult.setMessage("资产要素导入需要填写资产/负债类别相关信息");
-////            	            return webResult;
-//                		} else {
-//                			String[] dataParaArr = dataPara.split(":");
-//                			beginIndex = Integer.parseInt(dataParaArr[0].split("-")[0]);
-//                			endIndex = Integer.parseInt(dataParaArr[0].split("-")[1]);
-//                			assetType = dataParaArr[1];
-//                		}
-
 						//更换获取assetType的方法，根据导入文件的资产/负债类别来获取
 						String assetType2=strList.get(4);
 						if(assetMap.get(assetType2)!=null){
@@ -2207,13 +2062,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					}
 
 					for (Integer i : indexList) {
-//            		for (int i = 1; i < size; i ++) {
 						if (StringUtil.isEmpty(dataMap.get(columnList.get(i)))) {
 							dataMap.put(columnList.get(i), strList.get(i));
 						}
-//            			if (CHB_ASSET_INFO.equals(tableId) && i > 6 && i < 232 && StringUtil.isNotEmpty(strList.get(i))) {
-//            				assetInfoFlag = false;
-//            			}
 					}
 					if (CHB_ASSET_INFO_LIST.contains(tableName)) {
 						dataMap.put("ASSET_TYPE", assetType);
@@ -2249,11 +2100,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						String remark=strList.get(CAI_BASE_COUNT);
 						dataMap.put("REMARK", remark);
 					}
-//            		if (assetInfoFlag) {
-//            			webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//        	           	webResult.setMessage("资产要素导入需要填写资产/负债类别相关信息");
-//        	            return webResult;
-//            		}
 					// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
 					Set<String> keySet = new HashSet<>(dataMap.keySet());
 					for (String key : keySet) {
@@ -2263,6 +2109,28 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					}
 					// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 end
 
+					if (Objects.equals("CHB_AST_POS_SUB",tableId)) {
+						String asset_id = dataMap.get("ASSET_ID");
+						String inter_asset_code = dataMap.get("INTER_ASSET_CODE");
+
+						if (!StringUtils.isEmpty(asset_id)) {
+							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(asset_id);
+							if (count<1) {
+								//checkResult.add(new ExcelValidDto("行内资产/负债编码[ASSET_ID="+asset_id+"]", String.valueOf(j+1),"行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+							}
+
+						}
+
+						if (!StringUtils.isEmpty(inter_asset_code)) {
+							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(inter_asset_code);
+							if (count<1) {
+								//checkResult.add(new ExcelValidDto("中间层行内资产/负债编码[INTER_ASSET_CODE="+inter_asset_code+"]", String.valueOf(j+1),"中间层行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+							}
+
+						}
+
+
+					}
 					dataMap.put("ERRMSG_ROW", String.valueOf(j));
 
 					/**A列为删除列的  不进行规则代码check了  add by dongxiangyang  20201029*/
@@ -2287,31 +2155,15 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				/*add by xuyang 底层持仓数据导入，新增资产编码是否存在资产要素校验，不存在，不允许导入 end*/
 				// 数据重复性检查
 				// 新增数据是否和数据库已有数据重复
-//            	List<String> existDataList = checkDataIsExist(pkDataMapList, tableId);
-//            	if (null != existDataList && existDataList.size() > 0) {
-//            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	           	webResult.setMessage("导入文件中以下业务主键数据和数据库重复：" + StringUtil.joinString(existDataList, GlobalConstant.COMMA));
-//    	            return webResult;
-//            	}
 				List<String> dataObjectList = baseInformationMapper.querydataObjectByTable(tableName);
 				String dataObject = dataObjectList.get(0);
 				if (null != bisinessPkList && bisinessPkList.size() > 0) {
 					// 业务主键数组
 					String[] bisinessPkArray = (String[]) bisinessPkList.toArray(new String[0]);
 					listDupError = DataCheckService.checkDuplicatedData(dataMapList, bisinessPkArray);
-//            		listDupError.forEach(dupError -> {
-//            			bisinessPkList.forEach(bisinessPk -> {
-//            				dupErrorStrList.add(bisinessPk + "=" + dupError.get(bisinessPk));
-//            			});
-//            		});
 					// 没有定义业务主键,检查所有数据
 				} else {
 					listDupError = DataCheckService.checkDuplicatedData(dataMapList);
-//            		listDupError.forEach(dupError -> {
-//            			for (String key : dupError.keySet()) {
-//            				dupErrorStrList.add(key + "=" + dupError.get(key));
-//            			}
-//            		});
 				}
 				// 业务主键重复
 				if (listDupError.size() > 0) {
@@ -2328,14 +2180,10 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						}
 						checkResult.add(new ExcelValidDto(vailkey, String.valueOf(index), "主键数据重复"));
 					}
-//            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	           	webResult.setMessage("导入文件中以下业务主键数据重复：" + StringUtil.joinString(dupErrorStrList, GlobalConstant.COMMA));
-//    	            return webResult;
 				}
 				List<String>checkColumnList=chbInfoMgrResultConfigMapper.getAllColumnByTableId(tableId);
 
 				// 已配置规则检查
-				//List<CheckRule> listRules = dataCheckService.queryCheckRules(dataObject);
 				// add by zhangliang 20210418 TMP调用SUB校验配置 start
 				List<CheckRule> listRules = dataCheckService.queryCheckRulesByDataTypeAndColumns(ChbCheckTableInfo.genDataType(dataObject));
 				// add by zhangliang 20210418 TMP调用SUB校验配置 end
@@ -2347,17 +2195,12 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					commonCodeCheckBatchService.codeCheckCommonOnly(dataMapList, chbCheckTableInfo);
 				}
 				// add by zhangliang 20210127 添加代码校验 end
-//                listError.forEach(errorMap -> {
-//                	errorLists.add(errorMap.get("ERRMSG"));
-//                });
 				// 文件中有不符合规则配置的数据
 				if (dataMapList.size() > 0) {
 					for (Map<String, String> map : dataMapList) {
 						if(StringUtil.isEmpty(map.get("ERRMSG"))){
 							continue;
 						}
-
-//业务主键凭借  List<String> bisinessPkList
 						/**start    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
 						String  vailkey=getBusinessKeyStr(bisinessPkList, map);
 						/**end    添加错误提示"标识码"字段     add by  dongxiangyang 20201026 */
@@ -2372,16 +2215,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						}
 						checkResult.add(new ExcelValidDto(vailkey, String.valueOf(index), map.get("ERRMSG")));
 					}
-//            		webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	           	webResult.setMessage("以下数据不满足已配置规则：" + StringUtil.joinString(errorLists, GlobalConstant.COMMA)
-//    	           		+ ", 请检查导入文件");
-//    	            return webResult;
 				}
 			}
 		}
-//    	webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-//    	return webResult;
-//    	checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0), "请导入2007以上版本的excel文件！"));
 		// add by zhangliang 20201024 合并显示错误信息  start
 		List<ExcelValidDto> resResult = new ArrayList<>();
 		if (!StringUtil.isEmptyList(checkResult)){
@@ -2493,10 +2329,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		String sheetName=tableName;
 		int count = 0;
 		AjaxResult webResult = new AjaxResult();
-		//List<BaseInformationDto> tableInfoList = baseInformationMapper.queryTableInfoByTableName(tableName);
-		// 导入文件相关表信息
-		//BaseInformationDto baseInformationDto = tableInfoList.get(0);
-		//String tableId = baseInformationDto.getBaseTableId();
 
 		ChbMgrTableInfo chbMgrTableInfo=chbMgrTableInfoMapper.getTableInfobyChiName(tableName);
 		String tableId = chbMgrTableInfo.getMgrTableName();
@@ -2504,6 +2336,15 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		tableName=chbMgrTableInfo.getMgrTableName();
 
 		if (originalDataList!=null&&!originalDataList.isEmpty()) {
+
+			CompletableFuture<Map> proRegistCodeManageFuture = CompletableFuture.supplyAsync(() -> {
+				//系统中所有产品代码对应产品登记编码信息
+				List<Map<String, String>> mapList = proRegistCodeManage001Mapper.selectProdInfo();
+				if (CollectionUtils.isEmpty(mapList)) {
+					return Collections.EMPTY_MAP;
+				}
+				return mapList.stream().collect(JoyinCollectors.toMap(x -> x.get("REGCODE"), x -> x.get("PRODID")));
+			});
 			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
 			// 所有字段集合
 			List<String> allColumnList = baseInformationMapper.queryAllColumns(tableId);
@@ -2518,7 +2359,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			} else {
 				dataList = handleData(originalDataList, tableId,false);
 			}
-//			List<List<String>> dataList = handleData(originalDataList, tableId);
 			// 导入表主键集合
 			List<String> primarykeyList = baseInformationMapper.queryPrimarykeyByTableName(tableId);
 
@@ -2565,22 +2405,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					String assetType = "";
 					// 资产要素表数据处理
 					if (CHB_ASSET_INFO_LIST.contains(tableName)&&"2".equals(headerNum)) {
-//            			String dataPara = "";
-//            			for (int i = 7; i <= 274; i ++) {
-//                			String str = strList.get(i);
-//                			if (StringUtil.isNotEmpty(str)) {
-//                				dataPara = queryAssetType(i);
-//                				break;
-//                			}
-//                		}
-//            			if (StringUtil.isEmpty(dataPara)) {
-//                			continue;
-//                		}
-//            			String[] dataParaArr = dataPara.split(":");
-//                		beginIndex = Integer.parseInt(dataParaArr[0].split("-")[0]);
-//                		endIndex = Integer.parseInt(dataParaArr[0].split("-")[1]);
-//                		assetType = dataParaArr[1];
-
 						String assetType2=strList.get(4);
 						String[] dataParaArr = assetMap.get(assetType2).split(":");
 						beginIndex = Integer.parseInt(dataParaArr[1].split("-")[0]);
@@ -2614,9 +2438,16 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					HashMap<String, String> deleteMap = new HashMap<String, String>();
 					// 修改数据Map
 					HashMap<String, String> updateMap = new HashMap<String, String>();
+                    //子线程获取产品登记编码信息
+					Map<String, String> proRegistCodeManageMap = new HashMap<>();
+					try {
+						proRegistCodeManageMap = proRegistCodeManageFuture.get();
+					} catch (Exception e){
+						logger.error("获取产品登记编码错误{}",e.getMessage());
+					}
+
 					switch(strList.get(0)) {
 						case "新增" :
-//            			for (int i = 1; i < size; i ++) {
 							for (Integer i : indexList) {
 								String column = columnList.get(i);
 								String columnData = strList.get(i);
@@ -2629,6 +2460,13 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								//资产名称覆盖问题修复，防止被覆盖
 								if("ASSET_NAME".equals(column)&&StringUtil.isEmpty(columnData)){
 									continue;
+								}
+
+								//通过产品登记编码得到产品代码
+								if ("PRD_REGIST_CODE".equals(column)){
+									if (StringUtil.isNotEmpty(columnData)&&(prdList.contains(tableName))){
+										insertMap.put("PROD_ID", "'"+proRegistCodeManageMap.get(columnData)+"'");
+									}
 								}
 								// 数据状态定为E
 								if ("STATUS".equals(column)) {
@@ -2647,25 +2485,45 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
                                         }
 
 									} else {
-										//excel中输入了时间戳数据处理
-										if(columnData.length() > 10){
-											columnData = columnData.substring(0,10);
-										}
-										String dateStr = formatDateStr(columnData);
-										if (null != dateStr) {
-											columnData = "DATE'" + dateStr + "'";
+										//投资交易登记发起时间特殊处理
+										String tradeTimeColumnData = getTradeTimeFormat(tableName, column, columnData);
+										if (StringUtil.isNotBlank(tradeTimeColumnData)) {
+											columnData=tradeTimeColumnData;
+											//add by zhoubin 20220721 end GLTZJY-1615
 										} else {
-											columnData = null;
+											//excel中输入了时间戳数据处理
+											if(columnData.length() > 10){
+												columnData = columnData.substring(0,10);
+											}
+											String dateStr = formatDateStr(columnData);
+											if (null != dateStr) {
+												//产品状态登记和资产持仓登记的日期自定义，为了下面计算报送截止日
+												if (prdList.contains(tableName)){
+													if (StringUtil.equals("PRD_STATUS_DATE",column)) {
+														insertMap.put("CHB_PRD_STATUS_DATE", dateStr);
+													}
+													if (StringUtil.equals("VALUE_DATE",column)) {
+														insertMap.put("CHB_AST_POS_SUB_DATE", dateStr);
+													}
+
+												}
+												columnData = "DATE'" + dateStr + "'";
+											} else {
+												columnData = null;
+											}
 										}
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'";
+
+
 									}
 									// 时间类型字段全存入当前时间
 								} else if (timeColumnList.contains(column)) {
-                                    if(BaseCommonCheckService.isMYSQLDataBase()){
-                                        columnData =  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
-                                    }else{
-                                        columnData = "SYSDATE";
-                                    }
+									if (!prdList.contains(tableName) ||  !dateList.contains(column)){
+										if(BaseCommonCheckService.isMYSQLDataBase()){
+											columnData = "NOW()";
+										}else{
+											columnData = "SYSDATE";
+										}
+									}
 									// 创建者和修改者均设置为当前用户
 								} else if ("CREATE_USER".equals(column) || "UPDATE_USER".equals(column)) {
 									columnData = "'" + userName + "'";
@@ -2739,6 +2597,40 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									}
 									insertMap.put("INDENTIFY_MARK", indentifyMark);
 								}
+							}else if (prdList.contains(tableName)) {
+								insertMap.put("REGIST_SEQNO", "'" + IDGenerator.generate(32) + "'");
+								//产品状态登记和资产持仓登记设置默认值
+								insertMap.put("STATUS", "'" +DictCodeListExt2.报送数据状态_新建.getValue()+ "'");
+								insertMap.put("SEND_STATUS", "'" +DictCodeListExt2.报送状态_未报送.getValue()+ "'");
+								insertMap.put("SUBMIT_SEQ", "'" +CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)+ "'");
+								if(BaseCommonCheckService.isMYSQLDataBase()){
+									insertMap.put("STATUS_DATE", "NOW()");
+								}else{
+									insertMap.put("STATUS_DATE", "SYSDATE");
+								}
+								//报送截止日
+								List<Date> dateList=new ArrayList<>(1);
+								//产品状态登记报送截止日计算
+								if (StringUtil.equals("CHB_PRD_STATUS_SUB", tableName)) {
+									dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品状态登记.getValue(),
+											DictCodeListExt2.报送数据状态_新建.getValue(), new HashMap<String, List<Date>>(),
+											DateUtil.parse(insertMap.get("CHB_PRD_STATUS_DATE")));
+									insertMap.remove("CHB_PRD_STATUS_DATE");
+								}
+								//资产持仓登记报送截止日计算
+								if (StringUtil.equals("CHB_AST_POS_SUB", tableName)) {
+									dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产持仓登记.getValue(),
+											DictCodeListExt2.报送数据状态_新建.getValue(), new HashMap<String, List<Date>>(),
+											DateUtil.parse(insertMap.get("CHB_AST_POS_SUB_DATE")));
+									insertMap.put("TERMID", "'" + DateUtil.format(DateUtil.parse(insertMap.get("CHB_AST_POS_SUB_DATE"),"yyyy-MM-dd"), com.joyintech.framework.util.DateUtil.MONTH_OTHER_FORMAT)+ "'");
+									        insertMap.remove("CHB_AST_POS_SUB_DATE");
+
+								}
+
+								if (CollectionUtils.isNotEmpty(dateList)) {
+									insertMap.put("CHB_SUBMIT_DEADLINE",  "DATE'" + DateUtil.format(dateList.get(0)) + "'");
+									insertMap.put("SUBMIT_DEADLINE", "DATE'" + DateUtil.format(dateList.get(1)) + "'");
+								}
 							}
 							// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
 							Set<String> keySet = new HashSet<>(insertMap.keySet());
@@ -2751,7 +2643,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							dataInsertList.add(insertMap);
 							break;
 						case "删除" :
-//            			for (int i = 1; i < size; i ++) {
 							for (Integer i : indexList) {
 								String column = columnList.get(i);
 								String columnData = strList.get(i);
@@ -2772,7 +2663,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 										} else {
 											columnData = null;
 										}
-//            					columnData = "DATE'" + columnData.substring(0, 10) +"'";
 									}
 								} else {
 									columnData = "'" + columnData + "'";
@@ -2781,16 +2671,10 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 							}
 							if (CHB_ASSET_INFO_LIST.contains(tableName)) {
 								deleteMap.put("ASSET_TYPE", "'" + assetType + "'");
-//            				String industryShares2 = deleteMap.get("INDUSTRY_SHARES2");
-//            				if (StringUtil.isNotEmpty(industryShares2)) {
-//            					String industryShares1 = tamsBaseMapper.queryFirstIndustryBySecondIndustry(industryShares2.replace("'", ""));
-//            					deleteMap.put("INDUSTRY_SHARES", "'" + industryShares1 + "'");
-//            				}
 							}
 							dataDeleteList.add(deleteMap);
 							break;
 						case "修改" :
-//            			for (int i = 1; i < size; i ++) {
 							for (Integer i : indexList) {
 								String column = columnList.get(i);
 								String columnData = strList.get(i);
@@ -2822,17 +2706,24 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
                                             columnData =  "SYSDATE";
                                         }
 									} else {
-										//excel中输入了时间戳数据处理
-										if(columnData.length() > 10){
-											columnData = columnData.substring(0,10);
-										}
-										String dateStr = formatDateStr(columnData);
-										if (null != dateStr) {
-											columnData = "DATE'" + dateStr + "'";
+
+										String tradeTimeColumnData = getTradeTimeFormat(tableName, column, columnData);
+										if (StringUtil.isNotBlank(tradeTimeColumnData)) {
+											columnData=tradeTimeColumnData;
+											//add by zhoubin 20220721 end GLTZJY-1615
 										} else {
-											columnData = null;
+											//excel中输入了时间戳数据处理
+											if(columnData.length() > 10){
+												columnData = columnData.substring(0,10);
+											}
+											String dateStr = formatDateStr(columnData);
+											if (null != dateStr) {
+												columnData = "DATE'" + dateStr + "'";
+											} else {
+												columnData = null;
+											}
 										}
-//            						columnData = "DATE'" + columnData.substring(0, 10) +"'";
+
 									}
 									// 时间类型字段
 								} else if (timeColumnList.contains(column)) {
@@ -3037,18 +2928,14 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						String dateStr = formatDateTimeStr((String) jsonMap.get(key));
 						if (null != dateStr) {
 							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning start
-//							itemMap.put(key, "'" + dateStr +"'");
 							if (BaseCommonCheckService.isMYSQLDataBase()){
 								itemMap.put(key, "str_to_date('" + dateStr +"' , '%Y-%m-%d %T')");
 							}else {
 								itemMap.put(key, "to_date('" + dateStr +"' , 'yyyy-mm-dd hh24:mi:ss')");
 							}
-
-							//修改  orcle的拼法 TISHKS-1005 20220330 by wangyaning end
 						} else {
 							itemMap.put(key, null);
 						}
-//    					itemMap.put(key, "DATE'" + ((String) jsonMap.get(key)).substring(0, 10) +"'");
 					} else {
 						if(StringUtil.isNotEmpty(jsonMap.get(key))){
 							String keyTemp = (String) jsonMap.get(key);
@@ -3242,23 +3129,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 	private String queryValueByDictAndKey(String resultDictCode, String dataObj) {
 		DictCode dictCode = DictCode.get(resultDictCode);
 		//modify by wm code值直接从缓存中获取 start 20201031
-//		DictCodeList dictCodeList = DictCodeList.from(dictCode, dataObj);
-//		DictCodeListExt1 dictCodeListExt1 = DictCodeListExt1.from(dictCode, dataObj);
-//		DictCodeListExt2 dictCodeListExt2 = DictCodeListExt2.from(dictCode, dataObj);
-//		DictCodeListExt3 dictCodeListExt3 = DictCodeListExt3.from(dictCode, dataObj);
 		String value = dataObj;
-//		if (null != dictCodeList) {
-//			value = dataObj + " " + dictCodeList.getCodeName();
-//		}
-//		if (null != dictCodeListExt1) {
-//			value = dataObj + " " + dictCodeListExt1.getCodeName();
-//		}
-//		if (null != dictCodeListExt2) {
-//			value = dataObj + " " + dictCodeListExt2.getCodeName();
-//		}
-//		if (null != dictCodeListExt3) {
-//			value = dataObj + " " + dictCodeListExt3.getCodeName();
-//		}
 		if(StringUtil.isNotEmpty(dictCode)&&!value.contains(StringUtil.SPACE)){
 			// add by zhangliang 20201110 多选数据字典展示处理  start
 			if(value.contains(GlobalConstant.COMMA)) {
@@ -3275,13 +3146,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				value = dataObj + " " + SysDataUtil.getNameFromDataDict(dictCode, dataObj);
 			}
 		}
-
-		//modify by wm code值直接从缓存中获取 end 20201031
-		// add by  zhangliang 20201030 画面展示需要把itemCode_转成itemCode_itemValue  start
-//		if(value.contains(StringUtil.SPACE)){
-//			value = dataObj + " " + SysDataUtil.getNameFromDataDict(dictCode, StringUtil.trim(dataObj));
-//		}
-		// add by  zhangliang 20201030 画面展示需要把itemCode_转成itemCode_itemValue  end
 		return value;
 	}
 
@@ -3462,7 +3326,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		}
 
 		//添加日期类型默认字段 减少处理  ,从业人员登记因无其他入口.不需要ROW_DATE字段 leipeng
-		if(!tableId.equals("CHB_EMPLOYEE_INFO")){
+		if(!tableId.equals("CHB_EMPLOYEE_INFO") &&
+				!tableId.equals("CHB_PRD_STATUS_SUB") &&
+				!tableId.equals("CHB_AST_POS_SUB")){
 			firstData.add("ROW_DATE");
 		}
 
@@ -3508,7 +3374,9 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 				data.add(j+1, realData);
 			}
 			//添加日期类型默认字段 减少处理  ,从业人员登记因无其他入口.不需要ROW_DATE字段 leipeng
-			if(!tableId.equals("CHB_EMPLOYEE_INFO")){
+			if(!tableId.equals("CHB_EMPLOYEE_INFO")&&
+					!tableId.equals("CHB_PRD_STATUS_SUB") &&
+					!tableId.equals("CHB_AST_POS_SUB")){
 				data.add(DateUtil.getCurrentDate());
 			}
 			dataList.add(i, data);
@@ -3647,13 +3515,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					pkDataMap.put(key, value);
 				}
 			}
-//			if (flag) {
-//				int count = baseInformationMapper.checkDataIsExist(pkDataMap, tableName);
-//				if (count > 0) {
-//					data.remove(0);
-//					data.add(0, "修改");
-//				}
-//			}
 
 			data.add(DateUtil.getCurrentDate());
 
@@ -3710,5 +3571,26 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 			return buffer.substring(0, buffer.length() - 1);
 		}
 		return buffer.toString();
+	}
+
+	/**
+	 * 格式化交易发起时间
+	 * @param tableName
+	 * @param column
+	 * @param columnData
+	 * @return
+	 */
+	private String getTradeTimeFormat(String tableName,String column,String columnData) {
+		if (CHB_TRADE_TIME_LIST.contains(tableName) && StringUtil.equals("TRADE_TIME", column)) {
+			Date tradeTime = DateUtil.parse(columnData, "yyyyMMddHHmmss");
+			if (BaseCommonCheckService.isMYSQLDataBase()) {
+				columnData = "STR_TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','%Y-%m-%d %H:%i:%s')";
+			} else {
+				columnData = "TO_DATE('" + DateUtil.format(tradeTime, "yyyy-MM-dd HH:mm:ss") + "','yyyy-MM-DD HH24:MI:SS')";
+			}
+
+			return columnData;
+		}
+		return null;
 	}
 }

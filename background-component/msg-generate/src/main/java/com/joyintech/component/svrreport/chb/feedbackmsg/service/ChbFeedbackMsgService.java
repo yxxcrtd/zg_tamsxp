@@ -121,11 +121,13 @@ public class ChbFeedbackMsgService {
     /**
      * 一二期报表定义
      */
+    /***0722升级*/
     private static List<String> oneTwoReportList = Arrays.asList(DictCodeList.报表名称_产品申报登记.getValue(), DictCodeList.报表名称_产品发行登记.getValue(),
             DictCodeList.报表名称_机构和私人银行产品发行登记.getValue(),DictCodeList.报表名称_募集总量登记.getValue(),DictCodeList.报表名称_产品存续期登记.getValue(),
             DictCodeList.报表名称_产品终止登记.getValue(),DictCodeList.报表名称_资产要素信息登记.getValue(),DictCodeList.报表名称_资产交易信息登记.getValue(),
-            DictCodeList.报表名称_资管计划底层持仓信息登记.getValue(),DictCodeList.报表名称_资产估值信息登记.getValue(),DictCodeList.报表名称_从业人员登记.getValue());
-
+            DictCodeList.报表名称_资管计划底层持仓信息登记.getValue(),DictCodeList.报表名称_资产估值信息登记.getValue(),DictCodeList.报表名称_从业人员登记.getValue()
+            ,DictCodeList.报表名称_产品状态登记.getValue(),DictCodeList.报表名称_资产持仓登记.getValue());
+    /***0722升级*/
     /**
      * 三期报表定义
      */
@@ -461,6 +463,14 @@ public class ChbFeedbackMsgService {
                 else if (StrUtil.equals(DictCodeList.报表名称_从业人员登记.getValue(), submitType)) {
                     chbFeedbackMsgComponentMapper.updateChbEmployeeInfoSub(status);
                 }
+                /***0722升级**/
+                else if (StrUtil.equals(DictCodeList.报表名称_产品状态登记.getValue(), submitType)) {
+                    chbFeedbackMsgComponentMapper.updateChbPrdStatusSub(status);
+                }
+                else if (StrUtil.equals(DictCodeList.报表名称_资产持仓登记.getValue(), submitType)) {
+                    chbFeedbackMsgComponentMapper.updateChbAstPosSub(status);
+                }
+                /***0722升级**/
             }
 
         }

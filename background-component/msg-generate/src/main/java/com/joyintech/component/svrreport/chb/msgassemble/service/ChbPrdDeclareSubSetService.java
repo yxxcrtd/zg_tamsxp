@@ -1007,7 +1007,26 @@ public class ChbPrdDeclareSubSetService {
 					    cnBondItem65.setMaps(mapList65);//第一个父子节点组合结束
 					    cnBondItemMap.put("OtherDocumentsTuple", cnBondItem65);
 					    break;
-					    
+					/***0722升级*/
+					case "10"://流动性风险评估文件
+						CnBondInterfItemDto cnBondItem99 = new CnBondInterfItemDto();
+						//子节点开始
+						List<Map<String, CnBondInterfItemDto>> mapList99 = new ArrayList<Map<String, CnBondInterfItemDto>>();
+						for(int i = 1; i < str.length; i ++){
+							Map<String, CnBondInterfItemDto> cnBondItemMap99_1 =  new LinkedHashMap<String, CnBondInterfItemDto>();//子节点map
+							CnBondInterfItemDto cnBondItem99_1 = new CnBondInterfItemDto();//第一个子节点
+							String val = str[i];
+							if(!val.startsWith(sub.getProdInsId()+ "_")){
+								val = sub.getProdInsId()+ "_"+ val;
+							}
+							cnBondItem99_1.setValue(val);
+							cnBondItemMap99_1.put("LiquidityRiskAssessmentDocuments",cnBondItem99_1);
+							mapList99.add(cnBondItemMap99_1);
+						}
+						cnBondItem99.setMaps(mapList99);//第一个父子节点组合结束
+						cnBondItemMap.put("LiquidityRiskAssessmentDocumentsTuple", cnBondItem99);
+						break;
+						/***0722升级*/
 					default:
 						break;
 			    	}

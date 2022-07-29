@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbsd.astpossub.dao.SdAstPosSubRegSvrMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto" >
+        <result column="REGIST_SEQNO" property="registSeqno" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="ISSUE_PARTY_ID" property="issuePartyId" jdbcType="VARCHAR" />
+        <result column="PRD_REGIST_CODE" property="prdRegistCode" jdbcType="VARCHAR" />
+        <result column="TERMID" property="termid" jdbcType="VARCHAR" />
+        <result column="VALUE_DATE" property="valueDate" jdbcType="TIMESTAMP" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="POS_TYPE" property="posType" jdbcType="VARCHAR" />
+        <result column="INTER_LEVE_NO" property="interLeveNo" jdbcType="VARCHAR" />
+        <result column="INTER_ASSET_TYPE" property="interAssetType" jdbcType="VARCHAR" />
+        <result column="INTER_ASSET_CODE" property="interAssetCode" jdbcType="VARCHAR" />
+        <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+        <result column="AMT" property="amt" jdbcType="DECIMAL" />
+        <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
+        <result column="FLOAT_INGPL" property="floatIngpl" jdbcType="DECIMAL" />
+        <result column="CNY_FLOAT_INGPL" property="cnyFloatIngpl" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_CPRICE" property="unitValueCprice" jdbcType="DECIMAL" />
+        <result column="UNIT_VALUE_FPRICE" property="unitValueFprice" jdbcType="DECIMAL" />
+        <result column="QTY" property="qty" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="BALANCE_AMT" property="balanceAmt" jdbcType="DECIMAL" />
+        <result column="VALUE_REG_DATE" property="valueRegDate" jdbcType="TIMESTAMP" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="STATUS_DATE" property="statusDate" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_SEQ" property="submitSeq" jdbcType="VARCHAR" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+             REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID,
+            PRD_REGIST_CODE, TERMID, VALUE_DATE,
+            ASSET_ID, POS_TYPE, INTER_LEVE_NO,
+            INTER_ASSET_TYPE, INTER_ASSET_CODE, SUBJECT_NAME,
+            AMT, CNY_AMT, FLOAT_INGPL,
+            CNY_FLOAT_INGPL, UNIT_VALUE_CPRICE, UNIT_VALUE_FPRICE,
+            QTY, CCY, REMARK, BALANCE_AMT,
+            VALUE_REG_DATE, SEND_STATUS, STATUS_DATE,
+            STATUS, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE,
+            SUBMIT_TIME, SUBMIT_FEEDBACK_STATUS, CREATE_DEPT,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,SUBMIT_SEQ,
+            UPDATE_TIME
+  </sql>
+    <select id="selcteDataByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CHB_AST_POS_SUB
+        where SEND_STATUS = '01'
+        AND STATUS = '01'
+        <!--AND   to_char(STATUS_DATE,'yyyy-MM-dd') = #{batchdate,jdbcType = VARCHAR} -->
+        <if test="prodIdList != null and prodIdList.size() > 0">
+            AND PROD_ID IN
+            <trim suffixOverrides=" OR PROD_ID IN ()">
+                <foreach collection='prodIdList' open='(' close=')' index='index'
+                         item='item'>
+                    <if test="index != 0">
+                        <choose>
+                            <when test="index % 1000 == 999">) OR PROD_ID IN (</when>
+                            <otherwise>,</otherwise>
+                        </choose>
+                    </if>
+                    #{item}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+</mapper>

@@ -1158,4 +1158,16 @@ public class  ProdPersonIssue001Dto extends BaseEntity implements ITableRow{
 		return yieldHigh==null?"":df5.format(yieldHigh);
 	}
 
+    /**
+     * 定期开放周期
+     */
+    private  BigDecimal   periodicIntervalDays;
+
+    public BigDecimal getPeriodicIntervalDays() {
+        return periodicIntervalDays;
+    }
+
+    public void setPeriodicIntervalDays(BigDecimal periodicIntervalDays) {
+        this.periodicIntervalDays = periodicIntervalDays;
+    }
 }

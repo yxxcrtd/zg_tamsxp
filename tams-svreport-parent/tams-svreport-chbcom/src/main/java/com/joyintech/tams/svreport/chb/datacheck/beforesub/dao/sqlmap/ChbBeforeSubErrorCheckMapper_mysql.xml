@@ -289,4 +289,51 @@
 		where concat_ws('|',EMPLOYEE_TYPE,IDENTIFY_NUMBER) = #{key}
 		and SEND_STATUS IN ('02','03')
 	</select>
+
+    <select id="selectChbAstPosSub" resultType="java.util.HashMap"  parameterType="java.util.Date" >
+        select * from CHB_AST_POS_SUB
+        where
+        (SUBMIT_FEEDBACK_STATUS !='03' or SUBMIT_FEEDBACK_STATUS is null)
+        <if test="keys!=null and keys.size()!=0">
+
+            <foreach item="key" collection="keys" index="index" open="and (REGIST_SEQNO in(" separator="," close=")">
+                <if test="(index % 998) == 0">
+                    null) or REGIST_SEQNO in (
+                </if>
+
+                #{key}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <select id="selectPositionAmt"  resultType="java.math.BigDecimal">
+    select  ifnull(BALANCE_QTY*
+    ifnull((select PROD_VALUE from chb_prd_periodyield
+    where CHANGE_DATE in (
+    select MAX(CHANGE_DATE)
+    from chb_prd_periodyield
+    WHERE PROD_ID = #{prodId,jdbcType=VARCHAR}
+    AND STATUS = 'E'
+    AND CHANGE_DATE &lt;= STR_TO_DATE(#{checkdate,jdbcType=VARCHAR},'%Y-%m-%d')
+    )
+    and PROD_ID = #{prodId,jdbcType=VARCHAR}
+    AND STATUS = 'E'),0),0)
+    from chb_prd_position where PROD_ID=#{prodId,jdbcType=VARCHAR} and CDATE=STR_TO_DATE(#{checkdate,jdbcType=VARCHAR},'%Y-%m-%d')
+
+</select>
+
+    <select id="selectMonthAssetTotalAmt"  resultType="java.math.BigDecimal">
+SELECT
+ifnull(
+(select BALANCE*10000 from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
+AND TERMID= #{termid,jdbcType=VARCHAR}),0) FROM DUAL
+</select>
+
+    <select id="selectMonthAssetTotalBoAmt"  resultType="java.math.BigDecimal">
+SELECT
+ifnull(
+(select BOTTOMBALANCE*10000 from chb_month_report_detail  where PROPERTYCODE='AMT1_15'
+AND TERMID= #{termid,jdbcType=VARCHAR}),0) FROM DUAL
+</select>
 </mapper>

@@ -74,6 +74,11 @@
 		and SUB.STATUS != '03')
 		and POS.STATUS != 'D'
 		and POS.ASSET_CODE!='REMAININGCASH'
+		<if test='subjectNoList!=null and subjectNoList.size()>0'>
+			<foreach collection="subjectNoList" item="subjectNo" index="index" open="and POS.ASSET_CODE not in (" close=")" separator=",">
+				#{subjectNo,jdbcType=VARCHAR}
+			</foreach>
+		</if>
 	</select>
 	<!-- modify by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 end -->
 
@@ -145,8 +150,8 @@
 		and not exists  (
 		select 1 from CHB_BOT_AST_POS POS
 		where DATE_FORMAT(SUB.POS_DATE,'%Y-%m-%d') = DATE_FORMAT(POS.POS_DATE,'%Y-%m-%d')
-		and PLANASSET.ASSET_CODE = POS.PLAN_ASSET_ID
-		and BOTASSET.ASSET_CODE = POS.ASSET_CODE
+		and sub.PLAN_ASSET_ID = POS.PLAN_ASSET_ID
+		and sub.ASSET_CODE = POS.ASSET_CODE
 		and POS.STATUS != 'D')
 	</select>
 
