@@ -403,7 +403,7 @@ $(function () {
     });
 
     table.bind('click', '.batch', function (data, index) {
-        var height = '600px';
+        var height = '90%';
         var btns = {};
         var keyList = [];
         var dialogIndex = -1;
@@ -423,7 +423,7 @@ $(function () {
                 Joyin.error("所选数据不存在，请重新查询！");
                 table.load();
             } else {
-                dialogIndex = Joyin.dialog('预览', path, '1200px', height, param, function (params) {
+                dialogIndex = Joyin.dialog('预览', path, '90%', height, param, function (params) {
                 }, btns);
             }
         });
