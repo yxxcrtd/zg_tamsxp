@@ -2575,7 +2575,6 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								insertMap.put("STATUS", "'" +DictCodeListExt2.报送数据状态_新建.getValue()+ "'");
 								insertMap.put("SEND_STATUS", "'" +DictCodeListExt2.报送状态_未报送.getValue()+ "'");
 								insertMap.put("SUBMIT_SEQ", "'" +CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)+ "'");
-								insertMap.put("TERMID", "'" + DateUtil.format(DateUtil.parse(insertMap.get("CHB_AST_POS_SUB_DATE"),"yyyy-MM-dd"), com.joyintech.framework.util.DateUtil.MONTH_OTHER_FORMAT)+ "'");
 								if(BaseCommonCheckService.isMYSQLDataBase()){
 									insertMap.put("STATUS_DATE", "NOW()");
 								}else{
@@ -2595,6 +2594,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产持仓登记.getValue(),
 											DictCodeListExt2.报送数据状态_新建.getValue(), new HashMap<String, List<Date>>(),
 											DateUtil.parse(insertMap.get("CHB_AST_POS_SUB_DATE")));
+									insertMap.put("TERMID", "'" + DateUtil.format(DateUtil.parse(insertMap.get("CHB_AST_POS_SUB_DATE"),"yyyy-MM-dd"), com.joyintech.framework.util.DateUtil.MONTH_OTHER_FORMAT)+ "'");
 									        insertMap.remove("CHB_AST_POS_SUB_DATE");
 
 								}
