@@ -2575,6 +2575,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								insertMap.put("STATUS", "'" +DictCodeListExt2.报送数据状态_新建.getValue()+ "'");
 								insertMap.put("SEND_STATUS", "'" +DictCodeListExt2.报送状态_未报送.getValue()+ "'");
 								insertMap.put("SUBMIT_SEQ", "'" +CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)+ "'");
+								insertMap.put("TERMID", "'" + DateUtil.format(DateUtil.parse(insertMap.get("VALUE_DATE"),"yyyy-MM-dd"), com.joyintech.framework.util.DateUtil.MONTH_OTHER_FORMAT)+ "'");
 								if(BaseCommonCheckService.isMYSQLDataBase()){
 									insertMap.put("STATUS_DATE", "NOW()");
 								}else{

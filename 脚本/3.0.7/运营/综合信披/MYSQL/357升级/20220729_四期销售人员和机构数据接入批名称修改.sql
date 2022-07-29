@@ -1,0 +1,3 @@
+delete from SYS_BATCH_TASK where TASK_ID in ('3091','3092');
+INSERT INTO SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET) VALUES ('3091', 'VAL', '总部或分支机构信息接口数据接入', null, 'svrSaleInstInterfTaskService', 3050, 'system', null, now(), 'system', now(), null);
+INSERT INTO SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET) VALUES ('3092', 'VAL', '销售人员身份信息接口数据接入', null, 'svrSaleIderInterfTaskService', 3050, 'system', null, now(), 'system', now(), null);
