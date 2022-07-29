@@ -44,6 +44,7 @@ import com.joyintech.tams.report.common.util.ChbDeadlineUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.system.proregistcodemanage.dao.ProRegistCodeManage001Mapper;
 import com.joyintech.tams.svreport.infomanagement.service.OperationalLoanInfo001CheckService;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
@@ -77,6 +78,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.joyintech.tams.common.svreport.chb.util.SvrDataUtil.getSysParam;
@@ -153,6 +155,8 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 
 	@Autowired
 	private OperationalLoanInfo001CheckService operationalLoanInfo001CheckService;
+	@Autowired
+	private ProRegistCodeManage001Mapper proRegistCodeManage001Mapper;
 	// 需要存入数据来源的接口
 	private static final String[] INTERF_DATASOURCE = new String[] {"CHB_ASSET_INFO","CHB_BOT_AST_POS"};
 
@@ -2112,7 +2116,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						if (!StringUtils.isEmpty(asset_id)) {
 							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(asset_id);
 							if (count<1) {
-								checkResult.add(new ExcelValidDto("行内资产/负债编码[ASSET_ID="+asset_id+"]", String.valueOf(j+1),"行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+								//checkResult.add(new ExcelValidDto("行内资产/负债编码[ASSET_ID="+asset_id+"]", String.valueOf(j+1),"行内资产/负债编码在[资产要素登记]中不存在或未报送"));
 							}
 
 						}
@@ -2120,7 +2124,7 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 						if (!StringUtils.isEmpty(inter_asset_code)) {
 							int count = comminCodeCheckTmpMapper.queryChbAssetInfoSubByAssetCodeAndSendStatus(inter_asset_code);
 							if (count<1) {
-								checkResult.add(new ExcelValidDto("中间层行内资产/负债编码[INTER_ASSET_CODE="+inter_asset_code+"]", String.valueOf(j+1),"中间层行内资产/负债编码在[资产要素登记]中不存在或未报送"));
+								//checkResult.add(new ExcelValidDto("中间层行内资产/负债编码[INTER_ASSET_CODE="+inter_asset_code+"]", String.valueOf(j+1),"中间层行内资产/负债编码在[资产要素登记]中不存在或未报送"));
 							}
 
 						}
@@ -2332,6 +2336,15 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 		tableName=chbMgrTableInfo.getMgrTableName();
 
 		if (originalDataList!=null&&!originalDataList.isEmpty()) {
+
+			CompletableFuture<Map> proRegistCodeManageFuture = CompletableFuture.supplyAsync(() -> {
+				//系统中所有产品代码对应产品登记编码信息
+				List<Map<String, String>> mapList = proRegistCodeManage001Mapper.selectProdInfo();
+				if (CollectionUtils.isEmpty(mapList)) {
+					return Collections.EMPTY_MAP;
+				}
+				return mapList.stream().collect(JoyinCollectors.toMap(x -> x.get("REGCODE"), x -> x.get("PRODID")));
+			});
 			// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
 			// 所有字段集合
 			List<String> allColumnList = baseInformationMapper.queryAllColumns(tableId);
@@ -2425,6 +2438,14 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 					HashMap<String, String> deleteMap = new HashMap<String, String>();
 					// 修改数据Map
 					HashMap<String, String> updateMap = new HashMap<String, String>();
+                    //子线程获取产品登记编码信息
+					Map<String, String> proRegistCodeManageMap = new HashMap<>();
+					try {
+						proRegistCodeManageMap = proRegistCodeManageFuture.get();
+					} catch (Exception e){
+						logger.error("获取产品登记编码错误{}",e.getMessage());
+					}
+
 					switch(strList.get(0)) {
 						case "新增" :
 							for (Integer i : indexList) {
@@ -2439,6 +2460,13 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 								//资产名称覆盖问题修复，防止被覆盖
 								if("ASSET_NAME".equals(column)&&StringUtil.isEmpty(columnData)){
 									continue;
+								}
+
+								//通过产品登记编码得到产品代码
+								if ("PRD_REGIST_CODE".equals(column)){
+									if (StringUtil.isNotEmpty(columnData)&&(prdList.contains(tableName))){
+										insertMap.put("PROD_ID", "'"+proRegistCodeManageMap.get(columnData)+"'");
+									}
 								}
 								// 数据状态定为E
 								if ("STATUS".equals(column)) {
