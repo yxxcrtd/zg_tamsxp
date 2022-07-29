@@ -866,7 +866,15 @@
             '02' IS_UNDER_TRADE,/*是否底层交易流水:02 否*/
             NULL INVEST_VARIETY,/*投资品种 01债券 02ABS*/
             BALANCE.O_CCY CCY/*币种:关联资产要素信息表CHB_ASSET_INFO得到币种CCY*/
-        FROM BOK_BALANCE BALANCE
+        FROM
+        (
+        select  * from BOK_BALANCE
+        where SUBJECT_NO !='3001'
+        union all
+        select  * from BOK_BALANCE
+        where  SUBJECT_NO ='3001'
+         and  BAL_FLAG='D'
+        ) BALANCE
         LEFT JOIN CHB_PRD_BASEINFO PRODINFO /*产品要素信息*/
         on prodinfo.PROD_ID = replace(balance.BOOKSET_ID,'F16_')
         WHERE 1 =1 
