@@ -1,15 +1,13 @@
-package com.joyintech.tams.batch.report.antomanual.runner;
+package com.joyintech.tams.batch.svreport.chb.chbastposregistexport.runner;
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.tams.batch.report.antomanual.service.ChbAstPosRegistAutoManualMainService;
+import com.joyintech.tams.batch.svreport.chb.chbastposregistexport.service.ChbAstPosRegistAutoManualMainService;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * 资产持仓登记手工处理

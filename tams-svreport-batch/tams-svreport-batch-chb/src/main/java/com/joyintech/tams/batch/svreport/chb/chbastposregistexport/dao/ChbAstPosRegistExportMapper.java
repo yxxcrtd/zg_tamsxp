@@ -1,4 +1,4 @@
-package com.joyintech.tams.batch.report.chbastposregistexport.dao;
+package com.joyintech.tams.batch.svreport.chb.chbastposregistexport.dao;
 
 import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog;
 import com.joyintech.tams.svreport.chb.astposregist.dto.ChbAstPosRegist001Dto;

@@ -1,10 +1,9 @@
-package com.joyintech.tams.batch.report.chbastposregistexport.runner;
+package com.joyintech.tams.batch.svreport.chb.chbastposregistexport.runner;
 
 
 import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.tams.batch.report.chbastposregistexport.service.ChbAstPosRegistExportMainService;
-import com.joyintech.tams.report.system.subinfobatchlog.service.ChbSubinfoBatchLogService;
+import com.joyintech.tams.batch.svreport.chb.chbastposregistexport.service.ChbAstPosRegistExportMainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;

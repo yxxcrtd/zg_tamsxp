@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joyintech.tams.batch.report.chbastposregistexport.dao.ChbAstPosRegistExportMapper_mysql">
+<mapper namespace="com.joyintech.tams.batch.svreport.chb.chbastposregistexport.dao.ChbAstPosRegistExportMapper_mysql">
     <select id="getBatchLog" resultType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog">
-		select *
-		from chb_subinfo_batch_log
+		select * from chb_subinfo_batch_log
 		where deal_status = '04'
 	</select>
     <select id="countExportNum" parameterType="map" resultType="int">
-        select count(*)
-        from CHB_AST_POS_SUB sub
+        select count(*) from CHB_AST_POS_SUB sub
         <where>
             <if test="valueDateStart != null and valueDateStart != ''">
                 and DATE_FORMAT(sub.VALUE_DATE,'%Y-%m-%d') <![CDATA[ >= ]]> #{valueDateStart}

@@ -1,10 +1,10 @@
-package com.joyintech.tams.batch.report.chbastposregistexport.service;
+package com.joyintech.tams.batch.svreport.chb.chbastposregistexport.service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
-import com.joyintech.tams.batch.report.chbastposregistexport.dao.ChbAstPosRegistExportMapper;
+import com.joyintech.tams.batch.svreport.chb.chbastposregistexport.dao.ChbAstPosRegistExportMapper;
 import org.springframework.stereotype.Service;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import com.joyintech.tams.constant.DictCodeListExt3;

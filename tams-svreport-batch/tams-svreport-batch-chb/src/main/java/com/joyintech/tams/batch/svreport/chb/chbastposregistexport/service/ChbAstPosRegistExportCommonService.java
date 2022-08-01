@@ -1,4 +1,4 @@
-package com.joyintech.tams.batch.report.chbastposregistexport.service;
+package com.joyintech.tams.batch.svreport.chb.chbastposregistexport.service;
 
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -12,7 +12,7 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.batch.report.chbastposregistexport.dao.ChbAstPosRegistExportMapper;
+import com.joyintech.tams.batch.svreport.chb.chbastposregistexport.dao.ChbAstPosRegistExportMapper;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
