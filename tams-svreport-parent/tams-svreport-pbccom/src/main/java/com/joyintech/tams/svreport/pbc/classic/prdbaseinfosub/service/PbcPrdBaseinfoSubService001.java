@@ -377,7 +377,7 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 				result.setZjxtFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getZjxtFlag()));
 			}
             if (result.getProdStage() != null) {
-            	result.setProdStageToString(result.getProdStage().toString());
+				result.setProdStageToString(Integer.toString(result.getProdStage().intValue()));
 			}
            /* //日期转String，用于excel数据填充
             if (StringUtil.isNotEmpty(result.getRaiseEnddate())){

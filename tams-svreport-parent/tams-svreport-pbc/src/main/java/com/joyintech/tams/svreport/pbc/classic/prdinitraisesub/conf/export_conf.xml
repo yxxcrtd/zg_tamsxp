@@ -17,7 +17,7 @@
 			<Cell order="13" name="币种">ccy</Cell>
 			<Cell order="14" name="起始募集金额">initRaisingAmtsum</Cell>
 			<Cell order="15" name="起始募集金额折人民币">initRaisingAmtsumcny</Cell>
-			<Cell order="16" name="起始募集份额">initRaisingQty</Cell>
+			<Cell order="16" name="起始募集份额">initRaisingQtyStr</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

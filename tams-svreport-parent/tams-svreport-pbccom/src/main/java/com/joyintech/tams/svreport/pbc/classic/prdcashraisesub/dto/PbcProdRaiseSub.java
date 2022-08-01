@@ -446,6 +446,10 @@ public class PbcProdRaiseSub extends BaseEntity{
         this.raisingQty = raisingQty;
     }
 
+    public String getRaisingQtyStr() {
+        return this.getRaisingQty()==null?null: Integer.toString(this.getRaisingQty().intValue());
+    }
+
     /**
      * 当期兑付/赎回金额
      * @return REDAMT 当期兑付/赎回金额
@@ -494,6 +498,10 @@ public class PbcProdRaiseSub extends BaseEntity{
         this.redqty = redqty;
     }
 
+    public String getRedqtyStr() {
+        return this.getRedqty()==null?null: Integer.toString(this.getRedqty().intValue());
+    }
+
     /**
      * 期末产品金额
      * @return ENDAMTSUM 期末产品金额
@@ -540,6 +548,10 @@ public class PbcProdRaiseSub extends BaseEntity{
      */
     public void setEndqty(BigDecimal endqty) {
         this.endqty = endqty;
+    }
+
+    public String getEndqtyStr() {
+        return this.getEndqty()==null?null: Integer.toString(this.getEndqty().intValue());
     }
 
     /**

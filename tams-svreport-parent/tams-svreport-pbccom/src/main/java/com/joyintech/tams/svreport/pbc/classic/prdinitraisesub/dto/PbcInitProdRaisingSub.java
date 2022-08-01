@@ -370,6 +370,10 @@ public class PbcInitProdRaisingSub extends BaseEntity {
         this.initRaisingQty = initRaisingQty;
     }
 
+    public String getInitRaisingQtyStr() {
+        return this.getInitRaisingQty()==null?null: Integer.toString(this.getInitRaisingQty().intValue());
+    }
+
     /**
      * 报送状态
      * @return SEND_STATUS 报送状态

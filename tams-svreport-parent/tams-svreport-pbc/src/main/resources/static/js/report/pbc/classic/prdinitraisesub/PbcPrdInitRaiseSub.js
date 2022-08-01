@@ -77,7 +77,7 @@ $(function(){
 				{ title: "币种", field: 'ccy',width:150,sortField:'ccy'},
 				{ title: "起始募集金额", field: 'initRaisingAmtsum',width:150,type:'money',digit:2,sortField:'initRaisingAmtsum'},
 				{ title: "起始募集金额折人民币", field: 'initRaisingAmtsumcny',width:150,type:'money',digit:2,sortField:'initRaisingAmtsumcny'},
-				{ title: "起始募集份额", field: 'initRaisingQty',width:150,type:'money',digit:5,sortField:'initRaisingQty'},
+				{ title: "起始募集份额", field: 'initRaisingQtyStr',width:150,sortField:'initRaisingQty'},
 				{field:'sendStatus', visible:false},
 	            {field:'status', visible:false},
 	            {field:'submitFeedbackStatus', visible:false}

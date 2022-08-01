@@ -72,7 +72,7 @@ public class PbcPrdInitRaiseSubService001 extends CommonExportService<PbcInitPro
 //			result.setSendStatus(SysDataUtil.getNameFromDataDict(DictCode.报送状态, result.getSendStatus()));
 //			result.setSubmitFeedbackStatus(SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态,result.getSubmitFeedbackStatus()));
             if (StringUtil.isNotEmpty(result.getBuyPlace())){
-                result.setBuyPlace( SysDataUtil.getNameFromDataDict(DictCode.行政区划_省,result.getBuyPlace()));
+				result.setBuyPlace( result.getBuyPlace()+" "+SysDataUtil.getNameFromDataDict(DictCode.行政区划_省,result.getBuyPlace()));
             }
             if (StringUtil.isNotEmpty(result.getCustomerType1())){
                 result.setCustomerType1( SysDataUtil.getNameFromDataDict(DictCode.人行客户类型,result.getCustomerType1()));
