@@ -413,11 +413,13 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
         }
         // 人民币份额
         if (detail.getRmbfe() != null && BigDecimal.ZERO.compareTo(detail.getRmbfe()) != 0) {
-            detail.setRmbfeToString(df.format(detail.getRmbfe()));
+			//            detail.setRmbfeToString(df.format(detail.getRmbfe()));
+			detail.setRmbfeToString(detail.getRmbfe()==null?null:Long.toString(detail.getRmbfe().longValue()));
         }
         //份额
         if (detail.getFe() != null && BigDecimal.ZERO.compareTo(detail.getFe()) != 0) {
-            detail.setFeToString(df.format(detail.getFe()));
+			//            detail.setFeToString(df.format(detail.getFe()));
+			detail.setFeToString(detail.getFe()==null?null:Long.toString(detail.getFe().longValue()));
         }
     }
 	
