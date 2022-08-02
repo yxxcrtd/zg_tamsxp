@@ -268,9 +268,11 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		dateTempList = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
 		//获取机构名称及银行登记编码
 		for(SellMonthReport report : dateTempList){
-			String orgCode = CommonUtil.getOrgCode();
+			/*String orgCode = CommonUtil.getOrgCode();
 			String issuePartyId = sellMonthReportMapper.selectIssuePartyId(orgCode);
-			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);
+			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);*/
+			String issuePartyId =CommonUtil.selectBankCode();
+			String  issuePartyName=CommonUtil.selectBankCodeName();
 			report.setIssuePartyName(issuePartyName);
 			report.setIssuePartyId(issuePartyId);
 		}
