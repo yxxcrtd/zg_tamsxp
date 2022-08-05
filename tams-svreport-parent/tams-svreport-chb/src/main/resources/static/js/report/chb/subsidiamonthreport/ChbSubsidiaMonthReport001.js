@@ -51,7 +51,7 @@ $(function() {
             { title: "数据日期", width : 200, field: 'statusDate', type: 'datetime',sortField:'status_Date'},
             { title: "报送状态", width : 130, field: 'sendStatusStr',sortField:'send_Status'},
             { title: "报送日期", width : 200, field: 'submitTime', type: 'datetime',sortField:'submit_Time'},
-            { title: "报送截止日", width : 200, field: 'chbSubmitDeadline', type: 'datetime',sortField:'chb_Submit_Deadline'},
+            { title: "报送截止日", width : 200, field: 'chbSubmitDeadline', type: 'date',sortField:'chb_Submit_Deadline'},
             { title: "反馈状态",  width : 130,field: 'submitFeedbackStatusStr',sortField:'submit_Feedback_Status'},
             {title: '统计年月', width : 130,field:'termname',sortField:'termid'},
             {title: '报表名称',width : 310,field:'reportname',sortField:'termid'},
