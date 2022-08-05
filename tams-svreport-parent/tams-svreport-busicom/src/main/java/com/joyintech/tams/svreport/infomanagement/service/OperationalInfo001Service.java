@@ -2723,7 +2723,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				insertMap.put(column, columnData);
                 		}
             			//增加状态字段的设置
-            			insertMap.put("STATUS", "'" + "E" + "'");  
+            			/*insertMap.put("STATUS", "'" + "E" + "'"); */
             			
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
             			if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
@@ -2734,7 +2734,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
                            String SYSDATE=  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
             				insertMap.put("ASSET_TYPE", "'" + assetType + "'");
-            				insertMap.put("STATUS", "'" + "E" + "'");
+            				/*insertMap.put("STATUS", "'" + "E" + "'");*/
                             if(BaseCommonCheckService.isMYSQLDataBase()){
                                 insertMap.put("CREATE_TIME", SYSDATE);
                                 insertMap.put("UPDATE_TIME", SYSDATE);
