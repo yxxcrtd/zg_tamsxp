@@ -132,11 +132,21 @@ public class SellMonthReport001Service extends CommonExportService<SellMonthRepo
 		dateTempList = sellMonthReportMapper.selectByPrimaryKey(reportuuid);
 		//获取机构名称及银行登记编码
 		for(SellMonthReport Monthreport : dateTempList){
-			String orgCode = CommonUtil.getOrgCode();
-			String issuePartyId = sellMonthReportMapper.selectIssuePartyId(orgCode);
-			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);
+			/*String orgCode = CommonUtil.getOrgCode();*/
+			String issuePartyId =CommonUtil.selectBankCode();
+			String  issuePartyName=CommonUtil.selectBankCodeName();
+			/*String issuePartyId = sellMonthReportMapper.selectIssuePartyId(orgCode);
+			String issuePartyName = sellMonthReportMapper.selectOrgName(orgCode);*/
+			String termidstr=Monthreport.getTermid();
 			Monthreport.setIssuePartyName(issuePartyName);
 			Monthreport.setIssuePartyId(issuePartyId);
+
+			if(Monthreport.getTermid().contains("-")){
+				int index = termidstr.indexOf("-");
+				String termidstr1= termidstr.substring(0,index);
+				String termidstr2=termidstr.substring(index+1);
+				Monthreport.setTermid(termidstr1+termidstr2);
+			}
 		}
 		String fileName = reportName +".xls";
 		//查询当前期数的reportuuid主键
