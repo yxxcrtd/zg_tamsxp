@@ -38,7 +38,7 @@ $(function(){
               { title: "数据日期", field: 'statusDate',width:150,type: 'datetime',sortField:'statusDate'},
               { title: "报送状态", field: 'sendStatusStr',width:150,sortField:'sendStatus'},
               { title: '报送日期',field:'submitTime',width:150,type: 'datetime',sortField:'submitTime'},
-              { title: "报送截止日", field: 'pbcSubmitDeadline',width:150, type: 'datetime',sortField:'pbcSubmitDeadline'},
+              { title: "报送截止日", field: 'pbcSubmitDeadline',width:150, type: 'date',sortField:'pbcSubmitDeadline'},
               { title: "反馈状态", field: 'submitFeedbackStatusStr',width:150,sortField:'submitFeedbackStatus'},
               { title: "募集日期", field: 'raisingDate',width:150, type: 'date',sortField:'raisingDate'},
 //              { title: "产品代码", field: 'pbcProdId',width:150,sortField:''},

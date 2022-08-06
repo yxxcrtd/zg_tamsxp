@@ -395,8 +395,8 @@ public class PbcPrdCashRaiseSubService extends PbcClassicsSubService<PbcProdRais
                     List<Date> dateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品资金募集信息.getValue(),
                             DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, DateUtil.getFirstDay(executeDate),SVReportGlobalConstant.SVR_SUBMIT_TIME_PBC);
                     if (!StringUtil.isEmptyList(dateList)) {
-                        sub.setPbcSubmitDeadline(dateList.get(0));
-                        sub.setSubmitDeadline(dateList.get(1));
+                        sub.setPbcSubmitDeadline(DateUtil.addDay(dateList.get(0),-1));
+                        sub.setSubmitDeadline(DateUtil.addDay(dateList.get(1),-1));
                     }
                     // 创建人
                     sub.setCreateUser(CommonUtil.getUserName());

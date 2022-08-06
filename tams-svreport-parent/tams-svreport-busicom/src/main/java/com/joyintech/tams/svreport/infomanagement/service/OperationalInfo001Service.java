@@ -1293,16 +1293,17 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		if (iterator.hasNext()) {
 			Entry<String, List<Map<String, String>>> entity = iterator.next();
 			// 根据接口类型找到表名
-			List<String> tableIds = baseInformationMapper.queryTableIdByDataObject(entity.getKey());
+			/*List<String> tableIds = baseInformationMapper.queryTableIdByDataObject(entity.getKey());*/
+			String tableName=entity.getKey();
 
 			Map<String,Object> selectParam = new HashMap<>();
-			selectParam.put("tableId", tableIds.get(0));
+			selectParam.put("tableId", tableName);
             List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
             Map<String, String> resultMap = new HashMap<String, String>(16);
 //            List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = new ArrayList<ChbInfoMgrResultConfig>();
             // 资产要素表导出需要合并单元格的列号索引
     		List<Integer> mergeIndexList = new ArrayList<Integer>();
-    		if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+    		if(CHB_ASSET_INFO_LIST.contains(tableName)){
     			List<SysDataDict> dictList = tamsBaseMapper.selectSysDatadictValueList("SVR_ASSETDEBT_TYPE");
     			chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfoEx(selectParam);
     			mergeIndexList.add(0);
@@ -1328,8 +1329,8 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         				if(StringUtil.equals("ASSET_TYPE", map.get("ASSET_TYPE"))){
         					continue;
         				}
-        				List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableIds.get(0));
-        				List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableIds.get(0));
+        				List<String> dateColumnList =  baseInformationMapper.queryDateColumnList(tableName);
+        				List<String> timeColumnList =  baseInformationMapper.queryTimeColumnList(tableName);
     					String assetType = map.get("ASSET_TYPE").toString();
     					if(StringUtil.equals("19", assetType)){
     						assetType = "15";
@@ -1407,7 +1408,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			String[] title = new String[size + 1];
 			String[] titleCode = new String[size + 1];
 			title[0] = "操作类型";
-			if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
+			if(CHB_ASSET_INFO_LIST.contains(tableName)){
 				titleCode[0] = "操作类型";
 			}
 			int i = 1;
@@ -1450,11 +1451,11 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
                 }
             }
 			try {
-			if(CHB_ASSET_INFO_LIST.contains(tableIds.get(0))){
-				responseEntity = chbAssetListToExcel(tableIds.get(0),tableIds.get(0), title, dataList, enumIndexMap, mergeIndexList);;
+			if(CHB_ASSET_INFO_LIST.contains(tableName)){
+				responseEntity = chbAssetListToExcel(tableName,tableName, title, dataList, enumIndexMap, mergeIndexList);;
 			}
 			else{
-				responseEntity = objListToExcel(tableIds.get(0),tableIds.get(0), title, dataList, false, enumIndexMap);
+				responseEntity = objListToExcel(tableName,tableName, title, dataList, false, enumIndexMap);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
@@ -1662,11 +1663,17 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 		ResponseEntity<byte[]> responseEntity= null;
 		String createTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
-		List<BaseInformationDto> baseInformationDtoList = baseInformationMapper.queryBaseInfoByTableId(tableId);
+		String chiName;
+		if(tableId.equals("CHB_ASSET_INFO")){
+			chiName ="资产要素表";
+		}else {
+			List<BaseInformationDto> baseInformationDtoList = baseInformationMapper.queryBaseInfoByTableId(tableId);
+			chiName = baseInformationDtoList.get(0).getBaseTableName();
+		}
 		// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 start
 		String fileName = exportFilePath + File.separator + tableName + createTime + ".xlsx";
 		// modify by dubaojun 2020-10-15 业务数据维护导出报错问题修改，原因是导出文件时路径未拼接分割符，导致路径不正确 end
-		String chiName = baseInformationDtoList.get(0).getBaseTableName();
+
 		String exportFileName = chiName + createTime + ".xlsx";
 		try {
 			@SuppressWarnings("resource")
@@ -2723,7 +2730,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             				insertMap.put(column, columnData);
                 		}
             			//增加状态字段的设置
-            			insertMap.put("STATUS", "'" + "E" + "'");  
+            			/*insertMap.put("STATUS", "'" + "E" + "'"); */
             			
             			//包含定义的接口名称的时候，这些接口的数据来源导入默认增加datasource为手工处理 2020-07-17 start
             			if(StringUtil.isEmpty(insertMap.get("DATA_SOURCE"))&&
@@ -2734,7 +2741,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
             			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
                            String SYSDATE=  "'" + DateUtil.formatDateTime(DateUtil.now())+ "'";
             				insertMap.put("ASSET_TYPE", "'" + assetType + "'");
-            				insertMap.put("STATUS", "'" + "E" + "'");
+            				/*insertMap.put("STATUS", "'" + "E" + "'");*/
                             if(BaseCommonCheckService.isMYSQLDataBase()){
                                 insertMap.put("CREATE_TIME", SYSDATE);
                                 insertMap.put("UPDATE_TIME", SYSDATE);

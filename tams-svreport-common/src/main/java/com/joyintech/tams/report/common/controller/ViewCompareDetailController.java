@@ -311,6 +311,14 @@ public class ViewCompareDetailController extends BaseController {
                     sb.append("current");
                     // 设置当前值
                     setValue(detailList, tableName, registSeqNo, targetClass,sb,pageId);
+                    if("PBC_PRD_BASEINFO_SUB_NEW".equals(tableName)){
+                        for(RegistDetailDto registDetailDto:detailList){
+                            if("pbcProdType".equals(registDetailDto.getData())){
+                                registDetailDto.setCurrentValue("1-银行非保本理财");
+                            }
+
+                        }
+                    }
                     // 设置修改前值
                     String oldTableName = getTableName(detailList, tableName);
                     if(null != oldTableName) {
