@@ -208,7 +208,7 @@
         where 1=1
         <if test="keyList != null and keyList.size() > 0">
             <foreach collection="keyList" item="items" open="and sub.TERMID in (" separator="," close=")">
-                #{items.termid,jdbcType=VARCHAR}
+                #{items,jdbcType=VARCHAR}
             </foreach>
         </if>
         order by sub.SUBMIT_DEADLINE
