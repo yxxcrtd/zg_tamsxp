@@ -259,38 +259,39 @@ public class ChbAstPosRegist001Service extends CommonExportService<ChbAstPosRegi
 		dealSearchParam(pageParam);
 		@SuppressWarnings("unchecked")
 		List<ChbAstPosRegist001Dto> dataList =  (List<ChbAstPosRegist001Dto>) pageParam.get("investList");
+		Map<String,List<ChbAstPosRegist001Dto>>  maptermid=dataList.stream().collect(Collectors.groupingBy(ChbAstPosRegist001Dto::getTermid));
 
 		List<ChbAstPosRegist001Dto> dtoList = new ArrayList<ChbAstPosRegist001Dto>();
-		this.selectAllDataBatch(dataList, dtoList);
+		this.selectAllDataBatch(new ArrayList<>(maptermid.keySet()), dtoList);
 		dealResultlist(dtoList);
 		return dtoList;
 	}
-	
-	private void selectAllDataBatch(List<ChbAstPosRegist001Dto> dataList, List<ChbAstPosRegist001Dto> dtoList) {
+
+	private void selectAllDataBatch(List<String> dataList, List<ChbAstPosRegist001Dto> dtoList) {
 		if (StringUtil.isEmptyList(dataList)) {
 			dtoList.addAll(chbAstPosRegist001Mapper.selectAllDataByList(dataList));
 			return;
-        }
-        int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
-        int dataCount = dataList.size();
-        if (dataCount <= maxDataCountOneTime) {
-        	dtoList.addAll(chbAstPosRegist001Mapper.selectAllDataByList(dataList));
-            return;
-        }
+		}
+		int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
+		int dataCount = dataList.size();
+		if (dataCount <= maxDataCountOneTime) {
+			dtoList.addAll(chbAstPosRegist001Mapper.selectAllDataByList(dataList));
+			return;
+		}
 
-        List<ChbAstPosRegist001Dto> newDataList = new ArrayList<ChbAstPosRegist001Dto>();
-        newDataList.addAll(dataList);
+		List<String> newDataList = new ArrayList<String>();
+		newDataList.addAll(dataList);
 
-        // 分批处理
-        int part = dataCount / maxDataCountOneTime; // 分批数
-        for (int i = 0; i < part; i++ ) {
-        	dtoList.addAll(chbAstPosRegist001Mapper.selectAllDataByList(newDataList.subList(0, maxDataCountOneTime)));
-            newDataList.subList(0, maxDataCountOneTime).clear();
-        }
-        // 最后剩下的数据
-        if (CollectionUtils.isNotEmpty(newDataList)) {
-        	dtoList.addAll(chbAstPosRegist001Mapper.selectAllDataByList(newDataList));
-        }
+		// 分批处理
+		int part = dataCount / maxDataCountOneTime; // 分批数
+		for (int i = 0; i < part; i++ ) {
+			dtoList.addAll(chbAstPosRegist001Mapper.selectAllDataByList(newDataList.subList(0, maxDataCountOneTime)));
+			newDataList.subList(0, maxDataCountOneTime).clear();
+		}
+		// 最后剩下的数据
+		if (CollectionUtils.isNotEmpty(newDataList)) {
+			dtoList.addAll(chbAstPosRegist001Mapper.selectAllDataByList(newDataList));
+		}
 	}
 
 	/**

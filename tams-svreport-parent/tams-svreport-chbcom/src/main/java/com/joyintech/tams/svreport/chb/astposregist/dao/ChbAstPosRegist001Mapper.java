@@ -16,7 +16,7 @@ public interface ChbAstPosRegist001Mapper {
 
     List<ChbAstPosRegist001Dto> selectAllData(Map<String, Object> pageParam);
 
-    List<ChbAstPosRegist001Dto> selectAllDataByList(@Param("keyList") List<ChbAstPosRegist001Dto> dataList);
+    List<ChbAstPosRegist001Dto> selectAllDataByList(@Param("keyList") List<String> dataList);
 
     List<String> selectRegistSeqnoList(@Param("list")List<ChbAstPosRegist001Dto> astposTerminationList,@Param("flag") String flag);
 
