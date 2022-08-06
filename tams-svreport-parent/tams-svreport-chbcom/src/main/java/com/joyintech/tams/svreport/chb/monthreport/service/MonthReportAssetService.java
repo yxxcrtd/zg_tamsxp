@@ -744,7 +744,7 @@ public class MonthReportAssetService {
 					}
 				}
 
-                p11.setAccuamt(p11.getAccuamt().setScale(6, RoundingMode.HALF_UP));
+//                p11.setAccuamt(p11.getAccuamt().setScale(6, RoundingMode.HALF_UP));
                 list.add(p11);
             } else {
 				if (p11.getTotalNum() != null && p11.getTotalNum().compareTo(BigDecimal.ZERO) != 0){
