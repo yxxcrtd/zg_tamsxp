@@ -62,6 +62,7 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
                 //登记表和DAT表数据差异比较
                 dealPbcPrdBaseinfoEndSubDatDiff(detail);
                 dealPbcPrdBaseinfoEndSubDat(detail);
+                detail.setCusYearYield(detail.getCusYearYield()==null?null:detail.getCusYearYield().setScale(5, BigDecimal.ROUND_HALF_UP));
             }
         }else{
             listDetail.add(new PbcPrdBaseinfoEndSubDatDiff());  //为空

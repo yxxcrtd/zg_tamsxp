@@ -734,6 +734,11 @@ public class PbcPrdBaseinfoSubDatDiffDto {
         this.prodStage = prodStage;
     }
 
+    public String getProdStageStr() {
+        return getProdStage()==null?null:Integer.toString(getProdStage().intValue());
+    }
+
+
     /**
      * 理财产品代码
      * @return PROD_ID 理财产品代码
