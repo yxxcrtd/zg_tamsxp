@@ -2615,6 +2615,10 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品状态登记.getValue(),
 											DictCodeListExt2.报送数据状态_新建.getValue(), new HashMap<String, List<Date>>(),
 											DateUtil.parse(insertMap.get("CHB_PRD_STATUS_DATE")));
+									//产品杠杆率
+									BigDecimal leverage = new BigDecimal(insertMap.get("PRD_LEVERAGE"));
+									//除以100在入库
+									insertMap.put("PRD_LEVERAGE",leverage.divide(new BigDecimal("100")).toString());
 									insertMap.remove("CHB_PRD_STATUS_DATE");
 								}
 								//资产持仓登记报送截止日计算
@@ -2810,6 +2814,13 @@ public class SubOperationalInfo001Service extends CommonExportService<FilterInfo
 									}
 									updateMap.put("INDENTIFY_MARK", indentifyMark);
 								}
+							}
+							//处理产品杠杆率
+							else if (StringUtil.equals("CHB_PRD_STATUS_SUB", tableName)) {
+								//产品杠杆率
+								BigDecimal leverage = new BigDecimal(updateMap.get("PRD_LEVERAGE"));
+								//除以100在入库
+								updateMap.put("PRD_LEVERAGE",leverage.divide(new BigDecimal("100")).toString());
 							}
 							// add by dubaojun 2020-10-15 删除不存在的字段，防止报错 start
 							keySet = new HashSet<>(updateMap.keySet());
