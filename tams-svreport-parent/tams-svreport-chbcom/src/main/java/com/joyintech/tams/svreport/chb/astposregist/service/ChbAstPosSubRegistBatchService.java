@@ -610,7 +610,7 @@ public class ChbAstPosSubRegistBatchService extends SvrCBBaseService{
 			}
 			//理财产品杠杆率=【a】生成的.理财产品总资产金额（元） /(【a】生成的.理财产品总资产金额（元） - 【b】生成的.理财产品总负债金额（元）)
 			if(toamap.containsKey(key)&&tobmap.containsKey(key)){
-				sub.setPrdLeverage(ArithmeticUtil.divide(toamap.get(key),ArithmeticUtil.subtract(toamap.get(key),tobmap.get(key)),5));
+				sub.setPrdLeverage(ArithmeticUtil.divide(toamap.get(key),ArithmeticUtil.subtract(toamap.get(key),tobmap.get(key)),7));
 			}
 			//产品状态统计日
 			sub.setPrdStatusDate(objectDate);

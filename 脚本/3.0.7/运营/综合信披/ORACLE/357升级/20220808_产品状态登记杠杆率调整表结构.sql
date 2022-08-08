@@ -1,0 +1,1 @@
+ALTER  table chb_prd_status_sub  modify  PRD_LEVERAGE  number(10,7);
