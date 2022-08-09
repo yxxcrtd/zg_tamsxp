@@ -29,7 +29,7 @@ $(function() {
             holdDateStart:$('#holdDate').startDate(),
             holdDateEnd:$('#holdDate').endDate(),
             //机构代码
-            orgCode : $('#orgCode').val()==null?null:$('#orgCode').val().join(","),
+            /*orgCode : $('#orgCode').val()==null?null:$('#orgCode').val().join(","),*/
             // 发送状态
             submitSendStatus : $("#submitSendStatus").val() == null ? null : $('#submitSendStatus').val().join(",")
             // 发送状态
@@ -116,7 +116,7 @@ $(function() {
             {title: '持有份额',field:'qty', width:150,type:'number', digit:5},
             {title: '持有金额',field:'amount', width:150,type:'number'},
             {title: '折算人民币金额（元）',field:'cnyAmt', width:180,type:'number'},
-            {title: '机构代码',field:'orgCode', width:150},
+            /*{title: '机构代码',field:'orgCode', width:150},*/
             {field:'ccyCode', visible:false},
             {field:'sendStatusCode', visible:false},
             {field:'statusCode', visible:false}

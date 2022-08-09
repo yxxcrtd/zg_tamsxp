@@ -7,7 +7,7 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   profiles:
-    active: CVR_305_XNYH_DEV_P    #一体化使用yitihua-jicheng
+    active: BS303CVR_DEV_TEST01_LXY_P    #一体化使用yitihua-jicheng
   thymeleaf:
     cache: false
   #数据源配置
@@ -144,7 +144,7 @@ batch:
     maxJobPoolSize: 5 #job线程池
     maxExeUser: 2 #最大并发用户数
     maxThreadPerUser: 5 #任务并发数
-    sleeptime: 10000 #轮询时间
+    sleeptime: 500 #轮询时间
     maxSqlNum: 50 #批量提交数
     needProcessLog: false #process是否记录正常日志
     enableServerDoubleAlive: false #是否启用双活
@@ -700,7 +700,7 @@ tx-lcn:
     onlyError: true
 ---
 spring:
-  profiles: CVR_305_XNYH_DEV_P
+  profiles: BS303CVR_DEV_TEST01_LXY_P
   #本地启动建议删除redis配置start
   redis:
     database: 1
@@ -709,15 +709,15 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@192.168.60.194:1521/orcl
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
-    reportSqlldrDatabaseName: 192.168.60.194:1521/orcl #sqlldr用数据库连接，必须保持这种格式
+    url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl #sqlldr用数据库连接，必须保持这种格式
 #应用配置
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
-  sqldiruserName: CVR_305_XNYH_DEV
-  sqldirpassword: CVR_305_XNYH_DEV
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  sqldiruserName: BS303CVR_DEV_TEST01_LXY
+  sqldirpassword: BS303CVR_DEV_TEST01_LXY
   loadbalance: false
   micorservice:
     contextPath:
@@ -748,15 +748,15 @@ application:
 #base数据库配置
 base:
   datasource:
-    url: jdbc:oracle:thin:@192.168.60.194:1521/orcl
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
 #interf数据源配置
 interf:
   datasource:
-    url: jdbc:oracle:thin:@192.168.60.194:1521/orcl
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    url: jdbc:oracle:thin:@192.168.70.245:1521/orcl
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
 #日志路径配置
 log:
   path: /home/bs3.0/cvr/batch/logs
@@ -797,7 +797,7 @@ spring:
     username: wzc
     password: wzc
     driverClassName: com.mysql.jdbc.Driver
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 #应用配置
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test_P?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
@@ -885,7 +885,7 @@ spring:
     username: wzc
     password: wzc
     driverClassName: com.mysql.jdbc.Driver
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 #应用配置
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true

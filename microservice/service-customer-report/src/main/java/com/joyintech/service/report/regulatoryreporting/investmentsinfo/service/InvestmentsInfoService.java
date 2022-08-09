@@ -299,7 +299,7 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t3_zq14_amt", "ASSETAMT1_4_11");
 		tablePorpertyMap_2.put("t3_lzq14_amt", "ASSETAMT1_4_11");
 
-
+		tablePorpertyMap_4_1.put("00", "t4_amt1_0");
 		tablePorpertyMap_4_1.put("01", "t4_amt1_1");
 		tablePorpertyMap_4_1.put("02", "t4_amt1_2");
 		tablePorpertyMap_4_1.put("03", "t4_amt1_3");
