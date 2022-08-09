@@ -117,6 +117,7 @@ application:
     reportCbFeedBackHandleCountOneTime: 10000    #中债反馈文件，单次解析最大行数
     isExceptionWhenSendTimeout: 01  #中债报送文件发送超时的时候，是否抛出异常
     base64Key: HF*ts303HF*ts303
+    svrBackStatus: 1
   cache:
     file: classpath:ehcache_batch.xml
   sysCode: TAMS
