@@ -877,9 +877,7 @@
     ifnull(assetinfo.INDUSTRY,assetinfo.INDUSTRY_PBC) INDUSTRY,/*融资人、发行人行业一级类别*/
     assetinfo.PROFIT_TYPE REP_PROFIT_TYPE ,/*项目类收售益权*/
     '01' IS_NEED_REFLECT, /*是否需要映射人行一级二级三级类型*/
-    case when ifnull(c.rating ,d.rating) = '10' then '04'
-    when  ifnull(c.rating ,d.rating) in ('01','02','03','04','05','06','07','08','09') then ifnull(c.rating ,d.rating)
-    else ifnull(a.rating,b.rating) end as rating
+    ifnull(ifnull(c.rating ,d.rating),ifnull(a.rating,b.rating))  as rating
     <if test="isChlBtm ==null or isChlBtm=='01' ">
       FROM CHB_ASSETS_BASIS_DATA VAL
     </if>
