@@ -116,7 +116,7 @@
         where
         REPORT_NO = #{reportNo,jdbcType=VARCHAR}
         <if test="submitNum != null" >
-            AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
+            AND SUMIT_SEQ = #{submitNum,jdbcType=VARCHAR}
         </if>
     </update>
 
