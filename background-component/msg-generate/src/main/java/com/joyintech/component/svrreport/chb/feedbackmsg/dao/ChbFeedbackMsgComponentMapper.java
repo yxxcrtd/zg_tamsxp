@@ -145,6 +145,14 @@ public interface ChbFeedbackMsgComponentMapper {
 	 */
 	int updateChbSubmitStatus(ChbSubmitStatusDto status);
 
+
+	/**
+	 * 更新中债三期反馈状态
+	 * @param status 反馈状态
+	 * @return
+	 */
+	int updateChbSubmitStatusNew(ChbSubmitStatusDto status);
+
 	/**
 	 * 更新 中债直连报送 状态
 	 * @param record

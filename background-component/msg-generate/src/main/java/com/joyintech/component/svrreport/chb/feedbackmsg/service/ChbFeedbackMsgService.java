@@ -73,6 +73,10 @@ public class ChbFeedbackMsgService {
     @Value("${application.chb.reportCbFeedBackHandleCountOneTime:10000}")
     private int reportCbFeedBackHandleCountOneTime;
 
+    /***三期是否改造  1 已改造  2 未改造**/
+    @Value("${application.chb.svrBackStatus:}")
+    private String svrBackStatus;
+
     /**
      * 日志状态处理
      */
@@ -427,8 +431,15 @@ public class ChbFeedbackMsgService {
                 /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
                 status.setFlag(submitType);
                 /***三期CHB_SUBMIT_STATUS去除改造  20220310**/
-                // 更新中债三期反馈状态表
-                chbFeedbackMsgComponentMapper.updateChbSubmitStatus(status);
+
+                if(StringUtil.isNotEmpty(svrBackStatus)&&svrBackStatus.equals("1")){
+                    // 更新中债三期反馈状态表
+                    chbFeedbackMsgComponentMapper.updateChbSubmitStatusNew(status);
+                }else{
+                    chbFeedbackMsgComponentMapper.updateChbSubmitStatus(status);
+                }
+
+
             } else {
                 // 中债一、二期的反馈结果
                 chbFeedbackMsgComponentMapper.updateChbSubmitStatusTwo(status);
