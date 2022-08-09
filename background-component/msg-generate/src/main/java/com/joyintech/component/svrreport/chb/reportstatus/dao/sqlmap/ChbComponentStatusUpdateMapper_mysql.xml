@@ -164,6 +164,15 @@
             SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>
 
+    <update id="updateChbEmployeeInfoSubSubmitStatus">
+        update
+            CHB_EMPLOYEE_INFO_SUB
+        set
+            SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
+        WHERE
+            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+    </update>
+
 
 
     <select id="querySubDataStatusBySumitSeq" resultType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto">

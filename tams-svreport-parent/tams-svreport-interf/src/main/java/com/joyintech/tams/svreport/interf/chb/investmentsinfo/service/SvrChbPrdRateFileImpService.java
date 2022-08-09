@@ -113,7 +113,7 @@ public class SvrChbPrdRateFileImpService extends FileImpService {
 	public String importDB(List<Map<String, String>> listData, InterfFile interfFile, String date) {
 		String result = "";
 		logger.debug("产品利率基本信息检查----开始-----:" +  df.format(new Date()));
-		checkData(listData, interfFile.getFilename(), InterfDefine.产品利率基本信息接口数据.getCode(),InterfDefine.产品利率基本信息接口数据.getCode(), null,"FPROD_ID","PROD_ID", "CHANGE_DATE", "CHANG_TYPE");
+		checkData(listData, interfFile.getFilename(), InterfDefine.产品利率基本信息接口数据.getCode(),InterfDefine.产品利率基本信息接口数据.getCode(), null,"FPROD_ID","PROD_ID", "CHANGE_DATE", "CHANGE_TYPE");
 		logger.debug("产品利率基本信息检查----结束-----:" +  df.format(new Date()));
 		if(CollectionUtils.isEmpty(listData)){
 			return "success";

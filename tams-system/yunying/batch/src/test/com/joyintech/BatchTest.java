@@ -59,7 +59,7 @@ public class BatchTest {
         //例如executeBatch("10003,10002","DGJ001,JZX0607CP,FFJZ0010","2020-08-23","2020-08-23","1","1")
         //SYS_BATCH_PRD_GRP查询产品组流水号
         // executeBatch("","","","","","");
-        executeBatch("100","F16_FY21109","2021-10-30","2021-10-30","1","1");
+        executeBatch("3033","null","2021-06-30","2021-06-30","1","1");
         //executeBatch("val","30ecd23dda8c486caed25d3017c4c37b","2020-05-31","2020-05-31","0","0");
 
     }

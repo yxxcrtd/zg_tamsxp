@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     cache: false
   profiles:
-    active: CVR_305_XNYH_DEV_P
+    active: BS303CVR_DEV_TEST01_LXY_P
   application:
     name: tamsyy-serverREPORT#0426
     dfstype: 2
@@ -1225,7 +1225,7 @@ url:
   batch: http://localhost:8084/main/about/refreshCache
 ---
 spring:
-  profiles: CVR_305_XNYH_DEV_P
+  profiles: BS303CVR_DEV_TEST01_LXY_P
   thymeleaf:
     cache: false
   redis:
@@ -1237,16 +1237,16 @@ spring:
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
-    reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
+    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
   driverClassName: oracle.jdbc.driver.OracleDriver
-  sqldiruserName: CVR_305_XNYH_DEV
-  sqldirpassword: CVR_305_XNYH_DEV
+  sqldiruserName: BS303CVR_DEV_TEST01_LXY
+  sqldirpassword: BS303CVR_DEV_TEST01_LXY
 valinterf:
   hostname: localhost
   port: 28080
@@ -1266,37 +1266,37 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
   hostname: localhost
   port: 28080
   contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
 chbsend:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.60.194:1521/orcl
+    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
     driverClassName: oracle.jdbc.driver.OracleDriver
-    username: CVR_305_XNYH_DEV
-    password: CVR_305_XNYH_DEV
+    username: BS303CVR_DEV_TEST01_LXY
+    password: BS303CVR_DEV_TEST01_LXY
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -1385,7 +1385,7 @@ spring:
     url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true
   driverClassName: com.mysql.jdbc.Driver
@@ -1529,7 +1529,7 @@ spring:
     url: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_306_mysql_test?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
   driverClassName: com.mysql.jdbc.Driver
@@ -1673,7 +1673,7 @@ spring:
     url: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
     username: wzc
     password: wzc
-    #reportSqlldrDatabaseName: 192.168.60.194:1521/orcl
+    #reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:mysql://192.168.60.43:3306/cvr_30_dev?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull&allowLoadLocalInfile=true
   driverClassName: com.mysql.jdbc.Driver

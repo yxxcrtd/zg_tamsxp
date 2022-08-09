@@ -14,7 +14,7 @@
       sub.ISSUE_PARTY_ID issuePartyId,
       sub.PRD_REGIST_CODE prdRegistCode,
       sub.PRD_TOTAL_AMT prdTotalAmt,
-      sub.PRD_LEVERAGE prdLeverage,
+      CAST(sub.PRD_LEVERAGE*100 AS DECIMAL(10, 5)) prdLeverage,
       sub.PRD_STATUS_DATE prdStatusDate,
       sub.TERMID termid,
       sub.REMARK remark,
@@ -87,7 +87,7 @@
       sub.ISSUE_PARTY_ID issuePartyId,
       sub.PRD_REGIST_CODE prdRegistCode,
       sub.PRD_TOTAL_AMT prdTotalAmt,
-      sub.PRD_LEVERAGE prdLeverage,
+      CAST(sub.PRD_LEVERAGE*100 AS DECIMAL(10, 5)) prdLeverage,
       sub.PRD_STATUS_DATE prdStatusDate,
       sub.TERMID termid,
       sub.REMARK remark,
@@ -110,7 +110,7 @@
 
       select
       sub.REGIST_SEQNO,sub.PROD_ID,sub.ISSUE_PARTY_ID,sub.PRD_REGIST_CODE,sub.PRD_TOTAL_AMT,
-      sub.PRD_LEVERAGE,sub.PRD_STATUS_DATE,sub.TERMID,sub.REMARK,sub.SEND_STATUS,sub.STATUS_DATE,sub.SUBMIT_SEQ,
+      CAST(sub.PRD_LEVERAGE*100 AS DECIMAL(10, 5)) as PRD_LEVERAGE,,sub.PRD_STATUS_DATE,sub.TERMID,sub.REMARK,sub.SEND_STATUS,sub.STATUS_DATE,sub.SUBMIT_SEQ,
       sub.STATUS,sub.CHB_SUBMIT_DEADLINE,sub.SUBMIT_DEADLINE,sub.SUBMIT_TIME,sub.SUBMIT_FEEDBACK_STATUS
       from CHB_PRD_STATUS_SUB sub
       <where>
@@ -345,7 +345,7 @@
         sub.ISSUE_PARTY_ID issuePartyId,
         sub.PRD_REGIST_CODE prdRegistCode,
         sub.PRD_TOTAL_AMT prdTotalAmt,
-        sub.PRD_LEVERAGE prdLeverage,
+        CAST(sub.PRD_LEVERAGE*100 AS DECIMAL(10, 5)) prdLeverage,
         sub.PRD_STATUS_DATE prdStatusDate,
         sub.TERMID termid,
         sub.REMARK remark,

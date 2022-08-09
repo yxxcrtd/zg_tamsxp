@@ -112,6 +112,11 @@ public class InvestmentsInfo001Service extends CommonExportService<ChbBankMonthR
 		data.put("fileName", "表3附表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
 		File table3AddFile = TisUtil.createFile(data, "InvestmentsInfot3Add", "表3附表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
 
+		//表2附表
+		data.put("fileName", "表2附表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
+		File table2AddFile = TisUtil.createFile(data, "InvestmentsInfot2Add", "表2附表(" + exportYear+"年" +exportQuarter+ "月" + ").xls");
+		sourceFiles.add(table2AddFile);
+
 
 		//表３附表单元格合并
 		InputStream inputStream = new FileInputStream(table3AddFile);

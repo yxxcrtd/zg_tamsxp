@@ -251,7 +251,7 @@
         set
             SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
         WHERE
-            SUBMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+            SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
     </update>
 
     <select id="querySubDataStatusBySumitSeq" resultType="com.joyintech.component.svrreport.chb.dto.ChbSubmitStatusDto">
