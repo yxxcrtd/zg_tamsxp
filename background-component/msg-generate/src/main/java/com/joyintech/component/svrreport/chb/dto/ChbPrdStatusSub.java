@@ -1,5 +1,7 @@
 package com.joyintech.component.svrreport.chb.dto;
 
+import com.joyintech.component.svrreport.chb.contant.annotate.RateFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -32,6 +34,7 @@ public class ChbPrdStatusSub{
     /**
      * 理财产品杠杆率（%）
      */
+    @RateFormat
     private BigDecimal prdLeverage;
 
     /**
