@@ -5,6 +5,7 @@ import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.component.svrreport.chb.contant.ChbConstant;
 import com.joyintech.component.svrreport.chb.contant.DictCodeList;
 import com.joyintech.component.svrreport.chb.dto.*;
+import com.joyintech.component.svrreport.chb.util.ChbXmlUtil;
 import org.n3r.idworker.Sid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,8 @@ public class ChbProdStatusSubSetService {
 		Map<String,String> registSeqKeyMap = new HashMap<String,String>();
 		datas.forEach(item -> {
 			Map<String, CnBondInterfItemDto> cnBondItemMap = new LinkedHashMap<String, CnBondInterfItemDto>();
+			//利率统一除以100
+			ChbXmlUtil.rateFormat(item);
 			String currRegistSeq = "";
 			// modify by zhangliang 20210130 重新发送不需要重生生成流水号 start
 			if (StringUtil.isNotEmpty(item.getSubmitSeq())){
