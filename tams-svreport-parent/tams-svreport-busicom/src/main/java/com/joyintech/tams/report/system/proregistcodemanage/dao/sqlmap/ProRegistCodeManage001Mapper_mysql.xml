@@ -262,7 +262,8 @@
 		where p.status in ('E','M')
 		and p.fprod_id is null
 		<if test="search != null and search !='' ">
-			AND P.PROD_ID LIKE concat_ws('','%', #{search},'%')
+			AND (P.PROD_ID LIKE concat_ws('','%', #{search},'%')
+			OR P.PROD_NAME LIKE concat_ws('','%', #{search},'%'))
 		</if>
 	</select>
 
