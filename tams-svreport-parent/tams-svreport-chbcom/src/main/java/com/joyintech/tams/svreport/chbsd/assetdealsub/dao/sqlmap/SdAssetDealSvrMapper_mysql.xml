@@ -51,6 +51,12 @@
         <!-- 中债五月份升级增加字段-->
         ,sub.ASSET_METHOD assetMethod
         ,sub.RIVAL_PARTY_TYPE rivalPartyType
+        ,sub.INVEST_APPROVER_ID investApproverId
+        ,sub.INVEST_APPROVER_NAME investApproverName
+        ,sub.INVEST_TRADER_ID investTraderId
+        ,sub.INVEST_TRADER_NAME investTraderName
+        ,sub.TRADE_TIME tradeTime
+        ,sub.RELATED_TRADE_STATUS relatedTradeStatus
         FROM chb_invest_trade_sub SUB
     </sql>
 

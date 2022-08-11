@@ -40,6 +40,8 @@
         <result column="NEW_EXP_YIELD" property="newExpYield" jdbcType="DECIMAL" />
         <result column="SHARE_AMT_WAN" property="shareAmtWan" jdbcType="DECIMAL" />
         <result column="CASH_AMT_WAN" property="cashAmtWan" jdbcType="DECIMAL" />
+        <result column="YIELD_DATE" property="yieldDate" jdbcType="DECIMAL" />
+
     </resultMap>
 
  <select id="selcteDataByIds" parameterType="java.util.List"  resultMap="SdProdDealSvrDtoRM">
@@ -82,6 +84,7 @@
         NEW_EXP_YIELD,
         SHARE_AMT_WAN,
         CASH_AMT_WAN
+        ,YIELD_DATE
     from CHB_PRD_DEAL_SUB
     where SEND_STATUS = '01'
     AND STATUS = '01'
