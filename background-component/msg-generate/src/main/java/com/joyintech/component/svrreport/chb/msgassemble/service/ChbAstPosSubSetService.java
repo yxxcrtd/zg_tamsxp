@@ -154,6 +154,7 @@ public class ChbAstPosSubSetService {
 			CnBondInterfItemDto cnBondItem1 = new CnBondInterfItemDto();
 			cnBondItem1.setValue(sub.getInterLeveNo());
 			cnBondItem1.setDecimals("0");
+			cnBondItem1.setUnitRef(ChbConstant.PURE);
 			cnBondItemMap1.put("NumberOfMezzanines", cnBondItem1);
 		}
 
