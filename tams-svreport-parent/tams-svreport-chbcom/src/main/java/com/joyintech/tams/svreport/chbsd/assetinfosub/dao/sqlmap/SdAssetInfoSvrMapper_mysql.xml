@@ -179,6 +179,14 @@
         ,DEPT_EQUITY  deptEquity
         ,HOLD_PURPOSE  holdPurpose
         ,FINANCIAL_COMISSUE  financialComissue
+        ,ACCOUNT_NO accountNo
+        ,CREDIT_ASSET_CODE creditAssetCode
+        ,BILL_CODE billCode
+        ,FINANCIAL_PRODUCT_FLAG financialProductFlag
+        ,PROD_REGISTER_CODE prodRegisterCode
+        ,PROFIT_FLAG profitFlag
+        ,IS_DEPOSIT_FLAG isDepositFlag
+        ,IS_BZHPJ isBzhpj
         FROM CHB_ASSET_INFO_SUB
     </sql>
 

@@ -30,12 +30,14 @@
     <result column="SUBMIT_DEADLINE" jdbcType="TIMESTAMP" property="submitDeadline" />
     <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
     <result column="DEPT_CODE" jdbcType="VARCHAR" property="deptCode" />
+      <result column="BUSI_ACCT_NO" property="busiAcctNo"/>
+      <result column="ACCT_NAME" property="acctName"/>
     <result column="PROD_REGIST_CODE" property="prodRegistCode" jdbcType="VARCHAR" />
     <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
     REGIST_SEQNO, PROD_ID, ISSUE_PARTY_ID, SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
-    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, 
+    SUBSCRIBE_CCY_AMT, SALE_AREA_AMT, TOTAL_AMT, RAISE_QTY, IS_CONSIGN, CONSIGN_AMT, BUSI_ACCT_NO,ACCT_NAME,
     REMARK, SEND_STATUS, SUBMIT_FEEDBACK_STATUS, STATUS_DATE, STATUS, CREATE_USER, CREATE_DEPT, 
     CREATE_TIME, UPDATE_USER, UPDATE_TIME, SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
     ORG_CODE, DEPT_CODE,PROD_REGIST_CODE,SUMIT_SEQ
