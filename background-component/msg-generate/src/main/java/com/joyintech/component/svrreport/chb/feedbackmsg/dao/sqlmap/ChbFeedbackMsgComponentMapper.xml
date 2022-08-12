@@ -282,10 +282,10 @@
         where
         <choose>
             <when test="submitNum !=null and submitNum != ''">
-                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+                SUBMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
             </when>
             <otherwise>
-                SUMIT_SEQ IN (
+                SUBMIT_SEQ IN (
                 SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
                 REPORT_NO = #{reportNo,jdbcType=VARCHAR}
                 )
@@ -308,10 +308,10 @@
         where
         <choose>
             <when test="submitNum !=null and submitNum != ''">
-                SUMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
+                SUBMIT_SEQ =  #{submitNum,jdbcType=VARCHAR}
             </when>
             <otherwise>
-                SUMIT_SEQ IN (
+                SUBMIT_SEQ IN (
                 SELECT SUBMIT_NUM FROM CHB_SUBMIT_STATUS_TWO where
                 REPORT_NO = #{reportNo,jdbcType=VARCHAR}
                 )
