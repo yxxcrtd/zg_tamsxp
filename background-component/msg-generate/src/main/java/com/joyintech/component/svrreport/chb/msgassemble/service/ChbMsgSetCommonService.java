@@ -562,7 +562,10 @@ public class ChbMsgSetCommonService {
                 "MarketValueOfUnderlyingAssetsLiabilitiesCNY",
                 "AggregateQuantityOfAssetManagementProductOrOutsourcingAsset",
                 "AggregateIssuedAmountOfAssetManagementProductOrOutsourcingAssetCNY",
-                "NonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY"};
+                "NonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY",
+                "ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet",
+                "ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull",
+                "ProductInvestedAssetsLiabilitiesRegistrationQuantity"};
         // 循环标签数组
         for (String s : str) {
             // 判断标签是否在数组中
@@ -878,6 +881,10 @@ public class ChbMsgSetCommonService {
             entity.setProductInvestedAssetsLiabilitiesRegistrationTuple(bases);
             // 添加context 标签
             contextList.add(context1);
+            // 添加context 标签
+            contextList.add(context2);
+            contextRefIds = new String[] {context1.getXbrliContextEntityId(),
+                    context2.getXbrliContextEntityId()};
             fileType = ChbConstant.FILE_116_TYPE;
         }
         /***0722升级**/
