@@ -10,27 +10,10 @@
 
 package com.joyintech.component.svrreport.chb.msgassemble.service;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import org.n3r.idworker.Sid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.component.svrreport.chb.contant.ChbConstant;
@@ -40,11 +23,17 @@ import com.joyintech.component.svrreport.chb.dto.ChbMsgBuildInfoDto;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdDeclareSubDto;
 import com.joyintech.component.svrreport.chb.dto.CnBondInterfItemDto;
 import com.joyintech.component.svrreport.chb.util.ChbXmlUtil;
+import org.n3r.idworker.Sid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
+import java.io.*;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -737,7 +726,7 @@ public class ChbPrdDeclareSubSetService {
 				CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
 				//子节点开始
 				List<Map<String, CnBondInterfItemDto>> cnBondItemMap3 = new ArrayList<Map<String, CnBondInterfItemDto>>();
-				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.SEMICOLON);
+				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.COMMA);
 				for(String str : prdSpecPropertys){
 					Map<String, CnBondInterfItemDto> cnBondItemMap3_1 =  new LinkedHashMap<String, CnBondInterfItemDto>();//子节点map
 					CnBondInterfItemDto cnBondItem3_1 = new CnBondInterfItemDto();//第一个子节点
@@ -1008,7 +997,7 @@ public class ChbPrdDeclareSubSetService {
 					    cnBondItemMap.put("OtherDocumentsTuple", cnBondItem65);
 					    break;
 					/***0722升级*/
-					case "10"://流动性风险评估文件
+					case "99"://流动性风险评估文件
 						CnBondInterfItemDto cnBondItem99 = new CnBondInterfItemDto();
 						//子节点开始
 						List<Map<String, CnBondInterfItemDto>> mapList99 = new ArrayList<Map<String, CnBondInterfItemDto>>();
