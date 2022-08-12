@@ -737,7 +737,7 @@ public class ChbPrdDeclareSubSetService {
 				CnBondInterfItemDto cnBondItem3 = new CnBondInterfItemDto();
 				//子节点开始
 				List<Map<String, CnBondInterfItemDto>> cnBondItemMap3 = new ArrayList<Map<String, CnBondInterfItemDto>>();
-				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.SEMICOLON);
+				String [] prdSpecPropertys = sub.getPrdSpecProperty().split(ChbConstant.COMMA);
 				for(String str : prdSpecPropertys){
 					Map<String, CnBondInterfItemDto> cnBondItemMap3_1 =  new LinkedHashMap<String, CnBondInterfItemDto>();//子节点map
 					CnBondInterfItemDto cnBondItem3_1 = new CnBondInterfItemDto();//第一个子节点
@@ -1008,7 +1008,7 @@ public class ChbPrdDeclareSubSetService {
 					    cnBondItemMap.put("OtherDocumentsTuple", cnBondItem65);
 					    break;
 					/***0722升级*/
-					case "10"://流动性风险评估文件
+					case "99"://流动性风险评估文件
 						CnBondInterfItemDto cnBondItem99 = new CnBondInterfItemDto();
 						//子节点开始
 						List<Map<String, CnBondInterfItemDto>> mapList99 = new ArrayList<Map<String, CnBondInterfItemDto>>();
