@@ -559,6 +559,14 @@ public class ChbFeedbackMsgService {
                 else if (StrUtil.equals(DictCodeList.报表名称_从业人员登记.getValue(), submitType)) {
                     componentMapper.updateChbEmployeeInfoSub(status);
                 }
+                /***0722升级**/
+                else if (StrUtil.equals(DictCodeList.报表名称_产品状态登记.getValue(), submitType)) {
+                    componentMapper.updateChbPrdStatusSub(status);
+                }
+                else if (StrUtil.equals(DictCodeList.报表名称_资产持仓登记.getValue(), submitType)) {
+                    componentMapper.updateChbAstPosSub(status);
+                }
+                /***0722升级**/
                 index ++;
                 if (index == maxSqlNum) {
                     sqlSession.commit();
@@ -1263,6 +1271,14 @@ public class ChbFeedbackMsgService {
             else if (ChbConstant.FILE_112_TYPE.equals(reportType)) {
                 submitType = DictCodeList.报表名称_从业人员登记.getValue();
             }
+            /***0722升级**/
+            else if (ChbConstant.FILE_115_TYPE.equals(reportType)) {
+                submitType = DictCodeList.报表名称_产品状态登记.getValue();
+            }
+            else if (ChbConstant.FILE_116_TYPE.equals(reportType)) {
+                submitType = DictCodeList.报表名称_资产持仓登记.getValue();
+            }
+            /***0722升级**/
             else if (ChbConstant.FILE_203_TYPE.equals(reportType)) {
                 submitType = DictCodeList.报表名称_分类总量信息登记.getValue();
             }
