@@ -989,7 +989,7 @@ public class ChbPrdDeclareSubSetService {
 					    cnBondItemMap.put("WealthManagementProductMarketingDocumentsTuple", cnBondItem64);
 					    break;
 					    
-			    	case "09"://其他材料
+			    	case "99"://其他材料
 					    CnBondInterfItemDto cnBondItem65 = new CnBondInterfItemDto();
 					    //子节点开始
 					    List<Map<String, CnBondInterfItemDto>> mapList65 = new ArrayList<Map<String, CnBondInterfItemDto>>();
@@ -1008,7 +1008,7 @@ public class ChbPrdDeclareSubSetService {
 					    cnBondItemMap.put("OtherDocumentsTuple", cnBondItem65);
 					    break;
 					/***0722升级*/
-					case "99"://流动性风险评估文件
+					case "09"://流动性风险评估文件
 						CnBondInterfItemDto cnBondItem99 = new CnBondInterfItemDto();
 						//子节点开始
 						List<Map<String, CnBondInterfItemDto>> mapList99 = new ArrayList<Map<String, CnBondInterfItemDto>>();
