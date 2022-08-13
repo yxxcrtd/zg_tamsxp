@@ -81,7 +81,7 @@ public class ChbPrdDeclareSubSetService {
 		for(ChbPrdDeclareSubDto data : datas){
 			if (StrUtil.isNotEmpty(data.getAttachFilePath())) {
 				try {
-					attachFiles.add(reBuildFile(data.getAttachFilePath(),data.getProdId()));
+					attachFiles.add(reBuildFile(data.getAttachFilePath(),data.getProdInsId()));
 				} catch (IOException e) {
 					logger.error("申报文件组装失败,请检查文件: ",e);
 					throw new Exception();
