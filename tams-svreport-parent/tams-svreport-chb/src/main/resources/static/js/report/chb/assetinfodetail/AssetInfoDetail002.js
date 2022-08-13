@@ -545,11 +545,12 @@ var QueryFunc=function(){
         $("input[id$='_assetName']").val($('#assetName').val());
 
         var ids = $("input[id$='_assetId']");
+        var code=$('#assetCode').val();
         $.each(ids,function(index,obj){
            if(null==obj.value||''==obj.value){
-               obj.value = $('#assetCode').val();
-           }
-        });
+           obj.value = code=code.split('.')[0];
+    }
+});
 
         if (repAssetType == '1503'){
             $("#svrBussRepQDIIStructureInfoDto_contractName").val($('#assetName').val());
