@@ -344,8 +344,8 @@ public class AgentInstitution001Service extends CommonExportService<AgentInstitu
             String fileNo=(String) map.get("fileNo");
             String fileAgentInstitutionCode = "1";
             if(srcName != null && srcName != "") {
-                if (srcName.contains("+")) {
-                    fileAgentInstitutionCode = srcName.substring(0, srcName.lastIndexOf("+"));
+                if (srcName.contains(".")) {
+                    fileAgentInstitutionCode = srcName.substring(0, srcName.lastIndexOf("."));
                 } else {
                     fileCheckMsg1.append("压缩包必须命名为: 代销机构代码+XX.zip");
                     fileCheckMsg1.append(GlobalConstant.HTML_NEWLINE);
