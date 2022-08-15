@@ -50,8 +50,8 @@
             ,{field:'accountName', title: '销售结算资金账户名称', width:'150',sortField:'accountName'}
             ,{field:'tradeCounterAccNo', title: '销售结算资金交易对手方账号', width:'150',sortField:'tradeCounterAccNo'}
             ,{field:'tradeCounterAccName', title: '销售结算资金交易对手方账户名称', width:'150',sortField:'tradeCounterAccName'}
-            ,{field:'tradeCounterAccBankNo', title: '销售结算资金交易对手方开户行名称 ', width:'150',sortField:'tradeCounterAccBankNo'}
-            ,{field:'tradeCounterAccBankName', title: '销售结算资金交易对手方账户开户行号 ', width:'150',sortField:'tradeCounterAccBankName'}
+            ,{field:'tradeCounterAccBankName', title: '销售结算资金交易对手方开户行名称 ', width:'150',sortField:'tradeCounterAccBankName'}
+            ,{field:'tradeCounterAccBankNo', title: '销售结算资金交易对手方账户开户行号 ', width:'150',sortField:'tradeCounterAccBankNo'}
             ,{field:'tradeCcy', title: '销售结算资金交易币种', width:'150',sortField:'tradeCcy'}
             ,{field:'tradeAmt', title: '销售结算资金交易金额', width:'150',sortField:'tradeAmt',type:'money',digit: 2}
             ,{field:'tradeTime', title: '销售结算资金交易时间', width:'150',sortField:'tradeTime'}
