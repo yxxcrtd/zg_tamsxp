@@ -849,9 +849,9 @@
 		nvl(NVL(DEAL.UPDATE_TIME, DEAL.CREATE_TIME),
 		to_date('1900-01-01', 'yyyy-MM-dd'))),
 		'yyyy-MM-dd') = to_char(#{statusDate,jdbcType=DATE},'yyyy-MM-dd')
-		and deal.PROD_ID is not null
-		/****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了   end**/
+		and (deal.PROD_ID is not null or info.PROD_ID is not null)
 		and info.fprod_id is null
+		/****add by leipeng 人行产品基本信息，人行产品代码一旦生成，修改基本信息数据在重新跑批也不会改变了   end**/
 		and info.ISSUING_STATUS='01'
 		<if test="prodList !=null  and prodList.size()!=0">
 			and deal.prod_id in

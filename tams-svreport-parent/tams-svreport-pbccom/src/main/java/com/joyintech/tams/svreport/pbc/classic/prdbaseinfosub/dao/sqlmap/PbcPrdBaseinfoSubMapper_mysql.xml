@@ -867,7 +867,7 @@
 		ifnull(ifnull(DEAL.UPDATE_TIME, DEAL.CREATE_TIME),
 		STR_TO_DATE('1900-01-01','%Y-%m-%d'))),
 		'%Y-%m-%d') = DATE_FORMAT(#{statusDate,jdbcType=DATE},'%Y-%m-%d')
-		and deal.PROD_ID is not null
+		and (deal.PROD_ID is not null or info.PROD_ID is not null)
 		and info.fprod_id is null
 		and info.ISSUING_STATUS='01'
 		<if test="prodList !=null  and prodList.size()!=0">
