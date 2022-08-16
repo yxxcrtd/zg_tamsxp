@@ -42,6 +42,7 @@
             ,{field:'workflowId', title:'错误表的workflowId',visible:false}
             ,{field:'statusValidStr', title: '数据状态', width:'150',sortField:'statusValid'}
             ,{field:'salerInstCode', title: '销售机构代码', width:'150',sortField:'salerInstCode'}
+            ,{field:'salerRegistNo', title: '销售人员登记编码', width:'150',sortField:'salerRegistNo'}
             ,{field:'salerName', title: '姓名', width:'150',sortField:'salerName'}
             ,{field:'salerSex', title: '性别', width:'150',sortField:'salerSex'}
             ,{field:'salerBirthday', title: '出生日期', width:'150',sortField:'salerBirthday',type:'date'}
