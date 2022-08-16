@@ -1,3 +1,3 @@
 DELETE from SYS_DATADICT_LIST where DICT_CODE='AGENT_STATUS' and ITEM_CODE='A';
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AGENT_STATUS', 'A', '待处理', 3, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+values ('AGENT_STATUS', 'A', '待处理', 3, '0', 'system', null, now(), 'system', now(), null);
