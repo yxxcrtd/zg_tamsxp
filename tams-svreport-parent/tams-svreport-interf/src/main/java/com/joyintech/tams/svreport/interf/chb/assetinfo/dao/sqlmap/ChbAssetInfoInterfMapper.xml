@@ -13226,6 +13226,8 @@
                 ,#{item.isConstracteBusi,jdbcType=VARCHAR} IS_CONSTRACTE_BUSI
                 ,#{item.billCode,jdbcType=VARCHAR} BILL_CODE
                 ,#{item.isDepositFlag,jdbcType=VARCHAR} IS_DEPOSIT_FLAG
+                ,#{item.financialProductFlag,jdbcType=VARCHAR} FINANCIAL_PRODUCT_FLAG
+                ,#{item.prodRegisterCode,jdbcType=VARCHAR} PROD_REGISTER_CODE
                 from dual
             </foreach>
         ) TEMP
@@ -13374,7 +13376,7 @@
             CII.DEPT_CODE = TEMP.DEPT_CODE,
             CII.ORG_CODE = TEMP.ORG_CODE,
             CII.DATA_SOURCE = TEMP.DATA_SOURCE,
-            CII.PRIVATEFUND_FLAG = TEMP.PRIVATEFUND_FLAG,
+            CII.PRIVATEFUND_FLmergeInfoListAG = TEMP.PRIVATEFUND_FLAG,
             CII.PRIVATEPRD_FLAG = TEMP.PRIVATEPRD_FLAG,
             CII.BONDTOSTOCK_FLAG = TEMP.BONDTOSTOCK_FLAG,
             CII.PPPFLAG = TEMP.PPPFLAG,
@@ -13461,6 +13463,8 @@
             ,CII.IS_CONSTRACTE_BUSI = TEMP.IS_CONSTRACTE_BUSI
             ,CII.BILL_CODE = TEMP.BILL_CODE
             ,CII.IS_DEPOSIT_FLAG = TEMP.IS_DEPOSIT_FLAG
+        ,CII.FINANCIAL_PRODUCT_FLAG = TEMP.FINANCIAL_PRODUCT_FLAG
+        ,CII.PROD_REGISTER_CODE = TEMP.PROD_REGISTER_CODE
         <!-- 未匹配到这插入 -->
         WHEN NOT MATCHED THEN
         INSERT (ASSET_UUID, ASSET_CODE, ASSET_TYPE,
@@ -13578,6 +13582,8 @@
         ,IS_CONSTRACTE_BUSI
         ,BILL_CODE
         ,IS_DEPOSIT_FLAG
+        ,FINANCIAL_PRODUCT_FLAG
+        ,PROD_REGISTER_CODE
         )
         values(
             TEMP.ASSET_UUID,
@@ -13807,6 +13813,8 @@
             ,TEMP.IS_CONSTRACTE_BUSI
             ,TEMP.BILL_CODE
             ,TEMP.IS_DEPOSIT_FLAG
+        ,TEMP.FINANCIAL_PRODUCT_FLAG
+        ,TEMP.PROD_REGISTER_CODE
         )
     </insert>
 
