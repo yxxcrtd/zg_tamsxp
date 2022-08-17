@@ -3063,6 +3063,10 @@ public class CommonCodeCheckBatchService {
         String   derInstrRatio= dataMap.get("DER_INSTR_RATIO");
         //二级资产类型
         String   assetType2=dataMap.get("ASSET_TYPE2");
+        //结构性票据最高收益率
+        String maxYield = dataMap.get("MAX_YIELD");
+        //结构性票据最低收益率
+        String minYield =  dataMap.get("MIN_YIELD");
         if(temp.equals("重复数据;")){
 
         }else{
@@ -3075,11 +3079,27 @@ public class CommonCodeCheckBatchService {
                 }
             }
             if(StringUtil.equals(assetType2, "1503")){
+                if(StringUtil.isEmpty(maxYield)){
+                    maxYield="0";
+                }
+                if(StringUtil.isEmpty(minYield)){
+                    minYield="0";
+                }
+                if(StringUtil.isEmpty(derInstrRatio)){
+                    derInstrRatio="0";
+                }
+                if(StringUtil.isEmpty(incomeRatio)){
+                    incomeRatio="0";
+                }
                 //“固定收益部分所占比例”与“衍生金融工具所占比例”之和需小于等于1
-                if(StringUtil.isNotEmpty(incomeRatio)&&isBigDecimal(incomeRatio)&&
-                        StringUtil.isNotEmpty(derInstrRatio)&&isBigDecimal(derInstrRatio)){
+                if(isBigDecimal(incomeRatio)&& isBigDecimal(derInstrRatio)){
                     if(new BigDecimal(incomeRatio).add(new BigDecimal(derInstrRatio)).compareTo(new BigDecimal(100))>0){
                         errMsgBuilder.append("以百分数形式表示的固定收益部分所占比例与衍生金融工具所占比例之和需小于等于100[").append("INCOME_RATIO=").append(incomeRatio).append(",DER_INSTR_RATIO=").append(derInstrRatio).append("];");
+                    }
+                }
+                if(isBigDecimal(maxYield)&&isBigDecimal(minYield)) {
+                    if (new BigDecimal(maxYield).add(new BigDecimal(minYield)).compareTo(new BigDecimal(100))>0) {
+                        errMsgBuilder.append("以百分数形式表示的结构性票据最高收益率与结构性票据最低收益率之和需小于等于100[").append("MAX_YIELD=").append(maxYield).append(",MIN_YIELD=").append(minYield).append("];");
                     }
                 }
             }
