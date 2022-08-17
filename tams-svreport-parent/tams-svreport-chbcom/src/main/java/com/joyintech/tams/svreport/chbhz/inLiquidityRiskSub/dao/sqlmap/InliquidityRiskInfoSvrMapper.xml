@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chbhz.inLiquidityRiskSub.dao.InliquidityRiskInfoSvrMapper" >
+	<!--	已报送的月报，不再生成报送数据-->
+	<select id="checkSubmission" resultType="java.lang.Integer">
+		SELECT count(*) from LIQUIDITY_RISK_SUB WHERE ITEM_ID = #{itemId,jdbcType=VARCHAR}  AND SEND_STATUS in ('02','03')
+	</select>
+
+	<!--	删除流动性风险登记主表-->
+	<delete id="deleteLiquidityRiskSub">
+		DELETE FROM LIQUIDITY_RISK_SUB WHERE ITEM_ID = #{itemId,jdbcType=VARCHAR}
+	</delete>
+
+	<!--	删除流动性风险登记明细表-->
+	<delete id="deleteLiquidityRiskSubDetail">
+		DELETE FROM LIQUIDITY_RISK_SUB_DETAIL WHERE ITEM_ID = #{itemId,jdbcType=VARCHAR}
+	</delete>
+
+	<!--	插入流动性风险登记主表-->
+	<insert id="insertLiquidityRiskSub" parameterType="com.joyintech.tams.common.base.entity.LiquidityRiskSub">
+		insert into LIQUIDITY_RISK_SUB (
+		REGIST_SEQNO,ITEM_ID,ITEM_NAME,STATUS,STATUS_DATE,CHB_SUBMIT_DEADLINE,
+		SUBMIT_DEADLINE,SEND_STATUS,ORG_CODE,DEPT_CODE,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+		)
+		SELECT
+		A.REGIST_SEQNO,A.ITEM_ID,A.ITEM_NAME,A.STATUS,A.STATUS_DATE,A.CHB_SUBMIT_DEADLINE,
+		A.SUBMIT_DEADLINE,A.SEND_STATUS,A.ORG_CODE,A.DEPT_CODE,A.CREATE_USER,A.CREATE_TIME,A.UPDATE_USER,A.UPDATE_TIME
+		FROM (
+		<foreach collection="dataList" index="index" item="item" separator=" UNION ALL ">
+			SELECT
+			#{item.registSeqno,jdbcType = VARCHAR} as REGIST_SEQNO,#{item.itemId,jdbcType = VARCHAR} as ITEM_ID,#{item.itemName,jdbcType = VARCHAR} as ITEM_NAME,
+			#{item.status,jdbcType = VARCHAR} as STATUS
+			,#{item.statusDate,jdbcType = DATE} as STATUS_DATE,#{item.chbSubmitDeadline,jdbcType = TIMESTAMP} as CHB_SUBMIT_DEADLINE,
+			#{item.submitDeadline,jdbcType = TIMESTAMP} as SUBMIT_DEADLINE,#{item.sendStatus,jdbcType = VARCHAR} as SEND_STATUS
+			,#{item.orgCode,jdbcType = VARCHAR} as ORG_CODE,#{item.deptCode,jdbcType = VARCHAR} as DEPT_CODE,#{item.createUser,jdbcType = VARCHAR} as CREATE_USER
+			,sysdate as CREATE_TIME
+			,#{item.updateUser,jdbcType = VARCHAR} as UPDATE_USER,sysdate as UPDATE_TIME
+			FROM dual
+		</foreach>
+		) A
+	</insert>
+
+	<!--	插入流动性风险登记明细表-->
+	<insert id="insertLiquidityRiskSubDetail" parameterType="com.joyintech.tams.common.base.entity.LiquidityRiskSub">
+		insert into LIQUIDITY_RISK_SUB_DETAIL (
+		ITEM_ID, PROD_ID, REG_CODE,
+		SOLUTIONS, OCCUR_DATE, REPLY_DATE,
+		DESCRIBED, DISPOSE_RESULT, REMARK,
+		ORG_CODE, DEPT_CODE, CREATE_USER,
+		UPDATE_USER, CREATE_TIME, UPDATE_TIME
+		)
+		SELECT
+		A.ITEM_ID, A.PROD_ID, A.REG_CODE,
+		A.SOLUTIONS, A.OCCUR_DATE, A.REPLY_DATE,
+		A.DESCRIBED, A.DISPOSE_RESULT, A.REMARK,
+		A.ORG_CODE, A.DEPT_CODE, A.CREATE_USER,
+		A.UPDATE_USER, A.CREATE_TIME, A.UPDATE_TIME
+		FROM (
+		<foreach collection="dataList" index="index" item="item" separator=" UNION ALL ">
+			SELECT
+			#{item.itemId,jdbcType=VARCHAR} AS ITEM_ID, #{item.prodId,jdbcType=VARCHAR} AS PROD_ID, #{item.regCode,jdbcType=VARCHAR} AS REG_CODE,
+			#{item.solutions,jdbcType=VARCHAR} AS SOLUTIONS, #{item.occurDate,jdbcType=DATE} AS OCCUR_DATE, #{item.replyDate,jdbcType=DATE} AS REPLY_DATE,
+			#{item.described,jdbcType=VARCHAR} AS DESCRIBED, #{item.disposeResult,jdbcType=VARCHAR} AS DISPOSE_RESULT, #{item.remark,jdbcType=VARCHAR} AS REMARK,
+			#{item.orgCode,jdbcType=VARCHAR} AS ORG_CODE, #{item.deptCode,jdbcType=VARCHAR} AS DEPT_CODE, #{item.createUser,jdbcType=VARCHAR} AS CREATE_USER,
+			#{item.updateUser,jdbcType=VARCHAR} AS UPDATE_USER,sysdate AS CREATE_TIME, sysdate AS UPDATE_TIME
+			FROM dual
+		</foreach>
+		) A
+	</insert>
+
+	<!--	查询流动性风险list-->
+	<select id="genLiquidityRiskForSubList" resultType="com.joyintech.tams.common.base.entity.LiquidityRiskSub">
+		select
+		PROD_ID prodId,
+		REG_CODE regCode,
+		SOLUTIONS solutions,
+		OCCUR_DATE occurDate,
+		REPLY_DATE replyDate,
+		DESCRIBED described,
+		DISPOSE_RESULT disposeResult,
+		REMARK remark,
+		ORG_CODE orgCode,
+		DEPT_CODE deptCode,
+		CREATE_USER createUser,
+		UPDATE_USER updateUser
+		from
+		  LIQUIDITY_RISK_INFO
+		where STATUS = 'E'
+		      and REPLY_DATE BETWEEN to_date(#{batchDateStart},'yyyy-MM-dd') AND to_date(#{batchDateEnd},'yyyy-MM-dd')
+	</select>
+</mapper>

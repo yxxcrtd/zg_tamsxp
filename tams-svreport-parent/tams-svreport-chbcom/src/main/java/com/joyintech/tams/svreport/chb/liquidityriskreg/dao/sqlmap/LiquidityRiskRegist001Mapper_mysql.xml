@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.liquidityriskreg.dao.LiquidityRiskRegist001Mapper_mysql">
+  <!--	分页查询-->
+  <select id="searchPage" parameterType="map" resultType="com.joyintech.tams.svreport.chb.liquidityriskreg.dto.LiquidityRiskRegist001Dto">
+    select * from (
+    select
+    REGIST_SEQNO registSeqno,
+    ITEM_ID itemId,
+    ITEM_NAME itemName,
+    STATUS status,
+    STATUS_DATE statusDate,
+    SUBMIT_TIME submitTime,
+    CHB_SUBMIT_DEADLINE chbSubmitDeadline,
+    SUBMIT_DEADLINE submitDeadline,
+    SUBMIT_FEEDBACK_STATUS submitFeedbackStatus,
+    SUBMIT_FEEDBACK_MSG submitFeedbackMsg,
+    SEND_STATUS sendStatus,
+    CREATE_USER createUser,
+    CREATE_TIME createTime,
+    UPDATE_USER updateUser,
+    UPDATE_TIME updateTime,
+    ORG_CODE orgCode,
+    DEPT_CODE deptCode
+    from LIQUIDITY_RISK_SUB
+    <where>
+      <if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+        DATE_FORMAT(CHB_SUBMIT_DEADLINE, '%Y-%m-%d') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+      </if>
+      <if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+        and DATE_FORMAT(CHB_SUBMIT_DEADLINE, '%Y-%m-%d') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+      </if>
+      <if test="sendStatusList != null and sendStatusList.size()&gt;0">
+        <foreach close=")" collection="sendStatusList" item="item" open="and SEND_STATUS in(" separator=",">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="keyList != null and keyList.size()&gt;0">
+        <foreach close=")" collection="keyList" item="item" open="and REGIST_SEQNO in(" separator=",">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusList != null and statusList.size()&gt;0">
+        <foreach close=")" collection="statusList" item="item" open="and STATUS in(" separator=",">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="statusDateStart != null and statusDateStart != ''">
+        and DATE_FORMAT(STATUS_DATE, '%Y-%m-%d') &gt;= #{statusDateStart,jdbcType=VARCHAR}
+      </if>
+      <if test="statusDateEnd != null and statusDateEnd != ''">
+        and DATE_FORMAT(STATUS_DATE, '%Y-%m-%d') &lt;= #{statusDateEnd,jdbcType=VARCHAR}
+      </if>
+      <if test="submitTimeStart != null and submitTimeStart != ''">
+        and DATE_FORMAT(SUBMIT_TIME, '%Y-%m-%d') &gt;= #{submitTimeStart,jdbcType=VARCHAR}
+      </if>
+      <if test="submitTimeEnd != null and submitTimeEnd != ''">
+        and DATE_FORMAT(SUBMIT_TIME, '%Y-%m-%d') &lt;= #{submitTimeEnd,jdbcType=VARCHAR}
+      </if>
+      <if test="termidDateStart != null and submitDateStart != ''">
+        and termid &gt;= #{termidDateStart,jdbcType=VARCHAR}
+      </if>
+      <if test="termidDateEnd != null and submitDateEnd != ''">
+        and termid &lt;= #{termidDateEnd,jdbcType=VARCHAR}
+      </if>
+      <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() &gt; 0">
+        <foreach close=")" collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND SUBMIT_FEEDBACK_STATUS IN (" separator=",">
+          #{submitFeedbackStatus,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="itemId != null and itemId != ''">
+        and ITEM_ID  =  #{itemId,jdbcType=VARCHAR}
+      </if>
+    </where>
+    ) ORDER BY STATUSDATE
+  </select>
+
+  <!--	手工处理-->
+  <update id="updateInterfSubmitAndSeqBatch" parameterType="string">
+    update LIQUIDITY_RISK_SUB
+    set
+    SEND_STATUS = '03',
+    SUBMIT_FEEDBACK_STATUS = '03',
+    submit_time = sysdate
+    where
+    ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </update>
+
+  <!--	取消手工处理-->
+  <update id="cancelMannultRegist" parameterType="string">
+    update LIQUIDITY_RISK_SUB
+    set
+    SEND_STATUS = '01',
+    SUBMIT_FEEDBACK_STATUS = null,
+    submit_time = null
+    where
+    ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </update>
+
+  <!--	查询明细数据-->
+  <select id="selectDetailData" parameterType="map" resultType="com.joyintech.tams.svreport.chb.liquidityriskreg.dto.LiquidityRiskRegist001Dto">
+    select
+    ITEM_ID      itemId
+    ,PROD_ID    prodId
+    ,REG_CODE	regCode
+    ,SOLUTIONS    solutions
+    ,OCCUR_DATE   occurDate
+    ,REPLY_DATE   replyDate
+    ,DESCRIBED    described
+    ,DISPOSE_RESULT  disposeResult
+    ,REMARK       remark
+    from LIQUIDITY_RISK_SUB_DETAIL
+    where
+    ITEM_ID = #{itemId,jdbcType=VARCHAR}
+  </select>
+
+  <!--	查询机构代码-->
+  <select id="selectOrgCode" parameterType="string" resultType="string">
+    select
+    ORG_CODE
+    from CHB_ORG_REGIST_BANK_CODE
+    where
+    REGIST_BANK_CODE = #{orgCode,jdbcType=VARCHAR}
+  </select>
+</mapper>
