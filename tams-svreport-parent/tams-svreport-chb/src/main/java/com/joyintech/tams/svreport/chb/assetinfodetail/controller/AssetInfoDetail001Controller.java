@@ -146,13 +146,25 @@ public class AssetInfoDetail001Controller extends BaseController {
 			ValidateGroupDelete.class}) AssetInfoDetailDto dto, BindingResult br) throws WorkFlowException {
 		ProcessParameter<AssetInfoDetailDto> processParameter = new ProcessParameter<AssetInfoDetailDto>();
 		WorkFlowParameter<AssetInfoDetailDto> params = new WorkFlowParameter<AssetInfoDetailDto>();
-		params.setPageId("AssetInfoDetail002");
-		params.setElementId(dto.getElementId());
-		params.setBusinessCode(item -> item.getAssetCode());
-		params.setBusinessType(DictCodeListExt3.共通业务类型_资产基本信息维护.getValue());
-		processParameter.setWorkFlowParameter(params);
+        params.setPageId("AssetInfoDetail002");
+        params.setElementId(dto.getElementId());
+        params.setBusinessCode(item -> item.getAssetCode());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_资产基本信息维护.getValue());
+        processParameter.setWorkFlowParameter(params);
+        String assetUuid=null;
+        String dataStatus=null;
+        int i=0;
+        for(AssetInfoDetailDto assetInfoDetailDto:dto.getSelectedItem()){
+            assetUuid=assetInfoDetailDto.getAssetUuid();
+            dataStatus=assetInfoDetailDto.getDataStatus();
+            if (StringUtil.isNotEmpty(assetUuid) && StringUtil.isNotEmpty(dataStatus)) {
+                dto.getSelectedItem().set(i,assetInfoDetailMService.getAssetInfoDetail(assetUuid, dataStatus));
+            }
+            i++;
+        }
+
 		String msg = assetInfoDetailMService.start(processParameter,
-				dto.getSelectedItem().toArray(new AssetInfoDetailDto[dto.getSelectedItem().size()]));
+				dto.getSelectedItem().toArray(new AssetInfoDetailDto[i]));
 		return new AjaxResult(msg);
 	}
 
