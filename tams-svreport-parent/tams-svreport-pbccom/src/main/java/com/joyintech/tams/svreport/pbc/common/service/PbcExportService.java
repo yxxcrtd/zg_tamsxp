@@ -114,7 +114,7 @@ public class PbcExportService extends BaseService<ITableRow>{
         			}
             		
             		if(!StringUtil.isNotEmpty(pbcReport.get("finInstitutionCode"))){
-        				pbcReport.put("finInstitutionCode",bankDto.getRegistBankCode());
+        				pbcReport.put("finInstitutionCode",bankDto.getPbcBankCode());
         			}
             	}
             }
