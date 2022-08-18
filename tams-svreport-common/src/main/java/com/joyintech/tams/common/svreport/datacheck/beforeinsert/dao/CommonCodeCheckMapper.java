@@ -38,6 +38,13 @@ public interface CommonCodeCheckMapper {
     List<ChbPrdresistCode> queryChbPrdresistCodeByRegCode(@Param("regCode")String  regCode);
 
     /**
+     *  根据产品代码查询产品登记编号信息
+     * @param prodId 产品代码
+     * @return 产品登记编号信息
+     */
+    List<ChbPrdresistCode> queryChbPrdresistCodeByProdId(@Param("prodId")String  prodId);
+
+    /**
      *  同一“对应资管及委外资产行内资产/负债编码”、同一“持仓日期”下，对于不同“底层资产行内资产/负债编码”的记录，该要素须保持一致
      * @param chbBotAstPosSub 查询对象
      * @return 符合条件的个数

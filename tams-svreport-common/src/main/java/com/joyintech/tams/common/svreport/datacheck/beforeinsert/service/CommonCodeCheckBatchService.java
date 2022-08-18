@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.activiti.engine.impl.util.CollectionUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -146,6 +147,9 @@ public class CommonCodeCheckBatchService {
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
                 case 资产持仓登记SUB:
                     checkAstPosSubSingle(map);
+                    break;
+                case 流动性风险应对情况信息表INFO:
+                    checkLiquidityRiskInfo(map);
                     break;
                 default:
                     break;
@@ -481,7 +485,9 @@ public class CommonCodeCheckBatchService {
 
             // add by zhangliang 20210112 没有错误信息时删除key，防止后面错误判断
             if (map.containsKey("ERRMSG") && StringUtil.isEmpty(map.get("ERRMSG"))){
-                map.remove("ERRMSG");
+                if (!StringUtil.equals("LIQUIDITY_RISK_INFO",tableInfo.getTableName())) {
+                    map.remove("ERRMSG");
+                }
             }
 
             //如果代码错误校验有错误信息
@@ -490,7 +496,10 @@ public class CommonCodeCheckBatchService {
 
             if(errodata != null) {
                 erroList.add(errodata);
-                list.remove(i);
+                //流动性风险维护表不需要移除
+                if (!StringUtil.equals("LIQUIDITY_RISK_INFO",tableInfo.getTableName())) {
+                    list.remove(i);
+                }
             }
 
             if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
@@ -4353,6 +4362,26 @@ public class CommonCodeCheckBatchService {
             }
         }
         dataMap.put("ERRMSG", errMsg);
+    }
+
+    /**
+     * 检查流动性风险应对情况数据
+     * @param dataMap
+     */
+    public  void  checkLiquidityRiskInfo(Map<String, String> dataMap){
+        String  errMsg=dataMap.getOrDefault("ERRMSG", "");
+        //产品代码
+        String  prodId=dataMap.get("PROD_ID");
+
+        List<ChbPrdresistCode> list = commonCodeCheckMapper.queryChbPrdresistCodeByProdId(prodId);
+        if (CollectionUtils.isEmpty(list)) {
+            errMsg +="产品登记编码不存在[PROD_ID="+prodId+"];";
+            dataMap.put("ERRMSG", errMsg);
+            return;
+        }
+        dataMap.put("REG_CODE", list.get(0).getRegCode());
+        dataMap.put("ERRMSG", errMsg);
+
     }
 
     public static boolean inclodeNine(String value){

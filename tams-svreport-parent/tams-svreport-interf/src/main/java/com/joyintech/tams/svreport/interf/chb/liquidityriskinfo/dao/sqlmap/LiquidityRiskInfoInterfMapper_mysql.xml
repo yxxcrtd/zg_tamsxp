@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.joyintech.tams.svreport.interf.chb.liquidityriskinfo.dao.LiquidityRiskInfoInterfMapper_mysql">
+
+    <insert id="mergeInfoList" >
+        insert into LIQUIDITY_RISK_INFO (SEQNO,
+        PROD_ID,
+        REG_CODE,
+        SOLUTIONS,
+        OCCUR_DATE,
+        REPLY_DATE,
+        DESCRIBED,
+        DISPOSE_RESULT,
+        REMARK,
+        ERR_MSG,
+        CREATE_USER,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        ORG_CODE,
+        DEPT_CODE,
+        STATUS,
+        DATA_SOURCE)
+        select SEQNO,
+        PROD_ID,
+        REG_CODE,
+        SOLUTIONS,
+        OCCUR_DATE,
+        REPLY_DATE,
+        DESCRIBED,
+        DISPOSE_RESULT,
+        REMARK,
+        ERR_MSG,
+        CREATE_USER,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        ORG_CODE,
+        DEPT_CODE,
+        STATUS,
+        DATA_SOURCE from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="newDataList" item="item"  separator="union all">
+            SELECT
+            #{item.seqno, jdbcType=CHAR} SEQNO,
+            #{item.prodId ,jdbcType=VARCHAR } PROD_ID,
+            #{item.regCode ,jdbcType=VARCHAR } REG_CODE,
+            #{item.solutions ,jdbcType=VARCHAR } SOLUTIONS,
+            #{item.occurDate ,jdbcType=DATE } OCCUR_DATE,
+            #{item.replyDate ,jdbcType=DATE } REPLY_DATE,
+            #{item.described ,jdbcType=VARCHAR } DESCRIBED,
+            #{item.disposeResult ,jdbcType=VARCHAR } DISPOSE_RESULT,
+            #{item.remark ,jdbcType=CHAR } REMARK,
+            #{item.errMsg ,jdbcType=VARCHAR } ERR_MSG,
+            #{item.createUser ,jdbcType=VARCHAR } CREATE_USER,
+            #{item.createTime ,jdbcType=TIMESTAMP } CREATE_TIME,
+            #{item.updateUser ,jdbcType=VARCHAR } UPDATE_USER,
+            #{item.updateTime ,jdbcType=TIMESTAMP } UPDATE_TIME,
+            #{item.orgCode ,jdbcType=VARCHAR } ORG_CODE,
+            #{item.deptCode ,jdbcType=VARCHAR } DEPT_CODE,
+            #{item.status ,jdbcType=VARCHAR } STATUS,
+            #{item.dataSource ,jdbcType=VARCHAR } DATA_SOURCE
+            FROM
+            DUAL
+        </foreach>
+        ) TEMP where not exists (select 1 from LIQUIDITY_RISK_INFO CII where
+        CII.REG_CODE = TEMP.REG_CODE AND
+        CII.SOLUTIONS = TEMP.SOLUTIONS AND
+        CII.OCCUR_DATE = TEMP.OCCUR_DATE AND
+        CII.REPLY_DATE = TEMP.REPLY_DATE AND
+        CII.DESCRIBED = TEMP.DESCRIBED AND
+        CII.DISPOSE_RESULT = TEMP.DISPOSE_RESULT )
+        ) de ;
+
+        UPDATE  LIQUIDITY_RISK_INFO as a,
+        (
+        select
+        PROD_ID,
+        REG_CODE,
+        SOLUTIONS,
+        OCCUR_DATE,
+        REPLY_DATE,
+        DESCRIBED,
+        DISPOSE_RESULT,
+        REMARK,
+        ERR_MSG,
+        CREATE_USER,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        ORG_CODE,
+        DEPT_CODE,
+        STATUS,
+        DATA_SOURCE from
+        (
+        select TEMP.* from
+        (
+        <foreach collection="newDataList" item="item"  separator="union all">
+            SELECT
+            #{item.prodId ,jdbcType=VARCHAR } PROD_ID,
+            #{item.regCode ,jdbcType=VARCHAR } REG_CODE,
+            #{item.solutions ,jdbcType=VARCHAR } SOLUTIONS,
+            #{item.occurDate ,jdbcType=DATE } OCCUR_DATE,
+            #{item.replyDate ,jdbcType=DATE } REPLY_DATE,
+            #{item.described ,jdbcType=VARCHAR } DESCRIBED,
+            #{item.disposeResult ,jdbcType=VARCHAR } DISPOSE_RESULT,
+            #{item.remark ,jdbcType=CHAR } REMARK,
+            #{item.errMsg ,jdbcType=VARCHAR } ERR_MSG,
+            #{item.createUser ,jdbcType=VARCHAR } CREATE_USER,
+            #{item.createTime ,jdbcType=TIMESTAMP } CREATE_TIME,
+            #{item.updateUser ,jdbcType=VARCHAR } UPDATE_USER,
+            #{item.updateTime ,jdbcType=TIMESTAMP } UPDATE_TIME,
+            #{item.orgCode ,jdbcType=VARCHAR } ORG_CODE,
+            #{item.deptCode ,jdbcType=VARCHAR } DEPT_CODE,
+            #{item.status ,jdbcType=VARCHAR } STATUS,
+            #{item.dataSource ,jdbcType=VARCHAR } DATA_SOURCE
+            FROM
+            DUAL
+        </foreach>
+        ) TEMP
+        ) de
+        ) AS b
+        set
+        a.PROD_ID = b.PROD_ID,
+        a.REMARK = b.REMARK,
+        a.ERR_MSG = b.ERR_MSG,
+        a.CREATE_USER = b.CREATE_USER,
+        a.CREATE_TIME = b.CREATE_TIME,
+        a.UPDATE_USER = b.UPDATE_USER,
+        a.UPDATE_TIME = b.UPDATE_TIME,
+        a.ORG_CODE = b.ORG_CODE,
+        a.DEPT_CODE = b.DEPT_CODE,
+        a.STATUS = b.STATUS,
+        a.DATA_SOURCE = b.DATA_SOURCE
+        where a.REG_CODE = b.REG_CODE AND
+        a.SOLUTIONS = b.SOLUTIONS AND
+        a.OCCUR_DATE = b.OCCUR_DATE AND
+        a.REPLY_DATE = b.REPLY_DATE AND
+        a.DESCRIBED = b.DESCRIBED AND
+        a.DISPOSE_RESULT = b.DISPOSE_RESULT
+    </insert>
+</mapper>

@@ -307,6 +307,9 @@
             <if test="prodInsId != null  and prodInsId !='' " >
                 and cpc.PROD_INS_ID != #{prodInsId,jdbcType=VARCHAR}
             </if>
+			<if test="prodId != null  and prodId !='' " >
+				and cpc.PRODID = #{prodId,jdbcType=VARCHAR}
+			</if>
         </where>
     </select>
     <select id="selectInfo" resultType="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage002Dto">

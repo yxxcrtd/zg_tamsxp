@@ -40,7 +40,7 @@ public enum ChbCheckTableInfo {
     总部或分支机构信息表INFO("CHB_SALER_INST_INFO", true, "SALER_ORG_CODE", new String[] {"SALER_ORG_CODE","SALER_ORG_NAME"}, ""),
     销售人员身份信息表INFO("CHB_SALER_IDEN_INFO", true, "SALER_INS_NO", new String[] {"SALER_INS_NO"}, ""),
     销售人员奖惩投诉记录信息表INFO("CHB_SALER_REW_PENA_INFO", true, "SALER_REW_PENA_NO", new String[] {"SALER_REW_PENA_NO"}, ""),
-
+    流动性风险应对情况信息表INFO("LIQUIDITY_RISK_INFO", true, "", new String[] {"REG_CODE","SOLUTIONS","OCCUR_DATE","REPLY_DATE","DESCRIBED","DISPOSE_RESULT"}, "LIQUIDITY_RISK_INFO"),
 
 
     /*杭州TMP*/
