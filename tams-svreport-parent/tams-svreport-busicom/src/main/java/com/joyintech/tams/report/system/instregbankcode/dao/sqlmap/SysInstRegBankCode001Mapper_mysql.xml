@@ -51,7 +51,7 @@
     <select id="queryForPageWithMode" resultType="com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto">
         select
         corbc.ORG_CODE as orgCode,
-        corbc.REGIST_BANK_CODE as registBankCode,
+        corbc.PBC_BANK_CODE as pbcBankCode,
         corbc.INSITITUTE_CODE as insitituteCode,
         sysi.institution_name as orgName,
         /****查询及新建界面新增“所属银保监局”字段用于城商行附表统计时“银保监局”字段的取值*/

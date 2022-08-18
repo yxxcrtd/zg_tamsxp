@@ -206,7 +206,7 @@ public abstract class PbcReportProdTotalService extends PbcExportService  {
             	// 社会信用代码
                 pbcMonthReport.setSocialCreditCode(bankDto.getInsitituteCode());
                 // 金融机构编码
-            	pbcMonthReport.setFinInstitutionCode(bankDto.getRegistBankCode());
+            	pbcMonthReport.setFinInstitutionCode(bankDto.getPbcBankCode());
            
         	}
         }
@@ -368,7 +368,7 @@ public abstract class PbcReportProdTotalService extends PbcExportService  {
 		                    	// 社会信用代码
 		                        pbcMonthReport.setSocialCreditCode(bankDto.getInsitituteCode());
 		                        // 金融机构编码
-		                    	pbcMonthReport.setFinInstitutionCode(bankDto.getRegistBankCode());
+		                    	pbcMonthReport.setFinInstitutionCode(bankDto.getPbcBankCode());
 		                   
 		                	}
 		        	}
