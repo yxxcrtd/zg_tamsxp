@@ -130,7 +130,17 @@
             CHB_PRDRESIST_CODE
       where REG_CODE = #{regCode}
    </select>
-   
+
+    <select id="queryChbPrdresistCodeByProdId" resultType="com.joyintech.tams.common.base.entity.ChbPrdresistCode">
+        select
+            PRODID prodid,
+            ORG_CODE orgCode,
+            REG_CODE regCode
+        from
+            CHB_PRDRESIST_CODE
+        where PRODID = #{prodId}
+    </select>
+
    <select id="queryChbPrdIssueSubByProdId" resultType="com.joyintech.tams.common.base.entity.ChbPrdIssueSub">
       select
             REGIST_SEQNO registSeqno,

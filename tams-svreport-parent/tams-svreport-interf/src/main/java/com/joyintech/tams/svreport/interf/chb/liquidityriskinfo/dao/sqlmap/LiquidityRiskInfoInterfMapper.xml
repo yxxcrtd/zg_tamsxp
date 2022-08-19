@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.joyintech.tams.svreport.interf.chb.liquidityriskinfo.dao.LiquidityRiskInfoInterfMapper">
+    <insert id="mergeInfoList"
+            parameterType="com.joyintech.tams.common.base.entity.LiquidityRiskInfo">
+        MERGE INTO LIQUIDITY_RISK_INFO L
+        USING (
+        <foreach collection="newDataList" item="item" open="select * from("
+                 close=")" separator="union all">
+            select
+            #{item.seqno, jdbcType=CHAR} SEQNO,
+            #{item.prodId ,jdbcType=VARCHAR } PROD_ID,
+            #{item.regCode ,jdbcType=VARCHAR } REG_CODE,
+            #{item.solutions ,jdbcType=VARCHAR } SOLUTIONS,
+            #{item.occurDate ,jdbcType=DATE } OCCUR_DATE,
+            #{item.replyDate ,jdbcType=DATE } REPLY_DATE,
+            #{item.described ,jdbcType=VARCHAR } DESCRIBED,
+            #{item.disposeResult ,jdbcType=VARCHAR } DISPOSE_RESULT,
+            #{item.remark ,jdbcType=CHAR } REMARK,
+            #{item.errMsg ,jdbcType=VARCHAR } ERR_MSG,
+            #{item.createUser ,jdbcType=VARCHAR } CREATE_USER,
+            #{item.createTime ,jdbcType=TIMESTAMP } CREATE_TIME,
+            #{item.updateUser ,jdbcType=VARCHAR } UPDATE_USER,
+            #{item.updateTime ,jdbcType=TIMESTAMP } UPDATE_TIME,
+            #{item.orgCode ,jdbcType=VARCHAR } ORG_CODE,
+            #{item.deptCode ,jdbcType=VARCHAR } DEPT_CODE,
+            #{item.status ,jdbcType=VARCHAR } STATUS,
+            #{item.dataSource ,jdbcType=VARCHAR } DATA_SOURCE
+            from dual
+        </foreach>
+        ) TEMP
+        ON (L.REG_CODE = TEMP.REG_CODE AND
+        L.SOLUTIONS = TEMP.SOLUTIONS AND
+        L.OCCUR_DATE = TEMP.OCCUR_DATE AND
+        L.REPLY_DATE = TEMP.REPLY_DATE AND
+        L.DESCRIBED = TEMP.DESCRIBED AND
+        L.DISPOSE_RESULT = TEMP.DISPOSE_RESULT)
+        WHEN MATCHED THEN
+        UPDATE
+        SET
+        L.SEQNO = TEMP.SEQNO,
+        L.PROD_ID = TEMP.PROD_ID,
+        L.REMARK = TEMP.REMARK,
+        L.ERR_MSG = TEMP.ERR_MSG,
+        L.CREATE_USER = TEMP.CREATE_USER,
+        L.CREATE_TIME = TEMP.CREATE_TIME,
+        L.UPDATE_USER = TEMP.UPDATE_USER,
+        L.UPDATE_TIME = TEMP.UPDATE_TIME,
+        L.ORG_CODE = TEMP.ORG_CODE,
+        L.DEPT_CODE = TEMP.DEPT_CODE,
+        L.STATUS = TEMP.STATUS,
+        L.DATA_SOURCE = TEMP.DATA_SOURCE
+        WHEN NOT MATCHED THEN
+        INSERT (
+        SEQNO,
+        PROD_ID,
+        REG_CODE,
+        SOLUTIONS,
+        OCCUR_DATE,
+        REPLY_DATE,
+        DESCRIBED,
+        DISPOSE_RESULT,
+        REMARK,
+        ERR_MSG,
+        CREATE_USER,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        ORG_CODE,
+        DEPT_CODE,
+        STATUS,
+        DATA_SOURCE
+        )
+        VALUES(
+        TEMP.SEQNO,
+        TEMP.PROD_ID,
+        TEMP.REG_CODE,
+        TEMP.SOLUTIONS,
+        TEMP.OCCUR_DATE,
+        TEMP.REPLY_DATE,
+        TEMP.DESCRIBED,
+        TEMP.DISPOSE_RESULT,
+        TEMP.REMARK,
+        TEMP.ERR_MSG,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.ORG_CODE,
+        TEMP.DEPT_CODE,
+        TEMP.STATUS,
+        TEMP.DATA_SOURCE
+        )
+    </insert>
+</mapper>

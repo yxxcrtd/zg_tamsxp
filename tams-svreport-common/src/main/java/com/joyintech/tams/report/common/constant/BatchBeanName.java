@@ -80,6 +80,7 @@ public enum BatchBeanName {
 	周期型产品余额数据接入("3049","svrCprodBalanceInterfTaskService","svrCprodBalanceImpMainService","周期型产品余额数据接入"),
 	子资管计划资产指标信息("3050","svrSubInvestmentPlanAssetIndicatorInfoTaskService","subInvestImpMainService","子资管计划资产指标信息"),
     贷款明细信息接口数据接入("3051","svrLoanDetailInfoInterfTaskService","loanDetailInfoImpMainService","贷款明细信息接口数据接入"),
+    流动性风险应对情况信息接口数据接入("3053","svrLiquidityRiskInfoInterfTaskService","liquidityRiskInfoImpMainService","流动性风险应对情况信息接口数据接入"),
 
     新人行单产品报表生成("3055","svrNewPbcSinglePrdReportTaskService","svrNewPbcSinglePrdReportTaskService","新人行单产品报表生成"),
     新人行dat报表生成("3056","svrNewPbcDatFileTaskService","svrNewPbcDatFileTaskService","新人行dat报表生成"),
@@ -92,7 +93,7 @@ public enum BatchBeanName {
 
     // 监管客户组别区域报送数据接入 add by qufangxu at 2021-02-24
     监管客户组别区域报送数据接入("3003","svrSaleCustSvrreportInterfTastService","saleCustSvrrepportImpMainService","监管客户组别区域报送数据接入"),
-    销售结算资金交易信息表报送数据接入("3053","svrChbSalerStlDealInfoInterfTastService","ChbSalerStlDealInfoImpMainService","销售结算资金交易信息表报送数据接入"),
+    销售结算资金交易信息表报送数据接入("3063","svrChbSalerStlDealInfoInterfTastService","ChbSalerStlDealInfoImpMainService","销售结算资金交易信息表报送数据接入"),
     理财子公司月度统计表生成("3055","svrSubsidiaMonthReportTaskService","SubsidiaMonthReportRegistBatchService","理财子公司月度统计表生成"),
 
     /**

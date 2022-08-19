@@ -72,6 +72,7 @@ public enum InterfDefine {
     资产利率基本信息接口数据("CHB_ASSET_RATE","资产利率基本信息接口数据"),
 
     产品汇总交易接口数据("CHB_PRD_DEAL_TOTAL","产品汇总交易接口数据"),
+    流动性风险应对情况信息接口("LIQUIDITY_RISK_INFO","流动性风险应对情况信息接口"),
     //add by wm 20201113 增加一体化报送页面参数 start
     产品申报登记信息("CHB_PRD_DECLARE_SUB","产品申报登记信息"),
     产品发行登记信息("CHB_PRD_ISSUE_SUB","产品发行登记信息"),
