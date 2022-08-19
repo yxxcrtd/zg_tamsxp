@@ -1236,22 +1236,28 @@ public class ChbFeedbackMsgService {
         }
         // 更新中债三期反馈状态
         if(StringUtil.isNotEmpty(svrBackStatus)&&svrBackStatus.equals("1")){
-        	// 批量更新三期的SUB表，设置为中债拖过
-        	List<ChbSubmitStatusDto> subUpdate =new ArrayList<>();
-        	// 更新中债报送结果
-            ChbSubmitStatusDto status = new ChbSubmitStatusDto();
-            //报送类型
-            status.setFlag(submitType);
-            // 报送编码
-            status.setReportNo(reportNo);
-            // 反馈状态
-            status.setSubmitFeedbackStatus(DictCodeList.报送反馈状态_中债通过.getValue());
-            subUpdate.add(status);
-            //批量更新登记表为报送成功
-            updateSub(subUpdate);
-            
-            // 更新三期的SUB表的错误信息记录
-        	updateSub(submiterrors);
+        	
+        	if (CollectionUtil.isNotEmpty(submitinfos)) {
+        		// 批量更新三期的SUB表，设置为中债通过
+            	List<ChbSubmitStatusDto> subUpdate =new ArrayList<>();
+            	// 更新中债报送结果
+                ChbSubmitStatusDto status = new ChbSubmitStatusDto();
+                //报送类型
+                status.setFlag(submitType);
+                // 报送编码
+                status.setReportNo(reportNo);
+                // 反馈状态
+                status.setSubmitFeedbackStatus(DictCodeList.报送反馈状态_中债通过.getValue());
+                subUpdate.add(status);
+                //批量更新登记表为报送成功
+                updateSub(subUpdate);
+            }
+        	
+        	//更新三期的STATUS表
+        	if (CollectionUtil.isNotEmpty(submiterrors)) {
+        		 // 更新三期的SUB表的错误信息记录
+            	updateSub(submiterrors);
+            }
         }else{
         	//更新三期的STATUS表
         	if (CollectionUtil.isNotEmpty(submiterrors)) {
