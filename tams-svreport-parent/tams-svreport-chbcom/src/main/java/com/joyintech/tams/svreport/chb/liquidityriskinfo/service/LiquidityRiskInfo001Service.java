@@ -170,52 +170,50 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
             webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
             return webResult;
         }
-        if (CollectionUtils.isNotEmpty(dataList)) {
-            List<Map<String, String>> listToMap = this.listToMap(dataList);
-
-            List<ExcelValidDto> result = new ArrayList<>();
-
-            List<ValidMessage> errorList = new ArrayList<>();
-
-            for (int i = 0; i < listToMap.size(); i++) {
-                Map<String, String> mapI = listToMap.get(i);
-                String prodId = mapI.get("PROD_ID");
-                String solutions = mapI.get("SOLUTIONS");
-                String occurDate = mapI.get("OCCUR_DATE");
-                String replyDate = mapI.get("REPLY_DATE");
-                String described = mapI.get("DESCRIBED");
-                String disposeResult = mapI.get("DISPOSE_RESULT");
-                String keyI = prodId + solutions + occurDate + replyDate + described + disposeResult;
-                boolean occur_date = DateUtil.isDateStr(occurDate);
-                if (!occur_date) {
-                    result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1), "风险发生日期必须为日期格式(YYYY-MM-DD)[OCCUR_DATE=" + occurDate + "]"));
-                }
-                boolean reply_date = DateUtil.isDateStr(replyDate);
-                if (!reply_date) {
-                    result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1), "风险应对必须为日期格式YYYY-MM-DD)[REPLY_DATE=" + replyDate + "]"));
-                }
-                for (int j = i + 1; j < listToMap.size(); j++) {
-                    Map<String, String> mapJ = listToMap.get(j);
-                    String keyJ = mapJ.get("PROD_ID") + mapJ.get("SOLUTIONS") + mapJ.get("OCCUR_DATE") + mapJ.get("REPLY_DATE")
-                            + mapJ.get("DESCRIBED") + mapJ.get("DISPOSE_RESULT");
-                    if (StringUtil.equals(keyI, keyJ)) {
-                        result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(j + 2), this.getMessage("REPORT_COMMON_FILE_E_0027", String.valueOf(i + 2) + "," + String.valueOf(j + 2))));
-                    }
-                }
-
-            }
-
-            for (ExcelValidDto excelValidDto : result) {
-                errorList.add(new ValidMessage(excelValidDto.getErrorInfo()));
-                webResult.setErrorList(errorList);
-                return webResult;
-            }
-            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-
-        } else {
-            // 防止在进行导入前check时进行了两次的弹框
-            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+        if(CollectionUtils.isEmpty(dataList)){
+            webResult.setMessage("请勿上传空文件", MessageType.错误消息);
+            return webResult;
         }
+        List<Map<String, String>> listToMap = this.listToMap(dataList);
+
+        List<ExcelValidDto> result = new ArrayList<>();
+
+        List<ValidMessage> errorList = new ArrayList<>();
+
+        for (int i = 0; i < listToMap.size(); i++) {
+            Map<String, String> mapI = listToMap.get(i);
+            String prodId = mapI.get("PROD_ID");
+            String solutions = mapI.get("SOLUTIONS");
+            String occurDate = mapI.get("OCCUR_DATE");
+            String replyDate = mapI.get("REPLY_DATE");
+            String described = mapI.get("DESCRIBED");
+            String disposeResult = mapI.get("DISPOSE_RESULT");
+            String keyI = prodId + solutions + occurDate + replyDate + described + disposeResult;
+            boolean occur_date = DateUtil.isDateStr(occurDate);
+            if (!occur_date) {
+                result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1), "风险发生日期必须为日期格式(YYYY-MM-DD)[OCCUR_DATE=" + occurDate + "]"));
+            }
+            boolean reply_date = DateUtil.isDateStr(replyDate);
+            if (!reply_date) {
+                result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1), "风险应对必须为日期格式YYYY-MM-DD)[REPLY_DATE=" + replyDate + "]"));
+            }
+            for (int j = i + 1; j < listToMap.size(); j++) {
+                Map<String, String> mapJ = listToMap.get(j);
+                String keyJ = mapJ.get("PROD_ID") + mapJ.get("SOLUTIONS") + mapJ.get("OCCUR_DATE") + mapJ.get("REPLY_DATE")
+                        + mapJ.get("DESCRIBED") + mapJ.get("DISPOSE_RESULT");
+                if (StringUtil.equals(keyI, keyJ)) {
+                    result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(j + 2), this.getMessage("REPORT_COMMON_FILE_E_0027", String.valueOf(i + 2) + "," + String.valueOf(j + 2))));
+                }
+            }
+
+        }
+
+        for (ExcelValidDto excelValidDto : result) {
+            errorList.add(new ValidMessage(excelValidDto.getErrorInfo()));
+            webResult.setErrorList(errorList);
+            return webResult;
+        }
+        webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 
         return webResult;
     }
