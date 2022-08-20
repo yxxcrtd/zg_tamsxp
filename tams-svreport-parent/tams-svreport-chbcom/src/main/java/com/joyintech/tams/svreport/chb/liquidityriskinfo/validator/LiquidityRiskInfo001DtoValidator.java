@@ -36,16 +36,11 @@ public class LiquidityRiskInfo001DtoValidator implements BeanValidator{
     public List<ValidMessage> valid(Object value) {
         LiquidityRiskInfo001Dto dto = (LiquidityRiskInfo001Dto)value;
         List<ValidMessage> errorList = new ArrayList<>();
-        //新增校验数据是否已在数据库中存在
-        if (StringUtil.isBlank(dto.getSeqno())){
-            dto.setRegCode(StringUtil.isBlank(dto.getRegCode())?" ":dto.getRegCode());
-            dto.setDescribed(StringUtil.isBlank(dto.getDescribed())?" ":dto.getDescribed());
-            dto.setDisposeResult(StringUtil.isBlank(dto.getDisposeResult())?" ":dto.getDisposeResult());
-            LiquidityRiskInfo001Dto liquidityRiskInfo001Dto = liquidityRiskInfo001Mapper.selectOne(dto);
-            if (liquidityRiskInfo001Dto != null){
-                errorList.add(new ValidMessage(this.getMessage("该数据已存在，无法新增")));
-            }
+
+        if (!this.validDataDuplicate(dto)) {
+            errorList.add(new ValidMessage("\"产品登记编码+流动性风险应对措施+风险发生日期+风险应对日期+风险事件描述+风险处理结果\"" + "与现有数据重复"));
         }
+
         if (StringUtil.isBlank(dto.getProdId())) {
             errorList.add(new ValidMessage("prodId", "产品代码要素不可为空。"));
         }
@@ -66,5 +61,32 @@ public class LiquidityRiskInfo001DtoValidator implements BeanValidator{
         }
         return errorList;
     }
+
+
+    /**
+     * 新增校验数据是否已在数据库中存在
+     *
+     * @param dto
+     * @return
+     */
+    private Boolean validDataDuplicate(LiquidityRiskInfo001Dto dto) {
+
+        Boolean flag = true;
+        dto.setRegCode(StringUtil.isBlank(dto.getRegCode()) ? " " : dto.getRegCode());
+        dto.setDescribed(StringUtil.isBlank(dto.getDescribed()) ? " " : dto.getDescribed());
+        dto.setDisposeResult(StringUtil.isBlank(dto.getDisposeResult()) ? " " : dto.getDisposeResult());
+        LiquidityRiskInfo001Dto liquidityRiskInfo001Dto = liquidityRiskInfo001Mapper.selectOne(dto);
+        //主键为空为新增
+        if (StringUtil.isBlank(dto.getSeqno()) && liquidityRiskInfo001Dto != null) {
+            flag = false;
+        }
+
+        if (StringUtil.isNotBlank(dto.getSeqno()) && !StringUtil.equals(liquidityRiskInfo001Dto.getSeqno(), dto.getSeqno())) {
+            flag = false;
+        }
+
+        return flag;
+    }
+
 
 }
