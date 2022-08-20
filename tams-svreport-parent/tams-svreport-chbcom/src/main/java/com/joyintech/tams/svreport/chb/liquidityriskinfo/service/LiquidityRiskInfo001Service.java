@@ -213,6 +213,11 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
             webResult.setErrorList(errorList);
             return webResult;
         }
+
+        if(liquidityRiskInfo001Mapper.selectLiquidityRiskInfoCount(listToMap)>0){
+            return  new AjaxResult("系统中存在重复的数据，是否覆盖?",MessageType.确认消息);
+        }
+
         webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
 
         return webResult;
@@ -260,8 +265,8 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
                     dto.setProdId(map.get("PROD_ID"));
                     dto.setRegCode(StringUtil.isBlank(map.get("REG_CODE")) ? " " : map.get("REG_CODE"));
                     dto.setSolutions(map.get("SOLUTIONS"));
-                    dto.setDescribed(StringUtil.isBlank(map.get("DESCRIBED")) ? " " : map.get("DESCRIBED"));
-                    dto.setDisposeResult(StringUtil.isBlank(map.get("DISPOSE_RESULT")) ? " " : map.get("DISPOSE_RESULT"));
+                    dto.setDescribed(map.get("DESCRIBED"));
+                    dto.setDisposeResult(map.get("DISPOSE_RESULT"));
                     dto.setOccurDate(DateUtil.parse(map.get("OCCUR_DATE")));
                     dto.setReplyDate(DateUtil.parse(map.get("REPLY_DATE")));
                     dto.setRemark(map.get("REMARK"));
@@ -297,6 +302,12 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
                         solutions = solutions.split(" ")[0];
                     }
                     temp.put(fieldName[i], solutions);
+                } else if (StringUtil.equals("DESCRIBED", fieldName[i]) || StringUtil.equals("DISPOSE_RESULT", fieldName[i])) {
+                    String value = data.get(i);
+                    if (StringUtil.isBlank(value)) {
+                        value =" ";
+                    }
+                    temp.put(fieldName[i], value);
                 } else {
                     temp.put(fieldName[i], data.get(i));
                 }

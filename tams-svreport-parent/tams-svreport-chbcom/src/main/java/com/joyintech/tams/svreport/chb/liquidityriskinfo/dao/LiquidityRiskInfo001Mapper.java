@@ -1,7 +1,6 @@
 package com.joyintech.tams.svreport.chb.liquidityriskinfo.dao;
 
 
-import com.joyintech.tams.common.base.entity.LiquidityRiskInfo;
 import com.joyintech.tams.svreport.chb.liquidityriskinfo.dto.LiquidityRiskInfo001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -58,6 +57,13 @@ public interface LiquidityRiskInfo001Mapper {
      * @return
      */
     LiquidityRiskInfo001Dto selectByPrimaryKey(@Param("seqno") String seqno);
+
+    /**
+     * 查询记录条数
+     * @param list
+     * @return
+     */
+    int  selectLiquidityRiskInfoCount(@Param("list")List<Map<String, String>> list);
 
 
 }
