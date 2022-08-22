@@ -1,0 +1,1 @@
+update SYS_MENU set REMARK='理财子公司产品情况月度统计表' where MENU_ID='REPORT_REGIST_001_001_013';
