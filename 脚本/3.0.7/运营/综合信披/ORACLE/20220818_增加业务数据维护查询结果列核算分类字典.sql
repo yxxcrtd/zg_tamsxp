@@ -1,0 +1,1 @@
+update chb_infomgr_result_config set DICTCODE='HS_TYPE' where MGRTABLE_ID='MST_CUSTOMER_INFO_ADD' and COLUMN_ID='HS_TYPE';

@@ -582,6 +582,33 @@ public class ChbFeedbackMsgService {
         }
     }
 
+    /**
+     * 更新中债三期反馈结果
+     * @param statusList 反馈结果
+     */
+    private void updateSub(List<ChbSubmitStatusDto> statusList) {
+        // 获取sql 连接， 批量执行模式 
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        try {
+            ChbFeedbackMsgComponentMapper componentMapper = sqlSession.getMapper(ChbFeedbackMsgComponentMapper.class);
+            int index = 0;
+            for (ChbSubmitStatusDto status : statusList) {
+                componentMapper.updateChbSubmitStatusNew(status);
+                index ++;
+                if (index == maxSqlNum) {
+                    sqlSession.commit();
+                    index = 0;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("批量执行失败", e);
+            sqlSession.rollback();
+        } finally {
+            sqlSession.commit();
+            sqlSession.close();
+        }
+    }
+    
 
     /**
      * 更新中债三期反馈结果
@@ -1208,12 +1235,39 @@ public class ChbFeedbackMsgService {
             updateSubmitStatusTwo(submitTwoinfos, submitType, updateFlag);
         }
         // 更新中债三期反馈状态
-        if (CollectionUtil.isNotEmpty(submiterrors)) {
-            updateSubmitStatus(submiterrors);
+        if(StringUtil.isNotEmpty(svrBackStatus)&&svrBackStatus.equals("1")){
+        	
+        	if (CollectionUtil.isNotEmpty(submitinfos)) {
+        		// 批量更新三期的SUB表，设置为中债通过
+            	List<ChbSubmitStatusDto> subUpdate =new ArrayList<>();
+            	// 更新中债报送结果
+                ChbSubmitStatusDto status = new ChbSubmitStatusDto();
+                //报送类型
+                status.setFlag(submitType);
+                // 报送编码
+                status.setReportNo(reportNo);
+                // 反馈状态
+                status.setSubmitFeedbackStatus(DictCodeList.报送反馈状态_中债通过.getValue());
+                subUpdate.add(status);
+                //批量更新登记表为报送成功
+                updateSub(subUpdate);
+            }
+        	
+        	//更新三期的STATUS表
+        	if (CollectionUtil.isNotEmpty(submiterrors)) {
+        		 // 更新三期的SUB表的错误信息记录
+            	updateSub(submiterrors);
+            }
+        }else{
+        	//更新三期的STATUS表
+        	if (CollectionUtil.isNotEmpty(submiterrors)) {
+                updateSubmitStatus(submiterrors);
+            }
+            if (CollectionUtil.isNotEmpty(submitinfos)) {
+                updateSubmitStatus(submitinfos);
+            }
         }
-        if (CollectionUtil.isNotEmpty(submitinfos)) {
-            updateSubmitStatus(submitinfos);
-        }
+        
 
         // 更新投资者明细反馈状态
         if (CollectionUtil.isNotEmpty(equdeterros)) {

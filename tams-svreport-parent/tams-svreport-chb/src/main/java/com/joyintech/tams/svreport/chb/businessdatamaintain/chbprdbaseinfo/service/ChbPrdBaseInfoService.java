@@ -52,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wubingbing
@@ -253,7 +254,7 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
             columnName= map.get(temp);
             columnList.add(i,columnName);
         }
-
+        List<String> prodIds = new LinkedList<>();
         List<Map<String,String>> list = new ArrayList<>();
         for(int i=1;i<dataList.size();++i){
             Map<String,String> subMap = new HashMap<>();
@@ -263,17 +264,28 @@ public class ChbPrdBaseInfoService extends CommonExportService<ChbPrdBaseInfoDto
                     subMap.put(columnList.get(j),subList.get(j));
                 }
             }
+            prodIds.add(subMap.get("PROD_ID"));
             subMap.put("PRODUUID",IDGenerator.generate(36));
             subMap.put("CREATE_USER", LoginUserUtil.getUserName());
             subMap.put("UPDATE_USER",LoginUserUtil.getUserName());
 
             list.add(subMap);
         }
+        //根据产品id查询产品申报信息
+        List<ChbPrdDeclareInfoDto> declareList = chbPrdDeclareInfoMapper.selectByChbPrdDeclareInfoList(prodIds);
+        Map<String, ChbPrdDeclareInfoDto> declareMap = declareList.stream().collect(Collectors.toMap(ChbPrdDeclareInfoDto::getProdInsId, dto -> dto));
+
         for (ChbInfoMgrResultConfig config : chbInfoMgrResultConfigList) {
             if(!StringUtils.isEmpty(config.getResultdictCode())){
                 for (Map<String, String> m : list) {
                     if(m.get(config.getRealColumnId())!=null){
                         m.put(config.getRealColumnId(),m.get(config.getRealColumnId()).split(" ")[0]);
+                        if (declareMap.get(m.get("PROD_ID"))!=null) {
+                            ChbPrdDeclareInfoDto declare = declareMap.get(m.get("PROD_ID"));
+                            m.put("OPERATE_MODE",declare.getOperateMode());
+                            m.put("IVSTORIENTATION",declare.getIvstorientation());
+                            m.put("CASH_MANA_CATE",declare.getCashManaCate());
+                        }
                     }
                 }
             }

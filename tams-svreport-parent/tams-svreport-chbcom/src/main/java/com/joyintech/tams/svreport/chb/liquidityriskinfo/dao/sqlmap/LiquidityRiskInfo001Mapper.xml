@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.svreport.chb.liquidityriskinfo.dao.LiquidityRiskInfo001Mapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.svreport.chb.liquidityriskinfo.dto.LiquidityRiskInfo001Dto" >
+        <id column="SEQNO" property="seqno" jdbcType="CHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="SOLUTIONS" property="solutions" jdbcType="VARCHAR" />
+        <result column="OCCUR_DATE" property="occurDate" jdbcType="DATE" />
+        <result column="REPLY_DATE" property="replyDate" jdbcType="DATE" />
+        <result column="DESCRIBED" property="described" jdbcType="VARCHAR" />
+        <result column="DISPOSE_RESULT" property="disposeResult" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="ERR_MSG" property="errMsg" jdbcType="VARCHAR" />
+        <result column="STATUS" property="statusValid" jdbcType="VARCHAR" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO, PROD_ID, REG_CODE, SOLUTIONS,OCCUR_DATE,REPLY_DATE,DESCRIBED,DISPOSE_RESULT,
+        REMARK,ERR_MSG, STATUS,ORG_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER,  UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.svreport.chb.liquidityriskinfo.dao.LiquidityRiskInfo001Mapper.Base_Column_List" />
+        from LIQUIDITY_RISK_INFO
+    </sql>
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.liquidityriskinfo.dto.LiquidityRiskInfo001Dto">
+        select
+        <include refid="com.joyintech.tams.svreport.chb.liquidityriskinfo.dao.LiquidityRiskInfo001Mapper.Base_Column_List" />
+        from LIQUIDITY_RISK_INFO
+        where REG_CODE =#{regCode}
+          AND SOLUTIONS =#{solutions}
+        <choose>
+            <when test="occurDate != null">
+          AND OCCUR_DATE =#{occurDate}
+          </when>
+            <otherwise>
+          AND OCCUR_DATE IS NULL
+          </otherwise>
+        </choose>
+        <choose>
+            <when test="replyDate != null">
+                AND REPLY_DATE =#{replyDate}
+            </when>
+            <otherwise>
+                AND REPLY_DATE IS NULL
+            </otherwise>
+        </choose>
+          AND DESCRIBED =#{described}
+          AND DISPOSE_RESULT =#{disposeResult}
+          AND STATUS !='D'
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from LIQUIDITY_RISK_INFO
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </delete>
+
+    <delete id="deleteLiquidityRiskInfo" parameterType="java.util.Map" >
+        delete from LIQUIDITY_RISK_INFO
+        where REG_CODE =#{regCode} AND SOLUTIONS =#{solutions} AND OCCUR_DATE =#{occurDate}
+          AND REPLY_DATE =#{replyDate} AND DESCRIBED =#{described} AND DISPOSE_RESULT =#{disposeResult}
+          AND STATUS =#{status}
+    </delete>
+
+    <insert id="insert" parameterType="com.joyintech.tams.svreport.chb.liquidityriskinfo.dto.LiquidityRiskInfo001Dto" >
+        insert into LIQUIDITY_RISK_INFO (SEQNO, PROD_ID, REG_CODE, SOLUTIONS,OCCUR_DATE,REPLY_DATE,DESCRIBED,DISPOSE_RESULT,
+                                         REMARK,DATA_SOURCE,ERR_MSG, STATUS,ORG_CODE, CREATE_USER, CREATE_TIME, UPDATE_USER,  UPDATE_TIME)
+        values (#{seqno,jdbcType=CHAR}, #{prodId,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR},
+            #{solutions,jdbcType=VARCHAR}, #{occurDate,jdbcType=DATE},#{replyDate,jdbcType=DATE},
+            #{described,jdbcType=VARCHAR},#{disposeResult,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},
+            #{dataSource,jdbcType=VARCHAR},#{errMsg,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, SYSDATE, #{updateUser,jdbcType=VARCHAR},SYSDATE)
+    </insert>
+
+    <insert id="mergeInfoList" parameterType="com.joyintech.tams.report.system.systempbccapassetinfo.dto.PbcCapAssetInfo001Dto">
+        MERGE INTO LIQUIDITY_RISK_INFO L
+        USING (
+        <foreach collection="newDataList" item="item" open="select * from("
+                 close=")" separator="union all">
+            select
+            #{item.seqno, jdbcType=CHAR} SEQNO,
+            #{item.prodId ,jdbcType=VARCHAR } PROD_ID,
+            #{item.regCode ,jdbcType=VARCHAR } REG_CODE,
+            #{item.solutions ,jdbcType=VARCHAR } SOLUTIONS,
+            #{item.occurDate ,jdbcType=DATE } OCCUR_DATE,
+            #{item.replyDate ,jdbcType=DATE } REPLY_DATE,
+            #{item.described ,jdbcType=VARCHAR } DESCRIBED,
+            #{item.disposeResult ,jdbcType=VARCHAR } DISPOSE_RESULT,
+            #{item.remark ,jdbcType=CHAR } REMARK,
+            #{item.errMsg ,jdbcType=VARCHAR } ERR_MSG,
+            #{item.createUser ,jdbcType=VARCHAR } CREATE_USER,
+            #{item.createTime ,jdbcType=TIMESTAMP } CREATE_TIME,
+            #{item.updateUser ,jdbcType=VARCHAR } UPDATE_USER,
+            #{item.updateTime ,jdbcType=TIMESTAMP } UPDATE_TIME,
+            #{item.orgCode ,jdbcType=VARCHAR } ORG_CODE,
+            #{item.deptCode ,jdbcType=VARCHAR } DEPT_CODE,
+            #{item.status ,jdbcType=VARCHAR } STATUS,
+            #{item.dataSource ,jdbcType=VARCHAR } DATA_SOURCE
+            from dual
+        </foreach>
+        ) TEMP
+        ON (L.REG_CODE = TEMP.REG_CODE AND
+        L.SOLUTIONS = TEMP.SOLUTIONS AND
+        L.OCCUR_DATE = TEMP.OCCUR_DATE AND
+        L.REPLY_DATE = TEMP.REPLY_DATE AND
+        L.DESCRIBED = TEMP.DESCRIBED AND
+        L.DISPOSE_RESULT = TEMP.DISPOSE_RESULT)
+        WHEN MATCHED THEN
+        UPDATE
+        SET
+        L.SEQNO = TEMP.SEQNO,
+        L.PROD_ID = TEMP.PROD_ID,
+        L.REMARK = TEMP.REMARK,
+        L.ERR_MSG = TEMP.ERR_MSG,
+        L.CREATE_USER = TEMP.CREATE_USER,
+        L.CREATE_TIME = TEMP.CREATE_TIME,
+        L.UPDATE_USER = TEMP.UPDATE_USER,
+        L.UPDATE_TIME = TEMP.UPDATE_TIME,
+        L.ORG_CODE = TEMP.ORG_CODE,
+        L.DEPT_CODE = TEMP.DEPT_CODE,
+        L.STATUS = TEMP.STATUS,
+        L.DATA_SOURCE = TEMP.DATA_SOURCE
+        WHEN NOT MATCHED THEN
+        INSERT (
+        SEQNO,
+        PROD_ID,
+        REG_CODE,
+        SOLUTIONS,
+        OCCUR_DATE,
+        REPLY_DATE,
+        DESCRIBED,
+        DISPOSE_RESULT,
+        REMARK,
+        ERR_MSG,
+        CREATE_USER,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME,
+        ORG_CODE,
+        DEPT_CODE,
+        STATUS,
+        DATA_SOURCE
+        )
+        VALUES(
+        TEMP.SEQNO,
+        TEMP.PROD_ID,
+        TEMP.REG_CODE,
+        TEMP.SOLUTIONS,
+        TEMP.OCCUR_DATE,
+        TEMP.REPLY_DATE,
+        TEMP.DESCRIBED,
+        TEMP.DISPOSE_RESULT,
+        TEMP.REMARK,
+        TEMP.ERR_MSG,
+        TEMP.CREATE_USER,
+        TEMP.CREATE_TIME,
+        TEMP.UPDATE_USER,
+        TEMP.UPDATE_TIME,
+        TEMP.ORG_CODE,
+        TEMP.DEPT_CODE,
+        TEMP.STATUS,
+        TEMP.DATA_SOURCE
+        )
+    </insert>
+    <update id="updateStatusByPrimaryKey">
+        update LIQUIDITY_RISK_INFO set STATUS = 'D'  where SEQNO = #{seqno,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.svreport.chb.liquidityriskinfo.dto.LiquidityRiskInfo001Dto" >
+        update LIQUIDITY_RISK_INFO
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            REG_CODE = #{regCode,jdbcType=VARCHAR},
+            SOLUTIONS = #{solutions,jdbcType=VARCHAR},
+            OCCUR_DATE = #{occurDate,jdbcType=VARCHAR},
+            REPLY_DATE = #{replyDate,jdbcType=VARCHAR},
+            DESCRIBED = #{described,jdbcType=VARCHAR},
+            DISPOSE_RESULT = #{disposeResult,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            ERR_MSG = null,
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=CHAR}
+    </update>
+    <select id="queryForPage"  resultMap="BaseResultMap" >
+
+          <include refid="Sql_All_Data"/>
+            <where>
+                <if test="occurDateStart != null and occurDateStart != ''" >
+                    AND to_char(OCCUR_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{occurDateStart}
+                </if>
+                <if test="occurDateEnd != null and occurDateEnd != ''" >
+                    AND to_char(OCCUR_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{occurDateEnd}
+                </if>
+                <if test="replyDateStart != null and replyDateStart != ''" >
+                    AND to_char(REPLY_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{replyDateStart}
+                </if>
+                <if test="replyDateEnd != null and replyDateEnd != ''" >
+                    AND to_char(REPLY_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{replyDateEnd}
+                </if>
+                <if test="prodIdList !=null and prodIdList.size()>0">
+                    and PROD_ID in
+                    <foreach collection="prodIdList" item="prodId" open="("
+                             close=")" separator=",">
+                        #{prodId}
+                    </foreach>
+                </if>
+                <if test="regCodeList !=null and regCodeList.size()>0">
+                    and REG_CODE in
+                    <foreach collection="regCodeList" item="regCode" open="("
+                             close=")" separator=",">
+                        #{regCode}
+                    </foreach>
+                </if>
+                <if test="solutionsList !=null and solutionsList.size()>0">
+                    and SOLUTIONS in
+                    <foreach collection="solutionsList" item="solutions" open="("
+                             close=")" separator=",">
+                        #{solutions}
+                    </foreach>
+                </if>
+                <if test="statusList !=null and statusList.size()>0">
+                    and STATUS in
+                    <foreach collection="statusList" item="status" open="("
+                             close=")" separator=",">
+                        #{status}
+                    </foreach>
+                </if>
+
+            </where>
+        order by UPDATE_TIME desc
+
+    </select>
+
+
+    <select id="querySearchPageList" resultMap="BaseResultMap">
+        <include refid="Sql_All_Data"/>
+        <where>
+            <if test="occurDateStart != null and occurDateStart != ''" >
+                AND to_char(OCCUR_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{occurDateStart}
+            </if>
+            <if test="occurDateEnd != null and occurDateEnd != ''" >
+                AND to_char(OCCUR_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{occurDateEnd}
+            </if>
+            <if test="replyDateStart != null and replyDateStart != ''" >
+                AND to_char(REPLY_DATE,'yyyy-MM-dd') <![CDATA[>=]]> #{replyDateStart}
+            </if>
+            <if test="replyDateEnd != null and replyDateEnd != ''" >
+                AND to_char(REPLY_DATE,'yyyy-MM-dd') <![CDATA[<=]]> #{replyDateEnd}
+            </if>
+            <if test="prodIdList !=null and prodIdList.size()>0">
+                and PROD_ID in
+                <foreach collection="prodIdList" item="prodId" open="("
+                         close=")" separator=",">
+                    #{prodId}
+                </foreach>
+            </if>
+            <if test="regCodeList !=null and regCodeList.size()>0">
+                and REG_CODE in
+                <foreach collection="regCodeList" item="regCode" open="("
+                         close=")" separator=",">
+                    #{regCode}
+                </foreach>
+            </if>
+            <if test="solutionsList !=null and solutionsList.size()>0">
+                and SOLUTIONS in
+                <foreach collection="solutionsList" item="solutions" open="("
+                         close=")" separator=",">
+                    #{solutions}
+                </foreach>
+            </if>
+            <if test="statusList !=null and statusList.size()>0">
+                and STATUS in
+                <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="keyList != null and keyList.size > 0">
+                and SEQNO in
+                <foreach collection="keyList" open="(" close=")" separator="," item="item">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+        </where>
+     order by UPDATE_TIME desc
+    </select>
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+        <include refid="Sql_All_Data"/>  where SEQNO =#{seqno}
+    </select>
+
+    <select id="selectLiquidityRiskInfoCount" resultType="string">
+        select PROD_ID||SOLUTIONS||TO_CHAR(OCCUR_DATE,'yyyy-MM-dd')||TO_CHAR(REPLY_DATE,'yyyy-MM-dd')||
+        DESCRIBED||DISPOSE_RESULT from LIQUIDITY_RISK_INFO
+        <where>
+            <foreach collection="list" item="items" index="i" separator="or">
+                <trim prefix="(" suffix=")" prefixOverrides="and">
+                    STATUS in ('A','E')
+                    <foreach collection="items.entrySet()" item="value"
+                             index="key">
+                        <if test="key == 'PROD_ID'">
+                            and
+                            PROD_ID=#{value,jdbcType=VARCHAR}
+                        </if>
+                        <if test="key == 'SOLUTIONS'">
+                            and
+                            SOLUTIONS=#{value,jdbcType=VARCHAR}
+                        </if>
+                        <if test="key == 'OCCUR_DATE'">
+                            and
+                            TO_CHAR(OCCUR_DATE,'yyyy-MM-dd')=#{value,jdbcType=VARCHAR}
+                        </if>
+                        <if test="key == 'REPLY_DATE'">
+                            and
+                            TO_CHAR(REPLY_DATE,'yyyy-MM-dd')=#{value,jdbcType=VARCHAR}
+                        </if>
+                        <if test="key == 'DESCRIBED'">
+                            and
+                            DESCRIBED=#{value,jdbcType=VARCHAR}
+                        </if>
+                        <if test="key == 'DISPOSE_RESULT'">
+                            and
+                            DISPOSE_RESULT=#{value,jdbcType=VARCHAR}
+                        </if>
+                    </foreach>
+                </trim>
+            </foreach>
+        </where>
+
+    </select>
+</mapper>

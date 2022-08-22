@@ -290,7 +290,7 @@
 
 	<select id="selectCode" resultType="java.util.Map">
 		select
-		cpc.REG_CODE regCode
+		cpc.REG_CODE REGCODE
 		from
 		CHB_PRDRESIST_CODE cpc
 		<where>
@@ -299,6 +299,9 @@
 			</if>
 			<if test="prodInsId != null  and prodInsId !='' " >
 				and cpc.PROD_INS_ID != #{prodInsId,jdbcType=VARCHAR}
+			</if>
+			<if test="prodId != null  and prodId !='' " >
+				and cpc.PRODID = #{prodId,jdbcType=VARCHAR}
 			</if>
 		</where>
 	</select>

@@ -14,6 +14,7 @@ $(function() {
             }
         },
         //searchOnInit: false, //初始化的时候就请求后台数据
+        checkbox : false,
         cols: [
             { title: "任务代码", field:'taskId',width:106},
             { title: "任务名称", field:'taskName',width:240},

@@ -45,6 +45,7 @@ import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dao.TamsBaseMapper;
 import com.joyintech.tams.systemtools.dto.SysDataDict;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -871,7 +872,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 //		String userId = CommonUtil.getUid();
 		String searchKey = (String) pageParam.get("searchKey");
 //		pageParam.put("userId", pageParam.get("userId"));
-		pageParam.put("searchCondition","%" + searchKey + "%");
+		if(StringUtils.isNotEmpty(searchKey)) {
+			pageParam.put("searchCondition", "%" + searchKey + "%");
+		}
         int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
 		Page<FilterInformationDto> page = queryForPage(pagenum,legth,()->filterInformationMapper.queryFilterInfoByUserId(pageParam));

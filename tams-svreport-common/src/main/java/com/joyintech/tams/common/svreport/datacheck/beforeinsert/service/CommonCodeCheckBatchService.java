@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.activiti.engine.impl.util.CollectionUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -146,6 +147,9 @@ public class CommonCodeCheckBatchService {
                     checkSaleInstInfo(map,saleInstSet,ChbCheckTableInfo.总部或分支机构信息表INFO.getTableName());
                 case 资产持仓登记SUB:
                     checkAstPosSubSingle(map);
+                    break;
+                case 流动性风险应对情况信息表INFO:
+                    checkLiquidityRiskInfo(map);
                     break;
                 default:
                     break;
@@ -481,7 +485,9 @@ public class CommonCodeCheckBatchService {
 
             // add by zhangliang 20210112 没有错误信息时删除key，防止后面错误判断
             if (map.containsKey("ERRMSG") && StringUtil.isEmpty(map.get("ERRMSG"))){
-                map.remove("ERRMSG");
+                if (!StringUtil.equals("LIQUIDITY_RISK_INFO",tableInfo.getTableName())) {
+                    map.remove("ERRMSG");
+                }
             }
 
             //如果代码错误校验有错误信息
@@ -490,7 +496,10 @@ public class CommonCodeCheckBatchService {
 
             if(errodata != null) {
                 erroList.add(errodata);
-                list.remove(i);
+                //流动性风险维护表不需要移除
+                if (!StringUtil.equals("LIQUIDITY_RISK_INFO",tableInfo.getTableName())) {
+                    list.remove(i);
+                }
             }
 
             if (StringUtil.equals(CacheUtil.getSysParam("INSERT_ERRDATA_MODE"), "02") && StringUtil.equals(tableInfo.getTableName(), ChbCheckTableInfo.资产要素登记表INFO.getTableName())){
@@ -3063,6 +3072,10 @@ public class CommonCodeCheckBatchService {
         String   derInstrRatio= dataMap.get("DER_INSTR_RATIO");
         //二级资产类型
         String   assetType2=dataMap.get("ASSET_TYPE2");
+        //结构性票据最高收益率
+        String maxYield = dataMap.get("MAX_YIELD");
+        //结构性票据最低收益率
+        String minYield =  dataMap.get("MIN_YIELD");
         if(temp.equals("重复数据;")){
 
         }else{
@@ -3075,11 +3088,27 @@ public class CommonCodeCheckBatchService {
                 }
             }
             if(StringUtil.equals(assetType2, "1503")){
+                if(StringUtil.isEmpty(maxYield)){
+                    maxYield="0";
+                }
+                if(StringUtil.isEmpty(minYield)){
+                    minYield="0";
+                }
+                if(StringUtil.isEmpty(derInstrRatio)){
+                    derInstrRatio="0";
+                }
+                if(StringUtil.isEmpty(incomeRatio)){
+                    incomeRatio="0";
+                }
                 //“固定收益部分所占比例”与“衍生金融工具所占比例”之和需小于等于1
-                if(StringUtil.isNotEmpty(incomeRatio)&&isBigDecimal(incomeRatio)&&
-                        StringUtil.isNotEmpty(derInstrRatio)&&isBigDecimal(derInstrRatio)){
+                if(isBigDecimal(incomeRatio)&& isBigDecimal(derInstrRatio)){
                     if(new BigDecimal(incomeRatio).add(new BigDecimal(derInstrRatio)).compareTo(new BigDecimal(100))>0){
                         errMsgBuilder.append("以百分数形式表示的固定收益部分所占比例与衍生金融工具所占比例之和需小于等于100[").append("INCOME_RATIO=").append(incomeRatio).append(",DER_INSTR_RATIO=").append(derInstrRatio).append("];");
+                    }
+                }
+                if(isBigDecimal(maxYield)&&isBigDecimal(minYield)) {
+                    if (new BigDecimal(maxYield).add(new BigDecimal(minYield)).compareTo(new BigDecimal(100))>0) {
+                        errMsgBuilder.append("以百分数形式表示的结构性票据最高收益率与结构性票据最低收益率之和需小于等于100[").append("MAX_YIELD=").append(maxYield).append(",MIN_YIELD=").append(minYield).append("];");
                     }
                 }
             }
@@ -4333,6 +4362,26 @@ public class CommonCodeCheckBatchService {
             }
         }
         dataMap.put("ERRMSG", errMsg);
+    }
+
+    /**
+     * 检查流动性风险应对情况数据
+     * @param dataMap
+     */
+    public  void  checkLiquidityRiskInfo(Map<String, String> dataMap){
+        String  errMsg=dataMap.getOrDefault("ERRMSG", "");
+        //产品代码
+        String  prodId=dataMap.get("PROD_ID");
+
+        List<ChbPrdresistCode> list = commonCodeCheckMapper.queryChbPrdresistCodeByProdId(prodId);
+        if (CollectionUtils.isEmpty(list)) {
+            errMsg +="产品登记编码不存在[PROD_ID="+prodId+"];";
+            dataMap.put("ERRMSG", errMsg);
+            return;
+        }
+        dataMap.put("REG_CODE", list.get(0).getRegCode());
+        dataMap.put("ERRMSG", errMsg);
+
     }
 
     public static boolean inclodeNine(String value){

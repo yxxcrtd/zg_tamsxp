@@ -585,5 +585,10 @@ public class SVReportGlobalConstant {
 
     /**统一数据维护删除逻辑***/
     public static final String SVR_OPER_DELETE_FLAG = "SVR_OPER_DELETE_FLAG";
-    
+
+    /**联系人电话***/
+    public static final String COUNTACT_PHONE_NUM = "COUNTACT_PHONE_NUM";
+
+    /**联系人姓名***/
+    public static final String COUNTACT_NAME = "COUNTACT_NAME";
 }

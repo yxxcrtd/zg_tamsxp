@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workbook filePath="LiquidityRiskInfo002.xlsx" name="流动性风险应对情况信息维护">
+	<Worksheet javaBean="com.joyintech.tams.svreport.chb.liquidityriskinfo.dto.LiquidityRiskInfo001Dto">
+		<Row>
+			<Cell order="1" name="数据状态">statusStr</Cell>
+		    <Cell order="2" name="产品代码">prodId</Cell>
+		    <Cell order="3" name="产品登记编码">regCode</Cell>
+		    <Cell order="4" name="流动性风险应对措施">solutionsStr</Cell>
+		    <Cell order="5" name="风险发生日期">occurDateStr</Cell>
+		    <Cell order="6" name="风险应对日期">replyDateStr</Cell>
+		    <Cell order="7" name="风险事件描述">described</Cell>
+		    <Cell order="8" name="风险处理结果">disposeResult</Cell>
+		    <Cell order="9" name="备注">remark</Cell>
+		    <Cell order="10" name="错误信息">errMsg</Cell>
+		    <Cell order="11" name="更新时间">updateTimeStr</Cell>
+		    <Cell order="12" name="更新人">updateUser</Cell>
+		</Row>
+	</Worksheet>
+</Workbook>

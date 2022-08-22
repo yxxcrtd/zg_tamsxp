@@ -743,10 +743,10 @@ $(function () {
                 scrollX:true,
                 //    scrollCollapse: true,
                 cols: [
-                        {title: "报表名称", field: "repName",width:'20%'},
-                        {title: "唯一标识", field: "code",width:'20%'},
+                        {title: "报表名称", field: "repName",width:'20%',sortable: false},
+                        {title: "唯一标识", field: "code",width:'30%'},
                         {title: "报送状态", field: "submitStatus",width:'20%'},
-                        {title: "报送日期", field: "submitTime",width:'20%'},
+                        {title: "报送日期", field: "submitTime",width:'23%'},
                         {title: "报送截止日", type: 'date', field: "submitDeadline",width:'20%'}
                     ]
             }),
