@@ -432,14 +432,6 @@ public class LiquidityRiskRegist001Service extends CommonExportService<Liquidity
 				data.setRegCode(null);
 				data.setOccurDate(null);
 				data.setReplyDate(null);
-				//塞入产品只数
-				if(StringUtil.equals(data.getSolutions(),"01")){
-					data.setProdParameter(Integer.toString(zhishuNum01));
-				}else if(StringUtil.equals(data.getSolutions(),"02")){
-					data.setProdParameter(Integer.toString(zhishuNum02));
-				}else if(StringUtil.equals(data.getSolutions(),"11")){
-					data.setProdParameter(Integer.toString(zhishuNum11));
-				}
 			}else{
 				if(StringUtil.equals(data.getSolutions(),"03")){
 					data.setFrequency(Integer.toString(cishuNum03));
@@ -461,14 +453,16 @@ public class LiquidityRiskRegist001Service extends CommonExportService<Liquidity
 					data.setFrequency(Integer.toString(cishuNum99));
 				}
 				//塞入产品只数
-				if(CollectionUtils.isNotEmpty(zhishuNumMap.get(data.getRegCode()))){
-					int i = zhishuNumMap.get(data.getRegCode()).size();
-					data.setProdParameter(Integer.toString(i));
-				}
+				int i = zhishuNumMap.get(data.getRegCode()).size();
+				data.setProdParameter(Integer.toString(i));
 			}
 		}
 
 		for(LiquidityRiskRegist001Dto data:dataList){
+			if(StringUtil.isEmpty(data.getProdParameter())){
+				int i = zhishuNumMap.size();
+				data.setProdParameter(Integer.toString(i));
+			}
 			data.setSolutions(data.getSolutions() + " " + SvrDataUtil.getNameFromDataDict(DictCode.流动性风险应对措施, data.getSolutions()));
 			data.setOccurDateStr(DateUtil.format(data.getOccurDate()));
 			data.setReplyDateStr(DateUtil.format(data.getReplyDate()));
