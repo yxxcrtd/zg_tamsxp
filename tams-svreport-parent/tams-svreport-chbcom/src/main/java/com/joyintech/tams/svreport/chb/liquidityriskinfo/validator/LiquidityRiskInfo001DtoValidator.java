@@ -81,7 +81,8 @@ public class LiquidityRiskInfo001DtoValidator implements BeanValidator{
             flag = false;
         }
 
-        if (StringUtil.isNotBlank(dto.getSeqno()) && !StringUtil.equals(liquidityRiskInfo001Dto.getSeqno(), dto.getSeqno())) {
+        //主键不为空为修改
+        if (StringUtil.isNotBlank(dto.getSeqno()) && (liquidityRiskInfo001Dto != null && !StringUtil.equals(liquidityRiskInfo001Dto.getSeqno(),dto.getSeqno()))) {
             flag = false;
         }
 
