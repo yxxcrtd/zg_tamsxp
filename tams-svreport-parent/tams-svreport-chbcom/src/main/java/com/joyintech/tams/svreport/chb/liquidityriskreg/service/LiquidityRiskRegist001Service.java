@@ -385,6 +385,9 @@ public class LiquidityRiskRegist001Service extends CommonExportService<Liquidity
 			}
 			if(StringUtil.equals(detail.getSolutions(),"01")||StringUtil.equals(detail.getSolutions(),"02")||StringUtil.equals(detail.getSolutions(),"11")){
 				if(SolutionsMap.get(detail.getSolutions()) == null){
+					if(StringUtil.isEmpty(detail.getRemark())){
+						detail.setRemark("");
+					}
 					SolutionsMap.put(detail.getSolutions(),detail);
 				}else{
 					if(StringUtil.isNotEmpty(detail.getDescribed())) {

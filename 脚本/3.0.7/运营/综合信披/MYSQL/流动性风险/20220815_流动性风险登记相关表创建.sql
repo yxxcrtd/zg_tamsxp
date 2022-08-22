@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS LIQUIDITY_RISK_SUB_DETAIL
     SOLUTIONS              varchar(4)    not null comment '流动性风险应对措施',
     OCCUR_DATE             DATE      not null comment '风险发生日期',
     REPLY_DATE             DATE      not null comment '风险应对日期',
-    DESCRIBED              varchar(256)     null comment '风险事件描述',
-    DISPOSE_RESULT         varchar(256)    null comment '风险处理结果',
+    DESCRIBED              varchar(256)    not null comment '风险事件描述',
+    DISPOSE_RESULT         varchar(256)   not null comment '风险处理结果',
     REMARK                 varchar(256)   null comment '备注',
     ORG_CODE	           varchar(20)   null comment '机构代码',
     DEPT_CODE	           varchar(20)   null comment '创建部门',
@@ -38,6 +38,6 @@ CREATE TABLE IF NOT EXISTS LIQUIDITY_RISK_SUB_DETAIL
     CREATE_TIME  	   datetime      null comment '创建时间',
     UPDATE_USER	           varchar(20)   null comment '更新人',
     UPDATE_TIME	           datetime      null comment '更新时间',
-    PRIMARY KEY (ITEM_ID , PROD_ID, REG_CODE, SOLUTIONS, OCCUR_DATE, REPLY_DATE)
+    PRIMARY KEY (ITEM_ID , PROD_ID, REG_CODE, SOLUTIONS, OCCUR_DATE, REPLY_DATE, DESCRIBED, DISPOSE_RESULT)
     )
     comment '流动性风险登记明细表' collate = utf8_bin;
