@@ -78,9 +78,8 @@ public class LiquidityRiskInfoController {
     @SuppressWarnings("unchecked")
     @PostMapping("checkConfirmMsgForImportData")
     public AjaxResult checkConfirmMsgForImportData(@RequestBody Map<String, Object> param) {
-        List<List<String>> dataList = (List<List<String>>) param.get("dataList");
         String fileName = (String)param.get("fileName");
-        return liquidityRiskInfo001Service.checkConfirmMsgForImportData(dataList,fileName);
+        return liquidityRiskInfo001Service.checkConfirmMsgForImportData(fileName);
     }
 
 

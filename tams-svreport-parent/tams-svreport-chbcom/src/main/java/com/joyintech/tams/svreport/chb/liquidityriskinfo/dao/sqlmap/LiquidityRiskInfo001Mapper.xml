@@ -293,8 +293,9 @@
         <include refid="Sql_All_Data"/>  where SEQNO =#{seqno}
     </select>
 
-    <select id="selectLiquidityRiskInfoCount" resultType="int">
-        SELECT COUNT(*) FROM LIQUIDITY_RISK_INFO
+    <select id="selectLiquidityRiskInfoCount" resultType="string">
+        select PROD_ID||SOLUTIONS||TO_CHAR(OCCUR_DATE,'yyyy-MM-dd')||TO_CHAR(REPLY_DATE,'yyyy-MM-dd')||
+        DESCRIBED||DISPOSE_RESULT from LIQUIDITY_RISK_INFO
         <where>
             <foreach collection="list" item="items" index="i" separator="or">
                 <trim prefix="(" suffix=")" prefixOverrides="and">

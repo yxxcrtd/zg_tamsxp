@@ -63,7 +63,7 @@ public interface LiquidityRiskInfo001Mapper {
      * @param list
      * @return
      */
-    int  selectLiquidityRiskInfoCount(@Param("list")List<Map<String, String>> list);
+    List<String>  selectLiquidityRiskInfoCount(@Param("list")List<Map<String, String>> list);
 
 
 }

@@ -103,7 +103,7 @@ public class LiquidityRiskInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "checkConfirmMsgForImportData", method = RequestMethod.POST)
     public AjaxResult checkConfirmMsgForImportData(String fileName) {
-        return liquidityRiskInfo001MService.checkConfirmMsgForImportData(fileName);
+        return liquidityRiskInfo001Service.checkConfirmMsgForImportData(fileName);
     }
 
 

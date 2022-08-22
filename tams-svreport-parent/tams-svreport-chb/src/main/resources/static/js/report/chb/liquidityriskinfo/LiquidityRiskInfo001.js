@@ -42,7 +42,7 @@
             replyDateEnd : replyDate==''?null: $('#replyDate').endDate()
         };
     };
-    var table = $('#LiquidityRiskInfo001_LiquidityRiskInfo001').joyintable({
+    var table = $('#LiquidityRiskInfo001Table').joyintable({
         ajax: {
             url: 'searchPage',
             type: 'POST',
@@ -88,7 +88,7 @@
         data.operateType = 'edit';
         Joyin.dialog(JoyinUtil.getLabel("流动性风险应对情况信息维护修改"),
             basePath + "chb/liquidityriskinfo/LiquidityRiskInfo002/init",//打开新界面
-            "85%", "85%", {pageModel:PAGE_MODEL_EDIT,
+            "70%", "85%", {pageModel:PAGE_MODEL_EDIT,
                 seqno: data.seqno, selectedItem: [data]
             },function(){
                 table.reload();//回调函数，表格刷新

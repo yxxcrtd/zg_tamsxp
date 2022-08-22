@@ -161,15 +161,17 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
     /**
      * 导入文件之前检查文件中的数据在数据库中是否已经存在 如果已经存在，需要提示用户进行确认是否覆盖数据库
      *
-     * @param dataList
+     * @param fileName
      * @return
      */
-    public AjaxResult checkConfirmMsgForImportData(List<List<String>> dataList, String fileName) {
+    public AjaxResult checkConfirmMsgForImportData(String fileName) {
         AjaxResult webResult = new AjaxResult();
         if (fileName.indexOf("流动性风险应对情况信息") == -1) {
-            webResult.setMessage(this.getMessage("ImportFileName"), MessageType.错误消息);
+            webResult.setMessage("文件名称错误，请下载模板后上传", MessageType.错误消息);
             return webResult;
         }
+        List<List<String>> dataList=ExcelUtil.getDataList(fileName);
+
         if(CollectionUtils.isEmpty(dataList)){
             webResult.setMessage("请勿上传空文件", MessageType.错误消息);
             return webResult;
@@ -179,6 +181,12 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
         List<ExcelValidDto> result = new ArrayList<>();
 
         List<ValidMessage> errorList = new ArrayList<>();
+
+        // 将序号放入list中
+        List<String> excelNumList = new ArrayList<>();
+
+        //查询是否有重复的数据
+        List<String> countList = liquidityRiskInfo001Mapper.selectLiquidityRiskInfoCount(listToMap);
 
         for (int i = 0; i < listToMap.size(); i++) {
             Map<String, String> mapI = listToMap.get(i);
@@ -191,11 +199,11 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
             String keyI = prodId + solutions + occurDate + replyDate + described + disposeResult;
             boolean occur_date = DateUtil.isDateStr(occurDate);
             if (!occur_date) {
-                result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1), "风险发生日期必须为日期格式(YYYY-MM-DD)[OCCUR_DATE=" + occurDate + "]"));
+                result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), "风险发生日期必须为日期格式(YYYY-MM-DD)[OCCUR_DATE=" + occurDate + "]"));
             }
             boolean reply_date = DateUtil.isDateStr(replyDate);
             if (!reply_date) {
-                result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 1), "风险应对必须为日期格式YYYY-MM-DD)[REPLY_DATE=" + replyDate + "]"));
+                result.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2), "风险应对必须为日期格式YYYY-MM-DD)[REPLY_DATE=" + replyDate + "]"));
             }
             for (int j = i + 1; j < listToMap.size(); j++) {
                 Map<String, String> mapJ = listToMap.get(j);
@@ -206,6 +214,10 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
                 }
             }
 
+            if (countList.contains(keyI)) {
+                excelNumList.add(String.valueOf(i + 2));
+            }
+
         }
 
         for (ExcelValidDto excelValidDto : result) {
@@ -214,12 +226,11 @@ public class LiquidityRiskInfo001Service extends CommonExportService<LiquidityRi
             return webResult;
         }
 
-        if(liquidityRiskInfo001Mapper.selectLiquidityRiskInfoCount(listToMap)>0){
-            return  new AjaxResult("系统中存在重复的数据，是否覆盖?",MessageType.确认消息);
+        if (CollectionUtils.isNotEmpty(excelNumList)) {
+            webResult.setMessage(this.getMessage("CHB_ISCOVER_EQU",StringUtil.joinString(excelNumList, GlobalConstant.COMMA)),MessageType.确认消息);
+        } else {
+            webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
         }
-
-        webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
-
         return webResult;
     }
 
