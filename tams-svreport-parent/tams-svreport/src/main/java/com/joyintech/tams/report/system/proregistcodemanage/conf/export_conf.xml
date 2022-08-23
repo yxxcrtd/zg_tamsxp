@@ -2,15 +2,10 @@
 <Workbook filePath="ProRegistCode.xlsx" name="产品登记编码管理">
 	<Worksheet javaBean="com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto">
 		<Row>
-			<Cell order="1" name="发行机构名称*"></Cell><!-- 发行机构名称 -->
-		    <Cell order="2" name="产品名称*">prodName</Cell><!-- 产品名称 -->
+			<Cell order="1" name="产品代码">prodId</Cell>  <!--理财产品代码 -->
+			<Cell order="2" name="产品名称*">prodName</Cell><!-- 产品名称 -->
 			<Cell order="3" name="产品登记编码*">regCode</Cell><!-- 产品登记编码 -->
-			<Cell order="4" name="行内标识码"></Cell>  <!-- 行内标识码-->
-			<Cell order="5" name="理财产品代码">prodId</Cell>  <!--理财产品代码 -->
-			<Cell order="6" name="产品运作模式*">operateMode</Cell><!-- 产品运作模式* -->
-			<Cell order="7" name="目标客户类型"></Cell>
-			<Cell order="8" name="产品状态"></Cell>
-			<Cell order="9" name="产品登记编码生成日"></Cell>
+			<Cell order="4" name="产品运作模式*">operateMode</Cell><!-- 产品运作模式* -->
 		</Row>
 	</Worksheet>
 </Workbook>
