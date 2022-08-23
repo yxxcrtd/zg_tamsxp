@@ -437,6 +437,14 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			if(StringUtil.equals("19", assetType)){
 				assetType = "15";
 			}
+            //add by zhoubin 20220823 处理科学计数法
+			if (StringUtil.equals(tableName,"SALE_CUST_SVRREPORT")) {
+				Object exchange_rate = map.get("EXCHANGE_RATE");
+				if (exchange_rate!=null&&!"".equals(exchange_rate)) {
+					BigDecimal exchangeRate = new BigDecimal(Double.valueOf(exchange_rate.toString()).toString());
+					map.put("EXCHANGE_RATE",exchangeRate.toString());
+				}
+			}
 			//公募基金与私募基金asset_type在excel中定义的type都为15，故此处做转换 end 2020-11-03
 			// 资产要素表特殊处理
 			if (CHB_ASSET_INFO_LIST.contains(tableName)) {
