@@ -14,17 +14,20 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.base.entity.SysDatadictListLink;
 import com.joyintech.tams.common.InterfFile;
+import com.joyintech.tams.common.base.dao.MstCustomerInfoAddMapper;
+import com.joyintech.tams.common.base.dao.MstCustomerInfoMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
+import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.dao.ChbInfoMgrResultConfigMapper;
+import com.joyintech.tams.report.interf.common.constant.InterfMappingConstants;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
+import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.AssetInfoDetailUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.util.ServerMenu;
 import com.joyintech.tams.svreport.chb.common.util.DuplicateDataUtil;
@@ -45,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.beans.PropertyDescriptor;
 import java.io.File;
@@ -71,6 +75,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 
 	@Autowired
 	private AssetInfoDetailMapper assetInfoDetailMapper;
+
+	@Autowired
+	private MstCustomerInfoAddMapper mstCustomerInfoAddMapper;
 
 	@Autowired
 	private RechbAassetInfoUtilService rechbAassetInfoUtilService;
@@ -657,4 +664,45 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}
 		return assetInfoList;
 	}
+
+	public AssetInfoDetailDto addTicket(String assetCode) {
+		ChbAssetInfo chbAssetInfo = assetInfoDetailMapper.queryTicketForWind(assetCode);
+		if(chbAssetInfo!=null){
+			String rivalPartyType = null;
+			String tradeMarket = null;
+			String industry = null;
+			String isFinLicence = null;
+			if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1108")){
+
+			}else if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1111") ||
+					StringUtil.equals(chbAssetInfo.getAssetType2(),"1114") || StringUtil.equals(chbAssetInfo.getAssetType2(),"1115")){
+				industry = chbAssetInfo.getIndustry();
+				String chbIssuerId = chbAssetInfo.getChbIssuerId();
+				MstCustomerInfoAddWithBLOBs mstCustomerInfoAddWithBLOBs = mstCustomerInfoAddMapper.selectByPrimaryKey(chbIssuerId);
+				isFinLicence = mstCustomerInfoAddWithBLOBs.getIsFinLicence();
+
+			}
+			ChbTypeMappingService chbTypeMappingExService = SpringContextUtil.getBean(
+					ChbTypeMappingService.class);
+			// 根据中债资产负债二级类型&对手方类型&场所&发行人&是否持有金融牌照映射人行类型
+			ChbTypeMappingEx mappingEx = chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.ASSET_TYPE2_PBCASSETTYPE,
+					chbAssetInfo.getAssetType2(),rivalPartyType,tradeMarket,industry,isFinLicence);
+			if(mappingEx != null){
+				chbAssetInfo.setPbcAssetType1(mappingEx.getObjfield1());
+				chbAssetInfo.setPbcAssetType2(mappingEx.getObjfield2());
+				chbAssetInfo.setPbcAssetType3(mappingEx.getObjfield3());
+			}
+
+			AssetInfoDetailDto dto = new AssetInfoDetailDto();
+			BeanUtil.copyPropertiesIgnoreNull(dto, chbAssetInfo);
+			SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto = new SvrBussFinBondRepInfoDto();
+			DtoChangeUtil.SetChbToRep(chbAssetInfo, svrBussFinBondRepInfoDto, DtoChangeUtil.target, false);
+			svrBussFinBondRepInfoDto.setRepSectype(chbAssetInfo.getChbSectype());
+			dto.setSvrBussFinBondRepInfoDto(svrBussFinBondRepInfoDto);
+			return dto;
+		}else{
+			return null;
+		}
+	}
+
 }

@@ -36,6 +36,11 @@ public final class InterfMappingConstants {
     * BS2.0对人行资产类型映射
     */
    public static final String MAPPINGCODE_PBCASSETTYPE = "MAPPINGCODE_PBCASSETTYPE";
+
+	/**
+	 * 中债类型2人行类型映射
+	 */
+	public static final String ASSET_TYPE2_PBCASSETTYPE = "ASSET_TYPE2_PBCASSETTYPE";
    /**
     * BS2.0对人行资产类型映射-融资人/发行人属性
     */

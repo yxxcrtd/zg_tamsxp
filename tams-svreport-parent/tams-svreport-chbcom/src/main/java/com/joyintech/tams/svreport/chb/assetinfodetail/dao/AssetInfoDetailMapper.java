@@ -82,4 +82,6 @@ public interface AssetInfoDetailMapper {
 	List<AssetInfoDetailDto> selectBykeys(@Param("list") List<String> list);
 
 	List<WorkFlowInfoDto> getWorkFlowList();
+
+	ChbAssetInfo queryTicketForWind(String assetCode);
 }

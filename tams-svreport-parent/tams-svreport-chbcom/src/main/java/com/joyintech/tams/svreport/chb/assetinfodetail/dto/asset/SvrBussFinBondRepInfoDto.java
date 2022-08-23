@@ -196,7 +196,19 @@ public class SvrBussFinBondRepInfoDto extends RepAssetBond{
      * 票面利率
      */
     private BigDecimal assetYield;
-        
+
+    /**
+     * 资产名称
+     */
+    private String assetName;
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
 
     public String getAssetType2() {
         return assetType2;

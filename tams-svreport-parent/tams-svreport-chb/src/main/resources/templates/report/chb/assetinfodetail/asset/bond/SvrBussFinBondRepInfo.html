@@ -22,7 +22,7 @@
             <div class="form-inline-wrap">
                 <label class="layui-form-label form-label-wrap" >名称</label>
                 <div class="layui-input-inline input-inline">
-                    <input type="text" th:id="|${entityName}_assetName|" disabled="true"
+                    <input type="text" th:id="|${entityName}_assetName|" disabled="true" th:value="${entity?.assetName}"
                            data-fixtype="2" class="layui-input form-input" required/>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                 <label class="layui-form-label form-label-wrap"
                        data-th-text="#{SvrBussFinBondRepInfo.repSectype}">具体类别</label>
                 <div class="layui-input-inline input-inline">
-                    <select id="repSectype" th:name="|${entityName}.repSectype|" parentIds="assetType2"
+                    <select th:id="|${entityName}_repSectype|" th:name="|${entityName}.repSectype|" parentIds="assetType2"
                             th:initValue="*{entity?.repSectype}"
                             class="layui-input form-input input-select"
                             allowClear="true" placeholder="请选择"
