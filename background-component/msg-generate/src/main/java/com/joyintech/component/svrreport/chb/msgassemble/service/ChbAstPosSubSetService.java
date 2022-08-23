@@ -71,6 +71,8 @@ public class ChbAstPosSubSetService {
 			//利率统一除以100
 			ChbXmlUtil.rateFormat(item);
 			Map<String, CnBondInterfItemDto> cnBondItemMap = new LinkedHashMap<String, CnBondInterfItemDto>();
+			//利率统一除以100
+			ChbXmlUtil.rateFormat(item);
 			String currRegistSeq = "";
 			// modify by zhangliang 20210130 重新发送不需要重生生成流水号 start
 			if (StringUtil.isNotEmpty(item.getSubmitSeq())){

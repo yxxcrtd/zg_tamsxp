@@ -537,6 +537,108 @@ var QueryFunc=function(){
         showReportInfo();
     }
 
+    var addTicket = function(){
+        var assetId =  $('#assetCode').val();
+        if (assetId) {
+            Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail002/addTicket?assetCode='+ $('#assetCode').val(),'' , function(result){
+                if (!result) {
+                    Joyin.error("未查询到该资产信息，无法加券，请手工维护");
+                } else {
+                    Joyin.confirm("是否确认加券并覆盖画面信息", function(){
+                        //组件赋值 先清后赋
+                        $.each(Joyin.curfromData['AssetInfoDetail002'],function(id, value){
+                            resetForm(id, value.odata, '');
+                        });
+                        $('#assetType2').val(result.assetType2).trigger('change');
+                        $.each(result, function(id, value) {
+                            setData(id, value, '');
+                        });
+                        layui.form.render();
+                    });
+                }
+            });
+        } else {
+            Joyin.error("请填写资产代码");
+        }
+    }
+
+    var resetForm = function(id,value,pageId){
+        var element;
+        if(pageId != '' && pageId != undefined){
+            id = pageId + '_' + id;
+        }
+        if($('#'+id).size() > 0){
+            element = $('#'+id);
+        }else{
+            element = $('input[name=' + id + ']');
+        }
+        //下拉框特殊处理
+        if (element.hasClass('input-select')) {
+            element.val(value).trigger('change');
+        }else if(element.hasClass('input-checkbox')){
+            //单选按钮特殊处理
+            element.val(value).trigger('change');
+        }else if ($('#' + id).attr('lay-skin') === 'switch') {
+            //switch 特殊处理
+            $('#' + id).prop('checked', false);
+            // 是否,有无
+            if (value === 'Y' || value === '01') {
+                $('#' + id).prop('checked', true);
+            }
+        }else{
+            element.val(value);
+        }
+    }
+
+    var setData = function(id, value ,pageId) {
+        if(id == 'svrBussFinBondRepInfoDto') {
+            $.each(value, function (id, value) {
+                setData(id, value, 'svrBussFinBondRepInfoDto');
+            });
+        }else{
+            // 基本信息
+            var element;
+            if(pageId != '' && pageId != undefined){
+                id = pageId + '_' + id;
+            }
+            if($('#'+id).size() > 0){
+                element = $('#'+id);
+            }else{
+                element = $('input[name=' + id + ']');
+            }
+
+            //下拉框特殊处理
+            if ($('#'+id).attr("data-url")){
+                debugger;
+                $('#'+id).textSelect('setValue', value);
+            }else if (element.hasClass('input-select')) {
+                element.val(value).trigger('change');
+            }else if (element.hasClass('input-dateSelect')) {
+                //日期框特殊处理
+                if (value){
+                    element.val(new Date(value).format('yyyy-MM-dd'));
+                }
+            }else if(element.hasClass('input-checkbox')){
+                //单选按钮特殊处理
+                element.val(value).trigger('change');
+            }else if ($('#' + id).attr('lay-skin') === 'switch') {
+                //switch 特殊处理
+                $('#' + id).prop('checked', false);
+                $('#' + id).next().removeClass('layui-form-onswitch').trigger('change');
+                $('#' + id).next().find("em").text('否');
+                // 是否,有无
+                if (value === 'Y' || value === '01') {
+                    $('#' + id).prop('checked', true);
+                    $('#' + id).next().addClass('layui-form-onswitch').trigger('change');
+                    $('#' + id).next().find("em").text('是');
+                }
+                // 债券新建新增快捷录入功能 add by renping 20191010 end
+            }else{
+                element.val(value);
+            }
+        }
+    }
+
     /**
      * 将当前子页面的数据赋值
      */
@@ -849,6 +951,8 @@ var QueryFunc=function(){
         $('#mdate').change(function(){
             dateVal();
         });
+
+        $('#AssetInfoDetail002_btn_addTicket').click(addTicket);
     });
 }());
 

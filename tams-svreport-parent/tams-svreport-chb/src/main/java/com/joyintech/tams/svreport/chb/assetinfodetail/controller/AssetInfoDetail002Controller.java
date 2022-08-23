@@ -124,6 +124,20 @@ public class AssetInfoDetail002Controller extends BaseController {
      * @since 1.0
      */
     @ResponseBody
+    @RequestMapping("addTicket")
+    public AssetInfoDetailDto addTicket(String assetCode) {
+        return assetInfoDetailMService.addTicket(assetCode);
+    }
+
+    /**
+     * check--保存
+     * @param dto
+     * @param result
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) AssetInfoDetailDto dto, BindingResult result) {
