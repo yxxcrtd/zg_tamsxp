@@ -102,8 +102,9 @@ public class SalerRewPenaInfo002Controller extends BaseController {
     @RequestMapping("getIssuePartyId")
     public String getIssuePartyId() {
         //获取本行中债机构代码
-        String orgCode = CommonUtil.getOrgCode();
-        return salerRewPenaInfoService.selectIssuePartyId(orgCode);
+        /*String orgCode = CommonUtil.getOrgCode();*/
+        String orgCode =CommonUtil.selectBankCode();
+        return orgCode;
     }
 
     /**
