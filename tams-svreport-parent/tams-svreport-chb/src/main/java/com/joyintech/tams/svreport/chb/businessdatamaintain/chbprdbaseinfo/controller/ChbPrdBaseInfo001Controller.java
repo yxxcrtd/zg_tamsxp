@@ -64,6 +64,7 @@ public class ChbPrdBaseInfo001Controller extends BaseController {
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.人行客户类型_SVR);
         this.setSelectOptionToModel(model, DictCode.报送产品发行状态);
+        this.setSelectOptionToModel(model, DictCode.产品数据状态);
         return super.init(model);
     }
 

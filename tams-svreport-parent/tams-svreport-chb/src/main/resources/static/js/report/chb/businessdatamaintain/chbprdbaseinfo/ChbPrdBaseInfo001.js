@@ -18,6 +18,8 @@ $(function() {
                 '#issuingStatus').val().join(","),
             customerType : $('#customerType').val() == null ? null : $(
                 '#customerType').val().join(","),
+            //反馈状态
+            dataStatus: $('#dataStatus').val()
         };
     };
     /**
@@ -100,7 +102,7 @@ $(function() {
             Joyin.dialog(JoyinUtil.getLabel("CchbPrdBaseInfo002"),
                 basePath + "/chb/businessdatamaintain/chbprdbaseinfo/chbprdbaseinfo002/init",
                 "98%", "95%",data,
-                function(){table.reload();});
+                function(){});
         });
     });
 

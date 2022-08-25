@@ -179,7 +179,7 @@ public class ChbAstPosSubSetService {
 		if(StringUtil.isNotEmpty(sub.getAmt())){
 			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
 			cnBondItem4.setValue(sub.getAmt().setScale(2, RoundingMode.HALF_UP).toString());
-			cnBondItem4.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem4.setUnitRef(sub.getCcy());
 			cnBondItem4.setDecimals("1");
 			cnBondItemMap1.put("ProductInvestedAssetsLiabilitiesRegistrationInvestedAmount", cnBondItem4);
 		}
@@ -197,7 +197,7 @@ public class ChbAstPosSubSetService {
 		if(StringUtil.isNotEmpty(sub.getFloatIngpl())){
 			CnBondInterfItemDto cnBondItem4 = new CnBondInterfItemDto();
 			cnBondItem4.setValue(sub.getFloatIngpl().setScale(2, RoundingMode.HALF_UP).toString());
-			cnBondItem4.setUnitRef(ChbConstant.币种全称_中债_人民币);
+			cnBondItem4.setUnitRef(sub.getCcy());
 			cnBondItem4.setDecimals("0");
 			cnBondItemMap1.put("FairValue", cnBondItem4);
 		}
