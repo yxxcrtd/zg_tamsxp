@@ -151,9 +151,9 @@ var QueryFunc=function(){
             }
         }else if(obj["03"].indexOf(repAssetType)>=0){
             //债券类资产/理财直接融资工具/同业存单
-            if(repAssetType=='1112'){
-                $("#svrBussFinBondRepInfoDto_repSectype").remove();
-            }
+            // if(repAssetType=='1112'){
+            //     $("#svrBussFinBondRepInfoDto_repSectype").remove();
+            // }
         }else if(obj["04"].indexOf(repAssetType)>=0){
             $("#svrBussRepAssetCreditNonstdInfoDto_repChose").val('无');
             $('#repCreditAssetCode_Div').hide();
