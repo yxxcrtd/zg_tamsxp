@@ -677,9 +677,13 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 			}else if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1111") ||
 					StringUtil.equals(chbAssetInfo.getAssetType2(),"1114") || StringUtil.equals(chbAssetInfo.getAssetType2(),"1115")){
 				industry = chbAssetInfo.getIndustry();
-				String chbIssuerId = chbAssetInfo.getChbIssuerId();
-				MstCustomerInfoAddWithBLOBs mstCustomerInfoAddWithBLOBs = mstCustomerInfoAddMapper.selectByPrimaryKey(chbIssuerId);
-				isFinLicence = mstCustomerInfoAddWithBLOBs.getIsFinLicence();
+				if(StringUtil.equals(industry,"10")){
+					String chbIssuerId = chbAssetInfo.getChbIssuerId();
+					MstCustomerInfoAddWithBLOBs mstCustomerInfoAddWithBLOBs = mstCustomerInfoAddMapper.selectByPrimaryKey(chbIssuerId);
+					if(mstCustomerInfoAddWithBLOBs != null && StringUtil.equals(mstCustomerInfoAddWithBLOBs.getIsFinLicence(),"Y")){
+						isFinLicence = mstCustomerInfoAddWithBLOBs.getIsFinLicence();
+					}
+				}
 
 			}
 			ChbTypeMappingService chbTypeMappingExService = SpringContextUtil.getBean(
