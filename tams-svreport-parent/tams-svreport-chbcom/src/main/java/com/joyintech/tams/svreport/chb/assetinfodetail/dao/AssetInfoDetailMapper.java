@@ -83,5 +83,5 @@ public interface AssetInfoDetailMapper {
 
 	List<WorkFlowInfoDto> getWorkFlowList();
 
-	ChbAssetInfo queryTicketForWind(String assetCode);
+	ChbAssetInfo queryTicketForWind(@Param("assetCode")String assetCode, @Param("sysflag")String sysflag, @Param("enddate") Date enddate);
 }
