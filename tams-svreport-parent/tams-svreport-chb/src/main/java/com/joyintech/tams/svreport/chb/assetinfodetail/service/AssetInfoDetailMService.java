@@ -19,6 +19,8 @@ import com.joyintech.tams.common.base.dao.MstCustomerInfoMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.common.svreport.base.service.BaseCommonCheckService;
 import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
@@ -666,7 +668,8 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 	}
 
 	public AssetInfoDetailDto addTicket(String assetCode) {
-		ChbAssetInfo chbAssetInfo = assetInfoDetailMapper.queryTicketForWind(assetCode);
+		String sysflag = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SEC_RATING_FLAG);
+		ChbAssetInfo chbAssetInfo = assetInfoDetailMapper.queryTicketForWind(assetCode, sysflag, new Date());
 		if(chbAssetInfo!=null){
 			String rivalPartyType = null;
 			String tradeMarket = null;
