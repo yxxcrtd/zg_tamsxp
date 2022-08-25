@@ -906,6 +906,9 @@
             <if test="vdateEnd!=null and vdateEnd !=''">
                 and VDATE &lt;= to_date(#{vdateEnd},'yyyy-mm-dd')
             </if>
+            <if test="dataStatus!=null and dataStatus !=''">
+                and STATUS = #{dataStatus}
+            </if>
             and not exists (select 1 from CHB_PRD_BASEINFO_ERRODATA b where a.PROD_ID = b.PROD_ID)
         </where>
     union all
@@ -988,6 +991,9 @@
             </if>
             <if test="vdateEnd!=null and vdateEnd !=''">
                 and VDATE &lt;= to_date(#{vdateEnd},'yyyy-mm-dd')
+            </if>
+            <if test="dataStatus!=null and dataStatus !=''">
+                and STATUS = #{dataStatus}
             </if>
         </where>
     </select>
