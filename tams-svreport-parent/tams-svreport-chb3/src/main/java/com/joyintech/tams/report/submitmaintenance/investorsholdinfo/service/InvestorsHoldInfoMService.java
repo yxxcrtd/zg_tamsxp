@@ -173,7 +173,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      */
     public void doSaveOrUpdate(InvestorsHoldInfo001Dto dto) {
     	 if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-    		 dto.setRegistBankCode(CommonUtil.getUserBankCode(null));
+    		 dto.setRegistBankCode(CommonUtil.selectBankCode());
     		 dto.setOrgCode(CommonUtil.getOrgCode());
     		 dto.setDeptCode(CommonUtil.getDeptCode());
     		 dto.setCreateDept(dto.getDeptCode()!=null?dto.getDeptCode():dto.getOrgCode());
