@@ -667,39 +667,21 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		return assetInfoList;
 	}
 
+	/**
+	 * 自动加券
+	 * @param assetCode
+	 * @return
+	 */
 	public AssetInfoDetailDto addTicket(String assetCode) {
 		String sysflag = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SEC_RATING_FLAG);
 		ChbAssetInfo chbAssetInfo = assetInfoDetailMapper.queryTicketForWind(assetCode, sysflag, new Date());
 		if(chbAssetInfo!=null){
-			String rivalPartyType = null;
-			String tradeMarket = null;
-			String industry = null;
-			String isFinLicence = null;
-			if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1108")){
-
-			}else if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1111") ||
-					StringUtil.equals(chbAssetInfo.getAssetType2(),"1114") || StringUtil.equals(chbAssetInfo.getAssetType2(),"1115")){
-				industry = chbAssetInfo.getIndustry();
-				if(StringUtil.equals(industry,"10")){
-					String chbIssuerId = chbAssetInfo.getChbIssuerId();
-					MstCustomerInfoAddWithBLOBs mstCustomerInfoAddWithBLOBs = mstCustomerInfoAddMapper.selectByPrimaryKey(chbIssuerId);
-					if(mstCustomerInfoAddWithBLOBs != null && StringUtil.equals(mstCustomerInfoAddWithBLOBs.getIsFinLicence(),"Y")){
-						isFinLicence = mstCustomerInfoAddWithBLOBs.getIsFinLicence();
-					}
-				}
-
-			}
-			ChbTypeMappingService chbTypeMappingExService = SpringContextUtil.getBean(
-					ChbTypeMappingService.class);
-			// 根据中债资产负债二级类型&对手方类型&场所&发行人&是否持有金融牌照映射人行类型
-			ChbTypeMappingEx mappingEx = chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.ASSET_TYPE2_PBCASSETTYPE,
-					chbAssetInfo.getAssetType2(),rivalPartyType,tradeMarket,industry,isFinLicence);
+			ChbTypeMappingEx mappingEx = setPbcAssetType(chbAssetInfo);
 			if(mappingEx != null){
 				chbAssetInfo.setPbcAssetType1(mappingEx.getObjfield1());
 				chbAssetInfo.setPbcAssetType2(mappingEx.getObjfield2());
 				chbAssetInfo.setPbcAssetType3(mappingEx.getObjfield3());
 			}
-
 			AssetInfoDetailDto dto = new AssetInfoDetailDto();
 			BeanUtil.copyPropertiesIgnoreNull(dto, chbAssetInfo);
 			SvrBussFinBondRepInfoDto svrBussFinBondRepInfoDto = new SvrBussFinBondRepInfoDto();
@@ -710,6 +692,46 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}else{
 			return null;
 		}
+	}
+
+	/**
+	 * 人行类型映射
+	 * @param chbAssetInfo
+	 * @return
+	 */
+	public ChbTypeMappingEx setPbcAssetType(ChbAssetInfo chbAssetInfo) {
+		String rivalPartyType = null;
+		String tradeMarket = null;
+		String industry = null;
+		String isFinLicence = null;
+		String profitType = null;
+		if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1107")||StringUtil.equals(chbAssetInfo.getAssetType2(),"1108")
+				||StringUtil.equals(chbAssetInfo.getAssetType2(),"1901")||StringUtil.equals(chbAssetInfo.getAssetType2(),"1902")){
+			rivalPartyType = chbAssetInfo.getRivalPartyType();
+			if(StringUtil.equals(rivalPartyType,"06")){
+				tradeMarket = chbAssetInfo.getTradeMarket();
+			}
+		}else if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1111") ||
+				StringUtil.equals(chbAssetInfo.getAssetType2(),"1114") || StringUtil.equals(chbAssetInfo.getAssetType2(),"1115")
+				|| StringUtil.equals(chbAssetInfo.getAssetType2(),"1302") || StringUtil.equals(chbAssetInfo.getAssetType2(),"1305")
+				|| StringUtil.equals(chbAssetInfo.getAssetType2(),"1502")){
+			industry = chbAssetInfo.getIndustry();
+			if(StringUtil.equals(industry,"10")){
+				String chbIssuerId = chbAssetInfo.getChbIssuerId();
+				MstCustomerInfoAddWithBLOBs mstCustomerInfoAddWithBLOBs = mstCustomerInfoAddMapper.selectByPrimaryKey(chbIssuerId);
+				if(mstCustomerInfoAddWithBLOBs != null && StringUtil.equals(mstCustomerInfoAddWithBLOBs.getIsFinLicence(),"Y")){
+					isFinLicence = mstCustomerInfoAddWithBLOBs.getIsFinLicence();
+				}
+			}
+
+		}else if(StringUtil.equals(chbAssetInfo.getAssetType2(),"1205")){
+			profitType = chbAssetInfo.getProfitType();
+		}
+		ChbTypeMappingService chbTypeMappingExService = SpringContextUtil.getBean(
+				ChbTypeMappingService.class);
+		// 根据中债资产负债二级类型&对手方类型&场所&发行人&是否持有金融牌照&收收益权 映射人行类型
+		return chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.ASSET_TYPE2_PBCASSETTYPE,
+				chbAssetInfo.getAssetType2(),rivalPartyType,tradeMarket,industry,isFinLicence,profitType);
 	}
 
 }
