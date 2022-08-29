@@ -229,9 +229,9 @@ public class ChbAstPosSubSetService {
 		}
 
 		//数量
-		if(StringUtil.isNotEmpty(sub.getUnitValueFprice())){
+		if(StringUtil.isNotEmpty(sub.getQty())){
 			CnBondInterfItemDto cnBondItem5 = new CnBondInterfItemDto();
-			cnBondItem5.setValue(sub.getUnitValueFprice().setScale(5, RoundingMode.HALF_UP).toString());
+			cnBondItem5.setValue(sub.getQty().setScale(5, RoundingMode.HALF_UP).toString());
 			cnBondItem5.setUnitRef(ChbConstant.币种全称_中债_人民币);
 			cnBondItem5.setDecimals("4");
 			cnBondItemMap1.put("ProductInvestedAssetsLiabilitiesRegistrationQuantity", cnBondItem5);
