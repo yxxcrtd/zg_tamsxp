@@ -1308,6 +1308,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 			String tableName=entity.getKey();
 
 			Map<String,Object> selectParam = new HashMap<>();
+			if(tableName.equals("CHB_ASSET_INDEX")){
+				tableName="CHB_ASSETS_BASIS_DATA";
+			}
 			selectParam.put("tableId", tableName);
             List<ChbInfoMgrResultConfig> chbInfoMgrResultConfigList = chbInfoMgrResultConfigMapper.queryAllchbMgrTableInfo(selectParam);
             Map<String, String> resultMap = new HashMap<String, String>(16);
