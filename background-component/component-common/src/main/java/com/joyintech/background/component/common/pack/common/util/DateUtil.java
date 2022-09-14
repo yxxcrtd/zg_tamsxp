@@ -66,6 +66,11 @@ public class DateUtil extends DateUtils {
     public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * "yyyy-MM-dd HH:mm:ss"
+     */
+    public static final String DEFAULT_DATETIME_FORMAT_SS = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    /**
      * "yyyy_MM_dd_HH_mm_ss_SSS" 用做文件名
      */
     public static final String DEFAULT_DATETIME_FORMAT_SSS = "yyyy_MM_dd_HH_mm_ss_SSS";
@@ -317,7 +322,7 @@ public class DateUtil extends DateUtils {
             return parseDate(dateString,
                 new String[] {DEFAULT_DATE_FORMAT_CN, DEFAULT_DATE_FORMAT_EN,
                     DATETIME_FORMAT_WITH_SSS_YEAR1, DEFAULT_DATETIME_FORMAT, DEFAULT_OTHER_FORMAT,
-                    DEFAULT_ANOTHER_FORMAT, "yyyy-MM","yyyyMM",DEFAULT_FOREI_FORMAT,"yyyy-MM-dd HH:mm:ss.0"});
+                    DEFAULT_ANOTHER_FORMAT, "yyyy-MM","yyyyMM",DEFAULT_FOREI_FORMAT,"yyyy-MM-dd HH:mm:ss.0",DEFAULT_DATETIME_FORMAT_SS});
         }
         catch (ParseException e) {
             throw new RuntimeException("Date ParseException");
