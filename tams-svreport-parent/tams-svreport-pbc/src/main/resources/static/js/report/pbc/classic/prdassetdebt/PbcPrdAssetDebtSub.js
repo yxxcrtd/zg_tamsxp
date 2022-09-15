@@ -208,7 +208,7 @@ $(function(){
 						mes+="没有对应的贷款明细信息和资金信托明细信息，不会更新报送状态，是否确认数据进行手工处理？";
 						Joyin.confirm("请确认是否要手工处理符合查询条件的全部记录？", function() {
 							layui.layer.open({type:3});
-							Joyin.ajaxJson('doManul', paramObj, function() {
+							Joyin.ajaxJson('', paramObj, function() {
 								table.load();
 								layui.layer.closeAll();
 							});
@@ -253,7 +253,7 @@ $(function(){
 						mes+="没有对应的贷款明细信息和资金信托明细信息，不会更新报送状态，是否确认数据进行手工处理？";
 						Joyin.confirm(mes,function() {
 							layui.layer.open({type:3});
-							Joyin.ajaxJson('doManul', paramObj, function() {
+							Joyin.ajaxJson('', paramObj, function() {
 								table.load();
 								layui.layer.closeAll();
 							});
