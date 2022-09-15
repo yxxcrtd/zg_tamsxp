@@ -44,16 +44,7 @@
             $('#tradeCode').val(tradeCode_New);
             $('#registBankCode').val(registBankCode_New);
             $('#contractCode').val(tradeCode_New);
-        } else {
-            //修改页面
-            $("#tradeCode").attr("disabled", "disabled");
-            $("#prodId").attr("disabled", "disabled");
-            $("#registBankCode").attr("disabled", "disabled");
-            $("#assetCode").attr("disabled", "disabled");
-            $("#prodName").attr("disabled", "disabled");
-            $("#curAssetType").attr("disabled", "disabled");
         }
-
 
         $('#prodName').change(function () {
             var prodName = $('#prodName').val();
@@ -96,12 +87,9 @@
         });
         $('#ccy').change(function () {
             if ($('#ccy').val() == 'CNY') {
-                $('#cnyAmt').attr("disabled", "disabled");
                 $('#amt').blur(function () {
                     $('#cnyAmt').val($('#amt').val());
                 })
-            } else {
-                $("#cnyAmt").removeAttr("disabled");
             }
         });
 
