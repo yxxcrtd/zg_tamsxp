@@ -565,8 +565,7 @@ public class ChbMsgSetCommonService {
                 "NonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY",
                 "ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet",
                 "ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull",
-                "ProductInvestedAssetsLiabilitiesRegistrationQuantity",
-                "NominalPrincipal"};
+                "ProductInvestedAssetsLiabilitiesRegistrationQuantity"};
         // 循环标签数组
         for (String s : str) {
             // 判断标签是否在数组中
