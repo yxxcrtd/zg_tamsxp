@@ -699,8 +699,8 @@ public class ChbMsgSetCommonService {
 
         // 阿富汗尼（AFN）
         XbrliUnitEntity afn = new XbrliUnitEntity();
-        twd.setId(ChbConstant.币种全称_中债_阿富汗尼);//修改XbrliUnitEntity对象属性映射 @modify zhaoyongsheng 20201028
-        twd.setXbrliMeasure(ChbConstant.ISO_4217 + ChbConstant.COLON + ChbConstant.币种全称_中债_阿富汗尼);
+        afn.setId(ChbConstant.币种全称_中债_阿富汗尼);//修改XbrliUnitEntity对象属性映射 @modify zhaoyongsheng 20201028
+        afn.setXbrliMeasure(ChbConstant.ISO_4217 + ChbConstant.COLON + ChbConstant.币种全称_中债_阿富汗尼);
         map.put(ChbConstant.币种全称_中债_阿富汗尼, afn);
 
         // Day 天
