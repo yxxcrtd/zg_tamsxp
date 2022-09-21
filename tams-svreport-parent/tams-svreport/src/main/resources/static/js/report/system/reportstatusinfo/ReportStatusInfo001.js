@@ -29,11 +29,11 @@ var ReportStatusInfo001 = function() {
                 { title: "报送流水号", field: 'repSeqNo',visible:false},
                 { title: "登记序列", field: 'registSeqNo',visible:false},
                 { title: "数据状态", field: 'statusName',sortField:'status',width:150},
-                { title: "报送类型", field: 'repTypeName',sortField:'repTypeName',width:150},
+                { title: "报送类型", field: 'repTypeName',sortField:'repType',width:150},
                 { title: "唯一标识符", field: 'uniqueCode',sortField:'uniqueCode',width:450},
                 { title: "报送日期", field: 'repDate',type: 'datetime',sortField:'repDate',width:150},
-                { title: "报送状态", field: 'repStatusName',sortField:'repStatusName',width:150},
-                { title: "反馈状态", field: 'feedbackStatusName',sortField:'feedbackStatusName',width:150},
+                { title: "报送状态", field: 'repStatusName',sortField:'repStatus',width:150},
+                { title: "反馈状态", field: 'feedbackStatusName',sortField:'feedbackStatus',width:150},
                 { title: "反馈消息", field: 'feedbackMsg',sortField:'feedbackMsg',width:150}
             ]
         })
