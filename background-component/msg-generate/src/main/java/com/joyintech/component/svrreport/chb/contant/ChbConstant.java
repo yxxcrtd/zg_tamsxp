@@ -408,6 +408,12 @@ public class ChbConstant {
      */
     public static final String 币种全称_中债_新台币 = "TWD";
 
+
+    /**
+     * 新台币（TWD）
+     */
+    public static final String 币种全称_中债_阿富汗尼 = "AFN";
+
     /**
      * SCHNAME
      */

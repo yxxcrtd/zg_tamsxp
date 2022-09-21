@@ -565,7 +565,8 @@ public class ChbMsgSetCommonService {
                 "NonInvestedAmountOfAssetManagementProductOrOutsourcingAssetCNY",
                 "ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationNet",
                 "ProductInvestedAssetsLiabilitiesRegistrationPerUnitValuationFull",
-                "ProductInvestedAssetsLiabilitiesRegistrationQuantity"};
+                "ProductInvestedAssetsLiabilitiesRegistrationQuantity",
+                "NominalPrincipal"};
         // 循环标签数组
         for (String s : str) {
             // 判断标签是否在数组中
@@ -697,6 +698,12 @@ public class ChbMsgSetCommonService {
         twd.setXbrliMeasure(ChbConstant.ISO_4217 + ChbConstant.COLON + ChbConstant.币种全称_中债_新台币);
         map.put(ChbConstant.币种全称_中债_新台币, twd);
 
+        // 阿富汗尼（AFN）
+        XbrliUnitEntity afn = new XbrliUnitEntity();
+        twd.setId(ChbConstant.币种全称_中债_阿富汗尼);//修改XbrliUnitEntity对象属性映射 @modify zhaoyongsheng 20201028
+        twd.setXbrliMeasure(ChbConstant.ISO_4217 + ChbConstant.COLON + ChbConstant.币种全称_中债_阿富汗尼);
+        map.put(ChbConstant.币种全称_中债_阿富汗尼, afn);
+
         // Day 天
         XbrliUnitEntity day = new XbrliUnitEntity();
         day.setId(ChbConstant.DAY);
@@ -816,6 +823,8 @@ public class ChbMsgSetCommonService {
             entity.setAssetsAndLiabilitiesRegistrationTuple(bases);
             // 添加context 标签
             contextList.add(context1);
+            // 添加context 标签
+            contextList.add(context2);
             fileType = ChbConstant.FILE_106_TYPE;
         }
         else if (DictCodeList.报表名称_资产交易信息登记.getValue().equals(dealType)) {
