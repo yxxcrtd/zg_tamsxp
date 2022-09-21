@@ -103,8 +103,8 @@ public class EquityInfoRegistController{
      * @since 1.0
      */
     @PostMapping("cancelMannulAll")
-    public void cancelMannulAll(@RequestBody Map<String,Object> map) {
-    		equityInfoRegist001Service.cancelMannulAll(map);
+    public List<ValidMessage> cancelMannulAll(@RequestBody Map<String,Object> map) {
+        return equityInfoRegist001Service.cancelMannulAll(map);
     	
     }
     
