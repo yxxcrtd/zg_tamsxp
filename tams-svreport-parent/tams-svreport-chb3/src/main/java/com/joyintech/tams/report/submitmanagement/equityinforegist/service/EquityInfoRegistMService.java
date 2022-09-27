@@ -127,11 +127,11 @@ public class EquityInfoRegistMService extends BaseService<EquityInfoRegist001Dto
     * @see
     * @since 1.0
     */
-   public void cancelMannulAll(Map<String,Object> map) {
+   public List<ValidMessage> cancelMannulAll(Map<String,Object> map) {
 	   map.put("deptCode", CommonUtil.getDeptCode());
-	   restTemplate.postForObject(
+	   return restTemplate.postForList(
 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/cancelMannulAll", map,
-	       		Integer.class);
+			   ValidMessage.class);
    }
 
    /**

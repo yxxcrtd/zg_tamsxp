@@ -943,22 +943,34 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
      * 手工处理取消所有
      * @param map
      */
-    public void cancelMannulAll(Map<String, Object> param){
+    public List<ValidMessage> cancelMannulAll(Map<String, Object> param){
+        List<ValidMessage> errorList =new ArrayList<ValidMessage>();
     	param.put("submitStatus", "03");
 //        param.put("deptCode", CommonUtil.getDeptCode());
         List<EquityInfoRegist001Dto> list= this.queryExportRegistList(param);
         List<ChbSubmitStatus> listStatus = new ArrayList<ChbSubmitStatus>();
         for(EquityInfoRegist001Dto registDto: list){
+            Map<String , Object>map =new HashMap<String , Object>();
+            map.put("registBankCode", registDto.getBankCode());
+            map.put("indentifyMark", registDto.getIndentifyMark());
+            map.put("noSubmit", DictCodeListExt2.报送状态_未报送.getValue());
         	ChbSubmitStatus chbSubmitStatus = new ChbSubmitStatus();
         	chbSubmitStatus.setSeqno(registDto.getSumitSeq());
 //        	registDto.setSumitSeq(null);
              listStatus.add(chbSubmitStatus);
-        	
+            if(equityInfoRegist001Mapper.isNotSubmitP(map)!= 0){
+                errorList.add(new ValidMessage("存在未报送的数据。"));
+            }
         }
-        equityInfoRegist001Mapper.updateEquityRegist(list);
-        //将履历表中履历号最大的数据挪回登记表
-        equityInfoRegist001Mapper.insertEquityRegistFromHis(list);
-        equityInfoRegist001Mapper.deleteMannulSubmitRegist(listStatus);
+        if (StringUtil.isEmptyList(errorList)){
+            equityInfoRegist001Mapper.updateEquityRegist(list);
+            //将履历表中履历号最大的数据挪回登记表
+            equityInfoRegist001Mapper.insertEquityRegistFromHis(list);
+            equityInfoRegist001Mapper.deleteMannulSubmitRegist(listStatus);
+            return null;
+        }else{
+            return errorList;
+        }
     }
     /**
      * 获取报送列表

@@ -262,7 +262,15 @@ public class EquityInfoRegist001Controller extends BaseController {
     public AjaxResult cancelMannul(@RequestBody Map<String,Object> map) {
     	//add by liubin 
     	if(map.get("flag") != null && "01".equals(map.get("flag"))){
-    		equityInfoRegistMService.cancelMannulAll(map);
+            List<ValidMessage> errorList = equityInfoRegistMService.cancelMannulAll(map);
+            if(CollectionUtils.isNotEmpty(errorList)){
+                AjaxResult webResult= new AjaxResult();
+                webResult.appendMessageList(errorList);
+                // 防止提示信息后卡死 add by weiyuqiang 2019-05-21 start
+                webResult.setStatuCode(HttpStatus.OK.value());
+                // 防止提示信息后卡死 add by weiyuqiang 2019-05-21 end
+                return webResult;
+            }
     	}else{
     		 String upKey = (String)map.get("updateKeys");//删除的主键
     	        List<ValidMessage> errorList = equityInfoRegistMService.checkIsNotSubmit(upKey);

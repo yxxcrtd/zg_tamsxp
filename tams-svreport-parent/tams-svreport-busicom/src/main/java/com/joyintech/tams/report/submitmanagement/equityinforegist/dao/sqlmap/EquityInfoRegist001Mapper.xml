@@ -657,6 +657,7 @@
         CREATE_TIME, DELETE_RES, ORG_CODE,
         CHB_SUBMIT_DEADLINE, CREATE_DEPT, SUMIT_SEQ,
         TYPE,CHECK_SEQNO,HOLDER_CLASSIFY,FUND_ACC_PLACE
+        ,SUBMIT_FEEDBACK_STATUS,REPORT_NO,SUBMIT_FEEDBACK_MSG
         )
         select  seq_equity_sub.NEXTVAL,
         A.INDENTIFY_MARK, A.REGIST_BANK_CODE,
@@ -674,6 +675,7 @@
         A.CREATE_TIME, A.DELETE_RES, A.ORG_CODE,
         A.CHB_SUBMIT_DEADLINE, A.CREATE_DEPT, A.SUMIT_SEQ,
         A.TYPE,A.CHECK_SEQNO,A.HOLDER_CLASSIFY,A.FUND_ACC_PLACE
+        ,A.SUBMIT_FEEDBACK_STATUS,A.REPORT_NO,A.SUBMIT_FEEDBACK_MSG
         from chb_equ_sub A
         <where>
             <foreach collection="list" index="index" item="item" open="(" separator=") or (" close=")">
