@@ -68,9 +68,6 @@ public class ChbProdStatusSubSetService {
 		List<String> registSeq = new ArrayList<String>();
 		Map<String,String> registSeqKeyMap = new HashMap<String,String>();
 		datas.forEach(item -> {
-			//利率统一除以100
-			ChbXmlUtil.rateFormat(item);
-
 			Map<String, CnBondInterfItemDto> cnBondItemMap = new LinkedHashMap<String, CnBondInterfItemDto>();
 			//利率统一除以100
 			ChbXmlUtil.rateFormat(item);
