@@ -338,4 +338,69 @@ $(function(){
         }
 
     };
+
+    /**
+     * 报送
+     */
+    $('#SalesTransactionMaintenanceRegist001_btn_submit').click(function () {
+        var rows = table.getAllCheckedRows();
+        if(rows.length === 0) {
+            var sendStatus = $('#sendStatus').val();
+            var status = $('#dataStatus').val();
+            if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
+                Joyin.error("只能报送报送状态为未报送的数据");
+                return;
+            }
+            else if(status && status.indexOf('03') > -1){
+                Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
+                return;
+            }
+            Joyin.ajax('submitBeforeCheck',getSearchParams(), function(result) {
+                if(!result || result.length ==0){
+                    Joyin.confirm("按照已选择当前查询条件报送,是否确认！",function(){
+                        layui.layer.open({type:3});
+                        Joyin.ajaxJson('submitChb', getSearchParams(), function() {
+                            table.load();
+                            layui.layer.closeAll();
+                        });
+                    });
+                }
+                else{
+                    window.checkResult = result;
+                    Joyin.checkData('<h4 class="modal-title" id="myModalLabel"> 销售结算资金交易数据检查 </h4>', 'submitBeforeCheck', getSearchParams());
+                }
+            });
+            return ;
+        }
+        for(var i=0;i<rows.length;i++){
+            if(rows[i].sendStatus !="01"){
+                Joyin.error("只能报送报送状态为未报送的数据");
+                return;
+            }
+            else if(rows[i].dataStatus && rows[i].dataStatus.indexOf('03') > -1){
+                Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行报送！");
+                return;
+            }
+        }
+        $.each(rows, function(i, v) {
+             //v.sendStatus=v.submitStatus;
+            //v.status=v.statusCode;
+            //v.ccy=v.ccyCode;
+        });
+        Joyin.ajax('submitBeforeCheck', {keyList: JSON.stringify(rows)}, function(result) {
+            if(!result || result.length ==0){
+                Joyin.confirm("请确认是否要报送选中记录？", function() {
+                    layui.layer.open({type:3});
+                    Joyin.ajaxJson('submitChb', {keyList: JSON.stringify(rows)}, function() {
+                        table.load();
+                        layui.layer.closeAll();
+                    });
+                })
+            }
+            else{
+                window.checkResult = result;
+                Joyin.checkData('<h4 class="modal-title" id="myModalLabel">销售结算资金交易数据检查 </h4>', 'submitBeforeCheck', {keyList: JSON.stringify(rows)});
+            }
+        });
+    });
 });

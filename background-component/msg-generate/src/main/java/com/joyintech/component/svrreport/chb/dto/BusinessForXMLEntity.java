@@ -130,6 +130,12 @@ public class BusinessForXMLEntity extends XbrliXbrlEntity {
     /***0722升级**/
 
     /**
+     * 子节点
+     */
+    @XmlElement(name = "wemax:SalesFundTransferOrSettlementRegistrationCsvDataExplanator")
+    private CommonNodeEntity salesFundTransferOrSettlementRegistrationCsvDataExplanator;
+
+    /**
      * 子节点(分类总量)
      */
     @XmlElement(name = "wemax:InvestorsSummationOfDiffenrentTypesInformationRegistrationTuple")
@@ -475,5 +481,13 @@ public class BusinessForXMLEntity extends XbrliXbrlEntity {
 
     public void setProductInvestedAssetsLiabilitiesRegistrationTuple(List<BaseInfoEntity> productInvestedAssetsLiabilitiesRegistrationTuple) {
         ProductInvestedAssetsLiabilitiesRegistrationTuple = productInvestedAssetsLiabilitiesRegistrationTuple;
+    }
+
+    public CommonNodeEntity getSalesFundTransferOrSettlementRegistrationCsvDataExplanator() {
+        return salesFundTransferOrSettlementRegistrationCsvDataExplanator;
+    }
+
+    public void setSalesFundTransferOrSettlementRegistrationCsvDataExplanator(CommonNodeEntity salesFundTransferOrSettlementRegistrationCsvDataExplanator) {
+        this.salesFundTransferOrSettlementRegistrationCsvDataExplanator = salesFundTransferOrSettlementRegistrationCsvDataExplanator;
     }
 }

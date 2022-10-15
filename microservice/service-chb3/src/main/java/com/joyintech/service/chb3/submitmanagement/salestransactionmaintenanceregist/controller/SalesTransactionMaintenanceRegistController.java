@@ -5,6 +5,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
 import com.joyintech.tams.common.base.entity.ChbBatchPara;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.service.SalesTransactionMaintenanceRegist001Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,16 @@ public class SalesTransactionMaintenanceRegistController {
     @PostMapping("queryForInfoRegist")
     public List<SalesTransactionMaintenanceRegist001Dto> queryForInfoRegist(@RequestBody Map<String,Object> param){
     	return salesTransactionMaintenanceRegist001Service.queryForInfoRegist(param);
+    }
+
+    /**
+     * 报送检查
+     * @return 检查结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("submitBeforeCheck")
+    public List<ExcelValidDto> submitBeforeCheck(@RequestBody Map<String,Object> map) {
+        return salesTransactionMaintenanceRegist001Service.submitBeforeCheck(map);
     }
 }

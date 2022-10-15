@@ -104,7 +104,8 @@ public class ChbMsgSetCommonService {
         // 设置基本信息 并返回使用单位
         if (!(DictCodeList.报表名称_投资者身份信息登记.getValue().equals(dealType)
                 || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(dealType)
-                || DictCodeList.报表名称_投资者明细信息登记.getValue().equals(dealType))) {
+                || DictCodeList.报表名称_投资者明细信息登记.getValue().equals(dealType)
+                || DictCodeList.报表名称_销售结算资金交易信息登记.getValue().equals(dealType))) {
             Map<String, XbrliUnitEntity> returnMaps = setEntity(bases, chbBondSubmitPara.getInfos(), contextRefIds, log);
             /*清理returnMaps空元素 @modify zhaoyongsheng 20201028 start*/
             returnMaps.entrySet().removeIf(entry -> entry == null);
@@ -938,6 +939,18 @@ public class ChbMsgSetCommonService {
             contextList.add(context1);
             fileType = ChbConstant.FILE_203_TYPE;
         }
+        else if (DictCodeList.报表名称_销售结算资金交易信息登记.getValue().equals(dealType)) {
+            // 基本信息标签
+            CommonNodeEntity node = new CommonNodeEntity();
+            // 标签值
+            node.setValue(chbBondSubmitPara.getInfos().get(0).get(
+                    "SalesFundTransferOrSettlementRegistrationCsvDataExplanator").getValue());
+            // contextRef
+            node.setContextRef(contextRefIds[0]);
+            entity.setSalesFundTransferOrSettlementRegistrationCsvDataExplanator(node);
+            contextList.add(context1);
+            fileType = ChbConstant.FILE_202_TYPE;
+        }
         return fileType;
     }
 
@@ -972,7 +985,8 @@ public class ChbMsgSetCommonService {
         entity.setXmlnsXbrldt(ChbConstant.TITLE_PROPERTY9);
         if (DictCodeList.报表名称_投资者身份信息登记.getValue().equals(type)
              || DictCodeList.报表名称_投资者持有信息登记.getValue().equals(type)
-             || DictCodeList.报表名称_投资者明细信息登记.getValue().equals(type)) {
+             || DictCodeList.报表名称_投资者明细信息登记.getValue().equals(type)
+             || DictCodeList.报表名称_销售结算资金交易信息登记.getValue().equals(type)) {
 	        // 标题10
 	        entity.setRolChinawealth(ChbConstant.TITLE_PROPERTY10);
         }
@@ -983,6 +997,12 @@ public class ChbMsgSetCommonService {
         entity.setXmlnsWemaxRet(ChbConstant.TITLE_WEMAZ_RET);
         entity.setXmlnsWemaxUnit(ChbConstant.TITLE_WEMAZ_UNIT);
         // 中债一二期需添加 end
+        //XmlnsWemaxRet、XmlnsWemaxUnit
+        if (DictCodeList.报表名称_销售结算资金交易信息登记.getValue().equals(type)){
+            entity.setXmlnsWemaxRet(null);
+            entity.setXmlnsWemaxUnit(null);
+        }
+
         if (DictCodeList.报表名称_分类总量信息登记.getValue().equals(type)) {
             entity.setXmlnsXsi1(ChbConstant.TITLE_PROPERTY1);
         }

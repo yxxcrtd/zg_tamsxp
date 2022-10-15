@@ -151,4 +151,15 @@ public interface MsgSendService {
 	void sendChbAstPosSubMsgs(List<ChbAstPosSub> datas, SendDataCheckType sendDataCheckType) throws Exception;
 
 	/***0722升级**/
+
+	/**
+	 * <销售结算资金交易登记>
+	 * @param datas 数据内容
+	 * @return 报送信息「需要拼装的数据」
+	 * @see MsgSendService
+	 * @since 1.0
+	 * @add by sjj 20221013
+	 */
+	void sendSalesTransactionMaintenanceRegistSubMsgs(List<SalesTransactionMaintenanceSubDto> datas, SendDataCheckType sendDataCheckType) throws Exception;
+
 }

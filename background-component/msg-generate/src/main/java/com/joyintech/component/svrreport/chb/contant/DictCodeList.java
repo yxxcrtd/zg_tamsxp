@@ -59,6 +59,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	报表名称_产品状态登记(DictCode.报表名称,"45","产品状态登记"),
 	报表名称_资产持仓登记(DictCode.报表名称,"46","资产持仓登记"),
 	/***0722升级**/
+	报表名称_销售结算资金交易信息登记(DictCode.报表名称,"34","销售结算资金交易信息登记"),
 	币种全称_中债_人民币(DictCode.币种全称_中债, "01", "人民币(CNY)"),
 	币种全称_中债_港元(DictCode.币种全称_中债, "02", "港元(HKD)"),
 	币种全称_中债_美元(DictCode.币种全称_中债, "03", "美元(USD)"),

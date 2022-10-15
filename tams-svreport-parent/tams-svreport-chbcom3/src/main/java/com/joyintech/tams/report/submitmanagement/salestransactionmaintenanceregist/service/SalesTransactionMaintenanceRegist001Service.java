@@ -14,6 +14,7 @@ import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.cnbond.dto.CnBondInterfItem;
 import com.joyintech.tams.report.interf.cnbond.dto.InterfCnBondSubmitPara;
 import com.joyintech.tams.report.submitmaintenance.salestransactionmaintenance.validate.SalesTransactionMaintenanceValid;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.common.EquityInfoRegistCommonUtil;
@@ -902,5 +903,29 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         if (CollectionUtils.isNotEmpty(newDataList)) {
             salesTransactionMaintenanceRegist001Mapper.deleteLastSubmitRegist(newDataList);;
         }
+    }
+
+    /**
+     * 中债直连报送前check
+     *
+     *传入需要check的主键
+     * @return 反馈信息
+     * @see
+     * @since 1.0
+     */
+    public List<ExcelValidDto> submitBeforeCheck(Map<String, Object> param) {
+        List<ExcelValidDto> result=new ArrayList<ExcelValidDto>();
+        dealSearchParam(param);
+        // 权益人报送表主键
+        @SuppressWarnings("unchecked")
+        List<SalesTransactionMaintenanceRegist001Dto> investorsHoldInfoRegistList = (List<SalesTransactionMaintenanceRegist001Dto>)param.get(
+                "investList");
+        if (investorsHoldInfoRegistList == null || investorsHoldInfoRegistList.isEmpty()) {
+            investorsHoldInfoRegistList = salesTransactionMaintenanceRegist001Mapper.queryForRegistPage(param);
+        }
+        if(!StringUtil.isEmptyList(result)){
+            return result;
+        }
+        return result;
     }
 }

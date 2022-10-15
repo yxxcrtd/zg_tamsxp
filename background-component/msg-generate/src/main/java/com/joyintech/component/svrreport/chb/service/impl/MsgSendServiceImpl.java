@@ -148,6 +148,12 @@ public class MsgSendServiceImpl implements MsgSendService {
 	@Autowired
 	private ChbComponentStatusUpdateMapper chbComponentStatusUpdateMapper;
 
+	/**
+	 * 销售结算资金交易登记 - 报文设置
+	 */
+	@Autowired
+	private SalesTransactionMaintenanceSubSetService salesTransactionMaintenanceSubSetService;
+
 
 	/**
 	 * 中债直连报送返回信息
@@ -464,5 +470,19 @@ public class MsgSendServiceImpl implements MsgSendService {
 //		return chbMsgReturnInfoDto;
 	}
 
-
+	/**
+	 * <设置资产持仓登记>
+	 * @param datas 资产持仓数据体
+	 * @return 报送信息「需要拼装的数据」
+	 * @see MsgSendService
+	 * @since 1.0
+	 * @add by zhaoyongsheng 20201017
+	 */
+	@Override
+	public void sendSalesTransactionMaintenanceRegistSubMsgs(List<SalesTransactionMaintenanceSubDto> datas, SendDataCheckType sendDataCheckType) throws Exception{
+		// 1. 设置报文
+		ChbMsgBuildInfoDto chbMsgBuildInfoDto = salesTransactionMaintenanceSubSetService.setMsg(datas);
+		// 2. 发送数据
+		getChbMsgSendInfo(chbMsgBuildInfoDto, sendDataCheckType);
+	}
 }

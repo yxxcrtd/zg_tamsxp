@@ -8,6 +8,7 @@ import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -108,6 +109,19 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/checkIfInBatchByTaskBeanName", beanname,
 	       	boolean.class);
    }
-   
-   
+
+
+	/**
+	 * 报送检查
+	 *
+	 * @return 检查结果
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	public List<ExcelValidDto> submitBeforeCheck(Map<String, Object> param) {
+		return restTemplate.postForList(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/submitBeforeCheck", param,
+				ExcelValidDto.class);
+	}
 }
