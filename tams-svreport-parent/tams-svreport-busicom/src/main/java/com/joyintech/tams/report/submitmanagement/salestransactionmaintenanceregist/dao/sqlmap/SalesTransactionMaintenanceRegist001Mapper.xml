@@ -455,7 +455,8 @@
     <select id="queryAllRegistSubmitList"
             resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
 		select   REGIST_SEQNO        as registSeqno,
-            	 INSTITUTION_CODE          as institutionCode
+            	 INSTITUTION_CODE          as institutionCode,
+            	 TRADE_NO as tradeNo
         from CHB_SALER_STL_DEAL_SUB sub
         where (sub.SEND_STATUS = '02' or sub.SEND_STATUS = '03')
 
