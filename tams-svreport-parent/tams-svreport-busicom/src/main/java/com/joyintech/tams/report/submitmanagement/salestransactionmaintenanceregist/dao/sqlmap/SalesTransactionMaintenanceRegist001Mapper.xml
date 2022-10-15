@@ -452,4 +452,57 @@
 		</if>
 	</select>
 
+    <select id="queryAllRegistSubmitList"
+            resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
+		select   REGIST_SEQNO        as registSeqno,
+            	 INSTITUTION_CODE          as institutionCode
+        from CHB_SALER_STL_DEAL_SUB sub
+        where (sub.SEND_STATUS = '02' or sub.SEND_STATUS = '03')
+
+	</select>
+
+	<select id="queryRegistSubmitListByKeys"
+			resultType="com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto">
+	   select REGIST_SEQNO                as registSeqno,
+       DATA_STATUS                 as dataStatus,
+       INSTITUTION_CODE            as institutionCode,
+       PRD_REGIST_CODE             as prdRegistCode,
+       ACCOUNT_NO                  as accountNo,
+       ACCOUNT_NAME                as accountName,
+       TRADE_NO                    as tradeNo,
+       TRADE_PS                    as tradePs,
+       TRADE_COUNTER_ACC_NO        as tradeCounterAccNo,
+       TRADE_COUNTER_ACC_NAME      as tradeCounterAccName,
+       TRADE_COUNTER_ACC_BANK_NAME as tradeCounterAccBankName,
+       TRADE_COUNTER_ACC_BANK_NO   as tradeCounterAccBankNo,
+       TRADE_CCY                   as tradeCcy,
+       TRADE_AMT                   as tradeAmt,
+       TRADE_VDATE                 as tradeVdate,
+       TRADE_TIME                  as tradeTime,
+       POSTSCRIPT                     postscript,
+       REMARK                         remark,
+       CHB_SUBMIT_DEADLINE         as chbSubmitDeadline,
+       SUBMIT_DEADLINE             as submitDeadline,
+       SUBMIT_TIME                 as submitTime,
+       SUMIT_SEQ                   as sumitSeq,
+       SEND_STATUS                 as sendStatus,
+       SUBMIT_FEEDBACK_STATUS      as submitFeedbackStatus,
+       SUBMIT_FEEDBACK_MSG         as submitFeedbackMsg,
+       CREATE_USER                    createrUser,
+       ORG_CODE                       orgCode,
+       CREATE_DEPT                    createrDept,
+       CREATE_TIME                    createrTime,
+       UPDATE_USER                    updateUser,
+       UPDATE_TIME                 as updateTime,
+       TRADE_TYPE                     tradeType
+		from CHB_SALER_STL_DEAL_SUB sub
+		<where>
+			<foreach collection="equityRegistList" item="equityRegist" open=" (" close=")" separator=") or (">
+				sub.INSTITUTION_CODE = #{equityRegist.institutionCode,jdbcType=VARCHAR}
+				and sub.REGIST_SEQNO = #{equityRegist.registSeqno,jdbcType=VARCHAR}
+				and sub.SEND_STATUS in('02','03')
+			</foreach>
+		</where>
+	</select>
+
 </mapper>
