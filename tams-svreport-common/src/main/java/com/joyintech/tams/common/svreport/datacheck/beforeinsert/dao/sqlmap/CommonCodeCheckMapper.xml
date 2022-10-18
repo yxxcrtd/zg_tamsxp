@@ -424,4 +424,20 @@
             COUNTER_TYPE2
         FROM chb_mst_counter_party  where STATUS = 'E'
     </select>
+
+    <select id="selectTradeNo" resultType="java.lang.Integer">
+        SELECT count(*) from CHB_SALER_STL_DEAL_INFO
+		where
+		DATA_STATUS = 'E'
+		and INSTITUTION_CODE=#{institutionCode,jdbcType=VARCHAR}
+		and PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR}
+		and ACCOUNT_NO=#{accountNo,jdbcType=VARCHAR}
+		and TRADE_NO=#{tradeNo,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="selectBankCode" resultType="java.lang.Integer">
+        SELECT count(*) from CHB_ORG_REGIST_BANK_CODE
+        where REGIST_BANK_CODE=#{institutionCode,jdbcType=VARCHAR}
+    </select>
 </mapper>

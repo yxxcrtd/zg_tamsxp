@@ -58,6 +58,7 @@ public class CommonCodeCheckBatchService {
     @Autowired
     private SqlSessionTemplate template;
 
+
     /**
      * 日志
      */
@@ -4178,6 +4179,10 @@ public class CommonCodeCheckBatchService {
         String  errMsg = dataMap.getOrDefault("ERRMSG", "");
         // 总部或分支机构名称
         String tradeTime = dataMap.get("TRADE_TIME");
+        String institutionCode = dataMap.get("INSTITUTION_CODE");
+        String prdRegistCode = dataMap.get("PRD_REGIST_CODE");
+        String accounNo = dataMap.get("ACCOUNT_NO");
+        String tradeNo = dataMap.get("TRADE_NO");
         if(tableName.equals("CHB_SALER_STL_DEAL_INFO")) {
             if (tradeTime != null && tradeTime != "") {
                 if (tradeTime.length() != 6) {
@@ -4193,6 +4198,16 @@ public class CommonCodeCheckBatchService {
                             || Integer.parseInt(tradeTime.substring(2, 3)) > 5 || Integer.parseInt(tradeTime.substring(4, 5)) > 5) {
                         errMsg += "交易时间填写错误,且格式为（HHmmss）。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
                     }
+                }
+            }
+            if(institutionCode !=null && prdRegistCode !=null && accounNo !=null && tradeNo !=null){
+                if(commonCodeCheckMapper.selectTradeNo(institutionCode, prdRegistCode, accounNo, tradeNo)>0){
+                    errMsg+="提供销售结算资金服务机构代码、销售结算资金账号、产品登记编码、销售结算资金交易流水号等要素不得同时重复。";
+                }
+            }
+            if(institutionCode !=null ){
+                if(commonCodeCheckMapper.selectBankCode(institutionCode)<=0){
+                    errMsg+="提供销售结算资金服务机构代码必须与银行代码相同。";
                 }
             }
         }
