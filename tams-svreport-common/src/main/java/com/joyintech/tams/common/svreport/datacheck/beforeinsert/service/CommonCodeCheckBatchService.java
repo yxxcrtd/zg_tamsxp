@@ -4181,17 +4181,17 @@ public class CommonCodeCheckBatchService {
         if(tableName.equals("CHB_SALER_STL_DEAL_INFO")) {
             if (tradeTime != null && tradeTime != "") {
                 if (tradeTime.length() != 6) {
-                    errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                    errMsg += "交易时间填写错误,且格式为（HHmmss）。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
                 }else if (!checkFigure(tradeTime)){
-                    errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                    errMsg += "交易时间填写错误,且格式为（HHmmss）。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
                 }
                 if(tradeTime.length() == 6 && checkFigure(tradeTime)) {
                     if(!checkFigure(tradeTime.substring(0, 1))){
-                        errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                        errMsg += "交易时间填写错误,且格式为（HHmmss）。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
                     }
                     else if (Integer.parseInt(tradeTime.substring(0, 2)) > 23
                             || Integer.parseInt(tradeTime.substring(2, 3)) > 5 || Integer.parseInt(tradeTime.substring(4, 5)) > 5) {
-                        errMsg += "交易时间填写错误。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
+                        errMsg += "交易时间填写错误,且格式为（HHmmss）。[TRADE_TIME=" + dataMap.get("TRADE_TIME") + "];";
                     }
                 }
             }
