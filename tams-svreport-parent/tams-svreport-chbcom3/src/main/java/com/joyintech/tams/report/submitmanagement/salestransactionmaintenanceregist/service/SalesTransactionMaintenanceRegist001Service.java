@@ -351,17 +351,17 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
      */
     public List<ExcelValidDto> sendAllDataBeforeCheck(List<SalesTransactionMaintenanceRegist001Dto> list){
         List<ExcelValidDto>  checkResult = new ArrayList<ExcelValidDto>();
-        if(CollectionUtils.isEmpty(list)){
-            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),"无报送数据"));
-        }
-        else{
-            //yc 暂时注释
-            checkResult = this.dealReportCheckData(list, checkResult ,true);
-            //yc 暂时注释
-        }
-        checkResult = checkResult.parallelStream().filter(dto -> {
-            return StringUtil.equals(dto.getCheckResult(), DictCodeListExt2.检查结果_检查不通过.getCodeName());
-        }).collect(Collectors.toList());
+//        if(CollectionUtils.isEmpty(list)){
+//            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),"无报送数据"));
+//        }
+//        else{
+//
+//            checkResult = this.dealReportCheckData(list, checkResult ,true);
+//
+//        }
+//        checkResult = checkResult.parallelStream().filter(dto -> {
+//            return StringUtil.equals(dto.getCheckResult(), DictCodeListExt2.检查结果_检查不通过.getCodeName());
+//        }).collect(Collectors.toList());
         return checkResult;
     }
 
@@ -380,40 +380,14 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         List<String> isCheckedDataList = new ArrayList<>();
         //存储没有进行数据检查的数据
         List<SalesTransactionMaintenanceRegist001Dto> isNeedCheckDataList = new ArrayList<>();
-        logger.info("检查报送流水号是否校验开始start");
+//        logger.info("检查报送流水号是否校验开始start");
 
         equityInfoRegistList.forEach(dto -> {
-            if(!StringUtil.equals(ReportGlobalConstant.IS_UN_SUBMIT_CHECK,dto.getCheckSeqno())
-                    && StringUtil.isNotEmpty(dto.getCheckSeqno())){
-                isCheckedDataList.add(dto.getCheckSeqno());
-            }
-            else{
-                isNeedCheckDataList.add(dto);
-            }
-        });
-        logger.info("检查报送流水号是否校验结束end");
 
-        logger.info("已检查数据查询start");
-        if(CollectionUtils.isNotEmpty(isCheckedDataList)){
-            //查询分批处理（每次最多处理maxCount条）
-            if(isCheckedDataList.size()<maxCount){
-                checkResult = checkReport001Mapper.selectByCheckSeqno(isCheckedDataList);
-            }
-            else{
-                int part = isCheckedDataList.size()/maxCount;
-                for(int j=0; j<part; j++){
-                    checkResult.addAll(checkReport001Mapper.selectByCheckSeqno(isCheckedDataList.subList(0, maxCount)));
-                    isCheckedDataList.subList(0, maxCount).clear();
-                }
-                if(CollectionUtils.isNotEmpty(isCheckedDataList)){
-                    checkResult.addAll(checkReport001Mapper.selectByCheckSeqno(isCheckedDataList));
-                }
-            }
-        }
-        logger.info("已检查送数据查询end");
-        if(isDB2DataBase){
-            maxCount = 1;
-        }
+            isNeedCheckDataList.add(dto);
+        });
+
+        //默认全部需要检查
         if(CollectionUtils.isNotEmpty(isNeedCheckDataList)){
             logger.info("数据check开始");
             //yc  校验？
@@ -907,13 +881,14 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         // 权益人报送表主键
         @SuppressWarnings("unchecked")
         List<SalesTransactionMaintenanceRegist001Dto> investorsHoldInfoRegistList = (List<SalesTransactionMaintenanceRegist001Dto>)param.get(
-                "investList");
+                "registList");
         if (investorsHoldInfoRegistList == null || investorsHoldInfoRegistList.isEmpty()) {
             investorsHoldInfoRegistList = salesTransactionMaintenanceRegist001Mapper.queryForRegistPage(param);
         }
         if(!StringUtil.isEmptyList(result)){
             return result;
         }
+        result = sendAllDataBeforeCheck(investorsHoldInfoRegistList);
         return result;
     }
 

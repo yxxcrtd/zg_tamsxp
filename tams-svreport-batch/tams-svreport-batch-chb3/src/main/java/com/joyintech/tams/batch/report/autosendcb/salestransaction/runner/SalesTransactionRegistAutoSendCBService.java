@@ -1,9 +1,8 @@
 /*
- * 文件名：EquityInfoAutoSendCBService.java
- * 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 文件名：EquityInfoAutoSendCBMainService.java
+ * 版权：Copyright 2022 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管业务监管报送平台
- * 修改人：刘二通
- * 修改时间：2017年12月9日
+ * 修改时间：2022年10月14日
  * 修改内容：新建
  * 系统名称：理财资管业务监管报送平台
  */
@@ -53,17 +52,6 @@ public class SalesTransactionRegistAutoSendCBService extends BatchBaseService {
             logger.info("无启动参数，批处理退出。");
             return result;
         }
-
-//        ChbSysBatchInfo batchInfo = this.getBatchInfo();
-//        super.setBatchInfo(batchInfo, getLogger());
-
-//        StartMode startMode = StartMode.fromCode(batchInfo.getStartMode());
-//        getLogger().log("启动模式：" + startMode.name());
-//        getLogger().log(
-//            "批处理开始日：" + new DateTime(batchInfo.getBatchStartDate()).toString(
-//                DateUtil.DEFAULT_DATE_FORMAT_EN) + "，批处理结束日："
-//                        + new DateTime(batchInfo.getBatchEndDate()).toString(
-//                            DateUtil.DEFAULT_DATE_FORMAT_EN));
 
         try {
             mainService.autoSendCB();

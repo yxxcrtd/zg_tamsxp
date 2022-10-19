@@ -17,6 +17,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.report.chbsd.salestransactionmaintenancesub.service.SalesTransactionMaintenanceBatchService;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmaintenance.equityinfo.service.EquityInfoDistinctService;
@@ -48,18 +49,13 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
      */
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * EquityInfoRegist001Service
-     */
-    @Autowired
-    private EquityInfoRegist001Service equityInfoRegist001Service;
 
     @Autowired
     private SalesTransactionMaintenanceRegist001Service salesTransactionMaintenanceRegist001Service;
 
-    @Autowired
-    private EquityInfoDistinctService equityInfoDistinctService;
-    
+
+    @Autowired(required = false)
+    private SalesTransactionMaintenanceBatchService salesTransactionMaintenanceBatchServiceService;
 
     /**
      * 自动检查报送
@@ -74,7 +70,7 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
         Date batchStartTime = DateUtil.now();
 
             logInfoBatchStart();
-            equityInfoDistinctService.checkBeforeSubmit();
+//            equityInfoDistinctService.checkBeforeSubmit();
             logInfoAutoCheckStart();
             Map<String, Object> param = new HashMap<String, Object>();
             param.put("statusListStr", DictCodeListExt2.报送数据状态_新建.getValue() + GlobalConstant.COMMA
@@ -88,12 +84,7 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
                 return;
             }
 
-//            List<String> keyList = StringUtil.splitToList(GlobalConstant.COMMA, keyListStr);
-//            keyList.remove(StringUtil.EMPTY);
             int keyCount = list.size();
-
-//            List<ExcelValidDto> validRstList = equityInfoRegist001Service.sendBeforeCheck(
-//                keyListStr);
 
             logInfo("sendAllDataBeforeCheck 报送前检查开始");
             List<ExcelValidDto> validRstList = salesTransactionMaintenanceRegist001Service.sendAllDataBeforeCheck(list);
@@ -127,13 +118,7 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
                 return;
             }
 
-//            logInfo("拼接submitKeys处理开始");
-//            String sendKeyListStr = StringUtil.joinString(sendKeyList, GlobalConstant.COMMA);
-//            param.put("submitKeys", sendKeyListStr);
-//            logInfo("拼接submitKeys处理结束");
-
-            //将报送数据按照登记银行代码放入map中
-        //将报送数据按照 UUID主键 放入map中
+            //将报送数据按照 UUID主键 放入map中
             Map<String,List<SalesTransactionMaintenanceRegist001Dto>> registMap = new HashMap<String,List<SalesTransactionMaintenanceRegist001Dto>>();
             List<SalesTransactionMaintenanceRegist001Dto> equList = null;
             for (SalesTransactionMaintenanceRegist001Dto salesTransactionMaintenanceRegist001Dto2 : list) {
