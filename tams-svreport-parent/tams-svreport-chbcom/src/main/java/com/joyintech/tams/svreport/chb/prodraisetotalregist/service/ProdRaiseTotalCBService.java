@@ -403,6 +403,31 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 					isagencyAmt = isagencyAmt.add(amt);
 				}
 				}
+                /****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+				String customerType = chbTypeMappingService.getMappingValue("PRD_RAISETOT_INVESTOR_TYPE", deal.getCustomerType2());
+
+				//数据判断不能为特殊地级市才进行统计
+				if(!StringUtil.equals(DictCodeListExt2.销售区域_中债_青岛市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_大连市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_宁波市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_厦门市.getValue(), buyPlace)
+						&&!StringUtil.equals(DictCodeListExt2.销售区域_中债_深圳市.getValue(), buyPlace)) {
+					if (SINGLE_PERSON.equals(customerType)) {
+						//个人
+						singleTotal += deal.getCustCounts().intValue();
+					} else if (LEGAL_PERSON.equals(customerType)) {
+						//法人
+						legalTotal += deal.getCustCounts().intValue();
+					} else if (UNLEGAL_PERSON.equals(customerType)) {
+						//非法人
+						unlegalTotal += deal.getCustCounts().intValue();
+					}
+				}
+				/****当系统参数SVR_PRD_DEAL_DIMENSION=02时，三个客户数字段改成从Chb_Prd_Deal表取认购交易的保有客户数字段 leipeng 20210224***/
+
+//				singleTotal=singleTotal+(posmodel.getSingletotal()==null?BigDecimal.ZERO:posmodel.getSingletotal()).intValue();
+//				legalTotal=legalTotal+(posmodel.getLegaltotal()==null?BigDecimal.ZERO:posmodel.getLegaltotal()).intValue();
+//				unlegalTotal=unlegalTotal+(posmodel.getUnlegaltotal()==null?BigDecimal.ZERO:posmodel.getUnlegaltotal()).intValue();
 			}
 		}
 		/**青岛银行关于客户数的调整   add by  dongxiangyang  20201112 start*/
