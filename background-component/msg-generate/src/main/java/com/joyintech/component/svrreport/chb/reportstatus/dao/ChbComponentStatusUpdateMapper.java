@@ -228,4 +228,20 @@ public interface ChbComponentStatusUpdateMapper {
 	 * @return sub基本信息
 	 */
 	List<ChbSubmitStatusDto> querySubDataStatusBySumitSeq(@Param("tableName") String tableName, @Param("registNo") List<String> registNo);
+
+	/**
+	 * 报表名称_销售结算资金交易信息登记发送状态
+	 * @param sendStatus
+	 * @param feedbackStatus
+	 * @return
+	 */
+	public int updateChbSalerStlDealSubSendStatus(@Param("registNo") String registNo, @Param("sendStatus") String sendStatus,
+												  @Param("feedbackStatus") String feedbackStatus);
+
+	/**
+	 * 报表名称_销售结算资金交易信息登记 反馈状态
+	 * @param status
+	 * @return
+	 */
+	public int updateChbSalerStlDealSubmitStatus(@Param("registNo") String registNo, @Param("status") String status);
 }

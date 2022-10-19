@@ -155,6 +155,19 @@ public class SalesTransactionMaintenanceSubDto {
      */
     private String tradeType;
 
+    /**
+     * 银行登记代码
+     */
+    private String registBankCode;
+
+    public String getRegistBankCode() {
+        return registBankCode;
+    }
+
+    public void setRegistBankCode(String registBankCode) {
+        this.registBankCode = registBankCode;
+    }
+
     public String getCheckSeqno() {
         return checkSeqno;
     }

@@ -124,4 +124,34 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
 				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/submitBeforeCheck", param,
 				ExcelValidDto.class);
 	}
+
+	/**
+	 * 重新报送
+	 *
+	 * @param param
+	 * 传入需要报送的主键
+	 * @return 反馈信息
+	 * @see
+	 * @since 1.0
+	 */
+	public void doSubmit(Map<String, Object> param) {
+		restTemplate.postForObject(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/submitChb", param,
+				Integer.class);
+	}
+
+	/**
+	 * 重新报送
+	 *
+	 * @param param
+	 * 传入需要报送的主键
+	 * @return 反馈信息
+	 * @see
+	 * @since 1.0
+	 */
+	public void doSubmitAgain(Map<String, Object> param) {
+		restTemplate.postForObject(
+				SvrServiceApplication.CHB3_SERVICE_NAME + "/SalesTransactionMaintenanceRegist/submitCbAgain", param,
+				Integer.class);
+	}
 }

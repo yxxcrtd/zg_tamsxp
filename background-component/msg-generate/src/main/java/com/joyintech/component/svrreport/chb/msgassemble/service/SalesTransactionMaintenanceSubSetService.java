@@ -126,7 +126,7 @@ public class SalesTransactionMaintenanceSubSetService {
 		res.setDealType(DictCodeList.报表名称_销售结算资金交易信息登记.getValue());
 		res.setSysDate(DateUtil.now());
 		res.setRegistSeq(registSeq);
-		res.setRegistBankCode(datas.get(0).getSumitSeq());
+		res.setRegistBankCode(datas.get(0).getRegistBankCode());
 		return res;
 	}
 }

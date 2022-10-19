@@ -10,7 +10,9 @@
 
 package com.joyintech.tams.batch.report.autosendcb.salestransaction.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
@@ -151,7 +153,12 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
                 List<SalesTransactionMaintenanceRegist001Dto> registList = entry.getValue();
                 logInfo("sendSalesTransactionCHB处理开始");
 
-                salesTransactionMaintenanceRegist001Service.sendSalesTransactionCHB(registList, true);
+                try {
+                    salesTransactionMaintenanceRegist001Service.sendSalesTransactionCHB(registList, true, SendDataCheckType.报送);
+                } catch (Exception e) {
+                        logger.error("【销售结算资金交易登记】发送销售结算资金交易信息处理异常" + e.getMessage());
+                        throw new BusinessException(e);
+                }
 
                 logInfo("sendSalesTransactionCHB处理结束");
             }

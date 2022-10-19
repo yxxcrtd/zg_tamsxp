@@ -347,7 +347,7 @@ $(function(){
         if(rows.length === 0) {
             var sendStatus = $('#sendStatus').val();
             var status = $('#dataStatus').val();
-            if (!(sendStatus && sendStatus.length == 1 && sendStatus[0] == '01')) {
+            if (!(sendStatus && sendStatus == '01')) {
                 Joyin.error("只能报送报送状态为未报送的数据");
                 return;
             }
@@ -355,11 +355,11 @@ $(function(){
                 Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
                 return;
             }
-            Joyin.ajax('submitBeforeCheck',getSearchParams(), function(result) {
+            Joyin.ajax('submitBeforeCheck',getPageParams(), function(result) {
                 if(!result || result.length ==0){
                     Joyin.confirm("按照已选择当前查询条件报送,是否确认！",function(){
                         layui.layer.open({type:3});
-                        Joyin.ajaxJson('submitChb', getSearchParams(), function() {
+                        Joyin.ajaxJson('submitChb', getPageParams(), function() {
                             table.load();
                             layui.layer.closeAll();
                         });
@@ -367,7 +367,7 @@ $(function(){
                 }
                 else{
                     window.checkResult = result;
-                    Joyin.checkData('<h4 class="modal-title" id="myModalLabel"> 销售结算资金交易数据检查 </h4>', 'submitBeforeCheck', getSearchParams());
+                    Joyin.checkData('<h4 class="modal-title" id="myModalLabel"> 销售结算资金交易数据检查 </h4>', 'submitBeforeCheck', getPageParams());
                 }
             });
             return ;
@@ -401,6 +401,80 @@ $(function(){
                 window.checkResult = result;
                 Joyin.checkData('<h4 class="modal-title" id="myModalLabel">销售结算资金交易数据检查 </h4>', 'submitBeforeCheck', {keyList: JSON.stringify(rows)});
             }
+        });
+    });
+
+    // 二次报送
+    $('#SalesTransactionMaintenanceRegist001_btn_submitAgain').click(function() {
+        var paramObj = getPageParams();
+
+        var submitArr = table.getAllCheckedRows();
+        if(submitArr.length === 0) {
+            var submitStatus = $('#sendStatus').val();
+            var status = $('#dataStatus').val();
+            var submitFeedbackStatus = $('#submitFeedbackStatus').val();
+            if (!(submitStatus && submitStatus == '02')) {
+                Joyin.error("只能对报送状态为接口报送的数据进行重新报送！");
+                return;
+            }
+            if(status && status.indexOf('03') > -1){
+                Joyin.error("只能对数据状态为新建和修改的数据进行重新报送！");
+                return;
+            }
+            if(submitFeedbackStatus &&
+                (submitFeedbackStatus.indexOf('01') > 0
+                    || submitFeedbackStatus.indexOf('03') > 0
+                    || submitFeedbackStatus.indexOf('05') > 0)) {
+                Joyin.error("只能对反馈状态为发送失败和中债退回的数据进行重新报送！");
+                return;
+            }
+
+            if(!status){
+                paramObj.status = '01,02';
+            }
+            if (!submitFeedbackStatus) {
+                paramObj.submitFeedbackStatus = '02,04';
+            }
+            Joyin.confirm("请确认是否要按照已选择当前查询条件进行二次报送？",function(){
+                layui.layer.open({type:3});
+                Joyin.ajaxJson('submitCbAgain', paramObj, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
+            });
+            return ;
+        }
+
+        var keyList = [];
+        for (var i = 0; i < submitArr.length; i++) {
+            var submitFeedbackStatus = submitArr[i].submitFeedbackStatus;
+            var submitStatus = submitArr[i].sendStatus;
+            if(submitStatus&&submitStatus.indexOf('01') > -1){
+                Joyin.error("未报送的数据不能进行二次报送！");
+                return;
+            }else if(!submitFeedbackStatus){
+                Joyin.error("反馈状态为空的数据不能进行二次报送！");
+                return;
+            }else if(submitFeedbackStatus&&
+                (submitFeedbackStatus.indexOf('01') > -1
+                    || submitFeedbackStatus.indexOf('03') > -1
+                    || submitFeedbackStatus.indexOf('05') > -1)){
+                Joyin.error("只能对反馈状态为发送失败和中债退回的数据进行二次报送！");
+                return;
+            }
+        };
+//        $.each(submitArr, function(i, v) {
+//            v.sendStatus=v.sendStatusCode;
+//            v.status=v.statusCode;
+//            v.ccy=v.ccyCode;
+//        });
+
+        Joyin.confirm("请确认是否要二次报送？",function(){
+            layui.layer.open({type:3});
+            Joyin.ajaxJson('submitCbAgain', {keyList: JSON.stringify(submitArr)}, function() {
+                table.load();
+                layui.layer.closeAll();
+            });
         });
     });
 });

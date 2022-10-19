@@ -194,6 +194,16 @@ public class ChbComponentStatusUpdateService {
                 }
             }
             /***0722升级**/
+            else if (StrUtil.equals(DictCodeList.报表名称_销售结算资金交易信息登记.getValue(), dealType)) {
+                for (String registSeq : registSeqs) {
+                    msgLogMapper.updateChbSalerStlDealSubSendStatus(registSeq, sendStatus, feedbackStatus);
+                    index ++;
+                    if (index == maxSqlNum) {
+                        sqlSession.commit();
+                        index = 0;
+                    }
+                }
+            }
         } catch (Exception e) {
             logger.error("批量执行失败", e);
             sqlSession.rollback();
@@ -338,6 +348,16 @@ public class ChbComponentStatusUpdateService {
                 }
             }
             /***0722升级**/
+            else if (StrUtil.equals(DictCodeList.报表名称_销售结算资金交易信息登记.getValue(), dealType)) {
+                for (String registSeq : registSeqs) {
+                    msgLogMapper.updateChbSalerStlDealSubmitStatus(registSeq, status);
+                    index ++;
+                    if (index == maxSqlNum) {
+                        sqlSession.commit();
+                        index = 0;
+                    }
+                }
+            }
         } catch (Exception e) {
             logger.error("批量执行失败", e);
             sqlSession.rollback();

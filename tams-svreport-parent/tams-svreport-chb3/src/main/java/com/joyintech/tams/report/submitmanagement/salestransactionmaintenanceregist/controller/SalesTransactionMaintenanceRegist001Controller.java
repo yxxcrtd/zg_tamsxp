@@ -12,7 +12,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.component.svrreport.chb.dto.SalesTransactionMaintenanceSubDto;
 import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
-import com.joyintech.tams.report.chbsd.salestransactionmaintenancesub.service.SalesTransactionMaintenanceBatchService;
+//import com.joyintech.tams.report.chbsd.salestransactionmaintenancesub.service.SalesTransactionMaintenanceBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -51,8 +51,6 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
     @Autowired(required = false)
     private IPlatformDate iPlatformDate;
 
-    @Autowired(required = false)
-    private SalesTransactionMaintenanceBatchService salesTransactionMaintenanceBatchServiceService;
     /**
      * 日志
      */
@@ -235,38 +233,61 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
     @ResponseBody
     @RequestMapping(value = "/submitChb", method = RequestMethod.POST)
     public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
-        //返回List
-        List<SalesTransactionMaintenanceRegist001Dto> list =new ArrayList<SalesTransactionMaintenanceRegist001Dto>();
-        // 选择行数据时
-        if (param.containsKey("keyList")) {
-            String keyList = param.get("keyList").toString();
-            try {
-                list = JsonUtils.json2List(keyList,
-                        SalesTransactionMaintenanceRegist001Dto.class);
-            }
-            catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }else{
-            Page<SalesTransactionMaintenanceRegist001Dto> page = salesTransactionMaintenanceRegistMService.searchForPage(RequestUtil.getPageParam());
-            if(page!=null&&page.getRoot()!=null&&page.getRoot().size()>0){
-                list = page.getRoot();
-            }
-        }
-        //报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
-        List<SalesTransactionMaintenanceSubDto> dataList = new ArrayList<SalesTransactionMaintenanceSubDto>();
-        for(SalesTransactionMaintenanceRegist001Dto sdDto:list){
-            SalesTransactionMaintenanceSubDto target = new SalesTransactionMaintenanceSubDto();
-            BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
-            dataList.add(target);
-        }
 
-        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
-        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
-            sendDataCheckType = SendDataCheckType.重新报送;
-        }
-        salesTransactionMaintenanceBatchServiceService.sendBatchCommon(dataList, sendDataCheckType);
-
+        salesTransactionMaintenanceRegistMService.doSubmit(param);
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+
+//        //数据List
+//        List<SalesTransactionMaintenanceSubDto> dataList = this.dealInfoList(param);
+//
+//        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
+//        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
+//            sendDataCheckType = SendDataCheckType.重新报送;
+//        }
+//        salesTransactionMaintenanceBatchServiceService.sendBatchCommon(dataList, sendDataCheckType);
+//
+//        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+    }
+
+//    public List<SalesTransactionMaintenanceSubDto> dealInfoList(Map<String, Object> param) {
+//        //返回数据List
+//        List<SalesTransactionMaintenanceSubDto> dataList = new ArrayList<SalesTransactionMaintenanceSubDto>();
+//
+//        //处理数据List
+//        List<SalesTransactionMaintenanceRegist001Dto> list = salesTransactionMaintenanceRegist001Service.setDataList(param);
+//
+//        //报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
+//        for(SalesTransactionMaintenanceRegist001Dto sdDto:list){
+//            SalesTransactionMaintenanceSubDto target = new SalesTransactionMaintenanceSubDto();
+//            BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
+//            dataList.add(target);
+//        }
+//        return dataList;
+//    }
+
+    /**
+     * 重新报送
+     *
+     * @param param
+     * 传入需要报送的主键
+     * @return 反馈信息
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping(value = "/submitCbAgain", method = RequestMethod.POST)
+    public AjaxResult doSubmitAgain(@RequestBody Map<String, Object> param) {
+        salesTransactionMaintenanceRegistMService.doSubmitAgain(param);
+        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
+//        //数据List
+//        List<SalesTransactionMaintenanceSubDto> dataList = this.dealInfoList(param);
+//
+//        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
+//        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
+//            sendDataCheckType = SendDataCheckType.重新报送;
+//        }
+//        salesTransactionMaintenanceBatchServiceService.sendBatchCommon(dataList, sendDataCheckType);
+//
+//        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }
 }

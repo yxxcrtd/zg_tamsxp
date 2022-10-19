@@ -505,5 +505,62 @@
 			</foreach>
 		</where>
 	</select>
+	<select id="selectRegistBankCode" resultType="java.lang.String">
+		select regist_bank_code from CHB_ORG_REGIST_BANK_CODE where rownum =1
+	</select>
+
+	<!-- 接口报送更新 -->
+	<update id="updateInterfSubmit">
+		update CHB_SALER_STL_DEAL_SUB  sub
+		<set>
+			<if test="submitStatus != null and submitStatus != ''">
+				sub.SEND_STATUS = #{submitStatus},
+			</if>
+			sub.submit_time = sysdate,
+			sub.UPDATE_TIME = sysdate
+		</set>
+		<where>
+			<foreach collection="salesTransactionMaintenanceRegistList" item="item" open="(" close=")" separator=") or (">
+				sub.INSTITUTION_CODE= #{item.institutionCode}
+				and sub.PRD_REGIST_CODE = #{item.prdRegistCode}
+				and sub.ACCOUNT_NO =#{item.accountNo}
+				and sub.TRADE_NO =#{item.tradeNo}
+				and sub.SEND_STATUS = '01'
+			</foreach>
+		</where>
+	</update>
+	<!-- 接口报送更新 -->
+	<update id="updateAllInterfSubmit">
+		update CHB_SALER_STL_DEAL_SUB sub
+		<set>
+			<if test="submitStatus != null and submitStatus != ''">
+				sub.SEND_STATUS = #{submitStatus},
+			</if>
+			sub.submit_time = sysdate,
+			sub.UPDATE_TIME = sysdate
+		</set>
+		<where>
+			sub.SEND_STATUS = '01'
+			and not exists (select 1 from CHB_REPORT_CHECK checkTable where checkTable.CHECK_RESULT = '02' and sub.CHECK_SEQNO = checkTable.CHECK_SEQNO)
+		</where>
+	</update>
+
+	<!-- 接口报送更新报送流水号 （解决插入流水表时，报送流水号为空问题） -->
+	<update id="updateInterfSubmitSeq" parameterType="java.util.Map">
+		begin
+		<foreach collection="salesTransactionMaintenanceRegistList" item="item" index="index" separator=";" >
+			update CHB_SALER_STL_DEAL_SUB  sub
+			set
+			sub.SUMIT_SEQ = #{item.sumitSeq} ,
+			sub.UPDATE_TIME = sysdate
+			where
+			sub.INSTITUTION_CODE= #{item.institutionCode}
+			and sub.PRD_REGIST_CODE = #{item.prdRegistCode}
+			and sub.ACCOUNT_NO =#{item.accountNo}
+			and sub.TRADE_NO =#{item.tradeNo}
+			and sub.SEND_STATUS = '02'
+		</foreach>
+		;end;
+	</update>
 
 </mapper>

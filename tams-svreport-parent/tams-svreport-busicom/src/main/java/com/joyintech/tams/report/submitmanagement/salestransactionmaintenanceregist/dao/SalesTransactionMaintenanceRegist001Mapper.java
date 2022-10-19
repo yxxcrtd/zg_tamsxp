@@ -1,5 +1,6 @@
 package com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dao;
 
+import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -97,4 +98,31 @@ public interface SalesTransactionMaintenanceRegist001Mapper {
      */
     List<SalesTransactionMaintenanceRegist001Dto> queryRegistSubmitListByKeys(@Param("equityRegistList") List<SalesTransactionMaintenanceRegist001Dto> equityRegistList);
 
+    /**
+     * 接口报送更新
+     * @param salesTransactionMaintenanceRegistList 输入条件
+     * @return 更新条数
+     * @see
+     * @since 1.0
+     */
+    int updateInterfSubmit(@Param("submitStatus")String submitStatus,@Param("salesTransactionMaintenanceRegistList") List<SalesTransactionMaintenanceRegist001Dto> salesTransactionMaintenanceRegistList);
+
+    /**
+     * 接口报送更新(更新所有检查通过的数据)
+     * @return 更新条数
+     * @see
+     * @since 1.0
+     */
+    int updateAllInterfSubmit(@Param("submitStatus")String submitStatus);
+
+    /**
+     * 接口报送更新报送流水号（为解决报送过程中出现空流程号）
+     * @param salesTransactionMaintenanceRegistList 输入条件
+     * @return 更新条数
+     * @see
+     * @since 1.0
+     */
+    int updateInterfSubmitSeq(@Param("salesTransactionMaintenanceRegistList") List<SalesTransactionMaintenanceRegist001Dto> salesTransactionMaintenanceRegistList);
+
+    String selectRegistBankCode();
 }

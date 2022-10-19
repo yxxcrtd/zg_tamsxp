@@ -1,10 +1,11 @@
 package com.joyintech.service.chb3.submitmanagement.salestransactionmaintenanceregist.controller;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.ChbBatchParaMapper;
-import com.joyintech.tams.common.base.entity.ChbBatchPara;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.service.SalesTransactionMaintenanceRegist001Service;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -101,5 +103,54 @@ public class SalesTransactionMaintenanceRegistController {
     @PostMapping("submitBeforeCheck")
     public List<ExcelValidDto> submitBeforeCheck(@RequestBody Map<String,Object> map) {
         return salesTransactionMaintenanceRegist001Service.submitBeforeCheck(map);
+    }
+
+    /**
+     * 中债直连报送
+     * @param map
+     * 传入需要报送的主键
+     * @return 反馈信息
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("submitChb")
+    public void doSubmit(@RequestBody Map<String, Object> map) {
+        Map<String, List<SalesTransactionMaintenanceRegist001Dto>> registMap = salesTransactionMaintenanceRegist001Service
+                .getSubmitList(map);
+        Iterator<Map.Entry<String, List<SalesTransactionMaintenanceRegist001Dto>>> entries = registMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<String, List<SalesTransactionMaintenanceRegist001Dto>> entry = entries.next();
+            List<SalesTransactionMaintenanceRegist001Dto> registList = entry.getValue();
+            try {
+                salesTransactionMaintenanceRegist001Service.sendSalesTransactionCHB(registList, false, SendDataCheckType.报送);
+            } catch (Exception e) {
+                throw new BusinessException(e);
+            }
+        }
+    }
+
+    /**
+     * 重新报送
+     * @param map
+     * 传入需要报送的主键
+     * @return 反馈信息
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("submitCbAgain")
+    public void doSubmitAgain(@RequestBody Map<String, Object> map) {
+        Map<String, List<SalesTransactionMaintenanceRegist001Dto>> registMap = salesTransactionMaintenanceRegist001Service
+                .getSubmitList(map);
+        Iterator<Map.Entry<String, List<SalesTransactionMaintenanceRegist001Dto>>> entries = registMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<String, List<SalesTransactionMaintenanceRegist001Dto>> entry = entries.next();
+            List<SalesTransactionMaintenanceRegist001Dto> registList = entry.getValue();
+            try {
+                salesTransactionMaintenanceRegist001Service.sendSalesTransactionCHB(registList, false, SendDataCheckType.报送);
+            } catch (Exception e) {
+                throw new BusinessException(e);
+            }
+        }
     }
 }
