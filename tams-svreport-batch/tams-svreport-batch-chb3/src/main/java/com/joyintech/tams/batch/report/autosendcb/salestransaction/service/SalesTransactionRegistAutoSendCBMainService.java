@@ -1,9 +1,9 @@
 /*
- * 文件名：EquityInfoAutoSendCBMainService.java
- * 版权：Copyright 2016-2017 JoyinTech. Co. Ltd. All Rights Reserved.
+ * 文件名：SalesTransactionRegistAutoSendCBMainService.java
+ * 版权：Copyright 2022 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管业务监管报送平台
- * 修改人：刘二通
- * 修改时间：2017年12月9日
+ * 修改人：yangchen
+ * 修改时间：2022年10月14日
  * 修改内容：新建
  * 系统名称：理财资管业务监管报送平台
  */
@@ -17,11 +17,8 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.report.chbsd.salestransactionmaintenancesub.service.SalesTransactionMaintenanceBatchService;
 import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
-import com.joyintech.tams.report.submitmaintenance.equityinfo.service.EquityInfoDistinctService;
-import com.joyintech.tams.report.submitmanagement.equityinforegist.service.EquityInfoRegist001Service;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.service.SalesTransactionMaintenanceRegist001Service;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -54,8 +51,7 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
     private SalesTransactionMaintenanceRegist001Service salesTransactionMaintenanceRegist001Service;
 
 
-    @Autowired(required = false)
-    private SalesTransactionMaintenanceBatchService salesTransactionMaintenanceBatchServiceService;
+
 
     /**
      * 自动检查报送
@@ -70,12 +66,10 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
         Date batchStartTime = DateUtil.now();
 
             logInfoBatchStart();
-//            equityInfoDistinctService.checkBeforeSubmit();
             logInfoAutoCheckStart();
             Map<String, Object> param = new HashMap<String, Object>();
             param.put("statusListStr", DictCodeListExt2.报送数据状态_新建.getValue() + GlobalConstant.COMMA
                                        + DictCodeListExt2.报送数据状态_修改.getValue());
-//            String keyListStr = equityInfoRegist001Service.getKeyList(param);
             logInfo("getAllUnSubmit查询全量数据开始");
             List<SalesTransactionMaintenanceRegist001Dto> list =salesTransactionMaintenanceRegist001Service.getAllUnSubmit(param);
             logInfo("getAllUnSubmit查询全量数据结束");

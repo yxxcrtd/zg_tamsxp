@@ -178,6 +178,11 @@ public class ChbConstant {
     public static final String FILE_114_TYPE = "114";
 
     /**
+     * 销售结算资金交易报告登记
+     */
+    public static final String FILE_170_TYPE = "170";
+
+    /**
      * 投资者身份信息登记
      */
     public static final String FILE_201_TYPE = "201";

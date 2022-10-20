@@ -8,11 +8,9 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.ChbOrgRegistBankCodeMapper;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
-//import com.joyintech.tams.report.chbsd.salestransactionmaintenancesub.service.SalesTransactionMaintenanceBatchService;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.common.util.SysDataUtil;
@@ -35,8 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
 
 
 /**
@@ -90,8 +87,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
     @Autowired
     private SalesTransactionMaintenanceValid salesTransactionMaintenanceValid;
 
-//    @Autowired(required = false)
-//    private SalesTransactionMaintenanceBatchService salesTransactionMaintenanceBatchServiceService;
 
     @Autowired
     private MsgSendService msgSend;
@@ -355,17 +350,7 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
      */
     public List<ExcelValidDto> sendAllDataBeforeCheck(List<SalesTransactionMaintenanceRegist001Dto> list){
         List<ExcelValidDto>  checkResult = new ArrayList<ExcelValidDto>();
-//        if(CollectionUtils.isEmpty(list)){
-//            checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),"无报送数据"));
-//        }
-//        else{
-//
-//            checkResult = this.dealReportCheckData(list, checkResult ,true);
-//
-//        }
-//        checkResult = checkResult.parallelStream().filter(dto -> {
-//            return StringUtil.equals(dto.getCheckResult(), DictCodeListExt2.检查结果_检查不通过.getCodeName());
-//        }).collect(Collectors.toList());
+        //报送前检查，已经在生成的时候进行检查，登记生成的都是有效数据
         return checkResult;
     }
 
@@ -531,7 +516,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         int dataCount = dataList.size();
         if (dataCount <= sendCbMaxDataCount) {
             logger.info("销售结算资金交易登记报文报送开始：" + DateUtil.getCurrentDateTime());
-//            salesTransactionMaintenanceBatchServiceService.sendSalesTransactionCHBOneFile(registList,sendDataCheckType);
             msgSend.sendSalesTransactionMaintenanceRegistSubMsgs(dataList,sendDataCheckType);
             logger.info("销售结算资金交易登记报文报送结束：" + DateUtil.getCurrentDateTime());
             return;
@@ -544,7 +528,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         int part = dataCount / sendCbMaxDataCount; // 分批数
         for (int i = 0; i < part; i++ ) {
             logger.info("销售结算资金交易登记报文报送开始：" + DateUtil.getCurrentDateTime());
-//            salesTransactionMaintenanceBatchServiceService.sendSalesTransactionCHBOneFile(newDataList.subList(0, sendCbMaxDataCount), sendDataCheckType);
             msgSend.sendSalesTransactionMaintenanceRegistSubMsgs(newDataList.subList(0, sendCbMaxDataCount),sendDataCheckType);
             logger.info("销售结算资金交易登记报文报送结束：" + DateUtil.getCurrentDateTime());
             newDataList.subList(0, sendCbMaxDataCount).clear();
@@ -552,7 +535,6 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
         // 最后剩下的数据
         if (!StringUtil.isEmptyList(newDataList)) {
             logger.info("销售结算资金交易登记报文报送开始：" + DateUtil.getCurrentDateTime());
-//            salesTransactionMaintenanceBatchServiceService.sendSalesTransactionCHBOneFile(newDataList, sendDataCheckType);
             msgSend.sendSalesTransactionMaintenanceRegistSubMsgs(newDataList, sendDataCheckType);
             logger.info("销售结算资金交易登记报文报送结束：" + DateUtil.getCurrentDateTime());
         }

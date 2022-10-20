@@ -1,7 +1,8 @@
 /*
- * 文件名：EquityInfoAutoSendCBMainService.java
+ * 文件名：SalesTransactionRegistAutoSendCBService.java
  * 版权：Copyright 2022 JoyinTech. Co. Ltd. All Rights Reserved.
  * 描述：理财资管业务监管报送平台
+ * 修改人：yangchen
  * 修改时间：2022年10月14日
  * 修改内容：新建
  * 系统名称：理财资管业务监管报送平台

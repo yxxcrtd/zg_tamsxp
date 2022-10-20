@@ -38,6 +38,14 @@ public interface ChbFeedbackMsgComponentMapper {
 	 */
 	int updateChbSubmitStatusTwo(ChbSubmitStatusDto status);
 
+
+	/**
+	 * 更新 销售结算交易登记反馈状态
+	 * @param status  反馈状态
+	 * @return
+	 */
+	int updateChbSalerSub(ChbSubmitStatusDto status);
+
 	/**
 	 * 更新 资产估值登记反馈状态
 	 * @param status  反馈状态
