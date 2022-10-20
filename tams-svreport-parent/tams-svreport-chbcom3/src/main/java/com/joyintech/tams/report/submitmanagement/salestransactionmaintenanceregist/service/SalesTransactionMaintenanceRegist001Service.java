@@ -305,6 +305,10 @@ public class SalesTransactionMaintenanceRegist001Service extends CommonExportSer
                 String dataStatus = param.get("dataStatus").toString();
                 param.put("dataStatusList", StringUtil.splitToList(GlobalConstant.COMMA, dataStatus));
             }
+            if(StringUtil.isNotBlank((String)param.get("submitFeedbackStatus"))) {
+                String dataStatus = param.get("submitFeedbackStatus").toString();
+                param.put("submitFeedbackStatusList", StringUtil.splitToList(GlobalConstant.COMMA, dataStatus));
+            }
             resultList = salesTransactionMaintenanceRegist001Mapper.setDataList(param);
             dealDataList(resultList);
         }

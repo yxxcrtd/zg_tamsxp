@@ -430,7 +430,7 @@ $(function(){
             }
 
             if(!status){
-                paramObj.status = '01,02';
+                paramObj.dataStatus = '01,02';
             }
             if (!submitFeedbackStatus) {
                 paramObj.submitFeedbackStatus = '02,04';

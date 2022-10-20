@@ -427,6 +427,11 @@
 		<if test="submitFeedbackStatus != null and submitFeedbackStatus != ''">
 			and a.SUBMIT_FEEDBACK_STATUS = #{submitFeedbackStatus}
 		</if>
+		<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+			<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND a.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+				#{submitFeedbackStatus}
+			</foreach>
+		</if>
 		<if test="sendStatus != null and sendStatus != ''">
 			and a.SEND_STATUS = #{sendStatus}
 		</if>
