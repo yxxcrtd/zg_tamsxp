@@ -86,7 +86,6 @@ public class SalesTransactionMaintenanceSubSetService {
 			//利率统一除以100
 			ChbXmlUtil.rateFormat(item);
 
-			Map<String, CnBondInterfItemDto> cnBondItemMap = new LinkedHashMap<String, CnBondInterfItemDto>();
 			String currRegistSeq = "";
 			//重新发送不需要重生生成流水号
 			if (StringUtil.isNotEmpty(item.getSumitSeq())){

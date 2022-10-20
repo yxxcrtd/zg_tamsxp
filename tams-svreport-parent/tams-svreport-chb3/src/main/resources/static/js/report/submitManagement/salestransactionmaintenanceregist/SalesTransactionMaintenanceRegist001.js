@@ -351,8 +351,8 @@ $(function(){
                 Joyin.error("只能报送报送状态为未报送的数据");
                 return;
             }
-            else if(status && status.indexOf('03') > -1){
-                Joyin.error("只能对数据状态为新建和修改的数据进行报送！");
+            else if(status && status != '01'){
+                Joyin.error("只能对数据状态为新建的数据进行报送！");
                 return;
             }
             Joyin.ajax('submitBeforeCheck',getPageParams(), function(result) {
@@ -377,8 +377,8 @@ $(function(){
                 Joyin.error("只能报送报送状态为未报送的数据");
                 return;
             }
-            else if(rows[i].dataStatus && rows[i].dataStatus.indexOf('03') > -1){
-                Joyin.error("只能对报送状态为未报送，数据状态为新建和修改的数据进行报送！");
+            else if(rows[i].dataStatus && rows[i].dataStatus != '01'){
+                Joyin.error("只能对报送状态为未报送，数据状态为新建的数据进行报送！");
                 return;
             }
         }
@@ -417,8 +417,8 @@ $(function(){
                 Joyin.error("只能对报送状态为接口报送的数据进行重新报送！");
                 return;
             }
-            if(status && status.indexOf('03') > -1){
-                Joyin.error("只能对数据状态为新建和修改的数据进行重新报送！");
+            if(status && status != '01'){
+                Joyin.error("只能对数据状态为新建的数据进行重新报送！");
                 return;
             }
             if(submitFeedbackStatus &&

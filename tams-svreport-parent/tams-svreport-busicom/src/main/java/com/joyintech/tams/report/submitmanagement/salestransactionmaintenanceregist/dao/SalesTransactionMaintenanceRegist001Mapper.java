@@ -82,7 +82,6 @@ public interface SalesTransactionMaintenanceRegist001Mapper {
 
     /**
      * 查询登记表中所有已报送的数据
-     * @param equityRegistList
      * @return 销售结算资金交易登记数据
      * @see
      * @since 1.0
@@ -91,12 +90,12 @@ public interface SalesTransactionMaintenanceRegist001Mapper {
 
     /**
      * 通过主键查询选择的数据
-     * @param equityRegistList
+     * @param salesTransactionMaintenanceRegistList
      * @return 权益人登记信息列表
      * @see
      * @since 1.0
      */
-    List<SalesTransactionMaintenanceRegist001Dto> queryRegistSubmitListByKeys(@Param("equityRegistList") List<SalesTransactionMaintenanceRegist001Dto> equityRegistList);
+    List<SalesTransactionMaintenanceRegist001Dto> queryRegistSubmitListByKeys(@Param("salesTransactionMaintenanceRegistList") List<SalesTransactionMaintenanceRegist001Dto> salesTransactionMaintenanceRegistList);
 
     /**
      * 接口报送更新

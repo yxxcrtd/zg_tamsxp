@@ -10,12 +10,8 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.component.svrreport.chb.dto.SalesTransactionMaintenanceSubDto;
-import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
-//import com.joyintech.tams.report.chbsd.salestransactionmaintenancesub.service.SalesTransactionMaintenanceBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.IOException;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.report.submitmanagement.salestransactionmaintenanceregist.dto.SalesTransactionMaintenanceRegist001Dto;
@@ -236,34 +232,7 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
 
         salesTransactionMaintenanceRegistMService.doSubmit(param);
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
-
-//        //数据List
-//        List<SalesTransactionMaintenanceSubDto> dataList = this.dealInfoList(param);
-//
-//        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
-//        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
-//            sendDataCheckType = SendDataCheckType.重新报送;
-//        }
-//        salesTransactionMaintenanceBatchServiceService.sendBatchCommon(dataList, sendDataCheckType);
-//
-//        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }
-
-//    public List<SalesTransactionMaintenanceSubDto> dealInfoList(Map<String, Object> param) {
-//        //返回数据List
-//        List<SalesTransactionMaintenanceSubDto> dataList = new ArrayList<SalesTransactionMaintenanceSubDto>();
-//
-//        //处理数据List
-//        List<SalesTransactionMaintenanceRegist001Dto> list = salesTransactionMaintenanceRegist001Service.setDataList(param);
-//
-//        //报文拼接：2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
-//        for(SalesTransactionMaintenanceRegist001Dto sdDto:list){
-//            SalesTransactionMaintenanceSubDto target = new SalesTransactionMaintenanceSubDto();
-//            BeanUtil.copyPropertiesIgnoreNull(target, sdDto);
-//            dataList.add(target);
-//        }
-//        return dataList;
-//    }
 
     /**
      * 重新报送
@@ -279,15 +248,5 @@ public class SalesTransactionMaintenanceRegist001Controller extends BaseControll
     public AjaxResult doSubmitAgain(@RequestBody Map<String, Object> param) {
         salesTransactionMaintenanceRegistMService.doSubmitAgain(param);
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
-//        //数据List
-//        List<SalesTransactionMaintenanceSubDto> dataList = this.dealInfoList(param);
-//
-//        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
-//        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
-//            sendDataCheckType = SendDataCheckType.重新报送;
-//        }
-//        salesTransactionMaintenanceBatchServiceService.sendBatchCommon(dataList, sendDataCheckType);
-//
-//        return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }
 }

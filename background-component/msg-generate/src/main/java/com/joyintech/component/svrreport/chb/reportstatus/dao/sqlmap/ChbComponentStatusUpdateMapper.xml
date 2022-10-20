@@ -274,20 +274,20 @@
         update
         CHB_SALER_STL_DEAL_SUB
         set
-        SEND_STATUS = #{sendStatus, jdbcType=VARCHAR},
-        SUBMIT_FEEDBACK_STATUS = #{feedbackStatus, jdbcType=VARCHAR},
+        SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+        SUBMIT_FEEDBACK_STATUS = #{feedbackStatus,jdbcType=VARCHAR},
         SUBMIT_FEEDBACK_MSG = NULL,
         SUBMIT_TIME = SYSDATE
         WHERE
-        SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+        SUMIT_SEQ = #{registNo,jdbcType=VARCHAR}
     </update>
 
     <update id="updateChbSalerStlDealSubmitStatus">
         update
         CHB_SALER_STL_DEAL_SUB
         set
-        SUBMIT_FEEDBACK_STATUS = #{status, jdbcType=VARCHAR}
+        SUBMIT_FEEDBACK_STATUS = #{status,jdbcType=VARCHAR}
         WHERE
-        SUMIT_SEQ = #{registNo,  jdbcType=VARCHAR}
+        SUMIT_SEQ = #{registNo,jdbcType=VARCHAR}
     </update>
 </mapper>

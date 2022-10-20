@@ -93,6 +93,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	报表编码_资产估值信息登记(DictCode.报表编码, "WMRS.109.001.01", "资产估值信息登记"),
 	报表编码_投资者身份信息登记(DictCode.报表编码, "WMRS.201.001.01", "投资者身份信息登记"),
 	报表编码_投资者持有信息登记(DictCode.报表编码, "WMRS.202.001.01", "投资者持有信息登记"),
+	报表编码_销售结算资金交易登记(DictCode.报表编码, "WMRS.203.001.01", "销售结算资金交易登记"),
 
 
 

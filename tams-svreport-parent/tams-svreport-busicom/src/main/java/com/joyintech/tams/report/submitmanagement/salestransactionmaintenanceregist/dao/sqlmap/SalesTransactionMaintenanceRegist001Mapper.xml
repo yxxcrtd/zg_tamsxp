@@ -161,10 +161,24 @@
 				</foreach>
 			</if>
 			<if test="registList !=null and registList.size()>0">
+				AND PRD_REGIST_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.prdRegistCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
 				AND TRADE_NO
 				IN
 				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
 					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				AND ACCOUNT_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.accountNo,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			and SEND_STATUS in ('02','03')
@@ -182,10 +196,24 @@
 				</foreach>
 			</if>
 			<if test="registList !=null and registList.size()>0">
+				AND PRD_REGIST_CODE
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.prdRegistCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
 				AND TRADE_NO
 				IN
 				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
 					#{regist.tradeNo,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registList !=null and registList.size()>0">
+				AND ACCOUNT_NO
+				IN
+				<foreach collection="registList" item="regist" open="(" separator=","  close=")">
+					#{regist.accountNo,jdbcType=VARCHAR}
 				</foreach>
 			</if>
 			and SEND_STATUS in ('02','03')
@@ -503,9 +531,11 @@
        TRADE_TYPE                     tradeType
 		from CHB_SALER_STL_DEAL_SUB sub
 		<where>
-			<foreach collection="equityRegistList" item="equityRegist" open=" (" close=")" separator=") or (">
-				sub.INSTITUTION_CODE = #{equityRegist.institutionCode,jdbcType=VARCHAR}
-				and sub.REGIST_SEQNO = #{equityRegist.registSeqno,jdbcType=VARCHAR}
+			<foreach collection="salesTransactionMaintenanceRegistList" item="item" open=" (" close=")" separator=") or (">
+				sub.INSTITUTION_CODE = #{item.institutionCode,jdbcType=VARCHAR}
+				and sub.PRD_REGIST_CODE = #{item.prdRegistCode,jdbcType=VARCHAR}
+				and sub.TRADE_NO = #{item.tradeNo,jdbcType=VARCHAR}
+				and sub.ACCOUNT_NO = #{item.accountNo,jdbcType=VARCHAR}
 				and sub.SEND_STATUS in('02','03')
 			</foreach>
 		</where>

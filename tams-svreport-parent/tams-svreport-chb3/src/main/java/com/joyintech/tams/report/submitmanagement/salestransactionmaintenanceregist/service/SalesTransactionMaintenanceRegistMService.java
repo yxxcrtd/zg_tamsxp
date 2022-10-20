@@ -126,7 +126,7 @@ public class SalesTransactionMaintenanceRegistMService extends BaseService<Sales
 	}
 
 	/**
-	 * 重新报送
+	 * 报送
 	 *
 	 * @param param
 	 * 传入需要报送的主键
