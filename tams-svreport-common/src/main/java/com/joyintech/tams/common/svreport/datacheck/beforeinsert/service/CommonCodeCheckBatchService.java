@@ -70,6 +70,8 @@ public class CommonCodeCheckBatchService {
      * @param  list 被检查的数据
      * @param  tableInfo  检查的表名
      */
+    Map<String, ChbSalesTransactionInfo> checkMap = new HashMap<>();
+    Map<String, ChbOrgRegistBankCode> codeMap = new HashMap<>();
     public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
         Map<String,String>  mapLinshi=new HashMap<>();
 
@@ -83,6 +85,17 @@ public class CommonCodeCheckBatchService {
         
         Map<String,String> detailMap = new HashMap();
         //循环处理待check数据
+        List<ChbSalesTransactionInfo> list1= commonCodeCheckMapper.selectTradeNo();
+        for (ChbSalesTransactionInfo chb : list1) {
+            String keys=chb.getInstitutionCode()+chb.getPrdRegistCode()+chb.getAccountNo()+chb.getTradeNo();
+            checkMap.put(keys,chb);
+        }
+        List<ChbOrgRegistBankCode> list2= commonCodeCheckMapper.selectBankCode();
+        for (ChbOrgRegistBankCode code : list2) {
+            String keys=code.getRegistBankCode();
+            codeMap.put(keys,code);
+        }
+
         for (int i = list.size() - 1; i >= 0; i--){
             Map<String, String> map=list.get(i);
             switch (tableInfo) {
@@ -4002,7 +4015,7 @@ public class CommonCodeCheckBatchService {
 
         chbSalerIdenErrodata.setSalerCredentType(map.get("SALER_CREDENT_TYPE"));
 
-              // 拼接错误字段信息
+        // 拼接错误字段信息
         Map<String, String> newMap = new HashMap<>(map);
         newMap.remove("ERRMSG");
         chbSalerIdenErrodata.setOrgData(JsonUtils.object2Json(newMap));
@@ -4201,12 +4214,15 @@ public class CommonCodeCheckBatchService {
                 }
             }
             if(institutionCode !=null && prdRegistCode !=null && accounNo !=null && tradeNo !=null){
-                if(commonCodeCheckMapper.selectTradeNo(institutionCode, prdRegistCode, accounNo, tradeNo)>0){
-                    errMsg+="提供销售结算资金服务机构代码、销售结算资金账号、产品登记编码、销售结算资金交易流水号等要素不得同时重复。";
-                }
+                 ChbSalesTransactionInfo info = checkMap.get(institutionCode + prdRegistCode + accounNo + tradeNo);
+                 if(info !=null){
+                     errMsg+="提供销售结算资金服务机构代码、销售结算资金账号、产品登记编码、销售结算资金交易流水号等要素不得同时重复。";
+                 }
             }
+
             if(institutionCode !=null ){
-                if(commonCodeCheckMapper.selectBankCode(institutionCode)<=0){
+                ChbOrgRegistBankCode codeInfo = codeMap.get(institutionCode);
+                if(codeInfo ==null){
                     errMsg+="提供销售结算资金服务机构代码必须与银行代码相同。";
                 }
             }

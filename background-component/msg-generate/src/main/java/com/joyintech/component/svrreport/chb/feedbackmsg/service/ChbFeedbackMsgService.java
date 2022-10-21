@@ -443,13 +443,11 @@ public class ChbFeedbackMsgService {
             } else {
                 // 中债一、二期的反馈结果
                 chbFeedbackMsgComponentMapper.updateChbSubmitStatusTwo(status);
-
-                if (StrUtil.equals(DictCodeList.报表名称_销售结算资金交易信息登记.getValue(), submitType)) {
-                    chbFeedbackMsgComponentMapper.updateChbSalerSub(status);
-                }
-
                 if (StrUtil.equals(DictCodeList.报表名称_资产估值信息登记.getValue(), submitType)) {
                     chbFeedbackMsgComponentMapper.updateChbAssetValSub(status);
+                }
+                else if (StrUtil.equals(DictCodeList.报表名称_销售结算资金交易信息登记.getValue(), submitType)) {
+                    chbFeedbackMsgComponentMapper.updateChbSalerSub(status);
                 }
                 else if (StrUtil.equals(DictCodeList.报表名称_产品申报登记.getValue(), submitType)) {
                     chbFeedbackMsgComponentMapper.updateChbPrdDeclareSub(status);
@@ -838,6 +836,7 @@ public class ChbFeedbackMsgService {
                     (new File(fout.getParent())).mkdirs();
                 }
                 out = new FileOutputStream(fout);
+                //
                 bout = new BufferedOutputStream(out);
                 int b;
                 while ((b = bin.read()) != -1) {
@@ -1299,12 +1298,11 @@ public class ChbFeedbackMsgService {
         if (StringUtil.isNotEmpty(fileName) && StringUtil.isNotEmpty(registBankCode)){
             String reportType = fileName.substring(registBankCode.length() + 1, registBankCode.length() + 4);
 
-            //yc 具体值要看 C-D-20170924-20170925
-            if (ChbConstant.FILE_170_TYPE.equals(reportType)) {
+
+            if (ChbConstant.FILE_301_TYPE.equals(reportType)) {
                 submitType = DictCodeList.报表名称_销售结算资金交易信息登记.getValue();
             }
-
-            if (ChbConstant.FILE_113_TYPE.equals(reportType)) {
+            else if (ChbConstant.FILE_113_TYPE.equals(reportType)) {
                 submitType = DictCodeList.报表名称_产品申报登记.getValue();
             }
             else if (ChbConstant.FILE_102_TYPE.equals(reportType)) {

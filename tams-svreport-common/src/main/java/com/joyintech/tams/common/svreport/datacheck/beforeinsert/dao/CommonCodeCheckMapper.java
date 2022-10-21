@@ -165,13 +165,15 @@ public interface CommonCodeCheckMapper {
 
     void deleteBokSubject(@Param("list") List<BokSubjectErrodataWithBLOBs> list);
 
+
     /**
      * 提供销售结算资金服务机构代码、产品登记编码与销售结算资金账号相等时，销售结算资金交易流水号不能重复
      */
-    int selectTradeNo(@Param("institutionCode")String institutionCode,@Param("prdRegistCode")String prdRegistCode,@Param("accountNo")String accountNo,@Param("tradeNo")String tradeNo);
+    List<ChbSalesTransactionInfo> selectTradeNo();
 
     /**
      * 提供销售结算资金服务机构代码必须与银行代码相同
      */
-    int selectBankCode(@Param("institutionCode")String institutionCode);
+    List<ChbOrgRegistBankCode> selectBankCode();
+
 }

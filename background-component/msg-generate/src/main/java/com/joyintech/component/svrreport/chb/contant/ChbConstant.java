@@ -180,7 +180,7 @@ public class ChbConstant {
     /**
      * 销售结算资金交易报告登记
      */
-    public static final String FILE_170_TYPE = "170";
+    public static final String FILE_301_TYPE = "301";
 
     /**
      * 投资者身份信息登记

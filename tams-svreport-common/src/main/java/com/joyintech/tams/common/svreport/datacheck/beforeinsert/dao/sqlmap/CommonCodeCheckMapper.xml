@@ -425,19 +425,19 @@
         FROM chb_mst_counter_party  where STATUS = 'E'
     </select>
 
-    <select id="selectTradeNo" resultType="java.lang.Integer">
-        SELECT count(*) from CHB_SALER_STL_DEAL_INFO
-		where
-		DATA_STATUS = 'E'
-		and INSTITUTION_CODE=#{institutionCode,jdbcType=VARCHAR}
-		and PRD_REGIST_CODE=#{prdRegistCode,jdbcType=VARCHAR}
-		and ACCOUNT_NO=#{accountNo,jdbcType=VARCHAR}
-		and TRADE_NO=#{tradeNo,jdbcType=VARCHAR}
+
+    <select id="selectBankCode" resultType="com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode">
+        SELECT REGIST_BANK_CODE from CHB_ORG_REGIST_BANK_CODE
     </select>
 
 
-    <select id="selectBankCode" resultType="java.lang.Integer">
-        SELECT count(*) from CHB_ORG_REGIST_BANK_CODE
-        where REGIST_BANK_CODE=#{institutionCode,jdbcType=VARCHAR}
+    <select id="selectTradeNo" resultType="com.joyintech.tams.common.base.entity.ChbSalesTransactionInfo">
+        select INSTITUTION_CODE institutionCode,
+                PRD_REGIST_CODE prdRegistCode,
+                ACCOUNT_NO accountNo,
+                TRADE_NO tradeNo
+        from CHB_SALER_STL_DEAL_INFO
+		where
+		DATA_STATUS = 'E'
     </select>
 </mapper>

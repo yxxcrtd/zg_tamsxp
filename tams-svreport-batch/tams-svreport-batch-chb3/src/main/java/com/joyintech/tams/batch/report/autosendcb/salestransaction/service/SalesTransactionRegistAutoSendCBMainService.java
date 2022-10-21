@@ -68,8 +68,7 @@ public class SalesTransactionRegistAutoSendCBMainService extends AutoSendCBBaseS
             logInfoBatchStart();
             logInfoAutoCheckStart();
             Map<String, Object> param = new HashMap<String, Object>();
-            param.put("statusListStr", DictCodeListExt2.报送数据状态_新建.getValue() + GlobalConstant.COMMA
-                                       + DictCodeListExt2.报送数据状态_修改.getValue());
+            param.put("statusListStr", DictCodeListExt2.报送数据状态_新建.getValue());
             logInfo("getAllUnSubmit查询全量数据开始");
             List<SalesTransactionMaintenanceRegist001Dto> list =salesTransactionMaintenanceRegist001Service.getAllUnSubmit(param);
             logInfo("getAllUnSubmit查询全量数据结束");
