@@ -103,9 +103,9 @@ public class SalesTransactionMaintenanceSubSetService {
 
 			String value = item.getInstitutionCode()+"|"+item.getPrdRegistCode()+"|"+item.getAccountNo()+"|"+item.getAccountName()
 					+ "|"+ item.getTradeNo()+ "|"+ item.getTradePs()+ "|"+ item.getTradeType()+ "|" + item.getTradeCounterAccNo()
-					+ "|"+ item.getTradeCcy() + "|" +item.getTradeCounterAccName()+ "|" +item.getTradeCounterAccBankName() + "|" +item.getTradeCounterAccBankNo()
+					+ "|" +item.getTradeCounterAccName()+ "|" +item.getTradeCounterAccBankName() + "|" +item.getTradeCounterAccBankNo()+ "|"+ item.getTradeCcy()
 					+ "|" + item.getTradeAmt().setScale(2,RoundingMode.HALF_UP) + "|" + sdf.format(item.getTradeVdate())+ "|" + item.getTradeTime()
-					+ "|"+ item.getRemark()+ "|"+ item.getSumitSeq();
+					+ "|"+ item.getPostscript() + "|"+ item.getRemark()+ "|"+ item.getSumitSeq();
 			info.append(value);
 			info.append('\n');
 		});

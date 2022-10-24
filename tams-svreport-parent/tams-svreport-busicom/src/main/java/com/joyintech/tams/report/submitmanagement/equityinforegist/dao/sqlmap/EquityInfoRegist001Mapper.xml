@@ -1068,6 +1068,7 @@
                 </foreach>
             </if>
         </where>
+        ORDER BY t1.INDENTIFY_MARK, t1.UPDATE_TIME desc
         )
         where rank = 1
     </select>
@@ -1117,6 +1118,7 @@
             AND t1.REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
             and  t1.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
         </where>
+        ORDER BY t1.INDENTIFY_MARK, t1.UPDATE_TIME desc
         ) where rank = 1
     </select>
 
@@ -1187,6 +1189,7 @@
             AND t1.REGIST_BANK_CODE = #{bankCode,jdbcType=VARCHAR}
             and  (t1.INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} or t1.ORG_INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR})
         </where>
+        ORDER BY t1.INDENTIFY_MARK, t1.UPDATE_TIME desc
         ) where rank = 1
     </select>
 
@@ -1389,6 +1392,7 @@
                         </foreach>
                     </if>
                 </where>
+        ORDER BY t1.INDENTIFY_MARK, t1.UPDATE_TIME desc
             )
         WHERE
             rank = 1

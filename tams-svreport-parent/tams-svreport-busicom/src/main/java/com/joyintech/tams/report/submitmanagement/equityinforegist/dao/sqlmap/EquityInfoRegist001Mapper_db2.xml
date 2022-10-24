@@ -364,6 +364,7 @@
 		    	(#{item.REGIST_BANK_CODE,jdbcType=VARCHAR}, #{item.INDENTIFY_MARK,jdbcType=VARCHAR})
 		    </foreach>
 		</where>
+		ORDER BY t1.INDENTIFY_MARK, t1.UPDATE_TIME desc
 		) where rank = 1
 	</select>
 	<select id="selectExistsByIndentifyMark"  resultType="java.lang.Integer">
