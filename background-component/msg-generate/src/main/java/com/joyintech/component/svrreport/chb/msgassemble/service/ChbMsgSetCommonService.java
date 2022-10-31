@@ -539,6 +539,13 @@ public class ChbMsgSetCommonService {
                     CommonNodeEntity.class);
             m.invoke(entity, node);
         }
+        //特殊币种特殊处理操作
+        if(null!=item.getUnitRef()&&null==mapUtils.get(item.getUnitRef())){
+            XbrliUnitEntity chf = new XbrliUnitEntity();
+            chf.setId(item.getUnitRef());
+            chf.setXbrliMeasure(ChbConstant.ISO_4217 + ChbConstant.COLON + item.getUnitRef());
+            mapUtils.put(item.getUnitRef(), chf);
+        }
         // 添加使用的标签
         returnMap.put(item.getUnitRef(),mapUtils.get(item.getUnitRef()));
     }
