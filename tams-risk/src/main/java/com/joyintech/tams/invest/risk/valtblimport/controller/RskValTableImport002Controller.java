@@ -144,23 +144,6 @@ public class RskValTableImport002Controller extends BaseController{
         // excel 全路径
         String excel = dto.getValTableFileName();
 
-        // 方法1
-        /**
-        ValuationTableAnalysis analysis = new ValuationTableAnalysis(timeModelPath, bayesModelPath, headerTrainDataDir, aggregateTrainDataDir);
-        ValuationTableInfo info = analysis.execute(excel);
-
-        logger.info("估值表名称:" + info.getName());
-        logger.info("估值日期:" + info.getHeader().getDate());
-        logger.info("明细头信息(从0开始):" + info.getListHeaderIndexes()+"\r\n");
-
-        // printList(info.getList(), rskValtblAssetSubList);
-        logger.info("\r\n" + info.getAggregateInfo());
-
-        // 日期转换 , sdf.parse(info.getHeader().getDate())
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-        // return printList(info.getList(), rskValtblAssetSubList);
-         */
-
         // 方法2
         ValuationTableAnalysis2 analysis2 = new ValuationTableAnalysis2();
         ValuationTableListHeaderBeforeHander headerBeforeHandler = new ValuationTableListHeaderBeforeHander(timeModelPath);
