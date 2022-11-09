@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>tams-base</artifactId>
+        <groupId>com.joyintech</groupId>
+        <version>2.1.2</version>
+    </parent>
+    <artifactId>tams-risk</artifactId>
+    <packaging>jar</packaging>
+    <name>tams-risk Maven Webapp</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>framework-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>framework-dtx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>joyintech-tools</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>joyintech-workflow</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-common</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.aviator</groupId>
+            <artifactId>aviator</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-valuation-analysis</artifactId>
+            <version>0.0.4</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>tams-risk</finalName>
+    </build>
+
+</project>

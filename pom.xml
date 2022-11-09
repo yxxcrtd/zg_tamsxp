@@ -58,5 +58,6 @@
         <module>background-component/component-check</module>
         <module>background-component/component-common</module>
         <module>background-component/msg-generate</module>
+        <module>tams-risk</module>
     </modules>
 </project>
