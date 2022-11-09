@@ -207,6 +207,7 @@ public class RskValTableImport001Controller extends BaseController{
         progressBarService.removePercent(pageId, ProgressBarService.FILE_UPLOAD_ID);
         return excelValidDtos;
     }
+
     /**
      * 组合代码下拉框(分页)
      * <功能详细描述>
@@ -215,10 +216,10 @@ public class RskValTableImport001Controller extends BaseController{
      * @see
      * @since 1.0
      */
-    @RequestMapping("getGroupIdInfo")
-    @ResponseBody
-    public Page<SelectOptionDto> getGroupIdInfo()
-             {
-        return rskValTableImportService.getGroupIdInfo(RequestUtil.getPageParam());
-    }
+//    @RequestMapping("getGroupIdInfo")
+//    @ResponseBody
+//    public Page<SelectOptionDto> getGroupIdInfo() {
+//        return rskValTableImportService.getGroupIdInfo(RequestUtil.getPageParam());
+//    }
+
 }

@@ -37,13 +37,13 @@ import com.joyintech.tams.valuation.analysis2.info.ValuationTableHeader2;
 import com.joyintech.tams.valuation.analysis2.info.ValuationTableInfo2;
 import com.joyintech.tams.valuation.analysis2.info.ValuationTableRow2;
 import com.joyintech.tams.valuation.analysis2.info.ValuationTableTotal2;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -201,7 +201,7 @@ public class RskValTableImport002Controller extends BaseController{
             rskValtblAssetSubDto.setSubCode(row.getSubjectCode());
             rskValtblAssetSubDto.setSubName(row.getData().get("科目名称"));
 
-            if (!ObjectUtils.isEmpty(row.getData().get("数量"))) {
+            if (ObjectUtils.isEmpty(row.getData().get("数量"))) {
                 rskValtblAssetSubDto.setSecurityQuantity(new BigDecimal(row.getData().get("数量").replaceAll(",", "")));
             }
             if (!ObjectUtils.isEmpty(row.getData().get("单位成本-n"))) {
@@ -246,16 +246,16 @@ public class RskValTableImport002Controller extends BaseController{
      * @see
      * @since 1.0
      */
-    @ResponseBody
-    @RequestMapping("check")
-    public Map<String,Object> check(@RequestBody RskValTableImportParamDto dto, BindingResult result) {
-        Map<String,Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("ptlId", dto.getPtlId());
-        paramMap.put("valDate", DateUtil.format(dto.getValDate()));
-        int valCount = rskValTableImportService.selectCount(paramMap);
-        paramMap.put("valCount", valCount);
-        return paramMap;
-    }
+//    @ResponseBody
+//    @RequestMapping("check")
+//    public Map<String,Object> check(@RequestBody RskValTableImportParamDto dto, BindingResult result) {
+//        Map<String,Object> paramMap = new HashMap<String, Object>();
+//        paramMap.put("ptlId", dto.getPtlId());
+//        paramMap.put("valDate", DateUtil.format(dto.getValDate()));
+//        int valCount = rskValTableImportService.selectCount(paramMap);
+//        paramMap.put("valCount", valCount);
+//        return paramMap;
+//    }
     
     /**
      * 保存
@@ -270,7 +270,7 @@ public class RskValTableImport002Controller extends BaseController{
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody RskValtblAssetSubDto dto) throws ParseException {
         dto.setImpMode(DictCodeListExt1.导入方式_手工.getValue());
-        List<String> errorList=rskValTableImportService.insert(dto);
+        List<String> errorList = rskValTableImportService.insert(dto);
         //处理成功的文件入库估值表导入日期记录表
         if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
             String deptCode=(LoginUserUtil.getInstCode()!= null && LoginUserUtil.getInstCode().size()>0) ? LoginUserUtil.getInstCode().get(0):null;
@@ -303,6 +303,7 @@ public class RskValTableImport002Controller extends BaseController{
         }  
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
     }
+
     /**
      * 获取警告信息
      *
@@ -315,7 +316,7 @@ public class RskValTableImport002Controller extends BaseController{
     @RequestMapping(value = "/getTableInfo")
     @ResponseBody
     public AjaxResult getTableInfo(@RequestBody RskValTableImportParamDto dto) throws Exception {
-        List<RskValtblAssetSubDto> RskValtblAssetSubList = rskValTableImportService.viewValTable(dto);
+        List<RskValtblAssetSubDto> RskValtblAssetSubList = null; //TODO rskValTableImportService.viewValTable(dto);
         if(dto.getWarnMap().get(dto.getAssetName()) > 0) {
             return new AjaxResult(dto.getAssetName() + "存在" + dto.getWarnMap().get(dto.getAssetName()) + "条科目未配置映射" , MessageType.警告消息);
         }

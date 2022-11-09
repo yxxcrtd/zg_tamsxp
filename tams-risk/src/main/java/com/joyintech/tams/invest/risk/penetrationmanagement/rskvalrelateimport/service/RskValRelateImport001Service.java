@@ -314,7 +314,8 @@ public class RskValRelateImport001Service extends CommonExportService<RskValRela
         RskValTableImportParamDto dto = getRskValTableImportParamDto(valDate, fileName, import001Dto);
         List<RskValtblAssetSubDto> rskValtblAssetSubDtos = null;
         try {
-            rskValtblAssetSubDtos = rskValTableImportService.viewValTable(dto);
+            // TODO
+            // rskValtblAssetSubDtos = rskValTableImportService.viewValTable(dto);
         } catch (Exception e) {
             return assetName + ",导入失败";
         }
