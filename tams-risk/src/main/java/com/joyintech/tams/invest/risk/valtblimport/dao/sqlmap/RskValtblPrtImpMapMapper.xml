@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.risk.valtblimport.dao.RskValRelateImportMapper">
+    <insert id="insert" parameterType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto">
+        insert into RSK_VALTBL_DATA (SEQ_NO,FILE_INFO_ID,SUB_CODE,SUB_NAME,SUB_ONE_CAT,SUB_TWO_CAT,
+                                     QUANTITY,UNIT_COST,SECURITY_COST,CTNWR,SMV,MCR,VALUE_ADDED,INTEREST,
+                                     DIVIDEND,INT_ADJ,DEVALUE,VAL_INC,LATE_INT,SHADOW_PRI_VAL,CCY,EXP_FLAG,
+                                     CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+         values(#{seqNo,jdbcType=VARCHAR},#{fileInfoId,jdbcType=VARCHAR},#{subCode,jdbcType=VARCHAR},#{subName,jdbcType=VARCHAR},#{subOneCat,jdbcType=VARCHAR},
+         #{subTwoCat,jdbcType=VARCHAR},#{quantity,jdbcType=VARCHAR},#{unitCost,jdbcType=VARCHAR},#{securityCost,jdbcType=VARCHAR},#{ctnwr,jdbcType=VARCHAR},#{smv,jdbcType=VARCHAR},
+         #{mcr,jdbcType=VARCHAR},#{valueAdded,jdbcType=NUMERIC},#{interest,jdbcType=NUMERIC},
+                #{dividend,jdbcType=NUMERIC},#{intAdj,jdbcType=NUMERIC},#{devalue,jdbcType=NUMERIC},#{valInc,jdbcType=NUMERIC},
+                #{lateInt,jdbcType=NUMERIC},#{shadowPriVal,jdbcType=NUMERIC},#{ccy,jdbcType=VARCHAR},#{expFlag,jdbcType=NUMERIC},
+             #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <select id="selectByPrimaryKey" resultType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto" parameterType="java.lang.String">
+        select SEQ_NO,FILE_INFO_ID,SUB_CODE,SUB_NAME,SUB_ONE_CAT,SUB_TWO_CAT,
+               QUANTITY,UNIT_COST,SECURITY_COST,CTNWR,SMV,MCR,VALUE_ADDED,INTEREST,
+               DIVIDEND,INT_ADJ,DEVALUE,VAL_INC,LATE_INT,SHADOW_PRI_VAL,CCY,EXP_FLAG,
+               CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+        from RSK_VALTBL_DATA where SEQ_NO=#{seqNO,jdbcType=VARCHAR}
+    </select>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto">
+         update RSK_VALTBL_DATA
+        <set>
+           <if test="FILE_INFO_ID != null">
+               FILE_INFO_ID=#{fileInfoId,jdbcType=VARCHAR},
+           </if>
+            <if test="SUB_CODE != null">
+                SUB_CODE=#{subCode,jdbcType=VARCHAR},
+            </if>
+            <if test="SUB_NAME != null">
+                SUB_NAME=#{subName,jdbcType=VARCHAR},
+            </if>
+            <if test="SUB_ONE_CAT != null">
+                SUB_ONE_CAT=#{subOneCat,jdbcType=VARCHAR},
+            </if>
+            <if test="SUB_TWO_CAT != null">
+                SUB_TWO_CAT=#{subTwoCat,jdbcType=VARCHAR},
+            </if>
+            <if test="QUANTITY != null">
+                QUANTITY=#{quantity,jdbcType=VARCHAR},
+            </if>
+            <if test="UNIT_COST != null">
+                UNIT_COST=#{unitCost,jdbcType=VARCHAR},
+            </if>
+            <if test="SECURITY_COST != null">
+                SECURITY_COST=#{securityCost,jdbcType=VARCHAR},
+
+            </if>
+            <if test="CTNWR != null">
+                CTNWR=#{ctnwr,jdbcType=VARCHAR},
+
+            </if>
+            <if test="SMV != null">
+                SMV=#{smv,jdbcType=VARCHAR},
+
+            </if>
+            <if test="MCR != null">
+                MCR=#{mcr,jdbcType=VARCHAR},
+
+            </if>
+            <if test="VALUE_ADDED != null">
+                VALUE_ADDED=#{valueAdded,jdbcType=NUMERIC},
+
+            </if>
+            <if test="INTEREST != null">
+                INTEREST=#{interest,jdbcType=NUMERIC},
+
+            </if>
+            <if test="DIVIDEND != null">
+                DIVIDEND=#{dividend,jdbcType=NUMERIC},
+
+            </if>
+            <if test="INT_ADJ != null">
+                INT_ADJ=#{intAdj,jdbcType=NUMERIC},
+
+
+            </if>
+            <if test="DEVALUE != null">
+                DEVALUE=#{devalue,jdbcType=NUMERIC},
+
+
+            </if>
+            <if test="VAL_INC != null">
+                VAL_INC=#{valInc,jdbcType=NUMERIC},
+
+
+            </if>
+            <if test="LATE_INT != null">
+                LATE_INT=#{lateInt,jdbcType=NUMERIC},
+
+
+            </if>
+            <if test="SHADOW_PRI_VAL != null">
+                SHADOW_PRI_VAL=#{shadowPriVal,jdbcType=NUMERIC},
+
+
+            </if>
+            <if test="CCY != null">
+                CCY=#{ccy,jdbcType=VARCHAR},
+
+
+            </if>
+            <if test="EXP_FLAG != null">
+                EXP_FLAG=#{expFlag,jdbcType=NUMERIC}
+
+
+            </if>
+           where SEQ_NO=#{seqNo,jdbcType=VARCHAR}
+
+
+        </set>
+    </update>
+</mapper>
