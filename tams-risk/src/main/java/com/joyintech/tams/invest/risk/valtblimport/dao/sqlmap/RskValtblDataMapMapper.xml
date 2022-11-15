@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.invest.risk.valtblimport.dao.RskValRelateImportMapper">
+<mapper namespace="com.joyintech.tams.invest.risk.valtblimport.dao.RskValtblDataMapper">
     <insert id="insert" parameterType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto">
         insert into RSK_VALTBL_DATA (SEQ_NO,FILE_INFO_ID,SUB_CODE,SUB_NAME,SUB_ONE_CAT,SUB_TWO_CAT,
                                      QUANTITY,UNIT_COST,SECURITY_COST,CTNWR,SMV,MCR,VALUE_ADDED,INTEREST,
@@ -13,14 +13,14 @@
                 #{lateInt,jdbcType=NUMERIC},#{shadowPriVal,jdbcType=NUMERIC},#{ccy,jdbcType=VARCHAR},#{expFlag,jdbcType=NUMERIC},
              #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
     </insert>
-    <select id="selectByPrimaryKey" resultType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto" parameterType="java.lang.String">
+    <select id="select" resultType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto">
         select SEQ_NO,FILE_INFO_ID,SUB_CODE,SUB_NAME,SUB_ONE_CAT,SUB_TWO_CAT,
                QUANTITY,UNIT_COST,SECURITY_COST,CTNWR,SMV,MCR,VALUE_ADDED,INTEREST,
                DIVIDEND,INT_ADJ,DEVALUE,VAL_INC,LATE_INT,SHADOW_PRI_VAL,CCY,EXP_FLAG,
                CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
-        from RSK_VALTBL_DATA where SEQ_NO=#{seqNO,jdbcType=VARCHAR}
+        from RSK_VALTBL_DATA
     </select>
-    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto">
+    <update id="updateByPrimaryKey" parameterType="java.lang.String">
          update RSK_VALTBL_DATA
         <set>
            <if test="FILE_INFO_ID != null">

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.risk.valtblimport.dao.RskValtblAnlsLogMapper">
+    <insert id="insert" parameterType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAnlsLogDto">
+        insert into RSK_VALTBL_ANLS_LOG (SEQ_NO,FILE_INFO_ID,FILE_INFO_NAME,REMARK,CREATE_USER,
+                                         CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        value (#{seqNo,jdbcType=VARCHAR},#{fileInfoId,jdbcType=VARCHAR},
+            #{fileInfoName,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR}
+            ,#{createTime,jdbcType=jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <select id="selectByPK" parameterType="java.lang.String" resultType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAnlsLogDto">
+        select SEQ_NO,FILE_INFO_ID,FILE_INFO_NAME,REMARK,CREATE_USER,
+               CREATE_TIME,UPDATE_USER,UPDATE_TIME
+        from  RSK_VALTBL_ANLS_LOG where SEQ_NO=#{seqNo,jdbcType=VARCHAR};
+    </select>
+</mapper>

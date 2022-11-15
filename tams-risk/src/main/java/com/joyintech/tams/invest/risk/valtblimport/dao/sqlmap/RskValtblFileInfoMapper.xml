@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.risk.valtblimport.dao.RskValtblFileInfoMapper">
+    <insert id="insert" parameterType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblFileInfoDto">
+        insert into RSK_VALTBL_FILE_INFO (SEQ_NO,FILE_GRP,FILE_NAME,FILE_HEADER,FILE_DATE
+        ,CAPITAL,FUND_ASSET_VAL,ASSET_TOTAL,LIABILITY_TOTAL,PORFIT,TOD_UNIT_VAL,EXP_FLAG,
+          CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        value(#{seqNo,jdbcType=VARCHAR},#{fileGpr,jdbcType=VARCHAR},#{fileName,jdbcType=VARCHAR}
+            ,#{fileHeader,jdbcType=VARCHAR},#{fileDate,jdbcType=VARCHAR},#{capital,jdbcType=NUMERIC},
+            #{fundAssetVal,jdbcType=NUMERIC},#{assetTotal,jdbcType=NUMERIC},#{liabilityTotal,jdbcType=NUMERIC}
+            ,#{porfit,jdbcType=NUMERIC},#{todUnitVal,jdbcType=NUMERIC},#{expFlag,jdbcType=NUMERIC},
+            #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <select id="selectByPK" parameterType="java.lang.String" resultType="com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblFileInfoDto">
+        select SEQ_NO,FILE_GRP,FILE_NAME,FILE_HEADER,FILE_DATE
+                ,CAPITAL,FUND_ASSET_VAL,ASSET_TOTAL,LIABILITY_TOTAL,PORFIT,TOD_UNIT_VAL,EXP_FLAG,
+               CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+              from  RSK_VALTBL_FILE_INFO
+        where SEQ_NO=#{seqNo,jdbcType=VARCHAR}
+    </select>
+</mapper>
