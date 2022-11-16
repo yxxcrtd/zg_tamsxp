@@ -12,7 +12,7 @@ public class RskValtblFileInfoDto {
     /**
      * 流水号
      */
-    private String sqlNO;
+    private String seqNo;
 
     /**
      * 估值表文件组
@@ -90,12 +90,12 @@ public class RskValtblFileInfoDto {
      */
     private Date updateTime;
 
-    public String getSqlNO() {
-        return sqlNO;
+    public String getSeqNo() {
+        return seqNo;
     }
 
-    public void setSqlNO(String sqlNO) {
-        this.sqlNO = sqlNO;
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo;
     }
 
     public String getFileGpr() {

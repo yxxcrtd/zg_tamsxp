@@ -111,7 +111,7 @@ public class RskValtblDataDto {
     /**
      * 币种
      */
-    private String cyy;
+    private String ccy;
 
     /**
      * 异常标识
@@ -298,12 +298,12 @@ public class RskValtblDataDto {
         this.shadowPriVal = shadowPriVal;
     }
 
-    public String getCyy() {
-        return cyy;
+    public String getCcy() {
+        return ccy;
     }
 
-    public void setCyy(String cyy) {
-        this.cyy = cyy;
+    public void setCcy(String ccy) {
+        this.ccy = ccy;
     }
 
     public int getExpFlag() {

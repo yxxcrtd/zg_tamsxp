@@ -16,17 +16,20 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.dto.RskValRelateImport001Dto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.service.RskValRelateImport002Service;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValTableImportParamDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
+import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto;
+import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblFileInfoDto;
 import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportCommonService;
 import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportService;
+import com.joyintech.tams.invest.risk.valtblimport.service.RskValtblDataService;
+import com.joyintech.tams.invest.risk.valtblimport.service.RskValtblFileInfoService;
 import com.joyintech.tams.valuation.analysis.ValuationTableTrain;
 import com.joyintech.tams.valuation.analysis2.ValuationTableAggregateInfoHander;
 import com.joyintech.tams.valuation.analysis2.ValuationTableAnalysis2;
@@ -83,6 +86,10 @@ public class RskValTableImport002Controller extends BaseController{
     private RskValRelateImport002Service rskValRelateImport002Service;
     @Autowired
     private RskValTableImportCommonService rskValTableImportCommonService;
+    @Autowired
+    private RskValtblDataService rskValtblDataService;
+    @Autowired
+    private RskValtblFileInfoService rskValtblFileInfoService;
     @Override
     public String init(Model model) {
         model.addAttribute("ptlId", this.getParam("ptlId"));
@@ -161,6 +168,12 @@ public class RskValTableImport002Controller extends BaseController{
         logger.info("估值日期: " + info2.getDate());
         logger.info("明细表头:");
 
+        //解析数据入库
+        RskValtblFileInfoDto rskValtblFileInfoDto=new RskValtblFileInfoDto();
+        rskValtblFileInfoDto.setSeqNo(IDGenerator.generate(32));
+        rskValtblFileInfoDto.setFileGpr(aggregateTrainDataDir);
+        rskValtblFileInfoService.insert(rskValtblFileInfoDto);
+
         for (ValuationTableHeader2 name : info2.getTableHeaderInfo().values()) {
             System.out.println("\t" + name);
         }
@@ -173,37 +186,58 @@ public class RskValTableImport002Controller extends BaseController{
         return printList(info2.getTableListData(), rskValtblAssetSubList);
     }
 
-    public static List<RskValtblAssetSubDto> printList(List<ValuationTableRow2> list, List<RskValtblAssetSubDto> rskValtblAssetSubList) {
+    public List<RskValtblAssetSubDto> printList(List<ValuationTableRow2> list, List<RskValtblAssetSubDto> rskValtblAssetSubList) {
         RskValtblAssetSubDto rskValtblAssetSubDto = null;
         for (ValuationTableRow2 row : list) {
             System.out.println(row);
             rskValtblAssetSubDto = new RskValtblAssetSubDto();
             rskValtblAssetSubDto.setIsMatch("是");
 
+            //解析数据入库
+            RskValtblDataDto rskValtblDataDto=new RskValtblDataDto();
+
             // 科目代码
             rskValtblAssetSubDto.setSubCode(row.getSubjectCode());
             rskValtblAssetSubDto.setSubName(row.getData().get("科目名称"));
 
-            if (ObjectUtils.isEmpty(row.getData().get("数量"))) {
+            rskValtblDataDto.setFileInfoId(IDGenerator.generate(32));
+            rskValtblDataDto.setSubCode(row.getSubjectCode());
+            rskValtblDataDto.setSubName(row.getData().get("科目名称"));
+            if (!ObjectUtils.isEmpty(row.getData().get("数量"))) {
                 rskValtblAssetSubDto.setSecurityQuantity(new BigDecimal(row.getData().get("数量").replaceAll(",", "")));
+                rskValtblDataDto.setQuantity(new BigDecimal(row.getData().get("数量").replaceAll(",", "")));
             }
             if (!ObjectUtils.isEmpty(row.getData().get("单位成本-n"))) {
                 rskValtblAssetSubDto.setUnitCost(new BigDecimal(row.getData().get("单位成本-n").replaceAll(",", ""))); // 去掉千位符的逗号
+                rskValtblDataDto.setUnitCost(new BigDecimal(row.getData().get("单位成本-n").replaceAll(",", "")));
             }
             if (!ObjectUtils.isEmpty(row.getData().get("本币成本"))) {
                 rskValtblAssetSubDto.setSecurityCost(new BigDecimal(row.getData().get("本币成本").replaceAll(",", ""))); // 成本(本币)
+                rskValtblDataDto.setSecurityCost(new BigDecimal(row.getData().get("本币成本").replaceAll(",", "")));
             }
             if (!ObjectUtils.isEmpty(row.getData().get("成本占比"))) {
                 rskValtblAssetSubDto.setCtnwr(new BigDecimal(row.getData().get("成本占比").replace("%", ""))); // 成本占比(去掉后面的%)
+                rskValtblDataDto.setCtnwr(new BigDecimal(row.getData().get("成本占比").replace("%", "")));
             }
             if (!ObjectUtils.isEmpty(row.getData().get("市价-n"))) {
                 rskValtblAssetSubDto.setSmv(new BigDecimal(row.getData().get("市价-n").replaceAll(",", ""))); // 市值(本币)
+                rskValtblDataDto.setSmv(new BigDecimal(row.getData().get("市价-n").replaceAll(",", "")));
             }
             if (!ObjectUtils.isEmpty(row.getData().get("本币市值"))) {
                 rskValtblAssetSubDto.setMcr(new BigDecimal(row.getData().get("本币市值").replace("%", ""))); // 市值占比
+                rskValtblDataDto.setMcr(new BigDecimal(row.getData().get("本币市值").replace("%", "")));
             }
             rskValtblAssetSubDto.setCcy(row.getData().get("币种"));
+            rskValtblDataDto.setCcy(row.getData().get("币种"));
             rskValtblAssetSubDto.setCcy(row.getData().get("停牌信息-n"));
+            rskValtblDataDto.setCcy(row.getData().get("停牌信息-n"));
+            //异常标识，如果科目代码和科目名称解析为空，异常标识置1
+            if(row.getSubjectCode()==null||row.getData().get("科目名称")==null){
+                rskValtblDataDto.setExpFlag(1);
+            }else{
+                rskValtblDataDto.setExpFlag(0);
+            }
+            rskValtblDataService.insert(rskValtblDataDto);
 
             // 汇率
             // rskValtblAssetSubDto.setExchangeRate();
