@@ -40,6 +40,7 @@
         <module>../../microservice/service-pbc</module>
         <module>../../microservice/service-svrcom</module>
 		<module>../../microservice/tams-service-container-yunying</module>
+		<module>../../tams-risk</module>
 
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>

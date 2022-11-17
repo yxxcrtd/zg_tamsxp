@@ -1,15 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <artifactId>tams-base</artifactId>
         <groupId>com.joyintech</groupId>
-        <version>2.1.2</version>
+        <artifactId>tams-parent</artifactId>
+        <version>0.0.4</version>
     </parent>
     <artifactId>tams-risk</artifactId>
-    <packaging>jar</packaging>
-    <name>tams-risk Maven Webapp</name>
+    <version>3.0.0</version>
+    <packaging>pom</packaging>
 
     <dependencies>
         <dependency>
@@ -60,7 +59,25 @@
     </dependencies>
 
     <build>
-        <finalName>tams-risk</finalName>
+        <plugins>
+            <!-- 打包源代码插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
