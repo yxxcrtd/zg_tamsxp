@@ -227,6 +227,28 @@ public class RskValTableImport002Controller extends BaseController{
                 rskValtblAssetSubDto.setMcr(new BigDecimal(row.getData().get("本币市值").replace("%", ""))); // 市值占比
                 rskValtblDataDto.setMcr(new BigDecimal(row.getData().get("本币市值").replace("%", "")));
             }
+            if (!ObjectUtils.isEmpty(row.getData().get("估值增值"))) {
+                rskValtblAssetSubDto.setValueAdded(new BigDecimal(row.getData().get("估值增值").replace("%", ""))); // 估值增值（本币）
+                rskValtblDataDto.setValueAdded(new BigDecimal(row.getData().get("估值增值").replace("%", "")));
+            }
+            if (!ObjectUtils.isEmpty(row.getData().get("利息"))) {
+                rskValtblDataDto.setInterest(new BigDecimal(row.getData().get("估值增值").replace("%", "")));// 利息（本币）
+            }
+            if (!ObjectUtils.isEmpty(row.getData().get("股利/红利"))) {
+                rskValtblDataDto.setDividend(new BigDecimal(row.getData().get("估值增值").replace("%", "")));// 股利/红利（本币）
+            }
+            if (!ObjectUtils.isEmpty(row.getData().get("利息调整"))) {
+                rskValtblDataDto.setIntAdj(new BigDecimal(row.getData().get("利息调整").replace("%", "")));// 利息调整（本币）
+            }
+            if (!ObjectUtils.isEmpty(row.getData().get("减值"))) {
+                rskValtblDataDto.setDevalue(new BigDecimal(row.getData().get("减值").replace("%", "")));// 减值（本币）
+            }
+            if (!ObjectUtils.isEmpty(row.getData().get("逾期利息"))) {
+                rskValtblDataDto.setLateInt(new BigDecimal(row.getData().get("减值").replace("%", "")));//逾期利息（本币）
+            }
+            if (!ObjectUtils.isEmpty(row.getData().get("影子价格估值"))) {
+                rskValtblDataDto.setShadowPriVal(new BigDecimal(row.getData().get("减值").replace("%", "")));//影子价格估值（本币）
+            }
             rskValtblAssetSubDto.setCcy(row.getData().get("币种"));
             rskValtblDataDto.setCcy(row.getData().get("币种"));
             rskValtblAssetSubDto.setCcy(row.getData().get("停牌信息-n"));
