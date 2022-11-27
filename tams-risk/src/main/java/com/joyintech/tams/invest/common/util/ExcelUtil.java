@@ -6,6 +6,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -17,12 +18,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -465,6 +468,107 @@ public class ExcelUtil {
             logger.error(e1.getMessage(),e1);
         }
         return dataList;
+    }
+
+    /**
+     * 获取一级分类
+     * @param subCode       科目代码
+     * @param subName       科目名称
+     * @param securityCost  成本
+     * @param smv           市值
+     * @return
+     */
+    public static String getSubOneCat(String subCode, String subName, BigDecimal securityCost, BigDecimal smv) {
+        String returnCat = "01";
+        if (ObjectUtils.isEmpty(subCode) || ObjectUtils.isEmpty(subName)) {
+            return returnCat;
+        }
+
+        if (subCode.startsWith("01")) {
+            returnCat = "1";
+        }
+
+        if (subCode.startsWith("02")) {
+            returnCat = "2";
+        }
+
+        // 负数：-1；正数：1；0：0
+        if (ObjectUtils.isEmpty(securityCost)) {
+            securityCost = new BigDecimal(0);
+        }
+        int i1 = securityCost.compareTo(BigDecimal.ZERO);
+
+        if (ObjectUtils.isEmpty(smv)) {
+            smv = new BigDecimal(0);
+        }
+        int i2 = smv.compareTo(BigDecimal.ZERO);
+
+        // 判断一级科目
+        if (subCode.startsWith("3")) {
+            // 一级科目的长度为4
+            if (subCode.length() == 4) {
+                if (StringUtils.containsAny(subName, "证券清算款") || StringUtils.containsAny(subName, "清算款") || StringUtils.containsAny(subName, "清算资金往来") || StringUtils.containsAny(subName, "证券清算款")) {
+                    if (i1 == 1) {
+                        returnCat = "01";
+                    }
+                    if (i1 == -1) {
+                        returnCat = "02";
+                    }
+                }
+                if (!StringUtils.containsAny(subName, "证券清算款") || !StringUtils.containsAny(subName, "清算款") || !StringUtils.containsAny(subName, "清算资金往来") || !StringUtils.containsAny(subName, "证券清算款")) {
+                    if (i2 == 1) {
+                        returnCat = "01";
+                    }
+                    if (i2 == -1) {
+                        returnCat = "02";
+                    }
+                }
+            }
+        }
+
+        // 返回
+        return returnCat;
+    }
+
+    /**
+     * 获取二级分类
+     * @param subCode       科目代码
+     * @param subName       科目名称
+     * @param securityCost  成本
+     * @param smv           市值
+     * @return
+     */
+    public static String getSubTwoCat(String subCode, String subName, BigDecimal securityCost, BigDecimal smv) {
+        String returnCat = "";
+        if (ObjectUtils.isEmpty(subCode) || ObjectUtils.isEmpty(subName)) {
+            return returnCat;
+        }
+
+        // 负数：-1；正数：1；0：0
+        if (ObjectUtils.isEmpty(securityCost)) {
+            securityCost = new BigDecimal(0);
+        }
+        int i1 = securityCost.compareTo(BigDecimal.ZERO);
+
+        if (ObjectUtils.isEmpty(smv)) {
+            smv = new BigDecimal(0);
+        }
+        int i2 = smv.compareTo(BigDecimal.ZERO);
+
+        if (StringUtils.containsAny(subName, "银行存款") || StringUtils.containsAny(subName, "备付金") || StringUtils.containsAny(subName, "保证金") || StringUtils.containsAny(subName, "存放同业") || StringUtils.containsAny(subName, "证券清算款") || StringUtils.containsAny(subName, "清算款") || StringUtils.containsAny(subName, "清算资金往来")) {
+            if (i1 == 1) {
+                returnCat = "01";
+            }
+        }
+
+        if (StringUtils.containsAny(subName, "债券")) {
+            if (i1 == 1) {
+                returnCat = "01";
+            }
+        }
+
+        // 返回
+        return returnCat;
     }
     
 }
