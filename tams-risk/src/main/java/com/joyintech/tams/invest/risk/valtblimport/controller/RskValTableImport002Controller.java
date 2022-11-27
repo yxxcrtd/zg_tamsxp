@@ -327,9 +327,9 @@ public class RskValTableImport002Controller extends BaseController{
             rskValtblDataDto.setCreateTime(iPlatformDate.getSysDate());
             rskValtblDataDto.setUpdateUser(CommonUtil.getUserName());
             rskValtblDataDto.setUpdateTime(iPlatformDate.getSysDate());
-            rskValtblDataDto.setSubOneCat(ExcelUtil.getSubOneCat(rskValtblDataDto.getSubCode(),
-                    rskValtblDataDto.getSubName(),null == rskValtblDataDto.getSecurityCost() ? new BigDecimal(0) : rskValtblDataDto.getSecurityCost()
-                    , null == rskValtblDataDto.getSmv() ? new BigDecimal(0) : rskValtblDataDto.getSmv()));
+            rskValtblDataDto.setSubOneCat(getSubOneCat(rskValtblDataDto.getSubCode(), rskValtblDataDto.getSubName(),
+                    null == rskValtblDataDto.getSecurityCost() ? new BigDecimal(0) : rskValtblDataDto.getSecurityCost(),
+                    null == rskValtblDataDto.getSmv() ? new BigDecimal(0) : rskValtblDataDto.getSmv()));
             //异常标识，如果科目代码和科目名称解析为空，异常标识置1
            /* if(row.getSubjectCode()==null||row.getData().get("科目名称")==null){
                 rskValtblDataDto.setExpFlag(1);
@@ -442,9 +442,254 @@ public class RskValTableImport002Controller extends BaseController{
         }
     }
 
-    @RequestMapping(value="/selectLog")
-    @ResponseBody
-    public List<String> selectLog(String infoName){
-         return  rskValtblAnlsLogService.selectLog(infoName);
+//    @RequestMapping(value="/selectLog")
+//    @ResponseBody
+//    public List<String> selectLog(String infoName){
+//         return  rskValtblAnlsLogService.selectLog(infoName);
+//    }
+
+
+
+    /**
+     * 获取一级分类
+     * @param subCode       科目代码
+     * @param subName       科目名称
+     * @param securityCost  成本
+     * @param smv           市值
+     * @return
+     */
+    public static String getSubOneCat(String subCode, String subName, BigDecimal securityCost, BigDecimal smv) {
+        String returnCat = "01";
+        if (ObjectUtils.isEmpty(subCode) || ObjectUtils.isEmpty(subName)) {
+            return returnCat;
+        }
+
+        if (subCode.startsWith("1")) {
+            returnCat = "01";
+        } else
+
+        if (subCode.startsWith("2")) {
+            returnCat = "02";
+        } else
+
+        // 判断一级科目
+        if (subCode.startsWith("3")) {
+
+            // 负数：-1；正数：1；0：0
+            if (ObjectUtils.isEmpty(securityCost)) {
+                securityCost = new BigDecimal(0);
+            }
+            int i1 = securityCost.compareTo(BigDecimal.ZERO);
+
+            if (ObjectUtils.isEmpty(smv)) {
+                smv = new BigDecimal(0);
+            }
+            int i2 = smv.compareTo(BigDecimal.ZERO);
+
+            // 一级科目的长度为4
+            if (subCode.length() == 4) {
+                if (StringUtils.containsAny(subName, "证券清算款") || StringUtils.containsAny(subName, "清算款") || StringUtils.containsAny(subName, "清算资金往来") || StringUtils.containsAny(subName, "证券清算款")) {
+                    if (i1 == 1) {
+                        returnCat = "01";
+                    }
+                    if (i1 == -1) {
+                        returnCat = "02";
+                    }
+                }
+                if (!StringUtils.containsAny(subName, "证券清算款") || !StringUtils.containsAny(subName, "清算款") || !StringUtils.containsAny(subName, "清算资金往来") || !StringUtils.containsAny(subName, "证券清算款")) {
+                    if (i2 == 1) {
+                        returnCat = "01";
+                    }
+                    if (i2 == -1) {
+                        returnCat = "02";
+                    }
+                }
+            }
+        }
+
+        // 返回
+        return returnCat;
     }
+
+    /**
+     * 获取二级分类
+     * @param subCode       科目代码
+     * @param subName       科目名称
+     * @param securityCost  成本
+     * @param smv           市值
+     * @return
+     */
+    public static String getSubTwoCat(String subCode, String subName, BigDecimal securityCost, BigDecimal smv) {
+        String returnCat = "";
+        if (ObjectUtils.isEmpty(subCode) || ObjectUtils.isEmpty(subName)) {
+            return returnCat;
+        }
+
+        // 负数：-1；正数：1；0：0
+        if (ObjectUtils.isEmpty(securityCost)) {
+            securityCost = new BigDecimal(0);
+        }
+        int i1 = securityCost.compareTo(BigDecimal.ZERO);
+
+        if (ObjectUtils.isEmpty(smv)) {
+            smv = new BigDecimal(0);
+        }
+        int i2 = smv.compareTo(BigDecimal.ZERO);
+
+        if (StringUtils.containsAny(subName, "银行存款") || StringUtils.containsAny(subName, "备付金") || StringUtils.containsAny(subName, "保证金") || StringUtils.containsAny(subName, "存放同业") || StringUtils.containsAny(subName, "证券清算款") || StringUtils.containsAny(subName, "清算款") || StringUtils.containsAny(subName, "清算资金往来")) {
+            if (i1 == 1) {
+                returnCat = "01";
+            }
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        // todo
+        if (StringUtils.containsAny(subName, "债券")) {
+            returnCat = "02";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        if (StringUtils.containsAny(subName, "拆出") || StringUtils.containsAny(subName, "买入返售") || StringUtils.containsAny(subName, "拆放同业")) {
+            returnCat = "03";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        // todo
+        if (subCode.length() == 4 && (StringUtils.containsAny(subName, "拆入"))) {
+            returnCat = "04";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        if (StringUtils.containsAny(subName, "其他债权") || StringUtils.containsAny(subName, "项目类债权")) {
+            returnCat = "05";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        if (StringUtils.containsAny(subName, "股票") || StringUtils.containsAny(subName, "优先股") || StringUtils.containsAny(subName, "非上市股权")) {
+            returnCat = "06";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        // todo
+        if (subCode.startsWith("3")) {
+            returnCat = "07";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        if (StringUtils.containsAny(subName, "QD")) {
+            returnCat = "08";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        // todo
+        if (StringUtils.containsAny(subName, "基金投资") || StringUtils.containsAny(subName, "结构化主体")) {
+            returnCat = "11";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        // todo
+        if (StringUtils.containsAny(subName, "基金投资") || StringUtils.containsAny(subName, "结构化主体")) {
+            returnCat = "12";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        // todo
+        if (StringUtils.containsAny(subName, "基金投资") || StringUtils.containsAny(subName, "结构化主体")) {
+            returnCat = "13";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        if (StringUtils.containsAny(subName, "拆入") || StringUtils.containsAny(subName, "卖出回购")) {
+            returnCat = "15";
+        } else {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
+        // 返回
+        return returnCat;
+    }
+
 }
