@@ -186,9 +186,8 @@ public class RskValTableImport002Controller extends BaseController{
         }
 
         // 统计数据
-        for (ValuationTableTotal2 total2 : info2.getTotalData()) {
-            System.out.println(total2);
-        }
+        System.out.println("\n" + info2.getTotalObj());
+
         //估值表入库
         Date platDate = iPlatformDate.getSysDate();
         String seqNo=IDGenerator.generate(32);
