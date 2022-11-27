@@ -592,6 +592,16 @@ public class RskValTableImport002Controller extends BaseController{
             returnCat = "15";
         }
 
+        if (ObjectUtils.isEmpty(returnCat)) {
+            if (subCode.startsWith("1")) {
+                returnCat = "17";
+            }
+
+            if (subCode.startsWith("2")) {
+                returnCat = "16";
+            }
+        }
+
         // 返回
         return returnCat;
     }
