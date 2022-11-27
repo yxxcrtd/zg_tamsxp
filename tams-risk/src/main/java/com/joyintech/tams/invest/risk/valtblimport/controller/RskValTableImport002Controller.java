@@ -49,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.joyintech.tams.invest.common.util.ExcelUtil;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -326,6 +327,9 @@ public class RskValTableImport002Controller extends BaseController{
             rskValtblDataDto.setCreateTime(iPlatformDate.getSysDate());
             rskValtblDataDto.setUpdateUser(CommonUtil.getUserName());
             rskValtblDataDto.setUpdateTime(iPlatformDate.getSysDate());
+            rskValtblDataDto.setSubOneCat(ExcelUtil.getSubOneCat(rskValtblDataDto.getSubCode(),
+                    rskValtblDataDto.getSubName(),null == rskValtblDataDto.getSecurityCost() ? new BigDecimal(0) : rskValtblDataDto.getSecurityCost()
+                    , null == rskValtblDataDto.getSmv() ? new BigDecimal(0) : rskValtblDataDto.getSmv()));
             //异常标识，如果科目代码和科目名称解析为空，异常标识置1
            /* if(row.getSubjectCode()==null||row.getData().get("科目名称")==null){
                 rskValtblDataDto.setExpFlag(1);
@@ -440,7 +444,7 @@ public class RskValTableImport002Controller extends BaseController{
 
     @RequestMapping(value="/selectLog")
     @ResponseBody
-    public String selectLog(String infoName){
+    public List<String> selectLog(String infoName){
          return  rskValtblAnlsLogService.selectLog(infoName);
     }
 }
