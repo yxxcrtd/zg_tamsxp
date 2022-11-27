@@ -69,23 +69,23 @@
             <artifactId>commons-digester</artifactId>
             <version>1.7</version>
         </dependency>
-        <dependency>
-            <groupId>jasperreports-chart-customizers</groupId>
-            <artifactId>jasperreports-chart-customizers</artifactId>
-            <version>6.4.3</version>
-        </dependency>
-        <dependency>
-            <groupId>jasperreports-chart-themes</groupId>
-            <artifactId>jasperreports-chart-themes</artifactId>
-            <version>6.4.3</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>jasperreports-chart-customizers</groupId>-->
+<!--            <artifactId>jasperreports-chart-customizers</artifactId>-->
+<!--            <version>6.4.3</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>jasperreports-chart-themes</groupId>-->
+<!--            <artifactId>jasperreports-chart-themes</artifactId>-->
+<!--            <version>6.4.3</version>-->
+<!--        </dependency>-->
         <!--Jasper改造  zhangyf 20190220 end-->
         <!--add by pingan 20190308 start-->
-        <dependency>
-			<groupId>net.sf</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>6.4.31</version>
-		</dependency>
+<!--        <dependency>-->
+<!--			<groupId>net.sf</groupId>-->
+<!--			<artifactId>jasperreports</artifactId>-->
+<!--			<version>6.4.31</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>com.jaspersoft</groupId>
 			<artifactId>jasperserver-api-common</artifactId>
