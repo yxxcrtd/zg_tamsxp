@@ -540,152 +540,56 @@ public class RskValTableImport002Controller extends BaseController{
             if (i1 == 1) {
                 returnCat = "01";
             }
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         // todo
         if (StringUtils.containsAny(subName, "债券")) {
             returnCat = "02";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         if (StringUtils.containsAny(subName, "拆出") || StringUtils.containsAny(subName, "买入返售") || StringUtils.containsAny(subName, "拆放同业")) {
             returnCat = "03";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         // todo
         if (subCode.length() == 4 && (StringUtils.containsAny(subName, "拆入"))) {
             returnCat = "04";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         if (StringUtils.containsAny(subName, "其他债权") || StringUtils.containsAny(subName, "项目类债权")) {
             returnCat = "05";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         if (StringUtils.containsAny(subName, "股票") || StringUtils.containsAny(subName, "优先股") || StringUtils.containsAny(subName, "非上市股权")) {
             returnCat = "06";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         // todo
         if (subCode.startsWith("3")) {
             returnCat = "07";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         if (StringUtils.containsAny(subName, "QD")) {
             returnCat = "08";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         // todo
         if (StringUtils.containsAny(subName, "基金投资") || StringUtils.containsAny(subName, "结构化主体")) {
             returnCat = "11";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         // todo
         if (StringUtils.containsAny(subName, "基金投资") || StringUtils.containsAny(subName, "结构化主体")) {
             returnCat = "12";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         // todo
         if (StringUtils.containsAny(subName, "基金投资") || StringUtils.containsAny(subName, "结构化主体")) {
             returnCat = "13";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         if (StringUtils.containsAny(subName, "拆入") || StringUtils.containsAny(subName, "卖出回购")) {
             returnCat = "15";
-        } else {
-            if (subCode.startsWith("1")) {
-                returnCat = "17";
-            }
-
-            if (subCode.startsWith("2")) {
-                returnCat = "16";
-            }
         }
 
         // 返回
