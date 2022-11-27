@@ -27,23 +27,25 @@ $(function () {
                 fileHeaderArry.push($(this).text())
             }
         });
-        var subOneCat = $("#subOneCat option:selected").each(function (){
+       /* var subOneCat = $("#subOneCat option:selected").each(function (){
             if($(this).val() != null || $(this).val() != ''){
                 subOneCatArry.push($(this).text())
             }
-        });
-        var subTwoCat = $("#subTwoCat option:selected").each(function (){
+        });*/
+        /*var subTwoCat = $("#subTwoCat option:selected").each(function (){
             if($(this).val() != null || $(this).val() != ''){
                 subTwoCatArry.push($(this).text())
             }
-        });
+        });*/
+        var subTwoCat=$('#subTwoCat').val();
+        var subOneCat=$('#subOneCat').val();
         var subCode = $('#subCode').val();
         result.fileName = fileNameArry?fileNameArry.join(','):'';
         result.fileHeader = fileHeaderArry?fileHeaderArry.join(','):'';
         result.subCode = subCode?subCode.join(','):'';
-        result.subOneCat = subOneCatArry?subOneCatArry.join(','):'';
-        result.subTwoCat = subTwoCatArry?subTwoCatArry.join(','):'';
-        result.subTwoCat = subTwoCatArry?subTwoCatArry.join(','):'';
+        result.subOneCat = subOneCat?subOneCat.join(','):'';
+        result.subTwoCat = subTwoCat?subTwoCat.join(','):'';
+
         return result;
 
         /*var result = $.serializeToObject('#submitForm');
