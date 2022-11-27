@@ -310,7 +310,7 @@ public class RskValtblDataDto {
         return expFlag;
     }
 
-    public void setExpFlag(int expFlag) {
+    public void setExpFlag(int dataExpFlag) {
         this.expFlag = expFlag;
     }
 

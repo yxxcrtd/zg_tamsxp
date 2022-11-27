@@ -85,22 +85,23 @@ RskValTableImport001 = function(){
 /**
  * 定义数据表格
  */
+/*
 var rskvalsumnameTable1 = $("#rskvalstructureTable").joyintable({
     page: false,
     checkbox:false,
     cols:[
-        {field:'isMatch', title: 'RskValTableImport001.isMatch', width:200,sortable: false}
-        ,{field:'subCode',  title: 'RskValTableImport001.subCode',width:200,sortable: false}
+       /!* //{field:'isMatch', title: 'RskValTableImport001.isMatch', width:200,sortable: false}
+        {field:'subCode',  title: 'RskValTableImport001.subCode',width:200,sortable: false}
         ,{field:'subName',  title: 'RskValTableImport001.subName',width:200,sortable: false}
-        ,{field:'securityQuantity',  title: 'RskValTableImport001.securityQuantity',width:150,type:'number',digit:8,sortable: false}
+        ,{field:'quantity',  title: '数量',width:150,type:'number',digit:8,sortable: false}
         ,{field:'unitCost',  title: 'RskValTableImport001.unitCost',type:'number',digit:8,width:150,sortable: false}
         ,{field:'securityCost',  title: 'RskValTableImport001.securityCost',width:150,type:'number',digit:8,sortable: false}
         ,{field:'ctnwr',  title: 'RskValTableImport001.ctnwr',width:150,type:'number',digit:8,sortable: false}
-        ,{field:'mcp',  title: 'RskValTableImport001.mcp',width:150,type:'number',digit:8,sortable: false}
+        //,{field:'mcp',  title: 'RskValTableImport001.mcp',width:150,type:'number',digit:8,sortable: false}
         ,{field:'smv',  title: 'RskValTableImport001.smv',width:150,type:'number',digit:8,sortable: false}
         ,{field:'mcr',  title: 'RskValTableImport001.mcr',width:150,type:'number',digit:8,digit:8,sortable: false}
         ,{field:'valueAdded',  title: 'RskValTableImport001.valueAdded',width:150,sortable: false}
-        ,{field:'suspensionInfo',  title: 'RskValTableImport001.suspensionInfo',width:150,sortable: false}
+        /!*,{field:'suspensionInfo',  title: 'RskValTableImport001.suspensionInfo',width:150,sortable: false}
         ,{field:'equityInfo',  title: 'RskValTableImport001.equityInfo',width:150,sortable: false}
         ,{field:'securityCostOri', title: 'RskValTableImport001.securityCostOri',width:150,type:'number',digit:8,sortable: false}
         ,{field:'smvOri', title: 'RskValTableImport001.smvOri',width:150,type:'number',digit:8,sortable: false}
@@ -108,9 +109,10 @@ var rskvalsumnameTable1 = $("#rskvalstructureTable").joyintable({
         ,{field:'ccy', title: 'RskValTableImport001.ccy',width:150,sortable: false}
         ,{field:'exchangeRate', title: 'RskValTableImport001.exchangeRate',width:150,type:'number',digit:8,sortable: false}
         ,{field:'valType',  title: 'RskValTableImport001.valType', visible : false}
-        ,{field:'isMatch',  visible : false}
+        ,{field:'isMatch',  visible : false}*!/!*!/
     ]
 });
+*/
 
 
 /**
@@ -146,7 +148,7 @@ function checkDate(dateStr) {
     /**
      * 定义数据表格(指标结构映射)
      */
-    var rskvalstructureTable=$("#rskvalstructureTable").joyintable({
+   /* var rskvalstructureTable=$("#rskvalstructureTable").joyintable({
         ajax: {
             url: basePath + 'invest/risk/valtblimport/RskValTableImport002/initValTableInfo',//请求路径
             type: 'POST',//请求类型
@@ -156,7 +158,7 @@ function checkDate(dateStr) {
         },
         checkbox:false,
         cols:[
-                   {field:'isMatchStr', title: 'RskValTableImport001.isMatch', width:200,sortable: false}//是否匹配
+                  /!* {field:'isMatchStr', title: 'RskValTableImport001.isMatch', width:200,sortable: false}//是否匹配
                    ,{field:'subCode',  title: 'RskValTableImport001.subCode',width:200,sortable: false}
                   ,{field:'subName',  title: 'RskValTableImport001.subName',width:200,sortable: false}
                   ,{field:'securityQuantity',  title: 'RskValTableImport001.securityQuantity',width:150,type:'number',digit:8,sortable: false}
@@ -175,10 +177,10 @@ function checkDate(dateStr) {
                    ,{field:'ccy', title: 'RskValTableImport001.ccy',width:150,sortable: false}
                    ,{field:'exchangeRate', title: 'RskValTableImport001.exchangeRate',width:150,type:'number',digit:8,sortable: false}
                    ,{field:'valType',  title: 'RskValTableImport001.valType', visible : false}
-                   ,{field:'isMatch',  visible : false}
+                   ,{field:'isMatch',  visible : false}*!/
         ]
-    });
-    
+    });*/
+
     /**
      * 定义数据表格(资产科目映射)
      */
@@ -213,10 +215,10 @@ function checkDate(dateStr) {
         }
         ]
     });
-    
-    /**
+
+   /* /!**
      * 定义数据表格(汇总科目映射)
-     */
+     *!/
     var rskvalsumnameTable=$("#rskvalsumnameTable").joyintable({
         ajax: {
             url: basePath+'invest/risk/penetrationmanagement/rskvalsumname/RskValSumname001/findPage',//请求路径
@@ -226,9 +228,9 @@ function checkDate(dateStr) {
             }//ajax请求数据
         },
         checkbox:false,
-        /**
+        /!**
          * 定义表头
-         */
+         *!/
         cols:[
              {
             field : 'sumName',
@@ -243,8 +245,8 @@ function checkDate(dateStr) {
             title : 'RskValSumname001.nextIndexType'
         }
         ]
-    });
-    
+    });*/
+
     /**
      * 组合名称change事件
      */
@@ -274,13 +276,13 @@ function checkDate(dateStr) {
             rskvalsumnameTable.table ? rskvalsumnameTable.reload() : rskvalsumnameTable.load();
         })
     }
-    
+
     /**
      * 前台check
      */
     var check = function(){
-        var rskvalstructureList = rskvalstructureTable.getAllRows();
-        var rskValAssetCodeList = rskValAssetCodeTable.getAllRows();
+       var rskvalstructureList = rskvalstructureTable.getAllRows();
+       var rskValAssetCodeList = rskValAssetCodeTable.getAllRows();
         var rskvalsumnameList = rskvalsumnameTable.getAllRows();
         var msg;var msgArray=[];var messages="";
         if(!rskvalstructureList || rskvalstructureList.length == 0) {
@@ -314,7 +316,7 @@ function checkDate(dateStr) {
         }
         return true;*/
     }
-    
+
     /**
      * 获取文件路径名
      */
@@ -341,12 +343,12 @@ function checkDate(dateStr) {
         if(typeof fileInfo[0] != 'undefined'){
             object.valTableFileName = fileInfo[0].fileName;
         }
-//        Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport001/check',object, function(result) {
-//            if(check()){
-//                Joyin.dialog(JoyinUtil.getLabel('估值表预览'), '../RskValTableImport002/init', '95%', '95%'
-//                        ,object);
-//            }
-//        });
+       /* Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport001/check',object, function(result) {
+           if(check()){
+                Joyin.dialog(JoyinUtil.getLabel('估值表预览'), '../RskValTableImport002/init', '95%', '95%'
+                        ,object);
+            }
+        });*/
 
         Joyin.dialog(JoyinUtil.getLabel('估值表预览'), '../RskValTableImport002/init', '95%', '95%' ,object);
     }
@@ -354,11 +356,15 @@ function checkDate(dateStr) {
         //批量导入
         function batchUpload() {
             Joyin.confirm("请确认是否要批量导入数据？", function () {
-                Joyin.uploadFile(
+                    Joyin.dialog(JoyinUtil.getLabel("批量上传"), basePath
+                        + "invest/risk/valtblimport/RskValTableImport003/init", "70%",
+                        "60%");
+                /*Joyin.uploadFile(
                     {
                         pageId : 'RskValTableImport001',
-                        exts: 'zip',
-                        hideTpl: true
+                       /!* exts: 'zip',*!/
+                        hideTpl: false
+                        /!*type: 'list'*!/
                     },
                     function (fileName) {
                         $('#valDate').val('');
@@ -375,7 +381,7 @@ function checkDate(dateStr) {
                                 var index = parent.layer.getFrameIndex(window.name);
                                 parent.layer.close(index);
                             });
-                    });
+                    });*/
             });
         }
 

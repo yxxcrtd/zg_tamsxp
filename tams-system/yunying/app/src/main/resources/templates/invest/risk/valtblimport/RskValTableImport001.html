@@ -102,10 +102,22 @@
 <!--                        <i class="iconfont icon-upload" ></i>批量导入-->
 <!--                    </button>-->
 <!--                </div>-->
+            <div class="form-button-area" export="false" filter="false">
+                <!-- 预览 -->
+                <button type="button" class="layui-btn layui-btn-sm btn-default"
+                        id="RskValTableImport001_btn_see">
+                    <i class="iconfont icon-browse_fill"></i>预览
+                </button>
+                <!-- 批量导入 -->
+                <button type="button" class="layui-btn layui-btn-sm btn-default"
+                        id="RskValTableImport001_btn_batchUpload">
+                    <i class="iconfont icon-upload" ></i>批量导入
+                </button>
+            </div>
 <!--            </div>-->
         </form>
     </div>
-    <div class="rsk-dl-wrap" style="display: none">
+   <!-- <div class="rsk-dl-wrap" style="display: none">
     <dl class="rsk-dl">
         <dt data-th-text="#{RskValAssetCode003.startRow}">起始行：</dt>
         <dd id="ddstartRow">N/A</dd>
@@ -118,29 +130,29 @@
         <dt data-th-text="#{RskValSumname001.trimChars}">清理字符：</dt>
         <dd id="ddtrimChars">N/A</dd>
     </dl>
-    <!-- add by 裴家俊 20190514  添加过滤器 -->
+    &lt;!&ndash; add by 裴家俊 20190514  添加过滤器 &ndash;&gt;
     <dl class="rsk-dl rsk-dl-item">
         <dt data-th-text="#{RskValAssetCode003.filter}">过滤器：</dt>
         <dd id="ddfilterId">N/A</dd>
     </dl>
-    </div>
+    </div>-->
 
     <div class="layui-tab" id="tabList">
-        <ul class="layui-tab-title">
-            <!--            <li class="layui-this" lay-id="00" data-th-text="#{RskValStructure001.title}">指标结构映射</li>-->
-            <!--            <li data-th-text="#{RskValAssetCode002.title2}" lay-id="01">资产科目映射</li>-->
-            <!--            <li data-th-text="#{RskValSumname001.title}" lay-id="02">汇总科目映射</li>-->
+        <!--<ul class="layui-tab-title">
+            &lt;!&ndash;            <li class="layui-this" lay-id="00" data-th-text="#{RskValStructure001.title}">指标结构映射</li>&ndash;&gt;
+            &lt;!&ndash;            <li data-th-text="#{RskValAssetCode002.title2}" lay-id="01">资产科目映射</li>&ndash;&gt;
+            &lt;!&ndash;            <li data-th-text="#{RskValSumname001.title}" lay-id="02">汇总科目映射</li>&ndash;&gt;
 
             <li class="layui-this" lay-id="00">估值表预览</li>
             <li lay-id="01">估值表汇总</li>
-        </ul>
+        </ul>-->
 
-        <div class="layui-tab-content">
+        <div class="layui-tab-content" disabled="none">
             <div class="layui-tab-item layui-show">
-                <table class="layui-table" id="rskvalstructureTable"></table>
+                <table class="layui-table" id="rskvalstructureTable" disabled="none"></table>
             </div>
             <div class="layui-tab-item">
-                <table class="layui-table" id="rskValAssetCodeTable"></table>
+                <table class="layui-table" id="rskValAssetCodeTable" disabled="none"></table>
             </div>
             <div class="layui-tab-item">
                 <!-- <div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">

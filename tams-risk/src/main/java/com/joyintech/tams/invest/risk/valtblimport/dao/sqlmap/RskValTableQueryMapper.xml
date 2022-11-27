@@ -1,0 +1,21 @@
+<!--
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.invest.risk.valtblimport.dao.RskValTableQueryMapper">
+    <select id="getFileName" parameterType="java.lang.String" resultType="java.lang.String">
+        select RSK_VALTBL_FILE_INFO.FILE_NAME from RSK_VALTBL_FILE_INFO
+           <where>
+               <if test="fileName!=null">
+                   FILE_NAME=#{fileName}
+               </if>
+           </where>
+    </select>
+    <select id="getFileHeader" parameterType="java.lang.String" resultType="java.lang.String">
+        select RSK_VALTBL_FILE_INFO.FILE_HEADER from RSK_VALTBL_FILE_INFO
+        <where>
+            <if test="fileHeader!=null">
+                FILE_HEADER=#{fileHeader}
+            </if>
+        </where>
+    </select>
+</mapper>-->

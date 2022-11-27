@@ -126,14 +126,26 @@
     </div>
 
     <div class="layui-tab" id="tabList">
-        <ul class="layui-tab-title">
-            <!--            <li class="layui-this" lay-id="00" data-th-text="#{RskValStructure001.title}">指标结构映射</li>-->
-            <!--            <li data-th-text="#{RskValAssetCode002.title2}" lay-id="01">资产科目映射</li>-->
-            <!--            <li data-th-text="#{RskValSumname001.title}" lay-id="02">汇总科目映射</li>-->
+        <div class="form-button-area" export="false" filter="false">
+            <!-- 预览 -->
+            <button type="button" class="layui-btn layui-btn-sm btn-default"
+                    id="RskValTableImport001_btn_see">
+                <i class="iconfont icon-browse_fill"></i>预览
+            </button>
+            <!-- 批量导入 -->
+            <button type="button" class="layui-btn layui-btn-sm btn-default"
+                    id="RskValTableImport001_btn_batchUpload">
+                <i class="iconfont icon-upload" ></i>批量导入
+            </button>
+        </div>
+       <!-- <ul class="layui-tab-title">
+            &lt;!&ndash;            <li class="layui-this" lay-id="00" data-th-text="#{RskValStructure001.title}">指标结构映射</li>&ndash;&gt;
+            &lt;!&ndash;            <li data-th-text="#{RskValAssetCode002.title2}" lay-id="01">资产科目映射</li>&ndash;&gt;
+            &lt;!&ndash;            <li data-th-text="#{RskValSumname001.title}" lay-id="02">汇总科目映射</li>&ndash;&gt;
 
             <li class="layui-this" lay-id="00">估值表预览</li>
             <li lay-id="01">估值表汇总</li>
-        </ul>
+        </ul>-->
 
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">

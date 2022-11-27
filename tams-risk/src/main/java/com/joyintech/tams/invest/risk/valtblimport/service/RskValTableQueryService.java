@@ -4,15 +4,20 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.service.InvestInterfCommService;
+/*import com.joyintech.tams.invest.risk.valtblimport.dao.RskValTableQueryMapper;*/
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSumDto;
+import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblFileInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +28,26 @@ public class RskValTableQueryService extends CommonExportService<RskValtblAssetS
      */
     @Autowired
     private InvestInterfCommService investInterfCommService;
-    public Page<RskValtblAssetSumDto> selectForPage(Map<String, Object> pageParam) {
+    /*@Autowired
+    private RskValTableQueryMapper rskValTableQueryMapper;*/
+    public List<SelectOptionDto> getFileName(String fileName){
+        /*return rskValTableQueryMapper.getFileName(fileName);*/
+        return restTemplate.getForList(ServiceApplication.RISK_SERVICE_NAME + "/RskValTableQuery/getFileName?fileName="+fileName,
+                SelectOptionDto.class);
+    }
+    public List<SelectOptionDto> getFileHeader(String fileHeader){
+        return restTemplate.getForList(ServiceApplication.RISK_SERVICE_NAME + "/RskValTableQuery/getFileHeader?fileHeader="+fileHeader,
+                SelectOptionDto.class);
+    }
+    public List<SelectOptionDto> getSubCode(String subCode){
+        return restTemplate.getForList(ServiceApplication.RISK_SERVICE_NAME + "/RskValTableQuery/getSubCode?subCode="+subCode,
+                SelectOptionDto.class);
+    }
+
+    public Page<RskValtblFileInfoDto> selectForPage(Map<String, Object> pageParam) {
         return restTemplate.postForPage(
                 ServiceApplication.RISK_SERVICE_NAME + "/RskValTableQuery/findPage",
-                pageParam, RskValtblAssetSumDto.class);
+                pageParam, RskValtblFileInfoDto.class);
     }
 
     public List<RskValtblAssetSubDto> selectRskValTableDetaile(Map<String, Object> param) {
@@ -44,10 +65,10 @@ public class RskValTableQueryService extends CommonExportService<RskValtblAssetS
     /**
      * {@inheritDoc}
      */
-    @Override
+   /* @Override
     public Page<RskValtblAssetSumDto> selectPageData(Map<String, Object> selectParam) {
         return selectForPage(selectParam);
-    }
+    }*/
     /**
      * 发送【第三方接口】
      * @return

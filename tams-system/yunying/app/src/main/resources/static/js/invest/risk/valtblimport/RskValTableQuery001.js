@@ -3,14 +3,58 @@ $(function () {
      * 获取查询参数
      */
     var getPageParams = function() {
-        var result = $.serializeToObject('#submitForm');
+       /* var fileName=[];
+        $("#fileName option:selected").each(function (){
+            if($(this).val() != null || $(this).val() != ''){
+                fileName.push($(this).text())
+            }
+        })
+        return {
+            fileName:fileName
+        }*/
+        var fileNameArry=[];
+        var fileHeaderArry=[];
+        var subOneCatArry=[];
+        var subTwoCatArry=[];
+        var result = $.serializeToObject('#submitForm')
+        var fileName = $("#fileName option:selected").each(function (){
+            if($(this).val() != null || $(this).val() != ''){
+                fileNameArry.push($(this).text())
+            }
+        });
+        var fileHeader = $("#fileHeader option:selected").each(function (){
+            if($(this).val() != null || $(this).val() != ''){
+                fileHeaderArry.push($(this).text())
+            }
+        });
+        var subOneCat = $("#subOneCat option:selected").each(function (){
+            if($(this).val() != null || $(this).val() != ''){
+                subOneCatArry.push($(this).text())
+            }
+        });
+        var subTwoCat = $("#subTwoCat option:selected").each(function (){
+            if($(this).val() != null || $(this).val() != ''){
+                subTwoCatArry.push($(this).text())
+            }
+        });
+        var subCode = $('#subCode').val();
+        result.fileName = fileNameArry?fileNameArry.join(','):'';
+        result.fileHeader = fileHeaderArry?fileHeaderArry.join(','):'';
+        result.subCode = subCode?subCode.join(','):'';
+        result.subOneCat = subOneCatArry?subOneCatArry.join(','):'';
+        result.subTwoCat = subTwoCatArry?subTwoCatArry.join(','):'';
+        result.subTwoCat = subTwoCatArry?subTwoCatArry.join(','):'';
+        return result;
+
+        /*var result = $.serializeToObject('#submitForm');
         if($("#ptlId").val() == null || $("#ptlId").val() == ''){
             result.ptlId = $("#ptlId").val();
         }
         else{
             result.ptlId = $("#ptlId").val().join(',');
         }
-        return result;
+        return result;*/
+
     };
     var dataTable=$("#dataTable").joyintable({
         ajax: {
@@ -25,30 +69,33 @@ $(function () {
         searchOnInit: false,
         isMulti: true,
         cols: [[
-            {field:'ptlId', title: '组合名称',visible:false, rowspan: 2,sortable: false}//组合名称
-            ,{field:'valDate', title: '查询日期',visible:false, rowspan: 2,sortable: false}//组合名称
-            ,{field:'portfolioName', title: '组合名称',width:200, rowspan: 2,sortable: false}//组合名称
-            ,{title: '总资产', colspan: 2,align:'center',sortable: false}//总资产
-            ,{title: '净资产', colspan: 2,align:'center',sortable: false}//总资产
-            ,{title: '单位净值', colspan: 2,align:'center',sortable: false}//总资产
-            ,{title: '净值波动%', colspan: 3,align:'center',sortable: false}
-            ,{field:'deviatingAmount',rowspan: 2, title: '偏离金额',sortable: false,type:'number'}
-            ,{field:'degreeOfDeviate',rowspan: 2, title: '偏离度',sortable: false,type:'number'}
-            ,{field:'operation', title: 'SysCommon.operation', type:'action',rowspan: 2,
-                render:function (data, type, row, meta) {
-                        return '<i class="btn iconfont config" title="查看">&#xe6ac;</i>';
-                }
-            }
-        ],[
-            {field:'totalAssestCost', title: '成本',sortable: false,type:'number'}
-            ,{field:'totalAssestValue', title: '市值',sortable: false,type:'number'}
-            ,{field:'netAssestCost', title: '成本',sortable: false,type:'number'}
-            ,{field:'netAssestValue', title: '市值',sortable: false,type:'number'}
-            ,{field:'unitNetWorthCost', title: '成本',sortable: false,type:'number'}
-            ,{field:'unitNetWorthValue', title: '市值',sortable: false,type:'number'}
-            ,{field:'comparedWithDay', title: '较上一日',sortable: false,type:'number'}
-            ,{field:'comparedWithMonth', title: '较上月',sortable: false,type:'number'}
-            ,{field:'comparedWithYear', title: '较年初',sortable: false,type:'number'}
+            {field:'fileName', title: '估值表名称',width:'8%', rowspan: 2,sortable: false}
+            ,{field:'fileHeader', title: '估值表表头', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'fileDate', title: '估值日期', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'capital', title: '实收资本', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'fundAssetValCost', title: '基金资产净值（成本）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'fundAssetValSmv', title: '基金资产净值（市值）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'assetTotalCost', title: '资产合计（成本）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'assetTotalSmv', title: '资产合计（市值）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'liabilityTotalCost', title: '负债合计（成本）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'liabilityTotalSmv', title: '负债合计（市值）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'todUnitVal', title: '今日单位净值', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'porfit', title: '万份收益',rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'subCode', title: '标识代码', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'subName', title: '标识名称', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'subOneCat', title: '资产/负债一级类别', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'subTwoCat', title: '资产/负债二级类别', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'quantity', title: '数量', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'ccy', title: '币种', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'securityCost', title: '成本（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'interest', title: '利息（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'dividend', title: '股利/红利（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'intAdj', title: '利息调整（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'devalue', title: '减值（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'valInc', title: '估值增值（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'lateInt', title: '逾期利息（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'smv', title: '市值（本币）', rowspan: 2,sortable: false,width:'10%'}
+            ,{field:'shadowPriVal', title: '影子价格估值（本币）', rowspan: 2,sortable: false,width:'10%'}
         ]],
         done:function(){
             $(".laytable-cell-group").css({'text-align':'center'})
@@ -84,7 +131,8 @@ $(function () {
     $(function () {
         $("#RskValTableQuery001_btn_search").click(function () {
             var paramObj = getPageParams();//获取参数
-            if(!paramObj.valDate){
+
+            if(!paramObj.fileDate){
                 Joyin.alert("请选择查询日期！",7);
                 return;
             }

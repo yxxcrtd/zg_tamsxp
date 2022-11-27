@@ -2,8 +2,9 @@ package com.joyintech.tams.invest.risk.valtblimport.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-public class RskValtblFileInfoDto {
+public class RskValtblFileInfoDto extends RskValtblDataDto{
     /**
      *实体类含义：估值文件表Dto
      *
@@ -17,7 +18,7 @@ public class RskValtblFileInfoDto {
     /**
      * 估值表文件组
      */
-    private String fileGpr;
+    private String fileGrp;
 
     /**
      * 估值表文件名
@@ -41,14 +42,32 @@ public class RskValtblFileInfoDto {
 
 
     /**
-     * 基金资产净值
+     * 基金资产净值-本币成本
      */
-    private BigDecimal fundAssetVal;
+    private BigDecimal fundAssetValCost;
+    /**
+     * 基金资产净值-本币市值
+     */
+    private BigDecimal fundAssetValSmv;
 
     /**
-     * 资产合计
+     * 资产合计-本币成本
      */
-    private BigDecimal assetTotal;
+    private BigDecimal assetTotalCost;
+
+    /**
+     * 资产合计-本币市值
+     */
+    private BigDecimal assetTotalSmv;
+
+    /**
+     * 负债合计-本币成本
+     */
+    private BigDecimal liabilityTotalCost;
+    /**
+     * 负债合计-本币市值
+     */
+    private BigDecimal liabilityTotalSmv;
 
     /**
      * 负债合计
@@ -90,6 +109,19 @@ public class RskValtblFileInfoDto {
      */
     private Date updateTime;
 
+    /**
+     * 存放数据表
+     */
+    List<RskValtblDataDto> rskValtblDataDto;
+
+    public List<RskValtblDataDto> getRskValtblDataDto() {
+        return rskValtblDataDto;
+    }
+
+    public void setRskValtblDataDto(List<RskValtblDataDto> rskValtblDataDto) {
+        this.rskValtblDataDto = rskValtblDataDto;
+    }
+
     public String getSeqNo() {
         return seqNo;
     }
@@ -98,12 +130,12 @@ public class RskValtblFileInfoDto {
         this.seqNo = seqNo;
     }
 
-    public String getFileGpr() {
-        return fileGpr;
+    public String getFileGrp() {
+        return fileGrp;
     }
 
-    public void setFileGpr(String fileGpr) {
-        this.fileGpr = fileGpr;
+    public void setFileGrp(String fileGrp) {
+        this.fileGrp = fileGrp;
     }
 
     public String getFileName() {
@@ -138,20 +170,28 @@ public class RskValtblFileInfoDto {
         this.capital = capital;
     }
 
-    public BigDecimal getFundAssetVal() {
-        return fundAssetVal;
+    public BigDecimal getFundAssetValCost() {
+        return fundAssetValCost;
     }
 
-    public void setFundAssetVal(BigDecimal fundAssetVal) {
-        this.fundAssetVal = fundAssetVal;
+    public void setFundAssetValCost(BigDecimal fundAssetValCost) {
+        this.fundAssetValCost = fundAssetValCost;
     }
 
-    public BigDecimal getAssetTotal() {
-        return assetTotal;
+    public BigDecimal getFundAssetValSmv() {
+        return fundAssetValSmv;
     }
 
-    public void setAssetTotal(BigDecimal assetTotal) {
-        this.assetTotal = assetTotal;
+    public void setFundAssetValSmv(BigDecimal fundAssetValSmv) {
+        this.fundAssetValSmv = fundAssetValSmv;
+    }
+
+    public BigDecimal getAssetTotalCost() {
+        return assetTotalCost;
+    }
+
+    public void setAssetTotalCost(BigDecimal assetTotal) {
+        this.assetTotalCost = assetTotalCost;
     }
 
     public BigDecimal getLiabilityTotal() {
@@ -216,5 +256,29 @@ public class RskValtblFileInfoDto {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getAssetTotalSmv() {
+        return assetTotalSmv;
+    }
+
+    public void setAssetTotalSmv(BigDecimal assetTotalSmv) {
+        this.assetTotalSmv = assetTotalSmv;
+    }
+
+    public BigDecimal getLiabilityTotalCost() {
+        return liabilityTotalCost;
+    }
+
+    public void setLiabilityTotalCost(BigDecimal liabilityTotalCost) {
+        this.liabilityTotalCost = liabilityTotalCost;
+    }
+
+    public BigDecimal getLiabilityTotalSmv() {
+        return liabilityTotalSmv;
+    }
+
+    public void setLiabilityTotalSmv(BigDecimal liabilityTotalSmv) {
+        this.liabilityTotalSmv = liabilityTotalSmv;
     }
 }

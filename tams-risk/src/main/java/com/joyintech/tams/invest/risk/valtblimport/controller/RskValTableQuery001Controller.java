@@ -3,16 +3,21 @@ package com.joyintech.tams.invest.risk.valtblimport.controller;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSumDto;
+import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblFileInfoDto;
 import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableQueryService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,7 +43,32 @@ public class RskValTableQuery001Controller extends BaseController {
     private RskValTableQueryService rskValTableQueryService;
     @Override
     public String init(Model model){
+        this.setSelectOptionToModel(model, DictCode.资产_负债_一级类别);
+        this.setSelectOptionToModel(model, DictCode.资产_负债_二级类别);
+        this.setSelectOptionToModel(model, DictCode.异常标识);
         return super.init(model);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getFileName")
+    public List<SelectOptionDto> getFileName(){
+        String param = super.getRequest().getParameter("search");
+
+        return rskValTableQueryService.getFileName(param);
+    }
+    @ResponseBody
+    @RequestMapping("/getFileHeader")
+    public List<SelectOptionDto> getFileHeader(){
+        String param = super.getRequest().getParameter("search");
+        List<SelectOptionDto> temp =rskValTableQueryService.getFileHeader(param);
+        return temp;
+    }
+    @ResponseBody
+    @RequestMapping("/getSubCode")
+    public List<SelectOptionDto> getSubCode(){
+        String param = super.getRequest().getParameter("search");
+        List<SelectOptionDto> temp =rskValTableQueryService.getSubCode(param);
+        return temp;
     }
 
 
@@ -51,9 +81,9 @@ public class RskValTableQuery001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskValtblAssetSumDto> selectAll()
+    public Page<RskValtblFileInfoDto> selectAll()
              {
-        Page<RskValtblAssetSumDto> page = rskValTableQueryService.selectForPage(
+        Page<RskValtblFileInfoDto> page = rskValTableQueryService.selectForPage(
                 RequestUtil.getParameters(getRequest()));
         return page;
     }

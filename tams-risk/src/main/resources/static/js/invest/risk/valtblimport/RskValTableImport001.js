@@ -357,8 +357,9 @@ function checkDate(dateStr) {
                 Joyin.uploadFile(
                     {
                         pageId : 'RskValTableImport001',
-                        exts: 'zip',
-                        hideTpl: true
+                        /*exts: 'zip',*/
+                        hideTpl: true,
+                        type: 'list'
                     },
                     function (fileName) {
                         $('#valDate').val('');

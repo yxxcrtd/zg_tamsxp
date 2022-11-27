@@ -4,6 +4,8 @@ import com.joyintech.tams.common.base.entity.RskValtblPrtImpMap;
 import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblDataDto;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RskValtblDataMapper {
 
@@ -15,7 +17,7 @@ public interface RskValtblDataMapper {
 
     int insert(RskValtblDataDto rskValtblDataDto);
 
-    RskValtblDataDto select();
+    List<RskValtblDataDto> select();
 
     int updateByPrimaryKey(String seqNo);
 

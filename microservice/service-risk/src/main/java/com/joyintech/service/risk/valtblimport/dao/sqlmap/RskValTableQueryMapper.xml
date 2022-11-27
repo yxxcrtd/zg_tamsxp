@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.service.risk.valtblimport.dao.RskValTableQueryMapper">
+    <resultMap id="infoMap" type="com.joyintech.service.risk.valtblimport.dto.RskValtblFileInfoDto">
+        <id column="infoSeqNo" property="seqNo"></id>
+        <collection property="rskValtblDataDto" ofType="com.joyintech.service.risk.valtblimport.dto.RskValtblDataDto">
+            <id column="dataSeqNo" property="seqNo"></id>
+            <result column="subOneCat" property="subOneCat"></result>
+        </collection>
+    </resultMap>
+    <select id="getFileName" parameterType="java.lang.String" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select DISTINCT RSK_VALTBL_FILE_INFO.FILE_NAME id ,RSK_VALTBL_FILE_INFO.FILE_NAME text from RSK_VALTBL_FILE_INFO
+           <where>
+               <if test="fileName!=null and fileName!=''">
+                   FILE_NAME like concat('%',concat(#{fileName,jdbcType=VARCHAR},'%'))
+               </if>
+           </where>
+    </select>
+    <select id="getFileHeader" parameterType="java.lang.String" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select DISTINCT RSK_VALTBL_FILE_INFO.FILE_HEADER id , RSK_VALTBL_FILE_INFO.FILE_HEADER text from RSK_VALTBL_FILE_INFO
+        <where>
+            <if test="fileHeader!=null and fileHeader!=''">
+                FILE_HEADER like concat('%',concat(#{fileHeader,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+    </select>
+    <select id="getSubCode" parameterType="java.lang.String" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select DISTINCT RSK_VALTBL_DATA.SUB_CODE id , RSK_VALTBL_DATA.SUB_CODE text from RSK_VALTBL_DATA
+        <where>
+            <if test="subCode!=null and subCode!=''">
+                SUB_CODE like concat('%',concat(#{subCode,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+    </select>
+    <select id="queryForPage" resultType="com.joyintech.service.risk.valtblimport.dto.RskValtblFileInfoDto">
+        select RSK_VALTBL_FILE_INFO.FILE_NAME ,RSK_VALTBL_FILE_INFO.FILE_HEADER,RSK_VALTBL_FILE_INFO.FILE_DATE,RSK_VALTBL_DATA.SUB_CODE,RSK_VALTBL_DATA.SUB_NAME
+                  ,RSK_VALTBL_FILE_INFO.LIABILITY_TOTAL_COST,RSK_VALTBL_FILE_INFO.LIABILITY_TOTAL_SMV,RSK_VALTBL_FILE_INFO.TOD_UNIT_VAL
+                   ,RSK_VALTBL_FILE_INFO.CAPITAL,RSK_VALTBL_FILE_INFO.FUND_ASSET_VAL_COST,RSK_VALTBL_FILE_INFO.FUND_ASSET_VAL_SMV,
+               RSK_VALTBL_FILE_INFO.ASSET_TOTAL_COST,RSK_VALTBL_FILE_INFO.ASSET_TOTAL_SMV
+                   ,RSK_VALTBL_FILE_INFO.PORFIT,RSK_VALTBL_DATA.DEVALUE,RSK_VALTBL_DATA.INT_ADJ,RSK_VALTBL_DATA.VAL_INC
+                   ,RSK_VALTBL_DATA.QUANTITY,RSK_VALTBL_DATA.CCY,RSK_VALTBL_DATA.SECURITY_COST,RSK_VALTBL_DATA.INTEREST
+                   ,RSK_VALTBL_DATA.DIVIDEND,RSK_VALTBL_DATA.LATE_INT,RSK_VALTBL_DATA.SMV,RSK_VALTBL_DATA.SHADOW_PRI_VAL
+                  ,RSK_VALTBL_DATA.SUB_ONE_CAT,RSK_VALTBL_DATA.SUB_TWO_CAT from RSK_VALTBL_FILE_INFO
+
+
+        LEFT join RSK_VALTBL_DATA on RSK_VALTBL_DATA.FILE_INFO_ID=RSK_VALTBL_FILE_INFO.SEQ_NO
+        <where>
+             <if test="fileDate != null and fileDate!=''">
+                 RSK_VALTBL_FILE_INFO.FILE_DATE =#{fileDate}
+             </if>
+             <if test="fileName != null and !fileName.isEmpty()">
+                 and RSK_VALTBL_FILE_INFO.FILE_NAME in (<foreach collection="fileName" item="item" separator=",">#{item}</foreach>)
+             </if>
+             <if test="fileHeader != null and !fileHeader.isEmpty()">
+                 and RSK_VALTBL_FILE_INFO.FILE_HEADER in (<foreach collection="fileHeader" item="item" separator=",">#{item}</foreach>)
+             </if>
+            <if test="subCode != null and !subCode.isEmpty()">
+
+                and RSK_VALTBL_DATA.SUB_CODE in (<foreach collection="subCode" item="item" separator=",">#{item}</foreach>)
+            </if>
+             <if test="subOneCat != null and !subOneCat.isEmpty()">
+                 and RSK_VALTBL_DATA.SUB_ONE_CAT in (<foreach collection="subOneCat" item="item" separator=",">#{item}</foreach>)
+             </if>
+            <if test="subTwoCat != null and !subTwoCat.isEmpty()">
+                and RSK_VALTBL_DATA.SUB_TWO_CAT in (<foreach collection="subTwoCat" item="item" separator=",">#{item}</foreach>)
+            </if>
+         </where>
+    </select>
+    <insert id="insert">
+        insert into RSK_VALTBL_FILE_INFO (SEQ_NO,FILE_NAME,FILE_HEADER,FILE_DATE,CAPITAL,
+                                          FUND_ASSET_VAL_COST,FUND_ASSET_VAL_SMV,ASSET_TOTAL_COST,
+                                          ASSET_TOTAL_SMV,LIABILITY_TOTAL_COST,LIABILITY_TOTAL_SMV,PORFIT,TOD_UNIT_VAL,
+                                          CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+            values(#{seqNo,jdbcType=VARCHAR},#{fileName,jdbcType=VARCHAR}
+            ,#{fileHeader,jdbcType=VARCHAR},#{fileDate,jdbcType=VARCHAR},#{capital,jdbcType=NUMERIC},#{fundAssetValCost,jdbcType=NUMERIC},#{fundAssetValSmv,jdbcType=NUMERIC},
+                   #{assetTotalCost,jdbcType=NUMERIC},#{assetTotalSmv,jdbcType=NUMERIC},#{liabilityTotalCost,jdbcType=NUMERIC},#{liabilityTotalSmv,jdbcType=NUMERIC},#{porfit,jdbcType=NUMERIC},#{todUnitVal,jdbcType=NUMERIC},
+            #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertForLog">
+        insert into RSK_VALTBL_ANLS_LOG (SEQ_NO,FILE_INFO_ID,FILE_INFO_NAME,REMARK,CREATE_USER,
+                                         CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+            values (#{seqNo,jdbcType=VARCHAR},#{fileInfoId,jdbcType=VARCHAR},
+            #{fileInfoName,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{createUser,jdbcType=VARCHAR}
+            ,#{createTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertForData">
+        insert into RSK_VALTBL_DATA (SEQ_NO,FILE_INFO_ID,SUB_CODE,SUB_NAME,SUB_ONE_CAT,SUB_TWO_CAT,
+                                     QUANTITY,UNIT_COST,SECURITY_COST,CTNWR,SMV,MCR,INTEREST,
+                                     DIVIDEND,INT_ADJ,DEVALUE,VAL_INC,LATE_INT,SHADOW_PRI_VAL,CCY,EXP_FLAG,
+                                     CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        values(#{seqNo,jdbcType=VARCHAR},#{fileInfoId,jdbcType=VARCHAR},#{subCode,jdbcType=VARCHAR},#{subName,jdbcType=VARCHAR},#{subOneCat,jdbcType=VARCHAR},
+               #{subTwoCat,jdbcType=VARCHAR},#{quantity,jdbcType=VARCHAR},#{unitCost,jdbcType=VARCHAR},#{securityCost,jdbcType=VARCHAR},#{ctnwr,jdbcType=VARCHAR},#{smv,jdbcType=VARCHAR},
+               #{mcr,jdbcType=VARCHAR},#{interest,jdbcType=NUMERIC},
+               #{dividend,jdbcType=NUMERIC},#{intAdj,jdbcType=NUMERIC},#{devalue,jdbcType=NUMERIC},#{valInc,jdbcType=NUMERIC},
+               #{lateInt,jdbcType=NUMERIC},#{shadowPriVal,jdbcType=NUMERIC},#{ccy,jdbcType=VARCHAR},#{expFlag,jdbcType=NUMERIC},
+               #{createUser,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateUser,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <select id="selectName" parameterType="java.lang.String" resultType="java.lang.String">
+        select RSK_VALTBL_FILE_INFO.FILE_NAME from RSK_VALTBL_FILE_INFO
+         where FILE_NAME=#{name} and FILE_DATE!=null
+    </select>
+    <delete id="deleteName" parameterType="java.lang.String">
+        delete from RSK_VALTBL_FILE_INFO where FILE_NAME=#{name} and FILE_DATE!=null
+    </delete>
+    <select id="selectNameDate" resultType="java.lang.String">
+        select RSK_VALTBL_FILE_INFO.FILE_NAME from  RSK_VALTBL_FILE_INFO
+        where  FILE_NAME=#{fileName,jdbcType=VARCHAR} and FILE_DATE=#{fileDate,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteNameDate">
+        delete from RSK_VALTBL_FILE_INFO where FILE_NAME=#{fileName,jdbcType=VARCHAR} and FILE_DATE=#{fileDate,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteNameDateData">
+        delete from RSK_VALTBL_DATA  where RSK_VALTBL_DATA.FILE_INFO_ID    in
+              (select RSK_VALTBL_FILE_INFO.SEQ_NO from RSK_VALTBL_FILE_INFO where RSK_VALTBL_FILE_INFO.FILE_NAME=#{fileName})
+    </delete>
+    <delete id="deleteNameData" parameterType="java.lang.String">
+        delete from RSK_VALTBL_DATA where RSK_VALTBL_DATA.FILE_INFO_ID    in
+            (select RSK_VALTBL_FILE_INFO.SEQ_NO from RSK_VALTBL_FILE_INFO where RSK_VALTBL_FILE_INFO.FILE_NAME=#{fileName})
+    </delete>
+    <select id="selectLog" parameterType="java.lang.String" resultType="java.lang.String">
+        select RSK_VALTBL_ANLS_LOG.REMARK from RSK_VALTBL_ANLS_LOG
+         where FILE_INFO_ID=#{info,jdbcType=VARCHAR}
+    </select>
+</mapper>
