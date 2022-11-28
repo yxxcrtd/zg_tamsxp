@@ -40,7 +40,25 @@
                    ,RSK_VALTBL_FILE_INFO.PORFIT,RSK_VALTBL_DATA.DEVALUE,RSK_VALTBL_DATA.INT_ADJ,RSK_VALTBL_DATA.VAL_INC
                    ,RSK_VALTBL_DATA.QUANTITY,RSK_VALTBL_DATA.CCY,RSK_VALTBL_DATA.SECURITY_COST,RSK_VALTBL_DATA.INTEREST
                    ,RSK_VALTBL_DATA.DIVIDEND,RSK_VALTBL_DATA.LATE_INT,RSK_VALTBL_DATA.SMV,RSK_VALTBL_DATA.SHADOW_PRI_VAL
-                  ,RSK_VALTBL_DATA.SUB_ONE_CAT,RSK_VALTBL_DATA.SUB_TWO_CAT from RSK_VALTBL_FILE_INFO
+                  ,(case RSK_VALTBL_DATA.SUB_ONE_CAT when '01' then '资产'
+        when '02' then '负债'  end) subOneCat,
+               (case RSK_VALTBL_DATA.SUB_TWO_CAT when '01' then '现金及银行存款'
+                                                  when '02' then '同业存单'
+                                                  when '03' then '拆放同业及债券买入返售'
+                                                when '04' then '债券'
+                                                when '05' then '非标准化债权类资产'
+                                                when '06' then '权益类资产'
+                                                when '07' then '金融衍生品'
+                                                when '08' then '代客境外理财投资QDII'
+                                                when '09' then '商品类资产'
+                                                when '10' then '另类资产'
+                                                 when '11' then '公募基金'
+                                                when '12' then '私募基金'
+                                                when '13' then '资产管理产品'
+                                                when '14' then '委外投资——协议方式'
+                                                when '15' then '同业拆入及卖出回购'
+                                                 when '16' then '其他（负债）'
+                                                when '17' then '其他（资产）' end) subTwoCat from RSK_VALTBL_FILE_INFO
 
 
         LEFT join RSK_VALTBL_DATA on RSK_VALTBL_DATA.FILE_INFO_ID=RSK_VALTBL_FILE_INFO.SEQ_NO
@@ -117,7 +135,7 @@
         delete from RSK_VALTBL_DATA where RSK_VALTBL_DATA.FILE_INFO_ID    in
             (select RSK_VALTBL_FILE_INFO.SEQ_NO from RSK_VALTBL_FILE_INFO where RSK_VALTBL_FILE_INFO.FILE_NAME=#{fileName})
     </delete>
-    <select id="selectLog" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="selectLog" parameterType="java.lang.String" resultType="com.joyintech.service.risk.valtblimport.dto.RskValtblAnlsLogDto">
         select RSK_VALTBL_ANLS_LOG.REMARK from RSK_VALTBL_ANLS_LOG
          where FILE_INFO_ID=#{info,jdbcType=VARCHAR}
     </select>

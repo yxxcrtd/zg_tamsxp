@@ -106,7 +106,7 @@ public class RskValTableQueryService extends BaseService {
         return 1;
     }
 
-    public String selectForLog(String info){
+    public List<RskValtblAnlsLogDto> selectForLog(String info){
         return rskValTableQueryMapper.selectLog(info);
     }
 

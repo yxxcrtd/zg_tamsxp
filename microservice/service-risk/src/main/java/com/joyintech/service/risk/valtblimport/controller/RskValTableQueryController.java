@@ -97,7 +97,7 @@ public class RskValTableQueryController {
        return rskValTableQueryService.insertForData(rskValtblDataDtoList);
    }
     @PostMapping("/selectForLog")
-    public String selectForLog(String infoName){
+    public List<RskValtblAnlsLogDto> selectForLog(@RequestBody String infoName){
        return rskValTableQueryService.selectForLog(infoName);
     }
 

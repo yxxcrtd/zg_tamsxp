@@ -49,16 +49,54 @@
         }
         object.uploadArrStr=JSON.parse(dataArrStr);
         var x=object.fileArray[0].targetFile;
-        var print;
-        Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil
+
+        $.ajaxSettings.async = false;
+        var print=[];
+        for(var info in object.fileArray){
+                Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport002/initValTableInfo',
+                    {ptlId:object.fileArray[info].srcName,valTableFileName:object.fileArray[info].targetFile}, function(result) {
+                        x=result[0].fileInfoId;
+                        Joyin.ajax(basePath + 'invest/risk/valtblimport/RskValTableImport002/selectLog', {infoName:x},function (result2){
+                            print.push(result2);
+                            console.log(print);
+                            //rskvalsumnameTable1.load();
+                            rskvalsumnameTable1.addRow(result2[0]);
+                            rskvalsumnameTable1.reload();
+                            if(print.length==object.fileArray.length){
+                                rskvalsumnameTable1.addRow(result2[0]);
+                                rskvalsumnameTable1.reload();
+                                var sout="";
+                                for( let i=0;i<print.length;i++){
+                                    sout+=print[i];
+                                }
+
+                                // Joyin.alert(sout)
+
+
+
+                            }
+
+
+                        })
+                    })
+            }
+            console.log("=================" + print);
+
+
+
+
+
+        /*Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil
             .getLabel("SysCommon.submit")),    // 上传成功后回调预览接口
             function (){
+                var print=[];
             for(info in object.fileArray){
                 Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport002/initValTableInfo',
                     {ptlId:object.fileArray[info].srcName,valTableFileName:object.fileArray[info].targetFile}, function(result) {
                     x=result[0].fileInfoId;
                         Joyin.ajax(basePath + 'invest/risk/valtblimport/RskValTableImport002/selectLog', {infoName:x},function (result2){
-                            print=result2;
+                            print.push(result2);
+                            Joyin.alert(result2);
 
                         })
                     })
@@ -68,7 +106,7 @@
             }
 
 
-            );
+            );*/
     }
 
     //控件加载完成后
@@ -84,3 +122,11 @@
         });
     });
 }());
+
+var rskvalsumnameTable1 = $("#rskvalstructureTable").joyintable({
+    page: false,
+    checkbox:false,
+    cols:[
+        {field:'remark', title: '日志', width:200,sortable: false}
+    ]
+});

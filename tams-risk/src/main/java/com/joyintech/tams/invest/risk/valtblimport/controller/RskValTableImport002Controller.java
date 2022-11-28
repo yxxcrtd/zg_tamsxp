@@ -330,6 +330,9 @@ public class RskValTableImport002Controller extends BaseController{
             rskValtblDataDto.setSubOneCat(getSubOneCat(rskValtblDataDto.getSubCode(), rskValtblDataDto.getSubName(),
                     null == rskValtblDataDto.getSecurityCost() ? new BigDecimal(0) : rskValtblDataDto.getSecurityCost(),
                     null == rskValtblDataDto.getSmv() ? new BigDecimal(0) : rskValtblDataDto.getSmv()));
+            rskValtblDataDto.setSubTwoCat(getSubTwoCat(rskValtblDataDto.getSubCode(), rskValtblDataDto.getSubName(),
+                    null == rskValtblDataDto.getSecurityCost() ? new BigDecimal(0) : rskValtblDataDto.getSecurityCost(),
+                    null == rskValtblDataDto.getSmv() ? new BigDecimal(0) : rskValtblDataDto.getSmv()));
             //异常标识，如果科目代码和科目名称解析为空，异常标识置1
            /* if(row.getSubjectCode()==null||row.getData().get("科目名称")==null){
                 rskValtblDataDto.setExpFlag(1);
@@ -442,11 +445,11 @@ public class RskValTableImport002Controller extends BaseController{
         }
     }
 
-//    @RequestMapping(value="/selectLog")
-//    @ResponseBody
-//    public List<String> selectLog(String infoName){
-//         return  rskValtblAnlsLogService.selectLog(infoName);
-//    }
+    @RequestMapping(value="/selectLog")
+    @ResponseBody
+    public List<RskValtblAnlsLogDto> selectLog(String infoName){
+         return  rskValtblAnlsLogService.selectLog(infoName);
+    }
 
 
 

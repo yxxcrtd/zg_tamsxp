@@ -7,6 +7,8 @@ import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAnlsLogDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RskValtblAnlsLogService extends CommonExportService {
     @Autowired
@@ -23,8 +25,8 @@ public class RskValtblAnlsLogService extends CommonExportService {
     /**
      * 通过主键查询数据
      */
-    public  String selectLog(String infoName){
+    public List<RskValtblAnlsLogDto> selectLog(String infoName){
         return restTemplate.postForObject(
-                ServiceApplication.RISK_SERVICE_NAME + "/RskValTableQuery/selectForLog",infoName,String.class);
+                ServiceApplication.RISK_SERVICE_NAME + "/RskValTableQuery/selectForLog",infoName,List.class);
     }
 }
