@@ -27,6 +27,6 @@ public interface RskValTableQueryMapper {
     List<String> selectNameDate(Map<String,Object> map);
     int deleteNameDate(Map<String,Object> map);
     int deleteNameDateData(Map<String,Object> map);
-    String selectLog(@Param("info")String info);
+    List<RskValtblAnlsLogDto> selectLog(@Param("info")String info);
 
 }
